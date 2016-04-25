@@ -225,7 +225,7 @@ public:
             const polyMesh& c,
             const vector& position,
             const label celli,
-            const label tetFaceI,
+            const label tetFacei,
             const label tetPtI,
             const label meshEdgeStart,
             const label diagEdge

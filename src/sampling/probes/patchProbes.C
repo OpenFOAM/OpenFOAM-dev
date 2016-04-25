@@ -154,11 +154,11 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
         InfoInFunction << endl;
         forAll(nearest, sampleI)
         {
-            label procI = nearest[sampleI].second().second();
+            label proci = nearest[sampleI].second().second();
             label localI = nearest[sampleI].first().index();
 
             Info<< "    " << sampleI << " coord:"<< operator[](sampleI)
-                << " found on processor:" << procI
+                << " found on processor:" << proci
                 << " in local cell/face:" << localI
                 << " with fc:" << nearest[sampleI].first().rawPoint() << endl;
         }

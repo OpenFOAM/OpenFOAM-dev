@@ -448,51 +448,51 @@ bool Foam::oldCyclicPolyPatch::matchAnchors
     // Set faceMap such that half0 faces get first and corresponding half1
     // faces last.
 
-    forAll(half0ToPatch, half0FaceI)
+    forAll(half0ToPatch, half0Facei)
     {
         // Label in original patch
-        label patchFaceI = half0ToPatch[half0FaceI];
+        label patchFacei = half0ToPatch[half0Facei];
 
-        faceMap[patchFaceI] = half0FaceI;
+        faceMap[patchFacei] = half0Facei;
 
         // No rotation
-        rotation[patchFaceI] = 0;
+        rotation[patchFacei] = 0;
     }
 
     bool fullMatch = true;
 
-    forAll(from1To0, half1FaceI)
+    forAll(from1To0, half1Facei)
     {
-        label patchFaceI = half1ToPatch[half1FaceI];
+        label patchFacei = half1ToPatch[half1Facei];
 
         // This face has to match the corresponding one on half0.
-        label half0FaceI = from1To0[half1FaceI];
+        label half0Facei = from1To0[half1Facei];
 
-        label newFaceI = half0FaceI + pp.size()/2;
+        label newFacei = half0Facei + pp.size()/2;
 
-        faceMap[patchFaceI] = newFaceI;
+        faceMap[patchFacei] = newFacei;
 
-        // Rotate patchFaceI such that its f[0] aligns with that of
+        // Rotate patchFacei such that its f[0] aligns with that of
         // the corresponding face
-        // (which after shuffling will be at position half0FaceI)
+        // (which after shuffling will be at position half0Facei)
 
-        const point& wantedAnchor = anchors0[half0FaceI];
+        const point& wantedAnchor = anchors0[half0Facei];
 
-        rotation[newFaceI] = getRotation
+        rotation[newFacei] = getRotation
         (
             pp.points(),
-            half1Faces[half1FaceI],
+            half1Faces[half1Facei],
             wantedAnchor,
-            tols[half1FaceI]
+            tols[half1Facei]
         );
 
-        if (rotation[newFaceI] == -1)
+        if (rotation[newFacei] == -1)
         {
             fullMatch = false;
 
             if (report)
             {
-                const face& f = half1Faces[half1FaceI];
+                const face& f = half1Faces[half1Facei];
                 SeriousErrorInFunction
                     << "Patch:" << name() << " : "
                     << "Cannot find point on face " << f
@@ -950,30 +950,30 @@ bool Foam::oldCyclicPolyPatch::order
             const face& f = pp.localFaces()[facei];
             const labelList& pFaces = pp.pointFaces()[f[0]];
 
-            label matchedFaceI = -1;
+            label matchedFacei = -1;
 
             forAll(pFaces, i)
             {
-                label otherFaceI = pFaces[i];
+                label otherFacei = pFaces[i];
 
-                if (otherFaceI > facei)
+                if (otherFacei > facei)
                 {
-                    const face& otherF = pp.localFaces()[otherFaceI];
+                    const face& otherF = pp.localFaces()[otherFacei];
 
                     // Note: might pick up two similar oriented faces
                     //       (but that is illegal anyway)
                     if (f == otherF)
                     {
-                        matchedFaceI = otherFaceI;
+                        matchedFacei = otherFacei;
                         break;
                     }
                 }
             }
 
-            if (matchedFaceI != -1)
+            if (matchedFacei != -1)
             {
                 half0ToPatch[baffleI] = facei;
-                half1ToPatch[baffleI] = matchedFaceI;
+                half1ToPatch[baffleI] = matchedFacei;
                 baffleI++;
             }
         }

@@ -406,9 +406,9 @@ int main(int argc, char *argv[])
             {
                 IStringStream faceLine(line);
 
-                label tetGenFaceI, dummy, region;
+                label tetGenFacei, dummy, region;
 
-                faceLine >> tetGenFaceI;
+                faceLine >> tetGenFacei;
 
                 // Read face and reverse orientation (Foam needs outwards
                 // pointing)

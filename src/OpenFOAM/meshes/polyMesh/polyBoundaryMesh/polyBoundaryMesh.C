@@ -414,10 +414,10 @@ const Foam::labelList& Foam::polyBoundaryMesh::patchID() const
 
         forAll(bm, patchi)
         {
-            label bFaceI = bm[patchi].start() - mesh_.nInternalFaces();
+            label bFacei = bm[patchi].start() - mesh_.nInternalFaces();
             forAll(bm[patchi], i)
             {
-                patchID[bFaceI++] = patchi;
+                patchID[bFacei++] = patchi;
             }
         }
     }
@@ -872,13 +872,13 @@ bool Foam::polyBoundaryMesh::checkParallelSync(const bool report) const
     wordList names(bm.size());
     wordList types(bm.size());
 
-    label nonProcI = 0;
+    label nonProci = 0;
 
     forAll(bm, patchi)
     {
         if (!isA<processorPolyPatch>(bm[patchi]))
         {
-            if (nonProcI != patchi)
+            if (nonProci != patchi)
             {
                 // There is processor patch in between normal patches.
                 hasError = true;
@@ -895,14 +895,14 @@ bool Foam::polyBoundaryMesh::checkParallelSync(const bool report) const
             }
             else
             {
-                names[nonProcI] = bm[patchi].name();
-                types[nonProcI] = bm[patchi].type();
-                nonProcI++;
+                names[nonProci] = bm[patchi].name();
+                types[nonProci] = bm[patchi].type();
+                nonProci++;
             }
         }
     }
-    names.setSize(nonProcI);
-    types.setSize(nonProcI);
+    names.setSize(nonProci);
+    types.setSize(nonProci);
 
     List<wordList> allNames(Pstream::nProcs());
     allNames[Pstream::myProcNo()] = names;
@@ -916,12 +916,12 @@ bool Foam::polyBoundaryMesh::checkParallelSync(const bool report) const
 
     // Have every processor check but only master print error.
 
-    for (label procI = 1; procI < allNames.size(); ++procI)
+    for (label proci = 1; proci < allNames.size(); ++proci)
     {
         if
         (
-            (allNames[procI] != allNames[0])
-         || (allTypes[procI] != allTypes[0])
+            (allNames[proci] != allNames[0])
+         || (allTypes[proci] != allTypes[0])
         )
         {
             hasError = true;
@@ -931,9 +931,9 @@ bool Foam::polyBoundaryMesh::checkParallelSync(const bool report) const
                 Info<< " ***Inconsistent patches across processors, "
                        "processor 0 has patch names:" << allNames[0]
                     << " patch types:" << allTypes[0]
-                    << " processor " << procI << " has patch names:"
-                    << allNames[procI]
-                    << " patch types:" << allTypes[procI]
+                    << " processor " << proci << " has patch names:"
+                    << allNames[proci]
+                    << " patch types:" << allTypes[proci]
                     << endl;
             }
         }

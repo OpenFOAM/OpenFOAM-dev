@@ -267,11 +267,11 @@ void Foam::slidingInterface::renumberAttachedAddressing
 
     forAll(mfc, facei)
     {
-        label newCellI = reverseCellMap[mfc[mfzRenumber[facei]]];
+        label newCelli = reverseCellMap[mfc[mfzRenumber[facei]]];
 
-        if (newCellI >= 0)
+        if (newCelli >= 0)
         {
-            newMfc[facei] = newCellI;
+            newMfc[facei] = newCelli;
         }
     }
 
@@ -284,11 +284,11 @@ void Foam::slidingInterface::renumberAttachedAddressing
 
     forAll(sfc, facei)
     {
-        label newCellI = reverseCellMap[sfc[sfzRenumber[facei]]];
+        label newCelli = reverseCellMap[sfc[sfzRenumber[facei]]];
 
-        if (newCellI >= 0)
+        if (newCelli >= 0)
         {
-            newSfc[facei] = newCellI;
+            newSfc[facei] = newCelli;
         }
     }
 
@@ -317,11 +317,11 @@ void Foam::slidingInterface::renumberAttachedAddressing
 
     forAll(msof, facei)
     {
-        label newFaceI = reverseFaceMap[msof[facei]];
+        label newFacei = reverseFaceMap[msof[facei]];
 
-        if (newFaceI >= 0)
+        if (newFacei >= 0)
         {
-            newMsof[facei] = newFaceI;
+            newMsof[facei] = newFacei;
         }
     }
 //     Pout<< "newMsof: " << newMsof << endl;
@@ -333,11 +333,11 @@ void Foam::slidingInterface::renumberAttachedAddressing
 
     forAll(ssof, facei)
     {
-        label newFaceI = reverseFaceMap[ssof[facei]];
+        label newFacei = reverseFaceMap[ssof[facei]];
 
-        if (newFaceI >= 0)
+        if (newFacei >= 0)
         {
-            newSsof[facei] = newFaceI;
+            newSsof[facei] = newFacei;
         }
     }
 //     Pout<< "newSsof: " << newSsof << endl;

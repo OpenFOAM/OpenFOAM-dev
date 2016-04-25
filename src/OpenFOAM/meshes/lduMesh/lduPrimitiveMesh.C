@@ -172,7 +172,7 @@ Foam::labelList Foam::lduPrimitiveMesh::upperTriOrder
     labelList order;
     labelList nbr;
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     for (label celli = 0; celli < nCells; celli++)
     {
@@ -190,7 +190,7 @@ Foam::labelList Foam::lduPrimitiveMesh::upperTriOrder
         forAll(order, i)
         {
             label index = order[i];
-            oldToNew[cellToFaces[startOfCell + index]] = newFaceI++;
+            oldToNew[cellToFaces[startOfCell + index]] = newFacei++;
         }
     }
 
@@ -598,13 +598,13 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
         const labelUList& u = procMesh.lduAddr().upperAddr();
 
         // Add internal faces
-        label allFaceI = faceOffsets[procMeshI];
+        label allFacei = faceOffsets[procMeshI];
 
         forAll(l, facei)
         {
-            lowerAddr_[allFaceI] = cellOffsets[procMeshI]+l[facei];
-            upperAddr_[allFaceI] = cellOffsets[procMeshI]+u[facei];
-            allFaceI++;
+            lowerAddr_[allFacei] = cellOffsets[procMeshI]+l[facei];
+            upperAddr_[allFacei] = cellOffsets[procMeshI]+u[facei];
+            allFacei++;
         }
 
 
@@ -646,14 +646,14 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
                             label nbrIntI = -1;
                             forAll(elems, i)
                             {
-                                label procI = elems[i][0];
+                                label proci = elems[i][0];
                                 label interfacei = elems[i][1];
                                 const lduInterfacePtrsList interfaces =
                                     mesh
                                     (
                                         myMesh,
                                         otherMeshes,
-                                        procI
+                                        proci
                                     ).interfaces();
                                 const processorLduInterface& pldui =
                                     refCast<const processorLduInterface>
@@ -712,13 +712,13 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
 
                             forAll(faceCells, pfI)
                             {
-                                lowerAddr_[allFaceI] =
+                                lowerAddr_[allFacei] =
                                     cellOffsets[procMeshI]+faceCells[pfI];
-                                bfMap[pfI] = allFaceI;
-                                upperAddr_[allFaceI] =
+                                bfMap[pfI] = allFacei;
+                                upperAddr_[allFacei] =
                                     cellOffsets[nbrProcMeshI]+nbrFaceCells[pfI];
-                                nbrBfMap[pfI] = (-allFaceI-1);
-                                allFaceI++;
+                                nbrBfMap[pfI] = (-allFacei-1);
+                                allFacei++;
                             }
                         }
                     }
@@ -751,8 +751,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
                 }
                 else
                 {
-                    label allFaceI = -map[i]-1;
-                    map[i] = -oldToNew[allFaceI]-1;
+                    label allFacei = -map[i]-1;
+                    map[i] = -oldToNew[allFacei]-1;
                 }
             }
         }
@@ -761,15 +761,15 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
         inplaceReorder(oldToNew, lowerAddr_);
         inplaceReorder(oldToNew, upperAddr_);
 
-        forAll(boundaryFaceMap, procI)
+        forAll(boundaryFaceMap, proci)
         {
-            const labelList& bMap = boundaryMap[procI];
+            const labelList& bMap = boundaryMap[proci];
             forAll(bMap, intI)
             {
                 if (bMap[intI] == -1)
                 {
                     // Merged interface
-                    labelList& bfMap = boundaryFaceMap[procI][intI];
+                    labelList& bfMap = boundaryFaceMap[proci][intI];
 
                     forAll(bfMap, i)
                     {
@@ -779,8 +779,8 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
                         }
                         else
                         {
-                            label allFaceI = -bfMap[i]-1;
-                            bfMap[i] = (-oldToNew[allFaceI]-1);
+                            label allFacei = -bfMap[i]-1;
+                            bfMap[i] = (-oldToNew[allFacei]-1);
                         }
                     }
                 }

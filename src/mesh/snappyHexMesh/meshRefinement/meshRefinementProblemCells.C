@@ -759,9 +759,9 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
             // Count boundary faces.
             label nBfaces = 0;
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                if (isBoundaryFace[cFaces[cFaceI]])
+                if (isBoundaryFace[cFaces[cFacei]])
                 {
                     nBfaces++;
                 }

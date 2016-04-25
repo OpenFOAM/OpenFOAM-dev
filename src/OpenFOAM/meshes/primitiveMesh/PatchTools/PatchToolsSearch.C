@@ -76,18 +76,18 @@ void Foam::PatchTools::markZone
 
                     forAll(eFaceLst, j)
                     {
-                        label nbrFaceI = eFaceLst[j];
+                        label nbrFacei = eFaceLst[j];
 
-                        if (faceZone[nbrFaceI] == -1)
+                        if (faceZone[nbrFacei] == -1)
                         {
-                            faceZone[nbrFaceI] = currentZone;
-                            newChangedFaces.append(nbrFaceI);
+                            faceZone[nbrFacei] = currentZone;
+                            newChangedFaces.append(nbrFacei);
                         }
-                        else if (faceZone[nbrFaceI] != currentZone)
+                        else if (faceZone[nbrFacei] != currentZone)
                         {
                             FatalErrorInFunction
-                                << "Zones " << faceZone[nbrFaceI]
-                                << " at face " << nbrFaceI
+                                << "Zones " << faceZone[nbrFacei]
+                                << " at face " << nbrFacei
                                 << " connects to zone " << currentZone
                                 << " at face " << facei
                                 << abort(FatalError);
@@ -129,15 +129,15 @@ Foam::PatchTools::markZones
     faceZone = -1;
 
     label zoneI = 0;
-    for (label startFaceI = 0; startFaceI < faceZone.size();)
+    for (label startFacei = 0; startFacei < faceZone.size();)
     {
         // Find next non-visited face
-        for (; startFaceI < faceZone.size(); ++startFaceI)
+        for (; startFacei < faceZone.size(); ++startFacei)
         {
-            if (faceZone[startFaceI] == -1)
+            if (faceZone[startFacei] == -1)
             {
-                faceZone[startFaceI] = zoneI;
-                markZone(p, borderEdge, startFaceI, zoneI, faceZone);
+                faceZone[startFacei] = zoneI;
+                markZone(p, borderEdge, startFacei, zoneI, faceZone);
                 zoneI++;
                 break;
             }
@@ -176,15 +176,15 @@ Foam::PatchTools::subsetMap
 
     boolList pointHad(pointMap.size(), false);
 
-    forAll(p, oldFaceI)
+    forAll(p, oldFacei)
     {
-        if (includeFaces[oldFaceI])
+        if (includeFaces[oldFacei])
         {
             // Store new faces compact
-            faceMap[facei++] = oldFaceI;
+            faceMap[facei++] = oldFacei;
 
             // Renumber labels for face
-            const Face& f = localFaces[oldFaceI];
+            const Face& f = localFaces[oldFacei];
 
             forAll(f, fp)
             {

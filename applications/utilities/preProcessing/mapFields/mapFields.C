@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -348,15 +348,15 @@ int main(int argc, char *argv[])
 
         Info<< "Target mesh size: " << meshTarget.nCells() << endl;
 
-        for (int procI=0; procI<nProcs; procI++)
+        for (int proci=0; proci<nProcs; proci++)
         {
-            Info<< nl << "Source processor " << procI << endl;
+            Info<< nl << "Source processor " << proci << endl;
 
             Time runTimeSource
             (
                 Time::controlDictName,
                 rootDirSource,
-                caseDirSource/fileName(word("processor") + name(procI))
+                caseDirSource/fileName(word("processor") + name(proci))
             );
 
             #include "setTimeIndex.H"
@@ -429,15 +429,15 @@ int main(int argc, char *argv[])
 
         Info<< "Source mesh size: " << meshSource.nCells() << endl;
 
-        for (int procI=0; procI<nProcs; procI++)
+        for (int proci=0; proci<nProcs; proci++)
         {
-            Info<< nl << "Target processor " << procI << endl;
+            Info<< nl << "Target processor " << proci << endl;
 
             Time runTimeTarget
             (
                 Time::controlDictName,
                 rootDirTarget,
-                caseDirTarget/fileName(word("processor") + name(procI))
+                caseDirTarget/fileName(word("processor") + name(proci))
             );
 
             fvMesh meshTarget

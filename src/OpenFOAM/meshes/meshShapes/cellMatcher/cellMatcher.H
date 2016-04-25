@@ -134,7 +134,7 @@ protected:
         //- Map from 'edge' to neighbouring faces
         labelList edgeFaces_;
 
-        //- pointFaceIndex[localVertI][localFaceI] is index in localFace
+        //- pointFaceIndex[localVertI][localFacei] is index in localFace
         //  where localVertI is.
         labelListList pointFaceIndex_;
 
@@ -163,13 +163,13 @@ protected:
         void calcPointFaceIndex();
 
         //- Given start,end of edge lookup both faces sharing it and return
-        //  face != localFaceI
+        //  face != localFacei
         label otherFace
         (
             const label numVert,
             const label v0,
             const label v1,
-            const label localFaceI
+            const label localFacei
         ) const;
 
 

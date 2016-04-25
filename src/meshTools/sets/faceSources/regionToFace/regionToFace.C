@@ -61,7 +61,7 @@ Foam::topoSetSource::addToUsageTable Foam::regionToFace::usage_
 void Foam::regionToFace::markZone
 (
     const indirectPrimitivePatch& patch,
-    const label procI,
+    const label proci,
     const label facei,
     const label zoneI,
     labelList& faceZone
@@ -74,7 +74,7 @@ void Foam::regionToFace::markZone
     DynamicList<label> changedEdges;
     DynamicList<patchEdgeFaceRegion> changedInfo;
 
-    if (Pstream::myProcNo() == procI)
+    if (Pstream::myProcNo() == proci)
     {
         const labelList& fEdges = patch.faceEdges()[facei];
         forAll(fEdges, i)
@@ -158,7 +158,7 @@ void Foam::regionToFace::combine(topoSet& set, const bool add) const
     markZone
     (
         patch,
-        ni.second().second(),   // procI
+        ni.second().second(),   // proci
         ni.first().index(),     // start face
         0,                      // currentZone
         faceRegion

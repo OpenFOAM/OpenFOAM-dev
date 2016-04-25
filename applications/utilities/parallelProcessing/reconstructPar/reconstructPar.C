@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,16 +176,16 @@ int main(int argc, char *argv[])
     // Create the processor databases
     PtrList<Time> databases(nProcs);
 
-    forAll(databases, procI)
+    forAll(databases, proci)
     {
         databases.set
         (
-            procI,
+            proci,
             new Time
             (
                 Time::controlDictName,
                 args.rootPath(),
-                args.caseName()/fileName(word("processor") + name(procI))
+                args.caseName()/fileName(word("processor") + name(proci))
             )
         );
     }
@@ -227,9 +227,9 @@ int main(int argc, char *argv[])
 
 
     // Set all times on processor meshes equal to reconstructed mesh
-    forAll(databases, procI)
+    forAll(databases, proci)
     {
-        databases[procI].setTime(runTime);
+        databases[proci].setTime(runTime);
     }
 
 
@@ -329,9 +329,9 @@ int main(int argc, char *argv[])
             Info<< "Time = " << runTime.timeName() << endl << endl;
 
             // Set time for all databases
-            forAll(databases, procI)
+            forAll(databases, proci)
             {
-                databases[procI].setTime(timeDirs[timeI], timeI);
+                databases[proci].setTime(timeDirs[timeI], timeI);
             }
 
             // Check if any new meshes need to be read.
@@ -470,12 +470,12 @@ int main(int argc, char *argv[])
                 const pointMesh& pMesh = pointMesh::New(mesh);
                 PtrList<pointMesh> pMeshes(procMeshes.meshes().size());
 
-                forAll(pMeshes, procI)
+                forAll(pMeshes, proci)
                 {
                     pMeshes.set
                     (
-                        procI,
-                        new pointMesh(procMeshes.meshes()[procI])
+                        proci,
+                        new pointMesh(procMeshes.meshes()[proci])
                     );
                 }
 
@@ -531,13 +531,13 @@ int main(int argc, char *argv[])
             {
                 HashTable<IOobjectList> cloudObjects;
 
-                forAll(databases, procI)
+                forAll(databases, proci)
                 {
                     fileNameList cloudDirs
                     (
                         readDir
                         (
-                            databases[procI].timePath()
+                            databases[proci].timePath()
                           / regionDir
                           / cloud::prefix,
                             fileName::DIRECTORY
@@ -556,8 +556,8 @@ int main(int argc, char *argv[])
                             // Do local scan for valid cloud objects
                             IOobjectList sprayObjs
                             (
-                                procMeshes.meshes()[procI],
-                                databases[procI].timeName(),
+                                procMeshes.meshes()[proci],
+                                databases[proci].timeName(),
                                 cloud::prefix/cloudDirs[i]
                             );
 
@@ -709,9 +709,9 @@ int main(int argc, char *argv[])
                 HashTable<label> fSetNames;
                 HashTable<label> pSetNames;
 
-                forAll(procMeshes.meshes(), procI)
+                forAll(procMeshes.meshes(), proci)
                 {
-                    const fvMesh& procMesh = procMeshes.meshes()[procI];
+                    const fvMesh& procMesh = procMeshes.meshes()[proci];
 
                     // Note: look at sets in current time only or between
                     // mesh and current time?. For now current time. This will
@@ -762,9 +762,9 @@ int main(int argc, char *argv[])
                 }
 
                 // Load sets
-                forAll(procMeshes.meshes(), procI)
+                forAll(procMeshes.meshes(), proci)
                 {
-                    const fvMesh& procMesh = procMeshes.meshes()[procI];
+                    const fvMesh& procMesh = procMeshes.meshes()[proci];
 
                     IOobjectList objects
                     (
@@ -775,7 +775,7 @@ int main(int argc, char *argv[])
 
                     // cellSets
                     const labelList& cellMap =
-                        procMeshes.cellProcAddressing()[procI];
+                        procMeshes.cellProcAddressing()[proci];
 
                     IOobjectList cSets(objects.lookupClass(cellSet::typeName));
                     forAllConstIter(IOobjectList, cSets, iter)
@@ -802,7 +802,7 @@ int main(int argc, char *argv[])
 
                     // faceSets
                     const labelList& faceMap =
-                        procMeshes.faceProcAddressing()[procI];
+                        procMeshes.faceProcAddressing()[proci];
 
                     IOobjectList fSets(objects.lookupClass(faceSet::typeName));
                     forAllConstIter(IOobjectList, fSets, iter)
@@ -828,7 +828,7 @@ int main(int argc, char *argv[])
                     }
                     // pointSets
                     const labelList& pointMap =
-                        procMeshes.pointProcAddressing()[procI];
+                        procMeshes.pointProcAddressing()[proci];
 
                     IOobjectList pSets(objects.lookupClass(pointSet::typeName));
                     forAllConstIter(IOobjectList, pSets, iter)

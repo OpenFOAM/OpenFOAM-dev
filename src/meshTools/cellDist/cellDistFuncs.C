@@ -85,24 +85,24 @@ Foam::scalar Foam::cellDistFuncs::smallestDist
     const polyPatch& patch,
     const label nWallFaces,
     const labelList& wallFaces,
-    label& minFaceI
+    label& minFacei
 ) const
 {
     const pointField& points = patch.points();
 
     scalar minDist = GREAT;
-    minFaceI = -1;
+    minFacei = -1;
 
-    for (label wallFaceI = 0; wallFaceI < nWallFaces; wallFaceI++)
+    for (label wallFacei = 0; wallFacei < nWallFaces; wallFacei++)
     {
-        label patchFaceI = wallFaces[wallFaceI];
+        label patchFacei = wallFaces[wallFacei];
 
-        pointHit curHit = patch[patchFaceI].nearestPoint(p, points);
+        pointHit curHit = patch[patchFacei].nearestPoint(p, points);
 
         if (curHit.distance() < minDist)
         {
             minDist = curHit.distance();
-            minFaceI = patch.start() + patchFaceI;
+            minFacei = patch.start() + patchFacei;
         }
     }
 
@@ -116,17 +116,17 @@ Foam::scalar Foam::cellDistFuncs::smallestDist
 Foam::label Foam::cellDistFuncs::getPointNeighbours
 (
     const primitivePatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     labelList& neighbours
 ) const
 {
     label nNeighbours = 0;
 
     // Add myself
-    neighbours[nNeighbours++] = patchFaceI;
+    neighbours[nNeighbours++] = patchFacei;
 
     // Add all face neighbours
-    const labelList& faceNeighbours = patch.faceFaces()[patchFaceI];
+    const labelList& faceNeighbours = patch.faceFaces()[patchFacei];
 
     forAll(faceNeighbours, faceNeighbourI)
     {
@@ -141,7 +141,7 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
     // Assumes that point-only neighbours are not using multiple points on
     // face.
 
-    const face& f = patch.localFaces()[patchFaceI];
+    const face& f = patch.localFaces()[patchFacei];
 
     forAll(f, fp)
     {
@@ -187,7 +187,7 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
             if (!nbs.found(nb))
             {
                 SeriousErrorInFunction
-                    << "getPointNeighbours : patchFaceI:" << patchFaceI
+                    << "getPointNeighbours : patchFacei:" << patchFacei
                     << " verts:" << f << endl;
 
                 forAll(f, fp)
@@ -292,18 +292,18 @@ void Foam::cellDistFuncs::correctBoundaryFaceCells
             const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             // Check cells with face on wall
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
                 label nNeighbours = getPointNeighbours
                 (
                     patch,
-                    patchFaceI,
+                    patchFacei,
                     neighbours
                 );
 
-                label celli = faceOwner[patch.start() + patchFaceI];
+                label celli = faceOwner[patch.start() + patchFacei];
 
-                label minFaceI = -1;
+                label minFacei = -1;
 
                 wallDistCorrected[celli] = smallestDist
                 (
@@ -311,11 +311,11 @@ void Foam::cellDistFuncs::correctBoundaryFaceCells
                     patch,
                     nNeighbours,
                     neighbours,
-                    minFaceI
+                    minFacei
                 );
 
                 // Store wallCell and its nearest neighbour
-                nearestFace.insert(celli, minFaceI);
+                nearestFace.insert(celli, minFacei);
             }
         }
     }
@@ -358,7 +358,7 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
                     {
                         const labelList& wallFaces = pointFaces[meshPointI];
 
-                        label minFaceI = -1;
+                        label minFacei = -1;
 
                         wallDistCorrected[celli] = smallestDist
                         (
@@ -366,11 +366,11 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
                             patch,
                             wallFaces.size(),
                             wallFaces,
-                            minFaceI
+                            minFacei
                         );
 
                         // Store wallCell and its nearest neighbour
-                        nearestFace.insert(celli, minFaceI);
+                        nearestFace.insert(celli, minFacei);
                     }
                 }
             }

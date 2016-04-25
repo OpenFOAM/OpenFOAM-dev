@@ -433,11 +433,11 @@ void Foam::meshWriters::STARCD::writeBoundary(const fileName& prefix) const
             if (faceLookupIndex.found(mapIndex))
             {
                 const faceList sFaces = shape.faces();
-                forAll(sFaces, sFaceI)
+                forAll(sFaces, sFacei)
                 {
-                    if (faces[facei] == sFaces[sFaceI])
+                    if (faces[facei] == sFaces[sFacei])
                     {
-                        cellFaceId = sFaceI;
+                        cellFaceId = sFacei;
                         break;
                     }
                 }

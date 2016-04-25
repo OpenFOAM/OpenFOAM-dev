@@ -196,9 +196,9 @@ void v2WallFunctionFvPatchScalarField::updateCoeffs()
     // Set v2 wall values
     forAll(v2, facei)
     {
-        label faceCellI = patch().faceCells()[facei];
+        label faceCelli = patch().faceCells()[facei];
 
-        scalar uTau = Cmu25*sqrt(k[faceCellI]);
+        scalar uTau = Cmu25*sqrt(k[faceCelli]);
 
         scalar yPlus = uTau*y[facei]/nuw[facei];
 

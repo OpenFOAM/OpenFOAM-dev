@@ -135,7 +135,7 @@ Foam::wallBoundedStreamLineParticle::wallBoundedStreamLineParticle
     const polyMesh& mesh,
     const vector& position,
     const label celli,
-    const label tetFaceI,
+    const label tetFacei,
     const label tetPtI,
     const label meshEdgeStart,
     const label diagEdge,
@@ -147,7 +147,7 @@ Foam::wallBoundedStreamLineParticle::wallBoundedStreamLineParticle
         mesh,
         position,
         celli,
-        tetFaceI,
+        tetFacei,
         tetPtI,
         meshEdgeStart,
         diagEdge

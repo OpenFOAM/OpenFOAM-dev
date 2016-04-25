@@ -54,8 +54,8 @@ void Foam::syncTools::swapBoundaryCellPositions
         const labelUList& faceCells = pp.faceCells();
         forAll(faceCells, i)
         {
-            label bFaceI = pp.start()+i-mesh.nInternalFaces();
-            neighbourCellData[bFaceI] = cellData[faceCells[i]];
+            label bFacei = pp.start()+i-mesh.nInternalFaces();
+            neighbourCellData[bFacei] = cellData[faceCells[i]];
         }
     }
     syncTools::swapBoundaryFacePositions(mesh, neighbourCellData);

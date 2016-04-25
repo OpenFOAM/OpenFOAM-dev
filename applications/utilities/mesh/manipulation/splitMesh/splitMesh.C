@@ -200,15 +200,15 @@ int main(int argc, char *argv[])
     }
 
     // Find sides reachable from 0th face of faceSet
-    label startFaceI = faces[0];
+    label startFacei = faces[0];
 
     regionSide regionInfo
     (
         mesh,
         facesSet,
         fenceEdges,
-        mesh.faceOwner()[startFaceI],
-        startFaceI
+        mesh.faceOwner()[startFacei],
+        startFacei
     );
 
     // Determine flip state for all faces in faceSet

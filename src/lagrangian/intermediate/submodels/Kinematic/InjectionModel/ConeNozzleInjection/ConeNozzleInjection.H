@@ -127,7 +127,7 @@ private:
         label injectorCell_;
 
         //- Index of tet face for injector cell
-        label tetFaceI_;
+        label tetFacei_;
 
         //- Index of tet point for injector cell
         label tetPtI_;
@@ -242,7 +242,7 @@ public:
                 const scalar time,
                 vector& position,
                 label& cellOwner,
-                label& tetFaceI,
+                label& tetFacei,
                 label& tetPtI
             );
 

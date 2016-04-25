@@ -284,8 +284,8 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
         srcMagSf.setSize(sourceRestrictAddressing.size(), 0.0);
         forAll(sourceRestrictAddressing, facei)
         {
-            label coarseFaceI = sourceRestrictAddressing[facei];
-            srcMagSf[coarseFaceI] += fineSrcMagSf[facei];
+            label coarseFacei = sourceRestrictAddressing[facei];
+            srcMagSf[coarseFacei] += fineSrcMagSf[facei];
         }
     }
 
@@ -311,16 +311,16 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
             tgtSubMap[Pstream::myProcNo()] = identity(targetCoarseSize);
         }
 
-        forAll(map.subMap(), procI)
+        forAll(map.subMap(), proci)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
                 // Combine entries that point to the same coarse element. All
                 // the elements refer to local data so index into
                 // targetRestrictAddressing or allRestrict (since the same
                 // for local data).
-                const labelList& elems = map.subMap()[procI];
-                labelList& newSubMap = tgtSubMap[procI];
+                const labelList& elems = map.subMap()[proci];
+                labelList& newSubMap = tgtSubMap[proci];
                 newSubMap.setSize(elems.size());
 
                 labelList oldToNew(targetCoarseSize, -1);
@@ -359,16 +359,16 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
         label compactI = targetCoarseSize;
 
         // Compact data from other processors
-        forAll(map.constructMap(), procI)
+        forAll(map.constructMap(), proci)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
                 // Combine entries that point to the same coarse element. All
                 // elements now are remote data so we cannot use any local
                 // data here - use allRestrict instead.
-                const labelList& elems = map.constructMap()[procI];
+                const labelList& elems = map.constructMap()[proci];
 
-                labelList& newConstructMap = tgtConstructMap[procI];
+                labelList& newConstructMap = tgtConstructMap[proci];
                 newConstructMap.setSize(elems.size());
 
                 if (elems.size())
@@ -386,14 +386,14 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
                     }
                     remoteTargetCoarseSize += 1;
 
-                    // Combine locally data coming from procI
+                    // Combine locally data coming from proci
                     labelList oldToNew(remoteTargetCoarseSize, -1);
                     label newI = 0;
 
                     forAll(elems, i)
                     {
                         label fineElem = elems[i];
-                        // fineElem now points to section from procI
+                        // fineElem now points to section from proci
                         label coarseElem = allRestrict[fineElem];
                         if (oldToNew[coarseElem] == -1)
                         {
@@ -426,10 +426,10 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
             const scalarList& weights = fineSrcWeights[facei];
             const scalar fineArea = fineSrcMagSf[facei];
 
-            label coarseFaceI = sourceRestrictAddressing[facei];
+            label coarseFacei = sourceRestrictAddressing[facei];
 
-            labelList& newElems = srcAddress[coarseFaceI];
-            scalarList& newWeights = srcWeights[coarseFaceI];
+            labelList& newElems = srcAddress[coarseFacei];
+            scalarList& newWeights = srcWeights[coarseFacei];
 
             forAll(elems, i)
             {
@@ -472,10 +472,10 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
             const scalarList& weights = fineSrcWeights[facei];
             const scalar fineArea = fineSrcMagSf[facei];
 
-            label coarseFaceI = sourceRestrictAddressing[facei];
+            label coarseFacei = sourceRestrictAddressing[facei];
 
-            labelList& newElems = srcAddress[coarseFaceI];
-            scalarList& newWeights = srcWeights[coarseFaceI];
+            labelList& newElems = srcAddress[coarseFacei];
+            scalarList& newWeights = srcWeights[coarseFacei];
 
             forAll(elems, i)
             {
@@ -1417,20 +1417,20 @@ Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::srcPointFace
     const SourcePatch& srcPatch,
     const TargetPatch& tgtPatch,
     const vector& n,
-    const label tgtFaceI,
+    const label tgtFacei,
     point& tgtPoint
 )
 const
 {
     const pointField& srcPoints = srcPatch.points();
 
-    // source face addresses that intersect target face tgtFaceI
-    const labelList& addr = tgtAddress_[tgtFaceI];
+    // source face addresses that intersect target face tgtFacei
+    const labelList& addr = tgtAddress_[tgtFacei];
 
     forAll(addr, i)
     {
-        label srcFaceI = addr[i];
-        const face& f = srcPatch[srcFaceI];
+        label srcFacei = addr[i];
+        const face& f = srcPatch[srcFacei];
 
         pointHit ray = f.ray(tgtPoint, n, srcPoints);
 
@@ -1438,18 +1438,18 @@ const
         {
             tgtPoint = ray.rawPoint();
 
-            return srcFaceI;
+            return srcFacei;
         }
     }
 
     // no hit registered - try with face normal instead of input normal
     forAll(addr, i)
     {
-        label srcFaceI = addr[i];
-        const face& f = srcPatch[srcFaceI];
+        label srcFacei = addr[i];
+        const face& f = srcPatch[srcFacei];
 
-        vector nFace(-srcPatch.faceNormals()[srcFaceI]);
-        nFace += tgtPatch.faceNormals()[tgtFaceI];
+        vector nFace(-srcPatch.faceNormals()[srcFacei]);
+        nFace += tgtPatch.faceNormals()[tgtFacei];
 
         pointHit ray = f.ray(tgtPoint, nFace, srcPoints);
 
@@ -1457,7 +1457,7 @@ const
         {
             tgtPoint = ray.rawPoint();
 
-            return srcFaceI;
+            return srcFacei;
         }
     }
 
@@ -1471,20 +1471,20 @@ Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::tgtPointFace
     const SourcePatch& srcPatch,
     const TargetPatch& tgtPatch,
     const vector& n,
-    const label srcFaceI,
+    const label srcFacei,
     point& srcPoint
 )
 const
 {
     const pointField& tgtPoints = tgtPatch.points();
 
-    // target face addresses that intersect source face srcFaceI
-    const labelList& addr = srcAddress_[srcFaceI];
+    // target face addresses that intersect source face srcFacei
+    const labelList& addr = srcAddress_[srcFacei];
 
     forAll(addr, i)
     {
-        label tgtFaceI = addr[i];
-        const face& f = tgtPatch[tgtFaceI];
+        label tgtFacei = addr[i];
+        const face& f = tgtPatch[tgtFacei];
 
         pointHit ray = f.ray(srcPoint, n, tgtPoints);
 
@@ -1492,18 +1492,18 @@ const
         {
             srcPoint = ray.rawPoint();
 
-            return tgtFaceI;
+            return tgtFacei;
         }
     }
 
     // no hit registered - try with face normal instead of input normal
     forAll(addr, i)
     {
-        label tgtFaceI = addr[i];
-        const face& f = tgtPatch[tgtFaceI];
+        label tgtFacei = addr[i];
+        const face& f = tgtPatch[tgtFacei];
 
-        vector nFace(-srcPatch.faceNormals()[srcFaceI]);
-        nFace += tgtPatch.faceNormals()[tgtFaceI];
+        vector nFace(-srcPatch.faceNormals()[srcFacei]);
+        nFace += tgtPatch.faceNormals()[tgtFacei];
 
         pointHit ray = f.ray(srcPoint, n, tgtPoints);
 
@@ -1511,7 +1511,7 @@ const
         {
             srcPoint = ray.rawPoint();
 
-            return tgtFaceI;
+            return tgtFacei;
         }
     }
 

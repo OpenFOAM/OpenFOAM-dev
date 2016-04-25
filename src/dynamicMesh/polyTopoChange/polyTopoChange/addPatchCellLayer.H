@@ -197,8 +197,8 @@ class addPatchCellLayer
             const indirectPrimitivePatch& pp,
             const labelListList& globalEdgeFaces,
             const boolList& doneEdge,
-            const label thisGlobalFaceI,
-            const label nbrGlobalFaceI,
+            const label thisGlobalFacei,
+            const label nbrGlobalFacei,
             const label edgeI
         ) const;
 
@@ -207,8 +207,8 @@ class addPatchCellLayer
             const indirectPrimitivePatch& pp,
             const labelListList& globalEdgeFaces,
             const boolList& doneEdge,
-            const label patchFaceI,
-            const label globalFaceI
+            const label patchFacei,
+            const label globalFacei
         ) const;
 
 
@@ -221,8 +221,8 @@ class addPatchCellLayer
             const face& newFace,
             const label newPatchID,
 
-            const label ownFaceI,
-            const label nbrFaceI,
+            const label ownFacei,
+            const label nbrFacei,
             const label meshEdgeI,
             const label layerI,
             const label numEdgeFaces,

@@ -37,24 +37,24 @@ Description
 
         PstreamBuffers pBuffers(Pstream::nonBlocking);
 
-        for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
                 someObject vals;
 
-                UOPstream str(procI, pBuffers);
+                UOPstream str(proci, pBuffers);
                 str << vals;
             }
         }
 
         pBuffers.finishedSends();   // no-op for blocking
 
-        for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
-                UIPstream str(procI, pBuffers);
+                UIPstream str(proci, pBuffers);
                 someObject vals(str);
             }
         }

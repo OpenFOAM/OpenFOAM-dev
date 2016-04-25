@@ -81,11 +81,11 @@ void Foam::writeFuns::write
 
     insert(vvf.internalField(), fField);
 
-    forAll(superCells, superCellI)
+    forAll(superCells, superCelli)
     {
-        label origCellI = superCells[superCellI];
+        label origCelli = superCells[superCelli];
 
-        insert(vvf[origCellI], fField);
+        insert(vvf[origCelli], fField);
     }
     write(os, binary, fField);
 }
@@ -115,9 +115,9 @@ void Foam::writeFuns::write
 
     forAll(addPointCellLabels, api)
     {
-        label origCellI = addPointCellLabels[api];
+        label origCelli = addPointCellLabels[api];
 
-        insert(interpolatePointToCell(pvf, origCellI), fField);
+        insert(interpolatePointToCell(pvf, origCelli), fField);
     }
     write(os, binary, fField);
 }
@@ -148,9 +148,9 @@ void Foam::writeFuns::write
 
     forAll(addPointCellLabels, api)
     {
-        label origCellI = addPointCellLabels[api];
+        label origCelli = addPointCellLabels[api];
 
-        insert(vvf[origCellI], fField);
+        insert(vvf[origCelli], fField);
     }
     write(os, binary, fField);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,16 +207,16 @@ int main(int argc, char *argv[])
     {
         labelListList curBlockCells = blocks[blockI].blockCells();
 
-        forAll(curBlockCells, blockCellI)
+        forAll(curBlockCells, blockCelli)
         {
-            labelList cellPoints(curBlockCells[blockCellI].size());
+            labelList cellPoints(curBlockCells[blockCelli].size());
 
             forAll(cellPoints, pointI)
             {
                 cellPoints[pointI] =
                     oldToNew
                     [
-                        curBlockCells[blockCellI][pointI]
+                        curBlockCells[blockCelli][pointI]
                       + blockOffsets[blockI]
                     ];
             }

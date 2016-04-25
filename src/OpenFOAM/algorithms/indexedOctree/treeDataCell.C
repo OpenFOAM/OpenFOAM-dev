@@ -51,9 +51,9 @@ Foam::treeBoundBox Foam::treeDataCell::calcCellBb(const label celli) const
 
     const cell& cFaces = cells[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f = faces[cFaces[cFaceI]];
+        const face& f = faces[cFaces[cFacei]];
 
         forAll(f, fp)
         {

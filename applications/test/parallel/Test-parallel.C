@@ -76,21 +76,21 @@ int main(int argc, char *argv[])
         labelList nSend(Pstream::nProcs(), 0);
         forAll(complexData, i)
         {
-            label procI = complexData[i].first();
-            nSend[procI]++;
+            label proci = complexData[i].first();
+            nSend[proci]++;
         }
 
         // Collect items to be sent
         labelListList sendMap(Pstream::nProcs());
-        forAll(sendMap, procI)
+        forAll(sendMap, proci)
         {
-            sendMap[procI].setSize(nSend[procI]);
+            sendMap[proci].setSize(nSend[proci]);
         }
         nSend = 0;
         forAll(complexData, i)
         {
-            label procI = complexData[i].first();
-            sendMap[procI][nSend[procI]++] = i;
+            label proci = complexData[i].first();
+            sendMap[proci][nSend[proci]++] = i;
         }
 
         // Sync how many to send
@@ -99,9 +99,9 @@ int main(int argc, char *argv[])
 
         // Collect items to be received
         labelListList recvMap(Pstream::nProcs());
-        forAll(recvMap, procI)
+        forAll(recvMap, proci)
         {
-            recvMap[procI].setSize(nRecv[procI]);
+            recvMap[proci].setSize(nRecv[proci]);
         }
 
         label constructSize = 0;
@@ -111,13 +111,13 @@ int main(int argc, char *argv[])
             recvMap[Pstream::myProcNo()][i] = constructSize++;
         }
         // Construct from other processors
-        forAll(recvMap, procI)
+        forAll(recvMap, proci)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
-                forAll(recvMap[procI], i)
+                forAll(recvMap[proci], i)
                 {
-                    recvMap[procI][i] = constructSize++;
+                    recvMap[proci][i] = constructSize++;
                 }
             }
         }

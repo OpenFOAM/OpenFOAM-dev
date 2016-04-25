@@ -102,18 +102,18 @@ Usage
 const labelIOList& procAddressing
 (
     const PtrList<fvMesh>& procMeshList,
-    const label procI,
+    const label proci,
     const word& name,
     PtrList<labelIOList>& procAddressingList
 )
 {
-    const fvMesh& procMesh = procMeshList[procI];
+    const fvMesh& procMesh = procMeshList[proci];
 
-    if (!procAddressingList.set(procI))
+    if (!procAddressingList.set(proci))
     {
         procAddressingList.set
         (
-            procI,
+            proci,
             new labelIOList
             (
                 IOobject
@@ -129,7 +129,7 @@ const labelIOList& procAddressing
             )
         );
     }
-    return procAddressingList[procI];
+    return procAddressingList[proci];
 }
 
 
@@ -314,11 +314,11 @@ int main(int argc, char *argv[])
 
                 // remove existing processor dirs
                 // reverse order to avoid gaps if someone interrupts the process
-                for (label procI = nProcs-1; procI >= 0; --procI)
+                for (label proci = nProcs-1; proci >= 0; --proci)
                 {
                     fileName procDir
                     (
-                        runTime.path()/(word("processor") + name(procI))
+                        runTime.path()/(word("processor") + name(proci))
                     );
 
                     rmDir(procDir);
@@ -794,27 +794,27 @@ int main(int argc, char *argv[])
             Info<< endl;
 
             // split the fields over processors
-            for (label procI = 0; procI < mesh.nProcs(); procI++)
+            for (label proci = 0; proci < mesh.nProcs(); proci++)
             {
-                Info<< "Processor " << procI << ": field transfer" << endl;
+                Info<< "Processor " << proci << ": field transfer" << endl;
 
 
                 // open the database
-                if (!processorDbList.set(procI))
+                if (!processorDbList.set(proci))
                 {
                     processorDbList.set
                     (
-                        procI,
+                        proci,
                         new Time
                         (
                             Time::controlDictName,
                             args.rootPath(),
                             args.caseName()
-                           /fileName(word("processor") + name(procI))
+                           /fileName(word("processor") + name(proci))
                         )
                     );
                 }
-                Time& processorDb = processorDbList[procI];
+                Time& processorDb = processorDbList[proci];
 
 
                 processorDb.setTime(runTime);
@@ -830,11 +830,11 @@ int main(int argc, char *argv[])
                 }
 
                 // read the mesh
-                if (!procMeshList.set(procI))
+                if (!procMeshList.set(proci))
                 {
                     procMeshList.set
                     (
-                        procI,
+                        proci,
                         new fvMesh
                         (
                             IOobject
@@ -846,12 +846,12 @@ int main(int argc, char *argv[])
                         )
                     );
                 }
-                const fvMesh& procMesh = procMeshList[procI];
+                const fvMesh& procMesh = procMeshList[proci];
 
                 const labelIOList& faceProcAddressing = procAddressing
                 (
                     procMeshList,
-                    procI,
+                    proci,
                     "faceProcAddressing",
                     faceProcAddressingList
                 );
@@ -859,7 +859,7 @@ int main(int argc, char *argv[])
                 const labelIOList& cellProcAddressing = procAddressing
                 (
                     procMeshList,
-                    procI,
+                    proci,
                     "cellProcAddressing",
                     cellProcAddressingList
                 );
@@ -867,7 +867,7 @@ int main(int argc, char *argv[])
                 const labelIOList& boundaryProcAddressing = procAddressing
                 (
                     procMeshList,
-                    procI,
+                    proci,
                     "boundaryProcAddressing",
                     boundaryProcAddressingList
                 );
@@ -875,11 +875,11 @@ int main(int argc, char *argv[])
 
                 // FV fields
                 {
-                    if (!fieldDecomposerList.set(procI))
+                    if (!fieldDecomposerList.set(proci))
                     {
                         fieldDecomposerList.set
                         (
-                            procI,
+                            proci,
                             new fvFieldDecomposer
                             (
                                 mesh,
@@ -891,7 +891,7 @@ int main(int argc, char *argv[])
                         );
                     }
                     const fvFieldDecomposer& fieldDecomposer =
-                        fieldDecomposerList[procI];
+                        fieldDecomposerList[proci];
 
                     fieldDecomposer.decomposeFields(volScalarFields);
                     fieldDecomposer.decomposeFields(volVectorFields);
@@ -911,17 +911,17 @@ int main(int argc, char *argv[])
                     if (times.size() == 1)
                     {
                         // Clear cached decomposer
-                        fieldDecomposerList.set(procI, NULL);
+                        fieldDecomposerList.set(proci, NULL);
                     }
                 }
 
                 // Dimensioned fields
                 {
-                    if (!dimFieldDecomposerList.set(procI))
+                    if (!dimFieldDecomposerList.set(proci))
                     {
                         dimFieldDecomposerList.set
                         (
-                            procI,
+                            proci,
                             new dimFieldDecomposer
                             (
                                 mesh,
@@ -932,7 +932,7 @@ int main(int argc, char *argv[])
                         );
                     }
                     const dimFieldDecomposer& dimDecomposer =
-                        dimFieldDecomposerList[procI];
+                        dimFieldDecomposerList[proci];
 
                     dimDecomposer.decomposeFields(dimScalarFields);
                     dimDecomposer.decomposeFields(dimVectorFields);
@@ -942,7 +942,7 @@ int main(int argc, char *argv[])
 
                     if (times.size() == 1)
                     {
-                        dimFieldDecomposerList.set(procI, NULL);
+                        dimFieldDecomposerList.set(proci, NULL);
                     }
                 }
 
@@ -960,18 +960,18 @@ int main(int argc, char *argv[])
                     const labelIOList& pointProcAddressing = procAddressing
                     (
                         procMeshList,
-                        procI,
+                        proci,
                         "pointProcAddressing",
                         pointProcAddressingList
                     );
 
                     const pointMesh& procPMesh = pointMesh::New(procMesh);
 
-                    if (!pointFieldDecomposerList.set(procI))
+                    if (!pointFieldDecomposerList.set(proci))
                     {
                         pointFieldDecomposerList.set
                         (
-                            procI,
+                            proci,
                             new pointFieldDecomposer
                             (
                                 pMesh,
@@ -982,7 +982,7 @@ int main(int argc, char *argv[])
                         );
                     }
                     const pointFieldDecomposer& pointDecomposer =
-                        pointFieldDecomposerList[procI];
+                        pointFieldDecomposerList[proci];
 
                     pointDecomposer.decomposeFields(pointScalarFields);
                     pointDecomposer.decomposeFields(pointVectorFields);
@@ -993,8 +993,8 @@ int main(int argc, char *argv[])
 
                     if (times.size() == 1)
                     {
-                        pointProcAddressingList.set(procI, NULL);
-                        pointFieldDecomposerList.set(procI, NULL);
+                        pointProcAddressingList.set(proci, NULL);
+                        pointFieldDecomposerList.set(proci, NULL);
                     }
                 }
 
@@ -1118,11 +1118,11 @@ int main(int argc, char *argv[])
                 // times, otherwise it is just extra storage.
                 if (times.size() == 1)
                 {
-                    boundaryProcAddressingList.set(procI, NULL);
-                    cellProcAddressingList.set(procI, NULL);
-                    faceProcAddressingList.set(procI, NULL);
-                    procMeshList.set(procI, NULL);
-                    processorDbList.set(procI, NULL);
+                    boundaryProcAddressingList.set(proci, NULL);
+                    cellProcAddressingList.set(proci, NULL);
+                    faceProcAddressingList.set(proci, NULL);
+                    procMeshList.set(proci, NULL);
+                    processorDbList.set(proci, NULL);
                 }
             }
         }

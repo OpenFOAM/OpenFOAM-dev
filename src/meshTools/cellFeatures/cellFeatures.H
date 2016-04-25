@@ -88,7 +88,7 @@ class cellFeatures
         label nextEdge
         (
             const Map<label>& toSuperFace,
-            const label superFaceI,
+            const label superFacei,
             const label thisEdgeI,
             const label thisVertI
         ) const;
@@ -98,7 +98,7 @@ class cellFeatures
         void walkSuperFace
         (
             const label facei,
-            const label superFaceI,
+            const label superFacei,
             Map<label>& toSuperFace
         ) const;
 

@@ -83,15 +83,15 @@ bool validTri
     // Note: discards normal information - sides of baffle are merged.
     forAll(fFaces, i)
     {
-        label nbrFaceI = fFaces[i];
+        label nbrFacei = fFaces[i];
 
-        if (nbrFaceI <= facei)
+        if (nbrFacei <= facei)
         {
             // lower numbered faces already checked
             continue;
         }
 
-        const labelledTri& nbrF = surf[nbrFaceI];
+        const labelledTri& nbrF = surf[nbrFacei];
 
         if
         (
@@ -102,7 +102,7 @@ bool validTri
         {
             WarningInFunction
                 << "triangle " << facei << " vertices " << f
-                << " has the same vertices as triangle " << nbrFaceI
+                << " has the same vertices as triangle " << nbrFacei
                 << " vertices " << nbrF
                 << " coords:" << f.points(surf.points())
                 << endl;
@@ -534,9 +534,9 @@ int main(int argc, char *argv[])
 
         if (myFaces.size() > 2)
         {
-            forAll(myFaces, myFaceI)
+            forAll(myFaces, myFacei)
             {
-                problemFaces.append(myFaces[myFaceI]);
+                problemFaces.append(myFaces[myFacei]);
             }
 
             nMultEdges++;

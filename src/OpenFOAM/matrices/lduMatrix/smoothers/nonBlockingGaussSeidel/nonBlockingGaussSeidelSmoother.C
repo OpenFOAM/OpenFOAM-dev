@@ -68,7 +68,7 @@ Foam::nonBlockingGaussSeidelSmoother::nonBlockingGaussSeidelSmoother
 
     blockStart_ = nCells;
 
-    labelList startCellI(interfaceBouCoeffs.size(), -1);
+    labelList startCelli(interfaceBouCoeffs.size(), -1);
     forAll(interfaces, patchi)
     {
         if (interfaces.set(patchi))

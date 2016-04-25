@@ -351,7 +351,7 @@ void Foam::meshRefinement::markFeatureCellLevel
         const point& keepPoint = keepPoints[i];
 
         label celli = -1;
-        label tetFaceI = -1;
+        label tetFacei = -1;
         label tetPtI = -1;
 
 
@@ -360,7 +360,7 @@ void Foam::meshRefinement::markFeatureCellLevel
         (void)mesh_.cellTree();
         if (mesh_.nCells())
         {
-            mesh_.findCellFacePt(keepPoint, celli, tetFaceI, tetPtI);
+            mesh_.findCellFacePt(keepPoint, celli, tetFacei, tetPtI);
         }
 
         if (celli != -1)
@@ -405,7 +405,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                                 mesh_,
                                 keepPoint,
                                 celli,
-                                tetFaceI,
+                                tetFacei,
                                 tetPtI,
                                 featureMesh.points()[pointI],   // endpos
                                 featureLevel,                   // level
@@ -450,7 +450,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                                 mesh_,
                                 keepPoint,
                                 celli,
-                                tetFaceI,
+                                tetFacei,
                                 tetPtI,
                                 featureMesh.points()[pointI],   // endpos
                                 featureLevel,                   // level
@@ -957,11 +957,11 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
         }
         else
         {
-            label bFaceI = facei - mesh_.nInternalFaces();
+            label bFacei = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
-            end[i] = neiCc[bFaceI];
-            minLevel[i] = min(cellLevel[own], neiLevel[bFaceI]);
+            end[i] = neiCc[bFacei];
+            minLevel[i] = min(cellLevel[own], neiLevel[bFacei]);
         }
     }
 
@@ -1145,17 +1145,17 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
         }
         else
         {
-            label bFaceI = facei - mesh_.nInternalFaces();
+            label bFacei = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
-            end[i] = neiCc[bFaceI];
+            end[i] = neiCc[bFacei];
 
             if (!isMasterFace[facei])
             {
                 Swap(start[i], end[i]);
             }
 
-            minLevel[i] = min(cellLevel[own], neiLevel[bFaceI]);
+            minLevel[i] = min(cellLevel[own], neiLevel[bFacei]);
         }
     }
 
@@ -1436,11 +1436,11 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
     )
     {
         label own = mesh_.faceOwner()[facei];
-        label bFaceI = facei - mesh_.nInternalFaces();
+        label bFacei = facei - mesh_.nInternalFaces();
 
         const vectorList& ownNormals = cellSurfNormals[own];
         const labelList& ownLevels = cellSurfLevels[own];
-        const vectorList& neiNormals = neiSurfaceNormals[bFaceI];
+        const vectorList& neiNormals = neiSurfaceNormals[bFacei];
 
         // Special case: owner normals set is a subset of the neighbour
         // normals. Do not do curvature refinement since other cell's normals
@@ -1754,11 +1754,11 @@ Foam::label Foam::meshRefinement::markProximityRefinement
         }
         else
         {
-            label bFaceI = facei - mesh_.nInternalFaces();
+            label bFacei = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
-            end[i] = neiCc[bFaceI];
-            minLevel[i] = min(cellLevel[own], neiLevel[bFaceI]);
+            end[i] = neiCc[bFacei];
+            minLevel[i] = min(cellLevel[own], neiLevel[bFacei]);
         }
     }
 
@@ -1886,12 +1886,12 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
     for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        label bFaceI = facei-mesh_.nInternalFaces();
+        label bFacei = facei-mesh_.nInternalFaces();
         label own = mesh_.faceOwner()[facei];
 
-        neiBndMaxLevel[bFaceI] = cellMaxLevel[own];
-        neiBndMaxLocation[bFaceI] = cellMaxLocation[own];
-        neiBndMaxNormal[bFaceI] = cellMaxNormal[own];
+        neiBndMaxLevel[bFacei] = cellMaxLevel[own];
+        neiBndMaxLocation[bFacei] = cellMaxLocation[own];
+        neiBndMaxNormal[bFacei] = cellMaxNormal[own];
     }
     syncTools::swapBoundaryFaceList(mesh_, neiBndMaxLevel);
     syncTools::swapBoundaryFaceList(mesh_, neiBndMaxLocation);
@@ -1973,9 +1973,9 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
         label own = mesh_.faceOwner()[facei];
-        label bFaceI = facei - mesh_.nInternalFaces();
+        label bFacei = facei - mesh_.nInternalFaces();
 
-        if (cellLevel[own] < cellMaxLevel[own] && neiBndMaxLevel[bFaceI] != -1)
+        if (cellLevel[own] < cellMaxLevel[own] && neiBndMaxLevel[bFacei] != -1)
         {
             // Have valid data on both sides. Check planarCos.
             if
@@ -1985,8 +1985,8 @@ Foam::label Foam::meshRefinement::markProximityRefinement
                     planarCos,
                     cellMaxLocation[own],
                     cellMaxNormal[own],
-                    neiBndMaxLocation[bFaceI],
-                    neiBndMaxNormal[bFaceI]
+                    neiBndMaxLocation[bFacei],
+                    neiBndMaxNormal[bFacei]
                 )
             )
             {
@@ -2393,10 +2393,10 @@ Foam::meshRefinement::balanceAndRefine
     //    globalIndex globalCells(mesh_.nCells());
     //
     //    Info<< "** Distribution before balancing/refining:" << endl;
-    //    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    //    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     //    {
-    //        Info<< "    " << procI << '\t'
-    //            << globalCells.localSize(procI) << endl;
+    //        Info<< "    " << proci << '\t'
+    //            << globalCells.localSize(proci) << endl;
     //    }
     //    Info<< endl;
     //}
@@ -2404,10 +2404,10 @@ Foam::meshRefinement::balanceAndRefine
     //    globalIndex globalCells(cellsToRefine.size());
     //
     //    Info<< "** Cells to be refined:" << endl;
-    //    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    //    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     //    {
-    //        Info<< "    " << procI << '\t'
-    //            << globalCells.localSize(procI) << endl;
+    //        Info<< "    " << proci << '\t'
+    //            << globalCells.localSize(proci) << endl;
     //    }
     //    Info<< endl;
     //}
@@ -2466,10 +2466,10 @@ Foam::meshRefinement::balanceAndRefine
         //    globalIndex globalCells(mesh_.nCells());
         //
         //    Info<< "** Distribution after balancing:" << endl;
-        //    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        //    for (label proci = 0; proci < Pstream::nProcs(); proci++)
         //    {
-        //        Info<< "    " << procI << '\t'
-        //            << globalCells.localSize(procI) << endl;
+        //        Info<< "    " << proci << '\t'
+        //            << globalCells.localSize(proci) << endl;
         //    }
         //    Info<< endl;
         //}
@@ -2524,10 +2524,10 @@ Foam::meshRefinement::balanceAndRefine
     //    globalIndex globalCells(mesh_.nCells());
     //
     //    Info<< "** After refinement distribution:" << endl;
-    //    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    //    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     //    {
-    //        Info<< "    " << procI << '\t'
-    //            << globalCells.localSize(procI) << endl;
+    //        Info<< "    " << proci << '\t'
+    //            << globalCells.localSize(proci) << endl;
     //    }
     //    Info<< endl;
     //}

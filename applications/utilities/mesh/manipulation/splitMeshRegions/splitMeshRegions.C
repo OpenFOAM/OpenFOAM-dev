@@ -972,19 +972,19 @@ void createAndWriteRegion
     {
         // face + turning index. (see decomposePar)
         // Is the face pointing in the same direction?
-        label oldFaceI = map().faceMap()[facei];
+        label oldFacei = map().faceMap()[facei];
 
         if
         (
             map().cellMap()[newMesh().faceOwner()[facei]]
-         == mesh.faceOwner()[oldFaceI]
+         == mesh.faceOwner()[oldFacei]
         )
         {
-            faceProcAddressing[facei] = oldFaceI+1;
+            faceProcAddressing[facei] = oldFacei+1;
         }
         else
         {
-            faceProcAddressing[facei] = -(oldFaceI+1);
+            faceProcAddressing[facei] = -(oldFacei+1);
         }
     }
     Info<< "Writing map " << faceProcAddressing.name()
@@ -1261,15 +1261,15 @@ void matchRegions
         Pstream::gatherList(zoneNames);
         Pstream::scatterList(zoneNames);
 
-        forAll(zoneNames, procI)
+        forAll(zoneNames, proci)
         {
-            if (zoneNames[procI] != zoneNames[0])
+            if (zoneNames[proci] != zoneNames[0])
             {
                 FatalErrorInFunction
                     << "cellZones not synchronised across processors." << endl
                     << "Master has cellZones " << zoneNames[0] << endl
-                    << "Processor " << procI
-                    << " has cellZones " << zoneNames[procI]
+                    << "Processor " << proci
+                    << " has cellZones " << zoneNames[proci]
                     << exit(FatalError);
             }
         }
@@ -1561,14 +1561,14 @@ int main(int argc, char *argv[])
             << " This requires all"
             << " cells to be in one and only one cellZone." << nl << endl;
 
-        label unzonedCellI = findIndex(zoneID, -1);
-        if (unzonedCellI != -1)
+        label unzonedCelli = findIndex(zoneID, -1);
+        if (unzonedCelli != -1)
         {
             FatalErrorInFunction
                 << "For the cellZonesOnly option all cells "
                 << "have to be in a cellZone." << endl
-                << "Cell " << unzonedCellI
-                << " at" << mesh.cellCentres()[unzonedCellI]
+                << "Cell " << unzonedCelli
+                << " at" << mesh.cellCentres()[unzonedCelli]
                 << " is not in a cellZone. There might be more unzoned cells."
                 << exit(FatalError);
         }
@@ -1610,14 +1610,14 @@ int main(int argc, char *argv[])
         labelList newNeiZoneID(mesh.nFaces()-mesh.nInternalFaces());
         getZoneID(mesh, newCellZones, newZoneID, newNeiZoneID);
 
-        label unzonedCellI = findIndex(newZoneID, -1);
-        if (unzonedCellI != -1)
+        label unzonedCelli = findIndex(newZoneID, -1);
+        if (unzonedCelli != -1)
         {
             FatalErrorInFunction
                 << "For the cellZonesFileOnly option all cells "
                 << "have to be in a cellZone." << endl
-                << "Cell " << unzonedCellI
-                << " at" << mesh.cellCentres()[unzonedCellI]
+                << "Cell " << unzonedCelli
+                << " at" << mesh.cellCentres()[unzonedCelli]
                 << " is not in a cellZone. There might be more unzoned cells."
                 << exit(FatalError);
         }

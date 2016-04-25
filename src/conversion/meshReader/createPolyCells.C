@@ -106,9 +106,9 @@ void Foam::meshReader::createPolyCells()
             // get the list of search faces
             const faceList& searchFaces = cFaces[curNei];
 
-            forAll(searchFaces, neiFaceI)
+            forAll(searchFaces, neiFacei)
             {
-                int cmp = face::compare(curFace, searchFaces[neiFaceI]);
+                int cmp = face::compare(curFace, searchFaces[neiFacei]);
 
                 if (cmp)
                 {
@@ -124,7 +124,7 @@ void Foam::meshReader::createPolyCells()
 
 #ifdef DEBUG_FACE_ORDERING
                     Info<< "cmp " << cmp << " matched " << curFace
-                        << " with " << searchFaces[neiFaceI]
+                        << " with " << searchFaces[neiFacei]
                         << endl;
 
 
@@ -132,9 +132,9 @@ void Foam::meshReader::createPolyCells()
                         << " (" << origCellId_[baffleOffset+baffleI] << ")"
                         << " side " << side
                         << " against cell " << curNei
-                        << " face " << neiFaceI
+                        << " face " << neiFacei
                         << " curFace " << curFace[1]
-                        << " neiFace " << searchFaces[neiFaceI][1]
+                        << " neiFace " << searchFaces[neiFacei][1]
                         << endl;
 #endif
 
@@ -143,7 +143,7 @@ void Foam::meshReader::createPolyCells()
                         baffleIds_[baffleI][side] = cellFaceIdentifier
                         (
                             curNei,
-                            neiFaceI
+                            neiFacei
                         );
 
                         nNeighbours++;
@@ -246,20 +246,20 @@ void Foam::meshReader::createPolyCells()
                         // get the list of search faces
                         const faceList& searchFaces = cFaces[curNei];
 
-                        forAll(searchFaces, neiFaceI)
+                        forAll(searchFaces, neiFacei)
                         {
-                            if (searchFaces[neiFaceI] == curFace)
+                            if (searchFaces[neiFacei] == curFace)
                             {
                                 // Record the neighbour cell and face
                                 neiCells[facei] = curNei;
-                                faceOfNeiCell[facei] = neiFaceI;
+                                faceOfNeiCell[facei] = neiFacei;
                                 nNeighbours++;
 #ifdef DEBUG_FACE_ORDERING
                                 Info<< " cell " << celli
                                     << " face " << facei
                                     << " point " << pointI
                                     << " nei " << curNei
-                                    << " neiFace " << neiFaceI
+                                    << " neiFace " << neiFacei
                                     << endl;
 #endif
                                 found = true;

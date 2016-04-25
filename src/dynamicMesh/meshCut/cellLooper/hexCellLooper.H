@@ -79,7 +79,7 @@ private:
         bool walkHex
         (
             const label celli,
-            const label startFaceI,
+            const label startFacei,
             const label startEdgeI,
 
             labelList& loop,

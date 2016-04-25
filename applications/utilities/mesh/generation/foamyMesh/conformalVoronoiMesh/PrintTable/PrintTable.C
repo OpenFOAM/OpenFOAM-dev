@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,9 @@ void Foam::PrintTable<KeyType, DataType>::print
 
         List<label> largestProcSize(Pstream::nProcs(), 0);
 
-        forAll(procData, procI)
+        forAll(procData, proci)
         {
-            const HashTableData& procIData = procData[procI];
+            const HashTableData& procIData = procData[proci];
 
             for
             (
@@ -108,7 +108,7 @@ void Foam::PrintTable<KeyType, DataType>::print
 
                 HashTable<DataType, label>& key = combinedTable[iter.key()];
 
-                key.insert(procI, iter());
+                key.insert(proci, iter());
 
                 for
                 (
@@ -145,11 +145,11 @@ void Foam::PrintTable<KeyType, DataType>::print
         os.width(largestKeyLength);
         os  << indent << "# Proc";
 
-        forAll(procData, procI)
+        forAll(procData, proci)
         {
             os  << tab;
             os.width(largestDataLength);
-            os  << procI;
+            os  << proci;
         }
 
         if (printSum)

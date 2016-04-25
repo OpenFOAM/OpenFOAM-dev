@@ -150,32 +150,32 @@ void printMeshData(const polyMesh& mesh)
     label totProcPatches = 0;
     label maxProcFaces = 0;
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
         Info<< endl
-            << "Processor " << procI << nl
-            << "    Number of cells = " << globalCells.localSize(procI)
+            << "Processor " << proci << nl
+            << "    Number of cells = " << globalCells.localSize(proci)
             << endl;
 
         label nProcFaces = 0;
 
-        const labelList& nei = patchNeiProcNo[procI];
+        const labelList& nei = patchNeiProcNo[proci];
 
-        forAll(patchNeiProcNo[procI], i)
+        forAll(patchNeiProcNo[proci], i)
         {
             Info<< "    Number of faces shared with processor "
-                << patchNeiProcNo[procI][i] << " = " << patchSize[procI][i]
+                << patchNeiProcNo[proci][i] << " = " << patchSize[proci][i]
                 << endl;
 
-            nProcFaces += patchSize[procI][i];
+            nProcFaces += patchSize[proci][i];
         }
 
         Info<< "    Number of processor patches = " << nei.size() << nl
             << "    Number of processor faces = " << nProcFaces << nl
             << "    Number of boundary faces = "
-            << globalBoundaryFaces.localSize(procI) << endl;
+            << globalBoundaryFaces.localSize(proci) << endl;
 
-        maxProcCells = max(maxProcCells, globalCells.localSize(procI));
+        maxProcCells = max(maxProcCells, globalCells.localSize(proci));
         totProcFaces += nProcFaces;
         totProcPatches += nei.size();
         maxProcPatches = max(maxProcPatches, nei.size());
@@ -298,11 +298,11 @@ void readFields
                 tmp<GeoField> tsubfld = subsetterPtr().interpolate(fields[i]);
 
                 // Send to all processors that don't have a mesh
-                for (label procI = 1; procI < Pstream::nProcs(); procI++)
+                for (label proci = 1; proci < Pstream::nProcs(); proci++)
                 {
-                    if (!haveMesh[procI])
+                    if (!haveMesh[proci])
                     {
-                        OPstream toProc(Pstream::blocking, procI);
+                        OPstream toProc(Pstream::blocking, proci);
                         toProc<< tsubfld();
                     }
                 }
@@ -574,7 +574,7 @@ int main(int argc, char *argv[])
         // Find last non-processor patch.
         const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-        label nonProcI = -1;
+        label nonProci = -1;
 
         forAll(patches, patchi)
         {
@@ -582,10 +582,10 @@ int main(int argc, char *argv[])
             {
                 break;
             }
-            nonProcI++;
+            nonProci++;
         }
 
-        if (nonProcI == -1)
+        if (nonProci == -1)
         {
             FatalErrorInFunction
                 << "Cannot find non-processor patch on processor "
@@ -596,7 +596,7 @@ int main(int argc, char *argv[])
         // Subset 0 cells, no parallel comms. This is used to create zero-sized
         // fields.
         subsetterPtr.reset(new fvMeshSubset(mesh));
-        subsetterPtr().setLargeCellSubset(labelHashSet(0), nonProcI, false);
+        subsetterPtr().setLargeCellSubset(labelHashSet(0), nonProci, false);
     }
 
 
@@ -781,11 +781,11 @@ int main(int argc, char *argv[])
         << " Take care when issuing these" << nl
         << "commands." << nl << endl;
 
-    forAll(nFaces, procI)
+    forAll(nFaces, proci)
     {
-        fileName procDir = "processor" + name(procI);
+        fileName procDir = "processor" + name(proci);
 
-        if (nFaces[procI] == 0)
+        if (nFaces[proci] == 0)
         {
             Info<< "    rm -r " << procDir.c_str() << nl;
         }

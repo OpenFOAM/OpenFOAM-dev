@@ -97,11 +97,11 @@ void Foam::inverseFaceDistanceDiffusivity::correct()
 
         const vectorField::subField fc(patch.faceCentres());
 
-        forAll(fc, patchFaceI)
+        forAll(fc, patchFacei)
         {
-            changedFaces[nPatchFaces] = patch.start() + patchFaceI;
+            changedFaces[nPatchFaces] = patch.start() + patchFacei;
 
-            faceDist[nPatchFaces] = wallPoint(fc[patchFaceI], 0);
+            faceDist[nPatchFaces] = wallPoint(fc[patchFacei], 0);
 
             nPatchFaces++;
         }

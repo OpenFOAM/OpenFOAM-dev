@@ -1495,7 +1495,7 @@ bool Foam::polyMeshGeometry::checkFaceAngles
 
     label nConcave = 0;
 
-    label errorFaceI = -1;
+    label errorFacei = -1;
 
     forAll(checkFaces, i)
     {
@@ -1537,10 +1537,10 @@ bool Foam::polyMeshGeometry::checkFaceAngles
 
                     if ((edgeNormal & faceNormal) < SMALL)
                     {
-                        if (facei != errorFaceI)
+                        if (facei != errorFacei)
                         {
                             // Count only one error per face.
-                            errorFaceI = facei;
+                            errorFacei = facei;
                             nConcave++;
                         }
 
@@ -2121,9 +2121,9 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
         tensor areaSum(Zero);
         scalar magAreaSum = 0;
 
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            label facei = cFaces[cFaceI];
+            label facei = cFaces[cFacei];
 
             scalar magArea = mag(faceAreas[facei]);
 
@@ -2142,9 +2142,9 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
             if (setPtr)
             {
                 // Insert all faces of the cell.
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    label facei = cFaces[cFaceI];
+                    label facei = cFaces[cFacei];
                     setPtr->insert(facei);
                 }
             }

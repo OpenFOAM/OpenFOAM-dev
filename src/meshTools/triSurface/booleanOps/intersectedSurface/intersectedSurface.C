@@ -1205,9 +1205,9 @@ Foam::intersectedSurface::intersectedSurface
                                         // + intersection
                 )
             );
-            forAll(newFaces, newFaceI)
+            forAll(newFaces, newFacei)
             {
-                const face& newF = newFaces[newFaceI];
+                const face& newF = newFaces[newFacei];
 
 //                {
 //                    fileName fName
@@ -1215,11 +1215,11 @@ Foam::intersectedSurface::intersectedSurface
 //                        "face_"
 //                      + Foam::name(facei)
 //                      + "_subFace_"
-//                      + Foam::name(newFaceI)
+//                      + Foam::name(newFacei)
 //                      + ".obj"
 //                    );
 //                    Pout<< "Writing original face:" << facei << " subFace:"
-//                        << newFaceI << " to " << fName << endl;
+//                        << newFacei << " to " << fName << endl;
 //
 //                    OFstream str(fName);
 //

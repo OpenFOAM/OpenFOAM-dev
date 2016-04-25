@@ -458,15 +458,15 @@ void doRefinement
 
     const labelListList& addedCells = multiRef.addedCells();
 
-    forAll(addedCells, oldCellI)
+    forAll(addedCells, oldCelli)
     {
-        const labelList& added = addedCells[oldCellI];
+        const labelList& added = addedCells[oldCelli];
 
         if (added.size())
         {
             // Give all cells resulting from split the refinement level
             // of the master.
-            label masterLevel = ++refLevel[oldCellI];
+            label masterLevel = ++refLevel[oldCelli];
 
             forAll(added, i)
             {
@@ -629,7 +629,7 @@ int main(int argc, char *argv[])
     #include "createPolyMesh.H"
 
     // If nessecary add oldInternalFaces patch
-    label newPatchI = addPatch(mesh, "oldInternalFaces");
+    label newPatchi = addPatch(mesh, "oldInternalFaces");
 
 
     //
@@ -854,7 +854,7 @@ int main(int argc, char *argv[])
         {
             // Subset mesh to remove inside cells altogether. Updates cutCells,
             // refLevel.
-            subsetMesh(mesh, writeMesh, newPatchI, inside, cutCells, refLevel);
+            subsetMesh(mesh, writeMesh, newPatchi, inside, cutCells, refLevel);
         }
 
 

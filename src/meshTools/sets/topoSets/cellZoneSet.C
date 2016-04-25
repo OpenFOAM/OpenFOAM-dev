@@ -291,10 +291,10 @@ void cellZoneSet::updateMesh(const mapPolyMesh& morphMap)
     forAll(addressing_, i)
     {
         label celli = addressing_[i];
-        label newCellI = morphMap.reverseCellMap()[celli];
-        if (newCellI >= 0)
+        label newCelli = morphMap.reverseCellMap()[celli];
+        if (newCelli >= 0)
         {
-            newAddressing[n] = newCellI;
+            newAddressing[n] = newCelli;
             n++;
         }
     }

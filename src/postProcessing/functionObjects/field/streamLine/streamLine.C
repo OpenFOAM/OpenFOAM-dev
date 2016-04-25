@@ -544,10 +544,10 @@ void Foam::streamLine::write()
                 // processors.
                 label trackI = 0;
 
-                forAll(recvMap, procI)
+                forAll(recvMap, proci)
                 {
-                    labelList& fromProc = recvMap[procI];
-                    fromProc.setSize(globalTrackIDs.localSize(procI));
+                    labelList& fromProc = recvMap[proci];
+                    fromProc.setSize(globalTrackIDs.localSize(proci));
                     forAll(fromProc, i)
                     {
                         fromProc[i] = trackI++;

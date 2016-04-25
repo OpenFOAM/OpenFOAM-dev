@@ -192,7 +192,7 @@ void Foam::thresholdCellFaces::calculate
         label facei = p.start();
 
         // patch faces
-        forAll(p, localFaceI)
+        forAll(p, localFacei)
         {
             if
             (

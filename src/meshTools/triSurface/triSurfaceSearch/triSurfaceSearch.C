@@ -62,15 +62,15 @@ bool Foam::triSurfaceSearch::checkUniqueHit
 
         forAll(pointFaces, pI)
         {
-            const label pointFaceI = pointFaces[pI];
+            const label pointFacei = pointFaces[pI];
 
-            if (pointFaceI != currHit.index())
+            if (pointFacei != currHit.index())
             {
                 forAll(hits, hI)
                 {
                     const pointIndexHit& hit = hits[hI];
 
-                    if (hit.index() == pointFaceI)
+                    if (hit.index() == pointFacei)
                     {
                         return false;
                     }
@@ -91,22 +91,22 @@ bool Foam::triSurfaceSearch::checkUniqueHit
 
         forAll(edgeFaces, fI)
         {
-            const label edgeFaceI = edgeFaces[fI];
+            const label edgeFacei = edgeFaces[fI];
 
-            if (edgeFaceI != currHit.index())
+            if (edgeFacei != currHit.index())
             {
                 forAll(hits, hI)
                 {
                     const pointIndexHit& hit = hits[hI];
 
-                    if (hit.index() == edgeFaceI)
+                    if (hit.index() == edgeFacei)
                     {
                         // Check normals
                         const vector currHitNormal =
                             surface().faceNormals()[currHit.index()];
 
                         const vector existingHitNormal =
-                            surface().faceNormals()[edgeFaceI];
+                            surface().faceNormals()[edgeFacei];
 
                         const label signCurrHit =
                             pos(currHitNormal & lineVec);

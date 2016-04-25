@@ -118,10 +118,10 @@ void Foam::CFCFaceToCellStencil::calcCellStencil
 
         if (isA<emptyPolyPatch>(pp))
         {
-            label bFaceI = pp.start()-mesh().nInternalFaces();
+            label bFacei = pp.start()-mesh().nInternalFaces();
             forAll(pp, i)
             {
-                validBFace[bFaceI++] = false;
+                validBFace[bFacei++] = false;
             }
         }
     }
@@ -161,24 +161,24 @@ void Foam::CFCFaceToCellStencil::calcCellStencil
 
             if (mesh().isInternalFace(facei))
             {
-                label nbrCellI = own[facei];
-                if (nbrCellI == celli)
+                label nbrCelli = own[facei];
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = nei[facei];
+                    nbrCelli = nei[facei];
                 }
-                const cell& nbrFaces = mesh().cells()[nbrCellI];
+                const cell& nbrFaces = mesh().cells()[nbrCelli];
 
                 forAll(nbrFaces, j)
                 {
-                    label nbrFaceI = nbrFaces[j];
+                    label nbrFacei = nbrFaces[j];
 
                     if
                     (
-                        mesh().isInternalFace(nbrFaceI)
-                     || validBFace[nbrFaceI-mesh().nInternalFaces()]
+                        mesh().isInternalFace(nbrFacei)
+                     || validBFace[nbrFacei-mesh().nInternalFaces()]
                     )
                     {
-                        label nbrGlobalI = globalNumbering().toGlobal(nbrFaceI);
+                        label nbrGlobalI = globalNumbering().toGlobal(nbrFacei);
 
                         // Check if already there. Note:should use hashset?
                         if (findIndex(allGlobalFaces, nbrGlobalI) == -1)

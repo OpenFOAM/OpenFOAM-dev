@@ -109,17 +109,17 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
             const vectorField& patchSf = Sf.boundaryField()[patchi];
             const vectorField patchD(p.delta());
 
-            forAll(p, patchFaceI)
+            forAll(p, patchFacei)
             {
                 vector Cpf =
-                    patchFaceCentres[patchFaceI] - C[faceCells[patchFaceI]];
+                    patchFaceCentres[patchFacei] - C[faceCells[patchFacei]];
 
-                patchSkewCorrVecs[patchFaceI] =
+                patchSkewCorrVecs[patchFacei] =
                     Cpf
                   - (
-                        (patchSf[patchFaceI] & Cpf)/
-                        (patchSf[patchFaceI] & patchD[patchFaceI])
-                    )*patchD[patchFaceI];
+                        (patchSf[patchFacei] & Cpf)/
+                        (patchSf[patchFacei] & patchD[patchFacei])
+                    )*patchD[patchFacei];
             }
         }
     }

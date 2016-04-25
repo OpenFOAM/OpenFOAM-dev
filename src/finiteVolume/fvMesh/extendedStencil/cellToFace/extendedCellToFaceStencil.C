@@ -77,15 +77,15 @@ void Foam::extendedCellToFaceStencil::writeStencilStats
     // Sum all sent data
     label nSent = 0;
     label nLocal = 0;
-    forAll(map.subMap(), procI)
+    forAll(map.subMap(), proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            nSent += map.subMap()[procI].size();
+            nSent += map.subMap()[proci].size();
         }
         else
         {
-            nLocal += map.subMap()[procI].size();
+            nLocal += map.subMap()[proci].size();
         }
     }
 

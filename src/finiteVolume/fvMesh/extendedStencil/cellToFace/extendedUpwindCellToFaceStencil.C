@@ -49,17 +49,17 @@ void Foam::extendedUpwindCellToFaceStencil::selectOppositeFaces
     // Pick up all the faces that oppose this one.
     forAll(cFaces, i)
     {
-        label otherFaceI = cFaces[i];
+        label otherFacei = cFaces[i];
 
-        if (otherFaceI != facei && nonEmptyFace[otherFaceI])
+        if (otherFacei != facei && nonEmptyFace[otherFacei])
         {
-            if ((own[otherFaceI] == celli) == (own[facei] == celli))
+            if ((own[otherFacei] == celli) == (own[facei] == celli))
             {
-                opposedness[i] = -(areas[otherFaceI] & areas[facei]);
+                opposedness[i] = -(areas[otherFacei] & areas[facei]);
             }
             else
             {
-                opposedness[i] = (areas[otherFaceI] & areas[facei]);
+                opposedness[i] = (areas[otherFacei] & areas[facei]);
             }
         }
     }

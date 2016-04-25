@@ -114,12 +114,12 @@ void Foam::externalCoupledMixedFvPatchField<Type>::setMaster
         label sumOffset = 0;
         List<label>& procOffsets = offsets_[patchi];
 
-        forAll(procOffsets, procI)
+        forAll(procOffsets, proci)
         {
-            label o = procOffsets[procI];
+            label o = procOffsets[proci];
             if (o > 0)
             {
-                procOffsets[procI] = patchOffset + sumOffset;
+                procOffsets[proci] = patchOffset + sumOffset;
                 sumOffset += o;
             }
         }
@@ -137,7 +137,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry
 {
     int tag = Pstream::msgType() + 1;
 
-    const label procI = Pstream::myProcNo();
+    const label proci = Pstream::myProcNo();
     const polyPatch& p = this->patch().patch();
     const polyMesh& mesh = p.boundaryMesh().mesh();
 
@@ -152,11 +152,11 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry
     );
 
     List<pointField> allPoints(Pstream::nProcs());
-    allPoints[procI] = pointField(mesh.points(), uniquePointIDs);
+    allPoints[proci] = pointField(mesh.points(), uniquePointIDs);
     Pstream::gatherList(allPoints, tag);
 
     List<faceList> allFaces(Pstream::nProcs());
-    faceList& patchFaces = allFaces[procI];
+    faceList& patchFaces = allFaces[proci];
     patchFaces = p.localFaces();
     forAll(patchFaces, facei)
     {
@@ -738,11 +738,11 @@ void Foam::externalCoupledMixedFvPatchField<Type>::transferData
 
         if (Pstream::master())
         {
-            forAll(values, procI)
+            forAll(values, proci)
             {
-                const Field<scalar>& magSf = magSfs[procI];
-                const Field<Type>& value = values[procI];
-                const Field<Type>& snGrad = snGrads[procI];
+                const Field<scalar>& magSf = magSfs[proci];
+                const Field<Type>& value = values[proci];
+                const Field<Type>& snGrad = snGrads[proci];
 
                 forAll(magSf, facei)
                 {

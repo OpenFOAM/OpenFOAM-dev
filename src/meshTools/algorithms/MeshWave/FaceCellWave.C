@@ -80,19 +80,19 @@ namespace Foam
             {
                 if (y.valid(solver_.data()))
                 {
-                    label meshFaceI = -1;
+                    label meshFacei = -1;
                     if (patch_.owner())
                     {
-                        meshFaceI = patch_.start() + facei;
+                        meshFacei = patch_.start() + facei;
                     }
                     else
                     {
-                        meshFaceI = patch_.neighbPatch().start() + facei;
+                        meshFacei = patch_.neighbPatch().start() + facei;
                     }
                     x.updateFace
                     (
                         solver_.mesh(),
-                        meshFaceI,
+                        meshFacei,
                         y,
                         solver_.propagationTol(),
                         solver_.data()
@@ -115,7 +115,7 @@ template<class Type, class TrackingData>
 bool Foam::FaceCellWave<Type, TrackingData>::updateCell
 (
     const label celli,
-    const label neighbourFaceI,
+    const label neighbourFacei,
     const Type& neighbourInfo,
     const scalar tol,
     Type& cellInfo
@@ -130,7 +130,7 @@ bool Foam::FaceCellWave<Type, TrackingData>::updateCell
         (
             mesh_,
             celli,
-            neighbourFaceI,
+            neighbourFacei,
             neighbourInfo,
             tol,
             td_
@@ -163,7 +163,7 @@ template<class Type, class TrackingData>
 bool Foam::FaceCellWave<Type, TrackingData>::updateFace
 (
     const label facei,
-    const label neighbourCellI,
+    const label neighbourCelli,
     const Type& neighbourInfo,
     const scalar tol,
     Type& faceInfo
@@ -178,7 +178,7 @@ bool Foam::FaceCellWave<Type, TrackingData>::updateFace
         (
             mesh_,
             facei,
-            neighbourCellI,
+            neighbourCelli,
             neighbourInfo,
             tol,
             td_
@@ -258,10 +258,10 @@ void Foam::FaceCellWave<Type, TrackingData>::checkCyclic
     const cyclicPolyPatch& nbrPatch =
         refCast<const cyclicPolyPatch>(patch).neighbPatch();
 
-    forAll(patch, patchFaceI)
+    forAll(patch, patchFacei)
     {
-        label i1 = patch.start() + patchFaceI;
-        label i2 = nbrPatch.start() + patchFaceI;
+        label i1 = patch.start() + patchFacei;
+        label i2 = nbrPatch.start() + patchFacei;
 
         if
         (
@@ -317,14 +317,14 @@ void Foam::FaceCellWave<Type, TrackingData>::setFaceInfo
     const List<Type>& changedFacesInfo
 )
 {
-    forAll(changedFaces, changedFaceI)
+    forAll(changedFaces, changedFacei)
     {
-        label facei = changedFaces[changedFaceI];
+        label facei = changedFaces[changedFacei];
 
         bool wasValid = allFaceInfo_[facei].valid(td_);
 
         // Copy info for facei
-        allFaceInfo_[facei] = changedFacesInfo[changedFaceI];
+        allFaceInfo_[facei] = changedFacesInfo[changedFacei];
 
         // Maintain count of unset faces
         if (!wasValid && allFaceInfo_[facei].valid(td_))
@@ -350,20 +350,20 @@ void Foam::FaceCellWave<Type, TrackingData>::mergeFaceInfo
     const List<Type>& changedFacesInfo
 )
 {
-    for (label changedFaceI = 0; changedFaceI < nFaces; changedFaceI++)
+    for (label changedFacei = 0; changedFacei < nFaces; changedFacei++)
     {
-        const Type& neighbourWallInfo = changedFacesInfo[changedFaceI];
-        label patchFaceI = changedFaces[changedFaceI];
+        const Type& neighbourWallInfo = changedFacesInfo[changedFacei];
+        label patchFacei = changedFaces[changedFacei];
 
-        label meshFaceI = patch.start() + patchFaceI;
+        label meshFacei = patch.start() + patchFacei;
 
-        Type& currentWallInfo = allFaceInfo_[meshFaceI];
+        Type& currentWallInfo = allFaceInfo_[meshFacei];
 
         if (!currentWallInfo.equal(neighbourWallInfo, td_))
         {
             updateFace
             (
-                meshFaceI,
+                meshFacei,
                 neighbourWallInfo,
                 propagationTol_,
                 currentWallInfo
@@ -380,7 +380,7 @@ template<class Type, class TrackingData>
 Foam::label Foam::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 (
     const polyPatch& patch,
-    const label startFaceI,
+    const label startFacei,
     const label nFaces,
     labelList& changedPatchFaces,
     List<Type>& changedPatchFacesInfo
@@ -390,14 +390,14 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::getChangedPatchFaces
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = i + startFaceI;
+        label patchFacei = i + startFacei;
 
-        label meshFaceI = patch.start() + patchFaceI;
+        label meshFacei = patch.start() + patchFacei;
 
-        if (changedFace_[meshFaceI])
+        if (changedFace_[meshFacei])
         {
-            changedPatchFaces[nChangedPatchFaces] = patchFaceI;
-            changedPatchFacesInfo[nChangedPatchFaces] = allFaceInfo_[meshFaceI];
+            changedPatchFaces[nChangedPatchFaces] = patchFacei;
+            changedPatchFacesInfo[nChangedPatchFaces] = allFaceInfo_[meshFacei];
             nChangedPatchFaces++;
         }
     }
@@ -419,10 +419,10 @@ void Foam::FaceCellWave<Type, TrackingData>::leaveDomain
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = faceLabels[i];
+        label patchFacei = faceLabels[i];
 
-        label meshFaceI = patch.start() + patchFaceI;
-        faceInfo[i].leaveDomain(mesh_, patch, patchFaceI, fc[meshFaceI], td_);
+        label meshFacei = patch.start() + patchFacei;
+        faceInfo[i].leaveDomain(mesh_, patch, patchFacei, fc[meshFacei], td_);
     }
 }
 
@@ -441,10 +441,10 @@ void Foam::FaceCellWave<Type, TrackingData>::enterDomain
 
     for (label i = 0; i < nFaces; i++)
     {
-        label patchFaceI = faceLabels[i];
+        label patchFacei = faceLabels[i];
 
-        label meshFaceI = patch.start() + patchFaceI;
-        faceInfo[i].enterDomain(mesh_, patch, patchFaceI, fc[meshFaceI], td_);
+        label meshFacei = patch.start() + patchFacei;
+        faceInfo[i].enterDomain(mesh_, patch, patchFacei, fc[meshFacei], td_);
     }
 }
 
@@ -778,9 +778,9 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
             // Merge into global storage
             forAll(receiveInfo, i)
             {
-                label meshFaceI = cycPatch.start()+i;
+                label meshFacei = cycPatch.start()+i;
 
-                Type& currentWallInfo = allFaceInfo_[meshFaceI];
+                Type& currentWallInfo = allFaceInfo_[meshFacei];
 
                 if
                 (
@@ -790,7 +790,7 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                 {
                     updateFace
                     (
-                        meshFaceI,
+                        meshFacei,
                         receiveInfo[i],
                         propagationTol_,
                         currentWallInfo
@@ -946,12 +946,12 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::faceToCell()
 
     for
     (
-        label changedFaceI = 0;
-        changedFaceI < nChangedFaces_;
-        changedFaceI++
+        label changedFacei = 0;
+        changedFacei < nChangedFaces_;
+        changedFacei++
     )
     {
-        label facei = changedFaces_[changedFaceI];
+        label facei = changedFaces_[changedFacei];
         if (!changedFace_[facei])
         {
             FatalErrorInFunction
@@ -1029,12 +1029,12 @@ Foam::label Foam::FaceCellWave<Type, TrackingData>::cellToFace()
 
     for
     (
-        label changedCellI = 0;
-        changedCellI < nChangedCells_;
-        changedCellI++
+        label changedCelli = 0;
+        changedCelli < nChangedCells_;
+        changedCelli++
     )
     {
-        label celli = changedCells_[changedCellI];
+        label celli = changedCells_[changedCelli];
         if (!changedCell_[celli])
         {
             FatalErrorInFunction

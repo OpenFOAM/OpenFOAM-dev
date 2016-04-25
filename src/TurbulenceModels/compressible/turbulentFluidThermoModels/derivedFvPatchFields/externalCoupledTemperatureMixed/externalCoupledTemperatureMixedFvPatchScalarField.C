@@ -200,12 +200,12 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
 
         if (Pstream::master())
         {
-            forAll(values, procI)
+            forAll(values, proci)
             {
-                const Field<scalar>& magSf = magSfs[procI];
-                const Field<scalar>& value = values[procI];
-                const Field<scalar>& qDot = qDots[procI];
-                const Field<scalar>& htc = htcs[procI];
+                const Field<scalar>& magSf = magSfs[proci];
+                const Field<scalar>& value = values[proci];
+                const Field<scalar>& qDot = qDots[proci];
+                const Field<scalar>& htc = htcs[proci];
 
                 forAll(magSf, facei)
                 {

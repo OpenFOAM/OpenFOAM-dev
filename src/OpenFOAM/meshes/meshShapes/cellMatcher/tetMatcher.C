@@ -202,9 +202,9 @@ bool Foam::tetMatcher::faceSizeMatch
         return false;
     }
 
-    forAll(myFaces, myFaceI)
+    forAll(myFaces, myFacei)
     {
-        label size = faces[myFaces[myFaceI]].size();
+        label size = faces[myFaces[myFacei]].size();
 
         if (size != 3)
         {

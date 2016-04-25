@@ -129,16 +129,16 @@ void Foam::starMesh::markBoundaryFaces()
                     const faceList& curCellFaces =
                         cellFaces_[curCellIndex];
 
-                    forAll(curCellFaces, cellFaceI)
+                    forAll(curCellFaces, cellFacei)
                     {
-                        if (starEqualFace(curFace, curCellFaces[cellFaceI]))
+                        if (starEqualFace(curFace, curCellFaces[cellFacei]))
                         {
                             // Found the cell face corresponding to this face
                             found = true;
 
                             // Set boundary face to the corresponding cell face
                             curBoundaryCellIDs[facei] = curCellIndex;
-                            curBoundaryCellFaceIDs[facei] = cellFaceI;
+                            curBoundaryCellFaceIDs[facei] = cellFacei;
                         }
                         if (found) break;
                     }

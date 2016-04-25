@@ -71,7 +71,7 @@ void Foam::regionModels::regionModel1D::initialise()
     DynamicList<label> faceIDs;
     DynamicList<label> cellIDs;
 
-    label localPyrolysisFaceI = 0;
+    label localPyrolysisFacei = 0;
 
     const polyBoundaryMesh& rbm = regionMesh().boundaryMesh();
 
@@ -79,18 +79,18 @@ void Foam::regionModels::regionModel1D::initialise()
     {
         const label patchi = intCoupledPatchIDs_[i];
         const polyPatch& ppCoupled = rbm[patchi];
-        forAll(ppCoupled, localFaceI)
+        forAll(ppCoupled, localFacei)
         {
-            label facei = ppCoupled.start() + localFaceI;
+            label facei = ppCoupled.start() + localFacei;
             label celli = -1;
             label nFaces = 0;
             label nCells = 0;
             do
             {
-                label ownCellI = regionMesh().faceOwner()[facei];
-                if (ownCellI != celli)
+                label ownCelli = regionMesh().faceOwner()[facei];
+                if (ownCelli != celli)
                 {
-                    celli = ownCellI;
+                    celli = ownCelli;
                 }
                 else
                 {
@@ -104,28 +104,28 @@ void Foam::regionModels::regionModel1D::initialise()
                 nFaces++;
             } while (regionMesh().isInternalFace(facei));
 
-            boundaryFaceOppositeFace_[localPyrolysisFaceI] = facei;
+            boundaryFaceOppositeFace_[localPyrolysisFacei] = facei;
             faceIDs.remove(); //remove boundary face.
             nFaces--;
 
-            boundaryFaceFaces_[localPyrolysisFaceI].transfer(faceIDs);
-            boundaryFaceCells_[localPyrolysisFaceI].transfer(cellIDs);
+            boundaryFaceFaces_[localPyrolysisFacei].transfer(faceIDs);
+            boundaryFaceCells_[localPyrolysisFacei].transfer(cellIDs);
 
-            localPyrolysisFaceI++;
+            localPyrolysisFacei++;
             nLayers_ = nCells;
         }
     }
 
-    boundaryFaceOppositeFace_.setSize(localPyrolysisFaceI);
-    boundaryFaceFaces_.setSize(localPyrolysisFaceI);
-    boundaryFaceCells_.setSize(localPyrolysisFaceI);
+    boundaryFaceOppositeFace_.setSize(localPyrolysisFacei);
+    boundaryFaceFaces_.setSize(localPyrolysisFacei);
+    boundaryFaceCells_.setSize(localPyrolysisFacei);
 
     surfaceScalarField& nMagSf = nMagSfPtr_();
 
     surfaceScalarField::GeometricBoundaryField nMagSfBf =
         nMagSf.boundaryFieldRef();
 
-    localPyrolysisFaceI = 0;
+    localPyrolysisFacei = 0;
 
     forAll(intCoupledPatchIDs_, i)
     {
@@ -133,10 +133,10 @@ void Foam::regionModels::regionModel1D::initialise()
         const polyPatch& ppCoupled = rbm[patchi];
         const vectorField& pNormals = ppCoupled.faceNormals();
         nMagSfBf[patchi] = regionMesh().Sf().boundaryField()[patchi] & pNormals;
-        forAll(pNormals, localFaceI)
+        forAll(pNormals, localFacei)
         {
-            const vector& n = pNormals[localFaceI];
-            const labelList& faces = boundaryFaceFaces_[localPyrolysisFaceI++];
+            const vector& n = pNormals[localFacei];
+            const labelList& faces = boundaryFaceFaces_[localPyrolysisFacei++];
             forAll(faces, facei)
             {
                 const label faceID = faces[facei];
@@ -199,22 +199,22 @@ Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
     const polyBoundaryMesh& bm = regionMesh().boundaryMesh();
 
     label totalFaceId = 0;
-    forAll(intCoupledPatchIDs_, localPatchI)
+    forAll(intCoupledPatchIDs_, localPatchi)
     {
-        label patchi = intCoupledPatchIDs_[localPatchI];
+        label patchi = intCoupledPatchIDs_[localPatchi];
         const polyPatch pp = bm[patchi];
         const vectorField& cf = regionMesh().Cf().boundaryField()[patchi];
 
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
             const labelList& faces = boundaryFaceFaces_[totalFaceId];
             const labelList& cells = boundaryFaceCells_[totalFaceId];
 
-            const vector n = pp.faceNormals()[patchFaceI];
-            const vector sf = pp.faceAreas()[patchFaceI];
+            const vector n = pp.faceNormals()[patchFacei];
+            const vector sf = pp.faceAreas()[patchFacei];
 
             List<point> oldCf(faces.size() + 1);
-            oldCf[0] = cf[patchFaceI];
+            oldCf[0] = cf[patchFacei];
             forAll(faces, i)
             {
                 oldCf[i + 1] = regionMesh().faceCentres()[faces[i]];
@@ -251,8 +251,8 @@ Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
                 nbrCf = oldCf[i + 1] + localDelta;
             }
             // Modify boundary
-            const label bFaceI = boundaryFaceOppositeFace_[totalFaceId];
-            const face f = regionMesh().faces()[bFaceI];
+            const label bFacei = boundaryFaceOppositeFace_[totalFaceId];
+            const face f = regionMesh().faces()[bFacei];
             const label celli = cells[cells.size() - 1];
             newDelta += (deltaV[celli]/mag(sf))*n;
             forAll(f, pti)

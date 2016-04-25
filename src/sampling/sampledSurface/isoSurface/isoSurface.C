@@ -317,13 +317,13 @@ void Foam::isoSurface::getNeighbour
     }
     else
     {
-        label bFaceI = facei-mesh_.nInternalFaces();
-        label patchi = boundaryRegion[bFaceI];
+        label bFacei = facei-mesh_.nInternalFaces();
+        label patchi = boundaryRegion[bFacei];
         const polyPatch& pp = mesh_.boundaryMesh()[patchi];
-        label patchFaceI = facei-pp.start();
+        label patchFacei = facei-pp.start();
 
-        nbrValue = cVals.boundaryField()[patchi][patchFaceI];
-        nbrPoint = meshC.boundaryField()[patchi][patchFaceI];
+        nbrValue = cVals.boundaryField()[patchi][patchFacei];
+        nbrPoint = meshC.boundaryField()[patchi][patchFacei];
     }
 }
 
@@ -515,9 +515,9 @@ void Foam::isoSurface::calcSnappedCc
             // Create points for all intersections close to cell centre
             // (i.e. from pyramid edges)
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
+                label facei = cFaces[cFacei];
 
                 scalar nbrValue;
                 point nbrPoint;
@@ -540,7 +540,7 @@ void Foam::isoSurface::calcSnappedCc
                 s[2] = isoFraction(cVal, nbrValue);
                 pt[2] = (1.0-s[2])*cc[celli] + s[2]*nbrPoint;
 
-                const face& f = mesh_.faces()[cFaces[cFaceI]];
+                const face& f = mesh_.faces()[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
@@ -698,12 +698,12 @@ void Foam::isoSurface::calcSnappedPoint
         label nOther = 0;
         point otherPointSum = Zero;
 
-        forAll(pFaces, pFaceI)
+        forAll(pFaces, pFacei)
         {
             // Create points for all intersections close to point
             // (i.e. from pyramid edges)
 
-            label facei = pFaces[pFaceI];
+            label facei = pFaces[pFacei];
             const face& f = mesh_.faces()[facei];
             label own = mesh_.faceOwner()[facei];
 
@@ -989,15 +989,15 @@ Foam::triSurface Foam::isoSurface::stitchTriPoints
 
                 forAll(fFaces, i)
                 {
-                    label nbrFaceI = fFaces[i];
+                    label nbrFacei = fFaces[i];
 
-                    if (nbrFaceI <= facei)
+                    if (nbrFacei <= facei)
                     {
                         // lower numbered faces already checked
                         continue;
                     }
 
-                    const labelledTri& nbrF = surf[nbrFaceI];
+                    const labelledTri& nbrF = surf[nbrFacei];
 
                     if (f == nbrF)
                     {
@@ -1005,7 +1005,7 @@ Foam::triSurface Foam::isoSurface::stitchTriPoints
                             << "Check : "
                             << " triangle " << facei << " vertices " << f
                             << " fc:" << f.centre(surf.points())
-                            << " has the same vertices as triangle " << nbrFaceI
+                            << " has the same vertices as triangle " << nbrFacei
                             << " vertices " << nbrF
                             << " fc:" << nbrF.centre(surf.points())
                             << abort(FatalError);
@@ -1057,15 +1057,15 @@ bool Foam::isoSurface::validTri(const triSurface& surf, const label facei)
     // Note: discards normal information - sides of baffle are merged.
     forAll(fFaces, i)
     {
-        label nbrFaceI = fFaces[i];
+        label nbrFacei = fFaces[i];
 
-        if (nbrFaceI <= facei)
+        if (nbrFacei <= facei)
         {
             // lower numbered faces already checked
             continue;
         }
 
-        const labelledTri& nbrF = surf[nbrFaceI];
+        const labelledTri& nbrF = surf[nbrFacei];
 
         if
         (
@@ -1077,7 +1077,7 @@ bool Foam::isoSurface::validTri(const triSurface& surf, const label facei)
             WarningInFunction
                 << "triangle " << facei << " vertices " << f
                 << " fc:" << f.centre(surf.points())
-                << " has the same vertices as triangle " << nbrFaceI
+                << " has the same vertices as triangle " << nbrFacei
                 << " vertices " << nbrF
                 << " fc:" << nbrF.centre(surf.points())
                 << endl;

@@ -65,11 +65,11 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
     const polyMesh& owner,
     const vector& position,
     const label celli,
-    const label tetFaceI,
+    const label tetFacei,
     const label tetPtI
 )
 :
-    ParcelType(owner, position, celli, tetFaceI, tetPtI),
+    ParcelType(owner, position, celli, tetFacei, tetPtI),
     f_(Zero),
     angularMomentum_(Zero),
     torque_(Zero),
@@ -83,7 +83,7 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
     const polyMesh& owner,
     const vector& position,
     const label celli,
-    const label tetFaceI,
+    const label tetFacei,
     const label tetPtI,
     const label typeId,
     const scalar nParticle0,
@@ -101,7 +101,7 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
         owner,
         position,
         celli,
-        tetFaceI,
+        tetFacei,
         tetPtI,
         typeId,
         nParticle0,

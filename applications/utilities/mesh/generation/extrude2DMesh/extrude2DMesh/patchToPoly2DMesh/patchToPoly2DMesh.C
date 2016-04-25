@@ -101,7 +101,7 @@ Foam::labelList Foam::patchToPoly2DMesh::internalFaceOrder()
 
     labelList oldToNew(owner_.size(), -1);
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     forAll(faceEdges, facei)
     {
@@ -115,17 +115,17 @@ Foam::labelList Foam::patchToPoly2DMesh::internalFaceOrder()
             {
                 // Internal edge. Get the face on other side.
 
-                label nbrFaceI = neighbour_[fEdges[feI]];
+                label nbrFacei = neighbour_[fEdges[feI]];
 
-                if (nbrFaceI == facei)
+                if (nbrFacei == facei)
                 {
-                    nbrFaceI = owner_[fEdges[feI]];
+                    nbrFacei = owner_[fEdges[feI]];
                 }
 
-                if (facei < nbrFaceI)
+                if (facei < nbrFacei)
                 {
                     // facei is master
-                    nbr[feI] = nbrFaceI;
+                    nbr[feI] = nbrFacei;
                 }
             }
         }
@@ -136,7 +136,7 @@ Foam::labelList Foam::patchToPoly2DMesh::internalFaceOrder()
         {
             if (nbr[i] != -1)
             {
-                oldToNew[fEdges[nbr.indices()[i]]] = newFaceI++;
+                oldToNew[fEdges[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
@@ -183,12 +183,12 @@ void Foam::patchToPoly2DMesh::addPatchFacesToOwner()
 
     for
     (
-        label bFaceI = nInternalEdges;
-        bFaceI < faces_.size();
-        ++bFaceI
+        label bFacei = nInternalEdges;
+        bFacei < faces_.size();
+        ++bFacei
     )
     {
-        const face& e = faces_[bFaceI];
+        const face& e = faces_[bFacei];
 
         bool matched = false;
 
@@ -209,14 +209,14 @@ void Foam::patchToPoly2DMesh::addPatchFacesToOwner()
 
                 label fp = findIndex(f, e[0]);
 
-                newOwner[bFaceI] = owner_[bEdgeI];
+                newOwner[bFacei] = owner_[bEdgeI];
 
                 if (f.nextLabel(fp) != e[1])
                 {
                     Info<< "Flipping" << endl;
 
-                    faces_[bFaceI][0] = e[1];
-                    faces_[bFaceI][1] = e[0];
+                    faces_[bFacei][0] = e[1];
+                    faces_[bFacei][1] = e[0];
                 }
 
                 nMatched++;

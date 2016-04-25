@@ -185,11 +185,11 @@ label addPatch
 
     patchi = newPatches.size();
 
-    label startFaceI = 0;
+    label startFacei = 0;
     if (patchi > 0)
     {
         const polyPatch& pp = *newPatches.last();
-        startFaceI = pp.start()+pp.size();
+        startFacei = pp.start()+pp.size();
     }
 
 
@@ -200,7 +200,7 @@ label addPatch
             PatchType::typeName,
             patchName,
             0,                          // size
-            startFaceI,                 // nFaces
+            startFacei,                 // nFaces
             patchi,
             patches
         ).ptr()
@@ -240,17 +240,17 @@ label addPatch
 
     patchi = newPatches.size();
 
-    label startFaceI = 0;
+    label startFacei = 0;
     if (patchi > 0)
     {
         const polyPatch& pp = *newPatches.last();
-        startFaceI = pp.start()+pp.size();
+        startFacei = pp.start()+pp.size();
     }
 
     dictionary patchDict(dict);
     patchDict.set("type", PatchType::typeName);
     patchDict.set("nFaces", 0);
-    patchDict.set("startFace", startFaceI);
+    patchDict.set("startFace", startFacei);
 
     newPatches.append
     (
@@ -873,9 +873,9 @@ void addCoupledPatches
         {
             forAll(eFaces, i)
             {
-                label procI = procID[eFaces[i]];
-                minProcID[edgeI] = min(minProcID[edgeI], procI);
-                maxProcID[edgeI] = max(maxProcID[edgeI], procI);
+                label proci = procID[eFaces[i]];
+                minProcID[edgeI] = min(minProcID[edgeI], proci);
+                maxProcID[edgeI] = max(maxProcID[edgeI], proci);
             }
         }
     }
@@ -915,14 +915,14 @@ void addCoupledPatches
         )
         {
             // coupled boundary edge. Find matching patch.
-            label nbrProcI = minProcID[edgeI];
-            if (nbrProcI == Pstream::myProcNo())
+            label nbrProci = minProcID[edgeI];
+            if (nbrProci == Pstream::myProcNo())
             {
-                nbrProcI = maxProcID[edgeI];
+                nbrProci = maxProcID[edgeI];
             }
 
 
-            if (nbrProcI == Pstream::myProcNo())
+            if (nbrProci == Pstream::myProcNo())
             {
                 // Cyclic patch since both procs the same. This cyclic should
                 // already exist in newPatches so no adding necessary.
@@ -938,13 +938,13 @@ void addCoupledPatches
                 {
                     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-                    label newPatchI = findPatchID
+                    label newPatchi = findPatchID
                     (
                         newPatches,
                         patches[patches.whichPatch(facei)].name()
                     );
 
-                    sidePatchID[edgeI] = newPatchI;
+                    sidePatchID[edgeI] = newPatchi;
                 }
                 else
                 {
@@ -958,7 +958,7 @@ void addCoupledPatches
                 // Processor patch
                 word name
                 (
-                    processorPolyPatch::newName(Pstream::myProcNo(), nbrProcI)
+                    processorPolyPatch::newName(Pstream::myProcNo(), nbrProci)
                 );
 
                 sidePatchID[edgeI] = findPatchID(newPatches, name);
@@ -967,7 +967,7 @@ void addCoupledPatches
                 {
                     dictionary patchDict;
                     patchDict.add("myProcNo", Pstream::myProcNo());
-                    patchDict.add("neighbProcNo", nbrProcI);
+                    patchDict.add("neighbProcNo", nbrProci);
 
                     sidePatchID[edgeI] = addPatch<processorPolyPatch>
                     (
@@ -1154,9 +1154,9 @@ tmp<pointField> calcOffset
 
     forAll(fc, i)
     {
-        label meshFaceI = pp.start()+i;
-        label patchFaceI = mag(extruder.faceToFaceMap()[meshFaceI])-1;
-        point patchFc = extrudePatch[patchFaceI].centre
+        label meshFacei = pp.start()+i;
+        label patchFacei = mag(extruder.faceToFaceMap()[meshFacei])-1;
+        point patchFc = extrudePatch[patchFacei].centre
         (
             extrudePatch.points()
         );
@@ -1310,7 +1310,7 @@ void extrudeGeometricProperties
         if (extruder.faceToFaceMap()[facei] != 0)
         {
             // 'horizontal' face
-            label patchFaceI = mag(extruder.faceToFaceMap()[facei])-1;
+            label patchFacei = mag(extruder.faceToFaceMap()[facei])-1;
 
             label celli = regionMesh.faceOwner()[facei];
             if (regionMesh.isInternalFace(facei))
@@ -1335,8 +1335,8 @@ void extrudeGeometricProperties
             // Recalculate based on extrusion model
             faceCentres[facei] = model
             (
-                patchFaceCentres[patchFaceI],
-                extrudePatch.faceNormals()[patchFaceI],
+                patchFaceCentres[patchFacei],
+                extrudePatch.faceNormals()[patchFacei],
                 layerI
             );
         }
@@ -1387,7 +1387,7 @@ void extrudeGeometricProperties
 
     forAll(extruder.cellToFaceMap(), celli)
     {
-        label patchFaceI = extruder.cellToFaceMap()[celli];
+        label patchFacei = extruder.cellToFaceMap()[celli];
 
         // Calculate layer from cell numbering (see createShellMesh)
         label layerI = (celli % model.nLayers());
@@ -1395,14 +1395,14 @@ void extrudeGeometricProperties
         // Recalculate based on extrusion model
         point pt0 = model
         (
-            patchFaceCentres[patchFaceI],
-            extrudePatch.faceNormals()[patchFaceI],
+            patchFaceCentres[patchFacei],
+            extrudePatch.faceNormals()[patchFacei],
             layerI
         );
         point pt1 = model
         (
-            patchFaceCentres[patchFaceI],
-            extrudePatch.faceNormals()[patchFaceI],
+            patchFaceCentres[patchFacei],
+            extrudePatch.faceNormals()[patchFacei],
             layerI+1
         );
 
@@ -1960,13 +1960,13 @@ int main(int argc, char *argv[])
     {
         if (!isA<processorPolyPatch>(patches[patchi]))
         {
-            label newPatchI = regionPatches.size();
+            label newPatchi = regionPatches.size();
             regionPatches.append
             (
                 patches[patchi].clone
                 (
                     patches,
-                    newPatchI,
+                    newPatchi,
                     0,              // size
                     0               // start
                 ).ptr()
@@ -2240,12 +2240,12 @@ int main(int argc, char *argv[])
 
             if (facei != -1)
             {
-                label newPatchI = findPatchID
+                label newPatchi = findPatchID
                 (
                     regionPatches,
                     patches[patches.whichPatch(facei)].name()
                 );
-                ePatches.setSize(eFaces.size(), newPatchI);
+                ePatches.setSize(eFaces.size(), newPatchi);
             }
             else
             {
@@ -2683,20 +2683,20 @@ int main(int argc, char *argv[])
         polyTopoChange meshMod(mesh);
 
         // Modify faces to be in bottom (= always coupled) patch
-        forAll(extrudeMeshFaces, zoneFaceI)
+        forAll(extrudeMeshFaces, zoneFacei)
         {
-            label meshFaceI = extrudeMeshFaces[zoneFaceI];
-            label zoneI = zoneID[zoneFaceI];
-            bool flip = zoneFlipMap[zoneFaceI];
-            const face& f = mesh.faces()[meshFaceI];
+            label meshFacei = extrudeMeshFaces[zoneFacei];
+            label zoneI = zoneID[zoneFacei];
+            bool flip = zoneFlipMap[zoneFacei];
+            const face& f = mesh.faces()[meshFacei];
 
             if (!flip)
             {
                 meshMod.modifyFace
                 (
                     f,                          // modified face
-                    meshFaceI,                  // label of face being modified
-                    mesh.faceOwner()[meshFaceI],// owner
+                    meshFacei,                  // label of face being modified
+                    mesh.faceOwner()[meshFacei],// owner
                     -1,                         // neighbour
                     false,                      // face flip
                     interMeshBottomPatch[zoneI],// patch for face
@@ -2704,13 +2704,13 @@ int main(int argc, char *argv[])
                     flip                        // face flip in zone
                 );
             }
-            else if (mesh.isInternalFace(meshFaceI))
+            else if (mesh.isInternalFace(meshFacei))
             {
                 meshMod.modifyFace
                 (
                     f.reverseFace(),                // modified face
-                    meshFaceI,                      // label of modified face
-                    mesh.faceNeighbour()[meshFaceI],// owner
+                    meshFacei,                      // label of modified face
+                    mesh.faceNeighbour()[meshFacei],// owner
                     -1,                             // neighbour
                     true,                           // face flip
                     interMeshBottomPatch[zoneI],    // patch for face
@@ -2722,20 +2722,20 @@ int main(int argc, char *argv[])
 
         if (zoneShadowNames.size() > 0) //if there is a top faceZone specified
         {
-            forAll(extrudeMeshFaces, zoneFaceI)
+            forAll(extrudeMeshFaces, zoneFacei)
             {
-                label meshFaceI = extrudeMeshShadowFaces[zoneFaceI];
-                label zoneI = zoneShadowID[zoneFaceI];
-                bool flip = zoneShadowFlipMap[zoneFaceI];
-                const face& f = mesh.faces()[meshFaceI];
+                label meshFacei = extrudeMeshShadowFaces[zoneFacei];
+                label zoneI = zoneShadowID[zoneFacei];
+                bool flip = zoneShadowFlipMap[zoneFacei];
+                const face& f = mesh.faces()[meshFacei];
 
                 if (!flip)
                 {
                     meshMod.modifyFace
                     (
                         f,                          // modified face
-                        meshFaceI,                  // face being modified
-                        mesh.faceOwner()[meshFaceI],// owner
+                        meshFacei,                  // face being modified
+                        mesh.faceOwner()[meshFacei],// owner
                         -1,                         // neighbour
                         false,                      // face flip
                         interMeshTopPatch[zoneI],   // patch for face
@@ -2743,13 +2743,13 @@ int main(int argc, char *argv[])
                         flip                        // face flip in zone
                     );
                 }
-                else if (mesh.isInternalFace(meshFaceI))
+                else if (mesh.isInternalFace(meshFacei))
                 {
                     meshMod.modifyFace
                     (
                         f.reverseFace(),                // modified face
-                        meshFaceI,                      // label modified face
-                        mesh.faceNeighbour()[meshFaceI],// owner
+                        meshFacei,                      // label modified face
+                        mesh.faceNeighbour()[meshFacei],// owner
                         -1,                             // neighbour
                         true,                           // face flip
                         interMeshTopPatch[zoneI],       // patch for face
@@ -2762,25 +2762,25 @@ int main(int argc, char *argv[])
         else
         {
             // Add faces (using same points) to be in top patch
-            forAll(extrudeMeshFaces, zoneFaceI)
+            forAll(extrudeMeshFaces, zoneFacei)
             {
-                label meshFaceI = extrudeMeshFaces[zoneFaceI];
-                label zoneI = zoneID[zoneFaceI];
-                bool flip = zoneFlipMap[zoneFaceI];
-                const face& f = mesh.faces()[meshFaceI];
+                label meshFacei = extrudeMeshFaces[zoneFacei];
+                label zoneI = zoneID[zoneFacei];
+                bool flip = zoneFlipMap[zoneFacei];
+                const face& f = mesh.faces()[meshFacei];
 
                 if (!flip)
                 {
-                    if (mesh.isInternalFace(meshFaceI))
+                    if (mesh.isInternalFace(meshFacei))
                     {
                         meshMod.addFace
                         (
                             f.reverseFace(),                // modified face
-                            mesh.faceNeighbour()[meshFaceI],// owner
+                            mesh.faceNeighbour()[meshFacei],// owner
                             -1,                             // neighbour
                             -1,                             // master point
                             -1,                             // master edge
-                            meshFaceI,                      // master face
+                            meshFacei,                      // master face
                             true,                           // flip flux
                             interMeshTopPatch[zoneI],       // patch for face
                             -1,                             // zone for face
@@ -2793,11 +2793,11 @@ int main(int argc, char *argv[])
                     meshMod.addFace
                     (
                         f,                              // face
-                        mesh.faceOwner()[meshFaceI],    // owner
+                        mesh.faceOwner()[meshFacei],    // owner
                         -1,                             // neighbour
                         -1,                             // master point
                         -1,                             // master edge
-                        meshFaceI,                      // master face
+                        meshFacei,                      // master face
                         false,                          // flip flux
                         interMeshTopPatch[zoneI],       // patch for face
                         -1,                             // zone for face

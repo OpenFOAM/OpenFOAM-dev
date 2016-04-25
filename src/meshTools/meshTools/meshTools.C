@@ -424,9 +424,9 @@ Foam::label Foam::meshTools::getSharedFace
 {
     const cell& cFaces = mesh.cells()[cell0I];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         if
         (
@@ -468,9 +468,9 @@ void Foam::meshTools::getEdgeFaces
     face0 = -1;
     face1 = -1;
 
-    forAll(eFaces, eFaceI)
+    forAll(eFaces, eFacei)
     {
-        label facei = eFaces[eFaceI];
+        label facei = eFaces[eFacei];
 
         if (faceOnCell(mesh, celli, facei))
         {
@@ -560,7 +560,7 @@ Foam::label Foam::meshTools::otherFace
 Foam::label Foam::meshTools::otherCell
 (
     const primitiveMesh& mesh,
-    const label otherCellI,
+    const label otherCelli,
     const label facei
 )
 {
@@ -571,13 +571,13 @@ Foam::label Foam::meshTools::otherCell
             << abort(FatalError);
     }
 
-    label newCellI = mesh.faceOwner()[facei];
+    label newCelli = mesh.faceOwner()[facei];
 
-    if (newCellI == otherCellI)
+    if (newCelli == otherCelli)
     {
-        newCellI = mesh.faceNeighbour()[facei];
+        newCelli = mesh.faceNeighbour()[facei];
     }
-    return newCellI;
+    return newCelli;
 }
 
 

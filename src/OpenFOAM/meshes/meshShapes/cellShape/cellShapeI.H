@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,11 +110,11 @@ inline Foam::labelList Foam::cellShape::meshFaces
 
         forAll(cFaces, j)
         {
-            label meshFaceI = cFaces[j];
+            label meshFacei = cFaces[j];
 
-            if (allFaces[meshFaceI] == localF)
+            if (allFaces[meshFacei] == localF)
             {
-                modelToMesh[i] = meshFaceI;
+                modelToMesh[i] = meshFacei;
 
                 break;
             }
@@ -170,13 +170,13 @@ inline Foam::faceList Foam::cellShape::collapsedFaces() const
     faceList oldFaces(faces());
 
     faceList newFaces(oldFaces.size());
-    label newFaceI = 0;
+    label newFacei = 0;
 
-    forAll(oldFaces, oldFaceI)
+    forAll(oldFaces, oldFacei)
     {
-        const face& f = oldFaces[oldFaceI];
+        const face& f = oldFaces[oldFacei];
 
-        face& newF = newFaces[newFaceI];
+        face& newF = newFaces[newFacei];
 
         newF.setSize(f.size());
 
@@ -205,10 +205,10 @@ inline Foam::faceList Foam::cellShape::collapsedFaces() const
             // Size face and go to next one
             newF.setSize(newFp);
 
-            newFaceI++;
+            newFacei++;
         }
     }
-    newFaces.setSize(newFaceI);
+    newFaces.setSize(newFacei);
 
     return newFaces;
 }

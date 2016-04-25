@@ -51,8 +51,8 @@ Foam::tmp<Field<Type>> Foam::surfaceMeshWriter::getFaceField
         }
         else
         {
-            label localFaceI = facei - patches[patchi].start();
-            fld[i] = sfld.boundaryField()[patchi][localFaceI];
+            label localFacei = facei - patches[patchi].start();
+            fld[i] = sfld.boundaryField()[patchi][localFacei];
         }
     }
 

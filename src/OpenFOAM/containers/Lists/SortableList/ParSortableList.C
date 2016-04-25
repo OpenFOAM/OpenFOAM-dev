@@ -97,22 +97,22 @@ void Foam::ParSortableList<Type>::checkAndSend
     List<Type>& values,
     labelList& indices,
     const label bufSize,
-    const label destProcI
+    const label destProci
 ) const
 {
-    if (destProcI != Pstream::myProcNo())
+    if (destProci != Pstream::myProcNo())
     {
         values.setSize(bufSize);
         indices.setSize(bufSize);
 
         if (debug)
         {
-            Pout<<  "Sending to " << destProcI << " elements:" << values
+            Pout<<  "Sending to " << destProci << " elements:" << values
                 << endl;
         }
 
         {
-            OPstream toSlave(Pstream::blocking, destProcI);
+            OPstream toSlave(Pstream::blocking, destProci);
             toSlave << values << indices;
         }
     }
@@ -214,7 +214,7 @@ void Foam::ParSortableList<Type>::sort()
     //
 
     label pivotI = 1;
-    label destProcI = 0;
+    label destProci = 0;
 
     // Buffer for my own data. Keep original index together with value.
     labelList ownValues(sorted.size());
@@ -230,7 +230,7 @@ void Foam::ParSortableList<Type>::sort()
     {
         if ((pivotI < Pstream::nProcs()) && (sorted[sortedI] > pivots[pivotI]))
         {
-            checkAndSend(sendValues, sendIndices, sendI, destProcI);
+            checkAndSend(sendValues, sendIndices, sendI, destProci);
 
             // Reset buffer.
             sendValues.setSize(sorted.size());
@@ -238,10 +238,10 @@ void Foam::ParSortableList<Type>::sort()
             sendI = 0;
 
             pivotI++;
-            destProcI++;
+            destProci++;
         }
 
-        if (destProcI != Pstream::myProcNo())
+        if (destProci != Pstream::myProcNo())
         {
             sendValues[sendI] = sorted[sortedI];
             sendIndices[sendI] = sorted.indices()[sortedI];
@@ -259,7 +259,7 @@ void Foam::ParSortableList<Type>::sort()
     // Handle trailing send buffer
     if (sendI != 0)
     {
-        checkAndSend(sendValues, sendIndices, sendI, destProcI);
+        checkAndSend(sendValues, sendIndices, sendI, destProci);
     }
 
     // Print ownValues
@@ -283,9 +283,9 @@ void Foam::ParSortableList<Type>::sort()
 
     label combinedI = 0;
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        if (procI == Pstream::myProcNo())
+        if (proci == Pstream::myProcNo())
         {
             if (debug & 2)
             {
@@ -293,7 +293,7 @@ void Foam::ParSortableList<Type>::sort()
             }
 
             // Copy ownValues,ownIndices into combined buffer
-            copyInto(ownValues, ownIndices, procI, combinedI, combinedValues);
+            copyInto(ownValues, ownIndices, proci, combinedI, combinedValues);
         }
         else
         {
@@ -303,16 +303,16 @@ void Foam::ParSortableList<Type>::sort()
             {
                 if (debug)
                 {
-                    Pout<< "Receiving from " << procI << endl;
+                    Pout<< "Receiving from " << proci << endl;
                 }
 
-                IPstream fromSlave(Pstream::blocking, procI);
+                IPstream fromSlave(Pstream::blocking, proci);
 
                 fromSlave >> recValues >> recIndices;
 
                 if (debug & 2)
                 {
-                    Pout<< "Received from " << procI
+                    Pout<< "Received from " << proci
                         << " elements:" << recValues << endl;
                 }
             }
@@ -321,7 +321,7 @@ void Foam::ParSortableList<Type>::sort()
             {
                 Pout<< "Copying starting at:" << combinedI << endl;
             }
-            copyInto(recValues, recIndices, procI, combinedI, combinedValues);
+            copyInto(recValues, recIndices, proci, combinedI, combinedValues);
         }
     }
     combinedValues.setSize(combinedI);

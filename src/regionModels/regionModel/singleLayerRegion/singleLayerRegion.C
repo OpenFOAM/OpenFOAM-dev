@@ -131,9 +131,9 @@ void Foam::regionModels::singleLayerRegion::initialise()
             label facei = ppIntCoupled.start();
             label faceO = cFaces.opposingFaceLabel(facei, regionMesh().faces());
 
-            label passivePatchI = rbm.whichPatch(faceO);
-            passivePatchIDs_[i] = passivePatchI;
-            const polyPatch& ppPassive = rbm[passivePatchI];
+            label passivePatchi = rbm.whichPatch(faceO);
+            passivePatchIDs_[i] = passivePatchi;
+            const polyPatch& ppPassive = rbm[passivePatchi];
             UIndirectList<scalar>(passiveMagSf, ppPassive.faceCells()) =
                 mag(ppPassive.faceAreas());
         }

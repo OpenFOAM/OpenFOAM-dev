@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,7 +119,7 @@ template<class TrackingData>
 inline bool wallPointData<Type>::updateCell
 (
     const polyMesh& mesh,
-    const label thisCellI,
+    const label thisCelli,
     const label,
     const wallPointData<Type>& neighbourWallInfo,
     const scalar tol,
@@ -130,7 +130,7 @@ inline bool wallPointData<Type>::updateCell
 
     return update
     (
-        cellCentres[thisCellI],
+        cellCentres[thisCelli],
         neighbourWallInfo,
         tol,
         td
@@ -144,7 +144,7 @@ template<class TrackingData>
 inline bool wallPointData<Type>::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
+    const label thisFacei,
     const label,
     const wallPointData<Type>& neighbourWallInfo,
     const scalar tol,
@@ -155,7 +155,7 @@ inline bool wallPointData<Type>::updateFace
 
     return update
     (
-        faceCentres[thisFaceI],
+        faceCentres[thisFacei],
         neighbourWallInfo,
         tol,
         td
@@ -169,7 +169,7 @@ template<class TrackingData>
 inline bool wallPointData<Type>::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
+    const label thisFacei,
     const wallPointData<Type>& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -179,7 +179,7 @@ inline bool wallPointData<Type>::updateFace
 
     return update
     (
-        faceCentres[thisFaceI],
+        faceCentres[thisFacei],
         neighbourWallInfo,
         tol,
         td

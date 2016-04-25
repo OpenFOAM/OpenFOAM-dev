@@ -73,9 +73,9 @@ void Foam::nearWallFields::calcAddressing()
         vectorField nf(patch.nf());
         vectorField faceCellCentres(patch.patch().faceCellCentres());
 
-        forAll(patch, patchFaceI)
+        forAll(patch, patchFacei)
         {
-            label meshFaceI = patch.start()+patchFaceI;
+            label meshFacei = patch.start()+patchFacei;
 
             // Find starting point on face (since faceCentre might not
             // be on face-diagonal decomposition)
@@ -84,7 +84,7 @@ void Foam::nearWallFields::calcAddressing()
                 mappedPatchBase::facePoint
                 (
                     mesh,
-                    meshFaceI,
+                    meshFacei,
                     polyMesh::FACE_DIAG_TRIS
                 )
             );
@@ -98,16 +98,16 @@ void Foam::nearWallFields::calcAddressing()
             else
             {
                 // Fallback: start tracking from neighbouring cell centre
-                start = faceCellCentres[patchFaceI];
+                start = faceCellCentres[patchFacei];
             }
 
-            const point end = start-distance_*nf[patchFaceI];
+            const point end = start-distance_*nf[patchFacei];
 
             // Find tet for starting location
             label celli = -1;
-            label tetFaceI = -1;
+            label tetFacei = -1;
             label tetPtI = -1;
-            mesh.findCellFacePt(start, celli, tetFaceI, tetPtI);
+            mesh.findCellFacePt(start, celli, tetFacei, tetPtI);
 
             // Add to cloud. Add originating face as passive data
             cloud.addParticle
@@ -117,7 +117,7 @@ void Foam::nearWallFields::calcAddressing()
                     mesh,
                     start,
                     celli,
-                    tetFaceI,
+                    tetFacei,
                     tetPtI,
                     end,
                     globalWalls.toGlobal(nPatchFaces)    // passive data

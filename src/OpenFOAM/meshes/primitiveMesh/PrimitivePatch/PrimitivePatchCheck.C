@@ -45,12 +45,12 @@ visitPointRegion
 (
     const label pointI,
     const labelList& pFaces,
-    const label startFaceI,
+    const label startFacei,
     const label startEdgeI,
     boolList& pFacesHad
 ) const
 {
-    label index = findIndex(pFaces, startFaceI);
+    label index = findIndex(pFaces, startFacei);
 
     if (!pFacesHad[index])
     {
@@ -58,7 +58,7 @@ visitPointRegion
         pFacesHad[index] = true;
 
         // Step to next edge on face which is still using pointI
-        const labelList& fEdges = faceEdges()[startFaceI];
+        const labelList& fEdges = faceEdges()[startFacei];
 
         label nextEdgeI = -1;
 
@@ -80,7 +80,7 @@ visitPointRegion
         {
             FatalErrorInFunction
                 << "Problem: cannot find edge out of " << fEdges
-                << "on face " << startFaceI << " that uses point " << pointI
+                << "on face " << startFacei << " that uses point " << pointI
                 << " and is not edge " << startEdgeI << abort(FatalError);
         }
 
@@ -89,7 +89,7 @@ visitPointRegion
 
         forAll(eFaces, i)
         {
-            if (eFaces[i] != startFaceI)
+            if (eFaces[i] != startFacei)
             {
                 visitPointRegion
                 (

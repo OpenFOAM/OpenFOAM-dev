@@ -123,10 +123,10 @@ static void get_num_edges_list(void *data, int sizeGID, int sizeLID,
     {
         Foam::label celli = localID[i];
         const Foam::cell& cFaces = mesh.cells()[celli];
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
             Foam::label n = 0;
-            if (mesh.isInternalFace(cFaces[cFaceI]))
+            if (mesh.isInternalFace(cFaces[cFacei]))
             {
                 n++;
             }
@@ -167,11 +167,11 @@ static void get_edge_list(void *data, int sizeGID, int sizeLID,
         Foam::label celli = localID[i];
 
         const Foam::cell& cFaces = mesh.cells()[celli];
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
             Foam::label n = 0;
 
-            Foam::label facei = cFaces[cFaceI];
+            Foam::label facei = cFaces[cFacei];
             if (mesh.isInternalFace(facei))
             {
                 Foam::label nbr = mesh.faceOwner()[facei];

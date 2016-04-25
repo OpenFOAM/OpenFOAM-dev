@@ -110,13 +110,13 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
 
     const cell& cFaces = mesh.cells()[celli];
 
-    label minFaceI = -1;
+    label minFacei = -1;
     label minTetPtI = -1;
     scalar minDistSqr = sqr(GREAT);
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         if (isWallPatch[facei])
         {
@@ -137,7 +137,7 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
                 if (d2 < minDistSqr)
                 {
                     minDistSqr = d2;
-                    minFaceI = facei;
+                    minFacei = facei;
                     minTetPtI = i-1;
                 }
                 fp = nextFp;
@@ -149,7 +149,7 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
     return tetIndices
     (
         celli,
-        minFaceI,
+        minFacei,
         minTetPtI,
         mesh
     );
@@ -589,9 +589,9 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
 
                 numFacesPerEdge.clear();
 
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    label facei = cFaces[cFaceI];
+                    label facei = cFaces[cFacei];
                     const face& f = mesh.faces()[facei];
                     forAll(f, fp)
                     {
@@ -665,10 +665,10 @@ void Foam::wallBoundedStreamLine::write()
                 // processors.
                 label trackI = 0;
 
-                forAll(recvMap, procI)
+                forAll(recvMap, proci)
                 {
-                    labelList& fromProc = recvMap[procI];
-                    fromProc.setSize(globalTrackIDs.localSize(procI));
+                    labelList& fromProc = recvMap[proci];
+                    fromProc.setSize(globalTrackIDs.localSize(proci));
                     forAll(fromProc, i)
                     {
                         fromProc[i] = trackI++;

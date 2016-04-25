@@ -123,11 +123,11 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> fvMeshSubset::interpolate
 
             forAll(directAddressing, i)
             {
-                label baseFaceI = faceMap[subPatch.start()+i];
+                label baseFacei = faceMap[subPatch.start()+i];
 
-                if (baseFaceI >= baseStart && baseFaceI < baseStart+baseSize)
+                if (baseFacei >= baseStart && baseFacei < baseStart+baseSize)
                 {
-                    directAddressing[i] = baseFaceI-baseStart;
+                    directAddressing[i] = baseFacei-baseStart;
                 }
                 else
                 {
@@ -266,11 +266,11 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
 
             forAll(directAddressing, i)
             {
-                label baseFaceI = faceMap[subPatch.start()+i];
+                label baseFacei = faceMap[subPatch.start()+i];
 
-                if (baseFaceI >= baseStart && baseFaceI < baseStart+baseSize)
+                if (baseFacei >= baseStart && baseFacei < baseStart+baseSize)
                 {
-                    directAddressing[i] = baseFaceI-baseStart;
+                    directAddressing[i] = baseFacei-baseStart;
                 }
                 else
                 {
@@ -300,11 +300,11 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
 
             forAll(pfld, i)
             {
-                label baseFaceI = faceMap[subPatch.start()+i];
-                if (baseFaceI < vf.internalField().size())
+                label baseFacei = faceMap[subPatch.start()+i];
+                if (baseFacei < vf.internalField().size())
                 {
                     // Exposed internal face
-                    pfld[i] = vf.internalField()[baseFaceI];
+                    pfld[i] = vf.internalField()[baseFacei];
                 }
                 else
                 {
@@ -312,11 +312,11 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
                     // Only possible in case of a coupled boundary
                     label patchi = vf.mesh().boundaryMesh().whichPatch
                     (
-                        baseFaceI
+                        baseFacei
                     );
                     const fvPatch& otherPatch = vf.mesh().boundary()[patchi];
-                    label patchFaceI = otherPatch.patch().whichFace(baseFaceI);
-                    pfld[i] = vf.boundaryField()[patchi][patchFaceI];
+                    label patchFacei = otherPatch.patch().whichFace(baseFacei);
+                    pfld[i] = vf.boundaryField()[patchi][patchFacei];
                 }
             }
         }

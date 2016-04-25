@@ -80,9 +80,9 @@ Foam::labelList Foam::patchZones::edgeToFace(const labelList& changedEdges)
 
         const labelList& eFaces = pp_.edgeFaces()[edgeI];
 
-        forAll(eFaces, eFaceI)
+        forAll(eFaces, eFacei)
         {
-            label facei = eFaces[eFaceI];
+            label facei = eFaces[eFacei];
 
             if (operator[](facei) == -1)
             {

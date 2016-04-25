@@ -62,14 +62,14 @@ Foam::PstreamBuffers::PstreamBuffers
 Foam::PstreamBuffers::~PstreamBuffers()
 {
     // Check that all data has been consumed.
-    forAll(recvBufPos_, procI)
+    forAll(recvBufPos_, proci)
     {
-        if (recvBufPos_[procI] < recvBuf_[procI].size())
+        if (recvBufPos_[proci] < recvBuf_[proci].size())
         {
             FatalErrorInFunction
-                << "Message from processor " << procI
-                << " not fully consumed. messageSize:" << recvBuf_[procI].size()
-                << " bytes of which only " << recvBufPos_[procI]
+                << "Message from processor " << proci
+                << " not fully consumed. messageSize:" << recvBuf_[proci].size()
+                << " bytes of which only " << recvBufPos_[proci]
                 << " consumed."
                 << Foam::abort(FatalError);
         }

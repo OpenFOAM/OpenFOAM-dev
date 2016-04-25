@@ -156,11 +156,11 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
     const modelType& filmModel =
         db().time().lookupObject<modelType>("surfaceFilmProperties");
 
-    const label filmPatchI = filmModel.regionPatchID(patchi);
+    const label filmPatchi = filmModel.regionPatchID(patchi);
 
     tmp<volScalarField> mDotFilm(filmModel.primaryMassTrans());
-    scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchI];
-    filmModel.toPrimary(filmPatchI, mDotFilmp);
+    scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchi];
+    filmModel.toPrimary(filmPatchi, mDotFilmp);
 
     // Retrieve RAS turbulence model
     const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
@@ -187,9 +187,9 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
     scalarField& alphat = *this;
     forAll(alphat, facei)
     {
-        label faceCellI = patch().faceCells()[facei];
+        label faceCelli = patch().faceCells()[facei];
 
-        scalar uTau = Cmu25*sqrt(k[faceCellI]);
+        scalar uTau = Cmu25*sqrt(k[faceCelli]);
 
         scalar yPlus = y[facei]*uTau/(muw[facei]/rhow[facei]);
 

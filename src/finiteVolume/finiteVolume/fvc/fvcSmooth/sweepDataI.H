@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,14 +152,14 @@ template<class TrackingData>
 inline bool Foam::sweepData::updateCell
 (
     const polyMesh& mesh,
-    const label thisCellI,
+    const label thisCelli,
     const label,
     const sweepData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.cellCentres()[thisCellI], tol, td);
+    return update(svf, mesh.cellCentres()[thisCelli], tol, td);
 }
 
 
@@ -167,14 +167,14 @@ template<class TrackingData>
 inline bool Foam::sweepData::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
+    const label thisFacei,
     const label,
     const sweepData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.faceCentres()[thisFaceI], tol, td);
+    return update(svf, mesh.faceCentres()[thisFacei], tol, td);
 }
 
 
@@ -183,13 +183,13 @@ template<class TrackingData>
 inline bool Foam::sweepData::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
+    const label thisFacei,
     const sweepData& svf,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(svf, mesh.faceCentres()[thisFaceI], tol, td);
+    return update(svf, mesh.faceCentres()[thisFacei], tol, td);
 }
 
 

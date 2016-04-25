@@ -87,9 +87,9 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             {
                 const cell& cFaces = mesh_.cells()[celli];
 
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    const face& f = mesh_.faces()[cFaces[cFaceI]];
+                    const face& f = mesh_.faces()[cFaces[cFacei]];
 
                     label nQuads = 0;
                     label nTris = 0;
@@ -120,7 +120,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
     cellTypes_.setSize(cellShapes.size() + nAddCells);
 
     // Set counters for additional points and additional cells
-    label addPointI = 0, addCellI = 0;
+    label addPointI = 0, addCelli = 0;
 
     forAll(cellShapes, celli)
     {
@@ -200,10 +200,10 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             bool substituteCell = true;
 
             const labelList& cFaces = mesh_.cells()[celli];
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh_.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
+                const face& f = mesh_.faces()[cFaces[cFacei]];
+                const bool isOwner = (owner[cFaces[cFacei]] == celli);
 
                 // Number of triangles and quads in decomposition
                 label nTris = 0;
@@ -219,20 +219,20 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
 
                 forAll(quadFcs, quadI)
                 {
-                    label thisCellI;
+                    label thisCelli;
 
                     if (substituteCell)
                     {
-                        thisCellI = celli;
+                        thisCelli = celli;
                         substituteCell = false;
                     }
                     else
                     {
-                        thisCellI = mesh_.nCells() + addCellI;
-                        superCells_[addCellI++] = celli;
+                        thisCelli = mesh_.nCells() + addCelli;
+                        superCells_[addCelli++] = celli;
                     }
 
-                    labelList& addVtkVerts = vertLabels_[thisCellI];
+                    labelList& addVtkVerts = vertLabels_[thisCelli];
 
                     addVtkVerts.setSize(5);
 
@@ -261,26 +261,26 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
                     }
                     addVtkVerts[4] = newVertexLabel;
 
-                    cellTypes_[thisCellI] = VTK_PYRAMID;
+                    cellTypes_[thisCelli] = VTK_PYRAMID;
                 }
 
                 forAll(triFcs, triI)
                 {
-                    label thisCellI;
+                    label thisCelli;
 
                     if (substituteCell)
                     {
-                        thisCellI = celli;
+                        thisCelli = celli;
                         substituteCell = false;
                     }
                     else
                     {
-                        thisCellI = mesh_.nCells() + addCellI;
-                        superCells_[addCellI++] = celli;
+                        thisCelli = mesh_.nCells() + addCelli;
+                        superCells_[addCelli++] = celli;
                     }
 
 
-                    labelList& addVtkVerts = vertLabels_[thisCellI];
+                    labelList& addVtkVerts = vertLabels_[thisCelli];
 
                     const face& tri = triFcs[triI];
 
@@ -301,7 +301,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
                     }
                     addVtkVerts[3] = newVertexLabel;
 
-                    cellTypes_[thisCellI] = VTK_TETRA;
+                    cellTypes_[thisCelli] = VTK_TETRA;
                 }
             }
 
@@ -318,9 +318,9 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             label nData = 1 + cFaces.size();
 
             // count total number of face points
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh.faces()[cFaces[cFaceI]];
+                const face& f = mesh.faces()[cFaces[cFacei]];
                 nData += f.size();   // space for the face labels
             }
 
@@ -330,10 +330,10 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             vtkVerts[nData++] = cFaces.size();
 
             // build face stream
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
+                const face& f = mesh.faces()[cFaces[cFacei]];
+                const bool isOwner = (owner[cFaces[cFacei]] == celli);
 
                 // number of labels for this face
                 vtkVerts[nData++] = f.size();

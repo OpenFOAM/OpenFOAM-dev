@@ -170,7 +170,7 @@ public:
             const polyMesh& mesh,
             const vector& position,
             const label celli,
-            const label tetFaceI,
+            const label tetFacei,
             const label tetPtI
         );
 
@@ -180,7 +180,7 @@ public:
             const polyMesh& mesh,
             const vector& position,
             const label celli,
-            const label tetFaceI,
+            const label tetFacei,
             const label tetPtI,
             const label typeId,
             const scalar nParticle0,

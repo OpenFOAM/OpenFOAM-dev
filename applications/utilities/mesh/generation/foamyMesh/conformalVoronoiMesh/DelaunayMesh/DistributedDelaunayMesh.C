@@ -51,28 +51,28 @@ Foam::DistributedDelaunayMesh<Triangulation>::buildMap
 
     forAll(toProc, i)
     {
-        label procI = toProc[i];
+        label proci = toProc[i];
 
-        nSend[procI]++;
+        nSend[proci]++;
     }
 
 
     // 2. Size sendMap
     labelListList sendMap(Pstream::nProcs());
 
-    forAll(nSend, procI)
+    forAll(nSend, proci)
     {
-        sendMap[procI].setSize(nSend[procI]);
+        sendMap[proci].setSize(nSend[proci]);
 
-        nSend[procI] = 0;
+        nSend[proci] = 0;
     }
 
     // 3. Fill sendMap
     forAll(toProc, i)
     {
-        label procI = toProc[i];
+        label proci = toProc[i];
 
-        sendMap[procI][nSend[procI]++] = i;
+        sendMap[proci][nSend[proci]++] = i;
     }
 
     // 4. Send over how many I need to receive
@@ -93,17 +93,17 @@ Foam::DistributedDelaunayMesh<Triangulation>::buildMap
 
     label constructSize = constructMap[Pstream::myProcNo()].size();
 
-    forAll(constructMap, procI)
+    forAll(constructMap, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            label nRecv = recvSizes[procI];
+            label nRecv = recvSizes[proci];
 
-            constructMap[procI].setSize(nRecv);
+            constructMap[proci].setSize(nRecv);
 
             for (label i = 0; i < nRecv; i++)
             {
-                constructMap[procI][i] = constructSize++;
+                constructMap[proci][i] = constructSize++;
             }
         }
     }
@@ -201,16 +201,16 @@ Foam::labelList Foam::DistributedDelaunayMesh<Triangulation>::overlapProcessors
 {
     DynamicList<label> toProc(Pstream::nProcs());
 
-    forAll(allBackgroundMeshBounds_(), procI)
+    forAll(allBackgroundMeshBounds_(), proci)
     {
         // Test against the bounding box of the processor
         if
         (
-            !isLocal(procI)
-         && allBackgroundMeshBounds_()[procI].overlaps(centre, radiusSqr)
+            !isLocal(proci)
+         && allBackgroundMeshBounds_()[proci].overlaps(centre, radiusSqr)
         )
         {
-            toProc.append(procI);
+            toProc.append(proci);
         }
     }
 
@@ -366,9 +366,9 @@ void Foam::DistributedDelaunayMesh<Triangulation>::findProcessorBoundaryCells
         if (cellToCheck.found(cit->cellIndex()))
         {
             // Get the neighbours and check them
-            for (label adjCellI = 0; adjCellI < 4; ++adjCellI)
+            for (label adjCelli = 0; adjCelli < 4; ++adjCelli)
             {
-                Cell_handle citNeighbor = cit->neighbor(adjCellI);
+                Cell_handle citNeighbor = cit->neighbor(adjCelli);
 
                 // Ignore if has far point or previously visited
                 if
@@ -432,7 +432,7 @@ void Foam::DistributedDelaunayMesh<Triangulation>::markVerticesToRefer
 
             forAll(citOverlaps, cOI)
             {
-                label procI = citOverlaps[cOI];
+                label proci = citOverlaps[cOI];
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -451,11 +451,11 @@ void Foam::DistributedDelaunayMesh<Triangulation>::markVerticesToRefer
                     // Using the hashSet to ensure that each vertex is only
                     // referred once to each processor.
                     // Do not refer a vertex to its own processor.
-                    if (vProcIndex != procI)
+                    if (vProcIndex != proci)
                     {
-                        if (referralVertices[procI].insert(procIndexPair))
+                        if (referralVertices[proci].insert(procIndexPair))
                         {
-                            targetProcessor.append(procI);
+                            targetProcessor.append(proci);
 
                             parallelInfluenceVertices.append
                             (
@@ -501,9 +501,9 @@ Foam::label Foam::DistributedDelaunayMesh<Triangulation>::referVertices
 
     pointMap.distribute(parallelVertices);
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        const labelList& constructMap = pointMap.constructMap()[procI];
+        const labelList& constructMap = pointMap.constructMap()[proci];
 
         if (constructMap.size())
         {
@@ -841,11 +841,11 @@ void Foam::DistributedDelaunayMesh<Triangulation>::sync(const boundBox& bb)
        /Pstream::nProcs();
 
     PtrList<labelPairHashSet> referralVertices(Pstream::nProcs());
-    forAll(referralVertices, procI)
+    forAll(referralVertices, proci)
     {
-        if (!isLocal(procI))
+        if (!isLocal(proci))
         {
-            referralVertices.set(procI, new labelPairHashSet(nApproxReferred));
+            referralVertices.set(proci, new labelPairHashSet(nApproxReferred));
         }
     }
 

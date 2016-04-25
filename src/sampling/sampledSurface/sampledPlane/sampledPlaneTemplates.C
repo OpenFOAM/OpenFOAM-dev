@@ -51,9 +51,9 @@ Foam::sampledPlane::interpolateField
 
     boolList pointDone(points().size(), false);
 
-    forAll(faces(), cutFaceI)
+    forAll(faces(), cutFacei)
     {
-        const face& f = faces()[cutFaceI];
+        const face& f = faces()[cutFacei];
 
         forAll(f, faceVertI)
         {
@@ -64,7 +64,7 @@ Foam::sampledPlane::interpolateField
                 values[pointI] = interpolator.interpolate
                 (
                     points()[pointI],
-                    meshCells()[cutFaceI]
+                    meshCells()[cutFacei]
                 );
                 pointDone[pointI] = true;
             }

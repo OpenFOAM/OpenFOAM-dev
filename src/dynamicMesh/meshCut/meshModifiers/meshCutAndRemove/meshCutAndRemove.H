@@ -101,7 +101,7 @@ class meshCutAndRemove
         void faceCells
         (
             const cellCuts& cuts,
-            const label exposedPatchI,
+            const label exposedPatchi,
             const label facei,
             label& own,
             label& nei,
@@ -204,7 +204,7 @@ public:
             //  exposedPatch: patch for other exposed faces
             void setRefinement
             (
-                const label exposedPatchI,
+                const label exposedPatchi,
                 const cellCuts& cuts,
                 const labelList& cutPatch,
                 polyTopoChange& meshMod

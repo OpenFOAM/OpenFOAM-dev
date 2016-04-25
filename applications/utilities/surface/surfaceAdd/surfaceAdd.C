@@ -244,16 +244,16 @@ int main(int argc, char *argv[])
 
             newPatches.setSize(nRegions1 + nRegions2);
 
-            label newPatchI = 0;
+            label newPatchi = 0;
 
             forAll(surface1.patches(), patchi)
             {
-                newPatches[newPatchI++] = surface1.patches()[patchi];
+                newPatches[newPatchi++] = surface1.patches()[patchi];
             }
 
             forAll(surface2.patches(), patchi)
             {
-                newPatches[newPatchI++] = surface2.patches()[patchi];
+                newPatches[newPatchi++] = surface2.patches()[patchi];
             }
         }
 

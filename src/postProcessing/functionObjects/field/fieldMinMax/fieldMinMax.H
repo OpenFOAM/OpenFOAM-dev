@@ -148,8 +148,8 @@ protected:
             const word& outputName,
             const vector& minC,
             const vector& maxC,
-            const label minProcI,
-            const label maxProcI,
+            const label minProci,
+            const label maxProci,
             const Type& minValue,
             const Type& maxValue
         );

@@ -127,32 +127,32 @@ void printMeshData(const polyMesh& mesh)
     label totProcPatches = 0;
     label maxProcFaces = 0;
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
         Info<< endl
-            << "Processor " << procI << nl
-            << "    Number of cells = " << globalCells.localSize(procI)
+            << "Processor " << proci << nl
+            << "    Number of cells = " << globalCells.localSize(proci)
             << endl;
 
         label nProcFaces = 0;
 
-        const labelList& nei = patchNeiProcNo[procI];
+        const labelList& nei = patchNeiProcNo[proci];
 
-        forAll(patchNeiProcNo[procI], i)
+        forAll(patchNeiProcNo[proci], i)
         {
             Info<< "    Number of faces shared with processor "
-                << patchNeiProcNo[procI][i] << " = " << patchSize[procI][i]
+                << patchNeiProcNo[proci][i] << " = " << patchSize[proci][i]
                 << endl;
 
-            nProcFaces += patchSize[procI][i];
+            nProcFaces += patchSize[proci][i];
         }
 
         Info<< "    Number of processor patches = " << nei.size() << nl
             << "    Number of processor faces = " << nProcFaces << nl
             << "    Number of boundary faces = "
-            << globalBoundaryFaces.localSize(procI) << endl;
+            << globalBoundaryFaces.localSize(proci) << endl;
 
-        maxProcCells = max(maxProcCells, globalCells.localSize(procI));
+        maxProcCells = max(maxProcCells, globalCells.localSize(proci));
         totProcFaces += nProcFaces;
         totProcPatches += nei.size();
         maxProcPatches = max(maxProcPatches, nei.size());

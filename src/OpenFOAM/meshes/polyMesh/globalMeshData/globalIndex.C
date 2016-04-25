@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,10 @@ Foam::globalIndex::globalIndex
 
     label offset = 0;
     offsets_[0] = 0;
-    for (label procI = 0; procI < Pstream::nProcs(comm); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(comm); proci++)
     {
         label oldOffset = offset;
-        offset += localSizes[procI];
+        offset += localSizes[proci];
 
         if (offset < oldOffset)
         {
@@ -60,7 +60,7 @@ Foam::globalIndex::globalIndex
                 << "). Please recompile with larger datatype for label."
                 << exit(FatalError);
         }
-        offsets_[procI+1] = offset;
+        offsets_[proci+1] = offset;
     }
 }
 
@@ -76,10 +76,10 @@ Foam::globalIndex::globalIndex(const label localSize)
 
     label offset = 0;
     offsets_[0] = 0;
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
         label oldOffset = offset;
-        offset += localSizes[procI];
+        offset += localSizes[proci];
 
         if (offset < oldOffset)
         {
@@ -89,7 +89,7 @@ Foam::globalIndex::globalIndex(const label localSize)
                 << "). Please recompile with larger datatype for label."
                 << exit(FatalError);
         }
-        offsets_[procI+1] = offset;
+        offsets_[proci+1] = offset;
     }
 }
 

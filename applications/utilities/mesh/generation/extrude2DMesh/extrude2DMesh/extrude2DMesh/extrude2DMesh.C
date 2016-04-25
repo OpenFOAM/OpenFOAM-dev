@@ -92,8 +92,8 @@ Foam::extrude2DMesh::extrude2DMesh
     model_(model),
     modelType_(dict.lookup("extrudeModel")),
     patchType_(dict.lookup("patchType")),
-    frontPatchI_(-1),
-    backPatchI_(-1)
+    frontPatchi_(-1),
+    backPatchi_(-1)
 {
     check2D();
 }
@@ -111,8 +111,8 @@ void Foam::extrude2DMesh::addFrontBackPatches()
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    frontPatchI_ = patches.findPatchID("front");
-    backPatchI_ = patches.findPatchID("back");
+    frontPatchi_ = patches.findPatchID("front");
+    backPatchi_ = patches.findPatchID("back");
 
     // Add patch.
     List<polyPatch*> newPatches(patches.size() + 2);
@@ -131,59 +131,59 @@ void Foam::extrude2DMesh::addFrontBackPatches()
             ).ptr();
     }
 
-    if (frontPatchI_ == -1)
+    if (frontPatchi_ == -1)
     {
-        frontPatchI_ = patches.size();
+        frontPatchi_ = patches.size();
 
-        newPatches[frontPatchI_] =
+        newPatches[frontPatchi_] =
             polyPatch::New
             (
                 patchType_,
                 "front",
                 0,
                 mesh_.nFaces(),
-                frontPatchI_,
+                frontPatchi_,
                 patches
             ).ptr();
 
-//        newPatches[frontPatchI_] = polyPatch::New
+//        newPatches[frontPatchi_] = polyPatch::New
 //        (
 //            "front",
 //            patchDict_,
-//            frontPatchI_,
+//            frontPatchi_,
 //            patches
 //        ).ptr();
 
-        Info<< "Adding patch " << newPatches[frontPatchI_]->name()
-            << " at index " << frontPatchI_
+        Info<< "Adding patch " << newPatches[frontPatchi_]->name()
+            << " at index " << frontPatchi_
             << " for front faces." << nl << endl;
     }
 
-    if (backPatchI_ == -1)
+    if (backPatchi_ == -1)
     {
-        backPatchI_ = patches.size() + 1;
+        backPatchi_ = patches.size() + 1;
 
-        newPatches[backPatchI_] =
+        newPatches[backPatchi_] =
             polyPatch::New
             (
                 patchType_,
                 "back",
                 0,
                 mesh_.nFaces(),
-                backPatchI_,
+                backPatchi_,
                 patches
             ).ptr();
 
-//        newPatches[frontPatchI_] = polyPatch::New
+//        newPatches[frontPatchi_] = polyPatch::New
 //        (
 //            "back",
 //            patchDict_,
-//            backPatchI_,
+//            backPatchi_,
 //            patches
 //        ).ptr();
 
-        Info<< "Adding patch " << newPatches[backPatchI_]->name()
-            << " at index " << backPatchI_
+        Info<< "Adding patch " << newPatches[backPatchi_]->name()
+            << " at index " << backPatchi_
             << " for back faces." << nl << endl;
     }
 
@@ -330,10 +330,10 @@ void Foam::extrude2DMesh::setRefinement
             label currentLayerOffset = layer*mesh_.nPoints();
             label nextLayerOffset = currentLayerOffset + mesh_.nPoints();
 
-            label startFaceI = patches[patchi].start();
-            label endFaceI = startFaceI + patches[patchi].size();
+            label startFacei = patches[patchi].start();
+            label endFacei = startFacei + patches[patchi].size();
 
-            for (label facei = startFaceI; facei < endFaceI; facei++)
+            for (label facei = startFacei; facei < endFacei; facei++)
             {
                 label zoneID = mesh_.faceZones().whichZone(facei);
                 bool zoneFlip = false;
@@ -386,12 +386,12 @@ void Foam::extrude2DMesh::setRefinement
         face frontFace(cFaces.size());
 
         // Make a loop out of faces.
-        label nextFaceI = cFaces[0];
+        label nextFacei = cFaces[0];
 
-        const face& f = faces[nextFaceI];
+        const face& f = faces[nextFacei];
 
         label nextPointI;
-        if (mesh_.faceOwner()[nextFaceI] == celli)
+        if (mesh_.faceOwner()[nextFacei] == celli)
         {
             frontFace[0] = f[0];
             nextPointI = f[1];
@@ -408,23 +408,23 @@ void Foam::extrude2DMesh::setRefinement
             frontFace[i] = nextPointI;
 
             // Find face containing pointI
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
-                if (facei != nextFaceI)
+                label facei = cFaces[cFacei];
+                if (facei != nextFacei)
                 {
                     const face& f = faces[facei];
 
                     if (f[0] == nextPointI)
                     {
                         nextPointI = f[1];
-                        nextFaceI = facei;
+                        nextFacei = facei;
                         break;
                     }
                     else if (f[1] == nextPointI)
                     {
                         nextPointI = f[0];
-                        nextFaceI = facei;
+                        nextFacei = facei;
                         break;
                     }
                 }
@@ -482,12 +482,12 @@ void Foam::extrude2DMesh::setRefinement
         face frontFace(cFaces.size());
 
         // Make a loop out of faces.
-        label nextFaceI = cFaces[0];
+        label nextFacei = cFaces[0];
 
-        const face& f = faces[nextFaceI];
+        const face& f = faces[nextFacei];
 
         label nextPointI;
-        if (mesh_.faceOwner()[nextFaceI] == celli)
+        if (mesh_.faceOwner()[nextFacei] == celli)
         {
             frontFace[0] = f[0];
             nextPointI = f[1];
@@ -504,23 +504,23 @@ void Foam::extrude2DMesh::setRefinement
             frontFace[i] = nextPointI;
 
             // Find face containing pointI
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
-                if (facei != nextFaceI)
+                label facei = cFaces[cFacei];
+                if (facei != nextFacei)
                 {
                     const face& f = faces[facei];
 
                     if (f[0] == nextPointI)
                     {
                         nextPointI = f[1];
-                        nextFaceI = facei;
+                        nextFacei = facei;
                         break;
                     }
                     else if (f[1] == nextPointI)
                     {
                         nextPointI = f[0];
-                        nextFaceI = facei;
+                        nextFacei = facei;
                         break;
                     }
                 }
@@ -537,7 +537,7 @@ void Foam::extrude2DMesh::setRefinement
             -1,                             // masterEdgeID
             nFaces++,                       // masterFaceID
             false,                          // flipFaceFlux
-            backPatchI_,                    // patchID
+            backPatchi_,                    // patchID
             -1,                             // zoneID
             false                           // zoneFlip
         );
@@ -567,7 +567,7 @@ void Foam::extrude2DMesh::setRefinement
             -1,                             // masterEdgeID
             nFaces++,                       // masterFaceID
             false,                          // flipFaceFlux
-            frontPatchI_,                   // patchID
+            frontPatchi_,                   // patchID
             -1,                             // zoneID
             false                           // zoneFlip
         );

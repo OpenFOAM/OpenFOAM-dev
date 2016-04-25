@@ -163,11 +163,11 @@ int main(int argc, char *argv[])
         }
 
         // Remove face
-        label candidateFaceI = rndGen.integer(0, mesh.nInternalFaces()-1);
-        Info<< "Wanting to delete face " << mesh.faceCentres()[candidateFaceI]
+        label candidateFacei = rndGen.integer(0, mesh.nInternalFaces()-1);
+        Info<< "Wanting to delete face " << mesh.faceCentres()[candidateFacei]
             << nl << endl;
 
-        labelList candidates(1, candidateFaceI);
+        labelList candidates(1, candidateFacei);
 
 
         // Get compatible set of faces and connected sets of cells.

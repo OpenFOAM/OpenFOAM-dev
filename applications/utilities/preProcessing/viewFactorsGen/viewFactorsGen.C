@@ -75,8 +75,8 @@ triSurface triangulate
         mesh.nFaces() - mesh.nInternalFaces()
     );
 
-    label newPatchI = 0;
-    label localTriFaceI = 0;
+    label newPatchi = 0;
+    label localTriFacei = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
@@ -86,9 +86,9 @@ triSurface triangulate
 
         label nTriTotal = 0;
 
-        forAll(patch, patchFaceI)
+        forAll(patch, patchFacei)
         {
-            const face& f = patch[patchFaceI];
+            const face& f = patch[patchFacei];
 
             faceList triFaces(f.nTriangles(points));
 
@@ -96,27 +96,27 @@ triSurface triangulate
 
             f.triangles(points, nTri, triFaces);
 
-            forAll(triFaces, triFaceI)
+            forAll(triFaces, triFacei)
             {
-                const face& f = triFaces[triFaceI];
+                const face& f = triFaces[triFacei];
 
-                triangles.append(labelledTri(f[0], f[1], f[2], newPatchI));
+                triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
 
                 nTriTotal++;
 
-                triSurfaceToAgglom[localTriFaceI++] = globalNumbering.toGlobal
+                triSurfaceToAgglom[localTriFacei++] = globalNumbering.toGlobal
                 (
                     Pstream::myProcNo(),
-                    finalAgglom[patchi][patchFaceI]
+                    finalAgglom[patchi][patchFacei]
                   + coarsePatches[patchi].start()
                 );
             }
         }
 
-        newPatchI++;
+        newPatchi++;
     }
 
-    triSurfaceToAgglom.resize(localTriFaceI);
+    triSurfaceToAgglom.resize(localTriFacei);
 
     triangles.shrink();
 
@@ -131,20 +131,20 @@ triSurface triangulate
     );
 
     // Add patch names to surface
-    surface.patches().setSize(newPatchI);
+    surface.patches().setSize(newPatchi);
 
-    newPatchI = 0;
+    newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
     {
         const label patchi = iter.key();
         const polyPatch& patch = bMesh[patchi];
 
-        surface.patches()[newPatchI].index() = patchi;
-        surface.patches()[newPatchI].name() = patch.name();
-        surface.patches()[newPatchI].geometricType() = patch.type();
+        surface.patches()[newPatchi].index() = patchi;
+        surface.patches()[newPatchi].name() = patch.name();
+        surface.patches()[newPatchi].geometricType() = patch.type();
 
-        newPatchI++;
+        newPatchi++;
     }
 
     return surface;
@@ -222,7 +222,7 @@ scalar calculateViewFactorFij
 void insertMatrixElements
 (
     const globalIndex& globalNumbering,
-    const label fromProcI,
+    const label fromProci,
     const labelListList& globalFaceFaces,
     const scalarListList& viewFactors,
     scalarSquareMatrix& matrix
@@ -233,7 +233,7 @@ void insertMatrixElements
         const scalarList& vf = viewFactors[facei];
         const labelList& globalFaces = globalFaceFaces[facei];
 
-        label globalI = globalNumbering.toGlobal(fromProcI, facei);
+        label globalI = globalNumbering.toGlobal(fromProci, facei);
         forAll(globalFaces, i)
         {
             matrix[globalI][globalFaces[i]] = vf[i];
@@ -401,8 +401,8 @@ int main(int argc, char *argv[])
         {
             point cf = coarseCf[facei];
 
-            const label coarseFaceI = coarsePatchFace[facei];
-            const labelList& fineFaces = coarseToFine[coarseFaceI];
+            const label coarseFacei = coarsePatchFace[facei];
+            const labelList& fineFaces = coarseToFine[coarseFacei];
             const label agglomI =
                 agglom[fineFaces[0]] + coarsePatches[patchID].start();
 
@@ -611,8 +611,8 @@ int main(int argc, char *argv[])
             List<point>& fineCf = compactFineCf[compactI];
             List<point>& fineSf = compactFineSf[compactI++];
 
-            const label coarseFaceI = coarsePatchFace[coarseI];
-            const labelList& fineFaces = coarseToFine[coarseFaceI];
+            const label coarseFacei = coarsePatchFace[coarseI];
+            const labelList& fineFaces = coarseToFine[coarseFacei];
 
             fineCf.setSize(fineFaces.size());
             fineSf.setSize(fineFaces.size());
@@ -620,12 +620,12 @@ int main(int argc, char *argv[])
             fineCf = UIndirectList<point>
             (
                 mesh.Cf().boundaryField()[patchID],
-                coarseToFine[coarseFaceI]
+                coarseToFine[coarseFacei]
             );
             fineSf = UIndirectList<point>
             (
                 mesh.Sf().boundaryField()[patchID],
-                coarseToFine[coarseFaceI]
+                coarseToFine[coarseFacei]
             );
         }
     }
@@ -688,20 +688,20 @@ int main(int argc, char *argv[])
 
     if (mesh.nSolutionD() == 3)
     {
-        forAll(localCoarseSf, coarseFaceI)
+        forAll(localCoarseSf, coarseFacei)
         {
-            const List<point>& localFineSf = compactFineSf[coarseFaceI];
+            const List<point>& localFineSf = compactFineSf[coarseFacei];
             const vector Ai = sum(localFineSf);
-            const List<point>& localFineCf = compactFineCf[coarseFaceI];
-            const label fromPatchId = compactPatchId[coarseFaceI];
+            const List<point>& localFineCf = compactFineCf[coarseFacei];
+            const label fromPatchId = compactPatchId[coarseFacei];
             patchArea[fromPatchId] += mag(Ai);
 
-            const labelList& visCoarseFaces = visibleFaceFaces[coarseFaceI];
+            const labelList& visCoarseFaces = visibleFaceFaces[coarseFacei];
 
-            forAll(visCoarseFaces, visCoarseFaceI)
+            forAll(visCoarseFaces, visCoarseFacei)
             {
-                F[coarseFaceI].setSize(visCoarseFaces.size());
-                label compactJ = visCoarseFaces[visCoarseFaceI];
+                F[coarseFacei].setSize(visCoarseFaces.size());
+                label compactJ = visCoarseFaces[visCoarseFacei];
                 const List<point>& remoteFineSj = compactFineSf[compactJ];
                 const List<point>& remoteFineCj = compactFineCf[compactJ];
 
@@ -729,7 +729,7 @@ int main(int argc, char *argv[])
                         Fij += dIntFij;
                     }
                 }
-                F[coarseFaceI][visCoarseFaceI] = Fij/mag(Ai);
+                F[coarseFacei][visCoarseFacei] = Fij/mag(Ai);
                 sumViewFactorPatch[fromPatchId][toPatchId] += Fij;
             }
         }
@@ -749,22 +749,22 @@ int main(int argc, char *argv[])
 
         scalar wideBy2 = (box.span() & emptyDir)*2.0;
 
-        forAll(localCoarseSf, coarseFaceI)
+        forAll(localCoarseSf, coarseFacei)
         {
-            const vector& Ai = localCoarseSf[coarseFaceI];
-            const vector& Ci = localCoarseCf[coarseFaceI];
+            const vector& Ai = localCoarseSf[coarseFacei];
+            const vector& Ci = localCoarseCf[coarseFacei];
             vector Ain = Ai/mag(Ai);
             vector R1i = Ci + (mag(Ai)/wideBy2)*(Ain ^ emptyDir);
             vector R2i = Ci - (mag(Ai)/wideBy2)*(Ain ^ emptyDir) ;
 
-            const label fromPatchId = compactPatchId[coarseFaceI];
+            const label fromPatchId = compactPatchId[coarseFacei];
             patchArea[fromPatchId] += mag(Ai);
 
-            const labelList& visCoarseFaces = visibleFaceFaces[coarseFaceI];
-            forAll(visCoarseFaces, visCoarseFaceI)
+            const labelList& visCoarseFaces = visibleFaceFaces[coarseFacei];
+            forAll(visCoarseFaces, visCoarseFacei)
             {
-                F[coarseFaceI].setSize(visCoarseFaces.size());
-                label compactJ = visCoarseFaces[visCoarseFaceI];
+                F[coarseFacei].setSize(visCoarseFaces.size());
+                label compactJ = visCoarseFaces[visCoarseFacei];
                 const vector& Aj = compactCoarseSf[compactJ];
                 const vector& Cj = compactCoarseCf[compactJ];
 
@@ -781,7 +781,7 @@ int main(int argc, char *argv[])
 
                 scalar Fij = mag((d1 + d2) - (s1 + s2))/(4.0*mag(Ai)/wideBy2);
 
-                F[coarseFaceI][visCoarseFaceI] = Fij;
+                F[coarseFacei][visCoarseFacei] = Fij;
                 sumViewFactorPatch[fromPatchId][toPatchId] += Fij*mag(Ai);
             }
         }
@@ -873,15 +873,15 @@ int main(int argc, char *argv[])
     }
 
 
-    forAll(compactMap, procI)
+    forAll(compactMap, proci)
     {
-        const Map<label>& localToCompactMap = compactMap[procI];
+        const Map<label>& localToCompactMap = compactMap[proci];
 
         forAllConstIter(Map<label>, localToCompactMap, iter)
         {
             compactToGlobal[iter()] = globalNumbering.toGlobal
             (
-                procI,
+                proci,
                 iter.key()
             );
         }

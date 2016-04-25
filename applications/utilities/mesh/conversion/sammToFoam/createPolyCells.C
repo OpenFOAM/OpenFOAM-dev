@@ -114,16 +114,16 @@ void Foam::sammMesh::createPolyCells()
                         // get the list of search faces
                         const faceList& searchFaces = cellFaces_[curNei];
 
-                        forAll(searchFaces, neiFaceI)
+                        forAll(searchFaces, neiFacei)
                         {
-                            if (searchFaces[neiFaceI] == curFace)
+                            if (searchFaces[neiFacei] == curFace)
                             {
                                 // match!!
                                 found = true;
 
                                 // Record the neighbour cell and face
                                 neiCells[facei] = curNei;
-                                faceOfNeiCell[facei] = neiFaceI;
+                                faceOfNeiCell[facei] = neiFacei;
                                 nNeighbours++;
 
                                 break;

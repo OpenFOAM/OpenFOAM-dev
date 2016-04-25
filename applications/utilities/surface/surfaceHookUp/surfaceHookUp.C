@@ -531,11 +531,11 @@ int main(int argc, char *argv[])
 
                     visitedFace[hitSurfI][facei] = true;
 
-                    forAll(newFacesFromSplit, newFaceI)
+                    forAll(newFacesFromSplit, newFacei)
                     {
-                        const labelledTri& fN = newFacesFromSplit[newFaceI];
+                        const labelledTri& fN = newFacesFromSplit[newFacei];
 
-                        if (newFaceI == 0)
+                        if (newFacei == 0)
                         {
                             newFaces[hitSurfI][facei] = fN;
                         }

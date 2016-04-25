@@ -293,10 +293,10 @@ void Foam::ensightMesh::correct()
              && !refCast<const processorPolyPatch>(pp).owner()
             )
             {
-                label bFaceI = pp.start()-mesh_.nInternalFaces();
+                label bFacei = pp.start()-mesh_.nInternalFaces();
                 forAll(pp, i)
                 {
-                    boundaryFaceToBeIncluded_[bFaceI++] = 0;
+                    boundaryFaceToBeIncluded_[bFacei++] = 0;
                 }
             }
         }
@@ -1136,7 +1136,7 @@ void Foam::ensightMesh::write
     }
 
 
-    label ensightPatchI = patchPartOffset_;
+    label ensightPatchi = patchPartOffset_;
 
     forAll(allPatchNames_, patchi)
     {
@@ -1176,7 +1176,7 @@ void Foam::ensightMesh::write
 
                 writeAllPoints
                 (
-                    ensightPatchI++,
+                    ensightPatchi++,
                     patchName,
                     uniquePoints,
                     globalPointsPtr().size(),
@@ -1281,7 +1281,7 @@ void Foam::ensightMesh::write
 
             writeAllPoints
             (
-                ensightPatchI++,
+                ensightPatchi++,
                 faceZoneName,
                 uniquePoints,
                 globalPointsPtr().size(),

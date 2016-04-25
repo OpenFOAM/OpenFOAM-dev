@@ -119,7 +119,7 @@ void reactingOneDim::updateQr()
     tmp<volScalarField> kappa = kappaRad();
 
     // Propagate Qr through 1-D regions
-    label localPyrolysisFaceI = 0;
+    label localPyrolysisFacei = 0;
     forAll(intCoupledPatchIDs_, i)
     {
         const label patchi = intCoupledPatchIDs_[i];
@@ -131,7 +131,7 @@ void reactingOneDim::updateQr()
         {
             const scalar Qr0 = Qrp[facei];
             point Cf0 = Cf[facei];
-            const labelList& cells = boundaryFaceCells_[localPyrolysisFaceI++];
+            const labelList& cells = boundaryFaceCells_[localPyrolysisFacei++];
             scalar kappaInt = 0.0;
             forAll(cells, k)
             {

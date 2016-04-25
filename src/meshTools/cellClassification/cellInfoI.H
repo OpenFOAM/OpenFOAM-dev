@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,10 @@ template<class TrackingData>
 inline bool Foam::cellInfo::update
 (
     const cellInfo& w2,
-    const label thisFaceI,
-    const label thisCellI,
-    const label neighbourFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label thisCelli,
+    const label neighbourFacei,
+    const label neighbourCelli,
     TrackingData& td
 )
 {
@@ -49,10 +49,10 @@ inline bool Foam::cellInfo::update
         FatalErrorInFunction
             << "Problem: trying to propagate NOTSET or CUT type:" << w2.type()
             << " into cell/face with type:" << type() << endl
-            << "thisFaceI:" << thisFaceI
-            << "  thisCellI:" << thisCellI
-            << "  neighbourFaceI:" << neighbourFaceI
-            << "  neighbourCellI:" << neighbourCellI
+            << "thisFacei:" << thisFacei
+            << "  thisCelli:" << thisCelli
+            << "  neighbourFacei:" << neighbourFacei
+            << "  neighbourCelli:" << neighbourCelli
             << abort(FatalError);
         return false;
     }
@@ -80,10 +80,10 @@ inline bool Foam::cellInfo::update
     FatalErrorInFunction
         << "Problem: trying to propagate conflicting types:" << w2.type()
         << " into cell/face with type:" << type() << endl
-        << "thisFaceI:" << thisFaceI
-        << "  thisCellI:" << thisCellI
-        << "  neighbourFaceI:" << neighbourFaceI
-        << "  neighbourCellI:" << neighbourCellI
+        << "thisFacei:" << thisFacei
+        << "  thisCelli:" << thisCelli
+        << "  neighbourFacei:" << neighbourFacei
+        << "  neighbourCelli:" << neighbourCelli
         << abort(FatalError);
 
     return false;
@@ -143,7 +143,7 @@ inline void Foam::cellInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -167,7 +167,7 @@ inline void Foam::cellInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -179,8 +179,8 @@ template<class TrackingData>
 inline bool Foam::cellInfo::updateCell
 (
     const polyMesh&,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const cellInfo& neighbourInfo,
     const scalar tol,
     TrackingData& td
@@ -190,8 +190,8 @@ inline bool Foam::cellInfo::updateCell
     (
         neighbourInfo,
         -1,
-        thisCellI,
-        neighbourFaceI,
+        thisCelli,
+        neighbourFacei,
         -1,
         td
     );
@@ -203,8 +203,8 @@ template<class TrackingData>
 inline bool Foam::cellInfo::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const cellInfo& neighbourInfo,
     const scalar tol,
     TrackingData& td
@@ -213,10 +213,10 @@ inline bool Foam::cellInfo::updateFace
     return update
     (
         neighbourInfo,
-        thisFaceI,
+        thisFacei,
         -1,
         -1,
-        neighbourCellI,
+        neighbourCelli,
         td
     );
 }
@@ -226,7 +226,7 @@ template<class TrackingData>
 inline bool Foam::cellInfo::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
+    const label thisFacei,
     const cellInfo& neighbourInfo,
     const scalar tol,
     TrackingData& td
@@ -235,7 +235,7 @@ inline bool Foam::cellInfo::updateFace
     return update
     (
         neighbourInfo,
-        thisFaceI,
+        thisFacei,
         -1,
         -1,
         -1,

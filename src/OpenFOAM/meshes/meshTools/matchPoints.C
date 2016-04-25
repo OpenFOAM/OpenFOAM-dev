@@ -76,7 +76,7 @@ bool Foam::matchPoints
 
         // Go through range of equal mag and find nearest vector.
         scalar minDistSqr = VGREAT;
-        label minFaceI = -1;
+        label minFacei = -1;
 
         for
         (
@@ -95,11 +95,11 @@ bool Foam::matchPoints
             if (distSqr <= sqr(matchDist) && distSqr < minDistSqr)
             {
                 minDistSqr = distSqr;
-                minFaceI = facei;
+                minFacei = facei;
             }
         }
 
-        if (minFaceI == -1)
+        if (minFacei == -1)
         {
             fullMatch = false;
 
@@ -132,7 +132,7 @@ bool Foam::matchPoints
             }
         }
 
-        from0To1[face0I] = minFaceI;
+        from0To1[face0I] = minFacei;
     }
 
     return fullMatch;
@@ -188,7 +188,7 @@ bool Foam::matchPoints
         // Go through range of equal mag and find nearest vector.
         scalar minDistSqr = VGREAT;
         scalar minDistNorm = 0;
-        label minFaceI = -1;
+        label minFacei = -1;
 
         for
         (
@@ -222,12 +222,12 @@ bool Foam::matchPoints
                 {
                     minDistNorm = distNorm;
                     minDistSqr = distSqr;
-                    minFaceI = facei;
+                    minFacei = facei;
                 }
             }
         }
 
-        if (minFaceI == -1)
+        if (minFacei == -1)
         {
             fullMatch = false;
 
@@ -260,7 +260,7 @@ bool Foam::matchPoints
             }
         }
 
-        from0To1[face0I] = minFaceI;
+        from0To1[face0I] = minFacei;
     }
 
     return fullMatch;

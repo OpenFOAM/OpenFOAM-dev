@@ -130,7 +130,7 @@ class regionSplit
         void transferCoupledFaceRegion
         (
             const label facei,
-            const label otherFaceI,
+            const label otherFacei,
 
             labelList& faceRegion,
             DynamicList<label>& newChangedFaces

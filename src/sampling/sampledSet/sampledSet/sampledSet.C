@@ -167,9 +167,9 @@ Foam::label Foam::sampledSet::findNearFace
 {
     const cell& myFaces = mesh().cells()[celli];
 
-    forAll(myFaces, myFaceI)
+    forAll(myFaces, myFacei)
     {
-        const face& f = mesh().faces()[myFaces[myFaceI]];
+        const face& f = mesh().faces()[myFaces[myFacei]];
 
         pointHit inter = f.nearestPoint(sample, mesh().points());
 
@@ -186,7 +186,7 @@ Foam::label Foam::sampledSet::findNearFace
 
         if (dist < smallDist)
         {
-            return myFaces[myFaceI];
+            return myFaces[myFacei];
         }
     }
     return -1;
@@ -205,11 +205,11 @@ Foam::point Foam::sampledSet::pushIn
     point newPosition = facePt;
 
     // Taken from particle::initCellFacePt()
-    label tetFaceI;
+    label tetFacei;
     label tetPtI;
-    mesh().findTetFacePt(celli, facePt, tetFaceI, tetPtI);
+    mesh().findTetFacePt(celli, facePt, tetFacei, tetPtI);
 
-    if (tetFaceI == -1 || tetPtI == -1)
+    if (tetFacei == -1 || tetPtI == -1)
     {
         newPosition = facePt;
 
@@ -225,16 +225,16 @@ Foam::point Foam::sampledSet::pushIn
             (
                 celli,
                 newPosition,
-                tetFaceI,
+                tetFacei,
                 tetPtI
             );
 
             iterNo++;
 
-        } while (tetFaceI < 0  && iterNo <= trap);
+        } while (tetFacei < 0  && iterNo <= trap);
     }
 
-    if (tetFaceI == -1)
+    if (tetFacei == -1)
     {
         FatalErrorInFunction
             << "After pushing " << facePt << " to " << newPosition
@@ -254,28 +254,28 @@ bool Foam::sampledSet::getTrackingPoint
 (
     const point& samplePt,
     const point& bPoint,
-    const label bFaceI,
+    const label bFacei,
     const scalar smallDist,
 
     point& trackPt,
-    label& trackCellI,
-    label& trackFaceI
+    label& trackCelli,
+    label& trackFacei
 ) const
 {
     bool isGoodSample = false;
 
-    if (bFaceI == -1)
+    if (bFacei == -1)
     {
         // No boundary intersection. Try and find cell samplePt is in
-        trackCellI = mesh().findCell(samplePt, searchEngine_.decompMode());
+        trackCelli = mesh().findCell(samplePt, searchEngine_.decompMode());
 
         if
         (
-            (trackCellI == -1)
+            (trackCelli == -1)
         || !mesh().pointInCell
             (
                 samplePt,
-                trackCellI,
+                trackCelli,
                 searchEngine_.decompMode()
             )
         )
@@ -283,8 +283,8 @@ bool Foam::sampledSet::getTrackingPoint
             // Line samplePt - end_ does not intersect domain at all.
             // (or is along edge)
 
-            trackCellI = -1;
-            trackFaceI = -1;
+            trackCelli = -1;
+            trackFacei = -1;
 
             isGoodSample = false;
         }
@@ -293,7 +293,7 @@ bool Foam::sampledSet::getTrackingPoint
             // Start is inside. Use it as tracking point
 
             trackPt = samplePt;
-            trackFaceI = -1;
+            trackFacei = -1;
 
             isGoodSample = true;
         }
@@ -301,31 +301,31 @@ bool Foam::sampledSet::getTrackingPoint
     else if (mag(samplePt - bPoint) < smallDist)
     {
         // samplePt close to bPoint. Snap to it
-        trackPt = pushIn(bPoint, bFaceI);
-        trackFaceI = bFaceI;
-        trackCellI = getBoundaryCell(trackFaceI);
+        trackPt = pushIn(bPoint, bFacei);
+        trackFacei = bFacei;
+        trackCelli = getBoundaryCell(trackFacei);
 
         isGoodSample = true;
     }
     else
     {
-        scalar sign = calcSign(bFaceI, samplePt);
+        scalar sign = calcSign(bFacei, samplePt);
 
         if (sign < 0)
         {
             // samplePt inside or marginally outside.
             trackPt = samplePt;
-            trackFaceI = -1;
-            trackCellI = mesh().findCell(trackPt, searchEngine_.decompMode());
+            trackFacei = -1;
+            trackCelli = mesh().findCell(trackPt, searchEngine_.decompMode());
 
             isGoodSample = true;
         }
         else
         {
             // samplePt outside. use bPoint
-            trackPt = pushIn(bPoint, bFaceI);
-            trackFaceI = bFaceI;
-            trackCellI = getBoundaryCell(trackFaceI);
+            trackPt = pushIn(bPoint, bFacei);
+            trackFacei = bFacei;
+            trackCelli = getBoundaryCell(trackFacei);
 
             isGoodSample = false;
         }
@@ -336,11 +336,11 @@ bool Foam::sampledSet::getTrackingPoint
         InfoInFunction
             << " samplePt:" << samplePt
             << " bPoint:" << bPoint
-            << " bFaceI:" << bFaceI
+            << " bFacei:" << bFacei
             << endl << "   Calculated first tracking point :"
             << " trackPt:" << trackPt
-            << " trackCellI:" << trackCellI
-            << " trackFaceI:" << trackFaceI
+            << " trackCelli:" << trackCelli
+            << " trackFacei:" << trackFacei
             << " isGoodSample:" << isGoodSample
             << endl;
     }

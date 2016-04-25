@@ -31,8 +31,8 @@ template<class SourcePatch, class TargetPatch>
 void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
 (
     label& startSeedI,
-    label& srcFaceI,
-    label& tgtFaceI,
+    label& srcFacei,
+    label& tgtFacei,
     const boolList& mapFlag,
     labelList& seedFaces,
     const DynamicList<label>& visitedFaces,
@@ -42,8 +42,8 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
     faceAreaWeightAMI<SourcePatch, TargetPatch>::setNextFaces
     (
         startSeedI,
-        srcFaceI,
-        tgtFaceI,
+        srcFacei,
+        tgtFacei,
         mapFlag,
         seedFaces,
         visitedFaces,
@@ -104,8 +104,8 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
     scalarListList& srcWeights,
     labelListList& tgtAddress,
     scalarListList& tgtWeights,
-    label srcFaceI,
-    label tgtFaceI
+    label srcFacei,
+    label tgtFacei
 )
 {
     bool ok =
@@ -115,8 +115,8 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
             srcWeights,
             tgtAddress,
             tgtWeights,
-            srcFaceI,
-            tgtFaceI
+            srcFacei,
+            tgtFacei
         );
 
     if (!ok)
@@ -136,8 +136,8 @@ void Foam::partialFaceAreaWeightAMI<SourcePatch, TargetPatch>::calculate
         srcWght,
         tgtAddr,
         tgtWght,
-        srcFaceI,
-        tgtFaceI
+        srcFacei,
+        tgtFacei
     );
 
     // transfer data to persistent storage

@@ -61,13 +61,13 @@ void Foam::writeFaceSet
 
     faceList setFaces(set.size());
     labelList setFaceLabels(set.size());
-    label setFaceI = 0;
+    label setFacei = 0;
 
     forAllConstIter(faceSet, set, iter)
     {
-        setFaceLabels[setFaceI] = iter.key();
-        setFaces[setFaceI] = faces[iter.key()];
-        setFaceI++;
+        setFaceLabels[setFacei] = iter.key();
+        setFaces[setFacei] = faces[iter.key()];
+        setFacei++;
     }
     primitiveFacePatch fp(setFaces, vMesh.mesh().points());
 

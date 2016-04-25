@@ -102,7 +102,7 @@ class regionSide
             const primitiveMesh& mesh,
             const labelHashSet& regionEdges,
             const label regionPointI,
-            const label startFaceI,
+            const label startFacei,
             const label startEdgeI,
             labelHashSet& visitedEdges
         );
@@ -128,7 +128,7 @@ public:
         (
             const primitiveMesh& mesh,
             const label celli,
-            const label excludeFaceI,
+            const label excludeFacei,
             const label edgeI
         );
 

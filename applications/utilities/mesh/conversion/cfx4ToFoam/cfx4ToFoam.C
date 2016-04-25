@@ -550,16 +550,16 @@ int main(int argc, char *argv[])
     {
         labelListList curBlockCells = blocks[blockI].blockCells();
 
-        forAll(curBlockCells, blockCellI)
+        forAll(curBlockCells, blockCelli)
         {
-            labelList cellPoints(curBlockCells[blockCellI].size());
+            labelList cellPoints(curBlockCells[blockCelli].size());
 
             forAll(cellPoints, pointI)
             {
                 cellPoints[pointI] =
                     pointMergeList
                     [
-                        curBlockCells[blockCellI][pointI]
+                        curBlockCells[blockCelli][pointI]
                       + blockOffsets[blockI]
                     ];
             }
@@ -587,11 +587,11 @@ int main(int argc, char *argv[])
             // Check if this name has been already created
             label existingPatch = -1;
 
-            for (label oldPatchI = 0; oldPatchI < nCreatedPatches; oldPatchI++)
+            for (label oldPatchi = 0; oldPatchi < nCreatedPatches; oldPatchi++)
             {
-                if (patchNames[oldPatchI] == cfxPatchNames[patchi])
+                if (patchNames[oldPatchi] == cfxPatchNames[patchi])
                 {
-                    existingPatch = oldPatchI;
+                    existingPatch = oldPatchi;
                     break;
                 }
             }

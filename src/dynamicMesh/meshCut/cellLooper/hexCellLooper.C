@@ -49,14 +49,14 @@ addToRunTimeSelectionTable(cellLooper, hexCellLooper, word);
 bool Foam::hexCellLooper::walkHex
 (
     const label celli,
-    const label startFaceI,
+    const label startFacei,
     const label startEdgeI,
 
     labelList& loop,
     scalarField& loopWeights
 ) const
 {
-    label facei = startFaceI;
+    label facei = startFacei;
 
     label edgeI = startEdgeI;
 

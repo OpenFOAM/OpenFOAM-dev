@@ -116,7 +116,7 @@ class viewFactor
         void insertMatrixElements
         (
             const globalIndex& index,
-            const label fromProcI,
+            const label fromProci,
             const labelListList& globalFaceFaces,
             const scalarListList& viewFactors,
             scalarSquareMatrix& matrix

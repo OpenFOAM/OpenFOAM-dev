@@ -137,15 +137,15 @@ Foam::fv::fourthGrad<Type>::calcGrad
                 secondfGrad.boundaryField()[patchi].patchNeighbourField()
             );
 
-            forAll(faceCells, patchFaceI)
+            forAll(faceCells, patchFacei)
             {
-                fGrad[faceCells[patchFaceI]] -=
-                    0.5*lambdap[patchFaceI]*patchOwnLs[patchFaceI]
+                fGrad[faceCells[patchFacei]] -=
+                    0.5*lambdap[patchFacei]*patchOwnLs[patchFacei]
                    *(
-                        pd[patchFaceI]
+                        pd[patchFacei]
                       & (
-                            neighbourSecondfGrad[patchFaceI]
-                          - secondfGrad[faceCells[patchFaceI]]
+                            neighbourSecondfGrad[patchFacei]
+                          - secondfGrad[faceCells[patchFacei]]
                         )
                     );
             }

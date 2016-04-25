@@ -65,7 +65,7 @@ labelList getInternalFaceOrder
     labelList oldToNew(owner.size(), -1);
 
     // First unassigned face
-    label newFaceI = 0;
+    label newFacei = 0;
 
     forAll(cells, celli)
     {
@@ -77,20 +77,20 @@ labelList getInternalFaceOrder
         {
             label facei = cFaces[i];
 
-            label nbrCellI = neighbour[facei];
+            label nbrCelli = neighbour[facei];
 
-            if (nbrCellI != -1)
+            if (nbrCelli != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == celli)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = owner[facei];
+                    nbrCelli = owner[facei];
                 }
 
-                if (celli < nbrCellI)
+                if (celli < nbrCelli)
                 {
-                    // CellI is master
-                    nbr[i] = nbrCellI;
+                    // Celli is master
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -111,13 +111,13 @@ labelList getInternalFaceOrder
         {
             if (nbr[i] != -1)
             {
-                oldToNew[cFaces[nbr.indices()[i]]] = newFaceI++;
+                oldToNew[cFaces[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
 
     // Keep boundary faces in same order.
-    for (label facei = newFaceI; facei < owner.size(); facei++)
+    for (label facei = newFacei; facei < owner.size(); facei++)
     {
         oldToNew[facei] = facei;
     }
@@ -285,7 +285,7 @@ void ReadProblem
     )
     {
         // Index of foam patch
-        label foamPatchI = -1;
+        label foamPatchi = -1;
 
         // Read prostar id
 
@@ -311,7 +311,7 @@ void ReadProblem
 
         if (prostarToFoamPatch.found(prostarI))
         {
-            foamPatchI = prostarToFoamPatch[prostarI];
+            foamPatchi = prostarToFoamPatch[prostarI];
 
             // Read boundary type
 
@@ -325,7 +325,7 @@ void ReadProblem
                 char* s = new char[size + 1];
                 CCMIOReadOptstr(NULL, boundary, "BoundaryType", &size, s);
                 s[size] = '\0';
-                foamPatchTypes[foamPatchI] = string::validate<word>(string(s));
+                foamPatchTypes[foamPatchi] = string::validate<word>(string(s));
                 delete [] s;
             }
 
@@ -347,7 +347,7 @@ void ReadProblem
                 char* name = new char[size + 1];
                 CCMIOReadOptstr(NULL, boundary, "BoundaryName", &size, name);
                 name[size] = '\0';
-                foamPatchNames[foamPatchI] =
+                foamPatchNames[foamPatchi] =
                     string::validate<word>(string(name));
                 delete [] name;
             }
@@ -360,22 +360,22 @@ void ReadProblem
                 char* name = new char[size + 1];
                 CCMIOReadOptstr(NULL, boundary, "Label", &size, name);
                 name[size] = '\0';
-                foamPatchNames[foamPatchI] =
+                foamPatchNames[foamPatchi] =
                     string::validate<word>(string(name));
                 delete [] name;
             }
             else
             {
-                foamPatchNames[foamPatchI] =
-                    foamPatchTypes[foamPatchI]
-                  + Foam::name(foamPatchI);
-                Pout<< "Made up name:" << foamPatchNames[foamPatchI]
+                foamPatchNames[foamPatchi] =
+                    foamPatchTypes[foamPatchi]
+                  + Foam::name(foamPatchi);
+                Pout<< "Made up name:" << foamPatchNames[foamPatchi]
                     << endl;
             }
 
-            Pout<< "Read patch:" << foamPatchI
-                << " name:" << foamPatchNames[foamPatchI]
-                << " foamPatchTypes:" << foamPatchTypes[foamPatchI]
+            Pout<< "Read patch:" << foamPatchi
+                << " name:" << foamPatchNames[foamPatchi]
+                << " foamPatchTypes:" << foamPatchTypes[foamPatchi]
                 << endl;
         }
 
@@ -557,12 +557,12 @@ void ReadCells
 
         for (unsigned int i = 0; i < nFaces; i++)
         {
-            label foamFaceI = foamPatchStarts[regionI] + i;
+            label foamFacei = foamPatchStarts[regionI] + i;
 
-            foamFaceMap[foamFaceI] = mapData[i];
-            foamOwner[foamFaceI] = faceCells[i];
-            foamNeighbour[foamFaceI] = -1;
-            face& f = foamFaces[foamFaceI];
+            foamFaceMap[foamFacei] = mapData[i];
+            foamOwner[foamFacei] = faceCells[i];
+            foamNeighbour[foamFacei] = -1;
+            face& f = foamFaces[foamFacei];
 
             f.setSize(faces[pos++]);
             forAll(f, fp)
@@ -812,8 +812,8 @@ int main(int argc, char *argv[])
 
     // Renumber cell labels
     {
-        label maxCCMCellI = max(foamCellMap);
-        labelList toFoamCells(invert(maxCCMCellI+1, foamCellMap));
+        label maxCCMCelli = max(foamCellMap);
+        labelList toFoamCells(invert(maxCCMCelli+1, foamCellMap));
 
         inplaceRenumber(toFoamCells, foamOwner);
         inplaceRenumber(toFoamCells, foamNeighbour);
@@ -929,16 +929,16 @@ int main(int argc, char *argv[])
     // Create patches. Use patch types to determine what Foam types to generate.
     List<polyPatch*> newPatches(foamPatchNames.size());
 
-    label meshFaceI = foamPatchStarts[0];
+    label meshFacei = foamPatchStarts[0];
 
     forAll(newPatches, patchi)
     {
         const word& patchName = foamPatchNames[patchi];
         const word& patchType = foamPatchTypes[patchi];
 
-        Pout<< "Patch:" << patchName << " start at:" << meshFaceI
+        Pout<< "Patch:" << patchName << " start at:" << meshFacei
             << " size:" << foamPatchSizes[patchi]
-            << " end at:" << meshFaceI+foamPatchSizes[patchi]
+            << " end at:" << meshFacei+foamPatchSizes[patchi]
             << endl;
 
         if (patchType == "wall")
@@ -948,7 +948,7 @@ int main(int argc, char *argv[])
                 (
                     patchName,
                     foamPatchSizes[patchi],
-                    meshFaceI,
+                    meshFacei,
                     patchi,
                     mesh.boundaryMesh(),
                     patchType
@@ -961,7 +961,7 @@ int main(int argc, char *argv[])
                 (
                     patchName,
                     foamPatchSizes[patchi],
-                    meshFaceI,
+                    meshFacei,
                     patchi,
                     mesh.boundaryMesh(),
                     patchType
@@ -975,7 +975,7 @@ int main(int argc, char *argv[])
                 (
                     patchName,
                     foamPatchSizes[patchi],
-                    meshFaceI,
+                    meshFacei,
                     patchi,
                     mesh.boundaryMesh(),
                     patchType
@@ -990,20 +990,20 @@ int main(int argc, char *argv[])
                 (
                     patchName,
                     foamPatchSizes[patchi],
-                    meshFaceI,
+                    meshFacei,
                     patchi,
                     mesh.boundaryMesh(),
                     word::null
                 );
         }
 
-        meshFaceI += foamPatchSizes[patchi];
+        meshFacei += foamPatchSizes[patchi];
     }
 
-    if (meshFaceI != foamOwner.size())
+    if (meshFacei != foamOwner.size())
     {
         FatalErrorInFunction
-            << "meshFaceI:" << meshFaceI
+            << "meshFacei:" << meshFacei
             << " nFaces:" << foamOwner.size()
             << abort(FatalError);
     }

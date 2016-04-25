@@ -290,17 +290,17 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     List<DynamicList<label>> rilInverseTemp(rilInverse_.size());
 
     // Loop over all referred cells
-    forAll(ril_, refCellI)
+    forAll(ril_, refCelli)
     {
-        const labelList& realCells = ril_[refCellI];
+        const labelList& realCells = ril_[refCelli];
 
         // Loop over all real cells in that the referred cell is to
         // supply interactions to and record the index of this
         // referred cell in the real cells entry in rilInverse
 
-        forAll(realCells, realCellI)
+        forAll(realCells, realCelli)
         {
-            rilInverseTemp[realCells[realCellI]].append(refCellI);
+            rilInverseTemp[realCells[realCelli]].append(refCelli);
         }
     }
 
@@ -363,11 +363,11 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
                 // This wall face is in range of the Bb of the other
                 // processor Bb, and so needs to be referred to it
 
-                label wallFaceI = localWallFaces[i];
+                label wallFacei = localWallFaces[i];
 
                 wallFaceIAndTToExchange.append
                 (
-                    globalTransforms.encode(wallFaceI, transformIndex)
+                    globalTransforms.encode(wallFacei, transformIndex)
                 );
 
                 wallFaceBbsToExchange.append(wallFaceBb);
@@ -507,17 +507,17 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     List<DynamicList<label>> rwfilInverseTemp(rwfilInverse_.size());
 
     // Loop over all referred wall faces
-    forAll(rwfil_, refWallFaceI)
+    forAll(rwfil_, refWallFacei)
     {
-        const labelList& realCells = rwfil_[refWallFaceI];
+        const labelList& realCells = rwfil_[refWallFacei];
 
         // Loop over all real cells in that the referred wall face is
         // to supply interactions to and record the index of this
         // referred wall face in the real cells entry in rwfilInverse
 
-        forAll(realCells, realCellI)
+        forAll(realCells, realCelli)
         {
-            rwfilInverseTemp[realCells[realCellI]].append(refWallFaceI);
+            rwfilInverseTemp[realCells[realCelli]].append(refWallFacei);
         }
     }
 
@@ -653,13 +653,13 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
 
     label nTrans = globalTransforms.nIndependentTransforms();
 
-    forAll(allExtendedProcBbs, procI)
+    forAll(allExtendedProcBbs, proci)
     {
         List<label> permutationIndices(nTrans, 0);
 
-        if (nTrans == 0 && procI != Pstream::myProcNo())
+        if (nTrans == 0 && proci != Pstream::myProcNo())
         {
-            treeBoundBox extendedReferredProcBb = allExtendedProcBbs[procI];
+            treeBoundBox extendedReferredProcBb = allExtendedProcBbs[proci];
 
             if (procBb.overlaps(extendedReferredProcBb))
             {
@@ -669,7 +669,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                 // be no resultant transform when this is decoded.
                 tmpExtendedProcBbsTransformIndex.append(0);
 
-                tmpExtendedProcBbsOrigProc.append(procI);
+                tmpExtendedProcBbsOrigProc.append(proci);
             }
         }
         else if (nTrans == 3)
@@ -689,7 +689,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                             i == 0
                          && j == 0
                          && k == 0
-                         && procI == Pstream::myProcNo()
+                         && proci == Pstream::myProcNo()
                         )
                         {
                             // Skip this processor's extended boundBox
@@ -709,7 +709,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                         (
                             transform.transformPosition
                             (
-                                allExtendedProcBbs[procI].points()
+                                allExtendedProcBbs[proci].points()
                             )
                         );
 
@@ -722,7 +722,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
 
                             tmpExtendedProcBbsTransformIndex.append(transI);
 
-                            tmpExtendedProcBbsOrigProc.append(procI);
+                            tmpExtendedProcBbsOrigProc.append(proci);
                         }
                     }
                 }
@@ -737,7 +737,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
             {
                 for (j = -1; j <= 1; j++)
                 {
-                    if (i == 0 && j == 0 && procI == Pstream::myProcNo())
+                    if (i == 0 && j == 0 && proci == Pstream::myProcNo())
                     {
                         // Skip this processor's extended boundBox
                         // when it has no transformation
@@ -756,7 +756,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                     (
                         transform.transformPosition
                         (
-                            allExtendedProcBbs[procI].points()
+                            allExtendedProcBbs[proci].points()
                         )
                     );
 
@@ -769,7 +769,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
 
                         tmpExtendedProcBbsTransformIndex.append(transI);
 
-                        tmpExtendedProcBbsOrigProc.append(procI);
+                        tmpExtendedProcBbsOrigProc.append(proci);
                     }
                 }
             }
@@ -780,7 +780,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
 
             for (i = -1; i <= 1; i++)
             {
-                if (i == 0 && procI == Pstream::myProcNo())
+                if (i == 0 && proci == Pstream::myProcNo())
                 {
                     // Skip this processor's extended boundBox when it
                     // has no transformation
@@ -799,7 +799,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                 (
                     transform.transformPosition
                     (
-                        allExtendedProcBbs[procI].points()
+                        allExtendedProcBbs[proci].points()
                     )
                 );
 
@@ -812,7 +812,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
 
                     tmpExtendedProcBbsTransformIndex.append(transI);
 
-                    tmpExtendedProcBbsOrigProc.append(procI);
+                    tmpExtendedProcBbsOrigProc.append(proci);
                 }
             }
         }
@@ -839,27 +839,27 @@ void Foam::InteractionLists<ParticleType>::buildMap
 
     forAll(toProc, i)
     {
-        label procI = toProc[i];
+        label proci = toProc[i];
 
-        nSend[procI]++;
+        nSend[proci]++;
     }
 
     // 2. Size sendMap
     labelListList sendMap(Pstream::nProcs());
 
-    forAll(nSend, procI)
+    forAll(nSend, proci)
     {
-        sendMap[procI].setSize(nSend[procI]);
+        sendMap[proci].setSize(nSend[proci]);
 
-        nSend[procI] = 0;
+        nSend[proci] = 0;
     }
 
     // 3. Fill sendMap
     forAll(toProc, i)
     {
-        label procI = toProc[i];
+        label proci = toProc[i];
 
-        sendMap[procI][nSend[procI]++] = i;
+        sendMap[proci][nSend[proci]++] = i;
     }
 
     // 4. Send over how many I need to receive
@@ -880,17 +880,17 @@ void Foam::InteractionLists<ParticleType>::buildMap
 
     label constructSize = constructMap[Pstream::myProcNo()].size();
 
-    forAll(constructMap, procI)
+    forAll(constructMap, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            label nRecv = recvSizes[procI];
+            label nRecv = recvSizes[proci];
 
-            constructMap[procI].setSize(nRecv);
+            constructMap[proci].setSize(nRecv);
 
             for (label i = 0; i < nRecv; i++)
             {
-                constructMap[procI][i] = constructSize++;
+                constructMap[proci][i] = constructSize++;
             }
         }
     }
@@ -981,10 +981,10 @@ void Foam::InteractionLists<ParticleType>::fillReferredParticleCloud()
 {
     if (writeCloud_)
     {
-        forAll(referredParticles_, refCellI)
+        forAll(referredParticles_, refCelli)
         {
             const IDLList<ParticleType>& refCell =
-                referredParticles_[refCellI];
+                referredParticles_[refCelli];
 
             forAllConstIter(typename IDLList<ParticleType>, refCell, iter)
             {
@@ -1027,13 +1027,13 @@ void Foam::InteractionLists<ParticleType>::prepareWallDataToRefer()
             wallFaceIndex - mesh_.nInternalFaces()
         ];
 
-        label patchFaceI =
+        label patchFacei =
             wallFaceIndex
           - mesh_.boundaryMesh()[patchi].start();
 
         // Need to transform velocity when tensor transforms are
         // supported
-        referredWallData_[rWVI] = U.boundaryField()[patchi][patchFaceI];
+        referredWallData_[rWVI] = U.boundaryField()[patchi][patchFacei];
 
         if (transform.hasR())
         {

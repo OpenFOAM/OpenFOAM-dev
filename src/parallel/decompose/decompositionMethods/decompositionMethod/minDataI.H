@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ inline void Foam::minData::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData&
 )
@@ -88,7 +88,7 @@ inline void Foam::minData::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData&
 )
@@ -99,8 +99,8 @@ template<class TrackingData>
 inline bool Foam::minData::updateCell
 (
     const polyMesh&,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const minData& neighbourInfo,
     const scalar tol,
     TrackingData&
@@ -122,8 +122,8 @@ template<class TrackingData>
 inline bool Foam::minData::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const minData& neighbourInfo,
     const scalar tol,
     TrackingData&
@@ -147,7 +147,7 @@ template<class TrackingData>
 inline bool Foam::minData::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
+    const label thisFacei,
     const minData& neighbourInfo,
     const scalar tol,
     TrackingData&

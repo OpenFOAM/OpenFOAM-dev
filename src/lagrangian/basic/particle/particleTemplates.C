@@ -85,7 +85,7 @@ void Foam::particle::correctAfterParallelTransfer
         transformProperties(-s);
     }
 
-    tetFaceI_ = facei_ + ppp.start();
+    tetFacei_ = facei_ + ppp.start();
 
     // Faces either side of a coupled patch have matched base indices,
     // tetPtI is specified relative to the base point, already and
@@ -108,7 +108,7 @@ void Foam::particle::correctAfterParallelTransfer
     // This relationship can be verified for other points and sizes of
     // face.
 
-    tetPtI_ = mesh_.faces()[tetFaceI_].size() - 1 - tetPtI_;
+    tetPtI_ = mesh_.faces()[tetFacei_].size() - 1 - tetPtI_;
 
     // Reset the face index for the next tracking operation
     if (stepFraction_ > (1.0 - SMALL))
@@ -225,7 +225,7 @@ Foam::scalar Foam::particle::trackToFace
 
     // Pout<< "stepFraction " << stepFraction_ << nl
     //     << "celli " << celli_ << nl
-    //     << "tetFaceI " << tetFaceI_ << nl
+    //     << "tetFacei " << tetFacei_ << nl
     //     << "tetPtI " << tetPtI_
     //     << endl;
 
@@ -301,11 +301,11 @@ Foam::scalar Foam::particle::trackToFace
             tetNeighbour(triI);
         }
 
-        const Foam::face& f = pFaces[tetFaceI_];
+        const Foam::face& f = pFaces[tetFacei_];
 
-        bool own = (mesh_.faceOwner()[tetFaceI_] == celli_);
+        bool own = (mesh_.faceOwner()[tetFacei_] == celli_);
 
-        label tetBasePtI = mesh_.tetBasePtIs()[tetFaceI_];
+        label tetBasePtI = mesh_.tetBasePtIs()[tetFacei_];
 
         label basePtI = f[tetBasePtI];
 
@@ -429,7 +429,7 @@ Foam::scalar Foam::particle::trackToFace
                     tetAreas[tI],
                     tetPlaneBasePtIs[tI],
                     celli_,
-                    tetFaceI_,
+                    tetFacei_,
                     tetPtI_,
                     lambdaDistanceTolerance
                 );
@@ -446,14 +446,14 @@ Foam::scalar Foam::particle::trackToFace
         if (triI == 0)
         {
             // This must be a cell face crossing
-            facei_ = tetFaceI_;
+            facei_ = tetFacei_;
 
             // Set the faceHitTetIs to those for the current tet in case a
             // wall interaction is required with the cell face
             faceHitTetIs = tetIndices
             (
                 celli_,
-                tetFaceI_,
+                tetFacei_,
                 tetBasePtI,
                 fPtAI,
                 fPtBI,
@@ -469,7 +469,7 @@ Foam::scalar Foam::particle::trackToFace
         // Pout<< "track loop " << position_ << " " << endPosition << nl
         //     << "    " << celli_
         //     << "    " << facei_
-        //     << " " << tetFaceI_
+        //     << " " << tetFacei_
         //     << " " << tetPtI_
         //     << " " << triI
         //     << " " << lambdaMin
@@ -478,9 +478,9 @@ Foam::scalar Foam::particle::trackToFace
 
         // Pout<< "# Tracking loop tet "
         //     << origId_ << " " << origProc_<< nl
-        //     << "# face: " << tetFaceI_ << nl
+        //     << "# face: " << tetFacei_ << nl
         //     << "# tetPtI: " << tetPtI_ << nl
-        //     << "# tetBasePtI: " << mesh_.tetBasePtIs()[tetFaceI_] << nl
+        //     << "# tetBasePtI: " << mesh_.tetBasePtIs()[tetFacei_] << nl
         //     << "# tet.mag(): " << tet.mag() << nl
         //     << "# tet.quality(): " << tet.quality()
         //     << endl;
@@ -552,10 +552,10 @@ Foam::scalar Foam::particle::trackToFace
     }
     else
     {
-        label origFaceI = facei_;
+        label origFacei = facei_;
         label patchi = patch(facei_);
 
-        // No action taken for tetPtI_ for tetFaceI_ here, handled by
+        // No action taken for tetPtI_ for tetFacei_ here, handled by
         // patch interaction call or later during processor transfer.
 
         if
@@ -571,7 +571,7 @@ Foam::scalar Foam::particle::trackToFace
         )
         {
             // Did patch interaction model switch patches?
-            if (facei_ != origFaceI)
+            if (facei_ != origFacei)
             {
                 patchi = patch(facei_);
             }
@@ -998,10 +998,10 @@ void Foam::particle::hitCyclicPatch
 
     celli_ = mesh_.faceOwner()[facei_];
 
-    tetFaceI_ = facei_;
+    tetFacei_ = facei_;
 
     // See note in correctAfterParallelTransfer for tetPtI_ addressing.
-    tetPtI_ = mesh_.faces()[tetFaceI_].size() - 1 - tetPtI_;
+    tetPtI_ = mesh_.faces()[tetFacei_].size() - 1 - tetPtI_;
 
     const cyclicPolyPatch& receiveCpp = cpp.neighbPatch();
     label patchFacei = receiveCpp.whichFace(facei_);
@@ -1046,12 +1046,12 @@ void Foam::particle::hitCyclicAMIPatch
     const cyclicAMIPolyPatch& receiveCpp = cpp.neighbPatch();
 
     // Patch face index on sending side
-    label patchFaceI = facei_ - cpp.start();
+    label patchFacei = facei_ - cpp.start();
 
     // Patch face index on receiving side - also updates position
-    patchFaceI = cpp.pointFace(patchFaceI, direction, position_);
+    patchFacei = cpp.pointFace(patchFacei, direction, position_);
 
-    if (patchFaceI < 0)
+    if (patchFacei < 0)
     {
         FatalErrorInFunction
             << "Particle lost across " << cyclicAMIPolyPatch::typeName
@@ -1060,14 +1060,14 @@ void Foam::particle::hitCyclicAMIPatch
     }
 
     // Convert face index into global numbering
-    facei_ = patchFaceI + receiveCpp.start();
+    facei_ = patchFacei + receiveCpp.start();
 
     celli_ = mesh_.faceOwner()[facei_];
 
-    tetFaceI_ = facei_;
+    tetFacei_ = facei_;
 
     // See note in correctAfterParallelTransfer for tetPtI_ addressing.
-    tetPtI_ = mesh_.faces()[tetFaceI_].size() - 1 - tetPtI_;
+    tetPtI_ = mesh_.faces()[tetFacei_].size() - 1 - tetPtI_;
 
     // Now the particle is on the receiving side
 
@@ -1078,7 +1078,7 @@ void Foam::particle::hitCyclicAMIPatch
         (
             receiveCpp.forwardT().size() == 1
           ? receiveCpp.forwardT()[0]
-          : receiveCpp.forwardT()[patchFaceI]
+          : receiveCpp.forwardT()[patchFacei]
         );
         transformProperties(T);
     }
@@ -1088,7 +1088,7 @@ void Foam::particle::hitCyclicAMIPatch
         (
             (receiveCpp.separation().size() == 1)
           ? receiveCpp.separation()[0]
-          : receiveCpp.separation()[patchFaceI]
+          : receiveCpp.separation()[patchFacei]
         );
         transformProperties(-s);
     }

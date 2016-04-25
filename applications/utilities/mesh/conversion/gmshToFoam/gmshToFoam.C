@@ -949,23 +949,23 @@ int main(int argc, char *argv[])
             const face& f = pFaces[i];
 
             // Find face in pp using all vertices of f.
-            label patchFaceI = findFace(pp, f);
+            label patchFacei = findFace(pp, f);
 
-            if (patchFaceI != -1)
+            if (patchFacei != -1)
             {
-                label meshFaceI = pp.start() + patchFaceI;
+                label meshFacei = pp.start() + patchFacei;
 
-                repatcher.changePatchID(meshFaceI, patchi);
+                repatcher.changePatchID(meshFacei, patchi);
             }
             else
             {
                 // Maybe internal face? If so add to faceZone with same index
                 // - might be useful.
-                label meshFaceI = findInternalFace(mesh, f);
+                label meshFacei = findInternalFace(mesh, f);
 
-                if (meshFaceI != -1)
+                if (meshFacei != -1)
                 {
-                    zoneFaces[patchi].append(meshFaceI);
+                    zoneFaces[patchi].append(meshFacei);
                 }
                 else
                 {
@@ -1103,22 +1103,22 @@ int main(int argc, char *argv[])
     if (mesh.boundaryMesh()[defaultPatchID].size() == 0)
     {
         List<polyPatch*> newPatchPtrList((mesh.boundaryMesh().size() - 1));
-        label newPatchI = 0;
+        label newPatchi = 0;
         forAll(mesh.boundaryMesh(), patchi)
         {
             if (patchi != defaultPatchID)
             {
                 const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
-                newPatchPtrList[newPatchI] = patch.clone
+                newPatchPtrList[newPatchi] = patch.clone
                 (
                     mesh.boundaryMesh(),
-                    newPatchI,
+                    newPatchi,
                     patch.size(),
                     patch.start()
                 ).ptr();
 
-                newPatchI++;
+                newPatchi++;
             }
         }
         repatcher.changePatches(newPatchPtrList);

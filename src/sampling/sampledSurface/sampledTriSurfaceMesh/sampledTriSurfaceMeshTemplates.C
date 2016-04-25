@@ -60,13 +60,13 @@ Foam::sampledTriSurfaceMesh::sampleField
 
         forAll(vField.boundaryField(), patchi)
         {
-            label bFaceI = pbm[patchi].start() - mesh().nInternalFaces();
+            label bFacei = pbm[patchi].start() - mesh().nInternalFaces();
 
             SubList<Type>
             (
                 bVals,
                 vField.boundaryField()[patchi].size(),
-                bFaceI
+                bFacei
             ) = vField.boundaryField()[patchi];
         }
 

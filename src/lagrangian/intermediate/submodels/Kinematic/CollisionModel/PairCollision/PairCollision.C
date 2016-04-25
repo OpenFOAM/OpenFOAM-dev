@@ -83,17 +83,17 @@ void Foam::PairCollision<CloudType>::realRealInteraction()
     List<DynamicList<typename CloudType::parcelType*>>& cellOccupancy =
         this->owner().cellOccupancy();
 
-    forAll(dil, realCellI)
+    forAll(dil, realCelli)
     {
         // Loop over all Parcels in cell A (a)
-        forAll(cellOccupancy[realCellI], a)
+        forAll(cellOccupancy[realCelli], a)
         {
-            pA_ptr = cellOccupancy[realCellI][a];
+            pA_ptr = cellOccupancy[realCelli][a];
 
-            forAll(dil[realCellI], interactingCells)
+            forAll(dil[realCelli], interactingCells)
             {
                 List<typename CloudType::parcelType*> cellBParcels =
-                    cellOccupancy[dil[realCellI][interactingCells]];
+                    cellOccupancy[dil[realCelli][interactingCells]];
 
                 // Loop over all Parcels in cell B (b)
                 forAll(cellBParcels, b)
@@ -105,9 +105,9 @@ void Foam::PairCollision<CloudType>::realRealInteraction()
             }
 
             // Loop over the other Parcels in cell A (aO)
-            forAll(cellOccupancy[realCellI], aO)
+            forAll(cellOccupancy[realCelli], aO)
             {
-                pB_ptr = cellOccupancy[realCellI][aO];
+                pB_ptr = cellOccupancy[realCelli][aO];
 
                 // Do not double-evaluate, compare pointers, arbitrary
                 // order
@@ -134,12 +134,12 @@ void Foam::PairCollision<CloudType>::realReferredInteraction()
         this->owner().cellOccupancy();
 
     // Loop over all referred cells
-    forAll(ril, refCellI)
+    forAll(ril, refCelli)
     {
         IDLList<typename CloudType::parcelType>& refCellRefParticles =
-            referredParticles[refCellI];
+            referredParticles[refCelli];
 
-        const labelList& realCells = ril[refCellI];
+        const labelList& realCells = ril[refCelli];
 
         // Loop over all referred parcels in the referred cell
 
@@ -153,10 +153,10 @@ void Foam::PairCollision<CloudType>::realReferredInteraction()
             // Loop over all real cells in that the referred cell is
             // to supply interactions to
 
-            forAll(realCells, realCellI)
+            forAll(realCells, realCelli)
             {
                 List<typename CloudType::parcelType*> realCellParcels =
-                    cellOccupancy[realCells[realCellI]];
+                    cellOccupancy[realCells[realCelli]];
 
                 forAll(realCellParcels, realParcelI)
                 {
@@ -199,13 +199,13 @@ void Foam::PairCollision<CloudType>::wallInteraction()
     DynamicList<scalar> sharpSiteExclusionDistancesSqr;
     DynamicList<WallSiteData<vector>> sharpSiteData;
 
-    forAll(dil, realCellI)
+    forAll(dil, realCelli)
     {
         // The real wall faces in range of this real cell
-        const labelList& realWallFaces = directWallFaces[realCellI];
+        const labelList& realWallFaces = directWallFaces[realCelli];
 
         // Loop over all Parcels in cell
-        forAll(cellOccupancy[realCellI], cellParticleI)
+        forAll(cellOccupancy[realCelli], cellParticleI)
         {
             flatSitePoints.clear();
             flatSiteExclusionDistancesSqr.clear();
@@ -218,7 +218,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
             sharpSiteData.clear();
 
             typename CloudType::parcelType& p =
-                *cellOccupancy[realCellI][cellParticleI];
+                *cellOccupancy[realCelli][cellParticleI];
 
             const point& pos = p.position();
 
@@ -226,11 +226,11 @@ void Foam::PairCollision<CloudType>::wallInteraction()
 
             // real wallFace interactions
 
-            forAll(realWallFaces, realWallFaceI)
+            forAll(realWallFaces, realWallFacei)
             {
-                label realFaceI = realWallFaces[realWallFaceI];
+                label realFacei = realWallFaces[realWallFacei];
 
-                pointHit nearest = mesh.faces()[realFaceI].nearestPoint
+                pointHit nearest = mesh.faces()[realFacei].nearestPoint
                 (
                     pos,
                     mesh.points()
@@ -238,7 +238,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
 
                 if (nearest.distance() < r)
                 {
-                    vector normal = mesh.faceAreas()[realFaceI];
+                    vector normal = mesh.faceAreas()[realFacei];
 
                     normal /= mag(normal);
 
@@ -249,15 +249,15 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                     scalar normalAlignment = normal & pW/(mag(pW) + SMALL);
 
                     // Find the patchIndex and wallData for WallSiteData object
-                    label patchi = patchID[realFaceI - mesh.nInternalFaces()];
+                    label patchi = patchID[realFacei - mesh.nInternalFaces()];
 
-                    label patchFaceI =
-                        realFaceI - mesh.boundaryMesh()[patchi].start();
+                    label patchFacei =
+                        realFacei - mesh.boundaryMesh()[patchi].start();
 
                     WallSiteData<vector> wSD
                     (
                         patchi,
-                        U.boundaryField()[patchi][patchFaceI]
+                        U.boundaryField()[patchi][patchFacei]
                     );
 
                     bool particleHit = false;
@@ -303,7 +303,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                     if (particleHit)
                     {
                         bool keep = true;
-                        this->owner().functions().postFace(p, realFaceI, keep);
+                        this->owner().functions().postFace(p, realFacei, keep);
                         this->owner().functions().postPatch
                         (
                             p,
@@ -319,14 +319,14 @@ void Foam::PairCollision<CloudType>::wallInteraction()
             // referred wallFace interactions
 
             // The labels of referred wall faces in range of this real cell
-            const labelList& cellRefWallFaces = il_.rwfilInverse()[realCellI];
+            const labelList& cellRefWallFaces = il_.rwfilInverse()[realCelli];
 
             forAll(cellRefWallFaces, rWFI)
             {
-                label refWallFaceI = cellRefWallFaces[rWFI];
+                label refWallFacei = cellRefWallFaces[rWFI];
 
                 const referredWallFace& rwf =
-                    il_.referredWallFaces()[refWallFaceI];
+                    il_.referredWallFaces()[refWallFacei];
 
                 const pointField& pts = rwf.points();
 
@@ -349,7 +349,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                     WallSiteData<vector> wSD
                     (
                         rwf.patchIndex(),
-                        il_.referredWallData()[refWallFaceI]
+                        il_.referredWallData()[refWallFacei]
                     );
 
                     bool particleHit = false;

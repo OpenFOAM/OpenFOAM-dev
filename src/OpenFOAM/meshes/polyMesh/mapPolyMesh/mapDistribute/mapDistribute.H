@@ -50,7 +50,7 @@ Note:
     followed by used-only elements of proc0, proc2, proc3.
     The constructed mapDistribute sends the local elements from and
     receives the remote elements into their compact position.
-    compactMap[procI] is the position of elements from procI in the compact
+    compactMap[proci] is the position of elements from proci in the compact
     map. compactMap[myProcNo()] is empty since trivial addressing.
 
     It rewrites the input global indices into indices into the constructed
@@ -181,7 +181,7 @@ class mapDistribute
 
         static void checkReceivedSize
         (
-            const label procI,
+            const label proci,
             const label expectedSize,
             const label receivedSize
         );
@@ -413,7 +413,7 @@ public:
 
         //- Special variant that works with the info sorted into bins
         //  according to local indices. E.g. think cellCells where
-        //  cellCells[localCellI] is a list of global cells
+        //  cellCells[localCelli] is a list of global cells
         mapDistribute
         (
             const globalIndex&,

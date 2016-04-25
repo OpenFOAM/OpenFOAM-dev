@@ -64,11 +64,11 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorPosition
 
         label nCandidates = 0;
 
-        forAll(allBackgroundMeshBounds_, procI)
+        forAll(allBackgroundMeshBounds_, proci)
         {
-            if (allBackgroundMeshBounds_[procI].contains(pt))
+            if (allBackgroundMeshBounds_[proci].contains(pt))
             {
-                toCandidateProc.append(procI);
+                toCandidateProc.append(proci);
                 testPoints.append(pt);
 
                 nCandidates++;

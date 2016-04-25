@@ -83,9 +83,9 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
 
             for
             (
-                label patchFaceI = 0;
-                patchFaceI < myPatches[patchi].size();
-                patchFaceI++
+                label patchFacei = 0;
+                patchFacei < myPatches[patchi].size();
+                patchFacei++
             )
             {
                 const label facei = faceMap[faceIndex++];
@@ -114,13 +114,13 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
         }
 
 
-        label prevPatchI = -1;
+        label prevPatchi = -1;
 
         forAll(*this, facei)
         {
-            if (prevPatchI != patchIDs[facei])
+            if (prevPatchi != patchIDs[facei])
             {
-                prevPatchI = patchIDs[facei];
+                prevPatchi = patchIDs[facei];
                 os  << "g " << myPatches[patchIDs[facei]].name() << nl;
             }
             os  << "f "

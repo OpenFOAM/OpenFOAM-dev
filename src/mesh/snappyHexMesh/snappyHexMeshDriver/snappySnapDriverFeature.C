@@ -529,8 +529,8 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
             {
                 forAll(pp, i)
                 {
-                    label meshFaceI = pp.start()+i;
-                    patchID[meshFaceI-mesh.nInternalFaces()] = -1;
+                    label meshFacei = pp.start()+i;
+                    patchID[meshFacei-mesh.nInternalFaces()] = -1;
                 }
             }
         }
@@ -538,8 +538,8 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         // Remove any meshed faces
         forAll(pp.addressing(), i)
         {
-            label meshFaceI = pp.addressing()[i];
-            patchID[meshFaceI-mesh.nInternalFaces()] = -1;
+            label meshFacei = pp.addressing()[i];
+            patchID[meshFacei-mesh.nInternalFaces()] = -1;
         }
 
         // See if pp point uses any non-meshed boundary faces
@@ -559,17 +559,17 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
 
             forAll(pFaces, i)
             {
-                label meshFaceI = pFaces[i];
-                if (!mesh.isInternalFace(meshFaceI))
+                label meshFacei = pFaces[i];
+                if (!mesh.isInternalFace(meshFacei))
                 {
-                    label patchi = patchID[meshFaceI-mesh.nInternalFaces()];
+                    label patchi = patchID[meshFacei-mesh.nInternalFaces()];
 
                     if (patchi != -1)
                     {
-                        vector fn = mesh.faceAreas()[meshFaceI];
+                        vector fn = mesh.faceAreas()[meshFacei];
                         pNormals.append(fn/mag(fn));
-                        pDisp.append(mesh.faceCentres()[meshFaceI]-pt);
-                        pFc.append(mesh.faceCentres()[meshFaceI]);
+                        pDisp.append(mesh.faceCentres()[meshFacei]-pt);
+                        pFc.append(mesh.faceCentres()[meshFacei]);
                         pFid.append(patchi);
                     }
                 }

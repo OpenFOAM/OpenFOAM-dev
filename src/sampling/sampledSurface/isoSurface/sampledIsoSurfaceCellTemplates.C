@@ -61,9 +61,9 @@ Foam::sampledIsoSurfaceCell::interpolateField
 
     boolList pointDone(points().size(), false);
 
-    forAll(faces(), cutFaceI)
+    forAll(faces(), cutFacei)
     {
-        const face& f = faces()[cutFaceI];
+        const face& f = faces()[cutFacei];
 
         forAll(f, faceVertI)
         {
@@ -74,7 +74,7 @@ Foam::sampledIsoSurfaceCell::interpolateField
                 values[pointI] = interpolator.interpolate
                 (
                     points()[pointI],
-                    meshCells_[cutFaceI]
+                    meshCells_[cutFacei]
                 );
                 pointDone[pointI] = true;
             }

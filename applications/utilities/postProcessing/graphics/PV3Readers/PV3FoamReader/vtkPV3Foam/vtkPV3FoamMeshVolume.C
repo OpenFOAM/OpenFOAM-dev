@@ -99,9 +99,9 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             {
                 const cell& cFaces = mesh.cells()[celli];
 
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    const face& f = mesh.faces()[cFaces[cFaceI]];
+                    const face& f = mesh.faces()[cFaces[cFacei]];
 
                     label nQuads = 0;
                     label nTris = 0;
@@ -158,7 +158,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
     vtkmesh->Allocate(mesh.nCells() + nAddCells);
 
     // Set counters for additional points and additional cells
-    label addPointI = 0, addCellI = 0;
+    label addPointI = 0, addCelli = 0;
 
     // Create storage for points - needed for mapping from OpenFOAM to VTK
     // data types - max 'order' = hex = 8 points
@@ -173,7 +173,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
         const cellShape& cellShape = cellShapes[celli];
         const cellModel& cellModel = cellShape.model();
 
-        superCells[addCellI++] = celli;
+        superCells[addCelli++] = celli;
 
         if (cellModel == tet)
         {
@@ -280,9 +280,9 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             vtkIdType nLabels = nFaces;
 
             // count size for face stream
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh.faces()[cFaces[cFaceI]];
+                const face& f = mesh.faces()[cFaces[cFacei]];
                 nLabels += f.size();
             }
 
@@ -292,10 +292,10 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             faceStream.clear();
             faceStream.reserve(nLabels + nFaces);
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
+                const face& f = mesh.faces()[cFaces[cFacei]];
+                const bool isOwner = (owner[cFaces[cFacei]] == celli);
                 const label nFacePoints = f.size();
 
                 // number of labels for this face
@@ -327,9 +327,9 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             // establish unique node ids used
             HashSet<vtkIdType, Hash<label>> hashUniqId(2*256);
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh.faces()[cFaces[cFaceI]];
+                const face& f = mesh.faces()[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
@@ -363,10 +363,10 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             bool substituteCell = true;
 
             const labelList& cFaces = mesh.cells()[celli];
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
+                const face& f = mesh.faces()[cFaces[cFacei]];
+                const bool isOwner = (owner[cFaces[cFacei]] == celli);
 
                 // Number of triangles and quads in decomposition
                 label nTris = 0;
@@ -388,7 +388,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
                     }
                     else
                     {
-                        superCells[addCellI++] = celli;
+                        superCells[addCelli++] = celli;
                     }
 
                     const face& quad = quadFcs[quadI];
@@ -431,7 +431,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
                     }
                     else
                     {
-                        superCells[addCellI++] = celli;
+                        superCells[addCelli++] = celli;
                     }
 
                     const face& tri = triFcs[triI];

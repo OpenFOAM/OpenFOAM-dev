@@ -220,16 +220,16 @@ void Foam::polyMesh::setTopology
                         // Get the list of search faces
                         const faceList& searchFaces = cellsFaceShapes[curNei];
 
-                        forAll(searchFaces, neiFaceI)
+                        forAll(searchFaces, neiFacei)
                         {
-                            if (searchFaces[neiFaceI] == curFace)
+                            if (searchFaces[neiFacei] == curFace)
                             {
                                 // Match!!
                                 found = true;
 
                                 // Record the neighbour cell and face
                                 neiCells[facei] = curNei;
-                                faceOfNeiCell[facei] = neiFaceI;
+                                faceOfNeiCell[facei] = neiFacei;
                                 nNeighbours++;
 
                                 break;
@@ -315,11 +315,11 @@ void Foam::polyMesh::setTopology
 
             bool found = false;
 
-            forAll(facesOfCellInside, cellFaceI)
+            forAll(facesOfCellInside, cellFacei)
             {
-                if (face::sameVertices(facesOfCellInside[cellFaceI], curFace))
+                if (face::sameVertices(facesOfCellInside[cellFacei], curFace))
                 {
-                    if (cells[cellInside][cellFaceI] >= 0)
+                    if (cells[cellInside][cellFacei] >= 0)
                     {
                         FatalErrorInFunction
                             << "Trying to specify a boundary face " << curFace
@@ -335,9 +335,9 @@ void Foam::polyMesh::setTopology
                     found = true;
 
                     // Set the patch face to corresponding cell-face
-                    faces_[nFaces] = facesOfCellInside[cellFaceI];
+                    faces_[nFaces] = facesOfCellInside[cellFacei];
 
-                    cells[cellInside][cellFaceI] = nFaces;
+                    cells[cellInside][cellFacei] = nFaces;
 
                     break;
                 }

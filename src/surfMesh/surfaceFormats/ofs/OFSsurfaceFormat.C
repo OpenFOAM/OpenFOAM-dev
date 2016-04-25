@@ -221,7 +221,7 @@ void Foam::fileFormats::OFSsurfaceFormat<Face>::write
             // Print all faces belonging to this zone
             const surfZone& zone = zones[zoneI];
 
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 os << faceLst[faceMap[facei++]] << nl;
             }

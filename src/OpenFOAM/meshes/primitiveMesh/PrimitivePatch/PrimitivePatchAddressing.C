@@ -152,10 +152,10 @@ calcAddressing() const
 
             const labelList& nbrFaces = pf[e.start()];
 
-            forAll(nbrFaces, nbrFaceI)
+            forAll(nbrFaces, nbrFacei)
             {
                 // set reference to the current neighbour
-                label curNei = nbrFaces[nbrFaceI];
+                label curNei = nbrFaces[nbrFacei];
 
                 // Reject neighbours with the lower label
                 if (curNei > facei)

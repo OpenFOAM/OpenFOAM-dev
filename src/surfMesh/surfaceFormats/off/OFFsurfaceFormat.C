@@ -201,7 +201,7 @@ void Foam::fileFormats::OFFsurfaceFormat<Face>::write
 
         if (surf.useFaceMap())
         {
-            forAll(zoneLst[zoneI], localFaceI)
+            forAll(zoneLst[zoneI], localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
 
@@ -217,7 +217,7 @@ void Foam::fileFormats::OFFsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zoneLst[zoneI], localFaceI)
+            forAll(zoneLst[zoneI], localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
 

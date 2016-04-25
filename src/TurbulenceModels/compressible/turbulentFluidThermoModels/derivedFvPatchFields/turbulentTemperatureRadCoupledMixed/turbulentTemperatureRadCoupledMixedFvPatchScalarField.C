@@ -178,9 +178,9 @@ void turbulentTemperatureRadCoupledMixedFvPatchScalarField::updateCoeffs()
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
     const polyMesh& nbrMesh = mpp.sampleMesh();
-    const label samplePatchI = mpp.samplePolyPatch().index();
+    const label samplePatchi = mpp.samplePolyPatch().index();
     const fvPatch& nbrPatch =
-        refCast<const fvMesh>(nbrMesh).boundary()[samplePatchI];
+        refCast<const fvMesh>(nbrMesh).boundary()[samplePatchi];
 
 
     scalarField Tc(patchInternalField());

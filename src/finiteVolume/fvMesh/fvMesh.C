@@ -652,15 +652,15 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
 
         // Inject volume of merged cells
         label nMerged = 0;
-        forAll(meshMap.reverseCellMap(), oldCellI)
+        forAll(meshMap.reverseCellMap(), oldCelli)
         {
-            label index = meshMap.reverseCellMap()[oldCellI];
+            label index = meshMap.reverseCellMap()[oldCelli];
 
             if (index < -1)
             {
                 label celli = -index-2;
 
-                V0[celli] += savedV0[oldCellI];
+                V0[celli] += savedV0[oldCelli];
 
                 nMerged++;
             }
@@ -696,15 +696,15 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
 
         // Inject volume of merged cells
         label nMerged = 0;
-        forAll(meshMap.reverseCellMap(), oldCellI)
+        forAll(meshMap.reverseCellMap(), oldCelli)
         {
-            label index = meshMap.reverseCellMap()[oldCellI];
+            label index = meshMap.reverseCellMap()[oldCelli];
 
             if (index < -1)
             {
                 label celli = -index-2;
 
-                V00[celli] += savedV00[oldCellI];
+                V00[celli] += savedV00[oldCelli];
                 nMerged++;
             }
         }

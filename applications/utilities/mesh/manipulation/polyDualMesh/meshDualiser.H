@@ -117,7 +117,7 @@ class meshDualiser
         (
             const label masterPointI,
             const label masterEdgeI,
-            const label masterFaceI,
+            const label masterFacei,
 
             const bool edgeOrder,
             const label dualCell0,
@@ -131,9 +131,9 @@ class meshDualiser
         (
             const label masterPointI,
             const label masterEdgeI,
-            const label masterFaceI,
+            const label masterFacei,
 
-            const label dualCellI,
+            const label dualCelli,
             const label patchI,
             const DynamicList<label>& verts,
             polyTopoChange& meshMod
@@ -145,7 +145,7 @@ class meshDualiser
             const bool splitFace,
             const PackedBoolList&,
             const label edgeI,
-            const label startFaceI,
+            const label startFacei,
             polyTopoChange&,
             boolList& doneEFaces
         ) const;
@@ -163,7 +163,7 @@ class meshDualiser
         (
             const label patchI,
             const label patchPointI,
-            const label startFaceI,
+            const label startFacei,
             polyTopoChange&,
             boolList& donePFaces            // pFaces visited
         ) const;

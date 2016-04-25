@@ -386,10 +386,10 @@ void faceZoneSet::updateMesh(const mapPolyMesh& morphMap)
     forAll(addressing_, i)
     {
         label facei = addressing_[i];
-        label newFaceI = morphMap.reverseFaceMap()[facei];
-        if (newFaceI >= 0)
+        label newFacei = morphMap.reverseFaceMap()[facei];
+        if (newFacei >= 0)
         {
-            newAddressing[n] = newFaceI;
+            newAddressing[n] = newFacei;
             newFlipMap[n] = flipMap_[i];
             n++;
         }

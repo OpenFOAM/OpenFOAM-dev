@@ -744,23 +744,23 @@ void Foam::createShellMesh::setRefinement
             }
 
 
-            label minCellI = addedCells[nLayers*eFaces[0]+layerI];
-            label maxCellI;
+            label minCelli = addedCells[nLayers*eFaces[0]+layerI];
+            label maxCelli;
             label patchI;
             if (ePatches.size() == 0)
             {
-                maxCellI = addedCells[nLayers*eFaces[1]+layerI];
-                if (minCellI > maxCellI)
+                maxCelli = addedCells[nLayers*eFaces[1]+layerI];
+                if (minCelli > maxCelli)
                 {
                     // Swap
-                    Swap(minCellI, maxCellI);
+                    Swap(minCelli, maxCelli);
                     newF = newF.reverseFace();
                 }
                 patchI = -1;
             }
             else
             {
-                maxCellI = -1;
+                maxCelli = -1;
                 patchI = ePatches[0];
             }
 
@@ -773,8 +773,8 @@ void Foam::createShellMesh::setRefinement
             //        << " with new points:" << newF
             //        << " locations:"
             //        << UIndirectList<point>(meshMod.points(), newF)
-            //        << " own:" << minCellI
-            //        << " nei:" << maxCellI
+            //        << " own:" << minCelli
+            //        << " nei:" << maxCelli
             //        << endl;
             //}
 
@@ -783,8 +783,8 @@ void Foam::createShellMesh::setRefinement
             meshMod.addFace
             (
                 newF,                   // vertices
-                minCellI,               // own
-                maxCellI,               // nei
+                minCelli,               // own
+                maxCelli,               // nei
                 -1,                     // masterPointID
                 -1,                     // masterEdgeID
                 faceToFaceMap.size(),   // masterFaceID
@@ -809,10 +809,10 @@ void Foam::createShellMesh::setRefinement
             for (label i = 1; i < ePatches.size(); i++)
             {
                 // Extrude eFaces[i]
-                label minFaceI = eFaces[i];
+                label minFacei = eFaces[i];
 
                 // Make face pointing in to eFaces[0] so out of new master face
-                const face& f = patch_.localFaces()[minFaceI];
+                const face& f = patch_.localFaces()[minFacei];
 
                 const edge& e = patch_.edges()[edgeI];
                 label fp0 = findIndex(f, e[0]);
@@ -827,8 +827,8 @@ void Foam::createShellMesh::setRefinement
                 face newF(4);
                 for (label layerI = 0; layerI < nLayers; layerI++)
                 {
-                    label region0 = pointRegions_[minFaceI][fp0];
-                    label region1 = pointRegions_[minFaceI][fp1];
+                    label region0 = pointRegions_[minFacei][fp0];
+                    label region1 = pointRegions_[minFacei][fp1];
 
                     if (layerI == 0)
                     {
@@ -863,7 +863,7 @@ void Foam::createShellMesh::setRefinement
                     ////if (ePatches.size() == 0)
                     //{
                     //    Pout<< "Adding from MULTI face:"
-                    //        << patch_.faceCentres()[minFaceI]
+                    //        << patch_.faceCentres()[minFacei]
                     //        << " from edge:"
                     //        << patch_.localPoints()[f[fp0]]
                     //        << patch_.localPoints()[f[fp1]]
@@ -878,7 +878,7 @@ void Foam::createShellMesh::setRefinement
                     meshMod.addFace
                     (
                         newF,                   // vertices
-                        addedCells[nLayers*minFaceI+layerI],   // own
+                        addedCells[nLayers*minFacei+layerI],   // own
                         -1,                     // nei
                         -1,                     // masterPointID
                         -1,                     // masterEdgeID

@@ -74,21 +74,21 @@ protected:
         //- Return the true if cells intersect
         virtual bool intersect
         (
-            const label srcCellI,
-            const label tgtCellI
+            const label srcCelli,
+            const label tgtCelli
         ) const;
 
         //- Return the intersection volume between two cells
         virtual scalar interVol
         (
-            const label srcCellI,
-            const label tgtCellI
+            const label srcCelli,
+            const label tgtCelli
         ) const;
 
         //- Append target cell neihgbour cells to cellIDs list
         virtual void appendNbrCells
         (
-            const label tgtCellI,
+            const label tgtCelli,
             const polyMesh& mesh,
             const DynamicList<label>& visitedTgtCells,
             DynamicList<label>& nbrTgtCellIDs

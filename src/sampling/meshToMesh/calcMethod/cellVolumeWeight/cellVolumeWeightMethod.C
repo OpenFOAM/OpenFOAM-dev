@@ -103,8 +103,8 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
     label& startSeedI
 )
 {
-    label srcCellI = srcSeedI;
-    label tgtCellI = tgtSeedI;
+    label srcCelli = srcSeedI;
+    label tgtCelli = tgtSeedI;
 
     List<DynamicList<label>> srcToTgtAddr(src_.nCells());
     List<DynamicList<scalar>> srcToTgtWght(src_.nCells());
@@ -115,12 +115,12 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
     // list of tgt cell neighbour cells
     DynamicList<label> nbrTgtCells(10);
 
-    // list of tgt cells currently visited for srcCellI to avoid multiple hits
+    // list of tgt cells currently visited for srcCelli to avoid multiple hits
     DynamicList<label> visitedTgtCells(10);
 
     // list to keep track of tgt cells used to seed src cells
     labelList seedCells(src_.nCells(), -1);
-    seedCells[srcCellI] = tgtCellI;
+    seedCells[srcCelli] = tgtCelli;
 
     const scalarField& srcVol = src_.cellVolumes();
 
@@ -130,27 +130,27 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
         visitedTgtCells.clear();
 
         // append initial target cell and neighbours
-        nbrTgtCells.append(tgtCellI);
-        appendNbrCells(tgtCellI, tgt_, visitedTgtCells, nbrTgtCells);
+        nbrTgtCells.append(tgtCelli);
+        appendNbrCells(tgtCelli, tgt_, visitedTgtCells, nbrTgtCells);
 
         do
         {
-            tgtCellI = nbrTgtCells.remove();
-            visitedTgtCells.append(tgtCellI);
+            tgtCelli = nbrTgtCells.remove();
+            visitedTgtCells.append(tgtCelli);
 
-            scalar vol = interVol(srcCellI, tgtCellI);
+            scalar vol = interVol(srcCelli, tgtCelli);
 
             // accumulate addressing and weights for valid intersection
-            if (vol/srcVol[srcCellI] > tolerance_)
+            if (vol/srcVol[srcCelli] > tolerance_)
             {
                 // store src/tgt cell pair
-                srcToTgtAddr[srcCellI].append(tgtCellI);
-                srcToTgtWght[srcCellI].append(vol);
+                srcToTgtAddr[srcCelli].append(tgtCelli);
+                srcToTgtWght[srcCelli].append(vol);
 
-                tgtToSrcAddr[tgtCellI].append(srcCellI);
-                tgtToSrcWght[tgtCellI].append(vol);
+                tgtToSrcAddr[tgtCelli].append(srcCelli);
+                tgtToSrcWght[tgtCelli].append(vol);
 
-                appendNbrCells(tgtCellI, tgt_, visitedTgtCells, nbrTgtCells);
+                appendNbrCells(tgtCelli, tgt_, visitedTgtCells, nbrTgtCells);
 
                 // accumulate intersection volume
                 V_ += vol;
@@ -158,21 +158,21 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
         }
         while (!nbrTgtCells.empty());
 
-        mapFlag[srcCellI] = false;
+        mapFlag[srcCelli] = false;
 
         // find new source seed cell
         setNextCells
         (
             startSeedI,
-            srcCellI,
-            tgtCellI,
+            srcCelli,
+            tgtCelli,
             srcCellIDs,
             mapFlag,
             visitedTgtCells,
             seedCells
         );
     }
-    while (srcCellI != -1);
+    while (srcCelli != -1);
 
     // transfer addressing into persistent storage
     forAll(srcToTgtCellAddr, i)
@@ -192,15 +192,15 @@ void Foam::cellVolumeWeightMethod::calculateAddressing
 void Foam::cellVolumeWeightMethod::setNextCells
 (
     label& startSeedI,
-    label& srcCellI,
-    label& tgtCellI,
+    label& srcCelli,
+    label& tgtCelli,
     const labelList& srcCellIDs,
     const boolList& mapFlag,
     const DynamicList<label>& visitedCells,
     labelList& seedCells
 ) const
 {
-    const labelList& srcNbrCells = src_.cellCells()[srcCellI];
+    const labelList& srcNbrCells = src_.cellCells()[srcCelli];
 
     // set possible seeds for later use by querying all src cell neighbours
     // with all visited target cells
@@ -221,8 +221,8 @@ void Foam::cellVolumeWeightMethod::setNextCells
 
                     if (!valuesSet)
                     {
-                        srcCellI = cellS;
-                        tgtCellI = cellT;
+                        srcCelli = cellS;
+                        tgtCelli = cellT;
                         valuesSet = true;
                     }
                 }
@@ -253,8 +253,8 @@ void Foam::cellVolumeWeightMethod::setNextCells
 
                 if (seedCells[cellS] != -1)
                 {
-                    srcCellI = cellS;
-                    tgtCellI = seedCells[cellS];
+                    srcCelli = cellS;
+                    tgtCelli = seedCells[cellS];
 
                     return;
                 }
@@ -274,8 +274,8 @@ void Foam::cellVolumeWeightMethod::setNextCells
                 srcCellIDs,
                 mapFlag,
                 startSeedI,
-                srcCellI,
-                tgtCellI
+                srcCelli,
+                tgtCelli
             );
 
         if (restart)
@@ -286,8 +286,8 @@ void Foam::cellVolumeWeightMethod::setNextCells
     }
 
     // if we have got to here, there are no more src/tgt cell intersections
-    srcCellI = -1;
-    tgtCellI = -1;
+    srcCelli = -1;
+    tgtCelli = -1;
 }
 
 

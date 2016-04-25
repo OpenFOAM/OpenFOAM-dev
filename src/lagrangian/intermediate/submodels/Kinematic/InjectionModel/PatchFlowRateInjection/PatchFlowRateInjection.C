@@ -217,7 +217,7 @@ void Foam::PatchFlowRateInjection<CloudType>::setPositionAndCell
     const scalar,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
@@ -227,7 +227,7 @@ void Foam::PatchFlowRateInjection<CloudType>::setPositionAndCell
         this->owner().rndGen(),
         position,
         cellOwner,
-        tetFaceI,
+        tetFacei,
         tetPtI
     );
 }

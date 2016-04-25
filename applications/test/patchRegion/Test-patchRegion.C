@@ -80,14 +80,14 @@ int main(int argc, char *argv[])
     {
         const labelList& fEdges = patch.faceEdges()[facei];
 
-        label globalFaceI = globalNumbering.toGlobal(facei);
+        label globalFacei = globalNumbering.toGlobal(facei);
 
         forAll(fEdges, i)
         {
             changedEdges.append(fEdges[i]);
             changedInfo.append
             (
-                patchEdgeFaceRegions(labelPair(globalFaceI, globalFaceI))
+                patchEdgeFaceRegions(labelPair(globalFacei, globalFacei))
             );
         }
     }

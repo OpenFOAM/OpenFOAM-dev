@@ -623,23 +623,23 @@ bool Foam::ThermoSurfaceFilm<CloudType>::transferParcel
 template<class CloudType>
 void Foam::ThermoSurfaceFilm<CloudType>::cacheFilmFields
 (
-    const label filmPatchI,
-    const label primaryPatchI,
+    const label filmPatchi,
+    const label primaryPatchi,
     const regionModels::surfaceFilmModels::surfaceFilmModel& filmModel
 )
 {
     SurfaceFilmModel<CloudType>::cacheFilmFields
     (
-        filmPatchI,
-        primaryPatchI,
+        filmPatchi,
+        primaryPatchi,
         filmModel
     );
 
-    TFilmPatch_ = filmModel.Ts().boundaryField()[filmPatchI];
-    filmModel.toPrimary(filmPatchI, TFilmPatch_);
+    TFilmPatch_ = filmModel.Ts().boundaryField()[filmPatchi];
+    filmModel.toPrimary(filmPatchi, TFilmPatch_);
 
-    CpFilmPatch_ = filmModel.Cp().boundaryField()[filmPatchI];
-    filmModel.toPrimary(filmPatchI, CpFilmPatch_);
+    CpFilmPatch_ = filmModel.Cp().boundaryField()[filmPatchi];
+    filmModel.toPrimary(filmPatchi, CpFilmPatch_);
 }
 
 
@@ -647,14 +647,14 @@ template<class CloudType>
 void Foam::ThermoSurfaceFilm<CloudType>::setParcelProperties
 (
     parcelType& p,
-    const label filmFaceI
+    const label filmFacei
 ) const
 {
-    SurfaceFilmModel<CloudType>::setParcelProperties(p, filmFaceI);
+    SurfaceFilmModel<CloudType>::setParcelProperties(p, filmFacei);
 
     // Set parcel properties
-    p.T() = TFilmPatch_[filmFaceI];
-    p.Cp() = CpFilmPatch_[filmFaceI];
+    p.T() = TFilmPatch_[filmFacei];
+    p.Cp() = CpFilmPatch_[filmFacei];
 }
 
 

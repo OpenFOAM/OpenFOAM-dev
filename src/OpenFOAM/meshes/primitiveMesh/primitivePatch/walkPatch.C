@@ -102,14 +102,14 @@ Foam::label Foam::walkPatch::getNeighbour
     }
     else if (eFaces.size() == 2)
     {
-        label nbrFaceI = eFaces[0];
+        label nbrFacei = eFaces[0];
 
-        if (nbrFaceI == facei)
+        if (nbrFacei == facei)
         {
-            nbrFaceI = eFaces[1];
+            nbrFacei = eFaces[1];
         }
 
-        return nbrFaceI;
+        return nbrFacei;
     }
     else
     {

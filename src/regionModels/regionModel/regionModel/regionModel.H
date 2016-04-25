@@ -147,8 +147,8 @@ protected:
         virtual const AMIPatchToPatchInterpolation& interRegionAMI
         (
             const regionModel& nbrRegion,
-            const label regionPatchI,
-            const label nbrPatchI,
+            const label regionPatchi,
+            const label nbrPatchi,
             const bool flip
         ) const;
 
@@ -230,11 +230,11 @@ public:
 
                 //- Return true if patchI on the local region is a coupled
                 //  patch to the primary region
-                inline bool isCoupledPatch(const label regionPatchI) const;
+                inline bool isCoupledPatch(const label regionPatchi) const;
 
                 //- Return true if patchI on the primary region is a coupled
                 //  patch to the local region
-                inline bool isRegionPatch(const label primaryPatchI) const;
+                inline bool isRegionPatch(const label primaryPatchi) const;
 
                 //- Return the list of patch IDs on the primary region coupled
                 //  to this region
@@ -251,11 +251,11 @@ public:
         // Helper
 
             //- Return the coupled patch ID paired with coupled patch
-            //  regionPatchI
+            //  regionPatchi
             label nbrCoupledPatchID
             (
                 const regionModel& nbrRegion,
-                const label regionPatchI
+                const label regionPatchi
             ) const;
 
             //- Map patch field from another region model to local patch
@@ -263,8 +263,8 @@ public:
             tmp<Foam::Field<Type>> mapRegionPatchField
             (
                 const regionModel& nbrRegion,
-                const label regionPatchI,
-                const label nbrPatchI,
+                const label regionPatchi,
+                const label nbrPatchi,
                 const Field<Type>& nbrField,
                 const bool flip = false
             ) const;
@@ -275,7 +275,7 @@ public:
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
-                const label regionPatchI,
+                const label regionPatchi,
                 const bool flip = false
             ) const;
 
@@ -286,7 +286,7 @@ public:
             (
                 const regionModel& nbrRegion,
                 const word& fieldName,
-                const label regionPatchI,
+                const label regionPatchi,
                 const bool flip = false
             ) const;
 
@@ -294,7 +294,7 @@ public:
             template<class Type>
             void toPrimary
             (
-                const label regionPatchI,
+                const label regionPatchi,
                 List<Type>& regionField
             ) const;
 
@@ -302,7 +302,7 @@ public:
             template<class Type>
             void toRegion
             (
-                const label regionPatchI,
+                const label regionPatchi,
                 List<Type>& primaryFieldField
             ) const;
 
@@ -310,7 +310,7 @@ public:
             template<class Type, class CombineOp>
             void toPrimary
             (
-                const label regionPatchI,
+                const label regionPatchi,
                 List<Type>& regionField,
                 const CombineOp& cop
             ) const;
@@ -319,7 +319,7 @@ public:
             template<class Type, class CombineOp>
             void toRegion
             (
-                const label regionPatchI,
+                const label regionPatchi,
                 List<Type>& primaryFieldField,
                 const CombineOp& cop
             ) const;

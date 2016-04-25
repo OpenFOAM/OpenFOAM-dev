@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,9 +107,9 @@ bool Foam::eagerGAMGProcAgglomeration::agglomerate()
                     // processor
                     labelList procAgglomMap(nProcs);
 
-                    forAll(procAgglomMap, procI)
+                    forAll(procAgglomMap, proci)
                     {
-                        procAgglomMap[procI] = procI/(1<<mergeLevels_);
+                        procAgglomMap[proci] = proci/(1<<mergeLevels_);
                     }
 
                     // Master processor

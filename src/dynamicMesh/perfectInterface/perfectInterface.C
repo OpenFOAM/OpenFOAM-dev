@@ -68,9 +68,9 @@ Foam::pointField Foam::perfectInterface::calcFaceCentres
 
     pointField ctrs(pp.size());
 
-    forAll(ctrs, patchFaceI)
+    forAll(ctrs, patchFacei)
     {
-        ctrs[patchFaceI] = pp[patchFaceI].centre(points);
+        ctrs[patchFacei] = pp[patchFacei].centre(points);
     }
 
     return ctrs;
@@ -264,9 +264,9 @@ void Foam::perfectInterface::setRefinement
         {
             const labelList& pFaces = mesh.pointFaces()[meshPointI];
 
-            forAll(pFaces, pFaceI)
+            forAll(pFaces, pFacei)
             {
-                affectedFaces.insert(pFaces[pFaceI]);
+                affectedFaces.insert(pFaces[pFacei]);
             }
         }
     }
@@ -388,9 +388,9 @@ void Foam::perfectInterface::setRefinement
 
         label own = mesh.faceOwner()[facei];
 
-        label pp1FaceI = pp1.addressing()[from0To1Faces[i]];
+        label pp1Facei = pp1.addressing()[from0To1Faces[i]];
 
-        label nbr = mesh.faceOwner()[pp1FaceI];
+        label nbr = mesh.faceOwner()[pp1Facei];
 
         if (own < nbr)
         {

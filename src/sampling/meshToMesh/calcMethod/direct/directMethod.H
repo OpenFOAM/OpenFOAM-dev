@@ -59,8 +59,8 @@ protected:
         //- Return the true if cells intersect
         virtual bool intersect
         (
-            const label srcCellI,
-            const label tgtCellI
+            const label srcCelli,
+            const label tgtCelli
         ) const;
 
         //- Find indices of overlapping cells in src and tgt meshes - returns

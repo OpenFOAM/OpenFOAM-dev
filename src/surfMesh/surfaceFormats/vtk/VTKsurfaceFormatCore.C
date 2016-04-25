@@ -73,11 +73,11 @@ void Foam::fileFormats::VTKsurfaceFormatCore::writeTail
 
     forAll(zoneLst, zoneI)
     {
-        forAll(zoneLst[zoneI], localFaceI)
+        forAll(zoneLst[zoneI], localFacei)
         {
-            if (localFaceI)
+            if (localFacei)
             {
-                if (localFaceI % 20)
+                if (localFacei % 20)
                 {
                     os << ' ';
                 }

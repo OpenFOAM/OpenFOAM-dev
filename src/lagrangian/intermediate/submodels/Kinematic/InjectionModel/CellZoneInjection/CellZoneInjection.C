@@ -319,13 +319,13 @@ void Foam::CellZoneInjection<CloudType>::setPositionAndCell
     const scalar time,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
     position = positions_[parcelI];
     cellOwner = injectorCells_[parcelI];
-    tetFaceI = injectorTetFaces_[parcelI];
+    tetFacei = injectorTetFaces_[parcelI];
     tetPtI = injectorTetPts_[parcelI];
 }
 

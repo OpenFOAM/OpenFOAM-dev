@@ -35,8 +35,8 @@ void Foam::fieldMinMax::output
     const word& outputName,
     const vector& minC,
     const vector& maxC,
-    const label minProcI,
-    const label maxProcI,
+    const label minProci,
+    const label maxProci,
     const Type& minValue,
     const Type& maxValue
 )
@@ -54,7 +54,7 @@ void Foam::fieldMinMax::output
 
         if (Pstream::parRun())
         {
-            file<< token::TAB << minProcI;
+            file<< token::TAB << minProci;
         }
 
         file<< token::TAB << maxValue
@@ -62,7 +62,7 @@ void Foam::fieldMinMax::output
 
         if (Pstream::parRun())
         {
-            file<< token::TAB << maxProcI;
+            file<< token::TAB << maxProci;
         }
 
         file<< endl;
@@ -73,7 +73,7 @@ void Foam::fieldMinMax::output
 
         if (Pstream::parRun())
         {
-            if (log_) Info<< " on processor " << minProcI;
+            if (log_) Info<< " on processor " << minProci;
         }
 
         if (log_) Info
@@ -82,7 +82,7 @@ void Foam::fieldMinMax::output
 
         if (Pstream::parRun())
         {
-            if (log_) Info<< " on processor " << maxProcI;
+            if (log_) Info<< " on processor " << maxProci;
         }
     }
     else
@@ -109,7 +109,7 @@ void Foam::fieldMinMax::calcMinMaxFields
 
     if (obr_.foundObject<fieldType>(fieldName))
     {
-        const label procI = Pstream::myProcNo();
+        const label proci = Pstream::myProcNo();
 
         const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
         const fvMesh& mesh = field.mesh();
@@ -127,17 +127,17 @@ void Foam::fieldMinMax::calcMinMaxFields
 
                 scalarList minVs(Pstream::nProcs());
                 List<vector> minCs(Pstream::nProcs());
-                label minProcI = findMin(magField);
-                minVs[procI] = magField[minProcI];
-                minCs[procI] = field.mesh().C()[minProcI];
+                label minProci = findMin(magField);
+                minVs[proci] = magField[minProci];
+                minCs[proci] = field.mesh().C()[minProci];
 
 
                 labelList maxIs(Pstream::nProcs());
                 scalarList maxVs(Pstream::nProcs());
                 List<vector> maxCs(Pstream::nProcs());
-                label maxProcI = findMax(magField);
-                maxVs[procI] = magField[maxProcI];
-                maxCs[procI] = field.mesh().C()[maxProcI];
+                label maxProci = findMax(magField);
+                maxVs[proci] = magField[maxProci];
+                maxCs[proci] = field.mesh().C()[maxProci];
 
                 forAll(magFieldBoundary, patchi)
                 {
@@ -147,17 +147,17 @@ void Foam::fieldMinMax::calcMinMaxFields
                         const vectorField& Cfp = CfBoundary[patchi];
 
                         label minPI = findMin(mfp);
-                        if (mfp[minPI] < minVs[procI])
+                        if (mfp[minPI] < minVs[proci])
                         {
-                            minVs[procI] = mfp[minPI];
-                            minCs[procI] = Cfp[minPI];
+                            minVs[proci] = mfp[minPI];
+                            minCs[proci] = Cfp[minPI];
                         }
 
                         label maxPI = findMax(mfp);
-                        if (mfp[maxPI] > maxVs[procI])
+                        if (mfp[maxPI] > maxVs[proci])
                         {
-                            maxVs[procI] = mfp[maxPI];
-                            maxCs[procI] = Cfp[maxPI];
+                            maxVs[proci] = mfp[maxPI];
+                            maxCs[proci] = Cfp[maxPI];
                         }
                     }
                 }
@@ -199,18 +199,18 @@ void Foam::fieldMinMax::calcMinMaxFields
 
                 List<Type> minVs(Pstream::nProcs());
                 List<vector> minCs(Pstream::nProcs());
-                label minProcI = findMin(field);
-                minVs[procI] = field[minProcI];
-                minCs[procI] = field.mesh().C()[minProcI];
+                label minProci = findMin(field);
+                minVs[proci] = field[minProci];
+                minCs[proci] = field.mesh().C()[minProci];
 
                 Pstream::gatherList(minVs);
                 Pstream::gatherList(minCs);
 
                 List<Type> maxVs(Pstream::nProcs());
                 List<vector> maxCs(Pstream::nProcs());
-                label maxProcI = findMax(field);
-                maxVs[procI] = field[maxProcI];
-                maxCs[procI] = field.mesh().C()[maxProcI];
+                label maxProci = findMax(field);
+                maxVs[proci] = field[maxProci];
+                maxCs[proci] = field.mesh().C()[maxProci];
 
                 forAll(fieldBoundary, patchi)
                 {
@@ -220,17 +220,17 @@ void Foam::fieldMinMax::calcMinMaxFields
                         const vectorField& Cfp = CfBoundary[patchi];
 
                         label minPI = findMin(fp);
-                        if (fp[minPI] < minVs[procI])
+                        if (fp[minPI] < minVs[proci])
                         {
-                            minVs[procI] = fp[minPI];
-                            minCs[procI] = Cfp[minPI];
+                            minVs[proci] = fp[minPI];
+                            minCs[proci] = Cfp[minPI];
                         }
 
                         label maxPI = findMax(fp);
-                        if (fp[maxPI] > maxVs[procI])
+                        if (fp[maxPI] > maxVs[proci])
                         {
-                            maxVs[procI] = fp[maxPI];
-                            maxCs[procI] = Cfp[maxPI];
+                            maxVs[proci] = fp[maxPI];
+                            maxCs[proci] = Cfp[maxPI];
                         }
                     }
                 }

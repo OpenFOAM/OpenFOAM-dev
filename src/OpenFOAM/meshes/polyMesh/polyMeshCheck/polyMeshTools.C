@@ -70,12 +70,12 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceOrthogonality
             forAll(pp, i)
             {
                 label facei = pp.start() + i;
-                label bFaceI = facei - mesh.nInternalFaces();
+                label bFacei = facei - mesh.nInternalFaces();
 
                 ortho[facei] = primitiveMeshTools::faceOrthogonality
                 (
                     cc[own[facei]],
-                    neighbourCc[bFaceI],
+                    neighbourCc[bFacei],
                     areas[facei]
                 );
             }
@@ -132,7 +132,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
             forAll(pp, i)
             {
                 label facei = pp.start() + i;
-                label bFaceI = facei - mesh.nInternalFaces();
+                label bFacei = facei - mesh.nInternalFaces();
 
                 skew[facei] = primitiveMeshTools::faceSkewness
                 (
@@ -143,7 +143,7 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceSkewness
 
                     facei,
                     cellCtrs[own[facei]],
-                    neighbourCc[bFaceI]
+                    neighbourCc[bFacei]
                 );
             }
         }
@@ -212,13 +212,13 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::faceWeights
             forAll(pp, i)
             {
                 label facei = pp.start() + i;
-                label bFaceI = facei - mesh.nInternalFaces();
+                label bFacei = facei - mesh.nInternalFaces();
 
                 const point& fc = fCtrs[facei];
                 const vector& fa = fAreas[facei];
 
                 scalar dOwn = mag(fa & (fc-cellCtrs[own[facei]]));
-                scalar dNei = mag(fa & (neiCc[bFaceI]-fc));
+                scalar dNei = mag(fa & (neiCc[bFacei]-fc));
 
                 weight[facei] = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
             }
@@ -265,10 +265,10 @@ Foam::tmp<Foam::scalarField> Foam::polyMeshTools::volRatio
             forAll(pp, i)
             {
                 label facei = pp.start() + i;
-                label bFaceI = facei - mesh.nInternalFaces();
+                label bFacei = facei - mesh.nInternalFaces();
 
                 scalar volOwn = vol[own[facei]];
-                scalar volNei = neiVol[bFaceI];
+                scalar volNei = neiVol[bFacei];
 
                 ratio[facei] = min(volOwn,volNei)/(max(volOwn, volNei)+VSMALL);
             }

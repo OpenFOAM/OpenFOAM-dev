@@ -357,7 +357,7 @@ void walkSplitLine
     const boolList& borderEdge,
     const labelList& borderPoint,
 
-    const label startFaceI,
+    const label startFacei,
     const label startEdgeI,     // is border edge
     const label startPointI,    // is border point
 
@@ -365,7 +365,7 @@ void walkSplitLine
     Map<label>& faceToPoint
 )
 {
-    label facei = startFaceI;
+    label facei = startFacei;
     label edgeI = startEdgeI;
     label pointI = startPointI;
 
@@ -446,7 +446,7 @@ void walkSplitLine
 label sharedFace
 (
     const triSurface& surf,
-    const label firstFaceI,
+    const label firstFacei,
     const label sharedEdgeI
 )
 {
@@ -454,7 +454,7 @@ label sharedFace
 
     const edge& e = surf.edges()[sharedEdgeI];
 
-    const triSurface::FaceType& f = surf.localFaces()[firstFaceI];
+    const triSurface::FaceType& f = surf.localFaces()[firstFacei];
 
     label startIndex = findIndex(f, e.start());
 
@@ -467,16 +467,16 @@ label sharedFace
     const labelList& eFaces = surf.sortedEdgeFaces()[sharedEdgeI];
 
     // Get position of face in sorted edge faces
-    label faceIndex = findIndex(eFaces, firstFaceI);
+    label faceIndex = findIndex(eFaces, firstFacei);
 
     if (edgeOrder)
     {
-        // Get face before firstFaceI
+        // Get face before firstFacei
         return eFaces[eFaces.rcIndex(faceIndex)];
     }
     else
     {
-        // Get face after firstFaceI
+        // Get face after firstFacei
         return eFaces[eFaces.fcIndex(faceIndex)];
     }
 }
@@ -808,17 +808,17 @@ int main(int argc, char *argv[])
         // Pick any face using edge to start from.
         const labelList& eFaces = surf.edgeFaces()[startEdgeI];
 
-        label firstFaceI = eFaces[0];
+        label firstFacei = eFaces[0];
 
         // Find second face which is from same surface i.e. has outwards
         // pointing normal as well (actually bit more complex than this)
-        label secondFaceI = sharedFace(surf, firstFaceI, startEdgeI);
+        label secondFacei = sharedFace(surf, firstFacei, startEdgeI);
 
         Info<< "Starting local walk from:" << endl
             << "    edge :" << startEdgeI << endl
             << "    point:" << startPointI << endl
-            << "    face0:" << firstFaceI << endl
-            << "    face1:" << secondFaceI << endl
+            << "    face0:" << firstFacei << endl
+            << "    face1:" << secondFacei << endl
             << endl;
 
         // From face on border edge to edge.
@@ -826,7 +826,7 @@ int main(int argc, char *argv[])
         // From face connected to border point (but not border edge) to point.
         Map<label> faceToPoint(2*nBorderPoints);
 
-        faceToEdge.insert(firstFaceI, startEdgeI);
+        faceToEdge.insert(firstFacei, startEdgeI);
 
         walkSplitLine
         (
@@ -834,7 +834,7 @@ int main(int argc, char *argv[])
             borderEdge,
             borderPoint,
 
-            firstFaceI,
+            firstFacei,
             startEdgeI,
             startPointI,
 
@@ -842,7 +842,7 @@ int main(int argc, char *argv[])
             faceToPoint
         );
 
-        faceToEdge.insert(secondFaceI, startEdgeI);
+        faceToEdge.insert(secondFacei, startEdgeI);
 
         walkSplitLine
         (
@@ -850,7 +850,7 @@ int main(int argc, char *argv[])
             borderEdge,
             borderPoint,
 
-            secondFaceI,
+            secondFacei,
             startEdgeI,
             startPointI,
 

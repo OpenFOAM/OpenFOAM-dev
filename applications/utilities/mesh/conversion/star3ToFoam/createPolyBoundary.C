@@ -69,9 +69,9 @@ void Foam::starMesh::createPolyBoundary()
                     const faceList& curCellFaces =
                         cellFaces_[facePointCells[celli]];
 
-                    forAll(curCellFaces, cellFaceI)
+                    forAll(curCellFaces, cellFacei)
                     {
-                        if (curCellFaces[cellFaceI] == curFace)
+                        if (curCellFaces[cellFacei] == curFace)
                         {
                             // Found the cell face corresponding to this face
                             found = true;
@@ -79,13 +79,13 @@ void Foam::starMesh::createPolyBoundary()
                             // Debugging
                             if
                             (
-                                cellPolys_[facePointCells[celli]][cellFaceI]
+                                cellPolys_[facePointCells[celli]][cellFacei]
                              != -1
                             )
                             {
                                 if
                                 (
-                                    cellPolys_[facePointCells[celli]][cellFaceI]
+                                    cellPolys_[facePointCells[celli]][cellFacei]
                                   > nInternalFaces_
                                 )
                                 {
@@ -94,24 +94,24 @@ void Foam::starMesh::createPolyBoundary()
                                         << "\nProbably multiple definitions "
                                         << "of a single boundary face. " << endl
                                         << "Other boundary face: "
-                                        << curCellFaces[cellFaceI]
+                                        << curCellFaces[cellFacei]
                                         << endl;
 
                                     Info<< "PROSTAR Command: vset,news,vlis";
-                                    forAll(curCellFaces[cellFaceI], spI)
+                                    forAll(curCellFaces[cellFacei], spI)
                                     {
                                         // check if the point is given by STAR
                                         // or created locally
                                         if
                                         (
-                                            curCellFaces[cellFaceI][spI] > -1
-                                         && curCellFaces[cellFaceI][spI]
+                                            curCellFaces[cellFacei][spI] > -1
+                                         && curCellFaces[cellFacei][spI]
                                                 < starPointID_.size()
                                         )
                                         {
                                             Info<< ","
                                                 << starPointID_
-                                                 [curCellFaces[cellFaceI][spI]];
+                                                 [curCellFaces[cellFacei][spI]];
                                         }
                                         else
                                         {
@@ -128,24 +128,24 @@ void Foam::starMesh::createPolyBoundary()
                                         << "boundary face on a previously "
                                         << "matched internal face. " << endl
                                         << "Internal face: "
-                                        << curCellFaces[cellFaceI]
+                                        << curCellFaces[cellFacei]
                                         << endl;
 
                                     Info<< "PROSTAR Command: vset,news,vlis";
-                                    forAll(curCellFaces[cellFaceI], spI)
+                                    forAll(curCellFaces[cellFacei], spI)
                                     {
                                         // check if the point is given by STAR
                                         // or created locally
                                         if
                                         (
-                                            curCellFaces[cellFaceI][spI] > -1
-                                         && curCellFaces[cellFaceI][spI]
+                                            curCellFaces[cellFacei][spI] > -1
+                                         && curCellFaces[cellFacei][spI]
                                                 < starPointID_.size()
                                         )
                                         {
                                             Info<< ","
                                                 << starPointID_
-                                                 [curCellFaces[cellFaceI][spI]];
+                                                 [curCellFaces[cellFacei][spI]];
                                         }
                                         else
                                         {
@@ -157,7 +157,7 @@ void Foam::starMesh::createPolyBoundary()
                                 }
                             }
 
-                            cellPolys_[facePointCells[celli]][cellFaceI] =
+                            cellPolys_[facePointCells[celli]][cellFacei] =
                                 nCreatedFaces;
 
                             nBoundaryFacesFound++;

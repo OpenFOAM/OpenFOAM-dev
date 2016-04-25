@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,15 +45,15 @@ inline Foam::labelList& Foam::globalIndex::offsets()
 }
 
 
-inline Foam::label Foam::globalIndex::offset(const label procI) const
+inline Foam::label Foam::globalIndex::offset(const label proci) const
 {
-    return offsets_[procI];
+    return offsets_[proci];
 }
 
 
-inline Foam::label Foam::globalIndex::localSize(const label procI) const
+inline Foam::label Foam::globalIndex::localSize(const label proci) const
 {
-    return offsets_[procI+1] - offsets_[procI];
+    return offsets_[proci+1] - offsets_[proci];
 }
 
 
@@ -71,11 +71,11 @@ inline Foam::label Foam::globalIndex::size() const
 
 inline Foam::label Foam::globalIndex::toGlobal
 (
-    const label procI,
+    const label proci,
     const label i
 ) const
 {
-    return i + offsets_[procI];
+    return i + offsets_[proci];
 }
 
 
@@ -86,9 +86,9 @@ inline Foam::label Foam::globalIndex::toGlobal(const label i) const
 
 
 //- Is on local processor
-inline bool Foam::globalIndex::isLocal(const label procI, const label i) const
+inline bool Foam::globalIndex::isLocal(const label proci, const label i) const
 {
-    return i >= offsets_[procI] && i < offsets_[procI+1];
+    return i >= offsets_[proci] && i < offsets_[proci+1];
 }
 
 
@@ -98,16 +98,16 @@ inline bool Foam::globalIndex::isLocal(const label i) const
 }
 
 
-inline Foam::label Foam::globalIndex::toLocal(const label procI, const label i)
+inline Foam::label Foam::globalIndex::toLocal(const label proci, const label i)
 const
 {
-    label localI = i - offsets_[procI];
+    label localI = i - offsets_[proci];
 
-    if (localI < 0 || i >= offsets_[procI+1])
+    if (localI < 0 || i >= offsets_[proci+1])
     {
         FatalErrorInFunction
             << "Global " << i << " does not belong on processor "
-            << procI << endl << "Offsets:" << offsets_
+            << proci << endl << "Offsets:" << offsets_
             << abort(FatalError);
     }
     return localI;

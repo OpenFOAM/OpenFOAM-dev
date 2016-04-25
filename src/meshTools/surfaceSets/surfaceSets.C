@@ -74,9 +74,9 @@ License
 //{
 //    const labelList& cFaces = mesh.cells()[celli];
 //
-//    forAll(cFaces, cFaceI)
+//    forAll(cFaces, cFacei)
 //    {
-//        label facei = cFaces[cFaceI];
+//        label facei = cFaces[cFacei];
 //
 //        const face& f = mesh.faces()[facei];
 //
@@ -125,9 +125,9 @@ License
 //    {
 //        const cell& cFaces = cells[iter.key()];
 //
-//        forAll(cFaces, cFaceI)
+//        forAll(cFaces, cFacei)
 //        {
-//            const face& f = faces[cFaces[cFaceI]];
+//            const face& f = faces[cFaces[cFacei]];
 //
 //            forAll(f, fp)
 //            {
@@ -302,9 +302,9 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
             // Inside cell. Mark all vertices seen from this cell.
             const labelList& cFaces = cells[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = faces[cFaces[cFaceI]];
+                const face& f = faces[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
@@ -330,9 +330,9 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
             // Outside cell
             const labelList& cFaces = cells[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = faces[cFaces[cFaceI]];
+                const face& f = faces[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {

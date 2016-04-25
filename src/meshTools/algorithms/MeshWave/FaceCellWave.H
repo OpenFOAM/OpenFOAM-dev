@@ -132,7 +132,7 @@ class FaceCellWave
         bool updateCell
         (
             const label celli,
-            const label neighbourFaceI,
+            const label neighbourFacei,
             const Type& neighbourInfo,
             const scalar tol,
             Type& cellInfo
@@ -143,7 +143,7 @@ class FaceCellWave
         bool updateFace
         (
             const label facei,
-            const label neighbourCellI,
+            const label neighbourCelli,
             const Type& neighbourInfo,
             const scalar tol,
             Type& faceInfo
@@ -182,7 +182,7 @@ class FaceCellWave
             label getChangedPatchFaces
             (
                 const polyPatch& patch,
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 labelList& changedPatchFaces,
                 List<Type>& changedPatchFacesInfo

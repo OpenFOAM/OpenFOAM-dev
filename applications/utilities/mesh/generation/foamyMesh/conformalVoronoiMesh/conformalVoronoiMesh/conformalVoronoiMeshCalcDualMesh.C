@@ -1595,13 +1595,13 @@ Foam::label Foam::conformalVoronoiMesh::createPatchInfo
         Pstream::gatherList(procUsedList);
         Pstream::scatterList(procUsedList);
 
-        forAll(procUsedList, procI)
+        forAll(procUsedList, proci)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
-                if (procUsedList[procI][Pstream::myProcNo()])
+                if (procUsedList[proci][Pstream::myProcNo()])
                 {
-                    procUsed[procI] = true;
+                    procUsed[proci] = true;
                 }
             }
         }
@@ -1762,7 +1762,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
 
     labelPairPairDynListList procPatchSortingIndex(nPatches);
 
-    label dualFaceI = 0;
+    label dualFacei = 0;
 
     if (foamyHexMeshControls().guardFeaturePoints())
     {
@@ -2029,11 +2029,11 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
             }
 
             // internal face
-            faces[dualFaceI] = newDualFace;
-            owner[dualFaceI] = own;
-            neighbour[dualFaceI] = nei;
+            faces[dualFacei] = newDualFace;
+            owner[dualFacei] = own;
+            neighbour[dualFacei] = nei;
 
-            dualFaceI++;
+            dualFacei++;
         }
         else if
         (
@@ -2293,11 +2293,11 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
 //                    else
                     {
                         // internal face
-                        faces[dualFaceI] = newDualFace;
-                        owner[dualFaceI] = own;
-                        neighbour[dualFaceI] = nei;
+                        faces[dualFacei] = newDualFace;
+                        owner[dualFacei] = own;
+                        neighbour[dualFacei] = nei;
 
-                        dualFaceI++;
+                        dualFacei++;
                     }
                 }
             }
@@ -2313,7 +2313,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
             << endl;
     }
 
-    label nInternalFaces = dualFaceI;
+    label nInternalFaces = dualFacei;
 
     faces.setSize(nInternalFaces);
     owner.setSize(nInternalFaces);

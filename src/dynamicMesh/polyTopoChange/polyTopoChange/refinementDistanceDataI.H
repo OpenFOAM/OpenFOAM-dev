@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ inline void Foam::refinementDistanceData::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -197,7 +197,7 @@ inline void Foam::refinementDistanceData::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -212,14 +212,14 @@ template<class TrackingData>
 inline bool Foam::refinementDistanceData::updateCell
 (
     const polyMesh& mesh,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const refinementDistanceData& neighbourInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const point& pos = mesh.cellCentres()[thisCellI];
+    const point& pos = mesh.cellCentres()[thisCelli];
 
     return update(pos, neighbourInfo, tol, td);
 }
@@ -230,14 +230,14 @@ template<class TrackingData>
 inline bool Foam::refinementDistanceData::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const refinementDistanceData& neighbourInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const point& pos = mesh.faceCentres()[thisFaceI];
+    const point& pos = mesh.faceCentres()[thisFacei];
 
     return update(pos, neighbourInfo, tol, td);
 }
@@ -248,13 +248,13 @@ template<class TrackingData>
 inline bool Foam::refinementDistanceData::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
+    const label thisFacei,
     const refinementDistanceData& neighbourInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const point& pos = mesh.faceCentres()[thisFaceI];
+    const point& pos = mesh.faceCentres()[thisFacei];
 
     return update(pos, neighbourInfo, tol, td);
 }

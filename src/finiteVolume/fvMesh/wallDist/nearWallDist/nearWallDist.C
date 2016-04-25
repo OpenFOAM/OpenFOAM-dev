@@ -60,24 +60,24 @@ void Foam::nearWallDist::calculate()
             const labelUList& faceCells = patch.faceCells();
 
             // Check cells with face on wall
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
                 label nNeighbours = wallUtils.getPointNeighbours
                 (
                     pPatch,
-                    patchFaceI,
+                    patchFacei,
                     neighbours
                 );
 
-                label minFaceI = -1;
+                label minFacei = -1;
 
-                ypatch[patchFaceI] = wallUtils.smallestDist
+                ypatch[patchFacei] = wallUtils.smallestDist
                 (
-                    cellCentres[faceCells[patchFaceI]],
+                    cellCentres[faceCells[patchFacei]],
                     pPatch,
                     nNeighbours,
                     neighbours,
-                    minFaceI
+                    minFacei
                 );
             }
         }

@@ -95,7 +95,7 @@ void Foam::FacePostProcessing<CloudType>::write()
         massTotal_[zoneI] += mass_[zoneI];
     }
 
-    const label procI = Pstream::myProcNo();
+    const label proci = Pstream::myProcNo();
 
     Info<< type() << " output:" << nl;
 
@@ -106,7 +106,7 @@ void Foam::FacePostProcessing<CloudType>::write()
         const word& zoneName = fzm[faceZoneIDs_[zoneI]].name();
 
         scalarListList allProcMass(Pstream::nProcs());
-        allProcMass[procI] = massTotal_[zoneI];
+        allProcMass[proci] = massTotal_[zoneI];
         Pstream::gatherList(allProcMass);
         zoneMassTotal[zoneI] =
             ListListOps::combine<scalarList>
@@ -116,7 +116,7 @@ void Foam::FacePostProcessing<CloudType>::write()
         const scalar sumMassTotal = sum(zoneMassTotal[zoneI]);
 
         scalarListList allProcMassFlowRate(Pstream::nProcs());
-        allProcMassFlowRate[procI] = massFlowRate_[zoneI];
+        allProcMassFlowRate[proci] = massFlowRate_[zoneI];
         Pstream::gatherList(allProcMassFlowRate);
         zoneMassFlowRate[zoneI] =
             ListListOps::combine<scalarList>
@@ -160,7 +160,7 @@ void Foam::FacePostProcessing<CloudType>::write()
 
             pointField uniquePoints(mesh.points(), uniqueMeshPointLabels);
             List<pointField> allProcPoints(Pstream::nProcs());
-            allProcPoints[procI] = uniquePoints;
+            allProcPoints[proci] = uniquePoints;
             Pstream::gatherList(allProcPoints);
 
             faceList faces(fZone().localFaces());
@@ -169,7 +169,7 @@ void Foam::FacePostProcessing<CloudType>::write()
                 inplaceRenumber(pointToGlobal, faces[i]);
             }
             List<faceList> allProcFaces(Pstream::nProcs());
-            allProcFaces[procI] = faces;
+            allProcFaces[proci] = faces;
             Pstream::gatherList(allProcFaces);
 
             if (Pstream::master())
@@ -303,8 +303,8 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
                 }
                 else
                 {
-                    label bFaceI = facei - owner.mesh().nInternalFaces();
-                    label patchi = pbm.patchID()[bFaceI];
+                    label bFacei = facei - owner.mesh().nInternalFaces();
+                    label patchi = pbm.patchID()[bFacei];
                     const polyPatch& pp = pbm[patchi];
 
                     if
@@ -313,8 +313,8 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
                      || refCast<const coupledPolyPatch>(pp).owner()
                     )
                     {
-                        label localFaceI = pp.whichFace(facei);
-                        totArea += magSf.boundaryField()[patchi][localFaceI];
+                        label localFacei = pp.whichFace(facei);
+                        totArea += magSf.boundaryField()[patchi][localFacei];
                     }
                 }
             }

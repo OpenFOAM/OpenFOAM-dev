@@ -47,13 +47,13 @@ inline Foam::solidParticle::solidParticle
     const polyMesh& mesh,
     const vector& position,
     const label celli,
-    const label tetFaceI,
+    const label tetFacei,
     const label tetPtI,
     const scalar d,
     const vector& U
 )
 :
-    particle(mesh, position, celli, tetFaceI, tetPtI),
+    particle(mesh, position, celli, tetFacei, tetPtI),
     d_(d),
     U_(U)
 {}

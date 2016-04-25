@@ -76,22 +76,22 @@ Foam::labelList Foam::meshToMeshMethod::maskCells() const
 
 bool Foam::meshToMeshMethod::intersect
 (
-    const label srcCellI,
-    const label tgtCellI
+    const label srcCelli,
+    const label tgtCelli
 ) const
 {
-    scalar threshold = tolerance_*src_.cellVolumes()[srcCellI];
+    scalar threshold = tolerance_*src_.cellVolumes()[srcCelli];
 
     tetOverlapVolume overlapEngine;
 
-    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCellI]);
+    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCelli]);
 
     return overlapEngine.cellCellOverlapMinDecomp
     (
         src_,
-        srcCellI,
+        srcCelli,
         tgt_,
-        tgtCellI,
+        tgtCelli,
         bbTgtCell,
         threshold
     );
@@ -100,20 +100,20 @@ bool Foam::meshToMeshMethod::intersect
 
 Foam::scalar Foam::meshToMeshMethod::interVol
 (
-    const label srcCellI,
-    const label tgtCellI
+    const label srcCelli,
+    const label tgtCelli
 ) const
 {
     tetOverlapVolume overlapEngine;
 
-    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCellI]);
+    treeBoundBox bbTgtCell(tgt_.points(), tgt_.cellPoints()[tgtCelli]);
 
     scalar vol = overlapEngine.cellCellOverlapVolumeMinDecomp
     (
         src_,
-        srcCellI,
+        srcCelli,
         tgt_,
-        tgtCellI,
+        tgtCelli,
         bbTgtCell
     );
 
@@ -134,15 +134,15 @@ void Foam::meshToMeshMethod::appendNbrCells
     // filter out cells already visited from cell neighbours
     forAll(nbrCells, i)
     {
-        label nbrCellI = nbrCells[i];
+        label nbrCelli = nbrCells[i];
 
         if
         (
-            (findIndex(visitedCells, nbrCellI) == -1)
-         && (findIndex(nbrCellIDs, nbrCellI) == -1)
+            (findIndex(visitedCells, nbrCelli) == -1)
+         && (findIndex(nbrCellIDs, nbrCelli) == -1)
         )
         {
-            nbrCellIDs.append(nbrCellI);
+            nbrCellIDs.append(nbrCelli);
         }
     }
 }

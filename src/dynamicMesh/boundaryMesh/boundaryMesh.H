@@ -341,7 +341,7 @@ public:
             //  of triangles, nTris is per face number of triangles.
             label getNTris
             (
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 labelList& nTris
             ) const;
@@ -351,20 +351,20 @@ public:
             //  triVerts is triangle vertices, three per triangle.
             void triangulate
             (
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 const label totalNTris,
                 labelList& triVerts
             ) const;
 
             //- Number of points used in face subset.
-            label getNPoints(const label startFaceI, const label nFaces) const;
+            label getNPoints(const label startFacei, const label nFaces) const;
 
             //- Same as triangulate but in local vertex numbering.
             //  (Map returned).
             void triangulateLocal
             (
-                const label startFaceI,
+                const label startFacei,
                 const label nFaces,
                 const label totalNTris,
                 labelList& triVerts,

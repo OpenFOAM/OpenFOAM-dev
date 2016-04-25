@@ -34,12 +34,12 @@ void Foam::directAMI<SourcePatch, TargetPatch>::appendToDirectSeeds
     labelList& srcTgtSeed,
     DynamicList<label>& srcSeeds,
     DynamicList<label>& nonOverlapFaces,
-    label& srcFaceI,
-    label& tgtFaceI
+    label& srcFacei,
+    label& tgtFacei
 ) const
 {
-    const labelList& srcNbr = this->srcPatch_.faceFaces()[srcFaceI];
-    const labelList& tgtNbr = this->tgtPatch_.faceFaces()[tgtFaceI];
+    const labelList& srcNbr = this->srcPatch_.faceFaces()[srcFacei];
+    const labelList& tgtNbr = this->tgtPatch_.faceFaces()[tgtFacei];
 
     const pointField& srcPoints = this->srcPatch_.points();
     const pointField& tgtPoints = this->tgtPatch_.points();
@@ -144,13 +144,13 @@ void Foam::directAMI<SourcePatch, TargetPatch>::appendToDirectSeeds
 
     if (srcSeeds.size())
     {
-        srcFaceI = srcSeeds.remove();
-        tgtFaceI = srcTgtSeed[srcFaceI];
+        srcFacei = srcSeeds.remove();
+        tgtFacei = srcTgtSeed[srcFacei];
     }
     else
     {
-        srcFaceI = -1;
-        tgtFaceI = -1;
+        srcFacei = -1;
+        tgtFacei = -1;
     }
 }
 
@@ -160,24 +160,24 @@ void Foam::directAMI<SourcePatch, TargetPatch>::restartAdvancingFront
 (
     labelList& mapFlag,
     DynamicList<label>& nonOverlapFaces,
-    label& srcFaceI,
-    label& tgtFaceI
+    label& srcFacei,
+    label& tgtFacei
 ) const
 {
     forAll(mapFlag, facei)
     {
         if (mapFlag[facei] == 0)
         {
-            tgtFaceI = this->findTargetFace(facei);
+            tgtFacei = this->findTargetFace(facei);
 
-            if (tgtFaceI < 0)
+            if (tgtFacei < 0)
             {
                 mapFlag[facei] = -1;
                 nonOverlapFaces.append(facei);
             }
             else
             {
-                srcFaceI = facei;
+                srcFacei = facei;
                 break;
             }
         }
@@ -228,8 +228,8 @@ void Foam::directAMI<SourcePatch, TargetPatch>::calculate
     scalarListList& srcWeights,
     labelListList& tgtAddress,
     scalarListList& tgtWeights,
-    label srcFaceI,
-    label tgtFaceI
+    label srcFacei,
+    label tgtFacei
 )
 {
     bool ok =
@@ -239,8 +239,8 @@ void Foam::directAMI<SourcePatch, TargetPatch>::calculate
             srcWeights,
             tgtAddress,
             tgtWeights,
-            srcFaceI,
-            tgtFaceI
+            srcFacei,
+            tgtFacei
         );
 
     if (!ok)
@@ -257,12 +257,12 @@ void Foam::directAMI<SourcePatch, TargetPatch>::calculate
     // construct weights and addressing
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // list of faces currently visited for srcFaceI to avoid multiple hits
+    // list of faces currently visited for srcFacei to avoid multiple hits
     DynamicList<label> srcSeeds(10);
 
     // list to keep track of tgt faces used to seed src faces
     labelList srcTgtSeed(srcAddr.size(), -1);
-    srcTgtSeed[srcFaceI] = tgtFaceI;
+    srcTgtSeed[srcFacei] = tgtFacei;
 
     // list to keep track of whether src face can be mapped
     // 1 = mapped, 0 = untested, -1 = cannot map
@@ -272,30 +272,30 @@ void Foam::directAMI<SourcePatch, TargetPatch>::calculate
     DynamicList<label> nonOverlapFaces;
     do
     {
-        srcAddr[srcFaceI].append(tgtFaceI);
-        tgtAddr[tgtFaceI].append(srcFaceI);
+        srcAddr[srcFacei].append(tgtFacei);
+        tgtAddr[tgtFacei].append(srcFacei);
 
-        mapFlag[srcFaceI] = 1;
+        mapFlag[srcFacei] = 1;
 
         nTested++;
 
-        // Do advancing front starting from srcFaceI, tgtFaceI
+        // Do advancing front starting from srcFacei, tgtFacei
         appendToDirectSeeds
         (
             mapFlag,
             srcTgtSeed,
             srcSeeds,
             nonOverlapFaces,
-            srcFaceI,
-            tgtFaceI
+            srcFacei,
+            tgtFacei
         );
 
-        if (srcFaceI < 0 && nTested < this->srcPatch_.size())
+        if (srcFacei < 0 && nTested < this->srcPatch_.size())
         {
-            restartAdvancingFront(mapFlag, nonOverlapFaces, srcFaceI, tgtFaceI);
+            restartAdvancingFront(mapFlag, nonOverlapFaces, srcFacei, tgtFacei);
         }
 
-    } while (srcFaceI >= 0);
+    } while (srcFacei >= 0);
 
     if (nonOverlapFaces.size() != 0)
     {

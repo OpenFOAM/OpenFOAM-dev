@@ -109,35 +109,35 @@ void Foam::mapNearestMethod::calculateAddressing
     const scalarField& tgtVc = tgt_.cellVolumes();
 
     {
-        label srcCellI = srcSeedI;
-        label tgtCellI = tgtSeedI;
+        label srcCelli = srcSeedI;
+        label tgtCelli = tgtSeedI;
 
         do
         {
             // find nearest tgt cell
-            findNearestCell(src_, tgt_, srcCellI, tgtCellI);
+            findNearestCell(src_, tgt_, srcCelli, tgtCelli);
 
            // store src/tgt cell pair
-            srcToTgt[srcCellI].append(tgtCellI);
-            tgtToSrc[tgtCellI].append(srcCellI);
+            srcToTgt[srcCelli].append(tgtCelli);
+            tgtToSrc[tgtCelli].append(srcCelli);
 
-            // mark source cell srcCellI and tgtCellI as matched
-            mapFlag[srcCellI] = false;
+            // mark source cell srcCelli and tgtCelli as matched
+            mapFlag[srcCelli] = false;
 
             // accumulate intersection volume
-            V_ += srcVc[srcCellI];
+            V_ += srcVc[srcCelli];
 
             // find new source cell
             setNextNearestCells
             (
                 startSeedI,
-                srcCellI,
-                tgtCellI,
+                srcCelli,
+                tgtCelli,
                 mapFlag,
                 srcCellIDs
             );
         }
-        while (srcCellI >= 0);
+        while (srcCelli >= 0);
     }
 
     // for the case of multiple source cells per target cell, select the
@@ -145,16 +145,16 @@ void Foam::mapNearestMethod::calculateAddressing
     const vectorField& srcCc = src_.cellCentres();
     const vectorField& tgtCc = tgt_.cellCentres();
 
-    forAll(tgtToSrc, targetCellI)
+    forAll(tgtToSrc, targetCelli)
     {
-        if (tgtToSrc[targetCellI].size() > 1)
+        if (tgtToSrc[targetCelli].size() > 1)
         {
-            const vector& tgtC = tgtCc[targetCellI];
+            const vector& tgtC = tgtCc[targetCelli];
 
-            DynamicList<label>& srcCells = tgtToSrc[targetCellI];
+            DynamicList<label>& srcCells = tgtToSrc[targetCelli];
 
-            label srcCellI = srcCells[0];
-            scalar d = magSqr(tgtC - srcCc[srcCellI]);
+            label srcCelli = srcCells[0];
+            scalar d = magSqr(tgtC - srcCc[srcCelli]);
 
             for (label i = 1; i < srcCells.size(); i++)
             {
@@ -163,26 +163,26 @@ void Foam::mapNearestMethod::calculateAddressing
                 if (dNew < d)
                 {
                     d = dNew;
-                    srcCellI = srcI;
+                    srcCelli = srcI;
                 }
             }
 
             srcCells.clear();
-            srcCells.append(srcCellI);
+            srcCells.append(srcCelli);
         }
     }
 
     // If there are more target cells than source cells, some target cells
     // might not yet be mapped
-    forAll(tgtToSrc, tgtCellI)
+    forAll(tgtToSrc, tgtCelli)
     {
-        if (tgtToSrc[tgtCellI].empty())
+        if (tgtToSrc[tgtCelli].empty())
         {
-            label srcCellI = findMappedSrcCell(tgtCellI, tgtToSrc);
+            label srcCelli = findMappedSrcCell(tgtCelli, tgtToSrc);
 
-            findNearestCell(tgt_, src_, tgtCellI, srcCellI);
+            findNearestCell(tgt_, src_, tgtCelli, srcCelli);
 
-            tgtToSrc[tgtCellI].append(srcCellI);
+            tgtToSrc[tgtCelli].append(srcCelli);
         }
     }
 
@@ -241,21 +241,21 @@ void Foam::mapNearestMethod::findNearestCell
 void Foam::mapNearestMethod::setNextNearestCells
 (
     label& startSeedI,
-    label& srcCellI,
-    label& tgtCellI,
+    label& srcCelli,
+    label& tgtCelli,
     boolList& mapFlag,
     const labelList& srcCellIDs
 ) const
 {
-    const labelList& srcNbr = src_.cellCells()[srcCellI];
+    const labelList& srcNbr = src_.cellCells()[srcCelli];
 
-    srcCellI = -1;
+    srcCelli = -1;
     forAll(srcNbr, i)
     {
         label celli = srcNbr[i];
         if (mapFlag[celli])
         {
-            srcCellI = celli;
+            srcCelli = celli;
             return;
         }
     }
@@ -275,26 +275,26 @@ void Foam::mapNearestMethod::setNextNearestCells
         srcCellIDs,
         mapFlag,
         startSeedI,
-        srcCellI,
-        tgtCellI
+        srcCelli,
+        tgtCelli
     );
 }
 
 
 Foam::label Foam::mapNearestMethod::findMappedSrcCell
 (
-    const label tgtCellI,
+    const label tgtCelli,
     const List<DynamicList<label>>& tgtToSrc
 ) const
 {
     DynamicList<label> testCells(10);
     DynamicList<label> visitedCells(10);
 
-    testCells.append(tgtCellI);
+    testCells.append(tgtCelli);
 
     do
     {
-        // search target tgtCellI neighbours for match with source cell
+        // search target tgtCelli neighbours for match with source cell
         label tgtI = testCells.remove();
 
         if (findIndex(visitedCells, tgtI) == -1)

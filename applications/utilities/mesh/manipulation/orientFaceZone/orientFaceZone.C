@@ -101,14 +101,14 @@ int main(int argc, char *argv[])
 
         forAll(faceLabels, facei)
         {
-            const label meshFaceI = faceLabels[facei];
-            const label patchi = bm.whichPatch(meshFaceI);
+            const label meshFacei = faceLabels[facei];
+            const label patchi = bm.whichPatch(meshFacei);
 
             if
             (
                 patchi != -1
              && bm[patchi].coupled()
-             && !isMasterFace[meshFaceI]
+             && !isMasterFace[meshFacei]
             )
             {
                 // Slave side. Mark so doesn't get visited.
@@ -127,9 +127,9 @@ int main(int argc, char *argv[])
 
         forAll(faceLabels, facei)
         {
-            const label meshFaceI = faceLabels[facei];
+            const label meshFacei = faceLabels[facei];
 
-            if (isMasterFace[meshFaceI])
+            if (isMasterFace[meshFacei])
             {
                 const labelList& fEdges = patch.faceEdges()[facei];
                 forAll(fEdges, fEdgeI)
@@ -183,59 +183,59 @@ int main(int argc, char *argv[])
     while (true)
     {
         // Pick an unset face
-        label unsetFaceI = labelMax;
+        label unsetFacei = labelMax;
         forAll(allFaceInfo, facei)
         {
             if (allFaceInfo[facei] == orientedSurface::UNVISITED)
             {
-                unsetFaceI = globalFaces.toGlobal(facei);
+                unsetFacei = globalFaces.toGlobal(facei);
                 break;
             }
         }
 
-        reduce(unsetFaceI, minOp<label>());
+        reduce(unsetFacei, minOp<label>());
 
-        if (unsetFaceI == labelMax)
+        if (unsetFacei == labelMax)
         {
             break;
         }
 
-        label procI = globalFaces.whichProcID(unsetFaceI);
-        label seedFaceI = globalFaces.toLocal(procI, unsetFaceI);
-        Info<< "Seeding from processor " << procI << " face " << seedFaceI
+        label proci = globalFaces.whichProcID(unsetFacei);
+        label seedFacei = globalFaces.toLocal(proci, unsetFacei);
+        Info<< "Seeding from processor " << proci << " face " << seedFacei
             << endl;
 
-        if (procI == Pstream::myProcNo())
+        if (proci == Pstream::myProcNo())
         {
             // Determine orientation of seedFace
 
-            vector d = outsidePoint-patch.faceCentres()[seedFaceI];
-            const vector& fn = patch.faceNormals()[seedFaceI];
+            vector d = outsidePoint-patch.faceCentres()[seedFacei];
+            const vector& fn = patch.faceNormals()[seedFacei];
 
             // Set information to correct orientation
-            patchFaceOrientation& faceInfo = allFaceInfo[seedFaceI];
+            patchFaceOrientation& faceInfo = allFaceInfo[seedFacei];
             faceInfo = orientedSurface::NOFLIP;
 
             if ((fn&d) < 0)
             {
                 faceInfo.flip();
 
-                Pout<< "Face " << seedFaceI << " at "
-                    << patch.faceCentres()[seedFaceI]
+                Pout<< "Face " << seedFacei << " at "
+                    << patch.faceCentres()[seedFacei]
                     << " with normal " << fn
                     << " needs to be flipped." << endl;
             }
             else
             {
-                Pout<< "Face " << seedFaceI << " at "
-                    << patch.faceCentres()[seedFaceI]
+                Pout<< "Face " << seedFacei << " at "
+                    << patch.faceCentres()[seedFacei]
                     << " with normal " << fn
                     << " points in positive direction (cos = " << (fn&d)/mag(d)
                     << ")" << endl;
             }
 
 
-            const labelList& fEdges = patch.faceEdges()[seedFaceI];
+            const labelList& fEdges = patch.faceEdges()[seedFacei];
             forAll(fEdges, fEdgeI)
             {
                 label edgeI = fEdges[fEdgeI];
@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
                         mesh,
                         patch,
                         edgeI,
-                        seedFaceI,
+                        seedFacei,
                         faceInfo,
                         tol,
                         dummyTrackData
@@ -300,10 +300,10 @@ int main(int argc, char *argv[])
 
         forAll(faceLabels, i)
         {
-            const label meshFaceI = faceLabels[i];
-            if (!mesh.isInternalFace(meshFaceI))
+            const label meshFacei = faceLabels[i];
+            if (!mesh.isInternalFace(meshFacei))
             {
-                neiStatus[meshFaceI-mesh.nInternalFaces()] =
+                neiStatus[meshFacei-mesh.nInternalFaces()] =
                     allFaceInfo[i].flipStatus();
             }
         }
@@ -311,31 +311,31 @@ int main(int argc, char *argv[])
 
         forAll(faceLabels, i)
         {
-            const label meshFaceI = faceLabels[i];
-            const label patchi = bm.whichPatch(meshFaceI);
+            const label meshFacei = faceLabels[i];
+            const label patchi = bm.whichPatch(meshFacei);
 
             if
             (
                 patchi != -1
              && bm[patchi].coupled()
-             && !isMasterFace[meshFaceI]
+             && !isMasterFace[meshFacei]
             )
             {
                 // Slave side. Take flipped from neighbour
-                label bFaceI = meshFaceI-mesh.nInternalFaces();
+                label bFacei = meshFacei-mesh.nInternalFaces();
 
-                if (neiStatus[bFaceI] == orientedSurface::NOFLIP)
+                if (neiStatus[bFacei] == orientedSurface::NOFLIP)
                 {
                     allFaceInfo[i] = orientedSurface::FLIP;
                 }
-                else if (neiStatus[bFaceI] == orientedSurface::FLIP)
+                else if (neiStatus[bFacei] == orientedSurface::FLIP)
                 {
                     allFaceInfo[i] = orientedSurface::NOFLIP;
                 }
                 else
                 {
                     FatalErrorInFunction
-                        << "Incorrect status for face " << meshFaceI
+                        << "Incorrect status for face " << meshFacei
                         << abort(FatalError);
                 }
             }

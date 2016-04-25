@@ -273,7 +273,7 @@ void Foam::fileFormats::STARCDsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, f, faceIndex, zoneI + 1);
@@ -281,7 +281,7 @@ void Foam::fileFormats::STARCDsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
                 writeShell(os, f, faceIndex, zoneI + 1);

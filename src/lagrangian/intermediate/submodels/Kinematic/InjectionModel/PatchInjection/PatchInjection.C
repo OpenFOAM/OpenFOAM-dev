@@ -175,7 +175,7 @@ void Foam::PatchInjection<CloudType>::setPositionAndCell
     const scalar,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
@@ -185,7 +185,7 @@ void Foam::PatchInjection<CloudType>::setPositionAndCell
         this->owner().rndGen(),
         position,
         cellOwner,
-        tetFaceI,
+        tetFacei,
         tetPtI
     );
 }

@@ -213,8 +213,8 @@ Foam::patchProbes::sample
         if (facei >= 0)
         {
             label patchi = patches.whichPatch(facei);
-            label localFaceI = patches[patchi].whichFace(facei);
-            values[probeI] = vField.boundaryField()[patchi][localFaceI];
+            label localFacei = patches[patchi].whichFace(facei);
+            values[probeI] = vField.boundaryField()[patchi][localFacei];
         }
     }
 
@@ -264,8 +264,8 @@ Foam::patchProbes::sample
         if (facei >= 0)
         {
             label patchi = patches.whichPatch(facei);
-            label localFaceI = patches[patchi].whichFace(facei);
-            values[probeI] = sField.boundaryField()[patchi][localFaceI];
+            label localFacei = patches[patchi].whichFace(facei);
+            values[probeI] = sField.boundaryField()[patchi][localFacei];
         }
     }
 

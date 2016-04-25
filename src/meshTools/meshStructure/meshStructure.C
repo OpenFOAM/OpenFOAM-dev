@@ -118,10 +118,10 @@ void Foam::meshStructure::correct
         // Start of changes
         labelList patchFaces(pp.size());
         List<topoDistanceData> patchData(pp.size());
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
-            patchFaces[patchFaceI] = pp.addressing()[patchFaceI];
-            patchData[patchFaceI] = topoDistanceData(patchFaceI, 0);
+            patchFaces[patchFacei] = pp.addressing()[patchFacei];
+            patchData[patchFacei] = topoDistanceData(patchFacei, 0);
         }
 
 
@@ -161,7 +161,7 @@ void Foam::meshStructure::correct
         forAll(faceToPatchFaceAddressing_, facei)
         {
             label own = mesh.faceOwner()[facei];
-            label patchFaceI = faceData[facei].data();
+            label patchFacei = faceData[facei].data();
             label patchDist = faceData[facei].distance();
 
             if (mesh.isInternalFace(facei))
@@ -177,14 +177,14 @@ void Foam::meshStructure::correct
                 else if (cellData[own].distance() < cellData[nei].distance())
                 {
                     // unturned face
-                    faceToPatchFaceAddressing_[facei] = patchFaceI+1;
+                    faceToPatchFaceAddressing_[facei] = patchFacei+1;
                     faceToPatchEdgeAddressing_[facei] = -1;
                     faceLayer_[facei] = patchDist;
                 }
                 else
                 {
                     // turned face
-                    faceToPatchFaceAddressing_[facei] = -(patchFaceI+1);
+                    faceToPatchFaceAddressing_[facei] = -(patchFacei+1);
                     faceToPatchEdgeAddressing_[facei] = -1;
                     faceLayer_[facei] = patchDist;
                 }
@@ -192,7 +192,7 @@ void Foam::meshStructure::correct
             else if (patchDist == cellData[own].distance())
             {
                 // starting face
-                faceToPatchFaceAddressing_[facei] = -(patchFaceI+1);
+                faceToPatchFaceAddressing_[facei] = -(patchFacei+1);
                 faceToPatchEdgeAddressing_[facei] = -1;
                 faceLayer_[facei] = patchDist;
             }
@@ -290,11 +290,11 @@ void Foam::meshStructure::correct
                     //    << UIndirectList<pointTopoDistanceData>(pointData, f)
                     //    << endl;
 
-                    label patchFaceI = faceData[facei].data();
+                    label patchFacei = faceData[facei].data();
                     label patchDist = faceData[facei].distance();
 
                     faceToPatchEdgeAddressing_[facei] = -1;
-                    faceToPatchFaceAddressing_[facei] = patchFaceI+1;
+                    faceToPatchFaceAddressing_[facei] = patchFacei+1;
                     faceLayer_[facei] = patchDist;
                 }
                 else
@@ -344,9 +344,9 @@ void Foam::meshStructure::correct
         {
             const labelList& lCells = layerToCells[layerI];
 
-            forAll(lCells, lCellI)
+            forAll(lCells, lCelli)
             {
-                label celli = lCells[lCellI];
+                label celli = lCells[lCelli];
 
                 structured_ = isStructuredCell
                 (

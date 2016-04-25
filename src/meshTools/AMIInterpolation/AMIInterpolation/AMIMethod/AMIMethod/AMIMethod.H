@@ -120,8 +120,8 @@ protected:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label& srcFaceI,
-                label& tgtFaceI
+                label& srcFacei,
+                label& tgtFacei
             );
 
             //- Write triangle intersection to OBJ file
@@ -141,7 +141,7 @@ protected:
             void resetTree();
 
             //- Find face on target patch that overlaps source face
-            label findTargetFace(const label srcFaceI) const;
+            label findTargetFace(const label srcFacei) const;
 
             //- Add faces neighbouring facei to the ID list
             void appendNbrFaces
@@ -235,8 +235,8 @@ public:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label srcFaceI = -1,
-                label tgtFaceI = -1
+                label srcFacei = -1,
+                label tgtFacei = -1
             ) = 0;
 };
 

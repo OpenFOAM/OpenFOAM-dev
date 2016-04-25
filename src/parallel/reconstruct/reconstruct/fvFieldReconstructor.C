@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,25 +43,25 @@ Foam::fvFieldReconstructor::fvFieldReconstructor
     boundaryProcAddressing_(boundaryProcAddressing),
     nReconstructed_(0)
 {
-    forAll(procMeshes_, procI)
+    forAll(procMeshes_, proci)
     {
-        const fvMesh& procMesh = procMeshes_[procI];
+        const fvMesh& procMesh = procMeshes_[proci];
         if
         (
-            faceProcAddressing[procI].size() != procMesh.nFaces()
-         || cellProcAddressing[procI].size() != procMesh.nCells()
-         || boundaryProcAddressing[procI].size() != procMesh.boundary().size()
+            faceProcAddressing[proci].size() != procMesh.nFaces()
+         || cellProcAddressing[proci].size() != procMesh.nCells()
+         || boundaryProcAddressing[proci].size() != procMesh.boundary().size()
         )
         {
             FatalErrorInFunction
                 << "Size of maps does not correspond to size of mesh"
-                << " for processor " << procI << endl
-                << "faceProcAddressing : " << faceProcAddressing[procI].size()
+                << " for processor " << proci << endl
+                << "faceProcAddressing : " << faceProcAddressing[proci].size()
                 << " nFaces : " << procMesh.nFaces() << endl
-                << "cellProcAddressing : " << cellProcAddressing[procI].size()
+                << "cellProcAddressing : " << cellProcAddressing[proci].size()
                 << " nCell : " << procMesh.nCells() << endl
                 << "boundaryProcAddressing : "
-                << boundaryProcAddressing[procI].size()
+                << boundaryProcAddressing[proci].size()
                 << " nFaces : " << procMesh.boundary().size()
                 << exit(FatalError);
         }

@@ -78,9 +78,9 @@ void triSurface::writeOFF(const bool writeSorted, Ostream& os) const
 
             for
             (
-                label patchFaceI = 0;
-                patchFaceI < myPatches[patchi].size();
-                patchFaceI++
+                label patchFacei = 0;
+                patchFacei < myPatches[patchi].size();
+                patchFacei++
             )
             {
                 const label facei = faceMap[faceIndex++];

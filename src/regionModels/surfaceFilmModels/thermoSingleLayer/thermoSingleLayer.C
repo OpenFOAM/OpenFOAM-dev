@@ -764,16 +764,16 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho() const
 
     forAll(intCoupledPatchIDs(), i)
     {
-        const label filmPatchI = intCoupledPatchIDs()[i];
+        const label filmPatchi = intCoupledPatchIDs()[i];
 
         scalarField patchMass =
-            primaryMassPCTrans_.boundaryField()[filmPatchI];
+            primaryMassPCTrans_.boundaryField()[filmPatchi];
 
-        toPrimary(filmPatchI, patchMass);
+        toPrimary(filmPatchi, patchMass);
 
-        const label primaryPatchI = primaryPatchIDs()[i];
+        const label primaryPatchi = primaryPatchIDs()[i];
         const unallocLabelList& cells =
-            primaryMesh().boundaryMesh()[primaryPatchI].faceCells();
+            primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
 
         forAll(patchMass, j)
         {
@@ -818,16 +818,16 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Srho
 
         forAll(intCoupledPatchIDs_, i)
         {
-            const label filmPatchI = intCoupledPatchIDs_[i];
+            const label filmPatchi = intCoupledPatchIDs_[i];
 
             scalarField patchMass =
-                primaryMassPCTrans_.boundaryField()[filmPatchI];
+                primaryMassPCTrans_.boundaryField()[filmPatchi];
 
-            toPrimary(filmPatchI, patchMass);
+            toPrimary(filmPatchi, patchMass);
 
-            const label primaryPatchI = primaryPatchIDs()[i];
+            const label primaryPatchi = primaryPatchIDs()[i];
             const unallocLabelList& cells =
-                primaryMesh().boundaryMesh()[primaryPatchI].faceCells();
+                primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
 
             forAll(patchMass, j)
             {
@@ -868,16 +868,16 @@ tmp<DimensionedField<scalar, volMesh>> thermoSingleLayer::Sh() const
 
     forAll(intCoupledPatchIDs_, i)
     {
-        const label filmPatchI = intCoupledPatchIDs_[i];
+        const label filmPatchi = intCoupledPatchIDs_[i];
 
         scalarField patchEnergy =
-            primaryEnergyPCTrans_.boundaryField()[filmPatchI];
+            primaryEnergyPCTrans_.boundaryField()[filmPatchi];
 
-        toPrimary(filmPatchI, patchEnergy);
+        toPrimary(filmPatchi, patchEnergy);
 
-        const label primaryPatchI = primaryPatchIDs()[i];
+        const label primaryPatchi = primaryPatchIDs()[i];
         const unallocLabelList& cells =
-            primaryMesh().boundaryMesh()[primaryPatchI].faceCells();
+            primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
 
         forAll(patchEnergy, j)
         {

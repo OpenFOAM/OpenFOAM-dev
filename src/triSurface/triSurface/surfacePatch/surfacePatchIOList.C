@@ -79,7 +79,7 @@ Foam::surfacePatchIOList::surfacePatchIOList
             const dictionary& dict = patchEntries[patchi].dict();
 
             label patchSize = readLabel(dict.lookup("nFaces"));
-            label startFaceI = readLabel(dict.lookup("startFace"));
+            label startFacei = readLabel(dict.lookup("startFace"));
 
             patches[patchi] =
                 surfacePatch
@@ -87,12 +87,12 @@ Foam::surfacePatchIOList::surfacePatchIOList
                     word(dict.lookup("geometricType")),
                     patchEntries[patchi].keyword(),
                     patchSize,
-                    startFaceI,
+                    startFacei,
                     patchi
                 );
 
 
-            if (startFaceI != facei)
+            if (startFacei != facei)
             {
                 FatalErrorInFunction
                     << "Patches are not ordered. Start of patch " << patchi

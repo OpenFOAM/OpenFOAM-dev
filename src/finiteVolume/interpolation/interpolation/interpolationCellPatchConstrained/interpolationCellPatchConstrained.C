@@ -53,9 +53,9 @@ Type Foam::interpolationCellPatchConstrained<Type>::interpolate
         // Use boundary value
         const polyBoundaryMesh& pbm = this->psi_.mesh().boundaryMesh();
         label patchi = pbm.patchID()[facei-this->psi_.mesh().nInternalFaces()];
-        label patchFaceI = pbm[patchi].whichFace(facei);
+        label patchFacei = pbm[patchi].whichFace(facei);
 
-        return this->psi_.boundaryField()[patchi][patchFaceI];
+        return this->psi_.boundaryField()[patchi][patchFacei];
     }
     else
     {

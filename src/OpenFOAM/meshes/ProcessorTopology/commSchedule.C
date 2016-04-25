@@ -213,15 +213,15 @@ Foam::commSchedule::commSchedule
                 // Print it
                 OStringStream os;
                 os  << setw(3) << iter << " |";
-                forAll(procToComm, procI)
+                forAll(procToComm, proci)
                 {
-                    if (procToComm[procI] == -1)
+                    if (procToComm[proci] == -1)
                     {
                         os  << "   ";
                     }
                     else
                     {
-                        os  << setw(3) << procToComm[procI];
+                        os  << setw(3) << procToComm[proci];
                     }
                 }
                 Pout<< os.str().c_str() << endl;
@@ -254,9 +254,9 @@ Foam::commSchedule::commSchedule
         nProcScheduled[twoProcs[1]]++;
     }
     // Allocate
-    forAll(procSchedule_, procI)
+    forAll(procSchedule_, proci)
     {
-        procSchedule_[procI].setSize(nProcScheduled[procI]);
+        procSchedule_[proci].setSize(nProcScheduled[proci]);
     }
     nProcScheduled = 0;
     // Fill
@@ -276,17 +276,17 @@ Foam::commSchedule::commSchedule
     {
         Pout<< "commSchedule::commSchedule : Per processor:" << endl;
 
-        forAll(procSchedule_, procI)
+        forAll(procSchedule_, proci)
         {
-            const labelList& procComms = procSchedule_[procI];
+            const labelList& procComms = procSchedule_[proci];
 
-            Pout<< "Processor " << procI << " talks to processors:" << endl;
+            Pout<< "Processor " << proci << " talks to processors:" << endl;
 
             forAll(procComms, i)
             {
                 const labelPair& twoProcs = comms[procComms[i]];
 
-                label nbr = (twoProcs[1] == procI ? twoProcs[0] : twoProcs[1]);
+                label nbr = (twoProcs[1] == proci ? twoProcs[0] : twoProcs[1]);
 
                 Pout<< "    " << nbr << endl;
             }

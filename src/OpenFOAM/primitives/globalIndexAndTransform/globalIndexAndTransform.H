@@ -230,7 +230,7 @@ public:
         //- Encode index and bare index as components on given processor
         inline static labelPair encode
         (
-            const label procI,
+            const label proci,
             const label index,
             const label transformIndex
         );

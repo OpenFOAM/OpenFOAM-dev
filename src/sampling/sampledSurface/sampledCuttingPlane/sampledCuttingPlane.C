@@ -69,14 +69,14 @@ void Foam::sampledCuttingPlane::createGeometry()
         const polyBoundaryMesh& patches = mesh().boundaryMesh();
 
         // Patch to put exposed internal faces into
-        const label exposedPatchI = patches.findPatchID(exposedPatchName_);
+        const label exposedPatchi = patches.findPatchID(exposedPatchName_);
 
         if (debug)
         {
             Info<< "Allocating subset of size "
                 << mesh().cellZones()[zoneID_.index()].size()
                 << " with exposed faces into patch "
-                << patches[exposedPatchI].name() << endl;
+                << patches[exposedPatchi].name() << endl;
         }
 
         subMeshPtr_.reset
@@ -86,7 +86,7 @@ void Foam::sampledCuttingPlane::createGeometry()
         subMeshPtr_().setLargeCellSubset
         (
             labelHashSet(mesh().cellZones()[zoneID_.index()]),
-            exposedPatchI
+            exposedPatchi
         );
     }
 

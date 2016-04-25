@@ -843,17 +843,17 @@ void Foam::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
         forAllConstIter(Map<label>, faceAddedPoint_, iter)
         {
-            label oldFaceI = iter.key();
+            label oldFacei = iter.key();
 
-            label newFaceI = morphMap.reverseFaceMap()[oldFaceI];
+            label newFacei = morphMap.reverseFaceMap()[oldFacei];
 
             label oldPointI = iter();
 
             label newPointI = morphMap.reversePointMap()[oldPointI];
 
-            if (newFaceI >= 0 && newPointI >= 0)
+            if (newFacei >= 0 && newPointI >= 0)
             {
-                newAddedPoints.insert(newFaceI, newPointI);
+                newAddedPoints.insert(newFacei, newPointI);
             }
         }
 

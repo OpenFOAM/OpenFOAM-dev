@@ -29,7 +29,7 @@ Description
     for processor + local index. E.g.
 
     globalIndex globalFaces(mesh.nFaces());
-    label globalFaceI = globalFaces.toGlobal(facei);
+    label globalFacei = globalFaces.toGlobal(facei);
 
 
 SourceFiles
@@ -65,7 +65,7 @@ class globalIndex
 {
     // Private data
 
-        //- Start of procI. Size is nProcs()+1. (so like CompactListList)
+        //- Start of proci. Size is nProcs()+1. (so like CompactListList)
         labelList offsets_;
 
 
@@ -129,23 +129,23 @@ public:
             //- Global sum of localSizes
             inline label size() const;
 
-            //- Size of procI data
-            inline label localSize(const label procI) const;
+            //- Size of proci data
+            inline label localSize(const label proci) const;
 
-            //- From local to global on procI
-            inline label toGlobal(const label procI, const label i) const;
+            //- From local to global on proci
+            inline label toGlobal(const label proci, const label i) const;
 
-            //- Is on processor procI
-            inline bool isLocal(const label procI, const label i) const;
+            //- Is on processor proci
+            inline bool isLocal(const label proci, const label i) const;
 
-            //- From global to local on procI
-            inline label toLocal(const label procI, const label i) const;
+            //- From global to local on proci
+            inline label toLocal(const label proci, const label i) const;
 
             //- Which processor does global come from? Binary search.
             inline label whichProcID(const label i) const;
 
-            //- Start of procI data
-            inline label offset(const label procI) const;
+            //- Start of proci data
+            inline label offset(const label proci) const;
 
 
         // Other

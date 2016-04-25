@@ -36,7 +36,7 @@ Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
     const TargetPatch& tgtPatch
 ) const
 {
-    label procI = 0;
+    label proci = 0;
 
     if (Pstream::parRun())
     {
@@ -57,7 +57,7 @@ Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
 
         if (nHaveFaces > 1)
         {
-            procI = -1;
+            proci = -1;
             if (debug)
             {
                 InfoInFunction
@@ -66,18 +66,18 @@ Foam::label Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcDistribution
         }
         else if (nHaveFaces == 1)
         {
-            procI = findIndex(facesPresentOnProc, 1);
+            proci = findIndex(facesPresentOnProc, 1);
             if (debug)
             {
                 InfoInFunction
-                    << "AMI local to processor" << procI << endl;
+                    << "AMI local to processor" << proci << endl;
             }
         }
     }
 
 
     // Either not parallel or no faces on any processor
-    return procI;
+    return proci;
 }
 
 
@@ -95,15 +95,15 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcOverlappingProcs
 
     label nOverlaps = 0;
 
-    forAll(procBb, procI)
+    forAll(procBb, proci)
     {
-        const List<treeBoundBox>& bbs = procBb[procI];
+        const List<treeBoundBox>& bbs = procBb[proci];
 
         forAll(bbs, bbI)
         {
             if (bbs[bbI].overlaps(bb))
             {
-                overlaps[procI] = true;
+                overlaps[proci] = true;
                 nOverlaps++;
                 break;
             }
@@ -230,10 +230,10 @@ distributeAndMergePatches
     // Renumber and flatten
     label nFaces = 0;
     label nPoints = 0;
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        nFaces += allFaces[procI].size();
-        nPoints += allPoints[procI].size();
+        nFaces += allFaces[proci].size();
+        nPoints += allPoints[proci].size();
     }
 
     tgtFaces.setSize(nFaces);
@@ -269,14 +269,14 @@ distributeAndMergePatches
 
 
     // Other proc data follows
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            const labelList& faceIDs = allTgtFaceIDs[procI];
+            const labelList& faceIDs = allTgtFaceIDs[proci];
             SubList<label>(tgtFaceIDs, faceIDs.size(), nFaces) = faceIDs;
 
-            const faceList& fcs = allFaces[procI];
+            const faceList& fcs = allFaces[proci];
             forAll(fcs, i)
             {
                 const face& f = fcs[i];
@@ -288,7 +288,7 @@ distributeAndMergePatches
                 }
             }
 
-            const pointField& pts = allPoints[procI];
+            const pointField& pts = allPoints[proci];
             forAll(pts, i)
             {
                 tgtPoints[nPoints++] = pts[i];
@@ -369,9 +369,9 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
     {
         Info<< "Determining extent of srcPatch per processor:" << nl
             << "\tproc\tbb" << endl;
-        forAll(procBb, procI)
+        forAll(procBb, proci)
         {
-            Info<< '\t' << procI << '\t' << procBb[procI] << endl;
+            Info<< '\t' << proci << '\t' << procBb[proci] << endl;
         }
     }
 
@@ -398,11 +398,11 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
                 // Find the processor this face overlaps
                 calcOverlappingProcs(procBb, faceBb, procBbOverlaps);
 
-                forAll(procBbOverlaps, procI)
+                forAll(procBbOverlaps, proci)
                 {
-                    if (procBbOverlaps[procI])
+                    if (procBbOverlaps[proci])
                     {
-                        dynSendMap[procI].append(facei);
+                        dynSendMap[proci].append(facei);
                     }
                 }
             }
@@ -410,9 +410,9 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
 
         // Convert dynamicList to labelList
         sendMap.setSize(Pstream::nProcs());
-        forAll(sendMap, procI)
+        forAll(sendMap, proci)
         {
-            sendMap[procI].transfer(dynSendMap[procI]);
+            sendMap[proci].transfer(dynSendMap[proci]);
         }
     }
 
@@ -421,9 +421,9 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
     {
         Pout<< "Of my " << faces.size() << " I need to send to:" << nl
             << "\tproc\tfaces" << endl;
-        forAll(sendMap, procI)
+        forAll(sendMap, proci)
         {
-            Pout<< '\t' << procI << '\t' << sendMap[procI].size() << endl;
+            Pout<< '\t' << proci << '\t' << sendMap[proci].size() << endl;
         }
     }
 
@@ -431,9 +431,9 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
     // Send over how many faces I need to receive
     labelListList sendSizes(Pstream::nProcs());
     sendSizes[Pstream::myProcNo()].setSize(Pstream::nProcs());
-    forAll(sendMap, procI)
+    forAll(sendMap, proci)
     {
-        sendSizes[Pstream::myProcNo()][procI] = sendMap[procI].size();
+        sendSizes[Pstream::myProcNo()][proci] = sendMap[proci].size();
     }
     Pstream::gatherList(sendSizes);
     Pstream::scatterList(sendSizes);
@@ -449,17 +449,17 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
     );
 
     label segmentI = constructMap[Pstream::myProcNo()].size();
-    forAll(constructMap, procI)
+    forAll(constructMap, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
             // What I need to receive is what other processor is sending to me
-            label nRecv = sendSizes[procI][Pstream::myProcNo()];
-            constructMap[procI].setSize(nRecv);
+            label nRecv = sendSizes[proci][Pstream::myProcNo()];
+            constructMap[proci].setSize(nRecv);
 
             for (label i = 0; i < nRecv; i++)
             {
-                constructMap[procI][i] = segmentI++;
+                constructMap[proci][i] = segmentI++;
             }
         }
     }

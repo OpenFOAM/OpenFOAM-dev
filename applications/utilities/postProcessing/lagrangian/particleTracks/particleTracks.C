@@ -103,10 +103,10 @@ int main(int argc, char *argv[])
     labelList numIds = maxIds + 1;
 
     Info<< nl << "Particle statistics:" << endl;
-    forAll(maxIds, procI)
+    forAll(maxIds, proci)
     {
-        Info<< "    Found " << numIds[procI] << " particles originating"
-            << " from processor " << procI << endl;
+        Info<< "    Found " << numIds[proci] << " particles originating"
+            << " from processor " << proci << endl;
     }
     Info<< nl << endl;
 
@@ -169,13 +169,13 @@ int main(int argc, char *argv[])
         Info<< "    Constructing tracks" << nl << endl;
         if (Pstream::master())
         {
-            forAll(allPositions, procI)
+            forAll(allPositions, proci)
             {
-                forAll(allPositions[procI], i)
+                forAll(allPositions[proci], i)
                 {
                     label globalId =
-                        startIds[allOrigProcs[procI][i]]
-                      + allOrigIds[procI][i];
+                        startIds[allOrigProcs[proci][i]]
+                      + allOrigIds[proci][i];
 
                     if (globalId % sampleFrequency == 0)
                     {
@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
                         {
                             allTracks[trackId].append
                             (
-                                allPositions[procI][i]
+                                allPositions[proci][i]
                             );
                         }
                     }

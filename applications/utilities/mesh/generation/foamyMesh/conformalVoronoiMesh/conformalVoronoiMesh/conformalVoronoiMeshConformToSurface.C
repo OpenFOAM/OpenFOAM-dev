@@ -408,13 +408,13 @@ void Foam::conformalVoronoiMesh::buildSurfaceConformation()
 
     if (Pstream::parRun())
     {
-        forAll(referralVertices, procI)
+        forAll(referralVertices, proci)
         {
-            if (procI != Pstream::myProcNo())
+            if (proci != Pstream::myProcNo())
             {
                 referralVertices.set
                 (
-                    procI,
+                    proci,
                     new labelPairHashSet(number_of_vertices()/Pstream::nProcs())
                 );
             }
@@ -700,16 +700,16 @@ Foam::label Foam::conformalVoronoiMesh::synchroniseSurfaceTrees
     label nStoppedInsertion = 0;
 
     // Do the nearness tests here
-    for (label procI = 0; procI < Pstream::nProcs(); ++procI)
+    for (label proci = 0; proci < Pstream::nProcs(); ++proci)
     {
         // Skip own points
-        if (procI >= Pstream::myProcNo())
+        if (proci >= Pstream::myProcNo())
         {
             continue;
         }
 
         const pointIndexHitAndFeatureList& otherSurfEdges =
-            procSurfLocations[procI];
+            procSurfLocations[proci];
 
         forAll(otherSurfEdges, peI)
         {
@@ -725,9 +725,9 @@ Foam::label Foam::conformalVoronoiMesh::synchroniseSurfaceTrees
             {
                 nStoppedInsertion++;
 
-                if (!hits[procI].found(peI))
+                if (!hits[proci].found(peI))
                 {
-                    hits[procI].insert(peI);
+                    hits[proci].insert(peI);
                 }
             }
         }
@@ -792,15 +792,15 @@ Foam::label Foam::conformalVoronoiMesh::synchroniseEdgeTrees
     label nStoppedInsertion = 0;
 
     // Do the nearness tests here
-    for (label procI = 0; procI < Pstream::nProcs(); ++procI)
+    for (label proci = 0; proci < Pstream::nProcs(); ++proci)
     {
         // Skip own points
-        if (procI >= Pstream::myProcNo())
+        if (proci >= Pstream::myProcNo())
         {
             continue;
         }
 
-        pointIndexHitAndFeatureList& otherProcEdges = procEdgeLocations[procI];
+        pointIndexHitAndFeatureList& otherProcEdges = procEdgeLocations[proci];
 
         forAll(otherProcEdges, peI)
         {
@@ -812,7 +812,7 @@ Foam::label Foam::conformalVoronoiMesh::synchroniseEdgeTrees
             if (nearest.hit())
             {
 //                Pout<< "Not inserting " << peI << " " << pt << " "
-//                    << nearest.rawPoint() << " on proc " << procI
+//                    << nearest.rawPoint() << " on proc " << proci
 //                    << ", near edge = " << nearest
 //                    << " near ftPt = "<< info
 //                    << " " << featureEdgeExclusionDistanceSqr(pt)
@@ -820,9 +820,9 @@ Foam::label Foam::conformalVoronoiMesh::synchroniseEdgeTrees
 
                 nStoppedInsertion++;
 
-                if (!hits[procI].found(peI))
+                if (!hits[proci].found(peI))
                 {
-                    hits[procI].insert(peI);
+                    hits[proci].insert(peI);
                 }
             }
         }

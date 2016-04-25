@@ -30,12 +30,12 @@ License
 template<class CloudType>
 Foam::label Foam::ParticleErosion<CloudType>::applyToPatch
 (
-    const label globalPatchI
+    const label globalPatchi
 ) const
 {
     forAll(patchIDs_, i)
     {
-        if (patchIDs_[i] == globalPatchI)
+        if (patchIDs_[i] == globalPatchi)
         {
             return i;
         }
@@ -169,9 +169,9 @@ void Foam::ParticleErosion<CloudType>::postPatch
 {
     const label patchi = pp.index();
 
-    const label localPatchI = applyToPatch(patchi);
+    const label localPatchi = applyToPatch(patchi);
 
-    if (localPatchI != -1)
+    if (localPatchi != -1)
     {
         vector nw;
         vector Up;
@@ -196,8 +196,8 @@ void Foam::ParticleErosion<CloudType>::postPatch
 
         const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);
 
-        const label patchFaceI = pp.whichFace(p.face());
-        scalar& Q = QPtr_->boundaryFieldRef()[patchi][patchFaceI];
+        const label patchFacei = pp.whichFace(p.face());
+        scalar& Q = QPtr_->boundaryFieldRef()[patchi][patchFacei];
         if (tan(alpha) < K_/6.0)
         {
             Q += coeff*(sin(2.0*alpha) - 6.0/K_*sqr(sin(alpha)));

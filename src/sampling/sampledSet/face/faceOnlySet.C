@@ -124,40 +124,40 @@ void Foam::faceOnlySet::calcSamples
     );
 
     point bPoint(GREAT, GREAT, GREAT);
-    label bFaceI = -1;
+    label bFacei = -1;
 
     if (bHits.size())
     {
         bPoint = bHits[0].hitPoint();
-        bFaceI = bHits[0].index();
+        bFacei = bHits[0].index();
     }
 
-    // Get first tracking point. Use bPoint, bFaceI if provided.
+    // Get first tracking point. Use bPoint, bFacei if provided.
     point trackPt;
-    label trackCellI = -1;
-    label trackFaceI = -1;
+    label trackCelli = -1;
+    label trackFacei = -1;
 
     // Pout<< "before getTrackingPoint : bPoint:" << bPoint
-    //     << " bFaceI:" << bFaceI << endl;
+    //     << " bFacei:" << bFacei << endl;
 
     getTrackingPoint
     (
         start_,
         bPoint,
-        bFaceI,
+        bFacei,
         smallDist,
         trackPt,
-        trackCellI,
-        trackFaceI
+        trackCelli,
+        trackFacei
     );
 
     // Pout<< "after getTrackingPoint : "
     //     << " trackPt:" << trackPt
-    //     << " trackCellI:" << trackCellI
-    //     << " trackFaceI:" << trackFaceI
+    //     << " trackCelli:" << trackCelli
+    //     << " trackFacei:" << trackFacei
     //     << endl;
 
-    if (trackCellI == -1)
+    if (trackCelli == -1)
     {
         // Line start_ - end_ does not intersect domain at all.
         // (or is along edge)
@@ -169,16 +169,16 @@ void Foam::faceOnlySet::calcSamples
         return;
     }
 
-    if (trackFaceI == -1)
+    if (trackFacei == -1)
     {
         // No boundary face. Check for nearish internal face
-        trackFaceI = findNearFace(trackCellI, trackPt, smallDist);
+        trackFacei = findNearFace(trackCelli, trackPt, smallDist);
     }
 
     // Pout<< "calcSamples : got first point to track from :"
     //     << "  trackPt:" << trackPt
-    //     << "  trackCell:" << trackCellI
-    //     << "  trackFace:" << trackFaceI
+    //     << "  trackCell:" << trackCelli
+    //     << "  trackFace:" << trackFacei
     //     << endl;
 
     //
@@ -196,12 +196,12 @@ void Foam::faceOnlySet::calcSamples
 
     while (true)
     {
-        if (trackFaceI != -1)
+        if (trackFacei != -1)
         {
             // Pout<< "trackPt:" << trackPt << " on face so use." << endl;
             samplingPts.append(trackPt);
-            samplingCells.append(trackCellI);
-            samplingFaces.append(trackFaceI);
+            samplingCells.append(trackCelli);
+            samplingFaces.append(trackFacei);
             samplingCurveDist.append(mag(trackPt - start_));
         }
 
@@ -210,7 +210,7 @@ void Foam::faceOnlySet::calcSamples
         (
             mesh(),
             trackPt,
-            trackCellI
+            trackCelli
         );
 
         bool reachedBoundary = trackToBoundary
@@ -271,9 +271,9 @@ void Foam::faceOnlySet::calcSamples
         }
 
         // Update starting point for tracking
-        trackFaceI = bHits[bHitI].index();
-        trackPt = pushIn(bHits[bHitI].hitPoint(), trackFaceI);
-        trackCellI = getBoundaryCell(trackFaceI);
+        trackFacei = bHits[bHitI].index();
+        trackPt = pushIn(bHits[bHitI].hitPoint(), trackFacei);
+        trackCelli = getBoundaryCell(trackFacei);
 
         segmentI++;
 

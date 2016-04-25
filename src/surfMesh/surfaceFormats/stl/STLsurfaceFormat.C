@@ -225,7 +225,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeAscii
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const label facei = faceMap[faceIndex++];
                 writeShell(os, pointLst, faceLst[facei]);
@@ -233,7 +233,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeAscii
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 writeShell(os, pointLst, faceLst[faceIndex++]);
             }
@@ -297,7 +297,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeBinary
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 writeShell
                 (
@@ -310,7 +310,7 @@ void Foam::fileFormats::STLsurfaceFormat<Face>::writeBinary
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 writeShell
                 (

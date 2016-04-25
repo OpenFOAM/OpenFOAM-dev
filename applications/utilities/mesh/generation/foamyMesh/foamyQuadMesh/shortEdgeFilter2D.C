@@ -352,29 +352,29 @@ Foam::shortEdgeFilter2D::filter()
             bool flagDegenerateFace = false;
             const labelList& pFaces = ms_.pointFaces()[startVertex];
 
-            forAll(pFaces, pFaceI)
+            forAll(pFaces, pFacei)
             {
-                const face& f = ms_.localFaces()[pFaces[pFaceI]];
+                const face& f = ms_.localFaces()[pFaces[pFacei]];
                 forAll(f, fp)
                 {
                     // If the edge is part of this face...
                     if (f[fp] == endVertex)
                     {
                         // If deleting vertex would create a triangle, don't!
-                        if (newFaceVertexCount[pFaces[pFaceI]] < 4)
+                        if (newFaceVertexCount[pFaces[pFacei]] < 4)
                         {
                             flagDegenerateFace = true;
                         }
                         else
                         {
-                            newFaceVertexCount[pFaces[pFaceI]]--;
+                            newFaceVertexCount[pFaces[pFacei]]--;
                         }
                     }
                     // If the edge is not part of this face...
                     else
                     {
                         // Deleting vertex of a triangle...
-                        if (newFaceVertexCount[pFaces[pFaceI]] < 3)
+                        if (newFaceVertexCount[pFaces[pFacei]] < 3)
                         {
                             flagDegenerateFace = true;
                         }
@@ -450,7 +450,7 @@ Foam::shortEdgeFilter2D::filter()
 
     // Need a new faceList
     faceList newFaces(faces.size());
-    label newFaceI = 0;
+    label newFacei = 0;
 
     labelList newFace;
     label newFaceSize = 0;
@@ -521,7 +521,7 @@ Foam::shortEdgeFilter2D::filter()
 
         if (newFace.size() > 2)
         {
-            newFaces[newFaceI++] = face(newFace);
+            newFaces[newFacei++] = face(newFace);
         }
         else
         {
@@ -531,7 +531,7 @@ Foam::shortEdgeFilter2D::filter()
         }
     }
 
-    newFaces.setSize(newFaceI);
+    newFaces.setSize(newFacei);
 
     MeshedSurface<face> fMesh
     (

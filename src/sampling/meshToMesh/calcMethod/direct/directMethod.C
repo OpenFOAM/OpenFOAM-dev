@@ -40,14 +40,14 @@ namespace Foam
 
 bool Foam::directMethod::intersect
 (
-    const label srcCellI,
-    const label tgtCellI
+    const label srcCelli,
+    const label tgtCelli
 ) const
 {
     return tgt_.pointInCell
     (
-        src_.cellCentres()[srcCellI],
-        tgtCellI,
+        src_.cellCentres()[srcCelli],
+        tgtCelli,
         polyMesh::FACE_PLANES
     );
 }
@@ -124,20 +124,20 @@ void Foam::directMethod::calculateAddressing
     const scalarField& srcVc = src_.cellVolumes();
     const scalarField& tgtVc = tgt_.cellVolumes();
 
-    label srcCellI = srcSeedI;
-    label tgtCellI = tgtSeedI;
+    label srcCelli = srcSeedI;
+    label tgtCelli = tgtSeedI;
 
     do
     {
         // store src/tgt cell pair
-        srcToTgt[srcCellI].append(tgtCellI);
-        tgtToSrc[tgtCellI].append(srcCellI);
+        srcToTgt[srcCelli].append(tgtCelli);
+        tgtToSrc[tgtCelli].append(srcCelli);
 
         // mark source cell srcSeedI as matched
-        mapFlag[srcCellI] = false;
+        mapFlag[srcCelli] = false;
 
         // accumulate intersection volume
-        V_ += srcVc[srcCellI];
+        V_ += srcVc[srcCelli];
 
         // find new source seed cell
         appendToDirectSeeds
@@ -145,11 +145,11 @@ void Foam::directMethod::calculateAddressing
             mapFlag,
             srcTgtSeed,
             srcSeeds,
-            srcCellI,
-            tgtCellI
+            srcCelli,
+            tgtCelli
         );
     }
-    while (srcCellI >= 0);
+    while (srcCelli >= 0);
 
     // transfer addressing into persistent storage
     forAll(srcToTgtCellAddr, i)

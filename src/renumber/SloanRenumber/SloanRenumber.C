@@ -148,16 +148,16 @@ Foam::labelList Foam::SloanRenumber::renumber
             const labelUList& faceCells = pbm[patchi].faceCells();
             forAll(faceCells, i)
             {
-                label bFaceI = pbm[patchi].start()+i-mesh.nInternalFaces();
-                label nbrCellI = nbr[bFaceI];
+                label bFacei = pbm[patchi].start()+i-mesh.nInternalFaces();
+                label nbrCelli = nbr[bFacei];
 
-                if (faceCells[i] < nbrCellI)
+                if (faceCells[i] < nbrCelli)
                 {
-                    add_edge(faceCells[i], nbrCellI, G);
+                    add_edge(faceCells[i], nbrCelli, G);
                 }
                 else
                 {
-                    add_edge(nbrCellI, faceCells[i], G);
+                    add_edge(nbrCelli, faceCells[i], G);
                 }
             }
         }

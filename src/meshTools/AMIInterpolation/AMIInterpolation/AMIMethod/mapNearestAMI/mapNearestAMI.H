@@ -64,13 +64,13 @@ private:
 
         // Marching front
 
-            //- Find nearest target face for source face srcFaceI
+            //- Find nearest target face for source face srcFacei
             void findNearestFace
             (
                 const SourcePatch& srcPatch,
                 const TargetPatch& tgtPatch,
-                const label& srcFaceI,
-                label& tgtFaceI
+                const label& srcFacei,
+                label& tgtFacei
             ) const;
 
             //- Determine next source-target face pair
@@ -78,14 +78,14 @@ private:
             (
                 boolList& mapFlag,
                 label& startSeedI,
-                label& srcFaceI,
-                label& tgtFaceI
+                label& srcFacei,
+                label& tgtFacei
             ) const;
 
             //- Find mapped source face
             label findMappedSrcFace
             (
-                const label tgtFaceI,
+                const label tgtFacei,
                 const List<DynamicList<label>>& tgtToSrc
             ) const;
 
@@ -95,8 +95,8 @@ private:
             //- Area of intersection between source and target faces
             scalar interArea
             (
-                const label srcFaceI,
-                const label tgtFaceI
+                const label srcFacei,
+                const label tgtFacei
             ) const;
 
 
@@ -136,8 +136,8 @@ public:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label srcFaceI = -1,
-                label tgtFaceI = -1
+                label srcFacei = -1,
+                label tgtFacei = -1
             );
 };
 

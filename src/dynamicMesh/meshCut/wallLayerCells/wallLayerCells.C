@@ -45,9 +45,9 @@ bool Foam::wallLayerCells::usesCoupledPatch(const label celli) const
 
     const cell& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         label patchID = patches.whichPatch(facei);
 
@@ -116,14 +116,14 @@ Foam::wallLayerCells::wallLayerCells
 
             const polyPatch& pp = patches[patchi];
 
-            forAll(pp, patchFaceI)
+            forAll(pp, patchFacei)
             {
-                label meshFaceI = pp.start() + patchFaceI;
+                label meshFacei = pp.start() + patchFacei;
 
-                changedFaces[nChangedFaces] = meshFaceI;
+                changedFaces[nChangedFaces] = meshFacei;
 
                 // Set transported information to the wall normal.
-                const vector& norm = pp.faceNormals()[patchFaceI];
+                const vector& norm = pp.faceNormals()[patchFacei];
 
                 changedFacesInfo[nChangedFaces] = wallNormalInfo(norm);
 

@@ -142,20 +142,20 @@ int main(int argc, char *argv[])
     OFstream objFile(fName);
 
     // Write processors as single vertex in centre of mesh
-    forAll(meshCentres, procI)
+    forAll(meshCentres, proci)
     {
-        const point& pt = meshCentres[procI];
+        const point& pt = meshCentres[proci];
 
         objFile << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
     }
     // Write connections as lines between processors (duplicated)
-    forAll(connections, procI)
+    forAll(connections, proci)
     {
-        const labelList& nbs = connections[procI];
+        const labelList& nbs = connections[proci];
 
         forAll(nbs, nbI)
         {
-            objFile << "l " << procI + 1 << ' ' << nbs[nbI] + 1 << endl;
+            objFile << "l " << proci + 1 << ' ' << nbs[nbI] + 1 << endl;
         }
     }
 
@@ -196,9 +196,9 @@ int main(int argc, char *argv[])
 
         OFstream objFile(fName);
 
-        forAll(meshCentres, procI)
+        forAll(meshCentres, proci)
         {
-            const point& pt = meshCentres[procI];
+            const point& pt = meshCentres[proci];
 
             objFile << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z()
                     << endl;

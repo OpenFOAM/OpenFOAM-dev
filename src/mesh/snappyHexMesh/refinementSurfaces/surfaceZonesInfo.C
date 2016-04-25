@@ -387,15 +387,15 @@ Foam::labelList Foam::surfaceZonesInfo::addCellZonesToMesh
     Pstream::gatherList(allCellZones);
     Pstream::scatterList(allCellZones);
 
-    for (label procI = 1; procI < allCellZones.size(); procI++)
+    for (label proci = 1; proci < allCellZones.size(); proci++)
     {
-        if (allCellZones[procI] != allCellZones[0])
+        if (allCellZones[proci] != allCellZones[0])
         {
             FatalErrorInFunction
                 << "Zones not synchronised among processors." << nl
                 << " Processor0 has cellZones:" << allCellZones[0]
-                << " , processor" << procI
-                << " has cellZones:" << allCellZones[procI]
+                << " , processor" << proci
+                << " has cellZones:" << allCellZones[proci]
                 << exit(FatalError);
         }
     }
@@ -450,15 +450,15 @@ Foam::labelList Foam::surfaceZonesInfo::addFaceZonesToMesh
     Pstream::gatherList(allFaceZones);
     Pstream::scatterList(allFaceZones);
 
-    for (label procI = 1; procI < allFaceZones.size(); procI++)
+    for (label proci = 1; proci < allFaceZones.size(); proci++)
     {
-        if (allFaceZones[procI] != allFaceZones[0])
+        if (allFaceZones[proci] != allFaceZones[0])
         {
             FatalErrorInFunction
                 << "Zones not synchronised among processors." << nl
                 << " Processor0 has faceZones:" << allFaceZones[0]
-                << " , processor" << procI
-                << " has faceZones:" << allFaceZones[procI]
+                << " , processor" << proci
+                << " has faceZones:" << allFaceZones[proci]
                 << exit(FatalError);
         }
     }

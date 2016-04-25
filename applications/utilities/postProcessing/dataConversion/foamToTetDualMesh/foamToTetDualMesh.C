@@ -107,15 +107,15 @@ void ReadAndMapFields
             else if (index < 0)
             {
                 label facei = -index-1;
-                label bFaceI = facei - mesh.nInternalFaces();
-                if (bFaceI >= 0)
+                label bFacei = facei - mesh.nInternalFaces();
+                if (bFacei >= 0)
                 {
-                    label patchi = mesh.boundaryMesh().patchID()[bFaceI];
-                    label localFaceI = mesh.boundaryMesh()[patchi].whichFace
+                    label patchi = mesh.boundaryMesh().patchID()[bFacei];
+                    label localFacei = mesh.boundaryMesh()[patchi].whichFace
                     (
                         facei
                     );
-                    fld[pointI] = readField.boundaryField()[patchi][localFaceI];
+                    fld[pointI] = readField.boundaryField()[patchi][localFacei];
                 }
                 //else
                 //{

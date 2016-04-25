@@ -477,11 +477,11 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
 
             forAll(allFaceSets, setI)
             {
-                label masterFaceI = faceCombiner.masterFace()[setI];
+                label masterFacei = faceCombiner.masterFace()[setI];
 
-                if (masterFaceI != -1)
+                if (masterFacei != -1)
                 {
-                    label masterCellII = mesh_.faceOwner()[masterFaceI];
+                    label masterCellII = mesh_.faceOwner()[masterFacei];
 
                     const cell& cFaces = mesh_.cells()[masterCellII];
 
@@ -489,7 +489,7 @@ Foam::label Foam::meshRefinement::mergePatchFacesUndo
                     {
                         if (errorFaces.found(cFaces[i]))
                         {
-                            mastersToRestore.append(masterFaceI);
+                            mastersToRestore.append(masterFacei);
                             break;
                         }
                     }
@@ -800,9 +800,9 @@ Foam::labelList Foam::meshRefinement::growFaceCellFace
         label own = mesh_.faceOwner()[facei];
 
         const cell& ownFaces = mesh_.cells()[own];
-        forAll(ownFaces, ownFaceI)
+        forAll(ownFaces, ownFacei)
         {
-            selected[ownFaces[ownFaceI]] = true;
+            selected[ownFaces[ownFacei]] = true;
         }
 
         if (mesh_.isInternalFace(facei))
@@ -810,9 +810,9 @@ Foam::labelList Foam::meshRefinement::growFaceCellFace
             label nbr = mesh_.faceNeighbour()[facei];
 
             const cell& nbrFaces = mesh_.cells()[nbr];
-            forAll(nbrFaces, nbrFaceI)
+            forAll(nbrFaces, nbrFacei)
             {
-                selected[nbrFaces[nbrFaceI]] = true;
+                selected[nbrFaces[nbrFacei]] = true;
             }
         }
     }

@@ -172,9 +172,9 @@ void Foam::inversePointDistanceDiffusivity::correct()
 
                 scalar dist = 0;
 
-                forAll(ownFaces, ownFaceI)
+                forAll(ownFaces, ownFacei)
                 {
-                    const face& f = mesh().faces()[ownFaces[ownFaceI]];
+                    const face& f = mesh().faces()[ownFaces[ownFacei]];
 
                     forAll(f, fp)
                     {

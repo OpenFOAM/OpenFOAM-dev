@@ -137,11 +137,11 @@ void Foam::internalWriter::writeCellIDs()
         {
             cellId[labelI++] = cMap[celli];
         }
-        forAll(superCells, superCellI)
+        forAll(superCells, superCelli)
         {
-            label origCellI = cMap[superCells[superCellI]];
+            label origCelli = cMap[superCells[superCelli]];
 
-            cellId[labelI++] = origCellI;
+            cellId[labelI++] = origCelli;
         }
     }
     else
@@ -150,11 +150,11 @@ void Foam::internalWriter::writeCellIDs()
         {
             cellId[labelI++] = celli;
         }
-        forAll(superCells, superCellI)
+        forAll(superCells, superCelli)
         {
-            label origCellI = superCells[superCellI];
+            label origCelli = superCells[superCelli];
 
-            cellId[labelI++] = origCellI;
+            cellId[labelI++] = origCelli;
         }
     }
 

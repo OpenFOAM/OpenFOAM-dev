@@ -67,7 +67,7 @@ bool Foam::PatchEdgeFaceWave<PrimitivePatchType, Type, TrackingData>::
 updateEdge
 (
     const label edgeI,
-    const label neighbourFaceI,
+    const label neighbourFacei,
     const Type& neighbourInfo,
     Type& edgeInfo
 )
@@ -82,7 +82,7 @@ updateEdge
             mesh_,
             patch_,
             edgeI,
-            neighbourFaceI,
+            neighbourFacei,
             neighbourInfo,
             propagationTol_,
             td_
@@ -493,9 +493,9 @@ faceToEdge()
     changedEdges_.clear();
     changedEdge_ = false;
 
-    forAll(changedFaces_, changedFaceI)
+    forAll(changedFaces_, changedFacei)
     {
-        label facei = changedFaces_[changedFaceI];
+        label facei = changedFaces_[changedFacei];
 
         if (!changedFace_[facei])
         {
@@ -576,9 +576,9 @@ edgeToFace()
         // Evaluate all connected faces
 
         const labelList& eFaces = edgeFaces[edgeI];
-        forAll(eFaces, eFaceI)
+        forAll(eFaces, eFacei)
         {
-            label facei = eFaces[eFaceI];
+            label facei = eFaces[eFacei];
 
             Type& currentWallInfo = allFaceInfo_[facei];
 

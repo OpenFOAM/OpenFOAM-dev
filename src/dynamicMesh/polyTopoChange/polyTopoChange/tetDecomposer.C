@@ -254,9 +254,9 @@ void Foam::tetDecomposer::setRefinement
 
         EdgeMap<label> edgeToFace(8*cFaces.size());
 
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            label facei = cFaces[cFaceI];
+            label facei = cFaces[cFacei];
             const face& f = mesh_.faces()[facei];
 
             // Get reference to either owner or neighbour
@@ -271,7 +271,7 @@ void Foam::tetDecomposer::setRefinement
             {
                 forAll(f, fp)
                 {
-                    if (cFaceI == 0 && fp == 0)
+                    if (cFacei == 0 && fp == 0)
                     {
                         // Reuse cell itself
                         added[fp] = celli;
@@ -293,7 +293,7 @@ void Foam::tetDecomposer::setRefinement
             {
                 for (label triI = 0; triI < f.size()-2; triI++)
                 {
-                    if (cFaceI == 0 && triI == 0)
+                    if (cFacei == 0 && triI == 0)
                     {
                         // Reuse cell itself
                         added[triI] = celli;
@@ -560,9 +560,9 @@ void Foam::tetDecomposer::setRefinement
 
         edgeToFace.clear();
 
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            label facei = cFaces[cFaceI];
+            label facei = cFaces[cFacei];
 
             label zoneI = mesh_.faceZones().whichZone(facei);
             bool zoneFlip = false;
@@ -588,12 +588,12 @@ void Foam::tetDecomposer::setRefinement
                 else
                 {
                     // Found the other face on the edge.
-                    label otherFaceI = edgeFnd();
-                    const face& otherF = mesh_.faces()[otherFaceI];
+                    label otherFacei = edgeFnd();
+                    const face& otherF = mesh_.faces()[otherFacei];
 
                     // Found the other face on the edge. Note that since
                     // we are looping in the same order the tets added for
-                    // otherFaceI will be before those of facei
+                    // otherFacei will be before those of facei
 
                     label otherFp = findIndex(otherF, p0);
                     if (otherF.nextLabel(otherFp) == p1)
@@ -639,14 +639,14 @@ void Foam::tetDecomposer::setRefinement
                             thisTet = faceNeighbourCells_[facei][fp];
                         }
 
-                        if (mesh_.faceOwner()[otherFaceI] == celli)
+                        if (mesh_.faceOwner()[otherFacei] == celli)
                         {
-                            otherTet = faceOwnerCells_[otherFaceI][otherFp];
+                            otherTet = faceOwnerCells_[otherFacei][otherFp];
                         }
                         else
                         {
                             otherTet =
-                                faceNeighbourCells_[otherFaceI][otherFp];
+                                faceNeighbourCells_[otherFacei][otherFp];
                         }
                     }
                     else
@@ -661,15 +661,15 @@ void Foam::tetDecomposer::setRefinement
                             thisTet = faceNeighbourCells_[facei][thisTriI];
                         }
 
-                        label otherTriI = triIndex(otherFaceI, otherFp);
-                        if (mesh_.faceOwner()[otherFaceI] == celli)
+                        label otherTriI = triIndex(otherFacei, otherFp);
+                        if (mesh_.faceOwner()[otherFacei] == celli)
                         {
-                            otherTet = faceOwnerCells_[otherFaceI][otherTriI];
+                            otherTet = faceOwnerCells_[otherFacei][otherTriI];
                         }
                         else
                         {
                             otherTet =
-                                faceNeighbourCells_[otherFaceI][otherTriI];
+                                faceNeighbourCells_[otherFacei][otherTriI];
                         }
                     }
 

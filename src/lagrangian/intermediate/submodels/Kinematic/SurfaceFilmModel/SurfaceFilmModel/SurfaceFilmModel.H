@@ -112,8 +112,8 @@ protected:
         //- Cache the film fields in preparation for injection
         virtual void cacheFilmFields
         (
-            const label filmPatchI,
-            const label primaryPatchI,
+            const label filmPatchi,
+            const label primaryPatchi,
             const regionModels::surfaceFilmModels::surfaceFilmModel& filmModel
         );
 
@@ -121,7 +121,7 @@ protected:
         virtual void setParcelProperties
         (
             parcelType& p,
-            const label filmFaceI
+            const label filmFacei
         ) const;
 
 

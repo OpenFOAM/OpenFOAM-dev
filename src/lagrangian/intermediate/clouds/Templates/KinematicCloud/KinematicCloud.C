@@ -708,12 +708,12 @@ void Foam::KinematicCloud<CloudType>::patchData
 ) const
 {
     label patchi = pp.index();
-    label patchFaceI = pp.whichFace(p.face());
+    label patchFacei = pp.whichFace(p.face());
 
     vector n = tetIs.faceTri(mesh_).normal();
     n /= mag(n);
 
-    vector U = U_.boundaryField()[patchi][patchFaceI];
+    vector U = U_.boundaryField()[patchi][patchFacei];
 
     // Unless the face is rotating, the required normal is n;
     nw = n;
@@ -734,7 +734,7 @@ void Foam::KinematicCloud<CloudType>::patchData
     }
     else
     {
-        vector U00 = U_.oldTime().boundaryField()[patchi][patchFaceI];
+        vector U00 = U_.oldTime().boundaryField()[patchi][patchFacei];
 
         vector n00 = tetIs.oldFaceTri(mesh_).normal();
 

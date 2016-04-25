@@ -253,10 +253,10 @@ void Foam::fieldValues::faceSource::combineMeshGeometry
     // Renumber and flatten
     label nFaces = 0;
     label nPoints = 0;
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        nFaces += allFaces[procI].size();
-        nPoints += allPoints[procI].size();
+        nFaces += allFaces[proci].size();
+        nPoints += allPoints[proci].size();
     }
 
     faces.setSize(nFaces);
@@ -287,11 +287,11 @@ void Foam::fieldValues::faceSource::combineMeshGeometry
     }
 
     // Other proc data follows
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            const faceList& fcs = allFaces[procI];
+            const faceList& fcs = allFaces[proci];
             forAll(fcs, i)
             {
                 const face& f = fcs[i];
@@ -303,7 +303,7 @@ void Foam::fieldValues::faceSource::combineMeshGeometry
                 }
             }
 
-            const pointField& pts = allPoints[procI];
+            const pointField& pts = allPoints[proci];
             forAll(pts, i)
             {
                 points[nPoints++] = pts[i];

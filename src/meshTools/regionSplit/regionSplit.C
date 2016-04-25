@@ -44,7 +44,7 @@ defineTypeNameAndDebug(regionSplit, 0);
 void Foam::regionSplit::transferCoupledFaceRegion
 (
     const label facei,
-    const label otherFaceI,
+    const label otherFacei,
 
     labelList& faceRegion,
     DynamicList<label>& newChangedFaces
@@ -52,24 +52,24 @@ void Foam::regionSplit::transferCoupledFaceRegion
 {
     if (faceRegion[facei] >= 0)
     {
-        if (faceRegion[otherFaceI] == -1)
+        if (faceRegion[otherFacei] == -1)
         {
-            faceRegion[otherFaceI] = faceRegion[facei];
-            newChangedFaces.append(otherFaceI);
+            faceRegion[otherFacei] = faceRegion[facei];
+            newChangedFaces.append(otherFacei);
         }
-        else if (faceRegion[otherFaceI] == -2)
+        else if (faceRegion[otherFacei] == -2)
         {
-            // otherFaceI blocked but facei is not. Is illegal for coupled
+            // otherFacei blocked but facei is not. Is illegal for coupled
             // faces, not for explicit connections.
         }
-        else if (faceRegion[otherFaceI] != faceRegion[facei])
+        else if (faceRegion[otherFacei] != faceRegion[facei])
         {
             FatalErrorInFunction
                   << "Problem : coupled face " << facei
                   << " on patch " << mesh().boundaryMesh().whichPatch(facei)
                   << " has region " << faceRegion[facei]
-                  << " but coupled face " << otherFaceI
-                  << " has region " << faceRegion[otherFaceI]
+                  << " but coupled face " << otherFacei
+                  << " has region " << faceRegion[otherFacei]
                   << endl
                   << "Is your blocked faces specification"
                   << " synchronized across coupled boundaries?"
@@ -78,14 +78,14 @@ void Foam::regionSplit::transferCoupledFaceRegion
     }
     else if (faceRegion[facei] == -1)
     {
-        if (faceRegion[otherFaceI] >= 0)
+        if (faceRegion[otherFacei] >= 0)
         {
-            faceRegion[facei] = faceRegion[otherFaceI];
+            faceRegion[facei] = faceRegion[otherFacei];
             newChangedFaces.append(facei);
         }
-        else if (faceRegion[otherFaceI] == -2)
+        else if (faceRegion[otherFacei] == -2)
         {
-            // otherFaceI blocked but facei is not. Is illegal for coupled
+            // otherFacei blocked but facei is not. Is illegal for coupled
             // faces, not for explicit connections.
         }
     }
@@ -177,9 +177,9 @@ void Foam::regionSplit::fillSeedMask
 
             const cell& cFaces = mesh().cells()[celli];
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
+                label facei = cFaces[cFacei];
 
                 if (faceRegion[facei] == -1)
                 {
@@ -221,12 +221,12 @@ void Foam::regionSplit::fillSeedMask
 
                 forAll(cycPatch, i)
                 {
-                    label otherFaceI = cycPatch.transformGlobalFace(facei);
+                    label otherFacei = cycPatch.transformGlobalFace(facei);
 
                     transferCoupledFaceRegion
                     (
                         facei,
-                        otherFaceI,
+                        otherFacei,
                         faceRegion,
                         newChangedFaces
                     );
@@ -310,21 +310,21 @@ Foam::label Foam::regionSplit::calcLocalRegionSplit
     // Start with region 0
     label nLocalRegions = 0;
 
-    label unsetCellI = 0;
+    label unsetCelli = 0;
 
     do
     {
         // Find first unset cell
 
-        for (; unsetCellI < mesh().nCells(); unsetCellI++)
+        for (; unsetCelli < mesh().nCells(); unsetCelli++)
         {
-            if (cellRegion[unsetCellI] == -1)
+            if (cellRegion[unsetCelli] == -1)
             {
                 break;
             }
         }
 
-        if (unsetCellI >= mesh().nCells())
+        if (unsetCelli >= mesh().nCells())
         {
             break;
         }
@@ -334,13 +334,13 @@ Foam::label Foam::regionSplit::calcLocalRegionSplit
             explicitConnections,
             cellRegion,
             faceRegion,
-            unsetCellI,
+            unsetCelli,
             nLocalRegions
         );
 
         // Current unsetCell has now been handled. Go to next region.
         nLocalRegions++;
-        unsetCellI++;
+        unsetCelli++;
     }
     while (true);
 
@@ -566,9 +566,9 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
     Map<label> globalToCompact(2*nCompact);
     // Remote regions we want the compact number for
     List<labelHashSet> nonLocal(Pstream::nProcs());
-    forAll(nonLocal, procI)
+    forAll(nonLocal, proci)
     {
-        nonLocal[procI].resize((nLocalRegions-nCompact)/Pstream::nProcs());
+        nonLocal[proci].resize((nLocalRegions-nCompact)/Pstream::nProcs());
     }
 
     forAll(cellRegion, celli)
@@ -599,21 +599,21 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
 
     labelListList sendNonLocal(Pstream::nProcs());
     labelList nNonLocal(Pstream::nProcs(), 0);
-    forAll(sendNonLocal, procI)
+    forAll(sendNonLocal, proci)
     {
-        sendNonLocal[procI].setSize(nonLocal[procI].size());
-        forAllConstIter(labelHashSet, nonLocal[procI], iter)
+        sendNonLocal[proci].setSize(nonLocal[proci].size());
+        forAllConstIter(labelHashSet, nonLocal[proci], iter)
         {
-            sendNonLocal[procI][nNonLocal[procI]++] = iter.key();
+            sendNonLocal[proci][nNonLocal[proci]++] = iter.key();
         }
     }
 
     if (debug)
     {
-        forAll(nNonLocal, procI)
+        forAll(nNonLocal, proci)
         {
-            Pout<< "    from processor " << procI
-                << " want " << nNonLocal[procI]
+            Pout<< "    from processor " << proci
+                << " want " << nNonLocal[proci]
                 << " region numbers."
                 << endl;
         }
@@ -625,19 +625,19 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
     labelListList recvNonLocal;
     Pstream::exchange<labelList, label>(sendNonLocal, recvNonLocal);
 
-    // Now we have the wanted compact region labels that procI wants in
-    // recvNonLocal[procI]. Construct corresponding list of compact
+    // Now we have the wanted compact region labels that proci wants in
+    // recvNonLocal[proci]. Construct corresponding list of compact
     // region labels to send back.
 
     labelListList sendWantedLocal(Pstream::nProcs());
-    forAll(recvNonLocal, procI)
+    forAll(recvNonLocal, proci)
     {
-        const labelList& nonLocal = recvNonLocal[procI];
-        sendWantedLocal[procI].setSize(nonLocal.size());
+        const labelList& nonLocal = recvNonLocal[proci];
+        sendWantedLocal[proci].setSize(nonLocal.size());
 
         forAll(nonLocal, i)
         {
-            sendWantedLocal[procI][i] = globalToCompact[nonLocal[i]];
+            sendWantedLocal[proci][i] = globalToCompact[nonLocal[i]];
         }
     }
 
@@ -651,10 +651,10 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
     // corresponding compact number. Insert these into the local compaction
     // map.
 
-    forAll(recvNonLocal, procI)
+    forAll(recvNonLocal, proci)
     {
-        const labelList& wantedRegions = sendNonLocal[procI];
-        const labelList& compactRegions = recvNonLocal[procI];
+        const labelList& wantedRegions = sendNonLocal[proci];
+        const labelList& compactRegions = recvNonLocal[proci];
 
         forAll(wantedRegions, i)
         {

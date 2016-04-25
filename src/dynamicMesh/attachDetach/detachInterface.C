@@ -212,7 +212,7 @@ void Foam::attachDetach::detachInterface
             );
 
             // Add renumbered face into the slave patch
-            //label addedFaceI =
+            //label addedFacei =
             ref.setAction
             (
                 polyAddFace
@@ -235,7 +235,7 @@ void Foam::attachDetach::detachInterface
             //    << " fc:" <<  ref.faces()[curFaceID].centre(newPts)
             //    << " next to cell: " << nei[curFaceID]
             //    << " and adding face: " << newFace
-            //    << " fc:" << ref.faces()[addedFaceI].centre(newPts)
+            //    << " fc:" << ref.faces()[addedFacei].centre(newPts)
             //    << " next to cell: " << own[curFaceID] << endl;
             //}
         }
@@ -259,7 +259,7 @@ void Foam::attachDetach::detachInterface
             );
 
             // Add renumbered face into the slave patch
-            //label addedFaceI =
+            //label addedFacei =
             ref.setAction
             (
                 polyAddFace
@@ -282,7 +282,7 @@ void Foam::attachDetach::detachInterface
             //    << " fc:" <<  ref.faces()[curFaceID].centre(newPts)
             //    << " next to cell: " << own[curFaceID]
             //    << " and adding face: " << newFace
-            //    << " fc:" << ref.faces()[addedFaceI].centre(newPts)
+            //    << " fc:" << ref.faces()[addedFacei].centre(newPts)
             //    << " next to cell: " << nei[curFaceID] << endl;
             //}
         }

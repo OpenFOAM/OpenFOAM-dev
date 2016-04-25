@@ -117,13 +117,13 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 }
 
 
-//// Find intersection of plane with edges of hitFaceI. Returns
+//// Find intersection of plane with edges of hitFacei. Returns
 //// - edgeI
 //// - intersection point
 //Foam::pointIndexHit Foam::surfaceIntersection::faceEdgeIntersection
 //(
 //    const triSurface& surf,
-//    const label hitFaceI,
+//    const label hitFacei,
 //
 //    const vector& n,
 //    const point& eStart,
@@ -134,7 +134,7 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 //
 //    const pointField& points = surf.points();
 //
-//    const triSurface::FaceType& f = surf.localFaces()[hitFaceI];
+//    const triSurface::FaceType& f = surf.localFaces()[hitFacei];
 //
 //    // Plane for intersect test.
 //    plane pl(eStart, n);
@@ -172,7 +172,7 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 //                    meshTools::findEdge
 //                    (
 //                        surf.edges(),
-//                        surf.faceEdges()[hitFaceI],
+//                        surf.faceEdges()[hitFacei],
 //                        f[fp],
 //                        f[fp1]
 //                    );
@@ -186,7 +186,7 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 //
 //    FatalErrorInFunction
 //        << "Did not find intersection of plane " << pl
-//        << " with edges of face " << hitFaceI << " verts:" << f
+//        << " with edges of face " << hitFacei << " verts:" << f
 //        << abort(FatalError);
 //
 //    return pInter;
@@ -290,11 +290,11 @@ void Foam::surfaceIntersection::classifyHit
     const labelList& facesA = surf1.edgeFaces()[edgeI];
 
     // Label of face on surface2 edgeI intersected
-    label surf2FaceI = pHit.index();
+    label surf2Facei = pHit.index();
 
     // Classify point on surface2
 
-    const triSurface::FaceType& f2 = surf2.localFaces()[surf2FaceI];
+    const triSurface::FaceType& f2 = surf2.localFaces()[surf2Facei];
     const pointField& surf2Pts = surf2.localPoints();
 
     label nearType, nearLabel;
@@ -360,7 +360,7 @@ void Foam::surfaceIntersection::classifyHit
         {
             // 3. Point hits edge. Do nothing on this side. Reverse
             // is handled by 2 (edge hits point)
-            label edge2I = getEdge(surf2, surf2FaceI, nearLabel);
+            label edge2I = getEdge(surf2, surf2Facei, nearLabel);
             const edge& e2 = surf2.edges()[edge2I];
 
             if (debug&2)
@@ -380,7 +380,7 @@ void Foam::surfaceIntersection::classifyHit
             // doing the surf2 with surf1 intersection but these
             // are merged later on)
 
-            label edge2I = getEdge(surf2, surf2FaceI, nearLabel);
+            label edge2I = getEdge(surf2, surf2Facei, nearLabel);
             const edge& e2 = surf2.edges()[edge2I];
 
             if (debug&2)
@@ -430,7 +430,7 @@ void Foam::surfaceIntersection::classifyHit
             {
                 Pout<< pHit.hitPoint() << " is surf1:"
                     << " end point of edge " << e
-                    << " surf2: face " << surf2FaceI
+                    << " surf2: face " << surf2Facei
                     << endl;
             }
 
@@ -465,12 +465,12 @@ void Foam::surfaceIntersection::classifyHit
                     << pHit.hitPoint() << " is surf1:"
                     << " end point of edge " << e << " coord:"
                     << surf1.localPoints()[nearVert]
-                    << " surf2: face " << surf2FaceI << endl;
+                    << " surf2: face " << surf2Facei << endl;
             }
 
             vector eVec = otherPt - nearPt;
 
-            if ((surf2.faceNormals()[surf2FaceI] & eVec) > 0)
+            if ((surf2.faceNormals()[surf2Facei] & eVec) > 0)
             {
                 // otherVert on outside of surf2
 
@@ -497,7 +497,7 @@ void Foam::surfaceIntersection::classifyHit
                 (
                     isFirstSurf,
                     facesA,
-                    surf2FaceI,
+                    surf2Facei,
                     allCutEdges,
                     allCutPoints
                 );
@@ -508,7 +508,7 @@ void Foam::surfaceIntersection::classifyHit
                 {
                     Pout<< "Discarding " << pHit.hitPoint()
                         << " since edge " << e << " on inside of surf2."
-                        << " surf2 normal:" << surf2.faceNormals()[surf2FaceI]
+                        << " surf2 normal:" << surf2.faceNormals()[surf2Facei]
                         << endl;
                 }
             }
@@ -520,7 +520,7 @@ void Foam::surfaceIntersection::classifyHit
             {
                 Pout<< pHit.hitPoint() << " is surf1:"
                     << " somewhere on edge " << e
-                    << " surf2: face " << surf2FaceI
+                    << " surf2: face " << surf2Facei
                     << endl;
             }
 
@@ -533,7 +533,7 @@ void Foam::surfaceIntersection::classifyHit
             (
                 isFirstSurf,
                 facesA,
-                surf2FaceI,
+                surf2Facei,
                 allCutEdges,
                 allCutPoints
             );
@@ -611,7 +611,7 @@ void Foam::surfaceIntersection::doCutEdges
                     // is in their plane and they share a point with the edge.
 
                     // Label of face on surface2 edgeI intersected
-                    label hitFaceI = pHit.index();
+                    label hitFacei = pHit.index();
 
                     if
                     (
@@ -619,7 +619,7 @@ void Foam::surfaceIntersection::doCutEdges
                         (
                             surf1,
                             edgeI,
-                            hitFaceI,
+                            hitFacei,
                             0.1         // 1-cos of angle between normals
                         )
                     )
@@ -860,7 +860,7 @@ Foam::surfaceIntersection::surfaceIntersection
                 (
                     true,                       // is first surface
                     surf1.edgeFaces()[edgeI],
-                    pHit.index(),               // surf2FaceI
+                    pHit.index(),               // surf2Facei
                     allCutEdges,
                     allCutPoints
                 );
@@ -901,7 +901,7 @@ Foam::surfaceIntersection::surfaceIntersection
                 (
                     false,                      // is second surface
                     surf2.edgeFaces()[edgeI],
-                    pHit.index(),               // surf2FaceI
+                    pHit.index(),               // surf2Facei
                     allCutEdges,
                     allCutPoints
                 );

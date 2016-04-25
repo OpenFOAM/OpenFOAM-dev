@@ -616,11 +616,11 @@ void Foam::globalMeshData::calcPointConnectivity
             );
             // Add transform to connectivity
             const labelPair& n = myData[pTransformSlaves[i]];
-            label procI = globalIndexAndTransform::processor(n);
+            label proci = globalIndexAndTransform::processor(n);
             label index = globalIndexAndTransform::index(n);
             pConnectivity[connI++] = globalIndexAndTransform::encode
             (
-                procI,
+                proci,
                 index,
                 transformI
             );
@@ -767,11 +767,11 @@ void Foam::globalMeshData::calcGlobalPointEdges
                 {
                     // Add transform to connectivity
                     const labelPair& n = otherData[j];
-                    label procI = globalIndexAndTransform::processor(n);
+                    label proci = globalIndexAndTransform::processor(n);
                     label index = globalIndexAndTransform::index(n);
                     globalPPoints[sz++] = globalIndexAndTransform::encode
                     (
-                        procI,
+                        proci,
                         index,
                         transformI
                     );
@@ -811,25 +811,25 @@ Foam::label Foam::globalMeshData::findTransform
     const label localPoint
 ) const
 {
-    const label remoteProcI = globalIndexAndTransform::processor(remotePoint);
+    const label remoteProci = globalIndexAndTransform::processor(remotePoint);
     const label remoteIndex = globalIndexAndTransform::index(remotePoint);
 
     label remoteTransformI = -1;
     label localTransformI = -1;
     forAll(info, i)
     {
-        label procI = globalIndexAndTransform::processor(info[i]);
+        label proci = globalIndexAndTransform::processor(info[i]);
         label pointI = globalIndexAndTransform::index(info[i]);
         label transformI = globalIndexAndTransform::transformIndex(info[i]);
 
-        if (procI == Pstream::myProcNo() && pointI == localPoint)
+        if (proci == Pstream::myProcNo() && pointI == localPoint)
         {
             localTransformI = transformI;
             //Pout<< "For local :" << localPoint
             //    << " found transform:" << localTransformI
             //    << endl;
         }
-        if (procI == remoteProcI && pointI == remoteIndex)
+        if (proci == remoteProci && pointI == remoteIndex)
         {
             remoteTransformI = transformI;
             //Pout<< "For remote:" << remotePoint
@@ -960,13 +960,13 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
 
                     if (transform0 == transform1)
                     {
-                        label procI = globalEdgeNumbers.whichProcID(pEdges0[i]);
+                        label proci = globalEdgeNumbers.whichProcID(pEdges0[i]);
                         eEdges.append
                         (
                             globalIndexAndTransform::encode
                             (
-                                procI,
-                                globalEdgeNumbers.toLocal(procI, pEdges0[i]),
+                                proci,
+                                globalEdgeNumbers.toLocal(proci, pEdges0[i]),
                                 transform0
                             )
                         );
@@ -1016,7 +1016,7 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
                 for (label i = 1; i < edgeInfo.size(); i++)
                 {
                     const labelPair& info = edgeInfo[i];
-                    label procI = globalIndexAndTransform::processor(info);
+                    label proci = globalIndexAndTransform::processor(info);
                     label index = globalIndexAndTransform::index(info);
                     label transform = globalIndexAndTransform::transformIndex
                     (
@@ -1027,7 +1027,7 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
                     {
                         eEdges[nonTransformI++] = globalEdgeNumbers.toGlobal
                         (
-                            procI,
+                            proci,
                             index
                         );
                     }
@@ -1262,10 +1262,10 @@ void Foam::globalMeshData::calcPointBoundaryFaces
                     );
                     if (iter != meshPointMap.end())
                     {
-                        label bFaceI =
+                        label bFacei =
                              pp.start() + i - mesh_.nInternalFaces();
                         pointBoundaryFaces[iter()][nPointFaces[iter()]++] =
-                            bFaceI;
+                            bFacei;
                     }
                 }
             }
@@ -1406,12 +1406,12 @@ void Foam::globalMeshData::calcGlobalPointBoundaryFaces() const
                     // Check that same face not already present untransformed
                     if (findIndex(untrafoFaces, slave)== -1)
                     {
-                        label procI = globalIndices.whichProcID(slave);
-                        label facei = globalIndices.toLocal(procI, slave);
+                        label proci = globalIndices.whichProcID(slave);
+                        label facei = globalIndices.toLocal(proci, slave);
 
                         myBFaces[n++] = globalIndexAndTransform::encode
                         (
-                            procI,
+                            proci,
                             facei,
                             transformI
                         );
@@ -1478,7 +1478,7 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
     // Create map of boundary cells and point-cell addressing
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    label bCellI = 0;
+    label bCelli = 0;
     Map<label> meshCellMap(4*coupledPatch().nPoints());
     DynamicList<label> cellMap(meshCellMap.size());
 
@@ -1504,10 +1504,10 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
             }
             else
             {
-                meshCellMap.insert(celli, bCellI);
+                meshCellMap.insert(celli, bCelli);
                 cellMap.append(celli);
-                bCells[i] = bCellI;
-                bCellI++;
+                bCells[i] = bCelli;
+                bCelli++;
             }
         }
     }
@@ -1635,11 +1635,11 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
                     // Check that same cell not already present untransformed
                     if (findIndex(untrafoCells, slave)== -1)
                     {
-                        label procI = globalIndices.whichProcID(slave);
-                        label celli = globalIndices.toLocal(procI, slave);
+                        label proci = globalIndices.whichProcID(slave);
+                        label celli = globalIndices.toLocal(proci, slave);
                         myBCells[n++] = globalIndexAndTransform::encode
                         (
-                            procI,
+                            proci,
                             celli,
                             transformI
                         );

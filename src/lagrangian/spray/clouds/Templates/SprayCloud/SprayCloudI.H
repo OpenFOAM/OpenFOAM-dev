@@ -131,22 +131,22 @@ inline Foam::scalar Foam::SprayCloud<CloudType>::penetration
         // flatten the mass lists
         List<scalar> allMass(nParcelSum, 0.0);
         SortableList<scalar> allDist(nParcelSum, 0.0);
-        for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
             SubList<scalar>
             (
                 allMass,
-                globalParcels.localSize(procI),
-                globalParcels.offset(procI)
-            ) = procMass[procI];
+                globalParcels.localSize(proci),
+                globalParcels.offset(proci)
+            ) = procMass[proci];
 
             // flatten the distance list
             SubList<scalar>
             (
                 allDist,
-                globalParcels.localSize(procI),
-                globalParcels.offset(procI)
-            ) = procDist[procI];
+                globalParcels.localSize(proci),
+                globalParcels.offset(proci)
+            ) = procDist[proci];
         }
 
         // sort allDist distances into ascending order

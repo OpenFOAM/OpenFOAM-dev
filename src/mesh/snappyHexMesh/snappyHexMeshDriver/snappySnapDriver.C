@@ -884,9 +884,9 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
         forAll(pFaces, pfI)
         {
             label facei = pFaces[pfI];
-            label meshFaceI = pp.addressing()[facei];
+            label meshFacei = pp.addressing()[facei];
 
-            label own = mesh.faceOwner()[meshFaceI];
+            label own = mesh.faceOwner()[meshFacei];
             avgBoundary[pointI] += mesh.cellCentres()[own];
             nBoundary[pointI]++;
         }
@@ -1919,8 +1919,8 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
 //        {
 //            label globalRegionI = surfaces.globalRegion(surfI, regionI);
 //            // Collect master patch points
-//            label masterPatchI = globalToMasterPatch_[globalRegionI];
-//            label slavePatchI = globalToSlavePatch_[globalRegionI];
+//            label masterPatchi = globalToMasterPatch_[globalRegionI];
+//            label slavePatchi = globalToSlavePatch_[globalRegionI];
 //
 //            labelList patchPointIndices
 //            (
@@ -1928,7 +1928,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
 //                (
 //                    mesh,
 //                    pp,
-//                    pbm[masterPatchI]
+//                    pbm[masterPatchi]
 //                )
 //            );
 //
@@ -1961,7 +1961,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
 //            }
 //
 //            // Slave patch
-//            if (slavePatchI != masterPatchI)
+//            if (slavePatchi != masterPatchi)
 //            {
 //                labelList patchPointIndices
 //                (
@@ -1969,7 +1969,7 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurface
 //                    (
 //                        mesh,
 //                        pp,
-//                        pbm[slavePatchI]
+//                        pbm[slavePatchi]
 //                    )
 //                );
 //

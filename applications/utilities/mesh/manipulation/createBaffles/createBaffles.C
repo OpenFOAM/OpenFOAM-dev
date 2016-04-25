@@ -113,7 +113,7 @@ void modifyOrAddFace
     const label facei,
     const label own,
     const bool flipFaceFlux,
-    const label newPatchI,
+    const label newPatchi,
     const label zoneID,
     const bool zoneFlip,
 
@@ -132,7 +132,7 @@ void modifyOrAddFace
                 own,                        // owner
                 -1,                         // neighbour
                 flipFaceFlux,               // face flip
-                newPatchI,                  // patch for face
+                newPatchi,                  // patch for face
                 false,                      // remove from zone
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
@@ -154,7 +154,7 @@ void modifyOrAddFace
                 -1,                         // master edge
                 facei,                      // master face
                 flipFaceFlux,               // face flip
-                newPatchI,                  // patch for face
+                newPatchi,                  // patch for face
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
             )
@@ -186,11 +186,11 @@ void createFaces
 
         for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            label zoneFaceI = fZone.whichFace(facei);
+            label zoneFacei = fZone.whichFace(facei);
 
-            if (zoneFaceI != -1)
+            if (zoneFacei != -1)
             {
-                if (!fZone.flipMap()[zoneFaceI])
+                if (!fZone.flipMap()[zoneFacei])
                 {
                     // Use owner side of face
                     modifyOrAddFace
@@ -236,11 +236,11 @@ void createFaces
 
         for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            label zoneFaceI = fZone.whichFace(facei);
+            label zoneFacei = fZone.whichFace(facei);
 
-            if (zoneFaceI != -1)
+            if (zoneFacei != -1)
             {
-                if (!fZone.flipMap()[zoneFaceI])
+                if (!fZone.flipMap()[zoneFacei])
                 {
                     // Use neighbour side of face
                     modifyOrAddFace
@@ -294,9 +294,9 @@ void createFaces
         {
             const polyPatch& pp = pbm[patchi];
 
-            label newPatchI = newMasterPatches[i];
+            label newPatchi = newMasterPatches[i];
 
-            if (pp.coupled() && pbm[newPatchI].coupled())
+            if (pp.coupled() && pbm[newPatchi].coupled())
             {
                 // Do not allow coupled faces to be moved to different
                 // coupled patches.
@@ -307,9 +307,9 @@ void createFaces
                 {
                     label facei = pp.start()+i;
 
-                    label zoneFaceI = fZone.whichFace(facei);
+                    label zoneFacei = fZone.whichFace(facei);
 
-                    if (zoneFaceI != -1)
+                    if (zoneFacei != -1)
                     {
                         if (patchWarned.insert(patchi))
                         {
@@ -318,7 +318,7 @@ void createFaces
                                 << pp.name()
                                 << ") in faceZone " << fZone.name()
                                 << " to convert to baffle patch "
-                                << pbm[newPatchI].name()
+                                << pbm[newPatchi].name()
                                 << endl
                                 << "    Run with -internalFacesOnly option"
                                 << " if you don't wish to convert"
@@ -332,9 +332,9 @@ void createFaces
                             facei,                      // label of face
                             mesh.faceOwner()[facei],    // owner
                             false,                      // face flip
-                            newPatchI,                  // patch for face
+                            newPatchi,                  // patch for face
                             fZone.index(),              // zone for face
-                            fZone.flipMap()[zoneFaceI], // face flip in zone
+                            fZone.flipMap()[zoneFacei], // face flip in zone
                             modifiedFace                // modify or add
                         );
                         nModified++;

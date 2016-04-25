@@ -87,18 +87,18 @@ const
     {
         const point& keepPoint = keepPoints_[i];
 
-        label localCellI = mesh.findCell(keepPoint);
+        label localCelli = mesh.findCell(keepPoint);
 
-        label globalCellI = -1;
+        label globalCelli = -1;
 
-        if (localCellI != -1)
+        if (localCelli != -1)
         {
-            globalCellI = globalCells.toGlobal(localCellI);
+            globalCelli = globalCells.toGlobal(localCelli);
         }
 
-        reduce(globalCellI, maxOp<label>());
+        reduce(globalCelli, maxOp<label>());
 
-        if (globalCellI == -1)
+        if (globalCelli == -1)
         {
             FatalErrorInFunction
                 << "Point " << keepPoint
@@ -108,16 +108,16 @@ const
         }
 
 
-        label procI = globalCells.whichProcID(globalCellI);
-        label procCellI = globalCells.toLocal(procI, globalCellI);
+        label proci = globalCells.whichProcID(globalCelli);
+        label procCelli = globalCells.toLocal(proci, globalCelli);
 
-        Info<< "Found point " << keepPoint << " in cell " << procCellI
-            << " on processor " << procI << endl;
+        Info<< "Found point " << keepPoint << " in cell " << procCelli
+            << " on processor " << proci << endl;
 
 
-        if (globalCells.isLocal(globalCellI))
+        if (globalCells.isLocal(globalCelli))
         {
-            cellLabels[i] = localCellI;
+            cellLabels[i] = localCelli;
         }
         else
         {

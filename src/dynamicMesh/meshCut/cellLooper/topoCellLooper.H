@@ -135,7 +135,7 @@ class topoCellLooper
         (
             const label celli,
             const cellFeatures& features,
-            const label fromFaceI,
+            const label fromFacei,
             const label fromEdgeI,
             const label fromVertI,
 

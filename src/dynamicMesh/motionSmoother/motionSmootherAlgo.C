@@ -315,13 +315,13 @@ void Foam::motionSmootherAlgo::getAffectedFacesAndPoints
         {
             const labelList& pCells = mesh_.pointCells(iter.key());
 
-            forAll(pCells, pCellI)
+            forAll(pCells, pCelli)
             {
-                const cell& cFaces = mesh_.cells()[pCells[pCellI]];
+                const cell& cFaces = mesh_.cells()[pCells[pCelli]];
 
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    nbrFaces.insert(cFaces[cFaceI]);
+                    nbrFaces.insert(cFaces[cFacei]);
                 }
             }
         }

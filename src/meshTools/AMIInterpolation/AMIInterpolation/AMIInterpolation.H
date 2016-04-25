@@ -523,7 +523,7 @@ public:
                 const SourcePatch& srcPatch,
                 const TargetPatch& tgtPatch,
                 const vector& n,
-                const label tgtFaceI,
+                const label tgtFacei,
                 point& tgtPoint
             )
             const;
@@ -534,7 +534,7 @@ public:
                 const SourcePatch& srcPatch,
                 const TargetPatch& tgtPatch,
                 const vector& n,
-                const label srcFaceI,
+                const label srcFacei,
                 point& srcPoint
             )
             const;

@@ -59,12 +59,12 @@ inline Foam::DSMCParcel<ParcelType>::DSMCParcel
     const vector& U,
     const scalar Ei,
     const label celli,
-    const label tetFaceI,
+    const label tetFacei,
     const label tetPtI,
     const label typeId
 )
 :
-    ParcelType(mesh, position, celli, tetFaceI, tetPtI),
+    ParcelType(mesh, position, celli, tetFacei, tetPtI),
     U_(U),
     Ei_(Ei),
     typeId_(typeId)

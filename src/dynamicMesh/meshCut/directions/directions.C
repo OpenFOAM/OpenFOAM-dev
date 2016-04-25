@@ -150,21 +150,21 @@ Foam::vectorField Foam::directions::propagateDirection
 
     if (useTopo)
     {
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
-            label meshFaceI = pp.start() + patchFaceI;
+            label meshFacei = pp.start() + patchFacei;
 
-            label celli = mesh.faceOwner()[meshFaceI];
+            label celli = mesh.faceOwner()[meshFacei];
 
             if (!hexMatcher().isA(mesh, celli))
             {
                 FatalErrorInFunction
                     << "useHexTopology specified but cell " << celli
-                    << " on face " << patchFaceI << " of patch " << pp.name()
+                    << " on face " << patchFacei << " of patch " << pp.name()
                     << " is not a hex" << exit(FatalError);
             }
 
-            const vector& cutDir = ppField[patchFaceI];
+            const vector& cutDir = ppField[patchFacei];
 
             // Get edge(bundle) on cell most in direction of cutdir
             label edgeI = meshTools::cutDirToEdge(mesh, celli, cutDir);
@@ -175,13 +175,13 @@ Foam::vectorField Foam::directions::propagateDirection
                 (
                     mesh,
                     celli,
-                    meshFaceI,
+                    meshFacei,
                     edgeI
                 );
 
             // Set initial face and direction
-            changedFaces[patchFaceI] = meshFaceI;
-            changedFacesInfo[patchFaceI] =
+            changedFaces[patchFacei] = meshFacei;
+            changedFacesInfo[patchFacei] =
                 directionInfo
                 (
                     faceIndex,
@@ -191,14 +191,14 @@ Foam::vectorField Foam::directions::propagateDirection
     }
     else
     {
-        forAll(pp, patchFaceI)
+        forAll(pp, patchFacei)
         {
-            changedFaces[patchFaceI] = pp.start() + patchFaceI;
-            changedFacesInfo[patchFaceI] =
+            changedFaces[patchFacei] = pp.start() + patchFacei;
+            changedFacesInfo[patchFacei] =
                 directionInfo
                 (
                     -2,         // Geometric information only
-                    ppField[patchFaceI]
+                    ppField[patchFacei]
                 );
         }
     }

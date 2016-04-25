@@ -79,11 +79,11 @@ Foam::labelList Foam::cellLooper::getVertFacesNonEdge
     const labelList& pFaces = mesh().pointFaces()[vertI];
 
     labelList vertFaces(pFaces.size());
-    label vertFaceI = 0;
+    label vertFacei = 0;
 
-    forAll(pFaces, pFaceI)
+    forAll(pFaces, pFacei)
     {
-        label facei = pFaces[pFaceI];
+        label facei = pFaces[pFacei];
 
         if
         (
@@ -92,10 +92,10 @@ Foam::labelList Foam::cellLooper::getVertFacesNonEdge
          && (meshTools::faceOnCell(mesh(), celli, facei))
         )
         {
-            vertFaces[vertFaceI++] = facei;
+            vertFaces[vertFacei++] = facei;
         }
     }
-    vertFaces.setSize(vertFaceI);
+    vertFaces.setSize(vertFacei);
 
     return vertFaces;
 }

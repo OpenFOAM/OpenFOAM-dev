@@ -58,9 +58,9 @@ void Foam::booleanSurface::checkIncluded
 
         bool usesIncluded = false;
 
-        forAll(myFaces, myFaceI)
+        forAll(myFaces, myFacei)
         {
-            if (faceZone[myFaces[myFaceI]] == faceZone[includedFace])
+            if (faceZone[myFaces[myFacei]] == faceZone[includedFace])
             {
                 usesIncluded = true;
 
@@ -136,10 +136,10 @@ Foam::geometricSurfacePatchList Foam::booleanSurface::mergePatches
     );
 
     // Copy all patches of surf1
-    label combinedPatchI = 0;
+    label combinedPatchi = 0;
     forAll(surf1.patches(), patchi)
     {
-        combinedPatches[combinedPatchI++] = surf1.patches()[patchi];
+        combinedPatches[combinedPatchi++] = surf1.patches()[patchi];
     }
 
     // (inefficiently) add unique patches from surf2
@@ -161,9 +161,9 @@ Foam::geometricSurfacePatchList Foam::booleanSurface::mergePatches
 
         if (index == -1)
         {
-            combinedPatches[combinedPatchI] = surf2.patches()[patch2I];
-            patchMap2[patch2I] = combinedPatchI;
-            combinedPatchI++;
+            combinedPatches[combinedPatchi] = surf2.patches()[patch2I];
+            patchMap2[patch2I] = combinedPatchi;
+            combinedPatchi++;
         }
         else
         {
@@ -171,7 +171,7 @@ Foam::geometricSurfacePatchList Foam::booleanSurface::mergePatches
         }
     }
 
-    combinedPatches.setSize(combinedPatchI);
+    combinedPatches.setSize(combinedPatchi);
 
     return combinedPatches;
 }
@@ -181,7 +181,7 @@ void Foam::booleanSurface::propagateEdgeSide
 (
     const triSurface& surf,
     const label prevVert0,
-    const label prevFaceI,
+    const label prevFacei,
     const label prevState,
     const label edgeI,
     labelList& side
@@ -192,13 +192,13 @@ void Foam::booleanSurface::propagateEdgeSide
     // Simple case. Propagate side.
     if (eFaces.size() == 2)
     {
-        forAll(eFaces, eFaceI)
+        forAll(eFaces, eFacei)
         {
             propagateSide
             (
                 surf,
                 prevState,
-                eFaces[eFaceI],
+                eFaces[eFacei],
                 side
             );
         }
@@ -211,13 +211,13 @@ void Foam::booleanSurface::propagateEdgeSide
             << "Don't know how to handle edges with odd number of faces"
             << endl
             << "edge:" << edgeI << " vertices:" << surf.edges()[edgeI]
-            << " coming from face:" << prevFaceI
+            << " coming from face:" << prevFacei
             << " edgeFaces:" << eFaces << abort(FatalError);
     }
 
 
     // Get position of face in edgeFaces
-    label ind = index(eFaces, prevFaceI);
+    label ind = index(eFaces, prevFacei);
 
     // Determine orientation of faces around edge prevVert0
     // (might be opposite of edge)
@@ -246,13 +246,13 @@ void Foam::booleanSurface::propagateEdgeSide
     {
         // Coming from outside. nextInd is outside, rest is inside.
 
-        forAll(eFaces, eFaceI)
+        forAll(eFaces, eFacei)
         {
-            if (eFaceI != ind)
+            if (eFacei != ind)
             {
                 label nextState;
 
-                if (eFaceI == nextInd)
+                if (eFacei == nextInd)
                 {
                     nextState = OUTSIDE;
                 }
@@ -265,7 +265,7 @@ void Foam::booleanSurface::propagateEdgeSide
                 (
                     surf,
                     nextState,
-                    eFaces[eFaceI],
+                    eFaces[eFacei],
                     side
                 );
             }
@@ -275,13 +275,13 @@ void Foam::booleanSurface::propagateEdgeSide
     {
         // Coming from inside. prevInd is inside as well, rest is outside.
 
-        forAll(eFaces, eFaceI)
+        forAll(eFaces, eFacei)
         {
-            if (eFaceI != ind)
+            if (eFacei != ind)
             {
                 label nextState;
 
-                if (eFaceI == prevInd)
+                if (eFacei == prevInd)
                 {
                     nextState = INSIDE;
                 }
@@ -294,7 +294,7 @@ void Foam::booleanSurface::propagateEdgeSide
                 (
                     surf,
                     nextState,
-                    eFaces[eFaceI],
+                    eFaces[eFacei],
                     side
                 );
             }
@@ -427,15 +427,15 @@ Foam::booleanSurface::booleanSurface
 
 
     // Find (first) face of cutSurf1 that originates from includeFace1
-    label cutSurf1FaceI = index(cutSurf1.faceMap(), includeFace1);
+    label cutSurf1Facei = index(cutSurf1.faceMap(), includeFace1);
 
     if (debug)
     {
-        Pout<< "cutSurf1 : starting to fill from face:" << cutSurf1FaceI
+        Pout<< "cutSurf1 : starting to fill from face:" << cutSurf1Facei
             << endl;
     }
 
-    if (cutSurf1FaceI == -1)
+    if (cutSurf1Facei == -1)
     {
         FatalErrorInFunction
             << "Did not find face with label " << includeFace1
@@ -444,14 +444,14 @@ Foam::booleanSurface::booleanSurface
     }
 
     // Find (first) face of cutSurf2 that originates from includeFace1
-    label cutSurf2FaceI = index(cutSurf2.faceMap(), includeFace2);
+    label cutSurf2Facei = index(cutSurf2.faceMap(), includeFace2);
 
     if (debug)
     {
-        Pout<< "cutSurf2 : starting to fill from face:" << cutSurf2FaceI
+        Pout<< "cutSurf2 : starting to fill from face:" << cutSurf2Facei
             << endl;
     }
-    if (cutSurf2FaceI == -1)
+    if (cutSurf2Facei == -1)
     {
         FatalErrorInFunction
             << "Did not find face with label " << includeFace2
@@ -480,14 +480,14 @@ Foam::booleanSurface::booleanSurface
 
 
     // Check whether at least one of sides of intersection has been marked.
-    checkIncluded(cutSurf1, faceZone1, cutSurf1FaceI);
+    checkIncluded(cutSurf1, faceZone1, cutSurf1Facei);
 
-    // Subset zone which includes cutSurf2FaceI
+    // Subset zone which includes cutSurf2Facei
     boolList includedFaces1(cutSurf1.size(), false);
 
     forAll(faceZone1, facei)
     {
-        if (faceZone1[facei] == faceZone1[cutSurf1FaceI])
+        if (faceZone1[facei] == faceZone1[cutSurf1Facei])
         {
             includedFaces1[facei] = true;
         }
@@ -528,14 +528,14 @@ Foam::booleanSurface::booleanSurface
 
 
     // Check whether at least one of sides of intersection has been marked.
-    checkIncluded(cutSurf2, faceZone2, cutSurf2FaceI);
+    checkIncluded(cutSurf2, faceZone2, cutSurf2Facei);
 
-    // Subset zone which includes cutSurf2FaceI
+    // Subset zone which includes cutSurf2Facei
     boolList includedFaces2(cutSurf2.size(), false);
 
     forAll(faceZone2, facei)
     {
-        if (faceZone2[facei] == faceZone2[cutSurf2FaceI])
+        if (faceZone2[facei] == faceZone2[cutSurf2Facei])
         {
             includedFaces2[facei] = true;
         }
@@ -650,11 +650,11 @@ Foam::booleanSurface::booleanSurface
     faceMap_.setSize(combinedFaces.size());
 
     // Copy faces from subSurf1. No need for renumbering.
-    label combinedFaceI = 0;
+    label combinedFacei = 0;
     forAll(subSurf1, facei)
     {
-        faceMap_[combinedFaceI] = faceMap1[facei];
-        combinedFaces[combinedFaceI++] = subSurf1[facei];
+        faceMap_[combinedFacei] = faceMap1[facei];
+        combinedFaces[combinedFacei++] = subSurf1[facei];
     }
 
     // Copy and renumber faces from subSurf2.
@@ -662,9 +662,9 @@ Foam::booleanSurface::booleanSurface
     {
         const labelledTri& f = subSurf2[facei];
 
-        faceMap_[combinedFaceI] = -faceMap2[facei]-1;
+        faceMap_[combinedFacei] = -faceMap2[facei]-1;
 
-        combinedFaces[combinedFaceI++] =
+        combinedFaces[combinedFacei++] =
             labelledTri
             (
                 pointMap[f[0]],
@@ -856,16 +856,16 @@ Foam::booleanSurface::booleanSurface
     // Faces from 2 get vertices and region renumbered.
     List<labelledTri> combinedFaces(cutSurf1.size() + cutSurf2.size());
 
-    label combinedFaceI = 0;
+    label combinedFacei = 0;
 
     forAll(cutSurf1, facei)
     {
-        combinedFaces[combinedFaceI++] = cutSurf1[facei];
+        combinedFaces[combinedFacei++] = cutSurf1[facei];
     }
 
     forAll(cutSurf2, facei)
     {
-        labelledTri& combinedTri = combinedFaces[combinedFaceI++];
+        labelledTri& combinedTri = combinedFaces[combinedFacei++];
 
         const labelledTri& tri = cutSurf2[facei];
 
@@ -916,15 +916,15 @@ Foam::booleanSurface::booleanSurface
 
         faceMap_.setSize(combinedSurf.size());
 
-        label combinedFaceI = 0;
+        label combinedFacei = 0;
 
         forAll(cutSurf1, facei)
         {
-            faceMap_[combinedFaceI++] = cutSurf1.faceMap()[facei];
+            faceMap_[combinedFacei++] = cutSurf1.faceMap()[facei];
         }
         forAll(cutSurf2, facei)
         {
-            faceMap_[combinedFaceI++] = -cutSurf2.faceMap()[facei] - 1;
+            faceMap_[combinedFacei++] = -cutSurf2.faceMap()[facei] - 1;
         }
 
         triSurface::operator=(combinedSurf);
@@ -942,7 +942,7 @@ Foam::booleanSurface::booleanSurface
 
     const pointField& pts = combinedSurf.points();
 
-    label minFaceI = -1;
+    label minFacei = -1;
     pointHit minHit(false, Zero, GREAT, true);
 
     forAll(combinedSurf, facei)
@@ -952,14 +952,14 @@ Foam::booleanSurface::booleanSurface
         if (curHit.distance() < minHit.distance())
         {
             minHit = curHit;
-            minFaceI = facei;
+            minFacei = facei;
         }
     }
 
     if (debug)
     {
         Pout<< "booleanSurface : found for point:" << outsidePoint
-            << "  nearest face:" << minFaceI
+            << "  nearest face:" << minFacei
             << "  nearest point:" << minHit.rawPoint()
             << endl;
     }
@@ -971,7 +971,7 @@ Foam::booleanSurface::booleanSurface
     labelList side(combinedSurf.size(), UNVISITED);
 
     // Walk face-edge-face and propagate inside/outside status.
-    propagateSide(combinedSurf, OUTSIDE, minFaceI, side);
+    propagateSide(combinedSurf, OUTSIDE, minFacei, side);
 
 
     // Depending on operation include certain faces.
@@ -988,7 +988,7 @@ Foam::booleanSurface::booleanSurface
             FatalErrorInFunction
                 << "Face " << facei << " has not been reached by walking from"
                 << " nearest point " << minHit.rawPoint()
-                << " nearest face " << minFaceI << exit(FatalError);
+                << " nearest face " << minFacei << exit(FatalError);
         }
         else if (side[facei] == OUTSIDE)
         {
@@ -1041,19 +1041,19 @@ Foam::booleanSurface::booleanSurface
     forAll(subToCombinedFace, facei)
     {
         // Get label in combinedSurf
-        label combinedFaceI = subToCombinedFace[facei];
+        label combinedFacei = subToCombinedFace[facei];
 
         // First faces in combinedSurf come from cutSurf1.
 
-        if (combinedFaceI < cutSurf1.size())
+        if (combinedFacei < cutSurf1.size())
         {
-            label cutSurf1Face = combinedFaceI;
+            label cutSurf1Face = combinedFacei;
 
             faceMap_[facei] = cutSurf1.faceMap()[cutSurf1Face];
         }
         else
         {
-            label cutSurf2Face = combinedFaceI - cutSurf1.size();
+            label cutSurf2Face = combinedFacei - cutSurf1.size();
 
             faceMap_[facei] = - cutSurf2.faceMap()[cutSurf2Face] - 1;
         }

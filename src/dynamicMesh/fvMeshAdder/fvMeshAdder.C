@@ -46,11 +46,11 @@ Foam::labelList Foam::fvMeshAdder::calcPatchMap
 
     for (label i = 0; i < oldSize; i++)
     {
-        label newFaceI = oldToNew[oldStart+i];
+        label newFacei = oldToNew[oldStart+i];
 
-        if (newFaceI >= newStart && newFaceI < newStart+newSize)
+        if (newFacei >= newStart && newFacei < newStart+newSize)
         {
-            newToOld[newFaceI-newStart] = i;
+            newToOld[newFacei-newStart] = i;
         }
     }
     return newToOld;

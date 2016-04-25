@@ -49,9 +49,9 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
 
             for
             (
-                label patchFaceI = 0;
-                patchFaceI < patch.size();
-                patchFaceI++
+                label patchFacei = 0;
+                patchFacei < patch.size();
+                patchFacei++
             )
             {
                 const label facei = faceMap[faceIndex++];
@@ -94,20 +94,20 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
             }
         }
 
-        label currentPatchI = -1;
+        label currentPatchi = -1;
 
         forAll(*this, facei)
         {
-            if (currentPatchI != patchIDs[facei])
+            if (currentPatchi != patchIDs[facei])
             {
-                if (currentPatchI != -1)
+                if (currentPatchi != -1)
                 {
                     // Have already valid patch. Close it.
-                    os  << "endsolid " << myPatches[currentPatchI].name()
+                    os  << "endsolid " << myPatches[currentPatchi].name()
                         << nl;
                 }
-                currentPatchI = patchIDs[facei];
-                os  << "solid " << myPatches[currentPatchI].name() << nl;
+                currentPatchi = patchIDs[facei];
+                os  << "solid " << myPatches[currentPatchi].name() << nl;
             }
 
             const vector& n = faceNormals()[facei];
@@ -131,9 +131,9 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
                 << "  endfacet" << endl;
         }
 
-        if (currentPatchI != -1)
+        if (currentPatchi != -1)
         {
-            os  << "endsolid " << myPatches[currentPatchI].name()
+            os  << "endsolid " << myPatches[currentPatchi].name()
                 << nl;
         }
     }

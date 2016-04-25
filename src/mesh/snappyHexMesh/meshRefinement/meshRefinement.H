@@ -237,7 +237,7 @@ private:
         autoPtr<mapPolyMesh> removeInsideCells
         (
             const string& msg,
-            const label exposedPatchI
+            const label exposedPatchi
         );
 
 
@@ -901,7 +901,7 @@ public:
             static label appendPatch
             (
                 fvMesh&,
-                const label insertPatchI,
+                const label insertPatchi,
                 const word&,
                 const dictionary&
             );

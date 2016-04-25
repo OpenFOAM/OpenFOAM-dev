@@ -32,17 +32,17 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::findNearestFace
 (
     const SourcePatch& srcPatch,
     const TargetPatch& tgtPatch,
-    const label& srcFaceI,
-    label& tgtFaceI
+    const label& srcFacei,
+    label& tgtFacei
 ) const
 {
     const vectorField& srcCf = srcPatch.faceCentres();
     const vectorField& tgtCf = tgtPatch.faceCentres();
 
-    const vector srcP = srcCf[srcFaceI];
+    const vector srcP = srcCf[srcFacei];
 
     DynamicList<label> tgtFaces(10);
-    tgtFaces.append(tgtFaceI);
+    tgtFaces.append(tgtFacei);
 
     DynamicList<label> visitedFaces(10);
 
@@ -56,12 +56,12 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::findNearestFace
         scalar dTest = magSqr(tgtCf[tgtI] - srcP);
         if (dTest < d)
         {
-            tgtFaceI = tgtI;
+            tgtFacei = tgtI;
             d = dTest;
 
             this->appendNbrFaces
             (
-                tgtFaceI,
+                tgtFacei,
                 tgtPatch,
                 visitedFaces,
                 tgtFaces
@@ -77,20 +77,20 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
 (
     boolList& mapFlag,
     label& startSeedI,
-    label& srcFaceI,
-    label& tgtFaceI
+    label& srcFacei,
+    label& tgtFacei
 ) const
 {
-    const labelList& srcNbr = this->srcPatch_.faceFaces()[srcFaceI];
+    const labelList& srcNbr = this->srcPatch_.faceFaces()[srcFacei];
 
-    srcFaceI = -1;
+    srcFacei = -1;
 
     forAll(srcNbr, i)
     {
         label facei = srcNbr[i];
         if (mapFlag[facei])
         {
-            srcFaceI = facei;
+            srcFacei = facei;
             startSeedI = facei + 1;
 
             return;
@@ -101,16 +101,16 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
     {
         if (mapFlag[facei])
         {
-            srcFaceI = facei;
-            tgtFaceI = this->findTargetFace(facei);
+            srcFacei = facei;
+            tgtFacei = this->findTargetFace(facei);
 
-            if (tgtFaceI == -1)
+            if (tgtFacei == -1)
             {
                 const vectorField& srcCf = this->srcPatch_.faceCentres();
 
                 FatalErrorInFunction
                     << "Unable to find target face for source face "
-                    << srcFaceI << " with face centre " << srcCf[srcFaceI]
+                    << srcFacei << " with face centre " << srcCf[srcFacei]
                     << abort(FatalError);
             }
 
@@ -123,18 +123,18 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
 template<class SourcePatch, class TargetPatch>
 Foam::label Foam::mapNearestAMI<SourcePatch, TargetPatch>::findMappedSrcFace
 (
-    const label tgtFaceI,
+    const label tgtFacei,
     const List<DynamicList<label>>& tgtToSrc
 ) const
 {
     DynamicList<label> testFaces(10);
     DynamicList<label> visitedFaces(10);
 
-    testFaces.append(tgtFaceI);
+    testFaces.append(tgtFacei);
 
     do
     {
-        // search target tgtFaceI neighbours for match with source face
+        // search target tgtFacei neighbours for match with source face
         label tgtI = testFaces.remove();
 
         if (findIndex(visitedFaces, tgtI) == -1)
@@ -208,8 +208,8 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
     scalarListList& srcWeights,
     labelListList& tgtAddress,
     scalarListList& tgtWeights,
-    label srcFaceI,
-    label tgtFaceI
+    label srcFacei,
+    label tgtFacei
 )
 {
     bool ok =
@@ -219,8 +219,8 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
             srcWeights,
             tgtAddress,
             tgtWeights,
-            srcFaceI,
-            tgtFaceI
+            srcFacei,
+            tgtFacei
         );
 
     if (!ok)
@@ -246,22 +246,22 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
     DynamicList<label> nonOverlapFaces;
     do
     {
-        findNearestFace(this->srcPatch_, this->tgtPatch_, srcFaceI, tgtFaceI);
+        findNearestFace(this->srcPatch_, this->tgtPatch_, srcFacei, tgtFacei);
 
-        srcAddr[srcFaceI].append(tgtFaceI);
-        tgtAddr[tgtFaceI].append(srcFaceI);
+        srcAddr[srcFacei].append(tgtFacei);
+        tgtAddr[tgtFacei].append(srcFacei);
 
-        mapFlag[srcFaceI] = false;
+        mapFlag[srcFacei] = false;
 
-        // Do advancing front starting from srcFaceI, tgtFaceI
+        // Do advancing front starting from srcFacei, tgtFacei
         setNextNearestFaces
         (
             mapFlag,
             startSeedI,
-            srcFaceI,
-            tgtFaceI
+            srcFacei,
+            tgtFacei
         );
-    } while (srcFaceI >= 0);
+    } while (srcFacei >= 0);
 
 
     // for the case of multiple source faces per target face, select the
@@ -269,16 +269,16 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
     const vectorField& srcCf = this->srcPatch_.faceCentres();
     const vectorField& tgtCf = this->tgtPatch_.faceCentres();
 
-    forAll(tgtAddr, targetFaceI)
+    forAll(tgtAddr, targetFacei)
     {
-        if (tgtAddr[targetFaceI].size() > 1)
+        if (tgtAddr[targetFacei].size() > 1)
         {
-            const vector& tgtC = tgtCf[tgtFaceI];
+            const vector& tgtC = tgtCf[tgtFacei];
 
-            DynamicList<label>& srcFaces = tgtAddr[targetFaceI];
+            DynamicList<label>& srcFaces = tgtAddr[targetFacei];
 
-            label srcFaceI = srcFaces[0];
-            scalar d = magSqr(tgtC - srcCf[srcFaceI]);
+            label srcFacei = srcFaces[0];
+            scalar d = magSqr(tgtC - srcCf[srcFacei]);
 
             for (label i = 1; i < srcFaces.size(); i++)
             {
@@ -287,35 +287,35 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::calculate
                 if (dNew < d)
                 {
                     d = dNew;
-                    srcFaceI = srcI;
+                    srcFacei = srcI;
                 }
             }
 
             srcFaces.clear();
-            srcFaces.append(srcFaceI);
+            srcFaces.append(srcFacei);
         }
     }
 
     // If there are more target faces than source faces, some target faces
     // might not yet be mapped
-    forAll(tgtAddr, tgtFaceI)
+    forAll(tgtAddr, tgtFacei)
     {
-        if (tgtAddr[tgtFaceI].empty())
+        if (tgtAddr[tgtFacei].empty())
         {
-            label srcFaceI = findMappedSrcFace(tgtFaceI, tgtAddr);
+            label srcFacei = findMappedSrcFace(tgtFacei, tgtAddr);
 
-            if (srcFaceI >= 0)
+            if (srcFacei >= 0)
             {
                 // note - reversed search from src->tgt to tgt->src
                 findNearestFace
                 (
                     this->tgtPatch_,
                     this->srcPatch_,
-                    tgtFaceI,
-                    srcFaceI
+                    tgtFacei,
+                    srcFacei
                 );
 
-                tgtAddr[tgtFaceI].append(srcFaceI);
+                tgtAddr[tgtFacei].append(srcFacei);
             }
         }
     }

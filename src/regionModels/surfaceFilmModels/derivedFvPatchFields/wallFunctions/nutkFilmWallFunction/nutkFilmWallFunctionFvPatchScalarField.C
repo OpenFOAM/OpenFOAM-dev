@@ -68,11 +68,11 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
     const modelType& filmModel =
         db().time().lookupObject<modelType>("surfaceFilmProperties");
 
-    const label filmPatchI = filmModel.regionPatchID(patchi);
+    const label filmPatchi = filmModel.regionPatchID(patchi);
 
     tmp<volScalarField> mDotFilm(filmModel.primaryMassTrans());
-    scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchI];
-    filmModel.toPrimary(filmPatchI, mDotFilmp);
+    scalarField mDotFilmp = mDotFilm().boundaryField()[filmPatchi];
+    filmModel.toPrimary(filmPatchi, mDotFilmp);
 
 
     // Retrieve RAS turbulence model
@@ -95,9 +95,9 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
 
     forAll(uTau, facei)
     {
-        label faceCellI = patch().faceCells()[facei];
+        label faceCelli = patch().faceCells()[facei];
 
-        scalar ut = Cmu25*sqrt(k[faceCellI]);
+        scalar ut = Cmu25*sqrt(k[faceCelli]);
 
         scalar yPlus = y[facei]*ut/nuw[facei];
 

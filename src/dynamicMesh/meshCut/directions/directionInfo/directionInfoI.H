@@ -87,7 +87,7 @@ inline void Foam::directionInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -103,14 +103,14 @@ inline void Foam::directionInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
 {
     if (index_ >= 0)
     {
-        const face& f = patch[patchFaceI];
+        const face& f = patch[patchFacei];
 
         index_ = (f.size() - index_) % f.size();
     }
@@ -133,8 +133,8 @@ template<class TrackingData>
 inline bool Foam::directionInfo::updateCell
 (
     const polyMesh& mesh,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const directionInfo& neighbourInfo,
     const scalar,       // tol
     TrackingData& td
@@ -146,9 +146,9 @@ inline bool Foam::directionInfo::updateCell
         return false;
     }
 
-    if (hexMatcher().isA(mesh, thisCellI))
+    if (hexMatcher().isA(mesh, thisCelli))
     {
-        const face& f = mesh.faces()[neighbourFaceI];
+        const face& f = mesh.faces()[neighbourFacei];
 
         if (neighbourInfo.index() == -2)
         {
@@ -161,7 +161,7 @@ inline bool Foam::directionInfo::updateCell
             // but not used in face.
 
             // Get first edge on face.
-            label edgeI = mesh.faceEdges()[neighbourFaceI][0];
+            label edgeI = mesh.faceEdges()[neighbourFacei][0];
 
             const edge& e = mesh.edges()[edgeI];
 
@@ -170,8 +170,8 @@ inline bool Foam::directionInfo::updateCell
                 meshTools::otherFace
                 (
                     mesh,
-                    thisCellI,
-                    neighbourFaceI,
+                    thisCelli,
+                    neighbourFacei,
                     edgeI
                 );
 
@@ -193,7 +193,7 @@ inline bool Foam::directionInfo::updateCell
             label v0 = f[neighbourInfo.index()];
             label v1 = f[(neighbourInfo.index() + 1) % f.size()];
 
-            index_ = findEdge(mesh, mesh.faceEdges()[neighbourFaceI], v0, v1);
+            index_ = findEdge(mesh, mesh.faceEdges()[neighbourFacei], v0, v1);
         }
     }
     else
@@ -214,8 +214,8 @@ template<class TrackingData>
 inline bool Foam::directionInfo::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const directionInfo& neighbourInfo,
     const scalar,   // tol
     TrackingData& td
@@ -240,8 +240,8 @@ inline bool Foam::directionInfo::updateFace
             edgeToFaceIndex
             (
                 mesh,
-                neighbourCellI,
-                thisFaceI,
+                neighbourCelli,
+                thisFacei,
                 neighbourInfo.index()
             );
     }
@@ -263,7 +263,7 @@ template<class TrackingData>
 inline bool Foam::directionInfo::updateFace
 (
     const polyMesh& mesh,
-    const label,    // thisFaceI
+    const label,    // thisFacei
     const directionInfo& neighbourInfo,
     const scalar,   // tol
     TrackingData& td

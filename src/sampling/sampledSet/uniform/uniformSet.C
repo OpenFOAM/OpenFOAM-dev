@@ -149,7 +149,7 @@ bool Foam::uniformSet::trackToBoundary
         {
             Pout<< "Searching along trajectory from "
                 << "  trackPt:" << trackPt
-                << "  trackCellI:" << singleParticle.cell()
+                << "  trackCelli:" << singleParticle.cell()
                 << "  to:" << samplePt << endl;
         }
 
@@ -164,8 +164,8 @@ bool Foam::uniformSet::trackToBoundary
             {
                 Pout<< "Result of tracking "
                     << "  trackPt:" << trackPt
-                    << "  trackCellI:" << singleParticle.cell()
-                    << "  trackFaceI:" << singleParticle.face()
+                    << "  trackCelli:" << singleParticle.cell()
+                    << "  trackFacei:" << singleParticle.face()
                     << "  onBoundary:" << singleParticle.onBoundary()
                     << "  samplePt:" << samplePt
                     << "  smallDist:" << smallDist
@@ -245,34 +245,34 @@ void Foam::uniformSet::calcSamples
     );
 
     point bPoint(GREAT, GREAT, GREAT);
-    label bFaceI = -1;
+    label bFacei = -1;
 
     if (bHits.size())
     {
         bPoint = bHits[0].hitPoint();
-        bFaceI = bHits[0].index();
+        bFacei = bHits[0].index();
     }
 
-    // Get first tracking point. Use bPoint, bFaceI if provided.
+    // Get first tracking point. Use bPoint, bFacei if provided.
 
     point trackPt;
-    label trackCellI = -1;
-    label trackFaceI = -1;
+    label trackCelli = -1;
+    label trackFacei = -1;
 
     bool isSample =
         getTrackingPoint
         (
             start_,
             bPoint,
-            bFaceI,
+            bFacei,
             smallDist,
 
             trackPt,
-            trackCellI,
-            trackFaceI
+            trackCelli,
+            trackFacei
         );
 
-    if (trackCellI == -1)
+    if (trackCelli == -1)
     {
         // Line start_ - end_ does not intersect domain at all.
         // (or is along edge)
@@ -284,8 +284,8 @@ void Foam::uniformSet::calcSamples
     if (isSample)
     {
         samplingPts.append(start_);
-        samplingCells.append(trackCellI);
-        samplingFaces.append(trackFaceI);
+        samplingCells.append(trackCelli);
+        samplingFaces.append(trackFacei);
         samplingCurveDist.append(0.0);
     }
 
@@ -308,7 +308,7 @@ void Foam::uniformSet::calcSamples
     while(true)
     {
         // Initialize tracking starting from trackPt
-        passiveParticle singleParticle(mesh(), trackPt, trackCellI);
+        passiveParticle singleParticle(mesh(), trackPt, trackCelli);
 
         bool reachedBoundary = trackToBoundary
         (
@@ -378,9 +378,9 @@ void Foam::uniformSet::calcSamples
         }
 
         // Update starting point for tracking
-        trackFaceI = bFaceI;
-        trackPt = pushIn(bPoint, trackFaceI);
-        trackCellI = getBoundaryCell(trackFaceI);
+        trackFacei = bFacei;
+        trackPt = pushIn(bPoint, trackFacei);
+        trackCelli = getBoundaryCell(trackFacei);
 
         segmentI++;
 

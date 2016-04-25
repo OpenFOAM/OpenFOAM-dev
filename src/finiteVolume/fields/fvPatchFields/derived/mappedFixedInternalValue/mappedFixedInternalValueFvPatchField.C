@@ -135,9 +135,9 @@ void Foam::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
         case mappedPatchBase::NEARESTPATCHFACE:
         case mappedPatchBase::NEARESTPATCHFACEAMI:
         {
-            const label samplePatchI = mpp.samplePolyPatch().index();
+            const label samplePatchi = mpp.samplePolyPatch().index();
             const fvPatchField<Type>& nbrPatchField =
-                this->sampleField().boundaryField()[samplePatchI];
+                this->sampleField().boundaryField()[samplePatchi];
             nbrIntFld = nbrPatchField.patchInternalField();
             mpp.distribute(nbrIntFld);
 

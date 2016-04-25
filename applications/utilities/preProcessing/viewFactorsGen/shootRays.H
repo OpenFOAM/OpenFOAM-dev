@@ -7,9 +7,9 @@ const label maxDynListLength
     viewFactorDict.lookupOrDefault<label>("maxDynListLength", 100000)
 );
 
-for (label procI = 0; procI < Pstream::nProcs(); procI++)
+for (label proci = 0; proci < Pstream::nProcs(); proci++)
 {
-    // Shoot rays from me to procI. Note that even if processor has
+    // Shoot rays from me to proci. Note that even if processor has
     // 0 faces we still need to call findLine to keep calls synced.
 
     DynamicField<point> start(coarseMesh.nFaces());
@@ -25,9 +25,9 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
     const vectorField& myArea = remoteCoarseSf[Pstream::myProcNo()];
     const labelField& myAgg = remoteCoarseAgg[Pstream::myProcNo()];
 
-    const pointField& remoteArea = remoteCoarseSf[procI];
-    const pointField& remoteFc = remoteCoarseCf[procI];
-    const labelField& remoteAgg = remoteCoarseAgg[procI];
+    const pointField& remoteArea = remoteCoarseSf[proci];
+    const pointField& remoteFc = remoteCoarseCf[proci];
+    const labelField& remoteAgg = remoteCoarseAgg[proci];
 
     label i = 0;
     label j = 0;
@@ -41,7 +41,7 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
 
             for (; j < remoteFc.size(); j++)
             {
-                if (procI != Pstream::myProcNo() || i != j)
+                if (proci != Pstream::myProcNo() || i != j)
                 {
                     const point& remFc = remoteFc[j];
                     const vector& remA = remoteArea[j];
@@ -53,11 +53,11 @@ for (label procI = 0; procI < Pstream::nProcs(); procI++)
                     {
                         start.append(fc + 0.001*d);
                         startIndex.append(i);
-                        startAgg.append(globalNumbering.toGlobal(procI, fAgg));
+                        startAgg.append(globalNumbering.toGlobal(proci, fAgg));
                         end.append(fc + 0.999*d);
-                        label globalI = globalNumbering.toGlobal(procI, j);
+                        label globalI = globalNumbering.toGlobal(proci, j);
                         endIndex.append(globalI);
-                        endAgg.append(globalNumbering.toGlobal(procI, remAgg));
+                        endAgg.append(globalNumbering.toGlobal(proci, remAgg));
                         if (startIndex.size() > maxDynListLength)
                         {
                             FatalErrorInFunction

@@ -403,9 +403,9 @@ bool Foam::edgeIntersections::offsetPerturb
         const pointIndexHit& pHit = hits[i];
 
         // Classify point on face of surface2
-        label surf2FaceI = pHit.index();
+        label surf2Facei = pHit.index();
 
-        const triSurface::FaceType& f2 = surf2.localFaces()[surf2FaceI];
+        const triSurface::FaceType& f2 = surf2.localFaces()[surf2Facei];
         const pointField& surf2Pts = surf2.localPoints();
 
         const point ctr = f2.centre(surf2Pts);

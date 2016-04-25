@@ -208,7 +208,7 @@ void Foam::cellSplitter::setRefinement
         // Add other pyramids
         for (label i = 1; i < cFaces.size(); i++)
         {
-            label addedCellI =
+            label addedCelli =
                 meshMod.setAction
                 (
                     polyAddCell
@@ -221,7 +221,7 @@ void Foam::cellSplitter::setRefinement
                     )
                 );
 
-            newCells[i] = addedCellI;
+            newCells[i] = addedCelli;
         }
 
         cellToCells.insert(celli, newCells);
@@ -469,17 +469,17 @@ void Foam::cellSplitter::updateMesh(const mapPolyMesh& morphMap)
 
     forAllConstIter(Map<label>, addedPoints_, iter)
     {
-        label oldCellI = iter.key();
+        label oldCelli = iter.key();
 
-        label newCellI = morphMap.reverseCellMap()[oldCellI];
+        label newCelli = morphMap.reverseCellMap()[oldCelli];
 
         label oldPointI = iter();
 
         label newPointI = morphMap.reversePointMap()[oldPointI];
 
-        if (newCellI >= 0 && newPointI >= 0)
+        if (newCelli >= 0 && newPointI >= 0)
         {
-            newAddedPoints.insert(newCellI, newPointI);
+            newAddedPoints.insert(newCelli, newPointI);
         }
     }
 

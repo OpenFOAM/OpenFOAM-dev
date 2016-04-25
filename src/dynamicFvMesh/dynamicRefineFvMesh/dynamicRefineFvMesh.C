@@ -237,14 +237,14 @@ Foam::dynamicRefineFvMesh::refine
         // Check map.
         for (label facei = 0; facei < nInternalFaces(); facei++)
         {
-            label oldFaceI = map().faceMap()[facei];
+            label oldFacei = map().faceMap()[facei];
 
-            if (oldFaceI >= nInternalFaces())
+            if (oldFacei >= nInternalFaces())
             {
                 FatalErrorInFunction
                     << "New internal face:" << facei
                     << " fc:" << faceCentres()[facei]
-                    << " originates from boundary oldFace:" << oldFaceI
+                    << " originates from boundary oldFace:" << oldFacei
                     << abort(FatalError);
             }
         }
@@ -286,22 +286,22 @@ Foam::dynamicRefineFvMesh::refine
 
         forAll(faceMap, facei)
         {
-            label oldFaceI = faceMap[facei];
+            label oldFacei = faceMap[facei];
 
-            if (oldFaceI >= 0)
+            if (oldFacei >= 0)
             {
-                label masterFaceI = reverseFaceMap[oldFaceI];
+                label masterFacei = reverseFaceMap[oldFacei];
 
-                if (masterFaceI < 0)
+                if (masterFacei < 0)
                 {
                     FatalErrorInFunction
                         << "Problem: should not have removed faces"
                         << " when refining."
                         << nl << "face:" << facei << abort(FatalError);
                 }
-                else if (masterFaceI != facei)
+                else if (masterFacei != facei)
                 {
-                    masterFaces.insert(masterFaceI);
+                    masterFaces.insert(masterFacei);
                 }
             }
         }
@@ -369,14 +369,14 @@ Foam::dynamicRefineFvMesh::refine
             // Recalculate new internal faces.
             for (label facei = 0; facei < nInternalFaces(); facei++)
             {
-                label oldFaceI = faceMap[facei];
+                label oldFacei = faceMap[facei];
 
-                if (oldFaceI == -1)
+                if (oldFacei == -1)
                 {
                     // Inflated/appended
                     phi[facei] = phiU[facei];
                 }
-                else if (reverseFaceMap[oldFaceI] != facei)
+                else if (reverseFaceMap[oldFacei] != facei)
                 {
                     // face-from-masterface
                     phi[facei] = phiU[facei];
@@ -396,14 +396,14 @@ Foam::dynamicRefineFvMesh::refine
 
                 forAll(patchPhi, i)
                 {
-                    label oldFaceI = faceMap[facei];
+                    label oldFacei = faceMap[facei];
 
-                    if (oldFaceI == -1)
+                    if (oldFacei == -1)
                     {
                         // Inflated/appended
                         patchPhi[i] = patchPhiU[i];
                     }
-                    else if (reverseFaceMap[oldFaceI] != facei)
+                    else if (reverseFaceMap[oldFacei] != facei)
                     {
                         // face-from-masterface
                         patchPhi[i] = patchPhiU[i];
@@ -450,8 +450,8 @@ Foam::dynamicRefineFvMesh::refine
 
         forAll(newProtectedCell, celli)
         {
-            label oldCellI = map().cellMap()[celli];
-            newProtectedCell.set(celli, protectedCell_.get(oldCellI));
+            label oldCelli = map().cellMap()[celli];
+            newProtectedCell.set(celli, protectedCell_.get(oldCelli));
         }
         protectedCell_.transfer(newProtectedCell);
     }
@@ -498,9 +498,9 @@ Foam::dynamicRefineFvMesh::unrefine
 
                 const labelList& pFaces = pointFaces()[otherPointI];
 
-                forAll(pFaces, pFaceI)
+                forAll(pFaces, pFacei)
                 {
-                    faceToSplitPoint.insert(pFaces[pFaceI], otherPointI);
+                    faceToSplitPoint.insert(pFaces[pFacei], otherPointI);
                 }
             }
         }
@@ -589,13 +589,13 @@ Foam::dynamicRefineFvMesh::unrefine
 
             forAllConstIter(Map<label>, faceToSplitPoint, iter)
             {
-                label oldFaceI = iter.key();
+                label oldFacei = iter.key();
                 label oldPointI = iter();
 
                 if (reversePointMap[oldPointI] < 0)
                 {
                     // midpoint was removed. See if face still exists.
-                    label facei = reverseFaceMap[oldFaceI];
+                    label facei = reverseFaceMap[oldFacei];
 
                     if (facei >= 0)
                     {
@@ -630,10 +630,10 @@ Foam::dynamicRefineFvMesh::unrefine
 
         forAll(newProtectedCell, celli)
         {
-            label oldCellI = map().cellMap()[celli];
-            if (oldCellI >= 0)
+            label oldCelli = map().cellMap()[celli];
+            if (oldCelli >= 0)
             {
-                newProtectedCell.set(celli, protectedCell_.get(oldCellI));
+                newProtectedCell.set(celli, protectedCell_.get(oldCelli));
             }
         }
         protectedCell_.transfer(newProtectedCell);
@@ -873,9 +873,9 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectUnrefinePoints
 
             bool hasMarked = false;
 
-            forAll(pCells, pCellI)
+            forAll(pCells, pCelli)
             {
-                if (markedCell.get(pCells[pCellI]))
+                if (markedCell.get(pCells[pCelli]))
                 {
                     hasMarked = true;
                     break;
@@ -967,9 +967,9 @@ void Foam::dynamicRefineFvMesh::checkEightAnchorPoints
     {
         const labelList& pCells = pointCells(pointI);
 
-        forAll(pCells, pCellI)
+        forAll(pCells, pCelli)
         {
-            label celli = pCells[pCellI];
+            label celli = pCells[pCelli];
 
             if (pointLevel[pointI] <= cellLevel[celli])
             {
@@ -1139,9 +1139,9 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
             }
             else
             {
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    if (faces()[cFaces[cFaceI]].size() < 4)
+                    if (faces()[cFaces[cFacei]].size() < 4)
                     {
                         if (protectedCell_.set(celli, 1))
                         {
@@ -1324,19 +1324,19 @@ bool Foam::dynamicRefineFvMesh::update()
 
                     forAll(cellMap, celli)
                     {
-                        label oldCellI = cellMap[celli];
+                        label oldCelli = cellMap[celli];
 
-                        if (oldCellI < 0)
+                        if (oldCelli < 0)
                         {
                             newRefineCell.set(celli, 1);
                         }
-                        else if (reverseCellMap[oldCellI] != celli)
+                        else if (reverseCellMap[oldCelli] != celli)
                         {
                             newRefineCell.set(celli, 1);
                         }
                         else
                         {
-                            newRefineCell.set(celli, refineCell.get(oldCellI));
+                            newRefineCell.set(celli, refineCell.get(oldCelli));
                         }
                     }
                     refineCell.transfer(newRefineCell);

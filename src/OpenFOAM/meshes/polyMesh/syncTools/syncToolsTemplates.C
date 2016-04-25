@@ -1347,11 +1347,11 @@ void Foam::syncTools::syncBoundaryFaceList
 
                 top(procPatch, nbrPatchInfo);
 
-                label bFaceI = procPatch.start()-mesh.nInternalFaces();
+                label bFacei = procPatch.start()-mesh.nInternalFaces();
 
                 forAll(nbrPatchInfo, i)
                 {
-                    cop(faceValues[bFaceI++], nbrPatchInfo[i]);
+                    cop(faceValues[bFacei++], nbrPatchInfo[i]);
                 }
             }
         }
@@ -1472,10 +1472,10 @@ void Foam::syncTools::syncFaceList
                 forAll(procPatch, i)
                 {
                     unsigned int patchVal = patchInfo[i];
-                    label meshFaceI = procPatch.start()+i;
-                    unsigned int faceVal = faceValues[meshFaceI];
+                    label meshFacei = procPatch.start()+i;
+                    unsigned int faceVal = faceValues[meshFacei];
                     cop(faceVal, patchVal);
-                    faceValues[meshFaceI] = faceVal;
+                    faceValues[meshFacei] = faceVal;
                 }
             }
         }
@@ -1542,8 +1542,8 @@ void Foam::syncTools::swapBoundaryCellList
         const labelUList& faceCells = pp.faceCells();
         forAll(faceCells, i)
         {
-            label bFaceI = pp.start()+i-mesh.nInternalFaces();
-            neighbourCellData[bFaceI] = cellData[faceCells[i]];
+            label bFacei = pp.start()+i-mesh.nInternalFaces();
+            neighbourCellData[bFacei] = cellData[faceCells[i]];
         }
     }
     syncTools::swapBoundaryFaceList(mesh, neighbourCellData);

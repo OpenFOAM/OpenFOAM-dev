@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,13 +205,13 @@ void Foam::ManualInjection<CloudType>::setPositionAndCell
     const scalar,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
     position = positions_[parcelI];
     cellOwner = injectorCells_[parcelI];
-    tetFaceI = injectorTetFaces_[parcelI];
+    tetFacei = injectorTetFaces_[parcelI];
     tetPtI = injectorTetPts_[parcelI];
 }
 

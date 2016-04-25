@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,11 +95,11 @@ private:
         );
 
         //- Walk from face across connected faces. Change orientation to be
-        //  consistent with startFaceI.
+        //  consistent with startFacei.
         static void walkSurface
         (
             const triSurface& s,
-            const label startFaceI,
+            const label startFacei,
             labelList& flipState
         );
 
@@ -110,7 +110,7 @@ private:
             const triSurface&,
             const point& outsidePoint,
             const bool orientOutside,
-            const label nearestFaceI,
+            const label nearestFacei,
             const point& nearestPt,
             labelList& flipState
         );
@@ -123,7 +123,7 @@ private:
             const labelList& faceZone,
             const label zoneI,
             const point& visiblePoint,
-            label& zoneFaceI,
+            label& zoneFacei,
             bool& isOutside
         );
 

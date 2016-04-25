@@ -164,7 +164,7 @@ class surfaceIntersection
         //static pointIndexHit faceEdgeIntersection
         //(
         //    const triSurface&,
-        //    const label hitFaceI,
+        //    const label hitFacei,
         //
         //    const vector& n,
         //    const point& eStart,

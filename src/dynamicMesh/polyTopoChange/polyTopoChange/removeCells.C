@@ -293,7 +293,7 @@ void Foam::removeCells::setRefinement
                         << abort(FatalError);
                 }
 
-                // nei is remaining cell. FaceI becomes external cell
+                // nei is remaining cell. Facei becomes external cell
 
                 label zoneID = faceZones.whichZone(facei);
                 bool zoneFlip = false;
@@ -342,7 +342,7 @@ void Foam::removeCells::setRefinement
             //    << " fc:" << mesh_.faceCentres()[facei]
             //    << " into patch " << newPatchID[facei] << endl;
 
-            // own is remaining cell. FaceI becomes external cell.
+            // own is remaining cell. Facei becomes external cell.
             label zoneID = faceZones.whichZone(facei);
             bool zoneFlip = false;
 

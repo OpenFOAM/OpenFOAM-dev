@@ -109,9 +109,9 @@ void Foam::channelIndex::walkOppositeFaces
             {
                 const cell& ownCell = cells[mesh.faceOwner()[facei]];
 
-                label oppositeFaceI = ownCell.opposingFaceLabel(facei, faces);
+                label oppositeFacei = ownCell.opposingFaceLabel(facei, faces);
 
-                if (oppositeFaceI == -1)
+                if (oppositeFacei == -1)
                 {
                     FatalErrorInFunction
                         << "Face:" << facei << " owner cell:" << ownCell
@@ -119,10 +119,10 @@ void Foam::channelIndex::walkOppositeFaces
                 }
                 else
                 {
-                    if (!blockedFace[oppositeFaceI])
+                    if (!blockedFace[oppositeFacei])
                     {
-                        blockedFace[oppositeFaceI] = true;
-                        newFrontFaces.append(oppositeFaceI);
+                        blockedFace[oppositeFacei] = true;
+                        newFrontFaces.append(oppositeFacei);
                     }
                 }
             }
@@ -131,9 +131,9 @@ void Foam::channelIndex::walkOppositeFaces
             {
                 const cell& neiCell = mesh.cells()[mesh.faceNeighbour()[facei]];
 
-                label oppositeFaceI = neiCell.opposingFaceLabel(facei, faces);
+                label oppositeFacei = neiCell.opposingFaceLabel(facei, faces);
 
-                if (oppositeFaceI == -1)
+                if (oppositeFacei == -1)
                 {
                     FatalErrorInFunction
                         << "Face:" << facei << " neighbour cell:" << neiCell
@@ -141,10 +141,10 @@ void Foam::channelIndex::walkOppositeFaces
                 }
                 else
                 {
-                    if (!blockedFace[oppositeFaceI])
+                    if (!blockedFace[oppositeFacei])
                     {
-                        blockedFace[oppositeFaceI] = true;
-                        newFrontFaces.append(oppositeFaceI);
+                        blockedFace[oppositeFacei] = true;
+                        newFrontFaces.append(oppositeFacei);
                     }
                 }
             }

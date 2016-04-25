@@ -118,8 +118,8 @@ void rewriteBoundary
 
 
     // Add new entries
-    label addedPatchI = nOldPatches;
-    label newPatchI = 0;
+    label addedPatchi = nOldPatches;
+    label newPatchi = 0;
     forAll(oldPatches, patchi)
     {
         const dictionary& patchDict = oldPatches[patchi].dict();
@@ -134,7 +134,7 @@ void rewriteBoundary
             if (patchDict.found("neighbourPatch"))
             {
                 patches.set(patchi, oldPatches.set(patchi, NULL));
-                oldToNew[patchi] = newPatchI++;
+                oldToNew[patchi] = newPatchi++;
 
                 // Check if patches come from automatic conversion
                 word oldName;
@@ -182,7 +182,7 @@ void rewriteBoundary
 
                 // Change entry on this side
                 patches.set(patchi, oldPatches.set(patchi, NULL));
-                oldToNew[patchi] = newPatchI++;
+                oldToNew[patchi] = newPatchi++;
                 dictionary& thisPatchDict = patches[patchi].dict();
                 thisPatchDict.add("neighbourPatch", nbrName);
                 thisPatchDict.set("nFaces", nFaces/2);
@@ -191,7 +191,7 @@ void rewriteBoundary
                 // Add entry on other side
                 patches.set
                 (
-                    addedPatchI,
+                    addedPatchi,
                     new dictionaryEntry
                     (
                         nbrName,
@@ -199,12 +199,12 @@ void rewriteBoundary
                         patchDict
                     )
                 );
-                oldToNew[addedPatchI] = newPatchI++;
-                dictionary& nbrPatchDict = patches[addedPatchI].dict();
+                oldToNew[addedPatchi] = newPatchi++;
+                dictionary& nbrPatchDict = patches[addedPatchi].dict();
                 nbrPatchDict.set("neighbourPatch", thisName);
                 nbrPatchDict.set("nFaces", nFaces/2);
                 nbrPatchDict.set("startFace", startFace+nFaces/2);
-                patches[addedPatchI].keyword() = nbrName;
+                patches[addedPatchi].keyword() = nbrName;
 
                 Info<< "Replaced with patches" << nl
                     << patches[patchi].keyword() << " with" << nl
@@ -213,7 +213,7 @@ void rewriteBoundary
                     << nl
                     << "    startFace : "
                     << readLabel(thisPatchDict.lookup("startFace")) << nl
-                    << patches[addedPatchI].keyword() << " with" << nl
+                    << patches[addedPatchi].keyword() << " with" << nl
                     << "    nFaces    : "
                     << readLabel(nbrPatchDict.lookup("nFaces"))
                     << nl
@@ -221,13 +221,13 @@ void rewriteBoundary
                     << readLabel(nbrPatchDict.lookup("startFace"))
                     << nl << endl;
 
-                addedPatchI++;
+                addedPatchi++;
             }
         }
         else
         {
             patches.set(patchi, oldPatches.set(patchi, NULL));
-            oldToNew[patchi] = newPatchI++;
+            oldToNew[patchi] = newPatchi++;
         }
     }
 

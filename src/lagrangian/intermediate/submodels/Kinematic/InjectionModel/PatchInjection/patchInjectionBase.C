@@ -152,7 +152,7 @@ void Foam::patchInjectionBase::setPositionAndCell
     cachedRandom& rnd,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
@@ -168,21 +168,21 @@ void Foam::patchInjectionBase::setPositionAndCell
     if (cellOwners_.size() > 0)
     {
         // Determine which processor to inject from
-        label procI = 0;
+        label proci = 0;
         forAllReverse(sumTriMagSf_, i)
         {
             if (areaFraction >= sumTriMagSf_[i])
             {
-                procI = i;
+                proci = i;
                 break;
             }
         }
 
-        if (Pstream::myProcNo() == procI)
+        if (Pstream::myProcNo() == proci)
         {
             // Find corresponding decomposed face triangle
             label triI = 0;
-            scalar offset = sumTriMagSf_[procI];
+            scalar offset = sumTriMagSf_[proci];
             forAllReverse(triCumulativeMagSf_, i)
             {
                 if (areaFraction > triCumulativeMagSf_[i] + offset)
@@ -215,13 +215,13 @@ void Foam::patchInjectionBase::setPositionAndCell
             // first face of the cell as the tetFace and the first point after
             // the base point on the face as the tetPt.  The tracking will pick
             // the cell consistent with the motion in the first tracking step
-            tetFaceI = mesh.cells()[cellOwner][0];
+            tetFacei = mesh.cells()[cellOwner][0];
             tetPtI = 1;
         }
         else
         {
             cellOwner = -1;
-            tetFaceI = -1;
+            tetFacei = -1;
             tetPtI = -1;
 
             // Dummy position
@@ -231,7 +231,7 @@ void Foam::patchInjectionBase::setPositionAndCell
     else
     {
         cellOwner = -1;
-        tetFaceI = -1;
+        tetFacei = -1;
         tetPtI = -1;
 
         // Dummy position

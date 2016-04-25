@@ -1025,10 +1025,10 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledPoints() const
         // From local point to nbrPatch or -1.
         labelList coupledPoint(nPoints(), -1);
 
-        forAll(*this, patchFaceI)
+        forAll(*this, patchFacei)
         {
-            const face& fA = localFaces()[patchFaceI];
-            const face& fB = nbrLocalFaces[patchFaceI];
+            const face& fA = localFaces()[patchFacei];
+            const face& fB = nbrLocalFaces[patchFacei];
 
             forAll(fA, indexA)
             {
@@ -1111,9 +1111,9 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledEdges() const
         // Map from edge on A to points (in B indices)
         EdgeMap<label> edgeMap(nEdges());
 
-        forAll(*this, patchFaceI)
+        forAll(*this, patchFacei)
         {
-            const labelList& fEdges = faceEdges()[patchFaceI];
+            const labelList& fEdges = faceEdges()[patchFacei];
 
             forAll(fEdges, i)
             {
@@ -1146,9 +1146,9 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledEdges() const
         edgeList& coupledEdges = *coupledEdgesPtr_;
         label coupleI = 0;
 
-        forAll(neighbPatch, patchFaceI)
+        forAll(neighbPatch, patchFacei)
         {
-            const labelList& fEdges = neighbPatch.faceEdges()[patchFaceI];
+            const labelList& fEdges = neighbPatch.faceEdges()[patchFacei];
 
             forAll(fEdges, i)
             {
@@ -1284,9 +1284,9 @@ bool Foam::cyclicPolyPatch::order
     {
         // Do nothing (i.e. identical mapping, zero rotation).
         // See comment at top.
-        forAll(faceMap, patchFaceI)
+        forAll(faceMap, patchFacei)
         {
-            faceMap[patchFaceI] = patchFaceI;
+            faceMap[patchFacei] = patchFacei;
         }
 
         return false;
@@ -1392,32 +1392,32 @@ bool Foam::cyclicPolyPatch::order
 
 
         // Set rotation.
-        forAll(faceMap, oldFaceI)
+        forAll(faceMap, oldFacei)
         {
-            // The face f will be at newFaceI (after morphing) and we want its
+            // The face f will be at newFacei (after morphing) and we want its
             // anchorPoint (= f[0]) to align with the anchorpoint for the
             // corresponding face on the other side.
 
-            label newFaceI = faceMap[oldFaceI];
+            label newFacei = faceMap[oldFacei];
 
-            const point& wantedAnchor = anchors0[newFaceI];
+            const point& wantedAnchor = anchors0[newFacei];
 
-            rotation[newFaceI] = getRotation
+            rotation[newFacei] = getRotation
             (
                 pp.points(),
-                pp[oldFaceI],
+                pp[oldFacei],
                 wantedAnchor,
-                tols[oldFaceI]
+                tols[oldFacei]
             );
 
-            if (rotation[newFaceI] == -1)
+            if (rotation[newFacei] == -1)
             {
                 SeriousErrorInFunction
                     << "in patch " << name()
                     << " : "
-                    << "Cannot find point on face " << pp[oldFaceI]
+                    << "Cannot find point on face " << pp[oldFacei]
                     << " with vertices "
-                    << IndirectList<point>(pp.points(), pp[oldFaceI])()
+                    << IndirectList<point>(pp.points(), pp[oldFacei])()
                     << " that matches point " << wantedAnchor
                     << " when matching the halves of processor patch " << name()
                     << "Continuing with incorrect face ordering from now on!"

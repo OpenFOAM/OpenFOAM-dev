@@ -321,9 +321,9 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
 
         os << "numsurf " << patch.localFaces().size() << endl;
 
-        forAll(patch.localFaces(), localFaceI)
+        forAll(patch.localFaces(), localFacei)
         {
-            const Face& f = patch.localFaces()[localFaceI];
+            const Face& f = patch.localFaces()[localFacei];
 
             os  << "SURF 0x20" << nl          // polygon
                 << "mat " << zoneI << nl
@@ -386,7 +386,7 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
             // Create zone with only zone faces included for ease of addressing
             labelHashSet include(surf.size());
 
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const label facei = faceMap[faceIndex++];
                 include.insert(facei);
@@ -406,9 +406,9 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
 
             os << "numsurf " << subm.localFaces().size() << endl;
 
-            forAll(subm.localFaces(), localFaceI)
+            forAll(subm.localFaces(), localFacei)
             {
-                const Face& f = subm.localFaces()[localFaceI];
+                const Face& f = subm.localFaces()[localFacei];
 
                 os  << "SURF 0x20" << nl          // polygon
                     << "mat " << zoneI << nl

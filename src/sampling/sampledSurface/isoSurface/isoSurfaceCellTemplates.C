@@ -421,9 +421,9 @@ void Foam::isoSurfaceCell::generateTriPoints
             }
             else
             {
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    label facei = cFaces[cFaceI];
+                    label facei = cFaces[cFacei];
                     const face& f = mesh_.faces()[facei];
 
                     label fp0 = mesh_.tetBasePtIs()[facei];

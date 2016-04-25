@@ -555,8 +555,8 @@ Foam::UnsortedMeshedSurface<Face>::subsetMesh
 
     forAll(faceMap, facei)
     {
-        const label origFaceI = faceMap[facei];
-        newFaces[facei] = Face(locFaces[origFaceI]);
+        const label origFacei = faceMap[facei];
+        newFaces[facei] = Face(locFaces[origFacei]);
 
         // Renumber labels for face
         Face& f = newFaces[facei];
@@ -565,7 +565,7 @@ Foam::UnsortedMeshedSurface<Face>::subsetMesh
             f[fp] = oldToNew[f[fp]];
         }
 
-        newZones[facei] = zoneIds_[origFaceI];
+        newZones[facei] = zoneIds_[origFacei];
     }
     oldToNew.clear();
 

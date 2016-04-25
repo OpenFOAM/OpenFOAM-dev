@@ -373,7 +373,7 @@ void Foam::topoCellLooper::walkSplitHex
 (
     const label celli,
     const cellFeatures& features,
-    const label fromFaceI,
+    const label fromFacei,
     const label fromEdgeI,
     const label fromVertI,
 
@@ -382,7 +382,7 @@ void Foam::topoCellLooper::walkSplitHex
 ) const
 {
     // Work vars giving position on cell
-    label facei = fromFaceI;
+    label facei = fromFacei;
     label edgeI = fromEdgeI;
     label vertI = fromVertI;
 
@@ -517,17 +517,17 @@ void Foam::topoCellLooper::walkSplitHex
                     // Cross to other face (there is only one since no edges)
                     const labelList& pFaces = mesh().pointFaces()[vertI];
 
-                    forAll(pFaces, pFaceI)
+                    forAll(pFaces, pFacei)
                     {
-                        label thisFaceI = pFaces[pFaceI];
+                        label thisFacei = pFaces[pFacei];
 
                         if
                         (
-                            (thisFaceI != facei)
-                         && meshTools::faceOnCell(mesh(), celli, thisFaceI)
+                            (thisFacei != facei)
+                         && meshTools::faceOnCell(mesh(), celli, thisFacei)
                         )
                         {
-                            facei = thisFaceI;
+                            facei = thisFacei;
                             break;
                         }
                     }

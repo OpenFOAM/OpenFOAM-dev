@@ -90,17 +90,17 @@ void Foam::multiLevelDecomp::subsetGlobalCellCells
     cutConnections.setSize(nDomains);
     cutConnections = 0;
 
-    forAll(subCellCells, subCellI)
+    forAll(subCellCells, subCelli)
     {
-        labelList& cCells = subCellCells[subCellI];
+        labelList& cCells = subCellCells[subCelli];
 
         // Keep the connections to valid mapped cells
         label newI = 0;
         forAll(cCells, i)
         {
             // Get locally-compact cell index of neighbouring cell
-            label nbrCellI = oldToNew[cCells[i]];
-            if (nbrCellI == -1)
+            label nbrCelli = oldToNew[cCells[i]];
+            if (nbrCelli == -1)
             {
                 cutConnections[allDist[cCells[i]]]++;
             }
@@ -109,12 +109,12 @@ void Foam::multiLevelDecomp::subsetGlobalCellCells
                 // Reconvert local cell index into global one
 
                 // Get original neighbour
-                label celli = set[subCellI];
-                label oldNbrCellI = cellCells[celli][i];
+                label celli = set[subCelli];
+                label oldNbrCelli = cellCells[celli][i];
                 // Get processor from original neighbour
-                label procI = globalCells.whichProcID(oldNbrCellI);
+                label proci = globalCells.whichProcID(oldNbrCelli);
                 // Convert into global compact numbering
-                cCells[newI++] = globalSubCells.toGlobal(procI, nbrCellI);
+                cCells[newI++] = globalSubCells.toGlobal(proci, nbrCelli);
             }
         }
         cCells.setSize(newI);

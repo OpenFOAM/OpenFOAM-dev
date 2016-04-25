@@ -484,15 +484,15 @@ Foam::scalarField Foam::edgeCollapser::calcTargetFaceSizes() const
     const label nBoundaryFaces = mesh_.nFaces() - mesh_.nInternalFaces();
 
     // Calculate face size from cell volumes for internal faces
-    for (label intFaceI = 0; intFaceI < mesh_.nInternalFaces(); ++intFaceI)
+    for (label intFacei = 0; intFacei < mesh_.nInternalFaces(); ++intFacei)
     {
-        const scalar cellOwnerVol = max(0.0, V[cellOwner[intFaceI]]);
-        const scalar cellNeighbourVol = max(0.0, V[cellNeighbour[intFaceI]]);
+        const scalar cellOwnerVol = max(0.0, V[cellOwner[intFacei]]);
+        const scalar cellNeighbourVol = max(0.0, V[cellNeighbour[intFacei]]);
 
         scalar targetFaceSizeA = Foam::pow(cellOwnerVol, 1.0/3.0);
         scalar targetFaceSizeB = Foam::pow(cellNeighbourVol, 1.0/3.0);
 
-        targetFaceSizes[intFaceI] = 0.5*(targetFaceSizeA + targetFaceSizeB);
+        targetFaceSizes[intFacei] = 0.5*(targetFaceSizeA + targetFaceSizeB);
     }
 
     scalarField neiCellVolumes(nBoundaryFaces, -1);
@@ -502,7 +502,7 @@ Foam::scalarField Foam::edgeCollapser::calcTargetFaceSizes() const
     {
         const polyPatch& patch = patches[patchi];
 
-        label bFaceI = patch.start() - mesh_.nInternalFaces();
+        label bFacei = patch.start() - mesh_.nInternalFaces();
 
         if (patch.coupled())
         {
@@ -512,19 +512,19 @@ Foam::scalarField Foam::edgeCollapser::calcTargetFaceSizes() const
 
             forAll(faceCells, facei)
             {
-                neiCellVolumes[bFaceI++] = max(0.0, V[faceCells[facei]]);
+                neiCellVolumes[bFacei++] = max(0.0, V[faceCells[facei]]);
             }
         }
         else
         {
             // Normal boundary face: Just use owner cell volume to calculate
             // the target face size
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
-                const label extFaceI = patchFaceI + patch.start();
-                const scalar cellOwnerVol = max(0.0, V[cellOwner[extFaceI]]);
+                const label extFacei = patchFacei + patch.start();
+                const scalar cellOwnerVol = max(0.0, V[cellOwner[extFacei]]);
 
-                targetFaceSizes[extFaceI] = Foam::pow(cellOwnerVol, 1.0/3.0);
+                targetFaceSizes[extFacei] = Foam::pow(cellOwnerVol, 1.0/3.0);
             }
         }
     }
@@ -535,20 +535,20 @@ Foam::scalarField Foam::edgeCollapser::calcTargetFaceSizes() const
     {
         const polyPatch& patch = patches[patchi];
 
-        label bFaceI = patch.start() - mesh_.nInternalFaces();
+        label bFacei = patch.start() - mesh_.nInternalFaces();
 
         if (patch.coupled())
         {
-            forAll(patch, patchFaceI)
+            forAll(patch, patchFacei)
             {
-                const label localFaceI = patchFaceI + patch.start();
-                const scalar cellOwnerVol = max(0.0, V[cellOwner[localFaceI]]);
-                const scalar cellNeighbourVol = neiCellVolumes[bFaceI++];
+                const label localFacei = patchFacei + patch.start();
+                const scalar cellOwnerVol = max(0.0, V[cellOwner[localFacei]]);
+                const scalar cellNeighbourVol = neiCellVolumes[bFacei++];
 
                 scalar targetFaceSizeA = Foam::pow(cellOwnerVol, 1.0/3.0);
                 scalar targetFaceSizeB = Foam::pow(cellNeighbourVol, 1.0/3.0);
 
-                targetFaceSizes[localFaceI]
+                targetFaceSizes[localFacei]
                     = 0.5*(targetFaceSizeA + targetFaceSizeB);
             }
         }
@@ -1577,9 +1577,9 @@ bool Foam::edgeCollapser::setRefinement
         {
             const labelList& changedFaces = pointFaces[pointI];
 
-            forAll(changedFaces, changedFaceI)
+            forAll(changedFaces, changedFacei)
             {
-                label facei = changedFaces[changedFaceI];
+                label facei = changedFaces[changedFacei];
 
                 if (!doneFace[facei])
                 {
@@ -2108,9 +2108,9 @@ Foam::labelPair Foam::edgeCollapser::markFaceZoneEdges
 //
 //        bool coupled = false;
 //
-//        forAll(eFaces, eFaceI)
+//        forAll(eFaces, eFacei)
 //        {
-//            const label eFaceIndex = eFaces[eFaceI];
+//            const label eFaceIndex = eFaces[eFacei];
 //
 //            if (mesh_.isInternalFace(eFaceIndex))
 //            {

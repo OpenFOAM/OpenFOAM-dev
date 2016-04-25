@@ -174,11 +174,11 @@ void Foam::mappedPatchBase::collectSamples
         patchFaceProcs.setSize(patchFaces.size());
 
         label sampleI = 0;
-        forAll(nPerProc, procI)
+        forAll(nPerProc, proci)
         {
-            for (label i = 0; i < nPerProc[procI]; i++)
+            for (label i = 0; i < nPerProc[proci]; i++)
             {
-                patchFaceProcs[sampleI++] = procI;
+                patchFaceProcs[sampleI++] = proci;
             }
         }
     }
@@ -483,11 +483,11 @@ void Foam::mappedPatchBase::findSamples
 
         forAll(nearest, sampleI)
         {
-            label procI = nearest[sampleI].second().second();
+            label proci = nearest[sampleI].second().second();
             label localI = nearest[sampleI].first().index();
 
             Info<< "    " << sampleI << " coord:"<< samples[sampleI]
-                << " found on processor:" << procI
+                << " found on processor:" << proci
                 << " in local cell/face/point:" << localI
                 << " with location:" << nearest[sampleI].first().rawPoint()
                 << endl;
@@ -702,26 +702,26 @@ void Foam::mappedPatchBase::calcMapping() const
     labelListList& subMap = mapPtr_().subMap();
     labelListList& constructMap = mapPtr_().constructMap();
 
-    forAll(subMap, procI)
+    forAll(subMap, proci)
     {
-        subMap[procI] = UIndirectList<label>
+        subMap[proci] = UIndirectList<label>
         (
             sampleIndices,
-            subMap[procI]
+            subMap[proci]
         );
-        constructMap[procI] = UIndirectList<label>
+        constructMap[proci] = UIndirectList<label>
         (
             patchFaces,
-            constructMap[procI]
+            constructMap[proci]
         );
 
         //if (debug)
         //{
-        //    Pout<< "To proc:" << procI << " sending values of cells/faces:"
-        //        << subMap[procI] << endl;
-        //    Pout<< "From proc:" << procI
+        //    Pout<< "To proc:" << proci << " sending values of cells/faces:"
+        //        << subMap[proci] << endl;
+        //    Pout<< "From proc:" << proci
         //        << " receiving values of patch faces:"
-        //        << constructMap[procI] << endl;
+        //        << constructMap[proci] << endl;
         //}
     }
 
@@ -732,9 +732,9 @@ void Foam::mappedPatchBase::calcMapping() const
     {
         // Check that all elements get a value.
         PackedBoolList used(patch_.size());
-        forAll(constructMap, procI)
+        forAll(constructMap, proci)
         {
-            const labelList& map = constructMap[procI];
+            const labelList& map = constructMap[proci];
 
             forAll(map, i)
             {

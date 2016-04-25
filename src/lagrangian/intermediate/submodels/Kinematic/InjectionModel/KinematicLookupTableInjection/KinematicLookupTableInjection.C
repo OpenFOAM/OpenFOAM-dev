@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ void Foam::KinematicLookupTableInjection<CloudType>::setPositionAndCell
     const scalar time,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
@@ -192,7 +192,7 @@ void Foam::KinematicLookupTableInjection<CloudType>::setPositionAndCell
 
     position = injectors_[injectorI].x();
     cellOwner = injectorCells_[injectorI];
-    tetFaceI = injectorTetFaces_[injectorI];
+    tetFacei = injectorTetFaces_[injectorI];
     tetPtI = injectorTetPts_[injectorI];
 }
 

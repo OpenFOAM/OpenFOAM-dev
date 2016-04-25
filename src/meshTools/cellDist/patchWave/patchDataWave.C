@@ -48,17 +48,17 @@ void Foam::patchDataWave<TransferType>::setChangedFaces
 
             const Field<Type>& patchField = initialPatchValuePtrs_[patchi];
 
-            forAll(patch.faceCentres(), patchFaceI)
+            forAll(patch.faceCentres(), patchFacei)
             {
-                label meshFaceI = patch.start() + patchFaceI;
+                label meshFacei = patch.start() + patchFacei;
 
-                changedFaces[nChangedFaces] = meshFaceI;
+                changedFaces[nChangedFaces] = meshFacei;
 
                 faceDist[nChangedFaces] =
                     TransferType
                     (
-                        patch.faceCentres()[patchFaceI],
-                        patchField[patchFaceI],
+                        patch.faceCentres()[patchFacei],
+                        patchField[patchFacei],
                         0.0
                     );
 
@@ -132,28 +132,28 @@ Foam::label Foam::patchDataWave<TransferType>::getValues
         Field<Type>& patchDataField = *patchDataFieldPtr;
 
         // Copy distance and data
-        forAll(patchField, patchFaceI)
+        forAll(patchField, patchFacei)
         {
-            label meshFaceI = patch.start() + patchFaceI;
+            label meshFacei = patch.start() + patchFacei;
 
-            scalar dist = faceInfo[meshFaceI].distSqr();
+            scalar dist = faceInfo[meshFacei].distSqr();
 
-            if (faceInfo[meshFaceI].valid(waveInfo.data()))
+            if (faceInfo[meshFacei].valid(waveInfo.data()))
             {
                 // Adding SMALL to avoid problems with /0 in the turbulence
                 // models
-                patchField[patchFaceI] = Foam::sqrt(dist) + SMALL;
+                patchField[patchFacei] = Foam::sqrt(dist) + SMALL;
 
-                patchDataField[patchFaceI] = faceInfo[meshFaceI].data();
+                patchDataField[patchFacei] = faceInfo[meshFacei].data();
             }
             else
             {
                 // Illegal/unset value. What to do with data?
 
-                patchField[patchFaceI] = mag(dist);
+                patchField[patchFacei] = mag(dist);
 
-                //patchDataField[patchFaceI] = point::max;
-                patchDataField[patchFaceI] = faceInfo[meshFaceI].data();
+                //patchDataField[patchFacei] = point::max;
+                patchDataField[patchFacei] = faceInfo[meshFacei].data();
 
                 nIllegal++;
             }
@@ -263,9 +263,9 @@ void Foam::patchDataWave<TransferType>::correct()
 
         const labelList wallCells(nearestFace.toc());
 
-        forAll(wallCells, wallCellI)
+        forAll(wallCells, wallCelli)
         {
-            label celli = wallCells[wallCellI];
+            label celli = wallCells[wallCelli];
 
             label facei = nearestFace[celli];
 

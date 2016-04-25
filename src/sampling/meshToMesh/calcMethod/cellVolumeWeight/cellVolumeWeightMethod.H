@@ -85,8 +85,8 @@ protected:
         void setNextCells
         (
             label& startSeedI,
-            label& srcCellI,
-            label& tgtCellI,
+            label& srcCelli,
+            label& tgtCelli,
             const labelList& srcCellIDs,
             const boolList& mapFlag,
             const DynamicList<label>& visitedCells,

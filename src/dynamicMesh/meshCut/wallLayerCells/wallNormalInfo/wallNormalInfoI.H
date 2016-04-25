@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ inline void Foam::wallNormalInfo::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -138,7 +138,7 @@ inline void Foam::wallNormalInfo::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -150,8 +150,8 @@ template<class TrackingData>
 inline bool Foam::wallNormalInfo::updateCell
 (
     const polyMesh&,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const wallNormalInfo& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -166,8 +166,8 @@ template<class TrackingData>
 inline bool Foam::wallNormalInfo::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const wallNormalInfo& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -182,7 +182,7 @@ template<class TrackingData>
 inline bool Foam::wallNormalInfo::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
+    const label thisFacei,
     const wallNormalInfo& neighbourWallInfo,
     const scalar tol,
     TrackingData& td

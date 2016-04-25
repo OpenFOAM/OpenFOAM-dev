@@ -160,7 +160,7 @@ void Foam::fileFormats::TRIsurfaceFormat<Face>::write
 
         if (useFaceMap)
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, pointLst, f, zoneI);
@@ -168,7 +168,7 @@ void Foam::fileFormats::TRIsurfaceFormat<Face>::write
         }
         else
         {
-            forAll(zone, localFaceI)
+            forAll(zone, localFacei)
             {
                 const Face& f = faceLst[faceIndex++];
                 writeShell(os, pointLst, f, zoneI);
@@ -215,7 +215,7 @@ void Foam::fileFormats::TRIsurfaceFormat<Face>::write
         label faceIndex = 0;
         forAll(zoneLst, zoneI)
         {
-            forAll(zoneLst[zoneI], localFaceI)
+            forAll(zoneLst[zoneI], localFacei)
             {
                 const Face& f = faceLst[faceMap[faceIndex++]];
                 writeShell(os, pointLst, f, zoneI);

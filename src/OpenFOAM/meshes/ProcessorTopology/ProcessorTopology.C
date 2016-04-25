@@ -72,11 +72,11 @@ Foam::labelList Foam::ProcessorTopology<Container, ProcPatch>::procNeighbours
 
     nNeighbours = 0;
 
-    forAll(isNeighbourProc, procI)
+    forAll(isNeighbourProc, proci)
     {
-        if (isNeighbourProc[procI])
+        if (isNeighbourProc[proci])
         {
-            neighbours[nNeighbours++] = procI;
+            neighbours[nNeighbours++] = proci;
         }
     }
 
@@ -149,21 +149,21 @@ Foam::ProcessorTopology<Container, ProcPatch>::ProcessorTopology
         // to determine the schedule. Each processor pair stands for both
         // send and receive.
         label nComms = 0;
-        forAll(*this, procI)
+        forAll(*this, proci)
         {
-            nComms += operator[](procI).size();
+            nComms += operator[](proci).size();
         }
         DynamicList<labelPair> comms(nComms);
 
-        forAll(*this, procI)
+        forAll(*this, proci)
         {
-            const labelList& nbrs = operator[](procI);
+            const labelList& nbrs = operator[](proci);
 
             forAll(nbrs, i)
             {
-                if (procI < nbrs[i])
+                if (proci < nbrs[i])
                 {
-                    comms.append(labelPair(procI, nbrs[i]));
+                    comms.append(labelPair(proci, nbrs[i]));
                 }
             }
         }

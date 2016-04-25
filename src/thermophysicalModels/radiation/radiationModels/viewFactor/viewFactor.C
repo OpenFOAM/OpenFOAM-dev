@@ -55,11 +55,11 @@ void Foam::radiation::viewFactor::initialise()
     forAll(Qrp, patchi)
     {
         //const polyPatch& pp = mesh_.boundaryMesh()[patchi];
-        const fvPatchScalarField& QrPatchI = Qrp[patchi];
+        const fvPatchScalarField& QrPatchi = Qrp[patchi];
 
-        if ((isA<fixedValueFvPatchScalarField>(QrPatchI)))
+        if ((isA<fixedValueFvPatchScalarField>(QrPatchi)))
         {
-            selectedPatches_[count] = QrPatchI.patch().index();
+            selectedPatches_[count] = QrPatchi.patch().index();
             nLocalCoarseFaces_ += coarsePatches[patchi].size();
             count++;
         }
@@ -182,14 +182,14 @@ void Foam::radiation::viewFactor::initialise()
                 << "Insert elements in the matrix..." << endl;
         }
 
-        for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
             insertMatrixElements
             (
                 globalNumbering,
-                procI,
-                globalFaceFacesProc[procI],
-                F[procI],
+                proci,
+                globalFaceFacesProc[proci],
+                F[proci],
                 Fmatrix_()
             );
         }
@@ -371,7 +371,7 @@ bool Foam::radiation::viewFactor::read()
 void Foam::radiation::viewFactor::insertMatrixElements
 (
     const globalIndex& globalNumbering,
-    const label procI,
+    const label proci,
     const labelListList& globalFaceFaces,
     const scalarListList& viewFactors,
     scalarSquareMatrix& Fmatrix
@@ -382,7 +382,7 @@ void Foam::radiation::viewFactor::insertMatrixElements
         const scalarList& vf = viewFactors[facei];
         const labelList& globalFaces = globalFaceFaces[facei];
 
-        label globalI = globalNumbering.toGlobal(procI, facei);
+        label globalI = globalNumbering.toGlobal(proci, facei);
         forAll(globalFaces, i)
         {
             Fmatrix[globalI][globalFaces[i]] = vf[i];

@@ -209,7 +209,7 @@ private:
             const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& pointVisited,
             const point& pt,
-            const label excludeFaceI,
+            const label excludeFacei,
 
             label& minVertI,
             scalar& minDist

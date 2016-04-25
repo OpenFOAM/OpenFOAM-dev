@@ -76,7 +76,7 @@ class uniformSet
             label& sampleI
         ) const;
 
-        //- Samples from startTrackPt/CellI. Updates particle/samplePt/sampleI
+        //- Samples from startTrackPt/Celli. Updates particle/samplePt/sampleI
         //  and puts
         //  samples in the DynamicLists. Returns false if end of all samples
         //  reached

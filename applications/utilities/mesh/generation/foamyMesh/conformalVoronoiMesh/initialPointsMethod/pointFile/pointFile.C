@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,15 +127,15 @@ List<Vb::Point> pointFile::initialPoints() const
             {
                 bool foundAlready = false;
 
-                forAll(allProcPt, procI)
+                forAll(allProcPt, proci)
                 {
                     // If a processor with a lower index has found this point
                     // to insert already, defer to it and don't insert.
                     if (foundAlready)
                     {
-                        allProcPt[procI][ptI] = false;
+                        allProcPt[proci][ptI] = false;
                     }
-                    else if (allProcPt[procI][ptI])
+                    else if (allProcPt[proci][ptI])
                     {
                         foundAlready = true;
                     }

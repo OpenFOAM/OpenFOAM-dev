@@ -84,9 +84,9 @@ bool Foam::checkWedges
             }
 
             // Find opposite
-            label oppositePatchI = findOppositeWedge(mesh, pp);
+            label oppositePatchi = findOppositeWedge(mesh, pp);
 
-            if (oppositePatchI == -1)
+            if (oppositePatchi == -1)
             {
                 if (report)
                 {
@@ -97,7 +97,7 @@ bool Foam::checkWedges
             }
 
             const wedgePolyPatch& opp =
-                refCast<const wedgePolyPatch>(patches[oppositePatchI]);
+                refCast<const wedgePolyPatch>(patches[oppositePatchi]);
 
 
             if (mag(opp.axis() & pp.axis()) < (1-1e-3))
@@ -351,13 +351,13 @@ bool Foam::checkCoupledPoints
 
             forAll(cpp, i)
             {
-                label bFaceI = cpp.start() + i - mesh.nInternalFaces();
+                label bFacei = cpp.start() + i - mesh.nInternalFaces();
                 const face& f = cpp[i];
-                nbrPoints[bFaceI].setSize(f.size());
+                nbrPoints[bFacei].setSize(f.size());
                 forAll(f, fp)
                 {
                     const point& p0 = p[f[fp]];
-                    nbrPoints[bFaceI][fp] = p0;
+                    nbrPoints[bFacei][fp] = p0;
                 }
             }
         }
@@ -397,15 +397,15 @@ bool Foam::checkCoupledPoints
 
                 forAll(cpp, i)
                 {
-                    label bFaceI = cpp.start() + i - mesh.nInternalFaces();
+                    label bFacei = cpp.start() + i - mesh.nInternalFaces();
                     const face& f = cpp[i];
 
-                    if (f.size() != nbrPoints[bFaceI].size())
+                    if (f.size() != nbrPoints[bFacei].size())
                     {
                         FatalErrorInFunction
                             << "Local face size : " << f.size()
                             << " does not equal neighbour face size : "
-                            << nbrPoints[bFaceI].size()
+                            << nbrPoints[bFacei].size()
                             << abort(FatalError);
                     }
 
@@ -413,7 +413,7 @@ bool Foam::checkCoupledPoints
                     forAll(f, j)
                     {
                         const point& p0 = p[f[fp]];
-                        scalar d = mag(p0 - nbrPoints[bFaceI][j]);
+                        scalar d = mag(p0 - nbrPoints[bFacei][j]);
 
                         if (d > smallDist[i])
                         {

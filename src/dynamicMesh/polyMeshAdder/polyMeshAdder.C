@@ -216,7 +216,7 @@ Foam::List<Foam::polyPatch*> Foam::polyMeshAdder::combinePatches
     from0ToAllPatches.setSize(patches0.size());
     from0ToAllPatches = -1;
 
-    label startFaceI = nInternalFaces;
+    label startFacei = nInternalFaces;
 
     // Copy patches0 with new sizes. First patches always come from
     // mesh0 and will always be present.
@@ -224,80 +224,80 @@ Foam::List<Foam::polyPatch*> Foam::polyMeshAdder::combinePatches
     {
         // Originates from mesh0. Clone with new size & filter out empty
         // patch.
-        label filteredPatchI;
+        label filteredPatchi;
 
         if (nFaces[patchi] == 0 && isA<processorPolyPatch>(patches0[patchi]))
         {
             //Pout<< "Removing zero sized mesh0 patch "
             //    << patches0[patchi].name() << endl;
-            filteredPatchI = -1;
+            filteredPatchi = -1;
         }
         else
         {
-            filteredPatchI = allPatches.size();
+            filteredPatchi = allPatches.size();
 
             allPatches.append
             (
                 patches0[patchi].clone
                 (
                     allBoundaryMesh,
-                    filteredPatchI,
+                    filteredPatchi,
                     nFaces[patchi],
-                    startFaceI
+                    startFacei
                 ).ptr()
             );
-            startFaceI += nFaces[patchi];
+            startFacei += nFaces[patchi];
         }
 
         // Record new index in allPatches
-        from0ToAllPatches[patchi] = filteredPatchI;
+        from0ToAllPatches[patchi] = filteredPatchi;
 
         // Check if patch was also in mesh1 and update its addressing if so.
         if (fromAllTo1Patches[patchi] != -1)
         {
-            from1ToAllPatches[fromAllTo1Patches[patchi]] = filteredPatchI;
+            from1ToAllPatches[fromAllTo1Patches[patchi]] = filteredPatchi;
         }
     }
 
     // Copy unique patches of mesh1.
     forAll(from1ToAllPatches, patchi)
     {
-        label allPatchI = from1ToAllPatches[patchi];
+        label allPatchi = from1ToAllPatches[patchi];
 
-        if (allPatchI >= patches0.size())
+        if (allPatchi >= patches0.size())
         {
             // Patch has not been merged with any mesh0 patch.
 
-            label filteredPatchI;
+            label filteredPatchi;
 
             if
             (
-                nFaces[allPatchI] == 0
+                nFaces[allPatchi] == 0
              && isA<processorPolyPatch>(patches1[patchi])
             )
             {
                 //Pout<< "Removing zero sized mesh1 patch "
                 //    << patches1[patchi].name() << endl;
-                filteredPatchI = -1;
+                filteredPatchi = -1;
             }
             else
             {
-                filteredPatchI = allPatches.size();
+                filteredPatchi = allPatches.size();
 
                 allPatches.append
                 (
                     patches1[patchi].clone
                     (
                         allBoundaryMesh,
-                        filteredPatchI,
-                        nFaces[allPatchI],
-                        startFaceI
+                        filteredPatchi,
+                        nFaces[allPatchi],
+                        startFacei
                     ).ptr()
                 );
-                startFaceI += nFaces[allPatchI];
+                startFacei += nFaces[allPatchi];
             }
 
-            from1ToAllPatches[patchi] = filteredPatchI;
+            from1ToAllPatches[patchi] = filteredPatchi;
         }
     }
 
@@ -324,7 +324,7 @@ Foam::labelList Foam::polyMeshAdder::getFaceOrder
     }
 
     // First unassigned face
-    label newFaceI = 0;
+    label newFacei = 0;
 
     forAll(cells, celli)
     {
@@ -336,20 +336,20 @@ Foam::labelList Foam::polyMeshAdder::getFaceOrder
         {
             label facei = cFaces[i];
 
-            label nbrCellI = neighbour[facei];
+            label nbrCelli = neighbour[facei];
 
-            if (nbrCellI != -1)
+            if (nbrCelli != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == celli)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = owner[facei];
+                    nbrCelli = owner[facei];
                 }
 
-                if (celli < nbrCellI)
+                if (celli < nbrCelli)
                 {
-                    // CellI is master
-                    nbr[i] = nbrCellI;
+                    // Celli is master
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -370,7 +370,7 @@ Foam::labelList Foam::polyMeshAdder::getFaceOrder
         {
             if (nbr[i] != -1)
             {
-                oldToNew[cFaces[nbr.indices()[i]]] = newFaceI++;
+                oldToNew[cFaces[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
@@ -614,7 +614,7 @@ void Foam::polyMeshAdder::mergePrimitives
     allOwner = -1;
     allNeighbour.setSize(allFaces.size());
     allNeighbour = -1;
-    label allFaceI = 0;
+    label allFacei = 0;
 
     from0ToAllFaces.setSize(mesh0.nFaces());
     from0ToAllFaces = -1;
@@ -624,10 +624,10 @@ void Foam::polyMeshAdder::mergePrimitives
     // Copy mesh0 internal faces (always uncoupled)
     for (label facei = 0; facei < mesh0.nInternalFaces(); facei++)
     {
-        allFaces[allFaceI] = renumber(from0ToAllPoints, mesh0.faces()[facei]);
-        allOwner[allFaceI] = mesh0.faceOwner()[facei];
-        allNeighbour[allFaceI] = mesh0.faceNeighbour()[facei];
-        from0ToAllFaces[facei] = allFaceI++;
+        allFaces[allFacei] = renumber(from0ToAllPoints, mesh0.faces()[facei]);
+        allOwner[allFacei] = mesh0.faceOwner()[facei];
+        allNeighbour[allFacei] = mesh0.faceNeighbour()[facei];
+        from0ToAllFaces[facei] = allFacei++;
     }
 
     // Copy coupled faces. Every coupled face has an equivalent master and
@@ -637,61 +637,61 @@ void Foam::polyMeshAdder::mergePrimitives
 
     forAll(cutFaces, i)
     {
-        label masterFaceI = cutToMasterFaces[i];
+        label masterFacei = cutToMasterFaces[i];
 
-        label mesh0FaceI = masterPatch.addressing()[masterFaceI];
+        label mesh0Facei = masterPatch.addressing()[masterFacei];
 
-        if (from0ToAllFaces[mesh0FaceI] == -1)
+        if (from0ToAllFaces[mesh0Facei] == -1)
         {
             // First occurrence of face
-            from0ToAllFaces[mesh0FaceI] = allFaceI;
+            from0ToAllFaces[mesh0Facei] = allFacei;
 
             // External face becomes internal so uncount
-            label patch0 = patches0.whichPatch(mesh0FaceI);
+            label patch0 = patches0.whichPatch(mesh0Facei);
             nFacesPerPatch[patch0]--;
         }
 
-        label slaveFaceI = cutToSlaveFaces[i];
+        label slaveFacei = cutToSlaveFaces[i];
 
-        label mesh1FaceI = slavePatch.addressing()[slaveFaceI];
+        label mesh1Facei = slavePatch.addressing()[slaveFacei];
 
-        if (from1ToAllFaces[mesh1FaceI] == -1)
+        if (from1ToAllFaces[mesh1Facei] == -1)
         {
-            from1ToAllFaces[mesh1FaceI] = allFaceI;
+            from1ToAllFaces[mesh1Facei] = allFacei;
 
-            label patch1 = patches1.whichPatch(mesh1FaceI);
+            label patch1 = patches1.whichPatch(mesh1Facei);
             nFacesPerPatch[from1ToAllPatches[patch1]]--;
         }
 
         // Copy cut face (since cutPoints are copied first no renumbering
         // necessary)
-        allFaces[allFaceI] = cutFaces[i];
-        allOwner[allFaceI] = mesh0.faceOwner()[mesh0FaceI];
-        allNeighbour[allFaceI] = mesh1.faceOwner()[mesh1FaceI] + mesh0.nCells();
+        allFaces[allFacei] = cutFaces[i];
+        allOwner[allFacei] = mesh0.faceOwner()[mesh0Facei];
+        allNeighbour[allFacei] = mesh1.faceOwner()[mesh1Facei] + mesh0.nCells();
 
-        allFaceI++;
+        allFacei++;
     }
 
     // Copy mesh1 internal faces (always uncoupled)
     for (label facei = 0; facei < mesh1.nInternalFaces(); facei++)
     {
-        allFaces[allFaceI] = renumber(from1ToAllPoints, mesh1.faces()[facei]);
-        allOwner[allFaceI] = mesh1.faceOwner()[facei] + mesh0.nCells();
-        allNeighbour[allFaceI] = mesh1.faceNeighbour()[facei] + mesh0.nCells();
-        from1ToAllFaces[facei] = allFaceI++;
+        allFaces[allFacei] = renumber(from1ToAllPoints, mesh1.faces()[facei]);
+        allOwner[allFacei] = mesh1.faceOwner()[facei] + mesh0.nCells();
+        allNeighbour[allFacei] = mesh1.faceNeighbour()[facei] + mesh0.nCells();
+        from1ToAllFaces[facei] = allFacei++;
     }
 
-    nInternalFaces = allFaceI;
+    nInternalFaces = allFacei;
 
     // Copy (unmarked/uncoupled) external faces in new order.
-    for (label allPatchI = 0; allPatchI < nAllPatches; allPatchI++)
+    for (label allPatchi = 0; allPatchi < nAllPatches; allPatchi++)
     {
-        if (allPatchI < patches0.size())
+        if (allPatchi < patches0.size())
         {
             // Patch is present in mesh0
-            const polyPatch& pp = patches0[allPatchI];
+            const polyPatch& pp = patches0[allPatchi];
 
-            nFacesPerPatch[allPatchI] += pp.size();
+            nFacesPerPatch[allPatchi] += pp.size();
 
             label facei = pp.start();
 
@@ -700,25 +700,25 @@ void Foam::polyMeshAdder::mergePrimitives
                 if (from0ToAllFaces[facei] == -1)
                 {
                     // Is uncoupled face since has not yet been dealt with
-                    allFaces[allFaceI] = renumber
+                    allFaces[allFacei] = renumber
                     (
                         from0ToAllPoints,
                         mesh0.faces()[facei]
                     );
-                    allOwner[allFaceI] = mesh0.faceOwner()[facei];
-                    allNeighbour[allFaceI] = -1;
+                    allOwner[allFacei] = mesh0.faceOwner()[facei];
+                    allNeighbour[allFacei] = -1;
 
-                    from0ToAllFaces[facei] = allFaceI++;
+                    from0ToAllFaces[facei] = allFacei++;
                 }
                 facei++;
             }
         }
-        if (fromAllTo1Patches[allPatchI] != -1)
+        if (fromAllTo1Patches[allPatchi] != -1)
         {
             // Patch is present in mesh1
-            const polyPatch& pp = patches1[fromAllTo1Patches[allPatchI]];
+            const polyPatch& pp = patches1[fromAllTo1Patches[allPatchi]];
 
-            nFacesPerPatch[allPatchI] += pp.size();
+            nFacesPerPatch[allPatchi] += pp.size();
 
             label facei = pp.start();
 
@@ -727,25 +727,25 @@ void Foam::polyMeshAdder::mergePrimitives
                 if (from1ToAllFaces[facei] == -1)
                 {
                     // Is uncoupled face
-                    allFaces[allFaceI] = renumber
+                    allFaces[allFacei] = renumber
                     (
                         from1ToAllPoints,
                         mesh1.faces()[facei]
                     );
-                    allOwner[allFaceI] =
+                    allOwner[allFacei] =
                         mesh1.faceOwner()[facei]
                       + mesh0.nCells();
-                    allNeighbour[allFaceI] = -1;
+                    allNeighbour[allFacei] = -1;
 
-                    from1ToAllFaces[facei] = allFaceI++;
+                    from1ToAllFaces[facei] = allFacei++;
                 }
                 facei++;
             }
         }
     }
-    allFaces.setSize(allFaceI);
-    allOwner.setSize(allFaceI);
-    allNeighbour.setSize(allFaceI);
+    allFaces.setSize(allFacei);
+    allOwner.setSize(allFacei);
+    allNeighbour.setSize(allFacei);
 
 
     // So now we have all ok for one-to-one mapping.
@@ -767,9 +767,9 @@ void Foam::polyMeshAdder::mergePrimitives
         labelHashSet masterCutFaces(cutToMasterFaces.size());
         forAll(cutToMasterFaces, i)
         {
-            label meshFaceI = masterPatch.addressing()[cutToMasterFaces[i]];
+            label meshFacei = masterPatch.addressing()[cutToMasterFaces[i]];
 
-            masterCutFaces.insert(meshFaceI);
+            masterCutFaces.insert(meshFacei);
         }
 
         DynamicList<label> workFace(100);
@@ -778,7 +778,7 @@ void Foam::polyMeshAdder::mergePrimitives
         {
             if (!masterCutFaces.found(face0))
             {
-                label allFaceI = from0ToAllFaces[face0];
+                label allFacei = from0ToAllFaces[face0];
 
                 insertVertices
                 (
@@ -788,7 +788,7 @@ void Foam::polyMeshAdder::mergePrimitives
                     mesh0.faces()[face0],
 
                     workFace,
-                    allFaces[allFaceI]
+                    allFaces[allFacei]
                 );
             }
         }
@@ -798,16 +798,16 @@ void Foam::polyMeshAdder::mergePrimitives
         labelHashSet slaveCutFaces(cutToSlaveFaces.size());
         forAll(cutToSlaveFaces, i)
         {
-            label meshFaceI = slavePatch.addressing()[cutToSlaveFaces[i]];
+            label meshFacei = slavePatch.addressing()[cutToSlaveFaces[i]];
 
-            slaveCutFaces.insert(meshFaceI);
+            slaveCutFaces.insert(meshFacei);
         }
 
         forAll(from1ToAllFaces, face1)
         {
             if (!slaveCutFaces.found(face1))
             {
-                label allFaceI = from1ToAllFaces[face1];
+                label allFacei = from1ToAllFaces[face1];
 
                 insertVertices
                 (
@@ -817,7 +817,7 @@ void Foam::polyMeshAdder::mergePrimitives
                     mesh1.faces()[face1],
 
                     workFace,
-                    allFaces[allFaceI]
+                    allFaces[allFacei]
                 );
             }
         }
@@ -1050,25 +1050,25 @@ void Foam::polyMeshAdder::mergeFaceZones
             label face0 = addressing[i];
             bool flip0 = flipMap[i];
 
-            label allFaceI = from0ToAllFaces[face0];
-            if (allFaceI != -1)
+            label allFacei = from0ToAllFaces[face0];
+            if (allFacei != -1)
             {
                 // Check if orientation same
                 label allCell0 = owner0[face0];
-                if (allOwner[allFaceI] != allCell0)
+                if (allOwner[allFacei] != allCell0)
                 {
                     flip0 = !flip0;
                 }
 
-                if (faceToZone[allFaceI] == -1)
+                if (faceToZone[allFacei] == -1)
                 {
-                    faceToZone[allFaceI] = zoneI;
-                    faceToFlip[allFaceI] = flip0;
+                    faceToZone[allFacei] = zoneI;
+                    faceToFlip[allFacei] = flip0;
                 }
-                else if (faceToZone[allFaceI] != zoneI)
+                else if (faceToZone[allFacei] != zoneI)
                 {
-                    labelList& fZones = addFaceToZones[allFaceI];
-                    boolList& flipZones = addFaceToFlips[allFaceI];
+                    labelList& fZones = addFaceToZones[allFacei];
+                    boolList& flipZones = addFaceToFlips[allFacei];
 
                     if (findIndex(fZones, zoneI) == -1)
                     {
@@ -1093,25 +1093,25 @@ void Foam::polyMeshAdder::mergeFaceZones
             label face1 = addressing[i];
             bool flip1 = flipMap[i];
 
-            label allFaceI = from1ToAllFaces[face1];
-            if (allFaceI != -1)
+            label allFacei = from1ToAllFaces[face1];
+            if (allFacei != -1)
             {
                 // Check if orientation same
                 label allCell1 = from1ToAllCells[owner1[face1]];
-                if (allOwner[allFaceI] != allCell1)
+                if (allOwner[allFacei] != allCell1)
                 {
                     flip1 = !flip1;
                 }
 
-                if (faceToZone[allFaceI] == -1)
+                if (faceToZone[allFacei] == -1)
                 {
-                    faceToZone[allFaceI] = allZoneI;
-                    faceToFlip[allFaceI] = flip1;
+                    faceToZone[allFacei] = allZoneI;
+                    faceToFlip[allFacei] = flip1;
                 }
-                else if (faceToZone[allFaceI] != allZoneI)
+                else if (faceToZone[allFacei] != allZoneI)
                 {
-                    labelList& fZones = addFaceToZones[allFaceI];
-                    boolList& flipZones = addFaceToFlips[allFaceI];
+                    labelList& fZones = addFaceToZones[allFacei];
+                    boolList& flipZones = addFaceToFlips[allFacei];
 
                     if (findIndex(fZones, allZoneI) == -1)
                     {
@@ -1128,17 +1128,17 @@ void Foam::polyMeshAdder::mergeFaceZones
 
     // 1. Count
     labelList nFaces(zoneNames.size(), 0);
-    forAll(faceToZone, allFaceI)
+    forAll(faceToZone, allFacei)
     {
-        label zoneI = faceToZone[allFaceI];
+        label zoneI = faceToZone[allFacei];
         if (zoneI != -1)
         {
             nFaces[zoneI]++;
         }
     }
-    forAll(addFaceToZones, allFaceI)
+    forAll(addFaceToZones, allFacei)
     {
-        const labelList& fZones = addFaceToZones[allFaceI];
+        const labelList& fZones = addFaceToZones[allFacei];
         forAll(fZones, i)
         {
             nFaces[fZones[i]]++;
@@ -1153,25 +1153,25 @@ void Foam::polyMeshAdder::mergeFaceZones
         fzFaces[zoneI].setCapacity(nFaces[zoneI]);
         fzFlips[zoneI].setCapacity(nFaces[zoneI]);
     }
-    forAll(faceToZone, allFaceI)
+    forAll(faceToZone, allFacei)
     {
-        label zoneI = faceToZone[allFaceI];
-        bool flip = faceToFlip[allFaceI];
+        label zoneI = faceToZone[allFacei];
+        bool flip = faceToFlip[allFacei];
         if (zoneI != -1)
         {
-            fzFaces[zoneI].append(allFaceI);
+            fzFaces[zoneI].append(allFacei);
             fzFlips[zoneI].append(flip);
         }
     }
-    forAll(addFaceToZones, allFaceI)
+    forAll(addFaceToZones, allFacei)
     {
-        const labelList& fZones = addFaceToZones[allFaceI];
-        const boolList& flipZones = addFaceToFlips[allFaceI];
+        const labelList& fZones = addFaceToZones[allFacei];
+        const boolList& flipZones = addFaceToFlips[allFacei];
 
         forAll(fZones, i)
         {
             label zoneI = fZones[i];
-            fzFaces[zoneI].append(allFaceI);
+            fzFaces[zoneI].append(allFacei);
             fzFlips[zoneI].append(flipZones[i]);
         }
     }
@@ -1251,15 +1251,15 @@ void Foam::polyMeshAdder::mergeCellZones
         forAll(cz, i)
         {
             label cell1 = cz[i];
-            label allCellI = from1ToAllCells[cell1];
+            label allCelli = from1ToAllCells[cell1];
 
-            if (cellToZone[allCellI] == -1)
+            if (cellToZone[allCelli] == -1)
             {
-                cellToZone[allCellI] = allZoneI;
+                cellToZone[allCelli] = allZoneI;
             }
-            else if (cellToZone[allCellI] != allZoneI)
+            else if (cellToZone[allCelli] != allZoneI)
             {
-                labelList& cZones = addCellToZones[allCellI];
+                labelList& cZones = addCellToZones[allCelli];
                 if (findIndex(cZones, allZoneI) == -1)
                 {
                     cZones.append(allZoneI);
@@ -1272,17 +1272,17 @@ void Foam::polyMeshAdder::mergeCellZones
 
     // 1. Count
     labelList nCells(zoneNames.size(), 0);
-    forAll(cellToZone, allCellI)
+    forAll(cellToZone, allCelli)
     {
-        label zoneI = cellToZone[allCellI];
+        label zoneI = cellToZone[allCelli];
         if (zoneI != -1)
         {
             nCells[zoneI]++;
         }
     }
-    forAll(addCellToZones, allCellI)
+    forAll(addCellToZones, allCelli)
     {
-        const labelList& cZones = addCellToZones[allCellI];
+        const labelList& cZones = addCellToZones[allCelli];
         forAll(cZones, i)
         {
             nCells[cZones[i]]++;
@@ -1295,20 +1295,20 @@ void Foam::polyMeshAdder::mergeCellZones
     {
         czCells[zoneI].setCapacity(nCells[zoneI]);
     }
-    forAll(cellToZone, allCellI)
+    forAll(cellToZone, allCelli)
     {
-        label zoneI = cellToZone[allCellI];
+        label zoneI = cellToZone[allCelli];
         if (zoneI != -1)
         {
-            czCells[zoneI].append(allCellI);
+            czCells[zoneI].append(allCelli);
         }
     }
-    forAll(addCellToZones, allCellI)
+    forAll(addCellToZones, allCelli)
     {
-        const labelList& cZones = addCellToZones[allCellI];
+        const labelList& cZones = addCellToZones[allCelli];
         forAll(cZones, i)
         {
-            czCells[cZones[i]].append(allCellI);
+            czCells[cZones[i]].append(allCelli);
         }
     }
     forAll(czCells, i)
@@ -1819,11 +1819,11 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
     labelList patchSizes(allPatches.size());
     labelList patchStarts(allPatches.size());
 
-    label startFaceI = nInternalFaces;
+    label startFacei = nInternalFaces;
 
     // Copy patches0 with new sizes. First patches always come from
     // mesh0 and will always be present.
-    label allPatchI = 0;
+    label allPatchi = 0;
 
     forAll(from0ToAllPatches, patch0)
     {
@@ -1848,50 +1848,50 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
             // SubList construction in polyPatch.
             allPatches.set
             (
-                allPatchI,
+                allPatchi,
                 allPatches[patch0].clone
                 (
                     allPatches,
-                    allPatchI,
+                    allPatchi,
                     0,          // dummy size
                     0           // dummy start
                 )
             );
-            patchSizes[allPatchI] = nFaces[patch0];
-            patchStarts[allPatchI] = startFaceI;
+            patchSizes[allPatchi] = nFaces[patch0];
+            patchStarts[allPatchi] = startFacei;
 
             // Record new index in allPatches
-            from0ToAllPatches[patch0] = allPatchI;
+            from0ToAllPatches[patch0] = allPatchi;
 
             // Check if patch was also in mesh1 and update its addressing if so.
             if (fromAllTo1Patches[patch0] != -1)
             {
-                from1ToAllPatches[fromAllTo1Patches[patch0]] = allPatchI;
+                from1ToAllPatches[fromAllTo1Patches[patch0]] = allPatchi;
             }
 
-            startFaceI += nFaces[patch0];
+            startFacei += nFaces[patch0];
 
-            allPatchI++;
+            allPatchi++;
         }
     }
 
     // Copy unique patches of mesh1.
     forAll(from1ToAllPatches, patch1)
     {
-        label uncompactAllPatchI = from1ToAllPatches[patch1];
+        label uncompactAllPatchi = from1ToAllPatches[patch1];
 
-        if (uncompactAllPatchI >= from0ToAllPatches.size())
+        if (uncompactAllPatchi >= from0ToAllPatches.size())
         {
             // Patch has not been merged with any mesh0 patch.
 
             if
             (
-                nFaces[uncompactAllPatchI] == 0
+                nFaces[uncompactAllPatchi] == 0
              && isA<processorPolyPatch>(patches1[patch1])
             )
             {
                 //Pout<< "Removing zero sized mesh1 patch "
-                //    << allPatchNames[uncompactAllPatchI] << endl;
+                //    << allPatchNames[uncompactAllPatchi] << endl;
                 from1ToAllPatches[patch1] = -1;
             }
             else
@@ -1899,31 +1899,31 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
                 // Clone.
                 allPatches.set
                 (
-                    allPatchI,
+                    allPatchi,
                     patches1[patch1].clone
                     (
                         allPatches,
-                        allPatchI,
+                        allPatchi,
                         0,          // dummy size
                         0           // dummy start
                     )
                 );
-                patchSizes[allPatchI] = nFaces[uncompactAllPatchI];
-                patchStarts[allPatchI] = startFaceI;
+                patchSizes[allPatchi] = nFaces[uncompactAllPatchi];
+                patchStarts[allPatchi] = startFacei;
 
                 // Record new index in allPatches
-                from1ToAllPatches[patch1] = allPatchI;
+                from1ToAllPatches[patch1] = allPatchi;
 
-                startFaceI += nFaces[uncompactAllPatchI];
+                startFacei += nFaces[uncompactAllPatchi];
 
-                allPatchI++;
+                allPatchi++;
             }
         }
     }
 
-    allPatches.setSize(allPatchI);
-    patchSizes.setSize(allPatchI);
-    patchStarts.setSize(allPatchI);
+    allPatches.setSize(allPatchi);
+    patchSizes.setSize(allPatchi);
+    patchStarts.setSize(allPatchi);
 
 
     // Construct map information before changing mesh0 primitives

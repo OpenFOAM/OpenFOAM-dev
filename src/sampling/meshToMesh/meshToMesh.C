@@ -387,11 +387,11 @@ void Foam::meshToMesh::calculatePatchAMIs(const word& AMIMethodName)
 
     forAll(srcPatchID_, i)
     {
-        label srcPatchI = srcPatchID_[i];
-        label tgtPatchI = tgtPatchID_[i];
+        label srcPatchi = srcPatchID_[i];
+        label tgtPatchi = tgtPatchID_[i];
 
-        const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchI];
-        const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchI];
+        const polyPatch& srcPP = srcRegion_.boundaryMesh()[srcPatchi];
+        const polyPatch& tgtPP = tgtRegion_.boundaryMesh()[tgtPatchi];
 
         Info<< "Creating AMI between source patch " << srcPP.name()
             << " and target patch " << tgtPP.name()
@@ -441,11 +441,11 @@ void Foam::meshToMesh::constructNoCuttingPatches
             {
                 srcPatchID.append(pp.index());
 
-                label tgtPatchI = tgtBM.findPatchID(pp.name());
+                label tgtPatchi = tgtBM.findPatchID(pp.name());
 
-                if (tgtPatchI != -1)
+                if (tgtPatchi != -1)
                 {
-                    tgtPatchID.append(tgtPatchI);
+                    tgtPatchID.append(tgtPatchi);
                 }
                 else
                 {

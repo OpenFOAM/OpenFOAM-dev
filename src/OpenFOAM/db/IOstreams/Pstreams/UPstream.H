@@ -490,7 +490,7 @@ public:
         static void abort();
 
         //- Exchange label with all processors (in the communicator).
-        //  sendData[procI] is the label to send to procI.
+        //  sendData[proci] is the label to send to proci.
         //  After return recvData contains the data from the other processors.
         static void allToAll
         (

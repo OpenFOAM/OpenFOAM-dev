@@ -229,9 +229,9 @@ Foam::label Foam::cellCuts::edgeEdgeToFace
 {
     const labelList& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         const labelList& fEdges = mesh().faceEdges()[facei];
 
@@ -269,9 +269,9 @@ Foam::label Foam::cellCuts::edgeVertexToFace
 {
     const labelList& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         const face& f = mesh().faces()[facei];
 
@@ -308,9 +308,9 @@ Foam::label Foam::cellCuts::vertexVertexToFace
 {
     const labelList& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         const face& f = mesh().faces()[facei];
 
@@ -508,9 +508,9 @@ Foam::label Foam::cellCuts::loopFace
 {
     const cell& cFaces = mesh().cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         const labelList& fEdges = mesh().faceEdges()[facei];
         const face& f = mesh().faces()[facei];
@@ -569,15 +569,15 @@ bool Foam::cellCuts::walkPoint
 
     const labelList& pFaces = mesh().pointFaces()[vertI];
 
-    forAll(pFaces, pFaceI)
+    forAll(pFaces, pFacei)
     {
-        label otherFaceI = pFaces[pFaceI];
+        label otherFacei = pFaces[pFacei];
 
         if
         (
-            otherFaceI != exclude0
-         && otherFaceI != exclude1
-         && meshTools::faceOnCell(mesh(), celli, otherFaceI)
+            otherFacei != exclude0
+         && otherFacei != exclude1
+         && meshTools::faceOnCell(mesh(), celli, otherFacei)
         )
         {
             label oldNVisited = nVisited;
@@ -587,7 +587,7 @@ bool Foam::cellCuts::walkPoint
                 (
                     celli,
                     startCut,
-                    otherFaceI,
+                    otherFacei,
                     otherCut,
                     nVisited,
                     visited
@@ -620,7 +620,7 @@ bool Foam::cellCuts::crossEdge
     // Cross edge to other face
     label edgeI = getEdge(otherCut);
 
-    label otherFaceI = meshTools::otherFace(mesh(), celli, facei, edgeI);
+    label otherFacei = meshTools::otherFace(mesh(), celli, facei, edgeI);
 
     // Store old state
     label oldNVisited = nVisited;
@@ -631,7 +631,7 @@ bool Foam::cellCuts::crossEdge
         (
             celli,
             startCut,
-            otherFaceI,
+            otherFacei,
             otherCut,
             nVisited,
             visited
@@ -1042,9 +1042,9 @@ void Foam::cellCuts::calcCellLoops(const labelList& cutCells)
             label nVisited = 0;
 
             // Determine the first cut face to start walking from.
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
+                label facei = cFaces[cFacei];
 
                 const labelList& fCuts = allFaceCuts[facei];
 
@@ -1364,21 +1364,21 @@ bool Foam::cellCuts::calcAnchors
 
         if (iter() == 1)
         {
-            forAll(pFaces, pFaceI)
+            forAll(pFaces, pFacei)
             {
-                if (meshTools::faceOnCell(mesh(), celli, pFaces[pFaceI]))
+                if (meshTools::faceOnCell(mesh(), celli, pFaces[pFacei]))
                 {
-                    connectedFaces.insert(pFaces[pFaceI]);
+                    connectedFaces.insert(pFaces[pFacei]);
                 }
             }
         }
         else if (iter() == 2)
         {
-            forAll(pFaces, pFaceI)
+            forAll(pFaces, pFacei)
             {
-                if (meshTools::faceOnCell(mesh(), celli, pFaces[pFaceI]))
+                if (meshTools::faceOnCell(mesh(), celli, pFaces[pFacei]))
                 {
-                    otherFaces.insert(pFaces[pFaceI]);
+                    otherFaces.insert(pFaces[pFacei]);
                 }
             }
         }
@@ -1737,9 +1737,9 @@ bool Foam::cellCuts::conservativeValidLoop
                 // Check faces using this edge
                 const labelList& eFaces = mesh().edgeFaces()[edgeI];
 
-                forAll(eFaces, eFaceI)
+                forAll(eFaces, eFacei)
                 {
-                    label nCuts = countFaceCuts(eFaces[eFaceI], loop);
+                    label nCuts = countFaceCuts(eFaces[eFacei], loop);
 
                     if (nCuts > 2)
                     {
@@ -1774,9 +1774,9 @@ bool Foam::cellCuts::conservativeValidLoop
                 // Check faces using vertex.
                 const labelList& pFaces = mesh().pointFaces()[vertI];
 
-                forAll(pFaces, pFaceI)
+                forAll(pFaces, pFacei)
                 {
-                    label nCuts = countFaceCuts(pFaces[pFaceI], loop);
+                    label nCuts = countFaceCuts(pFaces[pFacei], loop);
 
                     if (nCuts > 2)
                     {
@@ -1829,7 +1829,7 @@ bool Foam::cellCuts::validLoop
         label nextCut = loop[(fp+1) % loop.size()];
 
         // Label (if any) of face cut (so cut not along existing edge)
-        label meshFaceI = -1;
+        label meshFacei = -1;
 
         if (isEdge(cut))
         {
@@ -1843,9 +1843,9 @@ bool Foam::cellCuts::validLoop
                 label nextEdgeI = getEdge(nextCut);
 
                 // Find face and mark as to be split.
-                meshFaceI = edgeEdgeToFace(celli, edgeI, nextEdgeI);
+                meshFacei = edgeEdgeToFace(celli, edgeI, nextEdgeI);
 
-                if (meshFaceI == -1)
+                if (meshFacei == -1)
                 {
                     // Can't find face using both cut edges.
                     return false;
@@ -1861,9 +1861,9 @@ bool Foam::cellCuts::validLoop
                 if (e.start() != nextVertI && e.end() != nextVertI)
                 {
                     // New edge. Find face and mark as to be split.
-                    meshFaceI = edgeVertexToFace(celli, edgeI, nextVertI);
+                    meshFacei = edgeVertexToFace(celli, edgeI, nextVertI);
 
-                    if (meshFaceI == -1)
+                    if (meshFacei == -1)
                     {
                         // Can't find face. Ilegal.
                         return false;
@@ -1886,9 +1886,9 @@ bool Foam::cellCuts::validLoop
                 if (nextE.start() != vertI && nextE.end() != vertI)
                 {
                     // Should be cross cut. Find face.
-                    meshFaceI = edgeVertexToFace(celli, nextEdgeI, vertI);
+                    meshFacei = edgeVertexToFace(celli, nextEdgeI, vertI);
 
-                    if (meshFaceI == -1)
+                    if (meshFacei == -1)
                     {
                         return false;
                     }
@@ -1902,9 +1902,9 @@ bool Foam::cellCuts::validLoop
                 if (meshTools::findEdge(mesh(), vertI, nextVertI) == -1)
                 {
                     // New edge. Find face.
-                    meshFaceI = vertexVertexToFace(celli, vertI, nextVertI);
+                    meshFacei = vertexVertexToFace(celli, vertI, nextVertI);
 
-                    if (meshFaceI == -1)
+                    if (meshFacei == -1)
                     {
                         return false;
                     }
@@ -1912,18 +1912,18 @@ bool Foam::cellCuts::validLoop
             }
         }
 
-        if (meshFaceI != -1)
+        if (meshFacei != -1)
         {
-            // meshFaceI is cut across along cut-nextCut (so not along existing
+            // meshFacei is cut across along cut-nextCut (so not along existing
             // edge). Check if this is compatible with existing pattern.
             edge cutEdge(cut, nextCut);
 
-            Map<edge>::const_iterator iter = faceSplitCut_.find(meshFaceI);
+            Map<edge>::const_iterator iter = faceSplitCut_.find(meshFacei);
 
             if (iter == faceSplitCut_.end())
             {
                 // Face not yet cut so insert.
-                newFaceSplitCut.insert(meshFaceI, cutEdge);
+                newFaceSplitCut.insert(meshFacei, cutEdge);
             }
             else
             {
@@ -2202,9 +2202,9 @@ void Foam::cellCuts::setFromCellCutter
     DynamicList<scalarField> invalidCutLoopWeights(2);
 
 
-    forAll(refCells, refCellI)
+    forAll(refCells, refCelli)
     {
-        const refineCell& refCell = refCells[refCellI];
+        const refineCell& refCell = refCells[refCelli];
 
         label celli = refCell.cellNo();
 

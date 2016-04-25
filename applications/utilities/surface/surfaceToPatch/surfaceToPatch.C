@@ -112,12 +112,12 @@ bool repatchFace
 {
     bool changed = false;
 
-    label bFaceI = facei - mesh.nInternalFaces();
+    label bFacei = facei - mesh.nInternalFaces();
 
-    if (nearest[bFaceI] != -1)
+    if (nearest[bFacei] != -1)
     {
         // Use boundary mesh one.
-        label bMeshPatchID = bMesh.whichPatch(nearest[bFaceI]);
+        label bMeshPatchID = bMesh.whichPatch(nearest[bFacei]);
 
         label patchID = surfToMeshPatch[bMeshPatchID];
 
@@ -255,11 +255,11 @@ int main(int argc, char *argv[])
         // Dump unmatched faces to faceSet for debugging.
         faceSet unmatchedFaces(mesh, "unmatchedFaces", nearest.size()/100);
 
-        forAll(nearest, bFaceI)
+        forAll(nearest, bFacei)
         {
-            if (nearest[bFaceI] == -1)
+            if (nearest[bFacei] == -1)
             {
-                unmatchedFaces.insert(mesh.nInternalFaces() + bFaceI);
+                unmatchedFaces.insert(mesh.nInternalFaces() + bFacei);
             }
         }
 
@@ -293,9 +293,9 @@ int main(int argc, char *argv[])
     }
     else
     {
-        forAll(nearest, bFaceI)
+        forAll(nearest, bFacei)
         {
-            label facei = mesh.nInternalFaces() + bFaceI;
+            label facei = mesh.nInternalFaces() + bFacei;
 
             if (repatchFace(mesh, bMesh, nearest, patchMap, facei, meshMod))
             {

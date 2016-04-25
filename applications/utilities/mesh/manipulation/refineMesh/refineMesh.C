@@ -329,9 +329,9 @@ int main(int argc, char *argv[])
     // Create cellSet with added cells for easy inspection
     cellSet newCells(mesh, "refinedCells", refCells.size());
 
-    forAll(oldToNew, oldCellI)
+    forAll(oldToNew, oldCelli)
     {
-        const labelList& added = oldToNew[oldCellI];
+        const labelList& added = oldToNew[oldCelli];
 
         forAll(added, i)
         {
@@ -372,21 +372,21 @@ int main(int argc, char *argv[])
       + oldTimeName;
 
 
-    forAll(oldToNew, oldCellI)
+    forAll(oldToNew, oldCelli)
     {
-        const labelList& added = oldToNew[oldCellI];
+        const labelList& added = oldToNew[oldCelli];
 
         if (added.size())
         {
             forAll(added, i)
             {
-                newToOld[added[i]] = oldCellI;
+                newToOld[added[i]] = oldCelli;
             }
         }
         else
         {
             // Unrefined cell
-            newToOld[oldCellI] = oldCellI;
+            newToOld[oldCelli] = oldCelli;
         }
     }
 

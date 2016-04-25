@@ -42,10 +42,10 @@ void Foam::wallBoundedParticle::patchInteraction
 
     if (!internalFace(facei_))
     {
-        label origFaceI = facei_;
+        label origFacei = facei_;
         label patchi = patch(facei_);
 
-        // No action taken for tetPtI_ for tetFaceI_ here, handled by
+        // No action taken for tetPtI_ for tetFacei_ here, handled by
         // patch interaction call or later during processor transfer.
 
 
@@ -66,7 +66,7 @@ void Foam::wallBoundedParticle::patchInteraction
         {
             // Did patch interaction model switch patches?
             // Note: recalculate meshEdgeStart_, diagEdge_!
-            if (facei_ != origFaceI)
+            if (facei_ != origFacei)
             {
                 patchi = patch(facei_);
             }
@@ -166,7 +166,7 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
         // check to the other internal tet on the edge.
         if (mesh_.isInternalFace(tetFace()))
         {
-            label nbrCellI =
+            label nbrCelli =
             (
                 celli_ == mesh_.faceOwner()[facei_]
               ? mesh_.faceNeighbour()[facei_]
@@ -175,13 +175,13 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
             // Check angle to nbrCell tet. Is it in the direction of the
             // endposition? I.e. since volume of nbr tet is positive the
             // tracking direction should be into the tet.
-            tetIndices nbrTi(nbrCellI, tetFaceI_, tetPtI_, mesh_);
+            tetIndices nbrTi(nbrCelli, tetFacei_, tetPtI_, mesh_);
             if ((nbrTi.faceTri(mesh_).normal() & (endPosition-position())) < 0)
             {
                 // Change into nbrCell. No need to change tetFace, tetPt.
                 //Pout<< "    crossed from cell:" << celli_
-                //    << " into " << nbrCellI << endl;
-                celli_ = nbrCellI;
+                //    << " into " << nbrCelli << endl;
+                celli_ = nbrCelli;
                 patchInteraction(td, trackFraction);
             }
             else

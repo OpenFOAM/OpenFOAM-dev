@@ -57,14 +57,14 @@ void Foam::conformalVoronoiMesh::calcNeighbourCellCentres
 
         const labelUList& faceCells = pp.faceCells();
 
-        label bFaceI = pp.start() - mesh.nInternalFaces();
+        label bFacei = pp.start() - mesh.nInternalFaces();
 
         if (pp.coupled())
         {
             forAll(faceCells, i)
             {
-                neiCc[bFaceI] = cellCentres[faceCells[i]];
-                bFaceI++;
+                neiCc[bFacei] = cellCentres[faceCells[i]];
+                bFacei++;
             }
         }
     }
@@ -329,14 +329,14 @@ void Foam::conformalVoronoiMesh::calcFaceZones
 
         const labelUList& faceCells = pp.faceCells();
 
-        label bFaceI = pp.start() - mesh.nInternalFaces();
+        label bFacei = pp.start() - mesh.nInternalFaces();
 
         if (pp.coupled())
         {
             forAll(faceCells, i)
             {
-                neiFaceOwner[bFaceI] = cellToSurface[faceCells[i]];
-                bFaceI++;
+                neiFaceOwner[bFacei] = cellToSurface[faceCells[i]];
+                bFacei++;
             }
         }
     }

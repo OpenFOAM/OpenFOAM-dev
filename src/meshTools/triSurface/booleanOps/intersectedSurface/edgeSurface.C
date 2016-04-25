@@ -230,9 +230,9 @@ Foam::edgeSurface::edgeSurface
         {
             allParentEdges.append(edgeI);
 
-            forAll(myFaces, myFaceI)
+            forAll(myFaces, myFacei)
             {
-                allFaceEdges[myFaces[myFaceI]].append(eI);
+                allFaceEdges[myFaces[myFacei]].append(eI);
             }
         }
     }

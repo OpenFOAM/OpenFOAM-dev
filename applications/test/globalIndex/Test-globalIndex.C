@@ -69,23 +69,23 @@ int main(int argc, char *argv[])
     for (label celli = 0; celli < mesh.nCells(); celli++)
     {
         // to global index
-        label globalCellI = globalNumbering.toGlobal(celli);
+        label globalCelli = globalNumbering.toGlobal(celli);
 
         // and back
-        label procI = globalNumbering.whichProcID(globalCellI);
-        label localCellI = globalNumbering.toLocal(globalCellI);
+        label proci = globalNumbering.whichProcID(globalCelli);
+        label localCelli = globalNumbering.toLocal(globalCelli);
 
-        if (procI != Pstream::myProcNo() || localCellI != celli)
+        if (proci != Pstream::myProcNo() || localCelli != celli)
         {
             FatalErrorInFunction
-                << "Problem. celli:" << celli << " localCellI:" << localCellI
-                << " procI:" << procI << abort(FatalError);
+                << "Problem. celli:" << celli << " localCelli:" << localCelli
+                << " proci:" << proci << abort(FatalError);
         }
 
-        if (!globalNumbering.isLocal(globalCellI))
+        if (!globalNumbering.isLocal(globalCelli))
         {
             FatalErrorInFunction
-                << "Problem. celli:" << celli << " globalCellI:" << globalCellI
+                << "Problem. celli:" << celli << " globalCelli:" << globalCelli
                 << " not local" << abort(FatalError);
         }
     }
@@ -104,30 +104,30 @@ int main(int argc, char *argv[])
     {
         // We already checked that toGlobal(0) maps back correctly to myProcNo
         // so now check that the index one before maps to the previous processor
-        label prevProcCellI = globalNumbering.toGlobal(0)-1;
-        label procI = globalNumbering.whichProcID(prevProcCellI);
+        label prevProcCelli = globalNumbering.toGlobal(0)-1;
+        label proci = globalNumbering.whichProcID(prevProcCelli);
 
-        if (procI != Pstream::myProcNo()-1)
+        if (proci != Pstream::myProcNo()-1)
         {
             FatalErrorInFunction
-                << "Problem. global:" << prevProcCellI
+                << "Problem. global:" << prevProcCelli
                 << " expected on processor:" << Pstream::myProcNo()-1
-                << " but is calculated to be on procI:" << procI
+                << " but is calculated to be on proci:" << proci
                 << abort(FatalError);
         }
 
-        if (globalNumbering.isLocal(prevProcCellI))
+        if (globalNumbering.isLocal(prevProcCelli))
         {
             FatalErrorInFunction
-                << "Problem. globalCellI:" << prevProcCellI
+                << "Problem. globalCelli:" << prevProcCelli
                 << " calculated as local" << abort(FatalError);
         }
 
-        if (!globalNumbering.isLocal(procI, prevProcCellI))
+        if (!globalNumbering.isLocal(proci, prevProcCelli))
         {
             FatalErrorInFunction
-                << "Problem. globalCellI:" << prevProcCellI
-                << " not calculated as local on processor:" << procI
+                << "Problem. globalCelli:" << prevProcCelli
+                << " not calculated as local on processor:" << proci
                 << abort(FatalError);
         }
     }
@@ -135,30 +135,30 @@ int main(int argc, char *argv[])
 
     if (Pstream::myProcNo() < Pstream::nProcs()-1)
     {
-        label nextProcCellI = globalNumbering.toGlobal(mesh.nCells()-1)+1;
-        label procI = globalNumbering.whichProcID(nextProcCellI);
+        label nextProcCelli = globalNumbering.toGlobal(mesh.nCells()-1)+1;
+        label proci = globalNumbering.whichProcID(nextProcCelli);
 
-        if (procI != Pstream::myProcNo()+1)
+        if (proci != Pstream::myProcNo()+1)
         {
             FatalErrorInFunction
-                << "Problem. global:" << nextProcCellI
+                << "Problem. global:" << nextProcCelli
                 << " expected on processor:" << Pstream::myProcNo()+1
-                << " but is calculated to be on procI:" << procI
+                << " but is calculated to be on proci:" << proci
                 << abort(FatalError);
         }
 
-        if (globalNumbering.isLocal(nextProcCellI))
+        if (globalNumbering.isLocal(nextProcCelli))
         {
             FatalErrorInFunction
-                << "Problem. globalCellI:" << nextProcCellI
+                << "Problem. globalCelli:" << nextProcCelli
                 << " calculated as local" << abort(FatalError);
         }
 
-        if (!globalNumbering.isLocal(procI, nextProcCellI))
+        if (!globalNumbering.isLocal(proci, nextProcCelli))
         {
             FatalErrorInFunction
-                << "Problem. globalCellI:" << nextProcCellI
-                << " not calculated as local on processor:" << procI
+                << "Problem. globalCelli:" << nextProcCelli
+                << " not calculated as local on processor:" << proci
                 << abort(FatalError);
         }
     }

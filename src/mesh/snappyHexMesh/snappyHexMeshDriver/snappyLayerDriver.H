@@ -288,8 +288,8 @@ private:
                 bool sameEdgeNeighbour
                 (
                     const labelListList& globalEdgeFaces,
-                    const label myGlobalFaceI,
-                    const label nbrGlobFaceI,
+                    const label myGlobalFacei,
+                    const label nbrGlobFacei,
                     const label edgeI
                 ) const;
 
@@ -300,8 +300,8 @@ private:
                     const labelListList& globalEdgeFaces,
                     const label facei,
                     const label edgeI,
-                    const label myGlobFaceI,
-                    const label nbrGlobFaceI,
+                    const label myGlobFacei,
+                    const label nbrGlobFacei,
                     DynamicList<label>& vertices
                 ) const;
 

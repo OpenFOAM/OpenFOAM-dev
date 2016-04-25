@@ -95,16 +95,16 @@ Foam::procFacesGAMGProcAgglomeration::singleCellMesh
         DynamicList<label> nbrs;
         DynamicList<scalar> weights;
 
-        forAll(procFaces, procI)
+        forAll(procFaces, proci)
         {
-            const Map<label>& neighbours = procFaces[procI];
+            const Map<label>& neighbours = procFaces[proci];
 
             // Add all the higher processors
             nbrs.clear();
             weights.clear();
             forAllConstIter(Map<label>, neighbours, iter)
             {
-                if (iter.key() > procI)
+                if (iter.key() > proci)
                 {
                     nbrs.append(iter.key());
                     weights.append(iter());
@@ -112,7 +112,7 @@ Foam::procFacesGAMGProcAgglomeration::singleCellMesh
                 sort(nbrs);
                 forAll(nbrs, i)
                 {
-                    l.append(procI);
+                    l.append(proci);
                     u.append(nbrs[i]);
                     weight.append(weights[i]);
                 }

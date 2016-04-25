@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ public:
         // Access
 
             //- From region cell to patch face. Consecutively added so
-            //  cell at layerI is at patchFaceI*nLayers+layerI
+            //  cell at layerI is at patchFacei*nLayers+layerI
             const labelList& cellToFaceMap() const
             {
                 return cellToFaceMap_;

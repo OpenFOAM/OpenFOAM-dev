@@ -544,11 +544,11 @@ void Foam::refinementHistory::updateMesh(const mapPolyMesh& map)
                         << "Problem" << abort(FatalError);
                 }
 
-                label newCellI = reverseCellMap[celli];
+                label newCelli = reverseCellMap[celli];
 
-                if (newCellI >= 0)
+                if (newCelli >= 0)
                 {
-                    newVisibleCells[newCellI] = index;
+                    newVisibleCells[newCelli] = index;
                 }
             }
         }
@@ -580,9 +580,9 @@ void Foam::refinementHistory::subset
 
         forAll(newVisibleCells, celli)
         {
-            label oldCellI = cellMap[celli];
+            label oldCelli = cellMap[celli];
 
-            label index = visibleCells_[oldCellI];
+            label index = visibleCells_[oldCelli];
 
             // Check that cell is live (so its parent has no refinement)
             if (index >= 0 && splitCells_[index].addedCellsPtr_.valid())
@@ -686,15 +686,15 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
     const labelListList& subCellMap = map.cellMap().subMap();
 
-    forAll(subCellMap, procI)
+    forAll(subCellMap, proci)
     {
-        const labelList& newToOld = subCellMap[procI];
+        const labelList& newToOld = subCellMap[proci];
 
         forAll(newToOld, i)
         {
-            label oldCellI = newToOld[i];
+            label oldCelli = newToOld[i];
 
-            destination[oldCellI] = procI;
+            destination[oldCelli] = proci;
         }
     }
 
@@ -731,9 +731,9 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
     // Create subsetted refinement tree consisting of all parents that
     // move in their whole to other processor.
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        //Pout<< "-- Subetting for processor " << procI << endl;
+        //Pout<< "-- Subetting for processor " << proci << endl;
 
         // From uncompacted to compacted splitCells.
         labelList oldToNew(splitCells_.size(), -1);
@@ -751,9 +751,9 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
 //                << " nCells:" << splitCellNum[index]
 //                << endl;
 
-            if (splitCellProc[index] == procI && splitCellNum[index] == 8)
+            if (splitCellProc[index] == proci && splitCellNum[index] == 8)
             {
-                // Entry moves in its whole to procI
+                // Entry moves in its whole to proci
                 oldToNew[index] = newSplitCells.size();
                 newSplitCells.append(splitCells_[index]);
 
@@ -769,13 +769,13 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
         {
             label index = visibleCells_[celli];
 
-            if (index >= 0 && destination[celli] == procI)
+            if (index >= 0 && destination[celli] == proci)
             {
                 label parent = splitCells_[index].parent_;
 
                 //Pout<< "Adding refined cell " << celli
                 //    << " since moves to "
-                //    << procI << " old parent:" << parent << endl;
+                //    << proci << " old parent:" << parent << endl;
 
                 // Create new splitCell with parent
                 oldToNew[index] = newSplitCells.size();
@@ -815,30 +815,30 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
         }
 
 
-        const labelList& subMap = subCellMap[procI];
+        const labelList& subMap = subCellMap[proci];
 
         // New visible cells.
         labelList newVisibleCells(subMap.size(), -1);
 
-        forAll(subMap, newCellI)
+        forAll(subMap, newCelli)
         {
-            label oldCellI = subMap[newCellI];
+            label oldCelli = subMap[newCelli];
 
-            label oldIndex = visibleCells_[oldCellI];
+            label oldIndex = visibleCells_[oldCelli];
 
             if (oldIndex >= 0)
             {
-                newVisibleCells[newCellI] = oldToNew[oldIndex];
+                newVisibleCells[newCelli] = oldToNew[oldIndex];
             }
         }
 
-        //Pout<< nl << "--Subset for domain:" << procI << endl;
+        //Pout<< nl << "--Subset for domain:" << proci << endl;
         //writeDebug(newVisibleCells, newSplitCells);
         //Pout<< "---------" << nl << endl;
 
 
         // Send to neighbours
-        OPstream toNbr(Pstream::blocking, procI);
+        OPstream toNbr(Pstream::blocking, proci);
         toNbr << newSplitCells << newVisibleCells;
     }
 
@@ -852,13 +852,13 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
     visibleCells_.setSize(map.mesh().nCells());
     visibleCells_ = -1;
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        IPstream fromNbr(Pstream::blocking, procI);
+        IPstream fromNbr(Pstream::blocking, proci);
         List<splitCell8> newSplitCells(fromNbr);
         labelList newVisibleCells(fromNbr);
 
-        //Pout<< nl << "--Received from domain:" << procI << endl;
+        //Pout<< nl << "--Received from domain:" << proci << endl;
         //writeDebug(newVisibleCells, newSplitCells);
         //Pout<< "---------" << nl << endl;
 
@@ -867,7 +867,7 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
         // renumbering can be done here.
         label offset = splitCells_.size();
 
-        //Pout<< "**Renumbering data from proc " << procI << " with offset "
+        //Pout<< "**Renumbering data from proc " << proci << " with offset "
         //    << offset << endl;
 
         forAll(newSplitCells, index)
@@ -896,7 +896,7 @@ void Foam::refinementHistory::distribute(const mapDistributePolyMesh& map)
 
 
         // Combine visibleCell.
-        const labelList& constructMap = map.cellMap().constructMap()[procI];
+        const labelList& constructMap = map.cellMap().constructMap()[proci];
 
         forAll(newVisibleCells, i)
         {
@@ -1105,23 +1105,23 @@ void Foam::refinementHistory::storeSplit
     // cell they were created from (parentIndex)
     forAll(addedCells, i)
     {
-        label addedCellI = addedCells[i];
+        label addedCelli = addedCells[i];
 
         // Create entries for the split off cells. All of them
         // are visible.
-        visibleCells_[addedCellI] = allocateSplitCell(parentIndex, i);
+        visibleCells_[addedCelli] = allocateSplitCell(parentIndex, i);
     }
 }
 
 
 void Foam::refinementHistory::combineCells
 (
-    const label masterCellI,
+    const label masterCelli,
     const labelList& combinedCells
 )
 {
     // Save the parent structure
-    label parentIndex = splitCells_[visibleCells_[masterCellI]].parent_;
+    label parentIndex = splitCells_[visibleCells_[masterCelli]].parent_;
 
     // Remove the information for the combined cells
     forAll(combinedCells, i)
@@ -1134,7 +1134,7 @@ void Foam::refinementHistory::combineCells
 
     splitCell8& parentSplit = splitCells_[parentIndex];
     parentSplit.addedCellsPtr_.reset(NULL);
-    visibleCells_[masterCellI] = parentIndex;
+    visibleCells_[masterCelli] = parentIndex;
 }
 
 

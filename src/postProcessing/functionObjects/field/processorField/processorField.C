@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ void Foam::processorField::execute()
             obr_.lookupObject<volScalarField>("processorID");
 
         const_cast<volScalarField&>(procField) ==
-            dimensionedScalar("procI", dimless, Pstream::myProcNo());
+            dimensionedScalar("proci", dimless, Pstream::myProcNo());
     }
 }
 

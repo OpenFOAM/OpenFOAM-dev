@@ -150,9 +150,9 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
             forAll(pp, i)
             {
                 label facei = pp.start() + i;
-                label nbrFaceI = facei - nInternalFaces;
+                label nbrFacei = facei - nInternalFaces;
                 label own = mesh_.faceOwner()[facei];
-                nbrFaceCellAddr[nbrFaceI] = cellAddr[own];
+                nbrFaceCellAddr[nbrFacei] = cellAddr[own];
             }
         }
     }

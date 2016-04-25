@@ -49,8 +49,8 @@ Foam::label Foam::fvMeshTools::addPatch
 
 
     // Append at end unless there are processor patches
-    label insertPatchI = polyPatches.size();
-    label startFaceI = mesh.nFaces();
+    label insertPatchi = polyPatches.size();
+    label startFacei = mesh.nFaces();
 
     if (!isA<processorPolyPatch>(patch))
     {
@@ -60,8 +60,8 @@ Foam::label Foam::fvMeshTools::addPatch
 
             if (isA<processorPolyPatch>(pp))
             {
-                insertPatchI = patchi;
-                startFaceI = pp.start();
+                insertPatchi = patchi;
+                startFacei = pp.start();
                 break;
             }
         }
@@ -86,9 +86,9 @@ Foam::label Foam::fvMeshTools::addPatch
         patch.clone
         (
             polyPatches,
-            insertPatchI,   //index
+            insertPatchi,   //index
             0,              //size
-            startFaceI      //start
+            startFacei      //start
         )
     );
     fvPatches.setSize(sz+1);
@@ -179,17 +179,17 @@ Foam::label Foam::fvMeshTools::addPatch
     // Create reordering list
     // patches before insert position stay as is
     labelList oldToNew(sz+1);
-    for (label i = 0; i < insertPatchI; i++)
+    for (label i = 0; i < insertPatchi; i++)
     {
         oldToNew[i] = i;
     }
     // patches after insert position move one up
-    for (label i = insertPatchI; i < sz; i++)
+    for (label i = insertPatchi; i < sz; i++)
     {
         oldToNew[i] = i+1;
     }
     // appended patch gets moved to insert position
-    oldToNew[sz] = insertPatchI;
+    oldToNew[sz] = insertPatchi;
 
     // Shuffle into place
     polyPatches.reorder(oldToNew, validBoundary);
@@ -206,7 +206,7 @@ Foam::label Foam::fvMeshTools::addPatch
     reorderPatchFields<surfaceSymmTensorField>(mesh, oldToNew);
     reorderPatchFields<surfaceTensorField>(mesh, oldToNew);
 
-    return insertPatchI;
+    return insertPatchi;
 }
 
 

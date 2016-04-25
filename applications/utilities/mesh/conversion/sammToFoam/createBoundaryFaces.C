@@ -93,16 +93,16 @@ void Foam::sammMesh::createBoundaryFaces()
                     const faceList& curCellFaces =
                         cellFaces_[facePointCells[celli]];
 
-                    forAll(curCellFaces, cellFaceI)
+                    forAll(curCellFaces, cellFacei)
                     {
-                        if (sammEqualFace(curCellFaces[cellFaceI], curFace))
+                        if (sammEqualFace(curCellFaces[cellFacei], curFace))
                         {
                             // Found the cell face corresponding to this face
                             found = true;
 
                             // Set boundary face to the corresponding cell face
                             // which guarantees it is outward-pointing
-                            curFace = curCellFaces[cellFaceI];
+                            curFace = curCellFaces[cellFacei];
                         }
                         if (found) break;
                     }

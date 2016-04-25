@@ -62,15 +62,15 @@ void Foam::domainDecomposition::processInterCyclics
             // Store old sizes. Used to detect which inter-proc patches
             // have been added to.
             labelListList oldInterfaceSizes(nProcs_);
-            forAll(oldInterfaceSizes, procI)
+            forAll(oldInterfaceSizes, proci)
             {
-                labelList& curOldSizes = oldInterfaceSizes[procI];
+                labelList& curOldSizes = oldInterfaceSizes[proci];
 
-                curOldSizes.setSize(interPatchFaces[procI].size());
+                curOldSizes.setSize(interPatchFaces[proci].size());
                 forAll(curOldSizes, interI)
                 {
                     curOldSizes[interI] =
-                        interPatchFaces[procI][interI].size();
+                        interPatchFaces[proci][interI].size();
                 }
             }
 
@@ -94,28 +94,28 @@ void Foam::domainDecomposition::processInterCyclics
             }
 
             // 1. Check if any faces added to existing interfaces
-            forAll(oldInterfaceSizes, procI)
+            forAll(oldInterfaceSizes, proci)
             {
-                const labelList& curOldSizes = oldInterfaceSizes[procI];
+                const labelList& curOldSizes = oldInterfaceSizes[proci];
 
                 forAll(curOldSizes, interI)
                 {
                     label oldSz = curOldSizes[interI];
-                    if (interPatchFaces[procI][interI].size() > oldSz)
+                    if (interPatchFaces[proci][interI].size() > oldSz)
                     {
                         // Added faces to this interface. Add an entry
-                        append(subPatchIDs[procI][interI], patchi);
-                        append(subPatchStarts[procI][interI], oldSz);
+                        append(subPatchIDs[proci][interI], patchi);
+                        append(subPatchStarts[proci][interI], oldSz);
                     }
                 }
             }
 
             // 2. Any new interfaces
-            forAll(subPatchIDs, procI)
+            forAll(subPatchIDs, proci)
             {
-                label nIntfcs = interPatchFaces[procI].size();
-                subPatchIDs[procI].setSize(nIntfcs, labelList(1, patchi));
-                subPatchStarts[procI].setSize(nIntfcs, labelList(1, label(0)));
+                label nIntfcs = interPatchFaces[proci].size();
+                subPatchIDs[proci].setSize(nIntfcs, labelList(1, patchi));
+                subPatchStarts[proci].setSize(nIntfcs, labelList(1, label(0)));
             }
         }
     }

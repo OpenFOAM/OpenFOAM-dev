@@ -28,7 +28,7 @@ Description
     Determines processor-processor connection. After instantiation contains
     on all processors the processor-processor connection table.
 
-    *this[procI] gives the list of neighbouring processors.
+    *this[proci] gives the list of neighbouring processors.
 
     TODO: This does not currently correctly support multiple processor
     patches connecting two processors.

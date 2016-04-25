@@ -250,8 +250,8 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //
 //                // Vertex might be used by multiple faces. Which one to
 //                // use? For now last one wins.
-//                label dualFaceI = dualPatchStarts[patchi]+i;
-//                vertexToDualAddressing[vertI] = -dualFaceI-1;
+//                label dualFacei = dualPatchStarts[patchi]+i;
+//                vertexToDualAddressing[vertI] = -dualFacei-1;
 //            }
 //        }
 //
@@ -498,19 +498,19 @@ void Foam::conformalVoronoiMesh::checkProcessorPatchesMatch
     {
         bool allMatch = true;
 
-        forAll(procPatchSizes, procI)
+        forAll(procPatchSizes, proci)
         {
-            const labelList& patchSizes = procPatchSizes[procI];
+            const labelList& patchSizes = procPatchSizes[proci];
 
             forAll(patchSizes, patchi)
             {
-                if (patchSizes[patchi] != procPatchSizes[patchi][procI])
+                if (patchSizes[patchi] != procPatchSizes[patchi][proci])
                 {
                     allMatch = false;
 
-                    Info<< indent << "Patches " << procI << " and " << patchi
+                    Info<< indent << "Patches " << proci << " and " << patchi
                         << " have different sizes: " << patchSizes[patchi]
-                        << " and " << procPatchSizes[patchi][procI] << endl;
+                        << " and " << procPatchSizes[patchi][proci] << endl;
                 }
             }
         }
@@ -708,18 +708,18 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
             if (changed)
             {
                 // Merge patch face reordering into mesh face reordering table
-                forAll(patchFaceRotation, patchFaceI)
+                forAll(patchFaceRotation, patchFacei)
                 {
-                    rotation[patchFaceI + patchStartFace]
-                        = patchFaceRotation[patchFaceI];
+                    rotation[patchFacei + patchStartFace]
+                        = patchFaceRotation[patchFacei];
                 }
 
-                forAll(patchFaceMap, patchFaceI)
+                forAll(patchFaceMap, patchFacei)
                 {
-                    if (patchFaceMap[patchFaceI] != patchFaceI)
+                    if (patchFaceMap[patchFacei] != patchFacei)
                     {
-                        faceMap[patchFaceI + patchStartFace]
-                            = patchFaceMap[patchFaceI] + patchStartFace;
+                        faceMap[patchFacei + patchStartFace]
+                            = patchFaceMap[patchFacei] + patchStartFace;
                     }
                 }
 

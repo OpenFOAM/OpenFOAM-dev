@@ -51,8 +51,8 @@ void Foam::CFCCellToCellStencil::calcFaceBoundaryData
             // For coupled faces get the cell on the other side
             forAll(pp, i)
             {
-                label bFaceI = facei-mesh().nInternalFaces();
-                neiGlobal[bFaceI] = globalNumbering().toGlobal(own[facei]);
+                label bFacei = facei-mesh().nInternalFaces();
+                neiGlobal[bFacei] = globalNumbering().toGlobal(own[facei]);
                 facei++;
             }
         }
@@ -60,8 +60,8 @@ void Foam::CFCCellToCellStencil::calcFaceBoundaryData
         {
             forAll(pp, i)
             {
-                label bFaceI = facei-mesh().nInternalFaces();
-                neiGlobal[bFaceI] = -1;
+                label bFacei = facei-mesh().nInternalFaces();
+                neiGlobal[bFacei] = -1;
                 facei++;
             }
         }
@@ -70,9 +70,9 @@ void Foam::CFCCellToCellStencil::calcFaceBoundaryData
             // For noncoupled faces get the boundary face.
             forAll(pp, i)
             {
-                label bFaceI = facei-mesh().nInternalFaces();
-                neiGlobal[bFaceI] =
-                    globalNumbering().toGlobal(mesh().nCells()+bFaceI);
+                label bFacei = facei-mesh().nInternalFaces();
+                neiGlobal[bFacei] =
+                    globalNumbering().toGlobal(mesh().nCells()+bFacei);
                 facei++;
             }
         }
@@ -122,19 +122,19 @@ void Foam::CFCCellToCellStencil::calcCellStencil
 
             if (mesh().isInternalFace(facei))
             {
-                label nbrCellI = own[facei];
-                if (nbrCellI == celli)
+                label nbrCelli = own[facei];
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = nei[facei];
+                    nbrCelli = nei[facei];
                 }
-                cCells[nNbr++] = globalNumbering().toGlobal(nbrCellI);
+                cCells[nNbr++] = globalNumbering().toGlobal(nbrCelli);
             }
             else
             {
-                label nbrCellI = neiGlobal[facei-mesh().nInternalFaces()];
-                if (nbrCellI != -1)
+                label nbrCelli = neiGlobal[facei-mesh().nInternalFaces()];
+                if (nbrCelli != -1)
                 {
-                    cCells[nNbr++] = nbrCellI;
+                    cCells[nNbr++] = nbrCelli;
                 }
             }
         }

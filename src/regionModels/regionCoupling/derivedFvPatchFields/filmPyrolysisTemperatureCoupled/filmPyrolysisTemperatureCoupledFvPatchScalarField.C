@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,22 +152,22 @@ void Foam::filmPyrolysisTemperatureCoupledFvPatchScalarField::updateCoeffs()
     const filmModelType& filmModel =
         db().time().lookupObject<filmModelType>(filmRegionName_);
 
-    const label filmPatchI = filmModel.regionPatchID(patchI);
+    const label filmPatchi = filmModel.regionPatchID(patchI);
 
-    scalarField alphaFilm = filmModel.alpha().boundaryField()[filmPatchI];
-    filmModel.toPrimary(filmPatchI, alphaFilm);
+    scalarField alphaFilm = filmModel.alpha().boundaryField()[filmPatchi];
+    filmModel.toPrimary(filmPatchi, alphaFilm);
 
-    scalarField TFilm = filmModel.Ts().boundaryField()[filmPatchI];
-    filmModel.toPrimary(filmPatchI, TFilm);
+    scalarField TFilm = filmModel.Ts().boundaryField()[filmPatchi];
+    filmModel.toPrimary(filmPatchi, TFilm);
 
     // Retrieve pyrolysis model
     const pyrModelType& pyrModel =
         db().time().lookupObject<pyrModelType>(pyrolysisRegionName_);
 
-    const label pyrPatchI = pyrModel.regionPatchID(patchI);
+    const label pyrPatchi = pyrModel.regionPatchID(patchI);
 
-    scalarField TPyr = pyrModel.T().boundaryField()[pyrPatchI];
-    pyrModel.toPrimary(pyrPatchI, TPyr);
+    scalarField TPyr = pyrModel.T().boundaryField()[pyrPatchi];
+    pyrModel.toPrimary(pyrPatchi, TPyr);
 
 
     // Evaluate temperature

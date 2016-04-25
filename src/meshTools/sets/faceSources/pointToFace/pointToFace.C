@@ -80,9 +80,9 @@ void Foam::pointToFace::combine(topoSet& set, const bool add) const
             const label pointI = iter.key();
             const labelList& pFaces = mesh_.pointFaces()[pointI];
 
-            forAll(pFaces, pFaceI)
+            forAll(pFaces, pFacei)
             {
-                addOrDelete(set, pFaces[pFaceI], add);
+                addOrDelete(set, pFaces[pFacei], add);
             }
         }
     }
@@ -98,9 +98,9 @@ void Foam::pointToFace::combine(topoSet& set, const bool add) const
             const label pointI = iter.key();
             const labelList& pFaces = mesh_.pointFaces()[pointI];
 
-            forAll(pFaces, pFaceI)
+            forAll(pFaces, pFacei)
             {
-                const label facei = pFaces[pFaceI];
+                const label facei = pFaces[pFacei];
 
                 Map<label>::iterator fndFace = numPoints.find(facei);
 

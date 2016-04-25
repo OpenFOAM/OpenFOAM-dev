@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ inline void Foam::refinementData::leaveDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -98,7 +98,7 @@ inline void Foam::refinementData::enterDomain
 (
     const polyMesh&,
     const polyPatch& patch,
-    const label patchFaceI,
+    const label patchFacei,
     const point& faceCentre,
     TrackingData& td
 )
@@ -110,8 +110,8 @@ template<class TrackingData>
 inline bool Foam::refinementData::updateCell
 (
     const polyMesh&,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const refinementData& neighbourInfo,
     const scalar tol,
     TrackingData& td
@@ -172,8 +172,8 @@ template<class TrackingData>
 inline bool Foam::refinementData::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const refinementData& neighbourInfo,
     const scalar tol,
     TrackingData& td
@@ -207,7 +207,7 @@ template<class TrackingData>
 inline bool Foam::refinementData::updateFace
 (
     const polyMesh&,
-    const label thisFaceI,
+    const label thisFacei,
     const refinementData& neighbourInfo,
     const scalar tol,
     TrackingData& td

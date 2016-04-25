@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ public:
             (
                 const polyMesh&,
                 const polyPatch&,
-                const label patchFaceI,
+                const label patchFacei,
                 const point& faceCentre,
                 TrackingData& td
             );
@@ -128,7 +128,7 @@ public:
             (
                 const polyMesh&,
                 const polyPatch&,
-                const label patchFaceI,
+                const label patchFacei,
                 const point& faceCentre,
                 TrackingData& td
             );
@@ -147,8 +147,8 @@ public:
             inline bool updateCell
             (
                 const polyMesh&,
-                const label thisCellI,
-                const label neighbourFaceI,
+                const label thisCelli,
+                const label neighbourFacei,
                 const sweepData& svf,
                 const scalar tol,
                 TrackingData& td
@@ -159,8 +159,8 @@ public:
             inline bool updateFace
             (
                 const polyMesh&,
-                const label thisFaceI,
-                const label neighbourCellI,
+                const label thisFacei,
+                const label neighbourCelli,
                 const sweepData& svf,
                 const scalar tol,
                 TrackingData& td
@@ -171,7 +171,7 @@ public:
             inline bool updateFace
             (
                 const polyMesh&,
-                const label thisFaceI,
+                const label thisFacei,
                 const sweepData& svf,
                 const scalar tol,
                 TrackingData& td

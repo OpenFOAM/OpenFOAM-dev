@@ -219,11 +219,11 @@ class fvMeshDistribute
 
         // Other
 
-            //- Remove cells. Add all exposed faces to patch oldInternalPatchI
+            //- Remove cells. Add all exposed faces to patch oldInternalPatchi
             autoPtr<mapPolyMesh> doRemoveCells
             (
                 const labelList& cellsToRemove,
-                const label oldInternalPatchI
+                const label oldInternalPatchi
             );
 
             //- Add processor patches. Changes mesh and returns per neighbour

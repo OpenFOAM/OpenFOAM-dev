@@ -144,16 +144,16 @@ cellShape create3DCellShape
 
     bool found = false;
 
-    forAll(localFaces, meshFaceI)
+    forAll(localFaces, meshFacei)
     {
-        if (localFaces[meshFaceI].size() == firstModelFace.size())
+        if (localFaces[meshFacei].size() == firstModelFace.size())
         {
             // Match. Insert points into the pointLabels
             found = true;
 
-            const labelList& curMeshFace = localFaces[meshFaceI];
+            const labelList& curMeshFace = localFaces[meshFacei];
 
-            meshFaceUsed[meshFaceI] = true;
+            meshFaceUsed[meshFacei] = true;
 
             forAll(curMeshFace, pointI)
             {
@@ -173,26 +173,26 @@ cellShape create3DCellShape
             << abort(FatalError);
     }
 
-    for (label modelFaceI = 1; modelFaceI < modelFaces.size(); modelFaceI++)
+    for (label modelFacei = 1; modelFacei < modelFaces.size(); modelFacei++)
     {
         // get the next model face
         const labelList& curModelFace =
             modelFaces
-            [faceMatchingOrder[fluentCellModelID][modelFaceI]];
+            [faceMatchingOrder[fluentCellModelID][modelFacei]];
 
         found = false;
 
         // Loop through mesh faces until a match is found
-        forAll(localFaces, meshFaceI)
+        forAll(localFaces, meshFacei)
         {
             if
             (
-                !meshFaceUsed[meshFaceI]
-             && localFaces[meshFaceI].size() == curModelFace.size()
+                !meshFaceUsed[meshFacei]
+             && localFaces[meshFacei].size() == curModelFace.size()
             )
             {
                 // A possible match. A mesh face will be rotated, so make a copy
-                labelList meshFaceLabels = localFaces[meshFaceI];
+                labelList meshFaceLabels = localFaces[meshFacei];
 
                 for
                 (
@@ -231,7 +231,7 @@ cellShape create3DCellShape
                                 meshFaceLabels[pointI];
                         }
 
-                        meshFaceUsed[meshFaceI] = true;
+                        meshFaceUsed[meshFacei] = true;
 
                         break;
                     }
@@ -258,7 +258,7 @@ cellShape create3DCellShape
             // A model face is not matched. Shape detection failed
             FatalErrorInFunction
                 << "Cannot find match for face "
-                << modelFaceI
+                << modelFacei
                 << ".\nModel: " << curModel.name() << " model face: "
                 << curModelFace << " Mesh faces: " << localFaces
                 << "Matched points: " << pointLabels

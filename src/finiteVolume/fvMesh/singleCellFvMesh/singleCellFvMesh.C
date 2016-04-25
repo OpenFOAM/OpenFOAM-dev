@@ -98,9 +98,9 @@ void Foam::singleCellFvMesh::agglomerateMesh
 
                 forAll(pp, i)
                 {
-                    label bFaceI = offset+i;
+                    label bFacei = offset+i;
                     label myZone = agglom[patchi][i];
-                    label nbrZone = nbrAgglom[bFaceI];
+                    label nbrZone = nbrAgglom[bFacei];
 
                     Map<label>::const_iterator iter = localToNbr.find(myZone);
 
@@ -182,9 +182,9 @@ void Foam::singleCellFvMesh::agglomerateMesh
                     // - patchStarts[patchi]      : coarse mesh patch start
                     // - myAgglom                 : agglomeration
                     // -  agglomToPatch[myAgglom] : fine mesh faces for zone
-                    label coarsePatchFaceI = coarseI - patchStarts[patchi];
-                    patchFaceMap_[patchi][coarsePatchFaceI] = myAgglom;
-                    agglomToFace[myAgglom] = coarsePatchFaceI;
+                    label coarsePatchFacei = coarseI - patchStarts[patchi];
+                    patchFaceMap_[patchi][coarsePatchFacei] = myAgglom;
+                    agglomToFace[myAgglom] = coarsePatchFacei;
 
                     const labelList& fineFaces = agglomToPatch[myAgglom];
 
@@ -329,11 +329,11 @@ void Foam::singleCellFvMesh::agglomerateMesh
 
             forAll(oldFz, i)
             {
-                label newFaceI = reverseFaceMap_[oldFz[i]];
+                label newFacei = reverseFaceMap_[oldFz[i]];
 
-                if (newFaceI != -1)
+                if (newFacei != -1)
                 {
-                    newAddressing.append(newFaceI);
+                    newAddressing.append(newFacei);
                     newFlipMap.append(oldFz.flipMap()[i]);
                 }
             }

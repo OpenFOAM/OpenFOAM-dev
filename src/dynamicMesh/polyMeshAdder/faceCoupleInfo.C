@@ -169,22 +169,22 @@ void Foam::faceCoupleInfo::writePointsFaces() const
 
         pointField equivMasterFaces(c.size());
 
-        forAll(cutToMasterFaces(), cutFaceI)
+        forAll(cutToMasterFaces(), cutFacei)
         {
-            label masterFaceI = cutToMasterFaces()[cutFaceI];
+            label masterFacei = cutToMasterFaces()[cutFacei];
 
-            if (masterFaceI != -1)
+            if (masterFacei != -1)
             {
-                equivMasterFaces[cutFaceI] = m[masterFaceI].centre(m.points());
+                equivMasterFaces[cutFacei] = m[masterFacei].centre(m.points());
             }
             else
             {
                 WarningInFunction
-                    << "No master face for cut face " << cutFaceI
-                    << " at position " << c[cutFaceI].centre(c.points())
+                    << "No master face for cut face " << cutFacei
+                    << " at position " << c[cutFacei].centre(c.points())
                     << endl;
 
-                equivMasterFaces[cutFaceI] = Zero;
+                equivMasterFaces[cutFacei] = Zero;
             }
         }
 
@@ -201,11 +201,11 @@ void Foam::faceCoupleInfo::writePointsFaces() const
 
         pointField equivSlaveFaces(c.size());
 
-        forAll(cutToSlaveFaces(), cutFaceI)
+        forAll(cutToSlaveFaces(), cutFacei)
         {
-            label slaveFaceI = cutToSlaveFaces()[cutFaceI];
+            label slaveFacei = cutToSlaveFaces()[cutFacei];
 
-            equivSlaveFaces[cutFaceI] = s[slaveFaceI].centre(s.points());
+            equivSlaveFaces[cutFacei] = s[slaveFacei].centre(s.points());
         }
 
         writeOBJ
@@ -350,9 +350,9 @@ bool Foam::faceCoupleInfo::regionEdge
         {
             label facei = eFaces[i];
 
-            label meshFaceI = slavePatch().addressing()[facei];
+            label meshFacei = slavePatch().addressing()[facei];
 
-            label patchI = slaveMesh.boundaryMesh().whichPatch(meshFaceI);
+            label patchI = slaveMesh.boundaryMesh().whichPatch(meshFacei);
 
             if (patch0 == -1)
             {
@@ -731,12 +731,12 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
     labelList cutPointRegion(cutPoints.size(), -1);
     DynamicList<label> cutPointRegionMaster;
 
-    forAll(patchFaces, patchFaceI)
+    forAll(patchFaces, patchFacei)
     {
-        const face& patchF = patchFaces[patchFaceI];
+        const face& patchF = patchFaces[patchFacei];
 
-        //const face& cutF = cutFaces[patchToCutFaces[patchFaceI]];
-        const face& cutF = cutFaces[patchFaceI];
+        //const face& cutF = cutFaces[patchToCutFaces[patchFacei]];
+        const face& cutF = cutFaces[patchFacei];
 
         // Do geometric matching to get position of cutF[0] in patchF
         label patchFp = matchFaces
@@ -1009,12 +1009,12 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
 
     for
     (
-        label mesh1FaceI = mesh1.nInternalFaces();
-        mesh1FaceI < mesh1.nFaces();
-        mesh1FaceI++
+        label mesh1Facei = mesh1.nInternalFaces();
+        mesh1Facei < mesh1.nFaces();
+        mesh1Facei++
     )
     {
-        const face& f1 = mesh1.faces()[mesh1FaceI];
+        const face& f1 = mesh1.faces()[mesh1Facei];
 
         // Generate face centre (prevent cellCentres() reconstruction)
         point fc(f1.centre(mesh1.points()));
@@ -1023,7 +1023,7 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
 
         if (nearInfo.hit())
         {
-            label mesh0FaceI = tree.shapes().faceLabels()[nearInfo.index()];
+            label mesh0Facei = tree.shapes().faceLabels()[nearInfo.index()];
 
             // Check if points of f1 actually lie on top of mesh0 face
             // This is the bit that might fail since if f0 is severely warped
@@ -1036,14 +1036,14 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
                 (
                     f1,
                     mesh1.points(),
-                    mesh0.faces()[mesh0FaceI],
+                    mesh0.faces()[mesh0Facei],
                     mesh0.points()
                 );
 
             if (dist < absTol)
             {
-                mesh0Set.insert(mesh0FaceI);
-                mesh1Set.insert(mesh1FaceI);
+                mesh0Set.insert(mesh0Facei);
+                mesh1Set.insert(mesh1Facei);
             }
         }
     }
@@ -1081,17 +1081,17 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
 
         label nChanged = 0;
 
-        forAll(cutToMasterFaces_, cutFaceI)
+        forAll(cutToMasterFaces_, cutFacei)
         {
-            const label masterFaceI = cutToMasterFaces_[cutFaceI];
+            const label masterFacei = cutToMasterFaces_[cutFacei];
 
-            if (masterFaceI != -1)
+            if (masterFacei != -1)
             {
                 // We now have a cutFace for which we have already found a
                 // master face. Grow this masterface across any internal edge
                 // (internal: no corresponding master edge)
 
-                const labelList& fEdges = cutFaceEdges[cutFaceI];
+                const labelList& fEdges = cutFaceEdges[cutFacei];
 
                 forAll(fEdges, i)
                 {
@@ -1102,7 +1102,7 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
                         // So this edge:
                         // - internal to the cutPatch (since all region edges
                         //   marked before)
-                        // - on cutFaceI which corresponds to masterFace.
+                        // - on cutFacei which corresponds to masterFace.
                         // Mark all connected faces with this masterFace.
 
                         const labelList& eFaces = cutEdgeFaces[cutEdgeI];
@@ -1113,11 +1113,11 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
 
                             if (cutToMasterFaces_[facei] == -1)
                             {
-                                cutToMasterFaces_[facei] = masterFaceI;
+                                cutToMasterFaces_[facei] = masterFacei;
                                 candidates.erase(facei);
                                 nChanged++;
                             }
-                            else if (cutToMasterFaces_[facei] != masterFaceI)
+                            else if (cutToMasterFaces_[facei] != masterFacei)
                             {
                                 const pointField& cutPoints =
                                     cutFaces().points();
@@ -1129,7 +1129,7 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
                                 label myMaster = cutToMasterFaces_[facei];
                                 const face& myF = masterPatch()[myMaster];
 
-                                const face& nbrF = masterPatch()[masterFaceI];
+                                const face& nbrF = masterPatch()[masterFacei];
 
                                 FatalErrorInFunction
                                     << "Cut face "
@@ -1137,8 +1137,8 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
                                     << " has master "
                                     << myMaster
                                     << " but also connects to nbr face "
-                                    << cutFaces()[cutFaceI].points(cutPoints)
-                                    << " with master " << masterFaceI
+                                    << cutFaces()[cutFacei].points(cutPoints)
+                                    << " with master " << masterFacei
                                     << nl
                                     << "myMasterFace:"
                                     << myF.points(masterPoints)
@@ -1190,24 +1190,24 @@ void Foam::faceCoupleInfo::checkMatch(const labelList& cutToMasterEdges) const
             // Internal edge. Check that master face is same on both sides.
             const labelList& cutEFaces = cutFaces().edgeFaces()[cutEdgeI];
 
-            label masterFaceI = -1;
+            label masterFacei = -1;
 
             forAll(cutEFaces, i)
             {
-                label cutFaceI = cutEFaces[i];
+                label cutFacei = cutEFaces[i];
 
-                if (cutToMasterFaces_[cutFaceI] != -1)
+                if (cutToMasterFaces_[cutFacei] != -1)
                 {
-                    if (masterFaceI == -1)
+                    if (masterFacei == -1)
                     {
-                        masterFaceI = cutToMasterFaces_[cutFaceI];
+                        masterFacei = cutToMasterFaces_[cutFacei];
                     }
-                    else if (masterFaceI != cutToMasterFaces_[cutFaceI])
+                    else if (masterFacei != cutToMasterFaces_[cutFacei])
                     {
-                        label myMaster = cutToMasterFaces_[cutFaceI];
+                        label myMaster = cutToMasterFaces_[cutFacei];
                         const face& myF = masterLocalFaces[myMaster];
 
-                        const face& nbrF = masterLocalFaces[masterFaceI];
+                        const face& nbrF = masterLocalFaces[masterFacei];
 
                         FatalErrorInFunction
                             << "Internal CutEdge " << e
@@ -1215,7 +1215,7 @@ void Foam::faceCoupleInfo::checkMatch(const labelList& cutToMasterEdges) const
                             << cutLocalPoints[e[0]]
                             << cutLocalPoints[e[1]]
                             << " connects to master " << myMaster
-                            << " and to master " << masterFaceI << nl
+                            << " and to master " << masterFacei << nl
                             << "myMasterFace:"
                             << myF.points(masterLocalPoints)
                             << "  nbrMasterFace:"
@@ -1239,7 +1239,7 @@ Foam::label Foam::faceCoupleInfo::matchEdgeFaces
     // than one region edge. Updates cutToMasterFaces_ and sets candidates which
     // is for every cutface on a region edge the possible master faces.
 
-    // For every unassigned cutFaceI the possible list of master faces.
+    // For every unassigned cutFacei the possible list of master faces.
     candidates.clear();
     candidates.resize(cutFaces().size());
 
@@ -1260,24 +1260,24 @@ Foam::label Foam::faceCoupleInfo::matchEdgeFaces
 
             forAll(cutEFaces, i)
             {
-                label cutFaceI = cutEFaces[i];
+                label cutFacei = cutEFaces[i];
 
-                if (cutToMasterFaces_[cutFaceI] == -1)
+                if (cutToMasterFaces_[cutFacei] == -1)
                 {
-                    // So this face (cutFaceI) is on an edge (cutEdgeI) that
+                    // So this face (cutFacei) is on an edge (cutEdgeI) that
                     // is used by some master faces (masterEFaces). Check if
-                    // the cutFaceI and some of these masterEFaces share more
+                    // the cutFacei and some of these masterEFaces share more
                     // than one edge (which uniquely defines face)
 
                     // Combine master faces with current set of candidate
                     // master faces.
-                    Map<labelList>::iterator fnd = candidates.find(cutFaceI);
+                    Map<labelList>::iterator fnd = candidates.find(cutFacei);
 
                     if (fnd == candidates.end())
                     {
-                        // No info yet for cutFaceI. Add all master faces as
+                        // No info yet for cutFacei. Add all master faces as
                         // candidates
-                        candidates.insert(cutFaceI, masterEFaces);
+                        candidates.insert(cutFacei, masterEFaces);
                     }
                     else
                     {
@@ -1300,8 +1300,8 @@ Foam::label Foam::faceCoupleInfo::matchEdgeFaces
                         {
                             // We found a perfect match. Delete entry from
                             // candidates map.
-                            cutToMasterFaces_[cutFaceI] = newCandidates[0];
-                            candidates.erase(cutFaceI);
+                            cutToMasterFaces_[cutFacei] = newCandidates[0];
+                            candidates.erase(cutFacei);
                             nChanged++;
                         }
                         else
@@ -1357,21 +1357,21 @@ Foam::label Foam::faceCoupleInfo::geometricMatchEdgeFaces
 
     forAllConstIter(Map<labelList>, candidates, iter)
     {
-        label cutFaceI = iter.key();
+        label cutFacei = iter.key();
 
-        const face& cutF = cutFaces()[cutFaceI];
+        const face& cutF = cutFaces()[cutFacei];
 
-        if (cutToMasterFaces_[cutFaceI] == -1)
+        if (cutToMasterFaces_[cutFacei] == -1)
         {
             const labelList& masterFaces = iter();
 
             // Find the best matching master face.
             scalar minDist = GREAT;
-            label minMasterFaceI = -1;
+            label minMasterFacei = -1;
 
             forAll(masterFaces, i)
             {
-                label masterFaceI = masterFaces[i];
+                label masterFacei = masterFaces[i];
 
                 if (masterToCutFaces[masterFaces[i]].empty())
                 {
@@ -1379,33 +1379,33 @@ Foam::label Foam::faceCoupleInfo::geometricMatchEdgeFaces
                     (
                         cutF,
                         cutPoints,
-                        masterPatch()[masterFaceI],
+                        masterPatch()[masterFacei],
                         masterPatch().points()
                     );
 
                     if (dist < minDist)
                     {
                         minDist = dist;
-                        minMasterFaceI = masterFaceI;
+                        minMasterFacei = masterFacei;
                     }
                 }
             }
 
-            if (minMasterFaceI != -1)
+            if (minMasterFacei != -1)
             {
-                cutToMasterFaces_[cutFaceI] = minMasterFaceI;
-                masterToCutFaces[minMasterFaceI] = cutFaceI;
+                cutToMasterFaces_[cutFacei] = minMasterFacei;
+                masterToCutFaces[minMasterFacei] = cutFacei;
                 nChanged++;
             }
         }
     }
 
     // (inefficiently) force candidates to be uptodate.
-    forAll(cutToMasterFaces_, cutFaceI)
+    forAll(cutToMasterFaces_, cutFacei)
     {
-        if (cutToMasterFaces_[cutFaceI] != -1)
+        if (cutToMasterFaces_[cutFacei] != -1)
         {
-            candidates.erase(cutFaceI);
+            candidates.erase(cutFacei);
         }
     }
 
@@ -1775,7 +1775,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
             << " matching (topological) cut faces to masterPatch" << endl;
     }
 
-    // For every unassigned cutFaceI the possible list of master faces.
+    // For every unassigned cutFacei the possible list of master faces.
     Map<labelList> candidates(cutFaces().size());
 
     cutToMasterFaces_.setSize(cutFaces().size());
@@ -1832,15 +1832,15 @@ void Foam::faceCoupleInfo::subDivisionMatch
 
 
     // All cut faces matched?
-    forAll(cutToMasterFaces_, cutFaceI)
+    forAll(cutToMasterFaces_, cutFacei)
     {
-        if (cutToMasterFaces_[cutFaceI] == -1)
+        if (cutToMasterFaces_[cutFacei] == -1)
         {
-            const face& cutF = cutFaces()[cutFaceI];
+            const face& cutF = cutFaces()[cutFacei];
 
             FatalErrorInFunction
                 << "Did not match all of cutFaces to a master face" << nl
-                << "First unmatched cut face:" << cutFaceI << " with points:"
+                << "First unmatched cut face:" << cutFacei << " with points:"
                 << UIndirectList<point>(cutFaces().points(), cutF)()
                 << nl
                 << "This usually means that the slave patch is not a"

@@ -151,7 +151,7 @@ protected:
 
         //- Index of the face that owns the decomposed tet that the
         //  particle is in
-        label tetFaceI_;
+        label tetFacei_;
 
         //- Index of the point on the face that defines the decomposed
         //  tet that the particle is in.  Relative to the face base
@@ -188,7 +188,7 @@ protected:
             const vector& tetArea,
             const label tetPlaneBasePtI,
             const label celli,
-            const label tetFaceI,
+            const label tetFacei,
             const label tetPtI,
             const scalar tol
         ) const;
@@ -202,7 +202,7 @@ protected:
             const vector& tetArea,
             const label tetPlaneBasePtI,
             const label celli,
-            const label tetFaceI,
+            const label tetFacei,
             const label tetPtI,
             const scalar tol
         ) const;
@@ -215,7 +215,7 @@ protected:
         inline void crossEdgeConnectedFace
         (
             const label& celli,
-            label& tetFaceI,
+            label& tetFacei,
             label& tetPtI,
             const edge& e
         );
@@ -316,7 +316,7 @@ public:
         DefinePropertyList
         (
             "(Px Py Pz) celli facei stepFraction "
-            "tetFaceI tetPtI origProc origId"
+            "tetFacei tetPtI origProc origId"
         );
 
         //- Cumulative particle counter - used to provode unique ID
@@ -342,11 +342,11 @@ public:
             const polyMesh& mesh,
             const vector& position,
             const label celli,
-            const label tetFaceI,
+            const label tetFacei,
             const label tetPtI
         );
 
-        //- Construct from components, tetFaceI_ and tetPtI_ are not
+        //- Construct from components, tetFacei_ and tetPtI_ are not
         //  supplied so they will be deduced by a search
         particle
         (
@@ -438,11 +438,11 @@ public:
             //  particle occupies.
             inline tetPointRef currentTet() const;
 
-            //- Return the normal of the tri on tetFaceI_ for the
+            //- Return the normal of the tri on tetFacei_ for the
             //  current tet.
             inline vector normal() const;
 
-            //- Return the normal of the tri on tetFaceI_ for the
+            //- Return the normal of the tri on tetFacei_ for the
             //  current tet at the start of the timestep, i.e. based
             //  on oldPoints
             inline vector oldNormal() const;

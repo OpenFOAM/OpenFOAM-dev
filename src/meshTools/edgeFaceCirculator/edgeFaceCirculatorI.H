@@ -268,7 +268,7 @@ void Foam::edgeFaceCirculator::setCanonical()
     else
     {
         // Internal edge. Walk until we hit minimum face label.
-        label minFaceI = faceLabel_;
+        label minFacei = faceLabel_;
         bool minOwnerSide = ownerSide_;
         label minIndex = index_;
 
@@ -295,15 +295,15 @@ void Foam::edgeFaceCirculator::setCanonical()
                     << abort(FatalError);
             }
 
-            if (faceLabel_ < minFaceI)
+            if (faceLabel_ < minFacei)
             {
-                minFaceI = faceLabel_;
+                minFacei = faceLabel_;
                 minOwnerSide = ownerSide_;
                 minIndex = index_;
             }
         }
 
-        faceLabel_ = minFaceI;
+        faceLabel_ = minFacei;
         ownerSide_ = minOwnerSide;
         index_ = minIndex;
         startFaceLabel_ = faceLabel_;

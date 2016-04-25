@@ -66,7 +66,7 @@ bool Foam::cellFeatures::faceAlignedEdge(const label facei, const label edgeI)
 Foam::label Foam::cellFeatures::nextEdge
 (
     const Map<label>& toSuperFace,
-    const label superFaceI,
+    const label superFacei,
     const label thisEdgeI,
     const label thisVertI
 ) const
@@ -83,14 +83,14 @@ Foam::label Foam::cellFeatures::nextEdge
 
             const labelList& eFaces = mesh_.edgeFaces()[edgeI];
 
-            forAll(eFaces, eFaceI)
+            forAll(eFaces, eFacei)
             {
-                label facei = eFaces[eFaceI];
+                label facei = eFaces[eFacei];
 
                 if
                 (
                     meshTools::faceOnCell(mesh_, celli_, facei)
-                 && (toSuperFace[facei] == superFaceI)
+                 && (toSuperFace[facei] == superFacei)
                 )
                 {
                     return edgeI;
@@ -179,13 +179,13 @@ bool Foam::cellFeatures::isCellFeatureEdge
 void Foam::cellFeatures::walkSuperFace
 (
     const label facei,
-    const label superFaceI,
+    const label superFacei,
     Map<label>& toSuperFace
 ) const
 {
     if (!toSuperFace.found(facei))
     {
-        toSuperFace.insert(facei, superFaceI);
+        toSuperFace.insert(facei, superFacei);
 
         const labelList& fEdges = mesh_.faceEdges()[facei];
 
@@ -207,7 +207,7 @@ void Foam::cellFeatures::walkSuperFace
                 walkSuperFace
                 (
                     face0,
-                    superFaceI,
+                    superFacei,
                     toSuperFace
                 );
             }
@@ -227,31 +227,31 @@ void Foam::cellFeatures::calcSuperFaces() const
     //    >=0 : superFace
     Map<label> toSuperFace(10*cFaces.size());
 
-    label superFaceI = 0;
+    label superFacei = 0;
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         if (!toSuperFace.found(facei))
         {
             walkSuperFace
             (
                 facei,
-                superFaceI,
+                superFacei,
                 toSuperFace
             );
-            superFaceI++;
+            superFacei++;
         }
     }
 
     // Construct superFace-to-oldface mapping.
 
-    faceMap_.setSize(superFaceI);
+    faceMap_.setSize(superFacei);
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
         faceMap_[toSuperFace[facei]].append(facei);
     }
@@ -264,17 +264,17 @@ void Foam::cellFeatures::calcSuperFaces() const
 
     // Construct superFaces
 
-    facesPtr_ = new faceList(superFaceI);
+    facesPtr_ = new faceList(superFacei);
 
     faceList& faces = *facesPtr_;
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        label facei = cFaces[cFaceI];
+        label facei = cFaces[cFacei];
 
-        label superFaceI = toSuperFace[facei];
+        label superFacei = toSuperFace[facei];
 
-        if (faces[superFaceI].empty())
+        if (faces[superFacei].empty())
         {
             // Superface not yet constructed.
 
@@ -330,7 +330,7 @@ void Foam::cellFeatures::calcSuperFaces() const
                     label newEdgeI = nextEdge
                     (
                         toSuperFace,
-                        superFaceI,
+                        superFacei,
                         edgeI,
                         vertI
                     );
@@ -355,13 +355,13 @@ void Foam::cellFeatures::calcSuperFaces() const
                 if (superFace.size() <= 2)
                 {
                     WarningInFunction
-                        << " Can not collapse faces " << faceMap_[superFaceI]
+                        << " Can not collapse faces " << faceMap_[superFacei]
                         << " into one big face on cell " << celli_ << endl
                         << "Try decreasing minCos:" << minCos_ << endl;
                 }
                 else
                 {
-                    faces[superFaceI].transfer(superFace);
+                    faces[superFacei].transfer(superFace);
                 }
             }
         }

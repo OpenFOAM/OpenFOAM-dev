@@ -44,15 +44,15 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
     // Create the internalField
     Field<Type> internalField(mesh_.nCells());
 
-    forAll(procMeshes_, procI)
+    forAll(procMeshes_, proci)
     {
-        const DimensionedField<Type, volMesh>& procField = procFields[procI];
+        const DimensionedField<Type, volMesh>& procField = procFields[proci];
 
         // Set the cell values in the reconstructed field
         internalField.rmap
         (
             procField.field(),
-            cellProcAddressing_[procI]
+            cellProcAddressing_[proci]
         );
     }
 
@@ -82,22 +82,22 @@ Foam::fvFieldReconstructor::reconstructFvVolumeInternalField
         procMeshes_.size()
     );
 
-    forAll(procMeshes_, procI)
+    forAll(procMeshes_, proci)
     {
         procFields.set
         (
-            procI,
+            proci,
             new DimensionedField<Type, volMesh>
             (
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[procI].time().timeName(),
-                    procMeshes_[procI],
+                    procMeshes_[proci].time().timeName(),
+                    procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                procMeshes_[procI]
+                procMeshes_[proci]
             )
         );
     }
@@ -132,29 +132,29 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
     // Create the patch fields
     PtrList<fvPatchField<Type>> patchFields(mesh_.boundary().size());
 
-    forAll(procFields, procI)
+    forAll(procFields, proci)
     {
         const GeometricField<Type, fvPatchField, volMesh>& procField =
-            procFields[procI];
+            procFields[proci];
 
         // Set the cell values in the reconstructed field
         internalField.rmap
         (
             procField.internalField(),
-            cellProcAddressing_[procI]
+            cellProcAddressing_[proci]
         );
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[procI], patchi)
+        forAll(boundaryProcAddressing_[proci], patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[procI][patchi];
+            const label curBPatch = boundaryProcAddressing_[proci][patchi];
 
             // Get addressing slice for this patch
             const labelList::subList cp =
                 procField.mesh().boundary()[patchi].patchSlice
                 (
-                    faceProcAddressing_[procI]
+                    faceProcAddressing_[proci]
                 );
 
             // check if the boundary patch is not a processor patch
@@ -191,7 +191,7 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
                     if (cp[facei] <= 0)
                     {
                         FatalErrorInFunction
-                            << "Processor " << procI
+                            << "Processor " << proci
                             << " patch "
                             << procField.mesh().boundary()[patchi].name()
                             << " face " << facei
@@ -309,22 +309,22 @@ Foam::fvFieldReconstructor::reconstructFvVolumeField
         procMeshes_.size()
     );
 
-    forAll(procMeshes_, procI)
+    forAll(procMeshes_, proci)
     {
         procFields.set
         (
-            procI,
+            proci,
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[procI].time().timeName(),
-                    procMeshes_[procI],
+                    procMeshes_[proci].time().timeName(),
+                    procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                procMeshes_[procI]
+                procMeshes_[proci]
             )
         );
     }
@@ -359,10 +359,10 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
     PtrList<fvsPatchField<Type>> patchFields(mesh_.boundary().size());
 
 
-    forAll(procMeshes_, procI)
+    forAll(procMeshes_, proci)
     {
         const GeometricField<Type, fvsPatchField, surfaceMesh>& procField =
-            procFields[procI];
+            procFields[proci];
 
         // Set the face values in the reconstructed field
 
@@ -370,7 +370,7 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
         // take care of the face direction offset trick.
         //
         {
-            const labelList& faceMap = faceProcAddressing_[procI];
+            const labelList& faceMap = faceProcAddressing_[proci];
 
             // Correctly oriented copy of internal field
             Field<Type> procInternalField(procField.internalField());
@@ -391,16 +391,16 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
         }
 
         // Set the boundary patch values in the reconstructed field
-        forAll(boundaryProcAddressing_[procI], patchi)
+        forAll(boundaryProcAddressing_[proci], patchi)
         {
             // Get patch index of the original patch
-            const label curBPatch = boundaryProcAddressing_[procI][patchi];
+            const label curBPatch = boundaryProcAddressing_[proci][patchi];
 
             // Get addressing slice for this patch
             const labelList::subList cp =
-                procMeshes_[procI].boundary()[patchi].patchSlice
+                procMeshes_[proci].boundary()[patchi].patchSlice
                 (
-                    faceProcAddressing_[procI]
+                    faceProcAddressing_[proci]
                 );
 
             // check if the boundary patch is not a processor patch
@@ -550,22 +550,22 @@ Foam::fvFieldReconstructor::reconstructFvSurfaceField
         procMeshes_.size()
     );
 
-    forAll(procMeshes_, procI)
+    forAll(procMeshes_, proci)
     {
         procFields.set
         (
-            procI,
+            proci,
             new GeometricField<Type, fvsPatchField, surfaceMesh>
             (
                 IOobject
                 (
                     fieldIoObject.name(),
-                    procMeshes_[procI].time().timeName(),
-                    procMeshes_[procI],
+                    procMeshes_[proci].time().timeName(),
+                    procMeshes_[proci],
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                procMeshes_[procI]
+                procMeshes_[proci]
             )
         );
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -773,7 +773,7 @@ void Foam::argList::parse
             string  slaveMachine;
             label slavePid;
 
-            label procI = 0;
+            label proci = 0;
             for
             (
                 int slave = Pstream::firstSlave();
@@ -784,7 +784,7 @@ void Foam::argList::parse
                 IPstream fromSlave(Pstream::scheduled, slave);
                 fromSlave >> slaveMachine >> slavePid;
 
-                slaveProcs[procI++] = slaveMachine + "." + name(slavePid);
+                slaveProcs[proci++] = slaveMachine + "." + name(slavePid);
             }
         }
         else

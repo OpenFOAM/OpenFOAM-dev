@@ -113,9 +113,9 @@ bool Foam::triSurface::readOFF(const fileName& OFFfileName)
 
                 f.triangles(points, nTri, triFaces);
 
-                forAll(triFaces, triFaceI)
+                forAll(triFaces, triFacei)
                 {
-                    const face& f = triFaces[triFaceI];
+                    const face& f = triFaces[triFacei];
 
                     tris.append(labelledTri(f[0], f[1], f[2], 0));
                 }

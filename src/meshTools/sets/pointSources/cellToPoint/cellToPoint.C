@@ -73,9 +73,9 @@ void Foam::cellToPoint::combine(topoSet& set, const bool add) const
         const label celli = iter.key();
         const labelList& cFaces = mesh_.cells()[celli];
 
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            const face& f = mesh_.faces()[cFaces[cFaceI]];
+            const face& f = mesh_.faces()[cFaces[cFacei]];
 
             forAll(f, fp)
             {

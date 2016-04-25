@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,13 +44,13 @@ void Foam::edgeVertex::updateLabels
     {
         const refineCell& refCell = refCells[refI];
 
-        label oldCellI = refCell.cellNo();
+        label oldCelli = refCell.cellNo();
 
-        label newCellI = map[oldCellI];
+        label newCelli = map[oldCelli];
 
-        if (newCellI != -1)
+        if (newCelli != -1)
         {
-            refCells[newRefI++] = refineCell(newCellI, refCell.direction());
+            refCells[newRefI++] = refineCell(newCelli, refCell.direction());
         }
     }
     refCells.setSize(newRefI);
@@ -133,9 +133,9 @@ void Foam::edgeVertex::updateLabels
 
     forAllConstIter(labelHashSet, cells, iter)
     {
-        const label newCellI = map[iter.key()];
+        const label newCelli = map[iter.key()];
 
-        if (newCellI != iter.key())
+        if (newCelli != iter.key())
         {
             changed = true;
 
@@ -150,11 +150,11 @@ void Foam::edgeVertex::updateLabels
 
         forAllConstIter(labelHashSet, cells, iter)
         {
-            const label newCellI = map[iter.key()];
+            const label newCelli = map[iter.key()];
 
-            if (newCellI != -1)
+            if (newCelli != -1)
             {
-                newCells.insert(newCellI);
+                newCells.insert(newCelli);
             }
         }
 

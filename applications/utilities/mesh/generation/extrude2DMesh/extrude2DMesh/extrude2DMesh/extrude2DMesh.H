@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,8 @@ class extrude2DMesh
 
         const word patchType_;
 
-        label frontPatchI_;
-        label backPatchI_;
+        label frontPatchi_;
+        label backPatchi_;
 
     // Private Member Functions
 
@@ -128,14 +128,14 @@ public:
         void distribute(const mapDistributePolyMesh&)
         {}
 
-        label frontPatchI() const
+        label frontPatchi() const
         {
-            return frontPatchI_;
+            return frontPatchi_;
         }
 
-        label backPatchI() const
+        label backPatchi() const
         {
-            return backPatchI_;
+            return backPatchi_;
         }
 
 };

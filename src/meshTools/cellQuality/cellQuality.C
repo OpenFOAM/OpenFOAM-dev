@@ -208,7 +208,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceNonOrthogonality() const
         result[facei] = cosDDotS;
     }
 
-    label globalFaceI = mesh_.nInternalFaces();
+    label globalFacei = mesh_.nInternalFaces();
 
     forAll(mesh_.boundaryMesh(), patchi)
     {
@@ -230,7 +230,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceNonOrthogonality() const
             scalar cosDDotS =
                 radToDeg(Foam::acos(min(1.0, (d & s)/(mag(d)*magS + VSMALL))));
 
-            result[globalFaceI++] = cosDDotS;
+            result[globalFacei++] = cosDDotS;
         }
     }
 
@@ -279,7 +279,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceSkewness() const
     }
 
 
-    label globalFaceI = mesh_.nInternalFaces();
+    label globalFacei = mesh_.nInternalFaces();
 
     forAll(mesh_.boundaryMesh(), patchi)
     {
@@ -300,7 +300,7 @@ Foam::tmp<Foam::scalarField> Foam::cellQuality::faceSkewness() const
                 cellCtrs[faceCells[facei]]
               + ((faceCentres[facei] - cellCtrs[faceCells[facei]])&n)*n;
 
-            result[globalFaceI++] =
+            result[globalFacei++] =
                 mag(faceCentres[facei] - faceIntersection)
                /(
                     mag(faceCentres[facei] - cellCtrs[faceCells[facei]])

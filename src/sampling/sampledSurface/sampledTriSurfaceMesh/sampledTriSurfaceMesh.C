@@ -272,13 +272,13 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
 
     {
         label newPointI = 0;
-        label newFaceI = 0;
+        label newFacei = 0;
 
         forAll(s, facei)
         {
             if (cellOrFaceLabels[facei] != -1)
             {
-                faceMap[newFaceI++] = facei;
+                faceMap[newFacei++] = facei;
 
                 const triSurface::FaceType& f = s[facei];
                 forAll(f, fp)
@@ -291,7 +291,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                 }
             }
         }
-        faceMap.setSize(newFaceI);
+        faceMap.setSize(newFacei);
         pointMap.setSize(newPointI);
     }
 

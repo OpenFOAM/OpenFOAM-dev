@@ -123,12 +123,12 @@ void Foam::meshRefinement::testSyncBoundaryFaceList
     {
         const polyPatch& pp = patches[patchi];
 
-        label bFaceI = pp.start() - mesh_.nInternalFaces();
+        label bFacei = pp.start() - mesh_.nInternalFaces();
 
         forAll(pp, i)
         {
-            const T& data = faceData[bFaceI];
-            const T& syncData = syncedFaceData[bFaceI];
+            const T& data = faceData[bFacei];
+            const T& syncData = syncedFaceData[bFacei];
 
             if (mag(data - syncData) > tol)
             {
@@ -146,7 +146,7 @@ void Foam::meshRefinement::testSyncBoundaryFaceList
                     << abort(FatalError);
             }
 
-            bFaceI++;
+            bFacei++;
         }
     }
 }

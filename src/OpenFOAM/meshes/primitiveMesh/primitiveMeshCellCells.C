@@ -85,11 +85,11 @@ void Foam::primitiveMesh::calcCellCells() const
 
         forAll(nei, facei)
         {
-            label ownCellI = own[facei];
-            label neiCellI = nei[facei];
+            label ownCelli = own[facei];
+            label neiCelli = nei[facei];
 
-            cellCellAddr[ownCellI][ncc[ownCellI]++] = neiCellI;
-            cellCellAddr[neiCellI][ncc[neiCellI]++] = ownCellI;
+            cellCellAddr[ownCelli][ncc[ownCelli]++] = neiCelli;
+            cellCellAddr[neiCelli][ncc[neiCelli]++] = ownCelli;
         }
     }
 }

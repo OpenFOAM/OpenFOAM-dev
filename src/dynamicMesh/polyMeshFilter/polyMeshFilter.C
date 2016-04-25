@@ -672,9 +672,9 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
             {
                 const labelList& eFaces = mesh_.edgeFaces()[fEdges[fEdgeI]];
 
-                forAll(eFaces, eFaceI)
+                forAll(eFaces, eFacei)
                 {
-                    const label eFace = eFaces[eFaceI];
+                    const label eFace = eFaces[eFacei];
 
                     const face& f = faces[eFace];
 
@@ -838,11 +838,11 @@ void Foam::polyMeshFilter::mapOldMeshFaceFieldToNewMesh
 {
     scalarField tmp(newMesh.nFaces());
 
-    forAll(faceMap, newFaceI)
+    forAll(faceMap, newFacei)
     {
-        const label oldFaceI = faceMap[newFaceI];
+        const label oldFacei = faceMap[newFacei];
 
-        tmp[newFaceI] = newMeshFaceFilterFactor[oldFaceI];
+        tmp[newFacei] = newMeshFaceFilterFactor[oldFacei];
     }
 
     newMeshFaceFilterFactor.transfer(tmp);

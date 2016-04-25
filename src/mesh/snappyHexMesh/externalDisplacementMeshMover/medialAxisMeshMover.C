@@ -107,11 +107,11 @@ Foam::medialAxisMeshMover::getPatch
     {
         const polyPatch& pp = patches[patchIDs[i]];
 
-        label meshFaceI = pp.start();
+        label meshFacei = pp.start();
 
         forAll(pp, i)
         {
-            addressing[nFaces++] = meshFaceI++;
+            addressing[nFaces++] = meshFacei++;
         }
     }
 

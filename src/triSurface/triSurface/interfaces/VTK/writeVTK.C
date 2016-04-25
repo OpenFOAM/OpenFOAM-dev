@@ -77,9 +77,9 @@ void triSurface::writeVTK(const bool writeSorted, Ostream& os) const
 
             for
             (
-                label patchFaceI = 0;
-                patchFaceI < myPatches[patchi].size();
-                patchFaceI++
+                label patchFacei = 0;
+                patchFacei < myPatches[patchi].size();
+                patchFacei++
             )
             {
                 if (faceIndex > 0 && (faceIndex % 10) == 0)
@@ -114,9 +114,9 @@ void triSurface::writeVTK(const bool writeSorted, Ostream& os) const
         {
             for
             (
-                label patchFaceI = 0;
-                patchFaceI < myPatches[patchi].size();
-                patchFaceI++
+                label patchFacei = 0;
+                patchFacei < myPatches[patchi].size();
+                patchFacei++
             )
             {
                 if (faceIndex > 0 && (faceIndex % 10) == 0)

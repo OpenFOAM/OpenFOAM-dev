@@ -105,9 +105,9 @@ Foam::boolList Foam::cellClassification::markFaces
         {
             const labelList& myFaces = mesh_.edgeFaces()[edgeI];
 
-            forAll(myFaces, myFaceI)
+            forAll(myFaces, myFacei)
             {
-                label facei = myFaces[myFaceI];
+                label facei = myFaces[myFacei];
 
                 if (!cutFace[facei])
                 {
@@ -131,19 +131,19 @@ Foam::boolList Foam::cellClassification::markFaces
 
     labelList allFaces(mesh_.nFaces() - nCutFaces);
 
-    label allFaceI = 0;
+    label allFacei = 0;
 
     forAll(cutFace, facei)
     {
         if (!cutFace[facei])
         {
-            allFaces[allFaceI++] = facei;
+            allFaces[allFacei++] = facei;
         }
     }
 
     if (debug)
     {
-        Pout<< "Testing " << allFaceI << " faces for piercing by surface"
+        Pout<< "Testing " << allFacei << " faces for piercing by surface"
             << endl;
     }
 
@@ -300,9 +300,9 @@ void Foam::cellClassification::markCells
 
             // Mark faces of celli
             const labelList& myFaces = mesh_.cells()[celli];
-            forAll(myFaces, myFaceI)
+            forAll(myFaces, myFacei)
             {
-                outsideFacesMap.insert(myFaces[myFaceI]);
+                outsideFacesMap.insert(myFaces[myFacei]);
             }
         }
     }
@@ -405,9 +405,9 @@ bool Foam::cellClassification::usesMixedPointsOnly
 
     const cell& cFaces = mesh_.cells()[celli];
 
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f = faces[cFaces[cFaceI]];
+        const face& f = faces[cFaces[cFacei]];
 
         forAll(f, fp)
         {
@@ -631,9 +631,9 @@ Foam::label Foam::cellClassification::growSurface
         const labelList& myCells = mesh_.pointCells()[pointI];
 
         // Check if one of cells has meshType
-        forAll(myCells, myCellI)
+        forAll(myCells, myCelli)
         {
-            label type = operator[](myCells[myCellI]);
+            label type = operator[](myCells[myCelli]);
 
             if (type == meshType)
             {
@@ -654,11 +654,11 @@ Foam::label Foam::cellClassification::growSurface
         {
             const labelList& myCells = mesh_.pointCells()[pointI];
 
-            forAll(myCells, myCellI)
+            forAll(myCells, myCelli)
             {
-                if (operator[](myCells[myCellI]) != meshType)
+                if (operator[](myCells[myCelli]) != meshType)
                 {
-                    operator[](myCells[myCellI]) = fillType;
+                    operator[](myCells[myCelli]) = fillType;
 
                     nChanged++;
                 }
@@ -768,9 +768,9 @@ Foam::label Foam::cellClassification::fillRegionEdges
 
                 forAll(eFaces, i)
                 {
-                    label patchFaceI = eFaces[i];
+                    label patchFacei = eFaces[i];
 
-                    label ownerCell = outsideOwner[patchFaceI];
+                    label ownerCell = outsideOwner[patchFacei];
 
                     if (operator[](ownerCell) == meshType)
                     {
@@ -841,8 +841,8 @@ Foam::label Foam::cellClassification::fillRegionPoints
             // one would be best to remove.
             forAll(pFaces, i)
             {
-                const label patchFaceI = pFaces[i];
-                const label ownerCell  = outsideOwner[patchFaceI];
+                const label patchFacei = pFaces[i];
+                const label ownerCell  = outsideOwner[patchFacei];
 
                 if (operator[](ownerCell) == meshType)
                 {

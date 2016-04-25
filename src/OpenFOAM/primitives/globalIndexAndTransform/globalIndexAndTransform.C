@@ -249,10 +249,10 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
         label nextTrans = 0;
 
-        forAll(allTransforms, procI)
+        forAll(allTransforms, proci)
         {
             const List<vectorTensorTransform>& procTransVecs =
-                allTransforms[procI];
+                allTransforms[proci];
 
             forAll(procTransVecs, pSVI)
             {
@@ -267,7 +267,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
                             transforms_,
                             dummyMatch,
                             transform,
-                            allTols[procI][pSVI],
+                            allTols[proci][pSVI],
                             true
                         ) ==  0
                     )

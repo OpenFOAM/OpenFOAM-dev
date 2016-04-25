@@ -110,9 +110,9 @@ Foam::label Foam::meshCutter::findInternalFacePoint
 
         const labelList& pFaces = mesh().pointFaces()[pointI];
 
-        forAll(pFaces, pFaceI)
+        forAll(pFaces, pFacei)
         {
-            label facei = pFaces[pFaceI];
+            label facei = pFaces[pFacei];
 
             if (mesh().isInternalFace(facei))
             {
@@ -448,7 +448,7 @@ Foam::face Foam::meshCutter::loopToFace
 {
     face newFace(2*loop.size());
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     forAll(loop, fp)
     {
@@ -462,14 +462,14 @@ Foam::face Foam::meshCutter::loopToFace
 
             label vertI = addedPoints_[e];
 
-            newFace[newFaceI++] = vertI;
+            newFace[newFacei++] = vertI;
         }
         else
         {
             // cut is vertex.
             label vertI = getVertex(cut);
 
-            newFace[newFaceI++] = vertI;
+            newFace[newFacei++] = vertI;
 
             label nextCut = loop[loop.fcIndex(fp)];
 
@@ -488,13 +488,13 @@ Foam::face Foam::meshCutter::loopToFace
 
                     if (fnd != addedPoints_.end())
                     {
-                        newFace[newFaceI++] = fnd();
+                        newFace[newFacei++] = fnd();
                     }
                 }
             }
         }
     }
-    newFace.setSize(newFaceI);
+    newFace.setSize(newFacei);
 
     return newFace;
 }
@@ -563,7 +563,7 @@ void Foam::meshCutter::setRefinement
                     << abort(FatalError);
             }
 
-            // One of the edge end points should be master point of nbCellI.
+            // One of the edge end points should be master point of nbCelli.
             label masterPointI = e.start();
 
             const point& v0 = mesh().points()[e.start()];
@@ -607,7 +607,7 @@ void Foam::meshCutter::setRefinement
         if (cellLoops[celli].size())
         {
             // Add a cell to the existing cell
-            label addedCellI =
+            label addedCelli =
                 meshMod.setAction
                 (
                     polyAddCell
@@ -620,7 +620,7 @@ void Foam::meshCutter::setRefinement
                     )
                 );
 
-            addedCells_.insert(celli, addedCellI);
+            addedCells_.insert(celli, addedCelli);
 
             if (debug & 2)
             {
@@ -649,7 +649,7 @@ void Foam::meshCutter::setRefinement
             // Pick any anchor point on cell
             label masterPointI = findInternalFacePoint(anchorPts[celli]);
 
-            label addedFaceI =
+            label addedFacei =
                 meshMod.setAction
                 (
                     polyAddFace
@@ -667,7 +667,7 @@ void Foam::meshCutter::setRefinement
                     )
                 );
 
-            addedFaces_.insert(celli, addedFaceI);
+            addedFaces_.insert(celli, addedFacei);
 
             if (debug & 2)
             {
@@ -686,7 +686,7 @@ void Foam::meshCutter::setRefinement
                 }
 
                 Pout<< "Added splitting face " << newFace << " index:"
-                    << addedFaceI
+                    << addedFacei
                     << " to owner " << celli
                     << " neighbour " << addedCells_[celli]
                     << " from Loop:";
@@ -803,9 +803,9 @@ void Foam::meshCutter::setRefinement
             // use anchorPts.
             if (uses(f, anchorPts[own]))
             {
-                label newCellI = addedCells_[own];
-                f0Owner = newCellI;
-                f1Owner = newCellI;
+                label newCelli = addedCells_[own];
+                f0Owner = newCelli;
+                f1Owner = newCelli;
             }
             else
             {
@@ -846,9 +846,9 @@ void Foam::meshCutter::setRefinement
                 // whether use anchorPts.
                 if (uses(f, anchorPts[nei]))
                 {
-                    label newCellI = addedCells_[nei];
-                    f0Neighbour = newCellI;
-                    f1Neighbour = newCellI;
+                    label newCelli = addedCells_[nei];
+                    f0Neighbour = newCelli;
+                    f1Neighbour = newCelli;
                 }
                 else
                 {
@@ -919,9 +919,9 @@ void Foam::meshCutter::setRefinement
         {
             const labelList& cllFaces = mesh().cells()[celli];
 
-            forAll(cllFaces, cllFaceI)
+            forAll(cllFaces, cllFacei)
             {
-                label facei = cllFaces[cllFaceI];
+                label facei = cllFaces[cllFacei];
 
                 if (!faceUptodate[facei])
                 {
@@ -981,26 +981,26 @@ void Foam::meshCutter::updateMesh(const mapPolyMesh& morphMap)
         forAllConstIter(Map<label>, addedCells_, iter)
         {
             label celli = iter.key();
-            label newCellI = morphMap.reverseCellMap()[celli];
+            label newCelli = morphMap.reverseCellMap()[celli];
 
-            label addedCellI = iter();
+            label addedCelli = iter();
 
-            label newAddedCellI = morphMap.reverseCellMap()[addedCellI];
+            label newAddedCelli = morphMap.reverseCellMap()[addedCelli];
 
-            if (newCellI >= 0 && newAddedCellI >= 0)
+            if (newCelli >= 0 && newAddedCelli >= 0)
             {
                 if
                 (
                     (debug & 2)
-                 && (newCellI != celli || newAddedCellI != addedCellI)
+                 && (newCelli != celli || newAddedCelli != addedCelli)
                 )
                 {
                     Pout<< "meshCutter::updateMesh :"
                         << " updating addedCell for cell " << celli
-                        << " from " << addedCellI
-                        << " to " << newAddedCellI << endl;
+                        << " from " << addedCelli
+                        << " to " << newAddedCelli << endl;
                 }
-                newAddedCells.insert(newCellI, newAddedCellI);
+                newAddedCells.insert(newCelli, newAddedCelli);
             }
         }
 
@@ -1014,27 +1014,27 @@ void Foam::meshCutter::updateMesh(const mapPolyMesh& morphMap)
         forAllConstIter(Map<label>, addedFaces_, iter)
         {
             label celli = iter.key();
-            label newCellI = morphMap.reverseCellMap()[celli];
+            label newCelli = morphMap.reverseCellMap()[celli];
 
-            label addedFaceI = iter();
+            label addedFacei = iter();
 
-            label newAddedFaceI = morphMap.reverseFaceMap()[addedFaceI];
+            label newAddedFacei = morphMap.reverseFaceMap()[addedFacei];
 
-            if ((newCellI >= 0) && (newAddedFaceI >= 0))
+            if ((newCelli >= 0) && (newAddedFacei >= 0))
             {
                 if
                 (
                     (debug & 2)
-                 && (newCellI != celli || newAddedFaceI != addedFaceI)
+                 && (newCelli != celli || newAddedFacei != addedFacei)
                 )
                 {
                     Pout<< "meshCutter::updateMesh :"
                         << " updating addedFace for cell " << celli
-                        << " from " << addedFaceI
-                        << " to " << newAddedFaceI
+                        << " from " << addedFacei
+                        << " to " << newAddedFacei
                         << endl;
                 }
-                newAddedFaces.insert(newCellI, newAddedFaceI);
+                newAddedFaces.insert(newCelli, newAddedFacei);
             }
         }
 

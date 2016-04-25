@@ -174,7 +174,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
 
     forAll(vf.boundaryField(), patchi)
     {
-        label bFaceI = bm[patchi].patch().start() - mesh.nInternalFaces();
+        label bFacei = bm[patchi].patch().start() - mesh.nInternalFaces();
 
         if
         (
@@ -186,7 +186,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
             (
                 boundaryVals,
                 vf.boundaryField()[patchi].size(),
-                bFaceI
+                bFacei
             ) = vf.boundaryField()[patchi];
         }
         else
@@ -195,7 +195,7 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
 
             forAll(pp, i)
             {
-                boundaryVals[bFaceI++] = Zero;
+                boundaryVals[bFacei++] = Zero;
             }
         }
     }

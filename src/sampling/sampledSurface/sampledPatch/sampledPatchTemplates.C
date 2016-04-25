@@ -84,12 +84,12 @@ Foam::sampledPatch::interpolateField
 
     boolList pointDone(points().size(), false);
 
-    forAll(faces(), cutFaceI)
+    forAll(faces(), cutFacei)
     {
-        label patchi = patchIDs_[patchIndex_[cutFaceI]];
+        label patchi = patchIDs_[patchIndex_[cutFacei]];
         const polyPatch& pp = mesh().boundaryMesh()[patchi];
-        label patchFaceI = patchFaceLabels()[cutFaceI];
-        const face& f = faces()[cutFaceI];
+        label patchFacei = patchFaceLabels()[cutFacei];
+        const face& f = faces()[cutFacei];
 
         forAll(f, faceVertI)
         {
@@ -97,7 +97,7 @@ Foam::sampledPatch::interpolateField
 
             if (!pointDone[pointI])
             {
-                label facei = patchFaceI + pp.start();
+                label facei = patchFacei + pp.start();
                 label celli = own[facei];
 
                 values[pointI] = interpolator.interpolate

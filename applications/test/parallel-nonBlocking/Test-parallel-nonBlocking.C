@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,9 +151,9 @@ int main(int argc, char *argv[])
     {
         PstreamBuffers pBufs(Pstream::nonBlocking);
 
-        for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
-            UOPstream toProc(procI, pBufs);
+            UOPstream toProc(proci, pBufs);
             toProc << Pstream::myProcNo();
         }
 
@@ -161,17 +161,17 @@ int main(int argc, char *argv[])
         pBufs.finishedSends();
 
         // Consume
-        for (label procI = 0; procI < Pstream::nProcs(); procI++)
+        for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {
-            UIPstream fromProc(procI, pBufs);
+            UIPstream fromProc(proci, pBufs);
             label data;
             fromProc >> data;
 
-            if (data != procI)
+            if (data != proci)
             {
                 FatalErrorInFunction
-                    << "From processor " << procI << " received " << data
-                    << " but expected " << procI
+                    << "From processor " << proci << " received " << data
+                    << " but expected " << proci
                     << exit(FatalError);
             }
         }

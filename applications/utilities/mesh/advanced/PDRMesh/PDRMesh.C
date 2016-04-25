@@ -71,7 +71,7 @@ void modifyOrAddFace
     const label facei,
     const label own,
     const bool flipFaceFlux,
-    const label newPatchI,
+    const label newPatchi,
     const label zoneID,
     const bool zoneFlip,
 
@@ -90,7 +90,7 @@ void modifyOrAddFace
                 own,                        // owner
                 -1,                         // neighbour
                 flipFaceFlux,               // face flip
-                newPatchI,                  // patch for face
+                newPatchi,                  // patch for face
                 false,                      // remove from zone
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
@@ -112,7 +112,7 @@ void modifyOrAddFace
                 -1,                         // master edge
                 facei,                      // master face
                 flipFaceFlux,               // face flip
-                newPatchI,                  // patch for face
+                newPatchi,                  // patch for face
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
             )
@@ -160,9 +160,9 @@ void subsetVolFields
 
                 label newStart = fld.patch().patch().start();
 
-                label oldPatchI = subsetter.patchMap()[patchi];
+                label oldPatchi = subsetter.patchMap()[patchi];
 
-                if (oldPatchI == -1)
+                if (oldPatchi == -1)
                 {
                     // New patch. Reset whole value.
                     fld = exposedValue;
@@ -171,17 +171,17 @@ void subsetVolFields
                 {
                     // Reset those faces that originate from different patch
                     // or internal faces.
-                    label oldSize = volField.boundaryField()[oldPatchI].size();
+                    label oldSize = volField.boundaryField()[oldPatchi].size();
                     label oldStart = volField.boundaryField()
                     [
-                        oldPatchI
+                        oldPatchi
                     ].patch().patch().start();
 
                     forAll(fld, j)
                     {
-                        label oldFaceI = subsetter.faceMap()[newStart+j];
+                        label oldFacei = subsetter.faceMap()[newStart+j];
 
-                        if (oldFaceI < oldStart || oldFaceI >= oldStart+oldSize)
+                        if (oldFacei < oldStart || oldFacei >= oldStart+oldSize)
                         {
                             fld[j] = exposedValue;
                         }
@@ -233,9 +233,9 @@ void subsetSurfaceFields
 
                 label newStart = fld.patch().patch().start();
 
-                label oldPatchI = subsetter.patchMap()[patchi];
+                label oldPatchi = subsetter.patchMap()[patchi];
 
-                if (oldPatchI == -1)
+                if (oldPatchi == -1)
                 {
                     // New patch. Reset whole value.
                     fld = exposedValue;
@@ -244,17 +244,17 @@ void subsetSurfaceFields
                 {
                     // Reset those faces that originate from different patch
                     // or internal faces.
-                    label oldSize = volField.boundaryField()[oldPatchI].size();
+                    label oldSize = volField.boundaryField()[oldPatchi].size();
                     label oldStart = volField.boundaryField()
                     [
-                        oldPatchI
+                        oldPatchi
                     ].patch().patch().start();
 
                     forAll(fld, j)
                     {
-                        label oldFaceI = subsetter.faceMap()[newStart+j];
+                        label oldFacei = subsetter.faceMap()[newStart+j];
 
-                        if (oldFaceI < oldStart || oldFaceI >= oldStart+oldSize)
+                        if (oldFacei < oldStart || oldFacei >= oldStart+oldSize)
                         {
                             fld[j] = exposedValue;
                         }
@@ -706,7 +706,7 @@ int main(int argc, char *argv[])
     }
 
     // Exposed faces patch
-    label defaultPatchI = findPatch(mesh.boundaryMesh(), defaultPatch);
+    label defaultPatchi = findPatch(mesh.boundaryMesh(), defaultPatch);
 
 
     //
@@ -725,7 +725,7 @@ int main(int argc, char *argv[])
         blockedCells.invert(mesh.nCells());
 
         // Create subsetted mesh.
-        subsetter.setLargeCellSubset(blockedCells, defaultPatchI, true);
+        subsetter.setLargeCellSubset(blockedCells, defaultPatchi, true);
     }
 
 
@@ -783,7 +783,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         scalar(Zero),
         volScalarField::typeName,
         scalarFlds
@@ -795,7 +795,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         vector(Zero),
         volVectorField::typeName,
         vectorFlds
@@ -813,7 +813,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         sphericalTensor(Zero),
         volSphericalTensorField::typeName,
         sphericalTensorFlds
@@ -825,7 +825,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         symmTensor(Zero),
         volSymmTensorField::typeName,
         symmTensorFlds
@@ -837,7 +837,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         tensor(Zero),
         volTensorField::typeName,
         tensorFlds
@@ -851,7 +851,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         scalar(Zero),
         surfaceScalarField::typeName,
         surfScalarFlds
@@ -863,7 +863,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         vector(Zero),
         surfaceVectorField::typeName,
         surfVectorFlds
@@ -881,7 +881,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         sphericalTensor(Zero),
         surfaceSphericalTensorField::typeName,
         surfSphericalTensorFlds
@@ -901,7 +901,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         symmTensor(Zero),
         surfaceSymmTensorField::typeName,
         surfSymmTensorFlds
@@ -913,7 +913,7 @@ int main(int argc, char *argv[])
     (
         subsetter,
         objects,
-        defaultPatchI,
+        defaultPatchi,
         tensor(Zero),
         surfaceTensorField::typeName,
         surfTensorFlds

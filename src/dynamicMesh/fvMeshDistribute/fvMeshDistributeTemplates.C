@@ -127,16 +127,16 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 
             forAll(patchFld, i)
             {
-                label oldFaceI = faceMap[facei++];
+                label oldFacei = faceMap[facei++];
 
-                // Find patch and local patch face oldFaceI was in.
-                forAll(oldPatchStarts, oldPatchI)
+                // Find patch and local patch face oldFacei was in.
+                forAll(oldPatchStarts, oldPatchi)
                 {
-                    label oldLocalI = oldFaceI - oldPatchStarts[oldPatchI];
+                    label oldLocalI = oldFacei - oldPatchStarts[oldPatchi];
 
-                    if (oldLocalI >= 0 && oldLocalI < oldBfld[oldPatchI].size())
+                    if (oldLocalI >= 0 && oldLocalI < oldBfld[oldPatchi].size())
                     {
-                        patchFld[i] = oldBfld[oldPatchI][oldLocalI];
+                        patchFld[i] = oldBfld[oldPatchi][oldLocalI];
                     }
                 }
             }

@@ -348,7 +348,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
 
 Foam::labelPair Foam::globalIndexAndTransform::encode
 (
-    const label procI,
+    const label proci,
     const label index,
     const label transformIndex
 )
@@ -362,10 +362,10 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
             << abort(FatalError);
     }
 
-    if (procI > labelMax/base_)
+    if (proci > labelMax/base_)
     {
         FatalErrorInFunction
-            << "Overflow : encoding processor " << procI << " in base " << base_
+            << "Overflow : encoding processor " << proci << " in base " << base_
             << " exceeds capability of label (" << labelMax
             << "). Please recompile with larger datatype for label."
             << exit(FatalError);
@@ -374,7 +374,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
     return labelPair
     (
         index,
-        transformIndex + procI*base_
+        transformIndex + proci*base_
     );
 }
 

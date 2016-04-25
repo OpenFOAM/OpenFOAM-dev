@@ -408,9 +408,9 @@ Foam::label Foam::snappyRefineDriver::gapOnlyRefine
                 )
                 {
                     label own = mesh.faceOwner()[facei];
-                    label bFaceI = facei-mesh.nInternalFaces();
+                    label bFacei = facei-mesh.nInternalFaces();
 
-                    if (isCandidateCell[own] != neiIsCandidateCell[bFaceI])
+                    if (isCandidateCell[own] != neiIsCandidateCell[bFacei])
                     {
                         newIsCandidateCell[own] = true;
                     }
@@ -560,14 +560,14 @@ Foam::label Foam::snappyRefineDriver::danglingCellRefine
                 label nIntFaces = 0;
                 forAll(cFaces, i)
                 {
-                    label bFaceI = cFaces[i]-mesh.nInternalFaces();
-                    if (bFaceI < 0)
+                    label bFacei = cFaces[i]-mesh.nInternalFaces();
+                    if (bFacei < 0)
                     {
                         nIntFaces++;
                     }
                     else
                     {
-                        label patchi = pbm.patchID()[bFaceI];
+                        label patchi = pbm.patchID()[bFacei];
                         if (pbm[patchi].coupled())
                         {
                             nIntFaces++;

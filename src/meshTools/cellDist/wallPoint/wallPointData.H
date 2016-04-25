@@ -118,8 +118,8 @@ public:
             inline bool updateCell
             (
                 const polyMesh& mesh,
-                const label thisCellI,
-                const label neighbourFaceI,
+                const label thisCelli,
+                const label neighbourFacei,
                 const wallPointData<Type>& neighbourWallInfo,
                 const scalar tol,
                 TrackingData& td
@@ -131,8 +131,8 @@ public:
             inline bool updateFace
             (
                 const polyMesh& mesh,
-                const label thisFaceI,
-                const label neighbourCellI,
+                const label thisFacei,
+                const label neighbourCelli,
                 const wallPointData<Type>& neighbourWallInfo,
                 const scalar tol,
                 TrackingData& td
@@ -145,7 +145,7 @@ public:
             inline bool updateFace
             (
                 const polyMesh& mesh,
-                const label thisFaceI,
+                const label thisFacei,
                 const wallPointData<Type>& neighbourWallInfo,
                 const scalar tol,
                 TrackingData& td

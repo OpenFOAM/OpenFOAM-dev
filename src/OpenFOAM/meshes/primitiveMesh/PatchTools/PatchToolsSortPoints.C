@@ -61,7 +61,7 @@ Foam::PatchTools::sortedPointEdges
 
         label edgeI = pEdges[0];
 
-        label prevFaceI = edgeFaces[edgeI][0];
+        label prevFacei = edgeFaces[edgeI][0];
 
         newEdgeList.clear();
         newEdgeList.setCapacity(nPointEdges);
@@ -81,7 +81,7 @@ Foam::PatchTools::sortedPointEdges
             }
 
             label facei = eFaces[0];
-            if (facei == prevFaceI)
+            if (facei == prevFacei)
             {
                 facei = eFaces[1];
             }
@@ -105,7 +105,7 @@ Foam::PatchTools::sortedPointEdges
                 }
             }
 
-            prevFaceI = facei;
+            prevFacei = facei;
 
             nVisitedEdges++;
             if (nVisitedEdges > nPointEdges)

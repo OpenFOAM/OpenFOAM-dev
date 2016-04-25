@@ -84,9 +84,9 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //    globalIndex globalCells(initxadj.size()-1);
 //
 //    bool hasZeroDomain = false;
-//    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+//    for (label proci = 0; proci < Pstream::nProcs(); proci++)
 //    {
-//        if (globalCells.localSize(procI) == 0)
+//        if (globalCells.localSize(proci) == 0)
 //        {
 //            hasZeroDomain = true;
 //            break;
@@ -123,12 +123,12 @@ void Foam::ptscotchDecomp::check(const int retVal, const char* str)
 //    // (is same as number of cells next processor has to receive)
 //    List<label> nSendCells(Pstream::nProcs(), 0);
 //
-//    for (label procI = nSendCells.size()-1; procI >=1; procI--)
+//    for (label proci = nSendCells.size()-1; proci >=1; proci--)
 //    {
-//        label nLocalCells = globalCells.localSize(procI);
-//        if (nLocalCells-nSendCells[procI] < 1)
+//        label nLocalCells = globalCells.localSize(proci);
+//        if (nLocalCells-nSendCells[proci] < 1)
 //        {
-//            nSendCells[procI-1] = nSendCells[procI]-nLocalCells+1;
+//            nSendCells[proci-1] = nSendCells[proci]-nLocalCells+1;
 //        }
 //    }
 //

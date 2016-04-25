@@ -34,12 +34,12 @@ License
 template<class CloudType>
 Foam::label Foam::PatchPostProcessing<CloudType>::applyToPatch
 (
-    const label globalPatchI
+    const label globalPatchi
 ) const
 {
     forAll(patchIDs_, i)
     {
-        if (patchIDs_[i] == globalPatchI)
+        if (patchIDs_[i] == globalPatchi)
         {
             return i;
         }
@@ -203,16 +203,16 @@ void Foam::PatchPostProcessing<CloudType>::postPatch
 )
 {
     const label patchi = pp.index();
-    const label localPatchI = applyToPatch(patchi);
+    const label localPatchi = applyToPatch(patchi);
 
-    if (localPatchI != -1 && patchData_[localPatchI].size() < maxStoredParcels_)
+    if (localPatchi != -1 && patchData_[localPatchi].size() < maxStoredParcels_)
     {
-        times_[localPatchI].append(this->owner().time().value());
+        times_[localPatchi].append(this->owner().time().value());
 
         OStringStream data;
         data<< Pstream::myProcNo() << ' ' << p;
 
-        patchData_[localPatchI].append(data.str());
+        patchData_[localPatchi].append(data.str());
     }
 }
 

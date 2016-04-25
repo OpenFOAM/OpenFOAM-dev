@@ -302,7 +302,7 @@ void Foam::fileFormats::GTSsurfaceFormat<Face>::write
     {
         const surfZone& zone = zones[zoneI];
 
-        forAll(zone, localFaceI)
+        forAll(zone, localFacei)
         {
             const labelList& fEdges = faceEs[faceIndex++];
 

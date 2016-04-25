@@ -64,28 +64,28 @@ void Foam::domainDecomposition::addInterProcFace
     if (patchiter != nbrToInterPatch[ownerProc].end())
     {
         // Existing interproc patch. Add to both sides.
-        label toNbrProcPatchI = patchiter();
-        interPatchFaces[ownerProc][toNbrProcPatchI].append(ownerIndex);
+        label toNbrProcPatchi = patchiter();
+        interPatchFaces[ownerProc][toNbrProcPatchi].append(ownerIndex);
 
         if (isInternalFace(facei))
         {
-            label toOwnerProcPatchI = nbrToInterPatch[nbrProc][ownerProc];
-            interPatchFaces[nbrProc][toOwnerProcPatchI].append(nbrIndex);
+            label toOwnerProcPatchi = nbrToInterPatch[nbrProc][ownerProc];
+            interPatchFaces[nbrProc][toOwnerProcPatchi].append(nbrIndex);
         }
     }
     else
     {
         // Create new interproc patches.
-        label toNbrProcPatchI = nbrToInterPatch[ownerProc].size();
-        nbrToInterPatch[ownerProc].insert(nbrProc, toNbrProcPatchI);
+        label toNbrProcPatchi = nbrToInterPatch[ownerProc].size();
+        nbrToInterPatch[ownerProc].insert(nbrProc, toNbrProcPatchi);
         DynamicList<label> oneFace;
         oneFace.append(ownerIndex);
         interPatchFaces[ownerProc].append(oneFace);
 
         if (isInternalFace(facei))
         {
-            label toOwnerProcPatchI = nbrToInterPatch[nbrProc].size();
-            nbrToInterPatch[nbrProc].insert(ownerProc, toOwnerProcPatchI);
+            label toOwnerProcPatchi = nbrToInterPatch[nbrProc].size();
+            nbrToInterPatch[nbrProc].insert(ownerProc, toOwnerProcPatchi);
             oneFace.clear();
             oneFace.append(nbrIndex);
             interPatchFaces[nbrProc].append(oneFace);
@@ -139,20 +139,20 @@ void Foam::domainDecomposition::decomposeMesh()
 
     // for all processors, set the size of start index and patch size
     // lists to the number of patches in the mesh
-    forAll(procPatchSize_, procI)
+    forAll(procPatchSize_, proci)
     {
-        procPatchSize_[procI].setSize(patches.size());
-        procPatchStartIndex_[procI].setSize(patches.size());
+        procPatchSize_[proci].setSize(patches.size());
+        procPatchStartIndex_[proci].setSize(patches.size());
     }
 
     forAll(patches, patchi)
     {
         // Reset size and start index for all processors
-        forAll(procPatchSize_, procI)
+        forAll(procPatchSize_, proci)
         {
-            procPatchSize_[procI][patchi] = 0;
-            procPatchStartIndex_[procI][patchi] =
-                procFaceAddressing_[procI].size();
+            procPatchSize_[proci][patchi] = 0;
+            procPatchStartIndex_[proci][patchi] =
+                procFaceAddressing_[proci].size();
         }
 
         const label patchStart = patches[patchi].start();
@@ -239,12 +239,12 @@ void Foam::domainDecomposition::decomposeMesh()
     // originating from internal faces this is always -1.
     List<labelListList> subPatchIDs(nProcs_);
     List<labelListList> subPatchStarts(nProcs_);
-    forAll(interPatchFaces, procI)
+    forAll(interPatchFaces, proci)
     {
-        label nInterfaces = interPatchFaces[procI].size();
+        label nInterfaces = interPatchFaces[proci].size();
 
-        subPatchIDs[procI].setSize(nInterfaces, labelList(1, label(-1)));
-        subPatchStarts[procI].setSize(nInterfaces, labelList(1, label(0)));
+        subPatchIDs[proci].setSize(nInterfaces, labelList(1, label(-1)));
+        subPatchStarts[proci].setSize(nInterfaces, labelList(1, label(0)));
     }
 
 
@@ -318,63 +318,63 @@ void Foam::domainDecomposition::decomposeMesh()
 
     // Sort inter-proc patch by neighbour
     labelList order;
-    forAll(procNbrToInterPatch, procI)
+    forAll(procNbrToInterPatch, proci)
     {
-        label nInterfaces = procNbrToInterPatch[procI].size();
+        label nInterfaces = procNbrToInterPatch[proci].size();
 
-        procNeighbourProcessors_[procI].setSize(nInterfaces);
-        procProcessorPatchSize_[procI].setSize(nInterfaces);
-        procProcessorPatchStartIndex_[procI].setSize(nInterfaces);
-        procProcessorPatchSubPatchIDs_[procI].setSize(nInterfaces);
-        procProcessorPatchSubPatchStarts_[procI].setSize(nInterfaces);
+        procNeighbourProcessors_[proci].setSize(nInterfaces);
+        procProcessorPatchSize_[proci].setSize(nInterfaces);
+        procProcessorPatchStartIndex_[proci].setSize(nInterfaces);
+        procProcessorPatchSubPatchIDs_[proci].setSize(nInterfaces);
+        procProcessorPatchSubPatchStarts_[proci].setSize(nInterfaces);
 
-        //Info<< "Processor " << procI << endl;
+        //Info<< "Processor " << proci << endl;
 
         // Get sorted neighbour processors
-        const Map<label>& curNbrToInterPatch = procNbrToInterPatch[procI];
+        const Map<label>& curNbrToInterPatch = procNbrToInterPatch[proci];
         labelList nbrs = curNbrToInterPatch.toc();
 
         sortedOrder(nbrs, order);
 
         DynamicList<DynamicList<label>>& curInterPatchFaces =
-            interPatchFaces[procI];
+            interPatchFaces[proci];
 
         forAll(nbrs, i)
         {
             const label nbrProc = nbrs[i];
             const label interPatch = curNbrToInterPatch[nbrProc];
 
-            procNeighbourProcessors_[procI][i] = nbrProc;
-            procProcessorPatchSize_[procI][i] =
+            procNeighbourProcessors_[proci][i] = nbrProc;
+            procProcessorPatchSize_[proci][i] =
                 curInterPatchFaces[interPatch].size();
-            procProcessorPatchStartIndex_[procI][i] =
-                procFaceAddressing_[procI].size();
+            procProcessorPatchStartIndex_[proci][i] =
+                procFaceAddressing_[proci].size();
 
             // Add size as last element to substarts and transfer
             append
             (
-                subPatchStarts[procI][interPatch],
+                subPatchStarts[proci][interPatch],
                 curInterPatchFaces[interPatch].size()
             );
-            procProcessorPatchSubPatchIDs_[procI][i].transfer
+            procProcessorPatchSubPatchIDs_[proci][i].transfer
             (
-                subPatchIDs[procI][interPatch]
+                subPatchIDs[proci][interPatch]
             );
-            procProcessorPatchSubPatchStarts_[procI][i].transfer
+            procProcessorPatchSubPatchStarts_[proci][i].transfer
             (
-                subPatchStarts[procI][interPatch]
+                subPatchStarts[proci][interPatch]
             );
 
             //Info<< "    nbr:" << nbrProc << endl;
             //Info<< "    interpatch:" << interPatch << endl;
-            //Info<< "    size:" << procProcessorPatchSize_[procI][i] << endl;
-            //Info<< "    start:" << procProcessorPatchStartIndex_[procI][i]
+            //Info<< "    size:" << procProcessorPatchSize_[proci][i] << endl;
+            //Info<< "    start:" << procProcessorPatchStartIndex_[proci][i]
             //    << endl;
             //Info<< "    subPatches:"
-            //    << procProcessorPatchSubPatchIDs_[procI][i]
+            //    << procProcessorPatchSubPatchIDs_[proci][i]
             //    << endl;
             //Info<< "    subStarts:"
-            //    << procProcessorPatchSubPatchStarts_[procI][i] << endl;
+            //    << procProcessorPatchSubPatchStarts_[proci][i] << endl;
 
             // And add all the face labels for interPatch
             DynamicList<label>& interPatchFaces =
@@ -382,55 +382,55 @@ void Foam::domainDecomposition::decomposeMesh()
 
             forAll(interPatchFaces, j)
             {
-                procFaceAddressing_[procI].append(interPatchFaces[j]);
+                procFaceAddressing_[proci].append(interPatchFaces[j]);
             }
             interPatchFaces.clearStorage();
         }
         curInterPatchFaces.clearStorage();
-        procFaceAddressing_[procI].shrink();
+        procFaceAddressing_[proci].shrink();
     }
 
 
 ////XXXXXXX
 //// Print a bit
-//    forAll(procPatchStartIndex_, procI)
+//    forAll(procPatchStartIndex_, proci)
 //    {
-//        Info<< "Processor:" << procI << endl;
+//        Info<< "Processor:" << proci << endl;
 //
-//        Info<< "    total faces:" << procFaceAddressing_[procI].size()
+//        Info<< "    total faces:" << procFaceAddressing_[proci].size()
 //            << endl;
 //
-//        const labelList& curProcPatchStartIndex = procPatchStartIndex_[procI];
+//        const labelList& curProcPatchStartIndex = procPatchStartIndex_[proci];
 //
 //        forAll(curProcPatchStartIndex, patchi)
 //        {
 //            Info<< "    patch:" << patchi
 //                << "\tstart:" << curProcPatchStartIndex[patchi]
-//                << "\tsize:" << procPatchSize_[procI][patchi]
+//                << "\tsize:" << procPatchSize_[proci][patchi]
 //                << endl;
 //        }
 //    }
 //    Info<< endl;
 //
-//    forAll(procNeighbourProcessors_, procI)
+//    forAll(procNeighbourProcessors_, proci)
 //    {
-//        Info<< "Processor " << procI << endl;
+//        Info<< "Processor " << proci << endl;
 //
-//        forAll(procNeighbourProcessors_[procI], i)
+//        forAll(procNeighbourProcessors_[proci], i)
 //        {
-//            Info<< "    nbr:" << procNeighbourProcessors_[procI][i] << endl;
-//            Info<< "    size:" << procProcessorPatchSize_[procI][i] << endl;
-//            Info<< "    start:" << procProcessorPatchStartIndex_[procI][i]
+//            Info<< "    nbr:" << procNeighbourProcessors_[proci][i] << endl;
+//            Info<< "    size:" << procProcessorPatchSize_[proci][i] << endl;
+//            Info<< "    start:" << procProcessorPatchStartIndex_[proci][i]
 //                << endl;
 //        }
 //    }
 //    Info<< endl;
 //
-//    forAll(procFaceAddressing_, procI)
+//    forAll(procFaceAddressing_, proci)
 //    {
-//        Info<< "Processor:" << procI << endl;
+//        Info<< "Processor:" << proci << endl;
 //
-//        Info<< "    faces:" << procFaceAddressing_[procI] << endl;
+//        Info<< "    faces:" << procFaceAddressing_[proci] << endl;
 //    }
 
 
@@ -441,12 +441,12 @@ void Foam::domainDecomposition::decomposeMesh()
     // used for the processor. Collect the list of used points for the
     // processor.
 
-    forAll(procPointAddressing_, procI)
+    forAll(procPointAddressing_, proci)
     {
         boolList pointLabels(nPoints(), false);
 
         // Get reference to list of used faces
-        const labelList& procFaceLabels = procFaceAddressing_[procI];
+        const labelList& procFaceLabels = procFaceAddressing_[proci];
 
         forAll(procFaceLabels, facei)
         {
@@ -461,7 +461,7 @@ void Foam::domainDecomposition::decomposeMesh()
         }
 
         // Collect the used points
-        labelList& procPointLabels = procPointAddressing_[procI];
+        labelList& procPointLabels = procPointAddressing_[proci];
 
         procPointLabels.setSize(pointLabels.size());
 

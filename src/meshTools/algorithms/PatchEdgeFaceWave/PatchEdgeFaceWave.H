@@ -133,7 +133,7 @@ class PatchEdgeFaceWave
         bool updateEdge
         (
             const label edgeI,
-            const label neighbourFaceI,
+            const label neighbourFacei,
             const Type& neighbourInfo,
             Type& edgeInfo
         );

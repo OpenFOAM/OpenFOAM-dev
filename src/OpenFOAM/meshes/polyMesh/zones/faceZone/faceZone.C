@@ -127,8 +127,8 @@ void Foam::faceZone::calcCellLayers() const
 
         forAll(mf, facei)
         {
-            label ownCellI = own[mf[facei]];
-            label neiCellI =
+            label ownCelli = own[mf[facei]];
+            label neiCelli =
             (
                 zoneMesh().mesh().isInternalFace(mf[facei])
               ? nei[mf[facei]]
@@ -138,13 +138,13 @@ void Foam::faceZone::calcCellLayers() const
             if (!faceFlip[facei])
             {
                 // Face is oriented correctly, no flip needed
-                mc[facei] = neiCellI;
-                sc[facei] = ownCellI;
+                mc[facei] = neiCelli;
+                sc[facei] = ownCelli;
             }
             else
             {
-                mc[facei] = ownCellI;
-                sc[facei] = neiCellI;
+                mc[facei] = ownCelli;
+                sc[facei] = neiCelli;
             }
         }
     }
@@ -457,10 +457,10 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 
             if (patchi != -1 && bm[patchi].coupled())
             {
-                const label bFaceI = facei-mesh.nInternalFaces();
+                const label bFacei = facei-mesh.nInternalFaces();
 
                 // Check face in zone on both sides
-                if (myZoneFace[bFaceI] != neiZoneFace[bFaceI])
+                if (myZoneFace[bFacei] != neiZoneFace[bFacei])
                 {
                     hasError = true;
 
@@ -480,7 +480,7 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
                         break;
                     }
                 }
-                else if (myZoneFlip[bFaceI] == neiZoneFlip[bFaceI])
+                else if (myZoneFlip[bFacei] == neiZoneFlip[bFacei])
                 {
                     // Flip state should be opposite.
                     hasError = true;

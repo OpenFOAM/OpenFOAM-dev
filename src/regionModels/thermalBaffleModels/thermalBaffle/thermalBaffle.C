@@ -104,20 +104,20 @@ void thermalBaffle::solveEnergy()
         const label patchi = intCoupledPatchIDs_[0];
         const polyPatch& ppCoupled = rbm[patchi];
 
-        forAll(ppCoupled, localFaceI)
+        forAll(ppCoupled, localFacei)
         {
-            const labelList& cells = boundaryFaceCells_[localFaceI];
+            const labelList& cells = boundaryFaceCells_[localFacei];
             forAll(cells, i)
             {
                 const label cellId = cells[i];
 
                 Q[cellId] =
-                    Qs_.boundaryField()[patchi][localFaceI]
-                   /thickness_[localFaceI];
+                    Qs_.boundaryField()[patchi][localFacei]
+                   /thickness_[localFacei];
 
-                rho[cellId] *= delta_.value()/thickness_[localFaceI];
+                rho[cellId] *= delta_.value()/thickness_[localFacei];
 
-                alpha[cellId] *= delta_.value()/thickness_[localFaceI];
+                alpha[cellId] *= delta_.value()/thickness_[localFacei];
             }
         }
     }

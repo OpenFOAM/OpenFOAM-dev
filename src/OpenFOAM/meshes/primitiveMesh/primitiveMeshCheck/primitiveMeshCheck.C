@@ -1023,17 +1023,17 @@ bool Foam::primitiveMesh::checkUpperTriangular
             }
             else
             {
-                label nbrCellI = nei[facei];
+                label nbrCelli = nei[facei];
 
-                if (nbrCellI == celli)
+                if (nbrCelli == celli)
                 {
-                    nbrCellI = own[facei];
+                    nbrCelli = own[facei];
                 }
 
-                if (celli < nbrCellI)
+                if (celli < nbrCelli)
                 {
                     // celli is master
-                    nbr[i] = nbrCellI;
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -1380,11 +1380,11 @@ bool Foam::primitiveMesh::checkDuplicateFaces
 
     forAllConstIter(Map<label>, nCommonPoints, iter)
     {
-        label nbFaceI = iter.key();
+        label nbFacei = iter.key();
         label nCommon = iter();
 
         const face& curFace = faces()[facei];
-        const face& nbFace = faces()[nbFaceI];
+        const face& nbFace = faces()[nbFacei];
 
         if (nCommon == nbFace.size() || nCommon == curFace.size())
         {
@@ -1400,7 +1400,7 @@ bool Foam::primitiveMesh::checkDuplicateFaces
             if (setPtr)
             {
                 setPtr->insert(facei);
-                setPtr->insert(nbFaceI);
+                setPtr->insert(nbFacei);
             }
         }
     }
@@ -1420,11 +1420,11 @@ bool Foam::primitiveMesh::checkCommonOrder
 
     forAllConstIter(Map<label>, nCommonPoints, iter)
     {
-        label nbFaceI = iter.key();
+        label nbFacei = iter.key();
         label nCommon = iter();
 
         const face& curFace = faces()[facei];
-        const face& nbFace = faces()[nbFaceI];
+        const face& nbFace = faces()[nbFacei];
 
         if
         (
@@ -1549,7 +1549,7 @@ bool Foam::primitiveMesh::checkCommonOrder
                             if (setPtr)
                             {
                                 setPtr->insert(facei);
-                                setPtr->insert(nbFaceI);
+                                setPtr->insert(nbFacei);
                             }
 
                             error = true;
@@ -1604,18 +1604,18 @@ bool Foam::primitiveMesh::checkFaceFaces
 
             forAll(nbs, nbI)
             {
-                label nbFaceI = nbs[nbI];
+                label nbFacei = nbs[nbI];
 
-                if (facei < nbFaceI)
+                if (facei < nbFacei)
                 {
                     // Only check once for each combination of two faces.
 
-                    Map<label>::iterator fnd = nCommonPoints.find(nbFaceI);
+                    Map<label>::iterator fnd = nCommonPoints.find(nbFacei);
 
                     if (fnd == nCommonPoints.end())
                     {
                         // First common vertex found.
-                        nCommonPoints.insert(nbFaceI, 1);
+                        nCommonPoints.insert(nbFacei, 1);
                     }
                     else
                     {

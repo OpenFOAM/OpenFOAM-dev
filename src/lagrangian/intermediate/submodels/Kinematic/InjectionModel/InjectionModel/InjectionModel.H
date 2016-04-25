@@ -159,7 +159,7 @@ protected:
         virtual bool findCellAtPosition
         (
             label& celli,
-            label& tetFaceI,
+            label& tetFacei,
             label& tetPtI,
             vector& position,
             bool errorOnNotFound = true
@@ -319,7 +319,7 @@ public:
                 const scalar time,
                 vector& position,
                 label& cellOwner,
-                label& tetFaceI,
+                label& tetFacei,
                 label& tetPtI
             ) = 0;
 

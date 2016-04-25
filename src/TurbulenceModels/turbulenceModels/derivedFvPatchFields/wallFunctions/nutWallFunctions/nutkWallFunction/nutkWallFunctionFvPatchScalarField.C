@@ -63,9 +63,9 @@ tmp<scalarField> nutkWallFunctionFvPatchScalarField::calcNut() const
 
     forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[facei];
+        label faceCelli = patch().faceCells()[facei];
 
-        scalar yPlus = Cmu25*y[facei]*sqrt(k[faceCellI])/nuw[facei];
+        scalar yPlus = Cmu25*y[facei]*sqrt(k[faceCelli])/nuw[facei];
 
         if (yPlus > yPlusLam_)
         {

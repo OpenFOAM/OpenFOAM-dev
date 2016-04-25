@@ -174,16 +174,16 @@ labelList getFaceOrder
 
     labelList oldToNewFace(mesh.nFaces(), -1);
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     labelList nbr;
     labelList order;
 
-    forAll(cellOrder, newCellI)
+    forAll(cellOrder, newCelli)
     {
-        label oldCellI = cellOrder[newCellI];
+        label oldCelli = cellOrder[newCelli];
 
-        const cell& cFaces = mesh.cells()[oldCellI];
+        const cell& cFaces = mesh.cells()[oldCelli];
 
         // Neighbouring cells
         nbr.setSize(cFaces.size());
@@ -195,16 +195,16 @@ labelList getFaceOrder
             if (mesh.isInternalFace(facei))
             {
                 // Internal face. Get cell on other side.
-                label nbrCellI = reverseCellOrder[mesh.faceNeighbour()[facei]];
-                if (nbrCellI == newCellI)
+                label nbrCelli = reverseCellOrder[mesh.faceNeighbour()[facei]];
+                if (nbrCelli == newCelli)
                 {
-                    nbrCellI = reverseCellOrder[mesh.faceOwner()[facei]];
+                    nbrCelli = reverseCellOrder[mesh.faceOwner()[facei]];
                 }
 
-                if (newCellI < nbrCellI)
+                if (newCelli < nbrCelli)
                 {
-                    // CellI is master
-                    nbr[i] = nbrCellI;
+                    // Celli is master
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -227,13 +227,13 @@ labelList getFaceOrder
             label index = order[i];
             if (nbr[index] != -1)
             {
-                oldToNewFace[cFaces[index]] = newFaceI++;
+                oldToNewFace[cFaces[index]] = newFacei++;
             }
         }
     }
 
     // Leave patch faces intact.
-    for (label facei = newFaceI; facei < mesh.nFaces(); facei++)
+    for (label facei = newFacei; facei < mesh.nFaces(); facei++)
     {
         oldToNewFace[facei] = facei;
     }
@@ -267,20 +267,20 @@ labelList getRegionFaceOrder
 
     labelList oldToNewFace(mesh.nFaces(), -1);
 
-    label newFaceI = 0;
+    label newFacei = 0;
 
     label prevRegion = -1;
 
-    forAll(cellOrder, newCellI)
+    forAll(cellOrder, newCelli)
     {
-        label oldCellI = cellOrder[newCellI];
+        label oldCelli = cellOrder[newCelli];
 
-        if (cellToRegion[oldCellI] != prevRegion)
+        if (cellToRegion[oldCelli] != prevRegion)
         {
-            prevRegion = cellToRegion[oldCellI];
+            prevRegion = cellToRegion[oldCelli];
         }
 
-        const cell& cFaces = mesh.cells()[oldCellI];
+        const cell& cFaces = mesh.cells()[oldCelli];
 
         SortableList<label> nbr(cFaces.size());
 
@@ -291,21 +291,21 @@ labelList getRegionFaceOrder
             if (mesh.isInternalFace(facei))
             {
                 // Internal face. Get cell on other side.
-                label nbrCellI = reverseCellOrder[mesh.faceNeighbour()[facei]];
-                if (nbrCellI == newCellI)
+                label nbrCelli = reverseCellOrder[mesh.faceNeighbour()[facei]];
+                if (nbrCelli == newCelli)
                 {
-                    nbrCellI = reverseCellOrder[mesh.faceOwner()[facei]];
+                    nbrCelli = reverseCellOrder[mesh.faceOwner()[facei]];
                 }
 
-                if (cellToRegion[oldCellI] != cellToRegion[cellOrder[nbrCellI]])
+                if (cellToRegion[oldCelli] != cellToRegion[cellOrder[nbrCelli]])
                 {
                     // Treat like external face. Do later.
                     nbr[i] = -1;
                 }
-                else if (newCellI < nbrCellI)
+                else if (newCelli < nbrCelli)
                 {
-                    // CellI is master
-                    nbr[i] = nbrCellI;
+                    // Celli is master
+                    nbr[i] = nbrCelli;
                 }
                 else
                 {
@@ -326,7 +326,7 @@ labelList getRegionFaceOrder
         {
             if (nbr[i] != -1)
             {
-                oldToNewFace[cFaces[nbr.indices()[i]]] = newFaceI++;
+                oldToNewFace[cFaces[nbr.indices()[i]]] = newFacei++;
             }
         }
     }
@@ -367,12 +367,12 @@ labelList getRegionFaceOrder
                 prevKey = key;
             }
 
-            oldToNewFace[sortKey.indices()[i]] = newFaceI++;
+            oldToNewFace[sortKey.indices()[i]] = newFacei++;
         }
     }
 
     // Leave patch faces intact.
-    for (label facei = newFaceI; facei < mesh.nFaces(); facei++)
+    for (label facei = newFacei; facei < mesh.nFaces(); facei++)
     {
         oldToNewFace[facei] = facei;
     }
@@ -477,8 +477,8 @@ autoPtr<mapPolyMesh> reorderMesh
             boolList newFlipMap(fZone.size());
             forAll(fZone, i)
             {
-                label oldFaceI = fZone[i];
-                newAddressing[i] = reverseFaceOrder[oldFaceI];
+                label oldFacei = fZone[i];
+                newAddressing[i] = reverseFaceOrder[oldFacei];
                 if (flipFaceFlux.found(newAddressing[i]))
                 {
                     newFlipMap[i] = !fZone.flipMap()[i];
@@ -999,8 +999,8 @@ int main(int argc, char *argv[])
             label sortedI = mesh.nCells();
             forAllReverse(order, i)
             {
-                label origCellI = bndCells[order[i]];
-                newReverseCellOrder[origCellI] = --sortedI;
+                label origCelli = bndCells[order[i]];
+                newReverseCellOrder[origCelli] = --sortedI;
             }
 
             Info<< "Ordered all " << nBndCells << " cells with a coupled face"
@@ -1009,12 +1009,12 @@ int main(int argc, char *argv[])
 
             // Compact
             sortedI = 0;
-            forAll(cellOrder, newCellI)
+            forAll(cellOrder, newCelli)
             {
-                label origCellI = cellOrder[newCellI];
-                if (newReverseCellOrder[origCellI] == -1)
+                label origCelli = cellOrder[newCelli];
+                if (newReverseCellOrder[origCelli] == -1)
                 {
-                    newReverseCellOrder[origCellI] = sortedI++;
+                    newReverseCellOrder[origCelli] = sortedI++;
                 }
             }
 
@@ -1106,14 +1106,14 @@ int main(int argc, char *argv[])
         forAllConstIter(labelHashSet, fff, iter)
         {
             label facei = iter.key();
-            label masterFaceI = faceProcAddressing[facei];
+            label masterFacei = faceProcAddressing[facei];
 
-            faceProcAddressing[facei] = -masterFaceI;
+            faceProcAddressing[facei] = -masterFacei;
 
-            if (masterFaceI == 0)
+            if (masterFacei == 0)
             {
                 FatalErrorInFunction
-                    << " masterFaceI:" << masterFaceI << exit(FatalError);
+                    << " masterFacei:" << masterFacei << exit(FatalError);
             }
         }
     }

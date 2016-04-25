@@ -93,7 +93,7 @@ void Foam::triSurface::writeAC(Ostream& os) const
 
         boolList include(size(), false);
 
-        forAll(sp, patchFaceI)
+        forAll(sp, patchFacei)
         {
             const label facei = faceMap[faceIndex++];
 

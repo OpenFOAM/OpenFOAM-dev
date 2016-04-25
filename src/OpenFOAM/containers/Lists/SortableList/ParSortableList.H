@@ -163,7 +163,7 @@ class ParSortableList
             List<Type>& values,
             labelList& indices,
             const label bufSize,
-            const label destProcI
+            const label destProci
         ) const;
 
 

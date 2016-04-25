@@ -136,7 +136,7 @@ class booleanSurface
         (
             const triSurface& surf,
             const label prevVert0,
-            const label prevFaceI,
+            const label prevFacei,
             const label prevState,
             const label edgeI,
             labelList& side

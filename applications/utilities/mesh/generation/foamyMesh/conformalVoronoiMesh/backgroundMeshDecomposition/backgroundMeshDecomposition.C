@@ -56,28 +56,28 @@ Foam::autoPtr<Foam::mapDistribute> Foam::backgroundMeshDecomposition::buildMap
 
     forAll(toProc, i)
     {
-        label procI = toProc[i];
+        label proci = toProc[i];
 
-        nSend[procI]++;
+        nSend[proci]++;
     }
 
 
     // 2. Size sendMap
     labelListList sendMap(Pstream::nProcs());
 
-    forAll(nSend, procI)
+    forAll(nSend, proci)
     {
-        sendMap[procI].setSize(nSend[procI]);
+        sendMap[proci].setSize(nSend[proci]);
 
-        nSend[procI] = 0;
+        nSend[proci] = 0;
     }
 
     // 3. Fill sendMap
     forAll(toProc, i)
     {
-        label procI = toProc[i];
+        label proci = toProc[i];
 
-        sendMap[procI][nSend[procI]++] = i;
+        sendMap[proci][nSend[proci]++] = i;
     }
 
     // 4. Send over how many I need to receive
@@ -98,17 +98,17 @@ Foam::autoPtr<Foam::mapDistribute> Foam::backgroundMeshDecomposition::buildMap
 
     label constructSize = constructMap[Pstream::myProcNo()].size();
 
-    forAll(constructMap, procI)
+    forAll(constructMap, proci)
     {
-        if (procI != Pstream::myProcNo())
+        if (proci != Pstream::myProcNo())
         {
-            label nRecv = recvSizes[procI];
+            label nRecv = recvSizes[proci];
 
-            constructMap[procI].setSize(nRecv);
+            constructMap[proci].setSize(nRecv);
 
             for (label i = 0; i < nRecv; i++)
             {
-                constructMap[procI][i] = constructSize++;
+                constructMap[proci][i] = constructSize++;
             }
         }
     }
@@ -259,17 +259,17 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
 
                     List<volumeType> newVolumeStatus(cellMap.size());
 
-                    forAll(cellMap, newCellI)
+                    forAll(cellMap, newCelli)
                     {
-                        label oldCellI = cellMap[newCellI];
+                        label oldCelli = cellMap[newCelli];
 
-                        if (oldCellI == -1)
+                        if (oldCelli == -1)
                         {
-                            newVolumeStatus[newCellI] = volumeType::UNKNOWN;
+                            newVolumeStatus[newCelli] = volumeType::UNKNOWN;
                         }
                         else
                         {
-                            newVolumeStatus[newCellI] = volumeStatus[oldCellI];
+                            newVolumeStatus[newCelli] = volumeStatus[oldCelli];
                         }
                     }
 
@@ -369,17 +369,17 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
 
                     List<volumeType> newVolumeStatus(cellMap.size());
 
-                    forAll(cellMap, newCellI)
+                    forAll(cellMap, newCelli)
                     {
-                        label oldCellI = cellMap[newCellI];
+                        label oldCelli = cellMap[newCelli];
 
-                        if (oldCellI == -1)
+                        if (oldCelli == -1)
                         {
-                            newVolumeStatus[newCellI] = volumeType::UNKNOWN;
+                            newVolumeStatus[newCelli] = volumeType::UNKNOWN;
                         }
                         else
                         {
-                            newVolumeStatus[newCellI] = volumeStatus[oldCellI];
+                            newVolumeStatus[newCelli] = volumeStatus[oldCelli];
                         }
                     }
 
@@ -474,29 +474,29 @@ void Foam::backgroundMeshDecomposition::printMeshData
 
     // globalIndex globalBoundaryFaces(mesh.nFaces()-mesh.nInternalFaces());
 
-    for (label procI = 0; procI < Pstream::nProcs(); procI++)
+    for (label proci = 0; proci < Pstream::nProcs(); proci++)
     {
-        Info<< "Processor " << procI << " "
-            << "Number of cells = " << globalCells.localSize(procI)
+        Info<< "Processor " << proci << " "
+            << "Number of cells = " << globalCells.localSize(proci)
             << endl;
 
         // label nProcFaces = 0;
 
-        // const labelList& nei = patchNeiProcNo[procI];
+        // const labelList& nei = patchNeiProcNo[proci];
 
-        // forAll(patchNeiProcNo[procI], i)
+        // forAll(patchNeiProcNo[proci], i)
         // {
         //     Info<< "    Number of faces shared with processor "
-        //         << patchNeiProcNo[procI][i] << " = " << patchSize[procI][i]
+        //         << patchNeiProcNo[proci][i] << " = " << patchSize[proci][i]
         //         << endl;
 
-        //     nProcFaces += patchSize[procI][i];
+        //     nProcFaces += patchSize[proci][i];
         // }
 
         // Info<< "    Number of processor patches = " << nei.size() << nl
         //     << "    Number of processor faces = " << nProcFaces << nl
         //     << "    Number of boundary faces = "
-        //     << globalBoundaryFaces.localSize(procI) << endl;
+        //     << globalBoundaryFaces.localSize(proci) << endl;
     }
 }
 
@@ -721,10 +721,10 @@ void Foam::backgroundMeshDecomposition::buildPatchAndTree()
     point bbMin(GREAT, GREAT, GREAT);
     point bbMax(-GREAT, -GREAT, -GREAT);
 
-    forAll(allBackgroundMeshBounds_, procI)
+    forAll(allBackgroundMeshBounds_, proci)
     {
-        bbMin = min(bbMin, allBackgroundMeshBounds_[procI].min());
-        bbMax = max(bbMax, allBackgroundMeshBounds_[procI].max());
+        bbMin = min(bbMin, allBackgroundMeshBounds_[proci].min());
+        bbMax = max(bbMax, allBackgroundMeshBounds_[proci].max());
     }
 
     globalBackgroundBounds_ = treeBoundBox(bbMin, bbMax);
@@ -1119,13 +1119,13 @@ Foam::labelList Foam::backgroundMeshDecomposition::processorNearestPosition
 
         label nCandidates = 0;
 
-        forAll(allBackgroundMeshBounds_, procI)
+        forAll(allBackgroundMeshBounds_, proci)
         {
             // Candidate points may lie just outside a processor box, increase
             // test range by using overlaps rather than contains
-            if (allBackgroundMeshBounds_[procI].overlaps(pt, sqr(SMALL*100)))
+            if (allBackgroundMeshBounds_[proci].overlaps(pt, sqr(SMALL*100)))
             {
-                toCandidateProc.append(procI);
+                toCandidateProc.append(proci);
                 testPoints.append(pt);
 
                 nCandidates++;
@@ -1242,17 +1242,17 @@ Foam::backgroundMeshDecomposition::intersectsProcessors
 
         label nCandidates = 0;
 
-        forAll(allBackgroundMeshBounds_, procI)
+        forAll(allBackgroundMeshBounds_, proci)
         {
             // It is assumed that the sphere in question overlaps the source
             // processor, so don't test it, unless includeOwnProcessor is true
             if
             (
-                (includeOwnProcessor || procI != Pstream::myProcNo())
-              && allBackgroundMeshBounds_[procI].intersects(s, e, p)
+                (includeOwnProcessor || proci != Pstream::myProcNo())
+              && allBackgroundMeshBounds_[proci].intersects(s, e, p)
             )
             {
-                toCandidateProc.append(procI);
+                toCandidateProc.append(proci);
                 testStarts.append(s);
                 testEnds.append(e);
 
@@ -1336,7 +1336,7 @@ bool Foam::backgroundMeshDecomposition::overlapsOtherProcessors
     const scalar& radiusSqr
 ) const
 {
-    forAll(allBackgroundMeshBounds_, procI)
+    forAll(allBackgroundMeshBounds_, proci)
     {
         if (bFTreePtr_().findNearest(centre, radiusSqr).hit())
         {
@@ -1356,19 +1356,19 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 {
     DynamicList<label> toProc(Pstream::nProcs());
 
-    forAll(allBackgroundMeshBounds_, procI)
+    forAll(allBackgroundMeshBounds_, proci)
     {
         // Test against the bounding box of the processor
         if
         (
-            procI != Pstream::myProcNo()
-         && allBackgroundMeshBounds_[procI].overlaps(centre, radiusSqr)
+            proci != Pstream::myProcNo()
+         && allBackgroundMeshBounds_[proci].overlaps(centre, radiusSqr)
         )
         {
             // Expensive test
 //            if (bFTreePtr_().findNearest(centre, radiusSqr).hit())
             {
-                toProc.append(procI);
+                toProc.append(proci);
             }
         }
     }
@@ -1400,19 +1400,19 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 //
 //        label nCandidates = 0;
 //
-//        forAll(allBackgroundMeshBounds_, procI)
+//        forAll(allBackgroundMeshBounds_, proci)
 //        {
 //            // It is assumed that the sphere in question overlaps the source
 //            // processor, so don't test it, unless includeOwnProcessor is true
 //            if
 //            (
-//                (includeOwnProcessor || procI != Pstream::myProcNo())
-//             && allBackgroundMeshBounds_[procI].overlaps(c, rSqr)
+//                (includeOwnProcessor || proci != Pstream::myProcNo())
+//             && allBackgroundMeshBounds_[proci].overlaps(c, rSqr)
 //            )
 //            {
 //                if (bFTreePtr_().findNearest(c, rSqr).hit())
 //                {
-//                    toCandidateProc.append(procI);
+//                    toCandidateProc.append(proci);
 //                    testCentres.append(c);
 //                    testRadiusSqrs.append(rSqr);
 //
@@ -1525,17 +1525,17 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 //
 //    label nCandidates = 0;
 //
-//    forAll(allBackgroundMeshBounds_, procI)
+//    forAll(allBackgroundMeshBounds_, proci)
 //    {
 //        // It is assumed that the sphere in question overlaps the source
 //        // processor, so don't test it, unless includeOwnProcessor is true
 //        if
 //        (
-//            (includeOwnProcessor || procI != Pstream::myProcNo())
-//         && allBackgroundMeshBounds_[procI].overlaps(cc, rSqr)
+//            (includeOwnProcessor || proci != Pstream::myProcNo())
+//         && allBackgroundMeshBounds_[proci].overlaps(cc, rSqr)
 //        )
 //        {
-//            toCandidateProc.append(procI);
+//            toCandidateProc.append(proci);
 //
 //            nCandidates++;
 //        }

@@ -86,9 +86,9 @@ Foam::isoSurfaceCell::cellCutType Foam::isoSurfaceCell::calcCutType
 
     if (isTet.get(celli) == 1)
     {
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            const face& f = mesh_.faces()[cFaces[cFaceI]];
+            const face& f = mesh_.faces()[cFaces[cFacei]];
 
             for (label fp = 1; fp < f.size() - 1; fp++)
             {
@@ -109,9 +109,9 @@ Foam::isoSurfaceCell::cellCutType Foam::isoSurfaceCell::calcCutType
         // First check if there is any cut in cell
         bool edgeCut = false;
 
-        forAll(cFaces, cFaceI)
+        forAll(cFaces, cFacei)
         {
-            label facei = cFaces[cFaceI];
+            label facei = cFaces[cFacei];
             const face& f = mesh_.faces()[facei];
 
             // Check pyramids cut
@@ -389,9 +389,9 @@ void Foam::isoSurfaceCell::calcSnappedCc
             // Create points for all intersections close to cell centre
             // (i.e. from pyramid edges)
 
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                const face& f = mesh_.faces()[cFaces[cFaceI]];
+                const face& f = mesh_.faces()[cFaces[cFacei]];
 
                 forAll(f, fp)
                 {
@@ -436,9 +436,9 @@ void Foam::isoSurfaceCell::calcSnappedCc
             else if (localPoints.size())
             {
                 // Need to analyse
-                forAll(cFaces, cFaceI)
+                forAll(cFaces, cFacei)
                 {
-                    label facei = cFaces[cFaceI];
+                    label facei = cFaces[cFacei];
                     const face& f = mesh_.faces()[facei];
 
                     // Do a tetrahedralisation. Each face to cc becomes pyr.
@@ -619,9 +619,9 @@ void Foam::isoSurfaceCell::genPointTris
 
     // Find 4th point
     label ccPointI = -1;
-    forAll(cFaces, cFaceI)
+    forAll(cFaces, cFacei)
     {
-        const face& f1 = mesh_.faces()[cFaces[cFaceI]];
+        const face& f1 = mesh_.faces()[cFaces[cFacei]];
         forAll(f1, fp)
         {
             label p1 = f1[fp];
@@ -763,9 +763,9 @@ void Foam::isoSurfaceCell::calcSnappedPoint
         localPointCells.clear();
         localTriPoints.clear();
 
-        forAll(pFaces, pFaceI)
+        forAll(pFaces, pFacei)
         {
-            label facei = pFaces[pFaceI];
+            label facei = pFaces[pFacei];
             label own = mesh_.faceOwner()[facei];
 
             if (isTet.get(own) == 1)
@@ -1082,15 +1082,15 @@ bool Foam::isoSurfaceCell::validTri(const triSurface& surf, const label facei)
     // Note: discards normal information - sides of baffle are merged.
     forAll(fFaces, i)
     {
-        label nbrFaceI = fFaces[i];
+        label nbrFacei = fFaces[i];
 
-        if (nbrFaceI <= facei)
+        if (nbrFacei <= facei)
         {
             // lower numbered faces already checked
             continue;
         }
 
-        const labelledTri& nbrF = surf[nbrFaceI];
+        const labelledTri& nbrF = surf[nbrFacei];
 
         if
         (
@@ -1102,7 +1102,7 @@ bool Foam::isoSurfaceCell::validTri(const triSurface& surf, const label facei)
             WarningInFunction
                 << "triangle " << facei << " vertices " << f
                 << " coords:" << f.points(surf.points())
-                << " has the same vertices as triangle " << nbrFaceI
+                << " has the same vertices as triangle " << nbrFacei
                 << " vertices " << nbrF
                 << endl;
 

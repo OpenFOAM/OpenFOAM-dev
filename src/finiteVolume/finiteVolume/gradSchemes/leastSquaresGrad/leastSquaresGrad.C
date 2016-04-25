@@ -89,13 +89,13 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
 
     forAll(own, facei)
     {
-        label ownFaceI = own[facei];
-        label neiFaceI = nei[facei];
+        label ownFacei = own[facei];
+        label neiFacei = nei[facei];
 
-        Type deltaVsf = vsf[neiFaceI] - vsf[ownFaceI];
+        Type deltaVsf = vsf[neiFacei] - vsf[ownFacei];
 
-        lsGrad[ownFaceI] += ownLs[facei]*deltaVsf;
-        lsGrad[neiFaceI] -= neiLs[facei]*deltaVsf;
+        lsGrad[ownFacei] += ownLs[facei]*deltaVsf;
+        lsGrad[neiFacei] -= neiLs[facei]*deltaVsf;
     }
 
     // Boundary faces
@@ -113,22 +113,22 @@ Foam::fv::leastSquaresGrad<Type>::calcGrad
                 vsf.boundaryField()[patchi].patchNeighbourField()
             );
 
-            forAll(neiVsf, patchFaceI)
+            forAll(neiVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFaceI]] +=
-                    patchOwnLs[patchFaceI]
-                   *(neiVsf[patchFaceI] - vsf[faceCells[patchFaceI]]);
+                lsGrad[faceCells[patchFacei]] +=
+                    patchOwnLs[patchFacei]
+                   *(neiVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
         else
         {
             const fvPatchField<Type>& patchVsf = vsf.boundaryField()[patchi];
 
-            forAll(patchVsf, patchFaceI)
+            forAll(patchVsf, patchFacei)
             {
-                lsGrad[faceCells[patchFaceI]] +=
-                     patchOwnLs[patchFaceI]
-                    *(patchVsf[patchFaceI] - vsf[faceCells[patchFaceI]]);
+                lsGrad[faceCells[patchFacei]] +=
+                     patchOwnLs[patchFacei]
+                    *(patchVsf[patchFacei] - vsf[faceCells[patchFacei]]);
             }
         }
     }

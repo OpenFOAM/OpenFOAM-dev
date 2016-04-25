@@ -445,7 +445,7 @@ void Foam::InflationInjection<CloudType>::setPositionAndCell
     const scalar,
     vector& position,
     label& cellOwner,
-    label& tetFaceI,
+    label& tetFacei,
     label& tetPtI
 )
 {
@@ -454,7 +454,7 @@ void Foam::InflationInjection<CloudType>::setPositionAndCell
     this->findCellAtPosition
     (
         cellOwner,
-        tetFaceI,
+        tetFacei,
         tetPtI,
         position,
         false

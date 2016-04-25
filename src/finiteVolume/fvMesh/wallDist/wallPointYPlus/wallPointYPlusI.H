@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,8 @@ template<class TrackingData>
 inline bool wallPointYPlus::updateCell
 (
     const polyMesh& mesh,
-    const label thisCellI,
-    const label neighbourFaceI,
+    const label thisCelli,
+    const label neighbourFacei,
     const wallPointYPlus& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -124,7 +124,7 @@ inline bool wallPointYPlus::updateCell
 
     return update
     (
-        cellCentres[thisCellI],
+        cellCentres[thisCelli],
         neighbourWallInfo,
         tol,
         td
@@ -137,8 +137,8 @@ template<class TrackingData>
 inline bool wallPointYPlus::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
-    const label neighbourCellI,
+    const label thisFacei,
+    const label neighbourCelli,
     const wallPointYPlus& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -148,7 +148,7 @@ inline bool wallPointYPlus::updateFace
 
     return update
     (
-        faceCentres[thisFaceI],
+        faceCentres[thisFacei],
         neighbourWallInfo,
         tol,
         td
@@ -161,7 +161,7 @@ template<class TrackingData>
 inline bool wallPointYPlus::updateFace
 (
     const polyMesh& mesh,
-    const label thisFaceI,
+    const label thisFacei,
     const wallPointYPlus& neighbourWallInfo,
     const scalar tol,
     TrackingData& td
@@ -171,7 +171,7 @@ inline bool wallPointYPlus::updateFace
 
     return update
     (
-        faceCentres[thisFaceI],
+        faceCentres[thisFacei],
         neighbourWallInfo,
         tol,
         td

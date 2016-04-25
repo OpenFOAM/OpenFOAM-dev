@@ -382,20 +382,20 @@ void Foam::probes::updateMesh(const mapPolyMesh& mpm)
             forAll(elementList_, i)
             {
                 label celli = elementList_[i];
-                label newCellI = reverseMap[celli];
-                if (newCellI == -1)
+                label newCelli = reverseMap[celli];
+                if (newCelli == -1)
                 {
                     // cell removed
                 }
-                else if (newCellI < -1)
+                else if (newCelli < -1)
                 {
                     // cell merged
-                    elems.append(-newCellI - 2);
+                    elems.append(-newCelli - 2);
                 }
                 else
                 {
                     // valid new cell
-                    elems.append(newCellI);
+                    elems.append(newCelli);
                 }
             }
 
@@ -410,20 +410,20 @@ void Foam::probes::updateMesh(const mapPolyMesh& mpm)
             forAll(faceList_, i)
             {
                 label facei = faceList_[i];
-                label newFaceI = reverseMap[facei];
-                if (newFaceI == -1)
+                label newFacei = reverseMap[facei];
+                if (newFacei == -1)
                 {
                     // face removed
                 }
-                else if (newFaceI < -1)
+                else if (newFacei < -1)
                 {
                     // face merged
-                    elems.append(-newFaceI - 2);
+                    elems.append(-newFacei - 2);
                 }
                 else
                 {
                     // valid new face
-                    elems.append(newFaceI);
+                    elems.append(newFacei);
                 }
             }
 

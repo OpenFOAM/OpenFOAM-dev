@@ -128,7 +128,7 @@ class hexRef8
         label addInternalFace
         (
             polyTopoChange& meshMod,
-            const label meshFaceI,
+            const label meshFacei,
             const label meshPointI,
             const face& newFace,
             const label own,

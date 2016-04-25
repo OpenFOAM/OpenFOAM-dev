@@ -157,12 +157,12 @@ void thermalBaffleModel::init()
             // Calculate thickness of the baffle on the first face only.
             if (delta_.value() == 0.0)
             {
-                forAll(ppCoupled, localFaceI)
+                forAll(ppCoupled, localFacei)
                 {
-                    label facei = ppCoupled.start() + localFaceI;
+                    label facei = ppCoupled.start() + localFacei;
 
                     label faceO =
-                        boundaryFaceOppositeFace_[localFaceI];
+                        boundaryFaceOppositeFace_[localFacei];
 
                     delta_.value() = mag
                     (

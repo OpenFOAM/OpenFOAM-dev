@@ -178,10 +178,10 @@ void Foam::cellToFaceStencil::validBoundaryFaces(boolList& isValidBFace) const
 
         if (pp.coupled() || isA<emptyPolyPatch>(pp))
         {
-            label bFaceI = pp.start()-mesh().nInternalFaces();
+            label bFacei = pp.start()-mesh().nInternalFaces();
             forAll(pp, i)
             {
-                isValidBFace[bFaceI++] = false;
+                isValidBFace[bFacei++] = false;
             }
         }
     }
@@ -294,14 +294,14 @@ void Foam::cellToFaceStencil::insertFaceCells
         }
         else
         {
-            label bFaceI = facei-mesh().nInternalFaces();
+            label bFacei = facei-mesh().nInternalFaces();
 
-            if (isValidBFace[bFaceI])
+            if (isValidBFace[bFacei])
             {
                 label globalI = globalNumbering().toGlobal
                 (
                     mesh().nCells()
-                  + bFaceI
+                  + bFacei
                 );
 
                 if (globalI != exclude0 && globalI != exclude1)

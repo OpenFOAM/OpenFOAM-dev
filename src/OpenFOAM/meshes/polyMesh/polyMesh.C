@@ -1216,16 +1216,16 @@ void Foam::polyMesh::findCellFacePt
 
     if (info.hit())
     {
-        label nearestCellI = tree.shapes().cellLabels()[info.index()];
+        label nearestCelli = tree.shapes().cellLabels()[info.index()];
 
         // Check the nearest cell to see if the point is inside.
-        findTetFacePt(nearestCellI, p, tetFacei, tetPti);
+        findTetFacePt(nearestCelli, p, tetFacei, tetPti);
 
         if (tetFacei != -1)
         {
             // Point was in the nearest cell
 
-            celli = nearestCellI;
+            celli = nearestCelli;
 
             return;
         }
@@ -1237,9 +1237,9 @@ void Foam::polyMesh::findCellFacePt
 
             forAll(testCells, pCI)
             {
-                label testCellI = tree.shapes().cellLabels()[testCells[pCI]];
+                label testCelli = tree.shapes().cellLabels()[testCells[pCI]];
 
-                if (testCellI == nearestCellI)
+                if (testCelli == nearestCelli)
                 {
                     // Don't retest the nearest cell
 
@@ -1247,13 +1247,13 @@ void Foam::polyMesh::findCellFacePt
                 }
 
                 // Check the test cell to see if the point is inside.
-                findTetFacePt(testCellI, p, tetFacei, tetPti);
+                findTetFacePt(testCelli, p, tetFacei, tetPti);
 
                 if (tetFacei != -1)
                 {
                     // Point was in the test cell
 
-                    celli = testCellI;
+                    celli = testCelli;
 
                     return;
                 }

@@ -105,9 +105,9 @@ void Foam::fvMeshSubset::doCoupledPatches
         PstreamBuffers pBufs(Pstream::nonBlocking);
 
         // Send face usage across processor patches
-        forAll(oldPatches, oldPatchI)
+        forAll(oldPatches, oldPatchi)
         {
-            const polyPatch& pp = oldPatches[oldPatchI];
+            const polyPatch& pp = oldPatches[oldPatchi];
 
             if (isA<processorPolyPatch>(pp))
             {
@@ -124,9 +124,9 @@ void Foam::fvMeshSubset::doCoupledPatches
         pBufs.finishedSends();
 
         // Receive face usage count and check for faces that become uncoupled.
-        forAll(oldPatches, oldPatchI)
+        forAll(oldPatches, oldPatchi)
         {
-            const polyPatch& pp = oldPatches[oldPatchI];
+            const polyPatch& pp = oldPatches[oldPatchi];
 
             if (isA<processorPolyPatch>(pp))
             {
@@ -158,9 +158,9 @@ void Foam::fvMeshSubset::doCoupledPatches
     }
 
     // Do same for cyclics.
-    forAll(oldPatches, oldPatchI)
+    forAll(oldPatches, oldPatchi)
     {
-        const polyPatch& pp = oldPatches[oldPatchI];
+        const polyPatch& pp = oldPatches[oldPatchi];
 
         if (isA<cyclicPolyPatch>(pp))
         {
@@ -169,16 +169,16 @@ void Foam::fvMeshSubset::doCoupledPatches
 
             forAll(cycPatch, i)
             {
-                label thisFaceI = cycPatch.start() + i;
-                label otherFaceI = cycPatch.transformGlobalFace(thisFaceI);
+                label thisFacei = cycPatch.start() + i;
+                label otherFacei = cycPatch.transformGlobalFace(thisFacei);
 
                 if
                 (
-                    nCellsUsingFace[thisFaceI] == 1
-                 && nCellsUsingFace[otherFaceI] == 0
+                    nCellsUsingFace[thisFacei] == 1
+                 && nCellsUsingFace[otherFacei] == 0
                 )
                 {
-                    nCellsUsingFace[thisFaceI] = 3;
+                    nCellsUsingFace[thisFacei] = 3;
                     nUncoupled++;
                 }
             }
@@ -303,17 +303,17 @@ void Foam::fvMeshSubset::subsetZones()
         labelList subAddressing(nSub);
         boolList subFlipStatus(nSub);
         nSub = 0;
-        forAll(faceMap(), subFaceI)
+        forAll(faceMap(), subFacei)
         {
-            label meshFaceI = faceMap()[subFaceI];
-            if (zone[meshFaceI] != 0)
+            label meshFacei = faceMap()[subFacei];
+            if (zone[meshFacei] != 0)
             {
-                subAddressing[nSub] = subFaceI;
-                label subOwner = subMesh().faceOwner()[subFaceI];
-                label baseOwner = baseMesh().faceOwner()[meshFaceI];
+                subAddressing[nSub] = subFacei;
+                label subOwner = subMesh().faceOwner()[subFacei];
+                label baseOwner = baseMesh().faceOwner()[meshFacei];
                 // If subowner is the same cell as the base keep the flip status
                 bool sameOwner = (cellMap()[subOwner] == baseOwner);
-                bool flip = (zone[meshFaceI] == 1);
+                bool flip = (zone[meshFacei] == 1);
                 subFlipStatus[nSub] = (sameOwner == flip);
 
                 nSub++;
@@ -498,20 +498,20 @@ void Foam::fvMeshSubset::setCellSubset
     }
 
     // 3. old internal faces
-    forAll(facesToc, intFaceI)
+    forAll(facesToc, intFacei)
     {
         if
         (
-            baseMesh().isInternalFace(facesToc[intFaceI])
-         && facesToSubset[facesToc[intFaceI]] == 1
+            baseMesh().isInternalFace(facesToc[intFacei])
+         && facesToSubset[facesToc[intFacei]] == 1
         )
         {
             // Mark face and increment number of points in set
-            faceMap_[globalFaceMap.size()] = facesToc[intFaceI];
-            globalFaceMap.insert(facesToc[intFaceI], globalFaceMap.size());
+            faceMap_[globalFaceMap.size()] = facesToc[intFacei];
+            globalFaceMap.insert(facesToc[intFacei], globalFaceMap.size());
 
             // Mark all points from the face
-            markPoints(oldFaces[facesToc[intFaceI]], globalPointMap);
+            markPoints(oldFaces[facesToc[intFacei]], globalPointMap);
         }
     }
 
@@ -606,21 +606,21 @@ void Foam::fvMeshSubset::setCellSubset
     // Assign boundary faces. Visited in order of faceMap_.
     for (label facei = nInternalFaces; facei < faceMap_.size(); facei++)
     {
-        label oldFaceI = faceMap_[facei];
+        label oldFacei = faceMap_[facei];
 
-        face oldF = oldFaces[oldFaceI];
+        face oldF = oldFaces[oldFacei];
 
         // Turn the faces as necessary to point outwards
-        if (baseMesh().isInternalFace(oldFaceI))
+        if (baseMesh().isInternalFace(oldFacei))
         {
             // Internal face. Possibly turned the wrong way round
             if
             (
-                !globalCellMap.found(oldOwner[oldFaceI])
-             && globalCellMap.found(oldNeighbour[oldFaceI])
+                !globalCellMap.found(oldOwner[oldFacei])
+             && globalCellMap.found(oldNeighbour[oldFacei])
             )
             {
-                oldF = oldFaces[oldFaceI].reverseFace();
+                oldF = oldFaces[oldFacei].reverseFace();
             }
 
             // Update count for patch
@@ -629,7 +629,7 @@ void Foam::fvMeshSubset::setCellSubset
         else
         {
             // Boundary face. Increment the appropriate patch
-            label patchOfFace = oldPatches.whichPatch(oldFaceI);
+            label patchOfFace = oldPatches.whichPatch(oldFacei);
 
             // Update count for patch
             boundaryPatchSizes[patchOfFace]++;
@@ -798,11 +798,11 @@ void Foam::fvMeshSubset::setLargeCellSubset
     cellMap_.setSize(oldCells.size());
     label nCellsInSet = 0;
 
-    forAll(region, oldCellI)
+    forAll(region, oldCelli)
     {
-        if (region[oldCellI] == currentRegion)
+        if (region[oldCelli] == currentRegion)
         {
-            cellMap_[nCellsInSet++] = oldCellI;
+            cellMap_[nCellsInSet++] = oldCelli;
         }
     }
     cellMap_.setSize(nCellsInSet);
@@ -821,23 +821,23 @@ void Foam::fvMeshSubset::setLargeCellSubset
     labelList nCellsUsingFace(oldFaces.size(), 0);
 
     label nFacesInSet = 0;
-    forAll(oldFaces, oldFaceI)
+    forAll(oldFaces, oldFacei)
     {
         bool faceUsed = false;
 
-        if (region[oldOwner[oldFaceI]] == currentRegion)
+        if (region[oldOwner[oldFacei]] == currentRegion)
         {
-            nCellsUsingFace[oldFaceI]++;
+            nCellsUsingFace[oldFacei]++;
             faceUsed = true;
         }
 
         if
         (
-            baseMesh().isInternalFace(oldFaceI)
-         && (region[oldNeighbour[oldFaceI]] == currentRegion)
+            baseMesh().isInternalFace(oldFacei)
+         && (region[oldNeighbour[oldFacei]] == currentRegion)
         )
         {
-            nCellsUsingFace[oldFaceI]++;
+            nCellsUsingFace[oldFacei]++;
             faceUsed = true;
         }
 
@@ -883,18 +883,18 @@ void Foam::fvMeshSubset::setLargeCellSubset
         nbSize++;
 
         // adapt old to new patches for inserted patch
-        for (label oldPatchI = 0; oldPatchI < nextPatchID; oldPatchI++)
+        for (label oldPatchi = 0; oldPatchi < nextPatchID; oldPatchi++)
         {
-            globalPatchMap[oldPatchI] = oldPatchI;
+            globalPatchMap[oldPatchi] = oldPatchi;
         }
         for
         (
-            label oldPatchI = nextPatchID;
-            oldPatchI < oldPatches.size();
-            oldPatchI++
+            label oldPatchi = nextPatchID;
+            oldPatchi < oldPatches.size();
+            oldPatchi++
         )
         {
-            globalPatchMap[oldPatchI] = oldPatchI+1;
+            globalPatchMap[oldPatchi] = oldPatchi+1;
         }
     }
     else
@@ -916,15 +916,15 @@ void Foam::fvMeshSubset::setLargeCellSubset
     label facei = 0;
 
     // 1. Pick up all preserved internal faces.
-    for (label oldFaceI = 0; oldFaceI < oldNInternalFaces; oldFaceI++)
+    for (label oldFacei = 0; oldFacei < oldNInternalFaces; oldFacei++)
     {
-        if (nCellsUsingFace[oldFaceI] == 2)
+        if (nCellsUsingFace[oldFacei] == 2)
         {
-            globalFaceMap[oldFaceI] = facei;
-            faceMap_[facei++] = oldFaceI;
+            globalFaceMap[oldFacei] = facei;
+            faceMap_[facei++] = oldFacei;
 
             // Mark all points from the face
-            markPoints(oldFaces[oldFaceI], globalPointMap);
+            markPoints(oldFaces[oldFacei], globalPointMap);
         }
     }
 
@@ -934,46 +934,46 @@ void Foam::fvMeshSubset::setLargeCellSubset
     // 2. Boundary faces up to where we want to insert old internal faces
     for
     (
-        label oldPatchI = 0;
-        oldPatchI < oldPatches.size()
-     && oldPatchI < nextPatchID;
-        oldPatchI++
+        label oldPatchi = 0;
+        oldPatchi < oldPatches.size()
+     && oldPatchi < nextPatchID;
+        oldPatchi++
     )
     {
-        const polyPatch& oldPatch = oldPatches[oldPatchI];
+        const polyPatch& oldPatch = oldPatches[oldPatchi];
 
-        label oldFaceI = oldPatch.start();
+        label oldFacei = oldPatch.start();
 
         forAll(oldPatch, i)
         {
-            if (nCellsUsingFace[oldFaceI] == 1)
+            if (nCellsUsingFace[oldFacei] == 1)
             {
                 // Boundary face is kept.
 
                 // Mark face and increment number of points in set
-                globalFaceMap[oldFaceI] = facei;
-                faceMap_[facei++] = oldFaceI;
+                globalFaceMap[oldFacei] = facei;
+                faceMap_[facei++] = oldFacei;
 
                 // Mark all points from the face
-                markPoints(oldFaces[oldFaceI], globalPointMap);
+                markPoints(oldFaces[oldFacei], globalPointMap);
 
                 // Increment number of patch faces
-                boundaryPatchSizes[globalPatchMap[oldPatchI]]++;
+                boundaryPatchSizes[globalPatchMap[oldPatchi]]++;
             }
-            oldFaceI++;
+            oldFacei++;
         }
     }
 
     // 3a. old internal faces that have become exposed.
-    for (label oldFaceI = 0; oldFaceI < oldNInternalFaces; oldFaceI++)
+    for (label oldFacei = 0; oldFacei < oldNInternalFaces; oldFacei++)
     {
-        if (nCellsUsingFace[oldFaceI] == 1)
+        if (nCellsUsingFace[oldFacei] == 1)
         {
-            globalFaceMap[oldFaceI] = facei;
-            faceMap_[facei++] = oldFaceI;
+            globalFaceMap[oldFacei] = facei;
+            faceMap_[facei++] = oldFacei;
 
             // Mark all points from the face
-            markPoints(oldFaces[oldFaceI], globalPointMap);
+            markPoints(oldFaces[oldFacei], globalPointMap);
 
             // Increment number of patch faces
             boundaryPatchSizes[oldInternalPatchID]++;
@@ -983,18 +983,18 @@ void Foam::fvMeshSubset::setLargeCellSubset
     // 3b. coupled patch faces that have become uncoupled.
     for
     (
-        label oldFaceI = oldNInternalFaces;
-        oldFaceI < oldFaces.size();
-        oldFaceI++
+        label oldFacei = oldNInternalFaces;
+        oldFacei < oldFaces.size();
+        oldFacei++
     )
     {
-        if (nCellsUsingFace[oldFaceI] == 3)
+        if (nCellsUsingFace[oldFacei] == 3)
         {
-            globalFaceMap[oldFaceI] = facei;
-            faceMap_[facei++] = oldFaceI;
+            globalFaceMap[oldFacei] = facei;
+            faceMap_[facei++] = oldFacei;
 
             // Mark all points from the face
-            markPoints(oldFaces[oldFaceI], globalPointMap);
+            markPoints(oldFaces[oldFacei], globalPointMap);
 
             // Increment number of patch faces
             boundaryPatchSizes[oldInternalPatchID]++;
@@ -1004,32 +1004,32 @@ void Foam::fvMeshSubset::setLargeCellSubset
     // 4. Remaining boundary faces
     for
     (
-        label oldPatchI = nextPatchID;
-        oldPatchI < oldPatches.size();
-        oldPatchI++
+        label oldPatchi = nextPatchID;
+        oldPatchi < oldPatches.size();
+        oldPatchi++
     )
     {
-        const polyPatch& oldPatch = oldPatches[oldPatchI];
+        const polyPatch& oldPatch = oldPatches[oldPatchi];
 
-        label oldFaceI = oldPatch.start();
+        label oldFacei = oldPatch.start();
 
         forAll(oldPatch, i)
         {
-            if (nCellsUsingFace[oldFaceI] == 1)
+            if (nCellsUsingFace[oldFacei] == 1)
             {
                 // Boundary face is kept.
 
                 // Mark face and increment number of points in set
-                globalFaceMap[oldFaceI] = facei;
-                faceMap_[facei++] = oldFaceI;
+                globalFaceMap[oldFacei] = facei;
+                faceMap_[facei++] = oldFacei;
 
                 // Mark all points from the face
-                markPoints(oldFaces[oldFaceI], globalPointMap);
+                markPoints(oldFaces[oldFacei], globalPointMap);
 
                 // Increment number of patch faces
-                boundaryPatchSizes[globalPatchMap[oldPatchI]]++;
+                boundaryPatchSizes[globalPatchMap[oldPatchi]]++;
             }
-            oldFaceI++;
+            oldFacei++;
         }
     }
 
@@ -1104,21 +1104,21 @@ void Foam::fvMeshSubset::setLargeCellSubset
     // flipped)
     for (label facei = nInternalFaces; facei < faceMap_.size(); facei++)
     {
-        label oldFaceI = faceMap_[facei];
+        label oldFacei = faceMap_[facei];
 
-        face oldF = oldFaces[oldFaceI];
+        face oldF = oldFaces[oldFacei];
 
         // Turn the faces as necessary to point outwards
-        if (baseMesh().isInternalFace(oldFaceI))
+        if (baseMesh().isInternalFace(oldFacei))
         {
             // Was internal face. Possibly turned the wrong way round
             if
             (
-                region[oldOwner[oldFaceI]] != currentRegion
-             && region[oldNeighbour[oldFaceI]] == currentRegion
+                region[oldOwner[oldFacei]] != currentRegion
+             && region[oldNeighbour[oldFacei]] == currentRegion
             )
             {
-                oldF = oldFaces[oldFaceI].reverseFace();
+                oldF = oldFaces[oldFacei].reverseFace();
             }
         }
 
@@ -1220,9 +1220,9 @@ void Foam::fvMeshSubset::setLargeCellSubset
         // everywhere remove the patch.
         bool samePatches = true;
 
-        for (label procI = 1; procI < patchNames.size(); procI++)
+        for (label proci = 1; proci < patchNames.size(); proci++)
         {
-            if (patchNames[procI] != patchNames[0])
+            if (patchNames[proci] != patchNames[0])
             {
                 samePatches = false;
                 break;
@@ -1242,16 +1242,16 @@ void Foam::fvMeshSubset::setLargeCellSubset
 
     for
     (
-        label oldPatchI = 0;
-        oldPatchI < oldPatches.size()
-     && oldPatchI < nextPatchID;
-        oldPatchI++
+        label oldPatchi = 0;
+        oldPatchi < oldPatches.size()
+     && oldPatchi < nextPatchID;
+        oldPatchi++
     )
     {
-        label newSize = boundaryPatchSizes[globalPatchMap[oldPatchI]];
+        label newSize = boundaryPatchSizes[globalPatchMap[oldPatchi]];
 
         // Clone (even if 0 size)
-        newBoundary[nNewPatches] = oldPatches[oldPatchI].clone
+        newBoundary[nNewPatches] = oldPatches[oldPatchi].clone
         (
             fvMeshSubsetPtr_().boundaryMesh(),
             nNewPatches,
@@ -1260,7 +1260,7 @@ void Foam::fvMeshSubset::setLargeCellSubset
         ).ptr();
 
         patchStart += newSize;
-        patchMap_[nNewPatches] = oldPatchI;    // compact patchMap
+        patchMap_[nNewPatches] = oldPatchi;    // compact patchMap
         nNewPatches++;
     }
 
@@ -1303,15 +1303,15 @@ void Foam::fvMeshSubset::setLargeCellSubset
 
     for
     (
-        label oldPatchI = nextPatchID;
-        oldPatchI < oldPatches.size();
-        oldPatchI++
+        label oldPatchi = nextPatchID;
+        oldPatchi < oldPatches.size();
+        oldPatchi++
     )
     {
-        label newSize = boundaryPatchSizes[globalPatchMap[oldPatchI]];
+        label newSize = boundaryPatchSizes[globalPatchMap[oldPatchi]];
 
         // Patch still exists. Add it
-        newBoundary[nNewPatches] = oldPatches[oldPatchI].clone
+        newBoundary[nNewPatches] = oldPatches[oldPatchi].clone
         (
             fvMeshSubsetPtr_().boundaryMesh(),
             nNewPatches,
@@ -1319,11 +1319,11 @@ void Foam::fvMeshSubset::setLargeCellSubset
             patchStart
         ).ptr();
 
-        //Pout<< "    " << oldPatches[oldPatchI].name() << " : "
+        //Pout<< "    " << oldPatches[oldPatchi].name() << " : "
         //    << newSize << endl;
 
         patchStart += newSize;
-        patchMap_[nNewPatches] = oldPatchI;    // compact patchMap
+        patchMap_[nNewPatches] = oldPatchi;    // compact patchMap
         nNewPatches++;
     }
 

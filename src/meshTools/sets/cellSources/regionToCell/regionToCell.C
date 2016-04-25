@@ -89,11 +89,11 @@ void Foam::regionToCell::markRegionFaces
         forAll(faceCells, i)
         {
             label facei = pp.start()+i;
-            label bFaceI = facei-mesh_.nInternalFaces();
+            label bFacei = facei-mesh_.nInternalFaces();
             if
             (
                 selectedCell[faceCells[i]]
-             != selectedCell[nbrSelected[bFaceI]]
+             != selectedCell[nbrSelected[bFacei]]
             )
             {
                 regionFace[facei] = true;
@@ -118,18 +118,18 @@ Foam::boolList Foam::regionToCell::findRegions
         label celli = mesh_.findCell(insidePoints_[i]);
 
         label keepRegionI = -1;
-        label keepProcI = -1;
+        label keepProci = -1;
         if (celli != -1)
         {
             keepRegionI = cellRegion[celli];
-            keepProcI = Pstream::myProcNo();
+            keepProci = Pstream::myProcNo();
         }
         reduce(keepRegionI, maxOp<label>());
         keepRegion[keepRegionI] = true;
 
-        reduce(keepProcI, maxOp<label>());
+        reduce(keepProci, maxOp<label>());
 
-        if (keepProcI == -1)
+        if (keepProci == -1)
         {
             FatalErrorInFunction
                 << "Did not find " << insidePoints_[i]
@@ -140,7 +140,7 @@ Foam::boolList Foam::regionToCell::findRegions
         if (verbose)
         {
             Info<< "    Found location " << insidePoints_[i]
-                << " in cell " << celli << " on processor " << keepProcI
+                << " in cell " << celli << " on processor " << keepProci
                 << " in global region " << keepRegionI
                 << " out of " << cellRegion.nRegions() << " regions." << endl;
         }

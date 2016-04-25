@@ -78,9 +78,9 @@ void Foam::pointToCell::combine(topoSet& set, const bool add) const
             const label pointI = iter.key();
             const labelList& pCells = mesh_.pointCells()[pointI];
 
-            forAll(pCells, pCellI)
+            forAll(pCells, pCelli)
             {
-                addOrDelete(set, pCells[pCellI], add);
+                addOrDelete(set, pCells[pCelli], add);
             }
         }
     }

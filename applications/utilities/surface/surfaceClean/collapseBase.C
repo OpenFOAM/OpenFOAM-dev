@@ -405,28 +405,28 @@ static void markRegion
 
         forAll(eFaces, i)
         {
-            label nbrFaceI = eFaces[i];
+            label nbrFacei = eFaces[i];
 
-            if (faceToEdge[nbrFaceI] != -1)
+            if (faceToEdge[nbrFacei] != -1)
             {
-                if (collapseRegion[nbrFaceI] == -1)
+                if (collapseRegion[nbrFacei] == -1)
                 {
                     markRegion
                     (
                         surf,
                         faceToEdge,
                         regionI,
-                        nbrFaceI,
+                        nbrFacei,
                         collapseRegion
                     );
                 }
-                else if (collapseRegion[nbrFaceI] != regionI)
+                else if (collapseRegion[nbrFacei] != regionI)
                 {
                     FatalErrorInFunction
                         << "Edge:" << edgeI << " between face " << facei
                         << " with region " << regionI
-                        << " and face " << nbrFaceI
-                        << " with region " << collapseRegion[nbrFaceI]
+                        << " and face " << nbrFacei
+                        << " with region " << collapseRegion[nbrFacei]
                         << endl;
                 }
             }

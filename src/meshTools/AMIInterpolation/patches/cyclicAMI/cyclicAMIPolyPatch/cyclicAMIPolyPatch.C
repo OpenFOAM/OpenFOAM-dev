@@ -999,11 +999,11 @@ Foam::label Foam::cyclicAMIPolyPatch::pointFace
     vector nrt(n);
     reverseTransformDirection(nrt, facei);
 
-    label nbrFaceI = -1;
+    label nbrFacei = -1;
 
     if (owner())
     {
-        nbrFaceI = AMI().tgtPointFace
+        nbrFacei = AMI().tgtPointFace
         (
             *this,
             neighbPatch(),
@@ -1014,7 +1014,7 @@ Foam::label Foam::cyclicAMIPolyPatch::pointFace
     }
     else
     {
-        nbrFaceI = neighbPatch().AMI().srcPointFace
+        nbrFacei = neighbPatch().AMI().srcPointFace
         (
             neighbPatch(),
             *this,
@@ -1024,12 +1024,12 @@ Foam::label Foam::cyclicAMIPolyPatch::pointFace
         );
     }
 
-    if (nbrFaceI >= 0)
+    if (nbrFacei >= 0)
     {
         p = prt;
     }
 
-    return nbrFaceI;
+    return nbrFacei;
 }
 
 

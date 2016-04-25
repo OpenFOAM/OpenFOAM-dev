@@ -263,10 +263,10 @@ void Foam::localPointRegion::calcPointRegions
     // - candidateFace does not necessary have to be a baffle!
     // - candidateFace is synchronised (since candidatePoint is)
     Map<label> candidateFace(2*nBnd);
-    label candidateFaceI = 0;
+    label candidateFacei = 0;
 
     Map<label> candidateCell(nBnd);
-    label candidateCellI = 0;
+    label candidateCelli = 0;
 
     forAll(mesh.faces(), facei)
     {
@@ -277,23 +277,23 @@ void Foam::localPointRegion::calcPointRegions
             if (candidatePoint[f[fp]])
             {
                 // Mark face
-                if (candidateFace.insert(facei, candidateFaceI))
+                if (candidateFace.insert(facei, candidateFacei))
                 {
-                    candidateFaceI++;
+                    candidateFacei++;
                 }
 
                 // Mark cells
-                if (candidateCell.insert(faceOwner[facei], candidateCellI))
+                if (candidateCell.insert(faceOwner[facei], candidateCelli))
                 {
-                    candidateCellI++;
+                    candidateCelli++;
                 }
 
                 if (mesh.isInternalFace(facei))
                 {
                     label nei = faceNeighbour[facei];
-                    if (candidateCell.insert(nei, candidateCellI))
+                    if (candidateCell.insert(nei, candidateCelli))
                     {
-                        candidateCellI++;
+                        candidateCelli++;
                     }
                 }
 
@@ -350,9 +350,9 @@ void Foam::localPointRegion::calcPointRegions
             const cell& cFaces = mesh.cells()[celli];
 
             // Determine minimum per point
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
+                label facei = cFaces[cFacei];
 
                 if (minRegion[facei].size())
                 {
@@ -377,9 +377,9 @@ void Foam::localPointRegion::calcPointRegions
             }
 
             // Set face minimum from point minimum
-            forAll(cFaces, cFaceI)
+            forAll(cFaces, cFacei)
             {
-                label facei = cFaces[cFaceI];
+                label facei = cFaces[cFacei];
 
                 if (minRegion[facei].size())
                 {
@@ -517,9 +517,9 @@ Foam::labelList Foam::localPointRegion::findDuplicateFaces
     label nDuplicateFaces = 0;
 
     // Find all duplicate faces.
-    forAll(allPatch, bFaceI)
+    forAll(allPatch, bFacei)
     {
-        const face& f = allPatch.localFaces()[bFaceI];
+        const face& f = allPatch.localFaces()[bFacei];
 
         // Get faces connected to f[0].
         // Check whether share all points with f.
@@ -527,31 +527,31 @@ Foam::labelList Foam::localPointRegion::findDuplicateFaces
 
         forAll(pFaces, i)
         {
-            label otherFaceI = pFaces[i];
+            label otherFacei = pFaces[i];
 
-            if (otherFaceI > bFaceI)
+            if (otherFacei > bFacei)
             {
-                const face& otherF = allPatch.localFaces()[otherFaceI];
+                const face& otherF = allPatch.localFaces()[otherFacei];
 
                 if (isDuplicate(f, otherF, true))
                 {
                     FatalErrorInFunction
-                        << "Face:" << bFaceI + mesh.nInternalFaces()
+                        << "Face:" << bFacei + mesh.nInternalFaces()
                         << " has local points:" << f
                         << " which are in same order as face:"
-                        << otherFaceI + mesh.nInternalFaces()
+                        << otherFacei + mesh.nInternalFaces()
                         << " with local points:" << otherF
                         << abort(FatalError);
                 }
                 else if (isDuplicate(f, otherF, false))
                 {
-                    label meshFace0 = bFaceI + mesh.nInternalFaces();
-                    label meshFace1 = otherFaceI + mesh.nInternalFaces();
+                    label meshFace0 = bFacei + mesh.nInternalFaces();
+                    label meshFace1 = otherFacei + mesh.nInternalFaces();
 
                     if
                     (
-                        duplicateFace[bFaceI] != -1
-                     || duplicateFace[otherFaceI] != -1
+                        duplicateFace[bFacei] != -1
+                     || duplicateFace[otherFacei] != -1
                     )
                     {
                         FatalErrorInFunction
@@ -567,8 +567,8 @@ Foam::labelList Foam::localPointRegion::findDuplicateFaces
                             << abort(FatalError);
                     }
 
-                    duplicateFace[bFaceI] = otherFaceI;
-                    duplicateFace[otherFaceI] = bFaceI;
+                    duplicateFace[bFacei] = otherFacei;
+                    duplicateFace[otherFacei] = bFacei;
                     nDuplicateFaces++;
                 }
             }
@@ -601,13 +601,13 @@ Foam::List<Foam::labelPair> Foam::localPointRegion::findDuplicateFacePairs
 
     forAll(duplicateFace, i)
     {
-        label otherFaceI = duplicateFace[i];
+        label otherFacei = duplicateFace[i];
 
-        if (otherFaceI != -1 && i < otherFaceI)
+        if (otherFacei != -1 && i < otherFacei)
         {
             label meshFace0 = testFaces[i];
             label patch0 = patches.whichPatch(meshFace0);
-            label meshFace1 = testFaces[otherFaceI];
+            label meshFace1 = testFaces[otherFacei];
             label patch1 = patches.whichPatch(meshFace1);
 
             // Check for illegal topology. Should normally not happen!
@@ -643,11 +643,11 @@ void Foam::localPointRegion::updateMesh(const mapPolyMesh& map)
 
         forAllConstIter(Map<label>, meshFaceMap_, iter)
         {
-            label newFaceI = map.reverseFaceMap()[iter.key()];
+            label newFacei = map.reverseFaceMap()[iter.key()];
 
-            if (newFaceI >= 0)
+            if (newFacei >= 0)
             {
-                newMap.insert(newFaceI, iter());
+                newMap.insert(newFacei, iter());
             }
         }
         meshFaceMap_.transfer(newMap);

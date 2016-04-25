@@ -69,9 +69,9 @@ void Foam::sammMesh::createPolyBoundary()
                     const faceList& curCellFaces =
                         cellFaces_[facePointCells[celli]];
 
-                    forAll(curCellFaces, cellFaceI)
+                    forAll(curCellFaces, cellFacei)
                     {
-                        if (curCellFaces[cellFaceI] == curFace)
+                        if (curCellFaces[cellFacei] == curFace)
                         {
                             // Found the cell face corresponding to this face
                             found = true;
@@ -79,7 +79,7 @@ void Foam::sammMesh::createPolyBoundary()
                             // Debugging
                             if
                             (
-                                cellPolys_[facePointCells[celli]][cellFaceI]
+                                cellPolys_[facePointCells[celli]][cellFacei]
                              != -1
                             )
                             {
@@ -89,7 +89,7 @@ void Foam::sammMesh::createPolyBoundary()
                                     << abort(FatalError);
                             }
 
-                            cellPolys_[facePointCells[celli]][cellFaceI] =
+                            cellPolys_[facePointCells[celli]][cellFacei] =
                                 nCreatedFaces;
 
                             nBoundaryFacesFound++;

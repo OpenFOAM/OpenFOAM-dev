@@ -120,19 +120,19 @@ protected:
 
         //- Calculates start of tracking given samplePt and first boundary
         //  intersection
-        //  (bPoint, bFaceI) (bFaceI == -1 if no boundary intersection)
+        //  (bPoint, bFacei) (bFacei == -1 if no boundary intersection)
         //  Returns true if trackPt is valid sampling point. Sets trackPt,
-        //  trackFaceI, trackCellI (-1 if no tracking point found)
+        //  trackFacei, trackCelli (-1 if no tracking point found)
         bool getTrackingPoint
         (
             const point& samplePt,
             const point& bPoint,
-            const label bFaceI,
+            const label bFacei,
             const scalar smallDist,
 
             point& trackPt,
-            label& trackCellI,
-            label& trackFaceI
+            label& trackCelli,
+            label& trackFacei
         ) const;
 
         //- Sets sample data

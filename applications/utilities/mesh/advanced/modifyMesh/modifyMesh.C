@@ -223,9 +223,9 @@ label findFace
     scalar almostMinDist = GREAT;
     label almostMinI = -1;
 
-    forAll(pp, patchFaceI)
+    forAll(pp, patchFacei)
     {
-        pointHit pHit(pp[patchFaceI].nearestPoint(nearPoint, points));
+        pointHit pHit(pp[patchFacei].nearestPoint(nearPoint, points));
 
         if (pHit.hit())
         {
@@ -235,12 +235,12 @@ label findFace
                 almostMinI = minI;
 
                 minDist = pHit.distance();
-                minI = patchFaceI + mesh.nInternalFaces();
+                minI = patchFacei + mesh.nInternalFaces();
             }
             else if (pHit.distance() < almostMinDist)
             {
                 almostMinDist = pHit.distance();
-                almostMinI = patchFaceI + mesh.nInternalFaces();
+                almostMinI = patchFacei + mesh.nInternalFaces();
             }
         }
     }

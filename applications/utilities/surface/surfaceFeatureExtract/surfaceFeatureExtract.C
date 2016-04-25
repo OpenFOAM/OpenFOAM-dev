@@ -752,9 +752,9 @@ surfaceFeatures::edgeStatus checkFlatRegionEdge
     DynamicList<Foam::vector> normals(2);
     DynamicList<labelList> bins(2);
 
-    forAll(eFaces, eFaceI)
+    forAll(eFaces, eFacei)
     {
-        const Foam::vector& n = surf.faceNormals()[eFaces[eFaceI]];
+        const Foam::vector& n = surf.faceNormals()[eFaces[eFacei]];
 
         // Find the normal in normals
         label index = -1;
@@ -769,7 +769,7 @@ surfaceFeatures::edgeStatus checkFlatRegionEdge
 
         if (index != -1)
         {
-            bins[index].append(eFaceI);
+            bins[index].append(eFacei);
         }
         else if (normals.size() >= 2)
         {
@@ -783,7 +783,7 @@ surfaceFeatures::edgeStatus checkFlatRegionEdge
         else
         {
             normals.append(n);
-            bins.append(labelList(1, eFaceI));
+            bins.append(labelList(1, eFacei));
         }
     }
 

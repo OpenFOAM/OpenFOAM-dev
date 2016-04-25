@@ -816,21 +816,21 @@ int main(int argc, char *argv[])
 
     // Renumber vertex numbers on boundaryFaces
 
-    forAll(boundaryFaces, bFaceI)
+    forAll(boundaryFaces, bFacei)
     {
-        labelList foamVerts(renumber(unvToFoam, boundaryFaces[bFaceI]));
+        labelList foamVerts(renumber(unvToFoam, boundaryFaces[bFacei]));
 
         if (findIndex(foamVerts, -1) != -1)
         {
             FatalErrorInFunction
-                << "Boundary face " << bFaceI
-                << " unv vertices " << boundaryFaces[bFaceI]
+                << "Boundary face " << bFacei
+                << " unv vertices " << boundaryFaces[bFacei]
                 << " has some undefined vertices " << foamVerts
                 << abort(FatalError);
         }
 
         // Bit nasty: replace vertex list.
-        boundaryFaces[bFaceI].transfer(foamVerts);
+        boundaryFaces[bFacei].transfer(foamVerts);
     }
 
 
@@ -1021,13 +1021,13 @@ int main(int argc, char *argv[])
             {
                 if (boundaryFaceToIndex.found(faceIndices[i]))
                 {
-                    label bFaceI = boundaryFaceToIndex[faceIndices[i]];
+                    label bFacei = boundaryFaceToIndex[faceIndices[i]];
 
-                    if (own[bFaceI] != -1 && nei[bFaceI] == -1)
+                    if (own[bFacei] != -1 && nei[bFacei] == -1)
                     {
-                        patchFaces[cnt] = boundaryFaces[bFaceI];
+                        patchFaces[cnt] = boundaryFaces[bFacei];
                         cnt++;
-                        if (alreadyOnBoundary.found(bFaceI))
+                        if (alreadyOnBoundary.found(bFacei))
                         {
                             duplicateFaces = true;
                         }
@@ -1100,8 +1100,8 @@ int main(int argc, char *argv[])
 
                 forAll(patchFaces, i)
                 {
-                    label bFaceI = boundaryFaceToIndex[faceIndices[i]];
-                    alreadyOnBoundary.insert(bFaceI);
+                    label bFacei = boundaryFaceToIndex[faceIndices[i]];
+                    alreadyOnBoundary.insert(bFacei);
                 }
             }
         }

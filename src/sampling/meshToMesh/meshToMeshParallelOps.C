@@ -39,7 +39,7 @@ Foam::label Foam::meshToMesh::calcDistribution
     const polyMesh& tgt
 ) const
 {
-    label procI = 0;
+    label proci = 0;
 
     if (Pstream::parRun())
     {
@@ -60,7 +60,7 @@ Foam::label Foam::meshToMesh::calcDistribution
 
         if (nHaveCells > 1)
         {
-            procI = -1;
+            proci = -1;
             if (debug)
             {
                 InfoInFunction
@@ -69,16 +69,16 @@ Foam::label Foam::meshToMesh::calcDistribution
         }
         else if (nHaveCells == 1)
         {
-            procI = findIndex(cellsPresentOnProc, 1);
+            proci = findIndex(cellsPresentOnProc, 1);
             if (debug)
             {
                 InfoInFunction
-                    << "Meshes local to processor" << procI << endl;
+                    << "Meshes local to processor" << proci << endl;
             }
         }
     }
 
-    return procI;
+    return proci;
 }
 
 
@@ -93,13 +93,13 @@ Foam::label Foam::meshToMesh::calcOverlappingProcs
 
     label nOverlaps = 0;
 
-    forAll(procBb, procI)
+    forAll(procBb, proci)
     {
-        const boundBox& bbp = procBb[procI];
+        const boundBox& bbp = procBb[proci];
 
         if (bbp.overlaps(bb))
         {
-            overlaps[procI] = true;
+            overlaps[proci] = true;
             nOverlaps++;
         }
     }
@@ -141,9 +141,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
         InfoInFunction
             << "Determining extent of src mesh per processor:" << nl
             << "\tproc\tbb" << endl;
-        forAll(procBb, procI)
+        forAll(procBb, proci)
         {
-            Info<< '\t' << procI << '\t' << procBb[procI] << endl;
+            Info<< '\t' << proci << '\t' << procBb[proci] << endl;
         }
     }
 
@@ -160,9 +160,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
         List<DynamicList<label>> dynSendMap(Pstream::nProcs());
         label iniSize = floor(tgt.nCells()/Pstream::nProcs());
 
-        forAll(dynSendMap, procI)
+        forAll(dynSendMap, proci)
         {
-            dynSendMap[procI].setCapacity(iniSize);
+            dynSendMap[proci].setCapacity(iniSize);
         }
 
         // work array - whether src processor bb overlaps the tgt cell bounds
@@ -186,20 +186,20 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
             // find the overlapping tgt cells on each src processor
             (void)calcOverlappingProcs(procBb, cellBb, procBbOverlaps);
 
-            forAll(procBbOverlaps, procI)
+            forAll(procBbOverlaps, proci)
             {
-                if (procBbOverlaps[procI])
+                if (procBbOverlaps[proci])
                 {
-                    dynSendMap[procI].append(celli);
+                    dynSendMap[proci].append(celli);
                 }
             }
         }
 
         // convert dynamicList to labelList
         sendMap.setSize(Pstream::nProcs());
-        forAll(sendMap, procI)
+        forAll(sendMap, proci)
         {
-            sendMap[procI].transfer(dynSendMap[procI]);
+            sendMap[proci].transfer(dynSendMap[proci]);
         }
     }
 
@@ -208,9 +208,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
     {
         Pout<< "Of my " << cells.size() << " target cells I need to send to:"
             << nl << "\tproc\tcells" << endl;
-        forAll(sendMap, procI)
+        forAll(sendMap, proci)
         {
-            Pout<< '\t' << procI << '\t' << sendMap[procI].size() << endl;
+            Pout<< '\t' << proci << '\t' << sendMap[proci].size() << endl;
         }
     }
 
@@ -218,9 +218,9 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
     // send over how many tgt cells I need to receive from each processor
     labelListList sendSizes(Pstream::nProcs());
     sendSizes[Pstream::myProcNo()].setSize(Pstream::nProcs());
-    forAll(sendMap, procI)
+    forAll(sendMap, proci)
     {
-        sendSizes[Pstream::myProcNo()][procI] = sendMap[procI].size();
+        sendSizes[Pstream::myProcNo()][proci] = sendMap[proci].size();
     }
     Pstream::gatherList(sendSizes);
     Pstream::scatterList(sendSizes);
@@ -230,15 +230,15 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
     labelListList constructMap(Pstream::nProcs());
 
     label segmentI = 0;
-    forAll(constructMap, procI)
+    forAll(constructMap, proci)
     {
         // what I need to receive is what other processor is sending to me
-        label nRecv = sendSizes[procI][Pstream::myProcNo()];
-        constructMap[procI].setSize(nRecv);
+        label nRecv = sendSizes[proci][Pstream::myProcNo()];
+        constructMap[proci].setSize(nRecv);
 
         for (label i = 0; i < nRecv; i++)
         {
-            constructMap[procI][i] = segmentI++;
+            constructMap[proci][i] = segmentI++;
         }
     }
 
@@ -292,9 +292,9 @@ void Foam::meshToMesh::distributeCells
         {
             // reverse cell map
             labelList reverseCellMap(tgtMesh.nCells(), -1);
-            forAll(sendElems, subCellI)
+            forAll(sendElems, subCelli)
             {
-                reverseCellMap[sendElems[subCellI]] = subCellI;
+                reverseCellMap[sendElems[subCelli]] = subCelli;
             }
 
             DynamicList<face> subFaces(tgtMesh.nFaces());
@@ -368,7 +368,7 @@ void Foam::meshToMesh::distributeCells
             {
                 const polyPatch& pp = tgtMesh.boundaryMesh()[patchi];
 
-                label nbrProcI = -1;
+                label nbrProci = -1;
 
                 // store info for faces on processor patches
                 if (isA<processorPolyPatch>(pp))
@@ -376,7 +376,7 @@ void Foam::meshToMesh::distributeCells
                     const processorPolyPatch& ppp =
                         dynamic_cast<const processorPolyPatch&>(pp);
 
-                    nbrProcI = ppp.neighbProcNo();
+                    nbrProci = ppp.neighbProcNo();
                 }
 
                 forAll(pp, i)
@@ -389,7 +389,7 @@ void Foam::meshToMesh::distributeCells
                         subFaces.append(tgtMesh.faces()[facei]);
                         subFaceOwner.append(reverseCellMap[own]);
                         subFaceNeighbour.append(-1);
-                        subNbrProcIDs.append(nbrProcI);
+                        subNbrProcIDs.append(nbrProci);
                         subProcLocalFaceIDs.append(i);
                     }
                 }
@@ -398,9 +398,9 @@ void Foam::meshToMesh::distributeCells
             // reverse point map
             labelList reversePointMap(tgtMesh.nPoints(), -1);
             DynamicList<point> subPoints(tgtMesh.nPoints());
-            forAll(subFaces, subFaceI)
+            forAll(subFaces, subFacei)
             {
-                face& f = subFaces[subFaceI];
+                face& f = subFaces[subFacei];
                 forAll(f, fp)
                 {
                     label pointI = f[fp];
@@ -563,19 +563,19 @@ void Foam::meshToMesh::distributeAndMergeCells
     // Starting offset for points
     label nPoints = 0;
     labelList pointOffset(Pstream::nProcs(), 0);
-    forAll(allPoints, procI)
+    forAll(allPoints, proci)
     {
-        pointOffset[procI] = nPoints;
-        nPoints += allPoints[procI].size();
+        pointOffset[proci] = nPoints;
+        nPoints += allPoints[proci].size();
     }
 
     // Starting offset for cells
     label nCells = 0;
     labelList cellOffset(Pstream::nProcs(), 0);
-    forAll(allTgtCellIDs, procI)
+    forAll(allTgtCellIDs, proci)
     {
-        cellOffset[procI] = nCells;
-        nCells += allTgtCellIDs[procI].size();
+        cellOffset[proci] = nCells;
+        nCells += allTgtCellIDs[proci].size();
     }
 
     // Count any coupled faces
@@ -583,19 +583,19 @@ void Foam::meshToMesh::distributeAndMergeCells
     typedef HashTable<label, label3, label3::Hash<>> procCoupleInfo;
     procCoupleInfo procFaceToGlobalCell;
 
-    forAll(allNbrProcIDs, procI)
+    forAll(allNbrProcIDs, proci)
     {
-        const labelList& nbrProcI = allNbrProcIDs[procI];
-        const labelList& localFaceI = allProcLocalFaceIDs[procI];
+        const labelList& nbrProci = allNbrProcIDs[proci];
+        const labelList& localFacei = allProcLocalFaceIDs[proci];
 
-        forAll(nbrProcI, i)
+        forAll(nbrProci, i)
         {
-            if (nbrProcI[i] != -1 && localFaceI[i] != -1)
+            if (nbrProci[i] != -1 && localFacei[i] != -1)
             {
                 label3 key;
-                key[0] = min(procI, nbrProcI[i]);
-                key[1] = max(procI, nbrProcI[i]);
-                key[2] = localFaceI[i];
+                key[0] = min(proci, nbrProci[i]);
+                key[1] = max(proci, nbrProci[i]);
+                key[2] = localFacei[i];
 
                 procCoupleInfo::const_iterator fnd =
                     procFaceToGlobalCell.find(key);
@@ -613,7 +613,7 @@ void Foam::meshToMesh::distributeAndMergeCells
                             << " across local face " << key[2] << endl;
                     }
 
-                    allNIntCoupledFaces[procI]++;
+                    allNIntCoupledFaces[proci]++;
                 }
             }
         }
@@ -624,14 +624,14 @@ void Foam::meshToMesh::distributeAndMergeCells
     label nIntFaces = 0;
     label nFacesTotal = 0;
     labelList internalFaceOffset(Pstream::nProcs(), 0);
-    forAll(allNIntCoupledFaces, procI)
+    forAll(allNIntCoupledFaces, proci)
     {
         label nCoupledFaces =
-            allNIntCoupledFaces[procI] - allNInternalFaces[procI];
+            allNIntCoupledFaces[proci] - allNInternalFaces[proci];
 
-        internalFaceOffset[procI] = nIntFaces;
-        nIntFaces += allNIntCoupledFaces[procI];
-        nFacesTotal += allFaceOwners[procI].size() - nCoupledFaces;
+        internalFaceOffset[proci] = nIntFaces;
+        nIntFaces += allNIntCoupledFaces[proci];
+        nFacesTotal += allFaceOwners[proci].size() - nCoupledFaces;
     }
 
     tgtPoints.setSize(nPoints);
@@ -641,99 +641,99 @@ void Foam::meshToMesh::distributeAndMergeCells
     tgtCellIDs.setSize(nCells);
 
     // Insert points
-    forAll(allPoints, procI)
+    forAll(allPoints, proci)
     {
-        const pointField& pts = allPoints[procI];
-        SubList<point>(tgtPoints, pts.size(), pointOffset[procI]) = pts;
+        const pointField& pts = allPoints[proci];
+        SubList<point>(tgtPoints, pts.size(), pointOffset[proci]) = pts;
     }
 
     // Insert cellIDs
-    forAll(allTgtCellIDs, procI)
+    forAll(allTgtCellIDs, proci)
     {
-        const labelList& cellIDs = allTgtCellIDs[procI];
-        SubList<label>(tgtCellIDs, cellIDs.size(), cellOffset[procI]) = cellIDs;
+        const labelList& cellIDs = allTgtCellIDs[proci];
+        SubList<label>(tgtCellIDs, cellIDs.size(), cellOffset[proci]) = cellIDs;
     }
 
 
     // Insert internal faces (from internal faces)
-    forAll(allFaces, procI)
+    forAll(allFaces, proci)
     {
-        const faceList& fcs = allFaces[procI];
-        const labelList& faceOs = allFaceOwners[procI];
-        const labelList& faceNs = allFaceNeighbours[procI];
+        const faceList& fcs = allFaces[proci];
+        const labelList& faceOs = allFaceOwners[proci];
+        const labelList& faceNs = allFaceNeighbours[proci];
 
         SubList<face> slice
         (
             tgtFaces,
-            allNInternalFaces[procI],
-            internalFaceOffset[procI]
+            allNInternalFaces[proci],
+            internalFaceOffset[proci]
         );
-        slice = SubList<face>(fcs, allNInternalFaces[procI]);
+        slice = SubList<face>(fcs, allNInternalFaces[proci]);
         forAll(slice, i)
         {
-            add(slice[i], pointOffset[procI]);
+            add(slice[i], pointOffset[proci]);
         }
 
         SubField<label> ownSlice
         (
             tgtFaceOwners,
-            allNInternalFaces[procI],
-            internalFaceOffset[procI]
+            allNInternalFaces[proci],
+            internalFaceOffset[proci]
         );
-        ownSlice = SubField<label>(faceOs, allNInternalFaces[procI]);
-        add(ownSlice, cellOffset[procI]);
+        ownSlice = SubField<label>(faceOs, allNInternalFaces[proci]);
+        add(ownSlice, cellOffset[proci]);
 
         SubField<label> nbrSlice
         (
             tgtFaceNeighbours,
-            allNInternalFaces[procI],
-            internalFaceOffset[procI]
+            allNInternalFaces[proci],
+            internalFaceOffset[proci]
         );
-        nbrSlice = SubField<label>(faceNs, allNInternalFaces[procI]);
-        add(nbrSlice, cellOffset[procI]);
+        nbrSlice = SubField<label>(faceNs, allNInternalFaces[proci]);
+        add(nbrSlice, cellOffset[proci]);
 
-        internalFaceOffset[procI] += allNInternalFaces[procI];
+        internalFaceOffset[proci] += allNInternalFaces[proci];
     }
 
 
     // Insert internal faces (from coupled face-pairs)
-    forAll(allNbrProcIDs, procI)
+    forAll(allNbrProcIDs, proci)
     {
-        const labelList& nbrProcI = allNbrProcIDs[procI];
-        const labelList& localFaceI = allProcLocalFaceIDs[procI];
-        const labelList& faceOs = allFaceOwners[procI];
-        const faceList& fcs = allFaces[procI];
+        const labelList& nbrProci = allNbrProcIDs[proci];
+        const labelList& localFacei = allProcLocalFaceIDs[proci];
+        const labelList& faceOs = allFaceOwners[proci];
+        const faceList& fcs = allFaces[proci];
 
-        forAll(nbrProcI, i)
+        forAll(nbrProci, i)
         {
-            if (nbrProcI[i] != -1 && localFaceI[i] != -1)
+            if (nbrProci[i] != -1 && localFacei[i] != -1)
             {
                 label3 key;
-                key[0] = min(procI, nbrProcI[i]);
-                key[1] = max(procI, nbrProcI[i]);
-                key[2] = localFaceI[i];
+                key[0] = min(proci, nbrProci[i]);
+                key[1] = max(proci, nbrProci[i]);
+                key[2] = localFacei[i];
 
                 procCoupleInfo::iterator fnd = procFaceToGlobalCell.find(key);
 
                 if (fnd != procFaceToGlobalCell.end())
                 {
-                    label tgtFaceI = fnd();
-                    if (tgtFaceI == -1)
+                    label tgtFacei = fnd();
+                    if (tgtFacei == -1)
                     {
                         // on first visit store the new cell on this side
-                        fnd() = cellOffset[procI] + faceOs[i];
+                        fnd() = cellOffset[proci] + faceOs[i];
                     }
                     else
                     {
                         // get owner and neighbour in new cell numbering
-                        label newOwn = cellOffset[procI] + faceOs[i];
+                        label newOwn = cellOffset[proci] + faceOs[i];
                         label newNbr = fnd();
-                        label tgtFaceI = internalFaceOffset[procI]++;
+                        label tgtFacei = internalFaceOffset[proci]++;
 
                         if (debug)
                         {
-                            Pout<< "    proc " << procI
-                                << "\tinserting face:" << tgtFaceI
+                            Pout<< "    proc " << proci
+                                << "\tinserting face:" << tgtFacei
                                 << " connection between owner " << newOwn
                                 << " and neighbour " << newNbr
                                 << endl;
@@ -742,19 +742,19 @@ void Foam::meshToMesh::distributeAndMergeCells
                         if (newOwn < newNbr)
                         {
                             // we have correct orientation
-                            tgtFaces[tgtFaceI] = fcs[i];
-                            tgtFaceOwners[tgtFaceI] = newOwn;
-                            tgtFaceNeighbours[tgtFaceI] = newNbr;
+                            tgtFaces[tgtFacei] = fcs[i];
+                            tgtFaceOwners[tgtFacei] = newOwn;
+                            tgtFaceNeighbours[tgtFacei] = newNbr;
                         }
                         else
                         {
                             // reverse orientation
-                            tgtFaces[tgtFaceI] = fcs[i].reverseFace();
-                            tgtFaceOwners[tgtFaceI] = newNbr;
-                            tgtFaceNeighbours[tgtFaceI] = newOwn;
+                            tgtFaces[tgtFacei] = fcs[i].reverseFace();
+                            tgtFaceOwners[tgtFacei] = newNbr;
+                            tgtFaceNeighbours[tgtFacei] = newOwn;
                         }
 
-                        add(tgtFaces[tgtFaceI], pointOffset[procI]);
+                        add(tgtFaces[tgtFacei], pointOffset[proci]);
 
                         // mark with unique value
                         fnd() = -2;
@@ -765,50 +765,50 @@ void Foam::meshToMesh::distributeAndMergeCells
     }
 
 
-    forAll(allNbrProcIDs, procI)
+    forAll(allNbrProcIDs, proci)
     {
-        const labelList& nbrProcI = allNbrProcIDs[procI];
-        const labelList& localFaceI = allProcLocalFaceIDs[procI];
-        const labelList& faceOs = allFaceOwners[procI];
-        const labelList& faceNs = allFaceNeighbours[procI];
-        const faceList& fcs = allFaces[procI];
+        const labelList& nbrProci = allNbrProcIDs[proci];
+        const labelList& localFacei = allProcLocalFaceIDs[proci];
+        const labelList& faceOs = allFaceOwners[proci];
+        const labelList& faceNs = allFaceNeighbours[proci];
+        const faceList& fcs = allFaces[proci];
 
-        forAll(nbrProcI, i)
+        forAll(nbrProci, i)
         {
             // coupled boundary face
-            if (nbrProcI[i] != -1 && localFaceI[i] != -1)
+            if (nbrProci[i] != -1 && localFacei[i] != -1)
             {
                 label3 key;
-                key[0] = min(procI, nbrProcI[i]);
-                key[1] = max(procI, nbrProcI[i]);
-                key[2] = localFaceI[i];
+                key[0] = min(proci, nbrProci[i]);
+                key[1] = max(proci, nbrProci[i]);
+                key[2] = localFacei[i];
 
-                label tgtFaceI = procFaceToGlobalCell[key];
+                label tgtFacei = procFaceToGlobalCell[key];
 
-                if (tgtFaceI == -1)
+                if (tgtFacei == -1)
                 {
                     FatalErrorInFunction
                         << "Unvisited " << key
                         << abort(FatalError);
                 }
-                else if (tgtFaceI != -2)
+                else if (tgtFacei != -2)
                 {
-                    label newOwn = cellOffset[procI] + faceOs[i];
-                    label tgtFaceI = nIntFaces++;
+                    label newOwn = cellOffset[proci] + faceOs[i];
+                    label tgtFacei = nIntFaces++;
 
                     if (debug)
                     {
-                        Pout<< "    proc " << procI
-                            << "\tinserting boundary face:" << tgtFaceI
+                        Pout<< "    proc " << proci
+                            << "\tinserting boundary face:" << tgtFacei
                             << " from coupled face " << key
                             << endl;
                     }
 
-                    tgtFaces[tgtFaceI] = fcs[i];
-                    add(tgtFaces[tgtFaceI], pointOffset[procI]);
+                    tgtFaces[tgtFacei] = fcs[i];
+                    add(tgtFaces[tgtFacei], pointOffset[proci]);
 
-                    tgtFaceOwners[tgtFaceI] = newOwn;
-                    tgtFaceNeighbours[tgtFaceI] = -1;
+                    tgtFaceOwners[tgtFacei] = newOwn;
+                    tgtFaceNeighbours[tgtFacei] = -1;
                 }
             }
             // normal boundary face
@@ -818,14 +818,14 @@ void Foam::meshToMesh::distributeAndMergeCells
                 label nbr = faceNs[i];
                 if ((own != -1) && (nbr == -1))
                 {
-                    label newOwn = cellOffset[procI] + faceOs[i];
-                    label tgtFaceI = nIntFaces++;
+                    label newOwn = cellOffset[proci] + faceOs[i];
+                    label tgtFacei = nIntFaces++;
 
-                    tgtFaces[tgtFaceI] = fcs[i];
-                    add(tgtFaces[tgtFaceI], pointOffset[procI]);
+                    tgtFaces[tgtFacei] = fcs[i];
+                    add(tgtFaces[tgtFacei], pointOffset[proci]);
 
-                    tgtFaceOwners[tgtFaceI] = newOwn;
-                    tgtFaceNeighbours[tgtFaceI] = -1;
+                    tgtFaceOwners[tgtFacei] = newOwn;
+                    tgtFaceNeighbours[tgtFacei] = -1;
                 }
             }
         }

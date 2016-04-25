@@ -68,8 +68,8 @@ private:
             virtual void setNextFaces
             (
                 label& startSeedI,
-                label& srcFaceI,
-                label& tgtFaceI,
+                label& srcFacei,
+                label& tgtFacei,
                 const boolList& mapFlag,
                 labelList& seedFaces,
                 const DynamicList<label>& visitedFaces,
@@ -119,8 +119,8 @@ public:
                 scalarListList& srcWeights,
                 labelListList& tgtAddress,
                 scalarListList& tgtWeights,
-                label srcFaceI = -1,
-                label tgtFaceI = -1
+                label srcFacei = -1,
+                label tgtFacei = -1
             );
 };
 

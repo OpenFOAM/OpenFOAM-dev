@@ -429,7 +429,7 @@ public:
         static vector surfaceNormal
         (
             const triSurface& surf,
-            const label nearestFaceI,
+            const label nearestFacei,
             const point& nearestPt
         );
 
@@ -458,7 +458,7 @@ public:
         (
             const triSurface& surf,
             const point& sample,
-            const label nearestFaceI
+            const label nearestFacei
         );
 
     // Triangulation of faces

@@ -86,7 +86,7 @@ Foam::label Foam::meshRefinement::createBaffle
     );
 
 
-    label dupFaceI = -1;
+    label dupFacei = -1;
 
     if (mesh_.isInternalFace(facei))
     {
@@ -104,7 +104,7 @@ Foam::label Foam::meshRefinement::createBaffle
             reverseFlip = !zoneFlip;
         }
 
-        dupFaceI = meshMod.setAction
+        dupFacei = meshMod.setAction
         (
             polyAddFace
             (
@@ -121,7 +121,7 @@ Foam::label Foam::meshRefinement::createBaffle
             )
         );
     }
-    return dupFaceI;
+    return dupFacei;
 }
 
 
@@ -441,11 +441,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
     const labelList& faceMap = map().faceMap();
 
     // Pick up owner side of baffle
-    forAll(ownPatch, oldFaceI)
+    forAll(ownPatch, oldFacei)
     {
-        label facei = reverseFaceMap[oldFaceI];
+        label facei = reverseFaceMap[oldFacei];
 
-        if (ownPatch[oldFaceI] != -1 && facei >= 0)
+        if (ownPatch[oldFacei] != -1 && facei >= 0)
         {
             const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[facei]];
 
@@ -458,9 +458,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createBaffles
     // Pick up neighbour side of baffle (added faces)
     forAll(faceMap, facei)
     {
-        label oldFaceI = faceMap[facei];
+        label oldFacei = faceMap[facei];
 
-        if (oldFaceI >= 0 && reverseFaceMap[oldFaceI] != facei)
+        if (oldFacei >= 0 && reverseFaceMap[oldFacei] != facei)
         {
             const cell& ownFaces = mesh_.cells()[mesh_.faceOwner()[facei]];
 
@@ -567,20 +567,20 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::createZoneBaffles
 
             forAll(faceMap, facei)
             {
-                label oldFaceI = faceMap[facei];
+                label oldFacei = faceMap[facei];
 
                 // Does face originate from face-to-patch
                 Map<labelPair>::const_iterator iter = faceToPatch.find
                 (
-                    oldFaceI
+                    oldFacei
                 );
 
                 if (iter != faceToPatch.end())
                 {
-                    label masterFaceI = reverseFaceMap[oldFaceI];
-                    if (facei != masterFaceI)
+                    label masterFacei = reverseFaceMap[oldFacei];
+                    if (facei != masterFacei)
                     {
-                        baffles[baffleI++] = labelPair(masterFaceI, facei);
+                        baffles[baffleI++] = labelPair(masterFacei, facei);
                     }
                 }
             }
@@ -1837,9 +1837,9 @@ void Foam::meshRefinement::calcPatchNumMasterFaces
 
     forAll(patch.addressing(), facei)
     {
-        const label meshFaceI = patch.addressing()[facei];
+        const label meshFacei = patch.addressing()[facei];
 
-        if (isMasterFace[meshFaceI])
+        if (isMasterFace[meshFacei])
         {
             const labelList& fEdges = patch.faceEdges()[facei];
             forAll(fEdges, fEdgeI)
@@ -1928,23 +1928,23 @@ Foam::label Foam::meshRefinement::markPatchZones
             break;
         }
 
-        label procI = globalFaces.whichProcID(globalSeed);
-        label seedFaceI = globalFaces.toLocal(procI, globalSeed);
+        label proci = globalFaces.whichProcID(globalSeed);
+        label seedFacei = globalFaces.toLocal(proci, globalSeed);
 
         //Info<< "Seeding zone " << currentZoneI
-        //    << " from processor " << procI << " face " << seedFaceI
+        //    << " from processor " << proci << " face " << seedFacei
         //    << endl;
 
-        if (procI == Pstream::myProcNo())
+        if (proci == Pstream::myProcNo())
         {
-            patchEdgeFaceRegion& faceInfo = allFaceInfo[seedFaceI];
+            patchEdgeFaceRegion& faceInfo = allFaceInfo[seedFacei];
 
 
             // Set face
             faceInfo = currentZoneI;
 
             // .. and seed its edges
-            const labelList& fEdges = patch.faceEdges()[seedFaceI];
+            const labelList& fEdges = patch.faceEdges()[seedFacei];
             forAll(fEdges, fEdgeI)
             {
                 label edgeI = fEdges[fEdgeI];
@@ -1958,7 +1958,7 @@ Foam::label Foam::meshRefinement::markPatchZones
                         mesh_,
                         patch,
                         edgeI,
-                        seedFaceI,
+                        seedFacei,
                         faceInfo,
                         tol,
                         dummyTrackData
@@ -2039,14 +2039,14 @@ void Foam::meshRefinement::consistentOrientation
 
         forAll(patch.addressing(), facei)
         {
-            const label meshFaceI = patch.addressing()[facei];
-            const label patchi = bm.whichPatch(meshFaceI);
+            const label meshFacei = patch.addressing()[facei];
+            const label patchi = bm.whichPatch(meshFacei);
 
             if
             (
                 patchi != -1
              && bm[patchi].coupled()
-             && !isMasterFace[meshFaceI]
+             && !isMasterFace[meshFacei]
             )
             {
                 // Slave side. Mark so doesn't get visited.
@@ -2110,28 +2110,28 @@ void Foam::meshRefinement::consistentOrientation
             break;
         }
 
-        label procI = globalFaces.whichProcID(globalSeed);
-        label seedFaceI = globalFaces.toLocal(procI, globalSeed);
+        label proci = globalFaces.whichProcID(globalSeed);
+        label seedFacei = globalFaces.toLocal(proci, globalSeed);
 
-        //Info<< "Seeding from processor " << procI << " face " << seedFaceI
+        //Info<< "Seeding from processor " << proci << " face " << seedFacei
         //    << endl;
 
-        if (procI == Pstream::myProcNo())
+        if (proci == Pstream::myProcNo())
         {
             // Determine orientation of seedFace
 
-            patchFaceOrientation& faceInfo = allFaceInfo[seedFaceI];
+            patchFaceOrientation& faceInfo = allFaceInfo[seedFacei];
 
             // Start off with correct orientation
             faceInfo = orientedSurface::NOFLIP;
 
-            if (zoneToOrientation[faceToZone[seedFaceI]] < 0)
+            if (zoneToOrientation[faceToZone[seedFacei]] < 0)
             {
                 faceInfo.flip();
             }
 
 
-            const labelList& fEdges = patch.faceEdges()[seedFaceI];
+            const labelList& fEdges = patch.faceEdges()[seedFacei];
             forAll(fEdges, fEdgeI)
             {
                 label edgeI = fEdges[fEdgeI];
@@ -2145,7 +2145,7 @@ void Foam::meshRefinement::consistentOrientation
                         mesh_,
                         patch,
                         edgeI,
-                        seedFaceI,
+                        seedFacei,
                         faceInfo,
                         tol,
                         dummyTrackData
@@ -2194,10 +2194,10 @@ void Foam::meshRefinement::consistentOrientation
 
         forAll(patch.addressing(), i)
         {
-            const label meshFaceI = patch.addressing()[i];
-            if (!mesh_.isInternalFace(meshFaceI))
+            const label meshFacei = patch.addressing()[i];
+            if (!mesh_.isInternalFace(meshFacei))
             {
-                neiStatus[meshFaceI-mesh_.nInternalFaces()] =
+                neiStatus[meshFacei-mesh_.nInternalFaces()] =
                     allFaceInfo[i].flipStatus();
             }
         }
@@ -2205,31 +2205,31 @@ void Foam::meshRefinement::consistentOrientation
 
         forAll(patch.addressing(), i)
         {
-            const label meshFaceI = patch.addressing()[i];
-            const label patchi = bm.whichPatch(meshFaceI);
+            const label meshFacei = patch.addressing()[i];
+            const label patchi = bm.whichPatch(meshFacei);
 
             if
             (
                 patchi != -1
              && bm[patchi].coupled()
-             && !isMasterFace[meshFaceI]
+             && !isMasterFace[meshFacei]
             )
             {
                 // Slave side. Take flipped from neighbour
-                label bFaceI = meshFaceI-mesh_.nInternalFaces();
+                label bFacei = meshFacei-mesh_.nInternalFaces();
 
-                if (neiStatus[bFaceI] == orientedSurface::NOFLIP)
+                if (neiStatus[bFacei] == orientedSurface::NOFLIP)
                 {
                     allFaceInfo[i] = orientedSurface::FLIP;
                 }
-                else if (neiStatus[bFaceI] == orientedSurface::FLIP)
+                else if (neiStatus[bFacei] == orientedSurface::FLIP)
                 {
                     allFaceInfo[i] = orientedSurface::NOFLIP;
                 }
                 else
                 {
                     FatalErrorInFunction
-                        << "Incorrect status for face " << meshFaceI
+                        << "Incorrect status for face " << meshFacei
                         << abort(FatalError);
                 }
             }
@@ -2244,21 +2244,21 @@ void Foam::meshRefinement::consistentOrientation
 
     forAll(allFaceInfo, facei)
     {
-        label meshFaceI = patch.addressing()[facei];
+        label meshFacei = patch.addressing()[facei];
 
         if (allFaceInfo[facei] == orientedSurface::NOFLIP)
         {
-            meshFlipMap[meshFaceI] = false;
+            meshFlipMap[meshFacei] = false;
         }
         else if (allFaceInfo[facei] == orientedSurface::FLIP)
         {
-            meshFlipMap[meshFaceI] = true;
+            meshFlipMap[meshFacei] = true;
         }
         else
         {
             FatalErrorInFunction
                 << "Problem : unvisited face " << facei
-                << " centre:" << mesh_.faceCentres()[meshFaceI]
+                << " centre:" << mesh_.faceCentres()[meshFacei]
                 << abort(FatalError);
         }
     }
@@ -2564,14 +2564,14 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
             }
             else if (ownRegion != keepRegionI && neiRegion == keepRegionI)
             {
-                label newPatchI = neiPatch[facei];
-                if (newPatchI == -1)
+                label newPatchi = neiPatch[facei];
+                if (newPatchi == -1)
                 {
-                    newPatchI = max(defaultPatch, ownPatch[facei]);
+                    newPatchi = max(defaultPatch, ownPatch[facei]);
                 }
                 forAll(f, fp)
                 {
-                    pointBaffle[f[fp]] = newPatchI;
+                    pointBaffle[f[fp]] = newPatchi;
                 }
             }
         }
@@ -2615,9 +2615,9 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
             {
                 const labelList& pFaces = pointFaces[pointI];
 
-                forAll(pFaces, pFaceI)
+                forAll(pFaces, pFacei)
                 {
-                    label facei = pFaces[pFaceI];
+                    label facei = pFaces[pFacei];
 
                     if (ownPatch[facei] == -1)
                     {
@@ -3128,10 +3128,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
 
         if (!pp.coupled())
         {
-            label bFaceI = pp.start()-mesh_.nInternalFaces();
+            label bFacei = pp.start()-mesh_.nInternalFaces();
             forAll(pp, i)
             {
-                neiCellZone[bFaceI++] = -1;
+                neiCellZone[bFacei++] = -1;
             }
         }
     }
@@ -3222,15 +3222,15 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
             // flipMap into account)
             forAll(patch.addressing(), facei)
             {
-                label meshFaceI = patch.addressing()[facei];
+                label meshFacei = patch.addressing()[facei];
 
-                if (isMasterFace[meshFaceI])
+                if (isMasterFace[meshFacei])
                 {
                     label n = 1;
                     if
                     (
-                        bool(posOrientation[meshFaceI])
-                     == meshFlipMap[meshFaceI]
+                        bool(posOrientation[meshFacei])
+                     == meshFlipMap[meshFacei]
                     )
                     {
                         n = -1;

@@ -61,9 +61,9 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::calcNut() const
 
     forAll(nutw, facei)
     {
-        label faceCellI = patch().faceCells()[facei];
+        label faceCelli = patch().faceCells()[facei];
 
-        scalar uStar = Cmu25*sqrt(k[faceCellI]);
+        scalar uStar = Cmu25*sqrt(k[faceCelli]);
         scalar yPlus = uStar*y[facei]/nuw[facei];
 
         scalar Edash = (y[facei] + z0_[facei])/z0_[facei];

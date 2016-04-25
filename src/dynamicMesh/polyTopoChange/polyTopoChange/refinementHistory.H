@@ -310,7 +310,7 @@ public:
         //- Store combining 8 cells into master
         void combineCells
         (
-            const label masterCellI,
+            const label masterCelli,
             const labelList& combinedCells
         );
 
