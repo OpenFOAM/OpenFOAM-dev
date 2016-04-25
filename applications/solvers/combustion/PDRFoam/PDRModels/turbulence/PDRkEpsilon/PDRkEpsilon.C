@@ -130,7 +130,7 @@ void PDRkEpsilon::correct()
     tgradU.clear();
 
     // Update espsilon and G at the wall
-    epsilon_.boundaryField().updateCoeffs();
+    epsilon_.boundaryFieldRef().updateCoeffs();
 
     // Add the blockage generation term so that it is included consistently
     // in both the k and epsilon equations
@@ -163,7 +163,7 @@ void PDRkEpsilon::correct()
 
     epsEqn.ref().relax();
 
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryField());
+    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
 
     solve(epsEqn);
     bound(epsilon_, epsilonMin_);

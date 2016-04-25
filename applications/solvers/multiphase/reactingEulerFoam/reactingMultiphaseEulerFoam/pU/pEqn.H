@@ -182,6 +182,9 @@ while (pimple.correct())
         );
         surfaceScalarField phiCorrCoeff(pos(alphafBar - 0.99));
 
+        surfaceScalarField::GeometricBoundaryField& phiCorrCoeffBf =
+            phiCorrCoeff.boundaryFieldRef();
+
         forAll(mesh.boundary(), patchi)
         {
             // Set ddtPhiCorr to 0 on non-coupled boundaries
@@ -191,7 +194,7 @@ while (pimple.correct())
              || isA<cyclicAMIFvPatch>(mesh.boundary()[patchi])
             )
             {
-                phiCorrCoeff.boundaryField()[patchi] = 0;
+                phiCorrCoeffBf[patchi] = 0;
             }
         }
 
@@ -281,7 +284,7 @@ while (pimple.correct())
 
         setSnGrad<fixedFluxPressureFvPatchScalarField>
         (
-            p_rgh.boundaryField(),
+            p_rgh.boundaryFieldRef(),
             (
                 phiHbyA.boundaryField() - phib
             )/(mesh.magSf().boundaryField()*rAUf.boundaryField())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -446,11 +446,13 @@ void Foam::twoPhaseSystem::solve()
             )
         );
 
+        surfaceScalarField::GeometricBoundaryField& alphaPhic1Bf =
+            alphaPhic1.boundaryFieldRef();
+
         // Ensure that the flux at inflow BCs is preserved
-        forAll(alphaPhic1.boundaryField(), patchi)
+        forAll(alphaPhic1Bf, patchi)
         {
-            fvsPatchScalarField& alphaPhic1p =
-                alphaPhic1.boundaryField()[patchi];
+            fvsPatchScalarField& alphaPhic1p = alphaPhic1Bf[patchi];
 
             if (!alphaPhic1p.coupled())
             {

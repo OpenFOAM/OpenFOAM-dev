@@ -609,7 +609,7 @@ void Foam::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
         limitSum(phiPsiCorrsInternal);
     }
 
-    surfaceScalarField::GeometricBoundaryField& bfld =
+    const surfaceScalarField::GeometricBoundaryField& bfld =
         phiPsiCorrs[0].boundaryField();
 
     forAll(bfld, patchi)
@@ -622,7 +622,7 @@ void Foam::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
                 phiPsiCorrsPatch.set
                 (
                     phasei,
-                    &phiPsiCorrs[phasei].boundaryField()[patchi]
+                    &phiPsiCorrs[phasei].boundaryFieldRef()[patchi]
                 );
             }
 

@@ -36,6 +36,9 @@ void Foam::BlendedInterfacialModel<ModelType>::correctFixedFluxBCs
     GeometricField& field
 ) const
 {
+    typename GeometricField::GeometricBoundaryField& fieldBf =
+        field.boundaryFieldRef();
+
     forAll(phase1_.phi()().boundaryField(), patchi)
     {
         if
@@ -46,7 +49,7 @@ void Foam::BlendedInterfacialModel<ModelType>::correctFixedFluxBCs
             )
         )
         {
-            field.boundaryField()[patchi] = Zero;
+            fieldBf[patchi] = Zero;
         }
     }
 }

@@ -54,11 +54,14 @@
         phic += (mixture.cAlpha()*icAlpha)*fvc::interpolate(mag(U));
     }
 
+    surfaceScalarField::GeometricBoundaryField& phicBf =
+        phic.boundaryFieldRef();
+
     // Do not compress interface at non-coupled boundary faces
     // (inlets, outlets etc.)
     forAll(phic.boundaryField(), patchi)
     {
-        fvsPatchScalarField& phicp = phic.boundaryField()[patchi];
+        fvsPatchScalarField& phicp = phicBf[patchi];
 
         if (!phicp.coupled())
         {

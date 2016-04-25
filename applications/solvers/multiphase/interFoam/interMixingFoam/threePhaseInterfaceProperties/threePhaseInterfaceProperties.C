@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ void Foam::threePhaseInterfaceProperties::calculateK()
     // Face unit interface normal
     surfaceVectorField nHatfv(gradAlphaf/(mag(gradAlphaf) + deltaN_));
 
-    correctContactAngle(nHatfv.boundaryField());
+    correctContactAngle(nHatfv.boundaryFieldRef());
 
     // Face unit interface normal flux
     nHatf_ = nHatfv & Sf;

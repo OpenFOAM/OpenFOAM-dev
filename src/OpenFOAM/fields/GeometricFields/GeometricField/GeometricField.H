@@ -429,30 +429,28 @@ public:
 
     // Member Functions
 
-        //- Return dimensioned internal field
+        //- Return a reference to the dimensioned internal field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
         DimensionedInternalField& dimensionedInternalField();
 
-        //- Return dimensioned internal field
+        //- Return a const-reference to the dimensioned internal field
         inline const DimensionedInternalField& dimensionedInternalField() const;
 
-        //- Return internal field
+        //- Return a reference to the internal field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
         InternalField& internalField();
 
-        //- Return internal field
+        //- Return a const-reference to the  internal field
         inline const InternalField& internalField() const;
 
-        //- Return reference to GeometricBoundaryField
+        //- Return a reference to the boundary field
+        //  Note: this increments the event counter and checks the
+        //  old-time fields; avoid in loops.
         GeometricBoundaryField& boundaryFieldRef();
 
-        //- Return reference to GeometricBoundaryField
-        #ifndef BOUNDARY_FIELD_REF
-        GeometricBoundaryField& boundaryField()
-        {
-            return boundaryFieldRef();
-        }
-        #endif
-
-        //- Return reference to GeometricBoundaryField for const field
+        //- Return const-reference to the boundary field
         inline const GeometricBoundaryField& boundaryField() const;
 
         //- Return the time index of the field

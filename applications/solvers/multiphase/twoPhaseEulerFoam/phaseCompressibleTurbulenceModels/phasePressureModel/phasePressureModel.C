@@ -171,7 +171,7 @@ Foam::RASModels::phasePressureModel::pPrime() const
     );
 
     volScalarField::GeometricBoundaryField& bpPrime =
-        tpPrime.ref().boundaryField();
+        tpPrime.ref().boundaryFieldRef();
 
     forAll(bpPrime, patchi)
     {
@@ -199,7 +199,7 @@ Foam::RASModels::phasePressureModel::pPrimef() const
     );
 
    surfaceScalarField::GeometricBoundaryField& bpPrime =
-       tpPrime.ref().boundaryField();
+       tpPrime.ref().boundaryFieldRef();
 
     forAll(bpPrime, patchi)
     {

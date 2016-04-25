@@ -523,7 +523,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixture::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(alpha1, alpha2);
 
-    correctContactAngle(alpha1, alpha2, tnHatfv.ref().boundaryField());
+    correctContactAngle(alpha1, alpha2, tnHatfv.ref().boundaryFieldRef());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());

@@ -196,7 +196,7 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correctInletOutlet
     const volScalarField& refVsf
 ) const
 {
-    volScalarField::GeometricBoundaryField& bf = vsf.boundaryField();
+    volScalarField::GeometricBoundaryField& bf = vsf.boundaryFieldRef();
     const volScalarField::GeometricBoundaryField& refBf =
         refVsf.boundaryField();
 

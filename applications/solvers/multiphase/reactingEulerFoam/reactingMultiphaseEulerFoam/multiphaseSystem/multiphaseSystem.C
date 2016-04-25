@@ -134,11 +134,13 @@ void Foam::multiphaseSystem::solveAlphas()
             );
         }
 
+        surfaceScalarField::GeometricBoundaryField& alphaPhiCorrBf =
+            alphaPhiCorr.boundaryFieldRef();
+
         // Ensure that the flux at inflow BCs is preserved
         forAll(alphaPhiCorr.boundaryField(), patchi)
         {
-            fvsPatchScalarField& alphaPhiCorrp =
-                alphaPhiCorr.boundaryField()[patchi];
+            fvsPatchScalarField& alphaPhiCorrp = alphaPhiCorrBf[patchi];
 
             if (!alphaPhiCorrp.coupled())
             {
@@ -477,7 +479,7 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseSystem::K
 {
     tmp<surfaceVectorField> tnHatfv = nHatfv(phase1, phase2);
 
-    correctContactAngle(phase1, phase2, tnHatfv.ref().boundaryField());
+    correctContactAngle(phase1, phase2, tnHatfv.ref().boundaryFieldRef());
 
     // Simple expression for curvature
     return -fvc::div(tnHatfv & mesh_.Sf());

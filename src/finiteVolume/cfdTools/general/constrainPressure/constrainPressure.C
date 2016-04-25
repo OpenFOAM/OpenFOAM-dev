@@ -44,7 +44,7 @@ void Foam::constrainPressure
 {
     const fvMesh& mesh = p.mesh();
 
-    volScalarField::GeometricBoundaryField& pBf = p.boundaryField();
+    volScalarField::GeometricBoundaryField& pBf = p.boundaryFieldRef();
 
     const volVectorField::GeometricBoundaryField& UBf = U.boundaryField();
     const surfaceScalarField::GeometricBoundaryField& phiHbyABf =

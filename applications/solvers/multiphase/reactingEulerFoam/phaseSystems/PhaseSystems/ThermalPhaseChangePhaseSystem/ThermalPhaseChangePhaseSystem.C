@@ -353,9 +353,9 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
 
         // Limit the H[12] boundary field to avoid /0
         const scalar HLimit = 1e-4;
-        H1.boundaryField() =
+        H1.boundaryFieldRef() =
             max(H1.boundaryField(), phase1.boundaryField()*HLimit);
-        H2.boundaryField() =
+        H2.boundaryFieldRef() =
             max(H2.boundaryField(), phase2.boundaryField()*HLimit);
 
         volScalarField mDotL

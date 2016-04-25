@@ -152,11 +152,13 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
     const fvPatchList& patches = phase.mesh().boundary();
     const volVectorField& U = phase.U();
 
+    volScalarField::GeometricBoundaryField& nufBf = nuf.boundaryFieldRef();
+
     forAll(patches, patchi)
     {
         if (!patches[patchi].coupled())
         {
-            nuf.boundaryField()[patchi] =
+            nufBf[patchi] =
                 (
                     pf.boundaryField()[patchi]*sin(phi_.value())
                    /(

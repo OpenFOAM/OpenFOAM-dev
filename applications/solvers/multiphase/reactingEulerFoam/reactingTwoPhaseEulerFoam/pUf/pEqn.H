@@ -201,7 +201,7 @@ while (pimple.correct())
     // Update the fixedFluxPressure BCs to ensure flux consistency
     setSnGrad<fixedFluxPressureFvPatchScalarField>
     (
-        p_rgh.boundaryField(),
+        p_rgh.boundaryFieldRef(),
         (
             phiHbyA.boundaryField()
           - (

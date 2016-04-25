@@ -119,9 +119,11 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::SCOPEXiEq::XiEq() const
         }
     }
 
+    volScalarField::GeometricBoundaryField& xieqBf = xieq.boundaryFieldRef();
+
     forAll(xieq.boundaryField(), patchi)
     {
-        scalarField& xieqp = xieq.boundaryField()[patchi];
+        scalarField& xieqp = xieqBf[patchi];
         const scalarField& Kp = K.boundaryField()[patchi];
         const scalarField& Map = Ma.boundaryField()[patchi];
         const scalarField& upBySup = upBySu.boundaryField()[patchi];

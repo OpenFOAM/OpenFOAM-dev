@@ -316,11 +316,13 @@ void Foam::twoPhaseSystem::solve()
             )
         );
 
+        surfaceScalarField::GeometricBoundaryField& alphaPhic1Bf =
+            alphaPhic1.boundaryFieldRef();
+
         // Ensure that the flux at inflow BCs is preserved
-        forAll(alphaPhic1.boundaryField(), patchi)
+        forAll(alphaPhic1Bf, patchi)
         {
-            fvsPatchScalarField& alphaPhic1p =
-                alphaPhic1.boundaryField()[patchi];
+            fvsPatchScalarField& alphaPhic1p = alphaPhic1Bf[patchi];
 
             if (!alphaPhic1p.coupled())
             {
