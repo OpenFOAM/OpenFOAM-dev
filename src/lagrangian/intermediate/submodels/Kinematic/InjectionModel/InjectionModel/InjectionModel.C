@@ -91,7 +91,7 @@ bool Foam::InjectionModel<CloudType>::prepareForNextTimeStep
 template<class CloudType>
 bool Foam::InjectionModel<CloudType>::findCellAtPosition
 (
-    label& cellI,
+    label& celli,
     label& tetFaceI,
     label& tetPtI,
     vector& position,
@@ -105,14 +105,14 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
     this->owner().mesh().findCellFacePt
     (
         position,
-        cellI,
+        celli,
         tetFaceI,
         tetPtI
     );
 
     label procI = -1;
 
-    if (cellI >= 0)
+    if (celli >= 0)
     {
         procI = Pstream::myProcNo();
     }
@@ -123,7 +123,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
 
     if (procI != Pstream::myProcNo())
     {
-        cellI = -1;
+        celli = -1;
         tetFaceI = -1;
         tetPtI = -1;
     }
@@ -132,13 +132,13 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
     // probably on an edge
     if (procI == -1)
     {
-        cellI = this->owner().mesh().findNearestCell(position);
+        celli = this->owner().mesh().findNearestCell(position);
 
-        if (cellI >= 0)
+        if (celli >= 0)
         {
-            position += SMALL*(cellCentres[cellI] - position);
+            position += SMALL*(cellCentres[celli] - position);
 
-            if (this->owner().mesh().pointInCell(position, cellI))
+            if (this->owner().mesh().pointInCell(position, celli))
             {
                 procI = Pstream::myProcNo();
             }
@@ -148,7 +148,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
 
         if (procI != Pstream::myProcNo())
         {
-            cellI = -1;
+            celli = -1;
             tetFaceI = -1;
             tetPtI = -1;
         }
@@ -441,7 +441,7 @@ void Foam::InjectionModel<CloudType>::inject(TrackData& td)
 
                 // Determine the injection position and owner cell,
                 // tetFace and tetPt
-                label cellI = -1;
+                label celli = -1;
                 label tetFaceI = -1;
                 label tetPtI = -1;
 
@@ -453,12 +453,12 @@ void Foam::InjectionModel<CloudType>::inject(TrackData& td)
                     newParcels,
                     timeInj,
                     pos,
-                    cellI,
+                    celli,
                     tetFaceI,
                     tetPtI
                 );
 
-                if (cellI > -1)
+                if (celli > -1)
                 {
                     // Lagrangian timestep
                     const scalar dt = time - timeInj;
@@ -468,7 +468,7 @@ void Foam::InjectionModel<CloudType>::inject(TrackData& td)
 
                     // Create a new parcel
                     parcelType* pPtr =
-                        new parcelType(mesh, pos, cellI, tetFaceI, tetPtI);
+                        new parcelType(mesh, pos, celli, tetFaceI, tetPtI);
 
                     // Check/set new parcel thermo properties
                     cloud.setParcelThermoProperties(*pPtr, dt);
@@ -561,7 +561,7 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
 
         // Determine the injection position and owner cell,
         // tetFace and tetPt
-        label cellI = -1;
+        label celli = -1;
         label tetFaceI = -1;
         label tetPtI = -1;
 
@@ -573,19 +573,19 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
             newParcels,
             0.0,
             pos,
-            cellI,
+            celli,
             tetFaceI,
             tetPtI
         );
 
-        if (cellI > -1)
+        if (celli > -1)
         {
             // Apply corrections to position for 2-D cases
             meshTools::constrainToMeshCentre(mesh, pos);
 
             // Create a new parcel
             parcelType* pPtr =
-                new parcelType(mesh, pos, cellI, tetFaceI, tetPtI);
+                new parcelType(mesh, pos, celli, tetFaceI, tetPtI);
 
             // Check/set new parcel thermo properties
             cloud.setParcelThermoProperties(*pPtr, 0.0);

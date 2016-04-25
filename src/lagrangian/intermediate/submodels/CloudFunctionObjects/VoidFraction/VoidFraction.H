@@ -119,7 +119,7 @@ public:
             virtual void postMove
             (
                 parcelType& p,
-                const label cellI,
+                const label celli,
                 const scalar dt,
                 const point& position0,
                 bool& keepParticle

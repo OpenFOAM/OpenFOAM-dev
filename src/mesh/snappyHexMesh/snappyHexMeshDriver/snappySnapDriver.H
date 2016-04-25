@@ -242,7 +242,7 @@ class snappySnapDriver
                     const indirectPrimitivePatch& pp,
                     const vectorField& patchAttraction,
                     const List<pointConstraint>& patchConstraints,
-                    const label faceI
+                    const label facei
                 ) const;
 
                 //- Avoid attraction across face diagonal since would

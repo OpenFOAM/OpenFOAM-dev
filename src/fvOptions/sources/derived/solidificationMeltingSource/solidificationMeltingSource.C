@@ -161,13 +161,13 @@ void Foam::fv::solidificationMeltingSource::update(const volScalarField& Cp)
 
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
+        label celli = cells_[i];
 
-        scalar Tc = T[cellI];
-        scalar Cpc = Cp[cellI];
-        scalar alpha1New = alpha1_[cellI] + relax_*Cpc*(Tc - Tmelt_)/L_;
+        scalar Tc = T[celli];
+        scalar Cpc = Cp[celli];
+        scalar alpha1New = alpha1_[celli] + relax_*Cpc*(Tc - Tmelt_)/L_;
 
-        alpha1_[cellI] = max(0, min(alpha1New, 1));
+        alpha1_[celli] = max(0, min(alpha1New, 1));
         deltaT_[i] = Tc - Tmelt_;
     }
 
@@ -293,16 +293,16 @@ void Foam::fv::solidificationMeltingSource::addSup
 
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
+        label celli = cells_[i];
 
-        scalar Vc = V[cellI];
-        scalar alpha1c = alpha1_[cellI];
+        scalar Vc = V[celli];
+        scalar alpha1c = alpha1_[celli];
 
         scalar S = -Cu_*sqr(1.0 - alpha1c)/(pow3(alpha1c) + q_);
         vector Sb = rhoRef_*g*beta_*deltaT_[i];
 
-        Sp[cellI] += Vc*S;
-        Su[cellI] += Vc*Sb;
+        Sp[celli] += Vc*S;
+        Su[celli] += Vc*Sb;
     }
 }
 

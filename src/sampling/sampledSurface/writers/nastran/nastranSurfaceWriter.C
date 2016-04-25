@@ -285,19 +285,19 @@ void Foam::nastranSurfaceWriter::writeGeometry
 
     label nFace = 1;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if (f.size() == 3)
         {
-            writeFace("CTRIA3", faces[faceI], nFace, os);
-            decomposedFaces[faceI].append(faces[faceI]);
+            writeFace("CTRIA3", faces[facei], nFace, os);
+            decomposedFaces[facei].append(faces[facei]);
         }
         else if (f.size() == 4)
         {
-            writeFace("CQUAD4", faces[faceI], nFace, os);
-            decomposedFaces[faceI].append(faces[faceI]);
+            writeFace("CQUAD4", faces[facei], nFace, os);
+            decomposedFaces[facei].append(faces[facei]);
         }
         else
         {
@@ -309,7 +309,7 @@ void Foam::nastranSurfaceWriter::writeGeometry
             forAll(triFaces, triI)
             {
                 writeFace("CTRIA3", triFaces[triI], nFace, os);
-                decomposedFaces[faceI].append(triFaces[triI]);
+                decomposedFaces[facei].append(triFaces[triI]);
             }
         }
     }

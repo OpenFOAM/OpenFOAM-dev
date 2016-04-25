@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ class polyMeshGeometry
             const polyMesh& mesh,
             const bool report,
             const scalar severeNonorthogonalityThreshold,
-            const label faceI,
+            const label facei,
             const vector& s,    // face area vector
             const vector& d,    // cc-cc vector
 
@@ -115,7 +115,7 @@ class polyMeshGeometry
             const bool report,
             const scalar minTetQuality,
             const pointField& p,
-            const label faceI,
+            const label facei,
             const point& fc,    // face centre
             const point& cc,    // cell centre
             labelHashSet* setPtr

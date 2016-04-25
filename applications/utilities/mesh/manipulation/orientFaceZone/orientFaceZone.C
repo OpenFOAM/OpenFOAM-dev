@@ -99,9 +99,9 @@ int main(int argc, char *argv[])
 
         label nProtected = 0;
 
-        forAll(faceLabels, faceI)
+        forAll(faceLabels, facei)
         {
-            const label meshFaceI = faceLabels[faceI];
+            const label meshFaceI = faceLabels[facei];
             const label patchi = bm.whichPatch(meshFaceI);
 
             if
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
             )
             {
                 // Slave side. Mark so doesn't get visited.
-                allFaceInfo[faceI] = orientedSurface::NOFLIP;
+                allFaceInfo[facei] = orientedSurface::NOFLIP;
                 nProtected++;
             }
         }
@@ -125,13 +125,13 @@ int main(int argc, char *argv[])
         // Number of (master)faces per edge
         labelList nMasterFaces(patch.nEdges(), 0);
 
-        forAll(faceLabels, faceI)
+        forAll(faceLabels, facei)
         {
-            const label meshFaceI = faceLabels[faceI];
+            const label meshFaceI = faceLabels[facei];
 
             if (isMasterFace[meshFaceI])
             {
-                const labelList& fEdges = patch.faceEdges()[faceI];
+                const labelList& fEdges = patch.faceEdges()[facei];
                 forAll(fEdges, fEdgeI)
                 {
                     nMasterFaces[fEdges[fEdgeI]]++;
@@ -184,11 +184,11 @@ int main(int argc, char *argv[])
     {
         // Pick an unset face
         label unsetFaceI = labelMax;
-        forAll(allFaceInfo, faceI)
+        forAll(allFaceInfo, facei)
         {
-            if (allFaceInfo[faceI] == orientedSurface::UNVISITED)
+            if (allFaceInfo[facei] == orientedSurface::UNVISITED)
             {
-                unsetFaceI = globalFaces.toGlobal(faceI);
+                unsetFaceI = globalFaces.toGlobal(facei);
                 break;
             }
         }
@@ -347,25 +347,25 @@ int main(int argc, char *argv[])
 
     boolList newFlipMap(allFaceInfo.size(), false);
     label nChanged = 0;
-    forAll(allFaceInfo, faceI)
+    forAll(allFaceInfo, facei)
     {
-        if (allFaceInfo[faceI] == orientedSurface::NOFLIP)
+        if (allFaceInfo[facei] == orientedSurface::NOFLIP)
         {
-            newFlipMap[faceI] = false;
+            newFlipMap[facei] = false;
         }
-        else if (allFaceInfo[faceI] == orientedSurface::FLIP)
+        else if (allFaceInfo[facei] == orientedSurface::FLIP)
         {
-            newFlipMap[faceI] = true;
+            newFlipMap[facei] = true;
         }
         else
         {
             FatalErrorInFunction
-                << "Problem : unvisited face " << faceI
-                << " centre:" << mesh.faceCentres()[faceLabels[faceI]]
+                << "Problem : unvisited face " << facei
+                << " centre:" << mesh.faceCentres()[faceLabels[facei]]
                 << abort(FatalError);
         }
 
-        if (fZone.flipMap()[faceI] != newFlipMap[faceI])
+        if (fZone.flipMap()[facei] != newFlipMap[facei])
         {
             nChanged++;
         }

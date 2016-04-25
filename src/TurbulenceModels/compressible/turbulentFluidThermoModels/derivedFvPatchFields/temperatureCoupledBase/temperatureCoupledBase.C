@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 ) const
 {
     const fvMesh& mesh = patch_.boundaryMesh().mesh();
-    const label patchI = patch_.index();
+    const label patchi = patch_.index();
 
     switch (method_)
     {
@@ -121,14 +121,14 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
                 const turbulenceModel& turbModel =
                     mesh.lookupObject<turbulenceModel>(turbName);
 
-                return turbModel.kappaEff(patchI);
+                return turbModel.kappaEff(patchi);
             }
             else if (mesh.foundObject<fluidThermo>(basicThermo::dictName))
             {
                 const fluidThermo& thermo =
                     mesh.lookupObject<fluidThermo>(basicThermo::dictName);
 
-                return thermo.kappa(patchI);
+                return thermo.kappa(patchi);
             }
             else
             {
@@ -146,7 +146,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
             const solidThermo& thermo =
                 mesh.lookupObject<solidThermo>(basicThermo::dictName);
 
-            return thermo.kappa(patchI);
+            return thermo.kappa(patchi);
             break;
         }
 
@@ -161,9 +161,9 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
                     alphaAniName_
                 );
 
-            const scalarField& pp = thermo.p().boundaryField()[patchI];
+            const scalarField& pp = thermo.p().boundaryField()[patchi];
 
-            const symmTensorField kappa(alphaAni*thermo.Cp(pp, Tp, patchI));
+            const symmTensorField kappa(alphaAni*thermo.Cp(pp, Tp, patchi));
 
             const vectorField n(patch_.nf());
 

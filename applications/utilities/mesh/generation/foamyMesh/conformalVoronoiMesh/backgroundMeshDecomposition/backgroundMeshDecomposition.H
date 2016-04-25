@@ -167,7 +167,7 @@ class backgroundMeshDecomposition
         //  it
         bool refineCell
         (
-            label cellI,
+            label celli,
             volumeType volType,
             scalar& weightEstimate
         ) const;

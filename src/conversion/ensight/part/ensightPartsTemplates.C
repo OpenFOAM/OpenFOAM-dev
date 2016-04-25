@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::ensightParts::writeField
 
     forAll(partsList_, partI)
     {
-        label patchI = partI - patchOffset;
+        label patchi = partI - patchOffset;
 
         if (partsList_[partI].isCellData())
         {
@@ -60,12 +60,12 @@ void Foam::ensightParts::writeField
                 field
             );
         }
-        else if (patchI < field.boundaryField().size())
+        else if (patchi < field.boundaryField().size())
         {
             partsList_[partI].writeField
             (
                 os,
-                field.boundaryField()[patchI]
+                field.boundaryField()[patchi]
             );
         }
     }

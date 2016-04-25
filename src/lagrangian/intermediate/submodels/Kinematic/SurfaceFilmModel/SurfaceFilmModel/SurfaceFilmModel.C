@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,17 +144,17 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
         {
             if (diameterParcelPatch_[j] > 0)
             {
-                const label cellI = injectorCellsPatch[j];
+                const label celli = injectorCellsPatch[j];
 
                 // The position could bein any tet of the decomposed cell,
                 // so arbitrarily choose the first face of the cell as the
                 // tetFace and the first point on the face after the base
                 // point as the tetPt.  The tracking will pick the cell
                 // consistent with the motion in the first tracking step.
-                const label tetFaceI = this->owner().mesh().cells()[cellI][0];
+                const label tetFaceI = this->owner().mesh().cells()[celli][0];
                 const label tetPtI = 1;
 
-//                const point& pos = this->owner().mesh().C()[cellI];
+//                const point& pos = this->owner().mesh().C()[celli];
 
                 const scalar offset =
                     max
@@ -170,7 +170,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
                     (
                         this->owner().pMesh(),
                         pos,
-                        cellI,
+                        celli,
                         tetFaceI,
                         tetPtI
                     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,9 @@ void Foam::meshReader::calcPointCells() const
     faceListList& cFaces = cellFaces();
 
     // For each cell
-    forAll(cFaces, cellI)
+    forAll(cFaces, celli)
     {
-        const faceList& faces = cFaces[cellI];
+        const faceList& faces = cFaces[celli];
 
         forAll(faces, i)
         {
@@ -86,7 +86,7 @@ void Foam::meshReader::calcPointCells() const
 
                 for (label f = 0; f < curCount; f++)
                 {
-                    if (curPointCells[f] == cellI)
+                    if (curPointCells[f] == celli)
                     {
                         found = true;
                         break;
@@ -102,7 +102,7 @@ void Foam::meshReader::calcPointCells() const
                     }
 
                     // Enter the cell label in the point's cell list
-                    curPointCells[curCount] = cellI;
+                    curPointCells[curCount] = celli;
 
                     // Increment the cell count for the point addressed
                     cellCount[curPoint]++;
@@ -144,9 +144,9 @@ void Foam::meshReader::calcPointCells() const
 
         // adjust cellFaces - this could be faster
         // For each cell
-        forAll(cFaces, cellI)
+        forAll(cFaces, celli)
         {
-            faceList& faces = cFaces[cellI];
+            faceList& faces = cFaces[celli];
 
             // For each face
             forAll(faces, i)

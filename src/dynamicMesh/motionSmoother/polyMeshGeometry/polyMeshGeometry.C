@@ -117,71 +117,71 @@ void Foam::polyMeshGeometry::updateCellCentresAndVols
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
-        cEst[own[faceI]] += faceCentres_[faceI];
-        nCellFaces[own[faceI]] += 1;
+        label facei = changedFaces[i];
+        cEst[own[facei]] += faceCentres_[facei];
+        nCellFaces[own[facei]] += 1;
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
-            cEst[nei[faceI]] += faceCentres_[faceI];
-            nCellFaces[nei[faceI]] += 1;
+            cEst[nei[facei]] += faceCentres_[facei];
+            nCellFaces[nei[facei]] += 1;
         }
     }
 
     forAll(changedCells, i)
     {
-        label cellI = changedCells[i];
-        cEst[cellI] /= nCellFaces[cellI];
+        label celli = changedCells[i];
+        cEst[celli] /= nCellFaces[celli];
     }
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
+        label facei = changedFaces[i];
 
         // Calculate 3*face-pyramid volume
         scalar pyr3Vol = max
         (
-            faceAreas_[faceI] & (faceCentres_[faceI] - cEst[own[faceI]]),
+            faceAreas_[facei] & (faceCentres_[facei] - cEst[own[facei]]),
             VSMALL
         );
 
         // Calculate face-pyramid centre
-        vector pc = (3.0/4.0)*faceCentres_[faceI] + (1.0/4.0)*cEst[own[faceI]];
+        vector pc = (3.0/4.0)*faceCentres_[facei] + (1.0/4.0)*cEst[own[facei]];
 
         // Accumulate volume-weighted face-pyramid centre
-        cellCentres_[own[faceI]] += pyr3Vol*pc;
+        cellCentres_[own[facei]] += pyr3Vol*pc;
 
         // Accumulate face-pyramid volume
-        cellVolumes_[own[faceI]] += pyr3Vol;
+        cellVolumes_[own[facei]] += pyr3Vol;
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
             // Calculate 3*face-pyramid volume
             scalar pyr3Vol = max
             (
-                faceAreas_[faceI] & (cEst[nei[faceI]] - faceCentres_[faceI]),
+                faceAreas_[facei] & (cEst[nei[facei]] - faceCentres_[facei]),
                 VSMALL
             );
 
             // Calculate face-pyramid centre
             vector pc =
-                (3.0/4.0)*faceCentres_[faceI]
-              + (1.0/4.0)*cEst[nei[faceI]];
+                (3.0/4.0)*faceCentres_[facei]
+              + (1.0/4.0)*cEst[nei[facei]];
 
             // Accumulate volume-weighted face-pyramid centre
-            cellCentres_[nei[faceI]] += pyr3Vol*pc;
+            cellCentres_[nei[facei]] += pyr3Vol*pc;
 
             // Accumulate face-pyramid volume
-            cellVolumes_[nei[faceI]] += pyr3Vol;
+            cellVolumes_[nei[facei]] += pyr3Vol;
         }
     }
 
     forAll(changedCells, i)
     {
-        label cellI = changedCells[i];
+        label celli = changedCells[i];
 
-        cellCentres_[cellI] /= cellVolumes_[cellI] + VSMALL;
-        cellVolumes_[cellI] *= (1.0/3.0);
+        cellCentres_[celli] /= cellVolumes_[celli] + VSMALL;
+        cellVolumes_[celli] *= (1.0/3.0);
     }
 }
 
@@ -199,13 +199,13 @@ Foam::labelList Foam::polyMeshGeometry::affectedCells
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
+        label facei = changedFaces[i];
 
-        affectedCells.insert(own[faceI]);
+        affectedCells.insert(own[facei]);
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
-            affectedCells.insert(nei[faceI]);
+            affectedCells.insert(nei[facei]);
         }
     }
     return affectedCells.toc();
@@ -217,7 +217,7 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
     const polyMesh& mesh,
     const bool report,
     const scalar severeNonorthogonalityThreshold,
-    const label faceI,
+    const label facei,
     const vector& s,    // face area vector
     const vector& d,    // cc-cc vector
 
@@ -232,9 +232,9 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
     {
         label nei = -1;
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
-            nei = mesh.faceNeighbour()[faceI];
+            nei = mesh.faceNeighbour()[facei];
         }
 
         if (dDotS > SMALL)
@@ -242,8 +242,8 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
             if (report)
             {
                 // Severe non-orthogonality but mesh still OK
-                Pout<< "Severe non-orthogonality for face " << faceI
-                    << " between cells " << mesh.faceOwner()[faceI]
+                Pout<< "Severe non-orthogonality for face " << facei
+                    << " between cells " << mesh.faceOwner()[facei]
                     << " and " << nei
                     << ": Angle = "
                     << radToDeg(::acos(dDotS))
@@ -259,8 +259,8 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
             {
                 WarningInFunction
                     << "Severe non-orthogonality detected for face "
-                    << faceI
-                    << " between cells " << mesh.faceOwner()[faceI]
+                    << facei
+                    << " between cells " << mesh.faceOwner()[facei]
                     << " and " << nei
                     << ": Angle = "
                     << radToDeg(::acos(dDotS))
@@ -272,7 +272,7 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
 
         if (setPtr)
         {
-            setPtr->insert(faceI);
+            setPtr->insert(facei);
         }
     }
     return dDotS;
@@ -286,14 +286,14 @@ bool Foam::polyMeshGeometry::checkFaceTet
     const bool report,
     const scalar minTetQuality,
     const pointField& p,
-    const label faceI,
+    const label facei,
     const point& fc,    // face centre
     const point& cc,    // cell centre
 
     labelHashSet* setPtr
 )
 {
-    const face& f = mesh.faces()[faceI];
+    const face& f = mesh.faces()[facei];
 
     forAll(f, fp)
     {
@@ -313,17 +313,17 @@ bool Foam::polyMeshGeometry::checkFaceTet
                     << "const bool, const scalar, const pointField&"
                     << ", const pointField&"
                     << ", const labelList&, labelHashSet*) : "
-                    << "face " << faceI
+                    << "face " << facei
                     << " has a triangle that points the wrong way."
                      << endl
                     << "Tet quality: " << tetQual
-                    << " Face " << faceI
+                    << " Face " << facei
                     << endl;
             }
 
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
             return true;
         }
@@ -392,9 +392,9 @@ bool Foam::polyMeshGeometry::checkFaceDotProduct
     // Calculate coupled cell centre
     pointField neiCc(mesh.nFaces() - mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        neiCc[faceI-mesh.nInternalFaces()] = cellCentres[own[faceI]];
+        neiCc[facei-mesh.nInternalFaces()] = cellCentres[own[facei]];
     }
 
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
@@ -410,20 +410,20 @@ bool Foam::polyMeshGeometry::checkFaceDotProduct
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        const point& ownCc = cellCentres[own[faceI]];
+        const point& ownCc = cellCentres[own[facei]];
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             scalar dDotS = checkNonOrtho
             (
                 mesh,
                 report,
                 severeNonorthogonalityThreshold,
-                faceI,
-                faceAreas[faceI],
-                cellCentres[nei[faceI]] - ownCc,
+                facei,
+                faceAreas[facei],
+                cellCentres[nei[facei]] - ownCc,
 
                 severeNonOrth,
                 errorNonOrth,
@@ -440,18 +440,18 @@ bool Foam::polyMeshGeometry::checkFaceDotProduct
         }
         else
         {
-            label patchI = patches.whichPatch(faceI);
+            label patchi = patches.whichPatch(facei);
 
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
                 scalar dDotS = checkNonOrtho
                 (
                     mesh,
                     report,
                     severeNonorthogonalityThreshold,
-                    faceI,
-                    faceAreas[faceI],
-                    neiCc[faceI-mesh.nInternalFaces()] - ownCc,
+                    facei,
+                    faceAreas[facei],
+                    neiCc[facei-mesh.nInternalFaces()] - ownCc,
 
                     severeNonOrth,
                     errorNonOrth,
@@ -571,13 +571,13 @@ bool Foam::polyMeshGeometry::checkFacePyramids
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
         // Create the owner pyramid - it will have negative volume
         scalar pyrVol = pyramidPointFaceRef
         (
-            f[faceI],
-            cellCentres[own[faceI]]
+            f[facei],
+            cellCentres[own[facei]]
         ).mag(p);
 
         if (pyrVol > -minPyrVol)
@@ -587,29 +587,29 @@ bool Foam::polyMeshGeometry::checkFacePyramids
                 Pout<< "bool polyMeshGeometry::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
-                    << "face " << faceI << " points the wrong way. " << endl
+                    << "face " << facei << " points the wrong way. " << endl
                     << "Pyramid volume: " << -pyrVol
-                    << " Face " << f[faceI] << " area: " << f[faceI].mag(p)
-                    << " Owner cell: " << own[faceI] << endl
+                    << " Face " << f[facei] << " area: " << f[facei].mag(p)
+                    << " Owner cell: " << own[facei] << endl
                     << "Owner cell vertex labels: "
-                    << mesh.cells()[own[faceI]].labels(f)
+                    << mesh.cells()[own[facei]].labels(f)
                     << endl;
             }
 
 
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
 
             nErrorPyrs++;
         }
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             // Create the neighbour pyramid - it will have positive volume
             scalar pyrVol =
-                pyramidPointFaceRef(f[faceI], cellCentres[nei[faceI]]).mag(p);
+                pyramidPointFaceRef(f[facei], cellCentres[nei[facei]]).mag(p);
 
             if (pyrVol < minPyrVol)
             {
@@ -618,18 +618,18 @@ bool Foam::polyMeshGeometry::checkFacePyramids
                     Pout<< "bool polyMeshGeometry::checkFacePyramids("
                         << "const bool, const scalar, const pointField&"
                         << ", const labelList&, labelHashSet*): "
-                        << "face " << faceI << " points the wrong way. " << endl
+                        << "face " << facei << " points the wrong way. " << endl
                         << "Pyramid volume: " << -pyrVol
-                        << " Face " << f[faceI] << " area: " << f[faceI].mag(p)
-                        << " Neighbour cell: " << nei[faceI] << endl
+                        << " Face " << f[facei] << " area: " << f[facei].mag(p)
+                        << " Neighbour cell: " << nei[facei] << endl
                         << "Neighbour cell vertex labels: "
-                        << mesh.cells()[nei[faceI]].labels(f)
+                        << mesh.cells()[nei[facei]].labels(f)
                         << endl;
                 }
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nErrorPyrs++;
@@ -752,9 +752,9 @@ bool Foam::polyMeshGeometry::checkFaceTets
     // Calculate coupled cell centre
     pointField neiCc(mesh.nFaces() - mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        neiCc[faceI - mesh.nInternalFaces()] = cellCentres[own[faceI]];
+        neiCc[facei - mesh.nInternalFaces()] = cellCentres[own[facei]];
     }
 
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
@@ -763,7 +763,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
         // Create the owner pyramid - note: exchange cell and face centre
         // to get positive volume.
@@ -773,9 +773,9 @@ bool Foam::polyMeshGeometry::checkFaceTets
             report,
             minTetQuality,
             p,
-            faceI,
-            cellCentres[own[faceI]],    // face centre
-            faceCentres[faceI],         // cell centre
+            facei,
+            cellCentres[own[facei]],    // face centre
+            faceCentres[facei],         // cell centre
             setPtr
         );
 
@@ -784,7 +784,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
             nErrorTets++;
         }
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             // Create the neighbour tets - they will have positive volume
             bool tetError = checkFaceTet
@@ -793,9 +793,9 @@ bool Foam::polyMeshGeometry::checkFaceTets
                 report,
                 minTetQuality,
                 p,
-                faceI,
-                faceCentres[faceI],         // face centre
-                cellCentres[nei[faceI]],    // cell centre
+                facei,
+                faceCentres[facei],         // face centre
+                cellCentres[nei[facei]],    // cell centre
                 setPtr
             );
 
@@ -809,7 +809,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
                 polyMeshTetDecomposition::findSharedBasePoint
                 (
                     mesh,
-                    faceI,
+                    facei,
                     minTetQuality,
                     report
                 ) == -1
@@ -817,7 +817,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nErrorTets++;
@@ -825,17 +825,17 @@ bool Foam::polyMeshGeometry::checkFaceTets
         }
         else
         {
-            label patchI = patches.whichPatch(faceI);
+            label patchi = patches.whichPatch(facei);
 
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
                 if
                 (
                     polyMeshTetDecomposition::findSharedBasePoint
                     (
                         mesh,
-                        faceI,
-                        neiCc[faceI - mesh.nInternalFaces()],
+                        facei,
+                        neiCc[facei - mesh.nInternalFaces()],
                         minTetQuality,
                         report
                     ) == -1
@@ -843,7 +843,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
                 {
                     if (setPtr)
                     {
-                        setPtr->insert(faceI);
+                        setPtr->insert(facei);
                     }
 
                     nErrorTets++;
@@ -856,7 +856,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
                     polyMeshTetDecomposition::findBasePoint
                     (
                         mesh,
-                        faceI,
+                        facei,
                         minTetQuality,
                         report
                     ) == -1
@@ -864,7 +864,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
                 {
                     if (setPtr)
                     {
-                        setPtr->insert(faceI);
+                        setPtr->insert(facei);
                     }
 
                     nErrorTets++;
@@ -991,9 +991,9 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             scalar skewness = primitiveMeshTools::faceSkewness
             (
@@ -1002,9 +1002,9 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
                 faceCentres,
                 faceAreas,
 
-                faceI,
-                cellCentres[own[faceI]],
-                cellCentres[nei[faceI]]
+                facei,
+                cellCentres[own[facei]],
+                cellCentres[nei[facei]]
             );
 
             // Check if the skewness vector is greater than the PN vector.
@@ -1014,13 +1014,13 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
             {
                 if (report)
                 {
-                    Pout<< "Severe skewness for face " << faceI
+                    Pout<< "Severe skewness for face " << facei
                         << " skewness = " << skewness << endl;
                 }
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nWarnSkew++;
@@ -1028,7 +1028,7 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
 
             maxSkew = max(maxSkew, skewness);
         }
-        else if (patches[patches.whichPatch(faceI)].coupled())
+        else if (patches[patches.whichPatch(facei)].coupled())
         {
             scalar skewness = primitiveMeshTools::faceSkewness
             (
@@ -1037,9 +1037,9 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
                 faceCentres,
                 faceAreas,
 
-                faceI,
-                cellCentres[own[faceI]],
-                neiCc[faceI-mesh.nInternalFaces()]
+                facei,
+                cellCentres[own[facei]],
+                neiCc[facei-mesh.nInternalFaces()]
             );
 
             // Check if the skewness vector is greater than the PN vector.
@@ -1049,13 +1049,13 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
             {
                 if (report)
                 {
-                    Pout<< "Severe skewness for coupled face " << faceI
+                    Pout<< "Severe skewness for coupled face " << facei
                         << " skewness = " << skewness << endl;
                 }
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nWarnSkew++;
@@ -1072,8 +1072,8 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
                 faceCentres,
                 faceAreas,
 
-                faceI,
-                cellCentres[own[faceI]]
+                facei,
+                cellCentres[own[facei]]
             );
 
 
@@ -1084,13 +1084,13 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
             {
                 if (report)
                 {
-                    Pout<< "Severe skewness for boundary face " << faceI
+                    Pout<< "Severe skewness for boundary face " << facei
                         << " skewness = " << skewness << endl;
                 }
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nWarnSkew++;
@@ -1194,9 +1194,9 @@ bool Foam::polyMeshGeometry::checkFaceWeights
     // Calculate coupled cell centre
     pointField neiCc(mesh.nFaces()-mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        neiCc[faceI-mesh.nInternalFaces()] = cellCentres[own[faceI]];
+        neiCc[facei-mesh.nInternalFaces()] = cellCentres[own[facei]];
     }
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
 
@@ -1207,29 +1207,29 @@ bool Foam::polyMeshGeometry::checkFaceWeights
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        const point& fc = faceCentres[faceI];
-        const vector& fa = faceAreas[faceI];
+        const point& fc = faceCentres[facei];
+        const vector& fa = faceAreas[facei];
 
-        scalar dOwn = mag(fa & (fc-cellCentres[own[faceI]]));
+        scalar dOwn = mag(fa & (fc-cellCentres[own[facei]]));
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
-            scalar dNei = mag(fa & (cellCentres[nei[faceI]]-fc));
+            scalar dNei = mag(fa & (cellCentres[nei[facei]]-fc));
             scalar weight = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
 
             if (weight < warnWeight)
             {
                 if (report)
                 {
-                    Pout<< "Small weighting factor for face " << faceI
+                    Pout<< "Small weighting factor for face " << facei
                         << " weight = " << weight << endl;
                 }
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nWarnWeight++;
@@ -1239,24 +1239,24 @@ bool Foam::polyMeshGeometry::checkFaceWeights
         }
         else
         {
-            label patchI = patches.whichPatch(faceI);
+            label patchi = patches.whichPatch(facei);
 
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
-                scalar dNei = mag(fa & (neiCc[faceI-mesh.nInternalFaces()]-fc));
+                scalar dNei = mag(fa & (neiCc[facei-mesh.nInternalFaces()]-fc));
                 scalar weight = min(dNei,dOwn)/(dNei+dOwn+VSMALL);
 
                 if (weight < warnWeight)
                 {
                     if (report)
                     {
-                        Pout<< "Small weighting factor for face " << faceI
+                        Pout<< "Small weighting factor for face " << facei
                             << " weight = " << weight << endl;
                     }
 
                     if (setPtr)
                     {
-                        setPtr->insert(faceI);
+                        setPtr->insert(facei);
                     }
 
                     nWarnWeight++;
@@ -1347,9 +1347,9 @@ bool Foam::polyMeshGeometry::checkVolRatio
     // Calculate coupled cell vol
     scalarField neiVols(mesh.nFaces()-mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        neiVols[faceI-mesh.nInternalFaces()] = cellVolumes[own[faceI]];
+        neiVols[facei-mesh.nInternalFaces()] = cellVolumes[own[facei]];
     }
     syncTools::swapBoundaryFaceList(mesh, neiVols);
 
@@ -1360,23 +1360,23 @@ bool Foam::polyMeshGeometry::checkVolRatio
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        scalar ownVol = mag(cellVolumes[own[faceI]]);
+        scalar ownVol = mag(cellVolumes[own[facei]]);
 
         scalar neiVol = -GREAT;
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
-            neiVol = mag(cellVolumes[nei[faceI]]);
+            neiVol = mag(cellVolumes[nei[facei]]);
         }
         else
         {
-            label patchI = patches.whichPatch(faceI);
+            label patchi = patches.whichPatch(facei);
 
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
-                neiVol = mag(neiVols[faceI-mesh.nInternalFaces()]);
+                neiVol = mag(neiVols[facei-mesh.nInternalFaces()]);
             }
         }
 
@@ -1388,13 +1388,13 @@ bool Foam::polyMeshGeometry::checkVolRatio
             {
                 if (report)
                 {
-                    Pout<< "Small ratio for face " << faceI
+                    Pout<< "Small ratio for face " << facei
                         << " ratio = " << ratio << endl;
                 }
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nWarnRatio++;
@@ -1499,11 +1499,11 @@ bool Foam::polyMeshGeometry::checkFaceAngles
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
-        vector faceNormal = faceAreas[faceI];
+        vector faceNormal = faceAreas[facei];
         faceNormal /= mag(faceNormal) + VSMALL;
 
         // Get edge from f[0] to f[size-1];
@@ -1537,16 +1537,16 @@ bool Foam::polyMeshGeometry::checkFaceAngles
 
                     if ((edgeNormal & faceNormal) < SMALL)
                     {
-                        if (faceI != errorFaceI)
+                        if (facei != errorFaceI)
                         {
                             // Count only one error per face.
-                            errorFaceI = faceI;
+                            errorFaceI = facei;
                             nConcave++;
                         }
 
                         if (setPtr)
                         {
-                            setPtr->insert(faceI);
+                            setPtr->insert(facei);
                         }
 
                         maxEdgeSin = max(maxEdgeSin, magEdgeNormal);
@@ -1630,17 +1630,17 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 
 //    forAll(checkFaces, i)
 //    {
-//        label faceI = checkFaces[i];
+//        label facei = checkFaces[i];
 //
-//        const face& f = fcs[faceI];
+//        const face& f = fcs[facei];
 //
-//        scalar magArea = mag(faceAreas[faceI]);
+//        scalar magArea = mag(faceAreas[facei]);
 //
 //        if (f.size() > 3 && magArea > VSMALL)
 //        {
-//            const vector nf = faceAreas[faceI] / magArea;
+//            const vector nf = faceAreas[facei] / magArea;
 //
-//            const point& fc = faceCentres[faceI];
+//            const point& fc = faceCentres[facei];
 //
 //            forAll(f, fpI)
 //            {
@@ -1662,7 +1662,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 //
 //                    if (setPtr)
 //                    {
-//                        setPtr->insert(faceI);
+//                        setPtr->insert(facei);
 //                    }
 //
 //                    break;
@@ -1679,43 +1679,43 @@ bool Foam::polyMeshGeometry::checkFaceTwist
     // Calculate coupled cell centre
     pointField neiCc(mesh.nFaces()-mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        neiCc[faceI-mesh.nInternalFaces()] = cellCentres[own[faceI]];
+        neiCc[facei-mesh.nInternalFaces()] = cellCentres[own[facei]];
     }
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
         if (f.size() > 3)
         {
             vector nf(Zero);
 
-            if (mesh.isInternalFace(faceI))
+            if (mesh.isInternalFace(facei))
             {
-                nf = cellCentres[nei[faceI]] - cellCentres[own[faceI]];
+                nf = cellCentres[nei[facei]] - cellCentres[own[facei]];
                 nf /= mag(nf) + VSMALL;
             }
-            else if (patches[patches.whichPatch(faceI)].coupled())
+            else if (patches[patches.whichPatch(facei)].coupled())
             {
                 nf =
-                    neiCc[faceI-mesh.nInternalFaces()]
-                  - cellCentres[own[faceI]];
+                    neiCc[facei-mesh.nInternalFaces()]
+                  - cellCentres[own[facei]];
                 nf /= mag(nf) + VSMALL;
             }
             else
             {
-                nf = faceCentres[faceI] - cellCentres[own[faceI]];
+                nf = faceCentres[facei] - cellCentres[own[facei]];
                 nf /= mag(nf) + VSMALL;
             }
 
             if (nf != vector::zero)
             {
-                const point& fc = faceCentres[faceI];
+                const point& fc = faceCentres[facei];
 
                 forAll(f, fpI)
                 {
@@ -1737,7 +1737,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 
                         if (setPtr)
                         {
-                            setPtr->insert(faceI);
+                            setPtr->insert(facei);
                         }
 
                         break;
@@ -1812,13 +1812,13 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
         if (f.size() > 3)
         {
-            const point& fc = faceCentres[faceI];
+            const point& fc = faceCentres[facei];
 
             // Find starting triangle (at startFp) with non-zero area
             label startFp = -1;
@@ -1872,7 +1872,7 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
 
                             if (setPtr)
                             {
-                                setPtr->insert(faceI);
+                                setPtr->insert(facei);
                             }
 
                             break;
@@ -1886,7 +1886,7 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
 
                         if (setPtr)
                         {
-                            setPtr->insert(faceI);
+                            setPtr->insert(facei);
                         }
 
                         break;
@@ -1962,13 +1962,13 @@ bool Foam::polyMeshGeometry::checkFaceFlatness
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
         if (f.size() > 3)
         {
-            const point& fc = faceCentres[faceI];
+            const point& fc = faceCentres[facei];
 
             // Sum triangle areas
             scalar sumArea = 0.0;
@@ -1983,13 +1983,13 @@ bool Foam::polyMeshGeometry::checkFaceFlatness
                 ).mag();
             }
 
-            if (sumArea/mag(faceAreas[faceI]) < minFlatness)
+            if (sumArea/mag(faceAreas[facei]) < minFlatness)
             {
                 nWarped++;
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
             }
         }
@@ -2049,13 +2049,13 @@ bool Foam::polyMeshGeometry::checkFaceArea
 
     forAll(checkFaces, i)
     {
-        label faceI = checkFaces[i];
+        label facei = checkFaces[i];
 
-        if (mag(faceAreas[faceI]) < minArea)
+        if (mag(faceAreas[facei]) < minArea)
         {
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
             nZeroArea++;
         }
@@ -2123,12 +2123,12 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
 
         forAll(cFaces, cFaceI)
         {
-            label faceI = cFaces[cFaceI];
+            label facei = cFaces[cFaceI];
 
-            scalar magArea = mag(faceAreas[faceI]);
+            scalar magArea = mag(faceAreas[facei]);
 
             magAreaSum += magArea;
-            areaSum += faceAreas[faceI]*(faceAreas[faceI]/(magArea+VSMALL));
+            areaSum += faceAreas[facei]*(faceAreas[facei]/(magArea+VSMALL));
         }
 
         scalar scaledDet = det(areaSum/(magAreaSum+VSMALL))/0.037037037037037;
@@ -2144,8 +2144,8 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
                 // Insert all faces of the cell.
                 forAll(cFaces, cFaceI)
                 {
-                    label faceI = cFaces[cFaceI];
-                    setPtr->insert(faceI);
+                    label facei = cFaces[cFaceI];
+                    setPtr->insert(facei);
                 }
             }
             nWarnDet++;

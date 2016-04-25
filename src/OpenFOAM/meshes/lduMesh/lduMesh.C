@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,10 +101,10 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<lduMesh>& ip)
     {
         const labelList& l = addr.lowerAddr();
         const labelList& u = addr.upperAddr();
-        forAll(l, faceI)
+        forAll(l, facei)
         {
-            os  << "        face:" << faceI << " l:" << l[faceI]
-                << " u:" << u[faceI] << endl;
+            os  << "        face:" << facei << " l:" << l[facei]
+                << " u:" << u[facei] << endl;
         }
         forAll(interfaces, i)
         {

@@ -249,15 +249,15 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                     scalar normalAlignment = normal & pW/(mag(pW) + SMALL);
 
                     // Find the patchIndex and wallData for WallSiteData object
-                    label patchI = patchID[realFaceI - mesh.nInternalFaces()];
+                    label patchi = patchID[realFaceI - mesh.nInternalFaces()];
 
                     label patchFaceI =
-                        realFaceI - mesh.boundaryMesh()[patchI].start();
+                        realFaceI - mesh.boundaryMesh()[patchi].start();
 
                     WallSiteData<vector> wSD
                     (
-                        patchI,
-                        U.boundaryField()[patchI][patchFaceI]
+                        patchi,
+                        U.boundaryField()[patchi][patchFaceI]
                     );
 
                     bool particleHit = false;
@@ -307,7 +307,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                         this->owner().functions().postPatch
                         (
                             p,
-                            mesh.boundaryMesh()[patchI],
+                            mesh.boundaryMesh()[patchi],
                             1.0,
                             p.currentTetIndices(),
                             keep

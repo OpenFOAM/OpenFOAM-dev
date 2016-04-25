@@ -159,24 +159,24 @@ void Foam::singleStepReactingMixture<ThermoType>::fresCorrect()
         const label speciei = reaction.rhs()[i].index;
         if (speciei != inertIndex_)
         {
-            forAll(fres_[speciei], cellI)
+            forAll(fres_[speciei], celli)
             {
-                if (fres_[fuelIndex_][cellI] > 0.0)
+                if (fres_[fuelIndex_][celli] > 0.0)
                 {
                     // rich mixture
-                    fres_[speciei][cellI] =
+                    fres_[speciei][celli] =
                         Yprod0_[speciei]
-                      * (1.0 + YO2[cellI]/s_.value() - YFuel[cellI]);
+                      * (1.0 + YO2[celli]/s_.value() - YFuel[celli]);
                 }
                 else
                 {
                     // lean mixture
-                    fres_[speciei][cellI] =
+                    fres_[speciei][celli] =
                         Yprod0_[speciei]
                       * (
                             1.0
-                          - YO2[cellI]/s_.value()*stoicRatio_.value()
-                          + YFuel[cellI]*stoicRatio_.value()
+                          - YO2[celli]/s_.value()*stoicRatio_.value()
+                          + YFuel[celli]*stoicRatio_.value()
                         );
                 }
             }

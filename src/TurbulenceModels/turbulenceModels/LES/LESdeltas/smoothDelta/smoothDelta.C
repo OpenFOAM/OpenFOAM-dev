@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,31 +49,31 @@ void Foam::LESModels::smoothDelta::setChangedFaces
     DynamicList<deltaData>& changedFacesInfo
 )
 {
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        scalar ownDelta = delta[mesh.faceOwner()[faceI]];
+        scalar ownDelta = delta[mesh.faceOwner()[facei]];
 
-        scalar neiDelta = delta[mesh.faceNeighbour()[faceI]];
+        scalar neiDelta = delta[mesh.faceNeighbour()[facei]];
 
         // Check if owner delta much larger than neighbour delta or vice versa
 
         if (ownDelta > maxDeltaRatio_ * neiDelta)
         {
-            changedFaces.append(faceI);
+            changedFaces.append(facei);
             changedFacesInfo.append(deltaData(ownDelta));
         }
         else if (neiDelta > maxDeltaRatio_ * ownDelta)
         {
-            changedFaces.append(faceI);
+            changedFaces.append(facei);
             changedFacesInfo.append(deltaData(neiDelta));
         }
     }
 
     // Insert all faces of coupled patches no matter what. Let FaceCellWave
     // sort it out.
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
         if (patch.coupled())
         {
@@ -109,9 +109,9 @@ void Foam::LESModels::smoothDelta::calcDelta()
     // Set initial field on cells.
     List<deltaData> cellDeltaData(mesh.nCells());
 
-    forAll(geometricDelta, cellI)
+    forAll(geometricDelta, celli)
     {
-        cellDeltaData[cellI] = geometricDelta[cellI];
+        cellDeltaData[celli] = geometricDelta[celli];
     }
 
     // Set initial field on faces.
@@ -130,9 +130,9 @@ void Foam::LESModels::smoothDelta::calcDelta()
         maxDeltaRatio_
     );
 
-    forAll(delta_, cellI)
+    forAll(delta_, celli)
     {
-        delta_[cellI] = cellDeltaData[cellI].delta();
+        delta_[celli] = cellDeltaData[celli].delta();
     }
 }
 

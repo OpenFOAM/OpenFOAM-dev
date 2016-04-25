@@ -59,13 +59,13 @@ void Foam::porosityModels::fixedCoeff::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
             const label j = fieldIndex(i);
-            const tensor Cd = rho*(alphaZones[j] + betaZones[j]*mag(U[cellI]));
+            const tensor Cd = rho*(alphaZones[j] + betaZones[j]*mag(U[celli]));
             const scalar isoCd = tr(Cd);
 
-            Udiag[cellI] += V[cellI]*isoCd;
-            Usource[cellI] -= V[cellI]*((Cd - I*isoCd) & U[cellI]);
+            Udiag[celli] += V[celli]*isoCd;
+            Usource[celli] -= V[celli]*((Cd - I*isoCd) & U[celli]);
         }
     }
 }
@@ -88,12 +88,12 @@ void Foam::porosityModels::fixedCoeff::apply
 
         forAll(cells, i)
         {
-            const label cellI = cells[i];
+            const label celli = cells[i];
             const label j = fieldIndex(i);
             const tensor alpha = alphaZones[j];
             const tensor beta = betaZones[j];
 
-            AU[cellI] += rho*(alpha + beta*mag(U[cellI]));
+            AU[celli] += rho*(alpha + beta*mag(U[celli]));
         }
     }
 }

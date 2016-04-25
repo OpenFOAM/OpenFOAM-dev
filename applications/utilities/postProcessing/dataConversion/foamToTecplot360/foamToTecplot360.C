@@ -324,9 +324,9 @@ int main(int argc, char *argv[])
         const fvMesh& mesh = vMesh.mesh();
 
         INTEGER4 nFaceNodes = 0;
-        forAll(mesh.faces(), faceI)
+        forAll(mesh.faces(), facei)
         {
-            nFaceNodes += mesh.faces()[faceI].size();
+            nFaceNodes += mesh.faces()[facei].size();
         }
 
 

@@ -482,19 +482,19 @@ void ensightField
             label j = 0;
             forAll(fz, i)
             {
-                label faceI = fz[i];
-                if (mesh.isInternalFace(faceI))
+                label facei = fz[i];
+                if (mesh.isInternalFace(facei))
                 {
-                    values[j] = sf[faceI];
+                    values[j] = sf[facei];
                     ++j;
                 }
                 else
                 {
-                    if (eMesh.faceToBeIncluded(faceI))
+                    if (eMesh.faceToBeIncluded(facei))
                     {
-                        label patchi = mesh.boundaryMesh().whichPatch(faceI);
+                        label patchi = mesh.boundaryMesh().whichPatch(facei);
                         const polyPatch& pp = mesh.boundaryMesh()[patchi];
-                        label patchFaceI = pp.whichFace(faceI);
+                        label patchFaceI = pp.whichFace(facei);
                         Type value = sf.boundaryField()[patchi][patchFaceI];
                         values[j] = value;
                         ++j;

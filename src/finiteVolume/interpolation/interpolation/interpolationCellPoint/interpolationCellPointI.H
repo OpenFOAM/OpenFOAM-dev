@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,11 +47,11 @@ template<class Type>
 inline Type Foam::interpolationCellPoint<Type>::interpolate
 (
     const vector& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 ) const
 {
-    return interpolate(cellPointWeight(this->pMesh_, position, cellI, faceI));
+    return interpolate(cellPointWeight(this->pMesh_, position, celli, facei));
 }
 
 
@@ -60,20 +60,20 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
 (
     const vector& position,
     const tetIndices& tetIs,
-    const label faceI
+    const label facei
 ) const
 {
     // Assumes that the position is consistent with the supplied
-    // tetIndices.  Does not pay attention to whether or not faceI is
+    // tetIndices.  Does not pay attention to whether or not facei is
     // supplied or not - the result will be essentially the same.
     // Performs a consistency check, however.
 
-    if (faceI >= 0)
+    if (facei >= 0)
     {
-        if (faceI != tetIs.face())
+        if (facei != tetIs.face())
         {
             FatalErrorInFunction
-                << "specified face " << faceI << " inconsistent with the face "
+                << "specified face " << facei << " inconsistent with the face "
                 << "stored by tetIndices: " << tetIs.face()
                 << exit(FatalError);
         }

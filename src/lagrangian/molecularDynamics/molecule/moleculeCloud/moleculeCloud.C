@@ -198,11 +198,11 @@ void Foam::moleculeCloud::calculatePairForce()
             {
                 forAll(realCells, rC)
                 {
-                    List<molecule*> cellI = cellOccupancy_[realCells[rC]];
+                    List<molecule*> celli = cellOccupancy_[realCells[rC]];
 
-                    forAll(cellI, cellIMols)
+                    forAll(celli, cellIMols)
                     {
-                        molI = cellI[cellIMols];
+                        molI = celli[cellIMols];
 
                         evaluatePair(*molI, refMol());
                     }
@@ -395,9 +395,9 @@ void Foam::moleculeCloud::removeHighEnergyOverlaps()
 
                 forAll(realCells, rC)
                 {
-                    label cellI = realCells[rC];
+                    label celli = realCells[rC];
 
-                    List<molecule*> cellIMols = cellOccupancy_[cellI];
+                    List<molecule*> cellIMols = cellOccupancy_[celli];
 
                     forAll(cellIMols, cIM)
                     {

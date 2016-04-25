@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,9 +42,9 @@ bool Foam::primitiveMesh::checkEdgeLength
 
     labelHashSet smallEdgeSet(nPoints()/100);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, fp)
         {

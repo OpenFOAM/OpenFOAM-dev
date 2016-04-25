@@ -44,7 +44,7 @@ void Foam::PatchTools::markZone
 (
     const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
     const BoolListType& borderEdge,
-    const label faceI,
+    const label facei,
     const label currentZone,
     labelList&  faceZone
 )
@@ -53,7 +53,7 @@ void Foam::PatchTools::markZone
     const labelListList& edgeFaces = p.edgeFaces();
 
     // List of faces whose faceZone has been set.
-    labelList changedFaces(1, faceI);
+    labelList changedFaces(1, facei);
 
     while (true)
     {
@@ -62,9 +62,9 @@ void Foam::PatchTools::markZone
 
         forAll(changedFaces, i)
         {
-            label faceI = changedFaces[i];
+            label facei = changedFaces[i];
 
-            const labelList& fEdges = faceEdges[faceI];
+            const labelList& fEdges = faceEdges[facei];
 
             forAll(fEdges, fEdgeI)
             {
@@ -89,7 +89,7 @@ void Foam::PatchTools::markZone
                                 << "Zones " << faceZone[nbrFaceI]
                                 << " at face " << nbrFaceI
                                 << " connects to zone " << currentZone
-                                << " at face " << faceI
+                                << " at face " << facei
                                 << abort(FatalError);
                         }
                     }
@@ -166,7 +166,7 @@ Foam::PatchTools::subsetMap
     labelList& faceMap
 )
 {
-    label faceI  = 0;
+    label facei  = 0;
     label pointI = 0;
 
     const List<Face>& localFaces = p.localFaces();
@@ -181,7 +181,7 @@ Foam::PatchTools::subsetMap
         if (includeFaces[oldFaceI])
         {
             // Store new faces compact
-            faceMap[faceI++] = oldFaceI;
+            faceMap[facei++] = oldFaceI;
 
             // Renumber labels for face
             const Face& f = localFaces[oldFaceI];
@@ -199,7 +199,7 @@ Foam::PatchTools::subsetMap
     }
 
     // Trim
-    faceMap.setSize(faceI);
+    faceMap.setSize(facei);
     pointMap.setSize(pointI);
 }
 
@@ -227,9 +227,9 @@ void Foam::PatchTools::calcBounds
     nPoints = 0;
     bb = boundBox::invertedBox;
 
-    forAll(p, faceI)
+    forAll(p, facei)
     {
-        const Face& f = p[faceI];
+        const Face& f = p[facei];
 
         forAll(f, fp)
         {

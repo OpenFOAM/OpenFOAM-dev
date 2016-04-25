@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,14 +207,14 @@ bool Foam::fileFormats::STARCDsurfaceFormat<Face>::read
                 label nTri = 0;
                 f.triangles(this->points(), nTri, triFaces);
 
-                forAll(triFaces, faceI)
+                forAll(triFaces, facei)
                 {
                     // a triangular face, but not yet a triFace
                     dynFaces.append
                     (
                         triFace
                         (
-                            static_cast<labelUList&>(triFaces[faceI])
+                            static_cast<labelUList&>(triFaces[facei])
                         )
                     );
                     dynZones.append(zoneI);

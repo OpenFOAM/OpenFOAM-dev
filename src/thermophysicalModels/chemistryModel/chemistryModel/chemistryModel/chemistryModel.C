@@ -574,10 +574,10 @@ Foam::chemistryModel<CompType, ThermoType>::Sh() const
 
         forAll(Y_, i)
         {
-            forAll(Sh, cellI)
+            forAll(Sh, celli)
             {
                 const scalar hi = specieThermo_[i].Hc();
-                Sh[cellI] -= hi*RR_[i][cellI];
+                Sh[celli] -= hi*RR_[i][celli];
             }
         }
     }

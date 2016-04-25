@@ -40,14 +40,14 @@ void Foam::extendedFaceToCellStencil::collectData
     List<Type> flatFld(map.constructSize(), Zero);
 
     // Insert my internal values
-    forAll(fld, cellI)
+    forAll(fld, celli)
     {
-        flatFld[cellI] = fld[cellI];
+        flatFld[celli] = fld[celli];
     }
     // Insert my boundary values
-    forAll(fld.boundaryField(), patchI)
+    forAll(fld.boundaryField(), patchi)
     {
-        const fvsPatchField<Type>& pfld = fld.boundaryField()[patchI];
+        const fvsPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
         label nCompact = pfld.patch().start();
 
@@ -63,15 +63,15 @@ void Foam::extendedFaceToCellStencil::collectData
     // 2. Pull to stencil
     stencilFld.setSize(stencil.size());
 
-    forAll(stencil, faceI)
+    forAll(stencil, facei)
     {
-        const labelList& compactCells = stencil[faceI];
+        const labelList& compactCells = stencil[facei];
 
-        stencilFld[faceI].setSize(compactCells.size());
+        stencilFld[facei].setSize(compactCells.size());
 
         forAll(compactCells, i)
         {
-            stencilFld[faceI][i] = flatFld[compactCells[i]];
+            stencilFld[facei][i] = flatFld[compactCells[i]];
         }
     }
 }
@@ -115,14 +115,14 @@ Foam::extendedFaceToCellStencil::weightedSum
     GeometricField<Type, fvPatchField, volMesh>& sf = tsfCorr.ref();
 
     // cells
-    forAll(sf, cellI)
+    forAll(sf, celli)
     {
-        const List<Type>& stField = stencilFld[cellI];
-        const List<scalar>& stWeight = stencilWeights[cellI];
+        const List<Type>& stField = stencilFld[celli];
+        const List<scalar>& stWeight = stencilWeights[celli];
 
         forAll(stField, i)
         {
-            sf[cellI] += stField[i]*stWeight[i];
+            sf[celli] += stField[i]*stWeight[i];
         }
     }
 

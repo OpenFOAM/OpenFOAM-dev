@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,22 +75,22 @@ void Foam::faceToCell::combine(topoSet& set, const bool add) const
     // Handle owner/neighbour/any selection
     forAllConstIter(faceSet, loadedSet, iter)
     {
-        const label faceI = iter.key();
+        const label facei = iter.key();
 
         if ((option_ == OWNER) || (option_ == ANY))
         {
-            const label cellI = mesh_.faceOwner()[faceI];
+            const label celli = mesh_.faceOwner()[facei];
 
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
             if ((option_ == NEIGHBOUR) || (option_ == ANY))
             {
-                const label cellI = mesh_.faceNeighbour()[faceI];
+                const label celli = mesh_.faceNeighbour()[facei];
 
-                addOrDelete(set, cellI, add);
+                addOrDelete(set, celli, add);
             }
         }
     }
@@ -104,8 +104,8 @@ void Foam::faceToCell::combine(topoSet& set, const bool add) const
 
         forAllConstIter(faceSet, loadedSet, iter)
         {
-            const label faceI = iter.key();
-            const label own = mesh_.faceOwner()[faceI];
+            const label facei = iter.key();
+            const label own = mesh_.faceOwner()[facei];
 
             Map<label>::iterator fndOwn = facesPerCell.find(own);
 
@@ -118,9 +118,9 @@ void Foam::faceToCell::combine(topoSet& set, const bool add) const
                 fndOwn()++;
             }
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label nei = mesh_.faceNeighbour()[faceI];
+                label nei = mesh_.faceNeighbour()[facei];
 
                 Map<label>::iterator fndNei = facesPerCell.find(nei);
 
@@ -139,11 +139,11 @@ void Foam::faceToCell::combine(topoSet& set, const bool add) const
         // -> all faces in set.
         forAllConstIter(Map<label>, facesPerCell, iter)
         {
-            const label cellI = iter.key();
+            const label celli = iter.key();
 
-            if (iter() == mesh_.cells()[cellI].size())
+            if (iter() == mesh_.cells()[celli].size())
             {
-                addOrDelete(set, cellI, add);
+                addOrDelete(set, celli, add);
             }
         }
     }

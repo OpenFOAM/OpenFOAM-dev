@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,16 +98,16 @@ void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
     // Set zero value at the start of the tri area list
     triMagSf.append(0.0);
 
-    forAll(patch, faceI)
+    forAll(patch, facei)
     {
-        const face& f = patch[faceI];
+        const face& f = patch[facei];
 
         tris.clear();
         f.triangles(points, tris);
 
         forAll(tris, i)
         {
-            triToFace.append(faceI);
+            triToFace.append(facei);
             triFace.append(tris[i]);
             triMagSf.append(tris[i].mag(points));
         }
@@ -193,8 +193,8 @@ void Foam::patchInjectionBase::setPositionAndCell
             }
 
             // Set cellOwner
-            label faceI = triToFace_[triI];
-            cellOwner = cellOwners_[faceI];
+            label facei = triToFace_[triI];
+            cellOwner = cellOwners_[facei];
 
             // Find random point in triangle
             const polyPatch& patch = mesh.boundaryMesh()[patchId_];
@@ -206,7 +206,7 @@ void Foam::patchInjectionBase::setPositionAndCell
             // Position perturbed away from face (into domain)
             const scalar a = rnd.position(scalar(0.1), scalar(0.5));
             const vector& pc = mesh.cellCentres()[cellOwner];
-            const vector d = mag(pf - pc)*patchNormal_[faceI];
+            const vector d = mag(pf - pc)*patchNormal_[facei];
 
             position = pf - a*d;
 

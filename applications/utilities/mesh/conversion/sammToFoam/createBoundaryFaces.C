@@ -76,11 +76,11 @@ void Foam::sammMesh::createBoundaryFaces()
 
         const labelListList& PointCells = pointCells();
 
-        forAll(patchFaces, faceI)
+        forAll(patchFaces, facei)
         {
             bool found = false;
 
-            face& curFace = patchFaces[faceI];
+            face& curFace = patchFaces[facei];
             const labelList& facePoints = curFace;
 
             forAll(facePoints, pointI)
@@ -88,10 +88,10 @@ void Foam::sammMesh::createBoundaryFaces()
                 const labelList& facePointCells =
                     PointCells[facePoints[pointI]];
 
-                forAll(facePointCells, cellI)
+                forAll(facePointCells, celli)
                 {
                     const faceList& curCellFaces =
-                        cellFaces_[facePointCells[cellI]];
+                        cellFaces_[facePointCells[celli]];
 
                     forAll(curCellFaces, cellFaceI)
                     {
@@ -113,7 +113,7 @@ void Foam::sammMesh::createBoundaryFaces()
             if (!found)
             {
                 FatalErrorInFunction
-                    << "Face " << faceI
+                    << "Face " << facei
                     << " does not have neighbour cell." << endl
                     << "    face : " << endl << curFace
                     << abort(FatalError);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,9 +54,9 @@ sortLabelledTri::sortLabelledTri(const triSurface& surf)
 {
 
     // Set the face label
-    forAll(surf, faceI)
+    forAll(surf, facei)
     {
-        operator[](faceI).index_ = faceI;
+        operator[](facei).index_ = facei;
     }
 
     // Sort according to region number.

@@ -48,15 +48,15 @@ Foam::particle::particle
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI
 )
 :
     mesh_(mesh),
     position_(position),
-    cellI_(cellI),
-    faceI_(-1),
+    celli_(celli),
+    facei_(-1),
     stepFraction_(0.0),
     tetFaceI_(tetFaceI),
     tetPtI_(tetPtI),
@@ -69,14 +69,14 @@ Foam::particle::particle
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     bool doCellFacePt
 )
 :
     mesh_(mesh),
     position_(position),
-    cellI_(cellI),
-    faceI_(-1),
+    celli_(celli),
+    facei_(-1),
     stepFraction_(0.0),
     tetFaceI_(-1),
     tetPtI_(-1),
@@ -94,8 +94,8 @@ Foam::particle::particle(const particle& p)
 :
     mesh_(p.mesh_),
     position_(p.position_),
-    cellI_(p.cellI_),
-    faceI_(p.faceI_),
+    celli_(p.celli_),
+    facei_(p.facei_),
     stepFraction_(p.stepFraction_),
     tetFaceI_(p.tetFaceI_),
     tetPtI_(p.tetPtI_),
@@ -108,8 +108,8 @@ Foam::particle::particle(const particle& p, const polyMesh& mesh)
 :
     mesh_(mesh),
     position_(p.position_),
-    cellI_(p.cellI_),
-    faceI_(p.faceI_),
+    celli_(p.celli_),
+    facei_(p.facei_),
     stepFraction_(p.stepFraction_),
     tetFaceI_(p.tetFaceI_),
     tetPtI_(p.tetPtI_),

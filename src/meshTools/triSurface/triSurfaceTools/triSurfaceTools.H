@@ -75,13 +75,13 @@ class triSurfaceTools
             static void calcRefineStatus
             (
                 const triSurface& surf,
-                const label faceI,
+                const label facei,
                 List<refineType>& refine
             );
             static void greenRefine
             (
                 const triSurface& surf,
-                const label faceI,
+                const label facei,
                 const label edgeI,
                 const label newPointI,
                 DynamicList<labelledTri>& newFaces
@@ -143,7 +143,7 @@ class triSurfaceTools
                 HashTable<label, label, Hash<label>>& edgeToFace
             );
 
-            //- Calculates (cos of) angle across edgeI of faceI,
+            //- Calculates (cos of) angle across edgeI of facei,
             //  taking into account updated addressing (resulting from edge
             //  collapse)
             static scalar edgeCosAngle
@@ -154,7 +154,7 @@ class triSurfaceTools
                 const labelHashSet& collapsedFaces,
                 const HashTable<label, label, Hash<label>>& edgeToEdge,
                 const HashTable<label, label, Hash<label>>& edgeToFace,
-                const label faceI,
+                const label facei,
                 const label edgeI
             );
 
@@ -287,30 +287,30 @@ public:
         //    label& vB
         //);
 
-        //- Get face connected to edge not faceI
+        //- Get face connected to edge not facei
         static label otherFace
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label edgeI
         );
 
-        //- Get the two edges on faceI counterclockwise after edgeI
+        //- Get the two edges on facei counterclockwise after edgeI
         static void otherEdges
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label edgeI,
             label& e1,
             label& e2
         );
 
-        //- Get the two vertices (local numbering) on faceI counterclockwise
+        //- Get the two vertices (local numbering) on facei counterclockwise
         //  vertI
         static void otherVertices
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label vertI,
             label& vert1I,
             label& vert2I
@@ -320,7 +320,7 @@ public:
         static label oppositeEdge
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label vertI
         );
 
@@ -328,7 +328,7 @@ public:
         static label oppositeVertex
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label edgeI
         );
 

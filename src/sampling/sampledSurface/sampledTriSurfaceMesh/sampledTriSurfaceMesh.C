@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,9 +94,9 @@ Foam::sampledTriSurfaceMesh::nonCoupledboundaryTree() const
 
         labelList bndFaces(mesh().nFaces()-mesh().nInternalFaces());
         label bndI = 0;
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
             if (!pp.coupled())
             {
                 forAll(pp, i)
@@ -274,13 +274,13 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
         label newPointI = 0;
         label newFaceI = 0;
 
-        forAll(s, faceI)
+        forAll(s, facei)
         {
-            if (cellOrFaceLabels[faceI] != -1)
+            if (cellOrFaceLabels[facei] != -1)
             {
-                faceMap[newFaceI++] = faceI;
+                faceMap[newFaceI++] = facei;
 
-                const triSurface::FaceType& f = s[faceI];
+                const triSurface::FaceType& f = s[facei];
                 forAll(f, fp)
                 {
                     if (reversePointMap[f[fp]] == -1)
@@ -348,8 +348,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             forAll(points(), pointI)
             {
                 const point& pt = points()[pointI];
-                label cellI = cellOrFaceLabels[pointToFace[pointI]];
-                sampleElements_[pointI] = cellI;
+                label celli = cellOrFaceLabels[pointToFace[pointI]];
+                sampleElements_[pointI] = celli;
 
                 // Check if point inside cell
                 if
@@ -367,7 +367,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                 else
                 {
                     // Find nearest point on faces of cell
-                    const cell& cFaces = mesh().cells()[cellI];
+                    const cell& cFaces = mesh().cells()[celli];
 
                     scalar minDistSqr = VGREAT;
 
@@ -392,8 +392,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             forAll(points(), pointI)
             {
                 const point& pt = points()[pointI];
-                label cellI = cellOrFaceLabels[pointToFace[pointI]];
-                sampleElements_[pointI] = cellI;
+                label celli = cellOrFaceLabels[pointToFace[pointI]];
+                sampleElements_[pointI] = celli;
                 samplePoints_[pointI] = pt;
             }
         }
@@ -406,9 +406,9 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             forAll(points(), pointI)
             {
                 const point& pt = points()[pointI];
-                label faceI = cellOrFaceLabels[pointToFace[pointI]];
-                sampleElements_[pointI] = faceI;
-                samplePoints_[pointI] =  mesh().faces()[faceI].nearestPoint
+                label facei = cellOrFaceLabels[pointToFace[pointI]];
+                sampleElements_[pointI] = facei;
+                samplePoints_[pointI] =  mesh().faces()[facei].nearestPoint
                 (
                     pt,
                     mesh().points()
@@ -452,8 +452,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                     meshTools::writeOBJ(str, samplePoints_[pointI]);
                     vertI++;
 
-                    label cellI = sampleElements_[pointI];
-                    meshTools::writeOBJ(str, mesh().cellCentres()[cellI]);
+                    label celli = sampleElements_[pointI];
+                    meshTools::writeOBJ(str, mesh().cellCentres()[celli]);
                     vertI++;
                     str << "l " << vertI-2 << ' ' << vertI-1 << ' ' << vertI
                         << nl;
@@ -469,8 +469,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                     meshTools::writeOBJ(str, samplePoints_[pointI]);
                     vertI++;
 
-                    label faceI = sampleElements_[pointI];
-                    meshTools::writeOBJ(str, mesh().faceCentres()[faceI]);
+                    label facei = sampleElements_[pointI];
+                    meshTools::writeOBJ(str, mesh().faceCentres()[facei]);
                     vertI++;
                     str << "l " << vertI-2 << ' ' << vertI-1 << ' ' << vertI
                         << nl;
@@ -486,8 +486,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                     meshTools::writeOBJ(str, faceCentres()[triI]);
                     vertI++;
 
-                    label cellI = sampleElements_[triI];
-                    meshTools::writeOBJ(str, mesh().cellCentres()[cellI]);
+                    label celli = sampleElements_[triI];
+                    meshTools::writeOBJ(str, mesh().cellCentres()[celli]);
                     vertI++;
                     str << "l " << vertI-1 << ' ' << vertI << nl;
                 }
@@ -499,8 +499,8 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                     meshTools::writeOBJ(str, faceCentres()[triI]);
                     vertI++;
 
-                    label faceI = sampleElements_[triI];
-                    meshTools::writeOBJ(str, mesh().faceCentres()[faceI]);
+                    label facei = sampleElements_[triI];
+                    meshTools::writeOBJ(str, mesh().faceCentres()[facei]);
                     vertI++;
                     str << "l " << vertI-1 << ' ' << vertI << nl;
                 }

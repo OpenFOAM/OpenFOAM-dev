@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,15 +127,15 @@ void Foam::sammMesh::readCouples()
         }
 
         // Once all couples are read, remove zero size faces from all cells
-        forAll(cellFaces_, cellI)
+        forAll(cellFaces_, celli)
         {
-            faceList& curFaces = cellFaces_[cellI];
+            faceList& curFaces = cellFaces_[celli];
 
             label zeroSizeFound = 0;
 
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
-                if (curFaces[faceI].empty())
+                if (curFaces[facei].empty())
                 {
                     zeroSizeFound++;
                 }
@@ -150,11 +150,11 @@ void Foam::sammMesh::readCouples()
 
                 label nFaces = 0;
 
-                forAll(oldFaces, faceI)
+                forAll(oldFaces, facei)
                 {
-                    if (oldFaces[faceI].size())
+                    if (oldFaces[facei].size())
                     {
-                        curFaces[nFaces] = oldFaces[faceI];
+                        curFaces[nFaces] = oldFaces[facei];
 
                         nFaces++;
                     }

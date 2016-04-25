@@ -98,10 +98,10 @@ void Foam::faceSelections::searchableSurfaceSelection::select
     pointField end(mesh_.nFaces());
 
     // Internal faces
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        start[faceI] = mesh_.cellCentres()[mesh_.faceOwner()[faceI]];
-        end[faceI] = mesh_.cellCentres()[mesh_.faceNeighbour()[faceI]];
+        start[facei] = mesh_.cellCentres()[mesh_.faceOwner()[facei]];
+        end[facei] = mesh_.cellCentres()[mesh_.faceNeighbour()[facei]];
     }
 
     // Boundary faces
@@ -123,18 +123,18 @@ void Foam::faceSelections::searchableSurfaceSelection::select
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                start[faceI] = mesh_.cellCentres()[mesh_.faceOwner()[faceI]];
-                end[faceI] = neighbourCellCentres[faceI-mesh_.nInternalFaces()];
+                label facei = pp.start()+i;
+                start[facei] = mesh_.cellCentres()[mesh_.faceOwner()[facei]];
+                end[facei] = neighbourCellCentres[facei-mesh_.nInternalFaces()];
             }
         }
         else
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                start[faceI] = mesh_.cellCentres()[mesh_.faceOwner()[faceI]];
-                end[faceI] = mesh_.faceCentres()[faceI];
+                label facei = pp.start()+i;
+                start[facei] = mesh_.cellCentres()[mesh_.faceOwner()[facei]];
+                end[facei] = mesh_.faceCentres()[facei];
             }
         }
     }
@@ -146,13 +146,13 @@ void Foam::faceSelections::searchableSurfaceSelection::select
 
     //- Note: do not select boundary faces.
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        if (hits[faceI].hit())
+        if (hits[facei].hit())
         {
-            faceToZoneID[faceI] = zoneID;
-            vector d = end[faceI]-start[faceI];
-            faceToFlip[faceI] = ((normals[faceI] & d) < 0);
+            faceToZoneID[facei] = zoneID;
+            vector d = end[facei]-start[facei];
+            faceToFlip[facei] = ((normals[facei] & d) < 0);
         }
     }
     forAll(pbm, patchi)
@@ -163,12 +163,12 @@ void Foam::faceSelections::searchableSurfaceSelection::select
         {
             forAll(pp, i)
             {
-                label faceI = pp.start()+i;
-                if (hits[faceI].hit())
+                label facei = pp.start()+i;
+                if (hits[facei].hit())
                 {
-                    faceToZoneID[faceI] = zoneID;
-                    vector d = end[faceI]-start[faceI];
-                    faceToFlip[faceI] = ((normals[faceI] & d) < 0);
+                    faceToZoneID[facei] = zoneID;
+                    vector d = end[facei]-start[facei];
+                    faceToFlip[facei] = ((normals[facei] & d) < 0);
                 }
             }
         }

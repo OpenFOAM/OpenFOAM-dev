@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ using namespace Foam::constant::mathematical;
 template<class CloudType>
 Foam::tmp<Foam::scalarField> Foam::LiquidEvaporation<CloudType>::calcXc
 (
-    const label cellI
+    const label celli
 ) const
 {
     scalarField Xc(this->owner().thermo().carrier().Y().size());
@@ -42,7 +42,7 @@ Foam::tmp<Foam::scalarField> Foam::LiquidEvaporation<CloudType>::calcXc
     forAll(Xc, i)
     {
         Xc[i] =
-            this->owner().thermo().carrier().Y()[i][cellI]
+            this->owner().thermo().carrier().Y()[i][celli]
            /this->owner().thermo().carrier().W(i);
     }
 
@@ -132,7 +132,7 @@ template<class CloudType>
 void Foam::LiquidEvaporation<CloudType>::calculate
 (
     const scalar dt,
-    const label cellI,
+    const label celli,
     const scalar Re,
     const scalar Pr,
     const scalar d,
@@ -164,8 +164,8 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         return;
     }
 
-    // construct carrier phase species volume fractions for cell, cellI
-    const scalarField Xc(calcXc(cellI));
+    // construct carrier phase species volume fractions for cell, celli
+    const scalarField Xc(calcXc(celli));
 
     // calculate mass transfer of each specie in liquid
     forAll(activeLiquids_, i)

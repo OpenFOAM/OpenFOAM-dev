@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,13 +33,13 @@ bool Foam::meshTriangulation::isInternalFace
 (
     const primitiveMesh& mesh,
     const boolList& includedCell,
-    const label faceI
+    const label facei
 )
 {
-    if (mesh.isInternalFace(faceI))
+    if (mesh.isInternalFace(facei))
     {
-        label own = mesh.faceOwner()[faceI];
-        label nei = mesh.faceNeighbour()[faceI];
+        label own = mesh.faceOwner()[facei];
+        label nei = mesh.faceNeighbour()[facei];
 
         if (includedCell[own] && includedCell[nei])
         {
@@ -75,25 +75,25 @@ void Foam::meshTriangulation::getFaces
     nFaces = 0;
     nInternalFaces = 0;
 
-    forAll(includedCell, cellI)
+    forAll(includedCell, celli)
     {
         // Include faces of cut cells only.
-        if (includedCell[cellI])
+        if (includedCell[celli])
         {
-            const labelList& cFaces = mesh.cells()[cellI];
+            const labelList& cFaces = mesh.cells()[celli];
 
             forAll(cFaces, i)
             {
-                label faceI = cFaces[i];
+                label facei = cFaces[i];
 
-                if (!faceIsCut[faceI])
+                if (!faceIsCut[facei])
                 {
                     // First visit of face.
                     nFaces++;
-                    faceIsCut[faceI] = true;
+                    faceIsCut[facei] = true;
 
                     // See if would become internal or external face
-                    if (isInternalFace(mesh, includedCell, faceI))
+                    if (isInternalFace(mesh, includedCell, facei))
                     {
                         nInternalFaces++;
                     }
@@ -110,7 +110,7 @@ void Foam::meshTriangulation::getFaces
 void Foam::meshTriangulation::insertTriangles
 (
     const triFaceList& faceTris,
-    const label faceI,
+    const label facei,
     const label regionI,
     const bool reverse,
 
@@ -140,7 +140,7 @@ void Foam::meshTriangulation::insertTriangles
 
         tri.region() = regionI;
 
-        faceMap_[triI] = faceI;
+        faceMap_[triI] = facei;
 
         triI++;
     }
@@ -195,21 +195,21 @@ Foam::meshTriangulation::meshTriangulation
 
     if (faceCentreDecomposition)
     {
-        forAll(faceIsCut, faceI)
+        forAll(faceIsCut, facei)
         {
-            if (faceIsCut[faceI])
+            if (faceIsCut[facei])
             {
-                nTotTri += faces[faceI].size();
+                nTotTri += faces[facei].size();
             }
         }
     }
     else
     {
-        forAll(faceIsCut, faceI)
+        forAll(faceIsCut, facei)
         {
-            if (faceIsCut[faceI])
+            if (faceIsCut[facei])
             {
-                nTotTri += faces[faceI].nTriangles(points);
+                nTotTri += faces[facei].nTriangles(points);
             }
         }
     }
@@ -228,9 +228,9 @@ Foam::meshTriangulation::meshTriangulation
             newPoints[pointI] = mesh.points()[pointI];
         }
         // Face centres
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            newPoints[mesh.nPoints() + faceI] = mesh.faceCentres()[faceI];
+            newPoints[mesh.nPoints() + facei] = mesh.faceCentres()[facei];
         }
     }
 
@@ -246,26 +246,26 @@ Foam::meshTriangulation::meshTriangulation
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Triangulate internal faces
-        forAll(faceIsCut, faceI)
+        forAll(faceIsCut, facei)
         {
-            if (faceIsCut[faceI] && isInternalFace(mesh, includedCell, faceI))
+            if (faceIsCut[facei] && isInternalFace(mesh, includedCell, facei))
             {
                 // Face was internal to the mesh and will be 'internal' to
                 // the surface.
 
                 // Triangulate face
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 forAll(f, fp)
                 {
-                    faceMap_[triI] = faceI;
+                    faceMap_[triI] = facei;
 
                     triangles[triI++] =
                         labelledTri
                         (
                             f[fp],
                             f.nextLabel(fp),
-                            mesh.nPoints() + faceI,     // face centre
+                            mesh.nPoints() + facei,     // face centre
                             internalFacesPatch
                         );
                 }
@@ -275,22 +275,22 @@ Foam::meshTriangulation::meshTriangulation
 
 
         // Triangulate external faces
-        forAll(faceIsCut, faceI)
+        forAll(faceIsCut, facei)
         {
-            if (faceIsCut[faceI] && !isInternalFace(mesh, includedCell, faceI))
+            if (faceIsCut[facei] && !isInternalFace(mesh, includedCell, facei))
             {
                 // Face will become outside of the surface.
 
-                label patchI = -1;
+                label patchi = -1;
                 bool reverse = false;
 
-                if (mesh.isInternalFace(faceI))
+                if (mesh.isInternalFace(facei))
                 {
-                    patchI = internalFacesPatch;
+                    patchi = internalFacesPatch;
 
                     // Check orientation. Check which side of the face gets
                     // included (note: only one side is).
-                    if (includedCell[mesh.faceOwner()[faceI]])
+                    if (includedCell[mesh.faceOwner()[facei]])
                     {
                         reverse = false;
                     }
@@ -303,28 +303,28 @@ Foam::meshTriangulation::meshTriangulation
                 {
                     // Face was already outside so orientation ok.
 
-                    patchI = patches.whichPatch(faceI);
+                    patchi = patches.whichPatch(facei);
 
                     reverse = false;
                 }
 
 
                 // Triangulate face
-                const face& f = faces[faceI];
+                const face& f = faces[facei];
 
                 if (reverse)
                 {
                     forAll(f, fp)
                     {
-                        faceMap_[triI] = faceI;
+                        faceMap_[triI] = facei;
 
                         triangles[triI++] =
                             labelledTri
                             (
                                 f.nextLabel(fp),
                                 f[fp],
-                                mesh.nPoints() + faceI,     // face centre
-                                patchI
+                                mesh.nPoints() + facei,     // face centre
+                                patchi
                             );
                     }
                 }
@@ -332,15 +332,15 @@ Foam::meshTriangulation::meshTriangulation
                 {
                     forAll(f, fp)
                     {
-                        faceMap_[triI] = faceI;
+                        faceMap_[triI] = facei;
 
                         triangles[triI++] =
                             labelledTri
                             (
                                 f[fp],
                                 f.nextLabel(fp),
-                                mesh.nPoints() + faceI,     // face centre
-                                patchI
+                                mesh.nPoints() + facei,     // face centre
+                                patchi
                             );
                     }
                 }
@@ -353,22 +353,22 @@ Foam::meshTriangulation::meshTriangulation
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Triangulate internal faces
-        forAll(faceIsCut, faceI)
+        forAll(faceIsCut, facei)
         {
-            if (faceIsCut[faceI] && isInternalFace(mesh, includedCell, faceI))
+            if (faceIsCut[facei] && isInternalFace(mesh, includedCell, facei))
             {
                 // Face was internal to the mesh and will be 'internal' to
                 // the surface.
 
                 // Triangulate face. Fall back to naive triangulation if failed.
-                faceTriangulation faceTris(points, faces[faceI], true);
+                faceTriangulation faceTris(points, faces[facei], true);
 
                 if (faceTris.empty())
                 {
                     WarningInFunction
-                        << "Could not find triangulation for face " << faceI
-                        << " vertices " << faces[faceI] << " coords "
-                        << IndirectList<point>(points, faces[faceI])() << endl;
+                        << "Could not find triangulation for face " << facei
+                        << " vertices " << faces[facei] << " coords "
+                        << IndirectList<point>(points, faces[facei])() << endl;
                 }
                 else
                 {
@@ -376,7 +376,7 @@ Foam::meshTriangulation::meshTriangulation
                     insertTriangles
                     (
                         faceTris,
-                        faceI,
+                        facei,
                         internalFacesPatch,
                         false,                  // no reverse
 
@@ -390,22 +390,22 @@ Foam::meshTriangulation::meshTriangulation
 
 
         // Triangulate external faces
-        forAll(faceIsCut, faceI)
+        forAll(faceIsCut, facei)
         {
-            if (faceIsCut[faceI] && !isInternalFace(mesh, includedCell, faceI))
+            if (faceIsCut[facei] && !isInternalFace(mesh, includedCell, facei))
             {
                 // Face will become outside of the surface.
 
-                label patchI = -1;
+                label patchi = -1;
                 bool reverse = false;
 
-                if (mesh.isInternalFace(faceI))
+                if (mesh.isInternalFace(facei))
                 {
-                    patchI = internalFacesPatch;
+                    patchi = internalFacesPatch;
 
                     // Check orientation. Check which side of the face gets
                     // included (note: only one side is).
-                    if (includedCell[mesh.faceOwner()[faceI]])
+                    if (includedCell[mesh.faceOwner()[facei]])
                     {
                         reverse = false;
                     }
@@ -418,20 +418,20 @@ Foam::meshTriangulation::meshTriangulation
                 {
                     // Face was already outside so orientation ok.
 
-                    patchI = patches.whichPatch(faceI);
+                    patchi = patches.whichPatch(facei);
 
                     reverse = false;
                 }
 
                 // Triangulate face
-                faceTriangulation faceTris(points, faces[faceI], true);
+                faceTriangulation faceTris(points, faces[facei], true);
 
                 if (faceTris.empty())
                 {
                     WarningInFunction
-                        << "Could not find triangulation for face " << faceI
-                        << " vertices " << faces[faceI] << " coords "
-                        << IndirectList<point>(points, faces[faceI])() << endl;
+                        << "Could not find triangulation for face " << facei
+                        << " vertices " << faces[facei] << " coords "
+                        << IndirectList<point>(points, faces[facei])() << endl;
                 }
                 else
                 {
@@ -439,8 +439,8 @@ Foam::meshTriangulation::meshTriangulation
                     insertTriangles
                     (
                         faceTris,
-                        faceI,
-                        patchI,
+                        facei,
+                        patchi,
                         reverse,    // whether to reverse
 
                         triangles,
@@ -461,14 +461,14 @@ Foam::meshTriangulation::meshTriangulation
 
     geometricSurfacePatchList surfPatches(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        surfPatches[patchI] =
+        surfPatches[patchi] =
             geometricSurfacePatch
             (
-                patches[patchI].physicalType(),
-                patches[patchI].name(),
-                patchI
+                patches[patchi].physicalType(),
+                patches[patchi].name(),
+                patchi
             );
     }
 

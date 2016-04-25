@@ -113,16 +113,16 @@ Foam::labelList Foam::SloanRenumber::renumber
 
     // Determine neighbour cell
     labelList nbr(mesh.nFaces()-mesh.nInternalFaces(), -1);
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        if (pbm[patchI].coupled() && !isA<processorPolyPatch>(pbm[patchI]))
+        if (pbm[patchi].coupled() && !isA<processorPolyPatch>(pbm[patchi]))
         {
             SubList<label>
             (
                 nbr,
-                pbm[patchI].size(),
-                pbm[patchI].start()-mesh.nInternalFaces()
-            ) = pbm[patchI].faceCells();
+                pbm[patchi].size(),
+                pbm[patchi].start()-mesh.nInternalFaces()
+            ) = pbm[patchi].faceCells();
         }
     }
     syncTools::swapBoundaryFaceList(mesh, nbr);
@@ -131,24 +131,24 @@ Foam::labelList Foam::SloanRenumber::renumber
     Graph G(mesh.nCells());
 
     // Add internal faces
-    forAll(mesh.faceNeighbour(), faceI)
+    forAll(mesh.faceNeighbour(), facei)
     {
-        add_edge(mesh.faceOwner()[faceI], mesh.faceNeighbour()[faceI], G);
+        add_edge(mesh.faceOwner()[facei], mesh.faceNeighbour()[facei], G);
     }
     // Add cyclics
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
         if
         (
-            pbm[patchI].coupled()
-        && !isA<processorPolyPatch>(pbm[patchI])
-        &&  refCast<const coupledPolyPatch>(pbm[patchI]).owner()
+            pbm[patchi].coupled()
+        && !isA<processorPolyPatch>(pbm[patchi])
+        &&  refCast<const coupledPolyPatch>(pbm[patchi]).owner()
         )
         {
-            const labelUList& faceCells = pbm[patchI].faceCells();
+            const labelUList& faceCells = pbm[patchi].faceCells();
             forAll(faceCells, i)
             {
-                label bFaceI = pbm[patchI].start()+i-mesh.nInternalFaces();
+                label bFaceI = pbm[patchi].start()+i-mesh.nInternalFaces();
                 label nbrCellI = nbr[bFaceI];
 
                 if (faceCells[i] < nbrCellI)
@@ -210,14 +210,14 @@ Foam::labelList Foam::SloanRenumber::renumber
 {
     Graph G(cellCells.size());
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& nbrs = cellCells[cellI];
+        const labelList& nbrs = cellCells[celli];
         forAll(nbrs, i)
         {
-            if (nbrs[i] > cellI)
+            if (nbrs[i] > celli)
             {
-                add_edge(cellI, nbrs[i], G);
+                add_edge(celli, nbrs[i], G);
             }
         }
     }

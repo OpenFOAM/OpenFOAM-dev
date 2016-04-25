@@ -630,9 +630,9 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
 {
     const faceList& faces = mesh_.faces();
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, fpI)
         {
@@ -640,12 +640,12 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
 
             if (pointErrorCount[f[fpI]] >= maxPointErrorCount())
             {
-                faceFilterFactor_[faceI] = -1;
+                faceFilterFactor_[facei] = -1;
             }
 
             if (isErrorPoint[ptIndex])
             {
-                faceFilterFactor_[faceI] *= faceReductionFactor();
+                faceFilterFactor_[facei] *= faceReductionFactor();
 
                 break;
             }
@@ -657,9 +657,9 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
     for (label smoothIter = 0; smoothIter < maxSmoothIters(); ++smoothIter)
     {
         // Smooth faceFilterFactor
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            const labelList& fEdges = mesh_.faceEdges()[faceI];
+            const labelList& fEdges = mesh_.faceEdges()[facei];
 
             scalar sumFaceFilterFactors = 0;
             label nFaces = 0;
@@ -689,7 +689,7 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
                         }
                     }
 
-                    if (eFace != faceI)
+                    if (eFace != facei)
                     {
                         sumFaceFilterFactors += faceFilterFactor_[eFace];
                         nFaces++;
@@ -702,9 +702,9 @@ void Foam::polyMeshFilter::checkMeshFacesAndRelaxEdges
                 continue;
             }
 
-            faceFilterFactor_[faceI] = min
+            faceFilterFactor_[facei] = min
             (
-                faceFilterFactor_[faceI],
+                faceFilterFactor_[facei],
                 sumFaceFilterFactors/nFaces
             );
         }

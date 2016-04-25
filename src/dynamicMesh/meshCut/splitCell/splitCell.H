@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class splitCell
 
         //- Unsplit cell label. Only uptodate if this cell is 'live'
         //  (i.e. no master or slave)
-        label cellI_;
+        label celli_;
 
         //- Parent splitCell or null
         splitCell* parent_;
@@ -80,7 +80,7 @@ public:
     // Constructors
 
         //- Construct from cell number and parent
-        splitCell(const label cellI, splitCell* parent);
+        splitCell(const label celli, splitCell* parent);
 
 
     //- Destructor
@@ -93,12 +93,12 @@ public:
 
             label cellLabel() const
             {
-                return cellI_;
+                return celli_;
             }
 
             label& cellLabel()
             {
-                return cellI_;
+                return celli_;
             }
 
             splitCell* parent() const

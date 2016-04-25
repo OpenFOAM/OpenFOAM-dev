@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,9 +185,9 @@ void Foam::createShellMesh::calcPointRegions
 
     // 1. Count
     label nMaxRegions = 0;
-    forAll(patch.localFaces(), faceI)
+    forAll(patch.localFaces(), facei)
     {
-        const face& f = patch.localFaces()[faceI];
+        const face& f = patch.localFaces()[facei];
         nMaxRegions += f.size();
     }
 
@@ -197,10 +197,10 @@ void Foam::createShellMesh::calcPointRegions
     label nRegions = 0;
 
     pointGlobalRegions.setSize(patch.size());
-    forAll(pointGlobalRegions, faceI)
+    forAll(pointGlobalRegions, facei)
     {
-        const face& f = patch.localFaces()[faceI];
-        labelList& pRegions = pointGlobalRegions[faceI];
+        const face& f = patch.localFaces()[facei];
+        labelList& pRegions = pointGlobalRegions[facei];
         pRegions.setSize(f.size());
         forAll(pRegions, fp)
         {
@@ -223,15 +223,15 @@ void Foam::createShellMesh::calcPointRegions
         {
             // Take over value from one face only.
             const edge& e = patch.edges()[edgeI];
-            label faceI = patch.edgeFaces()[edgeI][0];
-            const face& f = patch.localFaces()[faceI];
+            label facei = patch.edgeFaces()[edgeI][0];
+            const face& f = patch.localFaces()[facei];
 
             label fp0 = findIndex(f, e[0]);
             label fp1 = findIndex(f, e[1]);
             allEdgeData[edgeI] = labelPair
             (
-                pointGlobalRegions[faceI][fp0],
-                pointGlobalRegions[faceI][fp1]
+                pointGlobalRegions[facei][fp0],
+                pointGlobalRegions[facei][fp1]
             );
             if (!isChangedEdge[edgeI])
             {
@@ -279,29 +279,29 @@ void Foam::createShellMesh::calcPointRegions
 
             forAll(eFaces, i)
             {
-                label faceI = eFaces[i];
-                const face& f = patch.localFaces()[faceI];
+                label facei = eFaces[i];
+                const face& f = patch.localFaces()[facei];
 
                 // Combine edgeData with face data
                 label fp0 = findIndex(f, e[0]);
-                if (pointGlobalRegions[faceI][fp0] > edgeData[0])
+                if (pointGlobalRegions[facei][fp0] > edgeData[0])
                 {
-                    pointGlobalRegions[faceI][fp0] = edgeData[0];
-                    if (!isChangedFace[faceI])
+                    pointGlobalRegions[facei][fp0] = edgeData[0];
+                    if (!isChangedFace[facei])
                     {
-                        isChangedFace[faceI] = true;
-                        changedFaces.append(faceI);
+                        isChangedFace[facei] = true;
+                        changedFaces.append(facei);
                     }
                 }
 
                 label fp1 = findIndex(f, e[1]);
-                if (pointGlobalRegions[faceI][fp1] > edgeData[1])
+                if (pointGlobalRegions[facei][fp1] > edgeData[1])
                 {
-                    pointGlobalRegions[faceI][fp1] = edgeData[1];
-                    if (!isChangedFace[faceI])
+                    pointGlobalRegions[facei][fp1] = edgeData[1];
+                    if (!isChangedFace[facei])
                     {
-                        isChangedFace[faceI] = true;
-                        changedFaces.append(faceI);
+                        isChangedFace[facei] = true;
+                        changedFaces.append(facei);
                     }
                 }
             }
@@ -323,9 +323,9 @@ void Foam::createShellMesh::calcPointRegions
 
         forAll(changedFaces, i)
         {
-            label faceI = changedFaces[i];
-            const face& f = patch.localFaces()[faceI];
-            const labelList& fEdges = patch.faceEdges()[faceI];
+            label facei = changedFaces[i];
+            const face& f = patch.localFaces()[facei];
+            const labelList& fEdges = patch.faceEdges()[facei];
 
             forAll(fEdges, fp)
             {
@@ -335,9 +335,9 @@ void Foam::createShellMesh::calcPointRegions
                 {
                     const edge& e = patch.edges()[edgeI];
                     label fp0 = findIndex(f, e[0]);
-                    label region0 = pointGlobalRegions[faceI][fp0];
+                    label region0 = pointGlobalRegions[facei][fp0];
                     label fp1 = findIndex(f, e[1]);
-                    label region1 = pointGlobalRegions[faceI][fp1];
+                    label region1 = pointGlobalRegions[facei][fp1];
 
                     if
                     (
@@ -387,14 +387,14 @@ void Foam::createShellMesh::calcPointRegions
     pointLocalRegions.setSize(patch.size());
     Map<label> globalToLocalRegion(globalRegions.localSize()/4);
     DynamicList<label> dynLocalToGlobalRegion(globalToLocalRegion.size());
-    forAll(patch.localFaces(), faceI)
+    forAll(patch.localFaces(), facei)
     {
-        const face& f = patch.localFaces()[faceI];
-        face& pRegions = pointLocalRegions[faceI];
+        const face& f = patch.localFaces()[facei];
+        face& pRegions = pointLocalRegions[facei];
         pRegions.setSize(f.size());
         forAll(f, fp)
         {
-            label globalRegionI = pointGlobalRegions[faceI][fp];
+            label globalRegionI = pointGlobalRegions[facei][fp];
 
             Map<label>::iterator fnd = globalToLocalRegion.find(globalRegionI);
 
@@ -501,11 +501,11 @@ void Foam::createShellMesh::setRefinement
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     labelList addedCells(nLayers*patch_.size());
-    forAll(patch_, faceI)
+    forAll(patch_, facei)
     {
         for (label layerI = 0; layerI < nLayers; layerI++)
         {
-            addedCells[nLayers*faceI+layerI] = meshMod.addCell
+            addedCells[nLayers*facei+layerI] = meshMod.addCell
             (
                 -1,                     // masterPointID
                 -1,                     // masterEdgeID
@@ -513,7 +513,7 @@ void Foam::createShellMesh::setRefinement
                 cellToFaceMap.size(),   // masterCellID
                 -1                      // zoneID
             );
-            cellToFaceMap.append(faceI);
+            cellToFaceMap.append(facei);
         }
     }
 
@@ -570,39 +570,39 @@ void Foam::createShellMesh::setRefinement
 
 
     // Add face on bottom side
-    forAll(patch_.localFaces(), faceI)
+    forAll(patch_.localFaces(), facei)
     {
         meshMod.addFace
         (
-            patch_.localFaces()[faceI].reverseFace(),// vertices
-            addedCells[nLayers*faceI],  // own
+            patch_.localFaces()[facei].reverseFace(),// vertices
+            addedCells[nLayers*facei],  // own
             -1,                         // nei
             -1,                         // masterPointID
             -1,                         // masterEdgeID
-            faceToFaceMap.size(),       // masterFaceID : current faceI
+            faceToFaceMap.size(),       // masterFaceID : current facei
             true,                       // flipFaceFlux
-            bottomPatchID[faceI],       // patchID
+            bottomPatchID[facei],       // patchID
             -1,                         // zoneID
             false                       // zoneFlip
         );
-        faceToFaceMap.append(-faceI-1); // points to flipped original face
+        faceToFaceMap.append(-facei-1); // points to flipped original face
         faceToEdgeMap.append(-1);
 
-        //const face newF(patch_.localFaces()[faceI].reverseFace());
+        //const face newF(patch_.localFaces()[facei].reverseFace());
         //Pout<< "Added bottom face "
         //    << newF
         //    << " coords:" << UIndirectList<point>(meshMod.points(), newF)
-        //    << " own " << addedCells[faceI]
-        //    << " patch:" << bottomPatchID[faceI]
-        //    << "  at " << patch_.faceCentres()[faceI]
+        //    << " own " << addedCells[facei]
+        //    << " patch:" << bottomPatchID[facei]
+        //    << "  at " << patch_.faceCentres()[facei]
         //    << endl;
     }
 
     // Add inbetween faces and face on top
-    forAll(patch_.localFaces(), faceI)
+    forAll(patch_.localFaces(), facei)
     {
         // Get face in original ordering
-        const face& f = patch_.localFaces()[faceI];
+        const face& f = patch_.localFaces()[facei];
 
         face newF(f.size());
 
@@ -611,21 +611,21 @@ void Foam::createShellMesh::setRefinement
             // Pick up point based on region and layer
             forAll(f, fp)
             {
-                label region = pointRegions_[faceI][fp];
+                label region = pointRegions_[facei][fp];
                 newF[fp] = addedPoints[region*nLayers+layerI];
             }
 
-            label own = addedCells[faceI*nLayers+layerI];
+            label own = addedCells[facei*nLayers+layerI];
             label nei;
             label patchI;
             if (layerI == nLayers-1)
             {
                 nei = -1;
-                patchI = topPatchID[faceI];
+                patchI = topPatchID[facei];
             }
             else
             {
-                nei = addedCells[faceI*nLayers+layerI+1];
+                nei = addedCells[facei*nLayers+layerI+1];
                 patchI = -1;
             }
 
@@ -636,13 +636,13 @@ void Foam::createShellMesh::setRefinement
                 nei,                        // nei
                 -1,                         // masterPointID
                 -1,                         // masterEdgeID
-                faceToFaceMap.size(),       // masterFaceID : current faceI
+                faceToFaceMap.size(),       // masterFaceID : current facei
                 false,                      // flipFaceFlux
                 patchI,                     // patchID
                 -1,                         // zoneID
                 false                       // zoneFlip
             );
-            faceToFaceMap.append(faceI+1);  // unflipped
+            faceToFaceMap.append(facei+1);  // unflipped
             faceToEdgeMap.append(-1);
 
             //Pout<< "Added inbetween face " << newF
@@ -650,7 +650,7 @@ void Foam::createShellMesh::setRefinement
             //    << " at layer " << layerI
             //    << " own " << own
             //    << " nei " << nei
-            //    << "  at " << patch_.faceCentres()[faceI]
+            //    << "  at " << patch_.faceCentres()[facei]
             //    << endl;
         }
     }

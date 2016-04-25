@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,10 +35,10 @@ void Foam::SprayParcel<ParcelType>::setCellValues
 (
     TrackData& td,
     const scalar dt,
-    const label cellI
+    const label celli
 )
 {
-    ParcelType::setCellValues(td, dt, cellI);
+    ParcelType::setCellValues(td, dt, celli);
 }
 
 
@@ -48,10 +48,10 @@ void Foam::SprayParcel<ParcelType>::cellValueSourceCorrection
 (
     TrackData& td,
     const scalar dt,
-    const label cellI
+    const label celli
 )
 {
-    ParcelType::cellValueSourceCorrection(td, dt, cellI);
+    ParcelType::cellValueSourceCorrection(td, dt, celli);
 }
 
 
@@ -61,7 +61,7 @@ void Foam::SprayParcel<ParcelType>::calc
 (
     TrackData& td,
     const scalar dt,
-    const label cellI
+    const label celli
 )
 {
     typedef typename TrackData::cloudType::reactingCloudType reactingCloudType;
@@ -99,7 +99,7 @@ void Foam::SprayParcel<ParcelType>::calc
     const scalar mass0 = this->mass();
     mu_ = composition.liquids().mu(pc0, T0, X0);
 
-    ParcelType::calc(td, dt, cellI);
+    ParcelType::calc(td, dt, celli);
 
     if (td.keepParticle)
     {
@@ -126,7 +126,7 @@ void Foam::SprayParcel<ParcelType>::calc
 
         if (liquidCore() > 0.5)
         {
-            calcAtomization(td, dt, cellI);
+            calcAtomization(td, dt, celli);
 
             // Preserve the total mass/volume by increasing the number of
             // particles in parcels due to breakup
@@ -135,7 +135,7 @@ void Foam::SprayParcel<ParcelType>::calc
         }
         else
         {
-            calcBreakup(td, dt, cellI);
+            calcBreakup(td, dt, celli);
         }
     }
 
@@ -150,7 +150,7 @@ void Foam::SprayParcel<ParcelType>::calcAtomization
 (
     TrackData& td,
     const scalar dt,
-    const label cellI
+    const label celli
 )
 {
     typedef typename TrackData::cloudType::reactingCloudType reactingCloudType;
@@ -217,7 +217,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
 (
     TrackData& td,
     const scalar dt,
-    const label cellI
+    const label celli
 )
 {
     typedef typename TrackData::cloudType cloudType;
@@ -306,7 +306,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
         child->injector() = this->injector();
         child->tMom() = massChild/(Fcp.Sp() + Fncp.Sp());
         child->user() = 0.0;
-        child->setCellValues(td, dt, cellI);
+        child->setCellValues(td, dt, celli);
 
         td.cloud().addParticle(child);
     }

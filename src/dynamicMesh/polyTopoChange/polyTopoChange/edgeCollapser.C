@@ -119,13 +119,13 @@ Foam::label Foam::edgeCollapser::checkMeshQuality
 
 Foam::labelList Foam::edgeCollapser::edgesFromPoints
 (
-    const label& faceI,
+    const label& facei,
     const labelList& pointLabels
 ) const
 {
     labelList edgeLabels(pointLabels.size() - 1, -1);
 
-    const labelList& faceEdges = mesh_.faceEdges()[faceI];
+    const labelList& faceEdges = mesh_.faceEdges()[facei];
     const edgeList& edges = mesh_.edges();
 
     label count = 0;
@@ -168,7 +168,7 @@ Foam::labelList Foam::edgeCollapser::edgesFromPoints
 
 void Foam::edgeCollapser::collapseToEdge
 (
-    const label faceI,
+    const label facei,
     const pointField& pts,
     const labelList& pointPriority,
     const vector& collapseAxis,
@@ -223,7 +223,7 @@ void Foam::edgeCollapser::collapseToEdge
     maxPriority = labelMin;
     maxPriorityPts.clear();
 
-    labelList faceEdgesNeg = edgesFromPoints(faceI, facePtsNeg);
+    labelList faceEdgesNeg = edgesFromPoints(facei, facePtsNeg);
 
     forAll(faceEdgesNeg, edgeI)
     {
@@ -270,7 +270,7 @@ void Foam::edgeCollapser::collapseToEdge
 //        collapseToPtB = pts[maxPriorityPts.first()];
     }
 
-    labelList faceEdgesPos = edgesFromPoints(faceI, facePtsPos);
+    labelList faceEdgesPos = edgesFromPoints(facei, facePtsPos);
 
     forAll(faceEdgesPos, edgeI)
     {
@@ -286,7 +286,7 @@ void Foam::edgeCollapser::collapseToEdge
 
 void Foam::edgeCollapser::collapseToPoint
 (
-    const label& faceI,
+    const label& facei,
     const pointField& pts,
     const labelList& pointPriority,
     const point& fC,
@@ -295,7 +295,7 @@ void Foam::edgeCollapser::collapseToPoint
     Map<point>& collapsePointToLocation
 ) const
 {
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
 
     Foam::point collapseToPt = fC;
 
@@ -371,7 +371,7 @@ void Foam::edgeCollapser::collapseToPoint
 //        }
 //    }
 
-    const labelList& faceEdges = mesh_.faceEdges()[faceI];
+    const labelList& faceEdges = mesh_.faceEdges()[facei];
 
     forAll(faceEdges, eI)
     {
@@ -498,9 +498,9 @@ Foam::scalarField Foam::edgeCollapser::calcTargetFaceSizes() const
     scalarField neiCellVolumes(nBoundaryFaces, -1);
 
     // Now do boundary faces
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& patch = patches[patchI];
+        const polyPatch& patch = patches[patchi];
 
         label bFaceI = patch.start() - mesh_.nInternalFaces();
 
@@ -531,9 +531,9 @@ Foam::scalarField Foam::edgeCollapser::calcTargetFaceSizes() const
 
     syncTools::swapBoundaryFaceList(mesh_, neiCellVolumes);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& patch = patches[patchI];
+        const polyPatch& patch = patches[patchi];
 
         label bFaceI = patch.start() - mesh_.nInternalFaces();
 
@@ -563,14 +563,14 @@ Foam::edgeCollapser::collapseType Foam::edgeCollapser::collapseFace
 (
     const labelList& pointPriority,
     const face& f,
-    const label faceI,
+    const label facei,
     const scalar targetFaceSize,
     PackedBoolList& collapseEdge,
     Map<point>& collapsePointToLocation,
     const scalarField& faceFilterFactor
 ) const
 {
-    const scalar collapseSizeLimitCoeff = faceFilterFactor[faceI];
+    const scalar collapseSizeLimitCoeff = faceFilterFactor[facei];
 
     const pointField& pts = mesh_.points();
 
@@ -714,7 +714,7 @@ Foam::edgeCollapser::collapseType Foam::edgeCollapser::collapseFace
     {
         collapseToPoint
         (
-            faceI,
+            facei,
             pts,
             pointPriority,
             fC,
@@ -727,7 +727,7 @@ Foam::edgeCollapser::collapseType Foam::edgeCollapser::collapseFace
     {
         collapseToEdge
         (
-            faceI,
+            facei,
             pts,
             pointPriority,
             collapseAxis,
@@ -1426,33 +1426,33 @@ bool Foam::edgeCollapser::setRefinement
 
     do
     {
-        forAll(newFaces, faceI)
+        forAll(newFaces, facei)
         {
-            filterFace(collapseStrings, allPointInfo, newFaces[faceI]);
+            filterFace(collapseStrings, allPointInfo, newFaces[facei]);
         }
 
         // Check if faces to be collapsed cause cells to become collapsed.
         label nCellCollapsed = 0;
 
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            if (!cellRemoved[cellI])
+            if (!cellRemoved[celli])
             {
-                const cell& cFaces = cells[cellI];
+                const cell& cFaces = cells[celli];
 
                 label nFaces = cFaces.size();
 
                 forAll(cFaces, i)
                 {
-                    label faceI = cFaces[i];
+                    label facei = cFaces[i];
 
-                    if (newFaces[faceI].size() < 3)
+                    if (newFaces[facei].size() < 3)
                     {
                         --nFaces;
 
                         if (nFaces < 4)
                         {
-                            Pout<< "Cell:" << cellI
+                            Pout<< "Cell:" << celli
                                 << " uses faces:" << cFaces
                                 << " of which too many are marked for removal:"
                                 << endl
@@ -1468,10 +1468,10 @@ bool Foam::edgeCollapser::setRefinement
                             }
                             Pout<< endl;
 
-                            cellRemoved[cellI] = true;
+                            cellRemoved[celli] = true;
 
                             // Collapse all edges of cell to nothing
-//                            collapseEdges(cellEdges[cellI]);
+//                            collapseEdges(cellEdges[celli]);
 
                             nCellCollapsed++;
 
@@ -1500,26 +1500,26 @@ bool Foam::edgeCollapser::setRefinement
         // Mark points used.
         boolList usedPoint(mesh_.nPoints(), false);
 
-        forAll(cellRemoved, cellI)
+        forAll(cellRemoved, celli)
         {
-            if (cellRemoved[cellI])
+            if (cellRemoved[celli])
             {
-                meshMod.removeCell(cellI, -1);
+                meshMod.removeCell(celli, -1);
             }
         }
 
         // Remove faces
-        forAll(newFaces, faceI)
+        forAll(newFaces, facei)
         {
-            const face& f = newFaces[faceI];
+            const face& f = newFaces[facei];
 
             if (f.size() < 3)
             {
-                meshMod.removeFace(faceI, -1);
+                meshMod.removeFace(facei, -1);
                 meshChanged = true;
 
                 // Mark face as been done.
-                doneFace[faceI] = true;
+                doneFace[facei] = true;
             }
             else
             {
@@ -1579,14 +1579,14 @@ bool Foam::edgeCollapser::setRefinement
 
             forAll(changedFaces, changedFaceI)
             {
-                label faceI = changedFaces[changedFaceI];
+                label facei = changedFaces[changedFaceI];
 
-                if (!doneFace[faceI])
+                if (!doneFace[facei])
                 {
-                    doneFace[faceI] = true;
+                    doneFace[facei] = true;
 
                     // Get current zone info
-                    label zoneID = faceZones.whichZone(faceI);
+                    label zoneID = faceZones.whichZone(facei);
 
                     bool zoneFlip = false;
 
@@ -1594,27 +1594,27 @@ bool Foam::edgeCollapser::setRefinement
                     {
                         const faceZone& fZone = faceZones[zoneID];
 
-                        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
                     }
 
                     // Get current connectivity
-                    label own = faceOwner[faceI];
+                    label own = faceOwner[facei];
                     label nei = -1;
                     label patchID = -1;
 
-                    if (mesh_.isInternalFace(faceI))
+                    if (mesh_.isInternalFace(facei))
                     {
-                        nei = faceNeighbour[faceI];
+                        nei = faceNeighbour[facei];
                     }
                     else
                     {
-                        patchID = boundaryMesh.whichPatch(faceI);
+                        patchID = boundaryMesh.whichPatch(facei);
                     }
 
                     meshMod.modifyFace
                     (
-                        newFaces[faceI],            // face
-                        faceI,                      // faceI to change
+                        newFaces[facei],            // face
+                        facei,                      // facei to change
                         own,                        // owner
                         nei,                        // neighbour
                         false,                      // flipFaceFlux
@@ -1683,13 +1683,13 @@ void Foam::edgeCollapser::consistentCollapse
         PackedBoolList isCollapsedFace(mesh_.nFaces());
         PackedBoolList markedPoints(mesh_.nPoints());
 
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
-            isCollapsedFace[faceI] = isFaceCollapsed(f, allPointInfo);
+            isCollapsedFace[facei] = isFaceCollapsed(f, allPointInfo);
 
-            if (isCollapsedFace[faceI] < 1)
+            if (isCollapsedFace[facei] < 1)
             {
                 determineDuplicatePointsOnFace
                 (
@@ -1741,17 +1741,17 @@ void Foam::edgeCollapser::consistentCollapse
         if (!allowCellCollapse)
         {
             // Check collapsed cells
-            forAll(cells, cellI)
+            forAll(cells, celli)
             {
-                const cell& cFaces = cells[cellI];
+                const cell& cFaces = cells[celli];
 
                 label nFaces = cFaces.size();
 
                 forAll(cFaces, fI)
                 {
-                    label faceI = cFaces[fI];
+                    label facei = cFaces[fI];
 
-                    if (isCollapsedFace[faceI])
+                    if (isCollapsedFace[facei])
                     {
                         nFaces--;
                     }
@@ -1761,9 +1761,9 @@ void Foam::edgeCollapser::consistentCollapse
                 {
                     forAll(cFaces, fI)
                     {
-                        label faceI = cFaces[fI];
+                        label facei = cFaces[fI];
 
-                        const labelList& fEdges = faceEdges[faceI];
+                        const labelList& fEdges = faceEdges[facei];
 
                         // Unmark this face for collapse
                         forAll(fEdges, fEdgeI)
@@ -1780,7 +1780,7 @@ void Foam::edgeCollapser::consistentCollapse
                         }
 
                         // Uncollapsed this face.
-                        isCollapsedFace[faceI] = false;
+                        isCollapsedFace[facei] = false;
                         nFaces++;
                     }
                 }
@@ -1788,7 +1788,7 @@ void Foam::edgeCollapser::consistentCollapse
                 if (nFaces < 4)
                 {
                     FatalErrorInFunction
-                        << "Cell " << cellI << " " << cFaces << nl
+                        << "Cell " << celli << " " << cFaces << nl
                         << "is " << nFaces << ", "
                         << "but cell collapse has been disabled."
                         << abort(FatalError);

@@ -55,12 +55,12 @@ Foam::streamLine::wallPatch() const
 
     label nFaces = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        //if (!polyPatch::constraintType(patches[patchI].type()))
-        if (isA<wallPolyPatch>(patches[patchI]))
+        //if (!polyPatch::constraintType(patches[patchi].type()))
+        if (isA<wallPolyPatch>(patches[patchi]))
         {
-            nFaces += patches[patchI].size();
+            nFaces += patches[patchi].size();
         }
     }
 
@@ -68,12 +68,12 @@ Foam::streamLine::wallPatch() const
 
     nFaces = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        //if (!polyPatch::constraintType(patches[patchI].type()))
-        if (isA<wallPolyPatch>(patches[patchI]))
+        //if (!polyPatch::constraintType(patches[patchi].type()))
+        if (isA<wallPolyPatch>(patches[patchi]))
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             forAll(pp, i)
             {

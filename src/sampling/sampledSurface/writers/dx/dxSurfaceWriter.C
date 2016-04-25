@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,14 +67,14 @@ void Foam::dxSurfaceWriter::writeGeometry
         << "object 2 class array type int rank 1 shape 3 items "
         << faces.size() << " data follows" << nl;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if (f.size() != 3)
         {
             FatalErrorInFunction
-                << "Face " << faceI << " vertices " << f
+                << "Face " << facei << " vertices " << f
                 << " is not a triangle."
                 << exit(FatalError);
         }

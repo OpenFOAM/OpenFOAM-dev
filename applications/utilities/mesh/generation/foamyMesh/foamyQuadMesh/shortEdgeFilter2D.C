@@ -243,9 +243,9 @@ Foam::shortEdgeFilter2D::filter()
 
     // List of number of vertices in a face.
     labelList newFaceVertexCount(faces.size(), -1);
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        newFaceVertexCount[faceI] = faces[faceI].size();
+        newFaceVertexCount[facei] = faces[facei].size();
     }
 
     // Check if the point is a boundary point. Flag if it is so that
@@ -456,9 +456,9 @@ Foam::shortEdgeFilter2D::filter()
     label newFaceSize = 0;
 
     // Now need to iterate over the faces and remove points. Global index.
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         newFace.clear();
         newFace.setSize(f.size());
@@ -526,7 +526,7 @@ Foam::shortEdgeFilter2D::filter()
         else
         {
             FatalErrorInFunction
-                << "Only " << newFace.size() << " in face " << faceI
+                << "Only " << newFace.size() << " in face " << facei
                 << exit(FatalError);
         }
     }

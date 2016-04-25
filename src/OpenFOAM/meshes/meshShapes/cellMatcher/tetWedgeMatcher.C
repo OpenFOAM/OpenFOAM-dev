@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ bool Foam::tetWedgeMatcher::matchShape
     const bool checkOnly,
     const faceList& faces,
     const labelList& owner,
-    const label cellI,
+    const label celli,
     const labelList& myFaces
 )
 {
@@ -103,11 +103,11 @@ bool Foam::tetWedgeMatcher::matchShape
     //
 
     label face0I = -1;
-    forAll(faceSize_, faceI)
+    forAll(faceSize_, facei)
     {
-        if (faceSize_[faceI] == 3)
+        if (faceSize_[facei] == 3)
         {
-            face0I = faceI;
+            face0I = facei;
             break;
         }
     }
@@ -131,7 +131,7 @@ bool Foam::tetWedgeMatcher::matchShape
             (
                 face0vert0,
                 faceSize_[face0I],
-                !(owner[faceMap_[face0I]] == cellI)
+                !(owner[faceMap_[face0I]] == celli)
             );
         vertLabels_[1] = pointMap_[face0[face0vert1]];
 
@@ -160,7 +160,7 @@ bool Foam::tetWedgeMatcher::matchShape
             (
                 face0vert1,
                 faceSize_[face0I],
-                !(owner[faceMap_[face0I]] == cellI)
+                !(owner[faceMap_[face0I]] == celli)
             );
         vertLabels_[2] = pointMap_[face0[face0vert2]];
 
@@ -195,7 +195,7 @@ bool Foam::tetWedgeMatcher::matchShape
             (
                 face3vert2,
                 faceSize_[face3I],
-                (owner[faceMap_[face3I]] == cellI)
+                (owner[faceMap_[face3I]] == celli)
             );
 
         const face& face3 = localFaces_[face3I];
@@ -208,7 +208,7 @@ bool Foam::tetWedgeMatcher::matchShape
             (
                 face3vert4,
                 faceSize_[face3I],
-                (owner[faceMap_[face3I]] == cellI)
+                (owner[faceMap_[face3I]] == celli)
             );
         vertLabels_[3] = pointMap_[face3[face3vert3]];
 
@@ -268,15 +268,15 @@ bool Foam::tetWedgeMatcher::faceSizeMatch
 }
 
 
-bool Foam::tetWedgeMatcher::isA(const primitiveMesh& mesh, const label cellI)
+bool Foam::tetWedgeMatcher::isA(const primitiveMesh& mesh, const label celli)
 {
     return matchShape
     (
         true,
         mesh.faces(),
         mesh.faceOwner(),
-        cellI,
-        mesh.cells()[cellI]
+        celli,
+        mesh.cells()[celli]
     );
 }
 
@@ -298,7 +298,7 @@ bool Foam::tetWedgeMatcher::isA(const faceList& faces)
 bool Foam::tetWedgeMatcher::matches
 (
     const primitiveMesh& mesh,
-    const label cellI,
+    const label celli,
     cellShape& shape
 )
 {
@@ -309,8 +309,8 @@ bool Foam::tetWedgeMatcher::matches
             false,
             mesh.faces(),
             mesh.faceOwner(),
-            cellI,
-            mesh.cells()[cellI]
+            celli,
+            mesh.cells()[celli]
         )
     )
     {

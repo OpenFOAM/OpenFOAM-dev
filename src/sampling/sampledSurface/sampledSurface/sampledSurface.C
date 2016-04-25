@@ -62,9 +62,9 @@ void Foam::sampledSurface::makeSf() const
     SfPtr_ = new vectorField(theFaces.size());
 
     vectorField& values = *SfPtr_;
-    forAll(theFaces, faceI)
+    forAll(theFaces, facei)
     {
-        values[faceI] = theFaces[faceI].normal(points());
+        values[facei] = theFaces[facei].normal(points());
     }
 }
 
@@ -83,9 +83,9 @@ void Foam::sampledSurface::makeMagSf() const
     magSfPtr_ = new scalarField(theFaces.size());
 
     scalarField& values = *magSfPtr_;
-    forAll(theFaces, faceI)
+    forAll(theFaces, facei)
     {
-        values[faceI] = theFaces[faceI].mag(points());
+        values[facei] = theFaces[facei].mag(points());
     }
 }
 
@@ -104,9 +104,9 @@ void Foam::sampledSurface::makeCf() const
     CfPtr_ = new vectorField(theFaces.size());
 
     vectorField& values = *CfPtr_;
-    forAll(theFaces, faceI)
+    forAll(theFaces, facei)
     {
-        values[faceI] = theFaces[faceI].centre(points());
+        values[facei] = theFaces[facei].centre(points());
     }
 }
 
@@ -293,9 +293,9 @@ Foam::sampledSurface::project(const Field<scalar>& field) const
     tmp<Field<scalar>> tRes(new Field<scalar>(faces().size()));
     Field<scalar>& res = tRes.ref();
 
-    forAll(faces(), faceI)
+    forAll(faces(), facei)
     {
-        res[faceI] = field[faceI];
+        res[facei] = field[facei];
     }
 
     return tRes;

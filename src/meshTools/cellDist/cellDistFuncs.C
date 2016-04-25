@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ Foam::scalar Foam::cellDistFuncs::smallestDist
 }
 
 
-// Get point neighbours of faceI (including faceI). Returns number of faces.
+// Get point neighbours of facei (including facei). Returns number of faces.
 // Note: does not allocate storage but does use linear search to determine
 // uniqueness. For polygonal faces this might be quite inefficient.
 Foam::label Foam::cellDistFuncs::getPointNeighbours
@@ -151,12 +151,12 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
 
         forAll(pointNbs, nbI)
         {
-            label faceI = pointNbs[nbI];
+            label facei = pointNbs[nbI];
 
-            // Check for faceI in edge-neighbours part of neighbours
-            if (findIndex(nEdgeNbs, neighbours, faceI) == -1)
+            // Check for facei in edge-neighbours part of neighbours
+            if (findIndex(nEdgeNbs, neighbours, facei) == -1)
             {
-                neighbours[nNeighbours++] = faceI;
+                neighbours[nNeighbours++] = facei;
             }
         }
     }
@@ -232,11 +232,11 @@ Foam::label Foam::cellDistFuncs::maxPatchSize
 {
     label maxSize = 0;
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             maxSize = Foam::max(maxSize, patch.size());
         }
@@ -254,11 +254,11 @@ const
 {
     label sum = 0;
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             sum += patch.size();
         }
@@ -285,11 +285,11 @@ void Foam::cellDistFuncs::correctBoundaryFaceCells
     const vectorField& cellCentres = mesh().cellCentres();
     const labelList& faceOwner = mesh().faceOwner();
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             // Check cells with face on wall
             forAll(patch, patchFaceI)
@@ -301,13 +301,13 @@ void Foam::cellDistFuncs::correctBoundaryFaceCells
                     neighbours
                 );
 
-                label cellI = faceOwner[patch.start() + patchFaceI];
+                label celli = faceOwner[patch.start() + patchFaceI];
 
                 label minFaceI = -1;
 
-                wallDistCorrected[cellI] = smallestDist
+                wallDistCorrected[celli] = smallestDist
                 (
-                    cellCentres[cellI],
+                    cellCentres[celli],
                     patch,
                     nNeighbours,
                     neighbours,
@@ -315,7 +315,7 @@ void Foam::cellDistFuncs::correctBoundaryFaceCells
                 );
 
                 // Store wallCell and its nearest neighbour
-                nearestFace.insert(cellI, minFaceI);
+                nearestFace.insert(celli, minFaceI);
             }
         }
     }
@@ -335,11 +335,11 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
 
     const vectorField& cellCentres = mesh().cellCentres();
 
-    forAll(mesh().boundaryMesh(), patchI)
+    forAll(mesh().boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh().boundaryMesh()[patchI];
+            const polyPatch& patch = mesh().boundaryMesh()[patchi];
 
             const labelList& meshPoints = patch.meshPoints();
             const labelListList& pointFaces = patch.pointFaces();
@@ -352,17 +352,17 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
 
                 forAll(neighbours, neighbourI)
                 {
-                    label cellI = neighbours[neighbourI];
+                    label celli = neighbours[neighbourI];
 
-                    if (!nearestFace.found(cellI))
+                    if (!nearestFace.found(celli))
                     {
                         const labelList& wallFaces = pointFaces[meshPointI];
 
                         label minFaceI = -1;
 
-                        wallDistCorrected[cellI] = smallestDist
+                        wallDistCorrected[celli] = smallestDist
                         (
-                            cellCentres[cellI],
+                            cellCentres[celli],
                             patch,
                             wallFaces.size(),
                             wallFaces,
@@ -370,7 +370,7 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
                         );
 
                         // Store wallCell and its nearest neighbour
-                        nearestFace.insert(cellI, minFaceI);
+                        nearestFace.insert(celli, minFaceI);
                     }
                 }
             }

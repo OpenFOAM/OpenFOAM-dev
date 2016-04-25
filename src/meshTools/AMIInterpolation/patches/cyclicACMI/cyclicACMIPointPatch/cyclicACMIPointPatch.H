@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,8 +134,8 @@ public:
         //- Return neighbour point patch
         const cyclicACMIPointPatch& neighbPatch() const
         {
-            label patchI = cyclicACMIPolyPatch_.neighbPatchID();
-            const pointPatch& pp = this->boundaryMesh()[patchI];
+            label patchi = cyclicACMIPolyPatch_.neighbPatchID();
+            const pointPatch& pp = this->boundaryMesh()[patchi];
             return refCast<const cyclicACMIPointPatch>(pp);
         }
 

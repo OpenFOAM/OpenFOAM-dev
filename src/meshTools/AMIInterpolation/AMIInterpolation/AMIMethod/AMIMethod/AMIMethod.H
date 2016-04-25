@@ -143,10 +143,10 @@ protected:
             //- Find face on target patch that overlaps source face
             label findTargetFace(const label srcFaceI) const;
 
-            //- Add faces neighbouring faceI to the ID list
+            //- Add faces neighbouring facei to the ID list
             void appendNbrFaces
             (
-                const label faceI,
+                const label facei,
                 const TargetPatch& patch,
                 const DynamicList<label>& visitedFaces,
                 DynamicList<label>& faceIDs

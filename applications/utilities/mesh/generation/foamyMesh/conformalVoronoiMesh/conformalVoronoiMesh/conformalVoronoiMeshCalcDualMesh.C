@@ -133,7 +133,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
     points.setSize(vertI);
     pointToDelaunayVertex.setSize(vertI);
 
-    label cellI = 0;
+    label celli = 0;
 
     for
     (
@@ -144,7 +144,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
     {
         if (cit->internalOrBoundaryDualVertex())
         {
-             cit->cellIndex() = cellI++;
+             cit->cellIndex() = celli++;
         }
         else
         {
@@ -170,7 +170,7 @@ void Foam::conformalVoronoiMesh::calcTetMesh
 
     neighbour.setSize(number_of_finite_facets());
 
-    label faceI = 0;
+    label facei = 0;
 
     labelList verticesOnTriFace(3, label(-1));
 
@@ -262,14 +262,14 @@ void Foam::conformalVoronoiMesh::calcTetMesh
                 neighbourCell = c1I;
             }
 
-            faces[faceI] = newFace;
-            owner[faceI] = ownerCell;
-            neighbour[faceI] = neighbourCell;
-            faceI++;
+            faces[facei] = newFace;
+            owner[facei] = ownerCell;
+            neighbour[facei] = neighbourCell;
+            facei++;
         }
     }
 
-    label nInternalFaces = faceI;
+    label nInternalFaces = facei;
 
     faces.setSize(nInternalFaces);
     owner.setSize(nInternalFaces);
@@ -910,11 +910,11 @@ void Foam::conformalVoronoiMesh::checkCellSizing()
         pointField cellsToResize(cellsToResizeMap.size());
 
         label count = 0;
-        for (label cellI = 0; cellI < pMesh.nCells(); ++cellI)
+        for (label celli = 0; celli < pMesh.nCells(); ++celli)
         {
-            if (cellsToResizeMap.found(cellI))
+            if (cellsToResizeMap.found(celli))
             {
-                cellsToResize[count++] = pMesh.cellCentres()[cellI];
+                cellsToResize[count++] = pMesh.cellCentres()[celli];
             }
         }
 
@@ -1152,9 +1152,9 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::checkPolyMeshQuality
 
     // forAllConstIter(labelHashSet, limitCells, iter)
     // {
-    //     label cellI = iter.key();
+    //     label celli = iter.key();
 
-    //     const labelList& cP = cellPts[cellI];
+    //     const labelList& cP = cellPts[celli];
 
     //     forAll(cP, cPI)
     //     {
@@ -2527,17 +2527,17 @@ void Foam::conformalVoronoiMesh::addPatches
     owner.setSize(nInternalFaces + nBoundaryFaces);
     boundaryFacesToRemove.setSize(nInternalFaces + nBoundaryFaces);
 
-    label faceI = nInternalFaces;
+    label facei = nInternalFaces;
 
     forAll(patchFaces, p)
     {
         forAll(patchFaces[p], f)
         {
-            faces[faceI] = patchFaces[p][f];
-            owner[faceI] = patchOwners[p][f];
-            boundaryFacesToRemove[faceI] = indirectPatchFace[p][f];
+            faces[facei] = patchFaces[p][f];
+            owner[facei] = patchOwners[p][f];
+            boundaryFacesToRemove[facei] = indirectPatchFace[p][f];
 
-            faceI++;
+            facei++;
         }
     }
 }
@@ -2623,7 +2623,7 @@ Foam::labelList Foam::conformalVoronoiMesh::removeUnusedCells
         cellUsed[neighbour[nI]] = true;
     }
 
-    label cellI = 0;
+    label celli = 0;
 
     labelList oldToNew(cellUsed.size(), label(-1));
 
@@ -2634,11 +2634,11 @@ Foam::labelList Foam::conformalVoronoiMesh::removeUnusedCells
     {
         if (cellUsed[cellUI] == true)
         {
-            oldToNew[cellUI] = cellI++;
+            oldToNew[cellUI] = celli++;
         }
     }
 
-    labelList newToOld(invert(cellI, oldToNew));
+    labelList newToOld(invert(celli, oldToNew));
 
     // Find all of the unused cells, create a list of them, then
     // subtract one from each owner and neighbour entry for each of

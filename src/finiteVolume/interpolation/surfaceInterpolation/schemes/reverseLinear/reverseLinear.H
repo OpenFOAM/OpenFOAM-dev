@@ -132,15 +132,15 @@ public:
                 reverseLinearWeights.boundaryFieldRef();
 
 
-            forAll(mesh.boundary(), patchI)
+            forAll(mesh.boundary(), patchi)
             {
-                if (rlwbf[patchI].coupled())
+                if (rlwbf[patchi].coupled())
                 {
-                    rlwbf[patchI] = 1.0 - cdWeights.boundaryField()[patchI];
+                    rlwbf[patchi] = 1.0 - cdWeights.boundaryField()[patchi];
                 }
                 else
                 {
-                    rlwbf[patchI] = cdWeights.boundaryField()[patchI];
+                    rlwbf[patchi] = cdWeights.boundaryField()[patchi];
                 }
             }
 

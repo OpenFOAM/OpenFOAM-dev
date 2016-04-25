@@ -175,7 +175,7 @@ class meshCutter
         void faceCells
         (
             const cellCuts& cuts,
-            const label faceI,
+            const label facei,
             label& own,
             label& nei
         ) const;
@@ -183,30 +183,30 @@ class meshCutter
         //- Get patch information for face.
         void getFaceInfo
         (
-            const label faceI,
+            const label facei,
             label& patchID,
             label& zoneID,
             label& zoneFlip
         ) const;
 
-        //- Adds a face on top of existing faceI. Flips face
+        //- Adds a face on top of existing facei. Flips face
         //  if owner>neighbour
         void addFace
         (
             polyTopoChange& meshMod,
-            const label faceI,
+            const label facei,
             const face& newFace,
             const label owner,
             const label neighbour
         );
 
-        //- Modifies existing faceI for either new owner/neighbour or
+        //- Modifies existing facei for either new owner/neighbour or
         //  new face points. Checks if anything changed and flips face
         //  if owner>neighbour
         void modFace
         (
             polyTopoChange& meshMod,
-            const label faceI,
+            const label facei,
             const face& newFace,
             const label owner,
             const label neighbour
@@ -236,12 +236,12 @@ class meshCutter
         ) const;
 
         //- Add cuts of edges to face
-        face addEdgeCutsToFace(const label faceI) const;
+        face addEdgeCutsToFace(const label facei) const;
 
         //- Convert loop of cuts into face.
         face loopToFace
         (
-            const label cellI,
+            const label celli,
             const labelList& loop
         ) const;
 
@@ -249,7 +249,7 @@ class meshCutter
         //- Get elements of cell.
         void getFacesEdgesPoints
         (
-            const label cellI,
+            const label celli,
             labelHashSet& faces,
             labelHashSet& edges,
             labelHashSet& points

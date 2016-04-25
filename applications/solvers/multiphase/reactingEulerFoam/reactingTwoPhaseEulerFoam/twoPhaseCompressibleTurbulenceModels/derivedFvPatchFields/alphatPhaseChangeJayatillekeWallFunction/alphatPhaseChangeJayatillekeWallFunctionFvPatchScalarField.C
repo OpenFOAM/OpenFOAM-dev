@@ -85,23 +85,23 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
     tmp<scalarField> typsf(new scalarField(this->size()));
     scalarField& ypsf = typsf.ref();
 
-    forAll(ypsf, faceI)
+    forAll(ypsf, facei)
     {
         scalar ypt = 11.0;
 
         for (int i=0; i<maxIters_; i++)
         {
-            scalar f = ypt - (log(E_*ypt)/kappa_ + P[faceI])/Prat[faceI];
-            scalar df = 1 - 1.0/(ypt*kappa_*Prat[faceI]);
+            scalar f = ypt - (log(E_*ypt)/kappa_ + P[facei])/Prat[facei];
+            scalar df = 1 - 1.0/(ypt*kappa_*Prat[facei]);
             scalar yptNew = ypt - f/df;
 
             if (yptNew < VSMALL)
             {
-                ypsf[faceI] = 0;
+                ypsf[facei] = 0;
             }
             else if (mag(yptNew - ypt) < tolerance_)
             {
-                ypsf[faceI] = yptNew;
+                ypsf[facei] = yptNew;
             }
             else
             {
@@ -109,7 +109,7 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::yPlusTherm
             }
         }
 
-        ypsf[faceI] = ypt;
+        ypsf[facei] = ypt;
     }
 
     return typsf;
@@ -200,32 +200,32 @@ alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     scalarField& alphatConv = talphatConv.ref();
 
     // Populate boundary values
-    forAll(alphatConv, faceI)
+    forAll(alphatConv, facei)
     {
         // Evaluate new effective thermal diffusivity
         scalar alphaEff = 0.0;
-        if (yPlus[faceI] < yPlusTherm[faceI])
+        if (yPlus[facei] < yPlusTherm[facei])
         {
-            scalar A = qDot[faceI]*rhow[faceI]*uTau[faceI]*y[faceI];
-            scalar B = qDot[faceI]*Pr[faceI]*yPlus[faceI];
-            scalar C = Pr[faceI]*0.5*rhow[faceI]*uTau[faceI]*sqr(magUp[faceI]);
+            scalar A = qDot[facei]*rhow[facei]*uTau[facei]*y[facei];
+            scalar B = qDot[facei]*Pr[facei]*yPlus[facei];
+            scalar C = Pr[facei]*0.5*rhow[facei]*uTau[facei]*sqr(magUp[facei]);
             alphaEff = A/(B + C + VSMALL);
         }
         else
         {
-            scalar A = qDot[faceI]*rhow[faceI]*uTau[faceI]*y[faceI];
+            scalar A = qDot[facei]*rhow[facei]*uTau[facei]*y[facei];
             scalar B =
-                qDot[faceI]*Prt_*(1.0/kappa_*log(E_*yPlus[faceI]) + P[faceI]);
+                qDot[facei]*Prt_*(1.0/kappa_*log(E_*yPlus[facei]) + P[facei]);
             scalar magUc =
-                uTau[faceI]/kappa_*log(E_*yPlusTherm[faceI]) - mag(Uw[faceI]);
+                uTau[facei]/kappa_*log(E_*yPlusTherm[facei]) - mag(Uw[facei]);
             scalar C =
-                0.5*rhow[faceI]*uTau[faceI]
-               *(Prt_*sqr(magUp[faceI]) + (Pr[faceI] - Prt_)*sqr(magUc));
+                0.5*rhow[facei]*uTau[facei]
+               *(Prt_*sqr(magUp[facei]) + (Pr[facei] - Prt_)*sqr(magUc));
             alphaEff = A/(B + C + VSMALL);
         }
 
         // Update convective heat transfer turbulent thermal diffusivity
-        alphatConv[faceI] = max(0.0, alphaEff - alphaw[faceI]);
+        alphatConv[facei] = max(0.0, alphaEff - alphaw[facei]);
     }
 
     return talphatConv;

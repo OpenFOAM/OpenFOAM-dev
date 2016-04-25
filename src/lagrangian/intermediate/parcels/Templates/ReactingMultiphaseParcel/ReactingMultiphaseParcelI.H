@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,12 +69,12 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI
 )
 :
-    ParcelType(mesh, position, cellI, tetFaceI, tetPtI),
+    ParcelType(mesh, position, celli, tetFaceI, tetPtI),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),
@@ -87,7 +87,7 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI,
     const label typeId,
@@ -109,7 +109,7 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
     (
         mesh,
         position,
-        cellI,
+        celli,
         tetFaceI,
         tetPtI,
         typeId,

@@ -86,9 +86,9 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
     forAll(definedPatchRadii_, i)
     {
-        label patchI = definedPatchRadii_[i].first();
+        label patchi = definedPatchRadii_[i].first();
         scalar definedInvR1 = 1.0/max(rMin, definedPatchRadii_[i].second());
-        UIndirectList<scalar>(invR1, pbm[patchI].faceCells()) = definedInvR1;
+        UIndirectList<scalar>(invR1, pbm[patchi].faceCells()) = definedInvR1;
     }
 
     // filter out large radii
@@ -122,36 +122,36 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
 
     scalarField phiMax(mesh.nCells(), -GREAT);
     scalarField cosAngle(mesh.nCells(), 0.0);
-    forAll(nbr, faceI)
+    forAll(nbr, facei)
     {
-        label cellO = own[faceI];
-        label cellN = nbr[faceI];
+        label cellO = own[facei];
+        label cellN = nbr[facei];
 
-        if (phi[faceI] > phiMax[cellO])
+        if (phi[facei] > phiMax[cellO])
         {
-            phiMax[cellO] = phi[faceI];
-            cosAngle[cellO] = -gHat_ & nf[faceI];
+            phiMax[cellO] = phi[facei];
+            cosAngle[cellO] = -gHat_ & nf[facei];
         }
-        if (-phi[faceI] > phiMax[cellN])
+        if (-phi[facei] > phiMax[cellN])
         {
-            phiMax[cellN] = -phi[faceI];
-            cosAngle[cellN] = -gHat_ & -nf[faceI];
+            phiMax[cellN] = -phi[facei];
+            cosAngle[cellN] = -gHat_ & -nf[facei];
         }
     }
 
-    forAll(phi.boundaryField(), patchI)
+    forAll(phi.boundaryField(), patchi)
     {
-        const fvsPatchScalarField& phip = phi.boundaryField()[patchI];
+        const fvsPatchScalarField& phip = phi.boundaryField()[patchi];
         const fvPatch& pp = phip.patch();
         const labelList& faceCells = pp.faceCells();
         const vectorField nf(pp.nf());
         forAll(phip, i)
         {
-            label cellI = faceCells[i];
-            if (phip[i] > phiMax[cellI])
+            label celli = faceCells[i];
+            if (phip[i] > phiMax[celli])
             {
-                phiMax[cellI] = phip[i];
-                cosAngle[cellI] = -gHat_ & nf[i];
+                phiMax[celli] = phip[i];
+                cosAngle[celli] = -gHat_ & nf[i];
             }
         }
     }
@@ -159,14 +159,14 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     // correction for cyclics - use cyclic pairs' face normal instead of
     // local face normal
     const fvBoundaryMesh& pbm = mesh.boundary();
-    forAll(phi.boundaryField(), patchI)
+    forAll(phi.boundaryField(), patchi)
     {
-        if (isA<cyclicPolyPatch>(pbm[patchI]))
+        if (isA<cyclicPolyPatch>(pbm[patchi]))
         {
-            const scalarField& phip = phi.boundaryField()[patchI];
-            const vectorField nf(pbm[patchI].nf());
-            const labelList& faceCells = pbm[patchI].faceCells();
-            const label sizeBy2 = pbm[patchI].size()/2;
+            const scalarField& phip = phi.boundaryField()[patchi];
+            const vectorField nf(pbm[patchi].nf());
+            const labelList& faceCells = pbm[patchi].faceCells();
+            const label sizeBy2 = pbm[patchi].size()/2;
 
             for (label face0=0; face0<sizeBy2; face0++)
             {
@@ -252,14 +252,14 @@ curvatureSeparation::curvatureSeparation
         labelList patchIDs = findStrings(prIn[i].first(), allPatchNames);
         forAll(patchIDs, j)
         {
-            const label patchI = patchIDs[j];
+            const label patchi = patchIDs[j];
 
-            if (!uniquePatchIDs.found(patchI))
+            if (!uniquePatchIDs.found(patchi))
             {
                 const scalar radius = prIn[i].second();
-                prData.append(Tuple2<label, scalar>(patchI, radius));
+                prData.append(Tuple2<label, scalar>(patchi, radius));
 
-                uniquePatchIDs.insert(patchI);
+                uniquePatchIDs.insert(patchi);
             }
         }
     }

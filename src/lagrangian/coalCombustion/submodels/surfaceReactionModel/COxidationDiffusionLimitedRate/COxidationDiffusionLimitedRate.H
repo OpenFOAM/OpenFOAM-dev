@@ -134,7 +134,7 @@ public:
         virtual scalar calculate
         (
             const scalar dt,
-            const label cellI,
+            const label celli,
             const scalar d,
             const scalar T,
             const scalar Tc,

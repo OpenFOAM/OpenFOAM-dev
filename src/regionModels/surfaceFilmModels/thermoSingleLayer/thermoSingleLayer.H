@@ -319,7 +319,7 @@ public:
             virtual void addSources
             (
                 const label patchI,            // patchI on primary region
-                const label faceI,             // faceI of patchI
+                const label facei,             // facei of patchI
                 const scalar massSource,       // [kg]
                 const vector& momentumSource,  // [kg.m/s] (tangential momentum)
                 const scalar pressureSource,   // [kg.m/s] (normal momentum)

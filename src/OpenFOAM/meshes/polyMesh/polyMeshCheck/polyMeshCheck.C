@@ -72,15 +72,15 @@ bool Foam::polyMesh::checkFaceOrthogonality
     // Statistics only for internal and masters of coupled faces
     PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
 
-    forAll(ortho, faceI)
+    forAll(ortho, facei)
     {
-        if (ortho[faceI] < severeNonorthogonalityThreshold)
+        if (ortho[facei] < severeNonorthogonalityThreshold)
         {
-            if (ortho[faceI] > SMALL)
+            if (ortho[facei] > SMALL)
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 severeNonOrth++;
@@ -90,18 +90,18 @@ bool Foam::polyMesh::checkFaceOrthogonality
                 // Error : non-ortho too large
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
                 if (detailedReport && errorNonOrth == 0)
                 {
                     // Non-orthogonality greater than 90 deg
                     WarningInFunction
                         << "Severe non-orthogonality for face "
-                        << faceI
-                        << " between cells " << own[faceI]
-                        << " and " << nei[faceI]
+                        << facei
+                        << " between cells " << own[facei]
+                        << " and " << nei[facei]
                         << ": Angle = "
-                        << radToDeg(::acos(min(1.0, max(-1.0, ortho[faceI]))))
+                        << radToDeg(::acos(min(1.0, max(-1.0, ortho[facei]))))
                         << " deg." << endl;
                 }
 
@@ -109,10 +109,10 @@ bool Foam::polyMesh::checkFaceOrthogonality
             }
         }
 
-        if (isMasterFace[faceI])
+        if (isMasterFace[facei])
         {
-            minDDotS = min(minDDotS, ortho[faceI]);
-            sumDDotS += ortho[faceI];
+            minDDotS = min(minDDotS, ortho[facei]);
+            sumDDotS += ortho[facei];
             nSummed++;
         }
     }
@@ -205,37 +205,37 @@ bool Foam::polyMesh::checkFaceSkewness
     // Statistics only for all faces except slave coupled faces
     PackedBoolList isMasterFace(syncTools::getMasterFaces(*this));
 
-    forAll(skew, faceI)
+    forAll(skew, facei)
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skew[faceI] > skewThreshold_)
+        if (skew[facei] > skewThreshold_)
         {
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
             if (detailedReport && nWarnSkew == 0)
             {
                 // Non-orthogonality greater than 90 deg
-                if (isInternalFace(faceI))
+                if (isInternalFace(facei))
                 {
                     WarningInFunction
-                        << "Severe skewness " << skew[faceI]
-                        << " for face " << faceI
-                        << " between cells " << own[faceI]
-                        << " and " << nei[faceI];
+                        << "Severe skewness " << skew[facei]
+                        << " for face " << facei
+                        << " between cells " << own[facei]
+                        << " and " << nei[facei];
                 }
                 else
                 {
                     WarningInFunction
-                        << "Severe skewness " << skew[faceI]
-                        << " for boundary face " << faceI
-                        << " on cell " << own[faceI];
+                        << "Severe skewness " << skew[facei]
+                        << " for boundary face " << facei
+                        << " on cell " << own[facei];
                 }
             }
 
-            if (isMasterFace[faceI])
+            if (isMasterFace[facei])
             {
                 nWarnSkew++;
             }
@@ -314,9 +314,9 @@ bool Foam::polyMesh::checkEdgeAlignment
 
     EdgeMap<label> edgesInError;
 
-    forAll(fcs, faceI)
+    forAll(fcs, facei)
     {
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
         forAll(f, fp)
         {
@@ -358,13 +358,13 @@ bool Foam::polyMesh::checkEdgeAlignment
                         // Ok if purely in empty directions.
                         if (nNonEmptyDirs > 0)
                         {
-                            edgesInError.insert(edge(p0, p1), faceI);
+                            edgesInError.insert(edge(p0, p1), facei);
                         }
                     }
                     else if (nEmptyDirs > 1)
                     {
                         // Always an error
-                        edgesInError.insert(edge(p0, p1), faceI);
+                        edgesInError.insert(edge(p0, p1), facei);
                     }
                 }
             }
@@ -434,13 +434,13 @@ bool Foam::polyMesh::checkCellDeterminant
     scalar minDet = min(cellDeterminant);
     scalar sumDet = sum(cellDeterminant);
 
-    forAll(cellDeterminant, cellI)
+    forAll(cellDeterminant, celli)
     {
-        if (cellDeterminant[cellI] < warnDet)
+        if (cellDeterminant[celli] < warnDet)
         {
             if (setPtr)
             {
-                setPtr->insert(cellI);
+                setPtr->insert(celli);
             }
 
             nErrorCells++;
@@ -520,24 +520,24 @@ bool Foam::polyMesh::checkFaceWeight
     // Statistics only for internal and masters of coupled faces
     PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
 
-    forAll(faceWght, faceI)
+    forAll(faceWght, facei)
     {
-        if (faceWght[faceI] < minWeight)
+        if (faceWght[facei] < minWeight)
         {
             // Note: insert both sides of coupled faces
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
 
             nErrorFaces++;
         }
 
         // Note: statistics only on master of coupled faces
-        if (isMasterFace[faceI])
+        if (isMasterFace[facei])
         {
-            minDet = min(minDet, faceWght[faceI]);
-            sumDet += faceWght[faceI];
+            minDet = min(minDet, faceWght[facei]);
+            sumDet += faceWght[facei];
             nSummed++;
         }
     }
@@ -607,24 +607,24 @@ bool Foam::polyMesh::checkVolRatio
     // Statistics only for internal and masters of coupled faces
     PackedBoolList isMasterFace(syncTools::getInternalOrMasterFaces(*this));
 
-    forAll(volRatio, faceI)
+    forAll(volRatio, facei)
     {
-        if (volRatio[faceI] < minRatio)
+        if (volRatio[facei] < minRatio)
         {
             // Note: insert both sides of coupled faces
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
 
             nErrorFaces++;
         }
 
         // Note: statistics only on master of coupled faces
-        if (isMasterFace[faceI])
+        if (isMasterFace[facei])
         {
-            minDet = min(minDet, volRatio[faceI]);
-            sumDet += volRatio[faceI];
+            minDet = min(minDet, volRatio[facei]);
+            sumDet += volRatio[facei];
             nSummed++;
         }
     }

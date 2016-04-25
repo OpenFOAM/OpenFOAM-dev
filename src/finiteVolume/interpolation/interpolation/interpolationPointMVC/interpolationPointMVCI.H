@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,13 +39,13 @@ template<class Type>
 inline Type Foam::interpolationPointMVC<Type>::interpolate
 (
     const vector& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 ) const
 {
     return interpolate
     (
-        pointMVCWeight(this->pMesh_, position, cellI, faceI)
+        pointMVCWeight(this->pMesh_, position, celli, facei)
     );
 }
 

@@ -78,26 +78,26 @@ public:
 
 void Foam::removePoints::modifyFace
 (
-    const label faceI,
+    const label facei,
     const face& newFace,
     polyTopoChange& meshMod
 ) const
 {
     // Get other face data.
     label patchI = -1;
-    label owner = mesh_.faceOwner()[faceI];
+    label owner = mesh_.faceOwner()[facei];
     label neighbour = -1;
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
-        neighbour = mesh_.faceNeighbour()[faceI];
+        neighbour = mesh_.faceNeighbour()[facei];
     }
     else
     {
-        patchI = mesh_.boundaryMesh().whichPatch(faceI);
+        patchI = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    label zoneID = mesh_.faceZones().whichZone(faceI);
+    label zoneID = mesh_.faceZones().whichZone(facei);
 
     bool zoneFlip = false;
 
@@ -105,7 +105,7 @@ void Foam::removePoints::modifyFace
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 
     meshMod.setAction
@@ -113,7 +113,7 @@ void Foam::removePoints::modifyFace
         polyModifyFace
         (
             newFace,        // modified face
-            faceI,          // label of face being modified
+            facei,          // label of face being modified
             owner,          // owner
             neighbour,      // neighbour
             false,          // face flip
@@ -238,9 +238,9 @@ Foam::label Foam::removePoints::countPointUsage
 
     // Protect any points on faces that would collapse down to nothing
     // No particular intelligence so might protect too many points
-    forAll(mesh_.faces(), faceI)
+    forAll(mesh_.faces(), facei)
     {
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
         label nCollapse = 0;
         forAll(f, fp)
@@ -365,9 +365,9 @@ void Foam::removePoints::setRefinement
 
     forAllConstIter(labelHashSet, facesAffected, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
-        const face& f = mesh_.faces()[faceI];
+        const face& f = mesh_.faces()[facei];
 
         face newFace(f.size());
 
@@ -385,12 +385,12 @@ void Foam::removePoints::setRefinement
         newFace.setSize(newI);
 
         // Actually change the face to the new vertices
-        modifyFace(faceI, newFace, meshMod);
+        modifyFace(facei, newFace, meshMod);
 
         // Save the face. Negative indices are into savedPoints_
         if (undoable_)
         {
-            savedFaceLabels_[nSaved] = faceI;
+            savedFaceLabels_[nSaved] = facei;
 
             face& savedFace = savedFaces_[nSaved++];
             savedFace.setSize(f.size());
@@ -442,7 +442,7 @@ void Foam::removePoints::setRefinement
                 if (meshPoints != keptPoints)
                 {
                     FatalErrorInFunction
-                        << "faceI:" << savedFaceLabels_[saveI] << nl
+                        << "facei:" << savedFaceLabels_[saveI] << nl
                         << "meshPoints:" << meshPoints << nl
                         << "keptPoints:" << keptPoints << nl
                         << abort(FatalError);
@@ -532,7 +532,7 @@ void Foam::removePoints::updateMesh(const mapPolyMesh& map)
                     if (keptFace != f)
                     {
                         FatalErrorInFunction
-                            << "faceI:" << savedFaceLabels_[saveI] << nl
+                            << "facei:" << savedFaceLabels_[saveI] << nl
                             << "face:" << f << nl
                             << "keptFace:" << keptFace << nl
                             << "saved points:"

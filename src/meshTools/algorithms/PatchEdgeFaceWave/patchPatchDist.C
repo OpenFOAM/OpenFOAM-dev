@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,11 +156,11 @@ void Foam::patchPatchDist::correct()
     // Extract into *this
     setSize(patch_.size());
     nUnset_ = 0;
-    forAll(allFaceInfo, faceI)
+    forAll(allFaceInfo, facei)
     {
-        if (allFaceInfo[faceI].valid(calc.data()))
+        if (allFaceInfo[facei].valid(calc.data()))
         {
-            operator[](faceI) =  Foam::sqrt(allFaceInfo[faceI].distSqr());
+            operator[](facei) =  Foam::sqrt(allFaceInfo[facei].distSqr());
         }
         else
         {

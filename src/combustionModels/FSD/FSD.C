@@ -210,15 +210,15 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
 
     scalar deltaFt = 1.0/ftDim_;
 
-    forAll(ft_, cellI)
+    forAll(ft_, celli)
     {
-        if (ft_[cellI] > ftMin_ && ft_[cellI] < ftMax_)
+        if (ft_[celli] > ftMin_ && ft_[celli] < ftMax_)
         {
-            scalar ftCell = ft_[cellI];
+            scalar ftCell = ft_[celli];
 
-            if (ftVar[cellI] > ftVarMin_) //sub-grid beta pdf of ft_
+            if (ftVar[celli] > ftVarMin_) //sub-grid beta pdf of ft_
             {
-                scalar ftVarc = ftVar[cellI];
+                scalar ftVarc = ftVar[celli];
                 scalar a =
                     max(ftCell*(ftCell*(1.0 - ftCell)/ftVarc - 1.0), 0.0);
                 scalar b = max(a/ftCell - a, 0.0);
@@ -226,35 +226,35 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
                 for (int i=1; i<ftDim_; i++)
                 {
                     scalar ft = i*deltaFt;
-                    pc[cellI] += pow(ft, a-1.0)*pow(1.0 - ft, b - 1.0)*deltaFt;
+                    pc[celli] += pow(ft, a-1.0)*pow(1.0 - ft, b - 1.0)*deltaFt;
                 }
 
                 for (int i=1; i<ftDim_; i++)
                 {
                     scalar ft = i*deltaFt;
-                    omegaFuelBar[cellI] +=
-                        omegaFuel[cellI]/omegaF[cellI]
+                    omegaFuelBar[celli] +=
+                        omegaFuel[celli]/omegaF[celli]
                        *exp
                         (
                            -sqr(ft - ftStoich)
-                           /(2.0*sqr(0.01*omegaF[cellI]))
+                           /(2.0*sqr(0.01*omegaF[celli]))
                         )
                        *pow(ft, a - 1.0)
                        *pow(1.0 - ft, b - 1.0)
                        *deltaFt;
                 }
-                omegaFuelBar[cellI] /= max(pc[cellI], 1e-4);
+                omegaFuelBar[celli] /= max(pc[celli], 1e-4);
             }
             else
             {
-                omegaFuelBar[cellI] =
-                   omegaFuel[cellI]/omegaF[cellI]
-                  *exp(-sqr(ftCell - ftStoich)/(2.0*sqr(0.01*omegaF[cellI])));
+                omegaFuelBar[celli] =
+                   omegaFuel[celli]/omegaF[celli]
+                  *exp(-sqr(ftCell - ftStoich)/(2.0*sqr(0.01*omegaF[celli])));
             }
         }
         else
         {
-            omegaFuelBar[cellI] = 0.0;
+            omegaFuelBar[celli] = 0.0;
         }
     }
 
@@ -282,15 +282,15 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
         YprodTotal += this->singleMixturePtr_->Yprod0()[productsIndex[j]];
     }
 
-    forAll(ft_, cellI)
+    forAll(ft_, celli)
     {
-        if (ft_[cellI] < ftStoich)
+        if (ft_[celli] < ftStoich)
         {
-            pc[cellI] = ft_[cellI]*(YprodTotal/ftStoich);
+            pc[celli] = ft_[celli]*(YprodTotal/ftStoich);
         }
         else
         {
-            pc[cellI] = (1.0 - ft_[cellI])*(YprodTotal/(1.0 - ftStoich));
+            pc[celli] = (1.0 - ft_[celli])*(YprodTotal/(1.0 - ftStoich));
         }
     }
 

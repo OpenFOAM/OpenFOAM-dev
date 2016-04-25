@@ -64,17 +64,17 @@ bool limitRefinementLevel
 
     label oldNCells = refCells.size();
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
-            if (refLevel[cCells[i]] > (refLevel[cellI]+1))
+            if (refLevel[cCells[i]] > (refLevel[celli]+1))
             {
                 // Found neighbour with >=2 difference in refLevel.
-                refCells.insert(cellI);
-                refLevel[cellI]++;
+                refCells.insert(celli);
+                refLevel[celli]++;
                 break;
             }
         }
@@ -308,11 +308,11 @@ int main(int argc, char *argv[])
 
         Info<< "Setting field for patch "<< endl;
 
-        forAll(bField, faceI)
+        forAll(bField, facei)
         {
-            label own = mesh.faceOwner()[pp.start() + faceI];
+            label own = mesh.faceOwner()[pp.start() + facei];
 
-            bField[faceI] = postRefLevel[own];
+            bField[facei] = postRefLevel[own];
         }
     }
 

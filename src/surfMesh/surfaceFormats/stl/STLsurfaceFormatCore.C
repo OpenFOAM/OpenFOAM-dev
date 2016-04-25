@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ bool Foam::fileFormats::STLsurfaceFormatCore::readBINARY
 
     label ptI = 0;
     label zoneI = -1;
-    forAll(zoneIds_, faceI)
+    forAll(zoneIds_, facei)
     {
         // Read an STL triangle
         STLtriangle stlTri(is);
@@ -172,7 +172,7 @@ bool Foam::fileFormats::STLsurfaceFormatCore::readBINARY
             dynSizes.append(0);
         }
 
-        zoneIds_[faceI] = zoneI;
+        zoneIds_[facei] = zoneI;
         dynSizes[zoneI]++;
 
 #ifdef DEBUG_STLBINARY

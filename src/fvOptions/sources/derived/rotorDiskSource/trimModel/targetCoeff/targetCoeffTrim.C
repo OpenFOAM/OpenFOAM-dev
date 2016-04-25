@@ -66,15 +66,15 @@ Foam::vector Foam::targetCoeffTrim::calcCoeffs
     vector cf(Zero);
     forAll(cells, i)
     {
-        label cellI = cells[i];
+        label celli = cells[i];
 
-        vector fc = force[cellI];
-        vector mc = fc^(C[cellI] - origin);
+        vector fc = force[celli];
+        vector mc = fc^(C[celli] - origin);
 
         if (useCoeffs_)
         {
             scalar radius = x[i].x();
-            scalar coeff2 = rho[cellI]*coeff1*pow4(radius);
+            scalar coeff2 = rho[celli]*coeff1*pow4(radius);
 
             // add to coefficient vector
             cf[0] += (fc & yawAxis)/(coeff2 + ROOTVSMALL);

@@ -244,12 +244,12 @@ void dumpCyclicMatch(const fileName& prefix, const polyMesh& mesh)
             Pout<< "Dumping cyclic match as lines between face centres to "
                 << str.name() << endl;
 
-            forAll(cycPatch, faceI)
+            forAll(cycPatch, facei)
             {
-                const point& fc0 = mesh.faceCentres()[cycPatch.start()+faceI];
+                const point& fc0 = mesh.faceCentres()[cycPatch.start()+facei];
                 meshTools::writeOBJ(str, fc0);
                 vertI++;
-                const point& fc1 = mesh.faceCentres()[nbrPatch.start()+faceI];
+                const point& fc1 = mesh.faceCentres()[nbrPatch.start()+facei];
                 meshTools::writeOBJ(str, fc1);
                 vertI++;
 
@@ -716,12 +716,12 @@ int main(int argc, char *argv[])
 
             forAll(patchFaces, i)
             {
-                label faceI = patchFaces[i];
+                label facei = patchFaces[i];
 
-                if (mesh.isInternalFace(faceI))
+                if (mesh.isInternalFace(facei))
                 {
                     FatalErrorInFunction
-                        << "Face " << faceI << " specified in set "
+                        << "Face " << facei << " specified in set "
                         << faces.name()
                         << " is not an external face of the mesh." << endl
                         << "This application can only repatch existing boundary"
@@ -731,7 +731,7 @@ int main(int argc, char *argv[])
                 changePatchID
                 (
                     mesh,
-                    faceI,
+                    facei,
                     destPatchI,
                     meshMod
                 );

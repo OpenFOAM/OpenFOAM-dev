@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,16 +46,16 @@ Foam::PatchTools::checkOrientation
     bool foundError = false;
 
     // Check edge normals, face normals, point normals.
-    forAll(p.faceEdges(), faceI)
+    forAll(p.faceEdges(), facei)
     {
-        const labelList& edgeLabels = p.faceEdges()[faceI];
+        const labelList& edgeLabels = p.faceEdges()[facei];
         bool valid = true;
 
         if (edgeLabels.size() < 3)
         {
             if (report)
             {
-                Info<< "Face[" << faceI << "] " << p[faceI]
+                Info<< "Face[" << facei << "] " << p[facei]
                     << " has fewer than 3 edges. Edges: " << edgeLabels
                     << endl;
             }
@@ -70,7 +70,7 @@ Foam::PatchTools::checkOrientation
                     if (report)
                     {
                         Info<< "edge number " << edgeLabels[i]
-                            << " on face " << faceI
+                            << " on face " << facei
                             << " out-of-range\n"
                             << "This usually means the input surface has "
                             << "edges with more than 2 faces connected."
@@ -91,13 +91,13 @@ Foam::PatchTools::checkOrientation
         //
         //- Compute normal from 3 points, use the first as the origin
         // minor warpage should not be a problem
-        const Face& f = p[faceI];
+        const Face& f = p[facei];
         const point& p0 = p.points()[f[0]];
         const point& p1 = p.points()[f[1]];
         const point& p2 = p.points()[f.last()];
 
         const vector pointNormal((p1 - p0) ^ (p2 - p0));
-        if ((pointNormal & p.faceNormals()[faceI]) < 0)
+        if ((pointNormal & p.faceNormals()[facei]) < 0)
         {
             foundError = false;
 
@@ -109,7 +109,7 @@ Foam::PatchTools::checkOrientation
                     << "face: " << f << nl
                     << "points: " << p0 << ' ' << p1 << ' ' << p2 << nl
                     << "pointNormal:" << pointNormal << nl
-                    << "faceNormal:" << p.faceNormals()[faceI] << endl;
+                    << "faceNormal:" << p.faceNormals()[facei] << endl;
             }
         }
     }

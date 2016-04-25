@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,28 +191,28 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
     scalarField& kw = *this;
 
     // Set k wall values
-    forAll(kw, faceI)
+    forAll(kw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uTau = Cmu25*sqrt(k[faceCellI]);
 
-        scalar yPlus = uTau*y[faceI]/nuw[faceI];
+        scalar yPlus = uTau*y[facei]/nuw[facei];
 
         if (yPlus > yPlusLam_)
         {
             scalar Ck = -0.416;
             scalar Bk = 8.366;
-            kw[faceI] = Ck/kappa_*log(yPlus) + Bk;
+            kw[facei] = Ck/kappa_*log(yPlus) + Bk;
         }
         else
         {
             scalar C = 11.0;
             scalar Cf = (1.0/sqr(yPlus + C) + 2.0*yPlus/pow3(C) - 1.0/sqr(C));
-            kw[faceI] = 2400.0/sqr(Ceps2_)*Cf;
+            kw[facei] = 2400.0/sqr(Ceps2_)*Cf;
         }
 
-        kw[faceI] *= sqr(uTau);
+        kw[facei] *= sqr(uTau);
     }
 
     // Limit kw to avoid failure of the turbulence model due to division by kw

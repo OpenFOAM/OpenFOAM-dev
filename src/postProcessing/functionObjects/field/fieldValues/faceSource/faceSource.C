@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,24 +106,24 @@ void Foam::fieldValues::faceSource::setFaceZoneFaces()
 
     forAll(fZone, i)
     {
-        label faceI = fZone[i];
+        label facei = fZone[i];
 
         label faceId = -1;
         label facePatchId = -1;
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            faceId = faceI;
+            faceId = facei;
             facePatchId = -1;
         }
         else
         {
-            facePatchId = mesh().boundaryMesh().whichPatch(faceI);
+            facePatchId = mesh().boundaryMesh().whichPatch(facei);
             const polyPatch& pp = mesh().boundaryMesh()[facePatchId];
             if (isA<coupledPolyPatch>(pp))
             {
                 if (refCast<const coupledPolyPatch>(pp).owner())
                 {
-                    faceId = pp.whichFace(faceI);
+                    faceId = pp.whichFace(facei);
                 }
                 else
                 {
@@ -132,7 +132,7 @@ void Foam::fieldValues::faceSource::setFaceZoneFaces()
             }
             else if (!isA<emptyPolyPatch>(pp))
             {
-                faceId = faceI - pp.start();
+                faceId = facei - pp.start();
             }
             else
             {
@@ -171,9 +171,9 @@ void Foam::fieldValues::faceSource::setFaceZoneFaces()
 
 void Foam::fieldValues::faceSource::setPatchFaces()
 {
-    const label patchId = mesh().boundaryMesh().findPatchID(sourceName_);
+    const label patchid = mesh().boundaryMesh().findPatchID(sourceName_);
 
-    if (patchId < 0)
+    if (patchid < 0)
     {
         FatalErrorInFunction
             << type() << " " << name_ << ": "
@@ -184,7 +184,7 @@ void Foam::fieldValues::faceSource::setPatchFaces()
             << exit(FatalError);
     }
 
-    const polyPatch& pp = mesh().boundaryMesh()[patchId];
+    const polyPatch& pp = mesh().boundaryMesh()[patchid];
 
     label nFaces = pp.size();
     if (isA<emptyPolyPatch>(pp))
@@ -197,11 +197,11 @@ void Foam::fieldValues::faceSource::setPatchFaces()
     faceSign_.setSize(nFaces);
     nFaces_ = returnReduce(faceId_.size(), sumOp<label>());
 
-    forAll(faceId_, faceI)
+    forAll(faceId_, facei)
     {
-        faceId_[faceI] = faceI;
-        facePatchId_[faceI] = patchId;
-        faceSign_[faceI] = 1;
+        faceId_[facei] = facei;
+        facePatchId_[facei] = patchid;
+        faceSign_[facei] = 1;
     }
 }
 
@@ -233,8 +233,8 @@ void Foam::fieldValues::faceSource::combineMeshGeometry
     {
         if (facePatchId_[i] != -1)
         {
-            label patchI = facePatchId_[i];
-            globalFacesIs[i] += mesh().boundaryMesh()[patchI].start();
+            label patchi = facePatchId_[i];
+            globalFacesIs[i] += mesh().boundaryMesh()[patchi].start();
         }
     }
 

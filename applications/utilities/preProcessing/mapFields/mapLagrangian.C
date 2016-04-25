@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,17 +39,17 @@ static const scalar perturbFactor = 1e-6;
 // compatible with tracking.
 static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
 {
-    label cellI = -1;
+    label celli = -1;
     label tetFaceI = -1;
     label tetPtI = -1;
 
     const polyMesh& mesh = cloud.pMesh();
 
-    mesh.findCellFacePt(pt, cellI, tetFaceI, tetPtI);
+    mesh.findCellFacePt(pt, celli, tetFaceI, tetPtI);
 
-    if (cellI >= 0)
+    if (celli >= 0)
     {
-        return cellI;
+        return celli;
     }
     else
     {
@@ -62,17 +62,17 @@ static label findCell(const Cloud<passiveParticle>& cloud, const point& pt)
             polyMesh::FACE_PLANES    // no decomposition needed
         );
 
-        label faceI = meshSearcher.findNearestBoundaryFace(pt);
+        label facei = meshSearcher.findNearestBoundaryFace(pt);
 
-        if (faceI >= 0)
+        if (facei >= 0)
         {
-            const point& cc = mesh.cellCentres()[mesh.faceOwner()[faceI]];
+            const point& cc = mesh.cellCentres()[mesh.faceOwner()[facei]];
 
             const point perturbPt = (1-perturbFactor)*pt+perturbFactor*cc;
 
-            mesh.findCellFacePt(perturbPt, cellI, tetFaceI, tetPtI);
+            mesh.findCellFacePt(perturbPt, celli, tetFaceI, tetPtI);
 
-            return cellI;
+            return celli;
         }
     }
 
@@ -188,9 +188,9 @@ void mapLagrangian(const meshToMesh0& meshToMesh0Interp)
                         );
                         passiveParticle& newP = newPtr();
 
-                        label faceI = newP.track(iter().position(), td);
+                        label facei = newP.track(iter().position(), td);
 
-                        if (faceI < 0 && newP.cell() >= 0)
+                        if (facei < 0 && newP.cell() >= 0)
                         {
                             // Hit position.
                             foundCell = true;

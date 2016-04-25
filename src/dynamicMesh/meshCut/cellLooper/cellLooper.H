@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,29 +81,29 @@ protected:
         //- Get faces (on cell) connected to vertI which are not using edgeI
         labelList getVertFacesNonEdge
         (
-            const label cellI,
+            const label celli,
             const label edgeI,
             const label vertI
         ) const;
 
-        //- Get first edge connected to vertI and on faceI
+        //- Get first edge connected to vertI and on facei
         label getFirstVertEdge
         (
-            const label faceI,
+            const label facei,
             const label vertI
         ) const;
 
-        //- Get edges (on cell) connected to vertI which are not on faceI
+        //- Get edges (on cell) connected to vertI which are not on facei
         labelList getVertEdgesNonFace
         (
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             const label vertI
         ) const;
 
         //- Return edge from cellEdges that is most perpendicular
         //  to refinement direction.
-        label getMisAlignedEdge(const vector& refDir, const label cellI) const;
+        label getMisAlignedEdge(const vector& refDir, const label celli) const;
 
 private:
 
@@ -166,7 +166,7 @@ public:
 
     // Member Functions
 
-        //- Create cut along circumference of cellI. Gets current mesh cuts
+        //- Create cut along circumference of celli. Gets current mesh cuts
         //  vertIsCut, edgeIsCut, edgeWeight).
         //  Cut along circumference is expressed as cellVertCut,
         //  cellEdgeToWeight. Returns true if succesfull. Still might not
@@ -175,7 +175,7 @@ public:
         virtual bool cut
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,
@@ -189,7 +189,7 @@ public:
         virtual bool cut
         (
             const plane& cutPlane,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,

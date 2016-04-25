@@ -132,18 +132,18 @@ void Foam::ParticleCollector<CloudType>::initPolygons
     faces_.setSize(polygons.size());
     faceTris_.setSize(polygons.size());
     area_.setSize(polygons.size());
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        const Field<point>& polyPoints = polygons[faceI];
+        const Field<point>& polyPoints = polygons[facei];
         face f(identity(polyPoints.size()) + pointOffset);
         UIndirectList<point>(points_, f) = polyPoints;
-        area_[faceI] = f.mag(points_);
+        area_[facei] = f.mag(points_);
 
         DynamicList<face> tris;
         f.triangles(points_, tris);
-        faceTris_[faceI].transfer(tris);
+        faceTris_[facei].transfer(tris);
 
-        faces_[faceI].transfer(f);
+        faces_[facei].transfer(f);
 
         pointOffset += polyPoints.size();
     }
@@ -246,10 +246,10 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
                     facePts.append(id);
                 }
 
-                label faceI = secI + radI*nS;
+                label facei = secI + radI*nS;
 
-                faces_[faceI] = face(facePts);
-                area_[faceI] = faces_[faceI].mag(points_);
+                faces_[facei] = face(facePts);
+                area_[facei] = faces_[facei].mag(points_);
             }
         }
         else
@@ -273,10 +273,10 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
                     facePts.append(id);
                 }
 
-                label faceI = secI + radI*nS;
+                label facei = secI + radI*nS;
 
-                faces_[faceI] = face(facePts);
-                area_[faceI] = faces_[faceI].mag(points_);
+                faces_[facei] = face(facePts);
+                area_[facei] = faces_[facei].mag(points_);
             }
         }
     }
@@ -293,14 +293,14 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
     label dummyNearType = -1;
     label dummyNearLabel = -1;
 
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        const label facePoint0 = faces_[faceI][0];
+        const label facePoint0 = faces_[facei][0];
 
         const point& pf = points_[facePoint0];
 
-        const scalar d1 = normal_[faceI] & (p1 - pf);
-        const scalar d2 = normal_[faceI] & (p2 - pf);
+        const scalar d1 = normal_[facei] & (p1 - pf);
+        const scalar d2 = normal_[facei] & (p2 - pf);
 
         if (sign(d1) == sign(d2))
         {
@@ -311,7 +311,7 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
         // intersection point
         const point pIntersect = p1 + (d1/(d1 - d2))*(p2 - p1);
 
-        const List<face>& tris = faceTris_[faceI];
+        const List<face>& tris = faceTris_[facei];
 
         // identify if point is within poly bounds
         forAll(tris, triI)
@@ -326,7 +326,7 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
 
             if (t.classify(pIntersect, dummyNearType, dummyNearLabel))
             {
-                hitFaceIDs_.append(faceI);
+                hitFaceIDs_.append(facei);
             }
         }
     }
@@ -398,11 +398,11 @@ void Foam::ParticleCollector<CloudType>::write()
     const scalar alpha = (totalTime_ - timeElapsed)/totalTime_;
     const scalar beta = timeElapsed/totalTime_;
 
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        massFlowRate_[faceI] =
-            alpha*massFlowRate_[faceI] + beta*mass_[faceI]/timeElapsed;
-        massTotal_[faceI] += mass_[faceI];
+        massFlowRate_[facei] =
+            alpha*massFlowRate_[facei] + beta*mass_[facei]/timeElapsed;
+        massTotal_[facei] += mass_[facei];
     }
 
     const label procI = Pstream::myProcNo();
@@ -418,28 +418,28 @@ void Foam::ParticleCollector<CloudType>::write()
 
     scalar sumTotalMass = 0.0;
     scalar sumAverageMFR = 0.0;
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
         scalarList allProcMass(Pstream::nProcs());
-        allProcMass[procI] = massTotal_[faceI];
+        allProcMass[procI] = massTotal_[facei];
         Pstream::gatherList(allProcMass);
-        faceMassTotal[faceI] += sum(allProcMass);
+        faceMassTotal[facei] += sum(allProcMass);
 
         scalarList allProcMassFlowRate(Pstream::nProcs());
-        allProcMassFlowRate[procI] = massFlowRate_[faceI];
+        allProcMassFlowRate[procI] = massFlowRate_[facei];
         Pstream::gatherList(allProcMassFlowRate);
-        faceMassFlowRate[faceI] += sum(allProcMassFlowRate);
+        faceMassFlowRate[facei] += sum(allProcMassFlowRate);
 
-        sumTotalMass += faceMassTotal[faceI];
-        sumAverageMFR += faceMassFlowRate[faceI];
+        sumTotalMass += faceMassTotal[facei];
+        sumAverageMFR += faceMassFlowRate[facei];
 
         if (outputFilePtr_.valid())
         {
             outputFilePtr_()
                 << time.timeName()
-                << tab << faceI
-                << tab << faceMassTotal[faceI]
-                << tab << faceMassFlowRate[faceI]
+                << tab << facei
+                << tab << faceMassTotal[facei]
+                << tab << faceMassFlowRate[facei]
                 << endl;
         }
     }
@@ -495,11 +495,11 @@ void Foam::ParticleCollector<CloudType>::write()
         this->setModelProperty("massFlowRate", faceMassFlowRate);
     }
 
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-        mass_[faceI] = 0.0;
-        massTotal_[faceI] = 0.0;
-        massFlowRate_[faceI] = 0.0;
+        mass_[facei] = 0.0;
+        massTotal_[facei] = 0.0;
+        massFlowRate_[facei] = 0.0;
     }
 }
 
@@ -638,7 +638,7 @@ template<class CloudType>
 void Foam::ParticleCollector<CloudType>::postMove
 (
     parcelType& p,
-    const label cellI,
+    const label celli,
     const scalar dt,
     const point& position0,
     bool& keepParticle
@@ -674,27 +674,27 @@ void Foam::ParticleCollector<CloudType>::postMove
 
     forAll(hitFaceIDs_, i)
     {
-        label faceI = hitFaceIDs_[i];
+        label facei = hitFaceIDs_[i];
         scalar m = p.nParticle()*p.mass();
 
         if (negateParcelsOppositeNormal_)
         {
             vector Uhat = p.U();
             Uhat /= mag(Uhat) + ROOTVSMALL;
-            if ((Uhat & normal_[faceI]) < 0)
+            if ((Uhat & normal_[facei]) < 0)
             {
                 m *= -1.0;
             }
         }
 
         // add mass contribution
-        mass_[faceI] += m;
+        mass_[facei] += m;
 
         if (nSector_ == 1)
         {
-            mass_[faceI + 1] += m;
-            mass_[faceI + 2] += m;
-            mass_[faceI + 3] += m;
+            mass_[facei + 1] += m;
+            mass_[facei + 2] += m;
+            mass_[facei + 3] += m;
         }
 
         if (removeCollected_)

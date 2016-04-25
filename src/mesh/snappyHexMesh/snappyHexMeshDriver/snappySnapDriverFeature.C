@@ -319,10 +319,10 @@ void Foam::snappySnapDriver::calcNearestFace
         {
             if (hitInfo[hitI].hit())
             {
-                label faceI = ppFaces[hitI];
-                faceDisp[faceI] = hitInfo[hitI].hitPoint() - fc[hitI];
-                faceSurfaceNormal[faceI] = hitNormal[hitI];
-                faceSurfaceGlobalRegion[faceI] = surfaces.globalRegion
+                label facei = ppFaces[hitI];
+                faceDisp[facei] = hitInfo[hitI].hitPoint() - fc[hitI];
+                faceSurfaceNormal[facei] = hitNormal[hitI];
+                faceSurfaceGlobalRegion[facei] = surfaces.globalRegion
                 (
                     hitSurface[hitI],
                     hitRegion[hitI]
@@ -383,10 +383,10 @@ void Foam::snappySnapDriver::calcNearestFace
     {
         if (hitInfo[hitI].hit())
         {
-            label faceI = ppFaces[hitI];
-            faceDisp[faceI] = hitInfo[hitI].hitPoint() - fc[hitI];
-            faceSurfaceNormal[faceI] = hitNormal[hitI];
-            faceSurfaceGlobalRegion[faceI] = surfaces.globalRegion
+            label facei = ppFaces[hitI];
+            faceDisp[facei] = hitInfo[hitI].hitPoint() - fc[hitI];
+            faceSurfaceNormal[facei] = hitNormal[hitI];
+            faceSurfaceGlobalRegion[facei] = surfaces.globalRegion
             (
                 hitSurface[hitI],
                 hitRegion[hitI]
@@ -408,12 +408,12 @@ void Foam::snappySnapDriver::calcNearestFace
     faceRotation.setSize(pp.size());
     faceRotation = Zero;
 
-    forAll(faceRotation, faceI)
+    forAll(faceRotation, facei)
     {
         // Note: extend to >180 degrees checking
-        faceRotation[faceI] =
-            pp.faceNormals()[faceI]
-          ^ faceSurfaceNormal[faceI];
+        faceRotation[facei] =
+            pp.faceNormals()[facei]
+          ^ faceSurfaceNormal[facei];
     }
 
     if (debug&meshRefinement::ATTRACTION)
@@ -474,8 +474,8 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         label nFaces = 0;
         forAll(pFaces, i)
         {
-            label faceI = pFaces[i];
-            if (isMasterFace[faceI] && faceSurfaceGlobalRegion[faceI] != -1)
+            label facei = pFaces[i];
+            if (isMasterFace[facei] && faceSurfaceGlobalRegion[facei] != -1)
             {
                 nFaces++;
             }
@@ -494,14 +494,14 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         nFaces = 0;
         forAll(pFaces, i)
         {
-            label faceI = pFaces[i];
-            label globalRegionI = faceSurfaceGlobalRegion[faceI];
+            label facei = pFaces[i];
+            label globalRegionI = faceSurfaceGlobalRegion[facei];
 
-            if (isMasterFace[faceI] && globalRegionI != -1)
+            if (isMasterFace[facei] && globalRegionI != -1)
             {
-                pNormals[nFaces] = faceSurfaceNormal[faceI];
-                pDisp[nFaces] = faceDisp[faceI];
-                pFc[nFaces] = pp.faceCentres()[faceI];
+                pNormals[nFaces] = faceSurfaceNormal[facei];
+                pDisp[nFaces] = faceDisp[facei];
+                pFc[nFaces] = pp.faceCentres()[facei];
                 pFid[nFaces] = globalToMasterPatch_[globalRegionI];
                 nFaces++;
             }
@@ -521,9 +521,9 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
         labelList patchID(pbm.patchID());
 
         // Unmark all non-coupled boundary faces
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            const polyPatch& pp = pbm[patchI];
+            const polyPatch& pp = pbm[patchi];
 
             if (pp.coupled() || isA<emptyPolyPatch>(pp))
             {
@@ -562,15 +562,15 @@ void Foam::snappySnapDriver::calcNearestFacePointProperties
                 label meshFaceI = pFaces[i];
                 if (!mesh.isInternalFace(meshFaceI))
                 {
-                    label patchI = patchID[meshFaceI-mesh.nInternalFaces()];
+                    label patchi = patchID[meshFaceI-mesh.nInternalFaces()];
 
-                    if (patchI != -1)
+                    if (patchi != -1)
                     {
                         vector fn = mesh.faceAreas()[meshFaceI];
                         pNormals.append(fn/mag(fn));
                         pDisp.append(mesh.faceCentres()[meshFaceI]-pt);
                         pFc.append(mesh.faceCentres()[meshFaceI]);
-                        pFid.append(patchI);
+                        pFid.append(patchi);
                     }
                 }
             }
@@ -1371,9 +1371,9 @@ void Foam::snappySnapDriver::releasePointsNextToMultiPatch
 
     // 3. Knock out any attraction on faces with multi-patch points
     label nChanged = 0;
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
 
         label nMultiPatchPoints = 0;
         forAll(f, fp)
@@ -1427,10 +1427,10 @@ Foam::labelPair Foam::snappySnapDriver::findDiagonalAttraction
     const indirectPrimitivePatch& pp,
     const vectorField& patchAttraction,
     const List<pointConstraint>& patchConstraints,
-    const label faceI
+    const label facei
 ) const
 {
-    const face& f = pp.localFaces()[faceI];
+    const face& f = pp.localFaces()[facei];
 
     // For now just detect any attraction. Improve this to look at
     // actual attraction position and orientation
@@ -1497,16 +1497,16 @@ void Foam::snappySnapDriver::avoidDiagonalAttraction
     List<pointConstraint>& patchConstraints
 ) const
 {
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
 
         labelPair diag = findDiagonalAttraction
         (
             pp,
             patchAttraction,
             patchConstraints,
-            faceI
+            facei
         );
 
         if (diag[0] != -1 && diag[1] != -1)
@@ -2210,8 +2210,8 @@ void Foam::snappySnapDriver::determineBaffleFeatures
         eFc.setSize(eFaces.size());
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
-            eFc[i] = pp.faceNormals()[faceI];
+            label facei = eFaces[i];
+            eFc[i] = pp.faceNormals()[facei];
         }
     }
 
@@ -2512,9 +2512,9 @@ void Foam::snappySnapDriver::reverseAttractMeshPoints
         {
             boolList newIsFeatureEdgeOrPoint(isFeatureEdgeOrPoint);
 
-            forAll(pp.localFaces(), faceI)
+            forAll(pp.localFaces(), facei)
             {
-                const face& f = pp.localFaces()[faceI];
+                const face& f = pp.localFaces()[facei];
 
                 forAll(f, fp)
                 {
@@ -2962,9 +2962,9 @@ void Foam::snappySnapDriver::preventFaceSqueeze
 {
     pointField points;
     face singleF;
-    forAll(pp.localFaces(), faceI)
+    forAll(pp.localFaces(), facei)
     {
-        const face& f = pp.localFaces()[faceI];
+        const face& f = pp.localFaces()[facei];
 
         if (f.size() != points.size())
         {
@@ -3066,12 +3066,12 @@ Foam::vectorField Foam::snappySnapDriver::calcNearestSurfaceFeature
         // Calculate attraction distance per face (from the attraction distance
         // per point)
         scalarField faceSnapDist(pp.size(), -GREAT);
-        forAll(pp.localFaces(), faceI)
+        forAll(pp.localFaces(), facei)
         {
-            const face& f = pp.localFaces()[faceI];
+            const face& f = pp.localFaces()[facei];
             forAll(f, fp)
             {
-                faceSnapDist[faceI] = max(faceSnapDist[faceI], snapDist[f[fp]]);
+                faceSnapDist[facei] = max(faceSnapDist[facei], snapDist[f[fp]]);
             }
         }
 

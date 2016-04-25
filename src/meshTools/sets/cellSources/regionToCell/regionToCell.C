@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,15 +64,15 @@ void Foam::regionToCell::markRegionFaces
     // Internal faces
     const labelList& faceOwner = mesh_.faceOwner();
     const labelList& faceNeighbour = mesh_.faceNeighbour();
-    forAll(faceNeighbour, faceI)
+    forAll(faceNeighbour, facei)
     {
         if
         (
-            selectedCell[faceOwner[faceI]]
-         != selectedCell[faceNeighbour[faceI]]
+            selectedCell[faceOwner[facei]]
+         != selectedCell[faceNeighbour[facei]]
         )
         {
-            regionFace[faceI] = true;
+            regionFace[facei] = true;
         }
     }
 
@@ -82,21 +82,21 @@ void Foam::regionToCell::markRegionFaces
 
     // Boundary faces
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
         const labelUList& faceCells = pp.faceCells();
         forAll(faceCells, i)
         {
-            label faceI = pp.start()+i;
-            label bFaceI = faceI-mesh_.nInternalFaces();
+            label facei = pp.start()+i;
+            label bFaceI = facei-mesh_.nInternalFaces();
             if
             (
                 selectedCell[faceCells[i]]
              != selectedCell[nbrSelected[bFaceI]]
             )
             {
-                regionFace[faceI] = true;
+                regionFace[facei] = true;
             }
         }
     }
@@ -115,13 +115,13 @@ Foam::boolList Foam::regionToCell::findRegions
     {
         // Find the region containing the insidePoint
 
-        label cellI = mesh_.findCell(insidePoints_[i]);
+        label celli = mesh_.findCell(insidePoints_[i]);
 
         label keepRegionI = -1;
         label keepProcI = -1;
-        if (cellI != -1)
+        if (celli != -1)
         {
-            keepRegionI = cellRegion[cellI];
+            keepRegionI = cellRegion[celli];
             keepProcI = Pstream::myProcNo();
         }
         reduce(keepRegionI, maxOp<label>());
@@ -140,7 +140,7 @@ Foam::boolList Foam::regionToCell::findRegions
         if (verbose)
         {
             Info<< "    Found location " << insidePoints_[i]
-                << " in cell " << cellI << " on processor " << keepProcI
+                << " in cell " << celli << " on processor " << keepProcI
                 << " in global region " << keepRegionI
                 << " out of " << cellRegion.nRegions() << " regions." << endl;
         }
@@ -166,11 +166,11 @@ void Foam::regionToCell::unselectOutsideRegions
     boolList keepRegion(findRegions(true, cellRegion));
 
     // Go back to bool per cell
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        if (!keepRegion[cellRegion[cellI]])
+        if (!keepRegion[cellRegion[celli]])
         {
-            selectedCell[cellI] = false;
+            selectedCell[celli] = false;
         }
     }
 }
@@ -188,9 +188,9 @@ void Foam::regionToCell::shrinkRegions
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
 
         if (!pp.coupled() && !isA<emptyPolyPatch>(pp))
         {
@@ -205,11 +205,11 @@ void Foam::regionToCell::shrinkRegions
         }
     }
 
-    forAll(selectedCell, cellI)
+    forAll(selectedCell, celli)
     {
-        if (!selectedCell[cellI])
+        if (!selectedCell[celli])
         {
-            const labelList& cPoints = mesh_.cellPoints(cellI);
+            const labelList& cPoints = mesh_.cellPoints(celli);
             forAll(cPoints, i)
             {
                 boundaryPoint[cPoints[i]] = true;
@@ -231,10 +231,10 @@ void Foam::regionToCell::shrinkRegions
             const labelList& pCells = mesh_.pointCells(pointI);
             forAll(pCells, i)
             {
-                label cellI = pCells[i];
-                if (selectedCell[cellI])
+                label celli = pCells[i];
+                if (selectedCell[celli])
                 {
-                    selectedCell[cellI] = false;
+                    selectedCell[celli] = false;
                     nChanged++;
                 }
             }
@@ -279,11 +279,11 @@ void Foam::regionToCell::erode
 
     // Extract cells in regions that are not to be kept.
     boolList removeCell(mesh_.nCells(), false);
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        if (shrunkSelectedCell[cellI] && !keepRegion[cellRegion[cellI]])
+        if (shrunkSelectedCell[celli] && !keepRegion[cellRegion[celli]])
         {
-            removeCell[cellI] = true;
+            removeCell[celli] = true;
         }
     }
 
@@ -297,11 +297,11 @@ void Foam::regionToCell::erode
     {
         // Grow selected cell in regions that are not for keeping
         boolList boundaryPoint(mesh_.nPoints(), false);
-        forAll(removeCell, cellI)
+        forAll(removeCell, celli)
         {
-            if (removeCell[cellI])
+            if (removeCell[celli])
             {
-                const labelList& cPoints = mesh_.cellPoints(cellI);
+                const labelList& cPoints = mesh_.cellPoints(celli);
                 forAll(cPoints, i)
                 {
                     boundaryPoint[cPoints[i]] = true;
@@ -320,10 +320,10 @@ void Foam::regionToCell::erode
                 const labelList& pCells = mesh_.pointCells(pointI);
                 forAll(pCells, i)
                 {
-                    label cellI = pCells[i];
-                    if (!removeCell[cellI])
+                    label celli = pCells[i];
+                    if (!removeCell[celli])
                     {
-                        removeCell[cellI] = true;
+                        removeCell[celli] = true;
                         nChanged++;
                     }
                 }
@@ -336,11 +336,11 @@ void Foam::regionToCell::erode
 
 
     // Unmark removeCell
-    forAll(removeCell, cellI)
+    forAll(removeCell, celli)
     {
-        if (removeCell[cellI])
+        if (removeCell[celli])
         {
-            selectedCell[cellI] = false;
+            selectedCell[celli] = false;
         }
     }
 }
@@ -373,11 +373,11 @@ void Foam::regionToCell::combine(topoSet& set, const bool add) const
     }
 
 
-    forAll(selectedCell, cellI)
+    forAll(selectedCell, celli)
     {
-        if (selectedCell[cellI])
+        if (selectedCell[celli])
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

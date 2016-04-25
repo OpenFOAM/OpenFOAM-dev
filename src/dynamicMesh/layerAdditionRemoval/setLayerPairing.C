@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,20 +99,20 @@ bool Foam::layerAdditionRemoval::setLayerPairing() const
     label nPointErrors = 0;
     label nFaceErrors = 0;
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
         // Get the local master face
-        face curLocalFace = mlf[faceI];
+        face curLocalFace = mlf[facei];
 
         // Flip face based on flip index to recover original orientation
-        if (mfFlip[faceI])
+        if (mfFlip[facei])
         {
             curLocalFace.flip();
         }
 
         // Get the opposing face from the master cell
         oppositeFace lidFace =
-            cells[mc[faceI]].opposingFace(mf[faceI], faces);
+            cells[mc[facei]].opposingFace(mf[facei], faces);
 
         if (!lidFace.found())
         {
@@ -123,8 +123,8 @@ bool Foam::layerAdditionRemoval::setLayerPairing() const
 
         if (debug > 1)
         {
-            Pout<< "curMasterFace: " << faces[mf[faceI]] << nl
-                << "cell shape: " << mesh.cellShapes()[mc[faceI]] << nl
+            Pout<< "curMasterFace: " << faces[mf[facei]] << nl
+                << "cell shape: " << mesh.cellShapes()[mc[facei]] << nl
                 << "curLocalFace: " << curLocalFace << nl
                 << "lidFace: " << lidFace
                 << " master index: " << lidFace.masterIndex()
@@ -132,7 +132,7 @@ bool Foam::layerAdditionRemoval::setLayerPairing() const
         }
 
         // Grab the opposite face for face collapse addressing
-        ftc[faceI] = lidFace.oppositeIndex();
+        ftc[facei] = lidFace.oppositeIndex();
 
         // Using the local face insert the points into the lid list
         forAll(curLocalFace, pointI)

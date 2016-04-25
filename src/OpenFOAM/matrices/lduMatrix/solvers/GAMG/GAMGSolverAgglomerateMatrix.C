@@ -721,11 +721,11 @@ void Foam::GAMGSolver::procAgglomerateMatrix
         //
         //        //const scalarField& bouCoeffs = allInterfaceBouCoeffs[intI];
         //        //const scalarField& intCoeffs = allInterfaceIntCoeffs[intI];
-        //        //forAll(bouCoeffs, faceI)
+        //        //forAll(bouCoeffs, facei)
         //        //{
-        //        //    Pout<< "        " << faceI
-        //        //        << "\tbou:" << bouCoeffs[faceI]
-        //        //        << "\tint:" << intCoeffs[faceI]
+        //        //    Pout<< "        " << facei
+        //        //        << "\tbou:" << bouCoeffs[facei]
+        //        //        << "\tint:" << intCoeffs[facei]
         //        //        << endl;
         //        //}
         //    }

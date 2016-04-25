@@ -104,7 +104,7 @@ protected:
 
         //- Particle is on diagonal edge:
         //      const face& f = mesh.faces()[tetFace()]
-        //      label faceBasePtI = mesh.tetBasePtIs()[faceI];
+        //      label faceBasePtI = mesh.tetBasePtIs()[facei];
         //      label diagPtI = (faceBasePtI+diagEdge_)%f.size();
         //      const edge e(f[faceBasePtI], f[diagPtI]);
         label diagEdge_;
@@ -224,7 +224,7 @@ public:
         (
             const polyMesh& c,
             const vector& position,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI,
             const label meshEdgeStart,

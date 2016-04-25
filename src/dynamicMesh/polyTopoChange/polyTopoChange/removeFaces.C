@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,19 +52,19 @@ defineTypeNameAndDebug(removeFaces, 0);
 // only small area of faces removed in one go.
 void Foam::removeFaces::changeCellRegion
 (
-    const label cellI,
+    const label celli,
     const label oldRegion,
     const label newRegion,
     labelList& cellRegion
 ) const
 {
-    if (cellRegion[cellI] == oldRegion)
+    if (cellRegion[celli] == oldRegion)
     {
-        cellRegion[cellI] = newRegion;
+        cellRegion[celli] = newRegion;
 
         // Step to neighbouring cells
 
-        const labelList& cCells = mesh_.cellCells()[cellI];
+        const labelList& cCells = mesh_.cellCells()[celli];
 
         forAll(cCells, i)
         {
@@ -80,7 +80,7 @@ Foam::label Foam::removeFaces::changeFaceRegion
     const labelList& cellRegion,
     const boolList& removedFace,
     const labelList& nFacesPerEdge,
-    const label faceI,
+    const label facei,
     const label newRegion,
     const labelList& fEdges,
     labelList& faceRegion
@@ -88,9 +88,9 @@ Foam::label Foam::removeFaces::changeFaceRegion
 {
     label nChanged = 0;
 
-    if (faceRegion[faceI] == -1 && !removedFace[faceI])
+    if (faceRegion[facei] == -1 && !removedFace[facei])
     {
-        faceRegion[faceI] = newRegion;
+        faceRegion[facei] = newRegion;
 
         nChanged = 1;
 
@@ -148,13 +148,13 @@ Foam::boolList Foam::removeFaces::getFacesAffected
     boolList affectedFace(mesh_.nFaces(), false);
 
     // Mark faces affected by removal of cells
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        label region = cellRegion[cellI];
+        label region = cellRegion[celli];
 
-        if (region != -1 && (cellI != cellRegionMaster[region]))
+        if (region != -1 && (celli != cellRegionMaster[region]))
         {
-            const labelList& cFaces = mesh_.cells()[cellI];
+            const labelList& cFaces = mesh_.cells()[celli];
 
             forAll(cFaces, cFaceI)
             {
@@ -279,9 +279,9 @@ void Foam::removeFaces::mergeFaces
     // Find face among pFaces which uses edgeLoop[1]
     forAll(pFaces, i)
     {
-        label faceI = pFaces[i];
+        label facei = pFaces[i];
 
-        const face& f = fp.localFaces()[faceI];
+        const face& f = fp.localFaces()[facei];
 
         label index1 = findIndex(f, edgeLoop[1]);
 
@@ -294,13 +294,13 @@ void Foam::removeFaces::mergeFaces
             {
                 if (index1 == f.fcIndex(index0))
                 {
-                    masterIndex = faceI;
+                    masterIndex = facei;
                     reverseLoop = false;
                     break;
                 }
                 else if (index1 == f.rcIndex(index0))
                 {
-                    masterIndex = faceI;
+                    masterIndex = facei;
                     reverseLoop = true;
                     break;
                 }
@@ -320,9 +320,9 @@ void Foam::removeFaces::mergeFaces
     // ~~~~~~~~~~~~~~~~~~~~~~~
 
     // Modify first face.
-    label faceI = faceLabels[masterIndex];
+    label facei = faceLabels[masterIndex];
 
-    label own = mesh_.faceOwner()[faceI];
+    label own = mesh_.faceOwner()[facei];
 
     if (cellRegion[own] != -1)
     {
@@ -331,13 +331,13 @@ void Foam::removeFaces::mergeFaces
 
     label patchID, zoneID, zoneFlip;
 
-    getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+    getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
     label nei = -1;
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
-        nei = mesh_.faceNeighbour()[faceI];
+        nei = mesh_.faceNeighbour()[facei];
 
         if (cellRegion[nei] != -1)
         {
@@ -372,7 +372,7 @@ void Foam::removeFaces::mergeFaces
     }
 
     //{
-    //    Pout<< "Modifying masterface " << faceI
+    //    Pout<< "Modifying masterface " << facei
     //        << " from faces:" << faceLabels
     //        << " old verts:" << UIndirectList<face>(mesh_.faces(), faceLabels)
     //        << " for new verts:"
@@ -385,7 +385,7 @@ void Foam::removeFaces::mergeFaces
     modFace
     (
         mergedFace,         // modified face
-        faceI,              // label of face being modified
+        facei,              // label of face being modified
         own,                // owner
         nei,                // neighbour
         false,              // face flip
@@ -405,16 +405,16 @@ void Foam::removeFaces::mergeFaces
         {
             //Pout<< "Removing face " << faceLabels[patchFaceI] << endl;
 
-            meshMod.setAction(polyRemoveFace(faceLabels[patchFaceI], faceI));
+            meshMod.setAction(polyRemoveFace(faceLabels[patchFaceI], facei));
         }
     }
 }
 
 
-// Get patch, zone info for faceI
+// Get patch, zone info for facei
 void Foam::removeFaces::getFaceInfo
 (
-    const label faceI,
+    const label facei,
 
     label& patchID,
     label& zoneID,
@@ -423,12 +423,12 @@ void Foam::removeFaces::getFaceInfo
 {
     patchID = -1;
 
-    if (!mesh_.isInternalFace(faceI))
+    if (!mesh_.isInternalFace(facei))
     {
-        patchID = mesh_.boundaryMesh().whichPatch(faceI);
+        patchID = mesh_.boundaryMesh().whichPatch(facei);
     }
 
-    zoneID = mesh_.faceZones().whichZone(faceI);
+    zoneID = mesh_.faceZones().whichZone(facei);
 
     zoneFlip = false;
 
@@ -436,7 +436,7 @@ void Foam::removeFaces::getFaceInfo
     {
         const faceZone& fZone = mesh_.faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 }
 
@@ -445,10 +445,10 @@ void Foam::removeFaces::getFaceInfo
 Foam::face Foam::removeFaces::filterFace
 (
     const labelHashSet& pointsToRemove,
-    const label faceI
+    const label facei
 ) const
 {
-    const face& f = mesh_.faces()[faceI];
+    const face& f = mesh_.faces()[facei];
 
     labelList newFace(f.size(), -1);
 
@@ -491,7 +491,7 @@ void Foam::removeFaces::modFace
 //        if (debug)
 //        {
 //            Pout<< "ModifyFace (unreversed) :"
-//                << "  faceI:" << masterFaceID
+//                << "  facei:" << masterFaceID
 //                << "  f:" << f
 //                << "  own:" << own
 //                << "  nei:" << nei
@@ -524,7 +524,7 @@ void Foam::removeFaces::modFace
 //        if (debug)
 //        {
 //            Pout<< "ModifyFace (!reversed) :"
-//                << "  faceI:" << masterFaceID
+//                << "  facei:" << masterFaceID
 //                << "  f:" << f.reverseFace()
 //                << "  own:" << nei
 //                << "  nei:" << own
@@ -598,17 +598,17 @@ Foam::label Foam::removeFaces::compatibleRemoves
 
     forAll(facesToRemove, i)
     {
-        label faceI = facesToRemove[i];
+        label facei = facesToRemove[i];
 
-        if (!mesh_.isInternalFace(faceI))
+        if (!mesh_.isInternalFace(facei))
         {
             FatalErrorInFunction
-                << "Not internal face:" << faceI << abort(FatalError);
+                << "Not internal face:" << facei << abort(FatalError);
         }
 
 
-        label own = faceOwner[faceI];
-        label nei = faceNeighbour[faceI];
+        label own = faceOwner[facei];
+        label nei = faceNeighbour[facei];
 
         label region0 = cellRegion[own];
         label region1 = cellRegion[nei];
@@ -693,18 +693,18 @@ Foam::label Foam::removeFaces::compatibleRemoves
     {
         labelList nCells(regionMaster.size(), 0);
 
-        forAll(cellRegion, cellI)
+        forAll(cellRegion, celli)
         {
-            label r = cellRegion[cellI];
+            label r = cellRegion[celli];
 
             if (r != -1)
             {
                 nCells[r]++;
 
-                if (cellI < regionMaster[r])
+                if (celli < regionMaster[r])
                 {
                     FatalErrorInFunction
-                        << "Not lowest numbered : cell:" << cellI
+                        << "Not lowest numbered : cell:" << celli
                         << " region:" << r
                         << " regionmaster:" << regionMaster[r]
                         << abort(FatalError);
@@ -739,16 +739,16 @@ Foam::label Foam::removeFaces::compatibleRemoves
     // Recreate facesToRemove to be consistent with the cellRegions.
     DynamicList<label> allFacesToRemove(facesToRemove.size());
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label own = faceOwner[faceI];
-        label nei = faceNeighbour[faceI];
+        label own = faceOwner[facei];
+        label nei = faceNeighbour[facei];
 
         if (cellRegion[own] != -1 && cellRegion[own] == cellRegion[nei])
         {
             // Both will become the same cell so add face to list of faces
             // to be removed.
-            allFacesToRemove.append(faceI);
+            allFacesToRemove.append(facei);
         }
     }
 
@@ -779,16 +779,16 @@ void Foam::removeFaces::setRefinement
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        if (!mesh_.isInternalFace(faceI))
+        if (!mesh_.isInternalFace(facei))
         {
             FatalErrorInFunction
-                << "Face to remove is not internal face:" << faceI
+                << "Face to remove is not internal face:" << facei
                 << abort(FatalError);
         }
 
-        removedFace[faceI] = true;
+        removedFace[facei] = true;
     }
 
 
@@ -821,9 +821,9 @@ void Foam::removeFaces::setRefinement
         // Count usage of edges by non-removed faces.
         forAll(faceLabels, i)
         {
-            label faceI = faceLabels[i];
+            label facei = faceLabels[i];
 
-            const labelList& fEdges = mesh_.faceEdges(faceI, fe);
+            const labelList& fEdges = mesh_.faceEdges(facei, fe);
 
             forAll(fEdges, i)
             {
@@ -920,17 +920,17 @@ void Foam::removeFaces::setRefinement
 
                 forAll(eFaces, i)
                 {
-                    label faceI = eFaces[i];
+                    label facei = eFaces[i];
 
-                    if (!removedFace[faceI] && !mesh_.isInternalFace(faceI))
+                    if (!removedFace[facei] && !mesh_.isInternalFace(facei))
                     {
                         if (f0 == -1)
                         {
-                            f0 = faceI;
+                            f0 = facei;
                         }
                         else
                         {
-                            f1 = faceI;
+                            f1 = facei;
                             break;
                         }
                     }
@@ -1181,14 +1181,14 @@ void Foam::removeFaces::setRefinement
 
         for
         (
-            label faceI = mesh_.nInternalFaces();
-            faceI < mesh_.nFaces();
-            faceI++
+            label facei = mesh_.nInternalFaces();
+            facei < mesh_.nFaces();
+            facei++
         )
         {
             // Get the neighbouring region.
-            label nbrRegion = nbrFaceRegion[faceI];
-            label myRegion = faceRegion[faceI];
+            label nbrRegion = nbrFaceRegion[facei];
+            label myRegion = faceRegion[facei];
 
             if (myRegion <= -1 || nbrRegion <= -1)
             {
@@ -1197,7 +1197,7 @@ void Foam::removeFaces::setRefinement
                     FatalErrorInFunction
                         << "Inconsistent face region across coupled patches."
                         << endl
-                        << "This side has for faceI:" << faceI
+                        << "This side has for facei:" << facei
                         << " region:" << myRegion << endl
                         << "The other side has region:" << nbrRegion
                         << endl
@@ -1218,7 +1218,7 @@ void Foam::removeFaces::setRefinement
                     FatalErrorInFunction
                         << "Inconsistent face region across coupled patches."
                         << endl
-                        << "This side has for faceI:" << faceI
+                        << "This side has for facei:" << facei
                         << " region:" << myRegion
                         << " with coupled neighbouring regions:"
                         << toNbrRegion[myRegion] << " and "
@@ -1360,15 +1360,15 @@ void Foam::removeFaces::setRefinement
     // Remove split faces.
     forAll(faceLabels, labelI)
     {
-        label faceI = faceLabels[labelI];
+        label facei = faceLabels[labelI];
 
         // Remove face if not yet uptodate (which is never; but want to be
         // consistent with rest of face removals/modifications)
-        if (affectedFace[faceI])
+        if (affectedFace[facei])
         {
-            affectedFace[faceI] = false;
+            affectedFace[facei] = false;
 
-            meshMod.setAction(polyRemoveFace(faceI, -1));
+            meshMod.setAction(polyRemoveFace(facei, -1));
         }
     }
 
@@ -1383,13 +1383,13 @@ void Foam::removeFaces::setRefinement
 
 
     // Remove cells.
-    forAll(cellRegion, cellI)
+    forAll(cellRegion, celli)
     {
-        label region = cellRegion[cellI];
+        label region = cellRegion[celli];
 
-        if (region != -1 && (cellI != cellRegionMaster[region]))
+        if (region != -1 && (celli != cellRegionMaster[region]))
         {
-            meshMod.setAction(polyRemoveCell(cellI, cellRegionMaster[region]));
+            meshMod.setAction(polyRemoveCell(celli, cellRegionMaster[region]));
         }
     }
 
@@ -1437,15 +1437,15 @@ void Foam::removeFaces::setRefinement
 
     // Check if any remaining faces have not been updated for new slave/master
     // or points removed.
-    forAll(affectedFace, faceI)
+    forAll(affectedFace, facei)
     {
-        if (affectedFace[faceI])
+        if (affectedFace[facei])
         {
-            affectedFace[faceI] = false;
+            affectedFace[facei] = false;
 
-            face f(filterFace(pointsToRemove, faceI));
+            face f(filterFace(pointsToRemove, facei));
 
-            label own = mesh_.faceOwner()[faceI];
+            label own = mesh_.faceOwner()[facei];
 
             if (cellRegion[own] != -1)
             {
@@ -1454,13 +1454,13 @@ void Foam::removeFaces::setRefinement
 
             label patchID, zoneID, zoneFlip;
 
-            getFaceInfo(faceI, patchID, zoneID, zoneFlip);
+            getFaceInfo(facei, patchID, zoneID, zoneFlip);
 
             label nei = -1;
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                nei = mesh_.faceNeighbour()[faceI];
+                nei = mesh_.faceNeighbour()[facei];
 
                 if (cellRegion[nei] != -1)
                 {
@@ -1470,8 +1470,8 @@ void Foam::removeFaces::setRefinement
 
 //            if (debug)
 //            {
-//                Pout<< "Modifying " << faceI
-//                    << " old verts:" << mesh_.faces()[faceI]
+//                Pout<< "Modifying " << facei
+//                    << " old verts:" << mesh_.faces()[facei]
 //                    << " for new verts:" << f
 //                    << " or for new owner " << own << " or for new nei "
 //                    << nei
@@ -1481,7 +1481,7 @@ void Foam::removeFaces::setRefinement
             modFace
             (
                 f,                  // modified face
-                faceI,              // label of face being modified
+                facei,              // label of face being modified
                 own,                // owner
                 nei,                // neighbour
                 false,              // face flip

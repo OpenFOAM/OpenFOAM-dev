@@ -101,11 +101,11 @@ private:
 
     // Private Member Functions
 
-        //- Create an edgeList of edges in faceI which have both their points
+        //- Create an edgeList of edges in facei which have both their points
         //  in pointLabels
         labelList edgesFromPoints
         (
-            const label& faceI,
+            const label& facei,
             const labelList& pointLabels
         ) const;
 
@@ -113,7 +113,7 @@ private:
         //  locations for points that will move as a result of the collapse
         void collapseToEdge
         (
-            const label faceI,
+            const label facei,
             const pointField& pts,
             const labelList& pointPriority,
             const vector& collapseAxis,
@@ -131,7 +131,7 @@ private:
         //  locations for points that will move as a result of the collapse
         void collapseToPoint
         (
-            const label& faceI,
+            const label& facei,
             const pointField& pts,
             const labelList& pointPriority,
             const point& fC,
@@ -159,7 +159,7 @@ private:
         (
             const labelList& pointPriority,
             const face& f,
-            const label faceI,
+            const label facei,
             const scalar targetFaceSize,
             PackedBoolList& collapseEdge,
             Map<point>& collapsePointToLocation,

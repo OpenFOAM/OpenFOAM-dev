@@ -81,16 +81,16 @@ void Foam::attachPolyTopoChanger::attach(const bool removeEmptyPatches)
         List<polyPatch*> newPatches(oldPatches.size());
         label nNewPatches = 0;
 
-        forAll(oldPatches, patchI)
+        forAll(oldPatches, patchi)
         {
-            if (oldPatches[patchI].size())
+            if (oldPatches[patchi].size())
             {
-                newPatches[nNewPatches] = oldPatches[patchI].clone
+                newPatches[nNewPatches] = oldPatches[patchi].clone
                 (
                     mesh_.boundaryMesh(),
                     nNewPatches,
-                    oldPatches[patchI].size(),
-                    oldPatches[patchI].start()
+                    oldPatches[patchi].size(),
+                    oldPatches[patchi].start()
                 ).ptr();
 
                 nNewPatches++;
@@ -99,8 +99,8 @@ void Foam::attachPolyTopoChanger::attach(const bool removeEmptyPatches)
             {
                 if (debug)
                 {
-                    Pout<< "Removing zero-sized patch " << patchI
-                        << " named " << oldPatches[patchI].name() << endl;
+                    Pout<< "Removing zero-sized patch " << patchi
+                        << " named " << oldPatches[patchi].name() << endl;
                 }
             }
         }

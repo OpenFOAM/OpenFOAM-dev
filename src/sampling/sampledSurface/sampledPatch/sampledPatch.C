@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,8 +130,8 @@ bool Foam::sampledPatch::update()
     label sz = 0;
     forAll(patchIDs(), i)
     {
-        label patchI = patchIDs()[i];
-        const polyPatch& pp = mesh().boundaryMesh()[patchI];
+        label patchi = patchIDs()[i];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
         if (isA<emptyPolyPatch>(pp))
         {
@@ -154,11 +154,11 @@ bool Foam::sampledPatch::update()
 
     forAll(patchIDs(), i)
     {
-        label patchI = patchIDs()[i];
+        label patchi = patchIDs()[i];
 
         patchStart_[i] = sz;
 
-        const polyPatch& pp = mesh().boundaryMesh()[patchI];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
 
         forAll(pp, j)
         {

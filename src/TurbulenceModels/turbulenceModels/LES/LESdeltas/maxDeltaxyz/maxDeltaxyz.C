@@ -49,16 +49,16 @@ void Foam::LESModels::maxDeltaxyz::calcDelta()
     const cellList& cells = mesh.cells();
     scalarField hmax(cells.size());
 
-    forAll(cells,cellI)
+    forAll(cells,celli)
     {
         scalar deltaMaxTmp = 0.0;
-        const labelList& cFaces = mesh.cells()[cellI];
-        const point& centrevector = mesh.cellCentres()[cellI];
+        const labelList& cFaces = mesh.cells()[celli];
+        const point& centrevector = mesh.cellCentres()[celli];
 
         forAll(cFaces, cFaceI)
         {
-            label faceI = cFaces[cFaceI];
-            const point& facevector = mesh.faceCentres()[faceI];
+            label facei = cFaces[cFaceI];
+            const point& facevector = mesh.faceCentres()[facei];
             scalar tmp = mag(facevector - centrevector);
             if (tmp > deltaMaxTmp)
             {
@@ -66,7 +66,7 @@ void Foam::LESModels::maxDeltaxyz::calcDelta()
             }
         }
 
-        hmax[cellI] = deltaCoeff_*deltaMaxTmp;
+        hmax[celli] = deltaCoeff_*deltaMaxTmp;
     }
 
     if (nD == 3)

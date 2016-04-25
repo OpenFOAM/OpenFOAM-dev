@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,30 +180,30 @@ Foam::labelList Foam::structuredRenumber::renumber
     // And extract.
     // Note that distance is distance from face so starts at 1.
     bool haveWarned = false;
-    forAll(orderedToOld, cellI)
+    forAll(orderedToOld, celli)
     {
-        if (!cellData[cellI].valid(deltaCalc.data()))
+        if (!cellData[celli].valid(deltaCalc.data()))
         {
             if (!haveWarned)
             {
                 WarningInFunction
-                    << "Did not visit some cells, e.g. cell " << cellI
-                    << " at " << mesh.cellCentres()[cellI] << endl
+                    << "Did not visit some cells, e.g. cell " << celli
+                    << " at " << mesh.cellCentres()[celli] << endl
                     << "Assigning these cells to domain 0." << endl;
                 haveWarned = true;
             }
-            orderedToOld[cellI] = 0;
+            orderedToOld[celli] = 0;
         }
         else
         {
-            label layerI = cellData[cellI].distance();
+            label layerI = cellData[celli].distance();
             if (depthFirst_)
             {
-                orderedToOld[nLayers*cellData[cellI].data()+layerI] = cellI;
+                orderedToOld[nLayers*cellData[celli].data()+layerI] = celli;
             }
             else
             {
-                orderedToOld[cellData[cellI].data()+nLayers*layerI] = cellI;
+                orderedToOld[cellData[celli].data()+nLayers*layerI] = celli;
             }
         }
     }

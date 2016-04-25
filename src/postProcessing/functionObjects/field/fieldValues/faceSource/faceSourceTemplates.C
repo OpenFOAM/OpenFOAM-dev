@@ -85,14 +85,14 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::getFieldValues
                 );
                 Field<Type>& avg = tavg.ref();
 
-                forAll(faces, faceI)
+                forAll(faces, facei)
                 {
-                    const face& f = faces[faceI];
+                    const face& f = faces[facei];
                     forAll(f, fp)
                     {
-                        avg[faceI] += intFld[f[fp]];
+                        avg[facei] += intFld[f[fp]];
                     }
-                    avg[faceI] /= f.size();
+                    avg[facei] /= f.size();
                 }
 
                 return tavg;
@@ -359,11 +359,11 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label facei = faceId_[i];
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
@@ -400,15 +400,15 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
 
     forAll(values, i)
     {
-        label faceI = faceId_[i];
-        label patchI = facePatchId_[i];
-        if (patchI >= 0)
+        label facei = faceId_[i];
+        label patchi = facePatchId_[i];
+        if (patchi >= 0)
         {
-            values[i] = field.boundaryField()[patchI][faceI];
+            values[i] = field.boundaryField()[patchi][facei];
         }
         else
         {
-            values[i] = field[faceI];
+            values[i] = field[facei];
         }
     }
 

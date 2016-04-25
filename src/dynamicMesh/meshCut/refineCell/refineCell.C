@@ -35,9 +35,9 @@ Foam::refineCell::refineCell()
 {}
 
 
-Foam::refineCell::refineCell(const label cellI, const vector& direction)
+Foam::refineCell::refineCell(const label celli, const vector& direction)
 :
-    cellNo_(cellI),
+    cellNo_(celli),
     direction_(direction)
 {
     scalar magDir = mag(direction_);

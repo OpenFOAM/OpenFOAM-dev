@@ -478,9 +478,9 @@ Foam::KinematicCloud<CloudType>::vDotSweep() const
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
-        const label cellI = p.cell();
+        const label celli = p.cell();
 
-        vDotSweep[cellI] += p.nParticle()*p.areaP()*mag(p.U() - U_[cellI]);
+        vDotSweep[celli] += p.nParticle()*p.areaP()*mag(p.U() - U_[celli]);
     }
 
     vDotSweep.internalField() /= mesh_.V();
@@ -517,9 +517,9 @@ Foam::KinematicCloud<CloudType>::theta() const
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
-        const label cellI = p.cell();
+        const label celli = p.cell();
 
-        theta[cellI] += p.nParticle()*p.volume();
+        theta[celli] += p.nParticle()*p.volume();
     }
 
     theta.internalField() /= mesh_.V();
@@ -555,9 +555,9 @@ Foam::KinematicCloud<CloudType>::alpha() const
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
-        const label cellI = p.cell();
+        const label celli = p.cell();
 
-        alpha[cellI] += p.nParticle()*p.mass();
+        alpha[celli] += p.nParticle()*p.mass();
     }
 
     alpha /= (mesh_.V()*rho_);
@@ -592,9 +592,9 @@ Foam::KinematicCloud<CloudType>::rhoEff() const
     forAllConstIter(typename KinematicCloud<CloudType>, *this, iter)
     {
         const parcelType& p = iter();
-        const label cellI = p.cell();
+        const label celli = p.cell();
 
-        rhoEff[cellI] += p.nParticle()*p.mass();
+        rhoEff[celli] += p.nParticle()*p.mass();
     }
 
     rhoEff /= mesh_.V();

@@ -100,32 +100,32 @@ inline const Point& Foam::tetrahedron<Point, PointRef>::d() const
 template<class Point, class PointRef>
 inline Foam::triPointRef Foam::tetrahedron<Point, PointRef>::tri
 (
-    const label faceI
+    const label facei
 ) const
 {
     // Warning. Ordering of faces needs to be the same for a tetrahedron
     // class, a tetrahedron cell shape model and a tetCell
 
-    if (faceI == 0)
+    if (facei == 0)
     {
         return triPointRef(b_, c_, d_);
     }
-    else if (faceI == 1)
+    else if (facei == 1)
     {
         return triPointRef(a_, d_, c_);
     }
-    else if (faceI == 2)
+    else if (facei == 2)
     {
         return triPointRef(a_, b_, d_);
     }
-    else if (faceI == 3)
+    else if (facei == 3)
     {
         return triPointRef(a_, c_, b_);
     }
     else
     {
         FatalErrorInFunction
-            << "index out of range 0 -> 3. faceI = " << faceI
+            << "index out of range 0 -> 3. facei = " << facei
             << abort(FatalError);
         return triPointRef(b_, c_, d_);
     }

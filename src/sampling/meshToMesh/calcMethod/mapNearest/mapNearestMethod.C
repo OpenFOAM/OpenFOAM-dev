@@ -252,18 +252,18 @@ void Foam::mapNearestMethod::setNextNearestCells
     srcCellI = -1;
     forAll(srcNbr, i)
     {
-        label cellI = srcNbr[i];
-        if (mapFlag[cellI])
+        label celli = srcNbr[i];
+        if (mapFlag[celli])
         {
-            srcCellI = cellI;
+            srcCellI = celli;
             return;
         }
     }
 
     for (label i = startSeedI; i < srcCellIDs.size(); i++)
     {
-        label cellI = srcCellIDs[i];
-        if (mapFlag[cellI])
+        label celli = srcCellIDs[i];
+        if (mapFlag[celli])
         {
             startSeedI = i;
             break;

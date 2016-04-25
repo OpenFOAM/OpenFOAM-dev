@@ -109,8 +109,8 @@ void Foam::multiLevelDecomp::subsetGlobalCellCells
                 // Reconvert local cell index into global one
 
                 // Get original neighbour
-                label cellI = set[subCellI];
-                label oldNbrCellI = cellCells[cellI][i];
+                label celli = set[subCellI];
+                label oldNbrCellI = cellCells[celli][i];
                 // Get processor from original neighbour
                 label procI = globalCells.whichProcID(oldNbrCellI);
                 // Convert into global compact numbering

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -297,14 +297,14 @@ Foam::label Foam::meshSearch::findCellLinear(const point& location) const
     bool cellFound = false;
     label n = 0;
 
-    label cellI = -1;
+    label celli = -1;
 
     while ((!cellFound) && (n < mesh_.nCells()))
     {
         if (mesh_.pointInCell(location, n, cellDecompMode_))
         {
             cellFound = true;
-            cellI = n;
+            celli = n;
         }
         else
         {
@@ -313,7 +313,7 @@ Foam::label Foam::meshSearch::findCellLinear(const point& location) const
     }
     if (cellFound)
     {
-        return cellI;
+        return celli;
     }
     else
     {
@@ -354,29 +354,29 @@ Foam::label Foam::meshSearch::findCellWalk
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label cellI = mesh_.faceOwner()[faceI];
-                if (cellI == curCellI)
+                label celli = mesh_.faceOwner()[facei];
+                if (celli == curCellI)
                 {
-                    cellI = mesh_.faceNeighbour()[faceI];
+                    celli = mesh_.faceNeighbour()[facei];
                 }
 
                 // Check if this is the correct cell
-                if (mesh_.pointInCell(location, cellI, cellDecompMode_))
+                if (mesh_.pointInCell(location, celli, cellDecompMode_))
                 {
-                    return cellI;
+                    return celli;
                 }
 
                 // Also calculate the nearest cell
-                scalar distSqr = magSqr(mesh_.cellCentres()[cellI] - location);
+                scalar distSqr = magSqr(mesh_.cellCentres()[celli] - location);
 
                 if (distSqr < nearestDistSqr)
                 {
                     nearestDistSqr = distSqr;
-                    nearestCellI = cellI;
+                    nearestCellI = celli;
                 }
             }
         }
@@ -440,15 +440,15 @@ Foam::label Foam::meshSearch::findNearestBoundaryFaceWalk
 
             forAll(neighbours, nI)
             {
-                label faceI = neighbours[nI];
+                label facei = neighbours[nI];
 
                 if
                 (
-                    (faceI >= mesh_.nInternalFaces())
-                 && (faceI != lastFaceI)
+                    (facei >= mesh_.nInternalFaces())
+                 && (facei != lastFaceI)
                 )
                 {
-                    const face& f =  mesh_.faces()[faceI];
+                    const face& f =  mesh_.faces()[facei];
 
                     pointHit curHit = f.nearestPoint
                     (
@@ -460,7 +460,7 @@ Foam::label Foam::meshSearch::findNearestBoundaryFaceWalk
                     if (curHit.distance() < minDist)
                     {
                         minDist = curHit.distance();
-                        curFaceI = faceI;
+                        curFaceI = facei;
                         closer = true;  // a closer neighbour has been found
                     }
                 }
@@ -644,18 +644,18 @@ const
 //// Works by checking if there is a face inbetween the point and the cell
 //// centre.
 //// Check for internal uses proper face decomposition or just average normal.
-//bool Foam::meshSearch::pointInCell(const point& p, label cellI) const
+//bool Foam::meshSearch::pointInCell(const point& p, label celli) const
 //{
 //    if (faceDecomp_)
 //    {
-//        const point& ctr = mesh_.cellCentres()[cellI];
+//        const point& ctr = mesh_.cellCentres()[celli];
 //
 //        vector dir(p - ctr);
 //        scalar magDir = mag(dir);
 //
 //        // Check if any faces are hit by ray from cell centre to p.
 //        // If none -> p is in cell.
-//        const labelList& cFaces = mesh_.cells()[cellI];
+//        const labelList& cFaces = mesh_.cells()[celli];
 //
 //        // Make sure half_ray does not pick up any faces on the wrong
 //        // side of the ray.
@@ -663,9 +663,9 @@ const
 //
 //        forAll(cFaces, i)
 //        {
-//            label faceI = cFaces[i];
+//            label facei = cFaces[i];
 //
-//            pointHit inter = mesh_.faces()[faceI].ray
+//            pointHit inter = mesh_.faces()[facei].ray
 //            (
 //                ctr,
 //                dir,
@@ -695,7 +695,7 @@ const
 //    }
 //    else
 //    {
-//        const labelList& f = mesh_.cells()[cellI];
+//        const labelList& f = mesh_.cells()[celli];
 //        const labelList& owner = mesh_.faceOwner();
 //        const vectorField& cf = mesh_.faceCentres();
 //        const vectorField& Sf = mesh_.faceAreas();
@@ -705,7 +705,7 @@ const
 //            label nFace = f[facei];
 //            vector proj = p - cf[nFace];
 //            vector normal = Sf[nFace];
-//            if (owner[nFace] == cellI)
+//            if (owner[nFace] == celli)
 //            {
 //                if ((normal & proj) > 0)
 //                {
@@ -840,12 +840,12 @@ Foam::label Foam::meshSearch::findNearestBoundaryFace
 
             for
             (
-                label faceI = mesh_.nInternalFaces();
-                faceI < mesh_.nFaces();
-                faceI++
+                label facei = mesh_.nInternalFaces();
+                facei < mesh_.nFaces();
+                facei++
             )
             {
-                const face& f =  mesh_.faces()[faceI];
+                const face& f =  mesh_.faces()[facei];
 
                 pointHit curHit =
                     f.nearestPoint
@@ -857,7 +857,7 @@ Foam::label Foam::meshSearch::findNearestBoundaryFace
                 if (curHit.distance() < minDist)
                 {
                     minDist = curHit.distance();
-                    minFaceI = faceI;
+                    minFaceI = facei;
                 }
             }
             return minFaceI;

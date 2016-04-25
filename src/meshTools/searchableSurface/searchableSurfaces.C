@@ -763,9 +763,9 @@ bool Foam::searchableSurfaces::checkQuality
             );
 
             label nBadTris = 0;
-            forAll(s, faceI)
+            forAll(s, facei)
             {
-                const labelledTri& f = s[faceI];
+                const labelledTri& f = s[facei];
 
                 scalar q = triPointRef
                 (

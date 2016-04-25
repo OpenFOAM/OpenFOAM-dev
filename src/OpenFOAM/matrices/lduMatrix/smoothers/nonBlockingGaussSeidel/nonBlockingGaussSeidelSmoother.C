@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,14 +164,14 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
         label fStart;
         label fEnd = ownStartPtr[0];
 
-        for (label cellI=0; cellI<blockStart; cellI++)
+        for (label celli=0; celli<blockStart; celli++)
         {
             // Start and end of this row
             fStart = fEnd;
-            fEnd = ownStartPtr[cellI + 1];
+            fEnd = ownStartPtr[celli + 1];
 
             // Get the accumulated neighbour side
-            curPsi = bPrimePtr[cellI];
+            curPsi = bPrimePtr[celli];
 
             // Accumulate the owner product side
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -180,7 +180,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             }
 
             // Finish current psi
-            curPsi /= diagPtr[cellI];
+            curPsi /= diagPtr[celli];
 
             // Distribute the neighbour side using current psi
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -188,7 +188,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
                 bPrimePtr[uPtr[curFace]] -= lowerPtr[curFace]*curPsi;
             }
 
-            psiPtr[cellI] = curPsi;
+            psiPtr[celli] = curPsi;
         }
 
         matrix_.updateMatrixInterfaces
@@ -201,14 +201,14 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
         );
 
         // Update rest of the cells
-        for (label cellI=blockStart; cellI < nCells; cellI++)
+        for (label celli=blockStart; celli < nCells; celli++)
         {
             // Start and end of this row
             fStart = fEnd;
-            fEnd = ownStartPtr[cellI + 1];
+            fEnd = ownStartPtr[celli + 1];
 
             // Get the accumulated neighbour side
-            curPsi = bPrimePtr[cellI];
+            curPsi = bPrimePtr[celli];
 
             // Accumulate the owner product side
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -217,7 +217,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
             }
 
             // Finish current psi
-            curPsi /= diagPtr[cellI];
+            curPsi /= diagPtr[celli];
 
             // Distribute the neighbour side using current psi
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -225,7 +225,7 @@ void Foam::nonBlockingGaussSeidelSmoother::smooth
                 bPrimePtr[uPtr[curFace]] -= lowerPtr[curFace]*curPsi;
             }
 
-            psiPtr[cellI] = curPsi;
+            psiPtr[celli] = curPsi;
         }
     }
 

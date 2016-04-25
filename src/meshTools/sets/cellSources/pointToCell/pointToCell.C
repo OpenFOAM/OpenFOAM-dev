@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,18 +87,18 @@ void Foam::pointToCell::combine(topoSet& set, const bool add) const
     else if (option_ == EDGE)
     {
         const faceList& faces = mesh_.faces();
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             forAll(f, fp)
             {
                 if (loadedSet.found(f[fp]) && loadedSet.found(f.nextLabel(fp)))
                 {
-                    addOrDelete(set, mesh_.faceOwner()[faceI], add);
-                    if (mesh_.isInternalFace(faceI))
+                    addOrDelete(set, mesh_.faceOwner()[facei], add);
+                    if (mesh_.isInternalFace(facei))
                     {
-                        addOrDelete(set, mesh_.faceNeighbour()[faceI], add);
+                        addOrDelete(set, mesh_.faceNeighbour()[facei], add);
                     }
                 }
             }

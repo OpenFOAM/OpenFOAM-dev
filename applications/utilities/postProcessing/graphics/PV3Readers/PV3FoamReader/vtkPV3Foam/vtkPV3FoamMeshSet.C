@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ vtkPolyData* Foam::vtkPV3Foam::faceSetVTKMesh
 
     const faceList& meshFaces = mesh.faces();
     faceList patchFaces(fSet.size());
-    label faceI = 0;
+    label facei = 0;
     forAllConstIter(faceSet, fSet, iter)
     {
-        patchFaces[faceI++] = meshFaces[iter.key()];
+        patchFaces[facei++] = meshFaces[iter.key()];
     }
     primitiveFacePatch p(patchFaces, mesh.points());
 
@@ -83,9 +83,9 @@ vtkPolyData* Foam::vtkPV3Foam::faceSetVTKMesh
     vtkCellArray* vtkcells = vtkCellArray::New();
     vtkcells->Allocate(faces.size());
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         vtkIdType nodeIds[f.size()];
 
         forAll(f, fp)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,16 +85,16 @@ inline bool Foam::patchEdgeFaceRegions::updateEdge
     const polyMesh& mesh,
     const Patch& patch,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const patchEdgeFaceRegions& faceInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const face& f = patch.localFaces()[faceI];
+    const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
-    label index = findIndex(patch.faceEdges()[faceI], edgeI);
+    label index = findIndex(patch.faceEdges()[facei], edgeI);
     bool sameOrientation = (f[index] == e.start());
 
     // Get information in edge-order
@@ -188,18 +188,18 @@ inline bool Foam::patchEdgeFaceRegions::updateFace
 (
     const polyMesh& mesh,
     const Patch& patch,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const patchEdgeFaceRegions& edgeInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    const face& f = patch.localFaces()[faceI];
+    const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
     // Find starting point of edge on face.
-    label index0 = findIndex(patch.faceEdges()[faceI], edgeI);
+    label index0 = findIndex(patch.faceEdges()[facei], edgeI);
     label index1 = f.fcIndex(index0);
     bool sameOrientation = (f[index0] == e.start());
 

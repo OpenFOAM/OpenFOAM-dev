@@ -219,7 +219,7 @@ class wallBoundedStreamLine
         (
             const PackedBoolList& isWallPatch,
             const point& seedPt,
-            const label cellI
+            const label celli
         ) const;
 
         //- Do all seeding and tracking

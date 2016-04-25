@@ -32,9 +32,9 @@ Foam::Field<T> Foam::channelIndex::regionSum(const Field<T>& cellField) const
 {
     Field<T> regionField(cellRegion_().nRegions(), Zero);
 
-    forAll(cellRegion_(), cellI)
+    forAll(cellRegion_(), celli)
     {
-        regionField[cellRegion_()[cellI]] += cellField[cellI];
+        regionField[cellRegion_()[celli]] += cellField[celli];
     }
 
     // Global sum

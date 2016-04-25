@@ -53,9 +53,9 @@ void Foam::enrichedPatch::calcPointPoints() const
 
     bool found = false;
 
-    forAll(lf, faceI)
+    forAll(lf, facei)
     {
-        const face& curFace = lf[faceI];
+        const face& curFace = lf[facei];
 
         forAll(curFace, pointI)
         {

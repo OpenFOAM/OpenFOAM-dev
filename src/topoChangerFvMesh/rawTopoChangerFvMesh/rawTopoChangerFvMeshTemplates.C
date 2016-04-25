@@ -38,11 +38,11 @@ void Foam::rawTopoChangerFvMesh::setUnmappedValues
 {
     //Pout<< "Checking field " << fld.name() << endl;
 
-    forAll(fld.boundaryField(), patchI)
+    forAll(fld.boundaryField(), patchi)
     {
         PatchField<Type>& fvp = const_cast<PatchField<Type>&>
         (
-            fld.boundaryField()[patchI]
+            fld.boundaryField()[patchi]
         );
 
         const label start = fvp.patch().start();
@@ -53,8 +53,8 @@ void Foam::rawTopoChangerFvMesh::setUnmappedValues
                 //Pout<< "** Resetting unassigned value on patch "
                 //    << fvp.patch().name()
                 //    << " localface:" << i
-                //    << " to:" << baseFld.boundaryField()[patchI][i] << endl;
-                fvp[i] = baseFld.boundaryField()[patchI][i];
+                //    << " to:" << baseFld.boundaryField()[patchi][i] << endl;
+                fvp[i] = baseFld.boundaryField()[patchi][i];
             }
         }
     }

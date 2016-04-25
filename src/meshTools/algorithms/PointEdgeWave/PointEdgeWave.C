@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -294,9 +294,9 @@ Foam::label Foam::PointEdgeWave<Type, TrackingData>::countPatchType() const
 {
     label nPatches = 0;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        if (isA<PatchType>(mesh_.boundaryMesh()[patchI]))
+        if (isA<PatchType>(mesh_.boundaryMesh()[patchi]))
         {
             nPatches++;
         }
@@ -319,9 +319,9 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
     forAll(mesh_.globalData().processorPatches(), i)
     {
-        label patchI = mesh_.globalData().processorPatches()[i];
+        label patchi = mesh_.globalData().processorPatches()[i];
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         patchInfo.clear();
         patchInfo.reserve(procPatch.nPoints());
@@ -348,7 +348,7 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
         //if (debug)
         //{
-        //    Pout<< "Processor patch " << patchI << ' ' << procPatch.name()
+        //    Pout<< "Processor patch " << patchi << ' ' << procPatch.name()
         //        << " communicating with " << procPatch.neighbProcNo()
         //        << "  Sending:" << patchInfo.size() << endl;
         //}
@@ -366,9 +366,9 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
     forAll(mesh_.globalData().processorPatches(), i)
     {
-        label patchI = mesh_.globalData().processorPatches()[i];
+        label patchi = mesh_.globalData().processorPatches()[i];
         const processorPolyPatch& procPatch =
-            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchI]);
+            refCast<const processorPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
         List<Type> patchInfo;
         labelList patchPoints;
@@ -380,7 +380,7 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
 
         //if (debug)
         //{
-        //    Pout<< "Processor patch " << patchI << ' ' << procPatch.name()
+        //    Pout<< "Processor patch " << patchi << ' ' << procPatch.name()
         //        << " communicating with " << procPatch.neighbProcNo()
         //        << "  Received:" << patchInfo.size() << endl;
         //}
@@ -428,9 +428,9 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
     DynamicList<label> nbrPoints;
     DynamicList<label> thisPoints;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<cyclicPolyPatch>(patch))
         {
@@ -479,7 +479,7 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 
             //if (debug)
             //{
-            //    Pout<< "Cyclic patch " << patchI << ' ' << patch.name()
+            //    Pout<< "Cyclic patch " << patchi << ' ' << patch.name()
             //        << "  Changed : " << nbrInfo.size()
             //        << endl;
             //}

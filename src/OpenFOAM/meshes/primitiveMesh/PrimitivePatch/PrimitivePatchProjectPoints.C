@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,10 @@ projectPoints
     // Estimate face centre of target side
     Field<PointType> masterFaceCentres(targetPatch.size());
 
-    forAll(masterFaceCentres, faceI)
+    forAll(masterFaceCentres, facei)
     {
-        masterFaceCentres[faceI] =
-            average(masterFaces[faceI].points(masterPoints));
+        masterFaceCentres[facei] =
+            average(masterFaces[facei].points(masterPoints));
     }
 
     // Algorithm:
@@ -220,10 +220,10 @@ projectPoints
             result[curLocalPointLabel] = objectHit(false, -1);
             scalar minDistance = GREAT;
 
-            forAll(masterFaces, faceI)
+            forAll(masterFaces, facei)
             {
                 PointHit<PointType> curHit =
-                    masterFaces[faceI].ray
+                    masterFaces[facei].ray
                     (
                         curPoint,
                         curProjectionDir,
@@ -234,8 +234,8 @@ projectPoints
 
                 if (curHit.hit())
                 {
-                    result[curLocalPointLabel] = objectHit(true, faceI);
-                    curFace = faceI;
+                    result[curLocalPointLabel] = objectHit(true, facei);
+                    curFace = facei;
 
                     break;
                 }
@@ -249,8 +249,8 @@ projectPoints
                     {
                         minDistance = missDist;
 
-                        result[curLocalPointLabel] = objectHit(false, faceI);
-                        curFace = faceI;
+                        result[curLocalPointLabel] = objectHit(false, facei);
+                        curFace = facei;
                     }
                 }
             }
@@ -317,10 +317,10 @@ projectFaceCentres
 
     const typename ToPatch::PointFieldType& masterPoints = targetPatch.points();
 
-    forAll(masterFaceCentres, faceI)
+    forAll(masterFaceCentres, facei)
     {
-        masterFaceCentres[faceI] =
-            masterFaces[faceI].centre(masterPoints);
+        masterFaceCentres[facei] =
+            masterFaces[facei].centre(masterPoints);
     }
 
     // Result
@@ -342,10 +342,10 @@ projectFaceCentres
     label curFace = 0;
     label nNSquaredSearches = 0;
 
-    forAll(slaveFaceOrder, faceI)
+    forAll(slaveFaceOrder, facei)
     {
         // pick up slave point and direction
-        const label curLocalFaceLabel = slaveFaceOrder[faceI];
+        const label curLocalFaceLabel = slaveFaceOrder[facei];
 
         const point& curFaceCentre =
             slaveFaces[curLocalFaceLabel].centre(slaveGlobalPoints);
@@ -364,7 +364,7 @@ projectFaceCentres
 
         // Force the full search for the first point to ensure good
         // starting face
-        if (faceI == 0)
+        if (facei == 0)
         {
             doNSquaredSearch = true;
         }
@@ -461,10 +461,10 @@ projectFaceCentres
             result[curLocalFaceLabel] = objectHit(false, -1);
             scalar minDistance = GREAT;
 
-            forAll(masterFaces, faceI)
+            forAll(masterFaces, facei)
             {
                 PointHit<PointType> curHit =
-                    masterFaces[faceI].ray
+                    masterFaces[facei].ray
                     (
                         curFaceCentre,
                         curProjectionDir,
@@ -475,8 +475,8 @@ projectFaceCentres
 
                 if (curHit.hit())
                 {
-                    result[curLocalFaceLabel] = objectHit(true, faceI);
-                    curFace = faceI;
+                    result[curLocalFaceLabel] = objectHit(true, facei);
+                    curFace = facei;
 
                     break;
                 }
@@ -490,8 +490,8 @@ projectFaceCentres
                     {
                         minDistance = missDist;
 
-                        result[curLocalFaceLabel] = objectHit(false, faceI);
-                        curFace = faceI;
+                        result[curLocalFaceLabel] = objectHit(false, facei);
+                        curFace = facei;
                     }
                 }
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,8 @@ class wallLayerCells
 {
     // Private Member Functions
 
-        //- Check if any of the faces of cellI is on processorPatch
-        bool usesCoupledPatch(const label cellI) const;
+        //- Check if any of the faces of celli is on processorPatch
+        bool usesCoupledPatch(const label celli) const;
 
 public:
 

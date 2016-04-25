@@ -67,8 +67,8 @@ void Foam::cylindrical::init
         tensorField& R = Rptr_();
         forAll(cells, i)
         {
-            label cellI = cells[i];
-            vector dir = cc[cellI] - origin_;
+            label celli = cells[i];
+            vector dir = cc[celli] - origin_;
             dir /= mag(dir) + VSMALL;
 
             R[i] = axesRotation(e3_, dir).R();
@@ -79,12 +79,12 @@ void Foam::cylindrical::init
         Rptr_.reset(new tensorField(mesh.nCells()));
 
         tensorField& R = Rptr_();
-        forAll(cc, cellI)
+        forAll(cc, celli)
         {
-            vector dir = cc[cellI] - origin_;
+            vector dir = cc[celli] - origin_;
             dir /= mag(dir) + VSMALL;
 
-            R[cellI] = axesRotation(e3_, dir).R();
+            R[celli] = axesRotation(e3_, dir).R();
         }
     }
 }
@@ -194,11 +194,11 @@ void Foam::cylindrical::updateCells
 
     forAll(cells, i)
     {
-        label cellI = cells[i];
-        vector dir = cc[cellI] - origin_;
+        label celli = cells[i];
+        vector dir = cc[celli] - origin_;
         dir /= mag(dir) + VSMALL;
 
-        R[cellI] = axesRotation(e3_, dir).R();
+        R[celli] = axesRotation(e3_, dir).R();
     }
 }
 
@@ -307,8 +307,8 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
     tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
-        const label cellI = cellMap[i];
-        t[i] = R[cellI] & tf[i] & Rtr[cellI];
+        const label celli = cellMap[i];
+        t[i] = R[celli] & tf[i] & Rtr[celli];
     }
 
     return tt;

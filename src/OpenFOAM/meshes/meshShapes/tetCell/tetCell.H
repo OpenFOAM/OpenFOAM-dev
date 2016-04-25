@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ public:
         // Access
 
             //- Return i-th face
-            inline triFace face(const label faceI) const;
+            inline triFace face(const label facei) const;
 
             //- Return first face adjacent to the given edge
             inline label edgeFace(const label edgeI) const;
@@ -98,7 +98,7 @@ public:
             inline label edgeAdjacentFace
             (
                 const label edgeI,
-                const label faceI
+                const label facei
             ) const;
 
             //- Return i-th edge

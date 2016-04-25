@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,14 +67,14 @@ Foam::autoPtr<Foam::cellLooper> Foam::cellLooper::New
 // Get faces (on cell) connected to vertI which are not using edgeI
 Foam::labelList Foam::cellLooper::getVertFacesNonEdge
 (
-    const label cellI,
+    const label celli,
     const label edgeI,
     const label vertI
 ) const
 {
     // Get faces connected to startEdge
     label face0, face1;
-    meshTools::getEdgeFaces(mesh(), cellI, edgeI, face0, face1);
+    meshTools::getEdgeFaces(mesh(), celli, edgeI, face0, face1);
 
     const labelList& pFaces = mesh().pointFaces()[vertI];
 
@@ -83,16 +83,16 @@ Foam::labelList Foam::cellLooper::getVertFacesNonEdge
 
     forAll(pFaces, pFaceI)
     {
-        label faceI = pFaces[pFaceI];
+        label facei = pFaces[pFaceI];
 
         if
         (
-            (faceI != face0)
-         && (faceI != face1)
-         && (meshTools::faceOnCell(mesh(), cellI, faceI))
+            (facei != face0)
+         && (facei != face1)
+         && (meshTools::faceOnCell(mesh(), celli, facei))
         )
         {
-            vertFaces[vertFaceI++] = faceI;
+            vertFaces[vertFaceI++] = facei;
         }
     }
     vertFaces.setSize(vertFaceI);
@@ -101,14 +101,14 @@ Foam::labelList Foam::cellLooper::getVertFacesNonEdge
 }
 
 
-// Get first edge connected to vertI and on faceI
+// Get first edge connected to vertI and on facei
 Foam::label Foam::cellLooper::getFirstVertEdge
 (
-    const label faceI,
+    const label facei,
     const label vertI
 ) const
 {
-    const labelList& fEdges = mesh().faceEdges()[faceI];
+    const labelList& fEdges = mesh().faceEdges()[facei];
 
     forAll(fEdges, fEdgeI)
     {
@@ -123,7 +123,7 @@ Foam::label Foam::cellLooper::getFirstVertEdge
     }
 
     FatalErrorInFunction
-        << "Can not find edge on face " << faceI
+        << "Can not find edge on face " << facei
         << " using vertex " << vertI
         << abort(FatalError);
 
@@ -131,15 +131,15 @@ Foam::label Foam::cellLooper::getFirstVertEdge
 }
 
 
-// Get edges (on cell) connected to vertI which are not on faceI
+// Get edges (on cell) connected to vertI which are not on facei
 Foam::labelList Foam::cellLooper::getVertEdgesNonFace
 (
-    const label cellI,
-    const label faceI,
+    const label celli,
+    const label facei,
     const label vertI
 ) const
 {
-    const labelList& exclEdges = mesh().faceEdges()[faceI];
+    const labelList& exclEdges = mesh().faceEdges()[facei];
 
     const labelList& pEdges = mesh().pointEdges()[vertI];
 
@@ -153,7 +153,7 @@ Foam::labelList Foam::cellLooper::getVertEdgesNonFace
         if
         (
             (findIndex(exclEdges, edgeI) == -1)
-         && meshTools::edgeOnCell(mesh(), cellI, edgeI)
+         && meshTools::edgeOnCell(mesh(), celli, edgeI)
         )
         {
             vertEdges[vertEdgeI++] = edgeI;
@@ -171,10 +171,10 @@ Foam::labelList Foam::cellLooper::getVertEdgesNonFace
 Foam::label Foam::cellLooper::getMisAlignedEdge
 (
     const vector& refDir,
-    const label cellI
+    const label celli
 ) const
 {
-    const labelList& cEdges = mesh().cellEdges()[cellI];
+    const labelList& cEdges = mesh().cellEdges()[celli];
 
     label cutEdgeI = -1;
     scalar maxCos = -GREAT;

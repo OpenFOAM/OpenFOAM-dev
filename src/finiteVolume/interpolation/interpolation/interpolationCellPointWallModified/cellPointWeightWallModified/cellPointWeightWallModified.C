@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,22 +31,22 @@ Foam::cellPointWeightWallModified::cellPointWeightWallModified
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 )
 :
-    cellPointWeight(mesh, position, cellI, faceI)
+    cellPointWeight(mesh, position, celli, facei)
 {
     // findTetrahedron or findTriangle will already have been called
     // by the cellPointWeight constructor
 
-    if (faceI >= 0)
+    if (facei >= 0)
     {
         const polyBoundaryMesh& bm = mesh.boundaryMesh();
-        label patchI = bm.whichPatch(faceI);
-        if (patchI != -1)
+        label patchi = bm.whichPatch(facei);
+        if (patchi != -1)
         {
-            if (isA<wallPolyPatch>(bm[patchI]))
+            if (isA<wallPolyPatch>(bm[patchi]))
             {
                 // Apply cell centre value wall faces
                 weights_[0] = 1.0;

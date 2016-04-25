@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,25 +112,25 @@ void Foam::attachDetach::attachInterface
 
     const boolList& mfFlip = mesh.faceZones()[faceZoneID_.index()].flipMap();
 
-    forAll(masterFaceCells, faceI)
+    forAll(masterFaceCells, facei)
     {
         // If slave neighbour is greater than master, face does not need
         // turning.  Modify it to become internal
-        if (masterFaceCells[faceI] < slaveFaceCells[faceI])
+        if (masterFaceCells[facei] < slaveFaceCells[facei])
         {
             ref.setAction
             (
                 polyModifyFace
                 (
-                    faces[masterPatchStart + faceI], // modified face
-                    masterPatchStart + faceI,    // label of face being modified
-                    masterFaceCells[faceI],          // owner
-                    slaveFaceCells[faceI],           // neighbour
+                    faces[masterPatchStart + facei], // modified face
+                    masterPatchStart + facei,    // label of face being modified
+                    masterFaceCells[facei],          // owner
+                    slaveFaceCells[facei],           // neighbour
                     false,                           // face flip
                     -1,                              // patch for face
                     false,                           // remove from zone
                     faceZoneID_.index(),             // zone for face
-                    mfFlip[faceI]                    // face flip in zone
+                    mfFlip[facei]                    // face flip in zone
                 )
             );
         }
@@ -141,15 +141,15 @@ void Foam::attachDetach::attachInterface
             (
                 polyModifyFace
                 (
-                    faces[masterPatchStart + faceI].reverseFace(), // mod face
-                    masterPatchStart + faceI,    // label of face being modified
-                    slaveFaceCells[faceI],        // owner
-                    masterFaceCells[faceI],       // neighbour
+                    faces[masterPatchStart + facei].reverseFace(), // mod face
+                    masterPatchStart + facei,    // label of face being modified
+                    slaveFaceCells[facei],        // owner
+                    masterFaceCells[facei],       // neighbour
                     true,                         // face flip
                     -1,                           // patch for face
                     false,                        // remove from zone
                     faceZoneID_.index(),          // zone for face
-                    !mfFlip[faceI]                // face flip in zone
+                    !mfFlip[facei]                // face flip in zone
                 )
             );
         }
@@ -171,11 +171,11 @@ void Foam::attachDetach::attachInterface
     {
         const labelList& curFaces = pf[slaveMeshPoints[pointI]];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            if (!ref.faceRemoved(curFaces[faceI]))
+            if (!ref.faceRemoved(curFaces[facei]))
             {
-                facesToModifyMap.insert(curFaces[faceI]);
+                facesToModifyMap.insert(curFaces[facei]);
             }
         }
     }
@@ -183,12 +183,12 @@ void Foam::attachDetach::attachInterface
     // Grab the faces to be renumbered
     const labelList ftm = facesToModifyMap.toc();
 
-    forAll(ftm, faceI)
+    forAll(ftm, facei)
     {
         // For every face to modify, copy the face and re-map the vertices.
         // It is known all the faces will be changed since they hang off
         // re-mapped vertices
-        label curFaceID = ftm[faceI];
+        label curFaceID = ftm[facei];
 
         face newFace(faces[curFaceID]);
 

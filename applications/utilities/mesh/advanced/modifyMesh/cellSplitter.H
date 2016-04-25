@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class cellSplitter
         //- Get patch and zone info for face
         void getFaceInfo
         (
-            const label faceI,
+            const label facei,
             label& patchID,
             label& zoneID,
             label& zoneFlip
@@ -80,14 +80,14 @@ class cellSplitter
         //- Find the new owner (if any) of the face.
         label newOwner
         (
-            const label faceI,
+            const label facei,
             const Map<labelList>& cellToCells
         ) const;
 
         //- Find the new neighbour (if any) of the face.
         label newNeighbour
         (
-            const label faceI,
+            const label facei,
             const Map<labelList>& cellToCells
         ) const;
 

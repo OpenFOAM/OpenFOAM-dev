@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ License
 
 Foam::tetIndices::tetIndices()
 :
-    cellI_(-1),
-    faceI_(-1),
+    celli_(-1),
+    facei_(-1),
     faceBasePtI_(-1),
     facePtAI_(-1),
     facePtBI_(-1),
@@ -40,16 +40,16 @@ Foam::tetIndices::tetIndices()
 
 Foam::tetIndices::tetIndices
 (
-    label cellI,
-    label faceI,
+    label celli,
+    label facei,
     label faceBasePtI,
     label facePtAI,
     label facePtBI,
     label tetPtI
 )
 :
-    cellI_(cellI),
-    faceI_(faceI),
+    celli_(celli),
+    facei_(facei),
     faceBasePtI_(faceBasePtI),
     facePtAI_(facePtAI),
     facePtBI_(facePtBI),
@@ -59,14 +59,14 @@ Foam::tetIndices::tetIndices
 
 Foam::tetIndices::tetIndices
 (
-    label cellI,
-    label faceI,
+    label celli,
+    label facei,
     label tetPtI,
     const polyMesh& mesh
 )
 :
-    cellI_(cellI),
-    faceI_(faceI),
+    celli_(celli),
+    facei_(facei),
     faceBasePtI_(-1),
     facePtAI_(-1),
     facePtBI_(-1),
@@ -75,11 +75,11 @@ Foam::tetIndices::tetIndices
     const faceList& pFaces = mesh.faces();
     const labelList& pOwner = mesh.faceOwner();
 
-    const Foam::face& f = pFaces[faceI_];
+    const Foam::face& f = pFaces[facei_];
 
-    bool own = (pOwner[faceI_] == cellI_);
+    bool own = (pOwner[facei_] == celli_);
 
-    faceBasePtI_ = mesh.tetBasePtIs()[faceI_];
+    faceBasePtI_ = mesh.tetBasePtIs()[facei_];
 
     label facePtI = (tetPtI_ + faceBasePtI_) % f.size();
     label otherFacePtI = f.fcIndex(facePtI);

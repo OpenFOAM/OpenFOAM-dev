@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,18 +185,18 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Populate alphat field values
     scalarField& alphat = *this;
-    forAll(alphat, faceI)
+    forAll(alphat, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uTau = Cmu25*sqrt(k[faceCellI]);
 
-        scalar yPlus = y[faceI]*uTau/(muw[faceI]/rhow[faceI]);
+        scalar yPlus = y[facei]*uTau/(muw[facei]/rhow[facei]);
 
-        scalar Pr = muw[faceI]/alphaw[faceI];
+        scalar Pr = muw[facei]/alphaw[facei];
 
         scalar factor = 0.0;
-        scalar mStar = mDotFilmp[faceI]/(y[faceI]*uTau);
+        scalar mStar = mDotFilmp[facei]/(y[facei]*uTau);
         if (yPlus > yPlusCrit_)
         {
             scalar expTerm = exp(min(50.0, yPlusCrit_*mStar*Pr));
@@ -211,11 +211,11 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
             factor = mStar/(expTerm - 1.0 + ROOTVSMALL);
         }
 
-        scalar dx = patch().deltaCoeffs()[faceI];
+        scalar dx = patch().deltaCoeffs()[facei];
 
-        scalar alphaEff = dx*rhow[faceI]*uTau*factor;
+        scalar alphaEff = dx*rhow[facei]*uTau*factor;
 
-        alphat[faceI] = max(alphaEff - alphaw[faceI], 0.0);
+        alphat[facei] = max(alphaEff - alphaw[facei], 0.0);
     }
 
     // Restore tag

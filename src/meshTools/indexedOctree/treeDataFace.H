@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ class treeDataFace
     // Private Member Functions
 
         //- Calculate face bounding box
-        treeBoundBox calcBb(const label cellI) const;
+        treeBoundBox calcBb(const label celli) const;
 
         //- Initialise all member data
         void update();

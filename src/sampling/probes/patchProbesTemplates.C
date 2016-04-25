@@ -208,13 +208,13 @@ Foam::patchProbes::sample
 
     forAll(*this, probeI)
     {
-        label faceI = elementList_[probeI];
+        label facei = elementList_[probeI];
 
-        if (faceI >= 0)
+        if (facei >= 0)
         {
-            label patchI = patches.whichPatch(faceI);
-            label localFaceI = patches[patchI].whichFace(faceI);
-            values[probeI] = vField.boundaryField()[patchI][localFaceI];
+            label patchi = patches.whichPatch(facei);
+            label localFaceI = patches[patchi].whichFace(facei);
+            values[probeI] = vField.boundaryField()[patchi][localFaceI];
         }
     }
 
@@ -259,13 +259,13 @@ Foam::patchProbes::sample
 
     forAll(*this, probeI)
     {
-        label faceI = elementList_[probeI];
+        label facei = elementList_[probeI];
 
-        if (faceI >= 0)
+        if (facei >= 0)
         {
-            label patchI = patches.whichPatch(faceI);
-            label localFaceI = patches[patchI].whichFace(faceI);
-            values[probeI] = sField.boundaryField()[patchI][localFaceI];
+            label patchi = patches.whichPatch(facei);
+            label localFaceI = patches[patchi].whichFace(facei);
+            values[probeI] = sField.boundaryField()[patchi][localFaceI];
         }
     }
 

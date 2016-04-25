@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ addToRunTimeSelectionTable(cellLooper, hexCellLooper, word);
 // Starting from cut edge start walking.
 bool Foam::hexCellLooper::walkHex
 (
-    const label cellI,
+    const label celli,
     const label startFaceI,
     const label startEdgeI,
 
@@ -56,7 +56,7 @@ bool Foam::hexCellLooper::walkHex
     scalarField& loopWeights
 ) const
 {
-    label faceI = startFaceI;
+    label facei = startFaceI;
 
     label edgeI = startEdgeI;
 
@@ -75,12 +75,12 @@ bool Foam::hexCellLooper::walkHex
         loopWeights[cutI] = 0.5;
         cutI++;
 
-        faceI = meshTools::otherFace(mesh(), cellI, faceI, edgeI);
+        facei = meshTools::otherFace(mesh(), celli, facei, edgeI);
 
         const edge& e = mesh().edges()[edgeI];
 
         // Walk two edges further
-        edgeI = meshTools::walkFace(mesh(), faceI, edgeI, e.end(), 2);
+        edgeI = meshTools::walkFace(mesh(), facei, edgeI, e.end(), 2);
 
         if (edgeI == startEdgeI)
         {
@@ -92,7 +92,7 @@ bool Foam::hexCellLooper::walkHex
     // Checks.
     if (cutI > 4)
     {
-        Pout<< "hexCellLooper::walkHex" << "Problem : cell:" << cellI
+        Pout<< "hexCellLooper::walkHex" << "Problem : cell:" << celli
             << " collected loop:";
         writeCuts(Pout, loop, loopWeights);
         Pout<< "loopWeights:" << loopWeights << endl;
@@ -168,7 +168,7 @@ Foam::hexCellLooper::~hexCellLooper()
 bool Foam::hexCellLooper::cut
 (
     const vector& refDir,
-    const label cellI,
+    const label celli,
     const boolList& vertIsCut,
     const boolList& edgeIsCut,
     const scalarField& edgeWeight,
@@ -179,29 +179,29 @@ bool Foam::hexCellLooper::cut
 {
     bool success = false;
 
-    if (mesh().cellShapes()[cellI].model() == hex_)
+    if (mesh().cellShapes()[celli].model() == hex_)
     {
         // Get starting edge. Note: should be compatible with way refDir is
         // determined.
-        label edgeI = meshTools::cutDirToEdge(mesh(), cellI, refDir);
+        label edgeI = meshTools::cutDirToEdge(mesh(), celli, refDir);
 
         // Get any face using edge
         label face0;
         label face1;
-        meshTools::getEdgeFaces(mesh(), cellI, edgeI, face0, face1);
+        meshTools::getEdgeFaces(mesh(), celli, edgeI, face0, face1);
 
         // Walk circumference of hex, cutting edges only
         loop.setSize(4);
         loopWeights.setSize(4);
 
-        success = walkHex(cellI, face0, edgeI, loop, loopWeights);
+        success = walkHex(celli, face0, edgeI, loop, loopWeights);
     }
     else
     {
         success = geomCellLooper::cut
         (
             refDir,
-            cellI,
+            celli,
             vertIsCut,
             edgeIsCut,
             edgeWeight,
@@ -216,9 +216,9 @@ bool Foam::hexCellLooper::cut
         if (loop.empty())
         {
             WarningInFunction
-                << "could not cut cell " << cellI << endl;
+                << "could not cut cell " << celli << endl;
 
-            fileName cutsFile("hexCellLooper_" + name(cellI) + ".obj");
+            fileName cutsFile("hexCellLooper_" + name(celli) + ".obj");
 
             Pout<< "hexCellLooper : writing cell to " << cutsFile << endl;
 
@@ -230,7 +230,7 @@ bool Foam::hexCellLooper::cut
                 mesh().cells(),
                 mesh().faces(),
                 mesh().points(),
-                labelList(1, cellI)
+                labelList(1, celli)
             );
 
             return false;
@@ -273,7 +273,7 @@ bool Foam::hexCellLooper::cut
 bool Foam::hexCellLooper::cut
 (
     const plane& cutPlane,
-    const label cellI,
+    const label celli,
     const boolList& vertIsCut,
     const boolList& edgeIsCut,
     const scalarField& edgeWeight,
@@ -286,7 +286,7 @@ bool Foam::hexCellLooper::cut
         geomCellLooper::cut
         (
             cutPlane,
-            cellI,
+            celli,
             vertIsCut,
             edgeIsCut,
             edgeWeight,

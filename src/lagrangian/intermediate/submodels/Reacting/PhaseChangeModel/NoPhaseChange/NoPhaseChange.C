@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ template<class CloudType>
 void Foam::NoPhaseChange<CloudType>::calculate
 (
     const scalar dt,
-    const label cellI,
+    const label celli,
     const scalar Re,
     const scalar Pr,
     const scalar d,

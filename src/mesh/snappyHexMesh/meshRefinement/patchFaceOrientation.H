@@ -103,7 +103,7 @@ public:
                 const polyMesh& mesh,
                 const indirectPrimitivePatch& patch,
                 const label edgeI,
-                const label faceI,
+                const label facei,
                 const patchFaceOrientation& faceInfo,
                 const scalar tol,
                 TrackingData& td
@@ -127,7 +127,7 @@ public:
             (
                 const polyMesh& mesh,
                 const indirectPrimitivePatch& patch,
-                const label faceI,
+                const label facei,
                 const label edgeI,
                 const patchFaceOrientation& edgeInfo,
                 const scalar tol,

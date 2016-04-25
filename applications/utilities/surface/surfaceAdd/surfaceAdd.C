@@ -176,9 +176,9 @@ int main(int argc, char *argv[])
         label trianglei = 0;
 
         // Copy triangles1 into trianglesAll
-        forAll(surface1, faceI)
+        forAll(surface1, facei)
         {
-            facesAll[trianglei++] = surface1[faceI];
+            facesAll[trianglei++] = surface1[facei];
         }
         label nRegions1 = surface1.patches().size();
 
@@ -193,9 +193,9 @@ int main(int argc, char *argv[])
         }
 
         // Add (renumbered) surface2 triangles
-        forAll(surface2, faceI)
+        forAll(surface2, facei)
         {
-            const labelledTri& tri = surface2[faceI];
+            const labelledTri& tri = surface2[facei];
 
             labelledTri& destTri = facesAll[trianglei++];
             destTri[0] = tri[0] + points1.size();

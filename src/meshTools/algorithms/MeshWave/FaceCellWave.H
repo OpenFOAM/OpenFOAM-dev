@@ -131,7 +131,7 @@ class FaceCellWave
         //  statistics.
         bool updateCell
         (
-            const label cellI,
+            const label celli,
             const label neighbourFaceI,
             const Type& neighbourInfo,
             const scalar tol,
@@ -142,7 +142,7 @@ class FaceCellWave
         //  statistics.
         bool updateFace
         (
-            const label faceI,
+            const label facei,
             const label neighbourCellI,
             const Type& neighbourInfo,
             const scalar tol,
@@ -153,7 +153,7 @@ class FaceCellWave
         //  statistics.
         bool updateFace
         (
-            const label faceI,
+            const label facei,
             const Type& neighbourInfo,
             const scalar tol,
             Type& faceInfo

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,20 +77,20 @@ class regionSide
         static label otherEdge
         (
             const primitiveMesh& mesh,
-            const label faceI,
+            const label facei,
             const label edgeI,
             const label pointI
         );
 
-        //- From faceI, side cellI, cross to other faces/cells by
+        //- From facei, side celli, cross to other faces/cells by
         //  face-cell walking and store visited faces and update sideOwner_.
         void visitConnectedFaces
         (
             const primitiveMesh& mesh,
             const labelHashSet& region,
             const labelHashSet& fenceEdges,
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             labelHashSet& visitedFace
         );
 
@@ -127,7 +127,7 @@ public:
         static label otherFace
         (
             const primitiveMesh& mesh,
-            const label cellI,
+            const label celli,
             const label excludeFaceI,
             const label edgeI
         );

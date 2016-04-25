@@ -101,8 +101,8 @@ protected:
         //- Write access to source terms for solids
         inline PtrList<DimensionedField<scalar, volMesh>>& RRs();
 
-        //- Set reacting status of cell, cellI
-        void setCellReacting(const label cellI, const bool active);
+        //- Set reacting status of cell, celli
+        void setCellReacting(const label celli, const bool active);
 
 
 public:

@@ -59,11 +59,11 @@ void checkFaceEdges
     const labelListList& faceEdges
 )
 {
-    forAll(faceEdges, faceI)
+    forAll(faceEdges, facei)
     {
-        const face& f = localFaces[faceI];
+        const face& f = localFaces[facei];
 
-        const labelList& myEdges = faceEdges[faceI];
+        const labelList& myEdges = faceEdges[facei];
 
         forAll(f, fp)
         {
@@ -73,7 +73,7 @@ void checkFaceEdges
             {
                 FatalErrorInFunction
                     << "Edges of face not in face point order:"
-                    << "face:" << faceI << " localF:" << f
+                    << "face:" << facei << " localF:" << f
                     << " faceEdges:" << myEdges
                     << abort(FatalError);
             }
@@ -130,9 +130,9 @@ void writeFaceEdges
 
     writeObj(feStream, localPoints);
 
-    forAll(faceEdges, faceI)
+    forAll(faceEdges, facei)
     {
-        const labelList& myEdges = faceEdges[faceI];
+        const labelList& myEdges = faceEdges[facei];
 
         forAll(myEdges, i)
         {
@@ -158,9 +158,9 @@ void writeEdgeFaces
 
     pointField ctrs(localFaces.size(), Zero);
 
-    forAll(localFaces, faceI)
+    forAll(localFaces, facei)
     {
-        ctrs[faceI] = localFaces[faceI].centre(localPoints);
+        ctrs[facei] = localFaces[facei].centre(localPoints);
     }
     writeObj(efStream, ctrs);
 
@@ -190,19 +190,19 @@ void writeFaceFaces
 
     pointField ctrs(localFaces.size(), Zero);
 
-    forAll(localFaces, faceI)
+    forAll(localFaces, facei)
     {
-        ctrs[faceI] = localFaces[faceI].centre(localPoints);
+        ctrs[facei] = localFaces[facei].centre(localPoints);
     }
     writeObj(ffStream, ctrs);
 
-    forAll(faceFaces, faceI)
+    forAll(faceFaces, facei)
     {
-        const labelList& nbrs = faceFaces[faceI];
+        const labelList& nbrs = faceFaces[facei];
 
         forAll(nbrs, nbI)
         {
-            ffStream << "l " << faceI+1 << ' ' << nbrs[nbI]+1 << endl;
+            ffStream << "l " << facei+1 << ' ' << nbrs[nbI]+1 << endl;
         }
     }
 }

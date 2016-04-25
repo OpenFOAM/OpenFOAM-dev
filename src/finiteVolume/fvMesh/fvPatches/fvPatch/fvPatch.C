@@ -112,9 +112,9 @@ Foam::tmp<Foam::vectorField> Foam::fvPatch::Cn() const
     // get reference to global cell centres
     const vectorField& gcc = boundaryMesh().mesh().cellCentres();
 
-    forAll(faceCells, faceI)
+    forAll(faceCells, facei)
     {
-        cc[faceI] = gcc[faceCells[faceI]];
+        cc[facei] = gcc[faceCells[facei]];
     }
 
     return tcc;

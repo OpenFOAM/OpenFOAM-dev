@@ -175,12 +175,12 @@ Foam::globalIndexAndTransform::decodeTransformIndex
 Foam::label Foam::globalIndexAndTransform::addToTransformIndex
 (
     const label transformIndex,
-    const label patchI,
+    const label patchi,
     const bool isSendingSide,
     const scalar tol
 ) const
 {
-    const Pair<label>& transSign = patchTransformSign_[patchI];
+    const Pair<label>& transSign = patchTransformSign_[patchi];
 
     label matchTransI = transSign.first();
 
@@ -208,7 +208,7 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
             {
                 // sent from patch without a transformation. Do nothing.
                 FatalErrorInFunction
-                    << "patch:" << mesh_.boundaryMesh()[patchI].name()
+                    << "patch:" << mesh_.boundaryMesh()[patchi].name()
                     << " transform:" << matchTransI << " sign:" << sign
                     << "  current transforms:" << permutation
                     << exit(FatalError);
@@ -245,7 +245,7 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
                     FatalErrorInFunction
                         << "More than one patch accessing the same transform "
                         << "but not of the same sign." << endl
-                        << "patch:" << mesh_.boundaryMesh()[patchI].name()
+                        << "patch:" << mesh_.boundaryMesh()[patchi].name()
                         << " transform:" << matchTransI << " sign:" << sign
                         << "  current transforms:" << permutation
                         << exit(FatalError);
@@ -450,23 +450,23 @@ const Foam::vectorTensorTransform& Foam::globalIndexAndTransform::transform
 
 Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
 (
-    const labelHashSet& patchIs
+    const labelHashSet& patchis
 ) const
 {
     List<label> permutation(transforms_.size(), 0);
 
     labelList selectedTransformIs(0);
 
-    if (patchIs.empty() || transforms_.empty())
+    if (patchis.empty() || transforms_.empty())
     {
         return selectedTransformIs;
     }
 
-    forAllConstIter(labelHashSet, patchIs, iter)
+    forAllConstIter(labelHashSet, patchis, iter)
     {
-        label patchI = iter.key();
+        label patchi = iter.key();
 
-        const Pair<label>& transSign = patchTransformSign_[patchI];
+        const Pair<label>& transSign = patchTransformSign_[patchi];
 
         label matchTransI = transSign.first();
 
@@ -625,13 +625,13 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
 
 Foam::pointField Foam::globalIndexAndTransform::transformPatches
 (
-    const labelHashSet& patchIs,
+    const labelHashSet& patchis,
     const point& pt
 ) const
 {
-    labelList transIs = transformIndicesForPatches(patchIs);
+    labelList transIs = transformIndicesForPatches(patchis);
 
-    // Pout<< patchIs << nl << transIs << endl;
+    // Pout<< patchis << nl << transIs << endl;
 
     pointField transPts(transIs.size());
 

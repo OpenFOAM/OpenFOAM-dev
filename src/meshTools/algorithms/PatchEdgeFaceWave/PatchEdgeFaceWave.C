@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ updateEdge
 }
 
 
-// Update info for faceI, at position pt, with information from
+// Update info for facei, at position pt, with information from
 // neighbouring edge.
 // Updates:
 //      - changedFace_, changedFaces_,
@@ -120,7 +120,7 @@ template
 bool Foam::PatchEdgeFaceWave<PrimitivePatchType, Type, TrackingData>::
 updateFace
 (
-    const label faceI,
+    const label facei,
     const label neighbourEdgeI,
     const Type& neighbourInfo,
     Type& faceInfo
@@ -135,7 +135,7 @@ updateFace
         (
             mesh_,
             patch_,
-            faceI,
+            facei,
             neighbourEdgeI,
             neighbourInfo,
             propagationTol_,
@@ -144,10 +144,10 @@ updateFace
 
     if (propagate)
     {
-        if (!changedFace_[faceI])
+        if (!changedFace_[facei])
         {
-            changedFace_[faceI] = true;
-            changedFaces_.append(faceI);
+            changedFace_[facei] = true;
+            changedFaces_.append(facei);
         }
     }
 
@@ -495,21 +495,21 @@ faceToEdge()
 
     forAll(changedFaces_, changedFaceI)
     {
-        label faceI = changedFaces_[changedFaceI];
+        label facei = changedFaces_[changedFaceI];
 
-        if (!changedFace_[faceI])
+        if (!changedFace_[facei])
         {
             FatalErrorInFunction
-                << "face " << faceI
+                << "face " << facei
                 << " not marked as having been changed" << nl
                 << "This might be caused by multiple occurences of the same"
                 << " seed edge." << abort(FatalError);
         }
 
-        const Type& neighbourWallInfo = allFaceInfo_[faceI];
+        const Type& neighbourWallInfo = allFaceInfo_[facei];
 
         // Evaluate all connected edges
-        const labelList& fEdges = patch_.faceEdges()[faceI];
+        const labelList& fEdges = patch_.faceEdges()[facei];
 
         forAll(fEdges, fEdgeI)
         {
@@ -522,7 +522,7 @@ faceToEdge()
                 updateEdge
                 (
                     edgeI,
-                    faceI,
+                    facei,
                     neighbourWallInfo,
                     currentWallInfo
                 );
@@ -578,15 +578,15 @@ edgeToFace()
         const labelList& eFaces = edgeFaces[edgeI];
         forAll(eFaces, eFaceI)
         {
-            label faceI = eFaces[eFaceI];
+            label facei = eFaces[eFaceI];
 
-            Type& currentWallInfo = allFaceInfo_[faceI];
+            Type& currentWallInfo = allFaceInfo_[facei];
 
             if (!currentWallInfo.equal(neighbourWallInfo, td_))
             {
                 updateFace
                 (
-                    faceI,
+                    facei,
                     edgeI,
                     neighbourWallInfo,
                     currentWallInfo

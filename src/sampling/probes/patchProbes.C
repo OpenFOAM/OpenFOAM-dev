@@ -45,9 +45,9 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
 
     const polyBoundaryMesh& bm = mesh.boundaryMesh();
 
-    label patchI = bm.findPatchID(patchName_);
+    label patchi = bm.findPatchID(patchName_);
 
-    if (patchI == -1)
+    if (patchi == -1)
     {
         FatalErrorInFunction
             << " Unknown patch name "
@@ -58,7 +58,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
      // All the info for nearest. Construct to miss
     List<mappedPatchBase::nearInfo> nearest(this->size());
 
-    const polyPatch& pp = bm[patchI];
+    const polyPatch& pp = bm[patchi];
 
     if (pp.size() > 0)
     {
@@ -110,9 +110,9 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
                 );
             }
 
-            label faceI = boundaryTree.shapes().faceLabels()[info.index()];
+            label facei = boundaryTree.shapes().faceLabels()[info.index()];
 
-            const label patchi = bm.whichPatch(faceI);
+            const label patchi = bm.whichPatch(facei);
 
             if (isA<emptyPolyPatch>(bm[patchi]))
             {
@@ -125,7 +125,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
             }
             else
             {
-                const point& fc = mesh.faceCentres()[faceI];
+                const point& fc = mesh.faceCentres()[facei];
 
                 mappedPatchBase::nearInfo sampleInfo;
 
@@ -133,7 +133,7 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
                 (
                     true,
                     fc,
-                    faceI
+                    facei
                 );
 
                 sampleInfo.second().first() = magSqr(fc-sample);

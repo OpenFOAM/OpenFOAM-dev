@@ -87,22 +87,22 @@ void Foam::mapNearestAMI<SourcePatch, TargetPatch>::setNextNearestFaces
 
     forAll(srcNbr, i)
     {
-        label faceI = srcNbr[i];
-        if (mapFlag[faceI])
+        label facei = srcNbr[i];
+        if (mapFlag[facei])
         {
-            srcFaceI = faceI;
-            startSeedI = faceI + 1;
+            srcFaceI = facei;
+            startSeedI = facei + 1;
 
             return;
         }
     }
 
-    forAll(mapFlag, faceI)
+    forAll(mapFlag, facei)
     {
-        if (mapFlag[faceI])
+        if (mapFlag[facei])
         {
-            srcFaceI = faceI;
-            tgtFaceI = this->findTargetFace(faceI);
+            srcFaceI = facei;
+            tgtFaceI = this->findTargetFace(facei);
 
             if (tgtFaceI == -1)
             {

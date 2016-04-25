@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,18 +40,18 @@ void Foam::starMesh::createPolyCells()
 
     label maxFaces = 0;
 
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        cell& curCell = cellPolys_[cellI];
+        cell& curCell = cellPolys_[celli];
 
-        curCell.setSize(cellFaces_[cellI].size());
+        curCell.setSize(cellFaces_[celli].size());
 
         forAll(curCell, fI)
         {
             curCell[fI] = -1;
         }
 
-        maxFaces += cellFaces_[cellI].size();
+        maxFaces += cellFaces_[celli].size();
     }
 
     Info<< "Maximum possible number of faces in mesh: " << maxFaces << endl;
@@ -65,7 +65,7 @@ void Foam::starMesh::createPolyCells()
 
     nInternalFaces_ = 0;
 
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
         // Note:
         // Insertion cannot be done in one go as the faces need to be
@@ -73,7 +73,7 @@ void Foam::starMesh::createPolyCells()
         // cells.  Therefore, all neighbours will be detected first
         // and then added in the correct order.
 
-        const faceList& curFaces = cellFaces_[cellI];
+        const faceList& curFaces = cellFaces_[celli];
 
         // Record the neighbour cell
         labelList neiCells(curFaces.size(), -1);
@@ -84,14 +84,14 @@ void Foam::starMesh::createPolyCells()
         label nNeighbours = 0;
 
         // For all faces ...
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Skip faces that have already been matched
-            if (cellPolys_[cellI][faceI] >= 0) continue;
+            if (cellPolys_[celli][facei] >= 0) continue;
 
             found = false;
 
-            const face& curFace = curFaces[faceI];
+            const face& curFace = curFaces[facei];
 
             // get the list of labels
             const labelList& curPoints = curFace;
@@ -109,7 +109,7 @@ void Foam::starMesh::createPolyCells()
 
                     // reject neighbours with the lower label. This should
                     // also reject current cell.
-                    if (curNei > cellI)
+                    if (curNei > celli)
                     {
                         // get the list of search faces
                         const faceList& searchFaces = cellFaces_[curNei];
@@ -122,8 +122,8 @@ void Foam::starMesh::createPolyCells()
                                 found = true;
 
                                 // Record the neighbour cell and face
-                                neiCells[faceI] = curNei;
-                                faceOfNeiCell[faceI] = neiFaceI;
+                                neiCells[facei] = curNei;
+                                faceOfNeiCell[facei] = neiFaceI;
                                 nNeighbours++;
 
                                 break;
@@ -159,7 +159,7 @@ void Foam::starMesh::createPolyCells()
                 meshFaces_[nInternalFaces_] = curFaces[nextNei];
 
                 // Mark for owner
-                cellPolys_[cellI][nextNei] = nInternalFaces_;
+                cellPolys_[celli][nextNei] = nInternalFaces_;
 
                 // Mark for neighbour
                 cellPolys_[neiCells[nextNei]][faceOfNeiCell[nextNei]] =

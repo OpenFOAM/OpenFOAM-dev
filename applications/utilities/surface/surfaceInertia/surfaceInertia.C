@@ -331,14 +331,14 @@ int main(int argc, char *argv[])
 
     scalar surfaceArea = 0;
 
-    forAll(surf, faceI)
+    forAll(surf, facei)
     {
-        const labelledTri& f = surf[faceI];
+        const labelledTri& f = surf[facei];
 
         if (f[0] == f[1] || f[0] == f[2] || f[1] == f[2])
         {
             WarningInFunction
-               << "Illegal triangle " << faceI << " vertices " << f
+               << "Illegal triangle " << facei << " vertices " << f
                << " coords " << f.points(surf.points()) << endl;
         }
         else

@@ -214,14 +214,14 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
                 const interpolation<Type>& interp = interpolator();
 
                 newValues.setSize(samples.size(), pTraits<Type>::max);
-                forAll(samples, cellI)
+                forAll(samples, celli)
                 {
-                    if (samples[cellI] != point::max)
+                    if (samples[celli] != point::max)
                     {
-                        newValues[cellI] = interp.interpolate
+                        newValues[celli] = interp.interpolate
                         (
-                            samples[cellI],
-                            cellI
+                            samples[celli],
+                            celli
                         );
                     }
                 }
@@ -263,15 +263,15 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
 
             const fieldType& nbrField = sampleField();
 
-            forAll(nbrField.boundaryField(), patchI)
+            forAll(nbrField.boundaryField(), patchi)
             {
                 const fvPatchField<Type>& pf =
-                    nbrField.boundaryField()[patchI];
+                    nbrField.boundaryField()[patchi];
                 label faceStart = pf.patch().start();
 
-                forAll(pf, faceI)
+                forAll(pf, facei)
                 {
-                    allValues[faceStart++] = pf[faceI];
+                    allValues[faceStart++] = pf[facei];
                 }
             }
 

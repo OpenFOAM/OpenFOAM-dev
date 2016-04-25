@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ void Foam::attachDetach::calcPointMatchMap() const
 
     const label slavePatchStart = slavePatch.start();
 
-    forAll(reverseSlavePatch, faceI)
+    forAll(reverseSlavePatch, facei)
     {
-        reverseSlavePatch[faceI] =
-            faces[slavePatchStart + faceI].reverseFace();
+        reverseSlavePatch[facei] =
+            faces[slavePatchStart + facei].reverseFace();
     }
 
     // Create point merge list and remove merged points
@@ -90,10 +90,10 @@ void Foam::attachDetach::calcPointMatchMap() const
     pointMatchMapPtr_ = new Map<label>(2*slaveMeshPoints.size());
     Map<label>& removedPointMap = *pointMatchMapPtr_;
 
-    forAll(masterLocalFaces, faceI)
+    forAll(masterLocalFaces, facei)
     {
-        const face& curMasterPoints = masterLocalFaces[faceI];
-        const face& curSlavePoints = slaveLocalFaces[faceI];
+        const face& curMasterPoints = masterLocalFaces[facei];
+        const face& curSlavePoints = slaveLocalFaces[facei];
 
         forAll(curMasterPoints, pointI)
         {

@@ -52,11 +52,11 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 (
     const triSurface& surf,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const scalar
 )
 {
-    const triSurface::FaceType& f = surf.localFaces()[faceI];
+    const triSurface::FaceType& f = surf.localFaces()[facei];
     const edge& e = surf.edges()[edgeI];
 
     forAll(f, fp)
@@ -72,7 +72,7 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 //        vector eVec = e.vec(surf.localPoints());
 //        eVec /= mag(eVec) + VSMALL;
 //
-//        const labelList& eLabels = surf.faceEdges()[faceI];
+//        const labelList& eLabels = surf.faceEdges()[facei];
 //
 //        // Get edge vector of 0th edge of face
 //        vector e0Vec = surf.edges()[eLabels[0]].vec(surf.localPoints());
@@ -97,12 +97,12 @@ bool Foam::surfaceIntersection::excludeEdgeHit
 //        }
 //
 //        // Check if same as faceNormal
-//        if (mag(n & surf.faceNormals()[faceI]) > 1-tol)
+//        if (mag(n & surf.faceNormals()[facei]) > 1-tol)
 //        {
 //
-//            Pout<< "edge:" << e << "  face:" << faceI
+//            Pout<< "edge:" << e << "  face:" << facei
 //                << "  e0Vec:" << e0Vec << "  n:" << n
-//                << "  normalComponent:" << (n & surf.faceNormals()[faceI])
+//                << "  normalComponent:" << (n & surf.faceNormals()[facei])
 //                << "  tol:" << tol << endl;
 //
 //            return true;

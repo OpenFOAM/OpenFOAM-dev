@@ -83,8 +83,8 @@ class extendedUpwindCellToFaceStencil
         (
             const boolList& nonEmptyFace,
             const scalar minOpposedness,
-            const label faceI,
-            const label cellI,
+            const label facei,
+            const label celli,
             DynamicList<label>& oppositeFaces
         ) const;
 
@@ -94,8 +94,8 @@ class extendedUpwindCellToFaceStencil
             const boolList& nonEmptyFace,
             const labelListList& faceStencil,
             const scalar minOpposedness,
-            const label faceI,
-            const label cellI,
+            const label facei,
+            const label celli,
             const bool stencilHasNeighbour,
 
             DynamicList<label>& oppositeFaces,

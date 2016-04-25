@@ -76,19 +76,19 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
         const faceList& oldFaces = mesh.faces();
         const labelListList& pFaces = mesh.pointFaces();
 
-        forAll(Cells, cellI)
+        forAll(Cells, celli)
         {
-            const labelList& curFaces = Cells[cellI];
-            const edgeList cellEdges = Cells[cellI].edges(oldFaces);
-            const labelList cellPoints = Cells[cellI].labels(oldFaces);
+            const labelList& curFaces = Cells[celli];
+            const edgeList cellEdges = Cells[celli].edges(oldFaces);
+            const labelList cellPoints = Cells[celli].labels(oldFaces);
 
             // Find the edges used only once in the cell
 
             labelList edgeUsage(cellEdges.size(), 0);
 
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
-                edgeList curFaceEdges = oldFaces[curFaces[faceI]].edges();
+                edgeList curFaceEdges = oldFaces[curFaces[facei]].edges();
 
                 forAll(curFaceEdges, faceEdgeI)
                 {
@@ -118,15 +118,15 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                 else if (edgeUsage[edgeI] != 2)
                 {
                     WarningInFunction
-                        << "edge " << cellEdges[edgeI] << " in cell " << cellI
+                        << "edge " << cellEdges[edgeI] << " in cell " << celli
                         << " used " << edgeUsage[edgeI] << " times. " << nl
                         << "Should be 1 or 2 - serious error "
                         << "in mesh structure. " << endl;
 
                     #ifdef DEBUG_ZIPUP
-                    forAll(curFaces, faceI)
+                    forAll(curFaces, facei)
                     {
-                        Info<< "face: " << oldFaces[curFaces[faceI]]
+                        Info<< "face: " << oldFaces[curFaces[facei]]
                             << endl;
                     }
 
@@ -143,7 +143,7 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                     #endif
 
                     // Gather the problem cell
-                    problemCells.insert(cellI);
+                    problemCells.insert(celli);
                 }
             }
 
@@ -153,11 +153,11 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
             singleEdges.setSize(nSingleEdges);
 
             #ifdef DEBUG_ZIPUP
-            Info<< "Cell " << cellI << endl;
+            Info<< "Cell " << celli << endl;
 
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
-                Info<< "face: " << oldFaces[curFaces[faceI]] << endl;
+                Info<< "face: " << oldFaces[curFaces[facei]] << endl;
             }
 
             Info<< "Cell edges: " << cellEdges << nl
@@ -499,7 +499,7 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                                 << nl << "Point: " << orderedEdge[checkI]
                                 << " edge: " << orderedEdge << endl;
 
-                            problemCells.insert(cellI);
+                            problemCells.insert(celli);
                         }
                     }
                 }
@@ -527,12 +527,12 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                     facesSharingEdge[nfse++] = endPF[pfI];
                 }
 
-                forAll(facesSharingEdge, faceI)
+                forAll(facesSharingEdge, facei)
                 {
                     bool faceChanges = false;
 
                     // Label of the face being analysed
-                    const label currentFaceIndex = facesSharingEdge[faceI];
+                    const label currentFaceIndex = facesSharingEdge[facei];
 
                     const edgeList curFaceEdges =
                         oldFaces[currentFaceIndex].edges();
@@ -696,7 +696,7 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                                             << " face: "
                                             << newFace << endl;
 
-                                        problemCells.insert(cellI);
+                                        problemCells.insert(celli);
                                     }
                                 }
                             }
@@ -743,10 +743,10 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
         labelList patchSizes(bMesh.size(), 0);
         labelList patchStarts(bMesh.size(), 0);
 
-        forAll(bMesh, patchI)
+        forAll(bMesh, patchi)
         {
-            patchSizes[patchI] = bMesh[patchI].size();
-            patchStarts[patchI] = bMesh[patchI].start();
+            patchSizes[patchi] = bMesh[patchi].size();
+            patchStarts[patchi] = bMesh[patchi].start();
         }
 
         // Reset the mesh. Number of active faces is one beyond the last patch

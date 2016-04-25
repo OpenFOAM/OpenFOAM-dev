@@ -132,7 +132,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
     regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
     const parcelType& p,
     const polyPatch& pp,
-    const label faceI,
+    const label facei,
     const scalar mass,
     bool& keepParticle
 )
@@ -143,10 +143,10 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
     }
 
     // Patch face normal
-    const vector& nf = pp.faceNormals()[faceI];
+    const vector& nf = pp.faceNormals()[facei];
 
     // Patch velocity
-    const vector& Up = this->owner().U().boundaryField()[pp.index()][faceI];
+    const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
 
     // Relative parcel velocity
     const vector Urel = p.U() - Up;
@@ -160,7 +160,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
     filmModel.addSources
     (
         pp.index(),
-        faceI,
+        facei,
         mass,                           // mass
         mass*Ut,                        // tangential momentum
         mass*mag(Un),                   // impingement pressure
@@ -178,7 +178,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::bounceInteraction
 (
     parcelType& p,
     const polyPatch& pp,
-    const label faceI,
+    const label facei,
     bool& keepParticle
 ) const
 {
@@ -188,10 +188,10 @@ void Foam::ThermoSurfaceFilm<CloudType>::bounceInteraction
     }
 
     // Patch face normal
-    const vector& nf = pp.faceNormals()[faceI];
+    const vector& nf = pp.faceNormals()[facei];
 
     // Patch velocity
-    const vector& Up = this->owner().U().boundaryField()[pp.index()][faceI];
+    const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
 
     // Relative parcel velocity
     const vector Urel = p.U() - Up;
@@ -209,7 +209,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::drySplashInteraction
     regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
     const parcelType& p,
     const polyPatch& pp,
-    const label faceI,
+    const label facei,
     bool& keepParticle
 )
 {
@@ -221,8 +221,8 @@ void Foam::ThermoSurfaceFilm<CloudType>::drySplashInteraction
     const liquidProperties& liq = thermo_.liquids().properties()[0];
 
     // Patch face velocity and normal
-    const vector& Up = this->owner().U().boundaryField()[pp.index()][faceI];
-    const vector& nf = pp.faceNormals()[faceI];
+    const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
+    const vector& nf = pp.faceNormals()[facei];
 
     // local pressure
     const scalar pc = thermo_.thermo().p()[p.cell()];
@@ -247,14 +247,14 @@ void Foam::ThermoSurfaceFilm<CloudType>::drySplashInteraction
 
     if (We < Wec) // adhesion - assume absorb
     {
-        absorbInteraction(filmModel, p, pp, faceI, m, keepParticle);
+        absorbInteraction(filmModel, p, pp, facei, m, keepParticle);
     }
     else // splash
     {
         // ratio of incident mass to splashing mass
         const scalar mRatio = 0.2 + 0.6*rndGen_.sample01<scalar>();
         splashInteraction
-            (filmModel, p, pp, faceI, mRatio, We, Wec, sigma, keepParticle);
+            (filmModel, p, pp, facei, mRatio, We, Wec, sigma, keepParticle);
     }
 }
 
@@ -265,7 +265,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
     regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
     parcelType& p,
     const polyPatch& pp,
-    const label faceI,
+    const label facei,
     bool& keepParticle
 )
 {
@@ -277,8 +277,8 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
     const liquidProperties& liq = thermo_.liquids().properties()[0];
 
     // Patch face velocity and normal
-    const vector& Up = this->owner().U().boundaryField()[pp.index()][faceI];
-    const vector& nf = pp.faceNormals()[faceI];
+    const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
+    const vector& nf = pp.faceNormals()[facei];
 
     // local pressure
     const scalar pc = thermo_.thermo().p()[p.cell()];
@@ -305,7 +305,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
 
     if (We < 1) // adhesion - assume absorb
     {
-        absorbInteraction(filmModel, p, pp, faceI, m, keepParticle);
+        absorbInteraction(filmModel, p, pp, facei, m, keepParticle);
     }
     else if ((We >= 1) && (We < 20)) // bounce
     {
@@ -323,7 +323,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
     }
     else if ((We >= 20) && (We < Wec)) // spread - assume absorb
     {
-        absorbInteraction(filmModel, p, pp, faceI, m, keepParticle);
+        absorbInteraction(filmModel, p, pp, facei, m, keepParticle);
     }
     else    // splash
     {
@@ -331,7 +331,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
         // splash mass can be > incident mass due to film entrainment
         const scalar mRatio = 0.2 + 0.9*rndGen_.sample01<scalar>();
         splashInteraction
-            (filmModel, p, pp, faceI, mRatio, We, Wec, sigma, keepParticle);
+            (filmModel, p, pp, facei, mRatio, We, Wec, sigma, keepParticle);
     }
 }
 
@@ -342,7 +342,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
     const parcelType& p,
     const polyPatch& pp,
-    const label faceI,
+    const label facei,
     const scalar mRatio,
     const scalar We,
     const scalar Wec,
@@ -352,8 +352,8 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
 {
     // Patch face velocity and normal
     const fvMesh& mesh = this->owner().mesh();
-    const vector& Up = this->owner().U().boundaryField()[pp.index()][faceI];
-    const vector& nf = pp.faceNormals()[faceI];
+    const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
+    const vector& nf = pp.faceNormals()[facei];
 
     // Determine direction vectors tangential to patch normal
     const vector tanVec1 = tangentVector(nf);
@@ -367,7 +367,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     const vector Un = nf*(Urel & nf);
     const vector Ut = Urel - Un;
     const vector& posC = mesh.C()[p.cell()];
-    const vector& posCf = mesh.Cf().boundaryField()[pp.index()][faceI];
+    const vector& posCf = mesh.Cf().boundaryField()[pp.index()][facei];
 
     // total mass of (all) splashed parcels
     const scalar mSplash = m*mRatio;
@@ -412,7 +412,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     // switch to absorb if insufficient energy for splash
     if (EKs <= 0)
     {
-        absorbInteraction(filmModel, p, pp, faceI, m, keepParticle);
+        absorbInteraction(filmModel, p, pp, facei, m, keepParticle);
         return;
     }
 
@@ -467,7 +467,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     // transfer remaining part of parcel to film 0 - splashMass can be -ve
     // if entraining from the film
     const scalar mDash = m - mSplash;
-    absorbInteraction(filmModel, p, pp, faceI, mDash, keepParticle);
+    absorbInteraction(filmModel, p, pp, facei, mDash, keepParticle);
 }
 
 
@@ -567,38 +567,38 @@ bool Foam::ThermoSurfaceFilm<CloudType>::transferParcel
                 )
         );
 
-    const label patchI = pp.index();
+    const label patchi = pp.index();
 
-    if (filmModel.isRegionPatch(patchI))
+    if (filmModel.isRegionPatch(patchi))
     {
-        const label faceI = pp.whichFace(p.face());
+        const label facei = pp.whichFace(p.face());
 
         switch (interactionType_)
         {
             case itBounce:
             {
-                bounceInteraction(p, pp, faceI, keepParticle);
+                bounceInteraction(p, pp, facei, keepParticle);
 
                 break;
             }
             case itAbsorb:
             {
                 const scalar m = p.nParticle()*p.mass();
-                absorbInteraction(filmModel, p, pp, faceI, m, keepParticle);
+                absorbInteraction(filmModel, p, pp, facei, m, keepParticle);
 
                 break;
             }
             case itSplashBai:
             {
-                bool dry = this->deltaFilmPatch_[patchI][faceI] < deltaWet_;
+                bool dry = this->deltaFilmPatch_[patchi][facei] < deltaWet_;
 
                 if (dry)
                 {
-                    drySplashInteraction(filmModel, p, pp, faceI, keepParticle);
+                    drySplashInteraction(filmModel, p, pp, facei, keepParticle);
                 }
                 else
                 {
-                    wetSplashInteraction(filmModel, p, pp, faceI, keepParticle);
+                    wetSplashInteraction(filmModel, p, pp, facei, keepParticle);
                 }
 
                 break;

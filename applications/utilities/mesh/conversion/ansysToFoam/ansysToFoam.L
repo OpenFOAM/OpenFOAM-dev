@@ -277,11 +277,11 @@ label findFace(const polyMesh& mesh, const face& f)
 
     forAll(pFaces, i)
     {
-        label faceI = pFaces[i];
+        label facei = pFaces[i];
 
-        if (mesh.faces()[faceI] == f)
+        if (mesh.faces()[facei] == f)
         {
-            return faceI;
+            return facei;
         }
     }
 

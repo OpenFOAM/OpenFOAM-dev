@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,9 @@ void Foam::starMesh::calcPointCells() const
     //
 
     // For each cell
-    forAll(cellShapes_, cellI)
+    forAll(cellShapes_, celli)
     {
-        const faceList& faces = cellFaces_[cellI];
+        const faceList& faces = cellFaces_[celli];
 
         forAll(faces, i)
         {
@@ -90,7 +90,7 @@ void Foam::starMesh::calcPointCells() const
 
                 for (label f = 0; f < curCount; f++)
                 {
-                    if (curPointCells[f] == cellI)
+                    if (curPointCells[f] == celli)
                     {
                         found = true;
 
@@ -108,7 +108,7 @@ void Foam::starMesh::calcPointCells() const
                     }
 
                     // Enter the cell label in the point's cell list
-                    curPointCells[curCount] = cellI;
+                    curPointCells[curCount] = celli;
 
                     // Increment the cell count for the point addressed
                     cellCount[curPoint]++;

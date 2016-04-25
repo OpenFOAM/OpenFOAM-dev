@@ -42,15 +42,15 @@ void Foam::lduMatrix::initMatrixInterfaces
      || Pstream::defaultCommsType == Pstream::nonBlocking
     )
     {
-        forAll(interfaces, interfaceI)
+        forAll(interfaces, interfacei)
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].initInterfaceMatrixUpdate
+                interfaces[interfacei].initInterfaceMatrixUpdate
                 (
                     result,
                     psiif,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::defaultCommsType
                 );
@@ -65,18 +65,18 @@ void Foam::lduMatrix::initMatrixInterfaces
         // beyond the end of the schedule which only handles "normal" patches
         for
         (
-            label interfaceI=patchSchedule.size()/2;
-            interfaceI<interfaces.size();
-            interfaceI++
+            label interfacei=patchSchedule.size()/2;
+            interfacei<interfaces.size();
+            interfacei++
         )
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].initInterfaceMatrixUpdate
+                interfaces[interfacei].initInterfaceMatrixUpdate
                 (
                     result,
                     psiif,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::blocking
                 );
@@ -104,15 +104,15 @@ void Foam::lduMatrix::updateMatrixInterfaces
 {
     if (Pstream::defaultCommsType == Pstream::blocking)
     {
-        forAll(interfaces, interfaceI)
+        forAll(interfaces, interfacei)
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].updateInterfaceMatrix
+                interfaces[interfacei].updateInterfaceMatrix
                 (
                     result,
                     psiif,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::defaultCommsType
                 );
@@ -128,19 +128,19 @@ void Foam::lduMatrix::updateMatrixInterfaces
         {
             allUpdated = true;
 
-            forAll(interfaces, interfaceI)
+            forAll(interfaces, interfacei)
             {
-                if (interfaces.set(interfaceI))
+                if (interfaces.set(interfacei))
                 {
-                    if (!interfaces[interfaceI].updatedMatrix())
+                    if (!interfaces[interfacei].updatedMatrix())
                     {
-                        if (interfaces[interfaceI].ready())
+                        if (interfaces[interfacei].ready())
                         {
-                            interfaces[interfaceI].updateInterfaceMatrix
+                            interfaces[interfacei].updateInterfaceMatrix
                             (
                                 result,
                                 psiif,
-                                coupleCoeffs[interfaceI],
+                                coupleCoeffs[interfacei],
                                 cmpt,
                                 Pstream::defaultCommsType
                             );
@@ -179,19 +179,19 @@ void Foam::lduMatrix::updateMatrixInterfaces
         }
 
         // Consume
-        forAll(interfaces, interfaceI)
+        forAll(interfaces, interfacei)
         {
             if
             (
-                interfaces.set(interfaceI)
-            && !interfaces[interfaceI].updatedMatrix()
+                interfaces.set(interfacei)
+            && !interfaces[interfacei].updatedMatrix()
             )
             {
-                interfaces[interfaceI].updateInterfaceMatrix
+                interfaces[interfacei].updateInterfaceMatrix
                 (
                     result,
                     psiif,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::defaultCommsType
                 );
@@ -205,28 +205,28 @@ void Foam::lduMatrix::updateMatrixInterfaces
         // Loop over all the "normal" interfaces relating to standard patches
         forAll(patchSchedule, i)
         {
-            label interfaceI = patchSchedule[i].patch;
+            label interfacei = patchSchedule[i].patch;
 
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
                 if (patchSchedule[i].init)
                 {
-                    interfaces[interfaceI].initInterfaceMatrixUpdate
+                    interfaces[interfacei].initInterfaceMatrixUpdate
                     (
                         result,
                         psiif,
-                        coupleCoeffs[interfaceI],
+                        coupleCoeffs[interfacei],
                         cmpt,
                         Pstream::scheduled
                     );
                 }
                 else
                 {
-                    interfaces[interfaceI].updateInterfaceMatrix
+                    interfaces[interfacei].updateInterfaceMatrix
                     (
                         result,
                         psiif,
-                        coupleCoeffs[interfaceI],
+                        coupleCoeffs[interfacei],
                         cmpt,
                         Pstream::scheduled
                     );
@@ -238,18 +238,18 @@ void Foam::lduMatrix::updateMatrixInterfaces
         // beyond the end of the schedule which only handles "normal" patches
         for
         (
-            label interfaceI=patchSchedule.size()/2;
-            interfaceI<interfaces.size();
-            interfaceI++
+            label interfacei=patchSchedule.size()/2;
+            interfacei<interfaces.size();
+            interfacei++
         )
         {
-            if (interfaces.set(interfaceI))
+            if (interfaces.set(interfacei))
             {
-                interfaces[interfaceI].updateInterfaceMatrix
+                interfaces[interfacei].updateInterfaceMatrix
                 (
                     result,
                     psiif,
-                    coupleCoeffs[interfaceI],
+                    coupleCoeffs[interfacei],
                     cmpt,
                     Pstream::blocking
                 );

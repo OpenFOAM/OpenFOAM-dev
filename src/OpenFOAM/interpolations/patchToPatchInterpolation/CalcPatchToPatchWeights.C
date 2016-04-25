@@ -252,10 +252,10 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
 
     vectorField fromPatchFaceCentres(fromPatchFaces.size());
 
-    forAll(fromPatchFaceCentres, faceI)
+    forAll(fromPatchFaceCentres, facei)
     {
-        fromPatchFaceCentres[faceI] =
-            fromPatchFaces[faceI].centre(fromPatchPoints);
+        fromPatchFaceCentres[facei] =
+            fromPatchFaces[facei].centre(fromPatchPoints);
     }
 
     const pointField& toPatchPoints = toPatch_.points();
@@ -275,36 +275,36 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
     faceAddressingPtr_ = new labelList(proj.size(), -1);
     labelList& faceAddressing = *faceAddressingPtr_;
 
-    forAll(faceAddressing, faceI)
+    forAll(faceAddressing, facei)
     {
-        if (proj[faceI].hit())
+        if (proj[facei].hit())
         {
             // A hit exists
-            faceAddressing[faceI] = proj[faceI].hitObject();
+            faceAddressing[facei] = proj[facei].hitObject();
 
             const typename FromPatch::FaceType& hitFace =
-                fromPatchFaces[faceAddressing[faceI]];
+                fromPatchFaces[faceAddressing[facei]];
 
             pointHit curHit =
                 hitFace.ray
                 (
-                    toPatchFaces[faceI].centre(toPatchPoints),
-                    projectionDirection[faceI],
+                    toPatchFaces[facei].centre(toPatchPoints),
+                    projectionDirection[facei],
                     fromPatchPoints,
                     alg_,
                     dir_
                 );
 
             // grab distance to target
-            faceDistance[faceI] = curHit.distance();
+            faceDistance[facei] = curHit.distance();
 
             // grab face centre of the hit face
             const point& hitFaceCentre =
-                fromPatchFaceCentres[faceAddressing[faceI]];
+                fromPatchFaceCentres[faceAddressing[facei]];
 
             // grab neighbours of hit face
             const labelList& neighbours =
-                fromPatchFaceFaces[faceAddressing[faceI]];
+                fromPatchFaceFaces[faceAddressing[facei]];
 
             scalar m = mag(curHit.hitPoint() - hitFaceCentre);
 
@@ -314,8 +314,8 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
              || neighbours.empty()
             )
             {
-                faceWeights.set(faceI, new scalarField(1));
-                faceWeights[faceI][0] = 1.0;
+                faceWeights.set(facei, new scalarField(1));
+                faceWeights[facei][0] = 1.0;
             }
             else
             {
@@ -323,13 +323,13 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
 
                 // The first coefficient corresponds to the centre face.
                 // The rest is ordered in the same way as the faceFaces list.
-                faceWeights.set(faceI, new scalarField(neighbours.size() + 1));
+                faceWeights.set(facei, new scalarField(neighbours.size() + 1));
 
-                faceWeights[faceI][0] = 1.0/m;
+                faceWeights[facei][0] = 1.0/m;
 
                 forAll(neighbours, nI)
                 {
-                    faceWeights[faceI][nI + 1] =
+                    faceWeights[facei][nI + 1] =
                     1.0/
                     (
                         mag
@@ -342,11 +342,11 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcFaceAddressing() const
                 }
             }
 
-            faceWeights[faceI] /= sum(faceWeights[faceI]);
+            faceWeights[facei] /= sum(faceWeights[facei]);
         }
         else
         {
-            faceWeights.set(faceI, new scalarField(0));
+            faceWeights.set(facei, new scalarField(0));
         }
     }
 }

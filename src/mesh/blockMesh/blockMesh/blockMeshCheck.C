@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,9 +190,9 @@ bool Foam::blockMesh::patchLabelsOK
 {
     bool ok = true;
 
-    forAll(patchFaces, faceI)
+    forAll(patchFaces, facei)
     {
-        const labelList& f = patchFaces[faceI];
+        const labelList& f = patchFaces[facei];
 
         forAll(f, fp)
         {
@@ -204,7 +204,7 @@ bool Foam::blockMesh::patchLabelsOK
                     << "out-of-range point label " << f[fp]
                     << " (min = 0"
                     << ") on patch " << patchLabel
-                    << ", face " << faceI << endl;
+                    << ", face " << facei << endl;
             }
             else if (f[fp] >= points.size())
             {
@@ -214,7 +214,7 @@ bool Foam::blockMesh::patchLabelsOK
                     << "out-of-range point label " << f[fp]
                     << " (max = " << points.size() - 1
                     << ") on patch " << patchLabel
-                    << ", face " << faceI << endl;
+                    << ", face " << facei << endl;
 
             }
         }

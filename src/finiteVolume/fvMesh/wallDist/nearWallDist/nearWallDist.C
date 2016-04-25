@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,11 +47,11 @@ void Foam::nearWallDist::calculate()
 
     const volVectorField& cellCentres = mesh_.C();
 
-    forAll(mesh_.boundary(), patchI)
+    forAll(mesh_.boundary(), patchi)
     {
-        fvPatchScalarField& ypatch = operator[](patchI);
+        fvPatchScalarField& ypatch = operator[](patchi);
 
-        const fvPatch& patch = mesh_.boundary()[patchI];
+        const fvPatch& patch = mesh_.boundary()[patchi];
 
         if (isA<wallFvPatch>(patch))
         {
@@ -121,15 +121,15 @@ void Foam::nearWallDist::correct()
         const fvBoundaryMesh& bnd = mesh_.boundary();
 
         this->setSize(bnd.size());
-        forAll(*this, patchI)
+        forAll(*this, patchi)
         {
             this->set
             (
-                patchI,
+                patchi,
                 fvPatchField<scalar>::New
                 (
                     calculatedFvPatchScalarField::typeName,
-                    bnd[patchI],
+                    bnd[patchi],
                     V
                 )
             );

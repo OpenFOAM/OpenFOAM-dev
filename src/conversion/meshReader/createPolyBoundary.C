@@ -105,9 +105,9 @@ void Foam::meshReader::createPolyBoundary()
     const faceListList& cFaces = cellFaces();
 
     // determine number of non-patched faces:
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        cell& curCell = cellPolys_[cellI];
+        cell& curCell = cellPolys_[celli];
 
         forAll(curCell, fI)
         {
@@ -118,9 +118,9 @@ void Foam::meshReader::createPolyBoundary()
         }
     }
 
-    forAll(boundaryIds_, patchI)
+    forAll(boundaryIds_, patchi)
     {
-        nBoundaryFaces += boundaryIds_[patchI].size();
+        nBoundaryFaces += boundaryIds_[patchi].size();
     }
 
     Info<< nl
@@ -136,14 +136,14 @@ void Foam::meshReader::createPolyBoundary()
     interfaces_.setSize(baffleIds_.size());
     nBoundaryFaces = 0;
 
-    forAll(boundaryIds_, patchI)
+    forAll(boundaryIds_, patchi)
     {
-        const List<cellFaceIdentifier>& idList = boundaryIds_[patchI];
+        const List<cellFaceIdentifier>& idList = boundaryIds_[patchi];
 
-        patchStarts_[patchI] = nCreatedFaces;
+        patchStarts_[patchi] = nCreatedFaces;
 
         // write each baffle side separately
-        if (patchPhysicalTypes_[patchI] == "baffle")
+        if (patchPhysicalTypes_[patchi] == "baffle")
         {
             label count = 0;
 
@@ -186,7 +186,7 @@ void Foam::meshReader::createPolyBoundary()
 
             nInterfaces += (count - (count % 2)) / 2;
         }
-        else if (patchPhysicalTypes_[patchI] == "monitoring")
+        else if (patchPhysicalTypes_[patchi] == "monitoring")
         {
             // translate the "monitoring" pseudo-boundaries to face sets
             List<label> monitoring(idList.size());
@@ -208,7 +208,7 @@ void Foam::meshReader::createPolyBoundary()
                 }
             }
 
-            monitoringSets_.insert(patchNames_[patchI], monitoring);
+            monitoringSets_.insert(patchNames_[patchi], monitoring);
         }
         else
         {
@@ -229,7 +229,7 @@ void Foam::meshReader::createPolyBoundary()
             }
         }
 
-        patchSizes_[patchI] = nCreatedFaces - patchStarts_[patchI];
+        patchSizes_[patchi] = nCreatedFaces - patchStarts_[patchi];
     }
 
     // add in missing faces
@@ -271,9 +271,9 @@ void Foam::meshReader::createPolyBoundary()
     nInterfaces += (nMissingFaces - (nMissingFaces % 2)) / 2;
 
     // scan for any other missing faces
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaces = cellPolys_[cellI];
+        const labelList& curFaces = cellPolys_[celli];
 
         forAll(curFaces, cellFaceI)
         {
@@ -282,10 +282,10 @@ void Foam::meshReader::createPolyBoundary()
                 // just report the first few
                 if (nMissingFaces < 4)
                 {
-                    const face& thisFace = cFaces[cellI][cellFaceI];
+                    const face& thisFace = cFaces[celli][cellFaceI];
 
-                    Info<< "  cell " << cellI << " face " << cellFaceI
-                        << " (original cell " << origCellId_[cellI] << ")"
+                    Info<< "  cell " << celli << " face " << cellFaceI
+                        << " (original cell " << origCellId_[celli] << ")"
                         << " face: " << thisFace
                         << endl;
                 }
@@ -294,7 +294,7 @@ void Foam::meshReader::createPolyBoundary()
                     Info<< "  ..." << nl << endl;
                 }
 
-                addPolyBoundaryFace(cellI, cellFaceI, nCreatedFaces);
+                addPolyBoundaryFace(celli, cellFaceI, nCreatedFaces);
                 nMissingFaces++;
                 nCreatedFaces++;
             }
@@ -317,13 +317,13 @@ void Foam::meshReader::createPolyBoundary()
     // (faces addressed once or more than twice)
     labelList markupFaces(meshFaces_.size(), 0);
 
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaces = cellPolys_[cellI];
+        const labelList& curFaces = cellPolys_[celli];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            markupFaces[curFaces[faceI]]++;
+            markupFaces[curFaces[facei]]++;
         }
     }
 
@@ -334,15 +334,15 @@ void Foam::meshReader::createPolyBoundary()
 
     label nProblemFaces = 0;
 
-    forAll(markupFaces, faceI)
+    forAll(markupFaces, facei)
     {
-        if (markupFaces[faceI] != 2)
+        if (markupFaces[facei] != 2)
         {
-            const face& problemFace = meshFaces_[faceI];
+            const face& problemFace = meshFaces_[facei];
 
             InfoInFunction
-                << "Problem with face " << faceI << ": addressed "
-                << markupFaces[faceI] << " times (should be 2!). Face: "
+                << "Problem with face " << facei << ": addressed "
+                << markupFaces[facei] << " times (should be 2!). Face: "
                 << problemFace << endl;
 
             nProblemFaces++;
@@ -377,16 +377,16 @@ Foam::meshReader::polyBoundaryPatches(const polyMesh& mesh)
 
     // avoid empty patches - move to the end of the lists and truncate
     labelList oldToNew = identity(nPatches);
-    forAll(patchSizes_, patchI)
+    forAll(patchSizes_, patchi)
     {
-        if (patchSizes_[patchI] > 0)
+        if (patchSizes_[patchi] > 0)
         {
-            oldToNew[patchI] = nUsed++;
+            oldToNew[patchi] = nUsed++;
         }
         else
         {
             nEmpty++;
-            oldToNew[patchI] = nPatches - nEmpty;
+            oldToNew[patchi] = nPatches - nEmpty;
         }
     }
 
@@ -426,34 +426,34 @@ Foam::meshReader::polyBoundaryPatches(const polyMesh& mesh)
         "defaultFaces",
         defaultFacesType
     );
-    forAll(patchDicts, patchI)
+    forAll(patchDicts, patchi)
     {
-        if (!patchDicts.set(patchI))
+        if (!patchDicts.set(patchi))
         {
-            patchDicts.set(patchI, new dictionary());
+            patchDicts.set(patchi, new dictionary());
         }
-        dictionary& patchDict = patchDicts[patchI];
+        dictionary& patchDict = patchDicts[patchi];
 
         // add but not overwrite type
-        patchDict.add("type", patchTypes_[patchI], false);
-        if (patchPhysicalTypes_.size() && patchPhysicalTypes_[patchI].size())
+        patchDict.add("type", patchTypes_[patchi], false);
+        if (patchPhysicalTypes_.size() && patchPhysicalTypes_[patchi].size())
         {
-            patchDict.add("startFace", patchPhysicalTypes_[patchI], false);
+            patchDict.add("startFace", patchPhysicalTypes_[patchi], false);
         }
 
         // overwrite sizes and start
-        patchDict.add("nFaces", patchSizes_[patchI], true);
-        patchDict.add("startFace", patchStarts_[patchI], true);
+        patchDict.add("nFaces", patchSizes_[patchi], true);
+        patchDict.add("startFace", patchStarts_[patchi], true);
     }
 
 
-    forAll(patchStarts_, patchI)
+    forAll(patchStarts_, patchi)
     {
-        p[patchI] = polyPatch::New
+        p[patchi] = polyPatch::New
         (
-            patchNames_[patchI],
-            patchDicts[patchI],
-            patchI,
+            patchNames_[patchi],
+            patchDicts[patchi],
+            patchi,
             mesh.boundaryMesh()
         ).ptr();
     }

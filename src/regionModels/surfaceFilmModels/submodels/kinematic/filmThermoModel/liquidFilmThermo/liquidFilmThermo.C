@@ -259,9 +259,9 @@ tmp<volScalarField> liquidFilmThermo::rho() const
 
     if (useReferenceValues_)
     {
-        forAll(rho, cellI)
+        forAll(rho, celli)
         {
-            rho[cellI] = this->rho(pRef_, TRef_);
+            rho[celli] = this->rho(pRef_, TRef_);
         }
     }
     else
@@ -271,9 +271,9 @@ tmp<volScalarField> liquidFilmThermo::rho() const
         const volScalarField& T = film.T();
         const volScalarField& p = film.pPrimary();
 
-        forAll(rho, cellI)
+        forAll(rho, celli)
         {
-            rho[cellI] = this->rho(p[cellI], T[cellI]);
+            rho[celli] = this->rho(p[celli], T[celli]);
         }
     }
 
@@ -307,9 +307,9 @@ tmp<volScalarField> liquidFilmThermo::mu() const
 
     if (useReferenceValues_)
     {
-        forAll(mu, cellI)
+        forAll(mu, celli)
         {
-            mu[cellI] = this->mu(pRef_, TRef_);
+            mu[celli] = this->mu(pRef_, TRef_);
         }
     }
     else
@@ -319,9 +319,9 @@ tmp<volScalarField> liquidFilmThermo::mu() const
         const volScalarField& T = film.T();
         const volScalarField& p = film.pPrimary();
 
-        forAll(mu, cellI)
+        forAll(mu, celli)
         {
-            mu[cellI] = this->mu(p[cellI], T[cellI]);
+            mu[celli] = this->mu(p[celli], T[celli]);
         }
     }
 
@@ -355,9 +355,9 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
 
     if (useReferenceValues_)
     {
-        forAll(sigma, cellI)
+        forAll(sigma, celli)
         {
-            sigma[cellI] = this->sigma(pRef_, TRef_);
+            sigma[celli] = this->sigma(pRef_, TRef_);
         }
     }
     else
@@ -367,9 +367,9 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
         const volScalarField& T = film.T();
         const volScalarField& p = film.pPrimary();
 
-        forAll(sigma, cellI)
+        forAll(sigma, celli)
         {
-            sigma[cellI] = this->sigma(p[cellI], T[cellI]);
+            sigma[celli] = this->sigma(p[celli], T[celli]);
         }
     }
 
@@ -403,9 +403,9 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
 
     if (useReferenceValues_)
     {
-        forAll(Cp, cellI)
+        forAll(Cp, celli)
         {
-            Cp[cellI] = this->Cp(pRef_, TRef_);
+            Cp[celli] = this->Cp(pRef_, TRef_);
         }
     }
     else
@@ -415,9 +415,9 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
         const volScalarField& T = film.T();
         const volScalarField& p = film.pPrimary();
 
-        forAll(Cp, cellI)
+        forAll(Cp, celli)
         {
-            Cp[cellI] = this->Cp(p[cellI], T[cellI]);
+            Cp[celli] = this->Cp(p[celli], T[celli]);
         }
     }
 
@@ -451,9 +451,9 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
 
     if (useReferenceValues_)
     {
-        forAll(kappa, cellI)
+        forAll(kappa, celli)
         {
-            kappa[cellI] = this->kappa(pRef_, TRef_);
+            kappa[celli] = this->kappa(pRef_, TRef_);
         }
     }
     else
@@ -463,9 +463,9 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
         const volScalarField& T = film.T();
         const volScalarField& p = film.pPrimary();
 
-        forAll(kappa, cellI)
+        forAll(kappa, celli)
         {
-            kappa[cellI] = this->kappa(p[cellI], T[cellI]);
+            kappa[celli] = this->kappa(p[celli], T[celli]);
         }
     }
 

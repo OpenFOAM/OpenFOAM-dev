@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,11 +120,11 @@ class edgeFaceCirculator
         inline void setEnd();
 
         //- Check and set faceLabel_ and ownerSide_
-        inline void setFace(const label faceI, const label cellI);
+        inline void setFace(const label facei, const label celli);
 
         //- Set faceLabel_ to be the other face on the cell that uses the
         //  edge.
-        inline void otherFace(const label cellI);
+        inline void otherFace(const label celli);
 
 
 public:

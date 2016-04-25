@@ -44,15 +44,15 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
     // 1. Create the complete field with dummy patch fields
     PtrList<fvPatchField<Type>> patchFields(vf.boundaryField().size());
 
-    forAll(patchFields, patchI)
+    forAll(patchFields, patchi)
     {
         patchFields.set
         (
-            patchI,
+            patchi,
             fvPatchField<Type>::New
             (
                 calculatedFvPatchField<Type>::typeName,
-                boundary()[patchI],
+                boundary()[patchi],
                 DimensionedField<Type, volMesh>::null()
             )
         );
@@ -88,15 +88,15 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
 
     if (agglomerate())
     {
-        forAll(vf.boundaryField(), patchI)
+        forAll(vf.boundaryField(), patchi)
         {
-            const labelList& agglom = patchFaceAgglomeration_[patchI];
+            const labelList& agglom = patchFaceAgglomeration_[patchi];
             label nAgglom = max(agglom)+1;
 
             // Use inverse of agglomeration. This is from agglomeration to
             // original (fine) mesh patch face.
             labelListList coarseToFine(invertOneToMany(nAgglom, agglom));
-            inplaceReorder(patchFaceMap_[patchI], coarseToFine);
+            inplaceReorder(patchFaceMap_[patchi], coarseToFine);
             scalarListList coarseWeights(nAgglom);
             forAll(coarseToFine, coarseI)
             {
@@ -110,11 +110,11 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
 
             bf.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
-                    vf.boundaryField()[patchI],
-                    boundary()[patchI],
+                    vf.boundaryField()[patchi],
+                    boundary()[patchi],
                     resF.dimensionedInternalField(),
                     agglomPatchFieldMapper(coarseToFine, coarseWeights)
                 )
@@ -123,17 +123,17 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> singleCellFvMesh::interpolate
     }
     else
     {
-        forAll(vf.boundaryField(), patchI)
+        forAll(vf.boundaryField(), patchi)
         {
-            labelList map(identity(vf.boundaryField()[patchI].size()));
+            labelList map(identity(vf.boundaryField()[patchi].size()));
 
             bf.set
             (
-                patchI,
+                patchi,
                 fvPatchField<Type>::New
                 (
-                    vf.boundaryField()[patchI],
-                    boundary()[patchI],
+                    vf.boundaryField()[patchi],
+                    boundary()[patchi],
                     resF.dimensionedInternalField(),
                     directFvPatchFieldMapper(map)
                 )

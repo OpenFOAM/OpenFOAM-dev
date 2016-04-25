@@ -29,7 +29,7 @@ Description
 
     \li for injection to be allowed
         \verbatim
-        factor*referenceField[cellI] >= thresholdField[cellI]
+        factor*referenceField[celli] >= thresholdField[celli]
         \endverbatim
         where:
         - \c referenceField is the field used to supply the look-up values

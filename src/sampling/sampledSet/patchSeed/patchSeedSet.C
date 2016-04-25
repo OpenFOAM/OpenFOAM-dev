@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,19 +134,19 @@ void Foam::patchSeedSet::calcSamples
 
     forAll(patchFaces, i)
     {
-        label faceI = patchFaces[i];
+        label facei = patchFaces[i];
         pointIndexHit info = mappedPatchBase::facePoint
         (
             mesh(),
-            faceI,
+            facei,
             polyMesh::FACE_DIAG_TRIS
         );
-        label cellI = mesh().faceOwner()[faceI];
+        label celli = mesh().faceOwner()[facei];
 
         if (info.hit())
         {
             // Move the point into the cell
-            const point& cc = mesh().cellCentres()[cellI];
+            const point& cc = mesh().cellCentres()[celli];
             samplingPts.append
             (
                 info.hitPoint() + 1e-1*(cc-info.hitPoint())
@@ -156,8 +156,8 @@ void Foam::patchSeedSet::calcSamples
         {
             samplingPts.append(info.rawPoint());
         }
-        samplingCells.append(cellI);
-        samplingFaces.append(faceI);
+        samplingCells.append(celli);
+        samplingFaces.append(facei);
         samplingSegments.append(0);
         samplingCurveDist.append(globalSampleNumbers.toGlobal(i));
     }

@@ -812,20 +812,20 @@ public:
             //- cellCells using cells.
             const labelList& cellCells
             (
-                const label cellI,
+                const label celli,
                 DynamicList<label>&
             ) const;
 
-            const labelList& cellCells(const label cellI) const;
+            const labelList& cellCells(const label celli) const;
 
             //- cellPoints using cells
             const labelList& cellPoints
             (
-                const label cellI,
+                const label celli,
                 DynamicList<label>&
             ) const;
 
-            const labelList& cellPoints(const label cellI) const;
+            const labelList& cellPoints(const label celli) const;
 
             //- pointCells using pointFaces
             const labelList& pointCells
@@ -848,11 +848,11 @@ public:
             //- faceEdges using pointFaces, edges, pointEdges
             const labelList& faceEdges
             (
-                const label faceI,
+                const label facei,
                 DynamicList<label>&
             ) const;
 
-            const labelList& faceEdges(const label faceI) const;
+            const labelList& faceEdges(const label facei) const;
 
             //- edgeFaces using pointFaces, edges, pointEdges
             const labelList& edgeFaces
@@ -875,11 +875,11 @@ public:
             //- cellEdges using cells, pointFaces, edges, pointEdges
             const labelList& cellEdges
             (
-                const label cellI,
+                const label celli,
                 DynamicList<label>&
             ) const;
 
-            const labelList& cellEdges(const label cellI) const;
+            const labelList& cellEdges(const label celli) const;
 
 
             //- Clear geometry

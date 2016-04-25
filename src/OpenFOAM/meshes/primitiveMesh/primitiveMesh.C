@@ -143,9 +143,9 @@ bool Foam::primitiveMesh::calcPointOrder
     // from 0 inside oldToNew. (shifted up later on)
 
     label nBoundaryPoints = 0;
-    for (label faceI = nInternalFaces; faceI < faces.size(); faceI++)
+    for (label facei = nInternalFaces; facei < faces.size(); facei++)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, fp)
         {
@@ -179,9 +179,9 @@ bool Foam::primitiveMesh::calcPointOrder
 
     bool ordered = true;
 
-    for (label faceI = 0; faceI < nInternalFaces; faceI++)
+    for (label facei = 0; facei < nInternalFaces; facei++)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, fp)
         {
@@ -320,9 +320,9 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMesh::movePoints
     tmp<scalarField> tsweptVols(new scalarField(f.size()));
     scalarField& sweptVols = tsweptVols.ref();
 
-    forAll(f, faceI)
+    forAll(f, facei)
     {
-        sweptVols[faceI] = f[faceI].sweptVol(oldPoints, newPoints);
+        sweptVols[facei] = f[facei].sweptVol(oldPoints, newPoints);
     }
 
     // Force recalculation of all geometric data with new points

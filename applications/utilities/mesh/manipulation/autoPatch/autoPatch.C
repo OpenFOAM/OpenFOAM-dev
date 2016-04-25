@@ -157,13 +157,13 @@ int main(int argc, char *argv[])
         // Assign all visited faces to current patch
         label nVisited = 0;
 
-        forAll(visited, faceI)
+        forAll(visited, facei)
         {
-            if (visited[faceI])
+            if (visited[facei])
             {
                 nVisited++;
 
-                patchIDs[faceI] = newPatchI;
+                patchIDs[facei] = newPatchI;
             }
         }
 
@@ -234,11 +234,11 @@ int main(int argc, char *argv[])
     // have to do the geometric stuff.
     const labelList& meshFace = bMesh.meshFace();
 
-    forAll(patchIDs, faceI)
+    forAll(patchIDs, facei)
     {
-        label meshFaceI = meshFace[faceI];
+        label meshFaceI = meshFace[facei];
 
-        polyMeshRepatcher.changePatchID(meshFaceI, patchIDs[faceI]);
+        polyMeshRepatcher.changePatchID(meshFaceI, patchIDs[facei]);
     }
 
     polyMeshRepatcher.repatch();

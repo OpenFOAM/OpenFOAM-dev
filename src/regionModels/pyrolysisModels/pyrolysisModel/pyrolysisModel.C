@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ pyrolysisModel::~pyrolysisModel()
 scalar pyrolysisModel::addMassSources
 (
     const label patchI,
-    const label faceI
+    const label facei
 )
 {
     return 0.0;

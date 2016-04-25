@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,9 +45,9 @@ Foam::TGaussSeidelSmoother<Type, DType, LUType>::TGaussSeidelSmoother
     const DType* const __restrict__ diagPtr = matrix.diag().begin();
     DType* __restrict__ rDPtr = rD_.begin();
 
-    for (label cellI=0; cellI<nCells; cellI++)
+    for (label celli=0; celli<nCells; celli++)
     {
-        rDPtr[cellI] = inv(diagPtr[cellI]);
+        rDPtr[celli] = inv(diagPtr[celli]);
     }
 }
 
@@ -123,14 +123,14 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
         label fStart;
         label fEnd = ownStartPtr[0];
 
-        for (label cellI=0; cellI<nCells; cellI++)
+        for (label celli=0; celli<nCells; celli++)
         {
             // Start and end of this row
             fStart = fEnd;
-            fEnd = ownStartPtr[cellI + 1];
+            fEnd = ownStartPtr[celli + 1];
 
             // Get the accumulated neighbour side
-            curPsi = bPrimePtr[cellI];
+            curPsi = bPrimePtr[celli];
 
             // Accumulate the owner product side
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -139,7 +139,7 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
             }
 
             // Finish current psi
-            curPsi = dot(rDPtr[cellI], curPsi);
+            curPsi = dot(rDPtr[celli], curPsi);
 
             // Distribute the neighbour side using current psi
             for (label curFace=fStart; curFace<fEnd; curFace++)
@@ -147,7 +147,7 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
                 bPrimePtr[uPtr[curFace]] -= dot(lowerPtr[curFace], curPsi);
             }
 
-            psiPtr[cellI] = curPsi;
+            psiPtr[celli] = curPsi;
         }
     }
 }

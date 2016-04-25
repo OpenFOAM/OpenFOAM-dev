@@ -55,9 +55,9 @@ Foam::pointField Foam::oldCyclicPolyPatch::calcFaceCentres
 {
     pointField ctrs(faces.size());
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        ctrs[faceI] = faces[faceI].centre(points);
+        ctrs[facei] = faces[facei].centre(points);
     }
 
     return ctrs;
@@ -72,9 +72,9 @@ Foam::pointField Foam::oldCyclicPolyPatch::getAnchorPoints
 {
     pointField anchors(faces.size());
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        anchors[faceI] = points[faces[faceI][0]];
+        anchors[facei] = points[faces[facei][0]];
     }
 
     return anchors;
@@ -90,14 +90,14 @@ Foam::label Foam::oldCyclicPolyPatch::findMaxArea
     label maxI = -1;
     scalar maxAreaSqr = -GREAT;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        scalar areaSqr = magSqr(faces[faceI].normal(points));
+        scalar areaSqr = magSqr(faces[facei].normal(points));
 
         if (areaSqr > maxAreaSqr)
         {
             maxAreaSqr = areaSqr;
-            maxI = faceI;
+            maxI = facei;
         }
     }
     return maxI;
@@ -205,15 +205,15 @@ bool Foam::oldCyclicPolyPatch::getGeometricHalves
         half1ToPatch.setSize(pp.size());
 
         // Compare to face 0 normal.
-        forAll(faceNormals, faceI)
+        forAll(faceNormals, facei)
         {
-            if ((faceNormals[faceI] & faceNormals[0]) > 0)
+            if ((faceNormals[facei] & faceNormals[0]) > 0)
             {
-                half0ToPatch[n0Faces++] = faceI;
+                half0ToPatch[n0Faces++] = facei;
             }
             else
             {
-                half1ToPatch[n1Faces++] = faceI;
+                half1ToPatch[n1Faces++] = facei;
             }
         }
         half0ToPatch.setSize(n0Faces);
@@ -324,10 +324,10 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
             const tensor reverseT(rotationTensor(n0, -n1));
 
             // Rotation
-            forAll(half0Ctrs, faceI)
+            forAll(half0Ctrs, facei)
             {
-                half0Ctrs[faceI] = Foam::transform(reverseT, half0Ctrs[faceI]);
-                anchors0[faceI] = Foam::transform(reverseT, anchors0[faceI]);
+                half0Ctrs[facei] = Foam::transform(reverseT, half0Ctrs[facei]);
+                anchors0[facei] = Foam::transform(reverseT, anchors0[facei]);
             }
 
             ppPoints = Foam::transform(reverseT, pp.points());
@@ -379,17 +379,17 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
                 const tensor reverseT(rotationTensor(n0, -n1));
 
                 // Rotation
-                forAll(half0Ctrs, faceI)
+                forAll(half0Ctrs, facei)
                 {
-                    half0Ctrs[faceI] = Foam::transform
+                    half0Ctrs[facei] = Foam::transform
                     (
                         reverseT,
-                        half0Ctrs[faceI]
+                        half0Ctrs[facei]
                     );
-                    anchors0[faceI] = Foam::transform
+                    anchors0[facei] = Foam::transform
                     (
                         reverseT,
-                        anchors0[faceI]
+                        anchors0[facei]
                     );
                 }
                 ppPoints = Foam::transform(reverseT, pp.points());
@@ -862,11 +862,11 @@ bool Foam::oldCyclicPolyPatch::order
 
     if (!matchedAll)
     {
-        label faceI = 0;
+        label facei = 0;
         for (label i = 0; i < halfSize; i++)
         {
-            half0ToPatch[i] = faceI++;
-            half1ToPatch[i] = faceI++;
+            half0ToPatch[i] = facei++;
+            half1ToPatch[i] = facei++;
         }
 
         // And redo all matching
@@ -945,9 +945,9 @@ bool Foam::oldCyclicPolyPatch::order
     {
         label baffleI = 0;
 
-        forAll(pp, faceI)
+        forAll(pp, facei)
         {
-            const face& f = pp.localFaces()[faceI];
+            const face& f = pp.localFaces()[facei];
             const labelList& pFaces = pp.pointFaces()[f[0]];
 
             label matchedFaceI = -1;
@@ -956,7 +956,7 @@ bool Foam::oldCyclicPolyPatch::order
             {
                 label otherFaceI = pFaces[i];
 
-                if (otherFaceI > faceI)
+                if (otherFaceI > facei)
                 {
                     const face& otherF = pp.localFaces()[otherFaceI];
 
@@ -972,7 +972,7 @@ bool Foam::oldCyclicPolyPatch::order
 
             if (matchedFaceI != -1)
             {
-                half0ToPatch[baffleI] = faceI;
+                half0ToPatch[baffleI] = facei;
                 half1ToPatch[baffleI] = matchedFaceI;
                 baffleI++;
             }
@@ -1206,9 +1206,9 @@ bool Foam::oldCyclicPolyPatch::order
 
     // Return false if no change neccesary, true otherwise.
 
-    forAll(faceMap, faceI)
+    forAll(faceMap, facei)
     {
-        if (faceMap[faceI] != faceI || rotation[faceI] != 0)
+        if (faceMap[facei] != facei || rotation[facei] != 0)
         {
             return true;
         }

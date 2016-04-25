@@ -182,13 +182,13 @@ class cellCuts
 
         //- Debugging: write cell's edges and any cut vertices and edges
         //  (so no cell loop determined yet)
-        void writeUncutOBJ(const fileName&, const label cellI) const;
+        void writeUncutOBJ(const fileName&, const label celli) const;
 
         //- Debugging: write cell's edges, loop and anchors to directory.
         void writeOBJ
         (
             const fileName& dir,
-            const label cellI,
+            const label celli,
             const pointField& loopPoints,
             const labelList& anchors
         ) const;
@@ -196,7 +196,7 @@ class cellCuts
         //- Find face on cell using the two edges.
         label edgeEdgeToFace
         (
-            const label cellI,
+            const label celli,
             const label edgeA,
             const label edgeB
         ) const;
@@ -205,7 +205,7 @@ class cellCuts
         //- Find face on cell using an edge and a vertex.
         label edgeVertexToFace
         (
-            const label cellI,
+            const label celli,
             const label edgeI,
             const label vertI
         ) const;
@@ -213,7 +213,7 @@ class cellCuts
         //- Find face using two vertices (guaranteed not to be along edge)
         label vertexVertexToFace
         (
-            const label cellI,
+            const label celli,
             const label vertA,
             const label vertB
         ) const;
@@ -227,21 +227,21 @@ class cellCuts
 
         // Loop (cuts on cell circumference) calculation
 
-            //- Find edge (or -1) on faceI using vertices v0,v1
+            //- Find edge (or -1) on facei using vertices v0,v1
             label findEdge
             (
-                const label faceI,
+                const label facei,
                 const label v0,
                 const label v1
             ) const;
 
             //- Find face on which all cuts are (very rare) or -1.
-            label loopFace(const label cellI, const labelList& loop) const;
+            label loopFace(const label celli, const labelList& loop) const;
 
             //- Cross otherCut into next faces (not exclude0, exclude1)
             bool walkPoint
             (
-                const label cellI,
+                const label celli,
                 const label startCut,
 
                 const label exclude0,
@@ -253,12 +253,12 @@ class cellCuts
                 labelList& visited
             ) const;
 
-            //- Cross cut (which is edge on faceI) onto next face
+            //- Cross cut (which is edge on facei) onto next face
             bool crossEdge
             (
-                const label cellI,
+                const label celli,
                 const label startCut,
-                const label faceI,
+                const label facei,
                 const label otherCut,
 
                 label& nVisited,
@@ -269,20 +269,20 @@ class cellCuts
             // cuts.
             bool addCut
             (
-                const label cellI,
+                const label celli,
                 const label cut,
                 label& nVisited,
                 labelList& visited
             ) const;
 
-            //- Walk across faceI following cuts, starting at cut. Stores cuts
+            //- Walk across facei following cuts, starting at cut. Stores cuts
             //  visited
             // Returns true if valid walk.
             bool walkFace
             (
-                const label cellI,
+                const label celli,
                 const label startCut,
-                const label faceI,
+                const label facei,
                 const label cut,
 
                 label& lastCut,
@@ -296,9 +296,9 @@ class cellCuts
             //  vertices found.
             bool walkCell
             (
-                const label cellI,
+                const label celli,
                 const label startCut,   // overall starting cut
-                const label faceI,
+                const label facei,
                 const label prevCut,    // current cut
                 label& nVisited,
                 labelList& visited
@@ -310,10 +310,10 @@ class cellCuts
 
         // Cell anchoring
 
-            //- Are there enough faces on anchor side of cellI?
+            //- Are there enough faces on anchor side of celli?
             bool checkFaces
             (
-                const label cellI,
+                const label celli,
                 const labelList& anchorPoints
             ) const;
 
@@ -321,7 +321,7 @@ class cellCuts
             //  marks visited edges and vertices with status.
             void walkEdges
             (
-                const label cellI,
+                const label celli,
                 const label pointI,
                 const label status,
 
@@ -332,7 +332,7 @@ class cellCuts
             //- Check anchor points on 'outside' of loop
             bool loopAnchorConsistent
             (
-                const label cellI,
+                const label celli,
                 const pointField& loopPts,
                 const labelList& anchorPoints
             ) const;
@@ -342,7 +342,7 @@ class cellCuts
             //  points determined, false otherwise.
             bool calcAnchors
             (
-                const label cellI,
+                const label celli,
                 const labelList& loop,
                 const pointField& loopPts,
 
@@ -371,7 +371,7 @@ class cellCuts
             //- Counts number of cuts on face.
             label countFaceCuts
             (
-                const label faceI,
+                const label facei,
                 const labelList& loop
             ) const;
 
@@ -379,7 +379,7 @@ class cellCuts
             //  Does not use cut-addressing (faceCuts_, cutCuts_)
             bool conservativeValidLoop
             (
-                const label cellI,
+                const label celli,
                 const labelList& loop
             ) const;
 
@@ -389,7 +389,7 @@ class cellCuts
             //  points on one side of the loop.
             bool validLoop
             (
-                const label cellI,
+                const label celli,
                 const labelList& loop,
                 const scalarField& loopWeights,
                 Map<edge>& newFaceSplitCut,
@@ -404,7 +404,7 @@ class cellCuts
             //- Update basic cut information for single cell from cellLoop.
             bool setFromCellLoop
             (
-                const label cellI,
+                const label celli,
                 const labelList& loop,
                 const scalarField& loopWeights
             );
@@ -593,7 +593,7 @@ public:
 
             //- Returns coordinates of points on loop for given cell.
             //  Uses cellLoops_ and edgeWeight_
-            pointField loopPoints(const label cellI) const;
+            pointField loopPoints(const label celli) const;
 
             //- Invert anchor point selection.
             labelList nonAnchorPoints
@@ -603,12 +603,12 @@ public:
                 const labelList& loop
             ) const;
 
-            //- Flip loop for cellI. Updates anchor points as well.
-            void flip(const label cellI);
+            //- Flip loop for celli. Updates anchor points as well.
+            void flip(const label celli);
 
-            //- Flip loop for cellI. Does not update anchors. Use with care
+            //- Flip loop for celli. Does not update anchors. Use with care
             //  (only if you're sure loop orientation is wrong)
-            void flipLoopOnly(const label cellI);
+            void flipLoopOnly(const label celli);
 
 
         // Write
@@ -625,7 +625,7 @@ public:
             void writeOBJ(Ostream& os) const;
 
             //- debugging:Write edges of cell and loop
-            void writeCellOBJ(const fileName& dir, const label cellI) const;
+            void writeCellOBJ(const fileName& dir, const label celli) const;
 
 };
 

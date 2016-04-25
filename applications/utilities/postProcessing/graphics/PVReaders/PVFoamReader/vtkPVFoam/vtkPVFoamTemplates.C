@@ -71,9 +71,9 @@ vtkPolyData* Foam::vtkPVFoam::patchVTKMesh
 
     vtkCellArray* vtkcells = vtkCellArray::New();
     vtkcells->Allocate(faces.size());
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         vtkIdType nodeIds[f.size()];
 
         forAll(f, fp)

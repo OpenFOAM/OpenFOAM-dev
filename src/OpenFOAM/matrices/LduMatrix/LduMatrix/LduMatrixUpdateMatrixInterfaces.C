@@ -42,16 +42,16 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
      || Pstream::defaultCommsType == Pstream::nonBlocking
     )
     {
-        forAll(interfaces_, interfaceI)
+        forAll(interfaces_, interfacei)
         {
-            if (interfaces_.set(interfaceI))
+            if (interfaces_.set(interfacei))
             {
-                interfaces_[interfaceI].initInterfaceMatrixUpdate
+                interfaces_[interfacei].initInterfaceMatrixUpdate
                 (
                     result,
                     psiif,
-                    interfaceCoeffs[interfaceI],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfaceI]),
+                    interfaceCoeffs[interfacei],
+                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::defaultCommsType
                 );
             }
@@ -65,19 +65,19 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
         // beyond the end of the schedule which only handles "normal" patches
         for
         (
-            label interfaceI=patchSchedule.size()/2;
-            interfaceI<interfaces_.size();
-            interfaceI++
+            label interfacei=patchSchedule.size()/2;
+            interfacei<interfaces_.size();
+            interfacei++
         )
         {
-            if (interfaces_.set(interfaceI))
+            if (interfaces_.set(interfacei))
             {
-                interfaces_[interfaceI].initInterfaceMatrixUpdate
+                interfaces_[interfacei].initInterfaceMatrixUpdate
                 (
                     result,
                     psiif,
-                    interfaceCoeffs[interfaceI],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfaceI]),
+                    interfaceCoeffs[interfacei],
+                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::blocking
                 );
             }
@@ -114,16 +114,16 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
             OPstream::waitRequests();
         }
 
-        forAll(interfaces_, interfaceI)
+        forAll(interfaces_, interfacei)
         {
-            if (interfaces_.set(interfaceI))
+            if (interfaces_.set(interfacei))
             {
-                interfaces_[interfaceI].updateInterfaceMatrix
+                interfaces_[interfacei].updateInterfaceMatrix
                 (
                     result,
                     psiif,
-                    interfaceCoeffs[interfaceI],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfaceI]),
+                    interfaceCoeffs[interfacei],
+                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::defaultCommsType
                 );
             }
@@ -136,29 +136,29 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
         // Loop over all the "normal" interfaces relating to standard patches
         forAll(patchSchedule, i)
         {
-            label interfaceI = patchSchedule[i].patch;
+            label interfacei = patchSchedule[i].patch;
 
-            if (interfaces_.set(interfaceI))
+            if (interfaces_.set(interfacei))
             {
                 if (patchSchedule[i].init)
                 {
-                    interfaces_[interfaceI].initInterfaceMatrixUpdate
+                    interfaces_[interfacei].initInterfaceMatrixUpdate
                     (
                         result,
                         psiif,
-                        interfaceCoeffs[interfaceI],
-                      //Amultiplier<Type, LUType>(interfaceCoeffs[interfaceI]),
+                        interfaceCoeffs[interfacei],
+                      //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                         Pstream::scheduled
                     );
                 }
                 else
                 {
-                    interfaces_[interfaceI].updateInterfaceMatrix
+                    interfaces_[interfacei].updateInterfaceMatrix
                     (
                         result,
                         psiif,
-                        interfaceCoeffs[interfaceI],
-                      //Amultiplier<Type, LUType>(interfaceCoeffs[interfaceI]),
+                        interfaceCoeffs[interfacei],
+                      //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                         Pstream::scheduled
                     );
                 }
@@ -169,19 +169,19 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
         // beyond the end of the schedule which only handles "normal" patches
         for
         (
-            label interfaceI=patchSchedule.size()/2;
-            interfaceI<interfaces_.size();
-            interfaceI++
+            label interfacei=patchSchedule.size()/2;
+            interfacei<interfaces_.size();
+            interfacei++
         )
         {
-            if (interfaces_.set(interfaceI))
+            if (interfaces_.set(interfacei))
             {
-                interfaces_[interfaceI].updateInterfaceMatrix
+                interfaces_[interfacei].updateInterfaceMatrix
                 (
                     result,
                     psiif,
-                    interfaceCoeffs[interfaceI],
-                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfaceI]),
+                    interfaceCoeffs[interfacei],
+                    //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
                     Pstream::blocking
                 );
             }

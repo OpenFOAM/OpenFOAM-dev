@@ -62,8 +62,8 @@ void contactAngleForce::initialise()
 
         forAllConstIter(labelHashSet, patchIDs, iter)
         {
-            label patchI = iter.key();
-            Info<< "            " << pbm[patchI].name() << endl;
+            label patchi = iter.key();
+            Info<< "            " << pbm[patchi].name() << endl;
         }
 
         // Temporary implementation until run-time selection covers this case
@@ -165,54 +165,54 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
 
     volVectorField gradAlpha(fvc::grad(alpha));
 
-    forAll(nbr, faceI)
+    forAll(nbr, facei)
     {
-        const label cellO = own[faceI];
-        const label cellN = nbr[faceI];
+        const label cellO = own[facei];
+        const label cellN = nbr[facei];
 
-        label cellI = -1;
+        label celli = -1;
         if ((alpha[cellO] > 0.5) && (alpha[cellN] < 0.5))
         {
-            cellI = cellO;
+            celli = cellO;
         }
         else if ((alpha[cellO] < 0.5) && (alpha[cellN] > 0.5))
         {
-            cellI = cellN;
+            celli = cellN;
         }
 
-        if (cellI != -1 && mask_[cellI] > 0.5)
+        if (celli != -1 && mask_[celli] > 0.5)
         {
-            const scalar invDx = owner_.regionMesh().deltaCoeffs()[faceI];
+            const scalar invDx = owner_.regionMesh().deltaCoeffs()[facei];
             const vector n =
-                gradAlpha[cellI]/(mag(gradAlpha[cellI]) + ROOTVSMALL);
+                gradAlpha[celli]/(mag(gradAlpha[celli]) + ROOTVSMALL);
             scalar theta = cos(degToRad(distribution_->sample()));
-            force[cellI] += Ccf_*n*sigma[cellI]*(1.0 - theta)/invDx;
+            force[celli] += Ccf_*n*sigma[celli]*(1.0 - theta)/invDx;
         }
     }
 
-    forAll(alpha.boundaryField(), patchI)
+    forAll(alpha.boundaryField(), patchi)
     {
-        if (!owner().isCoupledPatch(patchI))
+        if (!owner().isCoupledPatch(patchi))
         {
-            const fvPatchField<scalar>& alphaf = alpha.boundaryField()[patchI];
-            const fvPatchField<scalar>& maskf = mask_.boundaryField()[patchI];
+            const fvPatchField<scalar>& alphaf = alpha.boundaryField()[patchi];
+            const fvPatchField<scalar>& maskf = mask_.boundaryField()[patchi];
             const scalarField& invDx = alphaf.patch().deltaCoeffs();
             const labelUList& faceCells = alphaf.patch().faceCells();
 
-            forAll(alphaf, faceI)
+            forAll(alphaf, facei)
             {
-                if (maskf[faceI] > 0.5)
+                if (maskf[facei] > 0.5)
                 {
-                    label cellO = faceCells[faceI];
+                    label cellO = faceCells[facei];
 
-                    if ((alpha[cellO] > 0.5) && (alphaf[faceI] < 0.5))
+                    if ((alpha[cellO] > 0.5) && (alphaf[facei] < 0.5))
                     {
                         const vector n =
                             gradAlpha[cellO]
                            /(mag(gradAlpha[cellO]) + ROOTVSMALL);
                         scalar theta = cos(degToRad(distribution_->sample()));
                         force[cellO] +=
-                            Ccf_*n*sigma[cellO]*(1.0 - theta)/invDx[faceI];
+                            Ccf_*n*sigma[cellO]*(1.0 - theta)/invDx[facei];
                     }
                 }
             }

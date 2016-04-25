@@ -97,36 +97,36 @@ void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
 
     Map<label> polyhedralFaces;
 
-    for (label cellI = 0; cellI < mesh.nCells(); cellI++)
+    for (label celli = 0; celli < mesh.nCells(); celli++)
     {
-        if (hex.isA(mesh, cellI))
+        if (hex.isA(mesh, celli))
         {
             nHex++;
         }
-        else if (tet.isA(mesh, cellI))
+        else if (tet.isA(mesh, celli))
         {
             nTet++;
         }
-        else if (pyr.isA(mesh, cellI))
+        else if (pyr.isA(mesh, celli))
         {
             nPyr++;
         }
-        else if (prism.isA(mesh, cellI))
+        else if (prism.isA(mesh, celli))
         {
             nPrism++;
         }
-        else if (wedge.isA(mesh, cellI))
+        else if (wedge.isA(mesh, celli))
         {
             nWedge++;
         }
-        else if (tetWedge.isA(mesh, cellI))
+        else if (tetWedge.isA(mesh, celli))
         {
             nTetWedge++;
         }
         else
         {
             nUnknown++;
-            polyhedralFaces(mesh.cells()[cellI].size())++;
+            polyhedralFaces(mesh.cells()[celli].size())++;
         }
     }
 

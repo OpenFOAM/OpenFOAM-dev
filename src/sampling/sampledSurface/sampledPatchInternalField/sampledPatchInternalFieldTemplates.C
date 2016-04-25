@@ -93,14 +93,14 @@ Foam::sampledPatchInternalField::interpolateField
 
         Field<Type> patchVals(mesh().nCells());
 
-        forAll(samples, cellI)
+        forAll(samples, celli)
         {
-            if (samples[cellI] != point::max)
+            if (samples[celli] != point::max)
             {
-                patchVals[cellI] = interpolator.interpolate
+                patchVals[celli] = interpolator.interpolate
                 (
-                    samples[cellI],
-                    cellI
+                    samples[celli],
+                    celli
                 );
             }
         }

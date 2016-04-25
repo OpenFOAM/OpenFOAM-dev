@@ -113,7 +113,7 @@ public:
         // Needed by meshWave
 
             //- Influence of neighbouring face.
-            //  Calls update(...) with cellCentre of cellI
+            //  Calls update(...) with cellCentre of celli
             template<class TrackingData>
             inline bool updateCell
             (
@@ -126,7 +126,7 @@ public:
             );
 
             //- Influence of neighbouring cell.
-            //  Calls update(...) with faceCentre of faceI
+            //  Calls update(...) with faceCentre of facei
             template<class TrackingData>
             inline bool updateFace
             (
@@ -140,7 +140,7 @@ public:
 
             //- Influence of different value on same face.
             //  Merge new and old info.
-            //  Calls update(...) with faceCentre of faceI
+            //  Calls update(...) with faceCentre of facei
             template<class TrackingData>
             inline bool updateFace
             (

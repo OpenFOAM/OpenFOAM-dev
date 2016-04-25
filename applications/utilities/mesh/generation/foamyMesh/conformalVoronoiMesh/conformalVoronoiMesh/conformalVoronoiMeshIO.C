@@ -179,7 +179,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 
     if (foamyHexMeshControls().writeTetDualMesh())
     {
-        label cellI = 0;
+        label celli = 0;
         for
         (
             Finite_cells_iterator cit = finite_cells_begin();
@@ -193,7 +193,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
              && !is_infinite(cit)
             )
             {
-                cit->cellIndex() = cellI++;
+                cit->cellIndex() = celli++;
             }
         }
 
@@ -213,20 +213,20 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //        // or patch face (negative index)
 //        labelList vertexToDualAddressing(number_of_vertices(), 0);
 //
-//        forAll(cellToDelaunayVertex, cellI)
+//        forAll(cellToDelaunayVertex, celli)
 //        {
-//            label vertI = cellToDelaunayVertex[cellI];
+//            label vertI = cellToDelaunayVertex[celli];
 //
 //            if (vertexToDualAddressing[vertI] != 0)
 //            {
 //                FatalErrorInFunction
 //                    << "Delaunay vertex " << vertI
-//                    << " from cell " << cellI
+//                    << " from cell " << celli
 //                    << " is already mapped to "
 //                    << vertexToDualAddressing[vertI]
 //                    << exit(FatalError);
 //            }
-//            vertexToDualAddressing[vertI] = cellI+1;
+//            vertexToDualAddressing[vertI] = celli+1;
 //        }
 //
 //        forAll(patchToDelaunayVertex, patchi)
@@ -356,15 +356,15 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //
 //                if (index > 0)
 //                {
-//                    label cellI = index-1;
-//                    dualPoints[pointI] = mesh.cellCentres()[cellI];
+//                    label celli = index-1;
+//                    dualPoints[pointI] = mesh.cellCentres()[celli];
 //                }
 //                else if (index < 0)
 //                {
-//                    label faceI = -index-1;
-//                    if (faceI >= mesh.nInternalFaces())
+//                    label facei = -index-1;
+//                    if (facei >= mesh.nInternalFaces())
 //                    {
-//                        dualPoints[pointI] = mesh.faceCentres()[faceI];
+//                        dualPoints[pointI] = mesh.faceCentres()[facei];
 //                    }
 //                }
 //            }
@@ -736,9 +736,9 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     {
         label nReorderedFaces = 0;
 
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-           if (faceMap[faceI] != -1)
+           if (faceMap[facei] != -1)
            {
                nReorderedFaces++;
            }
@@ -752,11 +752,11 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
         // Rotate faces (rotation is already in new face indices).
         label nRotated = 0;
 
-        forAll(rotation, faceI)
+        forAll(rotation, facei)
         {
-            if (rotation[faceI] != 0)
+            if (rotation[facei] != 0)
             {
-                faces[faceI] = rotateList(faces[faceI], rotation[faceI]);
+                faces[facei] = rotateList(faces[facei], rotation[facei]);
                 nRotated++;
             }
         }
@@ -961,11 +961,11 @@ void Foam::conformalVoronoiMesh::writeMesh
     labelList addr(boundaryFacesToRemove.count());
     label count = 0;
 
-    forAll(boundaryFacesToRemove, faceI)
+    forAll(boundaryFacesToRemove, facei)
     {
-        if (boundaryFacesToRemove[faceI])
+        if (boundaryFacesToRemove[facei])
         {
-            addr[count++] = faceI;
+            addr[count++] = facei;
         }
     }
 

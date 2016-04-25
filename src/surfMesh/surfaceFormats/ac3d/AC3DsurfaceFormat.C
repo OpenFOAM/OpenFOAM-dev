@@ -176,11 +176,11 @@ bool Foam::fileFormats::AC3DsurfaceFormat<Face>::read
             {
                 label nFaces = parse<int>(args);
 
-                for (label faceI = 0; faceI < nFaces; ++faceI)
+                for (label facei = 0; facei < nFaces; ++facei)
                 {
                     static string errorMsg =
                         string(" while reading face ")
-                            + Foam::name(faceI) + " on zone "
+                            + Foam::name(facei) + " on zone "
                             + Foam::name(zoneI)
                             + " from file " + filename;
 
@@ -388,8 +388,8 @@ void Foam::fileFormats::AC3DsurfaceFormat<Face>::write
 
             forAll(zone, localFaceI)
             {
-                const label faceI = faceMap[faceIndex++];
-                include.insert(faceI);
+                const label facei = faceMap[faceIndex++];
+                include.insert(facei);
             }
 
             UnsortedMeshedSurface<Face> subm = surf.subsetMesh(include);

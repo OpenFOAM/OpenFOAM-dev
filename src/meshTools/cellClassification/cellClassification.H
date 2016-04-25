@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ private:
         bool usesMixedPointsOnly
         (
             const List<pointStatus>&,
-            const label cellI
+            const label celli
         ) const;
 
         //- Get faces (and its 'owner') inbetween cells of differing type

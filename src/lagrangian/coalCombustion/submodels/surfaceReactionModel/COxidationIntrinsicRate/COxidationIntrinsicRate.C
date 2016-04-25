@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ template<class CloudType>
 Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
 (
     const scalar dt,
-    const label cellI,
+    const label celli,
     const scalar d,
     const scalar T,
     const scalar Tc,
@@ -146,7 +146,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     const SLGThermo& thermo = this->owner().thermo();
 
     // Local mass fraction of O2 in the carrier phase []
-    const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[cellI];
+    const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[celli];
 
     // Quick exit if oxidant not present
     if (YO2 < ROOTVSMALL)

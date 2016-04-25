@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,9 +129,9 @@ void Foam::foamFileSurfaceWriter::write
     // for e.g. timeVaryingMapped bc.
     pointField faceCentres(faces.size(),point::zero);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        faceCentres[faceI] = faces[faceI].centre(points);
+        faceCentres[facei] = faces[facei].centre(points);
     }
 
     OFstream(surfaceDir/"faceCentres")() << faceCentres;

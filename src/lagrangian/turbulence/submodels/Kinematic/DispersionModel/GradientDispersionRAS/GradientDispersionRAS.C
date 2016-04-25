@@ -93,7 +93,7 @@ template<class CloudType>
 Foam::vector Foam::GradientDispersionRAS<CloudType>::update
 (
     const scalar dt,
-    const label cellI,
+    const label celli,
     const vector& U,
     const vector& Uc,
     vector& UTurb,
@@ -104,10 +104,10 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
 
     const scalar cps = 0.16432;
 
-    const scalar k = this->kPtr_->internalField()[cellI];
+    const scalar k = this->kPtr_->internalField()[celli];
     const scalar epsilon =
-        this->epsilonPtr_->internalField()[cellI] + ROOTVSMALL;
-    const vector& gradk = this->gradkPtr_->internalField()[cellI];
+        this->epsilonPtr_->internalField()[celli] + ROOTVSMALL;
+    const vector& gradk = this->gradkPtr_->internalField()[celli];
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 

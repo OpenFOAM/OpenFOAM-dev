@@ -308,16 +308,16 @@ label findEdge
 }
 
 
-// Get the other edge connected to pointI on faceI.
+// Get the other edge connected to pointI on facei.
 label otherEdge
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label otherEdgeI,
     const label pointI
 )
 {
-    const labelList& fEdges = surf.faceEdges()[faceI];
+    const labelList& fEdges = surf.faceEdges()[facei];
 
     forAll(fEdges, i)
     {
@@ -339,7 +339,7 @@ label otherEdge
     }
 
     FatalErrorInFunction
-        << " verts:" << surf.localPoints()[faceI]
+        << " verts:" << surf.localPoints()[facei]
         << " connected to point " << pointI
         << " faceEdges:" << UIndirectList<edge>(surf.edges(), fEdges)()
         << abort(FatalError);
@@ -365,7 +365,7 @@ void walkSplitLine
     Map<label>& faceToPoint
 )
 {
-    label faceI = startFaceI;
+    label facei = startFaceI;
     label edgeI = startEdgeI;
     label pointI = startPointI;
 
@@ -378,11 +378,11 @@ void walkSplitLine
         do
         {
             // Cross face to next edge.
-            edgeI = otherEdge(surf, faceI, edgeI, pointI);
+            edgeI = otherEdge(surf, facei, edgeI, pointI);
 
             if (borderEdge[edgeI])
             {
-                if (!faceToEdge.insert(faceI, edgeI))
+                if (!faceToEdge.insert(facei, edgeI))
                 {
                     // Was already visited.
                     return;
@@ -393,7 +393,7 @@ void walkSplitLine
                     break;
                 }
             }
-            else if (!faceToPoint.insert(faceI, pointI))
+            else if (!faceToPoint.insert(facei, pointI))
             {
                 // Was already visited.
                 return;
@@ -409,13 +409,13 @@ void walkSplitLine
                     << abort(FatalError);
             }
 
-            if (eFaces[0] == faceI)
+            if (eFaces[0] == facei)
             {
-                faceI = eFaces[1];
+                facei = eFaces[1];
             }
-            else if (eFaces[1] == faceI)
+            else if (eFaces[1] == facei)
             {
-                faceI = eFaces[0];
+                facei = eFaces[0];
             }
             else
             {
@@ -516,17 +516,17 @@ void calcPointVecs
 
             forAll(eFaces, i)
             {
-                label faceI = eFaces[i];
+                label facei = eFaces[i];
 
-                if (faceToEdge.found(faceI))
+                if (faceToEdge.found(facei))
                 {
                     if (face0I == -1)
                     {
-                        face0I = faceI;
+                        face0I = facei;
                     }
                     else if (face1I == -1)
                     {
-                        face1I = faceI;
+                        face1I = facei;
 
                         break;
                     }
@@ -603,14 +603,14 @@ void renumberFaces
 {
     forAllConstIter(Map<label>, faceToEdge, iter)
     {
-        const label faceI = iter.key();
-        const triSurface::FaceType& f = surf.localFaces()[faceI];
+        const label facei = iter.key();
+        const triSurface::FaceType& f = surf.localFaces()[facei];
 
         forAll(f, fp)
         {
             if (pointMap[f[fp]] != -1)
             {
-                newTris[faceI][fp] = pointMap[f[fp]];
+                newTris[facei][fp] = pointMap[f[fp]];
             }
         }
     }
@@ -908,10 +908,10 @@ int main(int argc, char *argv[])
         // Start off from copy of faces.
         List<labelledTri> newTris(surf.size());
 
-        forAll(surf, faceI)
+        forAll(surf, facei)
         {
-            newTris[faceI] = surf.localFaces()[faceI];
-            newTris[faceI].region() = surf[faceI].region();
+            newTris[facei] = surf.localFaces()[facei];
+            newTris[facei].region() = surf[facei].region();
         }
 
         // Renumber all faces in faceToEdge
@@ -921,9 +921,9 @@ int main(int argc, char *argv[])
 
 
         // Check if faces use unmoved points.
-        forAll(newTris, faceI)
+        forAll(newTris, facei)
         {
-            const triSurface::FaceType& f = newTris[faceI];
+            const triSurface::FaceType& f = newTris[facei];
 
             forAll(f, fp)
             {
@@ -931,7 +931,7 @@ int main(int argc, char *argv[])
 
                 if (mag(pt) >= GREAT/2)
                 {
-                    Info<< "newTri:" << faceI << " verts:" << f
+                    Info<< "newTri:" << facei << " verts:" << f
                         << " vert:" << f[fp] << " point:" << pt << endl;
                 }
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class meshTriangulation
         (
             const primitiveMesh&,
             const boolList& includedCell,
-            const label faceI
+            const label facei
         );
 
         //- Find boundary faces of subset.
@@ -91,7 +91,7 @@ class meshTriangulation
         void insertTriangles
         (
             const triFaceList&,
-            const label faceI,
+            const label facei,
             const label regionI,
             const bool reverse,
 

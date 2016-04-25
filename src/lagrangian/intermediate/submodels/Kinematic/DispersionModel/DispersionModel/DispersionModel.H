@@ -109,7 +109,7 @@ public:
         virtual vector update
         (
             const scalar dt,
-            const label cellI,
+            const label celli,
             const vector& U,
             const vector& Uc,
             vector& UTurb,

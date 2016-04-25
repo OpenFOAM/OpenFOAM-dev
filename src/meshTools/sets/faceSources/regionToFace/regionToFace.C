@@ -62,7 +62,7 @@ void Foam::regionToFace::markZone
 (
     const indirectPrimitivePatch& patch,
     const label procI,
-    const label faceI,
+    const label facei,
     const label zoneI,
     labelList& faceZone
 ) const
@@ -76,7 +76,7 @@ void Foam::regionToFace::markZone
 
     if (Pstream::myProcNo() == procI)
     {
-        const labelList& fEdges = patch.faceEdges()[faceI];
+        const labelList& fEdges = patch.faceEdges()[facei];
         forAll(fEdges, i)
         {
             changedEdges.append(fEdges[i]);
@@ -100,11 +100,11 @@ void Foam::regionToFace::markZone
         returnReduce(patch.nEdges(), sumOp<label>())
     );
 
-    forAll(allFaceInfo, faceI)
+    forAll(allFaceInfo, facei)
     {
-        if (allFaceInfo[faceI].region() == zoneI)
+        if (allFaceInfo[facei].region() == zoneI)
         {
-            faceZone[faceI] = zoneI;
+            faceZone[facei] = zoneI;
         }
     }
 }
@@ -164,11 +164,11 @@ void Foam::regionToFace::combine(topoSet& set, const bool add) const
         faceRegion
     );
 
-    forAll(faceRegion, faceI)
+    forAll(faceRegion, facei)
     {
-        if (faceRegion[faceI] == 0)
+        if (faceRegion[facei] == 0)
         {
-            addOrDelete(set, patch.addressing()[faceI], add);
+            addOrDelete(set, patch.addressing()[facei], add);
         }
     }
 }

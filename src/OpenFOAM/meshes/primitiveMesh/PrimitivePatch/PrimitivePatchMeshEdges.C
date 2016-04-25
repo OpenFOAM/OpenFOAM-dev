@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,10 +77,10 @@ meshEdges
         // get the patch faces sharing the edge
         const labelList& curFaces = EdgeFaces[edgeI];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // get the cell next to the face
-            label curCell = faceCells[curFaces[faceI]];
+            label curCell = faceCells[curFaces[facei]];
 
             // get reference to edges on the cell
             const labelList& ce = cellEdges[curCell];

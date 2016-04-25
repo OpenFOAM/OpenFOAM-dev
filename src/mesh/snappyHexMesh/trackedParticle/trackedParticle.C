@@ -32,7 +32,7 @@ Foam::trackedParticle::trackedParticle
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI,
     const point& end,
@@ -42,7 +42,7 @@ Foam::trackedParticle::trackedParticle
     const label k
 )
 :
-    particle(mesh, position, cellI, tetFaceI, tetPtI),
+    particle(mesh, position, celli, tetFaceI, tetPtI),
     end_(end),
     level_(level),
     i_(i),

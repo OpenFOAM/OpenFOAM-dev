@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,9 +60,9 @@ void Foam::slidingInterface::clearCouple
     const labelList& cutFaceZoneLabels =
         mesh.faceZones()[cutFaceZoneID_.index()];
 
-    forAll(cutFaceZoneLabels, faceI)
+    forAll(cutFaceZoneLabels, facei)
     {
-        ref.setAction(polyRemoveFace(cutFaceZoneLabels[faceI]));
+        ref.setAction(polyRemoveFace(cutFaceZoneLabels[facei]));
     }
 
     if (debug)

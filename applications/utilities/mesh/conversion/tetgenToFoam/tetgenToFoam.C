@@ -80,11 +80,11 @@ label findFace(const primitiveMesh& mesh, const face& f)
 
     forAll(pFaces, i)
     {
-        label faceI = pFaces[i];
+        label facei = pFaces[i];
 
-        if (mesh.faces()[faceI] == f)
+        if (mesh.faces()[facei] == f)
         {
-            return faceI;
+            return facei;
         }
     }
 
@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
     labelList tetPoints(4);
 
     cellShapeList cells(nTets);
-    label cellI = 0;
+    label celli = 0;
 
     while (eleStream.good())
     {
@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
                 tetPoints[i] = nodeToPoint[nodeI];
             }
 
-            cells[cellI++] = cellShape(tet, tetPoints);
+            cells[celli++] = cellShape(tet, tetPoints);
 
             // Skip attributes
             for (label i = 0; i < nElemAttr; i++)
@@ -391,7 +391,7 @@ int main(int argc, char *argv[])
         boundaryPatch.setSize(nFaces);
         boundaryPatch = -1;
 
-        label faceI = 0;
+        label facei = 0;
 
         // Region to patch conversion
         Map<label> regionToPatch;
@@ -422,7 +422,7 @@ int main(int argc, char *argv[])
 
                 if (findFace(mesh, f) >= mesh.nInternalFaces())
                 {
-                    boundaryFaces[faceI] = f;
+                    boundaryFaces[facei] = f;
 
                     if (nFaceAttr > 0)
                     {
@@ -451,7 +451,7 @@ int main(int argc, char *argv[])
                             patchi = patchFind();
                         }
 
-                        boundaryPatch[faceI] = patchi;
+                        boundaryPatch[facei] = patchi;
 
                         // Skip remaining attributes
                         for (label i = 1; i < nFaceAttr; i++)
@@ -460,15 +460,15 @@ int main(int argc, char *argv[])
                         }
                     }
 
-                    faceI++;
+                    facei++;
                 }
             }
         }
 
 
         // Trim
-        boundaryFaces.setSize(faceI);
-        boundaryPatch.setSize(faceI);
+        boundaryFaces.setSize(facei);
+        boundaryPatch.setSize(facei);
 
 
          // Print region to patch mapping
@@ -500,11 +500,11 @@ int main(int argc, char *argv[])
         // Sort boundaryFaces by patch using boundaryPatch.
         List<DynamicList<face>> allPatchFaces(nPatches);
 
-        forAll(boundaryPatch, faceI)
+        forAll(boundaryPatch, facei)
         {
-            label patchi = boundaryPatch[faceI];
+            label patchi = boundaryPatch[facei];
 
-            allPatchFaces[patchi].append(boundaryFaces[faceI]);
+            allPatchFaces[patchi].append(boundaryFaces[facei]);
         }
 
         Info<< "Patch sizes:" << endl;

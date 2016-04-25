@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,15 +96,15 @@ int main(int argc, char *argv[])
     minIndex = -1;
     minDist = GREAT;
 
-    forAll(surf1, faceI)
+    forAll(surf1, facei)
     {
-        const point centre = surf1[faceI].centre(points);
+        const point centre = surf1[facei].centre(points);
 
         const scalar dist = mag(centre - samplePt);
         if (dist < minDist)
         {
             minDist = dist;
-            minIndex = faceI;
+            minIndex = facei;
         }
     }
 

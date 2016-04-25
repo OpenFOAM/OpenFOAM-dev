@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,9 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from cell number and parent
-Foam::splitCell::splitCell(const label cellI, splitCell* parent)
+Foam::splitCell::splitCell(const label celli, splitCell* parent)
 :
-    cellI_(cellI),
+    celli_(celli),
     parent_(parent),
     master_(NULL),
     slave_(NULL)

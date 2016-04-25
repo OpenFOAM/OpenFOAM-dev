@@ -41,21 +41,21 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::label Foam::sampledSet::getBoundaryCell(const label faceI) const
+Foam::label Foam::sampledSet::getBoundaryCell(const label facei) const
 {
-    return mesh().faceOwner()[faceI];
+    return mesh().faceOwner()[facei];
 }
 
 
-Foam::label Foam::sampledSet::getNeighbourCell(const label faceI) const
+Foam::label Foam::sampledSet::getNeighbourCell(const label facei) const
 {
-    if (faceI >= mesh().nInternalFaces())
+    if (facei >= mesh().nInternalFaces())
     {
-        return mesh().faceOwner()[faceI];
+        return mesh().faceOwner()[facei];
     }
     else
     {
-        return mesh().faceNeighbour()[faceI];
+        return mesh().faceNeighbour()[facei];
     }
 }
 
@@ -134,11 +134,11 @@ Foam::label Foam::sampledSet::pointInCell
 
 Foam::scalar Foam::sampledSet::calcSign
 (
-    const label faceI,
+    const label facei,
     const point& sample
 ) const
 {
-    vector vec = sample - mesh().faceCentres()[faceI];
+    vector vec = sample - mesh().faceCentres()[facei];
 
     scalar magVec = mag(vec);
 
@@ -150,7 +150,7 @@ Foam::scalar Foam::sampledSet::calcSign
 
     vec /= magVec;
 
-    vector n = mesh().faceAreas()[faceI];
+    vector n = mesh().faceAreas()[facei];
 
     n /= mag(n) + VSMALL;
 
@@ -160,12 +160,12 @@ Foam::scalar Foam::sampledSet::calcSign
 
 Foam::label Foam::sampledSet::findNearFace
 (
-    const label cellI,
+    const label celli,
     const point& sample,
     const scalar smallDist
 ) const
 {
-    const cell& myFaces = mesh().cells()[cellI];
+    const cell& myFaces = mesh().cells()[celli];
 
     forAll(myFaces, myFaceI)
     {
@@ -196,18 +196,18 @@ Foam::label Foam::sampledSet::findNearFace
 Foam::point Foam::sampledSet::pushIn
 (
     const point& facePt,
-    const label faceI
+    const label facei
 ) const
 {
-    label cellI = mesh().faceOwner()[faceI];
-    const point& cC = mesh().cellCentres()[cellI];
+    label celli = mesh().faceOwner()[facei];
+    const point& cC = mesh().cellCentres()[celli];
 
     point newPosition = facePt;
 
     // Taken from particle::initCellFacePt()
     label tetFaceI;
     label tetPtI;
-    mesh().findTetFacePt(cellI, facePt, tetFaceI, tetPtI);
+    mesh().findTetFacePt(celli, facePt, tetFaceI, tetPtI);
 
     if (tetFaceI == -1 || tetPtI == -1)
     {
@@ -223,7 +223,7 @@ Foam::point Foam::sampledSet::pushIn
 
             mesh().findTetFacePt
             (
-                cellI,
+                celli,
                 newPosition,
                 tetFaceI,
                 tetPtI
@@ -238,9 +238,9 @@ Foam::point Foam::sampledSet::pushIn
     {
         FatalErrorInFunction
             << "After pushing " << facePt << " to " << newPosition
-            << " it is still outside face " << faceI
-            << " at " << mesh().faceCentres()[faceI]
-            << " of cell " << cellI
+            << " it is still outside face " << facei
+            << " at " << mesh().faceCentres()[facei]
+            << " of cell " << celli
             << " at " << cC << endl
             << "Please change your starting point"
             << abort(FatalError);
@@ -478,7 +478,7 @@ Foam::Ostream& Foam::sampledSet::write(Ostream& os) const
 {
     coordSet::write(os);
 
-    os  << endl << "\t(cellI)\t(faceI)" << endl;
+    os  << endl << "\t(celli)\t(facei)" << endl;
 
     forAll(*this, sampleI)
     {

@@ -81,14 +81,14 @@ void Foam::nearWallFields::sampleBoundaryField
     // Construct flat fields for all patch faces to be sampled
     Field<Type> sampledValues(getPatchDataMapPtr_().constructSize());
 
-    forAll(cellToWalls_, cellI)
+    forAll(cellToWalls_, celli)
     {
-        const labelList& cData = cellToWalls_[cellI];
+        const labelList& cData = cellToWalls_[celli];
 
         forAll(cData, i)
         {
-            const point& samplePt = cellToSamples_[cellI][i];
-            sampledValues[cData[i]] = interpolator.interpolate(samplePt, cellI);
+            const point& samplePt = cellToSamples_[celli][i];
+            sampledValues[cData[i]] = interpolator.interpolate(samplePt, celli);
         }
     }
 

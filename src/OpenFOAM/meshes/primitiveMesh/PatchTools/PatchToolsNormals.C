@@ -164,10 +164,10 @@ Foam::PatchTools::pointNormals
         const faceList& localFaces = p.localFaces();
         const vectorField& faceNormals = p.faceNormals();
 
-        forAll(localFaces, faceI)
+        forAll(localFaces, facei)
         {
-            const face& f = localFaces[faceI];
-            const vector& n = faceNormals[faceI];
+            const face& f = localFaces[facei];
+            const vector& n = faceNormals[facei];
             forAll(f, fp)
             {
                 extrudeN[f[fp]] += n;

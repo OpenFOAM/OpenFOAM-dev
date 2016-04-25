@@ -59,10 +59,10 @@ inline void Foam::rawSurfaceWriter::writeLocation
     Ostream& os,
     const pointField& points,
     const faceList& faces,
-    const label faceI
+    const label facei
 )
 {
-    const point& ct = faces[faceI].centre(points);
+    const point& ct = faces[facei].centre(points);
     os  << ct.x() << ' ' << ct.y() << ' ' << ct.z() << ' ';
 }
 

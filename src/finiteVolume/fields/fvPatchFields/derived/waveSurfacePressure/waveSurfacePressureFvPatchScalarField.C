@@ -146,7 +146,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const scalar dt = db().time().deltaTValue();
 
@@ -156,7 +156,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
         (
             db().lookupObject<volVectorField>(zetaName_)
         );
-    vectorField& zetap = zeta.boundaryFieldRef()[patchI];
+    vectorField& zetap = zeta.boundaryFieldRef()[patchi];
 
     // lookup d/dt scheme from database for zeta
     const word ddtSchemeName(zeta.mesh().ddtScheme(zeta.name()));
@@ -170,7 +170,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
     tmp<vectorField> nf(patch().nf());
 
     // change in zeta due to flux
-    vectorField dZetap(dt*nf()*phi.boundaryField()[patchI]/patch().magSf());
+    vectorField dZetap(dt*nf()*phi.boundaryField()[patchi]/patch().magSf());
 
     if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {
@@ -187,7 +187,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
         case tsEuler:
         case tsCrankNicolson:
         {
-            zetap = zeta0.boundaryField()[patchI] + dZetap;
+            zetap = zeta0.boundaryField()[patchi] + dZetap;
 
             break;
         }
@@ -201,8 +201,8 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
 
             zetap =
                 (
-                    c0*zeta0.boundaryField()[patchI]
-                  - c00*zeta0.oldTime().boundaryField()[patchI]
+                    c0*zeta0.boundaryField()[patchi]
+                  - c00*zeta0.oldTime().boundaryField()[patchi]
                   + dZetap
                 )/c;
 

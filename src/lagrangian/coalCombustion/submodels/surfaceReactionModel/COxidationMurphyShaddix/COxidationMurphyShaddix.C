@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ template<class CloudType>
 Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
 (
     const scalar dt,
-    const label cellI,
+    const label celli,
     const scalar d,
     const scalar T,
     const scalar Tc,
@@ -145,7 +145,7 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
     const SLGThermo& thermo = this->owner().thermo();
 
     // Cell carrier phase O2 species density [kg/m^3]
-    const scalar rhoO2 = rhoc*thermo.carrier().Y(O2GlobalId_)[cellI];
+    const scalar rhoO2 = rhoc*thermo.carrier().Y(O2GlobalId_)[celli];
 
     if (rhoO2 < SMALL)
     {

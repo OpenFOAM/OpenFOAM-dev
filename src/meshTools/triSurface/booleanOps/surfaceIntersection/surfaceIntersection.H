@@ -130,7 +130,7 @@ class surfaceIntersection
         static label getEdge
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const label fp
         );
 
@@ -154,7 +154,7 @@ class surfaceIntersection
         (
             const triSurface& surf,
             const label edgeI,
-            const label faceI,
+            const label facei,
             const scalar tol
         );
 

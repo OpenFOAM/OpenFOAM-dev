@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,10 +117,10 @@ void Foam::searchableSurfaceToFaceZone::applyToSet
         const pointField& cc = mesh_.cellCentres();
 
         // Internal faces
-        for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
         {
-            start[faceI] = cc[mesh_.faceOwner()[faceI]];
-            end[faceI] = cc[mesh_.faceNeighbour()[faceI]];
+            start[facei] = cc[mesh_.faceOwner()[facei]];
+            end[facei] = cc[mesh_.faceNeighbour()[facei]];
         }
 
         // Boundary faces
@@ -129,26 +129,26 @@ void Foam::searchableSurfaceToFaceZone::applyToSet
 
         const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
-        forAll(pbm, patchI)
+        forAll(pbm, patchi)
         {
-            const polyPatch& pp = pbm[patchI];
+            const polyPatch& pp = pbm[patchi];
 
             if (pp.coupled())
             {
                 forAll(pp, i)
                 {
-                    label faceI = pp.start()+i;
-                    start[faceI] = cc[mesh_.faceOwner()[faceI]];
-                    end[faceI] = nbrCellCentres[faceI-mesh_.nInternalFaces()];
+                    label facei = pp.start()+i;
+                    start[facei] = cc[mesh_.faceOwner()[facei]];
+                    end[facei] = nbrCellCentres[facei-mesh_.nInternalFaces()];
                 }
             }
             else
             {
                 forAll(pp, i)
                 {
-                    label faceI = pp.start()+i;
-                    start[faceI] = cc[mesh_.faceOwner()[faceI]];
-                    end[faceI] = mesh_.faceCentres()[faceI];
+                    label facei = pp.start()+i;
+                    start[facei] = cc[mesh_.faceOwner()[facei]];
+                    end[facei] = mesh_.faceCentres()[facei];
                 }
             }
         }
@@ -174,13 +174,13 @@ void Foam::searchableSurfaceToFaceZone::applyToSet
             DynamicList<label> newAddressing(fzSet.addressing());
             DynamicList<bool> newFlipMap(fzSet.flipMap());
 
-            forAll(hits, faceI)
+            forAll(hits, facei)
             {
-                if (hits[faceI].hit() && !fzSet.found(faceI))
+                if (hits[facei].hit() && !fzSet.found(facei))
                 {
-                    newAddressing.append(faceI);
-                    vector d = end[faceI]-start[faceI];
-                    newFlipMap.append((normals[faceI] & d) < 0);
+                    newAddressing.append(facei);
+                    vector d = end[facei]-start[facei];
+                    newFlipMap.append((normals[facei] & d) < 0);
                 }
             }
 

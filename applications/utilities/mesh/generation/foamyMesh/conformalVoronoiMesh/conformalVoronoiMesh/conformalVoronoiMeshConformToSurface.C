@@ -132,30 +132,30 @@ Foam::label Foam::conformalVoronoiMesh::findVerticesNearBoundaries()
             continue;
         }
 
-        for (label cellI = 0; cellI < 4; ++cellI)
+        for (label celli = 0; celli < 4; ++celli)
         {
-            Vertex_handle v = c1->vertex(cellI);
+            Vertex_handle v = c1->vertex(celli);
 
             if
             (
                 !is_infinite(v)
              && v->internalPoint()
-             && fit->second != cellI
+             && fit->second != celli
             )
             {
                 v->setNearBoundary();
             }
         }
 
-        for (label cellI = 0; cellI < 4; ++cellI)
+        for (label celli = 0; celli < 4; ++celli)
         {
-            Vertex_handle v = c2->vertex(cellI);
+            Vertex_handle v = c2->vertex(celli);
 
             if
             (
                 !is_infinite(v)
              && v->internalPoint()
-             && fit->second != cellI
+             && fit->second != celli
             )
             {
                 v->setNearBoundary();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,14 +88,14 @@ bool Foam::matchPoints
             j++
         )
         {
-            label faceI = pts1MagSqr.indices()[j];
+            label facei = pts1MagSqr.indices()[j];
             // Compare actual vectors
-            scalar distSqr = magSqr(pts0[face0I] - pts1[faceI]);
+            scalar distSqr = magSqr(pts0[face0I] - pts1[facei]);
 
             if (distSqr <= sqr(matchDist) && distSqr < minDistSqr)
             {
                 minDistSqr = distSqr;
-                minFaceI = faceI;
+                minFaceI = facei;
             }
         }
 
@@ -122,12 +122,12 @@ bool Foam::matchPoints
                     j++
                 )
                 {
-                    label faceI = pts1MagSqr.indices()[j];
+                    label facei = pts1MagSqr.indices()[j];
 
-                    Pout<< "    Compared coord: " << pts1[faceI]
+                    Pout<< "    Compared coord: " << pts1[facei]
                         << " at index " << j
                         << " with difference to point "
-                        << mag(pts1[faceI] - pts0[face0I]) << endl;
+                        << mag(pts1[facei] - pts0[face0I]) << endl;
                 }
             }
         }
@@ -200,16 +200,16 @@ bool Foam::matchPoints
             j++
         )
         {
-            label faceI = pts1MagSqr.indices()[j];
+            label facei = pts1MagSqr.indices()[j];
             // Compare actual vectors
-            scalar distSqr = magSqr(pts0[face0I] - pts1[faceI]);
+            scalar distSqr = magSqr(pts0[face0I] - pts1[facei]);
 
-            scalar distNorm = (pts0Dir[face0I] & pts1Dir[faceI]);
+            scalar distNorm = (pts0Dir[face0I] & pts1Dir[facei]);
 
             if
             (
                 magSqr(pts0Dir[face0I]) < sqr(SMALL)
-             && magSqr(pts1Dir[faceI]) < sqr(SMALL)
+             && magSqr(pts1Dir[facei]) < sqr(SMALL)
             )
             {
                 distNorm = -1;
@@ -222,7 +222,7 @@ bool Foam::matchPoints
                 {
                     minDistNorm = distNorm;
                     minDistSqr = distSqr;
-                    minFaceI = faceI;
+                    minFaceI = facei;
                 }
             }
         }
@@ -250,12 +250,12 @@ bool Foam::matchPoints
                     j++
                 )
                 {
-                    label faceI = pts1MagSqr.indices()[j];
+                    label facei = pts1MagSqr.indices()[j];
 
-                    Pout<< "    Compared coord: " << pts1[faceI]
+                    Pout<< "    Compared coord: " << pts1[facei]
                         << " at index " << j
                         << " with difference to point "
-                        << mag(pts1[faceI] - pts0[face0I]) << endl;
+                        << mag(pts1[facei] - pts0[face0I]) << endl;
                 }
             }
         }

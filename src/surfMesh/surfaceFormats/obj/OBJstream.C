@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -354,9 +354,9 @@ Foam::Ostream& Foam::OBJstream::write
     }
     else
     {
-        forAll(localFaces, faceI)
+        forAll(localFaces, facei)
         {
-            const face& f = localFaces[faceI];
+            const face& f = localFaces[facei];
             write('f');
             forAll(f, i)
             {

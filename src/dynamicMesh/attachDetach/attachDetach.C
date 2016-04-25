@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,11 +107,11 @@ void Foam::attachDetach::checkDefinition()
 
             DynamicList<label> bouFacesInZone(addr.size());
 
-            forAll(addr, faceI)
+            forAll(addr, facei)
             {
-                if (!mesh.isInternalFace(addr[faceI]))
+                if (!mesh.isInternalFace(addr[facei]))
                 {
-                    bouFacesInZone.append(addr[faceI]);
+                    bouFacesInZone.append(addr[facei]);
                 }
             }
 
@@ -171,10 +171,10 @@ void Foam::attachDetach::checkDefinition()
 
             DynamicList<label> zoneProblemFaces(addr.size());
 
-            forAll(addr, faceI)
+            forAll(addr, facei)
             {
                 label facePatch =
-                    mesh.boundaryMesh().whichPatch(addr[faceI]);
+                    mesh.boundaryMesh().whichPatch(addr[facei]);
 
                 if
                 (
@@ -182,7 +182,7 @@ void Foam::attachDetach::checkDefinition()
                  && facePatch != slavePatchID_.index()
                 )
                 {
-                    zoneProblemFaces.append(addr[faceI]);
+                    zoneProblemFaces.append(addr[facei]);
                 }
             }
 

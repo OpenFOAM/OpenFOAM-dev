@@ -133,16 +133,16 @@ void Foam::syncTools::syncPointMap
 
         // Send
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].nPoints() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].nPoints() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 // Get data per patchPoint in neighbouring point numbers.
 
@@ -173,16 +173,16 @@ void Foam::syncTools::syncPointMap
 
         // Receive and combine.
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].nPoints() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].nPoints() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 UIPstream fromNb(procPatch.neighbProcNo(), pBufs);
                 Map<T> nbrPatchInfo(fromNb);
@@ -208,12 +208,12 @@ void Foam::syncTools::syncPointMap
     }
 
     // Do the cyclics.
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (isA<cyclicPolyPatch>(patches[patchI]))
+        if (isA<cyclicPolyPatch>(patches[patchi]))
         {
             const cyclicPolyPatch& cycPatch =
-                refCast<const cyclicPolyPatch>(patches[patchI]);
+                refCast<const cyclicPolyPatch>(patches[patchi]);
 
             if (cycPatch.owner())
             {
@@ -409,16 +409,16 @@ void Foam::syncTools::syncEdgeMap
 
         // Send
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].nEdges() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].nEdges() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
 
                 // Get data per patch edge in neighbouring edge.
@@ -453,16 +453,16 @@ void Foam::syncTools::syncEdgeMap
 
         // Receive and combine.
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].nEdges() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].nEdges() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 EdgeMap<T> nbrPatchInfo;
                 {
@@ -498,12 +498,12 @@ void Foam::syncTools::syncEdgeMap
     // Swap cyclic info
     // ~~~~~~~~~~~~~~~~
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (isA<cyclicPolyPatch>(patches[patchI]))
+        if (isA<cyclicPolyPatch>(patches[patchi]))
         {
             const cyclicPolyPatch& cycPatch =
-                refCast<const cyclicPolyPatch>(patches[patchI]);
+                refCast<const cyclicPolyPatch>(patches[patchi]);
 
             if (cycPatch.owner())
             {
@@ -624,9 +624,9 @@ void Foam::syncTools::syncEdgeMap
     // on the outside of the mesh. (though might not be on coupled patch
     // if is single edge and not on coupled face)
     // Store value (if any) on sharedEdgeValues
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        const face& f = mesh.faces()[faceI];
+        const face& f = mesh.faces()[facei];
 
         forAll(f, fp)
         {
@@ -803,16 +803,16 @@ void Foam::syncTools::syncEdgeMap
 //
 //        // Send
 //
-//        forAll(patches, patchI)
+//        forAll(patches, patchi)
 //        {
 //            if
 //            (
-//                isA<processorPolyPatch>(patches[patchI])
-//             && patches[patchI].nPoints() > 0
+//                isA<processorPolyPatch>(patches[patchi])
+//             && patches[patchi].nPoints() > 0
 //            )
 //            {
 //                const processorPolyPatch& procPatch =
-//                    refCast<const processorPolyPatch>(patches[patchI]);
+//                    refCast<const processorPolyPatch>(patches[patchi]);
 //
 //                // Get data per patchPoint in neighbouring point numbers.
 //                Field<T> patchInfo(procPatch.nPoints());
@@ -835,16 +835,16 @@ void Foam::syncTools::syncEdgeMap
 //
 //        // Receive and combine.
 //
-//        forAll(patches, patchI)
+//        forAll(patches, patchi)
 //        {
 //            if
 //            (
-//                isA<processorPolyPatch>(patches[patchI])
-//             && patches[patchI].nPoints() > 0
+//                isA<processorPolyPatch>(patches[patchi])
+//             && patches[patchi].nPoints() > 0
 //            )
 //            {
 //                const processorPolyPatch& procPatch =
-//                    refCast<const processorPolyPatch>(patches[patchI]);
+//                    refCast<const processorPolyPatch>(patches[patchi]);
 //
 //                Field<T> nbrPatchInfo(procPatch.nPoints());
 //                {
@@ -867,12 +867,12 @@ void Foam::syncTools::syncEdgeMap
 //    }
 //
 //    // Do the cyclics.
-//    forAll(patches, patchI)
+//    forAll(patches, patchi)
 //    {
-//        if (isA<cyclicPolyPatch>(patches[patchI]))
+//        if (isA<cyclicPolyPatch>(patches[patchi]))
 //        {
 //            const cyclicPolyPatch& cycPatch =
-//                refCast<const cyclicPolyPatch>(patches[patchI]);
+//                refCast<const cyclicPolyPatch>(patches[patchi]);
 //
 //            if (cycPatch.owner())
 //            {
@@ -1305,16 +1305,16 @@ void Foam::syncTools::syncBoundaryFaceList
 
         // Send
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].size() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].size() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 label patchStart = procPatch.start()-mesh.nInternalFaces();
 
@@ -1329,16 +1329,16 @@ void Foam::syncTools::syncBoundaryFaceList
 
         // Receive and combine.
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].size() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].size() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 Field<T> nbrPatchInfo(procPatch.size());
 
@@ -1358,12 +1358,12 @@ void Foam::syncTools::syncBoundaryFaceList
     }
 
     // Do the cyclics.
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (isA<cyclicPolyPatch>(patches[patchI]))
+        if (isA<cyclicPolyPatch>(patches[patchi]))
         {
             const cyclicPolyPatch& cycPatch =
-                refCast<const cyclicPolyPatch>(patches[patchI]);
+                refCast<const cyclicPolyPatch>(patches[patchi]);
 
             if (cycPatch.owner())
             {
@@ -1424,16 +1424,16 @@ void Foam::syncTools::syncFaceList
 
         // Send
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].size() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].size() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 List<unsigned int> patchInfo(procPatch.size());
                 forAll(procPatch, i)
@@ -1451,16 +1451,16 @@ void Foam::syncTools::syncFaceList
 
         // Receive and combine.
 
-        forAll(patches, patchI)
+        forAll(patches, patchi)
         {
             if
             (
-                isA<processorPolyPatch>(patches[patchI])
-             && patches[patchI].size() > 0
+                isA<processorPolyPatch>(patches[patchi])
+             && patches[patchi].size() > 0
             )
             {
                 const processorPolyPatch& procPatch =
-                    refCast<const processorPolyPatch>(patches[patchI]);
+                    refCast<const processorPolyPatch>(patches[patchi]);
 
                 List<unsigned int> patchInfo(procPatch.size());
                 {
@@ -1482,12 +1482,12 @@ void Foam::syncTools::syncFaceList
     }
 
     // Do the cyclics.
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (isA<cyclicPolyPatch>(patches[patchI]))
+        if (isA<cyclicPolyPatch>(patches[patchi]))
         {
             const cyclicPolyPatch& cycPatch =
-                refCast<const cyclicPolyPatch>(patches[patchI]);
+                refCast<const cyclicPolyPatch>(patches[patchi]);
 
             if (cycPatch.owner())
             {
@@ -1536,9 +1536,9 @@ void Foam::syncTools::swapBoundaryCellList
 
     neighbourCellData.setSize(nBnd);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         const labelUList& faceCells = pp.faceCells();
         forAll(faceCells, i)
         {

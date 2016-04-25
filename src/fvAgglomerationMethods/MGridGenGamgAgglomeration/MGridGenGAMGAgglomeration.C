@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,14 +145,14 @@ void Foam::MGridGenGAMGAgglomeration::detectSharedFaces
     sharedFaces.resize(addr.lowerAddr().size()/100);
 
     // Detect any faces inbetween same value
-    forAll(lower, faceI)
+    forAll(lower, facei)
     {
-        label lowerData = value[lower[faceI]];
-        label upperData = value[upper[faceI]];
+        label lowerData = value[lower[facei]];
+        label upperData = value[upper[facei]];
 
         if (lowerData != -1 && lowerData == upperData)
         {
-            sharedFaces.insert(faceI);
+            sharedFaces.insert(facei);
         }
     }
 }
@@ -242,9 +242,9 @@ Foam::MGridGenGAMGAgglomeration::MGridGenGAMGAgglomeration
             const globalIndex globalNumbering(nCoarseCells);
 
             labelField globalAgglom(addr.size());
-            forAll(agglom, cellI)
+            forAll(agglom, celli)
             {
-                globalAgglom[cellI] = globalNumbering.toGlobal(agglom[cellI]);
+                globalAgglom[celli] = globalNumbering.toGlobal(agglom[celli]);
             }
 
             // Get the interface agglomeration
@@ -269,8 +269,8 @@ Foam::MGridGenGAMGAgglomeration::MGridGenGAMGAgglomeration
             scalarField weights = *magSfPtr;
             forAllConstIter(labelHashSet, sharedFaces, iter)
             {
-                label faceI= iter.key();
-                weights[faceI] *= 2.0;
+                label facei= iter.key();
+                weights[facei] *= 2.0;
             }
 
             // Redo the agglomeration using the new weights

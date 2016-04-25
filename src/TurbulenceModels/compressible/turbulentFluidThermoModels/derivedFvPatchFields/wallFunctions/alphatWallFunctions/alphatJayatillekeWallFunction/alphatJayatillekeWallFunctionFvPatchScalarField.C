@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,16 +237,16 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     );
 
     // Populate boundary values
-    forAll(alphatw, faceI)
+    forAll(alphatw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uTau = Cmu25*sqrt(k[faceCellI]);
 
-        scalar yPlus = uTau*y[faceI]/(muw[faceI]/rhow[faceI]);
+        scalar yPlus = uTau*y[facei]/(muw[facei]/rhow[facei]);
 
         // Molecular Prandtl number
-        scalar Pr = muw[faceI]/alphaw[faceI];
+        scalar Pr = muw[facei]/alphaw[facei];
 
         // Molecular-to-turbulent Prandtl number ratio
         scalar Prat = Pr/Prt_;
@@ -259,36 +259,36 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
         scalar alphaEff = 0.0;
         if (yPlus < yPlusTherm)
         {
-            scalar A = qDot[faceI]*rhow[faceI]*uTau*y[faceI];
-            scalar B = qDot[faceI]*Pr*yPlus;
-            scalar C = Pr*0.5*rhow[faceI]*uTau*sqr(magUp[faceI]);
+            scalar A = qDot[facei]*rhow[facei]*uTau*y[facei];
+            scalar B = qDot[facei]*Pr*yPlus;
+            scalar C = Pr*0.5*rhow[facei]*uTau*sqr(magUp[facei]);
             alphaEff = A/(B + C + VSMALL);
         }
         else
         {
-            scalar A = qDot[faceI]*rhow[faceI]*uTau*y[faceI];
-            scalar B = qDot[faceI]*Prt_*(1.0/kappa_*log(E_*yPlus) + P);
-            scalar magUc = uTau/kappa_*log(E_*yPlusTherm) - mag(Uw[faceI]);
+            scalar A = qDot[facei]*rhow[facei]*uTau*y[facei];
+            scalar B = qDot[facei]*Prt_*(1.0/kappa_*log(E_*yPlus) + P);
+            scalar magUc = uTau/kappa_*log(E_*yPlusTherm) - mag(Uw[facei]);
             scalar C =
-                0.5*rhow[faceI]*uTau
-               *(Prt_*sqr(magUp[faceI]) + (Pr - Prt_)*sqr(magUc));
+                0.5*rhow[facei]*uTau
+               *(Prt_*sqr(magUp[facei]) + (Pr - Prt_)*sqr(magUc));
             alphaEff = A/(B + C + VSMALL);
         }
 
         // Update turbulent thermal diffusivity
-        alphatw[faceI] = max(0.0, alphaEff - alphaw[faceI]);
+        alphatw[facei] = max(0.0, alphaEff - alphaw[facei]);
 
         if (debug)
         {
             Info<< "    uTau           = " << uTau << nl
                 << "    Pr             = " << Pr << nl
                 << "    Prt            = " << Prt_ << nl
-                << "    qDot           = " << qDot[faceI] << nl
+                << "    qDot           = " << qDot[facei] << nl
                 << "    yPlus          = " << yPlus << nl
                 << "    yPlusTherm     = " << yPlusTherm << nl
                 << "    alphaEff       = " << alphaEff << nl
-                << "    alphaw         = " << alphaw[faceI] << nl
-                << "    alphatw        = " << alphatw[faceI] << nl
+                << "    alphaw         = " << alphaw[facei] << nl
+                << "    alphatw        = " << alphatw[facei] << nl
                 << endl;
         }
     }

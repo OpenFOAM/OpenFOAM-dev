@@ -328,14 +328,14 @@ mtype                 {space}"MTYPE:"{space}
 
         IStringStream elementStream(YYText());
 
-        label cellI(readLabel(elementStream));
+        label celli(readLabel(elementStream));
         label cellType(readLabel(elementStream));
         label nVertices(readLabel(elementStream));
 
         // reset number of continuation lines
         nCellContinuationLines = 0;
 
-        cellMap[curNumberOfCells] = cellI;
+        cellMap[curNumberOfCells] = celli;
         cellTypes[curNumberOfCells] = cellType;
         cellLabels.set(curNumberOfCells, new labelList(nVertices));
 
@@ -682,19 +682,19 @@ int main(int argc, char *argv[])
     // make a cell mapping array
     label maxCellIndex = 0;
 
-    forAll(cellMap, cellI)
+    forAll(cellMap, celli)
     {
-        if (cellMap[cellI] > maxCellIndex)
+        if (cellMap[celli] > maxCellIndex)
         {
-            maxCellIndex = cellMap[cellI];
+            maxCellIndex = cellMap[celli];
         }
     }
 
     labelList cellLookup(maxCellIndex + 1);
 
-    forAll(cellMap, cellI)
+    forAll(cellMap, celli)
     {
-        cellLookup[cellMap[cellI] ] = cellI;
+        cellLookup[cellMap[celli] ] = celli;
     }
 
     const cellModel& hex = *(cellModeller::lookup("hex"));
@@ -709,23 +709,23 @@ int main(int argc, char *argv[])
 
     cellShapeList cells(cellLabels.size());
 
-    forAll(cellTypes, cellI)
+    forAll(cellTypes, celli)
     {
-        const labelList& curCellLabels = cellLabels[cellI];
+        const labelList& curCellLabels = cellLabels[celli];
 
         // Tetrahedron
-        if (cellTypes[cellI] == 6)
+        if (cellTypes[celli] == 6)
         {
             labelsTet[0] = pointLookup[curCellLabels[0] ];
             labelsTet[1] = pointLookup[curCellLabels[2] ];
             labelsTet[2] = pointLookup[curCellLabels[3] ];
             labelsTet[3] = pointLookup[curCellLabels[1] ];
 
-            cells[cellI] = cellShape(tet, labelsTet);
+            cells[celli] = cellShape(tet, labelsTet);
         }
 
         // Square-based pyramid
-        else if (cellTypes[cellI] == 7)
+        else if (cellTypes[celli] == 7)
         {
             labelsPyramid[0] = pointLookup[curCellLabels[0] ];
             labelsPyramid[1] = pointLookup[curCellLabels[1] ];
@@ -733,11 +733,11 @@ int main(int argc, char *argv[])
             labelsPyramid[3] = pointLookup[curCellLabels[2] ];
             labelsPyramid[4] = pointLookup[curCellLabels[4] ];
 
-            cells[cellI] = cellShape(pyr, labelsPyramid);
+            cells[celli] = cellShape(pyr, labelsPyramid);
         }
 
         // Triangular prism
-        else if (cellTypes[cellI] == 5)
+        else if (cellTypes[celli] == 5)
         {
             labelsPrism[0] = pointLookup[curCellLabels[0] ];
             labelsPrism[1] = pointLookup[curCellLabels[1] ];
@@ -746,11 +746,11 @@ int main(int argc, char *argv[])
             labelsPrism[4] = pointLookup[curCellLabels[4] ];
             labelsPrism[5] = pointLookup[curCellLabels[5] ];
 
-            cells[cellI] = cellShape(prism, labelsPrism);
+            cells[celli] = cellShape(prism, labelsPrism);
         }
 
         // Hex
-        else if (cellTypes[cellI] == 4)
+        else if (cellTypes[celli] == 4)
         {
             labelsHex[0] = pointLookup[curCellLabels[0] ];
             labelsHex[1] = pointLookup[curCellLabels[1] ];
@@ -761,7 +761,7 @@ int main(int argc, char *argv[])
             labelsHex[6] = pointLookup[curCellLabels[7] ];
             labelsHex[7] = pointLookup[curCellLabels[6] ];
 
-            cells[cellI] = cellShape(hex, labelsHex);
+            cells[celli] = cellShape(hex, labelsHex);
         }
     }
 
@@ -788,18 +788,18 @@ int main(int argc, char *argv[])
         faceList& patchFaces = boundary[patchi];
         patchFaces.setSize(curCells.size());
 
-        forAll(curCells, faceI)
+        forAll(curCells, facei)
         {
-            patchFaces[faceI] =
-                cells[cellLookup[curCells[faceI] ] ].faces()
+            patchFaces[facei] =
+                cells[cellLookup[curCells[facei] ] ].faces()
                 [
                     faceIndex
                     [
                         // this picks a cell type
-                        cells[cellLookup[curCells[faceI] ] ]
+                        cells[cellLookup[curCells[facei] ] ]
                             .model().index()
                     ]
-                    [curFaces[faceI] - 1] // this gives a fluent face - 1
+                    [curFaces[facei] - 1] // this gives a fluent face - 1
                 ];
 
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
 
     const pointField& ctrs = mesh_.cellCentres();
 
-    forAll(ctrs, cellI)
+    forAll(ctrs, celli)
     {
         bool inside = true;
 
@@ -100,7 +100,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
         {
             const face& f = boxFaces[i];
 
-            if (((ctrs[cellI] - boxPoints[f[0]]) & boxFaceNormals[i]) > 0)
+            if (((ctrs[celli] - boxPoints[f[0]]) & boxFaceNormals[i]) > 0)
             {
                 inside = false;
                 break;
@@ -109,7 +109,7 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
 
         if (inside)
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

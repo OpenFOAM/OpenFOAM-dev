@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,10 +94,10 @@ bool Foam::fileFormats::TRIsurfaceFormat<Face>::read
     if (reader.sorted())
     {
         // already sorted - generate directly
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            const label startPt = 3*faceI;
-            faceLst[faceI] = triFace(startPt, startPt+1, startPt+2);
+            const label startPt = 3*facei;
+            faceLst[facei] = triFace(startPt, startPt+1, startPt+2);
         }
     }
     else
@@ -108,10 +108,10 @@ bool Foam::fileFormats::TRIsurfaceFormat<Face>::read
         sortedOrder(zoneIds, faceMap);
 
         // generate sorted faces
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            const label startPt = 3*faceMap[faceI];
-            faceLst[faceI] = triFace(startPt, startPt+1, startPt+2);
+            const label startPt = 3*faceMap[facei];
+            faceLst[facei] = triFace(startPt, startPt+1, startPt+2);
         }
     }
     zoneIds.clear();
@@ -202,9 +202,9 @@ void Foam::fileFormats::TRIsurfaceFormat<Face>::write
     {
         const List<label>& zoneIds  = surf.zoneIds();
 
-        forAll(faceLst, faceI)
+        forAll(faceLst, facei)
         {
-            writeShell(os, pointLst, faceLst[faceI], zoneIds[faceI]);
+            writeShell(os, pointLst, faceLst[facei], zoneIds[facei]);
         }
     }
     else

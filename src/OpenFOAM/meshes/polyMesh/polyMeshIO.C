@@ -184,12 +184,12 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             wordList oldTypes = boundary_.types();
             wordList oldNames = boundary_.names();
 
-            forAll(oldTypes, patchI)
+            forAll(oldTypes, patchi)
             {
                 if
                 (
-                    oldTypes[patchI] != newTypes[patchI]
-                 || oldNames[patchI] != newNames[patchI]
+                    oldTypes[patchi] != newTypes[patchi]
+                 || oldNames[patchi] != newNames[patchi]
                 )
                 {
                     boundaryChanged = true;
@@ -206,23 +206,23 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
             boundary_.clear();
             boundary_.setSize(newBoundary.size());
 
-            forAll(newBoundary, patchI)
+            forAll(newBoundary, patchi)
             {
-                boundary_.set(patchI, newBoundary[patchI].clone(boundary_));
+                boundary_.set(patchi, newBoundary[patchi].clone(boundary_));
             }
         }
         else
         {
-            forAll(boundary_, patchI)
+            forAll(boundary_, patchi)
             {
-                boundary_[patchI] = polyPatch
+                boundary_[patchi] = polyPatch
                 (
-                    newBoundary[patchI].name(),
-                    newBoundary[patchI].size(),
-                    newBoundary[patchI].start(),
-                    patchI,
+                    newBoundary[patchi].name(),
+                    newBoundary[patchi].size(),
+                    newBoundary[patchi].start(),
+                    patchi,
                     boundary_,
-                    newBoundary[patchI].type()
+                    newBoundary[patchi].type()
                 );
             }
         }

@@ -208,18 +208,18 @@ void thermalBaffleFvPatchScalarField::createPatchMesh()
     dicts[topPatchID].add("sampleMode", mpp.sampleModeNames_[mpp.mode()]);
 
 
-    forAll(regionPatches, patchI)
+    forAll(regionPatches, patchi)
     {
-        dictionary&  patchDict = dicts[patchI];
+        dictionary&  patchDict = dicts[patchi];
         patchDict.set("nFaces", 0);
         patchDict.set("startFace", 0);
 
-        regionPatches[patchI] = polyPatch::New
+        regionPatches[patchi] = polyPatch::New
         (
-            patchTypes[patchI],
-            patchNames[patchI],
-            dicts[patchI],
-            patchI,
+            patchTypes[patchi],
+            patchNames[patchi],
+            dicts[patchi],
+            patchi,
             thisMesh.boundaryMesh()
         ).ptr();
     }

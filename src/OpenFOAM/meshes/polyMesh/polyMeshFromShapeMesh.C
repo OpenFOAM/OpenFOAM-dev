@@ -93,16 +93,16 @@ Foam::labelList Foam::polyMesh::facePatchFaceCells
         {
             const labelList& facePointCells = pointCells[facePoints[pointI]];
 
-            forAll(facePointCells, cellI)
+            forAll(facePointCells, celli)
             {
-                faceList cellFaces = cellsFaceShapes[facePointCells[cellI]];
+                faceList cellFaces = cellsFaceShapes[facePointCells[celli]];
 
                 forAll(cellFaces, cellFace)
                 {
                     if (face::sameVertices(cellFaces[cellFace], curFace))
                     {
                         // Found the cell corresponding to this face
-                        FaceCells[fI] = facePointCells[cellI];
+                        FaceCells[fI] = facePointCells[celli];
 
                         found = true;
                     }
@@ -147,17 +147,17 @@ void Foam::polyMesh::setTopology
     faceListList cellsFaceShapes(cellsAsShapes.size());
     cells.setSize(cellsAsShapes.size());
 
-    forAll(cellsFaceShapes, cellI)
+    forAll(cellsFaceShapes, celli)
     {
-        cellsFaceShapes[cellI] = cellsAsShapes[cellI].faces();
+        cellsFaceShapes[celli] = cellsAsShapes[celli].faces();
 
-        cells[cellI].setSize(cellsFaceShapes[cellI].size());
+        cells[celli].setSize(cellsFaceShapes[celli].size());
 
         // Initialise cells to -1 to flag undefined faces
-        static_cast<labelList&>(cells[cellI]) = -1;
+        static_cast<labelList&>(cells[celli]) = -1;
 
         // Count maximum possible numer of mesh faces
-        maxFaces += cellsFaceShapes[cellI].size();
+        maxFaces += cellsFaceShapes[celli].size();
     }
 
     // Set size of faces array to maximum possible number of mesh faces
@@ -171,7 +171,7 @@ void Foam::polyMesh::setTopology
 
     bool found = false;
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
         // Note:
         // Insertion cannot be done in one go as the faces need to be
@@ -179,7 +179,7 @@ void Foam::polyMesh::setTopology
         // cells.  Therefore, all neighbours will be detected first
         // and then added in the correct order.
 
-        const faceList& curFaces = cellsFaceShapes[cellI];
+        const faceList& curFaces = cellsFaceShapes[celli];
 
         // Record the neighbour cell
         labelList neiCells(curFaces.size(), -1);
@@ -190,14 +190,14 @@ void Foam::polyMesh::setTopology
         label nNeighbours = 0;
 
         // For all faces ...
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Skip faces that have already been matched
-            if (cells[cellI][faceI] >= 0) continue;
+            if (cells[celli][facei] >= 0) continue;
 
             found = false;
 
-            const face& curFace = curFaces[faceI];
+            const face& curFace = curFaces[facei];
 
             // Get the list of labels
             const labelList& curPoints = curFace;
@@ -215,7 +215,7 @@ void Foam::polyMesh::setTopology
                     label curNei = curNeighbours[neiI];
 
                     // Reject neighbours with the lower label
-                    if (curNei > cellI)
+                    if (curNei > celli)
                     {
                         // Get the list of search faces
                         const faceList& searchFaces = cellsFaceShapes[curNei];
@@ -228,8 +228,8 @@ void Foam::polyMesh::setTopology
                                 found = true;
 
                                 // Record the neighbour cell and face
-                                neiCells[faceI] = curNei;
-                                faceOfNeiCell[faceI] = neiFaceI;
+                                neiCells[facei] = curNei;
+                                faceOfNeiCell[facei] = neiFaceI;
                                 nNeighbours++;
 
                                 break;
@@ -265,7 +265,7 @@ void Foam::polyMesh::setTopology
                 faces_[nFaces] = curFaces[nextNei];
 
                 // Set cell-face and cell-neighbour-face to current face label
-                cells[cellI][nextNei] = nFaces;
+                cells[celli][nextNei] = nFaces;
                 cells[neiCells[nextNei]][faceOfNeiCell[nextNei]] = nFaces;
 
                 // Stop the neighbour from being used again
@@ -288,9 +288,9 @@ void Foam::polyMesh::setTopology
     patchSizes.setSize(boundaryFaces.size(), -1);
     patchStarts.setSize(boundaryFaces.size(), -1);
 
-    forAll(boundaryFaces, patchI)
+    forAll(boundaryFaces, patchi)
     {
-        const faceList& patchFaces = boundaryFaces[patchI];
+        const faceList& patchFaces = boundaryFaces[patchi];
 
         labelList curPatchFaceCells =
             facePatchFaceCells
@@ -298,17 +298,17 @@ void Foam::polyMesh::setTopology
                 patchFaces,
                 PointCells,
                 cellsFaceShapes,
-                patchI
+                patchi
             );
 
         // Grab the start label
         label curPatchStart = nFaces;
 
-        forAll(patchFaces, faceI)
+        forAll(patchFaces, facei)
         {
-            const face& curFace = patchFaces[faceI];
+            const face& curFace = patchFaces[facei];
 
-            const label cellInside = curPatchFaceCells[faceI];
+            const label cellInside = curPatchFaceCells[facei];
 
             // Get faces of the cell inside
             const faceList& facesOfCellInside = cellsFaceShapes[cellInside];
@@ -326,9 +326,9 @@ void Foam::polyMesh::setTopology
                             << " on the face on cell " << cellInside
                             << " which is either an internal face or already "
                             << "belongs to some other patch.  This is face "
-                            << faceI << " of patch "
-                            << patchI << " named "
-                            << boundaryPatchNames[patchI] << "."
+                            << facei << " of patch "
+                            << patchi << " named "
+                            << boundaryPatchNames[patchi] << "."
                             << abort(FatalError);
                     }
 
@@ -346,7 +346,7 @@ void Foam::polyMesh::setTopology
             if (!found)
             {
                 FatalErrorInFunction
-                    << "face " << faceI << " of patch " << patchI
+                    << "face " << facei << " of patch " << patchi
                     << " does not seem to belong to cell " << cellInside
                     << " which, according to the addressing, "
                     << "should be next to it."
@@ -357,24 +357,24 @@ void Foam::polyMesh::setTopology
             nFaces++;
         }
 
-        patchSizes[patchI] = nFaces - curPatchStart;
-        patchStarts[patchI] = curPatchStart;
+        patchSizes[patchi] = nFaces - curPatchStart;
+        patchStarts[patchi] = curPatchStart;
     }
 
     // Grab "non-existing" faces and put them into a default patch
 
     defaultPatchStart = nFaces;
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        labelList& curCellFaces = cells[cellI];
+        labelList& curCellFaces = cells[celli];
 
-        forAll(curCellFaces, faceI)
+        forAll(curCellFaces, facei)
         {
-            if (curCellFaces[faceI] == -1) // "non-existent" face
+            if (curCellFaces[facei] == -1) // "non-existent" face
             {
-                curCellFaces[faceI] = nFaces;
-                faces_[nFaces] = cellsFaceShapes[cellI][faceI];
+                curCellFaces[facei] = nFaces;
+                faces_[nFaces] = cellsFaceShapes[celli][facei];
 
                 nFaces++;
             }
@@ -553,19 +553,19 @@ Foam::polyMesh::polyMesh
 
     // Warning: Patches can only be added once the face list is
     // completed, as they hold a subList of the face list
-    forAll(boundaryFaces, patchI)
+    forAll(boundaryFaces, patchi)
     {
         // Add the patch to the list
         boundary_.set
         (
-            patchI,
+            patchi,
             polyPatch::New
             (
-                boundaryPatchTypes[patchI],
-                boundaryPatchNames[patchI],
-                patchSizes[patchI],
-                patchStarts[patchI],
-                patchI,
+                boundaryPatchTypes[patchi],
+                boundaryPatchNames[patchi],
+                patchSizes[patchi],
+                patchStarts[patchi],
+                patchi,
                 boundary_
             )
         );
@@ -573,11 +573,11 @@ Foam::polyMesh::polyMesh
         if
         (
             boundaryPatchPhysicalTypes.size()
-         && boundaryPatchPhysicalTypes[patchI].size()
+         && boundaryPatchPhysicalTypes[patchi].size()
         )
         {
-            boundary_[patchI].physicalType() =
-                boundaryPatchPhysicalTypes[patchI];
+            boundary_[patchi].physicalType() =
+                boundaryPatchPhysicalTypes[patchi];
         }
     }
 
@@ -598,32 +598,32 @@ Foam::polyMesh::polyMesh
 
         // Check if there already exists a defaultFaces patch as last patch
         // and reuse it.
-        label patchI = findIndex(boundaryPatchNames, defaultBoundaryPatchName);
+        label patchi = findIndex(boundaryPatchNames, defaultBoundaryPatchName);
 
-        if (patchI != -1)
+        if (patchi != -1)
         {
-            if (patchI != boundaryFaces.size()-1 || boundary_[patchI].size())
+            if (patchi != boundaryFaces.size()-1 || boundary_[patchi].size())
             {
                 FatalErrorInFunction
-                    << "Default patch " << boundary_[patchI].name()
+                    << "Default patch " << boundary_[patchi].name()
                     << " already has faces in it or is not"
                     << " last in list of patches." << exit(FatalError);
             }
 
             WarningInFunction
-                << "Reusing existing patch " << patchI
+                << "Reusing existing patch " << patchi
                 << " for undefined faces." << endl;
 
             boundary_.set
             (
-                patchI,
+                patchi,
                 polyPatch::New
                 (
-                    boundaryPatchTypes[patchI],
-                    boundaryPatchNames[patchI],
+                    boundaryPatchTypes[patchi],
+                    boundaryPatchNames[patchi],
                     nFaces - defaultPatchStart,
                     defaultPatchStart,
-                    patchI,
+                    patchi,
                     boundary_
                 )
             );
@@ -837,22 +837,22 @@ Foam::polyMesh::polyMesh
 
     // Warning: Patches can only be added once the face list is
     // completed, as they hold a subList of the face list
-    forAll(boundaryDicts, patchI)
+    forAll(boundaryDicts, patchi)
     {
-        dictionary patchDict(boundaryDicts[patchI]);
+        dictionary patchDict(boundaryDicts[patchi]);
 
-        patchDict.set("nFaces", patchSizes[patchI]);
-        patchDict.set("startFace", patchStarts[patchI]);
+        patchDict.set("nFaces", patchSizes[patchi]);
+        patchDict.set("startFace", patchStarts[patchi]);
 
         // Add the patch to the list
         boundary_.set
         (
-            patchI,
+            patchi,
             polyPatch::New
             (
-                boundaryPatchNames[patchI],
+                boundaryPatchNames[patchi],
                 patchDict,
-                patchI,
+                patchi,
                 boundary_
             )
         );
@@ -874,32 +874,32 @@ Foam::polyMesh::polyMesh
 
         // Check if there already exists a defaultFaces patch as last patch
         // and reuse it.
-        label patchI = findIndex(boundaryPatchNames, defaultBoundaryPatchName);
+        label patchi = findIndex(boundaryPatchNames, defaultBoundaryPatchName);
 
-        if (patchI != -1)
+        if (patchi != -1)
         {
-            if (patchI != boundaryFaces.size()-1 || boundary_[patchI].size())
+            if (patchi != boundaryFaces.size()-1 || boundary_[patchi].size())
             {
                 FatalErrorInFunction
-                    << "Default patch " << boundary_[patchI].name()
+                    << "Default patch " << boundary_[patchi].name()
                     << " already has faces in it or is not"
                     << " last in list of patches." << exit(FatalError);
             }
 
             WarningInFunction
-                << "Reusing existing patch " << patchI
+                << "Reusing existing patch " << patchi
                 << " for undefined faces." << endl;
 
             boundary_.set
             (
-                patchI,
+                patchi,
                 polyPatch::New
                 (
-                    boundary_[patchI].type(),
-                    boundary_[patchI].name(),
+                    boundary_[patchi].type(),
+                    boundary_[patchi].name(),
                     nFaces - defaultPatchStart,
                     defaultPatchStart,
-                    patchI,
+                    patchi,
                     boundary_
                 )
             );

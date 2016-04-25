@@ -338,15 +338,15 @@ void Foam::isoSurfaceCell::generateTriPoints
     tetMatcher tet;
     label countNotFoundTets = 0;
 
-    forAll(mesh_.cells(), cellI)
+    forAll(mesh_.cells(), celli)
     {
-        if (cellCutType_[cellI] != NOTCUT)
+        if (cellCutType_[celli] != NOTCUT)
         {
             label oldNPoints = triPoints.size();
 
-            const cell& cFaces = mesh_.cells()[cellI];
+            const cell& cFaces = mesh_.cells()[celli];
 
-            if (tet.isA(mesh_, cellI))
+            if (tet.isA(mesh_, celli))
             {
                 // For tets don't do cell-centre decomposition, just use the
                 // tet points and values
@@ -368,7 +368,7 @@ void Foam::isoSurfaceCell::generateTriPoints
 
                 // Start off from positive volume tet to make sure we
                 // generate outwards pointing tets
-                if (mesh_.faceOwner()[cFaces[0]] == cellI)
+                if (mesh_.faceOwner()[cFaces[0]] == celli)
                 {
                     generateTriPoints
                     (
@@ -423,10 +423,10 @@ void Foam::isoSurfaceCell::generateTriPoints
             {
                 forAll(cFaces, cFaceI)
                 {
-                    label faceI = cFaces[cFaceI];
-                    const face& f = mesh_.faces()[faceI];
+                    label facei = cFaces[cFaceI];
+                    const face& f = mesh_.faces()[facei];
 
-                    label fp0 = mesh_.tetBasePtIs()[faceI];
+                    label fp0 = mesh_.tetBasePtIs()[facei];
 
                     // Skip undefined tets
                     if (fp0 < 0)
@@ -443,7 +443,7 @@ void Foam::isoSurfaceCell::generateTriPoints
 
                         // Start off from positive volume tet to make sure we
                         // generate outwards pointing tets
-                        if (mesh_.faceOwner()[faceI] == cellI)
+                        if (mesh_.faceOwner()[facei] == celli)
                         {
                             generateTriPoints
                             (
@@ -461,9 +461,9 @@ void Foam::isoSurfaceCell::generateTriPoints
                                 pCoords[tri[2]],
                                 snappedPoint[tri[2]],
 
-                                cVals[cellI],
-                                cCoords[cellI],
-                                snappedCc[cellI],
+                                cVals[celli],
+                                cCoords[celli],
+                                snappedCc[celli],
 
                                 triPoints
                             );
@@ -486,9 +486,9 @@ void Foam::isoSurfaceCell::generateTriPoints
                                 pCoords[tri[2]],
                                 snappedPoint[tri[2]],
 
-                                cVals[cellI],
-                                cCoords[cellI],
-                                snappedCc[cellI],
+                                cVals[celli],
+                                cCoords[celli],
+                                snappedCc[celli],
 
                                 triPoints
                             );
@@ -504,7 +504,7 @@ void Foam::isoSurfaceCell::generateTriPoints
             label nCells = (triPoints.size()-oldNPoints)/3;
             for (label i = 0; i < nCells; i++)
             {
-                triMeshCells.append(cellI);
+                triMeshCells.append(celli);
             }
         }
     }

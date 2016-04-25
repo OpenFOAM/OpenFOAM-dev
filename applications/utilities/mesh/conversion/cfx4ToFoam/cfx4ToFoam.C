@@ -611,11 +611,11 @@ int main(int argc, char *argv[])
                 label oldSize = renumberedPatch.size();
                 renumberedPatch.setSize(oldSize + curRawPatch.size());
 
-                forAll(curRawPatch, faceI)
+                forAll(curRawPatch, facei)
                 {
-                    const face& oldFace = curRawPatch[faceI];
+                    const face& oldFace = curRawPatch[facei];
 
-                    face& newFace = renumberedPatch[oldSize + faceI];
+                    face& newFace = renumberedPatch[oldSize + facei];
                     newFace.setSize(oldFace.size());
 
                     forAll(oldFace, pointI)
@@ -635,11 +635,11 @@ int main(int argc, char *argv[])
                 faceList& renumberedPatch = boundary[nCreatedPatches];
                 renumberedPatch.setSize(curRawPatch.size());
 
-                forAll(curRawPatch, faceI)
+                forAll(curRawPatch, facei)
                 {
-                    const face& oldFace = curRawPatch[faceI];
+                    const face& oldFace = curRawPatch[facei];
 
-                    face& newFace = renumberedPatch[faceI];
+                    face& newFace = renumberedPatch[facei];
                     newFace.setSize(oldFace.size());
 
                     forAll(oldFace, pointI)

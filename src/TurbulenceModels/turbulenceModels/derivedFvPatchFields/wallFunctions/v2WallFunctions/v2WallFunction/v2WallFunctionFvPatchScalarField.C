@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,27 +194,27 @@ void v2WallFunctionFvPatchScalarField::updateCoeffs()
     scalarField& v2 = *this;
 
     // Set v2 wall values
-    forAll(v2, faceI)
+    forAll(v2, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar uTau = Cmu25*sqrt(k[faceCellI]);
 
-        scalar yPlus = uTau*y[faceI]/nuw[faceI];
+        scalar yPlus = uTau*y[facei]/nuw[facei];
 
         if (yPlus > yPlusLam_)
         {
             scalar Cv2 = 0.193;
             scalar Bv2 = -0.94;
-            v2[faceI] = Cv2/kappa_*log(yPlus) + Bv2;
+            v2[facei] = Cv2/kappa_*log(yPlus) + Bv2;
         }
         else
         {
             scalar Cv2 = 0.193;
-            v2[faceI] = Cv2*pow4(yPlus);
+            v2[facei] = Cv2*pow4(yPlus);
         }
 
-        v2[faceI] *= sqr(uTau);
+        v2[facei] *= sqr(uTau);
     }
 
     fixedValueFvPatchField<scalar>::updateCoeffs();

@@ -126,21 +126,21 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::faceInterpolate
 
     const labelList& addr = faceAddr();
 
-    forAll(result, faceI)
+    forAll(result, facei)
     {
-        const scalarField& curWeights = weights[faceI];
+        const scalarField& curWeights = weights[facei];
 
-        if (addr[faceI] > -1)
+        if (addr[facei] > -1)
         {
             const labelList& hitFaceFaces =
-                fromPatchFaceFaces[addr[faceI]];
+                fromPatchFaceFaces[addr[facei]];
 
             // first add the hit face
-            result[faceI] += ff[addr[faceI]]*curWeights[0];
+            result[facei] += ff[addr[facei]]*curWeights[0];
 
             for (label wI = 1; wI < curWeights.size(); wI++)
             {
-                result[faceI] += ff[hitFaceFaces[wI - 1]]*curWeights[wI];
+                result[facei] += ff[hitFaceFaces[wI - 1]]*curWeights[wI];
             }
         }
     }

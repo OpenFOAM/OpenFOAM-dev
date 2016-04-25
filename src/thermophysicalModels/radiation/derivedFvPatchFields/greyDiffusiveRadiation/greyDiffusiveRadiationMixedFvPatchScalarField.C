@@ -168,7 +168,7 @@ updateCoeffs()
     label lambdaId = -1;
     dom.setRayIdLambdaId(dimensionedInternalField().name(), rayId, lambdaId);
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     if (dom.nLambda() != 1)
     {
@@ -185,50 +185,50 @@ updateCoeffs()
 
     const scalarField nAve(n & ray.dAve());
 
-    ray.Qr().boundaryFieldRef()[patchI] += Iw*nAve;
+    ray.Qr().boundaryFieldRef()[patchi] += Iw*nAve;
 
     const scalarField temissivity = emissivity();
 
-    scalarField& Qem = ray.Qem().boundaryFieldRef()[patchI];
-    scalarField& Qin = ray.Qin().boundaryFieldRef()[patchI];
+    scalarField& Qem = ray.Qem().boundaryFieldRef()[patchi];
+    scalarField& Qin = ray.Qin().boundaryFieldRef()[patchi];
 
     const vector& myRayId = dom.IRay(rayId).d();
 
     // Use updated Ir while iterating over rays
     // avoids to used lagged Qin
-    scalarField Ir = dom.IRay(0).Qin().boundaryField()[patchI];
+    scalarField Ir = dom.IRay(0).Qin().boundaryField()[patchi];
 
     for (label rayI=1; rayI < dom.nRay(); rayI++)
     {
-        Ir += dom.IRay(rayI).Qin().boundaryField()[patchI];
+        Ir += dom.IRay(rayI).Qin().boundaryField()[patchi];
     }
 
-    forAll(Iw, faceI)
+    forAll(Iw, facei)
     {
-        if ((-n[faceI] & myRayId) > 0.0)
+        if ((-n[facei] & myRayId) > 0.0)
         {
             // direction out of the wall
-            refGrad()[faceI] = 0.0;
-            valueFraction()[faceI] = 1.0;
-            refValue()[faceI] =
+            refGrad()[facei] = 0.0;
+            valueFraction()[facei] = 1.0;
+            refValue()[facei] =
                 (
-                    Ir[faceI]*(scalar(1.0) - temissivity[faceI])
-                  + temissivity[faceI]*physicoChemical::sigma.value()
-                  * pow4(Tp[faceI])
+                    Ir[facei]*(scalar(1.0) - temissivity[facei])
+                  + temissivity[facei]*physicoChemical::sigma.value()
+                  * pow4(Tp[facei])
                 )/pi;
 
             // Emmited heat flux from this ray direction
-            Qem[faceI] = refValue()[faceI]*nAve[faceI];
+            Qem[facei] = refValue()[facei]*nAve[facei];
         }
         else
         {
             // direction into the wall
-            valueFraction()[faceI] = 0.0;
-            refGrad()[faceI] = 0.0;
-            refValue()[faceI] = 0.0; //not used
+            valueFraction()[facei] = 0.0;
+            refGrad()[facei] = 0.0;
+            refValue()[facei] = 0.0; //not used
 
             // Incident heat flux on this ray direction
-            Qin[faceI] = Iw[faceI]*nAve[faceI];
+            Qin[facei] = Iw[facei]*nAve[facei];
         }
     }
 

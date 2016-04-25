@@ -70,20 +70,20 @@ void Foam::fvPatchMapper::calcAddressing() const
 
         // Adjust mapping to manage hits into other patches and into
         // internal
-        forAll(addr, faceI)
+        forAll(addr, facei)
         {
             if
             (
-                addr[faceI] >= oldPatchStart
-             && addr[faceI] < oldPatchEnd
+                addr[facei] >= oldPatchStart
+             && addr[facei] < oldPatchEnd
             )
             {
-                addr[faceI] -= oldPatchStart;
+                addr[facei] -= oldPatchStart;
             }
             else
             {
-                //addr[faceI] = 0;
-                addr[faceI] = -1;
+                //addr[facei] = 0;
+                addr[facei] = -1;
                 hasUnmapped_ = true;
             }
         }
@@ -118,10 +118,10 @@ void Foam::fvPatchMapper::calcAddressing() const
 
         // Adjust mapping to manage hits into other patches and into
         // internal
-        forAll(addr, faceI)
+        forAll(addr, facei)
         {
-            labelList& curAddr = addr[faceI];
-            scalarList& curW = w[faceI];
+            labelList& curAddr = addr[facei];
+            scalarList& curW = w[facei];
 
             if
             (

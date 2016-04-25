@@ -153,15 +153,15 @@ int main(int argc, char *argv[])
 
                     if (!isType<emptyPolyPatch>(patches[patchi]))
                     {
-                        forAll(bouFaces, faceI)
+                        forAll(bouFaces, facei)
                         {
                             if
                             (
-                                magSqr(phi.boundaryField()[patchi][faceI])
+                                magSqr(phi.boundaryField()[patchi][facei])
                               < SMALL
                             )
                             {
-                                const labelList& zeroPoints = bouFaces[faceI];
+                                const labelList& zeroPoints = bouFaces[facei];
 
                                 // Zero flux face found
                                 found = true;
@@ -178,7 +178,7 @@ int main(int argc, char *argv[])
                                 if (found)
                                 {
                                     Info<< "Zero face: patch: " << patchi
-                                        << "    face: " << faceI << endl;
+                                        << "    face: " << facei << endl;
 
                                     forAll(zeroPoints, pointI)
                                     {
@@ -250,12 +250,12 @@ int main(int argc, char *argv[])
 
                      for
                      (
-                         label faceI = nInternalFaces;
-                         faceI<faces.size();
-                         faceI++
+                         label facei = nInternalFaces;
+                         facei<faces.size();
+                         facei++
                      )
                      {
-                         const labelList& curBPoints = faces[faceI];
+                         const labelList& curBPoints = faces[facei];
                          bool bPointFound = false;
 
                          scalar currentBStream = 0.0;
@@ -287,7 +287,7 @@ int main(int argc, char *argv[])
                                  if (visitedPoint[curBPoints[pointI]] == 0)
                                  {
                                      label patchNo =
-                                         mesh.boundaryMesh().whichPatch(faceI);
+                                         mesh.boundaryMesh().whichPatch(facei);
 
                                      if
                                      (
@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
                                      {
                                          label faceNo =
                                              mesh.boundaryMesh()[patchNo]
-                                             .whichFace(faceI);
+                                             .whichFace(facei);
 
                                          vector edgeHat =
                                              points[curBPoints[pointI]]
@@ -311,7 +311,7 @@ int main(int argc, char *argv[])
                                          edgeHat.replace(slabDir, 0);
                                          edgeHat /= mag(edgeHat);
 
-                                         vector nHat = unitAreas[faceI];
+                                         vector nHat = unitAreas[facei];
 
                                          if (edgeHat.y() > VSMALL)
                                          {
@@ -378,10 +378,10 @@ int main(int argc, char *argv[])
                          }
                      }
 
-                     for (label faceI=0; faceI<nInternalFaces; faceI++)
+                     for (label facei=0; facei<nInternalFaces; facei++)
                      {
                          // Get the list of point labels for the face
-                         const labelList& curPoints = faces[faceI];
+                         const labelList& curPoints = faces[facei];
 
                          bool pointFound = false;
 
@@ -419,7 +419,7 @@ int main(int argc, char *argv[])
                                      edgeHat.replace(slabDir, 0);
                                      edgeHat /= mag(edgeHat);
 
-                                     vector nHat = unitAreas[faceI];
+                                     vector nHat = unitAreas[facei];
 
                                      if (edgeHat.y() > VSMALL)
                                      {
@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
 
                                          streamFunction[curPoints[pointI]] =
                                              currentStream
-                                           + phi[faceI]*sign(nHat.x());
+                                           + phi[facei]*sign(nHat.x());
                                      }
                                      else if (edgeHat.y() < -VSMALL)
                                      {
@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
 
                                          streamFunction[curPoints[pointI]] =
                                              currentStream
-                                           - phi[faceI]*sign(nHat.x());
+                                           - phi[facei]*sign(nHat.x());
                                      }
                                  }
                              }

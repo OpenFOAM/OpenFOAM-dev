@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ defineTypeNameAndDebug(treeDataCell, 0);
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::treeBoundBox Foam::treeDataCell::calcCellBb(const label cellI) const
+Foam::treeBoundBox Foam::treeDataCell::calcCellBb(const label celli) const
 {
     const cellList& cells = mesh_.cells();
     const faceList& faces = mesh_.faces();
@@ -49,7 +49,7 @@ Foam::treeBoundBox Foam::treeDataCell::calcCellBb(const label cellI) const
         vector(-GREAT, -GREAT, -GREAT)
     );
 
-    const cell& cFaces = cells[cellI];
+    const cell& cFaces = cells[celli];
 
     forAll(cFaces, cFaceI)
     {
@@ -208,14 +208,14 @@ void Foam::treeDataCell::findNearestOp::operator()
     forAll(indices, i)
     {
         label index = indices[i];
-        label cellI = shape.cellLabels()[index];
-        scalar distSqr = magSqr(sample - shape.mesh().cellCentres()[cellI]);
+        label celli = shape.cellLabels()[index];
+        scalar distSqr = magSqr(sample - shape.mesh().cellCentres()[celli]);
 
         if (distSqr < nearestDistSqr)
         {
             nearestDistSqr = distSqr;
             minIndex = index;
-            nearestPoint = shape.mesh().cellCentres()[cellI];
+            nearestPoint = shape.mesh().cellCentres()[celli];
         }
     }
 }

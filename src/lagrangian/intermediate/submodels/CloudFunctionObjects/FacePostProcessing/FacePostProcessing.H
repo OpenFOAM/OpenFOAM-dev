@@ -162,7 +162,7 @@ public:
             virtual void postFace
             (
                 const parcelType& p,
-                const label faceI,
+                const label facei,
                 bool& keepParticle
             );
 };

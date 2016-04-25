@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,12 +109,12 @@ bool Foam::AMIMethod<SourcePatch, TargetPatch>::initialise
         srcFaceI = 0;
         tgtFaceI = 0;
         bool foundFace = false;
-        forAll(srcPatch_, faceI)
+        forAll(srcPatch_, facei)
         {
-            tgtFaceI = findTargetFace(faceI);
+            tgtFaceI = findTargetFace(facei);
             if (tgtFaceI >= 0)
             {
-                srcFaceI = faceI;
+                srcFaceI = facei;
                 foundFace = true;
                 break;
             }
@@ -259,13 +259,13 @@ Foam::label Foam::AMIMethod<SourcePatch, TargetPatch>::findTargetFace
 template<class SourcePatch, class TargetPatch>
 void Foam::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
 (
-    const label faceI,
+    const label facei,
     const TargetPatch& patch,
     const DynamicList<label>& visitedFaces,
     DynamicList<label>& faceIDs
 ) const
 {
-    const labelList& nbrFaces = patch.faceFaces()[faceI];
+    const labelList& nbrFaces = patch.faceFaces()[facei];
 
     // filter out faces already visited from face neighbours
     forAll(nbrFaces, i)
@@ -296,7 +296,7 @@ void Foam::AMIMethod<SourcePatch, TargetPatch>::appendNbrFaces
         // prevent addition of face if it is not on the same plane-ish
         if (valid)
         {
-            const vector& n1 = patch.faceNormals()[faceI];
+            const vector& n1 = patch.faceNormals()[facei];
             const vector& n2 = patch.faceNormals()[nbrFaceI];
 
             scalar cosI = n1 & n2;

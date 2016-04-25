@@ -28,12 +28,12 @@ License
 static void markPointNbrs
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const bool val,
     boolList& okToCollapse
 )
 {
-    const triSurface::FaceType& f = surf.localFaces()[faceI];
+    const triSurface::FaceType& f = surf.localFaces()[facei];
 
     forAll(f, fp)
     {
@@ -57,9 +57,9 @@ static triSurface pack
     List<labelledTri> newTriangles(surf.size());
     label newTriangleI = 0;
 
-    forAll(surf, faceI)
+    forAll(surf, facei)
     {
-        const labelledTri& f = surf.localFaces()[faceI];
+        const labelledTri& f = surf.localFaces()[facei];
 
         label newA = pointMap[f[0]];
         label newB = pointMap[f[1]];
@@ -102,12 +102,12 @@ label collapseEdge(triSurface& surf, const scalar minLen)
         boolList okToCollapse(surf.size(), true);
         label nCollapsed = 0;
 
-        forAll(localFaces, faceI)
+        forAll(localFaces, facei)
         {
-            if (okToCollapse[faceI])
+            if (okToCollapse[facei])
             {
                 // Check edge lengths.
-                const triSurface::FaceType& f = localFaces[faceI];
+                const triSurface::FaceType& f = localFaces[facei];
 
                 forAll(f, fp)
                 {
@@ -120,14 +120,14 @@ label collapseEdge(triSurface& surf, const scalar minLen)
                         pointMap[v1] = v;
                         newPoints[v] = 0.5*(localPoints[v1] + localPoints[v]);
 
-                        //Pout<< "Collapsing triange " << faceI
+                        //Pout<< "Collapsing triange " << facei
                         //    << " to edge mid " << newPoints[v] << endl;
 
                         nCollapsed++;
-                        okToCollapse[faceI] = false;
+                        okToCollapse[facei] = false;
 
                         // Protect point neighbours from collapsing.
-                        markPointNbrs(surf, faceI, false, okToCollapse);
+                        markPointNbrs(surf, facei, false, okToCollapse);
 
                         break;
                     }

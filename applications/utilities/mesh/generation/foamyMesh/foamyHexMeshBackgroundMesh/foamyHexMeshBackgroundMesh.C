@@ -255,7 +255,7 @@ autoPtr<polyMesh> generateHexMesh
     cellShapeList cellShapes(nCells[0]*nCells[1]*nCells[2]);
 
     labelList hexPoints(8);
-    label cellI = 0;
+    label celli = 0;
     for (label i = 0; i < nCells[0]; i++)
     {
         for (label j = 0; j < nCells[1]; j++)
@@ -270,7 +270,7 @@ autoPtr<polyMesh> generateHexMesh
                 hexPoints[5] = vtxLabel(nCells, i+1, j,   k+1);
                 hexPoints[6] = vtxLabel(nCells, i+1, j+1, k+1);
                 hexPoints[7] = vtxLabel(nCells, i,   j+1, k+1);
-                cellShapes[cellI++] = cellShape(hex, hexPoints);
+                cellShapes[celli++] = cellShape(hex, hexPoints);
             }
         }
     }
@@ -627,11 +627,11 @@ int main(int argc, char *argv[])
         scalarField distSqr(cellDistance.size());
 
         const labelList& cellLevel = backgroundMesh.cellLevel();
-        forAll(cellLevel, cellI)
+        forAll(cellLevel, celli)
         {
             // The largest edge of the cell will always be less than the
             // span of the bounding box of the cell.
-            distSqr[cellI] = magSqr(cellSize)/pow(2, cellLevel[cellI]);
+            distSqr[celli] = magSqr(cellSize)/pow(2, cellLevel[celli]);
         }
 
         {
@@ -682,12 +682,12 @@ int main(int argc, char *argv[])
         );
         {
             scalarField pointDistSqr(fvm.nPoints(), -sqr(GREAT));
-            for (label faceI = 0; faceI < fvm.nInternalFaces(); faceI++)
+            for (label facei = 0; facei < fvm.nInternalFaces(); facei++)
             {
-                label own = fvm.faceOwner()[faceI];
+                label own = fvm.faceOwner()[facei];
                 label ownDistSqr = distSqr[own];
 
-                const face& f = fvm.faces()[faceI];
+                const face& f = fvm.faces()[facei];
                 forAll(f, fp)
                 {
                     pointDistSqr[f[fp]] = max(pointDistSqr[f[fp]], ownDistSqr);

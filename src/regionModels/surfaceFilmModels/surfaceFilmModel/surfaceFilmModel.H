@@ -149,7 +149,7 @@ public:
             virtual void addSources
             (
                 const label patchI,
-                const label faceI,
+                const label facei,
                 const scalar massSource,
                 const vector& momentumSource,
                 const scalar pressureSource,

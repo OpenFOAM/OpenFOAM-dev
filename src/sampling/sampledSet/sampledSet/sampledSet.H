@@ -101,21 +101,21 @@ protected:
 
         //- Calculates inproduct of face normal and vector sample-face centre
         //  <0 if sample inside.
-        scalar calcSign(const label faceI, const point& sample) const;
+        scalar calcSign(const label facei, const point& sample) const;
 
         //- Returns face label (or -1) of face which is close to sample
         label findNearFace
         (
-            const label cellI,
+            const label celli,
             const point& sample,
             const scalar smallDist
         ) const;
 
-        //- Moves sample in direction of -n to it is 'inside' of faceI
+        //- Moves sample in direction of -n to it is 'inside' of facei
         point pushIn
         (
             const point& sample,
-            const label faceI
+            const label facei
         ) const;
 
         //- Calculates start of tracking given samplePt and first boundary

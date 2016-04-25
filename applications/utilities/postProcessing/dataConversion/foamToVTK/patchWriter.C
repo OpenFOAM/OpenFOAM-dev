@@ -70,9 +70,9 @@ Foam::patchWriter::patchWriter
         nPoints_ += pp.nPoints();
         nFaces_ += pp.size();
 
-        forAll(pp, faceI)
+        forAll(pp, facei)
         {
-            nFaceVerts += pp[faceI].size() + 1;
+            nFaceVerts += pp[facei].size() + 1;
         }
     }
 
@@ -98,9 +98,9 @@ Foam::patchWriter::patchWriter
     {
         const polyPatch& pp = patches[patchIDs_[i]];
 
-        forAll(pp, faceI)
+        forAll(pp, facei)
         {
-            const face& f = pp.localFaces()[faceI];
+            const face& f = pp.localFaces()[facei];
 
             vertLabels.append(f.size());
             writeFuns::insert(f + offset, vertLabels);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,45 +112,45 @@ void drippingInjection::correct
 
 
     // Collect the data to be transferred
-    forAll(massDrip, cellI)
+    forAll(massDrip, celli)
     {
-        if (massDrip[cellI] > 0)
+        if (massDrip[celli] > 0)
         {
             // set new particle diameter if not already set
-            if (diameter_[cellI] < 0)
+            if (diameter_[celli] < 0)
             {
-                diameter_[cellI] = parcelDistribution_->sample();
+                diameter_[celli] = parcelDistribution_->sample();
             }
 
-            scalar& diam = diameter_[cellI];
-            scalar rhoc = rho[cellI];
+            scalar& diam = diameter_[celli];
+            scalar rhoc = rho[celli];
             scalar minMass = particlesPerParcel_*rhoc*pi/6*pow3(diam);
 
-            if (massDrip[cellI] > minMass)
+            if (massDrip[celli] > minMass)
             {
                 // All drip mass can be injected
-                massToInject[cellI] += massDrip[cellI];
-                availableMass[cellI] -= massDrip[cellI];
+                massToInject[celli] += massDrip[celli];
+                availableMass[celli] -= massDrip[celli];
 
                 // Set particle diameter
-                diameterToInject[cellI] = diam;
+                diameterToInject[celli] = diam;
 
                 // Retrieve new particle diameter sample
                 diam = parcelDistribution_->sample();
 
-                addToInjectedMass(massDrip[cellI]);
+                addToInjectedMass(massDrip[celli]);
             }
             else
             {
                 // Particle mass below minimum threshold - cannot be injected
-                massToInject[cellI] = 0.0;
-                diameterToInject[cellI] = 0.0;
+                massToInject[celli] = 0.0;
+                diameterToInject[celli] = 0.0;
             }
         }
         else
         {
-            massToInject[cellI] = 0.0;
-            diameterToInject[cellI] = 0.0;
+            massToInject[celli] = 0.0;
+            diameterToInject[celli] = 0.0;
         }
     }
 

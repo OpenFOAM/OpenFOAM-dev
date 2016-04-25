@@ -47,11 +47,11 @@ void Foam::starMesh::createPolyBoundary()
 
         polyBoundaryPatchStartIndices_[patchi] = nCreatedFaces;
 
-        forAll(curShapePatch, faceI)
+        forAll(curShapePatch, facei)
         {
             bool found = false;
 
-            const face& curFace = curShapePatch[faceI];
+            const face& curFace = curShapePatch[facei];
 
             meshFaces_[nCreatedFaces] = curFace;
 
@@ -64,10 +64,10 @@ void Foam::starMesh::createPolyBoundary()
                 const labelList& facePointCells =
                     PointCells[facePoints[pointI]];
 
-                forAll(facePointCells, cellI)
+                forAll(facePointCells, celli)
                 {
                     const faceList& curCellFaces =
-                        cellFaces_[facePointCells[cellI]];
+                        cellFaces_[facePointCells[celli]];
 
                     forAll(curCellFaces, cellFaceI)
                     {
@@ -79,13 +79,13 @@ void Foam::starMesh::createPolyBoundary()
                             // Debugging
                             if
                             (
-                                cellPolys_[facePointCells[cellI]][cellFaceI]
+                                cellPolys_[facePointCells[celli]][cellFaceI]
                              != -1
                             )
                             {
                                 if
                                 (
-                                    cellPolys_[facePointCells[cellI]][cellFaceI]
+                                    cellPolys_[facePointCells[celli]][cellFaceI]
                                   > nInternalFaces_
                                 )
                                 {
@@ -157,7 +157,7 @@ void Foam::starMesh::createPolyBoundary()
                                 }
                             }
 
-                            cellPolys_[facePointCells[cellI]][cellFaceI] =
+                            cellPolys_[facePointCells[celli]][cellFaceI] =
                                 nCreatedFaces;
 
                             nBoundaryFacesFound++;
@@ -176,20 +176,20 @@ void Foam::starMesh::createPolyBoundary()
     // check all cellPolys_ to see if there are any missing faces
     label nMissingFaceFound = 0;
 
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaces = cellPolys_[cellI];
+        const labelList& curFaces = cellPolys_[celli];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            if (curFaces[faceI] < 0)
+            if (curFaces[facei] < 0)
             {
-                const face& missingFace = cellFaces_[cellI][faceI];
+                const face& missingFace = cellFaces_[celli][facei];
 
                 InfoInFunction
-                    << "Missing face found in cell " << cellI
-                    << ".\nType: " << cellShapes_[cellI].model().name()
-                    << ". STAR cell number: " << starCellID_[cellI]
+                    << "Missing face found in cell " << celli
+                    << ".\nType: " << cellShapes_[celli].model().name()
+                    << ". STAR cell number: " << starCellID_[celli]
                     << ". Face: " << missingFace << endl;
 
                 nMissingFaceFound++;
@@ -228,13 +228,13 @@ void Foam::starMesh::createPolyBoundary()
     // (faces addressed once or more than twice)
     labelList markupFaces(meshFaces_.size(), 0);
 
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaces = cellPolys_[cellI];
+        const labelList& curFaces = cellPolys_[celli];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            markupFaces[curFaces[faceI]]++;
+            markupFaces[curFaces[facei]]++;
         }
     }
 
@@ -245,15 +245,15 @@ void Foam::starMesh::createPolyBoundary()
 
     label nProblemFacesFound = 0;
 
-    forAll(markupFaces, faceI)
+    forAll(markupFaces, facei)
     {
-        if (markupFaces[faceI] != 2)
+        if (markupFaces[facei] != 2)
         {
-            const face& problemFace = meshFaces_[faceI];
+            const face& problemFace = meshFaces_[facei];
 
             InfoInFunction
-                << "Problem with face " << faceI << ": addressed "
-                << markupFaces[faceI] << " times (should be 2!). Face: "
+                << "Problem with face " << facei << ": addressed "
+                << markupFaces[facei] << " times (should be 2!). Face: "
                 << problemFace << endl;
 
             nProblemFacesFound++;

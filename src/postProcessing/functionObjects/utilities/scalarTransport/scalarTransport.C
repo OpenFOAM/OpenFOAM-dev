@@ -53,16 +53,16 @@ Foam::wordList Foam::scalarTransport::boundaryTypes() const
 
     wordList bTypes(U.boundaryField().size());
 
-    forAll(bTypes, patchI)
+    forAll(bTypes, patchi)
     {
-        const fvPatchField<vector>& pf = U.boundaryField()[patchI];
+        const fvPatchField<vector>& pf = U.boundaryField()[patchi];
         if (isA<fixedValueFvPatchVectorField>(pf))
         {
-            bTypes[patchI] = fixedValueFvPatchScalarField::typeName;
+            bTypes[patchi] = fixedValueFvPatchScalarField::typeName;
         }
         else
         {
-            bTypes[patchI] = zeroGradientFvPatchScalarField::typeName;
+            bTypes[patchi] = zeroGradientFvPatchScalarField::typeName;
         }
     }
 

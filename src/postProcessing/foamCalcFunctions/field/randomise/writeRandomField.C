@@ -44,13 +44,13 @@ void Foam::calcTypes::randomise::writeRandomField
         Info<< "    Reading " << header.name() << endl;
         fieldType field(header, mesh);
 
-        forAll(field, cellI)
+        forAll(field, celli)
         {
             Type rndPert;
             rand.randomise(rndPert);
             rndPert = 2.0*rndPert - pTraits<Type>::one;
             rndPert /= mag(rndPert);
-            field[cellI] += pertMag*rndPert;
+            field[celli] += pertMag*rndPert;
         }
 
         fieldType randomisedField

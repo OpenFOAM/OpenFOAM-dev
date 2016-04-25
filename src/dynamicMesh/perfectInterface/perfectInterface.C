@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,13 +280,13 @@ void Foam::perfectInterface::setRefinement
     // never be sure what the user is doing.
     forAll(pp0, i)
     {
-        label faceI = pp0.addressing()[i];
+        label facei = pp0.addressing()[i];
 
-        if (affectedFaces.erase(faceI))
+        if (affectedFaces.erase(facei))
         {
             WarningInFunction
-                << "Found face " << faceI << " vertices "
-                << mesh.faces()[faceI] << " whose points are"
+                << "Found face " << facei << " vertices "
+                << mesh.faces()[facei] << " whose points are"
                 << " used both by master patch and slave patch" << endl;
         }
     }
@@ -295,8 +295,8 @@ void Foam::perfectInterface::setRefinement
     // 2. Renumber (non patch0/1) faces.
     forAllConstIter(labelHashSet, affectedFaces, iter)
     {
-        const label faceI = iter.key();
-        const face& f = mesh.faces()[faceI];
+        const label facei = iter.key();
+        const face& f = mesh.faces()[facei];
 
         face newFace(f.size());
 
@@ -309,16 +309,16 @@ void Foam::perfectInterface::setRefinement
 
         label patchI = -1;
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
-            nbr = mesh.faceNeighbour()[faceI];
+            nbr = mesh.faceNeighbour()[facei];
         }
         else
         {
-            patchI = patches.whichPatch(faceI);
+            patchI = patches.whichPatch(facei);
         }
 
-        label zoneID = mesh.faceZones().whichZone(faceI);
+        label zoneID = mesh.faceZones().whichZone(facei);
 
         bool zoneFlip = false;
 
@@ -326,7 +326,7 @@ void Foam::perfectInterface::setRefinement
         {
             const faceZone& fZone = mesh.faceZones()[zoneID];
 
-            zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+            zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
         }
 
         ref.setAction
@@ -334,8 +334,8 @@ void Foam::perfectInterface::setRefinement
             polyModifyFace
             (
                 newFace,                    // modified face
-                faceI,                      // label of face being modified
-                mesh.faceOwner()[faceI],    // owner
+                facei,                      // label of face being modified
+                mesh.faceOwner()[facei],    // owner
                 nbr,                        // neighbour
                 false,                      // face flip
                 patchI,                     // patch for face
@@ -362,8 +362,8 @@ void Foam::perfectInterface::setRefinement
     // 4. Remove patch1 faces
     forAll(pp1, i)
     {
-        label faceI = pp1.addressing()[i];
-        ref.setAction(polyRemoveFace(faceI));
+        label facei = pp1.addressing()[i];
+        ref.setAction(polyRemoveFace(facei));
     }
 
 
@@ -375,9 +375,9 @@ void Foam::perfectInterface::setRefinement
 
     forAll(pp0, i)
     {
-        label faceI = pp0.addressing()[i];
+        label facei = pp0.addressing()[i];
 
-        const face& f = mesh.faces()[faceI];
+        const face& f = mesh.faces()[facei];
 
         face newFace(f.size());
 
@@ -386,7 +386,7 @@ void Foam::perfectInterface::setRefinement
             newFace[fp] = renumberPoints[f[fp]];
         }
 
-        label own = mesh.faceOwner()[faceI];
+        label own = mesh.faceOwner()[facei];
 
         label pp1FaceI = pp1.addressing()[from0To1Faces[i]];
 
@@ -399,7 +399,7 @@ void Foam::perfectInterface::setRefinement
                 polyModifyFace
                 (
                     newFace,                // modified face
-                    faceI,                  // label of face being modified
+                    facei,                  // label of face being modified
                     own,                    // owner
                     nbr,                    // neighbour
                     false,                  // face flip
@@ -417,7 +417,7 @@ void Foam::perfectInterface::setRefinement
                 polyModifyFace
                 (
                     newFace.reverseFace(),  // modified face
-                    faceI,                  // label of face being modified
+                    facei,                  // label of face being modified
                     nbr,                    // owner
                     own,                    // neighbour
                     true,                   // face flip

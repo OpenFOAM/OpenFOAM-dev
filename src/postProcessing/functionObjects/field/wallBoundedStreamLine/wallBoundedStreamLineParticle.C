@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,14 +32,14 @@ Foam::vector Foam::wallBoundedStreamLineParticle::interpolateFields
 (
     const trackingData& td,
     const point& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 )
 {
-    if (cellI == -1)
+    if (celli == -1)
     {
         FatalErrorInFunction
-            << "Cell:" << cellI << abort(FatalError);
+            << "Cell:" << celli << abort(FatalError);
     }
 
     const tetIndices ti = currentTetIndices();
@@ -47,8 +47,8 @@ Foam::vector Foam::wallBoundedStreamLineParticle::interpolateFields
     const vector U = td.vvInterp_[td.UIndex_].interpolate
     (
         position,
-        ti,     //cellI,
-        faceI
+        ti,     //celli,
+        facei
     );
 
     // Check if at different position
@@ -70,8 +70,8 @@ Foam::vector Foam::wallBoundedStreamLineParticle::interpolateFields
                 td.vsInterp_[scalarI].interpolate
                 (
                     position,
-                    ti,     //cellI,
-                    faceI
+                    ti,     //celli,
+                    facei
                 )
             );
         }
@@ -90,8 +90,8 @@ Foam::vector Foam::wallBoundedStreamLineParticle::interpolateFields
                 positionU = td.vvInterp_[vectorI].interpolate
                 (
                     position,
-                    ti,     //cellI,
-                    faceI
+                    ti,     //celli,
+                    facei
                 );
             }
             sampledVectors_[vectorI].append(positionU);
@@ -134,7 +134,7 @@ Foam::wallBoundedStreamLineParticle::wallBoundedStreamLineParticle
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI,
     const label meshEdgeStart,
@@ -146,7 +146,7 @@ Foam::wallBoundedStreamLineParticle::wallBoundedStreamLineParticle
     (
         mesh,
         position,
-        cellI,
+        celli,
         tetFaceI,
         tetPtI,
         meshEdgeStart,

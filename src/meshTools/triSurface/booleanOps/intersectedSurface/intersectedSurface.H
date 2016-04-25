@@ -170,7 +170,7 @@ private:
         static Map<DynamicList<label>> calcPointEdgeAddressing
         (
             const edgeSurface&,
-            const label faceI
+            const label facei
         );
 
         //- Choose edge out of candidates (facePointEdges) according to
@@ -179,7 +179,7 @@ private:
         (
             const edgeSurface& eSurf,
             const Map<label>& visited,
-            const label faceI,
+            const label facei,
             const vector& n,                // original triangle normal
             const Map<DynamicList<label>>& facePointEdges,
             const label prevEdgeI,
@@ -190,7 +190,7 @@ private:
         static face walkFace
         (
             const edgeSurface& eSurf,
-            const label faceI,
+            const label facei,
             const vector& n,
             const Map<DynamicList<label>>& facePointEdges,
 
@@ -205,7 +205,7 @@ private:
         static void findNearestVisited
         (
             const edgeSurface& eSurf,
-            const label faceI,
+            const label facei,
             const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& pointVisited,
             const point& pt,
@@ -220,7 +220,7 @@ private:
         static faceList resplitFace
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             const Map<DynamicList<label>>& facePointEdges,
             const Map<label>& visited,
             edgeSurface& eSurf
@@ -231,7 +231,7 @@ private:
         static faceList splitFace
         (
             const triSurface& surf,
-            const label faceI,
+            const label facei,
             edgeSurface& eSurf
         );
 

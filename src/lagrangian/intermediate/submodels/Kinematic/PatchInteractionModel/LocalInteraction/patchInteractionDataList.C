@@ -67,9 +67,9 @@ Foam::patchInteractionDataList::patchInteractionDataList
 
     // Check that all patches are specified
     DynamicList<word> badPatches;
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        const polyPatch& pp = bMesh[patchI];
+        const polyPatch& pp = bMesh[patchi];
         if
         (
             !pp.coupled()
@@ -109,9 +109,9 @@ Foam::label Foam::patchInteractionDataList::applyToPatch(const label id) const
     forAll(patchGroupIDs_, groupI)
     {
         const labelList& patchIDs = patchGroupIDs_[groupI];
-        forAll(patchIDs, patchI)
+        forAll(patchIDs, patchi)
         {
-            if (patchIDs[patchI] == id)
+            if (patchIDs[patchi] == id)
             {
                 return groupI;
             }

@@ -171,7 +171,7 @@ protected:
                 regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
                 const parcelType& p,
                 const polyPatch& pp,
-                const label faceI,
+                const label facei,
                 const scalar mass,
                 bool& keepParticle
             );
@@ -181,7 +181,7 @@ protected:
             (
                 parcelType& p,
                 const polyPatch& pp,
-                const label faceI,
+                const label facei,
                 bool& keepParticle
             ) const;
 
@@ -191,7 +191,7 @@ protected:
                 regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
                 const parcelType& p,
                 const polyPatch& pp,
-                const label faceI,
+                const label facei,
                 bool& keepParticle
             );
 
@@ -201,7 +201,7 @@ protected:
                 regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
                 parcelType& p,
                 const polyPatch& pp,
-                const label faceI,
+                const label facei,
                 bool& keepParticle
             );
 
@@ -211,7 +211,7 @@ protected:
                 regionModels::surfaceFilmModels::surfaceFilmModel& filmModel,
                 const parcelType& p,
                 const polyPatch& pp,
-                const label faceI,
+                const label facei,
                 const scalar mRatio,
                 const scalar We,
                 const scalar Wec,

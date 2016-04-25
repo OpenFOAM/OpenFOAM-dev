@@ -39,17 +39,17 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::wallLayerCells::usesCoupledPatch(const label cellI) const
+bool Foam::wallLayerCells::usesCoupledPatch(const label celli) const
 {
     const polyBoundaryMesh& patches = mesh().boundaryMesh();
 
-    const cell& cFaces = mesh().cells()[cellI];
+    const cell& cFaces = mesh().cells()[celli];
 
     forAll(cFaces, cFaceI)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFaceI];
 
-        label patchID = patches.whichPatch(faceI);
+        label patchID = patches.whichPatch(facei);
 
         if ((patchID >= 0) && (patches[patchID].coupled()))
         {
@@ -78,9 +78,9 @@ Foam::wallLayerCells::wallLayerCells
     // Make map from name to local patch ID
     HashTable<label> patchNameToIndex(patches.size());
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        patchNameToIndex.insert(patches[patchI].name(), patchI);
+        patchNameToIndex.insert(patches[patchi].name(), patchi);
     }
 
 
@@ -93,9 +93,9 @@ Foam::wallLayerCells::wallLayerCells
 
         if (patchNameToIndex.found(name))
         {
-            label patchI = patchNameToIndex[name];
+            label patchi = patchNameToIndex[name];
 
-            nWalls += patches[patchI].size();
+            nWalls += patches[patchi].size();
         }
     }
 
@@ -112,9 +112,9 @@ Foam::wallLayerCells::wallLayerCells
 
         if (patchNameToIndex.found(name))
         {
-            label patchI = patchNameToIndex[name];
+            label patchi = patchNameToIndex[name];
 
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             forAll(pp, patchFaceI)
             {
@@ -162,13 +162,13 @@ Foam::wallLayerCells::wallLayerCells
 
         label vertI = 0;
 
-        forAll(faceInfo, faceI)
+        forAll(faceInfo, facei)
         {
-            const wallNormalInfo& info = faceInfo[faceI];
+            const wallNormalInfo& info = faceInfo[facei];
 
             if (info.valid(regionCalc.data()))
             {
-                const face& f = mesh.faces()[faceI];
+                const face& f = mesh.faces()[facei];
 
                 point mid(0.0, 0.0, 0.0);
 
@@ -206,13 +206,13 @@ Foam::wallLayerCells::wallLayerCells
 
     const List<wallNormalInfo>& cellInfo = regionCalc.allCellInfo();
 
-    forAll(cellInfo, cellI)
+    forAll(cellInfo, celli)
     {
-        const wallNormalInfo& info = cellInfo[cellI];
+        const wallNormalInfo& info = cellInfo[celli];
 
-        if (info.valid(regionCalc.data()) && !usesCoupledPatch(cellI))
+        if (info.valid(regionCalc.data()) && !usesCoupledPatch(celli))
         {
-            refineCells.append(refineCell(cellI, info.normal()));
+            refineCells.append(refineCell(celli, info.normal()));
         }
     }
 

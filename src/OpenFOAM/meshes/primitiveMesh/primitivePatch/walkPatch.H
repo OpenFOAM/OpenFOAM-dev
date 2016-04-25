@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ class walkPatch
         //- Get other face using v0, v1. Returns -1 if none.
         label getNeighbour
         (
-            const label faceI,
+            const label facei,
             const label fp,
             const label v0,
             const label v1
@@ -113,7 +113,7 @@ public:
             const primitivePatch& pp,
             const labelList& faceZone,  // Per face which zone it belongs to
             const bool reverse,         // Reverse walk
-            const label faceI,          // Current face
+            const label facei,          // Current face
             const label enterVertI,     // Vertex across which this face
                                         // is visited.
             boolList& visited

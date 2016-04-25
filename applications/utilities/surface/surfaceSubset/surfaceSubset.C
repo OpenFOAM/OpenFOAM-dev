@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -199,9 +199,9 @@ int main(int argc, char *argv[])
 
         Info<< "Using zone min:" << min << " max:" << max << endl;
 
-        forAll(surf1, faceI)
+        forAll(surf1, facei)
         {
-            const point centre = surf1[faceI].centre(surf1.points());
+            const point centre = surf1[facei].centre(surf1.points());
 
             if
             (
@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
              && (centre.z() <= max.z())
             )
             {
-                facesToSubset[faceI] = true;
+                facesToSubset[facei] = true;
             }
         }
     }
@@ -256,11 +256,11 @@ int main(int argc, char *argv[])
             searchSelectSurf.tree();
 
         // Check if face (centre) is in outside or inside.
-        forAll(facesToSubset, faceI)
+        forAll(facesToSubset, facei)
         {
-            if (!facesToSubset[faceI])
+            if (!facesToSubset[facei])
             {
-                const point fc(surf1[faceI].centre(surf1.points()));
+                const point fc(surf1[facei].centre(surf1.points()));
 
                 volumeType t = selectTree.getVolumeType(fc);
 
@@ -271,7 +271,7 @@ int main(int argc, char *argv[])
                   : (t == volumeType::INSIDE)
                 )
                 {
-                    facesToSubset[faceI] = true;
+                    facesToSubset[facei] = true;
                 }
             }
         }
@@ -289,14 +289,14 @@ int main(int argc, char *argv[])
         // Select all triangles that are close to the plane and
         // whose normal aligns with the plane as well.
 
-        forAll(surf1.faceCentres(), faceI)
+        forAll(surf1.faceCentres(), facei)
         {
-            const point& fc = surf1.faceCentres()[faceI];
-            const point& nf = surf1.faceNormals()[faceI];
+            const point& fc = surf1.faceCentres()[facei];
+            const point& nf = surf1.faceNormals()[facei];
 
             if (pl.distance(fc) < distance && mag(pl.normal() & nf) > cosAngle)
             {
-                facesToSubset[faceI] = true;
+                facesToSubset[facei] = true;
             }
         }
     }
@@ -315,37 +315,37 @@ int main(int argc, char *argv[])
         Info<< "Found " << markedFaces.size() << " marked face(s)." << endl;
 
         // Check and mark faces to pick up
-        forAll(markedFaces, faceI)
+        forAll(markedFaces, facei)
         {
             if
             (
-                markedFaces[faceI] < 0
-             || markedFaces[faceI] >= surf1.size()
+                markedFaces[facei] < 0
+             || markedFaces[facei] >= surf1.size()
             )
             {
                 FatalErrorInFunction
-                    << "Face label " << markedFaces[faceI] << "out of range."
+                    << "Face label " << markedFaces[facei] << "out of range."
                     << " The mesh has got "
                     << surf1.size() << " faces."
                     << exit(FatalError);
             }
 
             // Mark the face
-            facesToSubset[markedFaces[faceI]] = true;
+            facesToSubset[markedFaces[facei]] = true;
 
             // mark its neighbours if requested
             if (addFaceNeighbours)
             {
                 const labelList& curFaces =
-                    surf1.faceFaces()[markedFaces[faceI]];
+                    surf1.faceFaces()[markedFaces[facei]];
 
                 forAll(curFaces, i)
                 {
-                    label faceI = curFaces[i];
+                    label facei = curFaces[i];
 
-                    if (!facesToSubset[faceI])
+                    if (!facesToSubset[facei])
                     {
-                        facesToSubset[faceI] =  true;
+                        facesToSubset[facei] =  true;
                         nFaceNeighbours++;
                     }
                 }

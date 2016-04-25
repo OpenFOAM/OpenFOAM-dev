@@ -40,9 +40,9 @@ void Foam::polyMesh::initMesh()
     {
         label nInternalFaces = 0;
 
-        forAll(neighbour_, faceI)
+        forAll(neighbour_, facei)
         {
-            if (neighbour_[faceI] == -1)
+            if (neighbour_[facei] == -1)
             {
                 break;
             }
@@ -118,31 +118,31 @@ void Foam::polyMesh::initMesh(cellList& c)
 
     label nInternalFaces = 0;
 
-    forAll(c, cellI)
+    forAll(c, celli)
     {
         // get reference to face labels for current cell
-        const labelList& cellfaces = c[cellI];
+        const labelList& cellfaces = c[celli];
 
-        forAll(cellfaces, faceI)
+        forAll(cellfaces, facei)
         {
-            if (cellfaces[faceI] < 0)
+            if (cellfaces[facei] < 0)
             {
                 FatalErrorInFunction
-                    << "Illegal face label " << cellfaces[faceI]
-                    << " in cell " << cellI
+                    << "Illegal face label " << cellfaces[facei]
+                    << " in cell " << celli
                     << exit(FatalError);
             }
 
-            if (!markedFaces[cellfaces[faceI]])
+            if (!markedFaces[cellfaces[facei]])
             {
                 // First visit: owner
-                owner_[cellfaces[faceI]] = cellI;
-                markedFaces[cellfaces[faceI]] = true;
+                owner_[cellfaces[facei]] = celli;
+                markedFaces[cellfaces[facei]] = true;
             }
             else
             {
                 // Second visit: neighbour
-                neighbour_[cellfaces[faceI]] = cellI;
+                neighbour_[cellfaces[facei]] = celli;
                 nInternalFaces++;
             }
         }

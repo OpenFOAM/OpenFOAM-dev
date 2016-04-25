@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,16 +69,16 @@ License
 //(
 //    const primitiveMesh& mesh,
 //    const boolList& selectedPoint,
-//    const label cellI
+//    const label celli
 //)
 //{
-//    const labelList& cFaces = mesh.cells()[cellI];
+//    const labelList& cFaces = mesh.cells()[celli];
 //
 //    forAll(cFaces, cFaceI)
 //    {
-//        label faceI = cFaces[cFaceI];
+//        label facei = cFaces[cFaceI];
 //
-//        const face& f = mesh.faces()[faceI];
+//        const face& f = mesh.faces()[facei];
 //
 //        forAll(f, fp)
 //        {
@@ -149,16 +149,16 @@ License
 //    label nRemoved = 0;
 //    forAllConstIter(labelHashSet, flatCandidates, iter)
 //    {
-//        label cellI = iter.key();
+//        label celli = iter.key();
 //
-//        const cell& cll = cells[cellI];
+//        const cell& cll = cells[celli];
 //
 //        scalar newVol = cll.mag(newPoints, faces);
-//        scalar oldVol = mesh.cellVolumes()[cellI];
+//        scalar oldVol = mesh.cellVolumes()[celli];
 //
 //        if (newVol < 0.1 * oldVol)
 //        {
-//            internalCells.erase(cellI);
+//            internalCells.erase(celli);
 //            nRemoved++;
 //        }
 //    }
@@ -258,21 +258,21 @@ void Foam::surfaceSets::getSurfaceSets
         );
     }
 
-    forAll(cellType, cellI)
+    forAll(cellType, celli)
     {
-        label cType = cellType[cellI];
+        label cType = cellType[celli];
 
         if (cType == cellClassification::CUT)
         {
-            cut.insert(cellI);
+            cut.insert(celli);
         }
         else if (cType == cellClassification::INSIDE)
         {
-            inside.insert(cellI);
+            inside.insert(celli);
         }
         else if (cType == cellClassification::OUTSIDE)
         {
-            outside.insert(cellI);
+            outside.insert(celli);
         }
     }
 }
@@ -295,12 +295,12 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
 
     List<pointStatus> pointSide(mesh.nPoints(), NOTSET);
 
-    for (label cellI = 0; cellI < mesh.nCells(); cellI++)
+    for (label celli = 0; celli < mesh.nCells(); celli++)
     {
-        if (internalCells.found(cellI))
+        if (internalCells.found(celli))
         {
             // Inside cell. Mark all vertices seen from this cell.
-            const labelList& cFaces = cells[cellI];
+            const labelList& cFaces = cells[celli];
 
             forAll(cFaces, cFaceI)
             {
@@ -328,7 +328,7 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
         else
         {
             // Outside cell
-            const labelList& cFaces = cells[cellI];
+            const labelList& cFaces = cells[celli];
 
             forAll(cFaces, cFaceI)
             {
@@ -376,8 +376,8 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
 
     forAllConstIter(labelHashSet, internalCells, iter)
     {
-        const label cellI = iter.key();
-        const cell& cFaces = cells[cellI];
+        const label celli = iter.key();
+        const cell& cFaces = cells[celli];
 
         label usesMixedOnly = true;
 
@@ -401,7 +401,7 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
         }
         if (usesMixedOnly)
         {
-            mixedOnlyCells.insert(cellI);
+            mixedOnlyCells.insert(celli);
         }
     }
 

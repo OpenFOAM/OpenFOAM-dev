@@ -83,9 +83,9 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             Info<< "... scanning for polyhedra" << endl;
         }
 
-        forAll(cellShapes, cellI)
+        forAll(cellShapes, celli)
         {
-            const cellModel& model = cellShapes[cellI].model();
+            const cellModel& model = cellShapes[celli].model();
 
             if
             (
@@ -97,7 +97,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
              && model != tetWedge
             )
             {
-                const cell& cFaces = mesh.cells()[cellI];
+                const cell& cFaces = mesh.cells()[celli];
 
                 forAll(cFaces, cFaceI)
                 {
@@ -168,12 +168,12 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
     // [numFace0Pts, id1, id2, id3, numFace1Pts, id1, id2, id3, ...]
     DynamicList<vtkIdType> faceStream(256);
 
-    forAll(cellShapes, cellI)
+    forAll(cellShapes, celli)
     {
-        const cellShape& cellShape = cellShapes[cellI];
+        const cellShape& cellShape = cellShapes[celli];
         const cellModel& cellModel = cellShape.model();
 
-        superCells[addCellI++] = cellI;
+        superCells[addCellI++] = celli;
 
         if (cellModel == tet)
         {
@@ -273,7 +273,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
         else if (reader_->GetUseVTKPolyhedron())
         {
             // Polyhedral cell - use VTK_POLYHEDRON
-            const labelList& cFaces = mesh.cells()[cellI];
+            const labelList& cFaces = mesh.cells()[celli];
 
 #ifdef HAS_VTK_POLYHEDRON
             vtkIdType nFaces = cFaces.size();
@@ -295,7 +295,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             forAll(cFaces, cFaceI)
             {
                 const face& f = mesh.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == cellI);
+                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
                 const label nFacePoints = f.size();
 
                 // number of labels for this face
@@ -353,20 +353,20 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             // Polyhedral cell. Decompose into tets + prisms.
 
             // Mapping from additional point to cell
-            addPointCellLabels[addPointI] = cellI;
+            addPointCellLabels[addPointI] = celli;
 
             // The new vertex from the cell-centre
             const label newVertexLabel = mesh.nPoints() + addPointI;
-            vtkInsertNextOpenFOAMPoint(vtkpoints, mesh.C()[cellI]);
+            vtkInsertNextOpenFOAMPoint(vtkpoints, mesh.C()[celli]);
 
             // Whether to insert cell in place of original or not.
             bool substituteCell = true;
 
-            const labelList& cFaces = mesh.cells()[cellI];
+            const labelList& cFaces = mesh.cells()[celli];
             forAll(cFaces, cFaceI)
             {
                 const face& f = mesh.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == cellI);
+                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
 
                 // Number of triangles and quads in decomposition
                 label nTris = 0;
@@ -388,7 +388,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
                     }
                     else
                     {
-                        superCells[addCellI++] = cellI;
+                        superCells[addCellI++] = celli;
                     }
 
                     const face& quad = quadFcs[quadI];
@@ -431,7 +431,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
                     }
                     else
                     {
-                        superCells[addCellI++] = cellI;
+                        superCells[addCellI++] = celli;
                     }
 
                     const face& tri = triFcs[triI];

@@ -57,9 +57,9 @@ void Foam::extendedCentredCellToCellStencil::compact()
 {
     boolList isInStencil(map().constructSize(), false);
 
-    forAll(stencil_, cellI)
+    forAll(stencil_, celli)
     {
-        const labelList& stencilCells = stencil_[cellI];
+        const labelList& stencilCells = stencil_[celli];
 
         forAll(stencilCells, i)
         {

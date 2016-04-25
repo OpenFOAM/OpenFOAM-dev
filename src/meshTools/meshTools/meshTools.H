@@ -171,7 +171,7 @@ namespace meshTools
         bool edgeOnCell
         (
             const primitiveMesh&,
-            const label cellI,
+            const label celli,
             const label edgeI
         );
 
@@ -179,7 +179,7 @@ namespace meshTools
         bool edgeOnFace
         (
             const primitiveMesh&,
-            const label faceI,
+            const label facei,
             const label edgeI
         );
 
@@ -187,8 +187,8 @@ namespace meshTools
         bool faceOnCell
         (
             const primitiveMesh&,
-            const label cellI,
-            const label faceI
+            const label celli,
+            const label facei
         );
 
         //- Return edge among candidates that uses the two vertices.
@@ -228,7 +228,7 @@ namespace meshTools
         void getEdgeFaces
         (
             const primitiveMesh&,
-            const label cellI,
+            const label celli,
             const label edgeI,
             label& face0,
             label& face1
@@ -244,13 +244,13 @@ namespace meshTools
             const label vertI
         );
 
-        //- Return face on cell using edgeI but not faceI. Throws error
+        //- Return face on cell using edgeI but not facei. Throws error
         //  if none found.
         label otherFace
         (
             const primitiveMesh&,
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             const label edgeI
         );
 
@@ -259,8 +259,8 @@ namespace meshTools
         label otherCell
         (
             const primitiveMesh&,
-            const label cellI,
-            const label faceI
+            const label celli,
+            const label facei
         );
 
         //- Returns label of edge nEdges away from startEdge (in the direction
@@ -268,7 +268,7 @@ namespace meshTools
         label walkFace
         (
             const primitiveMesh&,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI,
             const label nEdges
@@ -310,7 +310,7 @@ namespace meshTools
         void getParallelEdges
         (
             const primitiveMesh&,
-            const label cellI,
+            const label celli,
             const label e0,
             label&,
             label&,
@@ -322,7 +322,7 @@ namespace meshTools
         vector edgeToCutDir
         (
             const primitiveMesh&,
-            const label cellI,
+            const label celli,
             const label edgeI
         );
 
@@ -331,7 +331,7 @@ namespace meshTools
         label cutDirToEdge
         (
             const primitiveMesh&,
-            const label cellI,
+            const label celli,
             const vector& cutDir
         );
 

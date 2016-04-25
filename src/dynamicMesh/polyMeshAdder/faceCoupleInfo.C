@@ -348,9 +348,9 @@ bool Foam::faceCoupleInfo::regionEdge
 
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
+            label facei = eFaces[i];
 
-            label meshFaceI = slavePatch().addressing()[faceI];
+            label meshFaceI = slavePatch().addressing()[facei];
 
             label patchI = slaveMesh.boundaryMesh().whichPatch(meshFaceI);
 
@@ -1109,15 +1109,15 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
 
                         forAll(eFaces, j)
                         {
-                            const label faceI = eFaces[j];
+                            const label facei = eFaces[j];
 
-                            if (cutToMasterFaces_[faceI] == -1)
+                            if (cutToMasterFaces_[facei] == -1)
                             {
-                                cutToMasterFaces_[faceI] = masterFaceI;
-                                candidates.erase(faceI);
+                                cutToMasterFaces_[facei] = masterFaceI;
+                                candidates.erase(facei);
                                 nChanged++;
                             }
-                            else if (cutToMasterFaces_[faceI] != masterFaceI)
+                            else if (cutToMasterFaces_[facei] != masterFaceI)
                             {
                                 const pointField& cutPoints =
                                     cutFaces().points();
@@ -1126,14 +1126,14 @@ Foam::label Foam::faceCoupleInfo::growCutFaces
 
                                 const edge& e = cutFaces().edges()[cutEdgeI];
 
-                                label myMaster = cutToMasterFaces_[faceI];
+                                label myMaster = cutToMasterFaces_[facei];
                                 const face& myF = masterPatch()[myMaster];
 
                                 const face& nbrF = masterPatch()[masterFaceI];
 
                                 FatalErrorInFunction
                                     << "Cut face "
-                                    << cutFaces()[faceI].points(cutPoints)
+                                    << cutFaces()[facei].points(cutPoints)
                                     << " has master "
                                     << myMaster
                                     << " but also connects to nbr face "
@@ -2051,11 +2051,11 @@ Foam::labelList Foam::faceCoupleInfo::faceLabels(const polyPatch& pp)
 {
     labelList faces(pp.size());
 
-    label faceI = pp.start();
+    label facei = pp.start();
 
     forAll(pp, i)
     {
-        faces[i] = faceI++;
+        faces[i] = facei++;
     }
     return faces;
 }

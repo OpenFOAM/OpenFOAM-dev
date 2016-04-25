@@ -137,7 +137,7 @@ void Foam::starMesh::readBoundary()
 
         IFstream boundaryFile(boundaryFileName);
 
-        for (label faceI=0; faceI<nFaces; faceI++)
+        for (label facei=0; facei<nFaces; facei++)
         {
             boundaryFile >> lineIndex;
 
@@ -170,7 +170,7 @@ void Foam::starMesh::readBoundary()
             )
             {
                 //Info<< "Converting collapsed quad into triangle"
-                //    << " for face " << faceI
+                //    << " for face " << facei
                 //    << " in Star boundary " << lineIndex << endl;
 
                 pointLabelsTri[0] = pointLabels[0];

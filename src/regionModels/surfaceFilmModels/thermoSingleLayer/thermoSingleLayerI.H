@@ -48,10 +48,10 @@ inline const SLGThermo& thermoSingleLayer::thermo() const
 inline tmp<scalarField> thermoSingleLayer::hs
 (
     const scalarField& T,
-    const label patchI
+    const label patchi
 ) const
 {
-    const scalarField& Cp = Cp_.boundaryField()[patchI];
+    const scalarField& Cp = Cp_.boundaryField()[patchi];
     return Cp*(T - 298.15);
 }
 
@@ -155,21 +155,21 @@ inline const filmRadiationModel& thermoSingleLayer::radiation() const
 }
 
 
-inline tmp<scalarField> thermoSingleLayer::Qconvw(const label patchI) const
+inline tmp<scalarField> thermoSingleLayer::Qconvw(const label patchi) const
 {
-    const scalarField htc(htcw_->h()().boundaryField()[patchI]);
-    const scalarField& Tp = T_.boundaryField()[patchI];
-    const scalarField& Twp = Tw_.boundaryField()[patchI];
+    const scalarField htc(htcw_->h()().boundaryField()[patchi]);
+    const scalarField& Tp = T_.boundaryField()[patchi];
+    const scalarField& Twp = Tw_.boundaryField()[patchi];
 
     return htc*(Tp - Twp);
 }
 
 
-inline tmp<scalarField> thermoSingleLayer::Qconvp(const label patchI) const
+inline tmp<scalarField> thermoSingleLayer::Qconvp(const label patchi) const
 {
-    const scalarField htc(htcs_->h()().boundaryField()[patchI]);
-    const scalarField& Tp = T_.boundaryField()[patchI];
-    const scalarField& Tpp = TPrimary_.boundaryField()[patchI];
+    const scalarField htc(htcs_->h()().boundaryField()[patchi]);
+    const scalarField& Tp = T_.boundaryField()[patchi];
+    const scalarField& Tpp = TPrimary_.boundaryField()[patchi];
 
     return htc*(Tp - Tpp);
 }

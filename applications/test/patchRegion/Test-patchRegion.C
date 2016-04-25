@@ -76,11 +76,11 @@ int main(int argc, char *argv[])
     DynamicList<label> changedEdges(4*patch.size());
     DynamicList<patchEdgeFaceRegions> changedInfo(changedEdges.size());
 
-    forAll(patch, faceI)
+    forAll(patch, facei)
     {
-        const labelList& fEdges = patch.faceEdges()[faceI];
+        const labelList& fEdges = patch.faceEdges()[facei];
 
-        label globalFaceI = globalNumbering.toGlobal(faceI);
+        label globalFaceI = globalNumbering.toGlobal(facei);
 
         forAll(fEdges, i)
         {
@@ -117,13 +117,13 @@ int main(int argc, char *argv[])
     {
         labelList currentRegion(patch.nPoints(), -1);
 
-        forAll(patch.localFaces(), faceI)
+        forAll(patch.localFaces(), facei)
         {
-            const face& f = patch.localFaces()[faceI];
+            const face& f = patch.localFaces()[facei];
 
             forAll(f, fp)
             {
-                label faceRegion = allFaceInfo[faceI].regions()[fp];
+                label faceRegion = allFaceInfo[facei].regions()[fp];
 
                 label pointI = f[fp];
 

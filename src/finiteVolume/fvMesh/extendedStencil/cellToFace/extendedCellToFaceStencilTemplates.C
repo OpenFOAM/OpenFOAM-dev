@@ -40,14 +40,14 @@ void Foam::extendedCellToFaceStencil::collectData
     List<Type> flatFld(map.constructSize(), Zero);
 
     // Insert my internal values
-    forAll(fld, cellI)
+    forAll(fld, celli)
     {
-        flatFld[cellI] = fld[cellI];
+        flatFld[celli] = fld[celli];
     }
     // Insert my boundary values
-    forAll(fld.boundaryField(), patchI)
+    forAll(fld.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& pfld = fld.boundaryField()[patchI];
+        const fvPatchField<Type>& pfld = fld.boundaryField()[patchi];
 
         label nCompact =
             pfld.patch().start()
@@ -66,15 +66,15 @@ void Foam::extendedCellToFaceStencil::collectData
     // 2. Pull to stencil
     stencilFld.setSize(stencil.size());
 
-    forAll(stencil, faceI)
+    forAll(stencil, facei)
     {
-        const labelList& compactCells = stencil[faceI];
+        const labelList& compactCells = stencil[facei];
 
-        stencilFld[faceI].setSize(compactCells.size());
+        stencilFld[facei].setSize(compactCells.size());
 
         forAll(compactCells, i)
         {
-            stencilFld[faceI][i] = flatFld[compactCells[i]];
+            stencilFld[facei][i] = flatFld[compactCells[i]];
         }
     }
 }
@@ -121,14 +121,14 @@ Foam::extendedCellToFaceStencil::weightedSum
     GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsfCorr.ref();
 
     // Internal faces
-    for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
     {
-        const List<Type>& stField = stencilFld[faceI];
-        const List<scalar>& stWeight = stencilWeights[faceI];
+        const List<Type>& stField = stencilFld[facei];
+        const List<scalar>& stWeight = stencilWeights[facei];
 
         forAll(stField, i)
         {
-            sf[faceI] += stField[i]*stWeight[i];
+            sf[facei] += stField[i]*stWeight[i];
         }
     }
 
@@ -143,19 +143,19 @@ Foam::extendedCellToFaceStencil::weightedSum
 
         if (pSfCorr.coupled())
         {
-            label faceI = pSfCorr.patch().start();
+            label facei = pSfCorr.patch().start();
 
             forAll(pSfCorr, i)
             {
-                const List<Type>& stField = stencilFld[faceI];
-                const List<scalar>& stWeight = stencilWeights[faceI];
+                const List<Type>& stField = stencilFld[facei];
+                const List<scalar>& stWeight = stencilWeights[facei];
 
                 forAll(stField, j)
                 {
                     pSfCorr[i] += stField[j]*stWeight[j];
                 }
 
-                faceI++;
+                facei++;
             }
         }
     }

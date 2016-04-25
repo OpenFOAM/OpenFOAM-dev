@@ -50,17 +50,17 @@ void SLTSDdtScheme<Type>::relaxedDiag
     const labelUList& neighbour = mesh().neighbour();
     scalarField diag(rD.size(), 0.0);
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        if (phi[faceI] > 0.0)
+        if (phi[facei] > 0.0)
         {
-            diag[owner[faceI]] += phi[faceI];
-            rD[neighbour[faceI]] += phi[faceI];
+            diag[owner[facei]] += phi[facei];
+            rD[neighbour[facei]] += phi[facei];
         }
         else
         {
-            diag[neighbour[faceI]] -= phi[faceI];
-            rD[owner[faceI]] -= phi[faceI];
+            diag[neighbour[facei]] -= phi[facei];
+            rD[owner[facei]] -= phi[facei];
         }
     }
 

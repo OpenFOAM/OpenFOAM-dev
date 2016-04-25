@@ -205,7 +205,7 @@ public:
             inline const Point& d() const;
 
             //- Return i-th face
-            inline triPointRef tri(const label faceI) const;
+            inline triPointRef tri(const label facei) const;
 
         // Properties
 

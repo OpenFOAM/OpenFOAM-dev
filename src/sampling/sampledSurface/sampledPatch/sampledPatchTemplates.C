@@ -39,8 +39,8 @@ Foam::sampledPatch::sampleField
     Field<Type>& values = tvalues.ref();
     forAll(patchFaceLabels_, i)
     {
-        label patchI = patchIDs_[patchIndex_[i]];
-        const Field<Type>& bField = vField.boundaryField()[patchI];
+        label patchi = patchIDs_[patchIndex_[i]];
+        const Field<Type>& bField = vField.boundaryField()[patchi];
         values[i] = bField[patchFaceLabels_[i]];
     }
 
@@ -61,8 +61,8 @@ Foam::sampledPatch::sampleField
 
     forAll(patchFaceLabels_, i)
     {
-        label patchI = patchIDs_[patchIndex_[i]];
-        values[i] = sField.boundaryField()[patchI][patchFaceLabels_[i]];
+        label patchi = patchIDs_[patchIndex_[i]];
+        values[i] = sField.boundaryField()[patchi][patchFaceLabels_[i]];
     }
 
     return tvalues;
@@ -86,8 +86,8 @@ Foam::sampledPatch::interpolateField
 
     forAll(faces(), cutFaceI)
     {
-        label patchI = patchIDs_[patchIndex_[cutFaceI]];
-        const polyPatch& pp = mesh().boundaryMesh()[patchI];
+        label patchi = patchIDs_[patchIndex_[cutFaceI]];
+        const polyPatch& pp = mesh().boundaryMesh()[patchi];
         label patchFaceI = patchFaceLabels()[cutFaceI];
         const face& f = faces()[cutFaceI];
 
@@ -97,14 +97,14 @@ Foam::sampledPatch::interpolateField
 
             if (!pointDone[pointI])
             {
-                label faceI = patchFaceI + pp.start();
-                label cellI = own[faceI];
+                label facei = patchFaceI + pp.start();
+                label celli = own[facei];
 
                 values[pointI] = interpolator.interpolate
                 (
                     points()[pointI],
-                    cellI,
-                    faceI
+                    celli,
+                    facei
                 );
                 pointDone[pointI] = true;
             }

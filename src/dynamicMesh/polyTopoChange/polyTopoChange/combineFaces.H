@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ class combineFaces
         void regioniseFaces
         (
             const scalar minCos,
-            const label cellI,
+            const label celli,
             const labelList& cEdges,
             Map<label>& faceRegion
         ) const;
@@ -109,7 +109,7 @@ class combineFaces
         //- Does merging faces invalidate (unmerged) neighbouring faces?
         bool faceNeighboursValid
         (
-            const label cellI,
+            const label celli,
             const Map<label>& faceRegion
         ) const;
 

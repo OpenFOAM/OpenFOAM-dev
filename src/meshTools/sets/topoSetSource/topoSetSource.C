@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,17 +139,17 @@ Foam::Istream& Foam::topoSetSource::checkIs(Istream& is)
 void Foam::topoSetSource::addOrDelete
 (
     topoSet& set,
-    const label cellI,
+    const label celli,
     const bool add
 ) const
 {
     if (add)
     {
-        set.insert(cellI);
+        set.insert(celli);
     }
     else
     {
-        set.erase(cellI);
+        set.erase(celli);
     }
 }
 

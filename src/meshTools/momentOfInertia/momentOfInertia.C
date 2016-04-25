@@ -320,13 +320,13 @@ Foam::tmp<Foam::tensorField> Foam::momentOfInertia::meshInertia
 Foam::tensor Foam::momentOfInertia::meshInertia
 (
     const polyMesh& mesh,
-    label cellI
+    label celli
 )
 {
     List<tetIndices> cellTets = polyMeshTetDecomposition::cellTetIndices
     (
         mesh,
-        cellI
+        celli
     );
 
     triFaceList faces(cellTets.size());

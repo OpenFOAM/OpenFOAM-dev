@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,9 +140,9 @@ void Foam::ensightParts::recalculate(const polyMesh& mesh)
 
 
     // do boundaries, skipping empty and processor patches
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh.boundaryMesh()[patchi];
         if (patch.size() && !isA<processorPolyPatch>(patch))
         {
             partsList_.set

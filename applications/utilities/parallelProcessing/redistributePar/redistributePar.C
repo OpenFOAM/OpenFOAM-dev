@@ -367,15 +367,15 @@ void compareFields
     const volVectorField& b
 )
 {
-    forAll(a, cellI)
+    forAll(a, celli)
     {
-        if (mag(b[cellI] - a[cellI]) > tolDim)
+        if (mag(b[celli] - a[celli]) > tolDim)
         {
             FatalErrorInFunction
                 << "Did not map volVectorField correctly:" << nl
-                << "cell:" << cellI
-                << " transfer b:" << b[cellI]
-                << " real cc:" << a[cellI]
+                << "cell:" << celli
+                << " transfer b:" << b[celli]
+                << " real cc:" << a[celli]
                 << abort(FatalError);
         }
     }

@@ -69,11 +69,11 @@ bool Foam::fileFormats::FTRsurfaceFormat<Face>::read
     List<label> zoneIds(facesRead.size());
 
     // disentangle faces/keys - already triangulated
-    forAll(facesRead, faceI)
+    forAll(facesRead, facei)
     {
         // unfortunately cannot transfer to save memory
-        faceLst[faceI] = facesRead[faceI];
-        zoneIds[faceI] = facesRead[faceI].key();
+        faceLst[facei] = facesRead[facei];
+        zoneIds[facei] = facesRead[facei].key();
     }
 
     this->storedFaces().transfer(faceLst);

@@ -164,20 +164,20 @@ void Foam::directAMI<SourcePatch, TargetPatch>::restartAdvancingFront
     label& tgtFaceI
 ) const
 {
-    forAll(mapFlag, faceI)
+    forAll(mapFlag, facei)
     {
-        if (mapFlag[faceI] == 0)
+        if (mapFlag[facei] == 0)
         {
-            tgtFaceI = this->findTargetFace(faceI);
+            tgtFaceI = this->findTargetFace(facei);
 
             if (tgtFaceI < 0)
             {
-                mapFlag[faceI] = -1;
-                nonOverlapFaces.append(faceI);
+                mapFlag[facei] = -1;
+                nonOverlapFaces.append(facei);
             }
             else
             {
-                srcFaceI = faceI;
+                srcFaceI = facei;
                 break;
             }
         }

@@ -273,10 +273,10 @@ void Foam::processorPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
                 label vertI = 0;
 
-                forAll(faceCentres(), faceI)
+                forAll(faceCentres(), facei)
                 {
-                    const point& c0 = neighbFaceCentres_[faceI];
-                    const point& c1 = faceCentres()[faceI];
+                    const point& c0 = neighbFaceCentres_[facei];
+                    const point& c1 = faceCentres()[facei];
 
                     writeOBJ(ccStr, c0, c1, vertI);
                 }
@@ -356,11 +356,11 @@ void Foam::processorPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
 
         for (label patchPointI = 0; patchPointI < nPoints(); patchPointI++)
         {
-            label faceI = pointFaces()[patchPointI][0];
+            label facei = pointFaces()[patchPointI][0];
 
-            pointFace[patchPointI] = faceI;
+            pointFace[patchPointI] = facei;
 
-            const face& f = localFaces()[faceI];
+            const face& f = localFaces()[facei];
 
             pointIndex[patchPointI] = findIndex(f, patchPointI);
         }
@@ -371,11 +371,11 @@ void Foam::processorPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
 
         for (label patchEdgeI = 0; patchEdgeI < nEdges(); patchEdgeI++)
         {
-            label faceI = edgeFaces()[patchEdgeI][0];
+            label facei = edgeFaces()[patchEdgeI][0];
 
-            edgeFace[patchEdgeI] = faceI;
+            edgeFace[patchEdgeI] = facei;
 
-            const labelList& fEdges = faceEdges()[faceI];
+            const labelList& fEdges = faceEdges()[facei];
 
             edgeIndex[patchEdgeI] = findIndex(fEdges, patchEdgeI);
         }
@@ -565,9 +565,9 @@ void Foam::processorPolyPatch::initOrder
             << "Dumping " << fc.size()
             << " local faceCentres to " << localStr.name() << endl;
 
-        forAll(fc, faceI)
+        forAll(fc, facei)
         {
-            writeOBJ(localStr, fc[faceI]);
+            writeOBJ(localStr, fc[facei]);
         }
     }
 
@@ -911,9 +911,9 @@ bool Foam::processorPolyPatch::order
                     Pout<< "processorPolyPatch::order : "
                         << "Dumping neighbour faceCentres to " << nbrStr.name()
                         << endl;
-                    forAll(masterCtrs, faceI)
+                    forAll(masterCtrs, facei)
                     {
-                        writeOBJ(nbrStr, masterCtrs[faceI]);
+                        writeOBJ(nbrStr, masterCtrs[facei]);
                     }
                 }
 
@@ -1024,14 +1024,14 @@ bool Foam::processorPolyPatch::order
 
                 label vertI = 0;
 
-                forAll(pp.faceCentres(), faceI)
+                forAll(pp.faceCentres(), facei)
                 {
-                    label masterFaceI = faceMap[faceI];
+                    label masterFaceI = faceMap[facei];
 
                     if (masterFaceI != -1)
                     {
                         const point& c0 = masterCtrs[masterFaceI];
-                        const point& c1 = pp.faceCentres()[faceI];
+                        const point& c1 = pp.faceCentres()[facei];
                         writeOBJ(ccStr, c0, c1, vertI);
                     }
                 }
@@ -1091,9 +1091,9 @@ bool Foam::processorPolyPatch::order
                 }
             }
 
-            forAll(faceMap, faceI)
+            forAll(faceMap, facei)
             {
-                if (faceMap[faceI] != faceI || rotation[faceI] != 0)
+                if (faceMap[facei] != facei || rotation[facei] != 0)
                 {
                     return true;
                 }

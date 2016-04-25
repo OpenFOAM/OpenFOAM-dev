@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,15 +38,15 @@ inline bool Foam::polyTopoChange::pointRemoved(const label pointI) const
 }
 
 
-inline bool Foam::polyTopoChange::faceRemoved(const label faceI) const
+inline bool Foam::polyTopoChange::faceRemoved(const label facei) const
 {
-    return faces_[faceI].empty();
+    return faces_[facei].empty();
 }
 
 
-inline bool Foam::polyTopoChange::cellRemoved(const label cellI) const
+inline bool Foam::polyTopoChange::cellRemoved(const label celli) const
 {
-    return cellMap_[cellI] == -2;
+    return cellMap_[celli] == -2;
 }
 
 

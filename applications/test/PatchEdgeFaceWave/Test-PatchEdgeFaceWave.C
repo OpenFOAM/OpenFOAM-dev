@@ -114,9 +114,9 @@ int main(int argc, char *argv[])
             dimensionedScalar("patchDist", dimLength, 0.0)
         );
         scalarField pf(vsf.boundaryField()[patch.index()].size());
-        forAll(pf, faceI)
+        forAll(pf, facei)
         {
-            pf[faceI] = Foam::sqrt(allFaceInfo[faceI].distSqr());
+            pf[facei] = Foam::sqrt(allFaceInfo[facei].distSqr());
         }
         vsf.boundaryFieldRef()[patch.index()] = pf;
 

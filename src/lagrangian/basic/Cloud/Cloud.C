@@ -40,12 +40,12 @@ void Foam::Cloud<ParticleType>::checkPatches() const
 {
     const polyBoundaryMesh& pbm = polyMesh_.boundaryMesh();
     bool ok = true;
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        if (isA<cyclicAMIPolyPatch>(pbm[patchI]))
+        if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
         {
             const cyclicAMIPolyPatch& cami =
-                refCast<const cyclicAMIPolyPatch>(pbm[patchI]);
+                refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
 
             if (cami.owner())
             {
@@ -73,11 +73,11 @@ void Foam::Cloud<ParticleType>::calcCellWallFaces() const
 
     const polyBoundaryMesh& patches = polyMesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        if (isA<wallPolyPatch>(patches[patchI]))
+        if (isA<wallPolyPatch>(patches[patchi]))
         {
-            const polyPatch& patch = patches[patchI];
+            const polyPatch& patch = patches[patchi];
 
             const labelList& pFaceCells = patch.faceCells();
 
@@ -263,27 +263,27 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
                 // boundary face
                 if (Pstream::parRun() && p.face() >= pMesh().nInternalFaces())
                 {
-                    label patchI = pbm.whichPatch(p.face());
+                    label patchi = pbm.whichPatch(p.face());
 
                     // ... and the face is on a processor patch
                     // prepare it for transfer
-                    if (procPatchIndices[patchI] != -1)
+                    if (procPatchIndices[patchi] != -1)
                     {
                         label n = neighbourProcIndices
                         [
                             refCast<const processorPolyPatch>
                             (
-                                pbm[patchI]
+                                pbm[patchi]
                             ).neighbProcNo()
                         ];
 
-                        p.prepareForParallelTransfer(patchI, td);
+                        p.prepareForParallelTransfer(patchi, td);
 
                         particleTransferLists[n].append(this->remove(&p));
 
                         patchIndexTransferLists[n].append
                         (
-                            procPatchNeighbours[patchI]
+                            procPatchNeighbours[patchi]
                         );
                     }
                 }
@@ -368,9 +368,9 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
                 {
                     ParticleType& newp = newpIter();
 
-                    label patchI = procPatches[receivePatchIndex[pI++]];
+                    label patchi = procPatches[receivePatchIndex[pI++]];
 
-                    newp.correctAfterParallelTransfer(patchI, td);
+                    newp.correctAfterParallelTransfer(patchi, td);
 
                     addParticle(newParticles.remove(&newp));
                 }

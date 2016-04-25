@@ -67,27 +67,27 @@ labelList getInternalFaceOrder
     // First unassigned face
     label newFaceI = 0;
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const labelList& cFaces = cells[cellI];
+        const labelList& cFaces = cells[celli];
 
         SortableList<label> nbr(cFaces.size());
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            label nbrCellI = neighbour[faceI];
+            label nbrCellI = neighbour[facei];
 
             if (nbrCellI != -1)
             {
                 // Internal face. Get cell on other side.
-                if (nbrCellI == cellI)
+                if (nbrCellI == celli)
                 {
-                    nbrCellI = owner[faceI];
+                    nbrCellI = owner[facei];
                 }
 
-                if (cellI < nbrCellI)
+                if (celli < nbrCellI)
                 {
                     // CellI is master
                     nbr[i] = nbrCellI;
@@ -117,9 +117,9 @@ labelList getInternalFaceOrder
     }
 
     // Keep boundary faces in same order.
-    for (label faceI = newFaceI; faceI < owner.size(); faceI++)
+    for (label facei = newFaceI; facei < owner.size(); facei++)
     {
-        oldToNew[faceI] = faceI;
+        oldToNew[facei] = facei;
     }
 
     return oldToNew;
@@ -128,7 +128,7 @@ labelList getInternalFaceOrder
 
 void storeCellInZone
 (
-    const label cellI,
+    const label celli,
     const label cellType,
     Map<label>& typeToZone,
     List<DynamicList<label>>& zoneCells
@@ -149,12 +149,12 @@ void storeCellInZone
                 << zoneI << endl;
             typeToZone.insert(cellType, zoneI);
 
-            zoneCells[zoneI].append(cellI);
+            zoneCells[zoneI].append(celli);
         }
         else
         {
             // Existing zone for type
-            zoneCells[zoneFnd()].append(cellI);
+            zoneCells[zoneFnd()].append(celli);
         }
     }
 }
@@ -482,12 +482,12 @@ void ReadCells
 
     unsigned int pos = 0;
 
-    for (unsigned int faceI = 0; faceI < nInternalFaces; faceI++)
+    for (unsigned int facei = 0; facei < nInternalFaces; facei++)
     {
-        foamFaceMap[faceI] = mapData[faceI];
-        foamOwner[faceI] = faceCells[2*faceI];
-        foamNeighbour[faceI] = faceCells[2*faceI+1];
-        face& f = foamFaces[faceI];
+        foamFaceMap[facei] = mapData[facei];
+        foamOwner[facei] = faceCells[2*facei];
+        foamNeighbour[facei] = faceCells[2*facei+1];
+        face& f = foamFaces[facei];
 
         f.setSize(faces[pos++]);
         forAll(f, fp)
@@ -804,9 +804,9 @@ int main(int argc, char *argv[])
         label maxCCMPointI = max(foamPointMap);
         labelList toFoamPoints(invert(maxCCMPointI+1, foamPointMap));
 
-        forAll(foamFaces, faceI)
+        forAll(foamFaces, facei)
         {
-            inplaceRenumber(toFoamPoints, foamFaces[faceI]);
+            inplaceRenumber(toFoamPoints, foamFaces[facei]);
         }
     }
 
@@ -831,15 +831,15 @@ int main(int argc, char *argv[])
     // Set owner/neighbour so owner < neighbour
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    forAll(foamNeighbour, faceI)
+    forAll(foamNeighbour, facei)
     {
-        label nbr = foamNeighbour[faceI];
-        label own = foamOwner[faceI];
+        label nbr = foamNeighbour[facei];
+        label own = foamOwner[facei];
 
         if (nbr >= foamCellType.size() || own >= foamCellType.size())
         {
             FatalErrorInFunction
-                << "face:" << faceI
+                << "face:" << facei
                 << " nbr:" << nbr
                 << " own:" << own
                 << " nCells:" << foamCellType.size()
@@ -850,15 +850,15 @@ int main(int argc, char *argv[])
         {
             if (nbr < own)
             {
-                foamOwner[faceI] = foamNeighbour[faceI];
-                foamNeighbour[faceI] = own;
-                foamFaces[faceI].flip();
+                foamOwner[facei] = foamNeighbour[facei];
+                foamNeighbour[facei] = own;
+                foamFaces[facei].flip();
             }
         }
 
 
         // And check the face
-        const face& f = foamFaces[faceI];
+        const face& f = foamFaces[facei];
 
         forAll(f, fp)
         {
@@ -897,9 +897,9 @@ int main(int argc, char *argv[])
         );
 
         // Reorder faces accordingly
-        forAll(foamCells, cellI)
+        forAll(foamCells, celli)
         {
-            inplaceRenumber(oldToNew, foamCells[cellI]);
+            inplaceRenumber(oldToNew, foamCells[celli]);
         }
 
         // Reorder faces.
@@ -1024,12 +1024,12 @@ int main(int argc, char *argv[])
         // Storage for cell zones.
         List<DynamicList<label>> zoneCells(0);
 
-        forAll(foamCellType, cellI)
+        forAll(foamCellType, celli)
         {
             storeCellInZone
             (
-                cellI,
-                foamCellType[cellI],
+                celli,
+                foamCellType[celli],
                 typeToZone,
                 zoneCells
             );
@@ -1094,9 +1094,9 @@ int main(int argc, char *argv[])
         dimensionedScalar("cellId", dimless, 0.0)
     );
 
-    forAll(foamCellMap, cellI)
+    forAll(foamCellMap, celli)
     {
-        cellIdField[cellI] = foamCellMap[cellI];
+        cellIdField[celli] = foamCellMap[celli];
     }
 
     // Construct field with calculated bc to hold cell type.
@@ -1114,9 +1114,9 @@ int main(int argc, char *argv[])
         dimensionedScalar("cellType", dimless, 0.0)
     );
 
-    forAll(foamCellType, cellI)
+    forAll(foamCellType, celli)
     {
-        cellTypeField[cellI] = foamCellType[cellI];
+        cellTypeField[celli] = foamCellType[celli];
     }
 
     Info<< "Writing cellIds as volScalarField to " << cellIdField.objectPath()

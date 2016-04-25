@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,14 +73,14 @@ public:
         {
             const pointBoundaryMesh& patches = mesh.boundary();
 
-            forAll(patches, patchI)
+            forAll(patches, patchi)
             {
                 set
                 (
-                    patchI,
+                    patchi,
                     new pointPatchMapper
                     (
-                        patches[patchI],
+                        patches[patchi],
                         pointMap,
                         mpm
                     )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,14 +69,14 @@ void Foam::thresholdCellFaces::calculate
         0   // index
     );
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        surfZones[patchI+1] = surfZone
+        surfZones[patchi+1] = surfZone
         (
-            bMesh[patchI].name(),
+            bMesh[patchi].name(),
             0,        // size
             0,        // start
-            patchI+1  // index
+            patchi+1  // index
         );
     }
 
@@ -94,32 +94,32 @@ void Foam::thresholdCellFaces::calculate
 
 
     // internal faces only
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); ++faceI)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); ++facei)
     {
         int side = 0;
 
         // check lowerThreshold
-        if (field[own[faceI]] > lowerThreshold)
+        if (field[own[facei]] > lowerThreshold)
         {
-            if (field[nei[faceI]] < lowerThreshold)
+            if (field[nei[facei]] < lowerThreshold)
             {
                 side = +1;
             }
         }
-        else if (field[nei[faceI]] > lowerThreshold)
+        else if (field[nei[facei]] > lowerThreshold)
         {
             side = -1;
         }
 
         // check upperThreshold
-        if (field[own[faceI]] < upperThreshold)
+        if (field[own[facei]] < upperThreshold)
         {
-            if (field[nei[faceI]] > upperThreshold)
+            if (field[nei[facei]] > upperThreshold)
             {
                 side = +1;
             }
         }
-        else if (field[nei[faceI]] < upperThreshold)
+        else if (field[nei[facei]] < upperThreshold)
         {
             side = -1;
         }
@@ -127,7 +127,7 @@ void Foam::thresholdCellFaces::calculate
 
         if (side)
         {
-            const face& f = origFaces[faceI];
+            const face& f = origFaces[facei];
 
             forAll(f, fp)
             {
@@ -144,12 +144,12 @@ void Foam::thresholdCellFaces::calculate
             if (side > 0)
             {
                 surfFace = f;
-                cellId = own[faceI];
+                cellId = own[facei];
             }
             else
             {
                 surfFace = f.reverseFace();
-                cellId = nei[faceI];
+                cellId = nei[facei];
             }
 
 
@@ -173,10 +173,10 @@ void Foam::thresholdCellFaces::calculate
 
 
     // nothing special for processor patches?
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        const polyPatch& p = bMesh[patchI];
-        surfZone& zone = surfZones[patchI+1];
+        const polyPatch& p = bMesh[patchi];
+        surfZone& zone = surfZones[patchi+1];
 
         zone.start() = nFaces;
 
@@ -189,18 +189,18 @@ void Foam::thresholdCellFaces::calculate
             continue;
         }
 
-        label faceI = p.start();
+        label facei = p.start();
 
         // patch faces
         forAll(p, localFaceI)
         {
             if
             (
-                field[own[faceI]] > lowerThreshold
-             && field[own[faceI]] < upperThreshold
+                field[own[facei]] > lowerThreshold
+             && field[own[facei]] < upperThreshold
             )
             {
-                const face& f = origFaces[faceI];
+                const face& f = origFaces[facei];
                 forAll(f, fp)
                 {
                     if (oldToNewPoints[f[fp]] == -1)
@@ -209,7 +209,7 @@ void Foam::thresholdCellFaces::calculate
                     }
                 }
 
-                label cellId = own[faceI];
+                label cellId = own[facei];
 
                 if (triangulate)
                 {
@@ -226,7 +226,7 @@ void Foam::thresholdCellFaces::calculate
                 }
             }
 
-            ++faceI;
+            ++facei;
         }
 
         zone.size() = surfFaces.size() - zone.start();
@@ -237,9 +237,9 @@ void Foam::thresholdCellFaces::calculate
     surfCells.shrink();
 
     // renumber
-    forAll(surfFaces, faceI)
+    forAll(surfFaces, facei)
     {
-        inplaceRenumber(oldToNewPoints, surfFaces[faceI]);
+        inplaceRenumber(oldToNewPoints, surfFaces[facei]);
     }
 
 

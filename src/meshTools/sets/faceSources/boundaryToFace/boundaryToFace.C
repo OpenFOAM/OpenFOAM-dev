@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,12 +56,12 @@ void Foam::boundaryToFace::combine(topoSet& set, const bool add) const
 {
     for
     (
-        label faceI = mesh().nInternalFaces();
-        faceI < mesh().nFaces();
-        faceI++
+        label facei = mesh().nInternalFaces();
+        facei < mesh().nFaces();
+        facei++
     )
     {
-        addOrDelete(set, faceI, add);
+        addOrDelete(set, facei, add);
     }
 }
 

@@ -744,9 +744,9 @@ int main(int argc, char *argv[])
                     layerExtrude.layerFaces()
                 )
             );
-            forAll(addedCells, faceI)
+            forAll(addedCells, facei)
             {
-                const labelList& aCells = addedCells[faceI];
+                const labelList& aCells = addedCells[facei];
                 forAll(aCells, i)
                 {
                     addedCellsSet.insert(aCells[i]);

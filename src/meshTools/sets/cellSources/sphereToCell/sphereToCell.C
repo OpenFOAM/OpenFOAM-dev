@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,12 @@ void Foam::sphereToCell::combine(topoSet& set, const bool add) const
 
     const scalar radSquared = radius_*radius_;
 
-    forAll(ctrs, cellI)
+    forAll(ctrs, celli)
     {
-        scalar offset = magSqr(centre_ - ctrs[cellI]);
+        scalar offset = magSqr(centre_ - ctrs[celli]);
         if (offset <= radSquared)
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

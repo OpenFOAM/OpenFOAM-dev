@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ protected:
     // Protected data
 
        //- Cell index
-       const label cellI_;
+       const label celli_;
 
        //- Weights applied to tet vertices
        List<scalar> weights_;
@@ -70,14 +70,14 @@ protected:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI
+            const label celli
         );
 
         void findTriangle
         (
             const polyMesh& mesh,
             const vector& position,
-            const label faceI
+            const label facei
         );
 
 
@@ -98,8 +98,8 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI,
-            const label faceI = -1
+            const label celli,
+            const label facei = -1
         );
 
 
@@ -108,7 +108,7 @@ public:
         //- Cell index
         inline label cell() const
         {
-            return cellI_;
+            return celli_;
         }
 
         //- Interpolation weights

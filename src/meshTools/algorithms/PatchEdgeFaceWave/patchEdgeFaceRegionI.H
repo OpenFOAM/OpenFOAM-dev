@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ inline bool Foam::patchEdgeFaceRegion::updateEdge
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const patchEdgeFaceRegion& faceInfo,
     const scalar tol,
     TrackingData& td
@@ -152,7 +152,7 @@ inline bool Foam::patchEdgeFaceRegion::updateFace
 (
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const patchEdgeFaceRegion& edgeInfo,
     const scalar tol,

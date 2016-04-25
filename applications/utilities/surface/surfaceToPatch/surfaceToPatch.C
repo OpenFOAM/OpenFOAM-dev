@@ -106,13 +106,13 @@ bool repatchFace
     const boundaryMesh& bMesh,
     const labelList& nearest,
     const labelList& surfToMeshPatch,
-    const label faceI,
+    const label facei,
     polyTopoChange& meshMod
 )
 {
     bool changed = false;
 
-    label bFaceI = faceI - mesh.nInternalFaces();
+    label bFaceI = facei - mesh.nInternalFaces();
 
     if (nearest[bFaceI] != -1)
     {
@@ -121,11 +121,11 @@ bool repatchFace
 
         label patchID = surfToMeshPatch[bMeshPatchID];
 
-        if (patchID != mesh.boundaryMesh().whichPatch(faceI))
+        if (patchID != mesh.boundaryMesh().whichPatch(facei))
         {
-            label own = mesh.faceOwner()[faceI];
+            label own = mesh.faceOwner()[facei];
 
-            label zoneID = mesh.faceZones().whichZone(faceI);
+            label zoneID = mesh.faceZones().whichZone(facei);
 
             bool zoneFlip = false;
 
@@ -133,15 +133,15 @@ bool repatchFace
             {
                 const faceZone& fZone = mesh.faceZones()[zoneID];
 
-                zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
             meshMod.setAction
             (
                 polyModifyFace
                 (
-                    mesh.faces()[faceI],// modified face
-                    faceI,              // label of face being modified
+                    mesh.faces()[facei],// modified face
+                    facei,              // label of face being modified
                     own,                // owner
                     -1,                 // neighbour
                     false,              // face flip
@@ -283,9 +283,9 @@ int main(int argc, char *argv[])
 
         forAllConstIter(faceSet, faceLabels, iter)
         {
-            label faceI = iter.key();
+            label facei = iter.key();
 
-            if (repatchFace(mesh, bMesh, nearest, patchMap, faceI, meshMod))
+            if (repatchFace(mesh, bMesh, nearest, patchMap, facei, meshMod))
             {
                 nChanged++;
             }
@@ -295,9 +295,9 @@ int main(int argc, char *argv[])
     {
         forAll(nearest, bFaceI)
         {
-            label faceI = mesh.nInternalFaces() + bFaceI;
+            label facei = mesh.nInternalFaces() + bFaceI;
 
-            if (repatchFace(mesh, bMesh, nearest, patchMap, faceI, meshMod))
+            if (repatchFace(mesh, bMesh, nearest, patchMap, facei, meshMod))
             {
                 nChanged++;
             }

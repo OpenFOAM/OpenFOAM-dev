@@ -965,7 +965,7 @@ void Foam::distributedTriSurfaceMesh::subsetMeshMap
     oldToNewPoints.setSize(s.points().size());
     oldToNewPoints = -1;
     {
-        label faceI = 0;
+        label facei = 0;
         label pointI = 0;
 
         forAll(include, oldFacei)
@@ -973,7 +973,7 @@ void Foam::distributedTriSurfaceMesh::subsetMeshMap
             if (include[oldFacei])
             {
                 // Store new faces compact
-                newToOldFaces[faceI++] = oldFacei;
+                newToOldFaces[facei++] = oldFacei;
 
                 // Renumber labels for face
                 const triSurface::FaceType& f = s[oldFacei];

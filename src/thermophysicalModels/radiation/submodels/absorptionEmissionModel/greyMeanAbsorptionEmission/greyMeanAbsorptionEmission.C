@@ -215,7 +215,7 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
 
     scalarField& a = ta.ref().internalField();
 
-    forAll(a, cellI)
+    forAll(a, celli)
     {
         forAllConstIter(HashTable<label>, speciesNames_, iter)
         {
@@ -227,33 +227,33 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
                 const volScalarField& ft =
                     mesh_.lookupObject<volScalarField>("ft");
 
-                const List<scalar>& Ynft = lookUpTablePtr_().lookUp(ft[cellI]);
+                const List<scalar>& Ynft = lookUpTablePtr_().lookUp(ft[celli]);
                 //moles x pressure [atm]
-                Xipi = Ynft[specieIndex_[n]]*paToAtm(p[cellI]);
+                Xipi = Ynft[specieIndex_[n]]*paToAtm(p[celli]);
             }
             else
             {
                 scalar invWt = 0.0;
                 forAll(mixture.Y(), s)
                 {
-                    invWt += mixture.Y(s)[cellI]/mixture.W(s);
+                    invWt += mixture.Y(s)[celli]/mixture.W(s);
                 }
 
                 label index = mixture.species()[iter.key()];
-                scalar Xk = mixture.Y(index)[cellI]/(mixture.W(index)*invWt);
+                scalar Xk = mixture.Y(index)[celli]/(mixture.W(index)*invWt);
 
-                Xipi = Xk*paToAtm(p[cellI]);
+                Xipi = Xk*paToAtm(p[celli]);
             }
 
-            const absorptionCoeffs::coeffArray& b = coeffs_[n].coeffs(T[cellI]);
+            const absorptionCoeffs::coeffArray& b = coeffs_[n].coeffs(T[celli]);
 
-            scalar Ti = T[cellI];
+            scalar Ti = T[celli];
             // negative temperature exponents
             if (coeffs_[n].invTemp())
             {
-                Ti = 1.0/T[cellI];
+                Ti = 1.0/T[celli];
             }
-            a[cellI] +=
+            a[celli] +=
                 Xipi
                *(
                     ((((b[5]*Ti + b[4])*Ti + b[3])*Ti + b[2])*Ti + b[1])*Ti

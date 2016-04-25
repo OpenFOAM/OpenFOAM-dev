@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,41 +135,41 @@ void cutBySurface
     // Is a bit of a hack but allows us to reuse all the functionality
     // in cellClassification.
 
-    forAll(cellType, cellI)
+    forAll(cellType, celli)
     {
-        label cType = cellType[cellI];
+        label cType = cellType[celli];
 
         if (cType == cellClassification::CUT)
         {
             if (selectCut)
             {
-                cellType[cellI] = MESH;
+                cellType[celli] = MESH;
             }
             else
             {
-                cellType[cellI] = NONMESH;
+                cellType[celli] = NONMESH;
             }
         }
         else if (cType == cellClassification::INSIDE)
         {
             if (selectInside)
             {
-                cellType[cellI] = MESH;
+                cellType[celli] = MESH;
             }
             else
             {
-                cellType[cellI] = NONMESH;
+                cellType[celli] = NONMESH;
             }
         }
         else if (cType == cellClassification::OUTSIDE)
         {
             if (selectOutside)
             {
-                cellType[cellI] = MESH;
+                cellType[celli] = MESH;
             }
             else
             {
-                cellType[cellI] = NONMESH;
+                cellType[celli] = NONMESH;
             }
         }
         else
@@ -269,27 +269,27 @@ label selectOutsideCells
     forAll(outsidePts, outsidePtI)
     {
         // Find cell containing point. Linear search.
-        label cellI = queryMesh.findCell(outsidePts[outsidePtI], -1, false);
+        label celli = queryMesh.findCell(outsidePts[outsidePtI], -1, false);
 
-        if (cellI != -1 && cellType[cellI] == MESH)
+        if (celli != -1 && cellType[celli] == MESH)
         {
-            Info<< "Marking cell " << cellI << " containing outside point "
-                << outsidePts[outsidePtI] << " with type " << cellType[cellI]
+            Info<< "Marking cell " << celli << " containing outside point "
+                << outsidePts[outsidePtI] << " with type " << cellType[celli]
                 << " ..." << endl;
 
             //
             // Mark this cell and its faces to start walking from
             //
 
-            // Mark faces of cellI
-            const labelList& cFaces = mesh.cells()[cellI];
+            // Mark faces of celli
+            const labelList& cFaces = mesh.cells()[celli];
             forAll(cFaces, i)
             {
-                label faceI = cFaces[i];
+                label facei = cFaces[i];
 
-                if (outsideFacesMap.insert(faceI))
+                if (outsideFacesMap.insert(facei))
                 {
-                    outsideFaces.append(faceI);
+                    outsideFaces.append(facei);
                     outsideFacesInfo.append(meshInfo);
                 }
             }
@@ -311,15 +311,15 @@ label selectOutsideCells
 
     label nChanged = 0;
 
-    forAll(allCellInfo, cellI)
+    forAll(allCellInfo, celli)
     {
-        if (cellType[cellI] == MESH)
+        if (cellType[celli] == MESH)
         {
             // Original cell was selected for meshing. Check if cell was
             // reached from outsidePoints
-            if (allCellInfo[cellI].type() != MESH)
+            if (allCellInfo[celli].type() != MESH)
             {
-                cellType[cellI] = NONMESH;
+                cellType[celli] = NONMESH;
                 nChanged++;
             }
         }
@@ -390,8 +390,8 @@ int main(int argc, char *argv[])
     {
         const point& outsidePoint = outsidePts[outsideI];
 
-        label cellI = queryMesh.findCell(outsidePoint, -1, false);
-        if (returnReduce(cellI, maxOp<label>()) == -1)
+        label celli = queryMesh.findCell(outsidePoint, -1, false);
+        if (returnReduce(celli, maxOp<label>()) == -1)
         {
             FatalErrorInFunction
                 << "outsidePoint " << outsidePoint
@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
         // Search engine on surface.
         querySurf.reset(new triSurfaceSearch(surf));
 
-        // Set cellType[cellI] according to relation to surface
+        // Set cellType[celli] according to relation to surface
         cutBySurface
         (
             mesh,

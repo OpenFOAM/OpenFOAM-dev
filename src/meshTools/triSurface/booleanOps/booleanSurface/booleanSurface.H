@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ class booleanSurface
         (
             const triSurface& surf,
             const label prevState,
-            const label faceI,
+            const label facei,
             labelList& side
         );
 
@@ -209,31 +209,31 @@ public:
             return faceMap_;
         }
 
-        bool from1(const label faceI) const
+        bool from1(const label facei) const
         {
-            return faceMap_[faceI] >= 0;
+            return faceMap_[facei] >= 0;
         }
 
-        bool surf1Face(const label faceI) const
+        bool surf1Face(const label facei) const
         {
-            if (!from1(faceI))
+            if (!from1(facei))
             {
                 FatalErrorInFunction
-                    << "face " << faceI << " not from surface 1"
+                    << "face " << facei << " not from surface 1"
                     << abort(FatalError);
             }
-            return faceMap_[faceI];
+            return faceMap_[facei];
         }
 
-        bool surf2Face(const label faceI) const
+        bool surf2Face(const label facei) const
         {
-            if (from1(faceI))
+            if (from1(facei))
             {
                 FatalErrorInFunction
-                    << "face " << faceI << " not from surface 2"
+                    << "face " << facei << " not from surface 2"
                     << abort(FatalError);
             }
-            return -faceMap_[faceI]-1;
+            return -faceMap_[facei]-1;
         }
 };
 

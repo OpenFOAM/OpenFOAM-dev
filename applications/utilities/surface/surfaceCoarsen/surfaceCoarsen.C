@@ -110,9 +110,9 @@ int main(int argc, char *argv[])
         vert.Add( ::Vector(pt.x(), pt.y(), pt.z()));
     }
 
-    forAll(surf, faceI)
+    forAll(surf, facei)
     {
-        const labelledTri& f = surf[faceI];
+        const labelledTri& f = surf[facei];
 
         tridata td;
         td.v[0]=f[0];

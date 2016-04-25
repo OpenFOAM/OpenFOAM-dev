@@ -249,7 +249,7 @@ class polyTopoChange
         void checkFace
         (
             const face&,
-            const label faceI,
+            const label facei,
             const label own,
             const label nei,
             const label patchI,
@@ -448,10 +448,10 @@ public:
             inline bool pointRemoved(const label pointI) const;
 
             //- Is face removed?
-            inline bool faceRemoved(const label faceI) const;
+            inline bool faceRemoved(const label facei) const;
 
             //- Is cell removed?
-            inline bool cellRemoved(const label cellI) const;
+            inline bool cellRemoved(const label celli) const;
 
 
         // Edit
@@ -531,7 +531,7 @@ public:
             void modifyFace
             (
                 const face& f,
-                const label faceI,
+                const label facei,
                 const label own,
                 const label nei,
                 const bool flipFaceFlux,

@@ -404,9 +404,9 @@ void writeCellDistance
             zeroGradientFvPatchScalarField::typeName
         );
 
-        forAll(cellDecomposition, cellI)
+        forAll(cellDecomposition, celli)
         {
-            cellDist[cellI] = cellDecomposition[cellI];
+            cellDist[celli] = cellDecomposition[celli];
         }
 
         cellDist.write();

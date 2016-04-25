@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,12 +234,12 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Populate boundary values
     scalarField& alphatw = *this;
-    forAll(alphatw, faceI)
+    forAll(alphatw, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         // y+
-        scalar yPlus = Cmu25*sqrt(k[faceCellI])*y[faceI]/nuw[faceI];
+        scalar yPlus = Cmu25*sqrt(k[faceCellI])*y[facei]/nuw[facei];
 
         // Molecular-to-turbulent Prandtl number ratio
         scalar Prat = Pr/Prt_;
@@ -251,13 +251,13 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
         // Update turbulent thermal conductivity
         if (yPlus > yPlusTherm)
         {
-            scalar nu = nuw[faceI];
+            scalar nu = nuw[facei];
             scalar kt = nu*(yPlus/(Prt_*(log(E_*yPlus)/kappa_ + P)) - 1/Pr);
-            alphatw[faceI] = max(0.0, kt);
+            alphatw[facei] = max(0.0, kt);
         }
         else
         {
-            alphatw[faceI] = 0.0;
+            alphatw[facei] = 0.0;
         }
     }
 

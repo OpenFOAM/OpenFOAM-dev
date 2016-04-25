@@ -150,9 +150,9 @@ int main(int argc, char *argv[])
             List<point> compactFld(map.constructSize(), Zero);
 
             // Insert my internal values
-            forAll(fld, cellI)
+            forAll(fld, celli)
             {
-                compactFld[cellI] = fld[cellI];
+                compactFld[celli] = fld[celli];
             }
             // Insert my boundary values
             label nCompact = fld.size();
@@ -172,27 +172,27 @@ int main(int argc, char *argv[])
             // 2. Pull to stencil
             stencilPoints.setSize(stencil.size());
 
-            forAll(stencil, cellI)
+            forAll(stencil, celli)
             {
-                const labelList& compactCells = stencil[cellI];
+                const labelList& compactCells = stencil[celli];
 
-                stencilPoints[cellI].setSize(compactCells.size());
+                stencilPoints[celli].setSize(compactCells.size());
 
                 forAll(compactCells, i)
                 {
-                    stencilPoints[cellI][i] = compactFld[compactCells[i]];
+                    stencilPoints[celli][i] = compactFld[compactCells[i]];
                 }
             }
         }
 
 
-        forAll(stencilPoints, cellI)
+        forAll(stencilPoints, celli)
         {
             writeStencilOBJ
             (
-                runTime.path()/"centredCell" + Foam::name(cellI) + ".obj",
-                mesh.cellCentres()[cellI],
-                stencilPoints[cellI]
+                runTime.path()/"centredCell" + Foam::name(celli) + ".obj",
+                mesh.cellCentres()[celli],
+                stencilPoints[celli]
             );
         }
     }

@@ -228,7 +228,7 @@ Foam::geomCellLooper::~geomCellLooper()
 bool Foam::geomCellLooper::cut
 (
     const vector& refDir,
-    const label cellI,
+    const label celli,
     const boolList& vertIsCut,
     const boolList& edgeIsCut,
     const scalarField& edgeWeight,
@@ -240,8 +240,8 @@ bool Foam::geomCellLooper::cut
     // Cut through cell centre normal to refDir.
     return cut
     (
-        plane(mesh().cellCentres()[cellI], refDir),
-        cellI,
+        plane(mesh().cellCentres()[celli], refDir),
+        celli,
         vertIsCut,
         edgeIsCut,
         edgeWeight,
@@ -254,7 +254,7 @@ bool Foam::geomCellLooper::cut
 bool Foam::geomCellLooper::cut
 (
     const plane& cutPlane,
-    const label cellI,
+    const label celli,
     const boolList&,
     const boolList&,
     const scalarField&,
@@ -277,7 +277,7 @@ bool Foam::geomCellLooper::cut
     // might not be snapped.
 
     // Size overly big.
-    label nEstCuts = 2*mesh().cells()[cellI].size();
+    label nEstCuts = 2*mesh().cells()[celli].size();
 
     DynamicList<label> localLoop(nEstCuts);
     DynamicList<scalar> localLoopWeights(nEstCuts);
@@ -286,7 +286,7 @@ bool Foam::geomCellLooper::cut
     // at the same time.
     labelHashSet checkedPoints(nEstCuts);
 
-    const labelList& cellEdges = mesh().cellEdges()[cellI];
+    const labelList& cellEdges = mesh().cellEdges()[celli];
 
     forAll(cellEdges, i)
     {
@@ -472,7 +472,7 @@ bool Foam::geomCellLooper::cut
 
     if (debug&2)
     {
-        Pout<< "cell:" << cellI << endl;
+        Pout<< "cell:" << celli << endl;
         forAll(loop, i)
         {
             Pout<< "At angle:" << sortedAngles[i] << endl

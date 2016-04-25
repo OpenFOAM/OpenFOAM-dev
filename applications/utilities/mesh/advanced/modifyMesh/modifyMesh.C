@@ -279,13 +279,13 @@ label findFace
 // Find cell with cell centre close to given point.
 label findCell(const primitiveMesh& mesh, const point& nearPoint)
 {
-    label cellI = mesh.findCell(nearPoint);
+    label celli = mesh.findCell(nearPoint);
 
-    if (cellI != -1)
+    if (celli != -1)
     {
-        scalar distToCcSqr = magSqr(nearPoint - mesh.cellCentres()[cellI]);
+        scalar distToCcSqr = magSqr(nearPoint - mesh.cellCentres()[celli]);
 
-        const labelList& cPoints = mesh.cellPoints()[cellI];
+        const labelList& cPoints = mesh.cellPoints()[celli];
 
         label minI = -1;
         scalar minDistSqr = GREAT;
@@ -305,9 +305,9 @@ label findCell(const primitiveMesh& mesh, const point& nearPoint)
 
         // Decide if nearPoint unique enough.
         Info<< "Found to point " << nearPoint << nl
-            << "    nearest cell       : " << cellI
+            << "    nearest cell       : " << celli
             << " distance " << Foam::sqrt(distToCcSqr)
-            << " to cell centre " << mesh.cellCentres()[cellI] << nl
+            << " to cell centre " << mesh.cellCentres()[celli] << nl
             << "    nearest mesh point : " << minI
             << " distance " << Foam::sqrt(minDistSqr)
             << " to " << mesh.points()[minI] << nl
@@ -318,11 +318,11 @@ label findCell(const primitiveMesh& mesh, const point& nearPoint)
             Info<< "Mesh point too close to nearest cell centre. Aborting"
                 << endl;
 
-            cellI = -1;
+            celli = -1;
         }
     }
 
-    return cellI;
+    return celli;
 }
 
 
@@ -470,11 +470,11 @@ int main(int argc, char *argv[])
     {
         const Pair<point>& pts = facesToTriangulate[i];
 
-        label faceI = findFace(mesh, allBoundary, pts.first());
+        label facei = findFace(mesh, allBoundary, pts.first());
 
-        if (faceI == -1 || !faceToDecompose.insert(faceI, pts.second()))
+        if (facei == -1 || !faceToDecompose.insert(facei, pts.second()))
         {
-            Info<< "Could not insert mesh face " << faceI
+            Info<< "Could not insert mesh face " << facei
                 << " for input point " << pts.first() << nl
                 << "Perhaps the face is already marked for splitting?" << endl;
 
@@ -491,11 +491,11 @@ int main(int argc, char *argv[])
     {
         const Pair<point>& pts = cellsToPyramidise[i];
 
-        label cellI = findCell(mesh, pts.first());
+        label celli = findCell(mesh, pts.first());
 
-        if (cellI == -1 || !cellToPyrCentre.insert(cellI, pts.second()))
+        if (celli == -1 || !cellToPyrCentre.insert(celli, pts.second()))
         {
-            Info<< "Could not insert mesh cell " << cellI
+            Info<< "Could not insert mesh cell " << celli
                 << " for input point " << pts.first() << nl
                 << "Perhaps the cell is already marked for splitting?" << endl;
 

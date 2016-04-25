@@ -112,7 +112,7 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI,
             const point& end,

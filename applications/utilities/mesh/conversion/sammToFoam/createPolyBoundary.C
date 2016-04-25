@@ -47,11 +47,11 @@ void Foam::sammMesh::createPolyBoundary()
 
         polyBoundaryPatchStartIndices_[patchi] = nCreatedFaces;
 
-        forAll(curShapePatch, faceI)
+        forAll(curShapePatch, facei)
         {
             bool found = false;
 
-            const face& curFace = curShapePatch[faceI];
+            const face& curFace = curShapePatch[facei];
 
             meshFaces_[nCreatedFaces] = curFace;
 
@@ -64,10 +64,10 @@ void Foam::sammMesh::createPolyBoundary()
                 const labelList& facePointCells =
                     PointCells[facePoints[pointI]];
 
-                forAll(facePointCells, cellI)
+                forAll(facePointCells, celli)
                 {
                     const faceList& curCellFaces =
-                        cellFaces_[facePointCells[cellI]];
+                        cellFaces_[facePointCells[celli]];
 
                     forAll(curCellFaces, cellFaceI)
                     {
@@ -79,7 +79,7 @@ void Foam::sammMesh::createPolyBoundary()
                             // Debugging
                             if
                             (
-                                cellPolys_[facePointCells[cellI]][cellFaceI]
+                                cellPolys_[facePointCells[celli]][cellFaceI]
                              != -1
                             )
                             {
@@ -89,7 +89,7 @@ void Foam::sammMesh::createPolyBoundary()
                                     << abort(FatalError);
                             }
 
-                            cellPolys_[facePointCells[cellI]][cellFaceI] =
+                            cellPolys_[facePointCells[celli]][cellFaceI] =
                                 nCreatedFaces;
 
                             nBoundaryFacesFound++;

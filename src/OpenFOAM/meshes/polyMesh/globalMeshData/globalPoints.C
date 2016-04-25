@@ -46,9 +46,9 @@ Foam::label Foam::globalPoints::countPatchPoints
 {
     label nTotPoints = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
         if (pp.coupled())
         {
             nTotPoints += pp.nPoints();
@@ -84,13 +84,13 @@ Foam::label Foam::globalPoints::findSamePoint
 
 Foam::labelPairList Foam::globalPoints::addSendTransform
 (
-    const label patchI,
+    const label patchi,
     const labelPairList& info
 ) const
 {
     scalar tol = refCast<const coupledPolyPatch>
     (
-        mesh_.boundaryMesh()[patchI]
+        mesh_.boundaryMesh()[patchi]
     ).matchTolerance();
 
     labelPairList sendInfo(info.size());
@@ -113,8 +113,8 @@ Foam::labelPairList Foam::globalPoints::addSendTransform
             globalTransforms_.addToTransformIndex
             (
                 globalIndexAndTransform::transformIndex(info[i]),
-                patchI,
-                true,           // patchI is sending side
+                patchi,
+                true,           // patchi is sending side
                 tol             // tolerance for comparison
             )
         );
@@ -398,9 +398,9 @@ void Foam::globalPoints::initOwnPoints
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -487,9 +487,9 @@ void Foam::globalPoints::sendPatchPoints
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
     const labelPairList& patchInfo = globalTransforms_.patchTransformSign();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         // mergeSeparated=true : send from all processor patches
         //               =false: send from ones without transform
@@ -497,7 +497,7 @@ void Foam::globalPoints::sendPatchPoints
         if
         (
             (Pstream::parRun() && isA<processorPolyPatch>(pp))
-         && (mergeSeparated || patchInfo[patchI].first() == -1)
+         && (mergeSeparated || patchInfo[patchi].first() == -1)
         )
         {
             const processorPolyPatch& procPatch =
@@ -584,14 +584,14 @@ void Foam::globalPoints::receivePatchPoints
     // Reset changed points
     changedPoints.clear();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if
         (
             (Pstream::parRun() && isA<processorPolyPatch>(pp))
-         && (mergeSeparated || patchInfo[patchI].first() == -1)
+         && (mergeSeparated || patchInfo[patchi].first() == -1)
         )
         {
             const processorPolyPatch& procPatch =
@@ -642,7 +642,7 @@ void Foam::globalPoints::receivePatchPoints
                 isA<cyclicPolyPatch>(pp)
              && refCast<const cyclicPolyPatch>(pp).owner()
             )
-         && (mergeSeparated || patchInfo[patchI].first() == -1)
+         && (mergeSeparated || patchInfo[patchi].first() == -1)
         )
         {
             // Handle cyclics: send lower half to upper half and vice versa.
@@ -651,7 +651,7 @@ void Foam::globalPoints::receivePatchPoints
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(pp);
 
-            //Pout<< "Patch:" << patchI << " name:" << pp.name() << endl;
+            //Pout<< "Patch:" << patchi << " name:" << pp.name() << endl;
 
             const labelList& meshPoints = pp.meshPoints();
             const labelList coupledMeshPoints(reverseMeshPoints(cycPatch));
@@ -845,9 +845,9 @@ Foam::labelList Foam::globalPoints::reverseMeshPoints
 
     faceList masterFaces(nbrPatch.size());
 
-    forAll(nbrPatch, faceI)
+    forAll(nbrPatch, facei)
     {
-        masterFaces[faceI] = nbrPatch[faceI].reverseFace();
+        masterFaces[facei] = nbrPatch[facei].reverseFace();
     }
 
     return primitiveFacePatch

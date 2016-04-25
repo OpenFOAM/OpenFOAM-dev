@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ private:
         (
             polyTopoChange& meshMod,
             const face& f,
-            const label faceI,
+            const label facei,
             const label own,
             const label nei,
             const label patchI,
@@ -124,7 +124,7 @@ private:
         ) const;
 
         //- Work out triangle index given the starting vertex in the face
-        label triIndex(const label faceI, const label fp) const;
+        label triIndex(const label facei, const label fp) const;
 
         //- Disallow default bitwise copy construct
         tetDecomposer(const tetDecomposer&);

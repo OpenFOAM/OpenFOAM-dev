@@ -72,10 +72,10 @@ using namespace Foam;
 //        const faceList& localFaces = p.localFaces();
 //        const vectorField& faceAreas = mesh.faceAreas();
 //
-//        forAll(localFaces, faceI)
+//        forAll(localFaces, facei)
 //        {
-//            const face& f = localFaces[faceI];
-//            const vector& n = faceAreas[meshFaces[faceI]];
+//            const face& f = localFaces[facei];
+//            const vector& n = faceAreas[meshFaces[facei]];
 //            forAll(f, fp)
 //            {
 //                extrudeN[f[fp]] += n;

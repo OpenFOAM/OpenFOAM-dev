@@ -591,10 +591,10 @@ bool Foam::GAMGAgglomeration::checkRestriction
     {
         label nChanged = 0;
 
-        forAll(lower, faceI)
+        forAll(lower, facei)
         {
-            label own = lower[faceI];
-            label nei = upper[faceI];
+            label own = lower[facei];
+            label nei = upper[facei];
 
             if (restrict[own] == restrict[nei])
             {
@@ -625,13 +625,13 @@ bool Foam::GAMGAgglomeration::checkRestriction
     // Count number of regions/masters per coarse cell
     labelListList coarseToMasters(nCoarse);
     nNewCoarse = 0;
-    forAll(restrict, cellI)
+    forAll(restrict, celli)
     {
-        labelList& masters = coarseToMasters[restrict[cellI]];
+        labelList& masters = coarseToMasters[restrict[celli]];
 
-        if (findIndex(masters, master[cellI]) == -1)
+        if (findIndex(masters, master[celli]) == -1)
         {
-            masters.append(master[cellI]);
+            masters.append(master[celli]);
             nNewCoarse++;
         }
     }
@@ -663,12 +663,12 @@ bool Foam::GAMGAgglomeration::checkRestriction
         }
 
         newRestrict.setSize(fineAddressing.size());
-        forAll(restrict, cellI)
+        forAll(restrict, celli)
         {
-            label coarseI = restrict[cellI];
+            label coarseI = restrict[celli];
 
-            label index = findIndex(coarseToMasters[coarseI], master[cellI]);
-            newRestrict[cellI] = coarseToNewCoarse[coarseI][index];
+            label index = findIndex(coarseToMasters[coarseI], master[celli]);
+            newRestrict[celli] = coarseToNewCoarse[coarseI][index];
         }
 
         return false;

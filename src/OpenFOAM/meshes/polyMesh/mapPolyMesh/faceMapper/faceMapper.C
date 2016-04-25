@@ -60,13 +60,13 @@ void Foam::faceMapper::calcAddressing() const
 
         label nInsertedFaces = 0;
 
-        forAll(directAddr, faceI)
+        forAll(directAddr, facei)
         {
-            if (directAddr[faceI] < 0)
+            if (directAddr[facei] < 0)
             {
                 // Found inserted face
-                directAddr[faceI] = 0;
-                insertedFaces[nInsertedFaces] = faceI;
+                directAddr[facei] = 0;
+                insertedFaces[nInsertedFaces] = facei;
                 nInsertedFaces++;
             }
         }
@@ -90,19 +90,19 @@ void Foam::faceMapper::calcAddressing() const
             // Get addressing
             const labelList& mo = ffp[ffpI].masterObjects();
 
-            label faceI = ffp[ffpI].index();
+            label facei = ffp[ffpI].index();
 
-            if (addr[faceI].size())
+            if (addr[facei].size())
             {
                 FatalErrorInFunction
-                    << "Master face " << faceI
+                    << "Master face " << facei
                     << " mapped from point faces " << mo
                     << " already destination of mapping." << abort(FatalError);
             }
 
             // Map from masters, uniform weights
-            addr[faceI] = mo;
-            w[faceI] = scalarList(mo.size(), 1.0/mo.size());
+            addr[facei] = mo;
+            w[facei] = scalarList(mo.size(), 1.0/mo.size());
         }
 
         const List<objectMap>& ffe = mpm_.facesFromEdgesMap();
@@ -112,19 +112,19 @@ void Foam::faceMapper::calcAddressing() const
             // Get addressing
             const labelList& mo = ffe[ffeI].masterObjects();
 
-            label faceI = ffe[ffeI].index();
+            label facei = ffe[ffeI].index();
 
-            if (addr[faceI].size())
+            if (addr[facei].size())
             {
                 FatalErrorInFunction
-                    << "Master face " << faceI
+                    << "Master face " << facei
                     << " mapped from edge faces " << mo
                     << " already destination of mapping." << abort(FatalError);
             }
 
             // Map from masters, uniform weights
-            addr[faceI] = mo;
-            w[faceI] = scalarList(mo.size(), 1.0/mo.size());
+            addr[facei] = mo;
+            w[facei] = scalarList(mo.size(), 1.0/mo.size());
         }
 
         const List<objectMap>& fff = mpm_.facesFromFacesMap();
@@ -134,19 +134,19 @@ void Foam::faceMapper::calcAddressing() const
             // Get addressing
             const labelList& mo = fff[fffI].masterObjects();
 
-            label faceI = fff[fffI].index();
+            label facei = fff[fffI].index();
 
-            if (addr[faceI].size())
+            if (addr[facei].size())
             {
                 FatalErrorInFunction
-                    << "Master face " << faceI
+                    << "Master face " << facei
                     << " mapped from face faces " << mo
                     << " already destination of mapping." << abort(FatalError);
             }
 
             // Map from masters, uniform weights
-            addr[faceI] = mo;
-            w[faceI] = scalarList(mo.size(), 1.0/mo.size());
+            addr[facei] = mo;
+            w[facei] = scalarList(mo.size(), 1.0/mo.size());
         }
 
 
@@ -154,13 +154,13 @@ void Foam::faceMapper::calcAddressing() const
         // so check if addressing size still zero.
         const labelList& fm = mpm_.faceMap();
 
-        forAll(fm, faceI)
+        forAll(fm, facei)
         {
-            if (fm[faceI] > -1 && addr[faceI].empty())
+            if (fm[facei] > -1 && addr[facei].empty())
             {
                 // Mapped from a single face
-                addr[faceI] = labelList(1, fm[faceI]);
-                w[faceI] = scalarList(1, 1.0);
+                addr[facei] = labelList(1, fm[facei]);
+                w[facei] = scalarList(1, 1.0);
             }
         }
 
@@ -172,15 +172,15 @@ void Foam::faceMapper::calcAddressing() const
 
         label nInsertedFaces = 0;
 
-        forAll(addr, faceI)
+        forAll(addr, facei)
         {
-            if (addr[faceI].empty())
+            if (addr[facei].empty())
             {
                 // Mapped from a dummy face
-                addr[faceI] = labelList(1, label(0));
-                w[faceI] = scalarList(1, 1.0);
+                addr[facei] = labelList(1, label(0));
+                w[facei] = scalarList(1, 1.0);
 
-                insertedFaces[nInsertedFaces] = faceI;
+                insertedFaces[nInsertedFaces] = facei;
                 nInsertedFaces++;
             }
         }

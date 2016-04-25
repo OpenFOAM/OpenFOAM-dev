@@ -82,31 +82,31 @@ class boundaryCutter
         //- Get patch and zone info for face
         void getFaceInfo
         (
-            const label faceI,
+            const label facei,
             label& patchID,
             label& zoneID,
             label& zoneFlip
         ) const;
 
         //- Add cuts of edges to face
-        face addEdgeCutsToFace(const label faceI, const Map<labelList>&) const;
+        face addEdgeCutsToFace(const label facei, const Map<labelList>&) const;
 
         //- Splits faces with multiple cut edges. Return true if anything split.
         bool splitFace
         (
-            const label faceI,
+            const label facei,
             const Map<point>& pointToPos,
             const Map<labelList>& edgeToAddedPoints,
             polyTopoChange& meshMod
         ) const;
 
-        //- Add/modify faceI for new vertices.
+        //- Add/modify facei for new vertices.
         void addFace
         (
-            const label faceI,
+            const label facei,
             const face& newFace,
 
-            bool& modifiedFace,     // have we already 'used' faceI?
+            bool& modifiedFace,     // have we already 'used' facei?
             polyTopoChange& meshMod
         ) const;
 

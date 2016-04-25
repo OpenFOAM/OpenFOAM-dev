@@ -61,12 +61,12 @@ bool Foam::primitiveMesh::checkClosedBoundary
     vector sumClosed(Zero);
     scalar sumMagClosedBoundary = 0;
 
-    for (label faceI = nInternalFaces(); faceI < areas.size(); faceI++)
+    for (label facei = nInternalFaces(); facei < areas.size(); facei++)
     {
-        if (!internalOrCoupledFaces.size() || !internalOrCoupledFaces[faceI])
+        if (!internalOrCoupledFaces.size() || !internalOrCoupledFaces[facei])
         {
-            sumClosed += areas[faceI];
-            sumMagClosedBoundary += mag(areas[faceI]);
+            sumClosed += areas[facei];
+            sumMagClosedBoundary += mag(areas[facei]);
         }
     }
 
@@ -165,23 +165,23 @@ bool Foam::primitiveMesh::checkClosedCells
     scalar maxAspectRatio = max(aspectRatio);
 
     // Check the sums
-    forAll(openness, cellI)
+    forAll(openness, celli)
     {
-        if (openness[cellI] > closedThreshold_)
+        if (openness[celli] > closedThreshold_)
         {
             if (setPtr)
             {
-                setPtr->insert(cellI);
+                setPtr->insert(celli);
             }
 
             nOpen++;
         }
 
-        if (aspectRatio[cellI] > aspectThreshold_)
+        if (aspectRatio[celli] > aspectThreshold_)
         {
             if (aspectSetPtr)
             {
-                aspectSetPtr->insert(cellI);
+                aspectSetPtr->insert(celli);
             }
 
             nAspect++;
@@ -249,37 +249,37 @@ bool Foam::primitiveMesh::checkFaceAreas
     scalar minArea = GREAT;
     scalar maxArea = -GREAT;
 
-    forAll(magFaceAreas, faceI)
+    forAll(magFaceAreas, facei)
     {
-        if (magFaceAreas[faceI] < VSMALL)
+        if (magFaceAreas[facei] < VSMALL)
         {
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
             if (detailedReport)
             {
-                if (isInternalFace(faceI))
+                if (isInternalFace(facei))
                 {
                     Pout<< "Zero or negative face area detected for "
-                        << "internal face "<< faceI << " between cells "
-                        << faceOwner()[faceI] << " and "
-                        << faceNeighbour()[faceI]
-                        << ".  Face area magnitude = " << magFaceAreas[faceI]
+                        << "internal face "<< facei << " between cells "
+                        << faceOwner()[facei] << " and "
+                        << faceNeighbour()[facei]
+                        << ".  Face area magnitude = " << magFaceAreas[facei]
                         << endl;
                 }
                 else
                 {
                     Pout<< "Zero or negative face area detected for "
-                        << "boundary face " << faceI << " next to cell "
-                        << faceOwner()[faceI] << ".  Face area magnitude = "
-                        << magFaceAreas[faceI] << endl;
+                        << "boundary face " << facei << " next to cell "
+                        << faceOwner()[facei] << ".  Face area magnitude = "
+                        << magFaceAreas[facei] << endl;
                 }
             }
         }
 
-        minArea = min(minArea, magFaceAreas[faceI]);
-        maxArea = max(maxArea, magFaceAreas[faceI]);
+        minArea = min(minArea, magFaceAreas[facei]);
+        maxArea = max(maxArea, magFaceAreas[facei]);
     }
 
     reduce(minArea, minOp<scalar>());
@@ -327,25 +327,25 @@ bool Foam::primitiveMesh::checkCellVolumes
 
     label nNegVolCells = 0;
 
-    forAll(vols, cellI)
+    forAll(vols, celli)
     {
-        if (vols[cellI] < VSMALL)
+        if (vols[celli] < VSMALL)
         {
             if (setPtr)
             {
-                setPtr->insert(cellI);
+                setPtr->insert(celli);
             }
             if (detailedReport)
             {
                 Pout<< "Zero or negative cell volume detected for cell "
-                    << cellI << ".  Volume = " << vols[cellI] << endl;
+                    << celli << ".  Volume = " << vols[celli] << endl;
             }
 
             nNegVolCells++;
         }
 
-        minVolume = min(minVolume, vols[cellI]);
-        maxVolume = max(maxVolume, vols[cellI]);
+        minVolume = min(minVolume, vols[celli]);
+        maxVolume = max(maxVolume, vols[celli]);
     }
 
     reduce(minVolume, minOp<scalar>());
@@ -414,15 +414,15 @@ bool Foam::primitiveMesh::checkFaceOrthogonality
     label errorNonOrth = 0;
 
 
-    forAll(ortho, faceI)
+    forAll(ortho, facei)
     {
-        if (ortho[faceI] < severeNonorthogonalityThreshold)
+        if (ortho[facei] < severeNonorthogonalityThreshold)
         {
-            if (ortho[faceI] > SMALL)
+            if (ortho[facei] > SMALL)
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 severeNonOrth++;
@@ -431,7 +431,7 @@ bool Foam::primitiveMesh::checkFaceOrthogonality
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 errorNonOrth++;
@@ -523,42 +523,42 @@ bool Foam::primitiveMesh::checkFacePyramids
 
     label nErrorPyrs = 0;
 
-    forAll(ownPyrVol, faceI)
+    forAll(ownPyrVol, facei)
     {
-        if (ownPyrVol[faceI] < minPyrVol)
+        if (ownPyrVol[facei] < minPyrVol)
         {
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
             if (detailedReport)
             {
-                Pout<< "Negative pyramid volume: " << ownPyrVol[faceI]
-                    << " for face " << faceI << " " << f[faceI]
-                    << "  and owner cell: " << own[faceI] << endl
+                Pout<< "Negative pyramid volume: " << ownPyrVol[facei]
+                    << " for face " << facei << " " << f[facei]
+                    << "  and owner cell: " << own[facei] << endl
                     << "Owner cell vertex labels: "
-                    << cells()[own[faceI]].labels(faces())
+                    << cells()[own[facei]].labels(faces())
                     << endl;
             }
 
             nErrorPyrs++;
         }
 
-        if (isInternalFace(faceI))
+        if (isInternalFace(facei))
         {
-            if (neiPyrVol[faceI] < minPyrVol)
+            if (neiPyrVol[facei] < minPyrVol)
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
                 if (detailedReport)
                 {
-                    Pout<< "Negative pyramid volume: " << neiPyrVol[faceI]
-                        << " for face " << faceI << " " << f[faceI]
-                        << "  and neighbour cell: " << nei[faceI] << nl
+                    Pout<< "Negative pyramid volume: " << neiPyrVol[facei]
+                        << " for face " << facei << " " << f[facei]
+                        << "  and neighbour cell: " << nei[facei] << nl
                         << "Neighbour cell vertex labels: "
-                        << cells()[nei[faceI]].labels(faces())
+                        << cells()[nei[facei]].labels(faces())
                         << endl;
                 }
                 nErrorPyrs++;
@@ -622,15 +622,15 @@ bool Foam::primitiveMesh::checkFaceSkewness
     scalar maxSkew = max(skewness);
     label nWarnSkew = 0;
 
-    forAll(skewness, faceI)
+    forAll(skewness, facei)
     {
         // Check if the skewness vector is greater than the PN vector.
         // This does not cause trouble but is a good indication of a poor mesh.
-        if (skewness[faceI] > skewThreshold_)
+        if (skewness[facei] > skewThreshold_)
         {
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
 
             nWarnSkew++;
@@ -701,15 +701,15 @@ bool Foam::primitiveMesh::checkFaceAngles
 
     label nConcave = 0;
 
-    forAll(faceAngles, faceI)
+    forAll(faceAngles, facei)
     {
-        if (faceAngles[faceI] > SMALL)
+        if (faceAngles[facei] > SMALL)
         {
             nConcave++;
 
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
         }
     }
@@ -784,22 +784,22 @@ bool Foam::primitiveMesh::checkFaceFlatness
     label nSummed = 0;
     label nWarped = 0;
 
-    forAll(faceFlatness, faceI)
+    forAll(faceFlatness, facei)
     {
-        if (fcs[faceI].size() > 3 && magAreas[faceI] > VSMALL)
+        if (fcs[facei].size() > 3 && magAreas[facei] > VSMALL)
         {
-            sumFlatness += faceFlatness[faceI];
+            sumFlatness += faceFlatness[facei];
             nSummed++;
 
-            minFlatness = min(minFlatness, faceFlatness[faceI]);
+            minFlatness = min(minFlatness, faceFlatness[facei]);
 
-            if (faceFlatness[faceI] < warnFlatness)
+            if (faceFlatness[facei] < warnFlatness)
             {
                 nWarped++;
 
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
             }
         }
@@ -867,9 +867,9 @@ bool Foam::primitiveMesh::checkConcaveCells
 
     label nConcaveCells = 0;
 
-    forAll(c, cellI)
+    forAll(c, celli)
     {
-        const cell& cFaces = c[cellI];
+        const cell& cFaces = c[celli];
 
         bool concave = false;
 
@@ -890,7 +890,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
             // Flip normal if required so that it is always pointing out of
             // the cell
-            if (fOwner[fI] != cellI)
+            if (fOwner[fI] != celli)
             {
                 fN *= -1;
             }
@@ -924,7 +924,7 @@ bool Foam::primitiveMesh::checkConcaveCells
 
                         if (setPtr)
                         {
-                            setPtr->insert(cellI);
+                            setPtr->insert(celli);
                         }
 
                         nConcaveCells++;
@@ -988,15 +988,15 @@ bool Foam::primitiveMesh::checkUpperTriangular
 
     // Loop through faceCells once more and make sure that for internal cell
     // the first label is smaller
-    for (label faceI = 0; faceI < internal; faceI++)
+    for (label facei = 0; facei < internal; facei++)
     {
-        if (own[faceI] >= nei[faceI])
+        if (own[facei] >= nei[facei])
         {
             error  = true;
 
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
             }
         }
     }
@@ -1005,34 +1005,34 @@ bool Foam::primitiveMesh::checkUpperTriangular
     // and add it to the check list (upper triangular order).
     // Once the list is completed, check it against the faceCell list
 
-    forAll(c, cellI)
+    forAll(c, celli)
     {
-        const labelList& curFaces = c[cellI];
+        const labelList& curFaces = c[celli];
 
         // Neighbouring cells
         SortableList<label> nbr(curFaces.size());
 
         forAll(curFaces, i)
         {
-            label faceI = curFaces[i];
+            label facei = curFaces[i];
 
-            if (faceI >= nInternalFaces())
+            if (facei >= nInternalFaces())
             {
                 // Sort last
                 nbr[i] = labelMax;
             }
             else
             {
-                label nbrCellI = nei[faceI];
+                label nbrCellI = nei[facei];
 
-                if (nbrCellI == cellI)
+                if (nbrCellI == celli)
                 {
-                    nbrCellI = own[faceI];
+                    nbrCellI = own[facei];
                 }
 
-                if (cellI < nbrCellI)
+                if (celli < nbrCellI)
                 {
-                    // cellI is master
+                    // celli is master
                     nbr[i] = nbrCellI;
                 }
                 else
@@ -1141,17 +1141,17 @@ bool Foam::primitiveMesh::checkCellsZipUp
     const faceList& f = faces();
     const cellList& c = cells();
 
-    forAll(c, cellI)
+    forAll(c, celli)
     {
-        const labelList& curFaces = c[cellI];
+        const labelList& curFaces = c[celli];
 
-        const edgeList cellEdges = c[cellI].edges(f);
+        const edgeList cellEdges = c[celli].edges(f);
 
         labelList edgeUsage(cellEdges.size(), 0);
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            edgeList curFaceEdges = f[curFaces[faceI]].edges();
+            edgeList curFaceEdges = f[curFaces[facei]].edges();
 
             forAll(curFaceEdges, faceEdgeI)
             {
@@ -1182,7 +1182,7 @@ bool Foam::primitiveMesh::checkCellsZipUp
             {
                 if (setPtr)
                 {
-                    setPtr->insert(cellI);
+                    setPtr->insert(celli);
                 }
             }
         }
@@ -1191,7 +1191,7 @@ bool Foam::primitiveMesh::checkCellsZipUp
         {
             if (setPtr)
             {
-                setPtr->insert(cellI);
+                setPtr->insert(celli);
             }
 
             nOpenCells++;
@@ -1370,7 +1370,7 @@ bool Foam::primitiveMesh::checkPoints
 
 bool Foam::primitiveMesh::checkDuplicateFaces
 (
-    const label faceI,
+    const label facei,
     const Map<label>& nCommonPoints,
     label& nBaffleFaces,
     labelHashSet* setPtr
@@ -1383,7 +1383,7 @@ bool Foam::primitiveMesh::checkDuplicateFaces
         label nbFaceI = iter.key();
         label nCommon = iter();
 
-        const face& curFace = faces()[faceI];
+        const face& curFace = faces()[facei];
         const face& nbFace = faces()[nbFaceI];
 
         if (nCommon == nbFace.size() || nCommon == curFace.size())
@@ -1399,7 +1399,7 @@ bool Foam::primitiveMesh::checkDuplicateFaces
 
             if (setPtr)
             {
-                setPtr->insert(faceI);
+                setPtr->insert(facei);
                 setPtr->insert(nbFaceI);
             }
         }
@@ -1411,7 +1411,7 @@ bool Foam::primitiveMesh::checkDuplicateFaces
 
 bool Foam::primitiveMesh::checkCommonOrder
 (
-    const label faceI,
+    const label facei,
     const Map<label>& nCommonPoints,
     labelHashSet* setPtr
 ) const
@@ -1423,7 +1423,7 @@ bool Foam::primitiveMesh::checkCommonOrder
         label nbFaceI = iter.key();
         label nCommon = iter();
 
-        const face& curFace = faces()[faceI];
+        const face& curFace = faces()[facei];
         const face& nbFace = faces()[nbFaceI];
 
         if
@@ -1548,7 +1548,7 @@ bool Foam::primitiveMesh::checkCommonOrder
                         {
                             if (setPtr)
                             {
-                                setPtr->insert(faceI);
+                                setPtr->insert(facei);
                                 setPtr->insert(nbFaceI);
                             }
 
@@ -1588,11 +1588,11 @@ bool Foam::primitiveMesh::checkFaceFaces
     label nErrorOrder = 0;
     Map<label> nCommonPoints(100);
 
-    for (label faceI = 0; faceI < nFaces(); faceI++)
+    for (label facei = 0; facei < nFaces(); facei++)
     {
-        const face& curFace = faces()[faceI];
+        const face& curFace = faces()[facei];
 
-        // Calculate number of common points between current faceI and
+        // Calculate number of common points between current facei and
         // neighbouring face. Store on map.
         nCommonPoints.clear();
 
@@ -1606,7 +1606,7 @@ bool Foam::primitiveMesh::checkFaceFaces
             {
                 label nbFaceI = nbs[nbI];
 
-                if (faceI < nbFaceI)
+                if (facei < nbFaceI)
                 {
                     // Only check once for each combination of two faces.
 
@@ -1628,13 +1628,13 @@ bool Foam::primitiveMesh::checkFaceFaces
         // Perform various checks on common points
 
         // Check all vertices shared (duplicate point)
-        if (checkDuplicateFaces(faceI, nCommonPoints, nBaffleFaces, setPtr))
+        if (checkDuplicateFaces(facei, nCommonPoints, nBaffleFaces, setPtr))
         {
             nErrorDuplicate++;
         }
 
         // Check common vertices are consecutive on both faces
-        if (checkCommonOrder(faceI, nCommonPoints, setPtr))
+        if (checkCommonOrder(facei, nCommonPoints, setPtr))
         {
             nErrorOrder++;
         }

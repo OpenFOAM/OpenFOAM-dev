@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,9 @@ void Foam::cylinderToCell::combine(topoSet& set, const bool add) const
 
     const pointField& ctrs = mesh_.cellCentres();
 
-    forAll(ctrs, cellI)
+    forAll(ctrs, celli)
     {
-        vector d = ctrs[cellI] - p1_;
+        vector d = ctrs[celli] - p1_;
         scalar magD = d & axis;
 
         if ((magD > 0) && (magD < magAxis2))
@@ -65,7 +65,7 @@ void Foam::cylinderToCell::combine(topoSet& set, const bool add) const
             scalar d2 = (d & d) - sqr(magD)/magAxis2;
             if (d2 < rad2)
             {
-                addOrDelete(set, cellI, add);
+                addOrDelete(set, celli, add);
             }
         }
     }

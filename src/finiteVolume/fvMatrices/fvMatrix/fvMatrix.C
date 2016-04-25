@@ -48,9 +48,9 @@ void Foam::fvMatrix<Type>::addToInternalField
             << abort(FatalError);
     }
 
-    forAll(addr, faceI)
+    forAll(addr, facei)
     {
-        intf[addr[faceI]] += pf[faceI];
+        intf[addr[facei]] += pf[facei];
     }
 }
 
@@ -85,9 +85,9 @@ void Foam::fvMatrix<Type>::subtractFromInternalField
             << abort(FatalError);
     }
 
-    forAll(addr, faceI)
+    forAll(addr, facei)
     {
-        intf[addr[faceI]] -= pf[faceI];
+        intf[addr[facei]] -= pf[facei];
     }
 }
 
@@ -113,12 +113,12 @@ void Foam::fvMatrix<Type>::addBoundaryDiag
     const direction solveCmpt
 ) const
 {
-    forAll(internalCoeffs_, patchI)
+    forAll(internalCoeffs_, patchi)
     {
         addToInternalField
         (
-            lduAddr().patchAddr(patchI),
-            internalCoeffs_[patchI].component(solveCmpt),
+            lduAddr().patchAddr(patchi),
+            internalCoeffs_[patchi].component(solveCmpt),
             diag
         );
     }
@@ -128,12 +128,12 @@ void Foam::fvMatrix<Type>::addBoundaryDiag
 template<class Type>
 void Foam::fvMatrix<Type>::addCmptAvBoundaryDiag(scalarField& diag) const
 {
-    forAll(internalCoeffs_, patchI)
+    forAll(internalCoeffs_, patchi)
     {
         addToInternalField
         (
-            lduAddr().patchAddr(patchI),
-            cmptAv(internalCoeffs_[patchI]),
+            lduAddr().patchAddr(patchi),
+            cmptAv(internalCoeffs_[patchi]),
             diag
         );
     }
@@ -147,21 +147,21 @@ void Foam::fvMatrix<Type>::addBoundarySource
     const bool couples
 ) const
 {
-    forAll(psi_.boundaryField(), patchI)
+    forAll(psi_.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchI];
-        const Field<Type>& pbc = boundaryCoeffs_[patchI];
+        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchi];
+        const Field<Type>& pbc = boundaryCoeffs_[patchi];
 
         if (!ptf.coupled())
         {
-            addToInternalField(lduAddr().patchAddr(patchI), pbc, source);
+            addToInternalField(lduAddr().patchAddr(patchi), pbc, source);
         }
         else if (couples)
         {
             const tmp<Field<Type>> tpnf = ptf.patchNeighbourField();
             const Field<Type>& pnf = tpnf();
 
-            const labelUList& addr = lduAddr().patchAddr(patchI);
+            const labelUList& addr = lduAddr().patchAddr(patchi);
 
             forAll(addr, facei)
             {
@@ -285,24 +285,24 @@ Foam::fvMatrix<Type>::fvMatrix
     }
 
     // Initialise coupling coefficients
-    forAll(psi.mesh().boundary(), patchI)
+    forAll(psi.mesh().boundary(), patchi)
     {
         internalCoeffs_.set
         (
-            patchI,
+            patchi,
             new Field<Type>
             (
-                psi.mesh().boundary()[patchI].size(),
+                psi.mesh().boundary()[patchi].size(),
                 Zero
             )
         );
 
         boundaryCoeffs_.set
         (
-            patchI,
+            patchi,
             new Field<Type>
             (
-                psi.mesh().boundary()[patchI].size(),
+                psi.mesh().boundary()[patchi].size(),
                 Zero
             )
         );
@@ -425,24 +425,24 @@ Foam::fvMatrix<Type>::fvMatrix
     }
 
     // Initialise coupling coefficients
-    forAll(psi.mesh().boundary(), patchI)
+    forAll(psi.mesh().boundary(), patchi)
     {
         internalCoeffs_.set
         (
-            patchI,
+            patchi,
             new Field<Type>
             (
-                psi.mesh().boundary()[patchI].size(),
+                psi.mesh().boundary()[patchi].size(),
                 Zero
             )
         );
 
         boundaryCoeffs_.set
         (
-            patchI,
+            patchi,
             new Field<Type>
             (
-                psi.mesh().boundary()[patchI].size(),
+                psi.mesh().boundary()[patchi].size(),
                 Zero
             )
         );
@@ -532,18 +532,18 @@ void Foam::fvMatrix<Type>::relax(const scalar alpha)
     sumMagOffDiag(sumOff);
 
     // Handle the boundary contributions to the diagonal
-    forAll(psi_.boundaryField(), patchI)
+    forAll(psi_.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchI];
+        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchi];
 
         if (ptf.size())
         {
-            const labelUList& pa = lduAddr().patchAddr(patchI);
-            Field<Type>& iCoeffs = internalCoeffs_[patchI];
+            const labelUList& pa = lduAddr().patchAddr(patchi);
+            Field<Type>& iCoeffs = internalCoeffs_[patchi];
 
             if (ptf.coupled())
             {
-                const Field<Type>& pCoeffs = boundaryCoeffs_[patchI];
+                const Field<Type>& pCoeffs = boundaryCoeffs_[patchi];
 
                 // For coupled boundaries add the diagonal and
                 // off-diagonal contributions
@@ -627,14 +627,14 @@ void Foam::fvMatrix<Type>::relax(const scalar alpha)
     D /= alpha;
 
     // Now remove the diagonal contribution from coupled boundaries
-    forAll(psi_.boundaryField(), patchI)
+    forAll(psi_.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchI];
+        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchi];
 
         if (ptf.size())
         {
-            const labelUList& pa = lduAddr().patchAddr(patchI);
-            Field<Type>& iCoeffs = internalCoeffs_[patchI];
+            const labelUList& pa = lduAddr().patchAddr(patchi);
+            Field<Type>& iCoeffs = internalCoeffs_[patchi];
 
             if (ptf.coupled())
             {
@@ -681,9 +681,9 @@ void Foam::fvMatrix<Type>::boundaryManipulate
         GeometricBoundaryField& bFields
 )
 {
-    forAll(bFields, patchI)
+    forAll(bFields, patchi)
     {
-        bFields[patchI].manipulateMatrix(*this);
+        bFields[patchi].manipulateMatrix(*this);
     }
 }
 
@@ -702,16 +702,16 @@ Foam::tmp<Foam::Field<Type>> Foam::fvMatrix<Type>::DD() const
 {
     tmp<Field<Type>> tdiag(pTraits<Type>::one*diag());
 
-    forAll(psi_.boundaryField(), patchI)
+    forAll(psi_.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchI];
+        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchi];
 
         if (!ptf.coupled() && ptf.size())
         {
             addToInternalField
             (
-                lduAddr().patchAddr(patchI),
-                internalCoeffs_[patchI],
+                lduAddr().patchAddr(patchi),
+                internalCoeffs_[patchi],
                 tdiag.ref()
             );
         }
@@ -836,16 +836,16 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Type>::H1() const
 
     H1_.internalField() = lduMatrix::H1();
 
-    forAll(psi_.boundaryField(), patchI)
+    forAll(psi_.boundaryField(), patchi)
     {
-        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchI];
+        const fvPatchField<Type>& ptf = psi_.boundaryField()[patchi];
 
         if (ptf.coupled() && ptf.size())
         {
             addToInternalField
             (
-                lduAddr().patchAddr(patchI),
-                boundaryCoeffs_[patchI].component(0),
+                lduAddr().patchAddr(patchi),
+                boundaryCoeffs_[patchi].component(0),
                 H1_
             );
         }
@@ -903,27 +903,27 @@ flux() const
 
     FieldField<Field, Type> InternalContrib = internalCoeffs_;
 
-    forAll(InternalContrib, patchI)
+    forAll(InternalContrib, patchi)
     {
-        InternalContrib[patchI] =
+        InternalContrib[patchi] =
             cmptMultiply
             (
-                InternalContrib[patchI],
-                psi_.boundaryField()[patchI].patchInternalField()
+                InternalContrib[patchi],
+                psi_.boundaryField()[patchi].patchInternalField()
             );
     }
 
     FieldField<Field, Type> NeighbourContrib = boundaryCoeffs_;
 
-    forAll(NeighbourContrib, patchI)
+    forAll(NeighbourContrib, patchi)
     {
-        if (psi_.boundaryField()[patchI].coupled())
+        if (psi_.boundaryField()[patchi].coupled())
         {
-            NeighbourContrib[patchI] =
+            NeighbourContrib[patchi] =
                 cmptMultiply
                 (
-                    NeighbourContrib[patchI],
-                    psi_.boundaryField()[patchI].patchNeighbourField()
+                    NeighbourContrib[patchi],
+                    psi_.boundaryField()[patchi].patchNeighbourField()
                 );
         }
     }
@@ -931,9 +931,9 @@ flux() const
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
         GeometricBoundaryField& ffbf = fieldFlux.boundaryFieldRef();
 
-    forAll(ffbf, patchI)
+    forAll(ffbf, patchi)
     {
-        ffbf[patchI] = InternalContrib[patchI] - NeighbourContrib[patchI];
+        ffbf[patchi] = InternalContrib[patchi] - NeighbourContrib[patchi];
     }
 
     if (faceFluxCorrectionPtr_)
@@ -1184,15 +1184,15 @@ void Foam::fvMatrix<Type>::operator*=
     lduMatrix::operator*=(dsf.field());
     source_ *= dsf.field();
 
-    forAll(boundaryCoeffs_, patchI)
+    forAll(boundaryCoeffs_, patchi)
     {
         scalarField pisf
         (
-            dsf.mesh().boundary()[patchI].patchInternalField(dsf.field())
+            dsf.mesh().boundary()[patchi].patchInternalField(dsf.field())
         );
 
-        internalCoeffs_[patchI] *= pisf;
-        boundaryCoeffs_[patchI] *= pisf;
+        internalCoeffs_[patchi] *= pisf;
+        boundaryCoeffs_[patchi] *= pisf;
     }
 
     if (faceFluxCorrectionPtr_)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -230,7 +230,7 @@ void Foam::sammMesh::readCells()
         labelList labels(24, label(-1));
         label lineLabel, sammLabel, regionLabel, typeFlag;
 
-        for (label cellI = 0; cellI < nCells; cellI++)
+        for (label celli = 0; celli < nCells; celli++)
         {
             label nLabels = 0;
 
@@ -294,15 +294,15 @@ void Foam::sammMesh::readCells()
 
             } while (typeFlag == -1 || addOnToCell);
 
-            starCellLabelLookup_[lineLabel] = cellI;
+            starCellLabelLookup_[lineLabel] = celli;
 
             if (nLabels == 8)
             {
-                addRegularCell(labels, cellI);
+                addRegularCell(labels, celli);
             }
             else
             {
-                addSAMMcell(typeFlag, labels, cellI);
+                addSAMMcell(typeFlag, labels, celli);
             }
         }
     }

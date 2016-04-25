@@ -298,7 +298,7 @@ private:
                 (
                     const indirectPrimitivePatch& pp,
                     const labelListList& globalEdgeFaces,
-                    const label faceI,
+                    const label facei,
                     const label edgeI,
                     const label myGlobFaceI,
                     const label nbrGlobFaceI,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,18 +107,18 @@ public:
             const bool checkOnly,
             const faceList& faces,
             const labelList& faceOwner,
-            const label cellI,
+            const label celli,
             const labelList& myFaces
         );
 
-        virtual bool isA(const primitiveMesh& mesh, const label cellI);
+        virtual bool isA(const primitiveMesh& mesh, const label celli);
 
         virtual bool isA(const faceList&);
 
         virtual bool matches
         (
             const primitiveMesh& mesh,
-            const label cellI,
+            const label celli,
             cellShape& shape
         );
 };

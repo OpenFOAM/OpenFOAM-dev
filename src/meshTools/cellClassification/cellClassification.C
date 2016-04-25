@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,11 +107,11 @@ Foam::boolList Foam::cellClassification::markFaces
 
             forAll(myFaces, myFaceI)
             {
-                label faceI = myFaces[myFaceI];
+                label facei = myFaces[myFaceI];
 
-                if (!cutFace[faceI])
+                if (!cutFace[facei])
                 {
-                    cutFace[faceI] = true;
+                    cutFace[facei] = true;
 
                     nCutFaces++;
                 }
@@ -133,11 +133,11 @@ Foam::boolList Foam::cellClassification::markFaces
 
     label allFaceI = 0;
 
-    forAll(cutFace, faceI)
+    forAll(cutFace, facei)
     {
-        if (!cutFace[faceI])
+        if (!cutFace[facei])
         {
-            allFaces[allFaceI++] = faceI;
+            allFaces[allFaceI++] = facei;
         }
     }
 
@@ -208,11 +208,11 @@ Foam::boolList Foam::cellClassification::markFaces
             }
             else
             {
-                label faceI = faceTree.shapes().faceLabels()[pHit.index()];
+                label facei = faceTree.shapes().faceLabels()[pHit.index()];
 
-                if (!cutFace[faceI])
+                if (!cutFace[facei])
                 {
-                    cutFace[faceI] = true;
+                    cutFace[facei] = true;
 
                     nAddFaces++;
                 }
@@ -258,16 +258,16 @@ void Foam::cellClassification::markCells
     List<cellInfo> cellInfoList(mesh_.nCells());
 
     // Mark cut cells first
-    forAll(piercedFace, faceI)
+    forAll(piercedFace, facei)
     {
-        if (piercedFace[faceI])
+        if (piercedFace[facei])
         {
-            cellInfoList[mesh_.faceOwner()[faceI]] =
+            cellInfoList[mesh_.faceOwner()[facei]] =
                 cellInfo(cellClassification::CUT);
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                cellInfoList[mesh_.faceNeighbour()[faceI]] =
+                cellInfoList[mesh_.faceNeighbour()[facei]] =
                     cellInfo(cellClassification::CUT);
             }
         }
@@ -283,9 +283,9 @@ void Foam::cellClassification::markCells
     forAll(outsidePts, outsidePtI)
     {
         // Use linear search for points.
-        label cellI = queryMesh.findCell(outsidePts[outsidePtI], -1, false);
+        label celli = queryMesh.findCell(outsidePts[outsidePtI], -1, false);
 
-        if (returnReduce(cellI, maxOp<label>()) == -1)
+        if (returnReduce(celli, maxOp<label>()) == -1)
         {
             FatalErrorInFunction
                 << "outsidePoint " << outsidePts[outsidePtI]
@@ -294,12 +294,12 @@ void Foam::cellClassification::markCells
                 << exit(FatalError);
         }
 
-        if (cellI >= 0)
+        if (celli >= 0)
         {
-            cellInfoList[cellI] = cellInfo(cellClassification::OUTSIDE);
+            cellInfoList[celli] = cellInfo(cellClassification::OUTSIDE);
 
-            // Mark faces of cellI
-            const labelList& myFaces = mesh_.cells()[cellI];
+            // Mark faces of celli
+            const labelList& myFaces = mesh_.cells()[celli];
             forAll(myFaces, myFaceI)
             {
                 outsideFacesMap.insert(myFaces[myFaceI]);
@@ -332,15 +332,15 @@ void Foam::cellClassification::markCells
     // Get information out of cellInfoList
     const List<cellInfo>& allInfo = cellInfoCalc.allCellInfo();
 
-    forAll(allInfo, cellI)
+    forAll(allInfo, celli)
     {
-        label t = allInfo[cellI].type();
+        label t = allInfo[celli].type();
 
         if (t == cellClassification::NOTSET)
         {
             t = cellClassification::INSIDE;
         }
-        operator[](cellI) = t;
+        operator[](celli) = t;
     }
 }
 
@@ -398,12 +398,12 @@ void Foam::cellClassification::classifyPoints
 bool Foam::cellClassification::usesMixedPointsOnly
 (
     const List<pointStatus>& pointSide,
-    const label cellI
+    const label celli
 ) const
 {
     const faceList& faces = mesh_.faces();
 
-    const cell& cFaces = mesh_.cells()[cellI];
+    const cell& cFaces = mesh_.cells()[celli];
 
     forAll(cFaces, cFaceI)
     {
@@ -440,33 +440,33 @@ void Foam::cellClassification::getMeshOutside
 
     // Get faces on interface between meshType and non-meshType
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label ownType = operator[](own[faceI]);
-        label nbrType = operator[](nbr[faceI]);
+        label ownType = operator[](own[facei]);
+        label nbrType = operator[](nbr[facei]);
 
         if (ownType == meshType && nbrType != meshType)
         {
-            outsideFaces[outsideI] = faces[faceI];
-            outsideOwner[outsideI] = own[faceI];    // meshType cell
+            outsideFaces[outsideI] = faces[facei];
+            outsideOwner[outsideI] = own[facei];    // meshType cell
             outsideI++;
         }
         else if (ownType != meshType && nbrType == meshType)
         {
-            outsideFaces[outsideI] = faces[faceI];
-            outsideOwner[outsideI] = nbr[faceI];    // meshType cell
+            outsideFaces[outsideI] = faces[facei];
+            outsideOwner[outsideI] = nbr[facei];    // meshType cell
             outsideI++;
         }
     }
 
     // Get faces on outside of real mesh with cells of meshType.
 
-    for (label faceI = mesh_.nInternalFaces(); faceI < mesh_.nFaces(); faceI++)
+    for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        if (operator[](own[faceI]) == meshType)
+        if (operator[](own[facei]) == meshType)
         {
-            outsideFaces[outsideI] = faces[faceI];
-            outsideOwner[outsideI] = own[faceI];    // meshType cell
+            outsideFaces[outsideI] = faces[facei];
+            outsideOwner[outsideI] = own[facei];    // meshType cell
             outsideI++;
         }
     }
@@ -541,17 +541,17 @@ Foam::label Foam::cellClassification::trimCutCells
     labelList newCellType(*this);
 
 //    // Split types into outside and rest
-//    forAll(*this, cellI)
+//    forAll(*this, celli)
 //    {
-//        label type = operator[](cellI);
+//        label type = operator[](celli);
 //
 //        if (type == meshType)
 //        {
-//            newCellType[cellI] = type;
+//            newCellType[celli] = type;
 //        }
 //        else
 //        {
-//            newCellType[cellI] = fillType;
+//            newCellType[celli] = fillType;
 //        }
 //    }
 
@@ -597,15 +597,15 @@ Foam::label Foam::cellClassification::trimCutCells
 
     label nChanged = 0;
 
-    forAll(newCellType, cellI)
+    forAll(newCellType, celli)
     {
-        if (operator[](cellI) == cellClassification::CUT)
+        if (operator[](celli) == cellClassification::CUT)
         {
-            if (newCellType[cellI] != meshType)
+            if (newCellType[celli] != meshType)
             {
                 // Cell was cutCell but further than nLayers away from
                 // meshType. Convert to fillType.
-                operator[](cellI) = fillType;
+                operator[](celli) = fillType;
                 nChanged++;
             }
         }
@@ -701,13 +701,13 @@ Foam::label Foam::cellClassification::fillHangingCells
 
                 forAll(pCells, i)
                 {
-                    label cellI = pCells[i];
+                    label celli = pCells[i];
 
-                    if (operator[](cellI) == meshType)
+                    if (operator[](celli) == meshType)
                     {
-                        if (usesMixedPointsOnly(pointSide, cellI))
+                        if (usesMixedPointsOnly(pointSide, celli))
                         {
-                            operator[](cellI) = fillType;
+                            operator[](celli) = fillType;
 
                             nChanged++;
                         }

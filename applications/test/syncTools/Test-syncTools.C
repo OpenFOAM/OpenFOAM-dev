@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,15 +141,15 @@ void testPackedList(const polyMesh& mesh, Random& rndGen)
 
     {
         PackedList<3> bits(mesh.nFaces());
-        forAll(bits, faceI)
+        forAll(bits, facei)
         {
-            bits.set(faceI, rndGen.integer(0,3));
+            bits.set(facei, rndGen.integer(0,3));
         }
 
         labelList faceValues(mesh.nFaces());
-        forAll(bits, faceI)
+        forAll(bits, facei)
         {
-            faceValues[faceI] = bits.get(faceI);
+            faceValues[facei] = bits.get(facei);
         }
 
         PackedList<3> maxBits(bits);
@@ -161,20 +161,20 @@ void testPackedList(const polyMesh& mesh, Random& rndGen)
         syncTools::syncFaceList(mesh, maxBits, maxEqOp<unsigned int>());
         syncTools::syncFaceList(mesh, maxFaceValues, maxEqOp<label>());
 
-        forAll(bits, faceI)
+        forAll(bits, facei)
         {
             if
             (
-                faceValues[faceI] != label(bits.get(faceI))
-             || maxFaceValues[faceI] != label(maxBits.get(faceI))
+                faceValues[facei] != label(bits.get(facei))
+             || maxFaceValues[facei] != label(maxBits.get(facei))
             )
             {
                 FatalErrorInFunction
-                    << "face:" << faceI
-                    << " minlabel:" << faceValues[faceI]
-                    << " minbits:" << bits.get(faceI)
-                    << " maxLabel:" << maxFaceValues[faceI]
-                    << " maxBits:" << maxBits.get(faceI)
+                    << "face:" << facei
+                    << " minlabel:" << faceValues[facei]
+                    << " minbits:" << bits.get(facei)
+                    << " maxLabel:" << maxFaceValues[facei]
+                    << " maxBits:" << maxBits.get(facei)
                     << exit(FatalError);
             }
         }
@@ -532,14 +532,14 @@ void testFaceSync(const polyMesh& mesh, Random& rndGen)
             maxMagSqrEqOp<point>()
         );
 
-        forAll(syncedFc, faceI)
+        forAll(syncedFc, facei)
         {
-            if (mag(syncedFc[faceI] - mesh.faceCentres()[faceI]) > SMALL)
+            if (mag(syncedFc[facei] - mesh.faceCentres()[facei]) > SMALL)
             {
                 FatalErrorInFunction
-                    << "Face " << faceI
-                    << " original centre " << mesh.faceCentres()[faceI]
-                    << " synced centre " << syncedFc[faceI]
+                    << "Face " << facei
+                    << " original centre " << mesh.faceCentres()[facei]
+                    << " synced centre " << syncedFc[facei]
                     << exit(FatalError);
             }
         }
@@ -552,11 +552,11 @@ void testFaceSync(const polyMesh& mesh, Random& rndGen)
 
         PackedBoolList isMasterFace(syncTools::getMasterFaces(mesh));
 
-        forAll(isMasterFace, faceI)
+        forAll(isMasterFace, facei)
         {
-            if (isMasterFace[faceI])
+            if (isMasterFace[facei])
             {
-                nMasters[faceI] = 1;
+                nMasters[facei] = 1;
             }
         }
 
@@ -567,14 +567,14 @@ void testFaceSync(const polyMesh& mesh, Random& rndGen)
             plusEqOp<label>()
         );
 
-        forAll(nMasters, faceI)
+        forAll(nMasters, facei)
         {
-            if (nMasters[faceI] != 1)
+            if (nMasters[facei] != 1)
             {
                 FatalErrorInFunction
-                    << "Face " << faceI
-                    << " centre " << mesh.faceCentres()[faceI]
-                    << " has " << nMasters[faceI]
+                    << "Face " << facei
+                    << " centre " << mesh.faceCentres()[facei]
+                    << " has " << nMasters[facei]
                     << " masters."
                     << exit(FatalError);
             }

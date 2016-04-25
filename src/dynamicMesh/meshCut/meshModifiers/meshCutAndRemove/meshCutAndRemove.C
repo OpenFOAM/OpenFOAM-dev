@@ -97,11 +97,11 @@ Foam::label Foam::meshCutAndRemove::findCutCell
 {
     forAll(cellLabels, labelI)
     {
-        label cellI = cellLabels[labelI];
+        label celli = cellLabels[labelI];
 
-        if (cuts.cellLoops()[cellI].size())
+        if (cuts.cellLoops()[celli].size())
         {
-            return cellI;
+            return celli;
         }
     }
     return -1;
@@ -121,9 +121,9 @@ Foam::label Foam::meshCutAndRemove::findInternalFacePoint
 
         forAll(pFaces, pFaceI)
         {
-            label faceI = pFaces[pFaceI];
+            label facei = pFaces[pFaceI];
 
-            if (mesh().isInternalFace(faceI))
+            if (mesh().isInternalFace(facei))
             {
                 return pointI;
             }
@@ -174,7 +174,7 @@ void Foam::meshCutAndRemove::faceCells
 (
     const cellCuts& cuts,
     const label exposedPatchI,
-    const label faceI,
+    const label facei,
     label& own,
     label& nei,
     label& patchID
@@ -183,9 +183,9 @@ void Foam::meshCutAndRemove::faceCells
     const labelListList& anchorPts = cuts.cellAnchorPoints();
     const labelListList& cellLoops = cuts.cellLoops();
 
-    const face& f = mesh().faces()[faceI];
+    const face& f = mesh().faces()[facei];
 
-    own = mesh().faceOwner()[faceI];
+    own = mesh().faceOwner()[facei];
 
     if (cellLoops[own].size() && firstCommon(f, anchorPts[own]) == -1)
     {
@@ -195,9 +195,9 @@ void Foam::meshCutAndRemove::faceCells
 
     nei = -1;
 
-    if (mesh().isInternalFace(faceI))
+    if (mesh().isInternalFace(facei))
     {
-        nei = mesh().faceNeighbour()[faceI];
+        nei = mesh().faceNeighbour()[facei];
 
         if (cellLoops[nei].size() && firstCommon(f, anchorPts[nei]) == -1)
         {
@@ -205,7 +205,7 @@ void Foam::meshCutAndRemove::faceCells
         }
     }
 
-    patchID = mesh().boundaryMesh().whichPatch(faceI);
+    patchID = mesh().boundaryMesh().whichPatch(facei);
 
     if (patchID == -1 && (own == -1 || nei == -1))
     {
@@ -217,12 +217,12 @@ void Foam::meshCutAndRemove::faceCells
 
 void Foam::meshCutAndRemove::getZoneInfo
 (
-    const label faceI,
+    const label facei,
     label& zoneID,
     bool& zoneFlip
 ) const
 {
-    zoneID = mesh().faceZones().whichZone(faceI);
+    zoneID = mesh().faceZones().whichZone(facei);
 
     zoneFlip = false;
 
@@ -230,7 +230,7 @@ void Foam::meshCutAndRemove::getZoneInfo
     {
         const faceZone& fZone = mesh().faceZones()[zoneID];
 
-        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
     }
 }
 
@@ -238,7 +238,7 @@ void Foam::meshCutAndRemove::getZoneInfo
 void Foam::meshCutAndRemove::addFace
 (
     polyTopoChange& meshMod,
-    const label faceI,
+    const label facei,
     const label masterPointI,
     const face& newFace,
     const label own,
@@ -249,7 +249,7 @@ void Foam::meshCutAndRemove::addFace
     label zoneID;
     bool zoneFlip;
 
-    getZoneInfo(faceI, zoneID, zoneFlip);
+    getZoneInfo(facei, zoneID, zoneFlip);
 
     if ((nei == -1) || (own != -1 && own < nei))
     {
@@ -318,11 +318,11 @@ void Foam::meshCutAndRemove::addFace
 }
 
 
-// Modifies existing faceI for either new owner/neighbour or new face points.
+// Modifies existing facei for either new owner/neighbour or new face points.
 void Foam::meshCutAndRemove::modFace
 (
     polyTopoChange& meshMod,
-    const label faceI,
+    const label facei,
     const face& newFace,
     const label own,
     const label nei,
@@ -332,22 +332,22 @@ void Foam::meshCutAndRemove::modFace
     label zoneID;
     bool zoneFlip;
 
-    getZoneInfo(faceI, zoneID, zoneFlip);
+    getZoneInfo(facei, zoneID, zoneFlip);
 
     if
     (
-        (own != mesh().faceOwner()[faceI])
+        (own != mesh().faceOwner()[facei])
      || (
-            mesh().isInternalFace(faceI)
-         && (nei != mesh().faceNeighbour()[faceI])
+            mesh().isInternalFace(facei)
+         && (nei != mesh().faceNeighbour()[facei])
         )
-     || (newFace != mesh().faces()[faceI])
+     || (newFace != mesh().faces()[facei])
     )
     {
         if (debug & 2)
         {
-            Pout<< "Modifying face " << faceI
-                << " old vertices:" << mesh().faces()[faceI]
+            Pout<< "Modifying face " << facei
+                << " old vertices:" << mesh().faces()[facei]
                 << " new vertices:" << newFace
                 << " new owner:" << own
                 << " new neighbour:" << nei
@@ -364,7 +364,7 @@ void Foam::meshCutAndRemove::modFace
                 polyModifyFace
                 (
                     newFace,            // modified face
-                    faceI,              // label of face being modified
+                    facei,              // label of face being modified
                     own,                // owner
                     nei,                // neighbour
                     false,              // face flip
@@ -382,7 +382,7 @@ void Foam::meshCutAndRemove::modFace
                 polyModifyFace
                 (
                     newFace.reverseFace(),  // modified face
-                    faceI,                  // label of face being modified
+                    facei,                  // label of face being modified
                     nei,                    // owner
                     own,                    // neighbour
                     false,                  // face flip
@@ -463,9 +463,9 @@ void Foam::meshCutAndRemove::splitFace
 }
 
 
-Foam::face Foam::meshCutAndRemove::addEdgeCutsToFace(const label faceI) const
+Foam::face Foam::meshCutAndRemove::addEdgeCutsToFace(const label facei) const
 {
-    const face& f = mesh().faces()[faceI];
+    const face& f = mesh().faces()[facei];
 
     face newFace(2 * f.size());
 
@@ -495,12 +495,12 @@ Foam::face Foam::meshCutAndRemove::addEdgeCutsToFace(const label faceI) const
 }
 
 
-// Walk loop (loop of cuts) across circumference of cellI. Returns face in
+// Walk loop (loop of cuts) across circumference of celli. Returns face in
 // new vertices.
 // Note: tricky bit is that it can use existing edges which have been split.
 Foam::face Foam::meshCutAndRemove::loopToFace
 (
-    const label cellI,
+    const label celli,
     const labelList& loop
 ) const
 {
@@ -664,9 +664,9 @@ void Foam::meshCutAndRemove::setRefinement
     {
         boolList usedPoint(mesh().nPoints(), false);
 
-        forAll(cellLoops, cellI)
+        forAll(cellLoops, celli)
         {
-            const labelList& loop = cellLoops[cellI];
+            const labelList& loop = cellLoops[celli];
 
             if (loop.size())
             {
@@ -681,7 +681,7 @@ void Foam::meshCutAndRemove::setRefinement
                     }
                 }
 
-                const labelList& anchors = anchorPts[cellI];
+                const labelList& anchors = anchorPts[celli];
 
                 forAll(anchors, i)
                 {
@@ -691,7 +691,7 @@ void Foam::meshCutAndRemove::setRefinement
             else
             {
                 // Cell is not cut so use all its points
-                const labelList& cPoints = mesh().cellPoints()[cellI];
+                const labelList& cPoints = mesh().cellPoints()[celli];
 
                 forAll(cPoints, i)
                 {
@@ -767,17 +767,17 @@ void Foam::meshCutAndRemove::setRefinement
     // For all cut cells add an internal or external face
     //
 
-    forAll(cellLoops, cellI)
+    forAll(cellLoops, celli)
     {
-        const labelList& loop = cellLoops[cellI];
+        const labelList& loop = cellLoops[celli];
 
         if (loop.size())
         {
-            if (cutPatch[cellI] < 0 || cutPatch[cellI] >= patches.size())
+            if (cutPatch[celli] < 0 || cutPatch[celli] >= patches.size())
             {
                 FatalErrorInFunction
-                    << "Illegal patch " << cutPatch[cellI]
-                    << " provided for cut cell " << cellI
+                    << "Illegal patch " << cutPatch[celli]
+                    << " provided for cut cell " << celli
                     << abort(FatalError);
             }
 
@@ -785,7 +785,7 @@ void Foam::meshCutAndRemove::setRefinement
             // Convert loop (=list of cuts) into proper face.
             // cellCuts sets orientation is towards anchor side so reverse.
             //
-            face newFace(loopToFace(cellI, loop));
+            face newFace(loopToFace(celli, loop));
 
             reverse(newFace);
 
@@ -798,26 +798,26 @@ void Foam::meshCutAndRemove::setRefinement
                     polyAddFace
                     (
                         newFace,                // face
-                        cellI,                  // owner
+                        celli,                  // owner
                         -1,                     // neighbour
                         masterPointI,           // master point
                         -1,                     // master edge
                         -1,                     // master face for addition
                         false,                  // flux flip
-                        cutPatch[cellI],        // patch for face
+                        cutPatch[celli],        // patch for face
                         -1,                     // zone for face
                         false                   // face zone flip
                     )
                 );
 
-            addedFaces_.insert(cellI, addedFaceI);
+            addedFaces_.insert(celli, addedFaceI);
 
             if (debug & 2)
             {
                 Pout<< "Added splitting face " << newFace << " index:"
                     << addedFaceI << " from masterPoint:" << masterPointI
-                    << " to owner " << cellI << " with anchors:"
-                    << anchorPts[cellI]
+                    << " to owner " << celli << " with anchors:"
+                    << anchorPts[celli]
                     << " from Loop:";
 
                 // Gets edgeweights of loop
@@ -854,10 +854,10 @@ void Foam::meshCutAndRemove::setRefinement
 
     forAllConstIter(Map<edge>, faceSplitCuts, iter)
     {
-        label faceI = iter.key();
+        label facei = iter.key();
 
         // Renumber face to include split edges.
-        face newFace(addEdgeCutsToFace(faceI));
+        face newFace(addEdgeCutsToFace(facei));
 
         // Edge splitting the face. Convert edge to new vertex numbering.
         const edge& splitEdge = iter();
@@ -891,18 +891,18 @@ void Foam::meshCutAndRemove::setRefinement
         face f0, f1;
         splitFace(newFace, v0, v1, f0, f1);
 
-        label own = mesh().faceOwner()[faceI];
+        label own = mesh().faceOwner()[facei];
 
         label nei = -1;
 
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            nei = mesh().faceNeighbour()[faceI];
+            nei = mesh().faceNeighbour()[facei];
         }
 
         if (debug & 2)
         {
-            Pout<< "Split face " << mesh().faces()[faceI]
+            Pout<< "Split face " << mesh().faces()[facei]
                 << " own:" << own << " nei:" << nei
                 << " into f0:" << f0
                 << " and f1:" << f1 << endl;
@@ -919,7 +919,7 @@ void Foam::meshCutAndRemove::setRefinement
         // The face f gets split into two parts, f0 and f1.
         // Each of these can have a different owner and or neighbour.
 
-        const face& f = mesh().faces()[faceI];
+        const face& f = mesh().faces()[facei];
 
         label f0Own = -1;
         label f1Own = -1;
@@ -1023,7 +1023,7 @@ void Foam::meshCutAndRemove::setRefinement
 
         // If faces were internal but now become external set a patch.
         // If they were external already keep the patch.
-        label patchID = patches.whichPatch(faceI);
+        label patchID = patches.whichPatch(facei);
 
         if (patchID == -1)
         {
@@ -1031,8 +1031,8 @@ void Foam::meshCutAndRemove::setRefinement
         }
 
 
-        // Do as much as possible by modifying faceI. Delay any remove
-        // face. Keep track of whether faceI has been used.
+        // Do as much as possible by modifying facei. Delay any remove
+        // face. Keep track of whether facei has been used.
 
         bool modifiedFaceI = false;
 
@@ -1041,7 +1041,7 @@ void Foam::meshCutAndRemove::setRefinement
             if (f0Nei != -1)
             {
                 // f0 becomes external face (note:modFace will reverse face)
-                modFace(meshMod, faceI, f0, f0Own, f0Nei, patchID);
+                modFace(meshMod, facei, f0, f0Own, f0Nei, patchID);
                 modifiedFaceI = true;
             }
         }
@@ -1050,13 +1050,13 @@ void Foam::meshCutAndRemove::setRefinement
             if (f0Nei == -1)
             {
                 // f0 becomes external face
-                modFace(meshMod, faceI, f0, f0Own, f0Nei, patchID);
+                modFace(meshMod, facei, f0, f0Own, f0Nei, patchID);
                 modifiedFaceI = true;
             }
             else
             {
                 // f0 stays internal face.
-                modFace(meshMod, faceI, f0, f0Own, f0Nei, -1);
+                modFace(meshMod, facei, f0, f0Own, f0Nei, -1);
                 modifiedFaceI = true;
             }
         }
@@ -1075,7 +1075,7 @@ void Foam::meshCutAndRemove::setRefinement
                 // f1 becomes external face (note:modFace will reverse face)
                 if (!modifiedFaceI)
                 {
-                    modFace(meshMod, faceI, f1, f1Own, f1Nei, patchID);
+                    modFace(meshMod, facei, f1, f1Own, f1Nei, patchID);
                     modifiedFaceI = true;
                 }
                 else
@@ -1085,7 +1085,7 @@ void Foam::meshCutAndRemove::setRefinement
                     addFace
                     (
                         meshMod,
-                        faceI,          // face for zone info
+                        facei,          // face for zone info
                         masterPointI,   // inflation point
                         f1,             // vertices of face
                         f1Own,
@@ -1102,7 +1102,7 @@ void Foam::meshCutAndRemove::setRefinement
                 // f1 becomes external face
                 if (!modifiedFaceI)
                 {
-                    modFace(meshMod, faceI, f1, f1Own, f1Nei, patchID);
+                    modFace(meshMod, facei, f1, f1Own, f1Nei, patchID);
                     modifiedFaceI = true;
                 }
                 else
@@ -1112,7 +1112,7 @@ void Foam::meshCutAndRemove::setRefinement
                     addFace
                     (
                         meshMod,
-                        faceI,
+                        facei,
                         masterPointI,
                         f1,
                         f1Own,
@@ -1126,29 +1126,29 @@ void Foam::meshCutAndRemove::setRefinement
                 // f1 is internal face.
                 if (!modifiedFaceI)
                 {
-                    modFace(meshMod, faceI, f1, f1Own, f1Nei, -1);
+                    modFace(meshMod, facei, f1, f1Own, f1Nei, -1);
                     modifiedFaceI = true;
                 }
                 else
                 {
                     label masterPointI = findPatchFacePoint(f1, -1);
 
-                    addFace(meshMod, faceI, masterPointI, f1, f1Own, f1Nei, -1);
+                    addFace(meshMod, facei, masterPointI, f1, f1Own, f1Nei, -1);
                 }
             }
         }
 
         if (f0Own == -1 && f0Nei == -1 && !modifiedFaceI)
         {
-            meshMod.setAction(polyRemoveFace(faceI));
+            meshMod.setAction(polyRemoveFace(facei));
 
             if (debug & 2)
             {
-                Pout<< "Removed face " << faceI << endl;
+                Pout<< "Removed face " << facei << endl;
             }
         }
 
-        faceUptodate[faceI] = true;
+        faceUptodate[facei] = true;
     }
 
 
@@ -1167,44 +1167,44 @@ void Foam::meshCutAndRemove::setRefinement
 
             forAll(eFaces, i)
             {
-                label faceI = eFaces[i];
+                label facei = eFaces[i];
 
-                if (!faceUptodate[faceI])
+                if (!faceUptodate[facei])
                 {
                     // So the face has not been split itself (i.e. its owner
                     // or neighbour have not been split) so it only
                     // borders by edge a cell which has been split.
 
-                    // Get (new or original) owner and neighbour of faceI
+                    // Get (new or original) owner and neighbour of facei
                     label own, nei, patchID;
-                    faceCells(cuts, exposedPatchI, faceI, own, nei, patchID);
+                    faceCells(cuts, exposedPatchI, facei, own, nei, patchID);
 
 
                     if (own == -1 && nei == -1)
                     {
-                        meshMod.setAction(polyRemoveFace(faceI));
+                        meshMod.setAction(polyRemoveFace(facei));
 
                         if (debug & 2)
                         {
-                            Pout<< "Removed face " << faceI << endl;
+                            Pout<< "Removed face " << facei << endl;
                         }
                     }
                     else
                     {
                         // Renumber face to include split edges.
-                        face newFace(addEdgeCutsToFace(faceI));
+                        face newFace(addEdgeCutsToFace(facei));
 
                         if (debug & 2)
                         {
-                            Pout<< "Added edge cuts to face " << faceI
-                                << " f:" << mesh().faces()[faceI]
+                            Pout<< "Added edge cuts to face " << facei
+                                << " f:" << mesh().faces()[facei]
                                 << " newFace:" << newFace << endl;
                         }
 
                         modFace
                         (
                             meshMod,
-                            faceI,
+                            facei,
                             newFace,
                             own,
                             nei,
@@ -1212,7 +1212,7 @@ void Foam::meshCutAndRemove::setRefinement
                         );
                     }
 
-                    faceUptodate[faceI] = true;
+                    faceUptodate[facei] = true;
                 }
             }
         }
@@ -1227,29 +1227,29 @@ void Foam::meshCutAndRemove::setRefinement
 
     const faceList& faces = mesh().faces();
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if (!faceUptodate[faceI])
+        if (!faceUptodate[facei])
         {
-            // Get (new or original) owner and neighbour of faceI
+            // Get (new or original) owner and neighbour of facei
             label own, nei, patchID;
-            faceCells(cuts, exposedPatchI, faceI, own, nei, patchID);
+            faceCells(cuts, exposedPatchI, facei, own, nei, patchID);
 
             if (own == -1 && nei == -1)
             {
-                meshMod.setAction(polyRemoveFace(faceI));
+                meshMod.setAction(polyRemoveFace(facei));
 
                 if (debug & 2)
                 {
-                    Pout<< "Removed face " << faceI << endl;
+                    Pout<< "Removed face " << facei << endl;
                 }
             }
             else
             {
-                modFace(meshMod, faceI, faces[faceI], own, nei, patchID);
+                modFace(meshMod, facei, faces[facei], own, nei, patchID);
             }
 
-            faceUptodate[faceI] = true;
+            faceUptodate[facei] = true;
         }
     }
 
@@ -1272,8 +1272,8 @@ void Foam::meshCutAndRemove::updateMesh(const mapPolyMesh& map)
 
         forAllConstIter(Map<label>, addedFaces_, iter)
         {
-            label cellI = iter.key();
-            label newCellI = map.reverseCellMap()[cellI];
+            label celli = iter.key();
+            label newCellI = map.reverseCellMap()[celli];
 
             label addedFaceI = iter();
 
@@ -1284,11 +1284,11 @@ void Foam::meshCutAndRemove::updateMesh(const mapPolyMesh& map)
                 if
                 (
                     (debug & 2)
-                 && (newCellI != cellI || newAddedFaceI != addedFaceI)
+                 && (newCellI != celli || newAddedFaceI != addedFaceI)
                 )
                 {
                     Pout<< "meshCutAndRemove::updateMesh :"
-                        << " updating addedFace for cell " << cellI
+                        << " updating addedFace for cell " << celli
                         << " from " << addedFaceI
                         << " to " << newAddedFaceI
                         << endl;

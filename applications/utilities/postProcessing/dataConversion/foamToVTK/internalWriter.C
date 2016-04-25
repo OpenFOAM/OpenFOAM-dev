@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,18 +80,18 @@ Foam::internalWriter::internalWriter
     // Count total number of vertices referenced.
     label nFaceVerts = 0;
 
-    forAll(vtkVertLabels, cellI)
+    forAll(vtkVertLabels, celli)
     {
-        nFaceVerts += vtkVertLabels[cellI].size() + 1;
+        nFaceVerts += vtkVertLabels[celli].size() + 1;
     }
 
     os_ << "CELLS " << vtkVertLabels.size() << ' ' << nFaceVerts << std::endl;
 
     DynamicList<label> vertLabels(nFaceVerts);
 
-    forAll(vtkVertLabels, cellI)
+    forAll(vtkVertLabels, celli)
     {
-        const labelList& vtkVerts = vtkVertLabels[cellI];
+        const labelList& vtkVerts = vtkVertLabels[celli];
 
         vertLabels.append(vtkVerts.size());
 
@@ -133,9 +133,9 @@ void Foam::internalWriter::writeCellIDs()
     {
         const labelList& cMap = vMesh_.subsetter().cellMap();
 
-        forAll(mesh.cells(), cellI)
+        forAll(mesh.cells(), celli)
         {
-            cellId[labelI++] = cMap[cellI];
+            cellId[labelI++] = cMap[celli];
         }
         forAll(superCells, superCellI)
         {
@@ -146,9 +146,9 @@ void Foam::internalWriter::writeCellIDs()
     }
     else
     {
-        forAll(mesh.cells(), cellI)
+        forAll(mesh.cells(), celli)
         {
-            cellId[labelI++] = cellI;
+            cellId[labelI++] = celli;
         }
         forAll(superCells, superCellI)
         {

@@ -144,8 +144,8 @@ private:
         (
             const trackingData& td,
             const point& position,
-            const label cellI,
-            const label faceI
+            const label celli,
+            const label facei
         );
 
         vector sample(trackingData& td);
@@ -160,7 +160,7 @@ public:
         (
             const polyMesh& c,
             const vector& position,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI,
             const label meshEdgeStart,

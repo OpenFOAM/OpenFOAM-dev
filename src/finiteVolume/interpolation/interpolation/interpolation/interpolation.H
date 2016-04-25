@@ -131,8 +131,8 @@ public:
         virtual Type interpolate
         (
             const vector& position,
-            const label cellI,
-            const label faceI = -1
+            const label celli,
+            const label facei = -1
         ) const = 0;
 
         //- Interpolate field to the given point in the tetrahedron
@@ -143,10 +143,10 @@ public:
         (
             const vector& position,
             const tetIndices& tetIs,
-            const label faceI = -1
+            const label facei = -1
         ) const
         {
-            return interpolate(position, tetIs.cell(), faceI);
+            return interpolate(position, tetIs.cell(), facei);
         }
 };
 

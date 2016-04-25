@@ -68,17 +68,17 @@ void Foam::vtkSurfaceWriter::writeGeometry
 
     // Write faces
     label nNodes = 0;
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        nNodes += faces[faceI].size();
+        nNodes += faces[facei].size();
     }
 
     os  << "POLYGONS " << faces.size() << ' '
         << faces.size() + nNodes << nl;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         os  << f.size();
         forAll(f, fp)

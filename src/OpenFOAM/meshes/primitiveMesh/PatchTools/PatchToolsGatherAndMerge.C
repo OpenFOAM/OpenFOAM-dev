@@ -119,9 +119,9 @@ void Foam::PatchTools::gatherAndMerge
             // Relabel faces
             List<Face>& faces = mergedFaces;
 
-            forAll(faces, faceI)
+            forAll(faces, facei)
             {
-                inplaceRenumber(pointMergeMap, faces[faceI]);
+                inplaceRenumber(pointMergeMap, faces[facei]);
             }
         }
     }

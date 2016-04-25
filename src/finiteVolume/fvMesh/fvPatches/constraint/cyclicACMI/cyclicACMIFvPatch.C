@@ -94,12 +94,12 @@ void Foam::cyclicACMIFvPatch::makeWeights(scalarField& w) const
             )
         );
 
-        forAll(deltas, faceI)
+        forAll(deltas, facei)
         {
-            scalar di = deltas[faceI];
-            scalar dni = nbrDeltas[faceI];
+            scalar di = deltas[facei];
+            scalar dni = nbrDeltas[facei];
 
-            w[faceI] = dni/(di + dni);
+            w[facei] = dni/(di + dni);
         }
     }
     else
@@ -153,22 +153,22 @@ Foam::tmp<Foam::vectorField> Foam::cyclicACMIFvPatch::delta() const
         // do the transformation if necessary
         if (parallel())
         {
-            forAll(patchD, faceI)
+            forAll(patchD, facei)
             {
-                const vector& ddi = patchD[faceI];
-                const vector& dni = nbrPatchD[faceI];
+                const vector& ddi = patchD[facei];
+                const vector& dni = nbrPatchD[facei];
 
-                pdv[faceI] = ddi - dni;
+                pdv[facei] = ddi - dni;
             }
         }
         else
         {
-            forAll(patchD, faceI)
+            forAll(patchD, facei)
             {
-                const vector& ddi = patchD[faceI];
-                const vector& dni = nbrPatchD[faceI];
+                const vector& ddi = patchD[facei];
+                const vector& dni = nbrPatchD[facei];
 
-                pdv[faceI] = ddi - transform(forwardT()[0], dni);
+                pdv[facei] = ddi - transform(forwardT()[0], dni);
             }
         }
 

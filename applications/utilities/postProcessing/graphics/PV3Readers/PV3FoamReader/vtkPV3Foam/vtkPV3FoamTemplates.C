@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,9 @@ vtkPolyData* Foam::vtkPV3Foam::patchVTKMesh
 
     vtkCellArray* vtkcells = vtkCellArray::New();
     vtkcells->Allocate(faces.size());
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         vtkIdType nodeIds[f.size()];
 
         forAll(f, fp)

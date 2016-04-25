@@ -167,9 +167,9 @@ void Foam::ParticleErosion<CloudType>::postPatch
     bool&
 )
 {
-    const label patchI = pp.index();
+    const label patchi = pp.index();
 
-    const label localPatchI = applyToPatch(patchI);
+    const label localPatchI = applyToPatch(patchi);
 
     if (localPatchI != -1)
     {
@@ -197,7 +197,7 @@ void Foam::ParticleErosion<CloudType>::postPatch
         const scalar coeff = p.nParticle()*p.mass()*sqr(magU)/(p_*psi_*K_);
 
         const label patchFaceI = pp.whichFace(p.face());
-        scalar& Q = QPtr_->boundaryFieldRef()[patchI][patchFaceI];
+        scalar& Q = QPtr_->boundaryFieldRef()[patchi][patchFaceI];
         if (tan(alpha) < K_/6.0)
         {
             Q += coeff*(sin(2.0*alpha) - 6.0/K_*sqr(sin(alpha)));

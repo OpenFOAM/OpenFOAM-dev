@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,8 +47,8 @@ template<class Type>
 inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
 (
     const vector& position,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 ) const
 {
     return interpolate
@@ -57,8 +57,8 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
         (
             this->pMesh_,
             position,
-            cellI,
-            faceI
+            celli,
+            facei
         )
     );
 }
@@ -69,25 +69,25 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
 (
     const vector& position,
     const tetIndices& tetIs,
-    const label faceI
+    const label facei
 ) const
 {
-    if (faceI >= 0)
+    if (facei >= 0)
     {
-        if (faceI != tetIs.face())
+        if (facei != tetIs.face())
         {
             FatalErrorInFunction
-                << "specified face " << faceI << " inconsistent with the face "
+                << "specified face " << facei << " inconsistent with the face "
                 << "stored by tetIndices: " << tetIs.face()
                 << exit(FatalError);
         }
 
         const polyBoundaryMesh& bm = this->pMesh_.boundaryMesh();
-        label patchI = bm.whichPatch(faceI);
+        label patchi = bm.whichPatch(facei);
 
-        if (patchI != -1)
+        if (patchi != -1)
         {
-            if (isA<wallPolyPatch>(bm[patchI]))
+            if (isA<wallPolyPatch>(bm[patchi]))
             {
                 Type t = this->psi_[tetIs.cell()];
 
@@ -103,7 +103,7 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
     (
         position,
         tetIs,
-        faceI
+        facei
     );
 }
 

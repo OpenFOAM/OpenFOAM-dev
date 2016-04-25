@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ bool Foam::fileFormats::OFFsurfaceFormat<Face>::read
     // use a DynamicList for possible on-the-fly triangulation
     DynamicList<Face>  dynFaces(nElems);
 
-    for (label faceI = 0; faceI < nElems; ++faceI)
+    for (label facei = 0; facei < nElems; ++facei)
     {
         line = this->getLineNoComment(is);
 

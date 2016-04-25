@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,18 +172,18 @@ bool triSurface::readAC(const fileName& ACfileName)
     // Start of vertices for object/patch
     label patchStartVert = 0;
 
-    for (label patchI = 0; patchI < nPatches; patchI++)
+    for (label patchi = 0; patchi < nPatches; patchi++)
     {
         readUpto
         (
             "OBJECT",
             ACfile,
             args,
-            " while reading patch " + Foam::name(patchI)
+            " while reading patch " + Foam::name(patchi)
         );
 
         // Object global values
-        string patchName = string("patch") + name(patchI);
+        string patchName = string("patch") + name(patchi);
         label nVerts = 0;
         tensor rot(I);
         vector loc(0, 0, 0);
@@ -197,7 +197,7 @@ bool triSurface::readAC(const fileName& ACfileName)
             {
                 FatalErrorInFunction
                     << "Did not read up to \"kids 0\" while reading patch "
-                    << patchI << " from file " << ACfileName
+                    << patchi << " from file " << ACfileName
                     << exit(FatalError);
             }
 
@@ -220,7 +220,7 @@ bool triSurface::readAC(const fileName& ACfileName)
                 WarningInFunction
                     << "rot (rotation tensor) command not implemented"
                     << "Line:" << cmd << ' ' << args << endl
-                    << "while reading patch " << patchI << endl;
+                    << "while reading patch " << patchi << endl;
             }
             else if (cmd == "loc")
             {
@@ -254,7 +254,7 @@ bool triSurface::readAC(const fileName& ACfileName)
                 {
                     static string errorMsg =
                         string(" while reading face ")
-                      + name(triI) + " on patch " + name(patchI)
+                      + name(triI) + " on patch " + name(patchi)
                       + " from file " + ACfileName;
 
                     readUpto("SURF", ACfile, args, errorMsg);
@@ -269,7 +269,7 @@ bool triSurface::readAC(const fileName& ACfileName)
                             << "Can only read surfaces with 3 vertices."
                             << endl
                             << "Detected " << size << " when reading triangle "
-                            << triI << " of patch " << patchI
+                            << triI << " of patch " << patchi
                             << exit(FatalError);
                     }
 
@@ -292,7 +292,7 @@ bool triSurface::readAC(const fileName& ACfileName)
                             v0 + patchStartVert,
                             v1 + patchStartVert,
                             v2 + patchStartVert,
-                            patchI
+                            patchi
                         )
                     );
                 }
@@ -312,16 +312,16 @@ bool triSurface::readAC(const fileName& ACfileName)
                     FatalErrorInFunction
                         << "Can only read objects without kids."
                         << " Encountered " << nKids << " kids when"
-                        << " reading patch " << patchI
+                        << " reading patch " << patchi
                         << exit(FatalError);
                 }
 
-                patches[patchI] =
+                patches[patchi] =
                     geometricSurfacePatch
                     (
                         "empty",
                         word(patchName),
-                        patchI
+                        patchi
                     );
 
                 // Stop reading current patch

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -240,9 +240,9 @@ int main(int argc, char *argv[])
         // Select all cells
         refCells.setSize(mesh.nCells());
 
-        forAll(mesh.cells(), cellI)
+        forAll(mesh.cells(), celli)
         {
-            refCells[cellI] = cellI;
+            refCells[celli] = celli;
         }
 
         if (mesh.nGeometricD() == 3)

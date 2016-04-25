@@ -158,8 +158,8 @@ Foam::PatchPostProcessing<CloudType>::PatchPostProcessing
     {
         forAll(patchIDs_, i)
         {
-            const label patchI = patchIDs_[i];
-            const word& patchName = owner.mesh().boundaryMesh()[patchI].name();
+            const label patchi = patchIDs_[i];
+            const word& patchName = owner.mesh().boundaryMesh()[patchi].name();
             Info<< "Post-process patch " << patchName << endl;
         }
     }
@@ -202,8 +202,8 @@ void Foam::PatchPostProcessing<CloudType>::postPatch
     bool&
 )
 {
-    const label patchI = pp.index();
-    const label localPatchI = applyToPatch(patchI);
+    const label patchi = pp.index();
+    const label localPatchI = applyToPatch(patchi);
 
     if (localPatchI != -1 && patchData_[localPatchI].size() < maxStoredParcels_)
     {

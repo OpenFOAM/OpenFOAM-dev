@@ -141,10 +141,10 @@ protected:
         vector position_;
 
         //- Index of the cell it is in
-        label cellI_;
+        label celli_;
 
         //- Face index if the particle is on a face otherwise -1
-        label faceI_;
+        label facei_;
 
         //- Fraction of time-step completed
         scalar stepFraction_;
@@ -187,7 +187,7 @@ protected:
             const label triI,
             const vector& tetArea,
             const label tetPlaneBasePtI,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI,
             const scalar tol
@@ -201,7 +201,7 @@ protected:
             const label triI,
             const vector& tetArea,
             const label tetPlaneBasePtI,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI,
             const scalar tol
@@ -214,7 +214,7 @@ protected:
         //  given cell to find the resulting face and tetPtI
         inline void crossEdgeConnectedFace
         (
-            const label& cellI,
+            const label& celli,
             label& tetFaceI,
             label& tetPtI,
             const edge& e
@@ -315,7 +315,7 @@ public:
         //- String representation of properties
         DefinePropertyList
         (
-            "(Px Py Pz) cellI faceI stepFraction "
+            "(Px Py Pz) celli facei stepFraction "
             "tetFaceI tetPtI origProc origId"
         );
 
@@ -341,7 +341,7 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI
         );
@@ -352,7 +352,7 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI,
+            const label celli,
             bool doCellFacePt = true
         );
 
@@ -470,19 +470,19 @@ public:
             inline bool onBoundary() const;
 
             //- Is this global face an internal face?
-            inline bool internalFace(const label faceI) const;
+            inline bool internalFace(const label facei) const;
 
             //- Is this global face a boundary face?
-            inline bool boundaryFace(const label faceI) const;
+            inline bool boundaryFace(const label facei) const;
 
             //- Which patch is particle on
-            inline label patch(const label faceI) const;
+            inline label patch(const label facei) const;
 
             //- Which face of this patch is this particle on
             inline label patchFace
             (
                 const label patchI,
-                const label faceI
+                const label facei
             ) const;
 
             //- Return the fraction of time-step completed
@@ -553,7 +553,7 @@ public:
         void prepareForParallelTransfer(const label patchI, TrackData& td);
 
         //- Convert processor patch addressing to the global equivalents
-        //  and set the cellI to the face-neighbour
+        //  and set the celli to the face-neighbour
         template<class TrackData>
         void correctAfterParallelTransfer(const label patchI, TrackData& td);
 

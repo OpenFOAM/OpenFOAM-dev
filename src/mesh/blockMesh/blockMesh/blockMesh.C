@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,12 +98,12 @@ Foam::PtrList<Foam::dictionary> Foam::blockMesh::patchDicts() const
 
     PtrList<dictionary> patchDicts(patchTopologies.size());
 
-    forAll(patchTopologies, patchI)
+    forAll(patchTopologies, patchi)
     {
         OStringStream os;
-        patchTopologies[patchI].write(os);
+        patchTopologies[patchi].write(os);
         IStringStream is(os.str());
-        patchDicts.set(patchI, new dictionary(is));
+        patchDicts.set(patchi, new dictionary(is));
     }
     return patchDicts;
 }

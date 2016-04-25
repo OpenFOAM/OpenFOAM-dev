@@ -171,9 +171,9 @@ void Foam::cellToCellStencil::validBoundaryFaces(boolList& isValidBFace) const
 
     isValidBFace.setSize(mesh().nFaces()-mesh().nInternalFaces(), true);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled() || isA<emptyPolyPatch>(pp))
         {
@@ -194,9 +194,9 @@ Foam::cellToCellStencil::allCoupledFacesPatch() const
 
     label nCoupled = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
@@ -206,17 +206,17 @@ Foam::cellToCellStencil::allCoupledFacesPatch() const
     labelList coupledFaces(nCoupled);
     nCoupled = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                coupledFaces[nCoupled++] = faceI++;
+                coupledFaces[nCoupled++] = facei++;
             }
         }
     }
@@ -275,17 +275,17 @@ void Foam::cellToCellStencil::insertFaceCells
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        label globalOwn = globalNumbering().toGlobal(own[faceI]);
+        label globalOwn = globalNumbering().toGlobal(own[facei]);
         if (globalOwn != exclude0 && globalOwn != exclude1)
         {
             globals.insert(globalOwn);
         }
 
-        if (mesh().isInternalFace(faceI))
+        if (mesh().isInternalFace(facei))
         {
-            label globalNei = globalNumbering().toGlobal(nei[faceI]);
+            label globalNei = globalNumbering().toGlobal(nei[facei]);
             if (globalNei != exclude0 && globalNei != exclude1)
             {
                 globals.insert(globalNei);
@@ -293,7 +293,7 @@ void Foam::cellToCellStencil::insertFaceCells
         }
         else
         {
-            label bFaceI = faceI-mesh().nInternalFaces();
+            label bFaceI = facei-mesh().nInternalFaces();
 
             if (isValidBFace[bFaceI])
             {

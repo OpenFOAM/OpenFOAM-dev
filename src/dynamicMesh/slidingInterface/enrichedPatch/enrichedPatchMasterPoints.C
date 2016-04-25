@@ -56,9 +56,9 @@ void Foam::enrichedPatch::calcMasterPointFaces() const
     const faceList& ef = enrichedFaces();
 
     // Add the original face points
-    forAll(masterPatch_, faceI)
+    forAll(masterPatch_, facei)
     {
-        const face& curFace = ef[faceI + slavePatch_.size()];
+        const face& curFace = ef[facei + slavePatch_.size()];
 //         Pout<< "Cur face in pfAddr: " << curFace << endl;
         forAll(curFace, pointI)
         {
@@ -75,11 +75,11 @@ void Foam::enrichedPatch::calcMasterPointFaces() const
                 );
 
                 // Iterator is invalidated - have to find again
-                mpf.find(curFace[pointI])().append(faceI);
+                mpf.find(curFace[pointI])().append(facei);
             }
             else
             {
-                mpfIter().append(faceI);
+                mpfIter().append(facei);
             }
         }
     }

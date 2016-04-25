@@ -389,11 +389,11 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
         // Work array - whether processor bb overlaps the face bounds
         boolList procBbOverlaps(Pstream::nProcs());
 
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            if (faces[faceI].size())
+            if (faces[facei].size())
             {
-                treeBoundBox faceBb(points, faces[faceI]);
+                treeBoundBox faceBb(points, faces[facei]);
 
                 // Find the processor this face overlaps
                 calcOverlappingProcs(procBb, faceBb, procBbOverlaps);
@@ -402,7 +402,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcProcMap
                 {
                     if (procBbOverlaps[procI])
                     {
-                        dynSendMap[procI].append(faceI);
+                        dynSendMap[procI].append(facei);
                     }
                 }
             }

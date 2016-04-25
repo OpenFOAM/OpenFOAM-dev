@@ -342,10 +342,10 @@ Foam::label Foam::ptscotchDecomp::decompose
             label baseval = 0;
             // 100*hasVertlabels+10*hasEdgeWeights+1*hasVertWeighs
             str << baseval << ' ' << "000" << nl;
-            for (label cellI = 0; cellI < xadjSize-1; cellI++)
+            for (label celli = 0; celli < xadjSize-1; celli++)
             {
-                label start = xadj[cellI];
-                label end = xadj[cellI+1];
+                label start = xadj[celli];
+                label end = xadj[celli+1];
                 str << end-start;
 
                 for (label i = start; i < end; i++)

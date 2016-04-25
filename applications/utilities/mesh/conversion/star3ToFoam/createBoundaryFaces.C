@@ -110,11 +110,11 @@ void Foam::starMesh::markBoundaryFaces()
 
         const labelListList& PointCells = pointCells();
 
-        forAll(patchFaces, faceI)
+        forAll(patchFaces, facei)
         {
             bool found = false;
 
-            const face& curFace = patchFaces[faceI];
+            const face& curFace = patchFaces[facei];
             const labelList& facePoints = curFace;
 
             forAll(facePoints, pointI)
@@ -122,9 +122,9 @@ void Foam::starMesh::markBoundaryFaces()
                 const labelList& facePointCells =
                     PointCells[facePoints[pointI]];
 
-                forAll(facePointCells, cellI)
+                forAll(facePointCells, celli)
                 {
-                    const label curCellIndex = facePointCells[cellI];
+                    const label curCellIndex = facePointCells[celli];
 
                     const faceList& curCellFaces =
                         cellFaces_[curCellIndex];
@@ -137,8 +137,8 @@ void Foam::starMesh::markBoundaryFaces()
                             found = true;
 
                             // Set boundary face to the corresponding cell face
-                            curBoundaryCellIDs[faceI] = curCellIndex;
-                            curBoundaryCellFaceIDs[faceI] = cellFaceI;
+                            curBoundaryCellIDs[facei] = curCellIndex;
+                            curBoundaryCellFaceIDs[facei] = cellFaceI;
                         }
                         if (found) break;
                     }
@@ -149,7 +149,7 @@ void Foam::starMesh::markBoundaryFaces()
             if (!found)
             {
                 FatalErrorInFunction
-                    << "Face " << faceI
+                    << "Face " << facei
                     << " does not have neighbour cell."
                     << " Face : " << endl << curFace << endl
                     << "PROSTAR Command: vset,news,vlis";
@@ -186,11 +186,11 @@ void Foam::starMesh::collectBoundaryFaces()
         const labelList& curBoundaryCellIDs = boundaryCellIDs_[patchi];
         const labelList& curBoundaryCellFaceIDs = boundaryCellFaceIDs_[patchi];
 
-        forAll(curBoundaryCellIDs, faceI)
+        forAll(curBoundaryCellIDs, facei)
         {
-            patchFaces[faceI] =
-                cellFaces_[curBoundaryCellIDs[faceI]]
-                    [curBoundaryCellFaceIDs[faceI]];
+            patchFaces[facei] =
+                cellFaces_[curBoundaryCellIDs[facei]]
+                    [curBoundaryCellFaceIDs[facei]];
         }
     }
 

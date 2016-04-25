@@ -270,11 +270,11 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 phiCorrect_.ref() -= phiGByA();
             }
 
-            forAll(phiCorrect_(), faceI)
+            forAll(phiCorrect_(), facei)
             {
                 // Current and correction fluxes
-                const scalar phiCurr = phi[faceI];
-                scalar& phiCorr = phiCorrect_.ref()[faceI];
+                const scalar phiCurr = phi[facei];
+                scalar& phiCorr = phiCorrect_.ref()[facei];
 
                 // Don't limit if the correction is in the opposite direction to
                 // the flux. We need all the help we can get in this state.
@@ -337,33 +337,33 @@ Foam::vector Foam::PackingModels::Implicit<CloudType>::velocityCorrection
     const fvMesh& mesh = this->owner().mesh();
 
     // containing tetrahedron and parcel coordinates within
-    const label cellI = p.cell();
-    const label faceI = p.tetFace();
-    const tetIndices tetIs(cellI, faceI, p.tetPt(), mesh);
+    const label celli = p.cell();
+    const label facei = p.tetFace();
+    const tetIndices tetIs(celli, facei, p.tetPt(), mesh);
     List<scalar> tetCoordinates(4);
     tetIs.tet(mesh).barycentric(p.position(), tetCoordinates);
 
     // cell velocity
-    const vector U = uCorrect_()[cellI];
+    const vector U = uCorrect_()[celli];
 
     // face geometry
-    vector nHat = mesh.faces()[faceI].normal(mesh.points());
+    vector nHat = mesh.faces()[facei].normal(mesh.points());
     const scalar nMag = mag(nHat);
     nHat /= nMag;
 
     // get face flux
     scalar phi;
-    const label patchI = mesh.boundaryMesh().whichPatch(faceI);
-    if (patchI == -1)
+    const label patchi = mesh.boundaryMesh().whichPatch(facei);
+    if (patchi == -1)
     {
-        phi = phiCorrect_()[faceI];
+        phi = phiCorrect_()[facei];
     }
     else
     {
         phi =
-            phiCorrect_().boundaryField()[patchI]
+            phiCorrect_().boundaryField()[patchi]
             [
-                mesh.boundaryMesh()[patchI].whichFace(faceI)
+                mesh.boundaryMesh()[patchi].whichFace(facei)
             ];
     }
 

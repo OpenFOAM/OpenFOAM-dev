@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,20 +32,20 @@ Description
 
 void Foam::sammMesh::purgeCellShapes()
 {
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        const faceList& curFaces = cellFaces_[cellI];
+        const faceList& curFaces = cellFaces_[celli];
 
         // Get model faces
-        faceList shapeFaces = cellShapes_[cellI].faces();
+        faceList shapeFaces = cellShapes_[celli].faces();
 
-        forAll(shapeFaces, faceI)
+        forAll(shapeFaces, facei)
         {
             bool found = false;
 
             forAll(curFaces, i)
             {
-                if (shapeFaces[faceI] == curFaces[i])
+                if (shapeFaces[facei] == curFaces[i])
                 {
                     found = true;
                     break;
@@ -54,8 +54,8 @@ void Foam::sammMesh::purgeCellShapes()
 
             if (!found)
             {
-                Info<< "Purging cell shape " << cellI << endl;
-                cellShapes_[cellI] = cellShape(*unknownPtr_, labelList(0));
+                Info<< "Purging cell shape " << celli << endl;
+                cellShapes_[celli] = cellShape(*unknownPtr_, labelList(0));
                 break;
             }
         }

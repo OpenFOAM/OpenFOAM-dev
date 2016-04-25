@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ template<class CloudType>
 Foam::scalar Foam::COxidationKineticDiffusionLimitedRate<CloudType>::calculate
 (
     const scalar dt,
-    const label cellI,
+    const label celli,
     const scalar d,
     const scalar T,
     const scalar Tc,
@@ -131,7 +131,7 @@ Foam::scalar Foam::COxidationKineticDiffusionLimitedRate<CloudType>::calculate
     const SLGThermo& thermo = this->owner().thermo();
 
     // Local mass fraction of O2 in the carrier phase
-    const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[cellI];
+    const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[celli];
 
     // Diffusion rate coefficient
     const scalar D0 = C1_/d*pow(0.5*(T + Tc), 0.75);

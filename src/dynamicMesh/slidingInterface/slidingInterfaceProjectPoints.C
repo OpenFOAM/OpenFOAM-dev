@@ -151,12 +151,12 @@ bool Foam::slidingInterface::projectPoints() const
         // Do faces
         const labelList& curFaces = masterEdgeFaces[edgeI];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            minMasterFaceLength[curFaces[faceI]] =
+            minMasterFaceLength[curFaces[facei]] =
                 min
                 (
-                    minMasterFaceLength[curFaces[faceI]],
+                    minMasterFaceLength[curFaces[facei]],
                     curLength
                 );
         }
@@ -194,12 +194,12 @@ bool Foam::slidingInterface::projectPoints() const
         // Do faces
         const labelList& curFaces = slaveEdgeFaces[edgeI];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            minSlaveFaceLength[curFaces[faceI]] =
+            minSlaveFaceLength[curFaces[facei]] =
                 min
                 (
-                    minSlaveFaceLength[curFaces[faceI]],
+                    minSlaveFaceLength[curFaces[facei]],
                     curLength
                 );
         }
@@ -889,9 +889,9 @@ bool Foam::slidingInterface::projectPoints() const
 
             const labelList curFaces = curFaceMap.toc();
 //             Pout<< "curFaces: " << curFaces << endl;
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
-                const face& f = masterLocalFaces[curFaces[faceI]];
+                const face& f = masterLocalFaces[curFaces[facei]];
 
                 forAll(f, pointI)
                 {

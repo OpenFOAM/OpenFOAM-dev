@@ -57,12 +57,12 @@ Foam::wallBoundedStreamLine::wallPatch() const
 
     label nFaces = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        //if (!polyPatch::constraintType(patches[patchI].type()))
-        if (isA<wallPolyPatch>(patches[patchI]))
+        //if (!polyPatch::constraintType(patches[patchi].type()))
+        if (isA<wallPolyPatch>(patches[patchi]))
         {
-            nFaces += patches[patchI].size();
+            nFaces += patches[patchi].size();
         }
     }
 
@@ -70,12 +70,12 @@ Foam::wallBoundedStreamLine::wallPatch() const
 
     nFaces = 0;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        //if (!polyPatch::constraintType(patches[patchI].type()))
-        if (isA<wallPolyPatch>(patches[patchI]))
+        //if (!polyPatch::constraintType(patches[patchi].type()))
+        if (isA<wallPolyPatch>(patches[patchi]))
         {
-            const polyPatch& pp = patches[patchI];
+            const polyPatch& pp = patches[patchi];
 
             forAll(pp, i)
             {
@@ -103,12 +103,12 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
 (
     const PackedBoolList& isWallPatch,
     const point& seedPt,
-    const label cellI
+    const label celli
 ) const
 {
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
 
-    const cell& cFaces = mesh.cells()[cellI];
+    const cell& cFaces = mesh.cells()[celli];
 
     label minFaceI = -1;
     label minTetPtI = -1;
@@ -116,12 +116,12 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
 
     forAll(cFaces, cFaceI)
     {
-        label faceI = cFaces[cFaceI];
+        label facei = cFaces[cFaceI];
 
-        if (isWallPatch[faceI])
+        if (isWallPatch[facei])
         {
-            const face& f = mesh.faces()[faceI];
-            const label fp0 = mesh.tetBasePtIs()[faceI];
+            const face& f = mesh.faces()[facei];
+            const label fp0 = mesh.tetBasePtIs()[facei];
             const point& basePoint = mesh.points()[f[fp0]];
 
             label fp = f.fcIndex(fp0);
@@ -137,7 +137,7 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
                 if (d2 < minDistSqr)
                 {
                     minDistSqr = d2;
-                    minFaceI = faceI;
+                    minFaceI = facei;
                     minTetPtI = i-1;
                 }
                 fp = nextFp;
@@ -148,7 +148,7 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
     // Put particle in tet
     return tetIndices
     (
-        cellI,
+        celli,
         minFaceI,
         minTetPtI,
         mesh
@@ -196,9 +196,9 @@ void Foam::wallBoundedStreamLine::track()
         forAll(seedPoints, i)
         {
             const point& seedPt = seedPoints[i];
-            label cellI = seedPoints.cells()[i];
+            label celli = seedPoints.cells()[i];
 
-            tetIndices ids(findNearestTet(isWallPatch, seedPt, cellI));
+            tetIndices ids(findNearestTet(isWallPatch, seedPt, celli));
 
             if (ids.face() != -1 && isWallPatch[ids.face()])
             {
@@ -583,16 +583,16 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
 
             // 2. all edges on a cell having two faces
             EdgeMap<label> numFacesPerEdge;
-            forAll(mesh.cells(), cellI)
+            forAll(mesh.cells(), celli)
             {
-                const cell& cFaces = mesh.cells()[cellI];
+                const cell& cFaces = mesh.cells()[celli];
 
                 numFacesPerEdge.clear();
 
                 forAll(cFaces, cFaceI)
                 {
-                    label faceI = cFaces[cFaceI];
-                    const face& f = mesh.faces()[faceI];
+                    label facei = cFaces[cFaceI];
+                    const face& f = mesh.faces()[facei];
                     forAll(f, fp)
                     {
                         const edge e(f[fp], f.nextLabel(fp));
@@ -614,7 +614,7 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
                     if (iter() != 2)
                     {
                         FatalErrorInFunction
-                            << "problem cell:" << cellI
+                            << "problem cell:" << celli
                             << abort(FatalError);
                     }
                 }

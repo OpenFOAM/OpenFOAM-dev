@@ -47,8 +47,8 @@ void Foam::nearWallFields::calcAddressing()
     label nPatchFaces = 0;
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchI = iter.key();
-        nPatchFaces += mesh.boundary()[patchI].size();
+        label patchi = iter.key();
+        nPatchFaces += mesh.boundary()[patchi].size();
     }
 
     // Global indexing
@@ -67,8 +67,8 @@ void Foam::nearWallFields::calcAddressing()
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        label patchI = iter.key();
-        const fvPatch& patch = mesh.boundary()[patchI];
+        label patchi = iter.key();
+        const fvPatch& patch = mesh.boundary()[patchi];
 
         vectorField nf(patch.nf());
         vectorField faceCellCentres(patch.patch().faceCellCentres());
@@ -104,10 +104,10 @@ void Foam::nearWallFields::calcAddressing()
             const point end = start-distance_*nf[patchFaceI];
 
             // Find tet for starting location
-            label cellI = -1;
+            label celli = -1;
             label tetFaceI = -1;
             label tetPtI = -1;
-            mesh.findCellFacePt(start, cellI, tetFaceI, tetPtI);
+            mesh.findCellFacePt(start, celli, tetFaceI, tetPtI);
 
             // Add to cloud. Add originating face as passive data
             cloud.addParticle
@@ -116,7 +116,7 @@ void Foam::nearWallFields::calcAddressing()
                 (
                     mesh,
                     start,
-                    cellI,
+                    celli,
                     tetFaceI,
                     tetPtI,
                     end,
@@ -202,10 +202,10 @@ void Foam::nearWallFields::calcAddressing()
             );
             InfoInFunction << "Dumping obtained to " << str.name() << endl;
 
-            forAll(cellToWalls_, cellI)
+            forAll(cellToWalls_, celli)
             {
-                const List<point>& ends = cellToSamples_[cellI];
-                const labelList& cData = cellToWalls_[cellI];
+                const List<point>& ends = cellToSamples_[celli];
+                const labelList& cData = cellToWalls_[celli];
                 forAll(cData, i)
                 {
                     str.write(linePointRef(ends[i], start[cData[i]]));

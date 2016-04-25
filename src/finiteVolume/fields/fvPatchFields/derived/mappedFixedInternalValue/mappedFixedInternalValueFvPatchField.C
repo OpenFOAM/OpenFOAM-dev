@@ -149,16 +149,16 @@ void Foam::mappedFixedInternalValueFvPatchField<Type>::updateCoeffs()
 
             const FieldType& nbrField = this->sampleField();
 
-            forAll(nbrField.boundaryField(), patchI)
+            forAll(nbrField.boundaryField(), patchi)
             {
-                const fvPatchField<Type>& pf = nbrField.boundaryField()[patchI];
+                const fvPatchField<Type>& pf = nbrField.boundaryField()[patchi];
                 const Field<Type> pif(pf.patchInternalField());
 
                 label faceStart = pf.patch().start();
 
-                forAll(pf, faceI)
+                forAll(pf, facei)
                 {
-                    allValues[faceStart++] = pif[faceI];
+                    allValues[faceStart++] = pif[facei];
                 }
             }
 

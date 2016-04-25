@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,11 +43,11 @@ void Foam::SuppressionCollision<CloudType>::collide(const scalar dt)
     forAllIter(typename CloudType, this->owner(), iter)
     {
         typename CloudType::parcelType& p = iter();
-        label cellI = p.cell();
+        label celli = p.cell();
 
         scalar xx = this->owner().rndGen().template sample01<scalar>();
 
-        if (xx < P[cellI])
+        if (xx < P[celli])
         {
             p.canCombust() = -1;
             p.typeId() = max(p.typeId(), suppressedParcelType_);

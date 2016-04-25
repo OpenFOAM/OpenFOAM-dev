@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,11 +78,11 @@ void Foam::enrichedPatch::calcLocalFaces() const
     localFacesPtr_ = new faceList(faces.size());
     faceList& lf = *localFacesPtr_;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
-        face& curlf = lf[faceI];
+        face& curlf = lf[facei];
 
         curlf.setSize(f.size());
 
@@ -225,16 +225,16 @@ bool Foam::enrichedPatch::checkSupport() const
 
     bool error = false;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& curFace = faces[faceI];
+        const face& curFace = faces[facei];
 
         forAll(curFace, pointI)
         {
             if (!pointMap().found(curFace[pointI]))
             {
                 WarningInFunction
-                    << "Point " << pointI << " of face " << faceI
+                    << "Point " << pointI << " of face " << facei
                     << " global point index: " << curFace[pointI]
                     << " not supported in point map.  This is not allowed."
                     << endl;
@@ -261,9 +261,9 @@ void Foam::enrichedPatch::writeOBJ(const fileName& fName) const
 
     const faceList& faces = localFaces();
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         str << 'f';
         forAll(f, fp)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,11 +37,11 @@ Foam::labelHashSet Foam::cellDistFuncs::getPatchIDs() const
 
     labelHashSet patchIDs(bMesh.size());
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        if (isA<Type>(bMesh[patchI]))
+        if (isA<Type>(bMesh[patchi]))
         {
-            patchIDs.insert(patchI);
+            patchIDs.insert(patchi);
         }
     }
     return patchIDs;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ void Foam::fileFormats::OFSsurfaceFormat<Face>::write
         os  << "\n// faces:"  << nl
             << faceLst.size() << token::BEGIN_LIST << nl;
 
-        label faceI = 0;
+        label facei = 0;
         forAll(zones, zoneI)
         {
             // Print all faces belonging to this zone
@@ -223,7 +223,7 @@ void Foam::fileFormats::OFSsurfaceFormat<Face>::write
 
             forAll(zone, localFaceI)
             {
-                os << faceLst[faceMap[faceI++]] << nl;
+                os << faceLst[faceMap[facei++]] << nl;
             }
         }
         os << token::END_LIST << nl;

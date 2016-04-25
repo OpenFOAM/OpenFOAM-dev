@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,20 +56,20 @@ void Foam::cuttingPlane::calcCutCells
     }
 
     cutCells_.setSize(listSize);
-    label cutcellI(0);
+    label cutcelli(0);
 
     // Find the cut cells by detecting any cell that uses points with
     // opposing dotProducts.
     for (label listI = 0; listI < listSize; ++listI)
     {
-        label cellI = listI;
+        label celli = listI;
 
         if (notNull(cellIdLabels))
         {
-            cellI = cellIdLabels[listI];
+            celli = cellIdLabels[listI];
         }
 
-        const labelList& cEdges = cellEdges[cellI];
+        const labelList& cEdges = cellEdges[celli];
 
         label nCutEdges = 0;
 
@@ -87,7 +87,7 @@ void Foam::cuttingPlane::calcCutCells
 
                 if (nCutEdges > 2)
                 {
-                    cutCells_[cutcellI++] = cellI;
+                    cutCells_[cutcelli++] = celli;
 
                     break;
                 }
@@ -96,7 +96,7 @@ void Foam::cuttingPlane::calcCutCells
     }
 
     // Set correct list size
-    cutCells_.setSize(cutcellI);
+    cutCells_.setSize(cutcelli);
 }
 
 
@@ -161,12 +161,12 @@ bool Foam::cuttingPlane::walkCell
 (
     const primitiveMesh& mesh,
     const labelUList& edgePoint,
-    const label cellI,
+    const label celli,
     const label startEdgeI,
     DynamicList<label>& faceVerts
 )
 {
-    label faceI = -1;
+    label facei = -1;
     label edgeI = startEdgeI;
 
     label nIter = 0;
@@ -177,10 +177,10 @@ bool Foam::cuttingPlane::walkCell
         faceVerts.append(edgePoint[edgeI]);
 
         // Cross edge to other face
-        faceI = meshTools::otherFace(mesh, cellI, faceI, edgeI);
+        facei = meshTools::otherFace(mesh, celli, facei, edgeI);
 
         // Find next cut edge on face.
-        const labelList& fEdges = mesh.faceEdges()[faceI];
+        const labelList& fEdges = mesh.faceEdges()[facei];
 
         label nextEdgeI = -1;
 
@@ -202,9 +202,9 @@ bool Foam::cuttingPlane::walkCell
 
         if (nextEdgeI == -1)
         {
-            // Did not find another cut edge on faceI. Do what?
+            // Did not find another cut edge on facei. Do what?
             WarningInFunction
-                << "Did not find closed walk along surface of cell " << cellI
+                << "Did not find closed walk along surface of cell " << celli
                 << " starting from edge " << startEdgeI
                 << " in " << nIter << " iterations." << nl
                 << "Collected cutPoints so far:" << faceVerts
@@ -220,7 +220,7 @@ bool Foam::cuttingPlane::walkCell
         if (nIter > 1000)
         {
             WarningInFunction
-                << "Did not find closed walk along surface of cell " << cellI
+                << "Did not find closed walk along surface of cell " << celli
                 << " starting from edge " << startEdgeI
                 << " in " << nIter << " iterations." << nl
                 << "Collected cutPoints so far:" << faceVerts
@@ -238,7 +238,7 @@ bool Foam::cuttingPlane::walkCell
     else
     {
         WarningInFunction
-            << "Did not find closed walk along surface of cell " << cellI
+            << "Did not find closed walk along surface of cell " << celli
             << " starting from edge " << startEdgeI << nl
             << "Collected cutPoints so far:" << faceVerts
             << endl;
@@ -266,10 +266,10 @@ void Foam::cuttingPlane::walkCellCuts
 
     forAll(cutCells_, i)
     {
-        label cellI = cutCells_[i];
+        label celli = cutCells_[i];
 
         // Find the starting edge to walk from.
-        const labelList& cEdges = mesh.cellEdges()[cellI];
+        const labelList& cEdges = mesh.cellEdges()[celli];
 
         label startEdgeI = -1;
 
@@ -288,7 +288,7 @@ void Foam::cuttingPlane::walkCellCuts
         if (startEdgeI == -1)
         {
             FatalErrorInFunction
-                << "Cannot find cut edge for cut cell " << cellI
+                << "Cannot find cut edge for cut cell " << celli
                 << abort(FatalError);
         }
 
@@ -297,7 +297,7 @@ void Foam::cuttingPlane::walkCellCuts
         (
             mesh,
             edgePoint,
-            cellI,
+            celli,
             startEdgeI,
             faceVerts
         );
@@ -318,13 +318,13 @@ void Foam::cuttingPlane::walkCellCuts
                 label nTri = f.triangles(cutPoints, dynCutFaces);
                 while (nTri--)
                 {
-                    dynCutCells.append(cellI);
+                    dynCutCells.append(celli);
                 }
             }
             else
             {
                 dynCutFaces.append(f);
-                dynCutCells.append(cellI);
+                dynCutCells.append(celli);
             }
         }
     }
@@ -397,9 +397,9 @@ void Foam::cuttingPlane::remapFaces
         MeshStorage::remapFaces(faceMap);
 
         List<label> newCutCells(faceMap.size());
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            newCutCells[faceI] = cutCells_[faceMap[faceI]];
+            newCutCells[facei] = cutCells_[faceMap[facei]];
         }
         cutCells_.transfer(newCutCells);
     }

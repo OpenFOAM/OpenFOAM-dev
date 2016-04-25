@@ -1207,9 +1207,9 @@ void Foam::globalMeshData::calcPointBoundaryFaces
 
     labelList nPointFaces(coupledPatch().nPoints(), 0);
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        const polyPatch& pp = bMesh[patchI];
+        const polyPatch& pp = bMesh[patchi];
 
         if (!pp.coupled())
         {
@@ -1245,9 +1245,9 @@ void Foam::globalMeshData::calcPointBoundaryFaces
 
     // 3. Fill
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        const polyPatch& pp = bMesh[patchI];
+        const polyPatch& pp = bMesh[patchi];
 
         if (!pp.coupled())
         {
@@ -1407,12 +1407,12 @@ void Foam::globalMeshData::calcGlobalPointBoundaryFaces() const
                     if (findIndex(untrafoFaces, slave)== -1)
                     {
                         label procI = globalIndices.whichProcID(slave);
-                        label faceI = globalIndices.toLocal(procI, slave);
+                        label facei = globalIndices.toLocal(procI, slave);
 
                         myBFaces[n++] = globalIndexAndTransform::encode
                         (
                             procI,
-                            faceI,
+                            facei,
                             transformI
                         );
                     }
@@ -1495,8 +1495,8 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
 
         forAll(pCells, i)
         {
-            label cellI = pCells[i];
-            Map<label>::iterator fnd = meshCellMap.find(cellI);
+            label celli = pCells[i];
+            Map<label>::iterator fnd = meshCellMap.find(celli);
 
             if (fnd != meshCellMap.end())
             {
@@ -1504,8 +1504,8 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
             }
             else
             {
-                meshCellMap.insert(cellI, bCellI);
-                cellMap.append(cellI);
+                meshCellMap.insert(celli, bCellI);
+                cellMap.append(celli);
                 bCells[i] = bCellI;
                 bCellI++;
             }
@@ -1636,11 +1636,11 @@ void Foam::globalMeshData::calcGlobalPointBoundaryCells() const
                     if (findIndex(untrafoCells, slave)== -1)
                     {
                         label procI = globalIndices.whichProcID(slave);
-                        label cellI = globalIndices.toLocal(procI, slave);
+                        label celli = globalIndices.toLocal(procI, slave);
                         myBCells[n++] = globalIndexAndTransform::encode
                         (
                             procI,
-                            cellI,
+                            celli,
                             transformI
                         );
                     }
@@ -2041,9 +2041,9 @@ const Foam::indirectPrimitivePatch& Foam::globalMeshData::coupledPatch() const
 
         label nCoupled = 0;
 
-        forAll(bMesh, patchI)
+        forAll(bMesh, patchi)
         {
-            const polyPatch& pp = bMesh[patchI];
+            const polyPatch& pp = bMesh[patchi];
 
             if (pp.coupled())
             {
@@ -2053,17 +2053,17 @@ const Foam::indirectPrimitivePatch& Foam::globalMeshData::coupledPatch() const
         labelList coupledFaces(nCoupled);
         nCoupled = 0;
 
-        forAll(bMesh, patchI)
+        forAll(bMesh, patchi)
         {
-            const polyPatch& pp = bMesh[patchI];
+            const polyPatch& pp = bMesh[patchi];
 
             if (pp.coupled())
             {
-                label faceI = pp.start();
+                label facei = pp.start();
 
                 forAll(pp, i)
                 {
-                    coupledFaces[nCoupled++] = faceI++;
+                    coupledFaces[nCoupled++] = facei++;
                 }
             }
         }

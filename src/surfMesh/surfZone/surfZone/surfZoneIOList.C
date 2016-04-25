@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Foam::surfZoneIOList::surfZoneIOList
         PtrList<entry> dictEntries(is);
         zones.setSize(dictEntries.size());
 
-        label faceI = 0;
+        label facei = 0;
         forAll(zones, zoneI)
         {
             const dictionary& dict = dictEntries[zoneI].dict();
@@ -83,7 +83,7 @@ Foam::surfZoneIOList::surfZoneIOList
                 zones[zoneI].geometricType() = geoType;
             }
 
-            if (startFaceI != faceI)
+            if (startFaceI != facei)
             {
                 FatalErrorInFunction
                     << "surfZones are not ordered. Start of zone " << zoneI
@@ -92,7 +92,7 @@ Foam::surfZoneIOList::surfZoneIOList
                     << exit(FatalError);
             }
 
-            faceI += zoneSize;
+            facei += zoneSize;
         }
 
         // Check state of IOstream

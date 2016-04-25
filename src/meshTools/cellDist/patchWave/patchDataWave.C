@@ -40,13 +40,13 @@ void Foam::patchDataWave<TransferType>::setChangedFaces
 
     label nChangedFaces = 0;
 
-    forAll(mesh.boundaryMesh(), patchI)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        if (patchIDs.found(patchI))
+        if (patchIDs.found(patchi))
         {
-            const polyPatch& patch = mesh.boundaryMesh()[patchI];
+            const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
-            const Field<Type>& patchField = initialPatchValuePtrs_[patchI];
+            const Field<Type>& patchField = initialPatchValuePtrs_[patchi];
 
             forAll(patch.faceCentres(), patchFaceI)
             {
@@ -86,48 +86,48 @@ Foam::label Foam::patchDataWave<TransferType>::getValues
     // Copy cell values
     distance_.setSize(cellInfo.size());
 
-    forAll(cellInfo, cellI)
+    forAll(cellInfo, celli)
     {
-        const TransferType & wpn = cellInfo[cellI];
+        const TransferType & wpn = cellInfo[celli];
 
         scalar dist = wpn.distSqr();
 
-        if (cellInfo[cellI].valid(waveInfo.data()))
+        if (cellInfo[celli].valid(waveInfo.data()))
         {
-            distance_[cellI] = Foam::sqrt(dist);
+            distance_[celli] = Foam::sqrt(dist);
 
-            cellData_[cellI] = cellInfo[cellI].data();
+            cellData_[celli] = cellInfo[celli].data();
         }
         else
         {
             // Illegal/unset value. What to do with data?
             // Note: mag for now. Should maybe be member of TransferType?
 
-            distance_[cellI] = mag(dist);
+            distance_[celli] = mag(dist);
 
-            //cellData_[cellI] = point::max;
-            cellData_[cellI] = cellInfo[cellI].data();
+            //cellData_[celli] = point::max;
+            cellData_[celli] = cellInfo[celli].data();
 
             nIllegal++;
         }
     }
 
     // Copy boundary values
-    forAll(patchDistance_, patchI)
+    forAll(patchDistance_, patchi)
     {
-        const polyPatch& patch = mesh.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh.boundaryMesh()[patchi];
 
         // Allocate storage for patchDistance
         scalarField* patchFieldPtr = new scalarField(patch.size());
 
-        patchDistance_.set(patchI, patchFieldPtr);
+        patchDistance_.set(patchi, patchFieldPtr);
 
         scalarField& patchField = *patchFieldPtr;
 
         // Allocate storage for patchData
         Field<Type>* patchDataFieldPtr = new Field<Type>(patch.size());
 
-        patchData_.set(patchI, patchDataFieldPtr);
+        patchData_.set(patchi, patchDataFieldPtr);
 
         Field<Type>& patchDataField = *patchDataFieldPtr;
 
@@ -265,11 +265,11 @@ void Foam::patchDataWave<TransferType>::correct()
 
         forAll(wallCells, wallCellI)
         {
-            label cellI = wallCells[wallCellI];
+            label celli = wallCells[wallCellI];
 
-            label faceI = nearestFace[cellI];
+            label facei = nearestFace[celli];
 
-            cellData_[cellI] = faceInfo[faceI].data();
+            cellData_[celli] = faceInfo[facei].data();
         }
     }
 }

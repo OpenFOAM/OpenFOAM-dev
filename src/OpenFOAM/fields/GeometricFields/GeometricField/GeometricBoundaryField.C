@@ -634,9 +634,9 @@ operator==
     GeometricBoundaryField& bf
 )
 {
-    forAll((*this), patchI)
+    forAll((*this), patchi)
     {
-        this->operator[](patchI) == bf[patchI];
+        this->operator[](patchi) == bf[patchi];
     }
 }
 
@@ -648,9 +648,9 @@ operator==
     const FieldField<PatchField, Type>& ptff
 )
 {
-    forAll((*this), patchI)
+    forAll((*this), patchi)
     {
-        this->operator[](patchI) == ptff[patchI];
+        this->operator[](patchi) == ptff[patchi];
     }
 }
 
@@ -662,9 +662,9 @@ operator==
     const Type& t
 )
 {
-    forAll((*this), patchI)
+    forAll((*this), patchi)
     {
-        this->operator[](patchI) == t;
+        this->operator[](patchi) == t;
     }
 }
 

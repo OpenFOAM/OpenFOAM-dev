@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ public:
 
             //- Add intersection edges to a face. Used for connecting
             //  floating intersection on face to rest of face.
-            void addIntersectionEdges(const label faceI, const edgeList&);
+            void addIntersectionEdges(const label facei, const edgeList&);
 };
 
 

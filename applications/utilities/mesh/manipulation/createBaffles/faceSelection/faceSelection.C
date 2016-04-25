@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,11 +94,11 @@ void Foam::faceSelection::select
 {
     if (flip_)
     {
-        forAll(faceToZoneID, faceI)
+        forAll(faceToZoneID, facei)
         {
-            if (faceToZoneID[faceI] == zoneID)
+            if (faceToZoneID[facei] == zoneID)
             {
-                faceToFlip[faceI] = !faceToFlip[faceI];
+                faceToFlip[facei] = !faceToFlip[facei];
             }
         }
     }

@@ -89,12 +89,12 @@ void Foam::volPointInterpolation::addSeparated
     typename GeometricField<Type, pointPatchField, pointMesh>::
         GeometricBoundaryField& pfbf = pf.boundaryFieldRef();
 
-    forAll(pfbf, patchI)
+    forAll(pfbf, patchi)
     {
-        if (pfbf[patchI].coupled())
+        if (pfbf[patchi].coupled())
         {
             refCast<coupledPointPatchField<Type>>
-                (pfbf[patchI]).initSwapAddSeparated
+                (pfbf[patchi]).initSwapAddSeparated
                 (
                     Pstream::nonBlocking,
                     pf.internalField()
@@ -105,12 +105,12 @@ void Foam::volPointInterpolation::addSeparated
     // Block for any outstanding requests
     Pstream::waitRequests();
 
-    forAll(pfbf, patchI)
+    forAll(pfbf, patchi)
     {
-        if (pfbf[patchI].coupled())
+        if (pfbf[patchi].coupled())
         {
             refCast<coupledPointPatchField<Type>>
-                (pfbf[patchI]).swapAddSeparated
+                (pfbf[patchi]).swapAddSeparated
                 (
                     Pstream::nonBlocking,
                     pf.internalField()
@@ -172,26 +172,26 @@ Foam::tmp<Foam::Field<Type>> Foam::volPointInterpolation::flatBoundaryField
     );
     Field<Type>& boundaryVals = tboundaryVals.ref();
 
-    forAll(vf.boundaryField(), patchI)
+    forAll(vf.boundaryField(), patchi)
     {
-        label bFaceI = bm[patchI].patch().start() - mesh.nInternalFaces();
+        label bFaceI = bm[patchi].patch().start() - mesh.nInternalFaces();
 
         if
         (
-           !isA<emptyFvPatch>(bm[patchI])
-        && !vf.boundaryField()[patchI].coupled()
+           !isA<emptyFvPatch>(bm[patchi])
+        && !vf.boundaryField()[patchi].coupled()
         )
         {
             SubList<Type>
             (
                 boundaryVals,
-                vf.boundaryField()[patchI].size(),
+                vf.boundaryField()[patchi].size(),
                 bFaceI
-            ) = vf.boundaryField()[patchI];
+            ) = vf.boundaryField()[patchi];
         }
         else
         {
-            const polyPatch& pp = bm[patchI].patch();
+            const polyPatch& pp = bm[patchi].patch();
 
             forAll(pp, i)
             {

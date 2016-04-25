@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,21 +34,21 @@ void Foam::starMesh::fixCollapsedEdges()
 {
     cellFaces_.setSize(cellShapes_.size());
 
-    forAll(cellShapes_, cellI)
+    forAll(cellShapes_, celli)
     {
-        cellFaces_[cellI] = cellShapes_[cellI].faces();
+        cellFaces_[celli] = cellShapes_[celli].faces();
     }
 
     // go through the faces and find if there exist faces with duplicate
     // vertices. If so, purge the duplicates and mark the mesh as a polyMesh
 
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        faceList& curFaces = cellFaces_[cellI];
+        faceList& curFaces = cellFaces_[celli];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            face& vertexLabels = curFaces[faceI];
+            face& vertexLabels = curFaces[facei];
 
             bool duplicatesFound = false;
 
@@ -128,7 +128,7 @@ void Foam::starMesh::fixCollapsedEdges()
                 if (nNewVertices < 3)
                 {
                     FatalErrorInFunction
-                        << "Face " << faceI << " of cell " << cellI
+                        << "Face " << facei << " of cell " << celli
                         << " is colapsed down to a point or edge, which is "
                         << "not permitted" << endl
                         << "original face: " << vertexLabels << endl

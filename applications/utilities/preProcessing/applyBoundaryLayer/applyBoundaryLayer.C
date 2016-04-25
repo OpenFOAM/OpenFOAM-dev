@@ -104,12 +104,12 @@ int main(int argc, char *argv[])
 
     Info<< "Setting boundary layer velocity" << nl << endl;
     scalar yblv = ybl.value();
-    forAll(U, cellI)
+    forAll(U, celli)
     {
-        if (y[cellI] <= yblv)
+        if (y[celli] <= yblv)
         {
-            mask[cellI] = 1;
-            U[cellI] *= ::pow(y[cellI]/yblv, (1.0/7.0));
+            mask[celli] = 1;
+            U[celli] *= ::pow(y[celli]/yblv, (1.0/7.0));
         }
     }
     mask.correctBoundaryConditions();

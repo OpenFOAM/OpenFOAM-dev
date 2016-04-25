@@ -86,9 +86,9 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::fvMeshAdder::add
 
     fvBoundaryMesh& fvPatches = const_cast<fvBoundaryMesh&>(mesh0.boundary());
     fvPatches.setSize(patches.size());
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        fvPatches.set(patchI, fvPatch::New(patches[patchI], fvPatches));
+        fvPatches.set(patchi, fvPatch::New(patches[patchi], fvPatches));
     }
 
     // Do the mapping of the stored fields

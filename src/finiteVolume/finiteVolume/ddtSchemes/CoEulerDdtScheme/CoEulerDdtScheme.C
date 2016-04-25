@@ -66,13 +66,13 @@ tmp<volScalarField> CoEulerDdtScheme<Type>::CorDeltaT() const
     const labelUList& owner = mesh().owner();
     const labelUList& neighbour = mesh().neighbour();
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        corDeltaT[owner[faceI]] =
-            max(corDeltaT[owner[faceI]], cofrDeltaT[faceI]);
+        corDeltaT[owner[facei]] =
+            max(corDeltaT[owner[facei]], cofrDeltaT[facei]);
 
-        corDeltaT[neighbour[faceI]] =
-            max(corDeltaT[neighbour[faceI]], cofrDeltaT[faceI]);
+        corDeltaT[neighbour[facei]] =
+            max(corDeltaT[neighbour[facei]], cofrDeltaT[facei]);
     }
 
     const surfaceScalarField::GeometricBoundaryField& cofrDeltaTbf =

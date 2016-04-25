@@ -88,8 +88,8 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
 
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        hec[cellI]= max(min(hec[cellI], heMax[i]), heMin[i]);
+        label celli = cells_[i];
+        hec[celli]= max(min(hec[celli], heMax[i]), heMin[i]);
     }
 
     // handle boundaries in the case of 'all'

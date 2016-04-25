@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,36 +59,36 @@ void Foam::nbrToCell::combine(topoSet& set, const bool add) const
 
     boolList isCoupled(mesh_.nFaces()-mesh_.nInternalFaces(), false);
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
             forAll(pp, i)
             {
-                isCoupled[faceI-mesh_.nInternalFaces()] = true;
-                faceI++;
+                isCoupled[facei-mesh_.nInternalFaces()] = true;
+                facei++;
             }
         }
     }
 
-    forAll(cells, cellI)
+    forAll(cells, celli)
     {
-        const cell& cFaces = cells[cellI];
+        const cell& cFaces = cells[celli];
 
         label nNbrCells = 0;
 
         forAll(cFaces, i)
         {
-            label faceI = cFaces[i];
+            label facei = cFaces[i];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
                 nNbrCells++;
             }
-            else if (isCoupled[faceI-mesh_.nInternalFaces()])
+            else if (isCoupled[facei-mesh_.nInternalFaces()])
             {
                 nNbrCells++;
             }
@@ -96,7 +96,7 @@ void Foam::nbrToCell::combine(topoSet& set, const bool add) const
 
         if (nNbrCells <= minNbrs_)
         {
-            addOrDelete(set, cellI, add);
+            addOrDelete(set, celli, add);
         }
     }
 }

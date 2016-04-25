@@ -158,7 +158,7 @@ protected:
         //  ensure that it lies in a cell and not edge/face
         virtual bool findCellAtPosition
         (
-            label& cellI,
+            label& celli,
             label& tetFaceI,
             label& tetPtI,
             vector& position,

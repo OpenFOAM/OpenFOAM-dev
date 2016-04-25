@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,17 +139,17 @@ Foam::pointField Foam::coupledPolyPatch::getAnchorPoints
     if (transform != COINCIDENTFULLMATCH)
     {
         // Return the first point
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            anchors[faceI] = points[faces[faceI][0]];
+            anchors[facei] = points[faces[facei][0]];
         }
     }
     else
     {
         // Make anchor point unique
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
-            const face& f = faces[faceI];
+            const face& f = faces[facei];
 
             bool unique = true;
 
@@ -179,14 +179,14 @@ Foam::pointField Foam::coupledPolyPatch::getAnchorPoints
 
                 if (unique)
                 {
-                    anchors[faceI] = p1;
+                    anchors[facei] = p1;
                     break;
                 }
             }
 
             if (!unique)
             {
-                anchors[faceI] = points[faces[faceI][0]];
+                anchors[facei] = points[faces[facei][0]];
             }
         }
     }
@@ -205,11 +205,11 @@ Foam::scalarField Foam::coupledPolyPatch::calcFaceTol
     // Calculate typical distance per face
     scalarField tols(faces.size());
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const point& cc = faceCentres[faceI];
+        const point& cc = faceCentres[facei];
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         // 1. calculate a typical size of the face. Use maximum distance
         //    to face centre
@@ -225,7 +225,7 @@ Foam::scalarField Foam::coupledPolyPatch::calcFaceTol
             maxCmpt = max(maxCmpt, cmptMax(cmptMag(pt)));
         }
 
-        tols[faceI] = max
+        tols[facei] = max
         (
             SMALL,
             max(SMALL*maxCmpt, Foam::sqrt(maxLenSqr))

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,10 +226,10 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
 
     pointField neighbourCellCentres(mesh.nFaces() - nInternalFaces);
 
-    for(label faceI = nInternalFaces; faceI < mesh.nFaces(); faceI++)
+    for(label facei = nInternalFaces; facei < mesh.nFaces(); facei++)
     {
-        neighbourCellCentres[faceI - nInternalFaces] =
-            pC[pOwner[faceI]];
+        neighbourCellCentres[facei - nInternalFaces] =
+            pC[pOwner[facei]];
     }
 
     syncTools::swapBoundaryFacePositions(mesh, neighbourCellCentres);
@@ -250,13 +250,13 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
         fI++, bFI++
     )
     {
-        label patchI =
+        label patchi =
             mesh.boundaryMesh().patchID()[bFI];
 
-        if (patches[patchI].coupled())
+        if (patches[patchi].coupled())
         {
             const coupledPolyPatch& pp =
-                refCast<const coupledPolyPatch>(patches[patchI]);
+                refCast<const coupledPolyPatch>(patches[patchi]);
 
             if (pp.owner())
             {
@@ -323,12 +323,12 @@ Foam::labelList Foam::polyMeshTetDecomposition::findFaceBasePts
             continue;
         }
 
-        label patchI = mesh.boundaryMesh().patchID()[bFI];
+        label patchi = mesh.boundaryMesh().patchID()[bFI];
 
-        if (patches[patchI].coupled())
+        if (patches[patchi].coupled())
         {
             const coupledPolyPatch& pp =
-                refCast<const coupledPolyPatch>(patches[patchI]);
+                refCast<const coupledPolyPatch>(patches[patchi]);
 
             // Calculated base points on coupled faces are those of
             // the owner patch face. They need to be reindexed to for
@@ -381,9 +381,9 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
     // Calculate coupled cell centre
     pointField neiCc(mesh.nFaces() - mesh.nInternalFaces());
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        neiCc[faceI - mesh.nInternalFaces()] = cc[own[faceI]];
+        neiCc[facei - mesh.nInternalFaces()] = cc[own[facei]];
     }
 
     syncTools::swapBoundaryFacePositions(mesh, neiCc);
@@ -394,9 +394,9 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
 
     label nErrorTets = 0;
 
-    forAll(fcs, faceI)
+    forAll(fcs, facei)
     {
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
         forAll(f, fPtI)
         {
@@ -404,15 +404,15 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
             (
                 p[f[fPtI]],
                 p[f.nextLabel(fPtI)],
-                fc[faceI],
-                cc[own[faceI]]
+                fc[facei],
+                cc[own[facei]]
             ).quality();
 
             if (tetQual > -tol)
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nErrorTets++;
@@ -420,10 +420,10 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
             }
         }
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             // Create the neighbour tet - it will have positive volume
-            const face& f = fcs[faceI];
+            const face& f = fcs[facei];
 
             forAll(f, fPtI)
             {
@@ -431,15 +431,15 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
                 (
                     p[f[fPtI]],
                     p[f.nextLabel(fPtI)],
-                    fc[faceI],
-                    cc[nei[faceI]]
+                    fc[facei],
+                    cc[nei[facei]]
                 ).quality();
 
                 if (tetQual < tol)
                 {
                     if (setPtr)
                     {
-                        setPtr->insert(faceI);
+                        setPtr->insert(facei);
                     }
 
                     nErrorTets++;
@@ -447,11 +447,11 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
                 }
             }
 
-            if (findSharedBasePoint(mesh, faceI, tol, report) == -1)
+            if (findSharedBasePoint(mesh, facei, tol, report) == -1)
             {
                 if (setPtr)
                 {
-                    setPtr->insert(faceI);
+                    setPtr->insert(facei);
                 }
 
                 nErrorTets++;
@@ -459,17 +459,17 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
         }
         else
         {
-            label patchI = patches.patchID()[faceI - mesh.nInternalFaces()];
+            label patchi = patches.patchID()[facei - mesh.nInternalFaces()];
 
-            if (patches[patchI].coupled())
+            if (patches[patchi].coupled())
             {
                 if
                 (
                     findSharedBasePoint
                     (
                         mesh,
-                        faceI,
-                        neiCc[faceI - mesh.nInternalFaces()],
+                        facei,
+                        neiCc[facei - mesh.nInternalFaces()],
                         tol,
                         report
                     ) == -1
@@ -477,7 +477,7 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
                 {
                     if (setPtr)
                     {
-                        setPtr->insert(faceI);
+                        setPtr->insert(facei);
                     }
 
                     nErrorTets++;
@@ -485,11 +485,11 @@ bool Foam::polyMeshTetDecomposition::checkFaceTets
             }
             else
             {
-                if (findBasePoint(mesh, faceI, tol, report) == -1)
+                if (findBasePoint(mesh, facei, tol, report) == -1)
                 {
                     if (setPtr)
                     {
-                        setPtr->insert(faceI);
+                        setPtr->insert(facei);
                     }
 
                     nErrorTets++;

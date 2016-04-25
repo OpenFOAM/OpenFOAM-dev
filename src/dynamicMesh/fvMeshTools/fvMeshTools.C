@@ -40,11 +40,11 @@ Foam::label Foam::fvMeshTools::addPatch
     polyBoundaryMesh& polyPatches =
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
 
-    label patchI = polyPatches.findPatchID(patch.name());
-    if (patchI != -1)
+    label patchi = polyPatches.findPatchID(patch.name());
+    if (patchi != -1)
     {
         // Already there
-        return patchI;
+        return patchi;
     }
 
 
@@ -54,13 +54,13 @@ Foam::label Foam::fvMeshTools::addPatch
 
     if (!isA<processorPolyPatch>(patch))
     {
-        forAll(polyPatches, patchI)
+        forAll(polyPatches, patchi)
         {
-            const polyPatch& pp = polyPatches[patchI];
+            const polyPatch& pp = polyPatches[patchi];
 
             if (isA<processorPolyPatch>(pp))
             {
-                insertPatchI = patchI;
+                insertPatchI = patchi;
                 startFaceI = pp.start();
                 break;
             }
@@ -213,60 +213,60 @@ Foam::label Foam::fvMeshTools::addPatch
 void Foam::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const dictionary& patchFieldDict
 )
 {
-    setPatchFields<volScalarField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volVectorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volSphericalTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volSymmTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<volTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<surfaceScalarField>(mesh, patchI, patchFieldDict);
-    setPatchFields<surfaceVectorField>(mesh, patchI, patchFieldDict);
+    setPatchFields<volScalarField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volVectorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volSphericalTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volSymmTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<volTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<surfaceScalarField>(mesh, patchi, patchFieldDict);
+    setPatchFields<surfaceVectorField>(mesh, patchi, patchFieldDict);
     setPatchFields<surfaceSphericalTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         patchFieldDict
     );
-    setPatchFields<surfaceSymmTensorField>(mesh, patchI, patchFieldDict);
-    setPatchFields<surfaceTensorField>(mesh, patchI, patchFieldDict);
+    setPatchFields<surfaceSymmTensorField>(mesh, patchi, patchFieldDict);
+    setPatchFields<surfaceTensorField>(mesh, patchi, patchFieldDict);
 }
 
 
-void Foam::fvMeshTools::zeroPatchFields(fvMesh& mesh, const label patchI)
+void Foam::fvMeshTools::zeroPatchFields(fvMesh& mesh, const label patchi)
 {
-    setPatchFields<volScalarField>(mesh, patchI, Zero);
-    setPatchFields<volVectorField>(mesh, patchI, Zero);
+    setPatchFields<volScalarField>(mesh, patchi, Zero);
+    setPatchFields<volVectorField>(mesh, patchi, Zero);
     setPatchFields<volSphericalTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         Zero
     );
     setPatchFields<volSymmTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         Zero
     );
-    setPatchFields<volTensorField>(mesh, patchI, Zero);
-    setPatchFields<surfaceScalarField>(mesh, patchI, Zero);
-    setPatchFields<surfaceVectorField>(mesh, patchI, Zero);
+    setPatchFields<volTensorField>(mesh, patchi, Zero);
+    setPatchFields<surfaceScalarField>(mesh, patchi, Zero);
+    setPatchFields<surfaceVectorField>(mesh, patchi, Zero);
     setPatchFields<surfaceSphericalTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         Zero
     );
     setPatchFields<surfaceSymmTensorField>
     (
         mesh,
-        patchI,
+        patchi,
         Zero
     );
-    setPatchFields<surfaceTensorField>(mesh, patchI, Zero);
+    setPatchFields<surfaceTensorField>(mesh, patchi, Zero);
 }
 
 
@@ -288,9 +288,9 @@ void Foam::fvMeshTools::trimPatches(fvMesh& mesh, const label nPatches)
     }
 
     label nFaces = 0;
-    for (label patchI = nPatches; patchI < polyPatches.size(); patchI++)
+    for (label patchi = nPatches; patchi < polyPatches.size(); patchi++)
     {
-        nFaces += polyPatches[patchI].size();
+        nFaces += polyPatches[patchi].size();
     }
     reduce(nFaces, sumOp<label>());
 

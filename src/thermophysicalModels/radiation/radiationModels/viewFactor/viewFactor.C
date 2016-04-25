@@ -52,15 +52,15 @@ void Foam::radiation::viewFactor::initialise()
     const volScalarField::GeometricBoundaryField& Qrp = Qr_.boundaryField();
 
     label count = 0;
-    forAll(Qrp, patchI)
+    forAll(Qrp, patchi)
     {
-        //const polyPatch& pp = mesh_.boundaryMesh()[patchI];
-        const fvPatchScalarField& QrPatchI = Qrp[patchI];
+        //const polyPatch& pp = mesh_.boundaryMesh()[patchi];
+        const fvPatchScalarField& QrPatchI = Qrp[patchi];
 
         if ((isA<fixedValueFvPatchScalarField>(QrPatchI)))
         {
             selectedPatches_[count] = QrPatchI.patch().index();
-            nLocalCoarseFaces_ += coarsePatches[patchI].size();
+            nLocalCoarseFaces_ += coarsePatches[patchi].size();
             count++;
         }
     }
@@ -377,12 +377,12 @@ void Foam::radiation::viewFactor::insertMatrixElements
     scalarSquareMatrix& Fmatrix
 )
 {
-    forAll(viewFactors, faceI)
+    forAll(viewFactors, facei)
     {
-        const scalarList& vf = viewFactors[faceI];
-        const labelList& globalFaces = globalFaceFaces[faceI];
+        const scalarList& vf = viewFactors[facei];
+        const labelList& globalFaces = globalFaceFaces[facei];
 
-        label globalI = globalNumbering.toGlobal(procI, faceI);
+        label globalI = globalNumbering.toGlobal(procI, facei);
         forAll(globalFaces, i)
         {
             Fmatrix[globalI][globalFaces[i]] = vf[i];
@@ -455,10 +455,10 @@ void Foam::radiation::viewFactor::calculate()
                 // Temperature, emissivity and external flux area weighting
                 forAll(fineFaces, j)
                 {
-                    label faceI = fineFaces[j];
-                    Tave[coarseI] += (Tp[faceI]*sf[faceI])/area;
-                    Eave[coarseI] += (eb[faceI]*sf[faceI])/area;
-                    Hoiave[coarseI] += (Hoi[faceI]*sf[faceI])/area;
+                    label facei = fineFaces[j];
+                    Tave[coarseI] += (Tp[facei]*sf[facei])/area;
+                    Eave[coarseI] += (eb[facei]*sf[facei])/area;
+                    Hoiave[coarseI] += (Hoi[facei]*sf[facei])/area;
                 }
             }
         }
@@ -644,10 +644,10 @@ void Foam::radiation::viewFactor::calculate()
                 const labelList& fineFaces = coarseToFine[coarseFaceID];
                 forAll(fineFaces, k)
                 {
-                    label faceI = fineFaces[k];
+                    label facei = fineFaces[k];
 
-                    Qrp[faceI] = q[globalCoarse];
-                    heatFlux += Qrp[faceI]*sf[faceI];
+                    Qrp[facei] = q[globalCoarse];
+                    heatFlux += Qrp[facei]*sf[facei];
                 }
                 globCoarseId ++;
             }

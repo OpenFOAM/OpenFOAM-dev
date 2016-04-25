@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,12 +139,12 @@ void Foam::fieldMinMax::calcMinMaxFields
                 maxVs[procI] = magField[maxProcI];
                 maxCs[procI] = field.mesh().C()[maxProcI];
 
-                forAll(magFieldBoundary, patchI)
+                forAll(magFieldBoundary, patchi)
                 {
-                    const scalarField& mfp = magFieldBoundary[patchI];
+                    const scalarField& mfp = magFieldBoundary[patchi];
                     if (mfp.size())
                     {
-                        const vectorField& Cfp = CfBoundary[patchI];
+                        const vectorField& Cfp = CfBoundary[patchi];
 
                         label minPI = findMin(mfp);
                         if (mfp[minPI] < minVs[procI])
@@ -212,12 +212,12 @@ void Foam::fieldMinMax::calcMinMaxFields
                 maxVs[procI] = field[maxProcI];
                 maxCs[procI] = field.mesh().C()[maxProcI];
 
-                forAll(fieldBoundary, patchI)
+                forAll(fieldBoundary, patchi)
                 {
-                    const Field<Type>& fp = fieldBoundary[patchI];
+                    const Field<Type>& fp = fieldBoundary[patchi];
                     if (fp.size())
                     {
-                        const vectorField& Cfp = CfBoundary[patchI];
+                        const vectorField& Cfp = CfBoundary[patchi];
 
                         label minPI = findMin(fp);
                         if (fp[minPI] < minVs[procI])

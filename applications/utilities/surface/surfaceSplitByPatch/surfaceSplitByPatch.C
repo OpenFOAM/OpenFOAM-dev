@@ -83,13 +83,13 @@ int main(int argc, char *argv[])
         // Collect faces of region
         boolList includeMap(surf.size(), false);
 
-        forAll(surf, faceI)
+        forAll(surf, facei)
         {
-            const labelledTri& f = surf[faceI];
+            const labelledTri& f = surf[facei];
 
             if (f.region() == patchi)
             {
-                includeMap[faceI] = true;
+                includeMap[facei] = true;
             }
         }
 

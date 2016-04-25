@@ -44,17 +44,17 @@ Usage
 
 using namespace Foam;
 
-// Split faceI along edgeI at position newPointI
+// Split facei along edgeI at position newPointI
 void greenRefine
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const label newPointI,
     DynamicList<labelledTri>& newFaces
 )
 {
-    const labelledTri& f = surf.localFaces()[faceI];
+    const labelledTri& f = surf.localFaces()[facei];
     const edge& e = surf.edges()[edgeI];
 
     // Find index of edge in face.
@@ -478,9 +478,9 @@ int main(int argc, char *argv[])
                         continue;
                     }
 
-                    const label faceI = eFaces[0];
+                    const label facei = eFaces[0];
 
-                    if (visitedFace[hitSurfI][faceI])
+                    if (visitedFace[hitSurfI][facei])
                     {
                         continue;
                     }
@@ -523,13 +523,13 @@ int main(int argc, char *argv[])
                     greenRefine
                     (
                         hitSurf,
-                        faceI,
+                        facei,
                         eIndex,
                         newPointI,
                         newFacesFromSplit
                     );
 
-                    visitedFace[hitSurfI][faceI] = true;
+                    visitedFace[hitSurfI][facei] = true;
 
                     forAll(newFacesFromSplit, newFaceI)
                     {
@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
 
                         if (newFaceI == 0)
                         {
-                            newFaces[hitSurfI][faceI] = fN;
+                            newFaces[hitSurfI][facei] = fN;
                         }
                         else
                         {

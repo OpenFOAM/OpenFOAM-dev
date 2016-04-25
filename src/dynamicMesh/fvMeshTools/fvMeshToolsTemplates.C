@@ -88,7 +88,7 @@ template<class GeoField>
 void Foam::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const dictionary& patchFieldDict
 )
 {
@@ -108,10 +108,10 @@ void Foam::fvMeshTools::setPatchFields
         {
             bfld.set
             (
-                patchI,
+                patchi,
                 GeoField::PatchFieldType::New
                 (
-                    mesh.boundary()[patchI],
+                    mesh.boundary()[patchi],
                     fld.dimensionedInternalField(),
                     patchFieldDict.subDict(fld.name())
                 )
@@ -127,7 +127,7 @@ template<class GeoField>
 void Foam::fvMeshTools::setPatchFields
 (
     fvMesh& mesh,
-    const label patchI,
+    const label patchi,
     const typename GeoField::value_type& value
 )
 {
@@ -143,7 +143,7 @@ void Foam::fvMeshTools::setPatchFields
         typename GeoField::GeometricBoundaryField& bfld =
             fld.boundaryFieldRef();
 
-        bfld[patchI] == value;
+        bfld[patchi] == value;
     }
 }
 

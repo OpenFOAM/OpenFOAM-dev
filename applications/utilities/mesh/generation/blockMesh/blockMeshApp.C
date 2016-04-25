@@ -188,10 +188,10 @@ int main(int argc, char *argv[])
 
             const pointField& cellCentres = topo.cellCentres();
 
-            forAll(cellCentres, cellI)
+            forAll(cellCentres, celli)
             {
                 //point cc = b.blockShape().centre(b.points());
-                const point& cc = cellCentres[cellI];
+                const point& cc = cellCentres[celli];
 
                 str << "v " << cc.x() << ' ' << cc.y() << ' ' << cc.z() << nl;
             }
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
         List<DynamicList<label>> zoneCells(nZones);
 
         // Running cell counter
-        label cellI = 0;
+        label celli = 0;
 
         // Largest zone so far
         label freeZoneI = 0;
@@ -289,12 +289,12 @@ int main(int argc, char *argv[])
 
                 forAll(blockCells, i)
                 {
-                    zoneCells[zoneI].append(cellI++);
+                    zoneCells[zoneI].append(celli++);
                 }
             }
             else
             {
-                cellI += b.cells().size();
+                celli += b.cells().size();
             }
         }
 

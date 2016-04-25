@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,11 +54,11 @@ using namespace Foam;
 //
 //    boolList include(surf.size(), false);
 //
-//    forAll(collapseRegion, faceI)
+//    forAll(collapseRegion, facei)
 //    {
-//        if (collapseRegion[faceI] == regionI)
+//        if (collapseRegion[facei] == regionI)
 //        {
-//            include[faceI] = true;
+//            include[facei] = true;
 //        }
 //    }
 //
@@ -269,7 +269,7 @@ bool isSliver
     const triSurface& surf,
     const scalar minLen,
     const scalar minQuality,
-    const label faceI,
+    const label facei,
     const label edgeI
 )
 {
@@ -284,12 +284,12 @@ bool isSliver
         triSurfaceTools::oppositeVertex
         (
             surf,
-            faceI,
+            facei,
             edgeI
         );
 
     const edge& e = surf.edges()[edgeI];
-    const labelledTri& f = surf[faceI];
+    const labelledTri& f = surf[facei];
 
     pointHit pHit =
         e.line(localPoints).nearestDist
@@ -306,10 +306,10 @@ bool isSliver
         )
     )
     {
-        // Remove faceI and split all other faces using this
+        // Remove facei and split all other faces using this
         // edge. This is done by 'replacing' the edgeI with the
         // opposite0 vertex
-        //Pout<< "Splitting face " << faceI << " since distance "
+        //Pout<< "Splitting face " << facei << " since distance "
         //    << pHit.distance()
         //    << " from vertex " << opposite0
         //    << " to edge " << edgeI
@@ -350,23 +350,23 @@ static void markCollapsedFaces
 
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
+            label facei = eFaces[i];
 
-            bool isCandidate = isSliver(surf, minLen, minQuality, faceI, edgeI);
+            bool isCandidate = isSliver(surf, minLen, minQuality, facei, edgeI);
 
             if (isCandidate)
             {
                 // Mark face as being collapsed
-                if (faceToEdge[faceI] != -1)
+                if (faceToEdge[facei] != -1)
                 {
                     FatalErrorInFunction
-                        << "Cannot collapse face " << faceI << " since "
+                        << "Cannot collapse face " << facei << " since "
                         << " is marked to be collapsed both to edge "
-                        << faceToEdge[faceI] << " and " << edgeI
+                        << faceToEdge[facei] << " and " << edgeI
                         << abort(FatalError);
                 }
 
-                faceToEdge[faceI] = edgeI;
+                faceToEdge[facei] = edgeI;
             }
         }
     }
@@ -380,22 +380,22 @@ static void markRegion
     const triSurface& surf,
     const labelList& faceToEdge,
     const label regionI,
-    const label faceI,
+    const label facei,
     labelList& collapseRegion
 )
 {
-    if (faceToEdge[faceI] == -1 || collapseRegion[faceI] != -1)
+    if (faceToEdge[facei] == -1 || collapseRegion[facei] != -1)
     {
         FatalErrorInFunction
             << "Problem : crossed into uncollapsed/regionized face"
             << abort(FatalError);
     }
 
-    collapseRegion[faceI] = regionI;
+    collapseRegion[facei] = regionI;
 
     // Recurse across edges to collapsed neighbours
 
-    const labelList& fEdges = surf.faceEdges()[faceI];
+    const labelList& fEdges = surf.faceEdges()[facei];
 
     forAll(fEdges, fEdgeI)
     {
@@ -423,7 +423,7 @@ static void markRegion
                 else if (collapseRegion[nbrFaceI] != regionI)
                 {
                     FatalErrorInFunction
-                        << "Edge:" << edgeI << " between face " << faceI
+                        << "Edge:" << edgeI << " between face " << facei
                         << " with region " << regionI
                         << " and face " << nbrFaceI
                         << " with region " << collapseRegion[nbrFaceI]
@@ -446,15 +446,15 @@ static label markRegions
 {
     label regionI = 0;
 
-    forAll(faceToEdge, faceI)
+    forAll(faceToEdge, facei)
     {
-        if (collapseRegion[faceI] == -1 && faceToEdge[faceI] != -1)
+        if (collapseRegion[facei] == -1 && faceToEdge[facei] != -1)
         {
             //Pout<< "markRegions : Marking region:" << regionI
-            //    << " starting from face " << faceI << endl;
+            //    << " starting from face " << facei << endl;
 
             // Collapsed face. Mark connected region with current region number
-            markRegion(surf, faceToEdge, regionI++, faceI, collapseRegion);
+            markRegion(surf, faceToEdge, regionI++, facei, collapseRegion);
         }
     }
     return regionI;
@@ -480,9 +480,9 @@ static label edgeType
 
     forAll(eFaces, i)
     {
-        label faceI = eFaces[i];
+        label facei = eFaces[i];
 
-        label region = collapseRegion[faceI];
+        label region = collapseRegion[facei];
 
         if (region == -1)
         {
@@ -926,20 +926,20 @@ label collapseBase
 
                     forAll(eFaces, i)
                     {
-                        label faceI = eFaces[i];
+                        label facei = eFaces[i];
 
-                        if (!faceHandled[faceI] && faceToEdge[faceI] == -1)
+                        if (!faceHandled[facei] && faceToEdge[facei] == -1)
                         {
                             // Split face to use vertices.
                             splitTri
                             (
-                                localFaces[faceI],
+                                localFaces[facei],
                                 e,
                                 splitVerts,
                                 newTris
                             );
 
-                            faceHandled[faceI] = true;
+                            faceHandled[facei] = true;
 
                             nSplit++;
                         }
@@ -949,11 +949,11 @@ label collapseBase
         }
 
         // Copy all unsplit faces
-        forAll(faceHandled, faceI)
+        forAll(faceHandled, facei)
         {
-            if (!faceHandled[faceI] && faceToEdge[faceI] == -1)
+            if (!faceHandled[facei] && faceToEdge[facei] == -1)
             {
-                newTris.append(localFaces[faceI]);
+                newTris.append(localFaces[facei]);
             }
         }
 

@@ -179,9 +179,9 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     scalar f = 0.0;
     if (turbulence_)
     {
-        const label cellI = p.cell();
+        const label celli = p.cell();
         const volScalarField& k = *kPtr_;
-        const scalar kc = k[cellI];
+        const scalar kc = k[celli];
         const scalar Dp = sigma*Tc*cc/(3*mathematical::pi*muc*dp);
         f = eta/mass*sqrt(2.0*sqr(kc)*sqr(Tc)/(Dp*dt));
     }

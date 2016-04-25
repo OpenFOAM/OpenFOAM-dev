@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,9 @@ void Foam::primitiveMesh::calcPointCells() const
 
         labelList npc(nPoints(), 0);
 
-        forAll(cf, cellI)
+        forAll(cf, celli)
         {
-            const labelList curPoints = cf[cellI].labels(faces());
+            const labelList curPoints = cf[celli].labels(faces());
 
             forAll(curPoints, pointI)
             {
@@ -88,15 +88,15 @@ void Foam::primitiveMesh::calcPointCells() const
         npc = 0;
 
 
-        forAll(cf, cellI)
+        forAll(cf, celli)
         {
-            const labelList curPoints = cf[cellI].labels(faces());
+            const labelList curPoints = cf[celli].labels(faces());
 
             forAll(curPoints, pointI)
             {
                 label ptI = curPoints[pointI];
 
-                pointCellAddr[ptI][npc[ptI]++] = cellI;
+                pointCellAddr[ptI][npc[ptI]++] = celli;
             }
         }
     }
@@ -136,15 +136,15 @@ const Foam::labelList& Foam::primitiveMesh::pointCells
 
         forAll(pFaces, i)
         {
-            const label faceI = pFaces[i];
+            const label facei = pFaces[i];
 
             // Append owner
-            storage.append(own[faceI]);
+            storage.append(own[facei]);
 
             // Append neighbour
-            if (faceI < nInternalFaces())
+            if (facei < nInternalFaces())
             {
-                storage.append(nei[faceI]);
+                storage.append(nei[facei]);
             }
         }
 

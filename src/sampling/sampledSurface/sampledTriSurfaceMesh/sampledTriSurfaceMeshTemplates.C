@@ -58,24 +58,24 @@ Foam::sampledTriSurfaceMesh::sampleField
 
         Field<Type> bVals(nBnd, Zero);
 
-        forAll(vField.boundaryField(), patchI)
+        forAll(vField.boundaryField(), patchi)
         {
-            label bFaceI = pbm[patchI].start() - mesh().nInternalFaces();
+            label bFaceI = pbm[patchi].start() - mesh().nInternalFaces();
 
             SubList<Type>
             (
                 bVals,
-                vField.boundaryField()[patchI].size(),
+                vField.boundaryField()[patchi].size(),
                 bFaceI
-            ) = vField.boundaryField()[patchI];
+            ) = vField.boundaryField()[patchi];
         }
 
         // Sample in flat boundary field
 
         forAll(sampleElements_, triI)
         {
-            label faceI = sampleElements_[triI];
-            values[triI] = bVals[faceI-mesh().nInternalFaces()];
+            label facei = sampleElements_[triI];
+            values[triI] = bVals[facei-mesh().nInternalFaces()];
         }
     }
 
@@ -113,13 +113,13 @@ Foam::sampledTriSurfaceMesh::interpolateField
 
         forAll(samplePoints_, pointI)
         {
-            label faceI = sampleElements_[pointI];
+            label facei = sampleElements_[pointI];
 
             values[pointI] = interpolator.interpolate
             (
                 samplePoints_[pointI],
-                mesh().faceOwner()[faceI],
-                faceI
+                mesh().faceOwner()[facei],
+                facei
             );
         }
     }

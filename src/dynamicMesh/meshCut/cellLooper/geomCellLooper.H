@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,14 +154,14 @@ public:
 
 
 
-        //- Create cut along circumference of cellI. Gets current mesh cuts.
+        //- Create cut along circumference of celli. Gets current mesh cuts.
         //  Cut along circumference is expressed as loop of cuts plus weights
         //  for cuts along edges (only valid for edge cuts).
         //  Return true if successful cut.
         virtual bool cut
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,
@@ -175,7 +175,7 @@ public:
         virtual bool cut
         (
             const plane& cutPlane,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,

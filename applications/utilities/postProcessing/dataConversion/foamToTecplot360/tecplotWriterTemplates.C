@@ -97,17 +97,17 @@ Foam::tmp<Field<Type>> Foam::tecplotWriter::getFaceField
 
     forAll(faceLabels, i)
     {
-        label faceI = faceLabels[i];
+        label facei = faceLabels[i];
 
-        label patchi = patches.whichPatch(faceI);
+        label patchi = patches.whichPatch(facei);
 
         if (patchi == -1)
         {
-            fld[i] = sfld[faceI];
+            fld[i] = sfld[facei];
         }
         else
         {
-            label localFaceI = faceI - patches[patchi].start();
+            label localFaceI = facei - patches[patchi].start();
             fld[i] = sfld.boundaryField()[patchi][localFaceI];
         }
     }

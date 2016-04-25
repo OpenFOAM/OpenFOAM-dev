@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,11 +75,11 @@ int main(int argc, char *argv[])
 
     boolList inside(querySurf.calcInside(mesh.cellCentres()));
 
-    forAll(inside, cellI)
+    forAll(inside, celli)
     {
-        if (inside[cellI])
+        if (inside[celli])
         {
-            insideCells.insert(cellI);
+            insideCells.insert(celli);
         }
     }
 

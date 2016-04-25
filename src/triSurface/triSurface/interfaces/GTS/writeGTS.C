@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,10 +43,10 @@ void triSurface::writeGTS(const bool writeSorted, Ostream& os) const
     surfacePatchList myPatches(calcPatches(faceMap));
 
     // Print patch names as comment
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        os  << "#     " << patchI << "    "
-            << myPatches[patchI].name() << endl;
+        os  << "#     " << patchi << "    "
+            << myPatches[patchi].name() << endl;
     }
     os  << "#" << endl;
 
@@ -82,36 +82,36 @@ void triSurface::writeGTS(const bool writeSorted, Ostream& os) const
     if (writeSorted)
     {
         label faceIndex = 0;
-        forAll(myPatches, patchI)
+        forAll(myPatches, patchi)
         {
             for
             (
                 label patchFaceI = 0;
-                patchFaceI < myPatches[patchI].size();
+                patchFaceI < myPatches[patchi].size();
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
+                const label facei = faceMap[faceIndex++];
 
-                const labelList& fEdges = faceEdges()[faceI];
+                const labelList& fEdges = faceEdges()[facei];
 
                 os  << fEdges[0] + 1 << ' '
                     << fEdges[1] + 1 << ' '
                     << fEdges[2] + 1 << ' '
-                    << (*this)[faceI].region() << endl;
+                    << (*this)[facei].region() << endl;
             }
         }
     }
     else
     {
-        forAll(faceEs, faceI)
+        forAll(faceEs, facei)
         {
-            const labelList& fEdges = faceEdges()[faceI];
+            const labelList& fEdges = faceEdges()[facei];
 
             os  << fEdges[0] + 1 << ' '
                 << fEdges[1] + 1 << ' '
                 << fEdges[2] + 1 << ' '
-                << (*this)[faceI].region() << endl;
+                << (*this)[facei].region() << endl;
         }
     }
 }

@@ -114,10 +114,10 @@ Foam::label Foam::scotchDecomp::decompose
 
             // Insert my own
             label nTotalCells = 0;
-            forAll(cWeights, cellI)
+            forAll(cWeights, celli)
             {
-                allXadj[nTotalCells] = xadj[cellI];
-                allWeights[nTotalCells++] = cWeights[cellI];
+                allXadj[nTotalCells] = xadj[celli];
+                allWeights[nTotalCells++] = cWeights[celli];
             }
             nTotalConnections = 0;
             forAll(adjncy, i)
@@ -134,10 +134,10 @@ Foam::label Foam::scotchDecomp::decompose
 
                 // Append.
                 //label procStart = nTotalCells;
-                forAll(nbrXadj, cellI)
+                forAll(nbrXadj, celli)
                 {
-                    allXadj[nTotalCells] = nTotalConnections+nbrXadj[cellI];
-                    allWeights[nTotalCells++] = nbrWeights[cellI];
+                    allXadj[nTotalCells] = nTotalConnections+nbrXadj[celli];
+                    allWeights[nTotalCells++] = nbrWeights[celli];
                 }
                 // No need to renumber xadj since already global.
                 forAll(nbrAdjncy, i)
@@ -230,10 +230,10 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
             label hasVertexWeights = 0;
             label numericflag = 10*hasEdgeWeights+hasVertexWeights;
             str << baseval << ' ' << numericflag << nl;
-            for (label cellI = 0; cellI < xadj.size()-1; cellI++)
+            for (label celli = 0; celli < xadj.size()-1; celli++)
             {
-                label start = xadj[cellI];
-                label end = xadj[cellI+1];
+                label start = xadj[celli];
+                label end = xadj[celli+1];
                 str << end-start;
 
                 for (label i = start; i < end; i++)

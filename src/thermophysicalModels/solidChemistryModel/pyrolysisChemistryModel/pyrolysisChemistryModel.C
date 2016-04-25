@@ -188,7 +188,7 @@ pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
     scalar pf, cf, pr, cr;
     label lRef, rRef;
 
-    const label cellI = cellCounter_;
+    const label celli = cellCounter_;
 
     scalarField om(nEqns(), 0.0);
 
@@ -217,7 +217,7 @@ pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 
             if (updateC0)
             {
-                Ys0_[si][cellI] += sr*omegai;
+                Ys0_[si][celli] += sr*omegai;
             }
         }
         forAll(R.grhs(), g)
@@ -249,7 +249,7 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
 {
     scalarField c1(nSpecie_, 0.0);
 
-    label cellI = cellCounter_;
+    label celli = cellCounter_;
 
     for (label i=0; i<nSpecie_; i++)
     {
@@ -266,8 +266,8 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::omega
         const scalar exp = R.lhs()[si].exponent;
 
         kf *=
-            pow(c1[si]/Ys0_[si][cellI], exp)
-           *(Ys0_[si][cellI]);
+            pow(c1[si]/Ys0_[si][celli], exp)
+           *(Ys0_[si][celli]);
     }
 
     return kf;
@@ -641,9 +641,9 @@ Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::gasHs
 
     const GasThermo& mixture = gasThermo_[index];
 
-    forAll(gasHs, cellI)
+    forAll(gasHs, celli)
     {
-        gasHs[cellI] = mixture.Hs(p[cellI], T[cellI]);
+        gasHs[celli] = mixture.Hs(p[celli], T[celli]);
     }
 
     return tHs;

@@ -337,7 +337,7 @@ private:
                 const vector& surfaceLocation,
                 const vector& surfaceNormal,
 
-                const label cellI,
+                const label celli,
 
                 label& cellMaxLevel,
                 vector& cellMaxLocation,
@@ -384,7 +384,7 @@ private:
             //  Returns label of added face.
             label createBaffle
             (
-                const label faceI,
+                const label facei,
                 const label ownPatch,
                 const label neiPatch,
                 polyTopoChange& meshMod
@@ -396,7 +396,7 @@ private:
             //  markFacesOnProblemCells
             void markBoundaryFace
             (
-                const label faceI,
+                const label facei,
                 boolList& isBoundaryFace,
                 boolList& isBoundaryEdge,
                 boolList& isBoundaryPoint
@@ -423,14 +423,14 @@ private:
                 const pointField& neiCc,
                 const scalar minFaceArea,
                 const scalar maxNonOrtho,
-                const label faceI
+                const label facei
             ) const;
 
             bool isCollapsedCell
             (
                 const pointField&,
                 const scalar volFraction,
-                const label cellI
+                const label celli
             ) const;
 
             //- Returns list with for every internal face -1 or the patch

@@ -385,19 +385,19 @@ Foam::meshToMesh0::interpolate
         boundaryAddressing_.size()
     );
 
-    forAll(boundaryAddressing_, patchI)
+    forAll(boundaryAddressing_, patchi)
     {
         patchFields.set
         (
-            patchI,
+            patchi,
             fvPatchField<Type>::New
             (
-                fromVf.boundaryField()[patchI],
-                toMesh_.boundary()[patchI],
+                fromVf.boundaryField()[patchi],
+                toMesh_.boundary()[patchi],
                 DimensionedField<Type, volMesh>::null(),
                 patchFieldInterpolator
                 (
-                    boundaryAddressing_[patchI]
+                    boundaryAddressing_[patchi]
                 )
             )
         );

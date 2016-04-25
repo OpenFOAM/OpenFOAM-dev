@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,28 +90,28 @@ Foam::labelList Foam::removeCells::getExposedFaces
     // Count cells using face.
     labelList nCellsUsingFace(mesh_.nFaces(), 0);
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label own = faceOwner[faceI];
-        label nei = faceNeighbour[faceI];
+        label own = faceOwner[facei];
+        label nei = faceNeighbour[facei];
 
         if (!removedCell[own])
         {
-            nCellsUsingFace[faceI]++;
+            nCellsUsingFace[facei]++;
         }
         if (!removedCell[nei])
         {
-            nCellsUsingFace[faceI]++;
+            nCellsUsingFace[facei]++;
         }
     }
 
-    for (label faceI = mesh_.nInternalFaces(); faceI < mesh_.nFaces(); faceI++)
+    for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        label own = faceOwner[faceI];
+        label own = faceOwner[facei];
 
         if (!removedCell[own])
         {
-            nCellsUsingFace[faceI]++;
+            nCellsUsingFace[facei]++;
         }
     }
 
@@ -137,36 +137,36 @@ Foam::labelList Foam::removeCells::getExposedFaces
 
     DynamicList<label> exposedFaces(mesh_.nFaces()/10);
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        if (nCellsUsingFace[faceI] == 1)
+        if (nCellsUsingFace[facei] == 1)
         {
-            exposedFaces.append(faceI);
+            exposedFaces.append(facei);
         }
     }
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                label own = faceOwner[faceI];
+                label own = faceOwner[facei];
 
-                if (nCellsUsingFace[faceI] == 1 && !removedCell[own])
+                if (nCellsUsingFace[facei] == 1 && !removedCell[own])
                 {
                     // My owner not removed but other side is so has to become
                     // normal, uncoupled, boundary face
-                    exposedFaces.append(faceI);
+                    exposedFaces.append(facei);
                 }
 
-                faceI++;
+                facei++;
             }
         }
     }
@@ -199,28 +199,28 @@ void Foam::removeCells::setRefinement
 
     forAll(exposedFaceLabels, i)
     {
-        label patchI = exposedPatchIDs[i];
+        label patchi = exposedPatchIDs[i];
 
-        if (patchI < 0 || patchI >= patches.size())
+        if (patchi < 0 || patchi >= patches.size())
         {
             FatalErrorInFunction
-                << "Invalid patch " << patchI
+                << "Invalid patch " << patchi
                 << " for exposed face " << exposedFaceLabels[i] << endl
                 << "Valid patches 0.." << patches.size()-1
                 << abort(FatalError);
         }
 
-        if (patches[patchI].coupled())
+        if (patches[patchi].coupled())
         {
             FatalErrorInFunction
                 << "Trying to put exposed face " << exposedFaceLabels[i]
-                << " into a coupled patch : " << patches[patchI].name()
+                << " into a coupled patch : " << patches[patchi].name()
                 << endl
                 << "This is illegal."
                 << abort(FatalError);
         }
 
-        newPatchID[exposedFaceLabels[i]] = patchI;
+        newPatchID[exposedFaceLabels[i]] = patchi;
     }
 
 
@@ -231,14 +231,14 @@ void Foam::removeCells::setRefinement
     // cells mentioned.
     forAll(cellLabels, i)
     {
-        label cellI = cellLabels[i];
+        label celli = cellLabels[i];
 
-        removedCell[cellI] = true;
+        removedCell[celli] = true;
 
-        //Pout<< "Removing cell " << cellI
-        //    << " cc:" << mesh_.cellCentres()[cellI] << endl;
+        //Pout<< "Removing cell " << celli
+        //    << " cc:" << mesh_.cellCentres()[celli] << endl;
 
-        meshMod.setAction(polyRemoveCell(cellI));
+        meshMod.setAction(polyRemoveCell(celli));
     }
 
 
@@ -254,9 +254,9 @@ void Foam::removeCells::setRefinement
     // removing a face.
     labelList nFacesUsingPoint(mesh_.nPoints(), 0);
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         forAll(f, fp)
         {
@@ -265,29 +265,29 @@ void Foam::removeCells::setRefinement
     }
 
 
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        const face& f = faces[faceI];
-        label own = faceOwner[faceI];
-        label nei = faceNeighbour[faceI];
+        const face& f = faces[facei];
+        label own = faceOwner[facei];
+        label nei = faceNeighbour[facei];
 
         if (removedCell[own])
         {
             if (removedCell[nei])
             {
                 // Face no longer used
-                //Pout<< "Removing internal face " << faceI
-                //    << " fc:" << mesh_.faceCentres()[faceI] << endl;
+                //Pout<< "Removing internal face " << facei
+                //    << " fc:" << mesh_.faceCentres()[facei] << endl;
 
-                meshMod.setAction(polyRemoveFace(faceI));
+                meshMod.setAction(polyRemoveFace(facei));
                 uncount(f, nFacesUsingPoint);
             }
             else
             {
-                if (newPatchID[faceI] == -1)
+                if (newPatchID[facei] == -1)
                 {
                     FatalErrorInFunction
-                        << "No patchID provided for exposed face " << faceI
+                        << "No patchID provided for exposed face " << facei
                         << " on cell " << nei << nl
                         << "Did you provide patch IDs for all exposed faces?"
                         << abort(FatalError);
@@ -295,7 +295,7 @@ void Foam::removeCells::setRefinement
 
                 // nei is remaining cell. FaceI becomes external cell
 
-                label zoneID = faceZones.whichZone(faceI);
+                label zoneID = faceZones.whichZone(facei);
                 bool zoneFlip = false;
 
                 if (zoneID >= 0)
@@ -303,23 +303,23 @@ void Foam::removeCells::setRefinement
                     const faceZone& fZone = faceZones[zoneID];
                     // Note: we reverse the owner/neighbour of the face
                     // so should also select the other side of the zone
-                    zoneFlip = !fZone.flipMap()[fZone.whichFace(faceI)];
+                    zoneFlip = !fZone.flipMap()[fZone.whichFace(facei)];
                 }
 
-                //Pout<< "Putting exposed internal face " << faceI
-                //    << " fc:" << mesh_.faceCentres()[faceI]
-                //    << " into patch " << newPatchID[faceI] << endl;
+                //Pout<< "Putting exposed internal face " << facei
+                //    << " fc:" << mesh_.faceCentres()[facei]
+                //    << " into patch " << newPatchID[facei] << endl;
 
                 meshMod.setAction
                 (
                     polyModifyFace
                     (
                         f.reverseFace(),        // modified face
-                        faceI,                  // label of face being modified
+                        facei,                  // label of face being modified
                         nei,                    // owner
                         -1,                     // neighbour
                         true,                   // face flip
-                        newPatchID[faceI],      // patch for face
+                        newPatchID[facei],      // patch for face
                         false,                  // remove from zone
                         zoneID,                 // zone for face
                         zoneFlip                // face flip in zone
@@ -329,27 +329,27 @@ void Foam::removeCells::setRefinement
         }
         else if (removedCell[nei])
         {
-            if (newPatchID[faceI] == -1)
+            if (newPatchID[facei] == -1)
             {
                 FatalErrorInFunction
-                    << "No patchID provided for exposed face " << faceI
+                    << "No patchID provided for exposed face " << facei
                     << " on cell " << own << nl
                     << "Did you provide patch IDs for all exposed faces?"
                     << abort(FatalError);
             }
 
-            //Pout<< "Putting exposed internal face " << faceI
-            //    << " fc:" << mesh_.faceCentres()[faceI]
-            //    << " into patch " << newPatchID[faceI] << endl;
+            //Pout<< "Putting exposed internal face " << facei
+            //    << " fc:" << mesh_.faceCentres()[facei]
+            //    << " into patch " << newPatchID[facei] << endl;
 
             // own is remaining cell. FaceI becomes external cell.
-            label zoneID = faceZones.whichZone(faceI);
+            label zoneID = faceZones.whichZone(facei);
             bool zoneFlip = false;
 
             if (zoneID >= 0)
             {
                 const faceZone& fZone = faceZones[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
             }
 
             meshMod.setAction
@@ -357,11 +357,11 @@ void Foam::removeCells::setRefinement
                 polyModifyFace
                 (
                     f,                      // modified face
-                    faceI,                  // label of face being modified
+                    facei,                  // label of face being modified
                     own,                    // owner
                     -1,                     // neighbour
                     false,                  // face flip
-                    newPatchID[faceI],      // patch for face
+                    newPatchID[facei],      // patch for face
                     false,                  // remove from zone
                     zoneID,                 // zone for face
                     zoneFlip                // face flip in zone
@@ -370,87 +370,87 @@ void Foam::removeCells::setRefinement
         }
     }
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         if (pp.coupled())
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (newPatchID[faceI] != -1)
+                if (newPatchID[facei] != -1)
                 {
-                    //Pout<< "Putting uncoupled coupled face " << faceI
-                    //    << " fc:" << mesh_.faceCentres()[faceI]
-                    //    << " into patch " << newPatchID[faceI] << endl;
+                    //Pout<< "Putting uncoupled coupled face " << facei
+                    //    << " fc:" << mesh_.faceCentres()[facei]
+                    //    << " into patch " << newPatchID[facei] << endl;
 
-                    label zoneID = faceZones.whichZone(faceI);
+                    label zoneID = faceZones.whichZone(facei);
                     bool zoneFlip = false;
 
                     if (zoneID >= 0)
                     {
                         const faceZone& fZone = faceZones[zoneID];
-                        zoneFlip = fZone.flipMap()[fZone.whichFace(faceI)];
+                        zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
                     }
 
                     meshMod.setAction
                     (
                         polyModifyFace
                         (
-                            faces[faceI],           // modified face
-                            faceI,                  // label of face
-                            faceOwner[faceI],       // owner
+                            faces[facei],           // modified face
+                            facei,                  // label of face
+                            faceOwner[facei],       // owner
                             -1,                     // neighbour
                             false,                  // face flip
-                            newPatchID[faceI],      // patch for face
+                            newPatchID[facei],      // patch for face
                             false,                  // remove from zone
                             zoneID,                 // zone for face
                             zoneFlip                // face flip in zone
                         )
                     );
                 }
-                else if (removedCell[faceOwner[faceI]])
+                else if (removedCell[faceOwner[facei]])
                 {
                     // Face no longer used
-                    //Pout<< "Removing boundary face " << faceI
-                    //    << " fc:" << mesh_.faceCentres()[faceI]
+                    //Pout<< "Removing boundary face " << facei
+                    //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << endl;
 
-                    meshMod.setAction(polyRemoveFace(faceI));
-                    uncount(faces[faceI], nFacesUsingPoint);
+                    meshMod.setAction(polyRemoveFace(facei));
+                    uncount(faces[facei], nFacesUsingPoint);
                 }
 
-                faceI++;
+                facei++;
             }
         }
         else
         {
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                if (newPatchID[faceI] != -1)
+                if (newPatchID[facei] != -1)
                 {
                     FatalErrorInFunction
-                        << "new patchID provided for boundary face " << faceI
+                        << "new patchID provided for boundary face " << facei
                         << " even though it is not on a coupled face."
                         << abort(FatalError);
                 }
 
-                if (removedCell[faceOwner[faceI]])
+                if (removedCell[faceOwner[facei]])
                 {
                     // Face no longer used
-                    //Pout<< "Removing boundary face " << faceI
-                    //    << " fc:" << mesh_.faceCentres()[faceI]
+                    //Pout<< "Removing boundary face " << facei
+                    //    << " fc:" << mesh_.faceCentres()[facei]
                     //    << endl;
 
-                    meshMod.setAction(polyRemoveFace(faceI));
-                    uncount(faces[faceI], nFacesUsingPoint);
+                    meshMod.setAction(polyRemoveFace(facei));
+                    uncount(faces[facei], nFacesUsingPoint);
                 }
 
-                faceI++;
+                facei++;
             }
         }
     }

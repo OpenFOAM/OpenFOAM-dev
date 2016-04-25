@@ -103,9 +103,9 @@ Foam::labelList Foam::patchToPoly2DMesh::internalFaceOrder()
 
     label newFaceI = 0;
 
-    forAll(faceEdges, faceI)
+    forAll(faceEdges, facei)
     {
-        const labelList& fEdges = faceEdges[faceI];
+        const labelList& fEdges = faceEdges[facei];
         // Neighbouring faces
         SortableList<label> nbr(fEdges.size(), -1);
 
@@ -117,14 +117,14 @@ Foam::labelList Foam::patchToPoly2DMesh::internalFaceOrder()
 
                 label nbrFaceI = neighbour_[fEdges[feI]];
 
-                if (nbrFaceI == faceI)
+                if (nbrFaceI == facei)
                 {
                     nbrFaceI = owner_[fEdges[feI]];
                 }
 
-                if (faceI < nbrFaceI)
+                if (facei < nbrFaceI)
                 {
-                    // faceI is master
+                    // facei is master
                     nbr[feI] = nbrFaceI;
                 }
             }

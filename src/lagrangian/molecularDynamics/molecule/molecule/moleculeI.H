@@ -221,7 +221,7 @@ inline Foam::molecule::molecule
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI,
     const tensor& Q,
@@ -236,7 +236,7 @@ inline Foam::molecule::molecule
 
 )
 :
-    particle(mesh, position, cellI, tetFaceI, tetPtI),
+    particle(mesh, position, celli, tetFaceI, tetPtI),
     Q_(Q),
     v_(v),
     a_(a),

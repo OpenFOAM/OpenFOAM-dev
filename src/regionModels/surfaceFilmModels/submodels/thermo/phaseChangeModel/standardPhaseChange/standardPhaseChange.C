@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,18 +119,18 @@ void standardPhaseChange::correctModel
         max(scalar(0.0), availableMass - deltaMin_*rho*magSf)
     );
 
-    forAll(dMass, cellI)
+    forAll(dMass, celli)
     {
-        if (delta[cellI] > deltaMin_)
+        if (delta[celli] > deltaMin_)
         {
             // cell pressure [Pa]
-            const scalar pc = pInf[cellI];
+            const scalar pc = pInf[celli];
 
             // calculate the boiling temperature
             const scalar Tb = filmThermo.Tb(pc);
 
             // local temperature - impose lower limit of 200 K for stability
-            const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[cellI]));
+            const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[celli]));
 
             // saturation pressure [Pa]
             const scalar pSat = filmThermo.pv(pc, Tloc);
@@ -143,20 +143,20 @@ void standardPhaseChange::correctModel
             {
                 // boiling
                 const scalar Cp = filmThermo.Cp(pc, Tloc);
-                const scalar Tcorr = max(0.0, T[cellI] - Tb);
-                const scalar qCorr = limMass[cellI]*Cp*(Tcorr);
-                dMass[cellI] = qCorr/hVap;
+                const scalar Tcorr = max(0.0, T[celli] - Tb);
+                const scalar qCorr = limMass[celli]*Cp*(Tcorr);
+                dMass[celli] = qCorr/hVap;
             }
             else
             {
                 // Primary region density [kg/m3]
-                const scalar rhoInfc = rhoInf[cellI];
+                const scalar rhoInfc = rhoInf[celli];
 
                 // Primary region viscosity [Pa.s]
-                const scalar muInfc = muInf[cellI];
+                const scalar muInfc = muInf[celli];
 
                 // Reynolds number
-                const scalar Re = rhoInfc*mag(dU[cellI])*L_/muInfc;
+                const scalar Re = rhoInfc*mag(dU[celli])*L_/muInfc;
 
                 // molecular weight of vapour [kg/kmol]
                 const scalar Wvap = thermo.carrier().W(vapId);
@@ -180,12 +180,12 @@ void standardPhaseChange::correctModel
                 const scalar hm = Sh*Dab/(L_ + ROOTVSMALL);
 
                 // add mass contribution to source
-                dMass[cellI] =
-                    dt*magSf[cellI]*rhoInfc*hm*(Ys - YInf[cellI])/(1.0 - Ys);
+                dMass[celli] =
+                    dt*magSf[celli]*rhoInfc*hm*(Ys - YInf[celli])/(1.0 - Ys);
             }
 
-            dMass[cellI] = min(limMass[cellI], max(0.0, dMass[cellI]));
-            dEnergy[cellI] = dMass[cellI]*hVap;
+            dMass[celli] = min(limMass[celli], max(0.0, dMass[celli]));
+            dEnergy[celli] = dMass[celli]*hVap;
         }
     }
 }

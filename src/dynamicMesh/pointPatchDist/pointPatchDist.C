@@ -72,8 +72,8 @@ void Foam::pointPatchDist::correct()
 
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {
-        label patchI = iter.key();
-        nPoints += pbm[patchI].meshPoints().size();
+        label patchi = iter.key();
+        nPoints += pbm[patchi].meshPoints().size();
     }
 
     externalPointEdgePoint::trackingData td(points_);
@@ -85,10 +85,10 @@ void Foam::pointPatchDist::correct()
 
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {
-        label patchI = iter.key();
+        label patchi = iter.key();
         // Retrieve the patch now we have its index in patches.
 
-        const labelList& mp = pbm[patchI].meshPoints();
+        const labelList& mp = pbm[patchi].meshPoints();
 
         forAll(mp, ppI)
         {

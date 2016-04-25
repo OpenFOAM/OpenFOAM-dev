@@ -169,17 +169,17 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
             vectorField allUValues(nbrMesh.nFaces(), Zero);
             scalarField allPhiValues(nbrMesh.nFaces(), 0.0);
 
-            forAll(UField.boundaryField(), patchI)
+            forAll(UField.boundaryField(), patchi)
             {
-                const fvPatchVectorField& Upf = UField.boundaryField()[patchI];
-                const scalarField& phipf = phiField.boundaryField()[patchI];
+                const fvPatchVectorField& Upf = UField.boundaryField()[patchi];
+                const scalarField& phipf = phiField.boundaryField()[patchi];
 
                 label faceStart = Upf.patch().start();
 
-                forAll(Upf, faceI)
+                forAll(Upf, facei)
                 {
-                    allUValues[faceStart + faceI] = Upf[faceI];
-                    allPhiValues[faceStart + faceI] = phipf[faceI];
+                    allUValues[faceStart + facei] = Upf[facei];
+                    allPhiValues[faceStart + facei] = phipf[facei];
                 }
             }
 

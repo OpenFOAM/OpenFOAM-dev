@@ -241,7 +241,7 @@ endOfSection               {space}")"{space}
 
     // Face data
     label faceGroupElementType = -1;
-    label faceI = 0;
+    label facei = 0;
 
     // Cell data
     label cellGroupElementType = -1;
@@ -458,7 +458,7 @@ endOfSection               {space}")"{space}
         faceGroupElementType = readHexLabel(faceGroupDataStream);
 
         // In FOAM, indices start from zero - adjust
-        faceI = faceGroupStartIndex.last() - 1;
+        facei = faceGroupStartIndex.last() - 1;
     }
 
 <readNumberOfFaces,readFaceGroupData>{spaceNl}{endOfSection} {
@@ -483,7 +483,7 @@ endOfSection               {space}")"{space}
 
         IStringStream mixedFaceStream(YYText());
 
-        face& curFaceLabels = faces[faceI];
+        face& curFaceLabels = faces[facei];
 
         // set size of label list
         curFaceLabels.setSize(readLabel(mixedFaceStream));
@@ -494,16 +494,16 @@ endOfSection               {space}")"{space}
         }
 
         // read neighbour and owner. Neighbour comes first
-        neighbour[faceI] = readHexLabel(mixedFaceStream) - 1;
-        owner[faceI] = readHexLabel(mixedFaceStream) - 1;
-        faceI++;
+        neighbour[facei] = readHexLabel(mixedFaceStream) - 1;
+        owner[facei] = readHexLabel(mixedFaceStream) - 1;
+        facei++;
     }
 
 <readFacesUniform>{spaceNl}{hexLabelList} {
 
         IStringStream mixedFaceStream(YYText());
 
-        face& curFaceLabels = faces[faceI];
+        face& curFaceLabels = faces[facei];
 
         // set size of label list. This is OK because in Fluent the type
         // for edge is 2, for triangle is 3 and for quad is 4
@@ -515,20 +515,20 @@ endOfSection               {space}")"{space}
         }
 
         // read neighbour and owner. Neighbour comes first
-        neighbour[faceI] = readHexLabel(mixedFaceStream) - 1;
-        owner[faceI] = readHexLabel(mixedFaceStream) - 1;
-        faceI++;
+        neighbour[facei] = readHexLabel(mixedFaceStream) - 1;
+        owner[facei] = readHexLabel(mixedFaceStream) - 1;
+        facei++;
     }
 
 <readFacesMixed,readFacesUniform>{spaceNl}{endOfSection} {
 
         // check read of fluentFaces
-        if (faceI != faceGroupEndIndex.last())
+        if (facei != faceGroupEndIndex.last())
         {
             Info<< "problem with reading fluentFaces: "
                 << "start index: " << faceGroupStartIndex.last()
                 << " end index: " << faceGroupEndIndex.last()
-                << " last fluentFaces read: " << faceI << endl;
+                << " last fluentFaces read: " << facei << endl;
         }
 
         yy_pop_state();
@@ -844,11 +844,11 @@ label findFace(const primitiveMesh& mesh, const face& f)
 
     forAll(pFaces, i)
     {
-        label faceI = pFaces[i];
+        label facei = pFaces[i];
 
-        if (f == mesh.faces()[faceI])
+        if (f == mesh.faces()[facei])
         {
-            return faceI;
+            return facei;
         }
     }
 
@@ -932,23 +932,23 @@ int main(int argc, char *argv[])
 
     // fill in owner and neighbour
 
-    forAll(owner, faceI)
+    forAll(owner, facei)
     {
-        if (owner[faceI] > -1)
+        if (owner[facei] > -1)
         {
-            label curCell = owner[faceI];
-            cellFaces[curCell][nFacesInCell[curCell] ] = faceI;
+            label curCell = owner[facei];
+            cellFaces[curCell][nFacesInCell[curCell] ] = facei;
 
             nFacesInCell[curCell]++;
         }
     }
 
-    forAll(neighbour, faceI)
+    forAll(neighbour, facei)
     {
-        if (neighbour[faceI] > -1)
+        if (neighbour[facei] > -1)
         {
-            label curCell = neighbour[faceI];
-            cellFaces[curCell][nFacesInCell[curCell] ] = faceI;
+            label curCell = neighbour[facei];
+            cellFaces[curCell][nFacesInCell[curCell] ] = facei;
 
             nFacesInCell[curCell]++;
         }
@@ -1062,17 +1062,17 @@ int main(int argc, char *argv[])
         }
 
         // Create new faces
-        forAll(faces, faceI)
+        forAll(faces, facei)
         {
 
-            if (faces[faceI].size() != 2)
+            if (faces[facei].size() != 2)
             {
                 FatalErrorInFunction
                     << "fluentMeshToFoam: a 2-D face defined with "
-                    << faces[faceI].size() << " points." << endl;
+                    << faces[facei].size() << " points." << endl;
             }
 
-            labelList& newFace = faces[faceI];
+            labelList& newFace = faces[facei];
 
             newFace.setSize(4);
 
@@ -1125,16 +1125,16 @@ int main(int argc, char *argv[])
     // area vector points into the domain. Turn them round before making patches
     // for Foam compatibility
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        if (owner[faceI] == -1)
+        if (owner[facei] == -1)
         {
             // reverse face
-            labelList oldFace = faces[faceI];
+            labelList oldFace = faces[facei];
 
             forAllReverse(oldFace, i)
             {
-                faces[faceI][oldFace.size() - i - 1] =
+                faces[facei][oldFace.size() - i - 1] =
                     oldFace[i];
             }
         }
@@ -1241,7 +1241,7 @@ int main(int argc, char *argv[])
 
         faceList patchFaces(faceGroupEndIndexIter() - faceLabel);
 
-        forAll(patchFaces, faceI)
+        forAll(patchFaces, facei)
         {
             if
             (
@@ -1249,14 +1249,14 @@ int main(int argc, char *argv[])
              || faces[faceLabel].size() == 4
             )
             {
-                patchFaces[faceI] = face(faces[faceLabel]);
+                patchFaces[facei] = face(faces[faceLabel]);
                 faceLabel++;
             }
             else
             {
                 FatalErrorInFunction
                     << "unrecognised face shape with "
-                    << patchFaces[faceI].size() << " vertices"
+                    << patchFaces[facei].size() << " vertices"
                     << abort(FatalError);
             }
         }
@@ -1412,28 +1412,28 @@ int main(int argc, char *argv[])
             //and mark patch number to global list
             forAll(meshFaces, i)
             {
-                label faceI = meshFaces[i];
+                label facei = meshFaces[i];
 
-                if (pShapeMesh.isInternalFace(faceI))
+                if (pShapeMesh.isInternalFace(facei))
                 {
                     FatalErrorInFunction
-                        << "Face " << faceI << " on new patch "
+                        << "Face " << facei << " on new patch "
                         << patchNames[patchi]
                         << " is not an external face of the mesh." << endl
                         << exit(FatalError);
                 }
 
-                if (facePatchID[faceI - pShapeMesh.nInternalFaces()]!= -1)
+                if (facePatchID[facei - pShapeMesh.nInternalFaces()]!= -1)
                 {
                     FatalErrorInFunction
-                        << "Face " << faceI << " on new patch "
+                        << "Face " << facei << " on new patch "
                         << patchNames[patchi]
                         << " has already been marked for repatching to"
                         << " patch "
-                        << facePatchID[faceI - pShapeMesh.nInternalFaces()]
+                        << facePatchID[facei - pShapeMesh.nInternalFaces()]
                         << exit(FatalError);
                 }
-                facePatchID[faceI - pShapeMesh.nInternalFaces()] = nBoundaries;
+                facePatchID[facei - pShapeMesh.nInternalFaces()] = nBoundaries;
             }
 
             //add to boundary patch
@@ -1521,9 +1521,9 @@ int main(int argc, char *argv[])
     // Change patch ids
     forAll(facePatchID, idI)
     {
-        label faceI = idI + pShapeMesh.nInternalFaces();
+        label facei = idI + pShapeMesh.nInternalFaces();
 
-        repatcher.changePatchID(faceI, facePatchID[idI]);
+        repatcher.changePatchID(facei, facePatchID[idI]);
     }
     repatcher.repatch();
 
@@ -1626,15 +1626,15 @@ int main(int argc, char *argv[])
             );
 
             DynamicList<label> zoneFaces(pShapeMesh.nFaces());
-            forAll(pShapeMesh.faceNeighbour(), faceI)
+            forAll(pShapeMesh.faceNeighbour(), facei)
             {
-                label nei = pShapeMesh.faceNeighbour()[faceI];
-                label own = pShapeMesh.faceOwner()[faceI];
+                label nei = pShapeMesh.faceNeighbour()[facei];
+                label own = pShapeMesh.faceOwner()[facei];
                 if (nei != -1)
                 {
                     if (zoneCell[nei] && zoneCell[own])
                     {
-                        zoneFaces.append(faceI);
+                        zoneFaces.append(facei);
                     }
                 }
             }

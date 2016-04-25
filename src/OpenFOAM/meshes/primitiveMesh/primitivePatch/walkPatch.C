@@ -38,13 +38,13 @@ namespace Foam
 
 Foam::label Foam::walkPatch::getNeighbour
 (
-    const label faceI,
+    const label facei,
     const label fp,
     const label v0,
     const label v1
 ) const
 {
-    const labelList& fEdges = pp_.faceEdges()[faceI];
+    const labelList& fEdges = pp_.faceEdges()[facei];
 
     const edgeList& edges = pp_.edges();
 
@@ -87,7 +87,7 @@ Foam::label Foam::walkPatch::getNeighbour
     if (nbrEdgeI == -1)
     {
         FatalErrorInFunction
-            << "Did not find edge on face " << faceI << " that uses vertices"
+            << "Did not find edge on face " << facei << " that uses vertices"
             << v0 << " and " << v1 << abort(FatalError);
     }
 
@@ -104,7 +104,7 @@ Foam::label Foam::walkPatch::getNeighbour
     {
         label nbrFaceI = eFaces[0];
 
-        if (nbrFaceI == faceI)
+        if (nbrFaceI == facei)
         {
             nbrFaceI = eFaces[1];
         }
@@ -114,7 +114,7 @@ Foam::label Foam::walkPatch::getNeighbour
     else
     {
         FatalErrorInFunction
-            << "Illegal surface on patch. Face " << faceI
+            << "Illegal surface on patch. Face " << facei
             << " at vertices " << v0 << ',' << v1
             << " has fewer than 1 or more than 2 neighbours"
             << abort(FatalError);
@@ -138,16 +138,16 @@ void Foam::walkPatch::faceToFace
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
+        label facei = changedFaces[i];
         label enterVertI = enterVerts[i];
 
-        if (!visited_[faceI])
+        if (!visited_[facei])
         {
             // Do this face
-            visited_[faceI] = true;
-            visitOrder_.append(faceI);
+            visited_[facei] = true;
+            visitOrder_.append(facei);
 
-            const face& f = pp_.localFaces()[faceI];
+            const face& f = pp_.localFaces()[facei];
 
             label fp = findIndex(f, enterVertI);
 
@@ -157,13 +157,13 @@ void Foam::walkPatch::faceToFace
             forAll(f, i)
             {
                 label fp1 = reverse_ ? f.rcIndex(fp) : f.fcIndex(fp);
-                label nbr = getNeighbour(faceI, fp, f[fp], f[fp1]);
+                label nbr = getNeighbour(facei, fp, f[fp], f[fp1]);
 
                 if
                 (
                     nbr != -1
                  && !visited_[nbr]
-                 && faceZone_[nbr] == faceZone_[faceI]
+                 && faceZone_[nbr] == faceZone_[facei]
                 )
                 {
                     nbrFaces[changedI] = nbr;
@@ -188,7 +188,7 @@ Foam::walkPatch::walkPatch
     const primitivePatch& pp,
     const labelList& faceZone,
     const bool reverse,
-    const label faceI,
+    const label facei,
     const label enterVertI,
     boolList& visited
 )
@@ -201,7 +201,7 @@ Foam::walkPatch::walkPatch
     indexInFace_(pp.size())
 {
     // List of faces that have been visited in the current iteration.
-    labelList changedFaces(1, faceI);
+    labelList changedFaces(1, facei);
     // Corresponding list of entry vertices
     labelList enterVerts(1, enterVertI);
 

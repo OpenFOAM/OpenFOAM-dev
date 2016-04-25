@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,12 +88,12 @@ void Foam::arraySet::calcSamples
 
     forAll(sampleCoords, sampleI)
     {
-        label cellI = queryMesh.findCell(sampleCoords[sampleI]);
+        label celli = queryMesh.findCell(sampleCoords[sampleI]);
 
-        if (cellI != -1)
+        if (celli != -1)
         {
             samplingPts.append(sampleCoords[sampleI]);
-            samplingCells.append(cellI);
+            samplingCells.append(celli);
             samplingFaces.append(-1);
             samplingSegments.append(0);
             samplingCurveDist.append(1.0 * sampleI);

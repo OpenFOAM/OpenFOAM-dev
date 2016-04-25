@@ -163,19 +163,19 @@ void Foam::layerAdditionRemoval::addCellLayer
 
     labelList addedCells(mf.size());
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
-        label cellI = mc[faceI];
-        label zoneI =  mesh.cellZones().whichZone(cellI);
+        label celli = mc[facei];
+        label zoneI =  mesh.cellZones().whichZone(celli);
 
-        addedCells[faceI] =
+        addedCells[facei] =
             ref.setAction
             (
                 polyAddCell
                 (
                     -1,           // master point
                     -1,           // master edge
-                    mf[faceI],    // master face
+                    mf[facei],    // master face
                     -1,           // master cell
                     zoneI         // zone for cell
                 )
@@ -194,9 +194,9 @@ void Foam::layerAdditionRemoval::addCellLayer
     // owner: if the master cell is equal to the face owner the flux
     // remains the same; otherwise it is flipped
 
-    forAll(zoneFaces, faceI)
+    forAll(zoneFaces, facei)
     {
-        const face oldFace = zoneFaces[faceI].reverseFace();
+        const face oldFace = zoneFaces[facei].reverseFace();
 
         face newFace(oldFace.size());
 
@@ -210,8 +210,8 @@ void Foam::layerAdditionRemoval::addCellLayer
         // Flip the face as necessary
         if
         (
-           !mesh.isInternalFace(mf[faceI])
-         || mc[faceI] == nei[mf[faceI]]
+           !mesh.isInternalFace(mf[facei])
+         || mc[facei] == nei[mf[facei]]
         )
         {
             flipFaceFlux = true;
@@ -223,11 +223,11 @@ void Foam::layerAdditionRemoval::addCellLayer
             polyAddFace
             (
                 newFace,               // face
-                mc[faceI],             // owner
-                addedCells[faceI],     // neighbour
+                mc[facei],             // owner
+                addedCells[facei],     // neighbour
                 -1,                    // master point
                 -1,                    // master edge
-                mf[faceI],             // master face for addition
+                mf[facei],             // master face for addition
                 flipFaceFlux,          // flux flip
                 -1,                    // patch for face
                 -1,                    // zone for face
@@ -238,8 +238,8 @@ void Foam::layerAdditionRemoval::addCellLayer
         if (debug > 1)
         {
             Pout<< "adding face: " << newFace
-                << " own: " << mc[faceI]
-                << " nei: " << addedCells[faceI]
+                << " own: " << mc[facei]
+                << " nei: " << addedCells[facei]
                 << endl;
         }
     }
@@ -250,9 +250,9 @@ void Foam::layerAdditionRemoval::addCellLayer
 
     // Pout<< "mfFlip: " << mfFlip << endl;
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
-        const label curfaceID = mf[faceI];
+        const label curfaceID = mf[facei];
 
         // If the face is internal, modify its owner to be the newly
         // created cell.  No flip is necessary
@@ -264,20 +264,20 @@ void Foam::layerAdditionRemoval::addCellLayer
                 (
                     faces[curfaceID],            // modified face
                     curfaceID,                   // label of face being modified
-                    addedCells[faceI],           // owner
+                    addedCells[facei],           // owner
                     -1,                          // neighbour
                     false,                       // face flip
                     mesh.boundaryMesh().whichPatch(curfaceID),// patch for face
                     false,                       // remove from zone
                     faceZoneID_.index(),         // zone for face
-                    mfFlip[faceI]                // face flip in zone
+                    mfFlip[facei]                // face flip in zone
                 )
             );
 
             if (debug > 1)
             {
                 Pout<< "Modifying a boundary face. Face: " << curfaceID
-                    << " flip: " << mfFlip[faceI]
+                    << " flip: " << mfFlip[facei]
                     << endl;
             }
         }
@@ -285,7 +285,7 @@ void Foam::layerAdditionRemoval::addCellLayer
         // If slave cell is owner, the face remains the same (but with
         // a new neighbour - the newly created cell).  Otherwise, the
         // face is flipped.
-        else if (sc[faceI] == own[curfaceID])
+        else if (sc[facei] == own[curfaceID])
         {
             // Orientation is good, just change neighbour
             ref.setAction
@@ -295,12 +295,12 @@ void Foam::layerAdditionRemoval::addCellLayer
                     faces[curfaceID],            // modified face
                     curfaceID,                   // label of face being modified
                     own[curfaceID],              // owner
-                    addedCells[faceI],           // neighbour
+                    addedCells[facei],           // neighbour
                     false,                       // face flip
                     mesh.boundaryMesh().whichPatch(curfaceID),// patch for face
                     false,                       // remove from zone
                     faceZoneID_.index(),         // zone for face
-                    mfFlip[faceI]                // face flip in zone
+                    mfFlip[facei]                // face flip in zone
                 )
             );
 
@@ -308,7 +308,7 @@ void Foam::layerAdditionRemoval::addCellLayer
             {
                 Pout<< "modify face, no flip " << curfaceID
                     << " own: " << own[curfaceID]
-                    << " nei: " << addedCells[faceI]
+                    << " nei: " << addedCells[facei]
                     << endl;
             }
         }
@@ -322,12 +322,12 @@ void Foam::layerAdditionRemoval::addCellLayer
                     faces[curfaceID].reverseFace(), // modified face
                     curfaceID,                   // label of face being modified
                     nei[curfaceID],                 // owner
-                    addedCells[faceI],              // neighbour
+                    addedCells[facei],              // neighbour
                     true,                           // face flip
                     mesh.boundaryMesh().whichPatch(curfaceID), // patch for face
                     false,                          // remove from zone
                     faceZoneID_.index(),            // zone for face
-                    !mfFlip[faceI]                  // face flip in zone
+                    !mfFlip[facei]                  // face flip in zone
                 )
             );
 
@@ -335,7 +335,7 @@ void Foam::layerAdditionRemoval::addCellLayer
             {
                 Pout<< "modify face, with flip " << curfaceID
                     << " own: " << own[curfaceID]
-                    << " nei: " << addedCells[faceI]
+                    << " nei: " << addedCells[facei]
                     << endl;
             }
         }
@@ -422,9 +422,9 @@ void Foam::layerAdditionRemoval::addCellLayer
         label patchID = -1;
         label zoneID = -1;
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            const label cf = curFaces[faceI];
+            const label cf = curFaces[facei];
 
             if (!mesh.isInternalFace(cf))
             {
@@ -492,16 +492,16 @@ void Foam::layerAdditionRemoval::addCellLayer
 
     const cellList& cells = mesh.cells();
 
-    forAll(mc, cellI)
+    forAll(mc, celli)
     {
-        const labelList& curFaces = cells[mc[cellI]];
+        const labelList& curFaces = cells[mc[celli]];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Check if the face belongs to the master zone; if not add it
-            if (zoneMesh.whichZone(curFaces[faceI]) != faceZoneID_.index())
+            if (zoneMesh.whichZone(curFaces[facei]) != faceZoneID_.index())
             {
-                masterCellFaceMap.insert(curFaces[faceI]);
+                masterCellFaceMap.insert(curFaces[facei]);
             }
         }
     }
@@ -521,12 +521,12 @@ void Foam::layerAdditionRemoval::addCellLayer
     // Grab the list of faces of the master layer
     const labelList masterCellFaces = masterCellFaceMap.toc();
 
-    forAll(masterCellFaces, faceI)
+    forAll(masterCellFaces, facei)
     {
         // Attempt to renumber the face using the masterLayerPointMap.
         // Missing point remain the same
 
-        const label curFaceID = masterCellFaces[faceI];
+        const label curFaceID = masterCellFaces[facei];
 
         const face& oldFace = faces[curFaceID];
 

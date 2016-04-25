@@ -104,40 +104,40 @@ void Foam::meshToMesh::mapSrcToTgt
         List<Type> work(srcField);
         map.distribute(work);
 
-        forAll(result, cellI)
+        forAll(result, celli)
         {
-            const labelList& srcAddress = tgtToSrcCellAddr_[cellI];
-            const scalarList& srcWeight = tgtToSrcCellWght_[cellI];
+            const labelList& srcAddress = tgtToSrcCellAddr_[celli];
+            const scalarList& srcWeight = tgtToSrcCellWght_[celli];
 
             if (srcAddress.size())
             {
-//                result[cellI] = Zero;
-                result[cellI] *= (1.0 - sum(srcWeight));
+//                result[celli] = Zero;
+                result[celli] *= (1.0 - sum(srcWeight));
                 forAll(srcAddress, i)
                 {
                     label srcI = srcAddress[i];
                     scalar w = srcWeight[i];
-                    cbop(result[cellI], cellI, work[srcI], w);
+                    cbop(result[celli], celli, work[srcI], w);
                 }
             }
         }
     }
     else
     {
-        forAll(result, cellI)
+        forAll(result, celli)
         {
-            const labelList& srcAddress = tgtToSrcCellAddr_[cellI];
-            const scalarList& srcWeight = tgtToSrcCellWght_[cellI];
+            const labelList& srcAddress = tgtToSrcCellAddr_[celli];
+            const scalarList& srcWeight = tgtToSrcCellWght_[celli];
 
             if (srcAddress.size())
             {
-//                result[cellI] = Zero;
-                result[cellI] *= (1.0 - sum(srcWeight));
+//                result[celli] = Zero;
+                result[celli] *= (1.0 - sum(srcWeight));
                 forAll(srcAddress, i)
                 {
                     label srcI = srcAddress[i];
                     scalar w = srcWeight[i];
-                    cbop(result[cellI], cellI, srcField[srcI], w);
+                    cbop(result[celli], celli, srcField[srcI], w);
                 }
             }
         }
@@ -225,38 +225,38 @@ void Foam::meshToMesh::mapTgtToSrc
         List<Type> work(tgtField);
         map.distribute(work);
 
-        forAll(result, cellI)
+        forAll(result, celli)
         {
-            const labelList& tgtAddress = srcToTgtCellAddr_[cellI];
-            const scalarList& tgtWeight = srcToTgtCellWght_[cellI];
+            const labelList& tgtAddress = srcToTgtCellAddr_[celli];
+            const scalarList& tgtWeight = srcToTgtCellWght_[celli];
 
             if (tgtAddress.size())
             {
-                result[cellI] *= (1.0 - sum(tgtWeight));
+                result[celli] *= (1.0 - sum(tgtWeight));
                 forAll(tgtAddress, i)
                 {
                     label tgtI = tgtAddress[i];
                     scalar w = tgtWeight[i];
-                    cbop(result[cellI], cellI, work[tgtI], w);
+                    cbop(result[celli], celli, work[tgtI], w);
                 }
             }
         }
     }
     else
     {
-        forAll(result, cellI)
+        forAll(result, celli)
         {
-            const labelList& tgtAddress = srcToTgtCellAddr_[cellI];
-            const scalarList& tgtWeight = srcToTgtCellWght_[cellI];
+            const labelList& tgtAddress = srcToTgtCellAddr_[celli];
+            const scalarList& tgtWeight = srcToTgtCellWght_[celli];
 
             if (tgtAddress.size())
             {
-                result[cellI] *= (1.0 - sum(tgtWeight));
+                result[celli] *= (1.0 - sum(tgtWeight));
                 forAll(tgtAddress, i)
                 {
                     label tgtI = tgtAddress[i];
                     scalar w = tgtWeight[i];
-                    cbop(result[cellI], cellI, tgtField[tgtI], w);
+                    cbop(result[celli], celli, tgtField[tgtI], w);
                 }
             }
         }

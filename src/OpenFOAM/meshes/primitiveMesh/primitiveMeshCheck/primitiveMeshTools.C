@@ -36,28 +36,28 @@ Foam::scalar Foam::primitiveMeshTools::faceSkewness
     const vectorField& fCtrs,
     const vectorField& fAreas,
 
-    const label faceI,
+    const label facei,
     const point& ownCc,
     const point& neiCc
 )
 {
-    vector Cpf = fCtrs[faceI] - ownCc;
+    vector Cpf = fCtrs[facei] - ownCc;
     vector d = neiCc - ownCc;
 
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + ROOTVSMALL))*d;
+      - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + ROOTVSMALL))*d;
     vector svHat = sv/(mag(sv) + ROOTVSMALL);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
     // of the skewness
     scalar fd = 0.2*mag(d) + ROOTVSMALL;
-    const face& f = mesh.faces()[faceI];
+    const face& f = mesh.faces()[facei];
     forAll(f, pi)
     {
-        fd = max(fd, mag(svHat & (p[f[pi]] - fCtrs[faceI])));
+        fd = max(fd, mag(svHat & (p[f[pi]] - fCtrs[facei])));
     }
 
     // Normalised skewness
@@ -72,13 +72,13 @@ Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
     const vectorField& fCtrs,
     const vectorField& fAreas,
 
-    const label faceI,
+    const label facei,
     const point& ownCc
 )
 {
-    vector Cpf = fCtrs[faceI] - ownCc;
+    vector Cpf = fCtrs[facei] - ownCc;
 
-    vector normal = fAreas[faceI];
+    vector normal = fAreas[facei];
     normal /= mag(normal) + ROOTVSMALL;
     vector d = normal*(normal & Cpf);
 
@@ -86,17 +86,17 @@ Foam::scalar Foam::primitiveMeshTools::boundaryFaceSkewness
     // Skewness vector
     vector sv =
         Cpf
-      - ((fAreas[faceI] & Cpf)/((fAreas[faceI] & d) + ROOTVSMALL))*d;
+      - ((fAreas[facei] & Cpf)/((fAreas[facei] & d) + ROOTVSMALL))*d;
     vector svHat = sv/(mag(sv) + ROOTVSMALL);
 
     // Normalisation distance calculated as the approximate distance
     // from the face centre to the edge of the face in the direction
     // of the skewness
     scalar fd = 0.4*mag(d) + ROOTVSMALL;
-    const face& f = mesh.faces()[faceI];
+    const face& f = mesh.faces()[facei];
     forAll(f, pi)
     {
-        fd = max(fd, mag(svHat & (p[f[pi]] - fCtrs[faceI])));
+        fd = max(fd, mag(svHat & (p[f[pi]] - fCtrs[facei])));
     }
 
     // Normalised skewness
@@ -133,13 +133,13 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceOrthogonality
     scalarField& ortho = tortho.ref();
 
     // Internal faces
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        ortho[faceI] = faceOrthogonality
+        ortho[facei] = faceOrthogonality
         (
-            cc[own[faceI]],
-            cc[nei[faceI]],
-            areas[faceI]
+            cc[own[facei]],
+            cc[nei[facei]],
+            areas[facei]
         );
     }
 
@@ -162,18 +162,18 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceSkewness
     tmp<scalarField> tskew(new scalarField(mesh.nFaces()));
     scalarField& skew = tskew.ref();
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
-        skew[faceI] = faceSkewness
+        skew[facei] = faceSkewness
         (
             mesh,
             p,
             fCtrs,
             fAreas,
 
-            faceI,
-            cellCtrs[own[faceI]],
-            cellCtrs[nei[faceI]]
+            facei,
+            cellCtrs[own[facei]],
+            cellCtrs[nei[facei]]
         );
     }
 
@@ -181,16 +181,16 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceSkewness
     // Boundary faces: consider them to have only skewness error.
     // (i.e. treat as if mirror cell on other side)
 
-    for (label faceI = mesh.nInternalFaces(); faceI < mesh.nFaces(); faceI++)
+    for (label facei = mesh.nInternalFaces(); facei < mesh.nFaces(); facei++)
     {
-        skew[faceI] = boundaryFaceSkewness
+        skew[facei] = boundaryFaceSkewness
         (
             mesh,
             p,
             fCtrs,
             fAreas,
-            faceI,
-            cellCtrs[own[faceI]]
+            facei,
+            cellCtrs[own[facei]]
         );
     }
 
@@ -215,22 +215,22 @@ void Foam::primitiveMeshTools::facePyramidVolume
     ownPyrVol.setSize(mesh.nFaces());
     neiPyrVol.setSize(mesh.nInternalFaces());
 
-    forAll(f, faceI)
+    forAll(f, facei)
     {
         // Create the owner pyramid
-        ownPyrVol[faceI] = -pyramidPointFaceRef
+        ownPyrVol[facei] = -pyramidPointFaceRef
         (
-            f[faceI],
-            ctrs[own[faceI]]
+            f[facei],
+            ctrs[own[facei]]
         ).mag(points);
 
-        if (mesh.isInternalFace(faceI))
+        if (mesh.isInternalFace(facei))
         {
             // Create the neighbour pyramid - it will have positive volume
-            neiPyrVol[faceI] = pyramidPointFaceRef
+            neiPyrVol[facei] = pyramidPointFaceRef
             (
-                f[faceI],
-                ctrs[nei[faceI]]
+                f[facei],
+                ctrs[nei[facei]]
             ).mag(points);
         }
     }
@@ -257,18 +257,18 @@ void Foam::primitiveMeshTools::cellClosedness
     vectorField sumClosed(mesh.nCells(), Zero);
     vectorField sumMagClosed(mesh.nCells(), Zero);
 
-    forAll(own, faceI)
+    forAll(own, facei)
     {
         // Add to owner
-        sumClosed[own[faceI]] += areas[faceI];
-        sumMagClosed[own[faceI]] += cmptMag(areas[faceI]);
+        sumClosed[own[facei]] += areas[facei];
+        sumMagClosed[own[facei]] += cmptMag(areas[facei]);
     }
 
-    forAll(nei, faceI)
+    forAll(nei, facei)
     {
         // Subtract from neighbour
-        sumClosed[nei[faceI]] -= areas[faceI];
-        sumMagClosed[nei[faceI]] += cmptMag(areas[faceI]);
+        sumClosed[nei[facei]] -= areas[facei];
+        sumMagClosed[nei[facei]] += cmptMag(areas[facei]);
     }
 
 
@@ -286,7 +286,7 @@ void Foam::primitiveMeshTools::cellClosedness
     openness.setSize(mesh.nCells());
     aratio.setSize(mesh.nCells());
 
-    forAll(sumClosed, cellI)
+    forAll(sumClosed, celli)
     {
         scalar maxOpenness = 0;
 
@@ -295,11 +295,11 @@ void Foam::primitiveMeshTools::cellClosedness
             maxOpenness = max
             (
                 maxOpenness,
-                mag(sumClosed[cellI][cmpt])
-               /(sumMagClosed[cellI][cmpt] + ROOTVSMALL)
+                mag(sumClosed[celli][cmpt])
+               /(sumMagClosed[celli][cmpt] + ROOTVSMALL)
             );
         }
-        openness[cellI] = maxOpenness;
+        openness[celli] = maxOpenness;
 
         // Calculate the aspect ration as the maximum of Cartesian component
         // aspect ratio to the total area hydraulic area aspect ratio
@@ -309,24 +309,24 @@ void Foam::primitiveMeshTools::cellClosedness
         {
             if (meshD[dir] == 1)
             {
-                minCmpt = min(minCmpt, sumMagClosed[cellI][dir]);
-                maxCmpt = max(maxCmpt, sumMagClosed[cellI][dir]);
+                minCmpt = min(minCmpt, sumMagClosed[celli][dir]);
+                maxCmpt = max(maxCmpt, sumMagClosed[celli][dir]);
             }
         }
 
         scalar aspectRatio = maxCmpt/(minCmpt + ROOTVSMALL);
         if (nDims == 3)
         {
-            scalar v = max(ROOTVSMALL, vols[cellI]);
+            scalar v = max(ROOTVSMALL, vols[celli]);
 
             aspectRatio = max
             (
                 aspectRatio,
-                1.0/6.0*cmptSum(sumMagClosed[cellI])/pow(v, 2.0/3.0)
+                1.0/6.0*cmptSum(sumMagClosed[celli])/pow(v, 2.0/3.0)
             );
         }
 
-        aratio[cellI] = aspectRatio;
+        aratio[celli] = aspectRatio;
     }
 }
 
@@ -348,9 +348,9 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
     scalarField& faceAngles = tfaceAngles.ref();
 
 
-    forAll(fcs, faceI)
+    forAll(fcs, facei)
     {
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
         // Get edge from f[0] to f[size-1];
         vector ePrev(p[f.first()] - p[f.last()]);
@@ -383,7 +383,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
                     // Check normal
                     edgeNormal /= magEdgeNormal;
 
-                    if ((edgeNormal & faceNormals[faceI]) < SMALL)
+                    if ((edgeNormal & faceNormals[facei]) < SMALL)
                     {
                         maxEdgeSin = max(maxEdgeSin, magEdgeNormal);
                     }
@@ -394,7 +394,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
             magEPrev = magE10;
         }
 
-        faceAngles[faceI] = maxEdgeSin;
+        faceAngles[facei] = maxEdgeSin;
     }
 
     return tfaceAngles;
@@ -419,13 +419,13 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
     scalarField& faceFlatness = tfaceFlatness.ref();
 
 
-    forAll(fcs, faceI)
+    forAll(fcs, facei)
     {
-        const face& f = fcs[faceI];
+        const face& f = fcs[facei];
 
-        if (f.size() > 3 && magAreas[faceI] > ROOTVSMALL)
+        if (f.size() > 3 && magAreas[facei] > ROOTVSMALL)
         {
-            const point& fc = fCtrs[faceI];
+            const point& fc = fCtrs[facei];
 
             // Calculate the sum of magnitude of areas and compare to magnitude
             // of sum of areas.
@@ -442,7 +442,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceFlatness
                 sumA += mag(n);
             }
 
-            faceFlatness[faceI] = magAreas[faceI]/(sumA + ROOTVSMALL);
+            faceFlatness[facei] = magAreas[facei]/(sumA + ROOTVSMALL);
         }
     }
 
@@ -484,9 +484,9 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
     }
     else
     {
-        forAll(c, cellI)
+        forAll(c, celli)
         {
-            const labelList& curFaces = c[cellI];
+            const labelList& curFaces = c[celli];
 
             // Calculate local normalization factor
             scalar avgArea = 0;
@@ -505,7 +505,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
 
             if (nInternalFaces == 0)
             {
-                cellDeterminant[cellI] = 0;
+                cellDeterminant[celli] = 0;
             }
             else
             {
@@ -539,7 +539,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
                     }
                 }
 
-                cellDeterminant[cellI] = mag(det(areaTensor));
+                cellDeterminant[celli] = mag(det(areaTensor));
             }
         }
     }

@@ -109,16 +109,16 @@ void Foam::DelaunayMesh<Triangulation>::addPatches
     faces.setSize(nInternalFaces + nBoundaryFaces);
     owner.setSize(nInternalFaces + nBoundaryFaces);
 
-    label faceI = nInternalFaces;
+    label facei = nInternalFaces;
 
     forAll(patchFaces, p)
     {
         forAll(patchFaces[p], f)
         {
-            faces[faceI] = patchFaces[p][f];
-            owner[faceI] = patchOwners[p][f];
+            faces[facei] = patchFaces[p][f];
+            owner[facei] = patchOwners[p][f];
 
-            faceI++;
+            facei++;
         }
     }
 }
@@ -429,7 +429,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
 
 
     // Index the cells
-    label cellI = 0;
+    label celli = 0;
 
     for
     (
@@ -445,11 +445,11 @@ Foam::DelaunayMesh<Triangulation>::createMesh
          && cit->real()
         )
         {
-            cellMap[cit->cellIndex()] = cellI++;
+            cellMap[cit->cellIndex()] = celli++;
         }
     }
 
-    label faceI = 0;
+    label facei = 0;
     labelList verticesOnTriFace(3, label(-1));
     face newFace(verticesOnTriFace);
 
@@ -566,16 +566,16 @@ Foam::DelaunayMesh<Triangulation>::createMesh
                 neighbourCell = c1I;
             }
 
-            faces[faceI] = newFace;
-            owner[faceI] = ownerCell;
-            neighbour[faceI] = neighbourCell;
-            faceI++;
+            faces[facei] = newFace;
+            owner[facei] = ownerCell;
+            neighbour[facei] = neighbourCell;
+            facei++;
         }
     }
 
-    faces.setSize(faceI);
-    owner.setSize(faceI);
-    neighbour.setSize(faceI);
+    faces.setSize(facei);
+    owner.setSize(facei);
+    neighbour.setSize(facei);
 
     sortFaces(faces, owner, neighbour);
 
@@ -583,7 +583,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
 
     addPatches
     (
-        faceI,
+        facei,
         faces,
         owner,
         patchDicts,

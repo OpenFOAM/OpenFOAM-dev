@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,14 +31,14 @@ Foam::findCellParticle::findCellParticle
 (
     const polyMesh& mesh,
     const vector& position,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI,
     const point& end,
     const label data
 )
 :
-    particle(mesh, position, cellI, tetFaceI, tetPtI),
+    particle(mesh, position, celli, tetFaceI, tetPtI),
     end_(end),
     data_(data)
 {}

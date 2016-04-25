@@ -167,15 +167,15 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
 
         // work array - whether src processor bb overlaps the tgt cell bounds
         boolList procBbOverlaps(Pstream::nProcs());
-        forAll(cells, cellI)
+        forAll(cells, celli)
         {
-            const cell& c = cells[cellI];
+            const cell& c = cells[celli];
 
             // determine bounding box of tgt cell
             boundBox cellBb(point::max, point::min);
-            forAll(c, faceI)
+            forAll(c, facei)
             {
-                const face& f = faces[c[faceI]];
+                const face& f = faces[c[facei]];
                 forAll(f, fp)
                 {
                     cellBb.min() = min(cellBb.min(), points[f[fp]]);
@@ -190,7 +190,7 @@ Foam::autoPtr<Foam::mapDistribute> Foam::meshToMesh::calcProcMap
             {
                 if (procBbOverlaps[procI])
                 {
-                    dynSendMap[procI].append(cellI);
+                    dynSendMap[procI].append(celli);
                 }
             }
         }
@@ -307,10 +307,10 @@ void Foam::meshToMesh::distributeCells
             label nInternal = 0;
 
             // internal faces
-            forAll(tgtMesh.faceNeighbour(), faceI)
+            forAll(tgtMesh.faceNeighbour(), facei)
             {
-                label own = tgtMesh.faceOwner()[faceI];
-                label nbr = tgtMesh.faceNeighbour()[faceI];
+                label own = tgtMesh.faceOwner()[facei];
+                label nbr = tgtMesh.faceNeighbour()[facei];
                 label subOwn = reverseCellMap[own];
                 label subNbr = reverseCellMap[nbr];
 
@@ -320,7 +320,7 @@ void Foam::meshToMesh::distributeCells
 
                     if (subOwn < subNbr)
                     {
-                        subFaces.append(tgtMesh.faces()[faceI]);
+                        subFaces.append(tgtMesh.faces()[facei]);
                         subFaceOwner.append(subOwn);
                         subFaceNeighbour.append(subNbr);
                         subNbrProcIDs.append(-1);
@@ -328,7 +328,7 @@ void Foam::meshToMesh::distributeCells
                     }
                     else
                     {
-                        subFaces.append(tgtMesh.faces()[faceI].reverseFace());
+                        subFaces.append(tgtMesh.faces()[facei].reverseFace());
                         subFaceOwner.append(subNbr);
                         subFaceNeighbour.append(subOwn);
                         subNbrProcIDs.append(-1);
@@ -338,16 +338,16 @@ void Foam::meshToMesh::distributeCells
             }
 
             // boundary faces for new region
-            forAll(tgtMesh.faceNeighbour(), faceI)
+            forAll(tgtMesh.faceNeighbour(), facei)
             {
-                label own = tgtMesh.faceOwner()[faceI];
-                label nbr = tgtMesh.faceNeighbour()[faceI];
+                label own = tgtMesh.faceOwner()[facei];
+                label nbr = tgtMesh.faceNeighbour()[facei];
                 label subOwn = reverseCellMap[own];
                 label subNbr = reverseCellMap[nbr];
 
                 if (subOwn != -1 && subNbr == -1)
                 {
-                    subFaces.append(tgtMesh.faces()[faceI]);
+                    subFaces.append(tgtMesh.faces()[facei]);
                     subFaceOwner.append(subOwn);
                     subFaceNeighbour.append(subNbr);
                     subNbrProcIDs.append(-1);
@@ -355,7 +355,7 @@ void Foam::meshToMesh::distributeCells
                 }
                 else if (subOwn == -1 && subNbr != -1)
                 {
-                    subFaces.append(tgtMesh.faces()[faceI].reverseFace());
+                    subFaces.append(tgtMesh.faces()[facei].reverseFace());
                     subFaceOwner.append(subNbr);
                     subFaceNeighbour.append(subOwn);
                     subNbrProcIDs.append(-1);
@@ -364,9 +364,9 @@ void Foam::meshToMesh::distributeCells
             }
 
             // boundary faces of existing region
-            forAll(tgtMesh.boundaryMesh(), patchI)
+            forAll(tgtMesh.boundaryMesh(), patchi)
             {
-                const polyPatch& pp = tgtMesh.boundaryMesh()[patchI];
+                const polyPatch& pp = tgtMesh.boundaryMesh()[patchi];
 
                 label nbrProcI = -1;
 
@@ -381,12 +381,12 @@ void Foam::meshToMesh::distributeCells
 
                 forAll(pp, i)
                 {
-                    label faceI = pp.start() + i;
-                    label own = tgtMesh.faceOwner()[faceI];
+                    label facei = pp.start() + i;
+                    label own = tgtMesh.faceOwner()[facei];
 
                     if (reverseCellMap[own] != -1)
                     {
-                        subFaces.append(tgtMesh.faces()[faceI]);
+                        subFaces.append(tgtMesh.faces()[facei]);
                         subFaceOwner.append(reverseCellMap[own]);
                         subFaceNeighbour.append(-1);
                         subNbrProcIDs.append(nbrProcI);

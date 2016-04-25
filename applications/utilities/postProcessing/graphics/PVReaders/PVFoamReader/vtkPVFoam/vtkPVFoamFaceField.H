@@ -74,9 +74,9 @@ void Foam::vtkPVFoam::convertFaceField
 
     // for interior faces: average owner/neighbour
     // for boundary faces: owner
-    forAll(faceLabels, faceI)
+    forAll(faceLabels, facei)
     {
-        const label faceNo = faceLabels[faceI];
+        const label faceNo = faceLabels[facei];
         if (faceNo < nInternalFaces)
         {
             Type t = 0.5*(tf[faceOwner[faceNo]] + tf[faceNeigh[faceNo]]);
@@ -96,7 +96,7 @@ void Foam::vtkPVFoam::convertFaceField
         }
         vtkOpenFOAMTupleRemap<Type>(vec);
 
-        cellData->InsertTuple(faceI, vec);
+        cellData->InsertTuple(facei, vec);
     }
 
 

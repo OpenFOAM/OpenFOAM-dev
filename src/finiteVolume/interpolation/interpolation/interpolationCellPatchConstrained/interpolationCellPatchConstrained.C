@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,22 +44,22 @@ template<class Type>
 Type Foam::interpolationCellPatchConstrained<Type>::interpolate
 (
     const vector& pt,
-    const label cellI,
-    const label faceI
+    const label celli,
+    const label facei
 ) const
 {
-    if (faceI >= 0 && faceI >= this->psi_.mesh().nInternalFaces())
+    if (facei >= 0 && facei >= this->psi_.mesh().nInternalFaces())
     {
         // Use boundary value
         const polyBoundaryMesh& pbm = this->psi_.mesh().boundaryMesh();
-        label patchI = pbm.patchID()[faceI-this->psi_.mesh().nInternalFaces()];
-        label patchFaceI = pbm[patchI].whichFace(faceI);
+        label patchi = pbm.patchID()[facei-this->psi_.mesh().nInternalFaces()];
+        label patchFaceI = pbm[patchi].whichFace(facei);
 
-        return this->psi_.boundaryField()[patchI][patchFaceI];
+        return this->psi_.boundaryField()[patchi][patchFaceI];
     }
     else
     {
-        return this->psi_[cellI];
+        return this->psi_[celli];
     }
 }
 

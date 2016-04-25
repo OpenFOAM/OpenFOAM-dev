@@ -54,9 +54,9 @@ Foam::cellMatcher::cellMatcher
     cellModelName_(cellModelName),
     cellModelPtr_(NULL)
 {
-    forAll(localFaces_, faceI)
+    forAll(localFaces_, facei)
     {
-        face& f = localFaces_[faceI];
+        face& f = localFaces_[facei];
 
         f.setSize(maxVertPerFace);
     }
@@ -83,9 +83,9 @@ Foam::label Foam::cellMatcher::calcLocalFaces
     label newVertI = 0;
     forAll(myFaces, myFaceI)
     {
-        label faceI = myFaces[myFaceI];
+        label facei = myFaces[myFaceI];
 
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
         face& localFace = localFaces_[myFaceI];
 
         // Size of localFace
@@ -118,7 +118,7 @@ Foam::label Foam::cellMatcher::calcLocalFaces
         }
 
         // Create face from localvertex labels
-        faceMap_[myFaceI] = faceI;
+        faceMap_[myFaceI] = facei;
     }
 
     // Create local to global vertex mapping
@@ -248,13 +248,13 @@ void Foam::cellMatcher::write(Foam::Ostream& os) const
 {
     os  << "Faces:" << endl;
 
-    forAll(localFaces_, faceI)
+    forAll(localFaces_, facei)
     {
         os  << "    ";
 
-        for (label fp = 0; fp < faceSize_[faceI]; fp++)
+        for (label fp = 0; fp < faceSize_[facei]; fp++)
         {
-            os  << ' ' << localFaces_[faceI][fp];
+            os  << ' ' << localFaces_[facei][fp];
         }
         os  << endl;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,26 +66,26 @@ int main(int argc, char *argv[])
     }
 
     // convert from local to global and back.
-    for (label cellI = 0; cellI < mesh.nCells(); cellI++)
+    for (label celli = 0; celli < mesh.nCells(); celli++)
     {
         // to global index
-        label globalCellI = globalNumbering.toGlobal(cellI);
+        label globalCellI = globalNumbering.toGlobal(celli);
 
         // and back
         label procI = globalNumbering.whichProcID(globalCellI);
         label localCellI = globalNumbering.toLocal(globalCellI);
 
-        if (procI != Pstream::myProcNo() || localCellI != cellI)
+        if (procI != Pstream::myProcNo() || localCellI != celli)
         {
             FatalErrorInFunction
-                << "Problem. cellI:" << cellI << " localCellI:" << localCellI
+                << "Problem. celli:" << celli << " localCellI:" << localCellI
                 << " procI:" << procI << abort(FatalError);
         }
 
         if (!globalNumbering.isLocal(globalCellI))
         {
             FatalErrorInFunction
-                << "Problem. cellI:" << cellI << " globalCellI:" << globalCellI
+                << "Problem. celli:" << celli << " globalCellI:" << globalCellI
                 << " not local" << abort(FatalError);
         }
     }

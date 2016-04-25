@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,11 @@ void Foam::circleSet::calcSamples
     );
 
     // set start point
-    label cellI = searchEngine().findCell(startPoint_);
-    if (cellI != -1)
+    label celli = searchEngine().findCell(startPoint_);
+    if (celli != -1)
     {
         samplingPts.append(startPoint_);
-        samplingCells.append(cellI);
+        samplingCells.append(celli);
         samplingFaces.append(-1);
         samplingSegments.append(0);
         samplingCurveDist.append(0.0);
@@ -110,12 +110,12 @@ void Foam::circleSet::calcSamples
         axis1 /= mag(axis1);
         point pt = origin_ + radius*axis1;
 
-        label cellI = searchEngine().findCell(pt);
+        label celli = searchEngine().findCell(pt);
 
-        if (cellI != -1)
+        if (celli != -1)
         {
             samplingPts.append(pt);
-            samplingCells.append(cellI);
+            samplingCells.append(celli);
             samplingFaces.append(-1);
             samplingSegments.append(nPoint);
             samplingCurveDist.append

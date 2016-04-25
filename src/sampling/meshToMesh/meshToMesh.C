@@ -101,9 +101,9 @@ void Foam::meshToMesh::normaliseWeights
 
     if (nCell > 0)
     {
-        forAll(wght, cellI)
+        forAll(wght, celli)
         {
-            scalarList& w = wght[cellI];
+            scalarList& w = wght[celli];
             scalar s = sum(w);
 
             forAll(w, i)
@@ -434,9 +434,9 @@ void Foam::meshToMesh::constructNoCuttingPatches
 
         DynamicList<label> srcPatchID(srcBM.size());
         DynamicList<label> tgtPatchID(tgtBM.size());
-        forAll(srcBM, patchI)
+        forAll(srcBM, patchi)
         {
-            const polyPatch& pp = srcBM[patchI];
+            const polyPatch& pp = srcBM[patchi];
             if (!polyPatch::constraintType(pp.type()))
             {
                 srcPatchID.append(pp.index());

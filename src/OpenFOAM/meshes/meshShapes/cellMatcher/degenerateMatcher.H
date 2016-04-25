@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ class degenerateMatcher
         (
             const faceList& faces,
             const labelList& faceOwner,
-            const label cellI,
+            const label celli,
             const labelList& cellFaces
         );
 
@@ -90,8 +90,8 @@ public:
         //  vertices. cellShape just used to extract faces.
         static cellShape match(const cellShape& shape);
 
-        //- Recognize shape given mesh and cellI
-        static cellShape match(const primitiveMesh& mesh, const label cellI);
+        //- Recognize shape given mesh and celli
+        static cellShape match(const primitiveMesh& mesh, const label celli);
 };
 
 

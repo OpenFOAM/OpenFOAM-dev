@@ -838,7 +838,7 @@ kinematicSingleLayer::~kinematicSingleLayer()
 void kinematicSingleLayer::addSources
 (
     const label patchi,
-    const label faceI,
+    const label facei,
     const scalar massSource,
     const vector& momentumSource,
     const scalar pressureSource,
@@ -854,9 +854,9 @@ void kinematicSingleLayer::addSources
             << "    pressure = " << pressureSource << endl;
     }
 
-    rhoSpPrimary_.boundaryFieldRef()[patchi][faceI] -= massSource;
-    USpPrimary_.boundaryFieldRef()[patchi][faceI] -= momentumSource;
-    pSpPrimary_.boundaryFieldRef()[patchi][faceI] -= pressureSource;
+    rhoSpPrimary_.boundaryFieldRef()[patchi][facei] -= massSource;
+    USpPrimary_.boundaryFieldRef()[patchi][facei] -= momentumSource;
+    pSpPrimary_.boundaryFieldRef()[patchi][facei] -= pressureSource;
 
     addedMassTotal_ += massSource;
 }

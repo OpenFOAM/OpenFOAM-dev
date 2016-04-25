@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,10 +78,10 @@ const Foam::labelList& Foam::primitiveMesh::edgeCells
         // Do quadratic insertion.
         forAll(eFaces, i)
         {
-            label faceI = eFaces[i];
+            label facei = eFaces[i];
 
             {
-                label ownCellI = own[faceI];
+                label ownCellI = own[facei];
 
                 // Check if not already in storage
                 forAll(storage, j)
@@ -99,9 +99,9 @@ const Foam::labelList& Foam::primitiveMesh::edgeCells
                 }
             }
 
-            if (isInternalFace(faceI))
+            if (isInternalFace(facei))
             {
-                label neiCellI = nei[faceI];
+                label neiCellI = nei[facei];
 
                 forAll(storage, j)
                 {

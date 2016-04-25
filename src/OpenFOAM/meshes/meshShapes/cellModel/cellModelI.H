@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,11 +99,11 @@ inline faceList cellModel::faces(const labelList& pointLabels) const
     faceList f(faces_.size());
 
     // Translate model lebels into global labels
-    forAll(faces_, faceI)
+    forAll(faces_, facei)
     {
-         const labelList& curModelLabels = faces_[faceI];
+         const labelList& curModelLabels = faces_[facei];
 
-         face& curFace = f[faceI];
+         face& curFace = f[facei];
 
          curFace.setSize(curModelLabels.size());
 

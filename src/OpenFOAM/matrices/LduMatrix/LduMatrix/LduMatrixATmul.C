@@ -198,12 +198,12 @@ void Foam::LduMatrix<Type, DType, LUType>::sumA
 
     // Add the interface internal coefficients to diagonal
     // and the interface boundary coefficients to the sum-off-diagonal
-    forAll(interfaces_, patchI)
+    forAll(interfaces_, patchi)
     {
-        if (interfaces_.set(patchI))
+        if (interfaces_.set(patchi))
         {
-            const unallocLabelList& pa = lduAddr().patchAddr(patchI);
-            const Field<LUType>& pCoeffs = interfacesUpper_[patchI];
+            const unallocLabelList& pa = lduAddr().patchAddr(patchi);
+            const Field<LUType>& pCoeffs = interfacesUpper_[patchi];
 
             forAll(pa, face)
             {

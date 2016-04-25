@@ -69,29 +69,29 @@ Description
     \par faces
 
     - unchanged:
-        - faceMap[faceI] contains old face label
+        - faceMap[facei] contains old face label
         - reverseFaceMap[oldFaceI] contains new face label
     - removed:
         - reverseFaceMap[oldFaceI] contains -1
     - merged into face:
         - reverseFaceMap[oldFaceI] contains <-1 : -newFaceI-2
-        - faceMap[faceI] contains the old master face label
-        - facesFromFaces gives for faceI all the old face labels
+        - faceMap[facei] contains the old master face label
+        - facesFromFaces gives for facei all the old face labels
           (including the old master face!)
     - added-from-same:
-        - faceMap[faceI] contains the old master face label
+        - faceMap[facei] contains the old master face label
     - inflated-from-edge:
-        - faceMap[faceI] contains -1
+        - faceMap[facei] contains -1
         - facesFromEdges contains an entry with
-            - faceI
+            - facei
             - list of faces(*) on old mesh that connected to the old edge
     - inflated-from-point:
-        - faceMap[faceI] contains -1
+        - faceMap[facei] contains -1
         - facesFromPoints contains an entry with
-            - faceI
+            - facei
             - list of faces(*) on old mesh that connected to the old point
     - appended:
-        - faceMap[faceI] contains -1
+        - faceMap[facei] contains -1
 
     Note (*) \n
        if the newly inflated face is a boundary face the list of faces will
@@ -101,34 +101,34 @@ Description
     \par cells
 
     - unchanged:
-        - cellMap[cellI] contains old cell label
+        - cellMap[celli] contains old cell label
         - reverseCellMap[oldCellI] contains new cell label
     - removed:
         - reverseCellMap[oldCellI] contains -1
     - merged into cell:
         - reverseCellMap[oldCellI] contains <-1 : -newCellI-2
-        - cellMap[cellI] contains the old master cell label
-        - cellsFromCells gives for cellI all the old cell labels
+        - cellMap[celli] contains the old master cell label
+        - cellsFromCells gives for celli all the old cell labels
           (including the old master cell!)
     - added-from-same:
-        - cellMap[cellI] contains the old master cell label
+        - cellMap[celli] contains the old master cell label
     - inflated-from-face:
-        - cellMap[cellI] contains -1
+        - cellMap[celli] contains -1
         - cellsFromFaces contains an entry with
-            - cellI
+            - celli
             - list of cells on old mesh that connected to the old face
     - inflated-from-edge:
-        - cellMap[cellI] contains -1
+        - cellMap[celli] contains -1
         - cellsFromEdges contains an entry with
-            - cellI
+            - celli
             - list of cells on old mesh that connected to the old edge
     - inflated-from-point:
-        - cellMap[cellI] contains -1
+        - cellMap[celli] contains -1
         - cellsFromPoints contains an entry with
-            - cellI
+            - celli
             - list of cells on old mesh that connected to the old point
     - appended:
-        - cellMap[cellI] contains -1
+        - cellMap[celli] contains -1
 
 
 SourceFiles

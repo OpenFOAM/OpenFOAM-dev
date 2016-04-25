@@ -345,9 +345,9 @@ Foam::laminarFlameSpeedModels::RaviPetersen::operator()() const
 
     volScalarField& Su0 = tSu0.ref();
 
-    forAll(Su0, cellI)
+    forAll(Su0, celli)
     {
-        Su0[cellI] = speed(EqR[cellI], p[cellI], Tu[cellI]);
+        Su0[celli] = speed(EqR[celli], p[celli], Tu[celli]);
     }
 
     return tSu0;

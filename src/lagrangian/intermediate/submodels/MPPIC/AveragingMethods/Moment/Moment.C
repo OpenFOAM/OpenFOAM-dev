@@ -60,37 +60,37 @@ Foam::AveragingMethods::Moment<Type>::Moment
     xQ[2] = vector(c, c, b);
     xQ[3] = vector(c, c, c);
 
-    forAll(mesh.C(), cellI)
+    forAll(mesh.C(), celli)
     {
         const List<tetIndices> cellTets =
-            polyMeshTetDecomposition::cellTetIndices(mesh, cellI);
+            polyMeshTetDecomposition::cellTetIndices(mesh, celli);
 
         symmTensor A(Zero);
 
         forAll(cellTets, tetI)
         {
             const tetIndices& tetIs = cellTets[tetI];
-            const label faceI = tetIs.face();
-            const face& f = mesh.faces()[faceI];
+            const label facei = tetIs.face();
+            const face& f = mesh.faces()[facei];
 
             const tensor T
             (
                 tensor
                 (
-                    mesh.points()[f[tetIs.faceBasePt()]] - mesh.C()[cellI],
-                    mesh.points()[f[tetIs.facePtA()]] - mesh.C()[cellI],
-                    mesh.points()[f[tetIs.facePtB()]] - mesh.C()[cellI]
+                    mesh.points()[f[tetIs.faceBasePt()]] - mesh.C()[celli],
+                    mesh.points()[f[tetIs.facePtA()]] - mesh.C()[celli],
+                    mesh.points()[f[tetIs.facePtB()]] - mesh.C()[celli]
                 ).T()
             );
 
-            const vectorField d((T & xQ)/scale_[cellI]);
+            const vectorField d((T & xQ)/scale_[celli]);
 
-            const scalar v(6.0*tetIs.tet(mesh).mag()/mesh.V()[cellI]);
+            const scalar v(6.0*tetIs.tet(mesh).mag()/mesh.V()[celli]);
 
             A += v*sum(wQ*sqr(d));
         }
 
-        transform_[cellI] = inv(A);
+        transform_[celli] = inv(A);
     }
 }
 
@@ -134,21 +134,21 @@ void Foam::AveragingMethods::Moment<Type>::add
     const Type& value
 )
 {
-    const label cellI = tetIs.cell();
+    const label celli = tetIs.cell();
 
-    const Type v = value/this->mesh_.V()[cellI];
+    const Type v = value/this->mesh_.V()[celli];
     const TypeGrad dv =
-        transform_[cellI]
+        transform_[celli]
       & (
             v
-          * (position - this->mesh_.C()[cellI])
-          / scale_[cellI]
+          * (position - this->mesh_.C()[celli])
+          / scale_[celli]
         );
 
-    data_[cellI] += v;
-    dataX_[cellI] += v + dv.x();
-    dataY_[cellI] += v + dv.y();
-    dataZ_[cellI] += v + dv.z();
+    data_[celli] += v;
+    dataX_[celli] += v + dv.x();
+    dataY_[celli] += v + dv.y();
+    dataZ_[celli] += v + dv.z();
 }
 
 
@@ -159,19 +159,19 @@ Type Foam::AveragingMethods::Moment<Type>::interpolate
     const tetIndices& tetIs
 ) const
 {
-    const label cellI = tetIs.cell();
+    const label celli = tetIs.cell();
 
     return
-        data_[cellI]
+        data_[celli]
       + (
             TypeGrad
             (
-                dataX_[cellI] - data_[cellI],
-                dataY_[cellI] - data_[cellI],
-                dataZ_[cellI] - data_[cellI]
+                dataX_[celli] - data_[celli],
+                dataY_[celli] - data_[celli],
+                dataZ_[celli] - data_[celli]
             )
-          & (position - this->mesh_.C()[cellI])
-          / scale_[cellI]
+          & (position - this->mesh_.C()[celli])
+          / scale_[celli]
         );
 }
 
@@ -184,15 +184,15 @@ Foam::AveragingMethods::Moment<Type>::interpolateGrad
     const tetIndices& tetIs
 ) const
 {
-    const label cellI(tetIs.cell());
+    const label celli(tetIs.cell());
 
     return
         TypeGrad
         (
-            dataX_[cellI] - data_[cellI],
-            dataY_[cellI] - data_[cellI],
-            dataZ_[cellI] - data_[cellI]
-        )/scale_[cellI];
+            dataX_[celli] - data_[celli],
+            dataY_[celli] - data_[celli],
+            dataZ_[celli] - data_[celli]
+        )/scale_[celli];
 }
 
 

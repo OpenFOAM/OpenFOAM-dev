@@ -109,12 +109,12 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
     numberDensities /= nParticle_;
 
-    forAll(mesh_.cells(), cellI)
+    forAll(mesh_.cells(), celli)
     {
         List<tetIndices> cellTets = polyMeshTetDecomposition::cellTetIndices
         (
             mesh_,
-            cellI
+            celli
         );
 
         forAll(cellTets, tetI)
@@ -181,7 +181,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
                         p,
                         U,
                         Ei,
-                        cellI,
+                        celli,
                         cellTetIs.face(),
                         cellTetIs.tetPt(),
                         typeId
@@ -229,9 +229,9 @@ void Foam::DSMCCloud<ParcelType>::collisions()
 
     label collisions = 0;
 
-    forAll(cellOccupancy_, cellI)
+    forAll(cellOccupancy_, celli)
     {
-        const DynamicList<ParcelType*>& cellParcels(cellOccupancy_[cellI]);
+        const DynamicList<ParcelType*>& cellParcels(cellOccupancy_[celli]);
 
         label nC(cellParcels.size());
 
@@ -249,7 +249,7 @@ void Foam::DSMCCloud<ParcelType>::collisions()
             // Inverse addressing specifying which subCell a parcel is in
             List<label> whichSubCell(cellParcels.size());
 
-            const point& cC = mesh_.cellCentres()[cellI];
+            const point& cC = mesh_.cellCentres()[celli];
 
             forAll(cellParcels, i)
             {
@@ -265,15 +265,15 @@ void Foam::DSMCCloud<ParcelType>::collisions()
 
             // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-            scalar sigmaTcRMax = sigmaTcRMax_[cellI];
+            scalar sigmaTcRMax = sigmaTcRMax_[celli];
 
             scalar selectedPairs =
-                collisionSelectionRemainder_[cellI]
+                collisionSelectionRemainder_[celli]
               + 0.5*nC*(nC - 1)*nParticle_*sigmaTcRMax*deltaT
-               /mesh_.cellVolumes()[cellI];
+               /mesh_.cellVolumes()[celli];
 
             label nCandidates(selectedPairs);
-            collisionSelectionRemainder_[cellI] = selectedPairs - nCandidates;
+            collisionSelectionRemainder_[celli] = selectedPairs - nCandidates;
             collisionCandidates += nCandidates;
 
             for (label c = 0; c < nCandidates; c++)
@@ -343,9 +343,9 @@ void Foam::DSMCCloud<ParcelType>::collisions()
                 // initial value in the acceptance-rejection criteria because
                 // the number of collision candidates selected was based on this
 
-                if (sigmaTcR > sigmaTcRMax_[cellI])
+                if (sigmaTcR > sigmaTcRMax_[celli])
                 {
-                    sigmaTcRMax_[cellI] = sigmaTcR;
+                    sigmaTcRMax_[celli] = sigmaTcR;
                 }
 
                 if ((sigmaTcR/sigmaTcRMax) > rndGen_.scalar01())
@@ -425,15 +425,15 @@ void Foam::DSMCCloud<ParcelType>::calculateFields()
     forAllConstIter(typename DSMCCloud<ParcelType>, *this, iter)
     {
         const ParcelType& p = iter();
-        const label cellI = p.cell();
+        const label celli = p.cell();
 
-        rhoN[cellI]++;
-        rhoM[cellI] += constProps(p.typeId()).mass();
-        dsmcRhoN[cellI]++;
-        linearKE[cellI] += 0.5*constProps(p.typeId()).mass()*(p.U() & p.U());
-        internalE[cellI] += p.Ei();
-        iDof[cellI] += constProps(p.typeId()).internalDegreesOfFreedom();
-        momentum[cellI] += constProps(p.typeId()).mass()*p.U();
+        rhoN[celli]++;
+        rhoM[celli] += constProps(p.typeId()).mass();
+        dsmcRhoN[celli]++;
+        linearKE[celli] += 0.5*constProps(p.typeId()).mass()*(p.U() & p.U());
+        internalE[celli] += p.Ei();
+        iDof[celli] += constProps(p.typeId()).internalDegreesOfFreedom();
+        momentum[celli] += constProps(p.typeId()).mass()*p.U();
     }
 
     rhoN *= nParticle_/mesh().cellVolumes();
@@ -466,7 +466,7 @@ void Foam::DSMCCloud<ParcelType>::addNewParcel
     const vector& position,
     const vector& U,
     const scalar Ei,
-    const label cellI,
+    const label celli,
     const label tetFaceI,
     const label tetPtI,
     const label typeId
@@ -478,7 +478,7 @@ void Foam::DSMCCloud<ParcelType>::addNewParcel
         position,
         U,
         Ei,
-        cellI,
+        celli,
         tetFaceI,
         tetPtI,
         typeId

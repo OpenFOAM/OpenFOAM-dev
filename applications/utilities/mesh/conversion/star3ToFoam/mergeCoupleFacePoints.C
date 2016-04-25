@@ -62,9 +62,9 @@ void Foam::starMesh::mergeCoupleFacePoints()
 
     label nMergeSets = 0;
 
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        const faceList& curFaces = cellFaces_[cellI];
+        const faceList& curFaces = cellFaces_[celli];
 
         // create a list of all points for the cell with duplicates
         // and find the shortest edge length
@@ -73,11 +73,11 @@ void Foam::starMesh::mergeCoupleFacePoints()
 
         scalar pointMergeTol = GREAT;
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            nPointsInCell += curFaces[faceI].size();
+            nPointsInCell += curFaces[facei].size();
 
-            edgeList curEdges = curFaces[faceI].edges();
+            edgeList curEdges = curFaces[facei].edges();
 
             forAll(curEdges, edgeI)
             {
@@ -97,9 +97,9 @@ void Foam::starMesh::mergeCoupleFacePoints()
         labelList cellPoints(nPointsInCell);
         label nAddedPoints = 0;
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            const face& f = curFaces[faceI];
+            const face& f = curFaces[facei];
 
             forAll(f, fI)
             {
@@ -252,15 +252,15 @@ void Foam::starMesh::mergeCoupleFacePoints()
     // renumbering of all faces.  This will only be used to see which
     // points are still used!
 
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        faceList& prelimFaces = cellFaces_[cellI];
+        faceList& prelimFaces = cellFaces_[celli];
 
-        forAll(prelimFaces, faceI)
+        forAll(prelimFaces, facei)
         {
-            face oldFacePoints = prelimFaces[faceI];
+            face oldFacePoints = prelimFaces[facei];
 
-            face& prelimFacePoints = prelimFaces[faceI];
+            face& prelimFacePoints = prelimFaces[facei];
 
             forAll(prelimFacePoints, pointI)
             {
@@ -283,13 +283,13 @@ void Foam::starMesh::mergeCoupleFacePoints()
     // re-create the point list and renumber the whole lot
     renumberPoints = 0;
 
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        const faceList& curFaces = cellFaces_[cellI];
+        const faceList& curFaces = cellFaces_[celli];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            const face& curFacePoints = curFaces[faceI];
+            const face& curFacePoints = curFaces[facei];
 
             forAll(curFacePoints, pointI)
             {
@@ -298,9 +298,9 @@ void Foam::starMesh::mergeCoupleFacePoints()
         }
     }
 
-    forAll(cellShapes_, cellI)
+    forAll(cellShapes_, celli)
     {
-        const labelList& curLabels = cellShapes_[cellI];
+        const labelList& curLabels = cellShapes_[celli];
 
         forAll(curLabels, pointI)
         {
@@ -308,7 +308,7 @@ void Foam::starMesh::mergeCoupleFacePoints()
             {
                 FatalErrorInFunction
                     << "Error in point merging for cell "
-                    << cellI << ". STAR index: " << starCellID_[cellI]
+                    << celli << ". STAR index: " << starCellID_[celli]
                     << ". " << endl
                     << "Point index: " << curLabels[pointI] << " STAR index "
                     << starPointID_[curLabels[pointI]] << endl
@@ -346,15 +346,15 @@ void Foam::starMesh::mergeCoupleFacePoints()
 
     Info<< "Renumbering all faces" << endl;
 
-    forAll(cellFaces_, cellI)
+    forAll(cellFaces_, celli)
     {
-        faceList& newFaces = cellFaces_[cellI];
+        faceList& newFaces = cellFaces_[celli];
 
-        forAll(newFaces, faceI)
+        forAll(newFaces, facei)
         {
-            face oldFacePoints = newFaces[faceI];
+            face oldFacePoints = newFaces[facei];
 
-            face& newFacePoints = newFaces[faceI];
+            face& newFacePoints = newFaces[facei];
 
             forAll(newFacePoints, pointI)
             {
@@ -375,11 +375,11 @@ void Foam::starMesh::mergeCoupleFacePoints()
 
     Info<< "Renumbering all cell shapes" << endl;
 
-    forAll(cellShapes_, cellI)
+    forAll(cellShapes_, celli)
     {
-        labelList oldLabels = cellShapes_[cellI];
+        labelList oldLabels = cellShapes_[celli];
 
-        labelList& curLabels = cellShapes_[cellI];
+        labelList& curLabels = cellShapes_[celli];
 
         forAll(curLabels, pointI)
         {
@@ -387,7 +387,7 @@ void Foam::starMesh::mergeCoupleFacePoints()
             {
                 FatalErrorInFunction
                     << "Error in point renumbering for cell "
-                    << cellI << ". STAR index: " << starCellID_[cellI]
+                    << celli << ". STAR index: " << starCellID_[celli]
                     << ". " << endl
                     << "Point index: " << curLabels[pointI] << " STAR index "
                     << starPointID_[curLabels[pointI]] << " returns invalid "

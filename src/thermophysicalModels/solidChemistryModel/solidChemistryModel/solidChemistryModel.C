@@ -140,10 +140,10 @@ Foam::solidChemistryModel<CompType, SolidThermo>::Sh() const
 
         forAll(Ys_, i)
         {
-            forAll(Sh, cellI)
+            forAll(Sh, celli)
             {
                 scalar hf = solidThermo_[i].Hc();
-                Sh[cellI] -= hf*RRs_[i][cellI];
+                Sh[celli] -= hf*RRs_[i][celli];
             }
         }
     }
@@ -187,11 +187,11 @@ Foam::solidChemistryModel<CompType, SolidThermo>::dQ() const
 template<class CompType, class SolidThermo>
 void Foam::solidChemistryModel<CompType, SolidThermo>::setCellReacting
 (
-    const label cellI,
+    const label celli,
     const bool active
 )
 {
-    reactingCells_[cellI] = active;
+    reactingCells_[celli] = active;
 }
 
 // ************************************************************************* //

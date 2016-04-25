@@ -82,17 +82,17 @@ Foam::scalar Foam::surfaceIntersection::minEdgeLen
 }
 
 
-// Get edge between fp and fp+1 on faceI.
+// Get edge between fp and fp+1 on facei.
 Foam::label Foam::surfaceIntersection::getEdge
 (
     const triSurface& surf,
-    const label faceI,
+    const label facei,
     const label fp
 )
 {
-    const edge faceEdge = surf.localFaces()[faceI].faceEdge(fp);
+    const edge faceEdge = surf.localFaces()[facei].faceEdge(fp);
 
-    const labelList& eLabels = surf.faceEdges()[faceI];
+    const labelList& eLabels = surf.faceEdges()[facei];
 
     forAll(eLabels, eI)
     {
@@ -106,7 +106,7 @@ Foam::label Foam::surfaceIntersection::getEdge
 
     FatalErrorInFunction
         << "Problem:: Cannot find edge with vertices " << faceEdge
-        << " in face " << faceI
+        << " in face " << facei
         << abort(FatalError);
 
     return -1;

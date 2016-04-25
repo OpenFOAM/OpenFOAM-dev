@@ -46,9 +46,9 @@ Foam::labelList Foam::patchZones::faceToEdge
 
     forAll(changedFaces, i)
     {
-        label faceI = changedFaces[i];
+        label facei = changedFaces[i];
 
-        const labelList& fEdges = pp_.faceEdges()[faceI];
+        const labelList& fEdges = pp_.faceEdges()[facei];
 
         forAll(fEdges, fEdgeI)
         {
@@ -82,13 +82,13 @@ Foam::labelList Foam::patchZones::edgeToFace(const labelList& changedEdges)
 
         forAll(eFaces, eFaceI)
         {
-            label faceI = eFaces[eFaceI];
+            label facei = eFaces[eFaceI];
 
-            if (operator[](faceI) == -1)
+            if (operator[](facei) == -1)
             {
-                operator[](faceI) = nZones_;
+                operator[](facei) = nZones_;
 
-                changedFaces[changedI++] = faceI;
+                changedFaces[changedI++] = facei;
             }
         }
     }
@@ -99,10 +99,10 @@ Foam::labelList Foam::patchZones::edgeToFace(const labelList& changedEdges)
 }
 
 
-void Foam::patchZones::markZone(label faceI)
+void Foam::patchZones::markZone(label facei)
 {
     // List of faces whose faceZone has been set.
-    labelList changedFaces(1, faceI);
+    labelList changedFaces(1, facei);
     // List of edges whose faceZone has been set.
     labelList changedEdges;
 
@@ -167,24 +167,24 @@ Foam::patchZones::patchZones
             << abort(FatalError);
     }
 
-    label faceI = 0;
+    label facei = 0;
 
     while (true)
     {
         // Find first non-visited face
-        for (; faceI < pp_.size(); faceI++)
+        for (; facei < pp_.size(); facei++)
         {
-            if (operator[](faceI) == -1)
+            if (operator[](facei) == -1)
             {
-                operator[](faceI) = nZones_;
+                operator[](facei) = nZones_;
 
-                markZone(faceI);
+                markZone(facei);
 
                 break;
             }
         }
 
-        if (faceI == pp_.size())
+        if (facei == pp_.size())
         {
             // Finished.
             break;

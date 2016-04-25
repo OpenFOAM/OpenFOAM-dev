@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,9 +95,9 @@ public:
             patchAddr_(mesh.boundary().size()),
             patchSchedule_(mesh.globalData().patchSchedule())
         {
-            forAll(mesh.boundary(), patchI)
+            forAll(mesh.boundary(), patchi)
             {
-                patchAddr_[patchI] = &mesh.boundary()[patchI].faceCells();
+                patchAddr_[patchi] = &mesh.boundary()[patchi].faceCells();
             }
         }
 

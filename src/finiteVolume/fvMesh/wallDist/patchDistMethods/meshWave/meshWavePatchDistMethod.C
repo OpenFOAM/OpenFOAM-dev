@@ -86,13 +86,13 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
     // Transfer values on patches into boundaryField of y
     volScalarField::GeometricBoundaryField& ybf = y.boundaryFieldRef();
 
-    forAll(ybf, patchI)
+    forAll(ybf, patchi)
     {
-        if (!isA<emptyFvPatchScalarField>(ybf[patchI]))
+        if (!isA<emptyFvPatchScalarField>(ybf[patchi]))
         {
-            scalarField& waveFld = wave.patchDistance()[patchI];
+            scalarField& waveFld = wave.patchDistance()[patchi];
 
-            ybf[patchI].transfer(waveFld);
+            ybf[patchi].transfer(waveFld);
         }
     }
 
@@ -116,9 +116,9 @@ bool Foam::patchDistMethods::meshWave::correct
 
     volVectorField::GeometricBoundaryField& nbf = n.boundaryFieldRef();
 
-    forAll(nbf, patchI)
+    forAll(nbf, patchi)
     {
-        patchData.set(patchI, &nbf[patchI]);
+        patchData.set(patchi, &nbf[patchi]);
     }
 
     // Do mesh wave
@@ -138,17 +138,17 @@ bool Foam::patchDistMethods::meshWave::correct
     // Transfer values on patches into boundaryField of y and n
     volScalarField::GeometricBoundaryField& ybf = y.boundaryFieldRef();
 
-    forAll(ybf, patchI)
+    forAll(ybf, patchi)
     {
-        scalarField& waveFld = wave.patchDistance()[patchI];
+        scalarField& waveFld = wave.patchDistance()[patchi];
 
-        if (!isA<emptyFvPatchScalarField>(ybf[patchI]))
+        if (!isA<emptyFvPatchScalarField>(ybf[patchi]))
         {
-            ybf[patchI].transfer(waveFld);
+            ybf[patchi].transfer(waveFld);
 
-            vectorField& wavePatchData = wave.patchData()[patchI];
+            vectorField& wavePatchData = wave.patchData()[patchi];
 
-            nbf[patchI].transfer(wavePatchData);
+            nbf[patchi].transfer(wavePatchData);
         }
     }
 

@@ -152,8 +152,8 @@ private:
         (
             const trackingData&,
             const point&,
-            const label cellI,
-            const label faceI
+            const label celli,
+            const label facei
         );
 
 
@@ -166,7 +166,7 @@ public:
         (
             const polyMesh& c,
             const vector& position,
-            const label cellI,
+            const label celli,
             const label lifeTime
         );
 

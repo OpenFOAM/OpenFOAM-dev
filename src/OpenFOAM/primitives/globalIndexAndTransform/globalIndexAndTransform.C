@@ -134,9 +134,9 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
     label dummyMatch = -1;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
         // Note: special check for unordered cyclics. These are in fact
         // transform bcs and should probably be split off.
@@ -355,11 +355,11 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
 
     label matchTransI = -1;
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        const polyPatch& pp = patches[patchI];
+        const polyPatch& pp = patches[patchi];
 
-        // Pout<< nl << patchI << " " << pp.name() << endl;
+        // Pout<< nl << patchi << " " << pp.name() << endl;
 
         // Note: special check for unordered cyclics. These are in fact
         // transform bcs and should probably be split off.
@@ -416,7 +416,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                         //        ]
                         //     << endl;
 
-                        patchTransformSign_[patchI] =
+                        patchTransformSign_[patchi] =
                             Pair<label>(matchTransI, sign);
                     }
                 }
@@ -460,7 +460,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                         //        ]
                         //     << endl;
 
-                        patchTransformSign_[patchI] =
+                        patchTransformSign_[patchi] =
                             Pair<label>(matchTransI, sign);
                     }
                 }
@@ -514,13 +514,13 @@ Foam::globalIndexAndTransform::globalIndexAndTransform
 
 
         Info<< "\tpatch\ttransform\tsign" << endl;
-        forAll(patchTransformSign_, patchI)
+        forAll(patchTransformSign_, patchi)
         {
-            if (patchTransformSign_[patchI].first() != -1)
+            if (patchTransformSign_[patchi].first() != -1)
             {
-                Info<< '\t' << patches[patchI].name()
-                    << '\t' << patchTransformSign_[patchI].first()
-                    << '\t' << patchTransformSign_[patchI].second()
+                Info<< '\t' << patches[patchi].name()
+                    << '\t' << patchTransformSign_[patchi].first()
+                    << '\t' << patchTransformSign_[patchi].second()
                     << endl;
             }
         }

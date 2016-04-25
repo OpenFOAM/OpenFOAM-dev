@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,11 +59,11 @@ void Foam::triSurface::writeAC(Ostream& os) const
 
     os  << "AC3Db" << endl;
 
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        const word& pName = myPatches[patchI].name();
+        const word& pName = myPatches[patchi].name();
 
-        label colourI = patchI % 8;
+        label colourI = patchi % 8;
         label colourCompI = 3 * colourI;
 
         os  << "MATERIAL \"" << pName << "Mat\" rgb "
@@ -82,9 +82,9 @@ void Foam::triSurface::writeAC(Ostream& os) const
 
     label faceIndex = 0;
 
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        const surfacePatch& sp = myPatches[patchI];
+        const surfacePatch& sp = myPatches[patchi];
 
         os  << "OBJECT poly" << endl
             << "name \"" << sp.name() << '"' << endl;
@@ -95,9 +95,9 @@ void Foam::triSurface::writeAC(Ostream& os) const
 
         forAll(sp, patchFaceI)
         {
-            const label faceI = faceMap[faceIndex++];
+            const label facei = faceMap[faceIndex++];
 
-            include[faceI] = true;
+            include[facei] = true;
         }
 
         labelList pointMap;
@@ -118,12 +118,12 @@ void Foam::triSurface::writeAC(Ostream& os) const
 
         os << "numsurf " << patch.localFaces().size() << endl;
 
-        forAll(patch.localFaces(), faceI)
+        forAll(patch.localFaces(), facei)
         {
-            const labelledTri& f = patch.localFaces()[faceI];
+            const labelledTri& f = patch.localFaces()[facei];
 
             os  << "SURF 0x20" << endl          // polygon
-                << "mat " << patchI << endl
+                << "mat " << patchi << endl
                 << "refs " << f.size() << endl;
 
             os << f[0] << " 0 0" << endl;

@@ -250,15 +250,15 @@ void readPoints
 void addAndExtend
 (
     DynamicList<label>& indizes,
-    label cellI,
+    label celli,
     label val
 )
 {
-    if (indizes.size() < (cellI+1))
+    if (indizes.size() < (celli+1))
     {
-        indizes.setSize(cellI+1,-1);
+        indizes.setSize(celli+1,-1);
     }
-    indizes[cellI] = val;
+    indizes[celli] = val;
 }
 
 // Reads cells section. Read region as well? Not handled yet but should just
@@ -304,16 +304,16 @@ void readCells
             break;
         }
 
-        label cellI, feID, physProp, matProp, colour, nNodes;
+        label celli, feID, physProp, matProp, colour, nNodes;
 
         IStringStream lineStr(line);
         lineStr
-            >> cellI >> feID >> physProp >> matProp >> colour >> nNodes;
+            >> celli >> feID >> physProp >> matProp >> colour >> nNodes;
 
         if (foundFeType.insert(feID))
         {
             Info<< "First occurrence of element type " << feID
-                << " for cell " << cellI << " at line "
+                << " for cell " << celli << " at line "
                 << is.lineNumber() << endl;
         }
 
@@ -338,7 +338,7 @@ void readCells
             lineStr
                 >> cVerts[0] >> cVerts[1] >> cVerts[2];
             boundaryFaces.append(cVerts);
-            boundaryFaceIndices.append(cellI);
+            boundaryFaceIndices.append(celli);
         }
         else if (feID == 44 || feID == 94)
         {
@@ -350,7 +350,7 @@ void readCells
             lineStr
                 >> cVerts[0] >> cVerts[1] >> cVerts[2] >> cVerts[3];
             boundaryFaces.append(cVerts);
-            boundaryFaceIndices.append(cellI);
+            boundaryFaceIndices.append(celli);
         }
         else if (feID == 111)
         {
@@ -364,12 +364,12 @@ void readCells
 
             cellVerts.append(cellShape(tet, cVerts, true));
             cellMaterial.append(physProp);
-            addAndExtend(cellCorrespondence,cellI,cellMaterial.size()-1);
+            addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
 
             if (cellVerts.last().size() != cVerts.size())
             {
                 Info<< "Line:" << is.lineNumber()
-                    << " element:" << cellI
+                    << " element:" << celli
                     << " type:" << feID
                     << " collapsed from " << cVerts << nl
                     << " to:" << cellVerts.last()
@@ -389,12 +389,12 @@ void readCells
 
             cellVerts.append(cellShape(prism, cVerts, true));
             cellMaterial.append(physProp);
-            addAndExtend(cellCorrespondence,cellI,cellMaterial.size()-1);
+            addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
 
             if (cellVerts.last().size() != cVerts.size())
             {
                 Info<< "Line:" << is.lineNumber()
-                    << " element:" << cellI
+                    << " element:" << celli
                     << " type:" << feID
                     << " collapsed from " << cVerts << nl
                     << " to:" << cellVerts.last()
@@ -414,12 +414,12 @@ void readCells
 
             cellVerts.append(cellShape(hex, cVerts, true));
             cellMaterial.append(physProp);
-            addAndExtend(cellCorrespondence,cellI,cellMaterial.size()-1);
+            addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
 
             if (cellVerts.last().size() != cVerts.size())
             {
                 Info<< "Line:" << is.lineNumber()
-                    << " element:" << cellI
+                    << " element:" << celli
                     << " type:" << feID
                     << " collapsed from " << cVerts << nl
                     << " to:" << cellVerts.last()
@@ -446,12 +446,12 @@ void readCells
 
             cellVerts.append(cellShape(tet, cVerts, true));
             cellMaterial.append(physProp);
-            addAndExtend(cellCorrespondence,cellI,cellMaterial.size()-1);
+            addAndExtend(cellCorrespondence,celli,cellMaterial.size()-1);
 
             if (cellVerts.last().size() != cVerts.size())
             {
                 Info<< "Line:" << is.lineNumber()
-                    << " element:" << cellI
+                    << " element:" << celli
                     << " type:" << feID
                     << " collapsed from " << cVerts << nl
                     << " to:" << cellVerts.last()
@@ -790,28 +790,28 @@ int main(int argc, char *argv[])
 
     // Renumber vertex numbers on cells
 
-    forAll(cellVerts, cellI)
+    forAll(cellVerts, celli)
     {
         labelList foamVerts
         (
             renumber
             (
                 unvToFoam,
-                static_cast<labelList&>(cellVerts[cellI])
+                static_cast<labelList&>(cellVerts[celli])
             )
         );
 
         if (findIndex(foamVerts, -1) != -1)
         {
             FatalErrorInFunction
-                << "Cell " << cellI
-                << " unv vertices " << cellVerts[cellI]
+                << "Cell " << celli
+                << " unv vertices " << cellVerts[celli]
                 << " has some undefined vertices " << foamVerts
                 << abort(FatalError);
         }
 
         // Bit nasty: replace vertex list.
-        cellVerts[cellI].transfer(foamVerts);
+        cellVerts[celli].transfer(foamVerts);
     }
 
     // Renumber vertex numbers on boundaryFaces
@@ -850,15 +850,15 @@ int main(int argc, char *argv[])
 
     {
         HashTable<label, face, Hash<face>> faceToFaceID(boundaryFaces.size());
-        forAll(boundaryFaces, faceI)
+        forAll(boundaryFaces, facei)
         {
-            SortableList<label> sortedVerts(boundaryFaces[faceI]);
-            faceToFaceID.insert(face(sortedVerts), faceI);
+            SortableList<label> sortedVerts(boundaryFaces[facei]);
+            faceToFaceID.insert(face(sortedVerts), facei);
         }
 
-        forAll(cellVerts, cellI)
+        forAll(cellVerts, celli)
         {
-            faceList faces = cellVerts[cellI].faces();
+            faceList faces = cellVerts[celli].faces();
             forAll(faces, i)
             {
                 SortableList<label> sortedVerts(faces[i]);
@@ -867,31 +867,31 @@ int main(int argc, char *argv[])
 
                 if (fnd != faceToFaceID.end())
                 {
-                    label faceI = fnd();
-                    int stat = face::compare(faces[i], boundaryFaces[faceI]);
+                    label facei = fnd();
+                    int stat = face::compare(faces[i], boundaryFaces[facei]);
 
                     if (stat == 1)
                     {
                         // Same orientation. Cell is owner.
-                        own[faceI] = cellI;
+                        own[facei] = celli;
                     }
                     else if (stat == -1)
                     {
                         // Opposite orientation. Cell is neighbour.
-                        nei[faceI] = cellI;
+                        nei[facei] = celli;
                     }
                 }
             }
         }
 
         label nReverse = 0;
-        forAll(own, faceI)
+        forAll(own, facei)
         {
-            if (own[faceI] == -1 && nei[faceI] != -1)
+            if (own[facei] == -1 && nei[facei] != -1)
             {
                 // Boundary face with incorrect orientation
-                boundaryFaces[faceI] = boundaryFaces[faceI].reverseFace();
-                Swap(own[faceI], nei[faceI]);
+                boundaryFaces[facei] = boundaryFaces[facei].reverseFace();
+                Swap(own[facei], nei[facei]);
                 nReverse++;
             }
         }
@@ -903,12 +903,12 @@ int main(int argc, char *argv[])
 
 
         label cnt = 0;
-        forAll(own, faceI)
+        forAll(own, facei)
         {
-            if (own[faceI] != -1 && nei[faceI] != -1)
+            if (own[facei] != -1 && nei[facei] != -1)
             {
-                faceToCell[1].insert(faceI, own[faceI]);
-                faceToCell[0].insert(faceI, nei[faceI]);
+                faceToCell[1].insert(facei, own[facei]);
+                faceToCell[0].insert(facei, nei[facei]);
                 cnt++;
             }
         }
@@ -958,9 +958,9 @@ int main(int argc, char *argv[])
 
         List<DynamicList<face>> dynPatchFaces(dofVertIndices.size());
 
-        forAll(cellVerts, cellI)
+        forAll(cellVerts, celli)
         {
-            const cellShape& shape = cellVerts[cellI];
+            const cellShape& shape = cellVerts[celli];
 
             const faceList shapeFaces(shape.faces());
 

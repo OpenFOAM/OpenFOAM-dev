@@ -113,7 +113,7 @@ public:
         (
             const polyMesh& mesh,
             const vector& position,
-            const label cellI,
+            const label celli,
             const label tetFaceI,
             const label tetPtI,
             const point& end,
@@ -277,7 +277,7 @@ public:
             );
 
             //- Convert processor patch addressing to the global equivalents
-            //  and set the cellI to the face-neighbour
+            //  and set the celli to the face-neighbour
             void correctAfterParallelTransfer(const label, trackingData&);
 
 

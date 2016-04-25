@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,9 +124,9 @@ void Foam::attachDetach::detachInterface
 
         bool edgeIsInternal = true;
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
-            if (!mesh.isInternalFace(curFaces[faceI]))
+            if (!mesh.isInternalFace(curFaces[facei]))
             {
                 // The edge belongs to a boundary face
                 edgeIsInternal = false;
@@ -178,12 +178,12 @@ void Foam::attachDetach::detachInterface
     const labelList& own = mesh.faceOwner();
     const labelList& nei = mesh.faceNeighbour();
 
-    forAll(mf, faceI)
+    forAll(mf, facei)
     {
-        const label curFaceID = mf[faceI];
+        const label curFaceID = mf[facei];
 
         // Build the face for the slave patch by renumbering
-        const face oldFace = zoneFaces[faceI].reverseFace();
+        const face oldFace = zoneFaces[facei].reverseFace();
 
         face newFace(oldFace.size());
 
@@ -192,7 +192,7 @@ void Foam::attachDetach::detachInterface
             newFace[pointI] = addedPoints[oldFace[pointI]];
         }
 
-        if (mfFlip[faceI])
+        if (mfFlip[facei])
         {
             // Face needs to be flipped for the master patch
             ref.setAction
@@ -207,7 +207,7 @@ void Foam::attachDetach::detachInterface
                     masterPatchID_.index(),         // patch for face
                     false,                          // remove from zone
                     faceZoneID_.index(),            // zone for face
-                    !mfFlip[faceI]                  // face flip in zone
+                    !mfFlip[facei]                  // face flip in zone
                 )
             );
 
@@ -254,7 +254,7 @@ void Foam::attachDetach::detachInterface
                     masterPatchID_.index(),   // patch for face
                     false,                    // remove from zone
                     faceZoneID_.index(),      // zone for face
-                    mfFlip[faceI]             // face flip in zone
+                    mfFlip[facei]             // face flip in zone
                 )
             );
 
@@ -310,16 +310,16 @@ void Foam::attachDetach::detachInterface
 
     const cellList& cells = mesh.cells();
 
-    forAll(mc, cellI)
+    forAll(mc, celli)
     {
-        const labelList& curFaces = cells[mc[cellI]];
+        const labelList& curFaces = cells[mc[celli]];
 
-        forAll(curFaces, faceI)
+        forAll(curFaces, facei)
         {
             // Check if the face belongs to the master patch; if not add it
-            if (zoneMesh.whichZone(curFaces[faceI]) != faceZoneID_.index())
+            if (zoneMesh.whichZone(curFaces[facei]) != faceZoneID_.index())
             {
-                masterCellFaceMap.insert(curFaces[faceI]);
+                masterCellFaceMap.insert(curFaces[facei]);
             }
         }
     }
@@ -350,9 +350,9 @@ void Foam::attachDetach::detachInterface
                 // Cell not found. Add its faces to the map
                 const cell& curFaces = cells[ownCell];
 
-                forAll(curFaces, faceI)
+                forAll(curFaces, facei)
                 {
-                    masterCellFaceMap.insert(curFaces[faceI]);
+                    masterCellFaceMap.insert(curFaces[facei]);
                 }
             }
 
@@ -366,9 +366,9 @@ void Foam::attachDetach::detachInterface
                     // Cell not found. Add its faces to the map
                     const cell& curFaces = cells[neiCell];
 
-                    forAll(curFaces, faceI)
+                    forAll(curFaces, facei)
                     {
-                        masterCellFaceMap.insert(curFaces[faceI]);
+                        masterCellFaceMap.insert(curFaces[facei]);
                     }
                 }
             }
@@ -390,12 +390,12 @@ void Foam::attachDetach::detachInterface
     // Grab the list of faces of the master layer
     const labelList masterCellFaces = masterCellFaceMap.toc();
 
-    forAll(masterCellFaces, faceI)
+    forAll(masterCellFaces, facei)
     {
         // Attempt to renumber the face using the masterLayerPointMap.
         // Missing point remain the same
 
-        const label curFaceID = masterCellFaces[faceI];
+        const label curFaceID = masterCellFaces[facei];
 
         const face& oldFace = faces[curFaceID];
 

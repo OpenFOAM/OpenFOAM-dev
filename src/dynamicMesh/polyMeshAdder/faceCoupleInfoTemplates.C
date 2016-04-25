@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,11 +39,11 @@ Foam::pointField Foam::faceCoupleInfo::calcFaceCentres
 {
     pointField fc(size);
 
-    label faceI = start;
+    label facei = start;
 
     forAll(fc, i)
     {
-        fc[i] = faces[faceI++].centre(points);
+        fc[i] = faces[facei++].centre(points);
     }
     return fc;
 }

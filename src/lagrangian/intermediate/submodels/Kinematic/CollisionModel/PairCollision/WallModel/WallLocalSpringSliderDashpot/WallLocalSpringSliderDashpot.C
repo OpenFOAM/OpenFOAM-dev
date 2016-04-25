@@ -214,11 +214,11 @@ Foam::WallLocalSpringSliderDashpot<CloudType>::WallLocalSpringSliderDashpot
 
     DynamicList<label> wallPatchIndices;
 
-    forAll(bMesh, patchI)
+    forAll(bMesh, patchi)
     {
-        if (isA<wallPolyPatch>(bMesh[patchI]))
+        if (isA<wallPolyPatch>(bMesh[patchi]))
         {
-            wallPatchIndices.append(bMesh[patchI].index());
+            wallPatchIndices.append(bMesh[patchi].index());
         }
     }
 

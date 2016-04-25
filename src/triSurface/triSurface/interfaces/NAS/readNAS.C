@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,19 +212,19 @@ bool triSurface::readNAS(const fileName& fName)
             // Convert group into patch
             Map<label>::const_iterator iter = groupToPatch.find(groupId);
 
-            label patchI;
+            label patchi;
             if (iter == groupToPatch.end())
             {
-                patchI = nPatches++;
-                groupToPatch.insert(groupId, patchI);
-                Info<< "patch " << patchI << " => group " << groupId << endl;
+                patchi = nPatches++;
+                groupToPatch.insert(groupId, patchi);
+                Info<< "patch " << patchi << " => group " << groupId << endl;
             }
             else
             {
-                patchI = iter();
+                patchi = iter();
             }
 
-            faces.append(labelledTri(a, b, c, patchI));
+            faces.append(labelledTri(a, b, c, patchi));
         }
         else if (cmd == "CQUAD4")
         {
@@ -237,20 +237,20 @@ bool triSurface::readNAS(const fileName& fName)
             // Convert group into patch
             Map<label>::const_iterator iter = groupToPatch.find(groupId);
 
-            label patchI;
+            label patchi;
             if (iter == groupToPatch.end())
             {
-                patchI = nPatches++;
-                groupToPatch.insert(groupId, patchI);
-                Info<< "patch " << patchI << " => group " << groupId << endl;
+                patchi = nPatches++;
+                groupToPatch.insert(groupId, patchi);
+                Info<< "patch " << patchi << " => group " << groupId << endl;
             }
             else
             {
-                patchI = iter();
+                patchi = iter();
             }
 
-            faces.append(labelledTri(a, b, c, patchI));
-            faces.append(labelledTri(c, d, a, patchI));
+            faces.append(labelledTri(a, b, c, patchi));
+            faces.append(labelledTri(c, d, a, patchi));
         }
         else if (cmd == "PSHELL")
         {
@@ -340,13 +340,13 @@ bool triSurface::readNAS(const fileName& fName)
 
     forAllConstIter(Map<word>, groupToName, iter)
     {
-        label patchI = groupToPatch[iter.key()];
+        label patchi = groupToPatch[iter.key()];
 
-        patches[patchI] = geometricSurfacePatch
+        patches[patchi] = geometricSurfacePatch
         (
             "empty",
             iter(),
-            patchI
+            patchi
         );
     }
 

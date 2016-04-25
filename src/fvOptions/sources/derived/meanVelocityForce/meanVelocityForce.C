@@ -132,9 +132,9 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
     const scalarField& cv = mesh_.V();
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        scalar volCell = cv[cellI];
-        magUbarAve += (flowDir_ & U[cellI])*volCell;
+        label celli = cells_[i];
+        scalar volCell = cv[celli];
+        magUbarAve += (flowDir_ & U[celli])*volCell;
     }
 
     reduce(magUbarAve, sumOp<scalar>());
@@ -154,9 +154,9 @@ void Foam::fv::meanVelocityForce::correct(volVectorField& U)
     const scalarField& cv = mesh_.V();
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        scalar volCell = cv[cellI];
-        rAUave += rAU[cellI]*volCell;
+        label celli = cells_[i];
+        scalar volCell = cv[celli];
+        rAUave += rAU[celli]*volCell;
     }
 
     // Collect across all processors
@@ -174,8 +174,8 @@ void Foam::fv::meanVelocityForce::correct(volVectorField& U)
     // Apply correction to velocity field
     forAll(cells_, i)
     {
-        label cellI = cells_[i];
-        U[cellI] += flowDir_*rAU[cellI]*dGradP_;
+        label celli = cells_[i];
+        U[celli] += flowDir_*rAU[celli]*dGradP_;
     }
 
     scalar gradP = gradP0_ + dGradP_;

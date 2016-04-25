@@ -181,10 +181,10 @@ Foam::procFacesGAMGProcAgglomeration::processorAgglomeration
         );
 
         labelList coarseToMaster(nCoarseProcs, labelMax);
-        forAll(fineToCoarse, cellI)
+        forAll(fineToCoarse, celli)
         {
-            label coarseI = fineToCoarse[cellI];
-            coarseToMaster[coarseI] = min(coarseToMaster[coarseI], cellI);
+            label coarseI = fineToCoarse[celli];
+            coarseToMaster[coarseI] = min(coarseToMaster[coarseI], celli);
         }
 
         // Sort according to master and redo restriction

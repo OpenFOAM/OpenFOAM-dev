@@ -414,7 +414,7 @@ public:
             static pointIndexHit facePoint
             (
                 const polyMesh&,
-                const label faceI,
+                const label facei,
                 const polyMesh::cellDecomposition
             );
 

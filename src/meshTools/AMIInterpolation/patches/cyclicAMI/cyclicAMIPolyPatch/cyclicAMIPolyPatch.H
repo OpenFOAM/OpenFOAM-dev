@@ -326,21 +326,21 @@ public:
                 virtual void transformPosition
                 (
                     point& l,
-                    const label faceI
+                    const label facei
                 ) const;
 
                 //- Transform a patch-based position from this side to nbr side
                 virtual void reverseTransformPosition
                 (
                     point& l,
-                    const label faceI
+                    const label facei
                 ) const;
 
                 //- Transform a patch-based direction from this side to nbr side
                 virtual void reverseTransformDirection
                 (
                     vector& d,
-                    const label faceI
+                    const label facei
                 ) const;
 
 
@@ -410,7 +410,7 @@ public:
         //  following trajectory vector n
         label pointFace
         (
-            const label faceI,
+            const label facei,
             const vector& n,
             point& p
         ) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,11 +201,11 @@ void Foam::patchCloudSet::calcSamples
         {
             if (nearest[sampleI].second().second() == Pstream::myProcNo())
             {
-                label faceI = nearInfo.index();
+                label facei = nearInfo.index();
 
                 samplingPts.append(nearInfo.hitPoint());
-                samplingCells.append(mesh().faceOwner()[faceI]);
-                samplingFaces.append(faceI);
+                samplingCells.append(mesh().faceOwner()[facei]);
+                samplingFaces.append(facei);
                 samplingSegments.append(0);
                 samplingCurveDist.append(1.0 * sampleI);
             }

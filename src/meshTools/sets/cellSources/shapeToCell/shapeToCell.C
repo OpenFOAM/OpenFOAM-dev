@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,13 +64,13 @@ void Foam::shapeToCell::combine(topoSet& set, const bool add) const
 {
     if (type_ == "splitHex")
     {
-        for (label cellI = 0; cellI < mesh_.nCells(); cellI++)
+        for (label celli = 0; celli < mesh_.nCells(); celli++)
         {
-            cellFeatures superCell(mesh_, featureCos, cellI);
+            cellFeatures superCell(mesh_, featureCos, celli);
 
             if (hexMatcher().isA(superCell.faces()))
             {
-                addOrDelete(set, cellI, add);
+                addOrDelete(set, celli, add);
             }
         }
     }
@@ -80,11 +80,11 @@ void Foam::shapeToCell::combine(topoSet& set, const bool add) const
 
         const cellShapeList& cellShapes = mesh_.cellShapes();
 
-        forAll(cellShapes, cellI)
+        forAll(cellShapes, celli)
         {
-            if (cellShapes[cellI].model() == wantedModel)
+            if (cellShapes[celli].model() == wantedModel)
             {
-                addOrDelete(set, cellI, add);
+                addOrDelete(set, celli, add);
             }
         }
     }

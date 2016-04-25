@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,14 +63,14 @@ bool Foam::solidParticle::move
 
         // remember which cell the parcel is in
         // since this will change if a face is hit
-        label cellI = cell();
+        label celli = cell();
 
         dt *= trackToFace(position() + dt*U_, td);
 
         tEnd -= dt;
         stepFraction() = 1.0 - tEnd/trackTime;
 
-        cellPointWeight cpw(mesh_, position(), cellI, face());
+        cellPointWeight cpw(mesh_, position(), celli, face());
         scalar rhoc = td.rhoInterp().interpolate(cpw);
         vector Uc = td.UInterp().interpolate(cpw);
         scalar nuc = td.nuInterp().interpolate(cpw);

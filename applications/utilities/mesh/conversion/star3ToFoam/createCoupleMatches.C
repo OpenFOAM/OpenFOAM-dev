@@ -1423,9 +1423,9 @@ void Foam::starMesh::createCoupleMatches()
         // Loop through all cells and reset faces for removal to zero size
         const labelList crfToc = cellRemovedFaces.toc();
 
-        forAll(crfToc, cellI)
+        forAll(crfToc, celli)
         {
-            const label curCell = crfToc[cellI];
+            const label curCell = crfToc[celli];
 
             const SLList<label>& curRemovedFaces = cellRemovedFaces[curCell];
 
@@ -1450,9 +1450,9 @@ void Foam::starMesh::createCoupleMatches()
         const labelList cafToc = cellAddedFaces.toc();
 
         // Insert the new faces into the list
-        forAll(cafToc, cellI)
+        forAll(cafToc, celli)
         {
-            const label curCell = cafToc[cellI];
+            const label curCell = cafToc[celli];
 
             const SLList<face>& curAddedFaces = cellAddedFaces[curCell];
 
@@ -1464,11 +1464,11 @@ void Foam::starMesh::createCoupleMatches()
             label nNewFaces = 0;
 
             // copy original faces that have not been removed
-            forAll(oldFaces, faceI)
+            forAll(oldFaces, facei)
             {
-                if (oldFaces[faceI].size())
+                if (oldFaces[facei].size())
                 {
-                    newFaces[nNewFaces] = oldFaces[faceI];
+                    newFaces[nNewFaces] = oldFaces[facei];
                     nNewFaces++;
                 }
             }

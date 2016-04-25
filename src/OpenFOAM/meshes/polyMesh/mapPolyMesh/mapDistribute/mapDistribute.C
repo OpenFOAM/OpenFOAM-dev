@@ -419,9 +419,9 @@ void Foam::mapDistribute::calcCompactAddressing
     // Count all (non-local) elements needed. Just for presizing map.
     labelList nNonLocal(Pstream::nProcs(), 0);
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -446,9 +446,9 @@ void Foam::mapDistribute::calcCompactAddressing
 
 
     // Collect all (non-local) elements needed.
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        const labelList& cCells = cellCells[cellI];
+        const labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -615,9 +615,9 @@ void Foam::mapDistribute::exchangeAddressing
     );
 
     // Renumber elements
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        labelList& cCells = cellCells[cellI];
+        labelList& cCells = cellCells[celli];
 
         forAll(cCells, i)
         {
@@ -987,9 +987,9 @@ Foam::mapDistribute::mapDistribute
     );
 
     // Add all (non-local) transformed elements needed.
-    forAll(transformedElements, cellI)
+    forAll(transformedElements, celli)
     {
-        const labelPairList& elems = transformedElements[cellI];
+        const labelPairList& elems = transformedElements[celli];
 
         forAll(elems, i)
         {
@@ -1022,9 +1022,9 @@ Foam::mapDistribute::mapDistribute
     // Count per transformIndex
     label nTrafo = globalTransforms.transformPermutations().size();
     labelList nPerTransform(nTrafo, 0);
-    forAll(transformedElements, cellI)
+    forAll(transformedElements, celli)
     {
-        const labelPairList& elems = transformedElements[cellI];
+        const labelPairList& elems = transformedElements[celli];
 
         forAll(elems, i)
         {
@@ -1046,10 +1046,10 @@ Foam::mapDistribute::mapDistribute
     nPerTransform = 0;
 
     transformedIndices.setSize(transformedElements.size());
-    forAll(transformedElements, cellI)
+    forAll(transformedElements, celli)
     {
-        const labelPairList& elems = transformedElements[cellI];
-        transformedIndices[cellI].setSize(elems.size());
+        const labelPairList& elems = transformedElements[celli];
+        transformedIndices[celli].setSize(elems.size());
 
         forAll(elems, i)
         {
@@ -1069,7 +1069,7 @@ Foam::mapDistribute::mapDistribute
             // index of element to transform
             transformElements_[trafoI][n] = rawElemI;
             // destination of transformed element
-            transformedIndices[cellI][i] = transformStart_[trafoI]+n;
+            transformedIndices[celli][i] = transformStart_[trafoI]+n;
             n++;
         }
     }

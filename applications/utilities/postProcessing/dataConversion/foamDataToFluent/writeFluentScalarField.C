@@ -58,9 +58,9 @@ void writeFluentField
         << "1 " << phiInternal.size() // Start and end of list
         << ")(" << endl;
 
-    forAll(phiInternal, cellI)
+    forAll(phiInternal, celli)
     {
-        stream << phiInternal[cellI] << endl;
+        stream << phiInternal[celli] << endl;
     }
 
     stream
@@ -94,9 +94,9 @@ void writeFluentField
 
             nWrittenFaces += emptyFaceCells.size();
 
-            forAll(emptyFaceCells, faceI)
+            forAll(emptyFaceCells, facei)
             {
-                stream << phiInternal[emptyFaceCells[faceI]] << endl;
+                stream << phiInternal[emptyFaceCells[facei]] << endl;
             }
 
             stream
@@ -122,9 +122,9 @@ void writeFluentField
 
             nWrittenFaces += patchPhi.size();
 
-            forAll(patchPhi, faceI)
+            forAll(patchPhi, facei)
             {
-                stream << patchPhi[faceI] << endl;
+                stream << patchPhi[facei] << endl;
             }
 
             stream

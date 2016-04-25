@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,21 +128,21 @@ void Foam::sammMesh::createPolyMeshData()
     label nProblemCells = 0;
 
     // check that there is no zeros in the cellPolys_
-    forAll(cellPolys_, cellI)
+    forAll(cellPolys_, celli)
     {
-        const labelList& curFaceLabels = cellPolys_[cellI];
+        const labelList& curFaceLabels = cellPolys_[celli];
 
-        forAll(curFaceLabels, faceI)
+        forAll(curFaceLabels, facei)
         {
-            if (curFaceLabels[faceI] == -1)
+            if (curFaceLabels[facei] == -1)
             {
-                Info<< "cell " << cellI
+                Info<< "cell " << celli
                     << " has got an unmatched face. "
-                    << "Index: " << cellShapes_[cellI].model().index() << endl
-//                     << "cell shape: " << cellShapes_[cellI] << endl
-//                     << "shape faces: " << cellShapes_[cellI].faces() << endl
-                    << "cellPolys: " << cellPolys_[cellI] << endl
-//                     << "cell faces: " << cellFaces_[cellI]
+                    << "Index: " << cellShapes_[celli].model().index() << endl
+//                     << "cell shape: " << cellShapes_[celli] << endl
+//                     << "shape faces: " << cellShapes_[celli].faces() << endl
+                    << "cellPolys: " << cellPolys_[celli] << endl
+//                     << "cell faces: " << cellFaces_[celli]
                     << endl;
 
                 nProblemCells++;

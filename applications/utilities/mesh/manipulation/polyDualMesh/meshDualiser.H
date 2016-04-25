@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ class meshDualiser
         static void dumpPolyTopoChange(const polyTopoChange&, const fileName&);
 
         //- Find dual cell given point and cell
-        label findDualCell(const label cellI, const label pointI) const;
+        label findDualCell(const label celli, const label pointI) const;
 
         //- Helper function to generate dualpoints on all boundary edges
         //  emanating from (boundary & feature) point
@@ -108,7 +108,7 @@ class meshDualiser
         //- Check that owner and neighbour of face have same dual cell
         bool sameDualCell
         (
-            const label faceI,
+            const label facei,
             const label pointI
         ) const;
 
@@ -153,7 +153,7 @@ class meshDualiser
         //- Create single internal face from internal face
         void createFaceFromInternalFace
         (
-            const label faceI,
+            const label facei,
             label& fp,
             polyTopoChange&
         ) const;

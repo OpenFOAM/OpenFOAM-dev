@@ -64,9 +64,9 @@ void writeSurfFields
 
     DynamicList<floatScalar> pField(3*mesh.nFaces());
 
-    for (label faceI = 0; faceI < mesh.nFaces(); faceI++)
+    for (label facei = 0; facei < mesh.nFaces(); facei++)
     {
-        writeFuns::insert(fc[faceI], pField);
+        writeFuns::insert(fc[facei], pField);
     }
 
     writeFuns::write(str, binary, pField);
@@ -84,9 +84,9 @@ void writeSurfFields
 
         DynamicList<floatScalar> fField(3*mesh.nFaces());
 
-        for (label faceI = 0; faceI < mesh.nInternalFaces(); faceI++)
+        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            writeFuns::insert(svf[faceI], fField);
+            writeFuns::insert(svf[facei], fField);
         }
 
         forAll(svf.boundaryField(), patchi)

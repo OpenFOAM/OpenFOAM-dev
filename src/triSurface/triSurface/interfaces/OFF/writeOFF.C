@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,10 +43,10 @@ void triSurface::writeOFF(const bool writeSorted, Ostream& os) const
     surfacePatchList myPatches(calcPatches(faceMap));
 
     // Print patch names as comment
-    forAll(myPatches, patchI)
+    forAll(myPatches, patchi)
     {
-        os  << "#     " << patchI << "    "
-            << myPatches[patchI].name() << endl;
+        os  << "#     " << patchi << "    "
+            << myPatches[patchi].name() << endl;
     }
     os  << nl << endl;
 
@@ -72,37 +72,37 @@ void triSurface::writeOFF(const bool writeSorted, Ostream& os) const
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchI)
+        forAll(myPatches, patchi)
         {
             // Print all faces belonging to this patch
 
             for
             (
                 label patchFaceI = 0;
-                patchFaceI < myPatches[patchI].size();
+                patchFaceI < myPatches[patchi].size();
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
+                const label facei = faceMap[faceIndex++];
 
                 os  << "3 "
-                    << operator[](faceI)[0] << ' '
-                    << operator[](faceI)[1] << ' '
-                    << operator[](faceI)[2] << ' '
-                    << operator[](faceI).region()
+                    << operator[](facei)[0] << ' '
+                    << operator[](facei)[1] << ' '
+                    << operator[](facei)[2] << ' '
+                    << operator[](facei).region()
                     << endl;
             }
         }
     }
     else
     {
-        forAll(*this, faceI)
+        forAll(*this, facei)
         {
             os  << "3 "
-                << operator[](faceI)[0] << ' '
-                << operator[](faceI)[1] << ' '
-                << operator[](faceI)[2] << ' '
-                << operator[](faceI).region()
+                << operator[](facei)[0] << ' '
+                << operator[](facei)[1] << ' '
+                << operator[](facei)[2] << ' '
+                << operator[](facei).region()
                 << endl;
         }
     }

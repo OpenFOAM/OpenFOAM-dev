@@ -73,15 +73,15 @@ void Foam::faceZone::calcFaceZonePatch() const
     const labelList& addr = *this;
     const boolList& flip = flipMap();
 
-    forAll(addr, faceI)
+    forAll(addr, facei)
     {
-        if (flip[faceI])
+        if (flip[facei])
         {
-            patch[faceI] = f[addr[faceI]].reverseFace();
+            patch[facei] = f[addr[facei]].reverseFace();
         }
         else
         {
-            patch[faceI] = f[addr[faceI]];
+            patch[facei] = f[addr[facei]];
         }
     }
 
@@ -125,26 +125,26 @@ void Foam::faceZone::calcCellLayers() const
         slaveCellsPtr_ = new labelList(mf.size());
         labelList& sc = *slaveCellsPtr_;
 
-        forAll(mf, faceI)
+        forAll(mf, facei)
         {
-            label ownCellI = own[mf[faceI]];
+            label ownCellI = own[mf[facei]];
             label neiCellI =
             (
-                zoneMesh().mesh().isInternalFace(mf[faceI])
-              ? nei[mf[faceI]]
+                zoneMesh().mesh().isInternalFace(mf[facei])
+              ? nei[mf[facei]]
               : -1
             );
 
-            if (!faceFlip[faceI])
+            if (!faceFlip[facei])
             {
                 // Face is oriented correctly, no flip needed
-                mc[faceI] = neiCellI;
-                sc[faceI] = ownCellI;
+                mc[facei] = neiCellI;
+                sc[facei] = ownCellI;
             }
             else
             {
-                mc[faceI] = ownCellI;
-                sc[faceI] = neiCellI;
+                mc[facei] = ownCellI;
+                sc[facei] = neiCellI;
             }
         }
     }
@@ -397,11 +397,11 @@ void Foam::faceZone::updateMesh(const mapPolyMesh& mpm)
 
     forAll(*this, i)
     {
-        const label faceI = operator[](i);
+        const label facei = operator[](i);
 
-        if (faceMap[faceI] >= 0)
+        if (faceMap[facei] >= 0)
         {
-            newAddressing[nFaces] = faceMap[faceI];
+            newAddressing[nFaces] = faceMap[facei];
             newFlipMap[nFaces] = flipMap_[i];       // Keep flip map.
             nFaces++;
         }
@@ -437,12 +437,12 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
         boolList neiZoneFlip(mesh.nFaces()-mesh.nInternalFaces(), false);
         forAll(*this, i)
         {
-            const label faceI = operator[](i);
+            const label facei = operator[](i);
 
-            if (!mesh.isInternalFace(faceI))
+            if (!mesh.isInternalFace(facei))
             {
-                neiZoneFace[faceI-mesh.nInternalFaces()] = true;
-                neiZoneFlip[faceI-mesh.nInternalFaces()] = flipMap()[i];
+                neiZoneFace[facei-mesh.nInternalFaces()] = true;
+                neiZoneFlip[facei-mesh.nInternalFaces()] = flipMap()[i];
             }
         }
         boolList myZoneFace(neiZoneFace);
@@ -452,12 +452,12 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
 
         forAll(*this, i)
         {
-            const label faceI = operator[](i);
-            const label patchI = bm.whichPatch(faceI);
+            const label facei = operator[](i);
+            const label patchi = bm.whichPatch(facei);
 
-            if (patchI != -1 && bm[patchI].coupled())
+            if (patchi != -1 && bm[patchi].coupled())
             {
-                const label bFaceI = faceI-mesh.nInternalFaces();
+                const label bFaceI = facei-mesh.nInternalFaces();
 
                 // Check face in zone on both sides
                 if (myZoneFace[bFaceI] != neiZoneFace[bFaceI])
@@ -468,9 +468,9 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
                     {
                         Pout<< " ***Problem with faceZone " << index()
                             << " named " << name()
-                            << ". Face " << faceI
+                            << ". Face " << facei
                             << " on coupled patch "
-                            << bm[patchI].name()
+                            << bm[patchi].name()
                             << " is not consistent with its coupled neighbour."
                             << endl;
                     }
@@ -489,9 +489,9 @@ bool Foam::faceZone::checkParallelSync(const bool report) const
                     {
                         Pout<< " ***Problem with faceZone " << index()
                             << " named " << name()
-                            << ". Face " << faceI
+                            << ". Face " << facei
                             << " on coupled patch "
-                            << bm[patchI].name()
+                            << bm[patchi].name()
                             << " does not have consistent flipMap"
                             << " across coupled faces."
                             << endl;

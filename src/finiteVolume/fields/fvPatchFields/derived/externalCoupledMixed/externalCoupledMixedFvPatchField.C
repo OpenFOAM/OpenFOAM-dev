@@ -158,9 +158,9 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry
     List<faceList> allFaces(Pstream::nProcs());
     faceList& patchFaces = allFaces[procI];
     patchFaces = p.localFaces();
-    forAll(patchFaces, faceI)
+    forAll(patchFaces, facei)
     {
-        inplaceRenumber(pointToGlobal, patchFaces[faceI]);
+        inplaceRenumber(pointToGlobal, patchFaces[facei]);
     }
 
     Pstream::gatherList(allFaces, tag);
@@ -365,13 +365,13 @@ void Foam::externalCoupledMixedFvPatchField<Type>::readData
     initialiseRead(is);
 
     // read data from file
-    forAll(this->patch(), faceI)
+    forAll(this->patch(), facei)
     {
         if (is.good())
         {
-            is  >> this->refValue()[faceI]
-                >> this->refGrad()[faceI]
-                >> this->valueFraction()[faceI];
+            is  >> this->refValue()[facei]
+                >> this->refGrad()[facei]
+                >> this->valueFraction()[facei];
         }
         else
         {
@@ -744,11 +744,11 @@ void Foam::externalCoupledMixedFvPatchField<Type>::transferData
                 const Field<Type>& value = values[procI];
                 const Field<Type>& snGrad = snGrads[procI];
 
-                forAll(magSf, faceI)
+                forAll(magSf, facei)
                 {
-                    os  << magSf[faceI] << token::SPACE
-                        << value[faceI] << token::SPACE
-                        << snGrad[faceI] << nl;
+                    os  << magSf[facei] << token::SPACE
+                        << value[facei] << token::SPACE
+                        << snGrad[facei] << nl;
                 }
             }
 
@@ -761,11 +761,11 @@ void Foam::externalCoupledMixedFvPatchField<Type>::transferData
         const Field<Type>& value(this->refValue());
         const Field<Type> snGrad(this->snGrad());
 
-        forAll(magSf, faceI)
+        forAll(magSf, facei)
         {
-            os  << magSf[faceI] << token::SPACE
-                << value[faceI] << token::SPACE
-                << snGrad[faceI] << nl;
+            os  << magSf[facei] << token::SPACE
+                << value[facei] << token::SPACE
+                << snGrad[facei] << nl;
         }
 
         os.flush();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ class topoCellLooper
         void walkFace
         (
             const cellFeatures& features,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI,
             const label nFeaturePts,
@@ -99,7 +99,7 @@ class topoCellLooper
         labelList getSuperEdge
         (
             const cellFeatures& features,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI
         ) const;
@@ -109,7 +109,7 @@ class topoCellLooper
         label getAlignedNonFeatureEdge
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const cellFeatures& features
         ) const;
 
@@ -120,7 +120,7 @@ class topoCellLooper
         void walkAcrossFace
         (
             const cellFeatures& features,
-            const label faceI,
+            const label facei,
             const label startEdgeI,
             const label startVertI,
             const label nFeats,
@@ -133,7 +133,7 @@ class topoCellLooper
         //  outside of cell.
         void walkSplitHex
         (
-            const label cellI,
+            const label celli,
             const cellFeatures& features,
             const label fromFaceI,
             const label fromEdgeI,
@@ -174,14 +174,14 @@ public:
 
     // Member Functions
 
-        //- Create cut along circumference of cellI. Gets current mesh cuts.
+        //- Create cut along circumference of celli. Gets current mesh cuts.
         //  Cut along circumference is expressed as loop of cuts plus weights
         //  for cuts along edges (only valid for edge cuts).
         //  Return true if successful cut.
         virtual bool cut
         (
             const vector& refDir,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,
@@ -195,7 +195,7 @@ public:
         virtual bool cut
         (
             const plane& cutPlane,
-            const label cellI,
+            const label celli,
             const boolList& vertIsCut,
             const boolList& edgeIsCut,
             const scalarField& edgeWeight,

@@ -153,7 +153,7 @@ class isoSurfaceCell
         //  Returns point.  Destroys arguments.
         pointIndexHit collapseSurface
         (
-            const label cellI,
+            const label celli,
             pointField& localPoints,
             DynamicList<labelledTri, 64>& localTris
         ) const;
@@ -175,8 +175,8 @@ class isoSurfaceCell
             const scalarField& cellValues,
             const scalarField& pointValues,
             const label pointI,
-            const label faceI,
-            const label cellI,
+            const label facei,
+            const label celli,
             DynamicList<point, 64>& localTriPoints
         ) const;
 
@@ -185,8 +185,8 @@ class isoSurfaceCell
         (
             const scalarField& pointValues,
             const label pointI,
-            const label faceI,
-            const label cellI,
+            const label facei,
+            const label celli,
             DynamicList<point, 64>& localTriPoints
         ) const;
 

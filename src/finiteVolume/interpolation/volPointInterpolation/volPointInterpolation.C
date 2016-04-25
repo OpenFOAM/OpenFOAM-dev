@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,14 +77,14 @@ void Foam::volPointInterpolation::calcBoundaryAddressing()
     // cyclicAMI
     const surfaceScalarField& magSf = mesh().magSf();
 
-    forAll(pbm, patchI)
+    forAll(pbm, patchi)
     {
-        const polyPatch& pp = pbm[patchI];
+        const polyPatch& pp = pbm[patchi];
 
         if
         (
             !isA<emptyPolyPatch>(pp)
-         && !magSf.boundaryField()[patchI].coupled()
+         && !magSf.boundaryField()[patchi].coupled()
         )
         {
             label bFaceI = pp.start()-mesh().nInternalFaces();
@@ -225,9 +225,9 @@ void Foam::volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
             {
                 if (boundaryIsPatchFace_[pFaces[i]])
                 {
-                    label faceI = mesh().nInternalFaces() + pFaces[i];
+                    label facei = mesh().nInternalFaces() + pFaces[i];
 
-                    pw[i] = 1.0/mag(points[pointI] - faceCentres[faceI]);
+                    pw[i] = 1.0/mag(points[pointI] - faceCentres[facei]);
                     sumWeights[pointI] += pw[i];
                 }
                 else

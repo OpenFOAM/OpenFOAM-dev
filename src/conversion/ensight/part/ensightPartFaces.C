@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,9 @@ void Foam::ensightPartFaces::classify(const faceList& faces)
     label nQuad = 0;
     label nPoly = 0;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if (f.size() == 3)
         {
@@ -85,21 +85,21 @@ void Foam::ensightPartFaces::classify(const faceList& faces)
     nPoly = 0;
 
     // classify the shapes
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        const face& f = faces[faceI];
+        const face& f = faces[facei];
 
         if (f.size() == 3)
         {
-            triCells[nTri++] = faceI;
+            triCells[nTri++] = facei;
         }
         else if (f.size() == 4)
         {
-            quadCells[nQuad++] = faceI;
+            quadCells[nQuad++] = facei;
         }
         else
         {
-            polygonCells[nPoly++] = faceI;
+            polygonCells[nPoly++] = facei;
         }
     }
 

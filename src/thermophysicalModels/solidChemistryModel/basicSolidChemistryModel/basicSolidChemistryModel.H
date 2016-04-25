@@ -155,8 +155,8 @@ public:
         //- Return specie Table for gases
         virtual const speciesTable& gasTable() const = 0;
 
-        //- Set reacting status of cell, cellI
-        virtual void setCellReacting(const label cellI, const bool active) = 0;
+        //- Set reacting status of cell, celli
+        virtual void setCellReacting(const label celli, const bool active) = 0;
 
         //- Calculates the reaction rates
         virtual void calculate() = 0;

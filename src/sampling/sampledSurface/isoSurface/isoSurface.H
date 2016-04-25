@@ -179,8 +179,8 @@ class isoSurface
             const labelList& boundaryRegion,
             const volVectorField& meshC,
             const volScalarField& cVals,
-            const label cellI,
-            const label faceI,
+            const label celli,
+            const label facei,
             scalar& nbrValue,
             point& nbrPoint
         ) const;
@@ -288,7 +288,7 @@ class isoSurface
             const DynamicList<Type>& snappedPoints,
             const labelList& snappedCc,
             const labelList& snappedPoint,
-            const label faceI,
+            const label facei,
 
             const scalar neiVal,
             const Type& neiPt,

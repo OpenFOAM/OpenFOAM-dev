@@ -75,11 +75,11 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     treeBoundBoxList cellBbs(mesh_.nCells());
 
-    forAll(cellBbs, cellI)
+    forAll(cellBbs, celli)
     {
-        cellBbs[cellI] = treeBoundBox
+        cellBbs[celli] = treeBoundBox
         (
-            mesh_.cells()[cellI].points
+            mesh_.cells()[celli].points
             (
                 mesh_.faces(),
                 mesh_.points()
@@ -112,20 +112,20 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         label origProc = extendedProcBbsOrigProc[ePBIRI];
 
-        forAll(cellBbs, cellI)
+        forAll(cellBbs, celli)
         {
-            const treeBoundBox& cellBb = cellBbs[cellI];
+            const treeBoundBox& cellBb = cellBbs[celli];
 
             if (cellBb.overlaps(otherExtendedProcBb))
             {
                 // This cell is in range of the Bb of the other
                 // processor Bb, and so needs to be referred to it
 
-                cellInRangeOfCoupledPatch[cellI] = true;
+                cellInRangeOfCoupledPatch[celli] = true;
 
                 cellIAndTToExchange.append
                 (
-                    globalTransforms.encode(cellI, transformIndex)
+                    globalTransforms.encode(celli, transformIndex)
                 );
 
                 cellBbsToExchange.append(cellBb);
@@ -148,11 +148,11 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     // a coupled boundary to build an octree limited to these cells.
     DynamicList<label> coupledPatchRangeCells;
 
-    forAll(cellInRangeOfCoupledPatch, cellI)
+    forAll(cellInRangeOfCoupledPatch, celli)
     {
-        if (cellInRangeOfCoupledPatch[cellI])
+        if (cellInRangeOfCoupledPatch[celli])
         {
-            coupledPatchRangeCells.append(cellI);
+            coupledPatchRangeCells.append(celli);
         }
     }
 
@@ -304,9 +304,9 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
         }
     }
 
-    forAll(rilInverse_, cellI)
+    forAll(rilInverse_, celli)
     {
-        rilInverse_[cellI].transfer(rilInverseTemp[cellI]);
+        rilInverse_[celli].transfer(rilInverseTemp[celli]);
     }
 
     // Determine which wall faces to refer
@@ -318,9 +318,9 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     // Determine the index of all of the wall faces on this processor
     DynamicList<label> localWallFaces;
 
-    forAll(mesh_.boundaryMesh(), patchI)
+    forAll(mesh_.boundaryMesh(), patchi)
     {
-        const polyPatch& patch = mesh_.boundaryMesh()[patchI];
+        const polyPatch& patch = mesh_.boundaryMesh()[patchi];
 
         if (isA<wallPolyPatch>(patch))
         {
@@ -521,9 +521,9 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
         }
     }
 
-    forAll(rwfilInverse_, cellI)
+    forAll(rwfilInverse_, celli)
     {
-        rwfilInverse_[cellI].transfer(rwfilInverseTemp[cellI]);
+        rwfilInverse_[celli].transfer(rwfilInverseTemp[celli]);
     }
 
     // Refer wall faces to the appropriate processor
@@ -542,7 +542,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         const face& f = mesh_.faces()[wallFaceIndex];
 
-        label patchI = mesh_.boundaryMesh().patchID()
+        label patchi = mesh_.boundaryMesh().patchID()
         [
             wallFaceIndex - mesh_.nInternalFaces()
         ];
@@ -551,7 +551,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
         (
             face(identity(f.size())),
             transform.invTransformPosition(f.points(mesh_.points())),
-            patchI
+            patchi
         );
     }
 
@@ -579,9 +579,9 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
     dwfil_.setSize(mesh_.nCells());
 
-    forAll(cellBbs, cellI)
+    forAll(cellBbs, celli)
     {
-        const treeBoundBox& cellBb = cellBbs[cellI];
+        const treeBoundBox& cellBb = cellBbs[celli];
 
         treeBoundBox extendedBb
         (
@@ -607,18 +607,18 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
             // The higher index cell is added to the lower index
             // cell's DIL.  A cell is not added to its own DIL.
-            if (c > cellI)
+            if (c > celli)
             {
                 cellDIL.append(c);
             }
         }
 
-        dil_[cellI].transfer(cellDIL);
+        dil_[celli].transfer(cellDIL);
 
         // Find all wall faces intersecting extendedBb
         interactingElems = wallFacesTree.findBox(extendedBb);
 
-        dwfil_[cellI].setSize(interactingElems.size(), -1);
+        dwfil_[celli].setSize(interactingElems.size(), -1);
 
         forAll(interactingElems, i)
         {
@@ -626,7 +626,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
             label f = wallFacesTree.shapes().faceLabels()[elemI];
 
-            dwfil_[cellI][i] = f;
+            dwfil_[celli][i] = f;
         }
     }
 }
@@ -1022,18 +1022,18 @@ void Foam::InteractionLists<ParticleType>::prepareWallDataToRefer()
             globalTransforms.transformIndex(wfiat)
         );
 
-        label patchI = mesh_.boundaryMesh().patchID()
+        label patchi = mesh_.boundaryMesh().patchID()
         [
             wallFaceIndex - mesh_.nInternalFaces()
         ];
 
         label patchFaceI =
             wallFaceIndex
-          - mesh_.boundaryMesh()[patchI].start();
+          - mesh_.boundaryMesh()[patchi].start();
 
         // Need to transform velocity when tensor transforms are
         // supported
-        referredWallData_[rWVI] = U.boundaryField()[patchI][patchFaceI];
+        referredWallData_[rWVI] = U.boundaryField()[patchi][patchFaceI];
 
         if (transform.hasR())
         {

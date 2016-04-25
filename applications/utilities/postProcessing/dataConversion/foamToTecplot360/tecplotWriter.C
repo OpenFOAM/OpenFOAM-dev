@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -318,25 +318,25 @@ void Foam::tecplotWriter::writeConnectivity(const fvMesh& mesh) const
 {
     List<INTEGER4> FaceNodeCounts(mesh.nFaces());
 
-    forAll(mesh.faces(), faceI)
+    forAll(mesh.faces(), facei)
     {
-        const face& f = mesh.faces()[faceI];
-        FaceNodeCounts[faceI] = INTEGER4(f.size());
+        const face& f = mesh.faces()[facei];
+        FaceNodeCounts[facei] = INTEGER4(f.size());
     }
 
 
     INTEGER4 nFaceNodes = 0;
-    forAll(mesh.faces(), faceI)
+    forAll(mesh.faces(), facei)
     {
-        nFaceNodes += mesh.faces()[faceI].size();
+        nFaceNodes += mesh.faces()[facei].size();
     }
 
 
     List<INTEGER4> FaceNodes(nFaceNodes);
     label nodeI = 0;
-    forAll(mesh.faces(), faceI)
+    forAll(mesh.faces(), facei)
     {
-        const face& f = mesh.faces()[faceI];
+        const face& f = mesh.faces()[facei];
         forAll(f, fp)
         {
             FaceNodes[nodeI++] = INTEGER4(f[fp]+1);
@@ -345,24 +345,24 @@ void Foam::tecplotWriter::writeConnectivity(const fvMesh& mesh) const
 
 
     List<INTEGER4> FaceLeftElems(mesh.nFaces());
-    forAll(mesh.faceOwner(), faceI)
+    forAll(mesh.faceOwner(), facei)
     {
-        FaceLeftElems[faceI] = mesh.faceOwner()[faceI]+1;
+        FaceLeftElems[facei] = mesh.faceOwner()[facei]+1;
     }
 
     List<INTEGER4> FaceRightElems(mesh.nFaces());
-    forAll(mesh.faceNeighbour(), faceI)
+    forAll(mesh.faceNeighbour(), facei)
     {
-        FaceRightElems[faceI] = mesh.faceNeighbour()[faceI]+1;
+        FaceRightElems[facei] = mesh.faceNeighbour()[facei]+1;
     }
     for
     (
-        label faceI = mesh.nInternalFaces();
-        faceI < mesh.nFaces();
-        faceI++
+        label facei = mesh.nInternalFaces();
+        facei < mesh.nFaces();
+        facei++
     )
     {
-        FaceRightElems[faceI] = 0;
+        FaceRightElems[facei] = 0;
     }
 
     if

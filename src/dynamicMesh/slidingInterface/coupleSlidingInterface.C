@@ -565,15 +565,15 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
             // Pout<< "curFaces: " << curFaces << endl;
 
-            forAll(curFaces, faceI)
+            forAll(curFaces, facei)
             {
-                // Pout<< "face: " << curFaces[faceI] << " "
-                //     << masterPatch[curFaces[faceI]]
+                // Pout<< "face: " << curFaces[facei] << " "
+                //     << masterPatch[curFaces[facei]]
                 //     << " local: "
-                //     << masterPatch.localFaces()[curFaces[faceI]]
+                //     << masterPatch.localFaces()[curFaces[facei]]
                 //     << endl;
 
-                const labelList& me = masterFaceEdges[curFaces[faceI]];
+                const labelList& me = masterFaceEdges[curFaces[facei]];
 
                 forAll(me, meI)
                 {
@@ -847,13 +847,13 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     boolList orphanedMaster(masterPatch.size(), false);
     boolList orphanedSlave(slavePatch.size(), false);
 
-    forAll(cutFaces, faceI)
+    forAll(cutFaces, facei)
     {
-        const face& curCutFace = cutFaces[faceI];
-        const label curMaster = cutFaceMaster[faceI];
-        const label curSlave = cutFaceSlave[faceI];
+        const face& curCutFace = cutFaces[facei];
+        const label curMaster = cutFaceMaster[facei];
+        const label curSlave = cutFaceSlave[facei];
 
-//         Pout<< "Doing insertion of face " << faceI << ": ";
+//         Pout<< "Doing insertion of face " << facei << ": ";
 
         // Check if the face has changed topologically
         bool insertedFace = false;
@@ -1040,7 +1040,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         else
         {
             FatalErrorInFunction
-                << "Face " << faceI << " in cut faces has neither a master "
+                << "Face " << facei << " in cut faces has neither a master "
                 << "nor a slave.  Error in the cutting algorithm on modify."
                 << abort(FatalError);
         }
@@ -1165,7 +1165,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             else
             {
                 FatalErrorInFunction
-                    << "Face " << faceI << " in cut faces has neither a master "
+                    << "Face " << facei << " in cut faces has neither a master "
                     << "nor a slave.  Error in the cutting algorithm on add."
                     << abort(FatalError);
             }
@@ -1178,9 +1178,9 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
     label nOrphanedMasters = 0;
 
-    forAll(orphanedMaster, faceI)
+    forAll(orphanedMaster, facei)
     {
-        if (orphanedMaster[faceI])
+        if (orphanedMaster[facei])
         {
             nOrphanedMasters++;
 
@@ -1189,8 +1189,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //(
             //    polyModifyFace
             //    (
-            //        masterPatch[faceI],                 // new face
-            //        masterPatchAddr[faceI],             // master face index
+            //        masterPatch[facei],                 // new face
+            //        masterPatchAddr[facei],             // master face index
             //        -1,                                 // owner
             //        -1,                                 // neighbour
             //        false,                              // flux flip
@@ -1201,17 +1201,17 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //    )
             //);
 
-            //Pout<< "**MJ:deleting master face " << masterPatchAddr[faceI]
-            //    << " old verts:" << masterPatch[faceI] << endl;
-            ref.setAction(polyRemoveFace(masterPatchAddr[faceI]));
+            //Pout<< "**MJ:deleting master face " << masterPatchAddr[facei]
+            //    << " old verts:" << masterPatch[facei] << endl;
+            ref.setAction(polyRemoveFace(masterPatchAddr[facei]));
         }
     }
 
     label nOrphanedSlaves = 0;
 
-    forAll(orphanedSlave, faceI)
+    forAll(orphanedSlave, facei)
     {
-        if (orphanedSlave[faceI])
+        if (orphanedSlave[facei])
         {
             nOrphanedSlaves++;
 
@@ -1220,8 +1220,8 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //(
             //    polyModifyFace
             //    (
-            //        slavePatch[faceI],                // new face
-            //        slavePatchAddr[faceI],            // slave face index
+            //        slavePatch[facei],                // new face
+            //        slavePatchAddr[facei],            // slave face index
             //        -1,                               // owner
             //        -1,                               // neighbour
             //        false,                            // flux flip
@@ -1232,9 +1232,9 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             //    )
             //);
 
-            //Pout<< "**MJ:deleting slave face " << slavePatchAddr[faceI]
-            //    << " old verts:" << slavePatch[faceI] << endl;
-            ref.setAction(polyRemoveFace(slavePatchAddr[faceI]));
+            //Pout<< "**MJ:deleting slave face " << slavePatchAddr[facei]
+            //    << " old verts:" << slavePatch[facei] << endl;
+            ref.setAction(polyRemoveFace(slavePatchAddr[facei]));
         }
     }
 
@@ -1268,11 +1268,11 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     // Pout<< "masterStickOuts: " << masterStickOuts << endl;
 
     // Re-create the master stick-out faces
-    forAll(masterStickOuts, faceI)
+    forAll(masterStickOuts, facei)
     {
         // Renumber the face and remove additional points
 
-        const label curFaceID = masterStickOuts[faceI];
+        const label curFaceID = masterStickOuts[facei];
 
         const face& oldRichFace = faces[curFaceID];
 
@@ -1540,10 +1540,10 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
     // Re-create the slave stick-out faces
 
-    forAll(slaveStickOuts, faceI)
+    forAll(slaveStickOuts, facei)
     {
         // Renumber the face and remove additional points
-        const label curFaceID = slaveStickOuts[faceI];
+        const label curFaceID = slaveStickOuts[facei];
 
         const face& oldRichFace = faces[curFaceID];
 

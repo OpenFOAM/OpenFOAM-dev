@@ -101,26 +101,26 @@ void ReadAndMapFields
 
             if (index > 0)
             {
-                label cellI = index-1;
-                fld[pointI] = readField[cellI];
+                label celli = index-1;
+                fld[pointI] = readField[celli];
             }
             else if (index < 0)
             {
-                label faceI = -index-1;
-                label bFaceI = faceI - mesh.nInternalFaces();
+                label facei = -index-1;
+                label bFaceI = facei - mesh.nInternalFaces();
                 if (bFaceI >= 0)
                 {
                     label patchi = mesh.boundaryMesh().patchID()[bFaceI];
                     label localFaceI = mesh.boundaryMesh()[patchi].whichFace
                     (
-                        faceI
+                        facei
                     );
                     fld[pointI] = readField.boundaryField()[patchi][localFaceI];
                 }
                 //else
                 //{
                 //    FatalErrorInFunction
-                //        << "Face " << faceI << " from index " << index
+                //        << "Face " << facei << " from index " << index
                 //        << " is not a boundary face." << abort(FatalError);
                 //}
 
@@ -214,11 +214,11 @@ int main(int argc, char *argv[])
         }
         else
         {
-            label faceI = -index-1;
-            if (faceI < mesh.nInternalFaces())
+            label facei = -index-1;
+            if (facei < mesh.nInternalFaces())
             {
                 FatalErrorInFunction
-                    << "Face " << faceI << " from index " << index
+                    << "Face " << facei << " from index " << index
                     << " is not a boundary face."
                     << " nInternalFaces:" << mesh.nInternalFaces()
                     << exit(FatalError);

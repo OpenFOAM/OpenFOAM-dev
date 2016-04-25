@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,10 @@ void Foam::cyclicACMIPolyPatch::resetAMI
         vectorField::subField Sf = faceAreas();
         vectorField::subField noSf = nonOverlapPatch.faceAreas();
 
-        forAll(Sf, faceI)
+        forAll(Sf, facei)
         {
-            Sf[faceI] = faceAreas0_[faceI];
-            noSf[faceI] = faceAreas0_[faceI];
+            Sf[facei] = faceAreas0_[facei];
+            noSf[facei] = faceAreas0_[facei];
         }
 
         // Calculate the AMI using partial face-area-weighted
@@ -100,10 +100,10 @@ void Foam::cyclicACMIPolyPatch::resetAMI
         tgtMask_ =
             min(scalar(1) - tolerance_, max(tolerance_, AMI().tgtWeightsSum()));
 
-        forAll(Sf, faceI)
+        forAll(Sf, facei)
         {
-            Sf[faceI] *= srcMask_[faceI];
-            noSf[faceI] *= 1.0 - srcMask_[faceI];
+            Sf[facei] *= srcMask_[facei];
+            noSf[facei] *= 1.0 - srcMask_[facei];
         }
 
         setNeighbourFaceAreas();
@@ -127,10 +127,10 @@ void Foam::cyclicACMIPolyPatch::setNeighbourFaceAreas() const
         vectorField::subField Sf = cp.faceAreas();
         vectorField::subField noSf = pp.faceAreas();
 
-        forAll(Sf, faceI)
+        forAll(Sf, facei)
         {
-            Sf[faceI] = tgtMask_[faceI]*faceAreas0[faceI];
-            noSf[faceI] = (1.0 - tgtMask_[faceI])*faceAreas0[faceI];
+            Sf[facei] = tgtMask_[facei]*faceAreas0[facei];
+            noSf[facei] = (1.0 - tgtMask_[facei])*faceAreas0[facei];
         }
     }
     else
@@ -400,9 +400,9 @@ Foam::label Foam::cyclicACMIPolyPatch::nonOverlapPatchID() const
             const scalarField magSf(mag(faceAreas()));
             const scalarField noMagSf(mag(noPp.faceAreas()));
 
-            forAll(magSf, faceI)
+            forAll(magSf, facei)
             {
-                scalar ratio = mag(magSf[faceI]/(noMagSf[faceI] + ROOTVSMALL));
+                scalar ratio = mag(magSf[facei]/(noMagSf[facei] + ROOTVSMALL));
 
                 if (ratio - 1 > tolerance_)
                 {

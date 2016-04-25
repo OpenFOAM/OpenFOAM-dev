@@ -60,14 +60,14 @@ Foam::label Foam::cyclicPolyPatch::findMaxArea
     label maxI = -1;
     scalar maxAreaSqr = -GREAT;
 
-    forAll(faces, faceI)
+    forAll(faces, facei)
     {
-        scalar areaSqr = magSqr(faces[faceI].normal(points));
+        scalar areaSqr = magSqr(faces[facei].normal(points));
 
         if (areaSqr > maxAreaSqr)
         {
             maxAreaSqr = areaSqr;
-            maxI = faceI;
+            maxI = facei;
         }
     }
     return maxI;
@@ -454,20 +454,20 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                 const tensor revT(E1.T() & E0);
 
                 // Rotation
-                forAll(half0Ctrs, faceI)
+                forAll(half0Ctrs, facei)
                 {
-                    half0Ctrs[faceI] =
+                    half0Ctrs[facei] =
                         Foam::transform
                         (
                             revT,
-                            half0Ctrs[faceI] - rotationCentre_
+                            half0Ctrs[facei] - rotationCentre_
                         )
                       + rotationCentre_;
-                    anchors0[faceI] =
+                    anchors0[facei] =
                         Foam::transform
                         (
                             revT,
-                            anchors0[faceI] - rotationCentre_
+                            anchors0[facei] - rotationCentre_
                         )
                       + rotationCentre_;
                 }
@@ -522,17 +522,17 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                     const tensor revT(rotationTensor(n0, -n1));
 
                     // Rotation
-                    forAll(half0Ctrs, faceI)
+                    forAll(half0Ctrs, facei)
                     {
-                        half0Ctrs[faceI] = Foam::transform
+                        half0Ctrs[facei] = Foam::transform
                         (
                             revT,
-                            half0Ctrs[faceI]
+                            half0Ctrs[facei]
                         );
-                        anchors0[faceI] = Foam::transform
+                        anchors0[facei] = Foam::transform
                         (
                             revT,
-                            anchors0[faceI]
+                            anchors0[facei]
                         );
                     }
                 }
@@ -576,18 +576,18 @@ Foam::vector Foam::cyclicPolyPatch::findFaceMaxRadius
 
     const scalarField magRadSqr(magSqr(n));
 
-    label faceI = findMax(magRadSqr);
+    label facei = findMax(magRadSqr);
 
     if (debug)
     {
         Info<< "findFaceMaxRadius(const pointField&) : patch: " << name() << nl
-            << "    rotFace  = " << faceI << nl
-            << "    point    = " << faceCentres[faceI] << nl
-            << "    distance = " << Foam::sqrt(magRadSqr[faceI])
+            << "    rotFace  = " << facei << nl
+            << "    point    = " << faceCentres[facei] << nl
+            << "    distance = " << Foam::sqrt(magRadSqr[facei])
             << endl;
     }
 
-    return n[faceI];
+    return n[facei];
 }
 
 
@@ -1431,9 +1431,9 @@ bool Foam::cyclicPolyPatch::order
 
         // Return false if no change neccesary, true otherwise.
 
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            if (faceMap[faceI] != faceI || rotation[faceI] != 0)
+            if (faceMap[facei] != facei || rotation[facei] != 0)
             {
                 return true;
             }

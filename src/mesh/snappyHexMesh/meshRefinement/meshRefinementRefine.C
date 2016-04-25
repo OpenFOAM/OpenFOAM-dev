@@ -154,10 +154,10 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
 
         // 1. Internal faces
 
-        for (label faceI = 0; faceI < nInternalFaces; faceI++)
+        for (label facei = 0; facei < nInternalFaces; facei++)
         {
-            label oldOwn = map.cellMap()[faceOwner[faceI]];
-            label oldNei = map.cellMap()[faceNeighbour[faceI]];
+            label oldOwn = map.cellMap()[faceOwner[facei]];
+            label oldNei = map.cellMap()[faceNeighbour[facei]];
 
             if
             (
@@ -171,7 +171,7 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
             }
             else
             {
-                refinedInternalFace.set(faceI, 1u);
+                refinedInternalFace.set(facei, 1u);
             }
         }
 
@@ -180,15 +180,15 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
 
         boolList refinedBoundaryFace(mesh.nFaces()-nInternalFaces, false);
 
-        forAll(mesh.boundaryMesh(), patchI)
+        forAll(mesh.boundaryMesh(), patchi)
         {
-            const polyPatch& pp = mesh.boundaryMesh()[patchI];
+            const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
-            label faceI = pp.start();
+            label facei = pp.start();
 
             forAll(pp, i)
             {
-                label oldOwn = map.cellMap()[faceOwner[faceI]];
+                label oldOwn = map.cellMap()[faceOwner[facei]];
 
                 if (oldOwn >= 0 && oldRefineCell.get(oldOwn) == 0u)
                 {
@@ -196,9 +196,9 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
                 }
                 else
                 {
-                    refinedBoundaryFace[faceI-nInternalFaces] = true;
+                    refinedBoundaryFace[facei-nInternalFaces] = true;
                 }
-                faceI++;
+                facei++;
             }
         }
 
@@ -216,16 +216,16 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
         //    - refinedBoundaryFace
         boolList changedFace(mesh.nFaces(), false);
 
-        forAll(refinedInternalFace, faceI)
+        forAll(refinedInternalFace, facei)
         {
-            if (refinedInternalFace.get(faceI) == 1u)
+            if (refinedInternalFace.get(facei) == 1u)
             {
-                const cell& ownFaces = cells[faceOwner[faceI]];
+                const cell& ownFaces = cells[faceOwner[facei]];
                 forAll(ownFaces, ownI)
                 {
                     changedFace[ownFaces[ownI]] = true;
                 }
-                const cell& neiFaces = cells[faceNeighbour[faceI]];
+                const cell& neiFaces = cells[faceNeighbour[facei]];
                 forAll(neiFaces, neiI)
                 {
                     changedFace[neiFaces[neiI]] = true;
@@ -261,9 +261,9 @@ Foam::labelList Foam::meshRefinement::getChangedFaces
         // Count changed master faces.
         nMasterChanged = 0;
 
-        forAll(changedFace, faceI)
+        forAll(changedFace, facei)
         {
-            if (changedFace[faceI] && isMasterFace[faceI])
+            if (changedFace[facei] && isMasterFace[facei])
             {
                 nMasterChanged++;
             }
@@ -350,7 +350,7 @@ void Foam::meshRefinement::markFeatureCellLevel
     {
         const point& keepPoint = keepPoints[i];
 
-        label cellI = -1;
+        label celli = -1;
         label tetFaceI = -1;
         label tetPtI = -1;
 
@@ -360,10 +360,10 @@ void Foam::meshRefinement::markFeatureCellLevel
         (void)mesh_.cellTree();
         if (mesh_.nCells())
         {
-            mesh_.findCellFacePt(keepPoint, cellI, tetFaceI, tetPtI);
+            mesh_.findCellFacePt(keepPoint, celli, tetFaceI, tetPtI);
         }
 
-        if (cellI != -1)
+        if (celli != -1)
         {
             // I am the processor that holds the keepPoint
 
@@ -404,7 +404,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                             (
                                 mesh_,
                                 keepPoint,
-                                cellI,
+                                celli,
                                 tetFaceI,
                                 tetPtI,
                                 featureMesh.points()[pointI],   // endpos
@@ -449,7 +449,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                             (
                                 mesh_,
                                 keepPoint,
-                                cellI,
+                                celli,
                                 tetFaceI,
                                 tetPtI,
                                 featureMesh.points()[pointI],   // endpos
@@ -637,13 +637,13 @@ void Foam::meshRefinement::markFeatureCellLevel
 
     //if (debug&meshRefinement::FEATURESEEDS)
     //{
-    //    forAll(maxFeatureLevel, cellI)
+    //    forAll(maxFeatureLevel, celli)
     //    {
-    //        if (maxFeatureLevel[cellI] != -1)
+    //        if (maxFeatureLevel[celli] != -1)
     //        {
-    //            Pout<< "Feature went through cell:" << cellI
-    //                << " coord:" << mesh_.cellCentres()[cellI]
-    //                << " leve:" << maxFeatureLevel[cellI]
+    //            Pout<< "Feature went through cell:" << celli
+    //                << " coord:" << mesh_.cellCentres()[celli]
+    //                << " leve:" << maxFeatureLevel[celli]
     //                << endl;
     //        }
     //    }
@@ -672,9 +672,9 @@ Foam::label Foam::meshRefinement::markFeatureRefinement
 
     label oldNRefine = nRefine;
 
-    forAll(maxFeatureLevel, cellI)
+    forAll(maxFeatureLevel, celli)
     {
-        if (maxFeatureLevel[cellI] > cellLevel[cellI])
+        if (maxFeatureLevel[celli] > cellLevel[celli])
         {
             // Mark
             if
@@ -683,7 +683,7 @@ Foam::label Foam::meshRefinement::markFeatureRefinement
                 (
                     0,                      // surface (n/a)
                     nAllowRefine,
-                    refineCell[cellI],
+                    refineCell[celli],
                     nRefine
                 )
             )
@@ -732,12 +732,12 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
     labelList testLevels(cellLevel.size()-nRefine);
     label testI = 0;
 
-    forAll(cellLevel, cellI)
+    forAll(cellLevel, celli)
     {
-        if (refineCell[cellI] == -1)
+        if (refineCell[celli] == -1)
         {
-            testCc[testI] = cellCentres[cellI];
-            testLevels[testI] = cellLevel[cellI];
+            testCc[testI] = cellCentres[celli];
+            testLevels[testI] = cellLevel[celli];
             testI++;
         }
     }
@@ -749,9 +749,9 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
     // Mark for refinement. Note that we didn't store the original cellID so
     // now just reloop in same order.
     testI = 0;
-    forAll(cellLevel, cellI)
+    forAll(cellLevel, celli)
     {
-        if (refineCell[cellI] == -1)
+        if (refineCell[celli] == -1)
         {
             if (maxLevel[testI] > testLevels[testI])
             {
@@ -759,7 +759,7 @@ Foam::label Foam::meshRefinement::markInternalDistanceToFeatureRefinement
                 (
                     maxLevel[testI],    // mark with any positive value
                     nAllowRefine,
-                    refineCell[cellI],
+                    refineCell[celli],
                     nRefine
                 );
 
@@ -810,12 +810,12 @@ Foam::label Foam::meshRefinement::markInternalRefinement
     labelList testLevels(cellLevel.size()-nRefine);
     label testI = 0;
 
-    forAll(cellLevel, cellI)
+    forAll(cellLevel, celli)
     {
-        if (refineCell[cellI] == -1)
+        if (refineCell[celli] == -1)
         {
-            testCc[testI] = cellCentres[cellI];
-            testLevels[testI] = cellLevel[cellI];
+            testCc[testI] = cellCentres[celli];
+            testLevels[testI] = cellLevel[celli];
             testI++;
         }
     }
@@ -827,9 +827,9 @@ Foam::label Foam::meshRefinement::markInternalRefinement
     // Mark for refinement. Note that we didn't store the original cellID so
     // now just reloop in same order.
     testI = 0;
-    forAll(cellLevel, cellI)
+    forAll(cellLevel, celli)
     {
-        if (refineCell[cellI] == -1)
+        if (refineCell[celli] == -1)
         {
             if (maxLevel[testI] > testLevels[testI])
             {
@@ -837,7 +837,7 @@ Foam::label Foam::meshRefinement::markInternalRefinement
                 (
                     maxLevel[testI],    // mark with any positive value
                     nAllowRefine,
-                    refineCell[cellI],
+                    refineCell[celli],
                     nRefine
                 );
 
@@ -880,26 +880,26 @@ Foam::labelList Foam::meshRefinement::getRefineCandidateFaces
 
     label nTest = 0;
 
-    forAll(surfaceIndex_, faceI)
+    forAll(surfaceIndex_, facei)
     {
-        if (surfaceIndex_[faceI] != -1)
+        if (surfaceIndex_[facei] != -1)
         {
-            label own = mesh_.faceOwner()[faceI];
+            label own = mesh_.faceOwner()[facei];
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label nei = mesh_.faceNeighbour()[faceI];
+                label nei = mesh_.faceNeighbour()[facei];
 
                 if (refineCell[own] == -1 || refineCell[nei] == -1)
                 {
-                    testFaces[nTest++] = faceI;
+                    testFaces[nTest++] = facei;
                 }
             }
             else
             {
                 if (refineCell[own] == -1)
                 {
-                    testFaces[nTest++] = faceI;
+                    testFaces[nTest++] = facei;
                 }
             }
         }
@@ -943,13 +943,13 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
     forAll(testFaces, i)
     {
-        label faceI = testFaces[i];
+        label facei = testFaces[i];
 
-        label own = mesh_.faceOwner()[faceI];
+        label own = mesh_.faceOwner()[facei];
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
-            label nei = mesh_.faceNeighbour()[faceI];
+            label nei = mesh_.faceNeighbour()[facei];
 
             start[i] = cellCentres[own];
             end[i] = cellCentres[nei];
@@ -957,7 +957,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
         }
         else
         {
-            label bFaceI = faceI - mesh_.nInternalFaces();
+            label bFaceI = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
             end[i] = neiCc[bFaceI];
@@ -994,7 +994,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
 
     forAll(testFaces, i)
     {
-        label faceI = testFaces[i];
+        label facei = testFaces[i];
 
         label surfI = surfaceHit[i];
 
@@ -1006,7 +1006,7 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
             // do the check with the surfaceMinLevel whilst intersecting the
             // surfaces?
 
-            label own = mesh_.faceOwner()[faceI];
+            label own = mesh_.faceOwner()[facei];
 
             if (surfaceMinLevel[i] > cellLevel[own])
             {
@@ -1026,9 +1026,9 @@ Foam::label Foam::meshRefinement::markSurfaceRefinement
                 }
             }
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label nei = mesh_.faceNeighbour()[faceI];
+                label nei = mesh_.faceNeighbour()[facei];
                 if (surfaceMinLevel[i] > cellLevel[nei])
                 {
                     // Neighbour needs refining
@@ -1131,13 +1131,13 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
 
     forAll(testFaces, i)
     {
-        label faceI = testFaces[i];
+        label facei = testFaces[i];
 
-        label own = mesh_.faceOwner()[faceI];
+        label own = mesh_.faceOwner()[facei];
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
-            label nei = mesh_.faceNeighbour()[faceI];
+            label nei = mesh_.faceNeighbour()[facei];
 
             start[i] = cellCentres[own];
             end[i] = cellCentres[nei];
@@ -1145,12 +1145,12 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
         }
         else
         {
-            label bFaceI = faceI - mesh_.nInternalFaces();
+            label bFaceI = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
             end[i] = neiCc[bFaceI];
 
-            if (!isMasterFace[faceI])
+            if (!isMasterFace[facei])
             {
                 Swap(start[i], end[i]);
             }
@@ -1215,8 +1215,8 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
         // Convert face-wise data to cell.
         forAll(testFaces, i)
         {
-            label faceI = testFaces[i];
-            label own = mesh_.faceOwner()[faceI];
+            label facei = testFaces[i];
+            label own = mesh_.faceOwner()[facei];
 
             const vectorList& fNormals = surfaceNormal[i];
             const labelList& fLevels = surfaceLevel[i];
@@ -1229,9 +1229,9 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
                     cellSurfNormals[own].append(fNormals[hitI]);
                 }
 
-                if (mesh_.isInternalFace(faceI))
+                if (mesh_.isInternalFace(facei))
                 {
-                    label nei = mesh_.faceNeighbour()[faceI];
+                    label nei = mesh_.faceNeighbour()[facei];
                     if (fLevels[hitI] > cellLevel[nei])
                     {
                         cellSurfLevels[nei].append(fLevels[hitI]);
@@ -1249,9 +1249,9 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
     {
         label nSet = 0;
         label nNormals = 9;
-        forAll(cellSurfNormals, cellI)
+        forAll(cellSurfNormals, celli)
         {
-            const vectorList& normals = cellSurfNormals[cellI];
+            const vectorList& normals = cellSurfNormals[celli];
             if (normals.size())
             {
                 nSet++;
@@ -1277,13 +1277,13 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
 
     for
     (
-        label cellI = 0;
-        !reachedLimit && cellI < cellSurfNormals.size();
-        cellI++
+        label celli = 0;
+        !reachedLimit && celli < cellSurfNormals.size();
+        celli++
     )
     {
-        const vectorList& normals = cellSurfNormals[cellI];
-        const labelList& levels = cellSurfLevels[cellI];
+        const vectorList& normals = cellSurfNormals[celli];
+        const labelList& levels = cellSurfLevels[celli];
 
         // n^2 comparison of all normals in a cell
         for (label i = 0; !reachedLimit && i < normals.size(); i++)
@@ -1294,7 +1294,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
                 {
                     label maxLevel = max(levels[i], levels[j]);
 
-                    if (cellLevel[cellI] < maxLevel)
+                    if (cellLevel[celli] < maxLevel)
                     {
                         if
                         (
@@ -1302,7 +1302,7 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
                             (
                                 maxLevel,
                                 nAllowRefine,
-                                refineCell[cellI],
+                                refineCell[celli],
                                 nRefine
                             )
                         )
@@ -1332,13 +1332,13 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
     // Internal faces
     for
     (
-        label faceI = 0;
-        !reachedLimit && faceI < mesh_.nInternalFaces();
-        faceI++
+        label facei = 0;
+        !reachedLimit && facei < mesh_.nInternalFaces();
+        facei++
     )
     {
-        label own = mesh_.faceOwner()[faceI];
-        label nei = mesh_.faceNeighbour()[faceI];
+        label own = mesh_.faceOwner()[facei];
+        label nei = mesh_.faceNeighbour()[facei];
 
         const vectorList& ownNormals = cellSurfNormals[own];
         const labelList& ownLevels = cellSurfLevels[own];
@@ -1430,13 +1430,13 @@ Foam::label Foam::meshRefinement::markSurfaceCurvatureRefinement
     // Boundary faces
     for
     (
-        label faceI = mesh_.nInternalFaces();
-        !reachedLimit && faceI < mesh_.nFaces();
-        faceI++
+        label facei = mesh_.nInternalFaces();
+        !reachedLimit && facei < mesh_.nFaces();
+        facei++
     )
     {
-        label own = mesh_.faceOwner()[faceI];
-        label bFaceI = faceI - mesh_.nInternalFaces();
+        label own = mesh_.faceOwner()[facei];
+        label bFaceI = facei - mesh_.nInternalFaces();
 
         const vectorList& ownNormals = cellSurfNormals[own];
         const labelList& ownLevels = cellSurfLevels[own];
@@ -1632,7 +1632,7 @@ bool Foam::meshRefinement::checkProximity
     const vector& surfaceLocation,  // current intersection location
     const vector& surfaceNormal,    // current intersection normal
 
-    const label cellI,
+    const label celli,
 
     label& cellMaxLevel,        // cached max surface level for this cell
     vector& cellMaxLocation,    // cached surface normal for this cell
@@ -1645,7 +1645,7 @@ bool Foam::meshRefinement::checkProximity
     const labelList& cellLevel = meshCutter_.cellLevel();
 
     // Test if surface applicable
-    if (surfaceLevel > cellLevel[cellI])
+    if (surfaceLevel > cellLevel[celli])
     {
         if (cellMaxLevel == -1)
         {
@@ -1694,7 +1694,7 @@ bool Foam::meshRefinement::checkProximity
                 (
                     surfaceLevel,   // mark with any non-neg number.
                     nAllowRefine,
-                    refineCell[cellI],
+                    refineCell[celli],
                     nRefine
                 );
             }
@@ -1740,13 +1740,13 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
     forAll(testFaces, i)
     {
-        label faceI = testFaces[i];
+        label facei = testFaces[i];
 
-        label own = mesh_.faceOwner()[faceI];
+        label own = mesh_.faceOwner()[facei];
 
-        if (mesh_.isInternalFace(faceI))
+        if (mesh_.isInternalFace(facei))
         {
-            label nei = mesh_.faceNeighbour()[faceI];
+            label nei = mesh_.faceNeighbour()[facei];
 
             start[i] = cellCentres[own];
             end[i] = cellCentres[nei];
@@ -1754,7 +1754,7 @@ Foam::label Foam::meshRefinement::markProximityRefinement
         }
         else
         {
-            label bFaceI = faceI - mesh_.nInternalFaces();
+            label bFaceI = facei - mesh_.nInternalFaces();
 
             start[i] = cellCentres[own];
             end[i] = neiCc[bFaceI];
@@ -1821,8 +1821,8 @@ Foam::label Foam::meshRefinement::markProximityRefinement
 
         forAll(testFaces, i)
         {
-            label faceI = testFaces[i];
-            label own = mesh_.faceOwner()[faceI];
+            label facei = testFaces[i];
+            label own = mesh_.faceOwner()[facei];
 
             const labelList& fLevels = surfaceLevel[i];
             const vectorList& fPoints = surfaceLocation[i];
@@ -1849,9 +1849,9 @@ Foam::label Foam::meshRefinement::markProximityRefinement
                 );
             }
 
-            if (mesh_.isInternalFace(faceI))
+            if (mesh_.isInternalFace(facei))
             {
-                label nei = mesh_.faceNeighbour()[faceI];
+                label nei = mesh_.faceNeighbour()[facei];
 
                 forAll(fLevels, hitI)
                 {
@@ -1884,10 +1884,10 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     pointField neiBndMaxLocation(mesh_.nFaces()-mesh_.nInternalFaces());
     vectorField neiBndMaxNormal(mesh_.nFaces()-mesh_.nInternalFaces());
 
-    for (label faceI = mesh_.nInternalFaces(); faceI < mesh_.nFaces(); faceI++)
+    for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        label bFaceI = faceI-mesh_.nInternalFaces();
-        label own = mesh_.faceOwner()[faceI];
+        label bFaceI = facei-mesh_.nInternalFaces();
+        label own = mesh_.faceOwner()[facei];
 
         neiBndMaxLevel[bFaceI] = cellMaxLevel[own];
         neiBndMaxLocation[bFaceI] = cellMaxLocation[own];
@@ -1900,10 +1900,10 @@ Foam::label Foam::meshRefinement::markProximityRefinement
     // Loop over all faces. Could only be checkFaces.. except if they're coupled
 
     // Internal faces
-    for (label faceI = 0; faceI < mesh_.nInternalFaces(); faceI++)
+    for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
     {
-        label own = mesh_.faceOwner()[faceI];
-        label nei = mesh_.faceNeighbour()[faceI];
+        label own = mesh_.faceOwner()[facei];
+        label nei = mesh_.faceNeighbour()[facei];
 
         if (cellMaxLevel[own] != -1 && cellMaxLevel[nei] != -1)
         {
@@ -1970,10 +1970,10 @@ Foam::label Foam::meshRefinement::markProximityRefinement
         }
     }
     // Boundary faces
-    for (label faceI = mesh_.nInternalFaces(); faceI < mesh_.nFaces(); faceI++)
+    for (label facei = mesh_.nInternalFaces(); facei < mesh_.nFaces(); facei++)
     {
-        label own = mesh_.faceOwner()[faceI];
-        label bFaceI = faceI - mesh_.nInternalFaces();
+        label own = mesh_.faceOwner()[facei];
+        label bFaceI = facei - mesh_.nInternalFaces();
 
         if (cellLevel[own] < cellMaxLevel[own] && neiBndMaxLevel[bFaceI] != -1)
         {
@@ -2223,11 +2223,11 @@ Foam::labelList Foam::meshRefinement::refineCandidates
         cellsToRefine.setSize(nRefine);
         nRefine = 0;
 
-        forAll(refineCell, cellI)
+        forAll(refineCell, celli)
         {
-            if (refineCell[cellI] != -1)
+            if (refineCell[celli] != -1)
             {
-                cellsToRefine[nRefine++] = cellI;
+                cellsToRefine[nRefine++] = celli;
             }
         }
     }

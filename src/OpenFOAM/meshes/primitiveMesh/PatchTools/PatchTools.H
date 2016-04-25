@@ -84,7 +84,7 @@ public:
 
 
     //- Fill faceZone with currentZone for every face reachable
-    //  from faceI without crossing edge marked in borderEdge.
+    //  from facei without crossing edge marked in borderEdge.
     //  Note: faceZone has to be sized nFaces before calling.
     template
     <
@@ -98,7 +98,7 @@ public:
     (
         const PrimitivePatch<Face, FaceList, PointField, PointType>&,
         const BoolListType& borderEdge,
-        const label faceI,
+        const label facei,
         const label currentZone,
         labelList& faceZone
     );

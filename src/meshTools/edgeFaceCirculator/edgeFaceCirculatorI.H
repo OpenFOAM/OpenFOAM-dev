@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,29 +36,29 @@ void Foam::edgeFaceCirculator::setEnd()
 
 void Foam::edgeFaceCirculator::setFace
 (
-    const label faceI,
-    const label cellI
+    const label facei,
+    const label celli
 )
 {
-    faceLabel_ = faceI;
+    faceLabel_ = facei;
 
-    if (!isBoundaryEdge_ && !mesh_.isInternalFace(faceI))
+    if (!isBoundaryEdge_ && !mesh_.isInternalFace(facei))
     {
         FatalErrorInFunction
             << "Edge is not defined as boundary edge but still walked to"
-            << " boundary face:" << faceI << " on cell:" << cellI
+            << " boundary face:" << facei << " on cell:" << celli
             << abort(FatalError);
     }
 }
 
 
-void Foam::edgeFaceCirculator::otherFace(const label cellI)
+void Foam::edgeFaceCirculator::otherFace(const label celli)
 {
     const face& f = mesh_.faces()[faceLabel_];
     label v0 = f[index_];
     label v1 = f.nextLabel(index_);
 
-    const cell& cFaces = mesh_.cells()[cellI];
+    const cell& cFaces = mesh_.cells()[celli];
 
     forAll(cFaces, i)
     {
@@ -71,7 +71,7 @@ void Foam::edgeFaceCirculator::otherFace(const label cellI)
             if (fp >= 0)
             {
                 index_ = fp;
-                setFace(faceB, cellI);
+                setFace(faceB, celli);
                 return;
             }
         }
@@ -220,17 +220,17 @@ void Foam::edgeFaceCirculator::setCanonical()
             {
                 if (ownerSide_)
                 {
-                    label cellI = mesh_.faceNeighbour()[faceLabel_];
-                    otherFace(cellI);
+                    label celli = mesh_.faceNeighbour()[faceLabel_];
+                    otherFace(celli);
                     // Maintain reverse direction of walking
-                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == cellI);
+                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == celli);
                 }
                 else
                 {
-                    label cellI = mesh_.faceOwner()[faceLabel_];
-                    otherFace(cellI);
+                    label celli = mesh_.faceOwner()[faceLabel_];
+                    otherFace(celli);
                     // Maintain reverse direction of walking
-                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == cellI);
+                    ownerSide_ = (mesh_.faceOwner()[faceLabel_] == celli);
                 }
             }
             else if (ownerSide_)
@@ -239,10 +239,10 @@ void Foam::edgeFaceCirculator::setCanonical()
             }
             else
             {
-                label cellI = mesh_.faceOwner()[faceLabel_];
-                otherFace(cellI);
+                label celli = mesh_.faceOwner()[faceLabel_];
+                otherFace(celli);
                 // Maintain reverse direction of walking
-                ownerSide_ = (mesh_.faceOwner()[faceLabel_] == cellI);
+                ownerSide_ = (mesh_.faceOwner()[faceLabel_] == celli);
             }
 
             i++;
@@ -360,10 +360,10 @@ Foam::edgeFaceCirculator::operator++()
     else if (ownerSide_)
     {
         // Step to owner
-        label cellI = mesh_.faceOwner()[faceLabel_];
-        otherFace(cellI);
+        label celli = mesh_.faceOwner()[faceLabel_];
+        otherFace(celli);
         // Maintain direction of walking
-        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != cellI);
+        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != celli);
 
         // Check for internal edge : ends on starting face.
         if (!isBoundaryEdge_ && faceLabel_ == startFaceLabel_)
@@ -374,10 +374,10 @@ Foam::edgeFaceCirculator::operator++()
     else if (mesh_.isInternalFace(faceLabel_))
     {
         // Step to neighbour
-        label cellI = mesh_.faceNeighbour()[faceLabel_];
-        otherFace(cellI);
+        label celli = mesh_.faceNeighbour()[faceLabel_];
+        otherFace(celli);
         // Maintain direction of walking
-        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != cellI);
+        ownerSide_ = (mesh_.faceOwner()[faceLabel_] != celli);
 
         // Check for internal edge : ends on starting face.
         if (!isBoundaryEdge_ && faceLabel_ == startFaceLabel_)

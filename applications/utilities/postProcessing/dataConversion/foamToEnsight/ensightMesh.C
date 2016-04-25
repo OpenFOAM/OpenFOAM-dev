@@ -129,34 +129,34 @@ void Foam::ensightMesh::correct()
         label nHexes = 0;
         label nPolys = 0;
 
-        forAll(cellShapes, cellI)
+        forAll(cellShapes, celli)
         {
-            const cellShape& cellShape = cellShapes[cellI];
+            const cellShape& cellShape = cellShapes[celli];
             const cellModel& cellModel = cellShape.model();
 
             if (cellModel == tet)
             {
-                tets[nTets++] = cellI;
+                tets[nTets++] = celli;
             }
             else if (cellModel == pyr)
             {
-                pyrs[nPyrs++] = cellI;
+                pyrs[nPyrs++] = celli;
             }
             else if (cellModel == prism)
             {
-                prisms[nPrisms++] = cellI;
+                prisms[nPrisms++] = celli;
             }
             else if (cellModel == wedge)
             {
-                wedges[nWedges++] = cellI;
+                wedges[nWedges++] = celli;
             }
             else if (cellModel == hex)
             {
-                hexes[nHexes++] = cellI;
+                hexes[nHexes++] = celli;
             }
             else
             {
-                polys[nPolys++] = cellI;
+                polys[nPolys++] = celli;
             }
         }
 
@@ -211,21 +211,21 @@ void Foam::ensightMesh::correct()
                 label nQuads = 0;
                 label nPolys = 0;
 
-                forAll(p, faceI)
+                forAll(p, facei)
                 {
-                    const face& f = p[faceI];
+                    const face& f = p[facei];
 
                     if (f.size() == 3)
                     {
-                        tris[nTris++] = faceI;
+                        tris[nTris++] = facei;
                     }
                     else if (f.size() == 4)
                     {
-                        quads[nQuads++] = faceI;
+                        quads[nQuads++] = facei;
                     }
                     else
                     {
-                        polys[nPolys++] = faceI;
+                        polys[nPolys++] = facei;
                     }
                 }
 
@@ -327,12 +327,12 @@ void Foam::ensightMesh::correct()
 
                 forAll(fz, i)
                 {
-                    label faceI = fz[i];
+                    label facei = fz[i];
 
                     // Avoid counting faces on processor boundaries twice
-                    if (faceToBeIncluded(faceI))
+                    if (faceToBeIncluded(facei))
                     {
-                        const face& f = mesh_.faces()[faceI];
+                        const face& f = mesh_.faces()[facei];
 
                         if (f.size() == 3)
                         {
@@ -425,17 +425,17 @@ Foam::ensightMesh::~ensightMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::ensightMesh::faceToBeIncluded(const label faceI) const
+bool Foam::ensightMesh::faceToBeIncluded(const label facei) const
 {
     bool res = false;
 
-    if (mesh_.isInternalFace(faceI))
+    if (mesh_.isInternalFace(facei))
     {
         res = true;
     }
     else
     {
-        res = boundaryFaceToBeIncluded_[faceI-mesh_.nInternalFaces()];
+        res = boundaryFaceToBeIncluded_[facei-mesh_.nInternalFaces()];
     }
 
     return res;
@@ -586,9 +586,9 @@ void Foam::ensightMesh::writePolysNPointsPerFace
     {
         const labelList& cf = cellFaces[polys[i]];
 
-        forAll(cf, faceI)
+        forAll(cf, facei)
         {
-            ensightGeometryFile.write(faces[cf[faceI]].size());
+            ensightGeometryFile.write(faces[cf[facei]].size());
         }
     }
 }
@@ -607,9 +607,9 @@ void Foam::ensightMesh::writePolysPoints
     {
         const labelList& cf = cellFaces[polys[i]];
 
-        forAll(cf, faceI)
+        forAll(cf, facei)
         {
-            const label faceId = cf[faceI];
+            const label faceId = cf[facei];
             const face& f = faces[faceId];  // points of face (in global points)
             const label np = f.size();
             bool reverseOrder = false;
@@ -1251,9 +1251,9 @@ void Foam::ensightMesh::write
             // a better way of doing this?
             label nMasterFaces = 0;
 
-            forAll(fz, faceI)
+            forAll(fz, facei)
             {
-                if (faceToBeIncluded(fz[faceI]))
+                if (faceToBeIncluded(fz[facei]))
                 {
                     ++nMasterFaces;
                 }
@@ -1264,11 +1264,11 @@ void Foam::ensightMesh::write
 
             label currentFace = 0;
 
-            forAll(fz, faceI)
+            forAll(fz, facei)
             {
-                if (faceToBeIncluded(fz[faceI]))
+                if (faceToBeIncluded(fz[facei]))
                 {
-                    faceZoneMasterFaces[currentFace] = faceZoneFaces[faceI];
+                    faceZoneMasterFaces[currentFace] = faceZoneFaces[facei];
                     ++currentFace;
                 }
             }

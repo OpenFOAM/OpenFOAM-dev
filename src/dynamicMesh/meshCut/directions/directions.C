@@ -94,14 +94,14 @@ void Foam::directions::writeOBJ
 
     label vertI = 0;
 
-    forAll(dirs, cellI)
+    forAll(dirs, celli)
     {
-        const point& ctr = mesh.cellCentres()[cellI];
+        const point& ctr = mesh.cellCentres()[celli];
 
         // Calculate local length scale
         scalar minDist = GREAT;
 
-        const labelList& nbrs = mesh.cellCells()[cellI];
+        const labelList& nbrs = mesh.cellCells()[celli];
 
         forAll(nbrs, nbrI)
         {
@@ -110,7 +110,7 @@ void Foam::directions::writeOBJ
 
         scalar scale = 0.5*minDist;
 
-        writeOBJ(xDirStream, ctr, ctr + scale*dirs[cellI], vertI);
+        writeOBJ(xDirStream, ctr, ctr + scale*dirs[celli], vertI);
     }
 }
 
@@ -154,12 +154,12 @@ Foam::vectorField Foam::directions::propagateDirection
         {
             label meshFaceI = pp.start() + patchFaceI;
 
-            label cellI = mesh.faceOwner()[meshFaceI];
+            label celli = mesh.faceOwner()[meshFaceI];
 
-            if (!hexMatcher().isA(mesh, cellI))
+            if (!hexMatcher().isA(mesh, celli))
             {
                 FatalErrorInFunction
-                    << "useHexTopology specified but cell " << cellI
+                    << "useHexTopology specified but cell " << celli
                     << " on face " << patchFaceI << " of patch " << pp.name()
                     << " is not a hex" << exit(FatalError);
             }
@@ -167,14 +167,14 @@ Foam::vectorField Foam::directions::propagateDirection
             const vector& cutDir = ppField[patchFaceI];
 
             // Get edge(bundle) on cell most in direction of cutdir
-            label edgeI = meshTools::cutDirToEdge(mesh, cellI, cutDir);
+            label edgeI = meshTools::cutDirToEdge(mesh, celli, cutDir);
 
             // Convert edge into index on face
             label faceIndex =
                 directionInfo::edgeToFaceIndex
                 (
                     mesh,
-                    cellI,
+                    celli,
                     meshFaceI,
                     edgeI
                 );
@@ -219,26 +219,26 @@ Foam::vectorField Foam::directions::propagateDirection
     label nGeom = 0;
     label nTopo = 0;
 
-    forAll(cellInfo, cellI)
+    forAll(cellInfo, celli)
     {
-        label index = cellInfo[cellI].index();
+        label index = cellInfo[celli].index();
 
         if (index == -3)
         {
             // Never visited
             WarningInFunction
-                << "Cell " << cellI << " never visited to determine "
+                << "Cell " << celli << " never visited to determine "
                 << "local coordinate system" << endl
                 << "Using direction " << defaultDir << " instead" << endl;
 
-            dirField[cellI] = defaultDir;
+            dirField[celli] = defaultDir;
 
             nUnset++;
         }
         else if (index == -2)
         {
             // Geometric direction
-            dirField[cellI] = cellInfo[cellI].n();
+            dirField[celli] = cellInfo[celli].n();
 
             nGeom++;
         }
@@ -251,7 +251,7 @@ Foam::vectorField Foam::directions::propagateDirection
         else
         {
             // Topological edge cut. Convert into average cut direction.
-            dirField[cellI] = meshTools::edgeToCutDir(mesh, cellI, index);
+            dirField[celli] = meshTools::edgeToCutDir(mesh, celli, index);
 
             nTopo++;
         }
@@ -347,9 +347,9 @@ Foam::directions::directions
 
         const word patchName(patchDict.lookup("patch"));
 
-        const label patchI = mesh.boundaryMesh().findPatchID(patchName);
+        const label patchi = mesh.boundaryMesh().findPatchID(patchName);
 
-        if (patchI == -1)
+        if (patchi == -1)
         {
             FatalErrorInFunction
                 << "Cannot find patch "
@@ -358,7 +358,7 @@ Foam::directions::directions
         }
 
         // Take zeroth face on patch
-        const polyPatch& pp = mesh.boundaryMesh()[patchI];
+        const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
         vector tan1(patchDict.lookup("tan1"));
 

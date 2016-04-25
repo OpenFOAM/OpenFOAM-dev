@@ -192,12 +192,12 @@ weights() const
     tmp<scalarField> tw(new scalarField(deltas.size()));
     scalarField& w = tw.ref();
 
-    forAll(alphaDelta, faceI)
+    forAll(alphaDelta, facei)
     {
-        scalar di = alphaDelta[faceI];
-        scalar dni = nbrAlphaDelta[faceI];
+        scalar di = alphaDelta[facei];
+        scalar dni = nbrAlphaDelta[facei];
 
-        w[faceI] = di/(di + dni);
+        w[facei] = di/(di + dni);
     }
 
     return tw;

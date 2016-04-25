@@ -102,7 +102,7 @@ class meshCutAndRemove
         (
             const cellCuts& cuts,
             const label exposedPatchI,
-            const label faceI,
+            const label facei,
             label& own,
             label& nei,
             label& patchID
@@ -111,7 +111,7 @@ class meshCutAndRemove
         //- Get zone information for face.
         void getZoneInfo
         (
-            const label faceI,
+            const label facei,
             label& zoneID,
             bool& zoneFlip
         ) const;
@@ -120,7 +120,7 @@ class meshCutAndRemove
         void addFace
         (
             polyTopoChange& meshMod,
-            const label faceI,
+            const label facei,
             const label masterPointI,
             const face& newFace,
             const label owner,
@@ -128,13 +128,13 @@ class meshCutAndRemove
             const label patchID
         );
 
-        //- Modifies existing faceI for either new owner/neighbour or
+        //- Modifies existing facei for either new owner/neighbour or
         //  new face points. Checks if anything changed and flips face
         //  if owner>neighbour
         void modFace
         (
             polyTopoChange& meshMod,
-            const label faceI,
+            const label facei,
             const face& newFace,
             const label owner,
             const label neighbour,
@@ -164,12 +164,12 @@ class meshCutAndRemove
         ) const;
 
         //- Add cuts of edges to face
-        face addEdgeCutsToFace(const label faceI) const;
+        face addEdgeCutsToFace(const label facei) const;
 
         //- Convert loop of cuts into face.
         face loopToFace
         (
-            const label cellI,
+            const label celli,
             const labelList& loop
         ) const;
 

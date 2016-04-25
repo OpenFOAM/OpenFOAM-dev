@@ -658,9 +658,9 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
 
             if (index < -1)
             {
-                label cellI = -index-2;
+                label celli = -index-2;
 
-                V0[cellI] += savedV0[oldCellI];
+                V0[celli] += savedV0[oldCellI];
 
                 nMerged++;
             }
@@ -702,9 +702,9 @@ void Foam::fvMesh::mapFields(const mapPolyMesh& meshMap)
 
             if (index < -1)
             {
-                label cellI = -index-2;
+                label celli = -index-2;
 
-                V00[cellI] += savedV00[oldCellI];
+                V00[celli] += savedV00[oldCellI];
                 nMerged++;
             }
         }
@@ -770,10 +770,10 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
 
     surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
 
-    forAll(patches, patchI)
+    forAll(patches, patchi)
     {
-        phibf[patchI] = patches[patchI].patchSlice(sweptVols);
-        phibf[patchI] *= rDeltaT;
+        phibf[patchi] = patches[patchi].patchSlice(sweptVols);
+        phibf[patchi] *= rDeltaT;
     }
 
     // Update or delete the local geometric properties as early as possible so

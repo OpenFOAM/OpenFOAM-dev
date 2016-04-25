@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,9 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
     // and cells
     if (decomposePoly)
     {
-        forAll(cellShapes, cellI)
+        forAll(cellShapes, celli)
         {
-            const cellModel& model = cellShapes[cellI].model();
+            const cellModel& model = cellShapes[celli].model();
 
             if
             (
@@ -85,7 +85,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
              && model != tetWedge
             )
             {
-                const cell& cFaces = mesh_.cells()[cellI];
+                const cell& cFaces = mesh_.cells()[celli];
 
                 forAll(cFaces, cFaceI)
                 {
@@ -122,24 +122,24 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
     // Set counters for additional points and additional cells
     label addPointI = 0, addCellI = 0;
 
-    forAll(cellShapes, cellI)
+    forAll(cellShapes, celli)
     {
-        const cellShape& cellShape = cellShapes[cellI];
+        const cellShape& cellShape = cellShapes[celli];
         const cellModel& cellModel = cellShape.model();
 
-        labelList& vtkVerts = vertLabels_[cellI];
+        labelList& vtkVerts = vertLabels_[celli];
 
         if (cellModel == tet)
         {
             vtkVerts = cellShape;
 
-            cellTypes_[cellI] = VTK_TETRA;
+            cellTypes_[celli] = VTK_TETRA;
         }
         else if (cellModel == pyr)
         {
             vtkVerts = cellShape;
 
-            cellTypes_[cellI] = VTK_PYRAMID;
+            cellTypes_[celli] = VTK_PYRAMID;
         }
         else if (cellModel == prism)
         {
@@ -150,7 +150,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             Foam::Swap(vtkVerts[1], vtkVerts[2]);
             Foam::Swap(vtkVerts[4], vtkVerts[5]);
 
-            cellTypes_[cellI] = VTK_WEDGE;
+            cellTypes_[celli] = VTK_WEDGE;
         }
         else if (cellModel == tetWedge)
         {
@@ -163,7 +163,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             vtkVerts[4] = cellShape[4];
             vtkVerts[5] = cellShape[4];
 
-            cellTypes_[cellI] = VTK_WEDGE;
+            cellTypes_[celli] = VTK_WEDGE;
         }
         else if (cellModel == wedge)
         {
@@ -178,20 +178,20 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             vtkVerts[6] = cellShape[5];
             vtkVerts[7] = cellShape[6];
 
-            cellTypes_[cellI] = VTK_HEXAHEDRON;
+            cellTypes_[celli] = VTK_HEXAHEDRON;
         }
         else if (cellModel == hex)
         {
             vtkVerts = cellShape;
 
-            cellTypes_[cellI] = VTK_HEXAHEDRON;
+            cellTypes_[celli] = VTK_HEXAHEDRON;
         }
         else if (decomposePoly)
         {
             // Polyhedral cell. Decompose into tets + pyramids.
 
             // Mapping from additional point to cell
-            addPointCellLabels_[addPointI] = cellI;
+            addPointCellLabels_[addPointI] = celli;
 
             // The new vertex from the cell-centre
             const label newVertexLabel = mesh_.nPoints() + addPointI;
@@ -199,11 +199,11 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             // Whether to insert cell in place of original or not.
             bool substituteCell = true;
 
-            const labelList& cFaces = mesh_.cells()[cellI];
+            const labelList& cFaces = mesh_.cells()[celli];
             forAll(cFaces, cFaceI)
             {
                 const face& f = mesh_.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == cellI);
+                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
 
                 // Number of triangles and quads in decomposition
                 label nTris = 0;
@@ -223,13 +223,13 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
 
                     if (substituteCell)
                     {
-                        thisCellI = cellI;
+                        thisCellI = celli;
                         substituteCell = false;
                     }
                     else
                     {
                         thisCellI = mesh_.nCells() + addCellI;
-                        superCells_[addCellI++] = cellI;
+                        superCells_[addCellI++] = celli;
                     }
 
                     labelList& addVtkVerts = vertLabels_[thisCellI];
@@ -270,13 +270,13 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
 
                     if (substituteCell)
                     {
-                        thisCellI = cellI;
+                        thisCellI = celli;
                         substituteCell = false;
                     }
                     else
                     {
                         thisCellI = mesh_.nCells() + addCellI;
-                        superCells_[addCellI++] = cellI;
+                        superCells_[addCellI++] = celli;
                     }
 
 
@@ -310,9 +310,9 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
         else
         {
             // Polyhedral cell - not decomposed
-            cellTypes_[cellI] = VTK_POLYHEDRON;
+            cellTypes_[celli] = VTK_POLYHEDRON;
 
-            const labelList& cFaces = mesh_.cells()[cellI];
+            const labelList& cFaces = mesh_.cells()[celli];
 
             // space for the number of faces and size of each face
             label nData = 1 + cFaces.size();
@@ -333,7 +333,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             forAll(cFaces, cFaceI)
             {
                 const face& f = mesh.faces()[cFaces[cFaceI]];
-                const bool isOwner = (owner[cFaces[cFaceI]] == cellI);
+                const bool isOwner = (owner[cFaces[cFaceI]] == celli);
 
                 // number of labels for this face
                 vtkVerts[nData++] = f.size();

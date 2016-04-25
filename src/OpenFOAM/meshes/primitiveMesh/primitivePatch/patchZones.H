@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,8 +82,8 @@ class patchZones
         labelList edgeToFace(const labelList& changedEdges);
 
         //- Fill *this with current zone for every face reachable
-        //  from faceI without crossing edge marked in borderEdge.
-        void markZone(label faceI);
+        //  from facei without crossing edge marked in borderEdge.
+        void markZone(label facei);
 
 public:
 

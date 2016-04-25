@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,13 +56,13 @@ void Foam::boxToFace::combine(topoSet& set, const bool add) const
 {
     const pointField& ctrs = mesh_.faceCentres();
 
-    forAll(ctrs, faceI)
+    forAll(ctrs, facei)
     {
         forAll(bbs_, i)
         {
-            if (bbs_[i].contains(ctrs[faceI]))
+            if (bbs_[i].contains(ctrs[facei]))
             {
-                addOrDelete(set, faceI, add);
+                addOrDelete(set, facei, add);
                 break;
             }
         }

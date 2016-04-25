@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,9 +88,9 @@ int main(int argc, char *argv[])
             dimensionedScalar("aggomeration", dimless, 0.0)
         );
         scalarField& fld = scalarAgglomeration.internalField();
-        forAll(fld, cellI)
+        forAll(fld, celli)
         {
-            fld[cellI] = cellToCoarse[cellI];
+            fld[celli] = cellToCoarse[celli];
         }
         fld /= max(fld);
         scalarAgglomeration.correctBoundaryConditions();
@@ -167,9 +167,9 @@ int main(int argc, char *argv[])
                 dimensionedScalar("aggomeration", dimless, 0.0)
             );
             scalarField& fld = scalarAgglomeration.internalField();
-            forAll(fld, cellI)
+            forAll(fld, celli)
             {
-                fld[cellI] = cellToCoarse[cellI];
+                fld[celli] = cellToCoarse[celli];
             }
             if (normalise)
             {
@@ -185,9 +185,9 @@ int main(int argc, char *argv[])
             label vertI = 0;
 
             // Write all mesh cc
-            forAll(mesh.cellCentres(), cellI)
+            forAll(mesh.cellCentres(), celli)
             {
-                meshTools::writeOBJ(str, mesh.cellCentres()[cellI]);
+                meshTools::writeOBJ(str, mesh.cellCentres()[celli]);
                 vertI++;
             }
 
@@ -205,9 +205,9 @@ int main(int argc, char *argv[])
 
                 forAll(cellLabels, i)
                 {
-                    label cellI = cellLabels[i];
+                    label celli = cellLabels[i];
 
-                    str << "l " << cellI+1 << ' ' << vertI << nl;
+                    str << "l " << celli+1 << ' ' << vertI << nl;
                 }
             }
         }

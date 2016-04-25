@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,18 +57,18 @@ const Foam::labelListList& Foam::primitiveMesh::cellPoints() const
 
 const Foam::labelList& Foam::primitiveMesh::cellPoints
 (
-    const label cellI,
+    const label celli,
     DynamicList<label>& storage
 ) const
 {
     if (hasCellPoints())
     {
-        return cellPoints()[cellI];
+        return cellPoints()[celli];
     }
     else
     {
         const faceList& fcs = faces();
-        const labelList& cFaces = cells()[cellI];
+        const labelList& cFaces = cells()[celli];
 
         labelSet_.clear();
 
@@ -98,9 +98,9 @@ const Foam::labelList& Foam::primitiveMesh::cellPoints
 }
 
 
-const Foam::labelList& Foam::primitiveMesh::cellPoints(const label cellI) const
+const Foam::labelList& Foam::primitiveMesh::cellPoints(const label celli) const
 {
-    return cellPoints(cellI, labels_);
+    return cellPoints(celli, labels_);
 }
 
 

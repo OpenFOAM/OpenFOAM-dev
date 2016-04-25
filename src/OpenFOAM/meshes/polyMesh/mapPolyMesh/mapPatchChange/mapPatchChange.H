@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,11 +97,11 @@ public:
 
                 label addedI = 0;
 
-                forAll(patchMap_, patchI)
+                forAll(patchMap_, patchi)
                 {
-                    if (patchMap_[patchI] == -1)
+                    if (patchMap_[patchi] == -1)
                     {
-                        added[addedI++] = patchI;
+                        added[addedI++] = patchi;
                     }
                 }
                 added.setSize(addedI);
@@ -114,11 +114,11 @@ public:
                 labelList oldToNew(nOldPatches_, -1);
 
                 // Mark all preserved patches
-                forAll(patchMap_, patchI)
+                forAll(patchMap_, patchi)
                 {
-                    if (patchMap_[patchI] != -1)
+                    if (patchMap_[patchi] != -1)
                     {
-                        oldToNew[patchMap_[patchI]] = patchI;
+                        oldToNew[patchMap_[patchi]] = patchi;
                     }
                 }
 

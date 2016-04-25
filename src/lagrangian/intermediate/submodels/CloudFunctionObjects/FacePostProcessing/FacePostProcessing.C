@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -296,25 +296,25 @@ Foam::FacePostProcessing<CloudType>::FacePostProcessing
             scalar totArea = 0.0;
             forAll(fz, j)
             {
-                label faceI = fz[j];
-                if (faceI < owner.mesh().nInternalFaces())
+                label facei = fz[j];
+                if (facei < owner.mesh().nInternalFaces())
                 {
                     totArea += magSf[fz[j]];
                 }
                 else
                 {
-                    label bFaceI = faceI - owner.mesh().nInternalFaces();
-                    label patchI = pbm.patchID()[bFaceI];
-                    const polyPatch& pp = pbm[patchI];
+                    label bFaceI = facei - owner.mesh().nInternalFaces();
+                    label patchi = pbm.patchID()[bFaceI];
+                    const polyPatch& pp = pbm[patchi];
 
                     if
                     (
-                        !magSf.boundaryField()[patchI].coupled()
+                        !magSf.boundaryField()[patchi].coupled()
                      || refCast<const coupledPolyPatch>(pp).owner()
                     )
                     {
-                        label localFaceI = pp.whichFace(faceI);
-                        totArea += magSf.boundaryField()[patchI][localFaceI];
+                        label localFaceI = pp.whichFace(facei);
+                        totArea += magSf.boundaryField()[patchi][localFaceI];
                     }
                 }
             }
@@ -363,7 +363,7 @@ template<class CloudType>
 void Foam::FacePostProcessing<CloudType>::postFace
 (
     const parcelType& p,
-    const label faceI,
+    const label facei,
     bool&
 )
 {
@@ -382,7 +382,7 @@ void Foam::FacePostProcessing<CloudType>::postFace
             label faceId = -1;
             forAll(fz, j)
             {
-                if (fz[j] == faceI)
+                if (fz[j] == facei)
                 {
                     faceId = j;
                     break;

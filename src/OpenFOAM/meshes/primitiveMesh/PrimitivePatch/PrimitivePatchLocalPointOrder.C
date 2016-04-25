@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,11 +77,11 @@ calcLocalPointOrder() const
 
     label nPoints = 0;
 
-    forAll(lf, faceI)
+    forAll(lf, facei)
     {
-        if (!visitedFace[faceI])
+        if (!visitedFace[facei])
         {
-            SLList<label> faceOrder(faceI);
+            SLList<label> faceOrder(facei);
 
             do
             {

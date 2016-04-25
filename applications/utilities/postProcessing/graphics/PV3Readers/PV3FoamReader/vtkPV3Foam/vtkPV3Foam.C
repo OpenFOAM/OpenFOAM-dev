@@ -708,10 +708,10 @@ void Foam::vtkPV3Foam::renderPatchNames(vtkRenderer* renderer, const bool show)
             }
 
             // Do averaging per individual zone
-            forAll(pp, faceI)
+            forAll(pp, facei)
             {
-                label zoneI = pZones[faceI];
-                zoneCentre[patchi][zoneI] += pp[faceI].centre(pp.points());
+                label zoneI = pZones[facei];
+                zoneCentre[patchi][zoneI] += pp[facei].centre(pp.points());
                 zoneNFaces[zoneI]++;
             }
 

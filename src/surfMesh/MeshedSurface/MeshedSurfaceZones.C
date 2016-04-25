@@ -87,10 +87,10 @@ void Foam::MeshedSurface<Face>::sortFacesAndStore
 
         // sorted faces
         List<Face> newFaces(faceMap.size());
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
             // use transfer to recover memory where possible
-            newFaces[faceI].transfer(oldFaces[faceMap[faceI]]);
+            newFaces[facei].transfer(oldFaces[faceMap[facei]]);
         }
         this->storedFaces().transfer(newFaces);
     }

@@ -110,11 +110,11 @@ extrudePatchMesh::extrudePatchMesh
     List<word> patchTypes(regionPatches.size());
     PtrList<dictionary> dicts(regionPatches.size());
 
-    forAll(dicts, patchI)
+    forAll(dicts, patchi)
     {
-        if (!dicts.set(patchI))
+        if (!dicts.set(patchi))
         {
-            dicts.set(patchI, new dictionary());
+            dicts.set(patchi, new dictionary());
         }
     }
 
@@ -122,23 +122,23 @@ extrudePatchMesh::extrudePatchMesh
     dicts[sidePatchID] = dict_.subDict("sideCoeffs");
     dicts[topPatchID] = dict_.subDict("topCoeffs");
 
-    forAll(dicts, patchI)
+    forAll(dicts, patchi)
     {
-        dicts[patchI].lookup("name") >> patchNames[patchI];
-        dicts[patchI].lookup("type") >> patchTypes[patchI];
+        dicts[patchi].lookup("name") >> patchNames[patchi];
+        dicts[patchi].lookup("type") >> patchTypes[patchi];
     }
 
-    forAll(regionPatches, patchI)
+    forAll(regionPatches, patchi)
     {
-        dictionary&  patchDict = dicts[patchI];
+        dictionary&  patchDict = dicts[patchi];
         patchDict.set("nFaces", 0);
         patchDict.set("startFace", 0);
 
-        regionPatches[patchI] = polyPatch::New
+        regionPatches[patchi] = polyPatch::New
             (
-                patchNames[patchI],
+                patchNames[patchi],
                 patchDict,
-                patchI,
+                patchi,
                 mesh.boundaryMesh()
             ).ptr();
 
@@ -190,10 +190,10 @@ void extrudePatchMesh::extrudeMesh(const List<polyPatch*>& regionPatches)
 
         // Per local region an originating point
         labelList localRegionPoints(localToGlobalRegion.size());
-        forAll(pointLocalRegions, faceI)
+        forAll(pointLocalRegions, facei)
         {
-            const face& f = extrudedPatch_.localFaces()[faceI];
-            const face& pRegions = pointLocalRegions[faceI];
+            const face& f = extrudedPatch_.localFaces()[facei];
+            const face& pRegions = pointLocalRegions[facei];
             forAll(pRegions, fp)
             {
                 localRegionPoints[pRegions[fp]] = f[fp];
@@ -205,14 +205,14 @@ void extrudePatchMesh::extrudeMesh(const List<polyPatch*>& regionPatches)
         {
             pointField localSum(localToGlobalRegion.size(), Zero);
 
-            forAll(pointLocalRegions, faceI)
+            forAll(pointLocalRegions, facei)
             {
-                const face& pRegions = pointLocalRegions[faceI];
+                const face& pRegions = pointLocalRegions[facei];
                 forAll(pRegions, fp)
                 {
                     label localRegionI = pRegions[fp];
                     localSum[localRegionI] +=
-                        extrudedPatch_.faceNormals()[faceI];
+                        extrudedPatch_.faceNormals()[facei];
                 }
             }
 
@@ -267,11 +267,11 @@ void extrudePatchMesh::extrudeMesh(const List<polyPatch*>& regionPatches)
         List<word> patchTypes(regionPatches.size());
         PtrList<dictionary> dicts(regionPatches.size());
 
-        forAll(dicts, patchI)
+        forAll(dicts, patchi)
         {
-            if (!dicts.set(patchI))
+            if (!dicts.set(patchi))
             {
-                dicts.set(patchI, new dictionary());
+                dicts.set(patchi, new dictionary());
             }
         }
 
@@ -279,23 +279,23 @@ void extrudePatchMesh::extrudeMesh(const List<polyPatch*>& regionPatches)
         dicts[sidePatchID] = dict_.subDict("sideCoeffs");
         dicts[topPatchID] = dict_.subDict("topCoeffs");
 
-        forAll(dicts, patchI)
+        forAll(dicts, patchi)
         {
-            dicts[patchI].lookup("name") >> patchNames[patchI];
-            dicts[patchI].lookup("type") >> patchTypes[patchI];
+            dicts[patchi].lookup("name") >> patchNames[patchi];
+            dicts[patchi].lookup("type") >> patchTypes[patchi];
         }
 
-        forAll(regionPatches, patchI)
+        forAll(regionPatches, patchi)
         {
-            dictionary&  patchDict = dicts[patchI];
+            dictionary&  patchDict = dicts[patchi];
             patchDict.set("nFaces", 0);
             patchDict.set("startFace", 0);
 
-            regionPatches[patchI] = polyPatch::New
+            regionPatches[patchi] = polyPatch::New
                 (
-                    patchNames[patchI],
+                    patchNames[patchi],
                     patchDict,
-                    patchI,
+                    patchi,
                     mesh.boundaryMesh()
                 ).ptr();
 

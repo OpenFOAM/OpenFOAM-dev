@@ -127,19 +127,19 @@ void reactingOneDim::updateQr()
         const scalarField& Qrp = Qr_.boundaryField()[patchi];
         const vectorField& Cf = regionMesh().Cf().boundaryField()[patchi];
 
-        forAll(Qrp, faceI)
+        forAll(Qrp, facei)
         {
-            const scalar Qr0 = Qrp[faceI];
-            point Cf0 = Cf[faceI];
+            const scalar Qr0 = Qrp[facei];
+            point Cf0 = Cf[facei];
             const labelList& cells = boundaryFaceCells_[localPyrolysisFaceI++];
             scalar kappaInt = 0.0;
             forAll(cells, k)
             {
-                const label cellI = cells[k];
-                const point& Cf1 = cellC[cellI];
+                const label celli = cells[k];
+                const point& Cf1 = cellC[celli];
                 const scalar delta = mag(Cf1 - Cf0);
-                kappaInt += kappa()[cellI]*delta;
-                Qr_[cellI] = Qr0*exp(-kappaInt);
+                kappaInt += kappa()[celli]*delta;
+                Qr_[celli] = Qr0*exp(-kappaInt);
                 Cf0 = Cf1;
             }
         }
@@ -175,25 +175,25 @@ void reactingOneDim::updatePhiGas()
             scalarField& phiGasp = phiGasBf[patchi];
             const scalarField& cellVol = regionMesh().V();
 
-            forAll(phiGasp, faceI)
+            forAll(phiGasp, facei)
             {
                 const labelList& cells = boundaryFaceCells_[totalFaceId++];
                 scalar massInt = 0.0;
                 forAllReverse(cells, k)
                 {
-                    const label cellI = cells[k];
-                    massInt += RRiGas[cellI]*cellVol[cellI];
-                    phiHsGas_[cellI] += massInt*HsiGas[cellI];
+                    const label celli = cells[k];
+                    massInt += RRiGas[celli]*cellVol[celli];
+                    phiHsGas_[celli] += massInt*HsiGas[celli];
                 }
 
-                phiGasp[faceI] += massInt;
+                phiGasp[facei] += massInt;
 
                 if (debug)
                 {
                     Info<< " Gas : " << gasTable[gasI]
                         << " on patch : " << patchi
                         << " mass produced at face(local) : "
-                        <<  faceI
+                        <<  facei
                         << " is : " << massInt
                         << " [kg/s] " << endl;
                 }
@@ -590,7 +590,7 @@ reactingOneDim::~reactingOneDim()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-scalar reactingOneDim::addMassSources(const label patchi, const label faceI)
+scalar reactingOneDim::addMassSources(const label patchi, const label facei)
 {
     label index = 0;
     forAll(primaryPatchIDs_, i)
@@ -604,7 +604,7 @@ scalar reactingOneDim::addMassSources(const label patchi, const label faceI)
 
     const label localPatchId =  intCoupledPatchIDs_[index];
 
-    const scalar massAdded = phiGas_.boundaryField()[localPatchId][faceI];
+    const scalar massAdded = phiGas_.boundaryField()[localPatchId][facei];
 
     if (debug)
     {
@@ -683,9 +683,9 @@ void reactingOneDim::preEvolveRegion()
     pyrolysisModel::preEvolveRegion();
 
     // Initialise all cells as able to react
-    forAll(h_, cellI)
+    forAll(h_, celli)
     {
-        solidChemistry_->setCellReacting(cellI, true);
+        solidChemistry_->setCellReacting(celli, true);
     }
 }
 

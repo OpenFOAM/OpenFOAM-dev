@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,20 +47,20 @@ void triSurface::writeTRI(const bool writeSorted, Ostream& os) const
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchI)
+        forAll(myPatches, patchi)
         {
             for
             (
                 label patchFaceI = 0;
-                patchFaceI < myPatches[patchI].size();
+                patchFaceI < myPatches[patchi].size();
                 patchFaceI++
             )
             {
-                const label faceI = faceMap[faceIndex++];
+                const label facei = faceMap[faceIndex++];
 
-                const point& p1 = ps[operator[](faceI)[0]];
-                const point& p2 = ps[operator[](faceI)[1]];
-                const point& p3 = ps[operator[](faceI)[2]];
+                const point& p1 = ps[operator[](facei)[0]];
+                const point& p2 = ps[operator[](facei)[1]];
+                const point& p3 = ps[operator[](facei)[2]];
 
                 os  << p1.x() << token::SPACE
                     << p1.y() << token::SPACE
@@ -74,18 +74,18 @@ void triSurface::writeTRI(const bool writeSorted, Ostream& os) const
                     << p3.y() << token::SPACE
                     << p3.z() << token::SPACE
 
-                    << "0x" << hex << operator[](faceI).region() << dec
+                    << "0x" << hex << operator[](facei).region() << dec
                     << endl;
             }
         }
     }
     else
     {
-        forAll(*this, faceI)
+        forAll(*this, facei)
         {
-            const point& p1 = ps[operator[](faceI)[0]];
-            const point& p2 = ps[operator[](faceI)[1]];
-            const point& p3 = ps[operator[](faceI)[2]];
+            const point& p1 = ps[operator[](facei)[0]];
+            const point& p2 = ps[operator[](facei)[1]];
+            const point& p3 = ps[operator[](facei)[2]];
 
             os  << p1.x() << token::SPACE
                 << p1.y() << token::SPACE
@@ -99,7 +99,7 @@ void triSurface::writeTRI(const bool writeSorted, Ostream& os) const
                 << p3.y() << token::SPACE
                 << p3.z() << token::SPACE
 
-                << "0x" << hex << operator[](faceI).region() << dec
+                << "0x" << hex << operator[](facei).region() << dec
                 << endl;
         }
     }

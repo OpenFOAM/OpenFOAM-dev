@@ -93,15 +93,15 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
 
     const scalar Cmu25 = pow(Cmu_, 0.25);
 
-    forAll(uTau, faceI)
+    forAll(uTau, facei)
     {
-        label faceCellI = patch().faceCells()[faceI];
+        label faceCellI = patch().faceCells()[facei];
 
         scalar ut = Cmu25*sqrt(k[faceCellI]);
 
-        scalar yPlus = y[faceI]*ut/nuw[faceI];
+        scalar yPlus = y[facei]*ut/nuw[facei];
 
-        scalar mStar = mDotFilmp[faceI]/(y[faceI]*ut);
+        scalar mStar = mDotFilmp[facei]/(y[facei]*ut);
 
         scalar factor = 0.0;
         if (yPlus > yPlusCrit_)
@@ -116,7 +116,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
             factor = mStar/(expTerm*yPlus - 1.0 + ROOTVSMALL);
         }
 
-        uTau[faceI] = sqrt(max(0, magGradU[faceI]*ut*factor));
+        uTau[facei] = sqrt(max(0, magGradU[facei]*ut*factor));
     }
 
     return tuTau;

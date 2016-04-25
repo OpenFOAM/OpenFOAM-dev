@@ -90,7 +90,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
     const label edgeI,
-    const label faceI,
+    const label facei,
     const patchFaceOrientation& faceInfo,
     const scalar tol,
     TrackingData& td
@@ -101,7 +101,7 @@ inline bool Foam::patchFaceOrientation::updateEdge
         return false;
     }
 
-    const face& f = patch.localFaces()[faceI];
+    const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
     //Pout<< "Updating edge:" << edgeI << " verts:" << e << nl
@@ -156,7 +156,7 @@ inline bool Foam::patchFaceOrientation::updateFace
 (
     const polyMesh& mesh,
     const indirectPrimitivePatch& patch,
-    const label faceI,
+    const label facei,
     const label edgeI,
     const patchFaceOrientation& edgeInfo,
     const scalar tol,
@@ -169,11 +169,11 @@ inline bool Foam::patchFaceOrientation::updateFace
     }
 
     // Transfer flip to face
-    const face& f = patch.localFaces()[faceI];
+    const face& f = patch.localFaces()[facei];
     const edge& e = patch.edges()[edgeI];
 
 
-    //Pout<< "Updating face:" << faceI << nl
+    //Pout<< "Updating face:" << facei << nl
     //    << "    verts:" << f << nl
     //    << " with edge:" << edgeI << nl
     //    << "    start:" << patch.localPoints()[e[0]] << nl

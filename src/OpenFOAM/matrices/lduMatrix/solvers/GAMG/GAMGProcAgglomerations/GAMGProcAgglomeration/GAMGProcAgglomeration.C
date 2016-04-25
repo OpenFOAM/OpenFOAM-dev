@@ -134,9 +134,9 @@ Foam::labelListList Foam::GAMGProcAgglomeration::globalCellCells
     );
 
     labelList globalIndices(addr.size());
-    forAll(globalIndices, cellI)
+    forAll(globalIndices, celli)
     {
-        globalIndices[cellI] = globalNumbering.toGlobal(myProcID, cellI);
+        globalIndices[celli] = globalNumbering.toGlobal(myProcID, celli);
     }
 
 
@@ -191,10 +191,10 @@ Foam::labelListList Foam::GAMGProcAgglomeration::globalCellCells
     const labelUList& own = addr.lowerAddr();
 
     {
-        forAll(nbr, faceI)
+        forAll(nbr, facei)
         {
-            nNbrs[nbr[faceI]]++;
-            nNbrs[own[faceI]]++;
+            nNbrs[nbr[facei]]++;
+            nNbrs[own[facei]]++;
         }
 
         forAll(interfaces, inti)
@@ -215,19 +215,19 @@ Foam::labelListList Foam::GAMGProcAgglomeration::globalCellCells
     // Create cell-cells addressing
     labelListList cellCells(addr.size());
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        cellCells[cellI].setSize(nNbrs[cellI], -1);
+        cellCells[celli].setSize(nNbrs[celli], -1);
     }
 
     // Reset the list of number of neighbours to zero
     nNbrs = 0;
 
     // Scatter the neighbour faces
-    forAll(nbr, faceI)
+    forAll(nbr, facei)
     {
-        label c0 = own[faceI];
-        label c1 = nbr[faceI];
+        label c0 = own[facei];
+        label c1 = nbr[facei];
 
         cellCells[c0][nNbrs[c0]++] = globalIndices[c1];
         cellCells[c1][nNbrs[c1]++] = globalIndices[c0];
@@ -246,15 +246,15 @@ Foam::labelListList Foam::GAMGProcAgglomeration::globalCellCells
         }
     }
 
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        Foam::stableSort(cellCells[cellI]);
+        Foam::stableSort(cellCells[celli]);
     }
 
     // Replace the initial element (always -1) with the local cell
-    forAll(cellCells, cellI)
+    forAll(cellCells, celli)
     {
-        cellCells[cellI][0] = globalIndices[cellI];
+        cellCells[celli][0] = globalIndices[celli];
     }
 
     return cellCells;

@@ -110,31 +110,31 @@ void writeVTK
 
         forAllConstIter(cellSet, currentSet, iter)
         {
-            label cellI = iter.key();
+            label celli = iter.key();
 
-            const cell& cFaces = mesh.cells()[cellI];
+            const cell& cFaces = mesh.cells()[celli];
 
             forAll(cFaces, i)
             {
-                label faceI = cFaces[i];
+                label facei = cFaces[i];
 
-                if (mesh.isInternalFace(faceI))
+                if (mesh.isInternalFace(facei))
                 {
-                    label otherCellI = mesh.faceOwner()[faceI];
+                    label otherCellI = mesh.faceOwner()[facei];
 
-                    if (otherCellI == cellI)
+                    if (otherCellI == celli)
                     {
-                        otherCellI = mesh.faceNeighbour()[faceI];
+                        otherCellI = mesh.faceNeighbour()[facei];
                     }
 
                     if (!currentSet.found(otherCellI))
                     {
-                        cellFaces.insert(faceI, cellI);
+                        cellFaces.insert(facei, celli);
                     }
                 }
                 else
                 {
-                    cellFaces.insert(faceI, cellI);
+                    cellFaces.insert(facei, celli);
                 }
             }
         }

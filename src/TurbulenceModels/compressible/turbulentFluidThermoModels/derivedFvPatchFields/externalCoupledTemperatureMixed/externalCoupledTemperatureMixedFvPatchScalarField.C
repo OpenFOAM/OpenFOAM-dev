@@ -121,7 +121,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
             << endl;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     // heat flux [W/m2]
     scalarField qDot(this->patch().size(), 0.0);
@@ -146,17 +146,17 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
 
         const basicThermo& thermo = turbModel.transport();
 
-        const fvPatchScalarField& hep = thermo.he().boundaryField()[patchI];
+        const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
 
-        qDot = turbModel.alphaEff(patchI)*hep.snGrad();
+        qDot = turbModel.alphaEff(patchi)*hep.snGrad();
     }
     else if (db().foundObject<basicThermo>(thermoName))
     {
         const basicThermo& thermo = db().lookupObject<basicThermo>(thermoName);
 
-        const fvPatchScalarField& hep = thermo.he().boundaryField()[patchI];
+        const fvPatchScalarField& hep = thermo.he().boundaryField()[patchi];
 
-        qDot = thermo.alpha().boundaryField()[patchI]*hep.snGrad();
+        qDot = thermo.alpha().boundaryField()[patchi]*hep.snGrad();
     }
     else
     {
@@ -207,12 +207,12 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
                 const Field<scalar>& qDot = qDots[procI];
                 const Field<scalar>& htc = htcs[procI];
 
-                forAll(magSf, faceI)
+                forAll(magSf, facei)
                 {
-                    os  << magSf[faceI] << token::SPACE
-                        << value[faceI] << token::SPACE
-                        << qDot[faceI] << token::SPACE
-                        << htc[faceI] << token::SPACE
+                    os  << magSf[facei] << token::SPACE
+                        << value[facei] << token::SPACE
+                        << qDot[facei] << token::SPACE
+                        << htc[facei] << token::SPACE
                         << nl;
                 }
             }
@@ -224,12 +224,12 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
     {
         const Field<scalar>& magSf(this->patch().magSf());
 
-        forAll(patch(), faceI)
+        forAll(patch(), facei)
         {
-            os  << magSf[faceI] << token::SPACE
-                << Tp[faceI] << token::SPACE
-                << qDot[faceI] << token::SPACE
-                << htc[faceI] << token::SPACE
+            os  << magSf[facei] << token::SPACE
+                << Tp[facei] << token::SPACE
+                << qDot[facei] << token::SPACE
+                << htc[facei] << token::SPACE
                 << nl;
         }
 

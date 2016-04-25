@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ bool Foam::triSurface::readOFF(const fileName& OFFfileName)
     // Read faces & triangulate them,
     DynamicList<labelledTri> tris(nElems);
 
-    for (label faceI = 0; faceI < nElems; faceI++)
+    for (label facei = 0; facei < nElems; facei++)
     {
         line = getLineNoComment(OFFfile);
         {
