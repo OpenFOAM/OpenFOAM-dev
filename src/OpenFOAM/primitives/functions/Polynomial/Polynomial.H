@@ -52,7 +52,7 @@ SourceFiles
 #include "scalar.H"
 #include "Ostream.H"
 #include "VectorSpace.H"
-#include <type_traits>
+#include "StaticAssert.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,7 +81,8 @@ class Polynomial
 :
     public VectorSpace<Polynomial<PolySize>, scalar, PolySize>
 {
-    static_assert(PolySize > 0, "Size must be positive (non-zero)");
+    //- Size must be positive (non-zero)
+    StaticAssert(PolySize > 0);
 
     // Private data
 
