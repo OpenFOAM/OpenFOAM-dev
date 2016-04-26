@@ -323,14 +323,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             dimensionedScalar rDtCoef0 = rDtCoef0_(ddt0);
 
-            ddt0.dimensionedInternalField() =
+            ddt0.dimensionedInternalFieldRef() =
             (
                 (rDtCoef0*dt)*(mesh().V0() - mesh().V00())
               - mesh().V00()*offCentre_(ddt0.dimensionedInternalField())
             )/mesh().V0();
         }
 
-        tdtdt.ref().dimensionedInternalField() =
+        tdtdt.ref().dimensionedInternalFieldRef() =
         (
             (rDtCoef*dt)*(mesh().V() - mesh().V0())
           - mesh().V0()*offCentre_(ddt0.dimensionedInternalField())

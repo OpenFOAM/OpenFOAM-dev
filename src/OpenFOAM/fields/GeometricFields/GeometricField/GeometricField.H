@@ -432,7 +432,7 @@ public:
         //- Return a reference to the dimensioned internal field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        DimensionedInternalField& dimensionedInternalField();
+        DimensionedInternalField& dimensionedInternalFieldRef();
 
         //- Return a const-reference to the dimensioned internal field
         inline const DimensionedInternalField& dimensionedInternalField() const;

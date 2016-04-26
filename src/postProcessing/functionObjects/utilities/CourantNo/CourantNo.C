@@ -142,7 +142,7 @@ void Foam::CourantNo::execute()
                 mesh.lookupObject<volScalarField>(type())
             );
 
-        Co.dimensionedInternalField() = byRho
+        Co.dimensionedInternalFieldRef() = byRho
         (
             (0.5*mesh.time().deltaT())
            *fvc::surfaceSum(mag(phi))().dimensionedInternalField()

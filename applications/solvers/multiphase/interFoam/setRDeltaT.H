@@ -56,7 +56,7 @@
     volScalarField rDeltaT0("rDeltaT0", rDeltaT);
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.dimensionedInternalField() = max
+    rDeltaT.dimensionedInternalFieldRef() = max
     (
         1/dimensionedScalar("maxDeltaT", dimTime, maxDeltaT),
         fvc::surfaceSum(mag(rhoPhi))().dimensionedInternalField()
@@ -70,7 +70,7 @@
 
         volScalarField alpha1Bar(fvc::average(alpha1));
 
-        rDeltaT.dimensionedInternalField() = max
+        rDeltaT.dimensionedInternalFieldRef() = max
         (
             rDeltaT.dimensionedInternalField(),
             pos(alpha1Bar.dimensionedInternalField() - alphaSpreadMin)

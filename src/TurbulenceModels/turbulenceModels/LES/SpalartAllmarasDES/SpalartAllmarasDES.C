@@ -158,7 +158,7 @@ tmp<volScalarField> SpalartAllmarasDES<BasicTurbulenceModel>::dTilda
 ) const
 {
     tmp<volScalarField> tdTilda(CDES_*this->delta());
-    min(tdTilda.ref().dimensionedInternalField(), tdTilda(), y_);
+    min(tdTilda.ref().dimensionedInternalFieldRef(), tdTilda(), y_);
     return tdTilda;
 }
 

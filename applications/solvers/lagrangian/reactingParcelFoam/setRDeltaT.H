@@ -58,7 +58,7 @@ License
 
     // Flow time scale
     {
-        rDeltaT.dimensionedInternalField() =
+        rDeltaT.dimensionedInternalFieldRef() =
         (
             fvc::surfaceSum(mag(phi))().dimensionedInternalField()
            /((2*maxCo)*mesh.V()*rho.dimensionedInternalField())
@@ -93,7 +93,7 @@ License
             << gMin(1/(rDeltaTT.field() + VSMALL)) << ", "
             << gMax(1/(rDeltaTT.field() + VSMALL)) << endl;
 
-        rDeltaT.dimensionedInternalField() = max
+        rDeltaT.dimensionedInternalFieldRef() = max
         (
             rDeltaT.dimensionedInternalField(),
             rDeltaTT
