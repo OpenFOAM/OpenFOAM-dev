@@ -36,9 +36,9 @@ SourceFiles
 #define NamedEnum_H
 
 #include "HashTable.H"
-#include "StaticAssert.H"
 #include "stringList.H"
 #include "wordList.H"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,7 +55,7 @@ class NamedEnum
     public HashTable<int>
 {
     //- nEnum must be positive (non-zero)
-    StaticAssert(nEnum > 0);
+    static_assert(nEnum > 0, "nEnum must be positive (non-zero)");
 
     // Private Member Functions
 

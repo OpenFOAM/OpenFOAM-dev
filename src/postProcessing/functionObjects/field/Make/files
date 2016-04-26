@@ -46,7 +46,4 @@ surfaceInterpolateFields/surfaceInterpolateFieldsFunctionObject.C
 regionSizeDistribution/regionSizeDistribution.C
 regionSizeDistribution/regionSizeDistributionFunctionObject.C
 
-histogram/histogram.C
-histogram/histogramFunctionObject.C
-
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

@@ -30,24 +30,12 @@ InClass
 #define vtkOpenFOAMTupleRemap_H
 
 // OpenFOAM includes
-#include "StaticAssert.H"
 #include "Swap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 inline void vtkOpenFOAMTupleRemap(float vec[]);
-
-
-// a symmTensor specialization to remap OpenFOAM -> ParaView naming order
-// Qt/Core/pqScalarBarRepresentation.cxx defines this order
-//     { "XX", "YY", "ZZ", "XY", "YZ", "XZ" }
-// in pqScalarBarRepresentation::getDefaultComponentLabel()
-// whereas OpenFOAM uses this order
-//     { XX, XY, XZ, YY, YZ, ZZ }
-//
-// for extra safety, assert that symmTensor indeed has 6 components
-StaticAssert(Foam::symmTensor::nComponents == 6);
 
 
 // Template specialization for symmTensor

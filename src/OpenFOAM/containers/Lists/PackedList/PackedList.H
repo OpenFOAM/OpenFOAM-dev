@@ -103,7 +103,7 @@ SourceFiles
 
 #include "labelList.H"
 #include "UIndirectList.H"
-#include "StaticAssert.H"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -174,7 +174,11 @@ private:
     //  it is more efficient to use a normal list.
     //  Thus max nBits is 1/2 of the base storage size.
     //  For simplicity, assume 8-bit bytes in the assert.
-    StaticAssert(nBits && nBits <= (sizeof(StorageType) << 2));
+    static_assert
+    (
+        nBits && nBits <= (sizeof(StorageType) << 2),
+        "nBits must be positive (non-zero) and fit within the storage"
+    );
 
     // Private data
 

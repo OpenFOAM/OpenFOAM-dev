@@ -27,7 +27,7 @@ License
 #include "products.H"
 #include "VectorSpaceOps.H"
 #include "ops.H"
-#include "StaticAssert.H"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,7 +79,11 @@ VectorSpace<Form, Cmpt, Ncmpts>::ConstBlock<SubVector, BStart>::ConstBlock
 :
     vs_(vs)
 {
-    StaticAssert(vsType::nComponents >= BStart + nComponents);
+    static_assert
+    (
+        vsType::nComponents >= BStart + nComponents,
+        "Requested block size > VectorSpace size"
+    );
 }
 
 
