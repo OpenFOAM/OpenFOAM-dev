@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,12 @@ Class
 Description
     Mesh data needed to do the Finite Volume discretisation.
 
+Class
+    Foam::isVolMesh
+
+Description
+    Supports static assertion that a template argument is of type volMesh.
+
 \*---------------------------------------------------------------------------*/
 
 #ifndef volMesh_H
@@ -35,6 +41,7 @@ Description
 #include "GeoMesh.H"
 #include "fvMesh.H"
 #include "primitiveMesh.H"
+#include <type_traits>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,6 +88,24 @@ public:
             return mesh_.C();
         }
 };
+
+
+/*---------------------------------------------------------------------------*\
+                          Class isVolMesh Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class T>
+class isVolMesh
+:
+    public std::false_type
+{};
+
+
+template<>
+class isVolMesh<volMesh>
+:
+    public std::true_type
+{};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

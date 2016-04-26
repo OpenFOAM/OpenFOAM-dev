@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,57 +21,30 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InClass
-    Foam::volFields
-
-Description
-
-SourceFiles
-    volFields.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef volFields_H
-#define volFields_H
-
-#include "GeometricFields.H"
-#include "volMesh.H"
-#include "fvMesh.H"
-#include "fvPatchField.H"
-#include "volFieldsFwd.H"
-#include "calculatedFvPatchFields.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
+template<class Type, template<class> class PatchField, class GeoMesh>
+inline
+const typename
+Foam::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
+Foam::GeometricField<Type, PatchField, GeoMesh>::
+v() const
 {
+    static_assert(isVolMesh<GeoMesh>::value, "Only valid for volFields");
+    return *this;
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<>
-tmp<GeometricField<scalar, fvPatchField, volMesh>>
-GeometricField<scalar, fvPatchField, volMesh>::component
-(
-    const direction
-) const;
+template<class Type, template<class> class PatchField, class GeoMesh>
+inline
+const typename
+Foam::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
+Foam::GeometricField<Type, PatchField, GeoMesh>::
+operator~() const
+{
+    static_assert(isVolMesh<GeoMesh>::value, "Only valid for volFields");
+    return *this;
+}
 
-template<>
-void GeometricField<scalar, fvPatchField, volMesh>::replace
-(
-    const direction,
-    const GeometricField<scalar, fvPatchField, volMesh>& sf
-);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "volFieldsI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //
