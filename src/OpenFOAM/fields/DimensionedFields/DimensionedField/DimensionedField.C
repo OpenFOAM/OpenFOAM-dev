@@ -264,7 +264,7 @@ DimensionedField<Type, GeoMesh>::DimensionedField
     mesh_(tdf().mesh_),
     dimensions_(tdf().dimensions_)
 {
-    tdf().clear();
+    tdf.clear();
 }
 #endif
 
