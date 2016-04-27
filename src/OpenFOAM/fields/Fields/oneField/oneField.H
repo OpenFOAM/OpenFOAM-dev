@@ -70,13 +70,18 @@ public:
 };
 
 
+inline const oneField& operator*(const oneField&, const oneField&);
+
+inline const oneField& operator/(const oneField&, const oneField&);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "oneFieldI.H"
+#include "oneFieldI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

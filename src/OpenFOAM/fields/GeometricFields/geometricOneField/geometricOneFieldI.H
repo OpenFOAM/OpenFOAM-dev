@@ -32,26 +32,38 @@ inline const Foam::dimensionSet& Foam::geometricOneField::dimensions() const
     return dimless;
 }
 
+
 inline Foam::one Foam::geometricOneField::operator[](const label) const
 {
     return one();
 }
+
 
 inline Foam::oneField Foam::geometricOneField::field() const
 {
     return oneField();
 }
 
+
 inline Foam::oneField Foam::geometricOneField::oldTime() const
 {
     return oneField();
 }
+
 
 inline Foam::geometricOneField::InternalField
 Foam::geometricOneField::internalField() const
 {
     return InternalField();
 }
+
+
+inline Foam::geometricOneField::DimensionedInternalField
+Foam::geometricOneField::v() const
+{
+    return DimensionedInternalField();
+}
+
 
 inline Foam::geometricOneField::GeometricBoundaryField
 Foam::geometricOneField::boundaryField() const
@@ -69,6 +81,27 @@ inline const Foam::geometricOneField& Foam::operator*
     return gof;
 }
 
+
+inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator*
+(
+    const geometricOneField::DimensionedInternalField& of,
+    const geometricOneField&
+)
+{
+    return of;
+}
+
+
+inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator*
+(
+    const geometricOneField&,
+    const geometricOneField::DimensionedInternalField& of
+)
+{
+    return of;
+}
+
+
 inline const Foam::geometricOneField& Foam::operator/
 (
     const geometricOneField& gof,
@@ -76,6 +109,26 @@ inline const Foam::geometricOneField& Foam::operator/
 )
 {
     return gof;
+}
+
+
+inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator/
+(
+    const geometricOneField::DimensionedInternalField& of,
+    const geometricOneField&
+)
+{
+    return of;
+}
+
+
+inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator/
+(
+    const geometricOneField&,
+    const geometricOneField::DimensionedInternalField& of
+)
+{
+    return of;
 }
 
 

@@ -39,4 +39,24 @@ inline Foam::oneField Foam::oneField::field() const
 }
 
 
+inline const Foam::oneField& Foam::operator*
+(
+    const oneField& of,
+    const oneField&
+)
+{
+    return of;
+}
+
+
+inline const Foam::oneField& Foam::operator/
+(
+    const oneField& of,
+    const oneField&
+)
+{
+    return of;
+}
+
+
 // ************************************************************************* //

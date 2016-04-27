@@ -59,6 +59,7 @@ public:
 
     // Public typedefs
 
+        typedef oneField DimensionedInternalField;
         typedef oneField InternalField;
         typedef oneField PatchFieldType;
         typedef oneFieldField GeometricBoundaryField;
@@ -83,6 +84,8 @@ public:
 
         inline InternalField internalField() const;
 
+        inline DimensionedInternalField v() const;
+
         inline GeometricBoundaryField boundaryField() const;
 };
 
@@ -93,10 +96,34 @@ inline const geometricOneField& operator*
     const geometricOneField&
 );
 
+inline const geometricOneField::DimensionedInternalField& operator*
+(
+    const geometricOneField::DimensionedInternalField&,
+    const geometricOneField&
+);
+
+inline const geometricOneField::DimensionedInternalField& operator*
+(
+    const geometricOneField&,
+    const geometricOneField::DimensionedInternalField&
+);
+
 inline const geometricOneField& operator/
 (
     const geometricOneField&,
     const geometricOneField&
+);
+
+inline const geometricOneField::DimensionedInternalField& operator/
+(
+    const geometricOneField::DimensionedInternalField&,
+    const geometricOneField&
+);
+
+inline const geometricOneField::DimensionedInternalField& operator/
+(
+    const geometricOneField&,
+    const geometricOneField::DimensionedInternalField&
 );
 
 
@@ -106,7 +133,7 @@ inline const geometricOneField& operator/
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "geometricOneFieldI.H"
+#include "geometricOneFieldI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
