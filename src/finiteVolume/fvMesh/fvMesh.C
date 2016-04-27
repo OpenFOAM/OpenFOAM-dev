@@ -63,8 +63,8 @@ void Foam::fvMesh::clearGeomNotOldVol()
         MoveableMeshObject
     >(*this);
 
-    slicedVolScalarField::DimensionedInternalField* VPtr =
-        static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);
+    slicedVolScalarField::Internal* VPtr =
+        static_cast<slicedVolScalarField::Internal*>(VPtr_);
     deleteDemandDrivenData(VPtr);
     VPtr_ = NULL;
 

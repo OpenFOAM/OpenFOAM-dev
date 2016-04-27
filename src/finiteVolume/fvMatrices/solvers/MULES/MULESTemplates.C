@@ -199,7 +199,7 @@ void Foam::MULES::limiter
 
     const labelUList& owner = mesh.owner();
     const labelUList& neighb = mesh.neighbour();
-    tmp<volScalarField::DimensionedInternalField> tVsc = mesh.Vsc();
+    tmp<volScalarField::Internal> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
     const scalarField& phiBDIf = phiBD;
@@ -330,7 +330,7 @@ void Foam::MULES::limiter
 
     if (mesh.moving())
     {
-        tmp<volScalarField::DimensionedInternalField> V0 = mesh.Vsc0();
+        tmp<volScalarField::Internal> V0 = mesh.Vsc0();
 
         psiMaxn =
             V

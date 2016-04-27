@@ -58,7 +58,7 @@ void Foam::fvMeshTools::addPatchFields
             bfld.set
             (
                 sz,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     mesh.boundary()[sz],
                     fld.dimensionedInternalField(),
@@ -71,7 +71,7 @@ void Foam::fvMeshTools::addPatchFields
             bfld.set
             (
                 sz,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     defaultPatchFieldType,
                     mesh.boundary()[sz],
@@ -109,7 +109,7 @@ void Foam::fvMeshTools::setPatchFields
             bfld.set
             (
                 patchi,
-                GeoField::PatchFieldType::New
+                GeoField::Patch::New
                 (
                     mesh.boundary()[patchi],
                     fld.dimensionedInternalField(),

@@ -148,8 +148,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
 
     decompositionMethod& decomposer = decomposerPtr_();
 
-    volScalarField::InternalField& icellWeights = cellWeights.internalField();
-
+    volScalarField::Internal& icellWeights = cellWeights;
 
     // For each cell in the mesh has it been determined if it is fully
     // inside, outside, or overlaps the surface
@@ -632,7 +631,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::selectRefinementCells
     volScalarField& cellWeights
 ) const
 {
-    volScalarField::InternalField& icellWeights = cellWeights.internalField();
+    volScalarField::Internal& icellWeights = cellWeights;
 
     labelHashSet cellsToRefine;
 
@@ -873,7 +872,7 @@ Foam::backgroundMeshDecomposition::distribute
         mesh_.write();
     }
 
-    volScalarField::InternalField& icellWeights = cellWeights.internalField();
+    volScalarField::Internal& icellWeights = cellWeights;
 
     while (true)
     {

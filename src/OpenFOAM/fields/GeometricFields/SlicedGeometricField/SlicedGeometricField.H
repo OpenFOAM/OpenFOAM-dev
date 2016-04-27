@@ -70,7 +70,7 @@ public:
     typedef typename GeoMesh::Mesh Mesh;
     typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
-    class DimensionedInternalField;
+    class Internal;
 
 
 private:
@@ -172,7 +172,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-       Class SlicedGeometricField::DimensionedInternalField Declaration
+       Class SlicedGeometricField::Internal Declaration
 \*---------------------------------------------------------------------------*/
 
 //- The internalField of a SlicedGeometricField
@@ -184,9 +184,9 @@ template
     class GeoMesh
 >
 class SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
-DimensionedInternalField
+Internal
 :
-    public GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField
+    public GeometricField<Type, PatchField, GeoMesh>::Internal
 {
 
 public:
@@ -194,7 +194,7 @@ public:
     // Constructors
 
         //- Construct from components and field to slice
-        DimensionedInternalField
+        Internal
         (
             const IOobject&,
             const Mesh&,
@@ -204,7 +204,7 @@ public:
 
 
     //- Destructor
-    ~DimensionedInternalField();
+    ~Internal();
 };
 
 

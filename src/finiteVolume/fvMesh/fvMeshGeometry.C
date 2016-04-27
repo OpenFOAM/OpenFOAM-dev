@@ -183,7 +183,7 @@ void Foam::fvMesh::makeCf() const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V() const
+const Foam::volScalarField::Internal& Foam::fvMesh::V() const
 {
     if (!VPtr_)
     {
@@ -193,7 +193,7 @@ const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V() const
                 << "Constructing from primitiveMesh::cellVolumes()" << endl;
         }
 
-        VPtr_ = new slicedVolScalarField::DimensionedInternalField
+        VPtr_ = new slicedVolScalarField::Internal
         (
             IOobject
             (
@@ -210,11 +210,11 @@ const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V() const
         );
     }
 
-    return *static_cast<slicedVolScalarField::DimensionedInternalField*>(VPtr_);
+    return *static_cast<slicedVolScalarField::Internal*>(VPtr_);
 }
 
 
-const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V0() const
+const Foam::volScalarField::Internal& Foam::fvMesh::V0() const
 {
     if (!V0Ptr_)
     {
@@ -227,7 +227,7 @@ const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V0() const
 }
 
 
-Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::setV0()
+Foam::volScalarField::Internal& Foam::fvMesh::setV0()
 {
     if (!V0Ptr_)
     {
@@ -240,7 +240,7 @@ Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::setV0()
 }
 
 
-const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V00() const
+const Foam::volScalarField::Internal& Foam::fvMesh::V00() const
 {
     if (!V00Ptr_)
     {
@@ -271,7 +271,7 @@ const Foam::volScalarField::DimensionedInternalField& Foam::fvMesh::V00() const
 }
 
 
-Foam::tmp<Foam::volScalarField::DimensionedInternalField>
+Foam::tmp<Foam::volScalarField::Internal>
 Foam::fvMesh::Vsc() const
 {
     if (moving() && time().subCycling())
@@ -300,7 +300,7 @@ Foam::fvMesh::Vsc() const
 }
 
 
-Foam::tmp<Foam::volScalarField::DimensionedInternalField>
+Foam::tmp<Foam::volScalarField::Internal>
 Foam::fvMesh::Vsc0() const
 {
     if (moving() && time().subCycling())

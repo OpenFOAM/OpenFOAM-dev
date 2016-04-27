@@ -218,7 +218,7 @@ void Foam::multiphaseSystem::solveAlphas()
         surfaceScalarField& alphaPhic = alphaPhiCorrs[phasei];
         alphaPhic += upwind<scalar>(mesh_, phi_).flux(phase);
 
-        volScalarField::DimensionedInternalField Sp
+        volScalarField::Internal Sp
         (
             IOobject
             (
@@ -230,7 +230,7 @@ void Foam::multiphaseSystem::solveAlphas()
             dimensionedScalar("Sp", divU.dimensions(), 0.0)
         );
 
-        volScalarField::DimensionedInternalField Su
+        volScalarField::Internal Su
         (
             IOobject
             (

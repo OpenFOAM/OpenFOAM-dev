@@ -392,7 +392,7 @@ void Foam::twoPhaseSystem::solve()
 
     for (int acorr=0; acorr<nAlphaCorr; acorr++)
     {
-        volScalarField::DimensionedInternalField Sp
+        volScalarField::Internal Sp
         (
             IOobject
             (
@@ -404,7 +404,7 @@ void Foam::twoPhaseSystem::solve()
             dimensionedScalar("Sp", dgdt_.dimensions(), 0.0)
         );
 
-        volScalarField::DimensionedInternalField Su
+        volScalarField::Internal Su
         (
             IOobject
             (

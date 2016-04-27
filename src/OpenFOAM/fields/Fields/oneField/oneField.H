@@ -55,6 +55,11 @@ class oneField
 
 public:
 
+    // Public typedefs
+
+        typedef oneField FieldType;
+
+
     // Constructors
 
         //- Construct null

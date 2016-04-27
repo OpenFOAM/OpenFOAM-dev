@@ -51,17 +51,24 @@ inline Foam::oneField Foam::geometricOneField::oldTime() const
 }
 
 
-inline Foam::geometricOneField::InternalField
-Foam::geometricOneField::internalField() const
+inline Foam::geometricOneField::Internal
+Foam::geometricOneField::operator()() const
 {
-    return InternalField();
+    return Internal();
 }
 
 
-inline Foam::geometricOneField::DimensionedInternalField
+inline Foam::geometricOneField::Internal
 Foam::geometricOneField::v() const
 {
-    return DimensionedInternalField();
+    return Internal();
+}
+
+
+inline typename Foam::geometricOneField::Internal::FieldType
+Foam::geometricOneField::internalField() const
+{
+    return typename Internal::FieldType();
 }
 
 
@@ -82,9 +89,9 @@ inline const Foam::geometricOneField& Foam::operator*
 }
 
 
-inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator*
+inline const Foam::geometricOneField::Internal& Foam::operator*
 (
-    const geometricOneField::DimensionedInternalField& of,
+    const geometricOneField::Internal& of,
     const geometricOneField&
 )
 {
@@ -92,10 +99,10 @@ inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator*
 }
 
 
-inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator*
+inline const Foam::geometricOneField::Internal& Foam::operator*
 (
     const geometricOneField&,
-    const geometricOneField::DimensionedInternalField& of
+    const geometricOneField::Internal& of
 )
 {
     return of;
@@ -112,9 +119,9 @@ inline const Foam::geometricOneField& Foam::operator/
 }
 
 
-inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator/
+inline const Foam::geometricOneField::Internal& Foam::operator/
 (
-    const geometricOneField::DimensionedInternalField& of,
+    const geometricOneField::Internal& of,
     const geometricOneField&
 )
 {
@@ -122,10 +129,10 @@ inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator/
 }
 
 
-inline const Foam::geometricOneField::DimensionedInternalField& Foam::operator/
+inline const Foam::geometricOneField::Internal& Foam::operator/
 (
     const geometricOneField&,
-    const geometricOneField::DimensionedInternalField& of
+    const geometricOneField::Internal& of
 )
 {
     return of;

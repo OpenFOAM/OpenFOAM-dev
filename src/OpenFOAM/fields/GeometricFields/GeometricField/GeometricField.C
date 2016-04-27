@@ -689,7 +689,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::~GeometricField()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::DimensionedInternalField&
+Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
 Foam::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalFieldRef()
 {
     this->setUpToDate();
@@ -700,7 +700,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::dimensionedInternalFieldRef()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::InternalField&
+Foam::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
 Foam::GeometricField<Type, PatchField, GeoMesh>::internalField()
 {
     this->setUpToDate();

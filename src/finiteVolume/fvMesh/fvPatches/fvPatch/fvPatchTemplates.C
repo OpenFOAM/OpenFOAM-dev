@@ -66,7 +66,7 @@ void Foam::fvPatch::patchInternalField
 
 
 template<class GeometricField, class Type>
-const typename GeometricField::PatchFieldType& Foam::fvPatch::patchField
+const typename GeometricField::Patch& Foam::fvPatch::patchField
 (
     const GeometricField& gf
 ) const

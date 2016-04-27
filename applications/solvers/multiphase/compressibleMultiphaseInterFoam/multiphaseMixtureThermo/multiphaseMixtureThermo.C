@@ -1058,7 +1058,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
         surfaceScalarField& alphaPhi = alphaPhiCorrs[phasei];
         alphaPhi += upwind<scalar>(mesh_, phi_).flux(alpha);
 
-        volScalarField::DimensionedInternalField Sp
+        volScalarField::Internal Sp
         (
             IOobject
             (
@@ -1070,7 +1070,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             dimensionedScalar("Sp", alpha.dgdt().dimensions(), 0.0)
         );
 
-        volScalarField::DimensionedInternalField Su
+        volScalarField::Internal Su
         (
             IOobject
             (

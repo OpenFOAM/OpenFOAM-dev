@@ -222,7 +222,7 @@ void Foam::meshRefinement::addPatchFields
         fldBf.set
         (
             sz,
-            GeoField::PatchFieldType::New
+            GeoField::Patch::New
             (
                 patchFieldType,
                 mesh.boundary()[sz],

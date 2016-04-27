@@ -59,9 +59,8 @@ public:
 
     // Public typedefs
 
-        typedef oneField DimensionedInternalField;
-        typedef oneField InternalField;
-        typedef oneField PatchFieldType;
+        typedef oneField Internal;
+        typedef oneField Patch;
         typedef oneFieldField GeometricBoundaryField;
         typedef one cmptType;
 
@@ -82,9 +81,11 @@ public:
 
         inline oneField oldTime() const;
 
-        inline InternalField internalField() const;
+        inline Internal operator()() const;
 
-        inline DimensionedInternalField v() const;
+        inline Internal v() const;
+
+        inline typename Internal::FieldType internalField() const;
 
         inline GeometricBoundaryField boundaryField() const;
 };
@@ -96,16 +97,16 @@ inline const geometricOneField& operator*
     const geometricOneField&
 );
 
-inline const geometricOneField::DimensionedInternalField& operator*
+inline const geometricOneField::Internal& operator*
 (
-    const geometricOneField::DimensionedInternalField&,
+    const geometricOneField::Internal&,
     const geometricOneField&
 );
 
-inline const geometricOneField::DimensionedInternalField& operator*
+inline const geometricOneField::Internal& operator*
 (
     const geometricOneField&,
-    const geometricOneField::DimensionedInternalField&
+    const geometricOneField::Internal&
 );
 
 inline const geometricOneField& operator/
@@ -114,16 +115,16 @@ inline const geometricOneField& operator/
     const geometricOneField&
 );
 
-inline const geometricOneField::DimensionedInternalField& operator/
+inline const geometricOneField::Internal& operator/
 (
-    const geometricOneField::DimensionedInternalField&,
+    const geometricOneField::Internal&,
     const geometricOneField&
 );
 
-inline const geometricOneField::DimensionedInternalField& operator/
+inline const geometricOneField::Internal& operator/
 (
     const geometricOneField&,
-    const geometricOneField::DimensionedInternalField&
+    const geometricOneField::Internal&
 );
 
 

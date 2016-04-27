@@ -74,7 +74,7 @@ License
 
     // Reaction source time scale
     {
-        volScalarField::DimensionedInternalField rDeltaTT
+        volScalarField::Internal rDeltaTT
         (
             mag
             (

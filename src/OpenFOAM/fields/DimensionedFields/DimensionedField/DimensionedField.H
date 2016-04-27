@@ -79,7 +79,13 @@ public:
 
     // Public typedefs
 
+        //- Type of mesh on which this DimensionedField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
+
+        //- Type of the field from which this DimensionedField is derived
+        typedef Field<Type> FieldType;
+
+        //- Component type of the elements of the field
         typedef typename Field<Type>::cmptType cmptType;
 
 

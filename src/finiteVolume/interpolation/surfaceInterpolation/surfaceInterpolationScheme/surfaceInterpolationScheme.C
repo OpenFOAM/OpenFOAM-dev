@@ -276,7 +276,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
     Field<RetType>& sfi = sf.internalField();
 
-    const typename SFType::InternalField& Sfi = Sf.internalField();
+    const typename SFType::Internal& Sfi = Sf();
 
     for (label fi=0; fi<P.size(); fi++)
     {
@@ -291,7 +291,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
     forAll(lambdas.boundaryField(), pi)
     {
         const fvsPatchScalarField& pLambda = lambdas.boundaryField()[pi];
-        const typename SFType::PatchFieldType& pSf = Sf.boundaryField()[pi];
+        const typename SFType::Patch& pSf = Sf.boundaryField()[pi];
         fvsPatchField<RetType>& psf = sfbf[pi];
 
         if (vf.boundaryField()[pi].coupled())

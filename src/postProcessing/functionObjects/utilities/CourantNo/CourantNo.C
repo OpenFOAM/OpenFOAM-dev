@@ -38,10 +38,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField::DimensionedInternalField>
+Foam::tmp<Foam::volScalarField::Internal>
 Foam::CourantNo::byRho
 (
-    const tmp<volScalarField::DimensionedInternalField>& Co
+    const tmp<volScalarField::Internal>& Co
 ) const
 {
     if (Co().dimensions() == dimDensity)

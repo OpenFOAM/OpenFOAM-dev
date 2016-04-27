@@ -95,12 +95,19 @@ public:
 
     // Public typedefs
 
+        //- Type of mesh on which this GeometricField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
+
+        //- Type of boundary mesh on which this
+        //  GeometricField::GeometricBoundaryField is instantiated
         typedef typename GeoMesh::BoundaryMesh BoundaryMesh;
 
-        typedef DimensionedField<Type, GeoMesh> DimensionedInternalField;
-        typedef Field<Type> InternalField;
-        typedef PatchField<Type> PatchFieldType;
+        //- Type of the internal field from which this GeometricField is derived
+        typedef DimensionedField<Type, GeoMesh> Internal;
+
+        //- Type of the patch field of which the
+        //  GeometricField::GeometricBoundaryField is composed
+        typedef PatchField<Type> Patch;
 
 
     class GeometricBoundaryField
@@ -126,7 +133,7 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const word&
             );
 
@@ -137,7 +144,7 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const wordList& wantedPatchTypes,
                 const wordList& actualPatchTypes = wordList()
             );
@@ -148,14 +155,14 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const PtrList<PatchField<Type>>&
             );
 
             //- Construct as copy setting the reference to the internal field
             GeometricBoundaryField
             (
-                const DimensionedInternalField&,
+                const Internal&,
                 const GeometricBoundaryField&
             );
 
@@ -173,7 +180,7 @@ public:
             GeometricBoundaryField
             (
                 const BoundaryMesh&,
-                const DimensionedInternalField&,
+                const Internal&,
                 const dictionary&
             );
 
@@ -432,23 +439,23 @@ public:
         //- Return a reference to the dimensioned internal field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        DimensionedInternalField& dimensionedInternalFieldRef();
+        Internal& dimensionedInternalFieldRef();
 
         //- Return a const-reference to the dimensioned internal field
-        inline const DimensionedInternalField& dimensionedInternalField() const;
+        inline const Internal& dimensionedInternalField() const;
 
         //- Return a const-reference to the dimensioned internal field
         //  of a "vol" field.  Useful in the formulation of source-terms
         //  for FV equations
-        inline const DimensionedInternalField& v() const;
+        inline const Internal& v() const;
 
         //- Return a reference to the internal field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        InternalField& internalField();
+        typename Internal::FieldType& internalField();
 
         //- Return a const-reference to the  internal field
-        inline const InternalField& internalField() const;
+        inline const typename Internal::FieldType& internalField() const;
 
         //- Return a reference to the boundary field
         //  Note: this increments the event counter and checks the
@@ -570,9 +577,8 @@ public:
     // Member operators
 
         //- Return a const-reference to the dimensioned internal field
-        //  of a "vol" field.  Useful in the formulation of source-terms
-        //  for FV equations
-        inline const DimensionedInternalField& operator~() const;
+        //  Useful in the formulation of source-terms for FV equations
+        inline const Internal& operator()() const;
 
         void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
         void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);

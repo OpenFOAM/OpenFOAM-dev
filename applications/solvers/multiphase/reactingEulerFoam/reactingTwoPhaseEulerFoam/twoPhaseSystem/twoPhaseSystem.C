@@ -206,7 +206,7 @@ void Foam::twoPhaseSystem::solve()
     const surfaceScalarField& phi2 = phase2_.phi();
 
     // Construct the dilatation rate source term
-    tmp<volScalarField::DimensionedInternalField> tdgdt;
+    tmp<volScalarField::Internal> tdgdt;
 
     if (phase1_.divU().valid() && phase2_.divU().valid())
     {
@@ -257,7 +257,7 @@ void Foam::twoPhaseSystem::solve()
 
     for (int acorr=0; acorr<nAlphaCorr; acorr++)
     {
-        volScalarField::DimensionedInternalField Sp
+        volScalarField::Internal Sp
         (
             IOobject
             (
@@ -269,7 +269,7 @@ void Foam::twoPhaseSystem::solve()
             dimensionedScalar("Sp", dimless/dimTime, 0.0)
         );
 
-        volScalarField::DimensionedInternalField Su
+        volScalarField::Internal Su
         (
             IOobject
             (
