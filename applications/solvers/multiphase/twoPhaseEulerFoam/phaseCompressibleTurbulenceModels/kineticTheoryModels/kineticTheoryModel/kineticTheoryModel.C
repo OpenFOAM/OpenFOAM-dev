@@ -278,7 +278,7 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
         )
     );
 
-    volScalarField::GeometricBoundaryField& bpPrime =
+    volScalarField::Boundary& bpPrime =
         tpPrime.ref().boundaryFieldRef();
 
     forAll(bpPrime, patchi)

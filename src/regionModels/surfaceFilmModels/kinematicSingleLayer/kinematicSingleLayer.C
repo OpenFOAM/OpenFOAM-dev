@@ -116,13 +116,13 @@ void kinematicSingleLayer::transferPrimaryRegionSourceFields()
         InfoInFunction << endl;
     }
 
-    volScalarField::GeometricBoundaryField& rhoSpPrimaryBf =
+    volScalarField::Boundary& rhoSpPrimaryBf =
         rhoSpPrimary_.boundaryFieldRef();
 
-    volVectorField::GeometricBoundaryField& USpPrimaryBf =
+    volVectorField::Boundary& USpPrimaryBf =
         USpPrimary_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& pSpPrimaryBf =
+    volScalarField::Boundary& pSpPrimaryBf =
         pSpPrimary_.boundaryFieldRef();
 
     // Convert accummulated source terms into per unit area per unit time

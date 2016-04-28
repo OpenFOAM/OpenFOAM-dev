@@ -76,7 +76,7 @@ void Foam::LimitedScheme<Type, Limiter, LimitFunc>::calcLimiter
         );
     }
 
-    surfaceScalarField::GeometricBoundaryField& bLim =
+    surfaceScalarField::Boundary& bLim =
         limiterField.boundaryFieldRef();
 
     forAll(bLim, patchi)

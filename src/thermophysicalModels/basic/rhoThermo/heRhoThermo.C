@@ -58,25 +58,25 @@ void Foam::heRhoThermo<BasicPsiThermo, MixtureType>::calculate()
         alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& pBf =
+    volScalarField::Boundary& pBf =
         this->p_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& TBf =
+    volScalarField::Boundary& TBf =
         this->T_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& psiBf =
+    volScalarField::Boundary& psiBf =
         this->psi_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& rhoBf =
+    volScalarField::Boundary& rhoBf =
         this->rho_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& heBf =
+    volScalarField::Boundary& heBf =
         this->he().boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& muBf =
+    volScalarField::Boundary& muBf =
         this->mu_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& alphaBf =
+    volScalarField::Boundary& alphaBf =
         this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)

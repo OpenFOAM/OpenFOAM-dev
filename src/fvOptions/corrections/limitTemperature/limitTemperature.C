@@ -95,7 +95,7 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
     // handle boundaries in the case of 'all'
     if (selectionMode_ == smAll)
     {
-        volScalarField::GeometricBoundaryField& bf = he.boundaryFieldRef();
+        volScalarField::Boundary& bf = he.boundaryFieldRef();
 
         forAll(bf, patchi)
         {

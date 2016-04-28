@@ -384,7 +384,7 @@ Foam::dynamicRefineFvMesh::refine
             }
 
             // Recalculate new boundary faces.
-            surfaceScalarField::GeometricBoundaryField& phiBf =
+            surfaceScalarField::Boundary& phiBf =
                 phi.boundaryFieldRef();
             forAll(phiBf, patchi)
             {
@@ -574,7 +574,7 @@ Foam::dynamicRefineFvMesh::unrefine
             }
 
             surfaceScalarField& phi = *iter();
-            surfaceScalarField::GeometricBoundaryField& phiBf =
+            surfaceScalarField::Boundary& phiBf =
                 phi.boundaryFieldRef();
 
             const surfaceScalarField phiU

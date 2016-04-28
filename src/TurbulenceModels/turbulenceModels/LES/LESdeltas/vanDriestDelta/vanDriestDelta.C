@@ -64,7 +64,7 @@ void Foam::LESModels::vanDriestDelta::calcDelta()
     );
 
     const fvPatchList& patches = mesh.boundary();
-    volScalarField::GeometricBoundaryField& ystarBf = ystar.boundaryFieldRef();
+    volScalarField::Boundary& ystarBf = ystar.boundaryFieldRef();
 
     forAll(patches, patchi)
     {

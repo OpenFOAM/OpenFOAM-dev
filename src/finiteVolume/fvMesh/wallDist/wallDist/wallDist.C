@@ -56,7 +56,7 @@ void Foam::wallDist::constructn() const
 
     const fvPatchList& patches = mesh().boundary();
 
-    volVectorField::GeometricBoundaryField& nbf = n_.ref().boundaryFieldRef();
+    volVectorField::Boundary& nbf = n_.ref().boundaryFieldRef();
 
     forAllConstIter(labelHashSet, patchIDs_, iter)
     {

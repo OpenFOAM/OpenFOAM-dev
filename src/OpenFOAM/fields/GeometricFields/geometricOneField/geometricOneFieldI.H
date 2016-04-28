@@ -72,10 +72,10 @@ Foam::geometricOneField::internalField() const
 }
 
 
-inline Foam::geometricOneField::GeometricBoundaryField
+inline Foam::geometricOneField::Boundary
 Foam::geometricOneField::boundaryField() const
 {
-    return GeometricBoundaryField();
+    return Boundary();
 }
 
 

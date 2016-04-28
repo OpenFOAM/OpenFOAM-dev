@@ -711,7 +711,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::internalField()
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 typename
-Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricBoundaryField&
+Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary&
 Foam::GeometricField<Type, PatchField, GeoMesh>::boundaryFieldRef()
 {
     this->setUpToDate();

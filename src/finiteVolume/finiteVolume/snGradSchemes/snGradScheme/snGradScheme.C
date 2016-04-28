@@ -139,7 +139,7 @@ snGradScheme<Type>::snGrad
     }
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& ssfbf = ssf.boundaryFieldRef();
+        Boundary& ssfbf = ssf.boundaryFieldRef();
 
     forAll(vf.boundaryField(), patchi)
     {

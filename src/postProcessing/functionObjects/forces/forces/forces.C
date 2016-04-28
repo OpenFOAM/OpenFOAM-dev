@@ -821,7 +821,7 @@ void Foam::forces::calcForcesMoment()
 
         const fvMesh& mesh = fD.mesh();
 
-        const surfaceVectorField::GeometricBoundaryField& Sfb =
+        const surfaceVectorField::Boundary& Sfb =
             mesh.Sf().boundaryField();
 
         forAllConstIter(labelHashSet, patchSet_, iter)
@@ -860,11 +860,11 @@ void Foam::forces::calcForcesMoment()
 
         const fvMesh& mesh = U.mesh();
 
-        const surfaceVectorField::GeometricBoundaryField& Sfb =
+        const surfaceVectorField::Boundary& Sfb =
             mesh.Sf().boundaryField();
 
         tmp<volSymmTensorField> tdevRhoReff = devRhoReff();
-        const volSymmTensorField::GeometricBoundaryField& devRhoReffb
+        const volSymmTensorField::Boundary& devRhoReffb
             = tdevRhoReff().boundaryField();
 
         // Scale pRef by density for incompressible simulations

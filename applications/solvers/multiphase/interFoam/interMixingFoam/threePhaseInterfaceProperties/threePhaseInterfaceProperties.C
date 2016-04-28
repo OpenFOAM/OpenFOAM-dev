@@ -41,16 +41,16 @@ const Foam::scalar Foam::threePhaseInterfaceProperties::convertToRad =
 
 void Foam::threePhaseInterfaceProperties::correctContactAngle
 (
-    surfaceVectorField::GeometricBoundaryField& nHatb
+    surfaceVectorField::Boundary& nHatb
 ) const
 {
-    const volScalarField::GeometricBoundaryField& alpha1 =
+    const volScalarField::Boundary& alpha1 =
         mixture_.alpha1().boundaryField();
-    const volScalarField::GeometricBoundaryField& alpha2 =
+    const volScalarField::Boundary& alpha2 =
         mixture_.alpha2().boundaryField();
-    const volScalarField::GeometricBoundaryField& alpha3 =
+    const volScalarField::Boundary& alpha3 =
         mixture_.alpha3().boundaryField();
-    const volVectorField::GeometricBoundaryField& U =
+    const volVectorField::Boundary& U =
         mixture_.U().boundaryField();
 
     const fvMesh& mesh = mixture_.U().mesh();

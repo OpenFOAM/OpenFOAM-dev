@@ -172,7 +172,7 @@ public:
             }
 
             typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-                GeometricBoundaryField& sfCorrbf = sfCorr.boundaryFieldRef();
+                Boundary& sfCorrbf = sfCorr.boundaryFieldRef();
 
             forAll(sfCorrbf, pi)
             {

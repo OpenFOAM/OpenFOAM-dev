@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
                 0.0*sigma.component(symmTensor::YZ)
             );
 
-            volScalarField::GeometricBoundaryField& sigmaUnBf =
+            volScalarField::Boundary& sigmaUnBf =
                 sigmaUn.boundaryFieldRef();
 
             forAll(sigmaUn.boundaryField(), patchi)

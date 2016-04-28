@@ -367,7 +367,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -460,7 +460,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -553,7 +553,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -657,7 +657,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -795,7 +795,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -880,7 +880,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -966,7 +966,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {
@@ -1061,7 +1061,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     if (mesh().moving())
     {
         typename DDt0Field<GeometricField<Type, fvPatchField, volMesh>>::
-            GeometricBoundaryField& ddt0bf = ddt0.boundaryFieldRef();
+            Boundary& ddt0bf = ddt0.boundaryFieldRef();
 
         if (evaluate(ddt0))
         {

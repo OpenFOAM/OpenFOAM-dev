@@ -173,7 +173,7 @@ wordList mixtureKEpsilon<BasicTurbulenceModel>::epsilonBoundaryTypes
     const volScalarField& epsilon
 ) const
 {
-    const volScalarField::GeometricBoundaryField& ebf = epsilon.boundaryField();
+    const volScalarField::Boundary& ebf = epsilon.boundaryField();
 
     wordList ebt = ebf.types();
 
@@ -196,8 +196,8 @@ void mixtureKEpsilon<BasicTurbulenceModel>::correctInletOutlet
     const volScalarField& refVsf
 ) const
 {
-    volScalarField::GeometricBoundaryField& bf = vsf.boundaryFieldRef();
-    const volScalarField::GeometricBoundaryField& refBf =
+    volScalarField::Boundary& bf = vsf.boundaryFieldRef();
+    const volScalarField::Boundary& refBf =
         refVsf.boundaryField();
 
     forAll(bf, patchi)

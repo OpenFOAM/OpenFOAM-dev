@@ -52,7 +52,7 @@ void processField
     if (fieldObjbjects.lookup(fieldName) != NULL)
     {
         fieldType vtf(*fieldObjbjects.lookup(fieldName), mesh);
-        const typename fieldType::GeometricBoundaryField& bf =
+        const typename fieldType::Boundary& bf =
             vtf.boundaryField();
 
         forAll(bf, patchi)

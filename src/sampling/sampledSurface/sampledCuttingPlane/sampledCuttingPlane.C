@@ -134,7 +134,7 @@ void Foam::sampledCuttingPlane::createGeometry()
         }
     }
 
-    volScalarField::GeometricBoundaryField& cellDistanceBf =
+    volScalarField::Boundary& cellDistanceBf =
         cellDistance.boundaryFieldRef();
 
     // Patch fields

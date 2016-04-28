@@ -125,7 +125,7 @@ inline Foam::Random& Foam::DSMCCloud<ParcelType>::rndGen()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::GeometricBoundaryField&
+inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::qBF()
 {
     return q_.boundaryFieldRef();
@@ -133,7 +133,7 @@ Foam::DSMCCloud<ParcelType>::qBF()
 
 
 template<class ParcelType>
-inline Foam::volVectorField::GeometricBoundaryField&
+inline Foam::volVectorField::Boundary&
 Foam::DSMCCloud<ParcelType>::fDBF()
 {
     return fD_.boundaryFieldRef();
@@ -141,7 +141,7 @@ Foam::DSMCCloud<ParcelType>::fDBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::GeometricBoundaryField&
+inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::rhoNBF()
 {
     return rhoN_.boundaryFieldRef();
@@ -149,7 +149,7 @@ Foam::DSMCCloud<ParcelType>::rhoNBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::GeometricBoundaryField&
+inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::rhoMBF()
 {
     return rhoM_.boundaryFieldRef();
@@ -157,7 +157,7 @@ Foam::DSMCCloud<ParcelType>::rhoMBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::GeometricBoundaryField&
+inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::linearKEBF()
 {
     return linearKE_.boundaryFieldRef();
@@ -165,7 +165,7 @@ Foam::DSMCCloud<ParcelType>::linearKEBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::GeometricBoundaryField&
+inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::internalEBF()
 {
     return internalE_.boundaryFieldRef();
@@ -173,7 +173,7 @@ Foam::DSMCCloud<ParcelType>::internalEBF()
 
 
 template<class ParcelType>
-inline Foam::volScalarField::GeometricBoundaryField&
+inline Foam::volScalarField::Boundary&
 Foam::DSMCCloud<ParcelType>::iDofBF()
 {
     return iDof_.boundaryFieldRef();
@@ -181,7 +181,7 @@ Foam::DSMCCloud<ParcelType>::iDofBF()
 
 
 template<class ParcelType>
-inline Foam::volVectorField::GeometricBoundaryField&
+inline Foam::volVectorField::Boundary&
 Foam::DSMCCloud<ParcelType>::momentumBF()
 {
     return momentum_.boundaryFieldRef();

@@ -124,7 +124,7 @@ void Foam::multiphaseSystem::solveAlphas()
             );
         }
 
-        surfaceScalarField::GeometricBoundaryField& alphaPhiCorrBf =
+        surfaceScalarField::Boundary& alphaPhiCorrBf =
             alphaPhiCorr.boundaryFieldRef();
 
         // Ensure that the flux at inflow BCs is preserved
@@ -266,10 +266,10 @@ void Foam::multiphaseSystem::correctContactAngle
 (
     const phaseModel& phase1,
     const phaseModel& phase2,
-    surfaceVectorField::GeometricBoundaryField& nHatb
+    surfaceVectorField::Boundary& nHatb
 ) const
 {
-    const volScalarField::GeometricBoundaryField& gbf
+    const volScalarField::Boundary& gbf
         = phase1.boundaryField();
 
     const fvBoundaryMesh& boundary = mesh_.boundary();
@@ -668,7 +668,7 @@ Foam::tmp<Foam::volVectorField> Foam::multiphaseSystem::Svm
         }
     }
 
-    volVectorField::GeometricBoundaryField& SvmBf =
+    volVectorField::Boundary& SvmBf =
         tSvm.ref().boundaryFieldRef();
 
     // Remove virtual mass at fixed-flux boundaries
@@ -718,7 +718,7 @@ Foam::multiphaseSystem::dragCoeffs() const
                 )
             ).ptr();
 
-        volScalarField::GeometricBoundaryField& Kbf = Kptr->boundaryFieldRef();
+        volScalarField::Boundary& Kbf = Kptr->boundaryFieldRef();
 
         // Remove drag at fixed-flux boundaries
         forAll(dm.phase1().phi().boundaryField(), patchi)

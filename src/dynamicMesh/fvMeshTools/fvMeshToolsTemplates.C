@@ -47,7 +47,7 @@ void Foam::fvMeshTools::addPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
+        typename GeoField::Boundary& bfld =
             fld.boundaryFieldRef();
 
         label sz = bfld.size();
@@ -101,7 +101,7 @@ void Foam::fvMeshTools::setPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
+        typename GeoField::Boundary& bfld =
             fld.boundaryFieldRef();
 
         if (patchFieldDict.found(fld.name()))
@@ -140,7 +140,7 @@ void Foam::fvMeshTools::setPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
+        typename GeoField::Boundary& bfld =
             fld.boundaryFieldRef();
 
         bfld[patchi] == value;
@@ -182,7 +182,7 @@ void Foam::fvMeshTools::reorderPatchFields
     {
         GeoField& fld = *iter();
 
-        typename GeoField::GeometricBoundaryField& bfld =
+        typename GeoField::Boundary& bfld =
             fld.boundaryFieldRef();
 
         bfld.reorder(oldToNew);

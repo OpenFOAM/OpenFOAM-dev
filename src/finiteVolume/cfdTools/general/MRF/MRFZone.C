@@ -419,7 +419,7 @@ void Foam::MRFZone::makeRelative(volVectorField& U) const
 
     // Included patches
 
-    volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {
@@ -487,7 +487,7 @@ void Foam::MRFZone::makeAbsolute(volVectorField& U) const
     }
 
     // Included patches
-    volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {
@@ -533,7 +533,7 @@ void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
     const vector Omega = this->Omega();
 
     // Included patches
-    volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
+    volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
     forAll(includedFaces_, patchi)
     {

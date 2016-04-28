@@ -98,7 +98,7 @@ Foam::extendedUpwindCellToFaceStencil::weightedSum
     // Boundaries. Either constrained or calculated so assign value
     // directly (instead of nicely using operator==)
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = sf.boundaryFieldRef();
+        Boundary& bSfCorr = sf.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {

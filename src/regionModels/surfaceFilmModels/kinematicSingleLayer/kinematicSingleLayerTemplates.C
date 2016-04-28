@@ -43,7 +43,7 @@ void kinematicSingleLayer::constrainFilmField
     const typename Type::cmptType& value
 )
 {
-    typename Type::GeometricBoundaryField& fieldBf = field.boundaryFieldRef();
+    typename Type::Boundary& fieldBf = field.boundaryFieldRef();
 
     forAll(intCoupledPatchIDs_, i)
     {

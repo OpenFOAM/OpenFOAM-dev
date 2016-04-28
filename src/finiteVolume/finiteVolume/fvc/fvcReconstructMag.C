@@ -86,7 +86,7 @@ tmp<volScalarField> reconstructMag(const surfaceScalarField& ssf)
         rf[nei] -= (Sf[facei] & (Cf[facei] - C[nei]))*ssf[facei]/magSf[facei];
     }
 
-    const surfaceScalarField::GeometricBoundaryField& bsf = ssf.boundaryField();
+    const surfaceScalarField::Boundary& bsf = ssf.boundaryField();
 
     forAll(bsf, patchi)
     {

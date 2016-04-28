@@ -338,7 +338,7 @@ int main(int argc, char *argv[])
 
     labelList viewFactorsPatches(patches.size());
 
-    const volScalarField::GeometricBoundaryField& Qrb = Qr.boundaryField();
+    const volScalarField::Boundary& Qrb = Qr.boundaryField();
 
     label count = 0;
     forAll(Qrb, patchi)
@@ -831,7 +831,7 @@ int main(int argc, char *argv[])
             dimensionedScalar("viewFactorField", dimless, 0)
         );
 
-        volScalarField::GeometricBoundaryField& viewFactorFieldBf =
+        volScalarField::Boundary& viewFactorFieldBf =
             viewFactorField.boundaryFieldRef();
 
         label compactI = 0;

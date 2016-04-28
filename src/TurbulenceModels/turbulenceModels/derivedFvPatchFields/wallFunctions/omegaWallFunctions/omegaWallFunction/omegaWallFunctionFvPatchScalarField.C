@@ -76,7 +76,7 @@ void omegaWallFunctionFvPatchScalarField::setMaster()
     const volScalarField& omega =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
 
-    const volScalarField::GeometricBoundaryField& bf = omega.boundaryField();
+    const volScalarField::Boundary& bf = omega.boundaryField();
 
     label master = -1;
     forAll(bf, patchi)
@@ -101,7 +101,7 @@ void omegaWallFunctionFvPatchScalarField::createAveragingWeights()
     const volScalarField& omega =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
 
-    const volScalarField::GeometricBoundaryField& bf = omega.boundaryField();
+    const volScalarField::Boundary& bf = omega.boundaryField();
 
     const fvMesh& mesh = omega.mesh();
 
@@ -162,7 +162,7 @@ omegaWallFunctionFvPatchScalarField::omegaPatch(const label patchi)
     const volScalarField& omega =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
 
-    const volScalarField::GeometricBoundaryField& bf = omega.boundaryField();
+    const volScalarField::Boundary& bf = omega.boundaryField();
 
     const omegaWallFunctionFvPatchScalarField& opf =
         refCast<const omegaWallFunctionFvPatchScalarField>(bf[patchi]);

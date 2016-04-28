@@ -187,7 +187,7 @@
 
     // Update the fixedFluxPressure BCs to ensure flux consistency
     {
-        surfaceScalarField::GeometricBoundaryField phib(phi.boundaryField());
+        surfaceScalarField::Boundary phib(phi.boundaryField());
         phib = 0;
         phasei = 0;
         forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)

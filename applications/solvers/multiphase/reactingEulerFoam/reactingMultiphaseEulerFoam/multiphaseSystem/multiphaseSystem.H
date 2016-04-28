@@ -91,7 +91,7 @@ class multiphaseSystem
         (
             const phaseModel& alpha1,
             const phaseModel& alpha2,
-            surfaceVectorField::GeometricBoundaryField& nHatb
+            surfaceVectorField::Boundary& nHatb
         ) const;
 
         tmp<volScalarField> K

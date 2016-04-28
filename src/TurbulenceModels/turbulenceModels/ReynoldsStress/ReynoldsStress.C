@@ -63,7 +63,7 @@ void Foam::ReynoldsStress<BasicTurbulenceModel>::correctWallShearStress
 {
     const fvPatchList& patches = this->mesh_.boundary();
 
-    volSymmTensorField::GeometricBoundaryField& RBf = R.boundaryFieldRef();
+    volSymmTensorField::Boundary& RBf = R.boundaryFieldRef();
 
     forAll(patches, patchi)
     {

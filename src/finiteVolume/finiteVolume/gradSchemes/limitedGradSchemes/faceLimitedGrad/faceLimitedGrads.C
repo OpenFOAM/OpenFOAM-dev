@@ -98,7 +98,7 @@ Foam::fv::faceLimitedGrad<Foam::scalar>::calcGrad
         );
     }
 
-    const volScalarField::GeometricBoundaryField& bsf = vsf.boundaryField();
+    const volScalarField::Boundary& bsf = vsf.boundaryField();
 
     forAll(bsf, patchi)
     {
@@ -249,7 +249,7 @@ Foam::fv::faceLimitedGrad<Foam::vector>::calcGrad
     }
 
 
-    const volVectorField::GeometricBoundaryField& bvf = vvf.boundaryField();
+    const volVectorField::Boundary& bvf = vvf.boundaryField();
 
     forAll(bvf, patchi)
     {

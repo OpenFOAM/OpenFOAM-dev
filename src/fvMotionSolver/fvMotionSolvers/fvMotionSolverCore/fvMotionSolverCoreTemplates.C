@@ -33,7 +33,7 @@ template<class Type>
 Foam::wordList Foam::fvMotionSolverCore::cellMotionBoundaryTypes
 (
     const typename GeometricField<Type, pointPatchField, pointMesh>::
-    GeometricBoundaryField& pmUbf
+    Boundary& pmUbf
 ) const
 {
     wordList cmUbf = pmUbf.types();

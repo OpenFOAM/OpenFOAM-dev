@@ -291,7 +291,7 @@ void initCreatedPatches
     {
         GeoField& field = const_cast<GeoField&>(*fieldIter());
 
-        typename GeoField::GeometricBoundaryField& fieldBf =
+        typename GeoField::Boundary& fieldBf =
             field.boundaryFieldRef();
 
         forAll(fieldBf, patchi)

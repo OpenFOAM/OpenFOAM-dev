@@ -182,7 +182,7 @@ while (pimple.correct())
         );
         surfaceScalarField phiCorrCoeff(pos(alphafBar - 0.99));
 
-        surfaceScalarField::GeometricBoundaryField& phiCorrCoeffBf =
+        surfaceScalarField::Boundary& phiCorrCoeffBf =
             phiCorrCoeff.boundaryFieldRef();
 
         forAll(mesh.boundary(), patchi)
@@ -274,7 +274,7 @@ while (pimple.correct())
 
     // Update the fixedFluxPressure BCs to ensure flux consistency
     {
-        surfaceScalarField::GeometricBoundaryField phib(phi.boundaryField());
+        surfaceScalarField::Boundary phib(phi.boundaryField());
         phib = 0;
         forAll(phases, phasei)
         {

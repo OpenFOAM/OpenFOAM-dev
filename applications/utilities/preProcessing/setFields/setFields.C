@@ -99,7 +99,7 @@ bool setCellFieldType
         }
 
         typename GeometricField<Type, fvPatchField, volMesh>::
-            GeometricBoundaryField& fieldBf = field.boundaryFieldRef();
+            Boundary& fieldBf = field.boundaryFieldRef();
 
         forAll(field.boundaryField(), patchi)
         {
@@ -277,7 +277,7 @@ bool setFaceFieldType
         Pstream::listCombineScatter(nChanged);
 
         typename GeometricField<Type, fvPatchField, volMesh>::
-            GeometricBoundaryField& fieldBf = field.boundaryFieldRef();
+            Boundary& fieldBf = field.boundaryFieldRef();
 
         // Reassign.
         forAll(field.boundaryField(), patchi)

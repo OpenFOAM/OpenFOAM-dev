@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,7 @@ private:
         (
             const phase& alpha1,
             const phase& alpha2,
-            surfaceVectorField::GeometricBoundaryField& nHatb
+            surfaceVectorField::Boundary& nHatb
         ) const;
 
         tmp<volScalarField> K(const phase& alpha1, const phase& alpha2) const;

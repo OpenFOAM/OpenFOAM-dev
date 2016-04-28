@@ -37,8 +37,8 @@ void Foam::correctUphiBCs
 
     if (mesh.changing())
     {
-        volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
-        surfaceScalarField::GeometricBoundaryField& phibf =
+        volVectorField::Boundary& Ubf = U.boundaryFieldRef();
+        surfaceScalarField::Boundary& phibf =
             phi.boundaryFieldRef();
 
         forAll(Ubf, patchi)
@@ -73,8 +73,8 @@ void Foam::correctUphiBCs
 
     if (mesh.changing())
     {
-        volVectorField::GeometricBoundaryField& Ubf = U.boundaryFieldRef();
-        surfaceScalarField::GeometricBoundaryField& phibf =
+        volVectorField::Boundary& Ubf = U.boundaryFieldRef();
+        surfaceScalarField::Boundary& phibf =
             phi.boundaryFieldRef();
 
         forAll(Ubf, patchi)

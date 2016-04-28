@@ -76,7 +76,7 @@ Foam::isoSurface::adaptPatchFields
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    typename FieldType::GeometricBoundaryField& sliceFldBf =
+    typename FieldType::Boundary& sliceFldBf =
         sliceFld.boundaryFieldRef();
 
     forAll(patches, patchi)

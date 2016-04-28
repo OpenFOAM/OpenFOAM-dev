@@ -118,7 +118,7 @@ Foam::saturationModels::polynomial::Tsat
         Tsat[celli] = C_.value(p[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& TsatBf = Tsat.boundaryFieldRef();
+    volScalarField::Boundary& TsatBf = Tsat.boundaryFieldRef();
 
     forAll(Tsat.boundaryField(), patchi)
     {

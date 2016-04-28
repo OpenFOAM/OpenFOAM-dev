@@ -1254,7 +1254,7 @@ Foam::isoSurface::isoSurface
         }
         else if (isA<emptyPolyPatch>(pp))
         {
-            typedef slicedVolVectorField::GeometricBoundaryField bType;
+            typedef slicedVolVectorField::Boundary bType;
 
             bType& bfld = const_cast<bType&>(meshC.boundaryField());
 

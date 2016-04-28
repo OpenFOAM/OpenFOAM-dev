@@ -93,7 +93,7 @@ void Foam::CentredFitData<Polynomial>::calcFit()
         >::calcFit(coeffs_[facei], stencilPoints[facei], w[facei], facei);
     }
 
-    const surfaceScalarField::GeometricBoundaryField& bw = w.boundaryField();
+    const surfaceScalarField::Boundary& bw = w.boundaryField();
 
     forAll(bw, patchi)
     {

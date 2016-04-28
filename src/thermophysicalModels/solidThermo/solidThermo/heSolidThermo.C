@@ -61,19 +61,19 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
             mixture_.Cpv(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::GeometricBoundaryField& pBf =
+    volScalarField::Boundary& pBf =
         this->p_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& TBf =
+    volScalarField::Boundary& TBf =
         this->T_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& rhoBf =
+    volScalarField::Boundary& rhoBf =
         this->rho_.boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& heBf =
+    volScalarField::Boundary& heBf =
         this->he().boundaryFieldRef();
 
-    volScalarField::GeometricBoundaryField& alphaBf =
+    volScalarField::Boundary& alphaBf =
         this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
@@ -233,7 +233,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
             ).Kappa(pCells[celli], TCells[celli]);
     }
 
-    volVectorField::GeometricBoundaryField& KappaBf = Kappa.boundaryFieldRef();
+    volVectorField::Boundary& KappaBf = Kappa.boundaryFieldRef();
 
     forAll(KappaBf, patchi)
     {

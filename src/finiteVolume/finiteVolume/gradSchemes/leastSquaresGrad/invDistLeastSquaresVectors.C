@@ -110,7 +110,7 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
     }
 
 
-    surfaceVectorField::GeometricBoundaryField& blsP =
+    surfaceVectorField::Boundary& blsP =
         pVectors_.boundaryField();
 
     forAll(blsP, patchi)

@@ -150,10 +150,10 @@ while (pimple.correct())
     surfaceScalarField phiCorrCoeff2(pos(0.01 - alphaf1Bar));
 
     {
-        surfaceScalarField::GeometricBoundaryField& phiCorrCoeff1Bf =
+        surfaceScalarField::Boundary& phiCorrCoeff1Bf =
             phiCorrCoeff1.boundaryFieldRef();
 
-        surfaceScalarField::GeometricBoundaryField& phiCorrCoeff2Bf =
+        surfaceScalarField::Boundary& phiCorrCoeff2Bf =
             phiCorrCoeff2.boundaryFieldRef();
 
         forAll(mesh.boundary(), patchi)

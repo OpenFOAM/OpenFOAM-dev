@@ -112,7 +112,7 @@ void thermoSingleLayer::correctHsForMappedT()
 {
     T_.correctBoundaryConditions();
 
-    volScalarField::GeometricBoundaryField& hsBf = hs_.boundaryFieldRef();
+    volScalarField::Boundary& hsBf = hs_.boundaryFieldRef();
 
     forAll(hsBf, patchi)
     {
@@ -173,7 +173,7 @@ void thermoSingleLayer::transferPrimaryRegionSourceFields()
 
     kinematicSingleLayer::transferPrimaryRegionSourceFields();
 
-    volScalarField::GeometricBoundaryField& hsSpPrimaryBf =
+    volScalarField::Boundary& hsSpPrimaryBf =
         hsSpPrimary_.boundaryFieldRef();
 
     // Convert accummulated source terms into per unit area per unit time

@@ -67,13 +67,13 @@ int main(int argc, char *argv[])
             )*fvc::snGrad(h)
         );
 
-        const surfaceScalarField::GeometricBoundaryField& patchHeatFlux =
+        const surfaceScalarField::Boundary& patchHeatFlux =
             heatFlux.boundaryField();
 
-        const volScalarField::GeometricBoundaryField& patchRadHeatFlux =
+        const volScalarField::Boundary& patchRadHeatFlux =
             Qr.boundaryField();
 
-        const surfaceScalarField::GeometricBoundaryField& magSf =
+        const surfaceScalarField::Boundary& magSf =
             mesh.magSf().boundaryField();
 
         Info<< "\nWall heat fluxes [W]" << endl;
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
             dimensionedScalar("wallHeatFlux", heatFlux.dimensions(), 0.0)
         );
 
-        volScalarField::GeometricBoundaryField& wallHeatFluxBf =
+        volScalarField::Boundary& wallHeatFluxBf =
             wallHeatFlux.boundaryFieldRef();
 
         forAll(wallHeatFluxBf, patchi)
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
                 )
             );
 
-            volScalarField::GeometricBoundaryField& totalWallHeatFluxBf =
+            volScalarField::Boundary& totalWallHeatFluxBf =
                 totalWallHeatFlux.boundaryFieldRef();
 
             forAll(totalWallHeatFluxBf, patchi)

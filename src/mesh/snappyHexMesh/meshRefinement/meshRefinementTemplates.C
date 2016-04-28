@@ -214,7 +214,7 @@ void Foam::meshRefinement::addPatchFields
     forAllIter(typename HashTable<GeoField*>, flds, iter)
     {
         GeoField& fld = *iter();
-        typename GeoField::GeometricBoundaryField& fldBf =
+        typename GeoField::Boundary& fldBf =
             fld.boundaryFieldRef();
 
         label sz = fldBf.size();

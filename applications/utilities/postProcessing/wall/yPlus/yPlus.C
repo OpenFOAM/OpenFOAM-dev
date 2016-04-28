@@ -57,18 +57,18 @@ void calcYPlus
     volScalarField& yPlus
 )
 {
-    volScalarField::GeometricBoundaryField d = nearWallDist(mesh).y();
+    volScalarField::Boundary d = nearWallDist(mesh).y();
 
-    const volScalarField::GeometricBoundaryField nutBf =
+    const volScalarField::Boundary nutBf =
         turbulenceModel->nut()().boundaryField();
 
-    const volScalarField::GeometricBoundaryField nuEffBf =
+    const volScalarField::Boundary nuEffBf =
         turbulenceModel->nuEff()().boundaryField();
 
-    const volScalarField::GeometricBoundaryField nuBf =
+    const volScalarField::Boundary nuBf =
         turbulenceModel->nu()().boundaryField();
 
-    volScalarField::GeometricBoundaryField& yPlusBf =
+    volScalarField::Boundary& yPlusBf =
         yPlus.boundaryFieldRef();
 
     const fvPatchList& patches = mesh.boundary();

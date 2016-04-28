@@ -116,7 +116,7 @@ public:
                 )
             );
 
-            surfaceScalarField::GeometricBoundaryField& awBf =
+            surfaceScalarField::Boundary& awBf =
                 taw.ref().boundaryFieldRef();
 
             forAll(awBf, patchi)

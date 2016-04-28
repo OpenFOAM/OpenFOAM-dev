@@ -122,7 +122,7 @@ void Foam::regionModels::regionModel1D::initialise()
 
     surfaceScalarField& nMagSf = nMagSfPtr_();
 
-    surfaceScalarField::GeometricBoundaryField nMagSfBf =
+    surfaceScalarField::Boundary nMagSfBf =
         nMagSf.boundaryFieldRef();
 
     localPyrolysisFacei = 0;

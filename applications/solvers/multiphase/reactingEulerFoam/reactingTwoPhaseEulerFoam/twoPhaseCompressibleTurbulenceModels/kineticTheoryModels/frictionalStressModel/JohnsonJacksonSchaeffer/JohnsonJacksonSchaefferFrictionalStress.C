@@ -163,7 +163,7 @@ JohnsonJacksonSchaeffer::nu
     const fvPatchList& patches = phase.mesh().boundary();
     const volVectorField& U = phase.U();
 
-    volScalarField::GeometricBoundaryField& nufBf = nuf.boundaryFieldRef();
+    volScalarField::Boundary& nufBf = nuf.boundaryFieldRef();
 
     forAll(patches, patchi)
     {

@@ -49,7 +49,7 @@ namespace Foam
 void Foam::radiation::viewFactor::initialise()
 {
     const polyBoundaryMesh& coarsePatches = coarseMesh_.boundaryMesh();
-    const volScalarField::GeometricBoundaryField& Qrp = Qr_.boundaryField();
+    const volScalarField::Boundary& Qrp = Qr_.boundaryField();
 
     label count = 0;
     forAll(Qrp, patchi)
@@ -407,7 +407,7 @@ void Foam::radiation::viewFactor::calculate()
     DynamicList<scalar> localCoarseEave(nLocalCoarseFaces_);
     DynamicList<scalar> localCoarseHoave(nLocalCoarseFaces_);
 
-    volScalarField::GeometricBoundaryField& QrBf = Qr_.boundaryFieldRef();
+    volScalarField::Boundary& QrBf = Qr_.boundaryFieldRef();
 
     forAll(selectedPatches_, i)
     {

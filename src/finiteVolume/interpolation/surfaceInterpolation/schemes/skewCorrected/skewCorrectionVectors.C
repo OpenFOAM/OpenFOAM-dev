@@ -90,7 +90,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
             Cpf - ((Sf[facei] & Cpf)/(Sf[facei] & d))*d;
     }
 
-    surfaceVectorField::GeometricBoundaryField& skewCorrVecsBf =
+    surfaceVectorField::Boundary& skewCorrVecsBf =
         skewCorrectionVectors_.boundaryFieldRef();
 
     forAll(skewCorrVecsBf, patchi)

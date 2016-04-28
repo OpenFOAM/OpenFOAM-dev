@@ -128,7 +128,7 @@ void Foam::distanceSurface::createGeometry()
         }
     }
 
-    volScalarField::GeometricBoundaryField& cellDistanceBf =
+    volScalarField::Boundary& cellDistanceBf =
         cellDistance.boundaryFieldRef();
 
     // Patch fields

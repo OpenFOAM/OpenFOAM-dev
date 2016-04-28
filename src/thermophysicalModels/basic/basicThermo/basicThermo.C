@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ const Foam::word Foam::basicThermo::dictName("thermophysicalProperties");
 
 Foam::wordList Foam::basicThermo::heBoundaryBaseTypes()
 {
-    const volScalarField::GeometricBoundaryField& tbf =
+    const volScalarField::Boundary& tbf =
         this->T_.boundaryField();
 
     wordList hbt(tbf.size(), word::null);
@@ -81,7 +81,7 @@ Foam::wordList Foam::basicThermo::heBoundaryBaseTypes()
 
 Foam::wordList Foam::basicThermo::heBoundaryTypes()
 {
-    const volScalarField::GeometricBoundaryField& tbf =
+    const volScalarField::Boundary& tbf =
         this->T_.boundaryField();
 
     wordList hbt = tbf.types();

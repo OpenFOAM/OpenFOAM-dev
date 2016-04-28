@@ -93,7 +93,7 @@ void Foam::nearWallDist::calculate()
 
 Foam::nearWallDist::nearWallDist(const Foam::fvMesh& mesh)
 :
-    volScalarField::GeometricBoundaryField
+    volScalarField::Boundary
     (
         mesh.boundary(),
         mesh.V(),           // Dummy internal field,

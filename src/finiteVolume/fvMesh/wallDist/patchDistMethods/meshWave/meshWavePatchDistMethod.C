@@ -84,7 +84,7 @@ bool Foam::patchDistMethods::meshWave::correct(volScalarField& y)
     y.transfer(wave.distance());
 
     // Transfer values on patches into boundaryField of y
-    volScalarField::GeometricBoundaryField& ybf = y.boundaryFieldRef();
+    volScalarField::Boundary& ybf = y.boundaryFieldRef();
 
     forAll(ybf, patchi)
     {
@@ -114,7 +114,7 @@ bool Foam::patchDistMethods::meshWave::correct
     // Collect pointers to data on patches
     UPtrList<vectorField> patchData(mesh_.boundaryMesh().size());
 
-    volVectorField::GeometricBoundaryField& nbf = n.boundaryFieldRef();
+    volVectorField::Boundary& nbf = n.boundaryFieldRef();
 
     forAll(nbf, patchi)
     {
@@ -136,7 +136,7 @@ bool Foam::patchDistMethods::meshWave::correct
     n.transfer(wave.cellData());
 
     // Transfer values on patches into boundaryField of y and n
-    volScalarField::GeometricBoundaryField& ybf = y.boundaryFieldRef();
+    volScalarField::Boundary& ybf = y.boundaryFieldRef();
 
     forAll(ybf, patchi)
     {

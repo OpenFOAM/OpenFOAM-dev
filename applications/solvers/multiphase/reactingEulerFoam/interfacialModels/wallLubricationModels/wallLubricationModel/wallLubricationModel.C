@@ -50,7 +50,7 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModel::zeroGradWalls
     volVectorField& Fi = tFi.ref();
     const fvPatchList& patches =  Fi.mesh().boundary();
 
-    volVectorField::GeometricBoundaryField& FiBf = Fi.boundaryFieldRef();
+    volVectorField::Boundary& FiBf = Fi.boundaryFieldRef();
 
     forAll(patches, patchi)
     {

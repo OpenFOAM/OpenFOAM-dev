@@ -330,7 +330,7 @@ void Foam::meshToMesh::mapSrcToTgt
     const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& resultBf = result.boundaryFieldRef();
+        Boundary& resultBf = result.boundaryFieldRef();
 
     forAll(AMIList, i)
     {
@@ -398,7 +398,7 @@ Foam::meshToMesh::mapSrcToTgt
     const fvMesh& tgtMesh = static_cast<const fvMesh&>(tgtRegion_);
 
     const fvBoundaryMesh& tgtBm = tgtMesh.boundary();
-    const typename fieldType::GeometricBoundaryField& srcBfld =
+    const typename fieldType::Boundary& srcBfld =
         field.boundaryField();
 
     PtrList<fvPatchField<Type>> tgtPatchFields(tgtBm.size());
@@ -587,7 +587,7 @@ Foam::meshToMesh::mapTgtToSrc
     const fvMesh& srcMesh = static_cast<const fvMesh&>(srcRegion_);
 
     const fvBoundaryMesh& srcBm = srcMesh.boundary();
-    const typename fieldType::GeometricBoundaryField& tgtBfld =
+    const typename fieldType::Boundary& tgtBfld =
         field.boundaryField();
 
     PtrList<fvPatchField<Type>> srcPatchFields(srcBm.size());

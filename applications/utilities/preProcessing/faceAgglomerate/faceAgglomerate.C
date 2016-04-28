@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
             dimensionedScalar("facesAgglomeration", dimless, 0)
         );
 
-        volScalarField::GeometricBoundaryField& facesAgglomerationBf =
+        volScalarField::Boundary& facesAgglomerationBf =
             facesAgglomeration.boundaryFieldRef();
 
         label coarsePatchIndex = 0;

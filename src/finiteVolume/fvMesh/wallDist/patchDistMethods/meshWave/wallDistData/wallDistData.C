@@ -83,7 +83,7 @@ void Foam::wallDistData<TransferType>::correct()
     UPtrList<Field<Type>> patchData(mesh.boundaryMesh().size());
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& fieldBf = field_.boundaryFieldRef();
+        Boundary& fieldBf = field_.boundaryFieldRef();
 
     forAll(fieldBf, patchi)
     {
@@ -105,7 +105,7 @@ void Foam::wallDistData<TransferType>::correct()
     field_.transfer(wave.cellData());
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bf = boundaryFieldRef();
+        Boundary& bf = boundaryFieldRef();
 
     // Transfer values on patches into boundaryField of *this and field_
     forAll(bf, patchi)

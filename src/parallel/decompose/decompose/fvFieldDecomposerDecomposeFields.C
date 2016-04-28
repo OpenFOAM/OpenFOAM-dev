@@ -83,7 +83,7 @@ Foam::fvFieldDecomposer::decomposeField
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bf = resF.boundaryFieldRef();
+        Boundary& bf = resF.boundaryFieldRef();
 
     forAll(bf, patchi)
     {
@@ -253,7 +253,7 @@ Foam::fvFieldDecomposer::decomposeField
     //  constructor (with reference to the now correct internal field)
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bf = resF.boundaryFieldRef();
+        Boundary& bf = resF.boundaryFieldRef();
 
     forAll(boundaryAddressing_, patchi)
     {

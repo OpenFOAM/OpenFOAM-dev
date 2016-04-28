@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::setMaster()
     const volScalarField& epsilon =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
 
-    const volScalarField::GeometricBoundaryField& bf = epsilon.boundaryField();
+    const volScalarField::Boundary& bf = epsilon.boundaryField();
 
     label master = -1;
     forAll(bf, patchi)
@@ -97,7 +97,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
     const volScalarField& epsilon =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
 
-    const volScalarField::GeometricBoundaryField& bf = epsilon.boundaryField();
+    const volScalarField::Boundary& bf = epsilon.boundaryField();
 
     const fvMesh& mesh = epsilon.mesh();
 
@@ -157,7 +157,7 @@ Foam::epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
     const volScalarField& epsilon =
         static_cast<const volScalarField&>(this->dimensionedInternalField());
 
-    const volScalarField::GeometricBoundaryField& bf = epsilon.boundaryField();
+    const volScalarField::Boundary& bf = epsilon.boundaryField();
 
     const epsilonWallFunctionFvPatchScalarField& epf =
         refCast<const epsilonWallFunctionFvPatchScalarField>(bf[patchi]);

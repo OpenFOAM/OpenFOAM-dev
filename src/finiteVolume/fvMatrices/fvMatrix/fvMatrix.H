@@ -376,7 +376,7 @@ public:
             void boundaryManipulate
             (
                 typename GeometricField<Type, fvPatchField, volMesh>::
-                    GeometricBoundaryField& values
+                    Boundary& values
             );
 
             //- Construct and return the solver

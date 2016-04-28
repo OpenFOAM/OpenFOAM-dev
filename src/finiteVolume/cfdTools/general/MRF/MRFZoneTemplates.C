@@ -154,7 +154,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
         phii[facei] += rho[facei]*(Omega ^ (Cfi[facei] - origin_)) & Sfi[facei];
     }
 
-    surfaceScalarField::GeometricBoundaryField& phibf = phi.boundaryFieldRef();
+    surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
 
     // Included patches

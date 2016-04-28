@@ -97,7 +97,7 @@ reconstruct
     }
 
     const typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-    GeometricBoundaryField& bsf = ssf.boundaryField();
+    Boundary& bsf = ssf.boundaryField();
 
     forAll(bsf, patchi)
     {

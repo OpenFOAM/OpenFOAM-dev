@@ -61,7 +61,7 @@ public:
 
         typedef oneField Internal;
         typedef oneField Patch;
-        typedef oneFieldField GeometricBoundaryField;
+        typedef oneFieldField Boundary;
         typedef one cmptType;
 
     // Constructors
@@ -87,7 +87,7 @@ public:
 
         inline typename Internal::FieldType internalField() const;
 
-        inline GeometricBoundaryField boundaryField() const;
+        inline Boundary boundaryField() const;
 };
 
 

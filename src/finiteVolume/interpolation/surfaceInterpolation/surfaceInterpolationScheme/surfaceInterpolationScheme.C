@@ -191,7 +191,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
     // Interpolate across coupled patches using given lambdas and ys
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& sfbf = sf.boundaryFieldRef();
+        Boundary& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
     {
@@ -286,7 +286,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
     // Interpolate across coupled patches using given lambdas
 
     typename GeometricField<RetType, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& sfbf = sf.boundaryFieldRef();
+        Boundary& sfbf = sf.boundaryFieldRef();
 
     forAll(lambdas.boundaryField(), pi)
     {

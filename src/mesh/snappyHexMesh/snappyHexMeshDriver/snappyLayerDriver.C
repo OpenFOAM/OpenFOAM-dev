@@ -2658,7 +2658,7 @@ bool Foam::snappyLayerDriver::writeLayerData
             );
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
-            volScalarField::GeometricBoundaryField& fldBf =
+            volScalarField::Boundary& fldBf =
                 fld.boundaryFieldRef();
 
             forAll(patchIDs, i)
@@ -2697,7 +2697,7 @@ bool Foam::snappyLayerDriver::writeLayerData
 
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
-            volScalarField::GeometricBoundaryField& fldBf =
+            volScalarField::Boundary& fldBf =
                 fld.boundaryFieldRef();
 
             forAll(patchIDs, i)
@@ -2732,7 +2732,7 @@ bool Foam::snappyLayerDriver::writeLayerData
 
             const polyBoundaryMesh& pbm = mesh.boundaryMesh();
 
-            volScalarField::GeometricBoundaryField& fldBf =
+            volScalarField::Boundary& fldBf =
                 fld.boundaryFieldRef();
 
             forAll(patchIDs, i)

@@ -815,10 +815,10 @@ void Foam::multiphaseMixtureThermo::correctContactAngle
 (
     const phaseModel& alpha1,
     const phaseModel& alpha2,
-    surfaceVectorField::GeometricBoundaryField& nHatb
+    surfaceVectorField::Boundary& nHatb
 ) const
 {
-    const volScalarField::GeometricBoundaryField& gbf
+    const volScalarField::Boundary& gbf
         = alpha1.boundaryField();
 
     const fvBoundaryMesh& boundary = mesh_.boundary();

@@ -156,7 +156,7 @@ public:
             clippedLinearWeights.internalField() =
                 max(min(cdWeights.internalField(), 1 - wfLimit_), wfLimit_);
 
-            surfaceScalarField::GeometricBoundaryField& clwbf =
+            surfaceScalarField::Boundary& clwbf =
                 clippedLinearWeights.boundaryFieldRef();
 
             forAll(mesh.boundary(), patchi)

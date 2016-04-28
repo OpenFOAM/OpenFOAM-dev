@@ -44,16 +44,16 @@ void Foam::constrainPressure
 {
     const fvMesh& mesh = p.mesh();
 
-    volScalarField::GeometricBoundaryField& pBf = p.boundaryFieldRef();
+    volScalarField::Boundary& pBf = p.boundaryFieldRef();
 
-    const volVectorField::GeometricBoundaryField& UBf = U.boundaryField();
-    const surfaceScalarField::GeometricBoundaryField& phiHbyABf =
+    const volVectorField::Boundary& UBf = U.boundaryField();
+    const surfaceScalarField::Boundary& phiHbyABf =
         phiHbyA.boundaryField();
-    const typename RAUType::GeometricBoundaryField& rhorAUBf =
+    const typename RAUType::Boundary& rhorAUBf =
         rhorAU.boundaryField();
-    const surfaceVectorField::GeometricBoundaryField& SfBf =
+    const surfaceVectorField::Boundary& SfBf =
         mesh.Sf().boundaryField();
-    const surfaceScalarField::GeometricBoundaryField& magSfBf =
+    const surfaceScalarField::Boundary& magSfBf =
         mesh.magSf().boundaryField();
 
     forAll(pBf, patchi)

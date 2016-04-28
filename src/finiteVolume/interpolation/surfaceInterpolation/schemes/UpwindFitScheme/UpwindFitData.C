@@ -75,7 +75,7 @@ void Foam::UpwindFitData<Polynomial>::calcFit()
     const fvMesh& mesh = this->mesh();
 
     const surfaceScalarField& w = mesh.surfaceInterpolation::weights();
-    const surfaceScalarField::GeometricBoundaryField& bw = w.boundaryField();
+    const surfaceScalarField::Boundary& bw = w.boundaryField();
 
     // Owner stencil weights
     // ~~~~~~~~~~~~~~~~~~~~~

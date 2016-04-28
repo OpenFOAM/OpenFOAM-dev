@@ -132,7 +132,7 @@ void MapGeometricFields
 
             // Map the patch fields
             typename GeometricField<Type, PatchField, GeoMesh>
-            ::GeometricBoundaryField& bfield = field.boundaryFieldRef();
+            ::Boundary& bfield = field.boundaryFieldRef();
             forAll(bfield, patchi)
             {
                 // Cannot check sizes for patch fields because of

@@ -65,7 +65,7 @@ protected:
         wordList cellMotionBoundaryTypes
         (
             const typename GeometricField<Type, pointPatchField, pointMesh>::
-            GeometricBoundaryField& pmUbf
+            Boundary& pmUbf
         ) const;
 
 public:

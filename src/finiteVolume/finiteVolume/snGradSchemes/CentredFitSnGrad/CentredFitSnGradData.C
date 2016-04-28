@@ -232,8 +232,8 @@ void Foam::CentredFitSnGradData<Polynomial>::calcFit()
         );
     }
 
-    const surfaceScalarField::GeometricBoundaryField& bw = w.boundaryField();
-    const surfaceScalarField::GeometricBoundaryField& bdC = dC.boundaryField();
+    const surfaceScalarField::Boundary& bw = w.boundaryField();
+    const surfaceScalarField::Boundary& bdC = dC.boundaryField();
 
     forAll(bw, patchi)
     {

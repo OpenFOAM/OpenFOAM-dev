@@ -114,7 +114,7 @@ void Foam::leastSquaresVectors::calcLeastSquaresVectors()
     }
 
 
-    surfaceVectorField::GeometricBoundaryField& pVectorsBf =
+    surfaceVectorField::Boundary& pVectorsBf =
         pVectors_.boundaryFieldRef();
 
     forAll(pVectorsBf, patchi)

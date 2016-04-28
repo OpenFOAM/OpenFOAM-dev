@@ -36,7 +36,7 @@ void Foam::BlendedInterfacialModel<modelType>::correctFixedFluxBCs
     GeometricField& field
 ) const
 {
-    typename GeometricField::GeometricBoundaryField& fieldBf =
+    typename GeometricField::Boundary& fieldBf =
         field.boundaryFieldRef();
 
     forAll(pair_.phase1().phi().boundaryField(), patchi)

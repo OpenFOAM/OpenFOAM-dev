@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
 
         V.dimensionedInternalFieldRef() = mesh.V();
 
-        volScalarField::GeometricBoundaryField& Vbf = V.boundaryFieldRef();
+        volScalarField::Boundary& Vbf = V.boundaryFieldRef();
 
         forAll(Vbf, patchi)
         {

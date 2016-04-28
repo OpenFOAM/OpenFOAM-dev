@@ -145,7 +145,7 @@ void Foam::MULES::limiterCorr
 )
 {
     const scalarField& psiIf = psi;
-    const volScalarField::GeometricBoundaryField& psiBf = psi.boundaryField();
+    const volScalarField::Boundary& psiBf = psi.boundaryField();
 
     const fvMesh& mesh = psi.mesh();
 
@@ -171,11 +171,11 @@ void Foam::MULES::limiterCorr
     tmp<volScalarField::Internal> tVsc = mesh.Vsc();
     const scalarField& V = tVsc();
 
-    const surfaceScalarField::GeometricBoundaryField& phiBf =
+    const surfaceScalarField::Boundary& phiBf =
         phi.boundaryField();
 
     const scalarField& phiCorrIf = phiCorr;
-    const surfaceScalarField::GeometricBoundaryField& phiCorrBf =
+    const surfaceScalarField::Boundary& phiCorrBf =
         phiCorr.boundaryField();
 
     slicedSurfaceScalarField lambda
@@ -196,7 +196,7 @@ void Foam::MULES::limiterCorr
     );
 
     scalarField& lambdaIf = lambda;
-    surfaceScalarField::GeometricBoundaryField& lambdaBf =
+    surfaceScalarField::Boundary& lambdaBf =
         lambda.boundaryFieldRef();
 
     scalarField psiMaxn(psiIf.size(), psiMin);

@@ -104,7 +104,7 @@ correction
 
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& bSfCorr = tsfCorr.ref().boundaryFieldRef();
+        Boundary& bSfCorr = tsfCorr.ref().boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {

@@ -47,7 +47,7 @@ bool reusable(const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf)
         {
             const GeometricField<Type, PatchField, GeoMesh>& gf = tgf();
             const typename GeometricField<Type, PatchField, GeoMesh>::
-                GeometricBoundaryField& gbf = gf.boundaryField();
+                Boundary& gbf = gf.boundaryField();
 
             forAll(gbf, patchi)
             {

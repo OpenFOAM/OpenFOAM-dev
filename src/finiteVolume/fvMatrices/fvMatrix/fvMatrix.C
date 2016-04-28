@@ -678,7 +678,7 @@ template<class Type>
 void Foam::fvMatrix<Type>::boundaryManipulate
 (
     typename GeometricField<Type, fvPatchField, volMesh>::
-        GeometricBoundaryField& bFields
+        Boundary& bFields
 )
 {
     forAll(bFields, patchi)
@@ -929,7 +929,7 @@ flux() const
     }
 
     typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        GeometricBoundaryField& ffbf = fieldFlux.boundaryFieldRef();
+        Boundary& ffbf = fieldFlux.boundaryFieldRef();
 
     forAll(ffbf, patchi)
     {
