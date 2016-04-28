@@ -87,7 +87,10 @@ int main(int argc, char *argv[])
 
         surfaceFilm.evolve();
 
-        pyrolysis.evolve();
+        if(solvePyrolysisRegion)
+        {
+            pyrolysis.evolve();
+        }
 
         if (solvePrimaryRegion)
         {

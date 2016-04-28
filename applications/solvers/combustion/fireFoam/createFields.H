@@ -121,6 +121,11 @@ Switch solvePrimaryRegion
     additionalControlsDict.lookup("solvePrimaryRegion")
 );
 
+Switch solvePyrolysisRegion
+(
+    additionalControlsDict.lookupOrDefault<bool>("solvePyrolysisRegion", true)
+);
+
 volScalarField dQ
 (
     IOobject
