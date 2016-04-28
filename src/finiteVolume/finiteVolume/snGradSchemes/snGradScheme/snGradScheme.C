@@ -126,7 +126,7 @@ snGradScheme<Type>::snGrad
     GeometricField<Type, fvsPatchField, surfaceMesh>& ssf = tsf.ref();
 
     // set reference to difference factors array
-    const scalarField& deltaCoeffs = tdeltaCoeffs().internalField();
+    const scalarField& deltaCoeffs = tdeltaCoeffs();
 
     // owner/neighbour addressing
     const labelUList& owner = mesh.owner();

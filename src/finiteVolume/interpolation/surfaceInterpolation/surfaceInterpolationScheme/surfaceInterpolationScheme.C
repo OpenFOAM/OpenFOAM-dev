@@ -157,9 +157,9 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
     const surfaceScalarField& lambdas = tlambdas();
     const surfaceScalarField& ys = tys();
 
-    const Field<Type>& vfi = vf.internalField();
-    const scalarField& lambda = lambdas.internalField();
-    const scalarField& y = ys.internalField();
+    const Field<Type>& vfi = vf;
+    const scalarField& lambda = lambdas;
+    const scalarField& y = ys;
 
     const fvMesh& mesh = vf.mesh();
     const labelUList& P = mesh.owner();
@@ -251,8 +251,8 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
     const surfaceScalarField& lambdas = tlambdas();
 
-    const Field<Type>& vfi = vf.internalField();
-    const scalarField& lambda = lambdas.internalField();
+    const Field<Type>& vfi = vf;
+    const scalarField& lambda = lambdas;
 
     const fvMesh& mesh = vf.mesh();
     const labelUList& P = mesh.owner();

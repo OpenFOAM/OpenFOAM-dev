@@ -51,8 +51,8 @@ void Foam::meshToMesh0::calculateInverseDistanceWeights() const
 
     // get reference to source mesh data
     const labelListList& cc = fromMesh_.cellCells();
-    const vectorField& centreFrom = fromMesh_.C().internalField();
-    const vectorField& centreTo = toMesh_.C().internalField();
+    const vectorField& centreFrom = fromMesh_.C();
+    const vectorField& centreTo = toMesh_.C();
 
     forAll(cellAddressing_, celli)
     {

@@ -320,7 +320,7 @@ void Foam::MRFZone::addCoriolis
 
     const labelList& cells = mesh_.cellZones()[cellZoneID_];
     vectorField& ddtUc = ddtU.internalField();
-    const vectorField& Uc = U.internalField();
+    const vectorField& Uc = U;
 
     const vector Omega = this->Omega();
 

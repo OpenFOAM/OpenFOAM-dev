@@ -1081,8 +1081,8 @@ void kinematicSingleLayer::info()
 {
     Info<< "\nSurface film: " << type() << endl;
 
-    const scalarField& deltaInternal = delta_.internalField();
-    const vectorField& Uinternal = U_.internalField();
+    const scalarField& deltaInternal = delta_;
+    const vectorField& Uinternal = U_;
     scalar addedMassTotal = 0.0;
     outputProperties().readIfPresent("addedMassTotal", addedMassTotal);
     addedMassTotal += returnReduce(addedMassTotal_, sumOp<scalar>());

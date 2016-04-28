@@ -32,9 +32,9 @@ License
 template<class BasicPsiThermo, class MixtureType>
 void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 {
-    const scalarField& hCells = this->he_.internalField();
-    const scalarField& heuCells = this->heu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& hCells = this->he_;
+    const scalarField& heuCells = this->heu_;
+    const scalarField& pCells = this->p_;
 
     scalarField& TCells = this->T_.internalField();
     scalarField& TuCells = this->Tu_.internalField();
@@ -177,8 +177,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
     )
 {
     scalarField& heuCells = this->heu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TuCells = this->Tu_.internalField();
+    const scalarField& pCells = this->p_;
+    const scalarField& TuCells = this->Tu_;
 
     forAll(heuCells, celli)
     {
@@ -309,9 +309,9 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
 
     volScalarField& Tb_ = tTb.ref();
     scalarField& TbCells = Tb_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TCells = this->T_.internalField();
-    const scalarField& hCells = this->he_.internalField();
+    const scalarField& pCells = this->p_;
+    const scalarField& TCells = this->T_;
+    const scalarField& hCells = this->he_;
 
     forAll(TbCells, celli)
     {
@@ -369,8 +369,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
 
     volScalarField& psiu = tpsiu.ref();
     scalarField& psiuCells = psiu.internalField();
-    const scalarField& TuCells = this->Tu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& TuCells = this->Tu_;
+    const scalarField& pCells = this->p_;
 
     forAll(psiuCells, celli)
     {
@@ -424,8 +424,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
     volScalarField& psib = tpsib.ref();
     scalarField& psibCells = psib.internalField();
     const volScalarField Tb_(Tb());
-    const scalarField& TbCells = Tb_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& TbCells = Tb_;
+    const scalarField& pCells = this->p_;
 
     forAll(psibCells, celli)
     {
@@ -478,8 +478,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
 
     volScalarField& muu_ = tmuu.ref();
     scalarField& muuCells = muu_.internalField();
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TuCells = this->Tu_.internalField();
+    const scalarField& pCells = this->p_;
+    const scalarField& TuCells = this->Tu_;
 
     forAll(muuCells, celli)
     {
@@ -537,8 +537,8 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
     volScalarField& mub_ = tmub.ref();
     scalarField& mubCells = mub_.internalField();
     const volScalarField Tb_(Tb());
-    const scalarField& pCells = this->p_.internalField();
-    const scalarField& TbCells = Tb_.internalField();
+    const scalarField& pCells = this->p_;
+    const scalarField& TbCells = Tb_;
 
     forAll(mubCells, celli)
     {

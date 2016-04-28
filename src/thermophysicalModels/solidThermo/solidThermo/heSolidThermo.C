@@ -33,8 +33,8 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 {
     scalarField& TCells = this->T_.internalField();
 
-    const scalarField& hCells = this->he_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& hCells = this->he_;
+    const scalarField& pCells = this->p_;
     scalarField& rhoCells = this->rho_.internalField();
     scalarField& alphaCells = this->alpha_.internalField();
 
@@ -219,8 +219,8 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
 
     volVectorField& Kappa = tKappa.ref();
     vectorField& KappaCells = Kappa.internalField();
-    const scalarField& TCells = this->T_.internalField();
-    const scalarField& pCells = this->p_.internalField();
+    const scalarField& TCells = this->T_;
+    const scalarField& pCells = this->p_;
 
     forAll(KappaCells, celli)
     {

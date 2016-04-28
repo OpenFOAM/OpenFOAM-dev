@@ -108,8 +108,8 @@ tmp<volScalarField> primaryRadiation::Shs()
     );
 
     scalarField& Shs = tShs.ref();
-    const scalarField& QinP = QinPrimary_.internalField();
-    const scalarField& alpha = owner_.alpha().internalField();
+    const scalarField& QinP = QinPrimary_;
+    const scalarField& alpha = owner_.alpha();
 
     Shs = QinP*alpha;
 
