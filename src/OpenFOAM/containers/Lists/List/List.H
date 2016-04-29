@@ -61,8 +61,10 @@ template<class T> Istream& operator>>(Istream&, List<T>&);
 template<class T, unsigned Size> class FixedList;
 template<class T> class PtrList;
 template<class T> class SLList;
+
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-    class DynamicList;
+class DynamicList;
+
 template<class T> class SortableList;
 template<class T> class IndirectList;
 template<class T> class UIndirectList;
@@ -119,10 +121,6 @@ public:
 
         //- Construct as subset.
         List(const UList<T>&, const labelUList& mapAddressing);
-
-        //- Construct given start and end iterators.
-        template<class InputIterator>
-        List(InputIterator first, InputIterator last);
 
         //- Construct as copy of FixedList<T, Size>
         template<unsigned Size>
@@ -262,7 +260,7 @@ List<T> readList(Istream&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "ListI.H"
+#include "ListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

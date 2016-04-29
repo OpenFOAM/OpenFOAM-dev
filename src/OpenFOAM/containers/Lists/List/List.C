@@ -25,7 +25,6 @@ License
 
 #include "List.H"
 #include "ListLoopM.H"
-
 #include "FixedList.H"
 #include "PtrList.H"
 #include "SLList.H"
@@ -185,37 +184,6 @@ Foam::List<T>::List(const UList<T>& a, const labelUList& map)
         {
             this->v_[i] = a[map[i]];
         }
-    }
-}
-
-
-template<class T>
-template<class InputIterator>
-Foam::List<T>::List(InputIterator first, InputIterator last)
-{
-    label s = 0;
-    for
-    (
-        InputIterator iter = first;
-        iter != last;
-        ++iter
-    )
-    {
-        s++;
-    }
-
-    setSize(s);
-
-    s = 0;
-
-    for
-    (
-        InputIterator iter = first;
-        iter != last;
-        ++iter
-    )
-    {
-        this->operator[](s++) = *iter;
     }
 }
 
@@ -533,6 +501,7 @@ void Foam::List<T>::operator=(const BiIndirectList<T>& lst)
         this->operator[](i) = lst[i];
     }
 }
+
 
 // * * * * * * * * * * * * * * * *  IOStream operators * * * * * * * * * * * //
 
