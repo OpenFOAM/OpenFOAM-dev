@@ -397,14 +397,12 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
             new GeometricField<Type, fvPatchField, volMesh>
             (
                 ddtIOobject,
-                mesh(),
-                rDtCoef.dimensions()*vf.dimensions(),
                 (
-                    rDtCoef.value()*
+                    rDtCoef*
                     (
-                        mesh().V()*vf.internalField()
-                      - mesh().V0()*vf.oldTime().internalField()
-                    ) - mesh().V0()*offCentre_(ddt0.internalField())
+                        mesh().V()*vf
+                      - mesh().V0()*vf.oldTime()
+                    ) - mesh().V0()*offCentre_(ddt0()())
                 )/mesh().V(),
                 rDtCoef.value()*
                 (
