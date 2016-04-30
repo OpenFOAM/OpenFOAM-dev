@@ -42,7 +42,7 @@ Foam::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
             << " average: " << gAverage(vsf.internalField())
             << endl;
 
-        vsf.internalField() = max
+        vsf.internalFieldRef() = max
         (
             max
             (

@@ -80,7 +80,7 @@ void Foam::AveragingMethods::Basic<Type>::updateGrad()
         dimensioned<Type>("zero", dimless, Zero),
         zeroGradientFvPatchField<Type>::typeName
     );
-    tempData.internalField() = data_;
+    tempData.internalFieldRef() = data_;
     tempData.correctBoundaryConditions();
     dataGrad_ = fvc::grad(tempData)->internalField();
 }

@@ -43,7 +43,7 @@ void stabilise
     const dimensioned<scalar>& ds
 )
 {
-    stabilise(result.internalField(), gsf.internalField(), ds.value());
+    stabilise(result.internalFieldRef(), gsf.internalField(), ds.value());
     stabilise(result.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
@@ -126,7 +126,7 @@ void pow
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2
 )
 {
-    pow(Pow.internalField(), gsf1.internalField(), gsf2.internalField());
+    pow(Pow.internalFieldRef(), gsf1.internalField(), gsf2.internalField());
     pow(Pow.boundaryFieldRef(), gsf1.boundaryField(), gsf2.boundaryField());
 }
 
@@ -269,7 +269,7 @@ void pow
     const dimensioned<scalar>& ds
 )
 {
-    pow(tPow.internalField(), gsf.internalField(), ds.value());
+    pow(tPow.internalFieldRef(), gsf.internalField(), ds.value());
     pow(tPow.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
@@ -358,7 +358,7 @@ void pow
     const GeometricField<scalar, PatchField, GeoMesh>& gsf
 )
 {
-    pow(tPow.internalField(), ds.value(), gsf.internalField());
+    pow(tPow.internalFieldRef(), ds.value(), gsf.internalField());
     pow(tPow.boundaryFieldRef(), ds.value(), gsf.boundaryField());
 }
 
@@ -450,7 +450,7 @@ void atan2
     const GeometricField<scalar, PatchField, GeoMesh>& gsf2
 )
 {
-    atan2(Atan2.internalField(), gsf1.internalField(), gsf2.internalField());
+    atan2(Atan2.internalFieldRef(), gsf1.internalField(), gsf2.internalField());
     atan2(Atan2.boundaryFieldRef(), gsf1.boundaryField(), gsf2.boundaryField());
 }
 
@@ -577,7 +577,7 @@ void atan2
     const dimensioned<scalar>& ds
 )
 {
-    atan2(tAtan2.internalField(), gsf.internalField(), ds.value());
+    atan2(tAtan2.internalFieldRef(), gsf.internalField(), ds.value());
     atan2(tAtan2.boundaryFieldRef(), gsf.boundaryField(), ds.value());
 }
 
@@ -666,7 +666,7 @@ void atan2
     const GeometricField<scalar, PatchField, GeoMesh>& gsf
 )
 {
-    atan2(tAtan2.internalField(), ds.value(), gsf.internalField());
+    atan2(tAtan2.internalFieldRef(), ds.value(), gsf.internalField());
     atan2(tAtan2.boundaryFieldRef(), ds.value(), gsf.boundaryField());
 }
 
@@ -799,7 +799,7 @@ void func                                                                      \
     const GeometricField<scalar, PatchField, GeoMesh>& gsf1                    \
 )                                                                              \
 {                                                                              \
-    func(gsf.internalField(), n, gsf1.internalField());                        \
+    func(gsf.internalFieldRef(), n, gsf1.internalField());                     \
     func(gsf.boundaryFieldRef(), n, gsf1.boundaryField());                     \
 }                                                                              \
                                                                                \

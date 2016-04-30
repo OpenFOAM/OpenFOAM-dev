@@ -149,7 +149,7 @@ Foam::limitedSurfaceInterpolationScheme<Type>::weights
     // from which the weight is calculated using the limiter value
     surfaceScalarField& Weights = tLimiter.ref();
 
-    scalarField& pWeights = Weights.internalField();
+    scalarField& pWeights = Weights.internalFieldRef();
 
     forAll(pWeights, face)
     {

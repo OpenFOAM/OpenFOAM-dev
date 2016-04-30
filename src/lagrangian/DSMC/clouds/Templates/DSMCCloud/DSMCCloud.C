@@ -202,7 +202,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
         mostAbundantType
     );
 
-    sigmaTcRMax_.internalField() = cP.sigmaT()*maxwellianMostProbableSpeed
+    sigmaTcRMax_.internalFieldRef() = cP.sigmaT()*maxwellianMostProbableSpeed
     (
         temperature,
         cP.mass()
@@ -414,13 +414,13 @@ void Foam::DSMCCloud<ParcelType>::resetFields()
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::calculateFields()
 {
-    scalarField& rhoN = rhoN_.internalField();
-    scalarField& rhoM = rhoM_.internalField();
-    scalarField& dsmcRhoN = dsmcRhoN_.internalField();
-    scalarField& linearKE = linearKE_.internalField();
-    scalarField& internalE = internalE_.internalField();
-    scalarField& iDof = iDof_.internalField();
-    vectorField& momentum = momentum_.internalField();
+    scalarField& rhoN = rhoN_.internalFieldRef();
+    scalarField& rhoM = rhoM_.internalFieldRef();
+    scalarField& dsmcRhoN = dsmcRhoN_.internalFieldRef();
+    scalarField& linearKE = linearKE_.internalFieldRef();
+    scalarField& internalE = internalE_.internalFieldRef();
+    scalarField& iDof = iDof_.internalFieldRef();
+    vectorField& momentum = momentum_.internalFieldRef();
 
     forAllConstIter(typename DSMCCloud<ParcelType>, *this, iter)
     {

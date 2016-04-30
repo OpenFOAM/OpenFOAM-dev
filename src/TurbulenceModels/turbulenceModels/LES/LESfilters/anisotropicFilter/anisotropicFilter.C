@@ -63,7 +63,7 @@ Foam::anisotropicFilter::anisotropicFilter
 {
     for (direction d=0; d<vector::nComponents; d++)
     {
-        coeff_.internalField().replace
+        coeff_.internalFieldRef().replace
         (
             d,
             (1/widthCoeff_)*
@@ -100,7 +100,7 @@ Foam::anisotropicFilter::anisotropicFilter
 {
     for (direction d=0; d<vector::nComponents; d++)
     {
-        coeff_.internalField().replace
+        coeff_.internalFieldRef().replace
         (
             d,
             (1/widthCoeff_)*

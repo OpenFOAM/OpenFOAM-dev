@@ -117,16 +117,14 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
             }
         }
 
+        scalarField& cwi = cellWeights.internalFieldRef();
+
         forAll(cellVertices, cI)
         {
             // Give a small but finite weight for empty cells.  Some
             // decomposition methods have difficulty with integer overflows in
             // the sum of the normalised weight field.
-            cellWeights.internalField()[cI] = max
-            (
-                cellVertices[cI],
-                1e-2
-            );
+            cwi[cI] = max(cellVertices[cI], 1e-2);
         }
 
         autoPtr<mapDistributePolyMesh> mapDist = decomposition_().distribute

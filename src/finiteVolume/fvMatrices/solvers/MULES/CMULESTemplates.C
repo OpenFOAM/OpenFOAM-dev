@@ -53,7 +53,7 @@ void Foam::MULES::correct
 
     if (mesh.moving())
     {
-        psi.internalField() =
+        psi.internalFieldRef() =
         (
             rho.field()*psi.internalField()*rDeltaT
           + Su.field()
@@ -62,7 +62,7 @@ void Foam::MULES::correct
     }
     else
     {
-        psi.internalField() =
+        psi.internalFieldRef() =
         (
             rho.field()*psi.internalField()*rDeltaT
           + Su.field()

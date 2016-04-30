@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     turbGen Ugen(K, Ea, k0);
 
-    U.internalField() = Ugen.U();
+    U.internalFieldRef() = Ugen.U();
     U.correctBoundaryConditions();
 
     Info<< "k("

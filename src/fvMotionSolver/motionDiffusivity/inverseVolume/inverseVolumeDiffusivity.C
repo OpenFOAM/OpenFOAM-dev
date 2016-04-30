@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::inverseVolumeDiffusivity::correct()
         zeroGradientFvPatchScalarField::typeName
     );
 
-    V.internalField() = mesh().V();
+    V.internalFieldRef() = mesh().V();
     V.correctBoundaryConditions();
 
     faceDiffusivity_ = 1.0/fvc::interpolate(V);

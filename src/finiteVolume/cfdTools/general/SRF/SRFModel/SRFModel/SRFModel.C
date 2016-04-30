@@ -228,7 +228,7 @@ Foam::tmp<Foam::volVectorField> Foam::SRF::SRFModel::Uabs() const
     volVectorField& Uabs = tUabs.ref();
 
     // Add SRF contribution to internal field
-    Uabs.internalField() += Urel_.internalField();
+    Uabs.internalFieldRef() += Urel_.internalField();
 
     // Add Urel boundary contributions
     volVectorField::Boundary& Uabsbf = Uabs.boundaryFieldRef();

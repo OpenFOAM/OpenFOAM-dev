@@ -8,7 +8,7 @@ if (runTime.outputTime())
 
     forAll(allSpeciesRhoN, rN)
     {
-        allSpeciesRhoN[rN].internalField() =
+        allSpeciesRhoN[rN].internalFieldRef() =
             allSpeciesN_RU[rN]
             /mesh.cellVolumes()
             /nAveragingSteps;
@@ -16,7 +16,7 @@ if (runTime.outputTime())
         totalRhoN_sum += allSpeciesRhoN[rN].internalField();
     }
 
-    totalRhoN.internalField() = totalRhoN_sum;
+    totalRhoN.internalFieldRef() = totalRhoN_sum;
 
 
     /*-----------------------------------------------------------------------*\
@@ -27,7 +27,7 @@ if (runTime.outputTime())
 
     forAll(allSpeciesRhoM, rM)
     {
-        allSpeciesRhoM[rM].internalField() =
+        allSpeciesRhoM[rM].internalFieldRef() =
             allSpeciesM_RU[rM]
             /mesh.cellVolumes()
             /nAveragingSteps;
@@ -35,7 +35,7 @@ if (runTime.outputTime())
         totalRhoM_sum += allSpeciesRhoM[rM].internalField();
     }
 
-    totalRhoM.internalField() = totalRhoM_sum;
+    totalRhoM.internalFieldRef() = totalRhoM_sum;
 
     /*-----------------------------------------------------------------------*\
         Bulk velocity

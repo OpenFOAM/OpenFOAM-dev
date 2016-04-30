@@ -153,7 +153,7 @@ public:
             surfaceScalarField& clippedLinearWeights =
                 tclippedLinearWeights.ref();
 
-            clippedLinearWeights.internalField() =
+            clippedLinearWeights.internalFieldRef() =
                 max(min(cdWeights.internalField(), 1 - wfLimit_), wfLimit_);
 
             surfaceScalarField::Boundary& clwbf =

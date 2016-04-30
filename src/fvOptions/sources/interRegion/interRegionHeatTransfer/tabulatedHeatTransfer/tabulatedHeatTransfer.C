@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ void Foam::fv::tabulatedHeatTransfer::calculateHtc()
 
     const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
-    scalarField& htcc = htc_.internalField();
+    scalarField& htcc = htc_.internalFieldRef();
 
     forAll(htcc, i)
     {

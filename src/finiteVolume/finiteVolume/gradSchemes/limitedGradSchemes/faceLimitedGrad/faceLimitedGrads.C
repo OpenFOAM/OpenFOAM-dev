@@ -165,7 +165,7 @@ Foam::fv::faceLimitedGrad<Foam::scalar>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.internalFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
 
@@ -326,7 +326,7 @@ Foam::fv::faceLimitedGrad<Foam::vector>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.internalFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<vector>::correctBoundaryConditions(vvf, g);
 

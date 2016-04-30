@@ -202,7 +202,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 
         solverPerfVec.replace(cmpt, solverPerf);
 
-        psi.internalField().replace(cmpt, psiCmpt);
+        psi.internalFieldRef().replace(cmpt, psiCmpt);
         diag() = saveDiag;
     }
 

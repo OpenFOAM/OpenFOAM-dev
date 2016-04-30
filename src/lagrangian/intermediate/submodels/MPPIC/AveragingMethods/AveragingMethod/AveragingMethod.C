@@ -231,10 +231,10 @@ bool Foam::AveragingMethod<Type>::write() const
     }
 
     // average
-    cellValue.internalField() /= mesh_.V();
-    cellGrad.internalField() /= mesh_.V();
-    pointValue.internalField() /= pointVolume;
-    pointGrad.internalField() /= pointVolume;
+    cellValue.internalFieldRef() /= mesh_.V();
+    cellGrad.internalFieldRef() /= mesh_.V();
+    pointValue.internalFieldRef() /= pointVolume;
+    pointGrad.internalFieldRef() /= pointVolume;
 
     // write
     if (!cellValue.write()) return false;

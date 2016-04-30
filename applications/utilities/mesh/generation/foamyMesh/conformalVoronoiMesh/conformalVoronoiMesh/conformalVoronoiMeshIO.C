@@ -1137,7 +1137,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
             zeroGradientFvPatchScalarField::typeName
         );
 
-        scalarField& cellSize = targetCellSize.internalField();
+        scalarField& cellSize = targetCellSize.internalFieldRef();
 
         const vectorField& C = mesh.cellCentres();
 
@@ -1163,7 +1163,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
-        // targetCellVolume.internalField() = pow3(cellSize);
+        // targetCellVolume.internalFieldRef() = pow3(cellSize);
 
         // Info<< nl << "Create actualCellVolume volScalarField" << endl;
 
@@ -1182,7 +1182,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
-        // actualCellVolume.internalField() = mesh.cellVolumes();
+        // actualCellVolume.internalFieldRef() = mesh.cellVolumes();
 
         // Info<< nl << "Create equivalentCellSize volScalarField" << endl;
 
@@ -1201,7 +1201,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
-        // equivalentCellSize.internalField() = pow
+        // equivalentCellSize.internalFieldRef() = pow
         // (
         //     actualCellVolume.internalField(),
         //     1.0/3.0
@@ -1247,7 +1247,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
     //         pointPatchVectorField::calculatedType()
     //     );
 
-    //     scalarField& cellSize = ptTargetCellSize.internalField();
+    //     scalarField& cellSize = ptTargetCellSize.internalFieldRef();
 
     //     const vectorField& P = tetMesh.points();
 
@@ -1283,7 +1283,7 @@ void Foam::conformalVoronoiMesh::writeCellAlignments
 //        zeroGradientFvPatchTensorField::typeName
 //    );
 //
-//    tensorField& cellAlignment = cellAlignments.internalField();
+//    tensorField& cellAlignment = cellAlignments.internalFieldRef();
 //
 //    const vectorField& C = mesh.cellCentres();
 //

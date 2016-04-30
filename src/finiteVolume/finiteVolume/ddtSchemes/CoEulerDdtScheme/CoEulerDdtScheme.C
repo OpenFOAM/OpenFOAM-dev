@@ -179,7 +179,7 @@ CoEulerDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt.ref().internalField() =
+        tdtdt.ref().internalFieldRef() =
             rDeltaT.internalField()*dt.value()
            *(1.0 - mesh().Vsc0()/mesh().Vsc());
 

@@ -117,7 +117,7 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
 
     if (phi.dimensions() == dimensionSet(0, 3, -1, 0, 0))
     {
-        rDeltaT.internalField() = max
+        rDeltaT.internalFieldRef() = max
         (
             rDeltaT.internalField()/mesh().V(),
             scalar(1)/deltaT.value()
@@ -131,7 +131,7 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
                 rhoName_
             ).oldTime();
 
-        rDeltaT.internalField() = max
+        rDeltaT.internalFieldRef() = max
         (
             rDeltaT.internalField()/(rho.internalField()*mesh().V()),
             scalar(1)/deltaT.value()
@@ -183,7 +183,7 @@ SLTSDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt.ref().internalField() =
+        tdtdt.ref().internalFieldRef() =
             rDeltaT.internalField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
 
         return tdtdt;

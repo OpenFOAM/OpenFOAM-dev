@@ -61,7 +61,7 @@
                 )
             );
 
-            aniAlphas[i].internalField() =
+            aniAlphas[i].internalFieldRef() =
                 coordinates[i].R().transformVector(tkappaByCp());
             aniAlphas[i].correctBoundaryConditions();
 

@@ -183,7 +183,7 @@ Foam::fv::cellLimitedGrad<Foam::scalar>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalField() *= limiter;
+    g.internalFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
 
@@ -336,7 +336,7 @@ Foam::fv::cellLimitedGrad<Foam::vector>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    tensorField& gIf = g.internalField();
+    tensorField& gIf = g.internalFieldRef();
 
     forAll(gIf, celli)
     {

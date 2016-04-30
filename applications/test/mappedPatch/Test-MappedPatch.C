@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
         patchFieldTypes
     );
 
-    cc.internalField() = mesh.C().internalField();
+    cc.internalFieldRef() = mesh.C().internalField();
     cc.boundaryFieldRef().updateCoeffs();
 
     forAll(cc.boundaryField(), patchi)

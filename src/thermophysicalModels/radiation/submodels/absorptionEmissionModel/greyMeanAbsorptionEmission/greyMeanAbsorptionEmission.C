@@ -213,7 +213,7 @@ Foam::radiation::greyMeanAbsorptionEmission::aCont(const label bandI) const
         )
     );
 
-    scalarField& a = ta.ref().internalField();
+    scalarField& a = ta.ref().internalFieldRef();
 
     forAll(a, celli)
     {
@@ -300,11 +300,11 @@ Foam::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
 
         if (dQ.dimensions() == dimEnergy/dimTime)
         {
-            E.ref().internalField() = EhrrCoeff_*dQ/mesh_.V();
+            E.ref().internalFieldRef() = EhrrCoeff_*dQ/mesh_.V();
         }
         else if (dQ.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E.ref().internalField() = EhrrCoeff_*dQ;
+            E.ref().internalFieldRef() = EhrrCoeff_*dQ;
         }
         else
         {

@@ -71,7 +71,7 @@ void Foam::LESModels::maxDeltaxyz::calcDelta()
 
     if (nD == 3)
     {
-        delta_.internalField() = hmax;
+        delta_.internalFieldRef() = hmax;
     }
     else if (nD == 2)
     {
@@ -79,7 +79,7 @@ void Foam::LESModels::maxDeltaxyz::calcDelta()
             << "Case is 2D, LES is not strictly applicable\n"
             << endl;
 
-        delta_.internalField() = hmax;
+        delta_.internalFieldRef() = hmax;
     }
     else
     {

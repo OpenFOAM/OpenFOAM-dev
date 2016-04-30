@@ -82,7 +82,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::SCOPEXiEq::XiEq() const
     volScalarField up(sqrt((2.0/3.0)*k));
     if (subGridSchelkin_)
     {
-        up.internalField() += calculateSchelkinEffect(uPrimeCoef_);
+        up.internalFieldRef() += calculateSchelkinEffect(uPrimeCoef_);
     }
 
     volScalarField l(lCoef_*sqrt(3.0/2.0)*up*k/epsilon);

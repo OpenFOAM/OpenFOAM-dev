@@ -114,7 +114,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
         )
     );
     volScalarField& N = tN.ref();
-    N.internalField() = Nv.internalField()*pow(mesh.V(), 2.0/3.0);
+    N.internalFieldRef() = Nv.internalField()*pow(mesh.V(), 2.0/3.0);
 
     volSymmTensorField ns
     (
@@ -134,7 +134,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
             Zero
         )
     );
-    ns.internalField() = nsv.internalField()*pow(mesh.V(), 2.0/3.0);
+    ns.internalFieldRef() = nsv.internalField()*pow(mesh.V(), 2.0/3.0);
 
     const volVectorField Uhat
     (
@@ -150,7 +150,7 @@ Foam::XiEqModel::calculateSchelkinEffect(const scalar uPrimeCoef) const
     const scalarField deltaUp(upLocal*(max(scalar(1.0), pow(nr, 0.5)) - 1.0));
 
     // Re use tN
-    N.internalField() = upLocal*(max(scalar(1.0), pow(nr, 0.5)) - 1.0);
+    N.internalFieldRef() = upLocal*(max(scalar(1.0), pow(nr, 0.5)) - 1.0);
 
     return tN;
 }

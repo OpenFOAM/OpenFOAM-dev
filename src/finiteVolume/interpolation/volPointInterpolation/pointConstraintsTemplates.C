@@ -137,7 +137,12 @@ void Foam::pointConstraints::constrain
     pf.correctBoundaryConditions();
 
     // Sync any dangling points
-    syncUntransformedData(mesh()(), pf.internalField(), maxMagSqrEqOp<Type>());
+    syncUntransformedData
+    (
+        mesh()(),
+        pf.internalFieldRef(),
+        maxMagSqrEqOp<Type>()
+    );
 
     // Apply multiple constraints on edge/corner points
     constrainCorners(pf);

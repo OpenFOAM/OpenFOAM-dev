@@ -118,7 +118,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
         pointPatchDist pDist(pMesh, patchSet_, points0());
 
         // Scaling: 1 up to di then linear down to 0 at do away from patches
-        scale_.internalField() =
+        scale_.internalFieldRef() =
             min
             (
                 max
@@ -130,7 +130,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
             );
 
         // Convert the scale function to a cosine
-        scale_.internalField() =
+        scale_.internalFieldRef() =
             min
             (
                 max
@@ -241,7 +241,7 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     }
 
     // Update the displacements
-    pointDisplacement_.internalField() =
+    pointDisplacement_.internalFieldRef() =
         motion_.transform(points0(), scale_) - points0();
 
     // Displacement has changed. Update boundary conditions

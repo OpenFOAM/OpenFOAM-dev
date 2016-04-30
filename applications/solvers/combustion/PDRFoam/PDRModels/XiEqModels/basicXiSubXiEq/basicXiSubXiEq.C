@@ -105,7 +105,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::basicSubGrid::XiEq() const
         mesh,
         dimensionedScalar("zero", Nv.dimensions(), 0.0)
     );
-    N.internalField() = Nv.internalField()*Cw;
+    N.internalFieldRef() = Nv.internalField()*Cw;
 
     volSymmTensorField ns
     (
@@ -125,7 +125,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::basicSubGrid::XiEq() const
             Zero
         )
     );
-    ns.internalField() = nsv.internalField()*Cw;
+    ns.internalFieldRef() = nsv.internalField()*Cw;
 
     volScalarField n(max(N - (Uhat & ns & Uhat), scalar(1e-4)));
     volScalarField b((Uhat & B_ & Uhat)/sqrt(n));

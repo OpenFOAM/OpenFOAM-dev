@@ -238,7 +238,7 @@ public:
                 fvc::surfaceSum(mag(tUflux))().internalField()
             );
 
-            Co.internalField() =
+            Co.internalFieldRef() =
                 (sumPhi/mesh.V().field())*(0.5*mesh.time().deltaTValue());
             Co.correctBoundaryConditions();
 

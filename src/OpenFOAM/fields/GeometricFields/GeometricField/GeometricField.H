@@ -190,7 +190,7 @@ public:
             //- Read the boundary field
             void readField
             (
-                const DimensionedField<Type, GeoMesh>& field,
+                const Internal& field,
                 const dictionary& dict
             );
 
@@ -334,6 +334,14 @@ public:
         GeometricField
         (
             const IOobject&,
+            const Internal&,
+            const PtrList<PatchField<Type>>&
+        );
+
+        //- Constructor from components
+        GeometricField
+        (
+            const IOobject&,
             const Mesh&,
             const dimensionSet&,
             const Field<Type>&,
@@ -452,7 +460,7 @@ public:
         //- Return a reference to the internal field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        typename Internal::FieldType& internalField();
+        typename Internal::FieldType& internalFieldRef();
 
         //- Return a const-reference to the  internal field
         inline const typename Internal::FieldType& internalField() const;

@@ -373,7 +373,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -466,7 +466,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*rho.value()*
                 (
@@ -559,7 +559,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -663,7 +663,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -801,7 +801,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -886,7 +886,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*rho.value()*
                 (
@@ -972,7 +972,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (
@@ -1067,7 +1067,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
         {
             scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
-            ddt0.internalField() =
+            ddt0.internalFieldRef() =
             (
                 rDtCoef0*
                 (

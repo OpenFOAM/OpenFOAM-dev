@@ -153,7 +153,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
         pointScalarField& scale = bodyMeshes_[bi].weight_;
 
         // Scaling: 1 up to di then linear down to 0 at do away from patches
-        scale.internalField() =
+        scale.internalFieldRef() =
             min
             (
                 max
@@ -166,7 +166,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
             );
 
         // Convert the scale function to a cosine
-        scale.internalField() =
+        scale.internalFieldRef() =
             min
             (
                 max
@@ -281,7 +281,7 @@ void Foam::rigidBodyMeshMotion::solve()
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        pointDisplacement_.internalField() = model_.transformPoints
+        pointDisplacement_.internalFieldRef() = model_.transformPoints
         (
             bodyMeshes_[0].bodyID_,
             bodyMeshes_[0].weight_,
@@ -298,7 +298,7 @@ void Foam::rigidBodyMeshMotion::solve()
             weights[bi] = &bodyMeshes_[bi].weight_;
         }
 
-        pointDisplacement_.internalField() =
+        pointDisplacement_.internalFieldRef() =
             model_.transformPoints(bodyIDs, weights, points0()) - points0();
     }
 

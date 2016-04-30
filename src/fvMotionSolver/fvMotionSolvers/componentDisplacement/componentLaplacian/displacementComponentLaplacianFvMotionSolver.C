@@ -158,9 +158,9 @@ Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
         // Apply pointLocation_ b.c. to mesh points.
 
-        pointLocation_().internalField() = fvMesh_.points();
+        pointLocation_().internalFieldRef() = fvMesh_.points();
 
-        pointLocation_().internalField().replace
+        pointLocation_().internalFieldRef().replace
         (
             cmpt_,
             points0_ + pointDisplacement_.internalField()
@@ -181,7 +181,7 @@ Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
             }
         }
 
-        twoDCorrectPoints(pointLocation_().internalField());
+        twoDCorrectPoints(pointLocation_().internalFieldRef());
 
         return tmp<pointField>(pointLocation_().internalField());
     }

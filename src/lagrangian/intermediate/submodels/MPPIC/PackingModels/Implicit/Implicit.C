@@ -150,7 +150,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             dimensionedScalar("zero", dimDensity, 0),
             zeroGradientFvPatchField<scalar>::typeName
         );
-        rho.internalField() = max(rhoAverage.internalField(), rhoMin_);
+        rho.internalFieldRef() = max(rhoAverage.internalField(), rhoMin_);
         rho.correctBoundaryConditions();
 
         // Stress field
@@ -172,7 +172,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             zeroGradientFvPatchField<scalar>::typeName
         );
 
-        tauPrime.internalField() =
+        tauPrime.internalFieldRef() =
             this->particleStressModel_->dTaudTheta
             (
                 alpha_.internalField(),
@@ -256,7 +256,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 dimensionedVector("zero", dimVelocity, Zero),
                 fixedValueFvPatchField<vector>::typeName
             );
-            U.internalField() = uAverage.internalField();
+            U.internalFieldRef() = uAverage.internalField();
             U.correctBoundaryConditions();
 
             surfaceScalarField phi

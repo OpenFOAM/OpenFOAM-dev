@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         dimensionedScalar("one", dimless, 1.0),
         calculatedPointPatchScalarField::typeName
     );
-    pointX.internalField() = mesh.points().component(0);
+    pointX.internalFieldRef() = mesh.points().component(0);
     pointX.correctBoundaryConditions();
     Info<< "Writing x-component field "
         << pointX.name() << " in " << runTime.timeName() << endl;

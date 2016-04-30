@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -378,7 +378,7 @@ void Foam::pointConstraints::constrainDisplacement
     syncUntransformedData
     (
         pf.mesh()(),
-        pf.internalField(),
+        pf.internalFieldRef(),
         maxMagSqrEqOp<vector>()
     );
 
@@ -390,7 +390,7 @@ void Foam::pointConstraints::constrainDisplacement
     twoDPointCorrector::New(mesh()()).correctDisplacement
     (
         mesh()().points(),
-        pf.internalField()
+        pf.internalFieldRef()
     );
 
     if (overrideFixedValue)

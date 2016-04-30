@@ -45,7 +45,7 @@ void transform
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    transform(rtf.internalField(), trf.internalField(), tf.internalField());
+    transform(rtf.internalFieldRef(), trf.internalField(), tf.internalField());
     transform(rtf.boundaryFieldRef(), trf.boundaryField(), tf.boundaryField());
 }
 
@@ -131,7 +131,7 @@ void transform
     const GeometricField<Type, PatchField, GeoMesh>& tf
 )
 {
-    transform(rtf.internalField(), t.value(), tf.internalField());
+    transform(rtf.internalFieldRef(), t.value(), tf.internalField());
     transform(rtf.boundaryFieldRef(), t.value(), tf.boundaryField());
 }
 

@@ -325,7 +325,7 @@ void Foam::meshToMesh::mapSrcToTgt
     GeometricField<Type, fvPatchField, volMesh>& result
 ) const
 {
-    mapSrcToTgt(field, cop, result.internalField());
+    mapSrcToTgt(field, cop, result.internalFieldRef());
 
     const PtrList<AMIPatchToPatchInterpolation>& AMIList = patchAMIs();
 

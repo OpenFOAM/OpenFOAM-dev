@@ -68,7 +68,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
         )
     );
 
-    Field<Type>& sfCorr = tsfCorr.ref().internalField();
+    Field<Type>& sfCorr = tsfCorr.ref().internalFieldRef();
 
     const pointField& points = mesh.points();
     const faceList& faces = mesh.faces();

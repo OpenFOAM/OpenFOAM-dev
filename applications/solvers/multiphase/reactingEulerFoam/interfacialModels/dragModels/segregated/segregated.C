@@ -104,7 +104,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         dimensionedScalar("L", dimLength, 0),
         zeroGradientFvPatchField<scalar>::typeName
     );
-    L.internalField() = cbrt(mesh.V());
+    L.internalFieldRef() = cbrt(mesh.V());
     L.correctBoundaryConditions();
 
     volScalarField I

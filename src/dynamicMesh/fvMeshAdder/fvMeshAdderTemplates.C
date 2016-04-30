@@ -49,7 +49,7 @@ void Foam::fvMeshAdder::MapVolField
         Field<Type> oldInternalField(fld.internalField());
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalField();
+        Field<Type>& intFld = fld.internalFieldRef();
 
         intFld.setSize(mesh.nCells());
 
@@ -340,7 +340,7 @@ void Foam::fvMeshAdder::MapSurfaceField
         Field<Type> oldField(fld);
 
         // Modify internal field
-        Field<Type>& intFld = fld.internalField();
+        Field<Type>& intFld = fld.internalFieldRef();
 
         intFld.setSize(mesh.nInternalFaces());
 

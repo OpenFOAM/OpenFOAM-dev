@@ -282,7 +282,7 @@ inline Foam::tmp<Foam::volScalarField> Foam::ThermoCloud<CloudType>::Ep() const
 
     if (radiation_)
     {
-        scalarField& Ep = tEp.ref().internalField();
+        scalarField& Ep = tEp.ref().internalFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -318,7 +318,7 @@ inline Foam::tmp<Foam::volScalarField> Foam::ThermoCloud<CloudType>::ap() const
 
     if (radiation_)
     {
-        scalarField& ap = tap.ref().internalField();
+        scalarField& ap = tap.ref().internalFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();
@@ -355,7 +355,7 @@ Foam::ThermoCloud<CloudType>::sigmap() const
 
     if (radiation_)
     {
-        scalarField& sigmap = tsigmap.ref().internalField();
+        scalarField& sigmap = tsigmap.ref().internalFieldRef();
         const scalar dt = this->db().time().deltaTValue();
         const scalarField& V = this->mesh().V();
         const scalar epsilon = constProps_.epsilon0();

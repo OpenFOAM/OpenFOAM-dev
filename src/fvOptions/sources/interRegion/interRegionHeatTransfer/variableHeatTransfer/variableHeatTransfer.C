@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
 
     const scalarField htcNbrMapped(interpolate(htcNbr));
 
-    htc_.internalField() = htcNbrMapped*AoV_;
+    htc_.internalFieldRef() = htcNbrMapped*AoV_;
 }
 
 

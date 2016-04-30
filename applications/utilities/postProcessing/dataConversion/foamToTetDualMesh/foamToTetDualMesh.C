@@ -91,7 +91,7 @@ void ReadAndMapFields
             )
         );
 
-        Field<Type>& fld = tetFields[i].internalField();
+        Field<Type>& fld = tetFields[i].internalFieldRef();
 
         // Map from read field. Set unmapped entries to nullValue.
         fld.setSize(map.size(), nullValue);

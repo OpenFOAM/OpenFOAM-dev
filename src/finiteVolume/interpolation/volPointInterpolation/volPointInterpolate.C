@@ -87,6 +87,9 @@ void Foam::volPointInterpolation::addSeparated
     }
 
     typename GeometricField<Type, pointPatchField, pointMesh>::
+        Internal& pfi = pf.dimensionedInternalFieldRef();
+
+    typename GeometricField<Type, pointPatchField, pointMesh>::
         Boundary& pfbf = pf.boundaryFieldRef();
 
     forAll(pfbf, patchi)
@@ -97,7 +100,7 @@ void Foam::volPointInterpolation::addSeparated
                 (pfbf[patchi]).initSwapAddSeparated
                 (
                     Pstream::nonBlocking,
-                    pf.internalField()
+                    pfi
                 );
         }
     }
@@ -113,7 +116,7 @@ void Foam::volPointInterpolation::addSeparated
                 (pfbf[patchi]).swapAddSeparated
                 (
                     Pstream::nonBlocking,
-                    pf.internalField()
+                    pfi
                 );
         }
     }
@@ -213,7 +216,7 @@ void Foam::volPointInterpolation::interpolateBoundaryField
 {
     const primitivePatch& boundary = boundaryPtr_();
 
-    Field<Type>& pfi = pf.internalField();
+    Field<Type>& pfi = pf.internalFieldRef();
 
     // Get face data in flat list
     tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));

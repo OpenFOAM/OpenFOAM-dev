@@ -49,7 +49,7 @@ void component
     const direction d
 )
 {
-    component(gcf.internalField(), gf.internalField(), d);
+    component(gcf.internalFieldRef(), gf.internalField(), d);
     component(gcf.boundaryFieldRef(), gf.boundaryField(), d);
 }
 
@@ -61,7 +61,7 @@ void T
      const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    T(gf.internalField(), gf1.internalField());
+    T(gf.internalFieldRef(), gf1.internalField());
     T(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
@@ -79,7 +79,7 @@ void pow
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    pow(gf.internalField(), gf1.internalField(), r);
+    pow(gf.internalFieldRef(), gf1.internalField(), r);
     pow(gf.boundaryFieldRef(), gf1.boundaryField(), r);
 }
 
@@ -173,7 +173,7 @@ void sqr
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    sqr(gf.internalField(), gf1.internalField());
+    sqr(gf.internalFieldRef(), gf1.internalField());
     sqr(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
@@ -261,7 +261,7 @@ void magSqr
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    magSqr(gsf.internalField(), gf.internalField());
+    magSqr(gsf.internalFieldRef(), gf.internalField());
     magSqr(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -333,7 +333,7 @@ void mag
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    mag(gsf.internalField(), gf.internalField());
+    mag(gsf.internalFieldRef(), gf.internalField());
     mag(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -410,7 +410,7 @@ void cmptAv
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    cmptAv(gcf.internalField(), gf.internalField());
+    cmptAv(gcf.internalFieldRef(), gf.internalField());
     cmptAv(gcf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -599,13 +599,18 @@ void opFunc                                                                    \
     const GeometricField<Type2, PatchField, GeoMesh>& gf2                      \
 )                                                                              \
 {                                                                              \
-    Foam::opFunc(gf.internalField(), gf1.internalField(), gf2.internalField());\
+    Foam::opFunc                                                               \
+    (                                                                          \
+        gf.internalFieldRef(),                                                 \
+        gf1.internalField(),                                                   \
+        gf2.internalField()                                                    \
+    );                                                                         \
     Foam::opFunc                                                               \
     (                                                                          \
         gf.boundaryFieldRef(),                                                 \
         gf1.boundaryField(),                                                   \
         gf2.boundaryField()                                                    \
-    );\
+    );                                                                         \
 }                                                                              \
                                                                                \
 template                                                                       \
@@ -750,7 +755,7 @@ void opFunc                                                                    \
     const dimensioned<Form>& dvs                                               \
 )                                                                              \
 {                                                                              \
-    Foam::opFunc(gf.internalField(), gf1.internalField(), dvs.value());        \
+    Foam::opFunc(gf.internalFieldRef(), gf1.internalField(), dvs.value());     \
     Foam::opFunc(gf.boundaryFieldRef(), gf1.boundaryField(), dvs.value());     \
 }                                                                              \
                                                                                \
@@ -863,7 +868,7 @@ void opFunc                                                                    \
     const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
 )                                                                              \
 {                                                                              \
-    Foam::opFunc(gf.internalField(), dvs.value(), gf1.internalField());        \
+    Foam::opFunc(gf.internalFieldRef(), dvs.value(), gf1.internalField());     \
     Foam::opFunc(gf.boundaryFieldRef(), dvs.value(), gf1.boundaryField());     \
 }                                                                              \
                                                                                \

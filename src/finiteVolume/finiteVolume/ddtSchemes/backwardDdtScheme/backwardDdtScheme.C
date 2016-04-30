@@ -111,7 +111,7 @@ backwardDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt.ref().internalField() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().internalFieldRef() = rDeltaT.value()*dt.value()*
         (
             coefft - (coefft0*mesh().V0() - coefft00*mesh().V00())/mesh().V()
         );
