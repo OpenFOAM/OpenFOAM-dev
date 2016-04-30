@@ -695,7 +695,7 @@ void kkLOmega::correct()
       - fvm::Sp(Cw2_*sqr(fw)*omega_, omega_)
       + (
             Cw3_*fOmega(lambdaEff, lambdaT)*alphaTEff*sqr(fw)*sqrt(kt_)
-        )().dimensionedInternalField()/pow3(y_.dimensionedInternalField())
+        )()()/pow3(y_())
     );
 
     omegaEqn.ref().relax();

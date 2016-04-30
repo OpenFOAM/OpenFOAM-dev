@@ -96,7 +96,7 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
@@ -109,7 +109,7 @@ Foam::fvFieldDecomposer::decomposeField
                 new processorCyclicFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         field.internalField(),
@@ -126,7 +126,7 @@ Foam::fvFieldDecomposer::decomposeField
                 new processorFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         field.internalField(),
@@ -143,7 +143,7 @@ Foam::fvFieldDecomposer::decomposeField
                 new emptyFvPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField()
+                    resF()
                 )
             );
         }
@@ -266,7 +266,7 @@ Foam::fvFieldDecomposer::decomposeField
                 (
                     field.boundaryField()[boundaryAddressing_[patchi]],
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     *patchFieldDecomposerPtrs_[patchi]
                 )
             );
@@ -279,7 +279,7 @@ Foam::fvFieldDecomposer::decomposeField
                 new processorCyclicFvsPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         allFaceField,
@@ -296,7 +296,7 @@ Foam::fvFieldDecomposer::decomposeField
                 new processorFvsPatchField<Type>
                 (
                     procMesh_.boundary()[patchi],
-                    resF.dimensionedInternalField(),
+                    resF(),
                     Field<Type>
                     (
                         allFaceField,

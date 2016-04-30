@@ -351,7 +351,7 @@ void Foam::meshToMesh::mapSrcToTgt
                 (
                     srcField,
                     tgtField.patch(),
-                    result.dimensionedInternalField(),
+                    result(),
                     weightedFvPatchFieldMapper
                     (
                         AMIList[i].tgtAddress(),
@@ -540,7 +540,7 @@ void Foam::meshToMesh::mapTgtToSrc
                 (
                     tgtField,
                     srcField.patch(),
-                    result.dimensionedInternalField(),
+                    result(),
                     weightedFvPatchFieldMapper
                     (
                         AMIList[i].srcAddress(),

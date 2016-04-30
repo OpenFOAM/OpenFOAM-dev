@@ -157,7 +157,7 @@ void Foam::fvMeshAdder::MapVolField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
-                        fld.dimensionedInternalField(), // new internal field
+                        fld(), // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -211,7 +211,7 @@ void Foam::fvMeshAdder::MapVolField
                         (
                             fldToAdd.boundaryField()[patchi], // added field
                             mesh.boundary()[newPatchi],       // new fvPatch
-                            fld.dimensionedInternalField(),   // new int. field
+                            fld(),   // new int. field
                             patchMapper                       // mapper
                         )
                     );
@@ -464,7 +464,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                     (
                         bfld[newPatchi],                // old field
                         mesh.boundary()[newPatchi],     // new fvPatch
-                        fld.dimensionedInternalField(), // new internal field
+                        fld(), // new internal field
                         patchMapper                     // mapper (new to old)
                     )
                 );
@@ -518,7 +518,7 @@ void Foam::fvMeshAdder::MapSurfaceField
                         (
                             fldToAdd.boundaryField()[patchi],// added field
                             mesh.boundary()[newPatchi],      // new fvPatch
-                            fld.dimensionedInternalField(),  // new int. field
+                            fld(),  // new int. field
                             patchMapper                      // mapper
                         )
                     );

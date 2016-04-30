@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
             calculatedFvPatchField<scalar>::typeName
         );
 
-        V.dimensionedInternalFieldRef() = mesh.V();
+        V.ref() = mesh.V();
 
         volScalarField::Boundary& Vbf = V.boundaryFieldRef();
 

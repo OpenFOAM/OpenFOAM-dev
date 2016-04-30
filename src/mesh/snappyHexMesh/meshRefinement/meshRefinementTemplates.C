@@ -226,7 +226,7 @@ void Foam::meshRefinement::addPatchFields
             (
                 patchFieldType,
                 mesh.boundary()[sz],
-                fld.dimensionedInternalField()
+                fld()
             )
         );
     }

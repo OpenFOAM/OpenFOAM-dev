@@ -19,10 +19,10 @@
     );
 
     // Set the reciprocal time-step from the local Courant number
-    rDeltaT.dimensionedInternalFieldRef() = max
+    rDeltaT.ref() = max
     (
         1/dimensionedScalar("maxDeltaT", dimTime, maxDeltaT),
-        fvc::surfaceSum(max(mag(phi1), mag(phi2)))().dimensionedInternalField()
+        fvc::surfaceSum(max(mag(phi1), mag(phi2)))()()
        /((2*maxCo)*mesh.V())
     );
 

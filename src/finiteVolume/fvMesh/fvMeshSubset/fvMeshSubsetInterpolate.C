@@ -144,7 +144,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> fvMeshSubset::interpolate
                 (
                     vf.boundaryField()[patchMap[patchi]],
                     subPatch,
-                    resF.dimensionedInternalField(),
+                    resF(),
                     directFvPatchFieldMapper(directAddressing)
                 )
             );
@@ -288,7 +288,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
                 (
                     vf.boundaryField()[patchMap[patchi]],
                     subPatch,
-                    resF.dimensionedInternalField(),
+                    resF(),
                     directFvPatchFieldMapper(directAddressing)
                 )
             );
@@ -462,7 +462,7 @@ fvMeshSubset::interpolate
                 (
                     vf.boundaryField()[patchMap[patchi]],
                     subPatch,
-                    resF.dimensionedInternalField(),
+                    resF(),
                     directPointPatchFieldMapper(directAddressing)
                 )
             );

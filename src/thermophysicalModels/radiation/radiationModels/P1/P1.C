@@ -282,11 +282,11 @@ Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::radiation::P1::Ru() const
 {
     const DimensionedField<scalar, volMesh>& G =
-        G_.dimensionedInternalField();
+        G_();
     const DimensionedField<scalar, volMesh> E =
-        absorptionEmission_->ECont()().dimensionedInternalField();
+        absorptionEmission_->ECont()()();
     const DimensionedField<scalar, volMesh> a =
-        absorptionEmission_->aCont()().dimensionedInternalField();
+        absorptionEmission_->aCont()()();
 
     return a*G - E;
 }

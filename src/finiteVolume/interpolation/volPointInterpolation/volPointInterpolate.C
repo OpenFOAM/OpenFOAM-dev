@@ -87,7 +87,7 @@ void Foam::volPointInterpolation::addSeparated
     }
 
     typename GeometricField<Type, pointPatchField, pointMesh>::
-        Internal& pfi = pf.dimensionedInternalFieldRef();
+        Internal& pfi = pf.ref();
 
     typename GeometricField<Type, pointPatchField, pointMesh>::
         Boundary& pfbf = pf.boundaryFieldRef();

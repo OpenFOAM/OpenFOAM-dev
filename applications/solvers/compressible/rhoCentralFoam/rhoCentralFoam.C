@@ -178,9 +178,9 @@ int main(int argc, char *argv[])
         // --- Solve momentum
         solve(fvm::ddt(rhoU) + fvc::div(phiUp));
 
-        U.dimensionedInternalFieldRef() =
-            rhoU.dimensionedInternalField()
-           /rho.dimensionedInternalField();
+        U.ref() =
+            rhoU()
+           /rho();
         U.correctBoundaryConditions();
         rhoU.boundaryFieldRef() == rho.boundaryField()*U.boundaryField();
 
@@ -233,9 +233,9 @@ int main(int argc, char *argv[])
             rhoE = rho*(e + 0.5*magSqr(U));
         }
 
-        p.dimensionedInternalFieldRef() =
-            rho.dimensionedInternalField()
-           /psi.dimensionedInternalField();
+        p.ref() =
+            rho()
+           /psi();
         p.correctBoundaryConditions();
         rho.boundaryFieldRef() == psi.boundaryField()*p.boundaryField();
 

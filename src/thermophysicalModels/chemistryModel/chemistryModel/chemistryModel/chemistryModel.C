@@ -611,7 +611,7 @@ Foam::chemistryModel<CompType, ThermoType>::dQ() const
     if (this->chemistry_)
     {
         volScalarField& dQ = tdQ.ref();
-        dQ.dimensionedInternalFieldRef() = this->mesh_.V()*Sh()();
+        dQ.ref() = this->mesh_.V()*Sh()();
     }
 
     return tdQ;

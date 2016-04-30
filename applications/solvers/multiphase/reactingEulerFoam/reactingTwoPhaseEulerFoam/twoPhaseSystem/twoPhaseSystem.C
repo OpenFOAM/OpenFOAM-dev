@@ -212,26 +212,26 @@ void Foam::twoPhaseSystem::solve()
     {
         tdgdt =
         (
-            alpha2.dimensionedInternalField()
-           *phase1_.divU()().dimensionedInternalField()
-          - alpha1.dimensionedInternalField()
-           *phase2_.divU()().dimensionedInternalField()
+            alpha2()
+           *phase1_.divU()()()
+          - alpha1()
+           *phase2_.divU()()()
         );
     }
     else if (phase1_.divU().valid())
     {
         tdgdt =
         (
-            alpha2.dimensionedInternalField()
-           *phase1_.divU()().dimensionedInternalField()
+            alpha2()
+           *phase1_.divU()()()
         );
     }
     else if (phase2_.divU().valid())
     {
         tdgdt =
         (
-          - alpha1.dimensionedInternalField()
-           *phase2_.divU()().dimensionedInternalField()
+          - alpha1()
+           *phase2_.divU()()()
         );
     }
 

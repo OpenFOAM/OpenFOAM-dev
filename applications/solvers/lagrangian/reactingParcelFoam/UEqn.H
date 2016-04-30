@@ -6,7 +6,7 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(U)
      ==
-        rho.dimensionedInternalField()*g
+        rho()*g
       + parcels.SU(U)
       + fvOptions(rho, U)
     );

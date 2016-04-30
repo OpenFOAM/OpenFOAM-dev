@@ -58,10 +58,10 @@ License
 
     // Flow time scale
     {
-        rDeltaT.dimensionedInternalFieldRef() =
+        rDeltaT.ref() =
         (
-            fvc::surfaceSum(mag(phi))().dimensionedInternalField()
-           /((2*maxCo)*mesh.V()*rho.dimensionedInternalField())
+            fvc::surfaceSum(mag(phi))()()
+           /((2*maxCo)*mesh.V()*rho())
         );
 
         // Limit the largest time scale
@@ -84,9 +84,9 @@ License
             )
            /(
                alphaTemp
-              *rho.dimensionedInternalField()
-              *thermo.Cp()().dimensionedInternalField()
-              *T.dimensionedInternalField()
+              *rho()
+              *thermo.Cp()()()
+              *T()
            )
         );
 
@@ -94,9 +94,9 @@ License
             << gMin(1/(rDeltaTT.field() + VSMALL)) << ", "
             << gMax(1/(rDeltaTT.field() + VSMALL)) << endl;
 
-        rDeltaT.dimensionedInternalFieldRef() = max
+        rDeltaT.ref() = max
         (
-            rDeltaT.dimensionedInternalField(),
+            rDeltaT(),
             rDeltaTT
         );
     }

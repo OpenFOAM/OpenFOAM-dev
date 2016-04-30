@@ -43,7 +43,7 @@ forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
                 slamDampCoeff
                *max
                 (
-                    mag(U.dimensionedInternalField()) - maxSlamVelocity,
+                    mag(U()) - maxSlamVelocity,
                     dimensionedScalar("U0", dimVelocity, 0)
                 )
                /pow(mesh.V(), 1.0/3.0),

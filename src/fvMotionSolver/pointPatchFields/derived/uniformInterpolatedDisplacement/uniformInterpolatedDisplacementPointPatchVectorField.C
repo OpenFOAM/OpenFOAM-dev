@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -249,7 +249,7 @@ void uniformInterpolatedDisplacementPointPatchVectorField::updateCoeffs()
     // Extract back from the internal field
     this->operator==
     (
-        this->patchInternalField(result.dimensionedInternalField())
+        this->patchInternalField(result())
     );
 
     fixedValuePointPatchField<vector>::updateCoeffs();

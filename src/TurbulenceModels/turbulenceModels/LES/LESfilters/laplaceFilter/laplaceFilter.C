@@ -57,7 +57,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, scalar widthCoeff)
         calculatedFvPatchScalarField::typeName
     )
 {
-    coeff_.dimensionedInternalFieldRef() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
+    coeff_.ref() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
 }
 
 
@@ -78,7 +78,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, const dictionary& bd)
         calculatedFvPatchScalarField::typeName
     )
 {
-    coeff_.dimensionedInternalFieldRef() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
+    coeff_.ref() = pow(mesh.V(), 2.0/3.0)/widthCoeff_;
 }
 
 

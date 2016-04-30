@@ -6,7 +6,7 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(U)
      ==
-        rho.dimensionedInternalField()*g
+        rho()*g
       + coalParcels.SU(U)
       + limestoneParcels.SU(U)
       + fvOptions(rho, U)
