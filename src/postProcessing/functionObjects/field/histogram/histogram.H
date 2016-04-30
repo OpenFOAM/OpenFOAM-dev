@@ -30,7 +30,7 @@ Group
 Description
     Write the volume-weighted histogram of a volScalarField.
 
-    Example of function object specification:
+    Example:
     \verbatim
     histogram1
     {
@@ -69,9 +69,9 @@ SourceFiles
 #ifndef functionObjects_histogram_H
 #define functionObjects_histogram_H
 
-#include "functionObjectFile.H"
 #include "writer.H"
 #include "volFieldsFwd.H"
+#include "functionObjectFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,6 +79,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
+class objectRegistry;
 class mapPolyMesh;
 class polyMesh;
 
@@ -95,10 +96,8 @@ class histogram
 {
     // Private data
 
-        //- Name of this set of histogram objects
+        //- Name of this histogram
         word name_;
-
-        const objectRegistry& obr_;
 
         //- on/off switch
         bool active_;
@@ -146,6 +145,16 @@ public:
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
         histogram
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
+        //- Construct on free-store and return pointer if successful
+        //  otherwise return a null-pointer
+        static autoPtr<histogram> New
         (
             const word& name,
             const objectRegistry&,

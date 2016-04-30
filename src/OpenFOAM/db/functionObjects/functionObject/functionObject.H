@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,26 +104,6 @@ public:
             NotImplemented;
             return autoPtr<functionObject>(NULL);
         }
-
-        //- Return a pointer to a new functionObject created on freestore
-        //  from Istream
-        class iNew
-        {
-            const Time& time_;
-
-        public:
-
-            iNew(const Time& t)
-            :
-                time_(t)
-            {}
-
-            autoPtr<functionObject> operator()
-            (
-                const word& name,
-                Istream& is
-            ) const;
-        };
 
 
     // Selectors

@@ -72,7 +72,7 @@ SourceFiles
 #ifndef cloudInfo_H
 #define cloudInfo_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "PtrList.H"
 #include "pointFieldFwd.H"
 #include "volFields.H"
@@ -94,7 +94,7 @@ class mapPolyMesh;
 
 class cloudInfo
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
 protected:
 

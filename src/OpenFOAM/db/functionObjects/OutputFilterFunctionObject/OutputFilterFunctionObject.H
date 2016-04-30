@@ -90,8 +90,8 @@ class OutputFilterFunctionObject
             //- De-activation time - defaults to VGREAT
             scalar timeEnd_;
 
-            //- Number of steps before the dumping time in which the deltaT
-            // will start to change (valid for ocAdjustableTime)
+            //- Number of steps before the dump-time during which deltaT
+            //  may be changed (valid for adjustableRunTime)
             label nStepsToStartTimeChange_;
 
 

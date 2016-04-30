@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Foam::fieldValues::fieldValueDelta::fieldValueDelta
     const bool loadFromFiles
 )
 :
-    functionObjectFile(obr, name, typeName),
+    functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
     loadFromFiles_(loadFromFiles),
@@ -148,7 +148,7 @@ void Foam::fieldValues::fieldValueDelta::read(const dictionary& dict)
 
 void Foam::fieldValues::fieldValueDelta::write()
 {
-    functionObjectFile::write();
+    functionObjectFiles::write();
 
     source1Ptr_->write();
     source2Ptr_->write();

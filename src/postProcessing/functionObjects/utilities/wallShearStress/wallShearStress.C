@@ -99,7 +99,7 @@ Foam::wallShearStress::wallShearStress
     const bool loadFromFiles
 )
 :
-    functionObjectFile(obr, name, typeName),
+    functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
     active_(true),
@@ -220,7 +220,7 @@ void Foam::wallShearStress::execute()
 
     if (active_)
     {
-        functionObjectFile::write();
+        functionObjectFiles::write();
 
         const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -279,7 +279,7 @@ void Foam::wallShearStress::write()
 {
     if (active_)
     {
-        functionObjectFile::write();
+        functionObjectFiles::write();
 
         const volVectorField& wallShearStress =
             obr_.lookupObject<volVectorField>(type());

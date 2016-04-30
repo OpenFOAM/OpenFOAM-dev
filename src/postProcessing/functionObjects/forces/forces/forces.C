@@ -524,7 +524,7 @@ Foam::forces::forces
     const bool readFields
 )
 :
-    functionObjectFile(obr, name, createFileNames(dict)),
+    functionObjectFiles(obr, name, createFileNames(dict)),
     name_(name),
     obr_(obr),
     active_(true),
@@ -583,7 +583,7 @@ Foam::forces::forces
     const coordinateSystem& coordSys
 )
 :
-    functionObjectFile(obr, name, typeName),
+    functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
     active_(true),
@@ -787,7 +787,7 @@ void Foam::forces::write()
 
     if (Pstream::master())
     {
-        functionObjectFile::write();
+        functionObjectFiles::write();
 
         writeForces();
 

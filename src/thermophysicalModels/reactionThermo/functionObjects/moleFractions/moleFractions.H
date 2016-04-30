@@ -60,7 +60,7 @@ SourceFiles
 #ifndef moleFractions_H
 #define moleFractions_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -75,7 +75,7 @@ namespace Foam
 template<class ThermoType>
 class moleFractions
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
     // Private data
 

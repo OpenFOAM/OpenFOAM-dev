@@ -38,7 +38,7 @@ SourceFiles
 #ifndef fieldValue_H
 #define fieldValue_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "Switch.H"
 #include "OFstream.H"
 #include "dictionary.H"
@@ -62,7 +62,7 @@ class mapPolyMesh;
 
 class fieldValue
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
 
 protected:

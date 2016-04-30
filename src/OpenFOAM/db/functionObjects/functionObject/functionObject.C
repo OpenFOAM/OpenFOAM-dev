@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ License
 
 namespace Foam
 {
-defineDebugSwitchWithName(functionObject, "functionObject", 0);
-defineRunTimeSelectionTable(functionObject, dictionary);
+    defineDebugSwitchWithName(functionObject, "functionObject", 0);
+    defineRunTimeSelectionTable(functionObject, dictionary);
 }
 
 
@@ -123,17 +123,6 @@ bool Foam::functionObject::timeSet()
 bool Foam::functionObject::adjustTimeStep()
 {
     return false;
-}
-
-
-Foam::autoPtr<Foam::functionObject> Foam::functionObject::iNew::operator()
-(
-    const word& name,
-    Istream& is
-) const
-{
-    dictionary dict(is);
-    return functionObject::New(name, time_, dict);
 }
 
 

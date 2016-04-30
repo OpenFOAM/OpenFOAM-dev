@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::cloudInfo::cloudInfo
     const bool loadFromFiles
 )
 :
-    functionObjectFile(obr, name),
+    functionObjectFiles(obr, name),
     name_(name),
     obr_(obr),
     active_(true)
@@ -78,7 +78,7 @@ void Foam::cloudInfo::read(const dictionary& dict)
 {
     if (active_)
     {
-        functionObjectFile::resetNames(dict.lookup("clouds"));
+        functionObjectFiles::resetNames(dict.lookup("clouds"));
 
         Info<< type() << " " << name_ << ": ";
         if (names().size())
@@ -114,7 +114,7 @@ void Foam::cloudInfo::write()
 {
     if (active_)
     {
-        functionObjectFile::write();
+        functionObjectFiles::write();
 
         forAll(names(), i)
         {

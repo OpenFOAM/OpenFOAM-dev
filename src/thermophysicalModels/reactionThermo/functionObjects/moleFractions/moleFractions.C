@@ -56,7 +56,7 @@ Foam::moleFractions<ThermoType>::moleFractions
     const bool loadFromFiles
 )
 :
-    functionObjectFile(obr, name),
+    functionObjectFiles(obr, name),
     name_(name),
     mesh_(refCast<const fvMesh>(obr))
 {

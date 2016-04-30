@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,6 @@ SourceFiles
 #define functionObjectFile_H
 
 #include "objectRegistry.H"
-#include "OFstream.H"
-#include "PtrList.H"
-#include "HashSet.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,22 +54,17 @@ namespace Foam
 
 class functionObjectFile
 {
-    // Private data
 
-        //- Reference to the database
+protected:
+
+    // Protected data
+
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Prefix
         const word prefix_;
 
-        //- File names
-        wordList names_;
-
-        //- File pointer
-        PtrList<OFstream> filePtrs_;
-
-
-protected:
 
     // Protected Member Functions
 
@@ -85,20 +77,8 @@ protected:
         //- Return the base directory for the current time value
         virtual fileName baseTimeDir() const;
 
-        //- Create the output file
-        virtual void createFiles();
-
         //- File header information
         virtual void writeFileHeader(const label i = 0);
-
-        //- Write function
-        virtual void write();
-
-        //- Reset the list of names from a wordList
-        virtual void resetNames(const wordList& names);
-
-        //- Reset the list of names to a single name entry
-        virtual void resetName(const word& name);
 
         //- Return the value width when writing to stream with optional offset
         virtual Omanip<int> valueWidth(const label offset = 0) const;
@@ -121,24 +101,8 @@ public:
 
     // Constructors
 
-        //- Construct null
+        //- Construct from objectRegistry
         functionObjectFile(const objectRegistry& obr, const word& prefix);
-
-        //- Construct from components
-        functionObjectFile
-        (
-            const objectRegistry& obr,
-            const word& prefix,
-            const word& name
-        );
-
-        //- Construct from components
-        functionObjectFile
-        (
-            const objectRegistry& obr,
-            const word& prefix,
-            const wordList& names
-        );
 
 
     //- Destructor
@@ -146,18 +110,6 @@ public:
 
 
     // Member Functions
-
-        //- Return const access to the names
-        const wordList& names() const;
-
-        //- Return access to the file (if only 1)
-        OFstream& file();
-
-        //- Return access to the files
-        PtrList<OFstream>& files();
-
-        //- Return file 'i'
-        OFstream& file(const label i);
 
         //- Write a commented string to stream
         void writeCommented

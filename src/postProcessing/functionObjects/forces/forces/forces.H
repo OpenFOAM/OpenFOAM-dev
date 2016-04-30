@@ -113,7 +113,7 @@ SourceFiles
 #ifndef forces_H
 #define forces_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "coordinateSystem.H"
 #include "coordinateSystems.H"
 #include "primitiveFieldsFwd.H"
@@ -141,7 +141,7 @@ class mapPolyMesh;
 
 class forces
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
 protected:
 

@@ -62,7 +62,7 @@ SourceFiles
 #ifndef residuals_H
 #define residuals_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "primitiveFieldsFwd.H"
 #include "volFieldsFwd.H"
 #include "HashSet.H"
@@ -88,7 +88,7 @@ class mapPolyMesh;
 
 class residuals
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
 protected:
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 #ifndef yPlus_H
 #define yPlus_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "volFieldsFwd.H"
 #include "Switch.H"
 #include "OFstream.H"
@@ -63,7 +63,7 @@ class fvMesh;
 
 class yPlus
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
     // Private data
 

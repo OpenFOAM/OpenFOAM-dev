@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ Foam::fieldMinMax::fieldMinMax
     const bool loadFromFiles
 )
 :
-    functionObjectFile(obr, name, typeName),
+    functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
     active_(true),
@@ -164,7 +164,7 @@ void Foam::fieldMinMax::write()
 {
     if (active_)
     {
-        functionObjectFile::write();
+        functionObjectFiles::write();
 
         if (!location_) writeTime(file());
         if (log_) Info<< type() << " " << name_ <<  " output:" << nl;

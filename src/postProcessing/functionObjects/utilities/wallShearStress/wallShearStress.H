@@ -73,10 +73,10 @@ SourceFiles
 #ifndef wallShearStress_H
 #define wallShearStress_H
 
-#include "functionObjectFile.H"
+#include "functionObjectFiles.H"
 #include "volFieldsFwd.H"
 #include "Switch.H"
-#include "OFstream.H"
+#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -96,7 +96,7 @@ class fvMesh;
 
 class wallShearStress
 :
-    public functionObjectFile
+    public functionObjectFiles
 {
 protected:
 

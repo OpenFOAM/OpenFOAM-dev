@@ -74,9 +74,8 @@ Foam::functionObjects::histogram::histogram
     const bool loadFromFiles
 )
 :
-    functionObjectFile(obr, name, typeName),
+    functionObjectFile(obr, typeName),
     name_(name),
-    obr_(obr),
     active_(true)
 {
     // Check if the available mesh is an fvMesh, otherwise deactivate
@@ -90,6 +89,26 @@ Foam::functionObjects::histogram::histogram
         WarningInFunction
             << "No fvMesh available, deactivating " << name_ << nl
             << endl;
+    }
+}
+
+
+Foam::autoPtr<Foam::functionObjects::histogram>
+Foam::functionObjects::histogram::New
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    if (isA<fvMesh>(obr))
+    {
+        return autoPtr<histogram>(new histogram(name, obr, dict));
+    }
+    else
+    {
+        return autoPtr<histogram>();
     }
 }
 
@@ -108,8 +127,7 @@ void Foam::functionObjects::histogram::read(const dictionary& dict)
     {
         dict.lookup("field") >> fieldName_;
         dict.lookup("max") >> max_;
-        min_ = 0.0;
-        dict.readIfPresent("min", min_);
+        min_ = dict.lookupOrDefault<scalar>("min", 0);
         dict.lookup("nBins") >> nBins_;
 
         word format(dict.lookup("setFormat"));
