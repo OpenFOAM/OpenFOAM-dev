@@ -131,7 +131,7 @@ void Foam::ParticleErosion<CloudType>::preEvolve()
 {
     if (QPtr_.valid())
     {
-        QPtr_->internalFieldRef() = 0.0;
+        QPtr_->primitiveFieldRef() = 0.0;
     }
     else
     {

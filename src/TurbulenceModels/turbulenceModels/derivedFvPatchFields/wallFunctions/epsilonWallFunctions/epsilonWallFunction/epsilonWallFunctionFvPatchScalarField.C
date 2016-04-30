@@ -70,7 +70,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::setMaster()
     }
 
     const volScalarField& epsilon =
-        static_cast<const volScalarField&>(this->dimensionedInternalField());
+        static_cast<const volScalarField&>(this->internalField());
 
     const volScalarField::Boundary& bf = epsilon.boundaryField();
 
@@ -95,7 +95,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::setMaster()
 void Foam::epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
 {
     const volScalarField& epsilon =
-        static_cast<const volScalarField&>(this->dimensionedInternalField());
+        static_cast<const volScalarField&>(this->internalField());
 
     const volScalarField::Boundary& bf = epsilon.boundaryField();
 
@@ -144,8 +144,8 @@ void Foam::epsilonWallFunctionFvPatchScalarField::createAveragingWeights()
         cornerWeights_[patchi] = 1.0/wf.patchInternalField();
     }
 
-    G_.setSize(dimensionedInternalField().size(), 0.0);
-    epsilon_.setSize(dimensionedInternalField().size(), 0.0);
+    G_.setSize(internalField().size(), 0.0);
+    epsilon_.setSize(internalField().size(), 0.0);
 
     initialised_ = true;
 }
@@ -155,7 +155,7 @@ Foam::epsilonWallFunctionFvPatchScalarField&
 Foam::epsilonWallFunctionFvPatchScalarField::epsilonPatch(const label patchi)
 {
     const volScalarField& epsilon =
-        static_cast<const volScalarField&>(this->dimensionedInternalField());
+        static_cast<const volScalarField&>(this->internalField());
 
     const volScalarField::Boundary& bf = epsilon.boundaryField();
 
@@ -408,7 +408,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
 
@@ -431,7 +431,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
             db().lookupObject<FieldType>(turbModel.GName())
         );
 
-    FieldType& epsilon = const_cast<FieldType&>(dimensionedInternalField());
+    FieldType& epsilon = const_cast<FieldType&>(internalField());
 
     forAll(*this, facei)
     {
@@ -460,7 +460,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
 
@@ -483,7 +483,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs
             db().lookupObject<FieldType>(turbModel.GName())
         );
 
-    FieldType& epsilon = const_cast<FieldType&>(dimensionedInternalField());
+    FieldType& epsilon = const_cast<FieldType&>(internalField());
 
     scalarField& epsilonf = *this;
 
@@ -538,7 +538,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::manipulateMatrix
     const labelUList& faceCells = patch().faceCells();
 
     const DimensionedField<scalar, volMesh>& epsilon
-        = dimensionedInternalField();
+        = internalField();
 
     label nConstrainedCells = 0;
 

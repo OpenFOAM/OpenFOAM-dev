@@ -88,7 +88,7 @@ bool setCellFieldType
 
         if (selectedCells.size() == field.size())
         {
-            field.internalFieldRef() = value;
+            field.primitiveFieldRef() = value;
         }
         else
         {

@@ -150,7 +150,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             dimensionedScalar("zero", dimDensity, 0),
             zeroGradientFvPatchField<scalar>::typeName
         );
-        rho.internalFieldRef() = max(rhoAverage.internalField(), rhoMin_);
+        rho.primitiveFieldRef() = max(rhoAverage.primitiveField(), rhoMin_);
         rho.correctBoundaryConditions();
 
         // Stress field
@@ -172,12 +172,12 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
             zeroGradientFvPatchField<scalar>::typeName
         );
 
-        tauPrime.internalFieldRef() =
+        tauPrime.primitiveFieldRef() =
             this->particleStressModel_->dTaudTheta
             (
-                alpha_.internalField(),
-                rho.internalField(),
-                uSqrAverage.internalField()
+                alpha_.primitiveField(),
+                rho.primitiveField(),
+                uSqrAverage.primitiveField()
             )();
 
         tauPrime.correctBoundaryConditions();
@@ -256,7 +256,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 dimensionedVector("zero", dimVelocity, Zero),
                 fixedValueFvPatchField<vector>::typeName
             );
-            U.internalFieldRef() = uAverage.internalField();
+            U.primitiveFieldRef() = uAverage.primitiveField();
             U.correctBoundaryConditions();
 
             surfaceScalarField phi
@@ -313,9 +313,9 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
         uCorrect_->correctBoundaryConditions();
 
         //Info << endl;
-        //Info << "     alpha: " << alpha_.internalField() << endl;
-        //Info << "phiCorrect: " << phiCorrect_->internalField() << endl;
-        //Info << "  uCorrect: " << uCorrect_->internalField() << endl;
+        //Info << "     alpha: " << alpha_.primitiveField() << endl;
+        //Info << "phiCorrect: " << phiCorrect_->primitiveField() << endl;
+        //Info << "  uCorrect: " << uCorrect_->primitiveField() << endl;
         //Info << endl;
     }
     else

@@ -127,8 +127,8 @@ void Foam::fluxCorrectedVelocityFvPatchVectorField::evaluate
         FatalErrorInFunction
             << "dimensions of phi are incorrect\n"
             << "    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 }

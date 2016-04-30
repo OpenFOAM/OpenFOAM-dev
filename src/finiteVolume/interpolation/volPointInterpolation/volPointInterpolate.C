@@ -216,7 +216,7 @@ void Foam::volPointInterpolation::interpolateBoundaryField
 {
     const primitivePatch& boundary = boundaryPtr_();
 
-    Field<Type>& pfi = pf.internalFieldRef();
+    Field<Type>& pfi = pf.primitiveFieldRef();
 
     // Get face data in flat list
     tmp<Field<Type>> tboundaryVals(flatBoundaryField(vf));

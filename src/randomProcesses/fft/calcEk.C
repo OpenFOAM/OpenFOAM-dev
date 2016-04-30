@@ -33,7 +33,7 @@ graph calcEk
     (
         fft::forwardTransform
         (
-            ReComplexField(U.internalField()),
+            ReComplexField(U.primitiveField()),
             K.nn()
         ),
         K

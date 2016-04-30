@@ -153,7 +153,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         )
     );
 
-    vectorField& force = tForce.ref().internalFieldRef();
+    vectorField& force = tForce.ref().primitiveFieldRef();
 
     const labelUList& own = owner_.regionMesh().owner();
     const labelUList& nbr = owner_.regionMesh().neighbour();

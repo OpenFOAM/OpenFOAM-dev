@@ -70,7 +70,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
                 fvc::div                                                       \
                 (                                                              \
                     *fvm.faceFluxCorrectionPtr()                               \
-                )().internalField();                                           \
+                )().primitiveField();                                          \
         }                                                                      \
         else                                                                   \
         {                                                                      \
@@ -79,7 +79,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
                 fvc::div                                                       \
                 (                                                              \
                     gammaMagSf*this->tsnGradScheme_().correction(vf)           \
-                )().internalField();                                           \
+                )().primitiveField();                                          \
         }                                                                      \
     }                                                                          \
                                                                                \
@@ -88,7 +88,7 @@ Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvmLaplacian         \
                                                                                \
                                                                                \
 template<>                                                                     \
-Foam::tmp<Foam::GeometricField<Foam::Type, Foam::fvPatchField, Foam::volMesh>>\
+Foam::tmp<Foam::GeometricField<Foam::Type, Foam::fvPatchField, Foam::volMesh>> \
 Foam::fv::gaussLaplacianScheme<Foam::Type, Foam::scalar>::fvcLaplacian         \
 (                                                                              \
     const GeometricField<scalar, fvsPatchField, surfaceMesh>& gamma,           \

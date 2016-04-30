@@ -74,7 +74,7 @@ void omegaWallFunctionFvPatchScalarField::setMaster()
     }
 
     const volScalarField& omega =
-        static_cast<const volScalarField&>(this->dimensionedInternalField());
+        static_cast<const volScalarField&>(this->internalField());
 
     const volScalarField::Boundary& bf = omega.boundaryField();
 
@@ -99,7 +99,7 @@ void omegaWallFunctionFvPatchScalarField::setMaster()
 void omegaWallFunctionFvPatchScalarField::createAveragingWeights()
 {
     const volScalarField& omega =
-        static_cast<const volScalarField&>(this->dimensionedInternalField());
+        static_cast<const volScalarField&>(this->internalField());
 
     const volScalarField::Boundary& bf = omega.boundaryField();
 
@@ -149,8 +149,8 @@ void omegaWallFunctionFvPatchScalarField::createAveragingWeights()
         cornerWeights_[patchi] = 1.0/wf.patchInternalField();
     }
 
-    G_.setSize(dimensionedInternalField().size(), 0.0);
-    omega_.setSize(dimensionedInternalField().size(), 0.0);
+    G_.setSize(internalField().size(), 0.0);
+    omega_.setSize(internalField().size(), 0.0);
 
     initialised_ = true;
 }
@@ -160,7 +160,7 @@ omegaWallFunctionFvPatchScalarField&
 omegaWallFunctionFvPatchScalarField::omegaPatch(const label patchi)
 {
     const volScalarField& omega =
-        static_cast<const volScalarField&>(this->dimensionedInternalField());
+        static_cast<const volScalarField&>(this->internalField());
 
     const volScalarField::Boundary& bf = omega.boundaryField();
 
@@ -418,7 +418,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
 
@@ -441,7 +441,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
             db().lookupObject<FieldType>(turbModel.GName())
         );
 
-    FieldType& omega = const_cast<FieldType&>(dimensionedInternalField());
+    FieldType& omega = const_cast<FieldType&>(internalField());
 
     forAll(*this, facei)
     {
@@ -470,7 +470,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
 
@@ -493,7 +493,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs
             db().lookupObject<FieldType>(turbModel.GName())
         );
 
-    FieldType& omega = const_cast<FieldType&>(dimensionedInternalField());
+    FieldType& omega = const_cast<FieldType&>(internalField());
 
     scalarField& omegaf = *this;
 
@@ -548,7 +548,7 @@ void omegaWallFunctionFvPatchScalarField::manipulateMatrix
     const labelUList& faceCells = patch().faceCells();
 
     const DimensionedField<scalar, volMesh>& omega
-        = dimensionedInternalField();
+        = internalField();
 
     label nConstrainedCells = 0;
 

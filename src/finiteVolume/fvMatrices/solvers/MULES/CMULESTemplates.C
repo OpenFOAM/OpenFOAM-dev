@@ -53,18 +53,18 @@ void Foam::MULES::correct
 
     if (mesh.moving())
     {
-        psi.internalFieldRef() =
+        psi.primitiveFieldRef() =
         (
-            rho.field()*psi.internalField()*rDeltaT
+            rho.field()*psi.primitiveField()*rDeltaT
           + Su.field()
           - psiIf
         )/(rho.field()*rDeltaT - Sp.field());
     }
     else
     {
-        psi.internalFieldRef() =
+        psi.primitiveFieldRef() =
         (
-            rho.field()*psi.internalField()*rDeltaT
+            rho.field()*psi.primitiveField()*rDeltaT
           + Su.field()
           - psiIf
         )/(rho.field()*rDeltaT - Sp.field());
@@ -293,7 +293,7 @@ void Foam::MULES::limiterCorr
        *(
            (rho.field()*rDeltaT - Sp.field())*psiMaxn
          - Su.field()
-         - rho.field()*psi.internalField()*rDeltaT
+         - rho.field()*psi.primitiveField()*rDeltaT
         );
 
     psiMinn =
@@ -301,7 +301,7 @@ void Foam::MULES::limiterCorr
        *(
            Su.field()
          - (rho.field()*rDeltaT - Sp.field())*psiMinn
-         + rho.field()*psi.internalField()*rDeltaT
+         + rho.field()*psi.primitiveField()*rDeltaT
         );
 
     scalarField sumlPhip(psiIf.size());

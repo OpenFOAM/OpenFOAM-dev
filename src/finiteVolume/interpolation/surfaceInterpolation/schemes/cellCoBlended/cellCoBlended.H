@@ -235,10 +235,10 @@ public:
 
             scalarField sumPhi
             (
-                fvc::surfaceSum(mag(tUflux))().internalField()
+                fvc::surfaceSum(mag(tUflux))().primitiveField()
             );
 
-            Co.internalFieldRef() =
+            Co.primitiveFieldRef() =
                 (sumPhi/mesh.V().field())*(0.5*mesh.time().deltaTValue());
             Co.correctBoundaryConditions();
 

@@ -68,8 +68,8 @@ License
         rDeltaT.max(1/maxDeltaT);
 
         Info<< "    Flow        = "
-            << gMin(1/rDeltaT.internalField()) << ", "
-            << gMax(1/rDeltaT.internalField()) << endl;
+            << gMin(1/rDeltaT.primitiveField()) << ", "
+            << gMax(1/rDeltaT.primitiveField()) << endl;
     }
 
     // Reaction source time scale
@@ -120,8 +120,8 @@ License
     rDeltaT.correctBoundaryConditions();
 
     Info<< "    Overall     = "
-        << gMin(1/rDeltaT.internalField())
-        << ", " << gMax(1/rDeltaT.internalField()) << endl;
+        << gMin(1/rDeltaT.primitiveField())
+        << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
 }
 
 

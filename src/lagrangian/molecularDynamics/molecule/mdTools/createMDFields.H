@@ -60,7 +60,7 @@ forAll(allSpeciesRhoN, rN)
             "zeroGradient"
         )
     );
-    allSpeciesRhoN[rN].internalFieldRef() = 0;
+    allSpeciesRhoN[rN].primitiveFieldRef() = 0;
     allSpeciesRhoN[rN].correctBoundaryConditions();
 }
 
@@ -80,7 +80,7 @@ volScalarField totalRhoN
     dimless/dimVolume,
     "zeroGradient"
 );
-totalRhoN.internalFieldRef() = 0;
+totalRhoN.primitiveFieldRef() = 0;
 totalRhoN.correctBoundaryConditions();
 
 /*---------------------------------------------------------------------------*\
@@ -115,7 +115,7 @@ forAll(allSpeciesRhoM, rM)
             "zeroGradient"
         )
     );
-    allSpeciesRhoM[rM].internalFieldRef() = 0;
+    allSpeciesRhoM[rM].primitiveFieldRef() = 0;
     allSpeciesRhoM[rM].correctBoundaryConditions();
 }
 
@@ -135,7 +135,7 @@ volScalarField totalRhoM
     dimMass/dimVolume,
     "zeroGradient"
 );
-totalRhoM.internalFieldRef() = 0;
+totalRhoM.primitiveFieldRef() = 0;
 totalRhoM.correctBoundaryConditions();
 
 /*---------------------------------------------------------------------------*\
@@ -170,7 +170,7 @@ forAll(allSpeciesVelocity, v)
             "zeroGradient"
         )
     );
-    allSpeciesVelocity[v].internalFieldRef() = Zero;
+    allSpeciesVelocity[v].primitiveFieldRef() = Zero;
     allSpeciesVelocity[v].correctBoundaryConditions();
 }
 
@@ -190,7 +190,7 @@ Info << "    Creating total velocity field" << endl;
 //     dimVelocity,
 //     "zeroGradient"
 // );
-// totalVelocity.internalFieldRef() = Zero;
+// totalVelocity.primitiveFieldRef() = Zero;
 // totalVelocity.correctBoundaryConditions();
 
 
@@ -243,7 +243,7 @@ forAll(allSpeciesTemperature, t)
             "zeroGradient"
         )
     );
-    allSpeciesTemperature[t].internalFieldRef() = 0;
+    allSpeciesTemperature[t].primitiveFieldRef() = 0;
     allSpeciesTemperature[t].correctBoundaryConditions();
 }
 
@@ -263,7 +263,7 @@ volScalarField totalTemperature
     dimTemperature,
     "zeroGradient"
 );
-totalTemperature.internalFieldRef() = 0;
+totalTemperature.primitiveFieldRef() = 0;
 totalTemperature.correctBoundaryConditions();
 
 /*---------------------------------------------------------------------------*\
@@ -299,7 +299,7 @@ forAll(allSpeciesMeanKE, mKE)
             "zeroGradient"
         )
     );
-    allSpeciesMeanKE[mKE].internalFieldRef() = 0;
+    allSpeciesMeanKE[mKE].primitiveFieldRef() = 0;
     allSpeciesMeanKE[mKE].correctBoundaryConditions();
 }
 
@@ -319,5 +319,5 @@ volScalarField totalMeanKE
     dimensionSet(1, 2, -2, 0, 0, 0, 0),
     "zeroGradient"
 );
-totalMeanKE.internalFieldRef() = 0;
+totalMeanKE.primitiveFieldRef() = 0;
 totalMeanKE.correctBoundaryConditions();

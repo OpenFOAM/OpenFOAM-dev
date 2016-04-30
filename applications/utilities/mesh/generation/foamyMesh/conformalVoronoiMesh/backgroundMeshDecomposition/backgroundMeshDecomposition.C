@@ -904,8 +904,8 @@ Foam::backgroundMeshDecomposition::distribute
         {
             Info<< "    cellWeightLimit " << cellWeightLimit << endl;
 
-            Pout<< "    sum(cellWeights) " << sum(cellWeights.internalField())
-                << " max(cellWeights) " << max(cellWeights.internalField())
+            Pout<< "    sum(cellWeights) " << sum(cellWeights.primitiveField())
+                << " max(cellWeights) " << max(cellWeights.primitiveField())
                 << endl;
         }
 

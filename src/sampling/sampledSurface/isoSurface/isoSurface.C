@@ -1183,8 +1183,8 @@ Foam::isoSurface::isoSurface
         Pout<< "isoSurface:" << nl
             << "    isoField      : " << cVals.name() << nl
             << "    cell min/max  : "
-            << min(cVals.internalField()) << " / "
-            << max(cVals.internalField()) << nl
+            << min(cVals.primitiveField()) << " / "
+            << max(cVals.primitiveField()) << nl
             << "    point min/max : "
             << min(pVals_) << " / "
             << max(pVals_) << nl

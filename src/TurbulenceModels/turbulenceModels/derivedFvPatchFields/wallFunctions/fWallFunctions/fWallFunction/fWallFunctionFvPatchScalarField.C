@@ -178,7 +178,7 @@ void fWallFunctionFvPatchScalarField::updateCoeffs()
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
     const v2fBase& v2fModel = refCast<const v2fBase>(turbModel);

@@ -450,7 +450,7 @@ public:
         Internal& ref();
 
         //- Return a const-reference to the dimensioned internal field
-        inline const Internal& dimensionedInternalField() const;
+        inline const Internal& internalField() const;
 
         //- Return a const-reference to the dimensioned internal field
         //  of a "vol" field.  Useful in the formulation of source-terms
@@ -460,10 +460,10 @@ public:
         //- Return a reference to the internal field
         //  Note: this increments the event counter and checks the
         //  old-time fields; avoid in loops.
-        typename Internal::FieldType& internalFieldRef();
+        typename Internal::FieldType& primitiveFieldRef();
 
         //- Return a const-reference to the  internal field
-        inline const typename Internal::FieldType& internalField() const;
+        inline const typename Internal::FieldType& primitiveField() const;
 
         //- Return a reference to the boundary field
         //  Note: this increments the event counter and checks the

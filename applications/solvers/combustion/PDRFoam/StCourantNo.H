@@ -36,8 +36,8 @@ Description
     {
        scalarField sumPhi
         (
-            fvc::surfaceSum(mag(phiSt))().internalField()
-          / rho.internalField()
+            fvc::surfaceSum(mag(phiSt))().primitiveField()
+          / rho.primitiveField()
         );
 
         StCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();

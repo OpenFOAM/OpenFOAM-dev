@@ -32,6 +32,6 @@
     fvc::smooth(rDeltaT, rDeltaTSmoothingCoeff);
 
     Info<< "Flow time scale min/max = "
-        << gMin(1/rDeltaT.internalField())
-        << ", " << gMax(1/rDeltaT.internalField()) << endl;
+        << gMin(1/rDeltaT.primitiveField())
+        << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
 }

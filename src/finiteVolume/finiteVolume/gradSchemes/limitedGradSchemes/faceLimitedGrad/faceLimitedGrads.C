@@ -63,7 +63,7 @@ Foam::fv::faceLimitedGrad<Foam::scalar>::calcGrad
     const surfaceVectorField& Cf = mesh.Cf();
 
     // create limiter
-    scalarField limiter(vsf.internalField().size(), 1.0);
+    scalarField limiter(vsf.primitiveField().size(), 1.0);
 
     scalar rk = (1.0/k_ - 1.0);
 
@@ -165,7 +165,7 @@ Foam::fv::faceLimitedGrad<Foam::scalar>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalFieldRef() *= limiter;
+    g.primitiveFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<scalar>::correctBoundaryConditions(vsf, g);
 
@@ -199,7 +199,7 @@ Foam::fv::faceLimitedGrad<Foam::vector>::calcGrad
     const surfaceVectorField& Cf = mesh.Cf();
 
     // create limiter
-    scalarField limiter(vvf.internalField().size(), 1.0);
+    scalarField limiter(vvf.primitiveField().size(), 1.0);
 
     scalar rk = (1.0/k_ - 1.0);
 
@@ -326,7 +326,7 @@ Foam::fv::faceLimitedGrad<Foam::vector>::calcGrad
             << " average: " << gAverage(limiter) << endl;
     }
 
-    g.internalFieldRef() *= limiter;
+    g.primitiveFieldRef() *= limiter;
     g.correctBoundaryConditions();
     gaussGrad<vector>::correctBoundaryConditions(vvf, g);
 

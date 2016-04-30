@@ -36,7 +36,7 @@ if (mesh.nInternalFaces())
 {
     scalarField sumPhi
     (
-        fvc::surfaceSum(mag(phi))().internalField()
+        fvc::surfaceSum(mag(phi))().primitiveField()
     );
 
     forAll(phases, phasei)
@@ -44,7 +44,7 @@ if (mesh.nInternalFaces())
         sumPhi = max
         (
             sumPhi,
-            fvc::surfaceSum(mag(phases[phasei].phi()))().internalField()
+            fvc::surfaceSum(mag(phases[phasei].phi()))().primitiveField()
         );
     }
 

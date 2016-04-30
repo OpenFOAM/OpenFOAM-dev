@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         dimensionedScalar("one", dimless, 1.0),
         calculatedPointPatchScalarField::typeName
     );
-    pointX.internalFieldRef() = mesh.points().component(0);
+    pointX.primitiveFieldRef() = mesh.points().component(0);
     pointX.correctBoundaryConditions();
     Info<< "Writing x-component field "
         << pointX.name() << " in " << runTime.timeName() << endl;
@@ -381,8 +381,8 @@ int main(int argc, char *argv[])
         // Check face field mapping
         if (surfaceOne.size())
         {
-            const scalar max = gMax(surfaceOne.internalField());
-            const scalar min = gMin(surfaceOne.internalField());
+            const scalar max = gMax(surfaceOne.primitiveField());
+            const scalar min = gMin(surfaceOne.primitiveField());
 
             Info<< "Uniform surface field min = " << min
                 << "  max = " << max << endl;

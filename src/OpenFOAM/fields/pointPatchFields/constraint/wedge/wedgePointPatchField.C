@@ -109,7 +109,7 @@ void Foam::wedgePointPatchField<Type>::evaluate(const Pstream::commsTypes)
         transform(I - nHat*nHat, this->patchInternalField());
 
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, tvalues());
 }

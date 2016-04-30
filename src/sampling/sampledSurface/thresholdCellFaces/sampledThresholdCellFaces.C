@@ -111,7 +111,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
     thresholdCellFaces surf
     (
         fvm,
-        cellFld.internalField(),
+        cellFld.primitiveField(),
         lowerThreshold_,
         upperThreshold_,
         triangulate_

@@ -111,7 +111,7 @@ backwardDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt.ref().internalFieldRef() = rDeltaT.value()*dt.value()*
+        tdtdt.ref().primitiveFieldRef() = rDeltaT.value()*dt.value()*
         (
             coefft - (coefft0*mesh().V0() - coefft00*mesh().V00())/mesh().V()
         );
@@ -173,10 +173,10 @@ backwardDdtScheme<Type>::fvcDdt
                 rDeltaT.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
-                    coefft*vf.internalField() -
+                    coefft*vf.primitiveField() -
                     (
-                        coefft0*vf.oldTime().internalField()*mesh().V0()
-                      - coefft00*vf.oldTime().oldTime().internalField()
+                        coefft0*vf.oldTime().primitiveField()*mesh().V0()
+                      - coefft00*vf.oldTime().oldTime().primitiveField()
                        *mesh().V00()
                     )/mesh().V()
                 ),
@@ -245,10 +245,10 @@ backwardDdtScheme<Type>::fvcDdt
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*rho.value()*
                 (
-                    coefft*vf.internalField() -
+                    coefft*vf.primitiveField() -
                     (
-                        coefft0*vf.oldTime().internalField()*mesh().V0()
-                      - coefft00*vf.oldTime().oldTime().internalField()
+                        coefft0*vf.oldTime().primitiveField()*mesh().V0()
+                      - coefft00*vf.oldTime().oldTime().primitiveField()
                        *mesh().V00()
                     )/mesh().V()
                 ),
@@ -317,12 +317,12 @@ backwardDdtScheme<Type>::fvcDdt
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
                 rDeltaT.value()*
                 (
-                    coefft*rho.internalField()*vf.internalField() -
+                    coefft*rho.primitiveField()*vf.primitiveField() -
                     (
-                        coefft0*rho.oldTime().internalField()
-                       *vf.oldTime().internalField()*mesh().V0()
-                      - coefft00*rho.oldTime().oldTime().internalField()
-                       *vf.oldTime().oldTime().internalField()*mesh().V00()
+                        coefft0*rho.oldTime().primitiveField()
+                       *vf.oldTime().primitiveField()*mesh().V0()
+                      - coefft00*rho.oldTime().oldTime().primitiveField()
+                       *vf.oldTime().oldTime().primitiveField()*mesh().V00()
                     )/mesh().V()
                 ),
                 rDeltaT.value()*
@@ -395,19 +395,19 @@ backwardDdtScheme<Type>::fvcDdt
                 rDeltaT.value()*
                 (
                     coefft
-                   *alpha.internalField()
-                   *rho.internalField()
-                   *vf.internalField() -
+                   *alpha.primitiveField()
+                   *rho.primitiveField()
+                   *vf.primitiveField() -
                     (
                         coefft0
-                       *alpha.oldTime().internalField()
-                       *rho.oldTime().internalField()
-                       *vf.oldTime().internalField()*mesh().V0()
+                       *alpha.oldTime().primitiveField()
+                       *rho.oldTime().primitiveField()
+                       *vf.oldTime().primitiveField()*mesh().V0()
 
                       - coefft00
-                       *alpha.oldTime().oldTime().internalField()
-                       *rho.oldTime().oldTime().internalField()
-                       *vf.oldTime().oldTime().internalField()*mesh().V00()
+                       *alpha.oldTime().oldTime().primitiveField()
+                       *rho.oldTime().oldTime().primitiveField()
+                       *vf.oldTime().oldTime().primitiveField()*mesh().V00()
                     )/mesh().V()
                 ),
                 rDeltaT.value()*
@@ -484,8 +484,8 @@ backwardDdtScheme<Type>::fvmDdt
     {
         fvm.source() = rDeltaT*
         (
-            coefft0*vf.oldTime().internalField()*mesh().V0()
-          - coefft00*vf.oldTime().oldTime().internalField()
+            coefft0*vf.oldTime().primitiveField()*mesh().V0()
+          - coefft00*vf.oldTime().oldTime().primitiveField()
            *mesh().V00()
         );
     }
@@ -493,8 +493,8 @@ backwardDdtScheme<Type>::fvmDdt
     {
         fvm.source() = rDeltaT*mesh().V()*
         (
-            coefft0*vf.oldTime().internalField()
-          - coefft00*vf.oldTime().oldTime().internalField()
+            coefft0*vf.oldTime().primitiveField()
+          - coefft00*vf.oldTime().oldTime().primitiveField()
         );
     }
 
@@ -535,8 +535,8 @@ backwardDdtScheme<Type>::fvmDdt
     {
         fvm.source() = rDeltaT*rho.value()*
         (
-            coefft0*vf.oldTime().internalField()*mesh().V0()
-          - coefft00*vf.oldTime().oldTime().internalField()
+            coefft0*vf.oldTime().primitiveField()*mesh().V0()
+          - coefft00*vf.oldTime().oldTime().primitiveField()
            *mesh().V00()
         );
     }
@@ -544,8 +544,8 @@ backwardDdtScheme<Type>::fvmDdt
     {
         fvm.source() = rDeltaT*mesh().V()*rho.value()*
         (
-            coefft0*vf.oldTime().internalField()
-          - coefft00*vf.oldTime().oldTime().internalField()
+            coefft0*vf.oldTime().primitiveField()
+          - coefft00*vf.oldTime().oldTime().primitiveField()
         );
     }
 
@@ -580,26 +580,26 @@ backwardDdtScheme<Type>::fvmDdt
     scalar coefft00 = deltaT*deltaT/(deltaT0*(deltaT + deltaT0));
     scalar coefft0  = coefft + coefft00;
 
-    fvm.diag() = (coefft*rDeltaT)*rho.internalField()*mesh().V();
+    fvm.diag() = (coefft*rDeltaT)*rho.primitiveField()*mesh().V();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT*
         (
-            coefft0*rho.oldTime().internalField()
-           *vf.oldTime().internalField()*mesh().V0()
-          - coefft00*rho.oldTime().oldTime().internalField()
-           *vf.oldTime().oldTime().internalField()*mesh().V00()
+            coefft0*rho.oldTime().primitiveField()
+           *vf.oldTime().primitiveField()*mesh().V0()
+          - coefft00*rho.oldTime().oldTime().primitiveField()
+           *vf.oldTime().oldTime().primitiveField()*mesh().V00()
         );
     }
     else
     {
         fvm.source() = rDeltaT*mesh().V()*
         (
-            coefft0*rho.oldTime().internalField()
-           *vf.oldTime().internalField()
-          - coefft00*rho.oldTime().oldTime().internalField()
-           *vf.oldTime().oldTime().internalField()
+            coefft0*rho.oldTime().primitiveField()
+           *vf.oldTime().primitiveField()
+          - coefft00*rho.oldTime().oldTime().primitiveField()
+           *vf.oldTime().oldTime().primitiveField()
         );
     }
 
@@ -636,21 +636,21 @@ backwardDdtScheme<Type>::fvmDdt
     scalar coefft0  = coefft + coefft00;
 
     fvm.diag() =
-        (coefft*rDeltaT)*alpha.internalField()*rho.internalField()*mesh().V();
+        (coefft*rDeltaT)*alpha.primitiveField()*rho.primitiveField()*mesh().V();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT*
         (
             coefft0
-           *alpha.oldTime().internalField()
-           *rho.oldTime().internalField()
-           *vf.oldTime().internalField()*mesh().V0()
+           *alpha.oldTime().primitiveField()
+           *rho.oldTime().primitiveField()
+           *vf.oldTime().primitiveField()*mesh().V0()
 
           - coefft00
-           *alpha.oldTime().oldTime().internalField()
-           *rho.oldTime().oldTime().internalField()
-           *vf.oldTime().oldTime().internalField()*mesh().V00()
+           *alpha.oldTime().oldTime().primitiveField()
+           *rho.oldTime().oldTime().primitiveField()
+           *vf.oldTime().oldTime().primitiveField()*mesh().V00()
         );
     }
     else
@@ -658,14 +658,14 @@ backwardDdtScheme<Type>::fvmDdt
         fvm.source() = rDeltaT*mesh().V()*
         (
             coefft0
-           *alpha.oldTime().internalField()
-           *rho.oldTime().internalField()
-           *vf.oldTime().internalField()
+           *alpha.oldTime().primitiveField()
+           *rho.oldTime().primitiveField()
+           *vf.oldTime().primitiveField()
 
           - coefft00
-           *alpha.oldTime().oldTime().internalField()
-           *rho.oldTime().oldTime().internalField()
-           *vf.oldTime().oldTime().internalField()
+           *alpha.oldTime().oldTime().primitiveField()
+           *rho.oldTime().oldTime().primitiveField()
+           *vf.oldTime().oldTime().primitiveField()
         );
     }
 

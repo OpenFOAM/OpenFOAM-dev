@@ -172,7 +172,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     const phaseModel& liquid
     (
-        fluid.phase1().name() == dimensionedInternalField().group()
+        fluid.phase1().name() == internalField().group()
       ? fluid.phase1()
       : fluid.phase2()
     );

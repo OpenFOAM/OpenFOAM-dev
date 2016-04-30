@@ -77,9 +77,9 @@ limitedSnGrad<Type>::correction
     if (fv::debug)
     {
         InfoInFunction
-            << "limiter min: " << min(limiter.internalField())
-            << " max: "<< max(limiter.internalField())
-            << " avg: " << average(limiter.internalField()) << endl;
+            << "limiter min: " << min(limiter.primitiveField())
+            << " max: "<< max(limiter.primitiveField())
+            << " avg: " << average(limiter.primitiveField()) << endl;
     }
 
     return limiter*corr;

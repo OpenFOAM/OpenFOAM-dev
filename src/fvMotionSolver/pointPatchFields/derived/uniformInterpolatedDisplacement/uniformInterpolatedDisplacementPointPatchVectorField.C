@@ -62,7 +62,7 @@ uniformInterpolatedDisplacementPointPatchVectorField
     fieldName_(dict.lookup("fieldName")),
     interpolationScheme_(dict.lookup("interpolationScheme"))
 {
-    const pointMesh& pMesh = this->dimensionedInternalField().mesh();
+    const pointMesh& pMesh = this->internalField().mesh();
 
     // Read time values
     instantList allTimes = Time::findTimes(pMesh().time().path());
@@ -161,7 +161,7 @@ void uniformInterpolatedDisplacementPointPatchVectorField::updateCoeffs()
         );
     }
 
-    const pointMesh& pMesh = this->dimensionedInternalField().mesh();
+    const pointMesh& pMesh = this->internalField().mesh();
     const Time& t = pMesh().time();
 
     // Update indices of times and weights
@@ -232,7 +232,7 @@ void uniformInterpolatedDisplacementPointPatchVectorField::updateCoeffs()
             IOobject
             (
                 word("uniformInterpolate(")
-              + this->dimensionedInternalField().name()
+              + this->internalField().name()
               + ')',
                 pMesh.time().timeName(),
                 pMesh.thisDb(),

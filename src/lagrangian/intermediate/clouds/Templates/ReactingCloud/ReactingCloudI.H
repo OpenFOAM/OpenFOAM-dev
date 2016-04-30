@@ -129,7 +129,7 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
 
             volScalarField& sourceField = trhoTrans.ref();
 
-            sourceField.internalFieldRef() =
+            sourceField.primitiveFieldRef() =
                 rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
 
             const dimensionedScalar YiSMALL("YiSMALL", dimless, SMALL);

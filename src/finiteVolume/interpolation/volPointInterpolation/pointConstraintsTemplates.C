@@ -140,7 +140,7 @@ void Foam::pointConstraints::constrain
     syncUntransformedData
     (
         mesh()(),
-        pf.internalFieldRef(),
+        pf.primitiveFieldRef(),
         maxMagSqrEqOp<Type>()
     );
 

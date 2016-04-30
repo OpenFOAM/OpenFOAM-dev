@@ -45,7 +45,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcNut() const
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
@@ -84,7 +84,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcYPlus
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
     const scalarField& y = turbModel.y()[patchi];
@@ -182,7 +182,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::yPlus() const
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];

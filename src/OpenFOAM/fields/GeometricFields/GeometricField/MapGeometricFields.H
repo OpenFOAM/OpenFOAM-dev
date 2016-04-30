@@ -126,7 +126,7 @@ void MapGeometricFields
             // Map the internal field
             MapInternalField<Type, MeshMapper, GeoMesh>()
             (
-                field.internalFieldRef(),
+                field.primitiveFieldRef(),
                 mapper
             );
 

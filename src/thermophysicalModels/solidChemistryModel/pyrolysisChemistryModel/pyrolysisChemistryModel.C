@@ -110,7 +110,7 @@ pyrolysisChemistryModel
             );
 
             // Calculate inital values of Ysi0 = rho*delta*Yi
-            Ys0_[fieldI].internalFieldRef() =
+            Ys0_[fieldI].primitiveFieldRef() =
                 this->solidThermo().rho()
                *max(this->Ys_[fieldI], scalar(0.001))*mesh.V();
         }

@@ -83,7 +83,7 @@ void Foam::distanceSurface::createGeometry()
     // Internal field
     {
         const pointField& cc = fvm.C();
-        scalarField& fld = cellDistance.internalFieldRef();
+        scalarField& fld = cellDistance.primitiveFieldRef();
 
         List<pointIndexHit> nearest;
         surfPtr_().findNearest
@@ -257,7 +257,7 @@ void Foam::distanceSurface::createGeometry()
             pointMesh::New(fvm),
             dimensionedScalar("zero", dimLength, 0)
         );
-        pDist.internalFieldRef() = pointDistance_;
+        pDist.primitiveFieldRef() = pointDistance_;
 
         Pout<< "Writing point distance:" << pDist.objectPath() << endl;
         pDist.write();

@@ -181,7 +181,7 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
     );
     GeometricField<Type, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
-    Field<Type>& sfi = sf.internalFieldRef();
+    Field<Type>& sfi = sf.primitiveFieldRef();
 
     for (label fi=0; fi<P.size(); fi++)
     {
@@ -274,7 +274,7 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
     );
     GeometricField<RetType, fvsPatchField, surfaceMesh>& sf = tsf.ref();
 
-    Field<RetType>& sfi = sf.internalFieldRef();
+    Field<RetType>& sfi = sf.primitiveFieldRef();
 
     const typename SFType::Internal& Sfi = Sf();
 

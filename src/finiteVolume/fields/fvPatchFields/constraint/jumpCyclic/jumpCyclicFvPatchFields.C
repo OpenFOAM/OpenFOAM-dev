@@ -52,7 +52,7 @@ void Foam::jumpCyclicFvPatchField<Foam::scalar>::updateInterfaceMatrix
         this->cyclicPatch().neighbFvPatch().faceCells();
 
     // only apply jump to original field
-    if (&psiInternal == &this->internalField())
+    if (&psiInternal == &this->primitiveField())
     {
         Field<scalar> jf(this->jump());
 

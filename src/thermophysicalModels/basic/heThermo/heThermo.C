@@ -54,7 +54,7 @@ heBoundaryCorrection(volScalarField& h)
 template<class BasicThermo, class MixtureType>
 void Foam::heThermo<BasicThermo, MixtureType>::init()
 {
-    scalarField& heCells = he_.internalFieldRef();
+    scalarField& heCells = he_.primitiveFieldRef();
     const scalarField& pCells = this->p_;
     const scalarField& TCells = this->T_;
 
@@ -187,7 +187,7 @@ Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::he
     );
 
     volScalarField& he = the.ref();
-    scalarField& heCells = he.internalFieldRef();
+    scalarField& heCells = he.primitiveFieldRef();
     const scalarField& pCells = p;
     const scalarField& TCells = T;
 
@@ -282,7 +282,7 @@ Foam::heThermo<BasicThermo, MixtureType>::hc() const
     );
 
     volScalarField& hcf = thc.ref();
-    scalarField& hcCells = hcf.internalFieldRef();
+    scalarField& hcCells = hcf.primitiveFieldRef();
 
     forAll(hcCells, celli)
     {

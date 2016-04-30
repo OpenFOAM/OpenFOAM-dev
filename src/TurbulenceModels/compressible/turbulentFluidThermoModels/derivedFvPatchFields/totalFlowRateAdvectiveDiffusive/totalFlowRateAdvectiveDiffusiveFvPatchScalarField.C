@@ -163,7 +163,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
             IOobject::groupName
             (
                 turbulenceModel::propertiesName,
-                dimensionedInternalField().group()
+                internalField().group()
             )
         );
 
@@ -191,7 +191,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'
-            << this->dimensionedInternalField().name() << " :"
+            << this->internalField().name() << " :"
             << " mass flux[Kg/s]:" << phi
             << endl;
     }

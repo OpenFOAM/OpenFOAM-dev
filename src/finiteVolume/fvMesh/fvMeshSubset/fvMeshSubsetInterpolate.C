@@ -96,7 +96,7 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> fvMeshSubset::interpolate
             ),
             sMesh,
             vf.dimensions(),
-            Field<Type>(vf.internalField(), cellMap),
+            Field<Type>(vf.primitiveField(), cellMap),
             patchFields
         )
     );
@@ -233,7 +233,7 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
             vf.dimensions(),
             Field<Type>
             (
-                vf.internalField(),
+                vf.primitiveField(),
                 SubList<label>
                 (
                     faceMap,
@@ -301,10 +301,10 @@ tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvMeshSubset::interpolate
             forAll(pfld, i)
             {
                 label baseFacei = faceMap[subPatch.start()+i];
-                if (baseFacei < vf.internalField().size())
+                if (baseFacei < vf.primitiveField().size())
                 {
                     // Exposed internal face
-                    pfld[i] = vf.internalField()[baseFacei];
+                    pfld[i] = vf.primitiveField()[baseFacei];
                 }
                 else
                 {
@@ -402,7 +402,7 @@ fvMeshSubset::interpolate
             ),
             sMesh,
             vf.dimensions(),
-            Field<Type>(vf.internalField(), pointMap),
+            Field<Type>(vf.primitiveField(), pointMap),
             patchFields
         )
     );

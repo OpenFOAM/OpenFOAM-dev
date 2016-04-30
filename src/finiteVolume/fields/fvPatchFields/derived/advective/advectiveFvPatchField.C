@@ -112,8 +112,8 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
                 dict
             )   << "unphysical lInf specified (lInf < 0)" << nl
                 << "    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalIOError);
         }
     }
@@ -190,11 +190,11 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = this->dimensionedInternalField().mesh();
+    const fvMesh& mesh = this->internalField().mesh();
 
     word ddtScheme
     (
-        mesh.ddtScheme(this->dimensionedInternalField().name())
+        mesh.ddtScheme(this->internalField().name())
     );
     scalar deltaT = this->db().time().deltaTValue();
 
@@ -202,7 +202,7 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
         this->db().objectRegistry::template
         lookupObject<GeometricField<Type, fvPatchField, volMesh>>
         (
-            this->dimensionedInternalField().name()
+            this->internalField().name()
         );
 
     // Calculate the advection speed of the field wave
@@ -274,8 +274,8 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
             FatalErrorInFunction
                 << ddtScheme << nl
                 << "    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalError);
         }
     }
@@ -324,8 +324,8 @@ void Foam::advectiveFvPatchField<Type>::updateCoeffs()
             FatalErrorInFunction
                 << ddtScheme
                 << "\n    on patch " << this->patch().name()
-                << " of field " << this->dimensionedInternalField().name()
-                << " in file " << this->dimensionedInternalField().objectPath()
+                << " of field " << this->internalField().name()
+                << " in file " << this->internalField().objectPath()
                 << exit(FatalError);
         }
     }

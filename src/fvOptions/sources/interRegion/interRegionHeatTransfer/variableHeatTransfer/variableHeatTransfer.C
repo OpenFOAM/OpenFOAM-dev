@@ -122,7 +122,7 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
 
     const scalarField htcNbrMapped(interpolate(htcNbr));
 
-    htc_.internalFieldRef() = htcNbrMapped*AoV_;
+    htc_.primitiveFieldRef() = htcNbrMapped*AoV_;
 }
 
 

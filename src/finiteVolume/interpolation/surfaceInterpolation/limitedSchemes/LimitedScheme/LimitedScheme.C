@@ -57,7 +57,7 @@ void Foam::LimitedScheme<Type, Limiter, LimitFunc>::calcLimiter
 
     const vectorField& C = mesh.C();
 
-    scalarField& pLim = limiterField.internalFieldRef();
+    scalarField& pLim = limiterField.primitiveFieldRef();
 
     forAll(pLim, face)
     {

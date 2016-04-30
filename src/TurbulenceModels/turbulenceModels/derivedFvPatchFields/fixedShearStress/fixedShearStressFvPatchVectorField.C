@@ -105,7 +105,7 @@ void Foam::fixedShearStressFvPatchVectorField::updateCoeffs()
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
 

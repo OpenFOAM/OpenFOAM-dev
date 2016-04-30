@@ -36,8 +36,8 @@ Foam::scalar Foam::compressibleCourantNo
 {
     scalarField sumPhi
     (
-        fvc::surfaceSum(mag(phi))().internalField()
-      / rho.internalField()
+        fvc::surfaceSum(mag(phi))().primitiveField()
+      / rho.primitiveField()
     );
 
     scalar CoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();

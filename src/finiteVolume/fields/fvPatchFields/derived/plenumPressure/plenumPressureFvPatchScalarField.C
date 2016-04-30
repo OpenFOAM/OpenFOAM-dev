@@ -184,7 +184,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
     const fvPatchField<scalar>& p_old =
         db().lookupObject<volScalarField>
         (
-            dimensionedInternalField().name()
+            internalField().name()
         ).oldTime().boundaryField()[patch().index()];
     const fvPatchField<vector>& U =
         patch().lookupPatchField<volVectorField, vector>(UName_);
@@ -205,7 +205,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 
     // Calculate the current mass flow rate
     scalar massFlowRate(1.0);
-    if (phi.dimensionedInternalField().dimensions() == dimVelocity*dimArea)
+    if (phi.internalField().dimensions() == dimVelocity*dimArea)
     {
         if (hasRho_)
         {
@@ -220,7 +220,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
     }
     else if
     (
-        phi.dimensionedInternalField().dimensions()
+        phi.internalField().dimensions()
      == dimDensity*dimVelocity*dimArea
     )
     {
@@ -240,8 +240,8 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of phi are not correct"
             << "\n    on patch " << patch().name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath() << nl
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath() << nl
             << exit(FatalError);
     }
 

@@ -70,7 +70,7 @@ label cellId = patches[patchId].faceCells()[faceId];
 scalarField y
 (
     wallNormal
-  & (mesh.C().internalField() - mesh.C().boundaryField()[patchId][faceId])
+  & (mesh.C().primitiveField() - mesh.C().boundaryField()[patchId][faceId])
 );
 
 Info<< "    Height to first cell centre y0 = " << y[cellId] << endl;

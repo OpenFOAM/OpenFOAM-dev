@@ -81,12 +81,12 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
                 rDeltaT2.dimensions()*vf.dimensions(),
                 halfRdeltaT2*
                 (
-                    coefft*VV0*vf.internalField()
+                    coefft*VV0*vf.primitiveField()
 
                   - (coefft*VV0 + coefft00*V0V00)
-                   *vf.oldTime().internalField()
+                   *vf.oldTime().primitiveField()
 
-                  + (coefft00*V0V00)*vf.oldTime().oldTime().internalField()
+                  + (coefft00*V0V00)*vf.oldTime().oldTime().primitiveField()
                 )/mesh().V(),
                 rDeltaT2.value()*
                 (
@@ -150,15 +150,15 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
         const scalarField VV0rhoRho0
         (
             (mesh().V() + mesh().V0())
-          * (rho.internalField() + rho.oldTime().internalField())
+          * (rho.primitiveField() + rho.oldTime().primitiveField())
         );
 
         const scalarField V0V00rho0Rho00
         (
             (mesh().V0() + mesh().V00())
           * (
-                rho.oldTime().internalField()
-              + rho.oldTime().oldTime().internalField()
+                rho.oldTime().primitiveField()
+              + rho.oldTime().oldTime().primitiveField()
             )
         );
 
@@ -171,13 +171,13 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
                 rDeltaT2.dimensions()*rho.dimensions()*vf.dimensions(),
                 quarterRdeltaT2*
                 (
-                    coefft*VV0rhoRho0*vf.internalField()
+                    coefft*VV0rhoRho0*vf.primitiveField()
 
                   - (coefft*VV0rhoRho0 + coefft00*V0V00rho0Rho00)
-                   *vf.oldTime().internalField()
+                   *vf.oldTime().primitiveField()
 
                   + (coefft00*V0V00rho0Rho00)
-                   *vf.oldTime().oldTime().internalField()
+                   *vf.oldTime().oldTime().primitiveField()
                 )/mesh().V(),
                 halfRdeltaT2*
                 (
@@ -270,9 +270,9 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         fvm.source() = halfRdeltaT2*
         (
             (coefft*VV0 + coefft00*V0V00)
-           *vf.oldTime().internalField()
+           *vf.oldTime().primitiveField()
 
-          - (coefft00*V0V00)*vf.oldTime().oldTime().internalField()
+          - (coefft00*V0V00)*vf.oldTime().oldTime().primitiveField()
         );
     }
     else
@@ -281,8 +281,8 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
 
         fvm.source() = rDeltaT2*mesh().V()*
         (
-            coefft0*vf.oldTime().internalField()
-          - coefft00*vf.oldTime().oldTime().internalField()
+            coefft0*vf.oldTime().primitiveField()
+          - coefft00*vf.oldTime().oldTime().primitiveField()
         );
     }
 
@@ -330,9 +330,9 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         fvm.source() = halfRdeltaT2*rho.value()*
         (
             (coefft*VV0 + coefft00*V0V00)
-           *vf.oldTime().internalField()
+           *vf.oldTime().primitiveField()
 
-          - (coefft00*V0V00)*vf.oldTime().oldTime().internalField()
+          - (coefft00*V0V00)*vf.oldTime().oldTime().primitiveField()
         );
     }
     else
@@ -341,8 +341,8 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
 
         fvm.source() = rDeltaT2*mesh().V()*rho.value()*
         (
-            (coefft + coefft00)*vf.oldTime().internalField()
-          - coefft00*vf.oldTime().oldTime().internalField()
+            (coefft + coefft00)*vf.oldTime().primitiveField()
+          - coefft00*vf.oldTime().oldTime().primitiveField()
         );
     }
 
@@ -385,15 +385,15 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         const scalarField VV0rhoRho0
         (
             (mesh().V() + mesh().V0())
-           *(rho.internalField() + rho.oldTime().internalField())
+           *(rho.primitiveField() + rho.oldTime().primitiveField())
         );
 
         const scalarField V0V00rho0Rho00
         (
             (mesh().V0() + mesh().V00())
            *(
-               rho.oldTime().internalField()
-             + rho.oldTime().oldTime().internalField()
+               rho.oldTime().primitiveField()
+             + rho.oldTime().oldTime().primitiveField()
             )
         );
 
@@ -402,10 +402,10 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         fvm.source() = quarterRdeltaT2*
         (
             (coefft*VV0rhoRho0 + coefft00*V0V00rho0Rho00)
-           *vf.oldTime().internalField()
+           *vf.oldTime().primitiveField()
 
           - (coefft00*V0V00rho0Rho00)
-           *vf.oldTime().oldTime().internalField()
+           *vf.oldTime().oldTime().primitiveField()
         );
     }
     else
@@ -414,14 +414,14 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
 
         const scalarField rhoRho0
         (
-            rho.internalField()
-          + rho.oldTime().internalField()
+            rho.primitiveField()
+          + rho.oldTime().primitiveField()
         );
 
         const scalarField rho0Rho00
         (
-            rho.oldTime().internalField()
-          + rho.oldTime().oldTime().internalField()
+            rho.oldTime().primitiveField()
+          + rho.oldTime().oldTime().primitiveField()
         );
 
         fvm.diag() = (coefft*halfRdeltaT2)*mesh().V()*rhoRho0;
@@ -429,10 +429,10 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
         fvm.source() = halfRdeltaT2*mesh().V()*
         (
             (coefft*rhoRho0 + coefft00*rho0Rho00)
-           *vf.oldTime().internalField()
+           *vf.oldTime().primitiveField()
 
           - (coefft00*rho0Rho00)
-           *vf.oldTime().oldTime().internalField()
+           *vf.oldTime().oldTime().primitiveField()
         );
     }
 

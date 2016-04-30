@@ -244,7 +244,7 @@ void Foam::AveragingMethods::Dual<Type>::average
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::AveragingMethods::Dual<Type>::internalField() const
+Foam::AveragingMethods::Dual<Type>::primitiveField() const
 {
     return tmp<Field<Type>>(dataCell_);
 }

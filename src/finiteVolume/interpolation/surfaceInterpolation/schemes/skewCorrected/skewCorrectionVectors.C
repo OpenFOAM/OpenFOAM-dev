@@ -126,7 +126,7 @@ void Foam::skewCorrectionVectors::calcSkewCorrectionVectors()
 
     scalar skewCoeff = 0.0;
 
-    if (Sf.internalField().size())
+    if (Sf.primitiveField().size())
     {
         skewCoeff =
             max(mag(skewCorrectionVectors_)*mesh_.deltaCoeffs()).value();

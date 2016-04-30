@@ -116,7 +116,7 @@ Foam::slicedFvPatchField<Type>::slicedFvPatchField
     fvPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>()
     )
 {

@@ -160,7 +160,7 @@ Foam::string Foam::codedFixedValueFvPatchField<Type>::description() const
         "patch "
       + this->patch().name()
       + " on field "
-      + this->dimensionedInternalField().name();
+      + this->internalField().name();
 }
 
 
@@ -274,7 +274,7 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
             fvPatchField<Type>::New
             (
                 this->patch(),
-                this->dimensionedInternalField(),
+                this->internalField(),
                 dict
             ).ptr()
         );

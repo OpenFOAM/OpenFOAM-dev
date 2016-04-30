@@ -46,7 +46,7 @@ Foam::scalar Foam::solidRegionDiffNo
       / fvc::interpolate(Cprho)
     );
 
-    DiNum = gMax(kapparhoCpbyDelta.internalField())*runTime.deltaT().value();
+    DiNum = gMax(kapparhoCpbyDelta.primitiveField())*runTime.deltaT().value();
 
     meanDiNum = (average(kapparhoCpbyDelta)).value()*runTime.deltaT().value();
 

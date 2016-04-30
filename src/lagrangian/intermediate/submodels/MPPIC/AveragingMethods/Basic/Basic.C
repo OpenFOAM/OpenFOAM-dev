@@ -80,9 +80,9 @@ void Foam::AveragingMethods::Basic<Type>::updateGrad()
         dimensioned<Type>("zero", dimless, Zero),
         zeroGradientFvPatchField<Type>::typeName
     );
-    tempData.internalFieldRef() = data_;
+    tempData.primitiveFieldRef() = data_;
     tempData.correctBoundaryConditions();
-    dataGrad_ = fvc::grad(tempData)->internalField();
+    dataGrad_ = fvc::grad(tempData)->primitiveField();
 }
 
 
@@ -125,7 +125,7 @@ Foam::AveragingMethods::Basic<Type>::interpolateGrad
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::AveragingMethods::Basic<Type>::internalField() const
+Foam::AveragingMethods::Basic<Type>::primitiveField() const
 {
     return tmp<Field<Type>>(data_);
 }

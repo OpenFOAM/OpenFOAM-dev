@@ -92,8 +92,8 @@ supersonicFreestreamFvPatchVectorField
             dict
         )   << "    unphysical pInf specified (pInf <= 0.0)"
             << "\n    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -182,8 +182,8 @@ void Foam::supersonicFreestreamFvPatchVectorField::updateCoeffs()
     {
         FatalErrorInFunction
             << "\n    on patch " << this->patch().name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalError);
     }
 
@@ -280,9 +280,9 @@ void Foam::supersonicFreestreamFvPatchVectorField::updateCoeffs()
                 FatalErrorInFunction
                     << "unphysical subsonic inflow has been generated"
                     << "\n    on patch " << this->patch().name()
-                    << " of field " << this->dimensionedInternalField().name()
+                    << " of field " << this->internalField().name()
                     << " in file "
-                    << this->dimensionedInternalField().objectPath()
+                    << this->internalField().objectPath()
                     << exit(FatalError);
             }
         }

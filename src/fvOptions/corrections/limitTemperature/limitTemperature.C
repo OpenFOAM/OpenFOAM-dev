@@ -84,7 +84,7 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
     scalarField heMin(thermo.he(thermo.p(), Tmin, cells_));
     scalarField heMax(thermo.he(thermo.p(), Tmax, cells_));
 
-    scalarField& hec = he.internalFieldRef();
+    scalarField& hec = he.primitiveFieldRef();
 
     forAll(cells_, i)
     {

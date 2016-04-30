@@ -263,8 +263,8 @@ void Foam::MPPICCloud<CloudType>::info()
 
     tmp<volScalarField> alpha = this->theta();
 
-    const scalar alphaMin = gMin(alpha().internalField());
-    const scalar alphaMax = gMax(alpha().internalField());
+    const scalar alphaMin = gMin(alpha().primitiveField());
+    const scalar alphaMax = gMax(alpha().primitiveField());
 
     Info<< "    Min cell volume fraction        = " << alphaMin << endl;
     Info<< "    Max cell volume fraction        = " << alphaMax << endl;

@@ -69,7 +69,7 @@ mappedPatchFieldBase<Type>::mappedPatchFieldBase
         dict.template lookupOrDefault<word>
         (
             "fieldName",
-            patchField_.dimensionedInternalField().name()
+            patchField_.internalField().name()
         )
     ),
     setAverage_(readBool(dict.lookup("setAverage"))),
@@ -92,7 +92,7 @@ mappedPatchFieldBase<Type>::mappedPatchFieldBase
 :
     mapper_(mapper),
     patchField_(patchField),
-    fieldName_(patchField_.dimensionedInternalField().name()),
+    fieldName_(patchField_.internalField().name()),
     setAverage_(false),
     average_(Zero),
     interpolationScheme_(interpolationCell<Type>::typeName)
@@ -143,13 +143,13 @@ mappedPatchFieldBase<Type>::sampleField() const
 
     if (mapper_.sameRegion())
     {
-        if (fieldName_ == patchField_.dimensionedInternalField().name())
+        if (fieldName_ == patchField_.internalField().name())
         {
             // Optimisation: bypass field lookup
             return
                 dynamic_cast<const fieldType&>
                 (
-                    patchField_.dimensionedInternalField()
+                    patchField_.internalField()
                 );
         }
         else

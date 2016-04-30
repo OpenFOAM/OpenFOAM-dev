@@ -818,7 +818,7 @@ Foam::tmp<Foam::pointField> Foam::motionSmootherAlgo::curPoints() const
         );
     }
 
-    tmp<pointField> tnewPoints(oldPoints_ + totalDisplacement.internalField());
+    tmp<pointField> tnewPoints(oldPoints_ + totalDisplacement.primitiveField());
 
     // Correct for 2-D motion
     modifyMotionPoints(tnewPoints.ref());
@@ -886,8 +886,8 @@ bool Foam::motionSmootherAlgo::scaleMesh
     );
 
     Info<< "Moving mesh using displacement scaling :"
-        << " min:" << gMin(scale_.internalField())
-        << "  max:" << gMax(scale_.internalField())
+        << " min:" << gMin(scale_.primitiveField())
+        << "  max:" << gMax(scale_.primitiveField())
         << endl;
 
     // Get points using current displacement and scale. Optionally 2D corrected.

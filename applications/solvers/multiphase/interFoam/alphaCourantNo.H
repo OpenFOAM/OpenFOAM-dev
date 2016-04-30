@@ -41,8 +41,8 @@ if (mesh.nInternalFaces())
 {
     scalarField sumPhi
     (
-        mixture.nearInterface()().internalField()
-       *fvc::surfaceSum(mag(phi))().internalField()
+        mixture.nearInterface()().primitiveField()
+       *fvc::surfaceSum(mag(phi))().primitiveField()
     );
 
     alphaCoNum = 0.5*gMax(sumPhi/mesh.V().field())*runTime.deltaTValue();

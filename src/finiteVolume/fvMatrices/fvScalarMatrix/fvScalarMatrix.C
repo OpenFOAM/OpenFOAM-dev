@@ -114,7 +114,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::fvSolver::solve
 
     solverPerformance solverPerf = solver_->solve
     (
-        psi.internalFieldRef(),
+        psi.primitiveFieldRef(),
         totalSource
     );
 
@@ -166,7 +166,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::solveSegregated
         internalCoeffs_,
         psi_.boundaryField().scalarInterfaces(),
         solverControls
-    )->solve(psi.internalFieldRef(), totalSource);
+    )->solve(psi.primitiveFieldRef(), totalSource);
 
     if (solverPerformance::debug)
     {
@@ -193,8 +193,8 @@ Foam::tmp<Foam::scalarField> Foam::fvMatrix<Foam::scalar>::residual() const
     (
         lduMatrix::residual
         (
-            psi_.internalField(),
-            source_ - boundaryDiag*psi_.internalField(),
+            psi_.primitiveField(),
+            source_ - boundaryDiag*psi_.primitiveField(),
             boundaryCoeffs_,
             psi_.boundaryField().scalarInterfaces(),
             0
@@ -229,10 +229,10 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H() const
     );
     volScalarField& Hphi = tHphi.ref();
 
-    Hphi.internalFieldRef() = (lduMatrix::H(psi_.internalField()) + source_);
-    addBoundarySource(Hphi.internalFieldRef());
+    Hphi.primitiveFieldRef() = (lduMatrix::H(psi_.primitiveField()) + source_);
+    addBoundarySource(Hphi.primitiveFieldRef());
 
-    Hphi.internalFieldRef() /= psi_.mesh().V();
+    Hphi.primitiveFieldRef() /= psi_.mesh().V();
     Hphi.correctBoundaryConditions();
 
     return tHphi;
@@ -261,10 +261,10 @@ Foam::tmp<Foam::volScalarField> Foam::fvMatrix<Foam::scalar>::H1() const
     );
     volScalarField& H1_ = tH1.ref();
 
-    H1_.internalFieldRef() = lduMatrix::H1();
-    //addBoundarySource(Hphi.internalField());
+    H1_.primitiveFieldRef() = lduMatrix::H1();
+    //addBoundarySource(Hphi.primitiveField());
 
-    H1_.internalFieldRef() /= psi_.mesh().V();
+    H1_.primitiveFieldRef() /= psi_.mesh().V();
     H1_.correctBoundaryConditions();
 
     return tH1;

@@ -14,7 +14,7 @@ if (!thermo.isotropic())
     tmp<volVectorField> tkappaByCp = thermo.Kappa()/cp;
     const coordinateSystem& coodSys = coordinates[i];
 
-    aniAlpha.internalFieldRef() =
+    aniAlpha.primitiveFieldRef() =
         coodSys.R().transformVector(tkappaByCp());
     aniAlpha.correctBoundaryConditions();
 

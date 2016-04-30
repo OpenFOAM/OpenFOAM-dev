@@ -74,7 +74,7 @@ Foam::tmp<Foam::volScalarField> Foam::XiEqModels::Gulder::XiEq() const
 
     if (subGridSchelkin_)
     {
-        up.internalFieldRef() += calculateSchelkinEffect(uPrimeCoef_);
+        up.primitiveFieldRef() += calculateSchelkinEffect(uPrimeCoef_);
     }
 
     volScalarField tauEta(sqrt(mag(thermo_.muu()/(thermo_.rhou()*epsilon))));

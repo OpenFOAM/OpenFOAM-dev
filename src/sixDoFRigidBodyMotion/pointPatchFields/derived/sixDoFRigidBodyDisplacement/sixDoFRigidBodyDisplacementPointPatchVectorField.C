@@ -195,7 +195,7 @@ void sixDoFRigidBodyDisplacementPointPatchVectorField::updateCoeffs()
         }
     }
 
-    const polyMesh& mesh = this->dimensionedInternalField().mesh()();
+    const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
     const pointPatch& ptPatch = this->patch();
 

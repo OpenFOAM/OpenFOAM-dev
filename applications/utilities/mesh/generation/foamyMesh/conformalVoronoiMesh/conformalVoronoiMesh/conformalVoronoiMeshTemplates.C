@@ -117,7 +117,7 @@ bool Foam::conformalVoronoiMesh::distributeBackground(const Triangulation& mesh)
             }
         }
 
-        scalarField& cwi = cellWeights.internalFieldRef();
+        scalarField& cwi = cellWeights.primitiveFieldRef();
 
         forAll(cellVertices, cI)
         {

@@ -143,7 +143,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 
         // copy field and source
 
-        scalarField psiCmpt(psi.internalField().component(cmpt));
+        scalarField psiCmpt(psi.primitiveField().component(cmpt));
         addBoundaryDiag(diag(), cmpt);
 
         scalarField sourceCmpt(source.component(cmpt));
@@ -202,7 +202,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
 
         solverPerfVec.replace(cmpt, solverPerf);
 
-        psi.internalFieldRef().replace(cmpt, psiCmpt);
+        psi.primitiveFieldRef().replace(cmpt, psiCmpt);
         diag() = saveDiag;
     }
 
@@ -337,7 +337,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fvMatrix<Type>::residual() const
     // Loop over field components
     for (direction cmpt=0; cmpt<Type::nComponents; cmpt++)
     {
-        scalarField psiCmpt(psi_.internalField().component(cmpt));
+        scalarField psiCmpt(psi_.primitiveField().component(cmpt));
 
         scalarField boundaryDiagCmpt(psi_.size(), 0.0);
         addBoundaryDiag(boundaryDiagCmpt, cmpt);

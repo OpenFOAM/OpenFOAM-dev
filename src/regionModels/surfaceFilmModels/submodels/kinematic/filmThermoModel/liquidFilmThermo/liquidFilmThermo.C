@@ -255,7 +255,7 @@ tmp<volScalarField> liquidFilmThermo::rho() const
         )
     );
 
-    scalarField& rho = trho.ref().internalFieldRef();
+    scalarField& rho = trho.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -303,7 +303,7 @@ tmp<volScalarField> liquidFilmThermo::mu() const
         )
     );
 
-    scalarField& mu = tmu.ref().internalFieldRef();
+    scalarField& mu = tmu.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -351,7 +351,7 @@ tmp<volScalarField> liquidFilmThermo::sigma() const
         )
     );
 
-    scalarField& sigma = tsigma.ref().internalFieldRef();
+    scalarField& sigma = tsigma.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -399,7 +399,7 @@ tmp<volScalarField> liquidFilmThermo::Cp() const
         )
     );
 
-    scalarField& Cp = tCp.ref().internalFieldRef();
+    scalarField& Cp = tCp.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {
@@ -447,7 +447,7 @@ tmp<volScalarField> liquidFilmThermo::kappa() const
         )
     );
 
-    scalarField& kappa = tkappa.ref().internalFieldRef();
+    scalarField& kappa = tkappa.ref().primitiveFieldRef();
 
     if (useReferenceValues_)
     {

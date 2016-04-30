@@ -3,7 +3,7 @@
     // The ddt term constructed by hand because it would be wrong for
     // Backward Differencing in time.
 
-    conserve.internalFieldRef() +=
+    conserve.primitiveFieldRef() +=
         (1.0 - mesh.V0()/mesh.V())/runTime.deltaTValue();
 
     scalar sumLocalContErr = runTime.deltaTValue()*

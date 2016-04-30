@@ -82,7 +82,7 @@ void Foam::VoidFraction<CloudType>::preEvolve()
 {
     if (thetaPtr_.valid())
     {
-        thetaPtr_->internalFieldRef() = 0.0;
+        thetaPtr_->primitiveFieldRef() = 0.0;
     }
     else
     {
@@ -115,7 +115,7 @@ void Foam::VoidFraction<CloudType>::postEvolve()
 
     const fvMesh& mesh = this->owner().mesh();
 
-    theta.internalFieldRef() /= mesh.time().deltaTValue()*mesh.V();
+    theta.primitiveFieldRef() /= mesh.time().deltaTValue()*mesh.V();
 
     CloudFunctionObject<CloudType>::postEvolve();
 }

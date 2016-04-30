@@ -344,7 +344,7 @@ Foam::dynamicRefineFvMesh::refine
 
                 surfaceScalarField& phi = *iter();
 
-                sigFpe::fillNan(phi.internalFieldRef());
+                sigFpe::fillNan(phi.primitiveFieldRef());
 
                 continue;
             }

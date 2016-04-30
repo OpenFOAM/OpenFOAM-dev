@@ -1137,7 +1137,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
             zeroGradientFvPatchScalarField::typeName
         );
 
-        scalarField& cellSize = targetCellSize.internalFieldRef();
+        scalarField& cellSize = targetCellSize.primitiveFieldRef();
 
         const vectorField& C = mesh.cellCentres();
 
@@ -1163,7 +1163,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
-        // targetCellVolume.internalFieldRef() = pow3(cellSize);
+        // targetCellVolume.primitiveFieldRef() = pow3(cellSize);
 
         // Info<< nl << "Create actualCellVolume volScalarField" << endl;
 
@@ -1182,7 +1182,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
-        // actualCellVolume.internalFieldRef() = mesh.cellVolumes();
+        // actualCellVolume.primitiveFieldRef() = mesh.cellVolumes();
 
         // Info<< nl << "Create equivalentCellSize volScalarField" << endl;
 
@@ -1201,9 +1201,9 @@ void Foam::conformalVoronoiMesh::writeCellSizes
         //     zeroGradientFvPatchScalarField::typeName
         // );
 
-        // equivalentCellSize.internalFieldRef() = pow
+        // equivalentCellSize.primitiveFieldRef() = pow
         // (
-        //     actualCellVolume.internalField(),
+        //     actualCellVolume.primitiveField(),
         //     1.0/3.0
         // );
 
@@ -1247,7 +1247,7 @@ void Foam::conformalVoronoiMesh::writeCellSizes
     //         pointPatchVectorField::calculatedType()
     //     );
 
-    //     scalarField& cellSize = ptTargetCellSize.internalFieldRef();
+    //     scalarField& cellSize = ptTargetCellSize.primitiveFieldRef();
 
     //     const vectorField& P = tetMesh.points();
 
@@ -1283,7 +1283,7 @@ void Foam::conformalVoronoiMesh::writeCellAlignments
 //        zeroGradientFvPatchTensorField::typeName
 //    );
 //
-//    tensorField& cellAlignment = cellAlignments.internalFieldRef();
+//    tensorField& cellAlignment = cellAlignments.primitiveFieldRef();
 //
 //    const vectorField& C = mesh.cellCentres();
 //

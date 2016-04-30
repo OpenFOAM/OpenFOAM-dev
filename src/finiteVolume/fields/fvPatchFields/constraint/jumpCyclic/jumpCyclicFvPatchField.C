@@ -93,7 +93,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::jumpCyclicFvPatchField<Type>::patchNeighbourField() const
 {
-    const Field<Type>& iField = this->internalField();
+    const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCells =
         this->cyclicPatch().neighbFvPatch().faceCells();
 
@@ -157,7 +157,7 @@ void Foam::jumpCyclicFvPatchField<Type>::updateInterfaceMatrix
         this->cyclicPatch().neighbFvPatch().faceCells();
 
     // only apply jump to original field
-    if (&psiInternal == &this->internalField())
+    if (&psiInternal == &this->primitiveField())
     {
         Field<Type> jf(this->jump());
 

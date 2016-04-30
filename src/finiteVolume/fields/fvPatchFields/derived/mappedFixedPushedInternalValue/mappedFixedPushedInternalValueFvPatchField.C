@@ -104,7 +104,7 @@ void Foam::mappedFixedPushedInternalValueFvPatchField<Type>::updateCoeffs()
     mappedFixedValueFvPatchField<Type>::updateCoeffs();
 
     // Assign the patch internal field to its boundary value
-    Field<Type>& intFld = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& intFld = const_cast<Field<Type>&>(this->primitiveField());
     UIndirectList<Type>(intFld, this->patch().faceCells()) = *this;
 }
 

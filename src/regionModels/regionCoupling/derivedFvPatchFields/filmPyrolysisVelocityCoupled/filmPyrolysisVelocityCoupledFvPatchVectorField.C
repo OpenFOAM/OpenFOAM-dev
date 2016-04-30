@@ -189,8 +189,8 @@ void Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
             << "Unable to process flux field phi with dimensions "
             << phi.dimensions() << nl
             << "    on patch " << patch().name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 

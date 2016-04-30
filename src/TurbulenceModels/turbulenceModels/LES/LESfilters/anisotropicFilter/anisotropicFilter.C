@@ -63,14 +63,14 @@ Foam::anisotropicFilter::anisotropicFilter
 {
     for (direction d=0; d<vector::nComponents; d++)
     {
-        coeff_.internalFieldRef().replace
+        coeff_.primitiveFieldRef().replace
         (
             d,
             (1/widthCoeff_)*
             sqr
             (
                 2.0*mesh.V()
-               /fvc::surfaceSum(mag(mesh.Sf().component(d)))().internalField()
+               /fvc::surfaceSum(mag(mesh.Sf().component(d)))().primitiveField()
             )
         );
     }
@@ -100,14 +100,14 @@ Foam::anisotropicFilter::anisotropicFilter
 {
     for (direction d=0; d<vector::nComponents; d++)
     {
-        coeff_.internalFieldRef().replace
+        coeff_.primitiveFieldRef().replace
         (
             d,
             (1/widthCoeff_)*
             sqr
             (
                 2.0*mesh.V()
-               /fvc::surfaceSum(mag(mesh.Sf().component(d)))().internalField()
+               /fvc::surfaceSum(mag(mesh.Sf().component(d)))().primitiveField()
             )
         );
     }

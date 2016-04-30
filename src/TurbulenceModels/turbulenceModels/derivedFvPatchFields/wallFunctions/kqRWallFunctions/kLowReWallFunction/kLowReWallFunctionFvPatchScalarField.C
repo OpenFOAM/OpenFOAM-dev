@@ -175,7 +175,7 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
     const scalarField& y = turbModel.y()[patchi];

@@ -122,7 +122,7 @@ void Foam::fv::tabulatedHeatTransfer::calculateHtc()
 
     const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
-    scalarField& htcc = htc_.internalFieldRef();
+    scalarField& htcc = htc_.primitiveFieldRef();
 
     forAll(htcc, i)
     {

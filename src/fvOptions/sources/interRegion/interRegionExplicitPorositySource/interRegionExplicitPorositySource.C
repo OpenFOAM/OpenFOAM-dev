@@ -160,9 +160,9 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     // Map local velocity onto neighbour region
     meshInterp().mapSrcToTgt
     (
-        U.internalField(),
+        U.primitiveField(),
         plusEqOp<vector>(),
-        UNbr.internalFieldRef()
+        UNbr.primitiveFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -214,9 +214,9 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     // Map local velocity onto neighbour region
     meshInterp().mapSrcToTgt
     (
-        U.internalField(),
+        U.primitiveField(),
         plusEqOp<vector>(),
-        UNbr.internalFieldRef()
+        UNbr.primitiveFieldRef()
     );
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
@@ -255,17 +255,17 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     // Map local rho onto neighbour region
     meshInterp().mapSrcToTgt
     (
-        rho.internalField(),
+        rho.primitiveField(),
         plusEqOp<scalar>(),
-        rhoNbr.internalFieldRef()
+        rhoNbr.primitiveFieldRef()
     );
 
     // Map local mu onto neighbour region
     meshInterp().mapSrcToTgt
     (
-        mu.internalField(),
+        mu.primitiveField(),
         plusEqOp<scalar>(),
-        muNbr.internalFieldRef()
+        muNbr.primitiveFieldRef()
     );
 
     porosityPtr_->addResistance(nbrEqn, rhoNbr, muNbr);

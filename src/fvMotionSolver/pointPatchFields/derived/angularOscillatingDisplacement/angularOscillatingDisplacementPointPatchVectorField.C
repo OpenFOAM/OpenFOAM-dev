@@ -155,7 +155,7 @@ void angularOscillatingDisplacementPointPatchVectorField::updateCoeffs()
         return;
     }
 
-    const polyMesh& mesh = this->dimensionedInternalField().mesh()();
+    const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
     scalar angle = angle0_ + amplitude_*sin(omega_*t.value());

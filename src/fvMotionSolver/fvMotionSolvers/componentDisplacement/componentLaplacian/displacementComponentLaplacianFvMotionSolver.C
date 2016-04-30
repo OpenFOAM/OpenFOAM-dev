@@ -158,12 +158,12 @@ Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
 
         // Apply pointLocation_ b.c. to mesh points.
 
-        pointLocation_().internalFieldRef() = fvMesh_.points();
+        pointLocation_().primitiveFieldRef() = fvMesh_.points();
 
-        pointLocation_().internalFieldRef().replace
+        pointLocation_().primitiveFieldRef().replace
         (
             cmpt_,
-            points0_ + pointDisplacement_.internalField()
+            points0_ + pointDisplacement_.primitiveField()
         );
 
         pointLocation_().correctBoundaryConditions();
@@ -181,9 +181,9 @@ Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
             }
         }
 
-        twoDCorrectPoints(pointLocation_().internalFieldRef());
+        twoDCorrectPoints(pointLocation_().primitiveFieldRef());
 
-        return tmp<pointField>(pointLocation_().internalField());
+        return tmp<pointField>(pointLocation_().primitiveField());
     }
     else
     {
@@ -193,7 +193,7 @@ Foam::displacementComponentLaplacianFvMotionSolver::curPoints() const
         curPoints.replace
         (
             cmpt_,
-            points0_ + pointDisplacement_.internalField()
+            points0_ + pointDisplacement_.primitiveField()
         );
 
         // Implement frozen points

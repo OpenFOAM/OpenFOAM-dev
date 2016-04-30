@@ -177,7 +177,7 @@ Foam::radiation::wideBandAbsorptionEmission::aCont(const label bandI) const
         )
     );
 
-    scalarField& a = ta.ref().internalFieldRef();
+    scalarField& a = ta.ref().primitiveFieldRef();
 
     forAll(a, i)
     {
@@ -255,18 +255,18 @@ Foam::radiation::wideBandAbsorptionEmission::ECont(const label bandI) const
 
         if (dQ.dimensions() == dimEnergy/dimTime)
         {
-            E.ref().internalFieldRef() =
+            E.ref().primitiveFieldRef() =
                 iEhrrCoeffs_[bandI]
-               *dQ.internalField()
+               *dQ.primitiveField()
                *(iBands_[bandI][1] - iBands_[bandI][0])
                /totalWaveLength_
                /mesh_.V();
         }
         else if (dQ.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E.ref().internalFieldRef() =
+            E.ref().primitiveFieldRef() =
                 iEhrrCoeffs_[bandI]
-               *dQ.internalField()
+               *dQ.primitiveField()
                *(iBands_[bandI][1] - iBands_[bandI][0])
                /totalWaveLength_;
         }
@@ -291,10 +291,10 @@ void Foam::radiation::wideBandAbsorptionEmission::correct
 
     for (label j=0; j<nBands_; j++)
     {
-        aLambda[j].internalFieldRef() = this->a(j);
+        aLambda[j].primitiveFieldRef() = this->a(j);
 
-        a.internalFieldRef() +=
-            aLambda[j].internalField()
+        a.primitiveFieldRef() +=
+            aLambda[j].primitiveField()
            *(iBands_[j][1] - iBands_[j][0])
            /totalWaveLength_;
     }

@@ -250,7 +250,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
             mesh_,
             dimensionedScalar("0", dimArea, 0)
         );
-        UIndirectList<scalar>(area.internalField(), cells_) = area_;
+        UIndirectList<scalar>(area.primitiveField(), cells_) = area_;
 
         Info<< type() << ": " << name_ << " writing field " << area.name()
             << endl;
@@ -448,7 +448,7 @@ Foam::tmp<Foam::vectorField> Foam::fv::rotorDiskSource::inflowVelocity
         }
         case ifLocal:
         {
-            return U.internalField();
+            return U.primitiveField();
 
             break;
         }

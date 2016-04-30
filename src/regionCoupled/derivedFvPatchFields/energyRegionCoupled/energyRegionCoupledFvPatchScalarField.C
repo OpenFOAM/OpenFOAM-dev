@@ -258,8 +258,8 @@ energyRegionCoupledFvPatchScalarField
         FatalErrorInFunction
             << "' not type '" << regionCoupledBase::typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << dimensionedInternalField().name()
-            << " in file " << dimensionedInternalField().objectPath()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
             << exit(FatalError);
     }
 }
@@ -354,7 +354,7 @@ patchNeighbourField() const
 
     const scalarField nbrIntT
     (
-        nbrThermoPtr_->T().internalField(), nbrFaceCells
+        nbrThermoPtr_->T().primitiveField(), nbrFaceCells
     );
 
     scalarField intNbrT
@@ -379,7 +379,7 @@ patchNeighbourTemperatureField() const
 
     const scalarField nbrIntT
     (
-        nbrThermoPtr_->T().internalField(), nbrFaceCells
+        nbrThermoPtr_->T().primitiveField(), nbrFaceCells
     );
 
      tmp<scalarField> tintNbrT =
@@ -396,7 +396,7 @@ patchInternalTemperatureField() const
 
     tmp<scalarField> tintT
     (
-        new scalarField(thermoPtr_->T().internalField(), faceCells)
+        new scalarField(thermoPtr_->T().primitiveField(), faceCells)
     );
 
     return tintT;
@@ -416,7 +416,7 @@ void Foam::energyRegionCoupledFvPatchScalarField::updateInterfaceMatrix
 
     scalarField myHE(this->size());
 
-    if (&psiInternal == &internalField())
+    if (&psiInternal == &primitiveField())
     {
         label patchi = this->patch().index();
         const scalarField& pp =  thermoPtr_->p().boundaryField()[patchi];

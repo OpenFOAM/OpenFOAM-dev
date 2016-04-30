@@ -167,7 +167,7 @@ updateCoeffs()
 
     label rayId = -1;
     label lambdaId = -1;
-    dom.setRayIdLambdaId(dimensionedInternalField().name(), rayId, lambdaId);
+    dom.setRayIdLambdaId(internalField().name(), rayId, lambdaId);
 
     const label patchi = patch().index();
 

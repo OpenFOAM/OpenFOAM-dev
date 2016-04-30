@@ -53,8 +53,8 @@
     rDeltaT.correctBoundaryConditions();
 
     Info<< "Flow time scale min/max = "
-        << gMin(1/rDeltaT.internalField())
-        << ", " << gMax(1/rDeltaT.internalField()) << endl;
+        << gMin(1/rDeltaT.primitiveField())
+        << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
 
     if (rDeltaTSmoothingCoeff < 1.0)
     {
@@ -62,8 +62,8 @@
     }
 
     Info<< "Smoothed flow time scale min/max = "
-        << gMin(1/rDeltaT.internalField())
-        << ", " << gMax(1/rDeltaT.internalField()) << endl;
+        << gMin(1/rDeltaT.primitiveField())
+        << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
 
     // Limit rate of change of time scale
     // - reduce as much as required
@@ -79,7 +79,7 @@
            *max(rDeltaT/rDeltaT0, scalar(1) - rDeltaTDampingCoeff);
 
         Info<< "Damped flow time scale min/max = "
-            << gMin(1/rDeltaT.internalField())
-            << ", " << gMax(1/rDeltaT.internalField()) << endl;
+            << gMin(1/rDeltaT.primitiveField())
+            << ", " << gMax(1/rDeltaT.primitiveField()) << endl;
     }
 }

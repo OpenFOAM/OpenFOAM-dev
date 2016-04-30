@@ -59,8 +59,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
         FatalErrorInFunction
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -86,8 +86,8 @@ Foam::cyclicACMIFvPatchField<Type>::cyclicACMIFvPatchField
         )   << "    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 
@@ -136,7 +136,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::cyclicACMIFvPatchField<Type>::patchNeighbourField() const
 {
-    const Field<Type>& iField = this->internalField();
+    const Field<Type>& iField = this->primitiveField();
     const labelUList& nbrFaceCellsCoupled =
         cyclicACMIPatch_.cyclicACMIPatch().neighbPatch().faceCells();
     const labelUList& faceCellsNonOverlap =
@@ -173,7 +173,7 @@ Foam::cyclicACMIFvPatchField<Type>::neighbourPatchField() const
     const GeometricField<Type, fvPatchField, volMesh>& fld =
         static_cast<const GeometricField<Type, fvPatchField, volMesh>&>
         (
-            this->internalField()
+            this->primitiveField()
         );
 
     return refCast<const cyclicACMIFvPatchField<Type>>
@@ -190,7 +190,7 @@ Foam::cyclicACMIFvPatchField<Type>::nonOverlapPatchField() const
     const GeometricField<Type, fvPatchField, volMesh>& fld =
         static_cast<const GeometricField<Type, fvPatchField, volMesh>&>
         (
-            this->internalField()
+            this->primitiveField()
         );
 
     return fld.boundaryField()[cyclicACMIPatch_.nonOverlapPatchID()];

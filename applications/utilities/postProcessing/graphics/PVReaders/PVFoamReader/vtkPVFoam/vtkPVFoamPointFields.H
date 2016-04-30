@@ -152,7 +152,7 @@ void Foam::vtkPVFoam::convertPointFields
             // Extract the field on the zone
             Field<Type> fld
             (
-                ptf.internalField(),
+                ptf.primitiveField(),
                 mesh.faceZones()[zoneId]().meshPoints()
             );
 

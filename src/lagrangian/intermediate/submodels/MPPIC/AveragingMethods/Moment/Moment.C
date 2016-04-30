@@ -198,7 +198,7 @@ Foam::AveragingMethods::Moment<Type>::interpolateGrad
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::AveragingMethods::Moment<Type>::internalField() const
+Foam::AveragingMethods::Moment<Type>::primitiveField() const
 {
     return tmp<Field<Type>>(data_);
 }

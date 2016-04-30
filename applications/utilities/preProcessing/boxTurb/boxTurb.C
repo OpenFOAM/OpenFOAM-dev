@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 
     turbGen Ugen(K, Ea, k0);
 
-    U.internalFieldRef() = Ugen.U();
+    U.primitiveFieldRef() = Ugen.U();
     U.correctBoundaryConditions();
 
     Info<< "k("

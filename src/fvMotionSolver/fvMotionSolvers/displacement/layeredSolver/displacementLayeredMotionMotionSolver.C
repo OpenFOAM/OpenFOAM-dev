@@ -512,7 +512,7 @@ Foam::displacementLayeredMotionMotionSolver::curPoints() const
 {
     tmp<pointField> tcurPoints
     (
-        points0() + pointDisplacement_.internalField()
+        points0() + pointDisplacement_.primitiveField()
     );
 
     return tcurPoints;

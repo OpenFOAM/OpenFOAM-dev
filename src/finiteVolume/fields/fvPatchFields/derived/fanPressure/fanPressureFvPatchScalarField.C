@@ -151,8 +151,8 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
         FatalErrorInFunction
             << "dimensions of phi are not correct"
                 << "\n    on patch " << patch().name()
-                << " of field " << dimensionedInternalField().name()
-                << " in file " << dimensionedInternalField().objectPath() << nl
+                << " of field " << internalField().name()
+                << " in file " << internalField().objectPath() << nl
                 << exit(FatalError);
     }
 

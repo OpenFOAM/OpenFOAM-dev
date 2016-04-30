@@ -308,8 +308,8 @@ const Foam::basicThermo& Foam::basicThermo::lookupThermo
         {
             if
             (
-                &(iter()->he().dimensionedInternalField())
-              == &(pf.dimensionedInternalField())
+                &(iter()->he().internalField())
+              == &(pf.internalField())
             )
             {
                 return *iter();

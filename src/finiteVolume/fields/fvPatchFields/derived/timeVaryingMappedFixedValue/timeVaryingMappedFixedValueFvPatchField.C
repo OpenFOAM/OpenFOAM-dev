@@ -563,7 +563,7 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::write
         os.writeKeyword("perturb") << perturb_ << token::END_STATEMENT << nl;
     }
 
-    if (fieldTableName_ != this->dimensionedInternalField().name())
+    if (fieldTableName_ != this->internalField().name())
     {
         os.writeKeyword("fieldTableName") << fieldTableName_
             << token::END_STATEMENT << nl;

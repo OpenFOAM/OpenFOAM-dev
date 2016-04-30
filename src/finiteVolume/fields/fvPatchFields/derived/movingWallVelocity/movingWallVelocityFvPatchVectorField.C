@@ -99,7 +99,7 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const fvMesh& mesh = dimensionedInternalField().mesh();
+    const fvMesh& mesh = internalField().mesh();
 
     if (mesh.moving())
     {
@@ -119,7 +119,7 @@ void Foam::movingWallVelocityFvPatchVectorField::updateCoeffs()
         const vectorField Up((pp.faceCentres() - oldFc)/deltaT);
 
         const volVectorField& U =
-            static_cast<const volVectorField&>(dimensionedInternalField());
+            static_cast<const volVectorField&>(internalField());
 
         scalarField phip
         (

@@ -33,10 +33,10 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
     const scalarField& hCells = this->he_;
     const scalarField& pCells = this->p_;
 
-    scalarField& TCells = this->T_.internalFieldRef();
-    scalarField& psiCells = this->psi_.internalFieldRef();
-    scalarField& muCells = this->mu_.internalFieldRef();
-    scalarField& alphaCells = this->alpha_.internalFieldRef();
+    scalarField& TCells = this->T_.primitiveFieldRef();
+    scalarField& psiCells = this->psi_.primitiveFieldRef();
+    scalarField& muCells = this->mu_.primitiveFieldRef();
+    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {

@@ -44,7 +44,7 @@ Foam::externalCoupledMixedFvPatchField<Type>::patchKey = "# Patch: ";
 template<class Type>
 Foam::fileName Foam::externalCoupledMixedFvPatchField<Type>::baseDir() const
 {
-    word regionName(this->dimensionedInternalField().mesh().name());
+    word regionName(this->internalField().mesh().name());
     if (regionName == polyMesh::defaultRegion)
     {
         regionName = ".";
@@ -64,7 +64,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::setMaster
 )
 {
     const volFieldType& cvf =
-        static_cast<const volFieldType&>(this->dimensionedInternalField());
+        static_cast<const volFieldType&>(this->internalField());
 
     volFieldType& vf = const_cast<volFieldType&>(cvf);
 
@@ -242,7 +242,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::startWait() const
     // only wait on master patch
 
     const volFieldType& cvf =
-        static_cast<const volFieldType&>(this->dimensionedInternalField());
+        static_cast<const volFieldType&>(this->internalField());
 
     const typename volFieldType::Boundary& bf =
         cvf.boundaryField();
@@ -406,7 +406,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::writeData
     writeHeader(os);
 
     const volFieldType& cvf =
-        static_cast<const volFieldType&>(this->dimensionedInternalField());
+        static_cast<const volFieldType&>(this->internalField());
 
     const typename volFieldType::Boundary& bf =
         cvf.boundaryField();
@@ -608,7 +608,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::initialise
     }
 
     const volFieldType& cvf =
-        static_cast<const volFieldType&>(this->dimensionedInternalField());
+        static_cast<const volFieldType&>(this->internalField());
 
     volFieldType& vf = const_cast<volFieldType&>(cvf);
 
@@ -777,7 +777,7 @@ template<class Type>
 void Foam::externalCoupledMixedFvPatchField<Type>::writeGeometry() const
 {
     const volFieldType& cvf =
-        static_cast<const volFieldType&>(this->dimensionedInternalField());
+        static_cast<const volFieldType&>(this->internalField());
 
     const typename volFieldType::Boundary& bf =
         cvf.boundaryField();

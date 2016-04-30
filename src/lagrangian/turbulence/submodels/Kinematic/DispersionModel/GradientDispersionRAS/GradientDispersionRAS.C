@@ -104,10 +104,10 @@ Foam::vector Foam::GradientDispersionRAS<CloudType>::update
 
     const scalar cps = 0.16432;
 
-    const scalar k = this->kPtr_->internalField()[celli];
+    const scalar k = this->kPtr_->primitiveField()[celli];
     const scalar epsilon =
-        this->epsilonPtr_->internalField()[celli] + ROOTVSMALL;
-    const vector& gradk = this->gradkPtr_->internalField()[celli];
+        this->epsilonPtr_->primitiveField()[celli] + ROOTVSMALL;
+    const vector& gradk = this->gradkPtr_->primitiveField()[celli];
 
     const scalar UrelMag = mag(U - Uc - UTurb);
 

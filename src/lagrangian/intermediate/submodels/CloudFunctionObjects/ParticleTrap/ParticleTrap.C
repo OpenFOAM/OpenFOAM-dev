@@ -110,7 +110,7 @@ void Foam::ParticleTrap<CloudType>::postMove
     bool&
 )
 {
-    if (alphaPtr_->internalField()[celli] < threshold_)
+    if (alphaPtr_->primitiveField()[celli] < threshold_)
     {
         const vector& gradAlpha = gradAlphaPtr_()[celli];
         vector nHat = gradAlpha/mag(gradAlpha);

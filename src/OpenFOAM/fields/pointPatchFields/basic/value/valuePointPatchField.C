@@ -155,7 +155,7 @@ void Foam::valuePointPatchField<Type>::updateCoeffs()
     }
 
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, *this);
 
@@ -167,7 +167,7 @@ template<class Type>
 void Foam::valuePointPatchField<Type>::evaluate(const Pstream::commsTypes)
 {
     // Get internal field to insert values into
-    Field<Type>& iF = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& iF = const_cast<Field<Type>&>(this->primitiveField());
 
     this->setInInternalField(iF, *this);
 

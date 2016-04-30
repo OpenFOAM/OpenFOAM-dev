@@ -92,8 +92,8 @@ gaussConvectionScheme<Type>::fvmDiv
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    fvm.lower() = -weights.internalField()*faceFlux.internalField();
-    fvm.upper() = fvm.lower() + faceFlux.internalField();
+    fvm.lower() = -weights.primitiveField()*faceFlux.primitiveField();
+    fvm.upper() = fvm.lower() + faceFlux.primitiveField();
     fvm.negSumDiag();
 
     forAll(vf.boundaryField(), patchi)

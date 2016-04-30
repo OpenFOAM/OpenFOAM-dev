@@ -113,7 +113,7 @@ void alphatWallFunctionFvPatchScalarField::updateCoeffs()
             IOobject::groupName
             (
                 compressibleTurbulenceModel::propertiesName,
-                dimensionedInternalField().group()
+                internalField().group()
             )
         );
 

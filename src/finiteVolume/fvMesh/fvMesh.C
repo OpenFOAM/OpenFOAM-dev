@@ -763,8 +763,9 @@ Foam::tmp<Foam::scalarField> Foam::fvMesh::movePoints(const pointField& p)
     tmp<scalarField> tsweptVols = polyMesh::movePoints(p);
     scalarField& sweptVols = tsweptVols.ref();
 
-    phi.internalFieldRef() = scalarField::subField(sweptVols, nInternalFaces());
-    phi.internalFieldRef() *= rDeltaT;
+    phi.primitiveFieldRef() =
+        scalarField::subField(sweptVols, nInternalFaces());
+    phi.primitiveFieldRef() *= rDeltaT;
 
     const fvPatchList& patches = boundary();
 

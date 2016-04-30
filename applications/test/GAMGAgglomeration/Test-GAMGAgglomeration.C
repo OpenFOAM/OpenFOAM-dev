@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
             mesh,
             dimensionedScalar("aggomeration", dimless, 0.0)
         );
-        scalarField& fld = scalarAgglomeration.internalFieldRef();
+        scalarField& fld = scalarAgglomeration.primitiveFieldRef();
         forAll(fld, celli)
         {
             fld[celli] = cellToCoarse[celli];
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
                 mesh,
                 dimensionedScalar("aggomeration", dimless, 0.0)
             );
-            scalarField& fld = scalarAgglomeration.internalFieldRef();
+            scalarField& fld = scalarAgglomeration.primitiveFieldRef();
             forAll(fld, celli)
             {
                 fld[celli] = cellToCoarse[celli];

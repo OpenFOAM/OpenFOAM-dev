@@ -173,9 +173,9 @@ Foam::displacementLaplacianFvMotionSolver::curPoints() const
                 << endl;
         }
 
-        pointLocation_().internalFieldRef() =
+        pointLocation_().primitiveFieldRef() =
             points0()
-          + pointDisplacement_.internalField();
+          + pointDisplacement_.primitiveField();
 
         pointLocation_().correctBoundaryConditions();
 
@@ -190,15 +190,15 @@ Foam::displacementLaplacianFvMotionSolver::curPoints() const
             }
         }
 
-        twoDCorrectPoints(pointLocation_().internalFieldRef());
+        twoDCorrectPoints(pointLocation_().primitiveFieldRef());
 
-        return tmp<pointField>(pointLocation_().internalField());
+        return tmp<pointField>(pointLocation_().primitiveField());
     }
     else
     {
         tmp<pointField> tcurPoints
         (
-            points0() + pointDisplacement_.internalField()
+            points0() + pointDisplacement_.primitiveField()
         );
         pointField& curPoints = tcurPoints.ref();
 

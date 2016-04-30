@@ -43,7 +43,7 @@ Foam::sampledPatchInternalField::sampleField
     forAll(patchStart(), i)
     {
         // Get patchface wise data by sampling internal field
-        Field<Type> interpVals = vField.internalField();
+        Field<Type> interpVals = vField.primitiveField();
         mappers_[i].map().distribute(interpVals);
 
         // Store at correct position in values

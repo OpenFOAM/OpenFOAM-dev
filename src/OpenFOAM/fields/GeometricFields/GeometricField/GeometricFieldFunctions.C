@@ -49,7 +49,7 @@ void component
     const direction d
 )
 {
-    component(gcf.internalFieldRef(), gf.internalField(), d);
+    component(gcf.primitiveFieldRef(), gf.primitiveField(), d);
     component(gcf.boundaryFieldRef(), gf.boundaryField(), d);
 }
 
@@ -61,7 +61,7 @@ void T
      const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    T(gf.internalFieldRef(), gf1.internalField());
+    T(gf.primitiveFieldRef(), gf1.primitiveField());
     T(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
@@ -79,7 +79,7 @@ void pow
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    pow(gf.internalFieldRef(), gf1.internalField(), r);
+    pow(gf.primitiveFieldRef(), gf1.primitiveField(), r);
     pow(gf.boundaryFieldRef(), gf1.boundaryField(), r);
 }
 
@@ -173,7 +173,7 @@ void sqr
     const GeometricField<Type, PatchField, GeoMesh>& gf1
 )
 {
-    sqr(gf.internalFieldRef(), gf1.internalField());
+    sqr(gf.primitiveFieldRef(), gf1.primitiveField());
     sqr(gf.boundaryFieldRef(), gf1.boundaryField());
 }
 
@@ -261,7 +261,7 @@ void magSqr
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    magSqr(gsf.internalFieldRef(), gf.internalField());
+    magSqr(gsf.primitiveFieldRef(), gf.primitiveField());
     magSqr(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -333,7 +333,7 @@ void mag
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    mag(gsf.internalFieldRef(), gf.internalField());
+    mag(gsf.primitiveFieldRef(), gf.primitiveField());
     mag(gsf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -410,7 +410,7 @@ void cmptAv
     const GeometricField<Type, PatchField, GeoMesh>& gf
 )
 {
-    cmptAv(gcf.internalFieldRef(), gf.internalField());
+    cmptAv(gcf.primitiveFieldRef(), gf.primitiveField());
     cmptAv(gcf.boundaryFieldRef(), gf.boundaryField());
 }
 
@@ -505,7 +505,7 @@ dimensioned<returnType> func                                                   \
     (                                                                          \
         #func "(" + gf.name() + ')',                                           \
         gf.dimensions(),                                                       \
-        Foam::func(gFunc(gf.internalField()), gFunc(gf.boundaryField()))       \
+        Foam::func(gFunc(gf.primitiveField()), gFunc(gf.boundaryField()))      \
     );                                                                         \
 }                                                                              \
                                                                                \
@@ -538,7 +538,7 @@ dimensioned<returnType> func                                                   \
     (                                                                          \
         #func "(" + gf.name() + ')',                                           \
         gf.dimensions(),                                                       \
-        gFunc(gf.internalField())                                              \
+        gFunc(gf.primitiveField())                                             \
     );                                                                         \
 }                                                                              \
                                                                                \
@@ -601,9 +601,9 @@ void opFunc                                                                    \
 {                                                                              \
     Foam::opFunc                                                               \
     (                                                                          \
-        gf.internalFieldRef(),                                                 \
-        gf1.internalField(),                                                   \
-        gf2.internalField()                                                    \
+        gf.primitiveFieldRef(),                                                \
+        gf1.primitiveField(),                                                  \
+        gf2.primitiveField()                                                   \
     );                                                                         \
     Foam::opFunc                                                               \
     (                                                                          \
@@ -755,7 +755,7 @@ void opFunc                                                                    \
     const dimensioned<Form>& dvs                                               \
 )                                                                              \
 {                                                                              \
-    Foam::opFunc(gf.internalFieldRef(), gf1.internalField(), dvs.value());     \
+    Foam::opFunc(gf.primitiveFieldRef(), gf1.primitiveField(), dvs.value());   \
     Foam::opFunc(gf.boundaryFieldRef(), gf1.boundaryField(), dvs.value());     \
 }                                                                              \
                                                                                \
@@ -868,7 +868,7 @@ void opFunc                                                                    \
     const GeometricField<Type, PatchField, GeoMesh>& gf1                       \
 )                                                                              \
 {                                                                              \
-    Foam::opFunc(gf.internalFieldRef(), dvs.value(), gf1.internalField());     \
+    Foam::opFunc(gf.primitiveFieldRef(), dvs.value(), gf1.primitiveField());   \
     Foam::opFunc(gf.boundaryFieldRef(), dvs.value(), gf1.boundaryField());     \
 }                                                                              \
                                                                                \

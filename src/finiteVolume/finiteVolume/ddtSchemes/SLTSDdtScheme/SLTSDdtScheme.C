@@ -117,9 +117,9 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
 
     if (phi.dimensions() == dimensionSet(0, 3, -1, 0, 0))
     {
-        rDeltaT.internalFieldRef() = max
+        rDeltaT.primitiveFieldRef() = max
         (
-            rDeltaT.internalField()/mesh().V(),
+            rDeltaT.primitiveField()/mesh().V(),
             scalar(1)/deltaT.value()
         );
     }
@@ -131,9 +131,9 @@ tmp<volScalarField> SLTSDdtScheme<Type>::SLrDeltaT() const
                 rhoName_
             ).oldTime();
 
-        rDeltaT.internalFieldRef() = max
+        rDeltaT.primitiveFieldRef() = max
         (
-            rDeltaT.internalField()/(rho.internalField()*mesh().V()),
+            rDeltaT.primitiveField()/(rho.primitiveField()*mesh().V()),
             scalar(1)/deltaT.value()
         );
     }
@@ -183,8 +183,8 @@ SLTSDdtScheme<Type>::fvcDdt
             )
         );
 
-        tdtdt.ref().internalFieldRef() =
-            rDeltaT.internalField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
+        tdtdt.ref().primitiveFieldRef() =
+            rDeltaT.primitiveField()*dt.value()*(1.0 - mesh().V0()/mesh().V());
 
         return tdtdt;
     }
@@ -234,10 +234,10 @@ SLTSDdtScheme<Type>::fvcDdt
                 ddtIOobject,
                 mesh(),
                 rDeltaT.dimensions()*vf.dimensions(),
-                rDeltaT.internalField()*
+                rDeltaT.primitiveField()*
                 (
-                    vf.internalField()
-                  - vf.oldTime().internalField()*mesh().V0()/mesh().V()
+                    vf.primitiveField()
+                  - vf.oldTime().primitiveField()*mesh().V0()/mesh().V()
                 ),
                 rDeltaT.boundaryField()*
                 (
@@ -286,10 +286,10 @@ SLTSDdtScheme<Type>::fvcDdt
                 ddtIOobject,
                 mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.internalField()*rho.value()*
+                rDeltaT.primitiveField()*rho.value()*
                 (
-                    vf.internalField()
-                  - vf.oldTime().internalField()*mesh().V0()/mesh().V()
+                    vf.primitiveField()
+                  - vf.oldTime().primitiveField()*mesh().V0()/mesh().V()
                 ),
                 rDeltaT.boundaryField()*rho.value()*
                 (
@@ -338,11 +338,11 @@ SLTSDdtScheme<Type>::fvcDdt
                 ddtIOobject,
                 mesh(),
                 rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.internalField()*
+                rDeltaT.primitiveField()*
                 (
-                    rho.internalField()*vf.internalField()
-                  - rho.oldTime().internalField()
-                   *vf.oldTime().internalField()*mesh().V0()/mesh().V()
+                    rho.primitiveField()*vf.primitiveField()
+                  - rho.oldTime().primitiveField()
+                   *vf.oldTime().primitiveField()*mesh().V0()/mesh().V()
                 ),
                 rDeltaT.boundaryField()*
                 (
@@ -395,15 +395,15 @@ SLTSDdtScheme<Type>::fvcDdt
                 mesh(),
                 rDeltaT.dimensions()
                *alpha.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.internalField()*
+                rDeltaT.primitiveField()*
                 (
-                    alpha.internalField()
-                   *rho.internalField()
-                   *vf.internalField()
+                    alpha.primitiveField()
+                   *rho.primitiveField()
+                   *vf.primitiveField()
 
-                  - alpha.oldTime().internalField()
-                   *rho.oldTime().internalField()
-                   *vf.oldTime().internalField()*mesh().Vsc0()/mesh().Vsc()
+                  - alpha.oldTime().primitiveField()
+                   *rho.oldTime().primitiveField()
+                   *vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
                 ),
                 rDeltaT.boundaryField()*
                 (
@@ -454,17 +454,17 @@ SLTSDdtScheme<Type>::fvmDdt
 
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalarField rDeltaT(SLrDeltaT()().internalField());
+    scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
     fvm.diag() = rDeltaT*mesh().V();
 
     if (mesh().moving())
     {
-        fvm.source() = rDeltaT*vf.oldTime().internalField()*mesh().V0();
+        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().V0();
     }
     else
     {
-        fvm.source() = rDeltaT*vf.oldTime().internalField()*mesh().V();
+        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().V();
     }
 
     return tfvm;
@@ -489,19 +489,19 @@ SLTSDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalarField rDeltaT(SLrDeltaT()().internalField());
+    scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
     fvm.diag() = rDeltaT*rho.value()*mesh().V();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().internalField()*mesh().V0();
+            *rho.value()*vf.oldTime().primitiveField()*mesh().V0();
     }
     else
     {
         fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().internalField()*mesh().V();
+            *rho.value()*vf.oldTime().primitiveField()*mesh().V();
     }
 
     return tfvm;
@@ -526,21 +526,21 @@ SLTSDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalarField rDeltaT(SLrDeltaT()().internalField());
+    scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*rho.internalField()*mesh().V();
+    fvm.diag() = rDeltaT*rho.primitiveField()*mesh().V();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
-            *rho.oldTime().internalField()
-            *vf.oldTime().internalField()*mesh().V0();
+            *rho.oldTime().primitiveField()
+            *vf.oldTime().primitiveField()*mesh().V0();
     }
     else
     {
         fvm.source() = rDeltaT
-            *rho.oldTime().internalField()
-            *vf.oldTime().internalField()*mesh().V();
+            *rho.oldTime().primitiveField()
+            *vf.oldTime().primitiveField()*mesh().V();
     }
 
     return tfvm;
@@ -566,23 +566,24 @@ SLTSDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalarField rDeltaT(SLrDeltaT()().internalField());
+    scalarField rDeltaT(SLrDeltaT()().primitiveField());
 
-    fvm.diag() = rDeltaT*alpha.internalField()*rho.internalField()*mesh().Vsc();
+    fvm.diag() =
+        rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
 
     if (mesh().moving())
     {
         fvm.source() = rDeltaT
-            *alpha.oldTime().internalField()
-            *rho.oldTime().internalField()
-            *vf.oldTime().internalField()*mesh().Vsc0();
+            *alpha.oldTime().primitiveField()
+            *rho.oldTime().primitiveField()
+            *vf.oldTime().primitiveField()*mesh().Vsc0();
     }
     else
     {
         fvm.source() = rDeltaT
-            *alpha.oldTime().internalField()
-            *rho.oldTime().internalField()
-            *vf.oldTime().internalField()*mesh().Vsc();
+            *alpha.oldTime().primitiveField()
+            *rho.oldTime().primitiveField()
+            *vf.oldTime().primitiveField()*mesh().Vsc();
     }
 
     return tfvm;

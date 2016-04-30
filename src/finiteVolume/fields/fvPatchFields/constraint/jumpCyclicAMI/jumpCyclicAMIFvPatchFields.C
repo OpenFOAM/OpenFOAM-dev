@@ -56,7 +56,7 @@ void Foam::jumpCyclicAMIFvPatchField<scalar>::updateInterfaceMatrix
     pnf = this->cyclicAMIPatch().interpolate(pnf);
 
     // only apply jump to original field
-    if (&psiInternal == &this->internalField())
+    if (&psiInternal == &this->primitiveField())
     {
         Field<scalar> jf(this->jump());
 

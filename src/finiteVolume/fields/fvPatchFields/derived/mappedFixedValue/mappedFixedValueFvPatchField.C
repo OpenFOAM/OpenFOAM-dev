@@ -126,7 +126,7 @@ void Foam::mappedFixedValueFvPatchField<Type>::updateCoeffs()
     if (debug)
     {
         Info<< "mapped on field:"
-            << this->dimensionedInternalField().name()
+            << this->internalField().name()
             << " patch:" << this->patch().name()
             << "  avg:" << gAverage(*this)
             << "  min:" << gMin(*this)

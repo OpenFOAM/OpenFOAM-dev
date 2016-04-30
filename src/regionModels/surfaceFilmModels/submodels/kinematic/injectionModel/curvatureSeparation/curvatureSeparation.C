@@ -78,7 +78,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
     );
 
 
-    scalarField& invR1 = tinvR1.ref().internalFieldRef();
+    scalarField& invR1 = tinvR1.ref().primitiveFieldRef();
 
     // apply defined patch radii
     const scalar rMin = 1e-6;
@@ -207,7 +207,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
             dimensionedScalar("zero", dimless, 0.0),
             zeroGradientFvPatchScalarField::typeName
         );
-        volCosAngle.internalFieldRef() = cosAngle;
+        volCosAngle.primitiveFieldRef() = cosAngle;
         volCosAngle.correctBoundaryConditions();
         volCosAngle.write();
     }
@@ -349,7 +349,7 @@ void curvatureSeparation::correct
             dimensionedScalar("zero", dimForce, 0.0),
             zeroGradientFvPatchScalarField::typeName
         );
-        volFnet.internalFieldRef() = Fnet;
+        volFnet.primitiveFieldRef() = Fnet;
         volFnet.correctBoundaryConditions();
         volFnet.write();
     }

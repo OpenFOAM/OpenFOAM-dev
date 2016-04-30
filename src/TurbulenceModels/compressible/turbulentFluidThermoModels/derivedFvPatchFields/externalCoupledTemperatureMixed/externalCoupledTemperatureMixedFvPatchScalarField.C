@@ -133,7 +133,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
         IOobject::groupName
         (
             turbulenceModel::propertiesName,
-            dimensionedInternalField().group()
+            internalField().group()
         )
     );
 

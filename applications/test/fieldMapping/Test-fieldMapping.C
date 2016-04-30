@@ -300,8 +300,8 @@ int main(int argc, char *argv[])
         // Check face field mapping
         if (surfaceOne.size())
         {
-            const scalar max = gMax(surfaceOne.internalField());
-            const scalar min = gMin(surfaceOne.internalField());
+            const scalar max = gMax(surfaceOne.primitiveField());
+            const scalar min = gMin(surfaceOne.primitiveField());
 
             Info<< "Uniform surface field min = " << min
                 << "  max = " << max << endl;

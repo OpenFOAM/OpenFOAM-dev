@@ -201,7 +201,7 @@ void Foam::fv::interRegionHeatTransferModel::addSup
     const volScalarField& Tnbr =
         nbrMesh.lookupObject<volScalarField>(TNbrName_);
 
-    interpolate(Tnbr, Tmapped.internalFieldRef());
+    interpolate(Tnbr, Tmapped.primitiveFieldRef());
 
     if (debug)
     {

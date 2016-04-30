@@ -8,15 +8,15 @@ if (runTime.outputTime())
 
     forAll(allSpeciesRhoN, rN)
     {
-        allSpeciesRhoN[rN].internalFieldRef() =
+        allSpeciesRhoN[rN].primitiveFieldRef() =
             allSpeciesN_RU[rN]
             /mesh.cellVolumes()
             /nAveragingSteps;
 
-        totalRhoN_sum += allSpeciesRhoN[rN].internalField();
+        totalRhoN_sum += allSpeciesRhoN[rN].primitiveField();
     }
 
-    totalRhoN.internalFieldRef() = totalRhoN_sum;
+    totalRhoN.primitiveFieldRef() = totalRhoN_sum;
 
 
     /*-----------------------------------------------------------------------*\
@@ -27,15 +27,15 @@ if (runTime.outputTime())
 
     forAll(allSpeciesRhoM, rM)
     {
-        allSpeciesRhoM[rM].internalFieldRef() =
+        allSpeciesRhoM[rM].primitiveFieldRef() =
             allSpeciesM_RU[rM]
             /mesh.cellVolumes()
             /nAveragingSteps;
 
-        totalRhoM_sum += allSpeciesRhoM[rM].internalField();
+        totalRhoM_sum += allSpeciesRhoM[rM].primitiveField();
     }
 
-    totalRhoM.internalFieldRef() = totalRhoM_sum;
+    totalRhoM.primitiveFieldRef() = totalRhoM_sum;
 
     /*-----------------------------------------------------------------------*\
         Bulk velocity
@@ -51,7 +51,7 @@ if (runTime.outputTime())
 
         vectorField& singleSpeciesVelocity
         (
-            allSpeciesVelocity[v].internalField()
+            allSpeciesVelocity[v].primitiveField()
         );
 
         forAll(singleSpeciesVelocity, sSV)
@@ -104,7 +104,7 @@ if (runTime.outputTime())
 
         scalarField& singleSpeciesTemp
         (
-            allSpeciesTemperature[t].internalField()
+            allSpeciesTemperature[t].primitiveField()
         );
 
         forAll(singleSpeciesTemp, sST)
@@ -178,7 +178,7 @@ if (runTime.outputTime())
 
         scalarField& singleSpeciesMeanKE
         (
-            allSpeciesMeanKE[mKE].internalField()
+            allSpeciesMeanKE[mKE].primitiveField()
         );
 
         forAll(singleSpeciesMeanKE, sSMKE)

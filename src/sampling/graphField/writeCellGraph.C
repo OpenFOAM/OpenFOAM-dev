@@ -24,8 +24,8 @@ void writeCellGraph
         vsf.name(),
         "x",
         vsf.name(),
-        vsf.mesh().C().internalField().component(vector::X),
-        vsf.internalField()
+        vsf.mesh().C().primitiveField().component(vector::X),
+        vsf.primitiveField()
     ).write(path/vsf.name(), graphFormat);
 }
 

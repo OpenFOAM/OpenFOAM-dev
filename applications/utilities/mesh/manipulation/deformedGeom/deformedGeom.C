@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
             pointField newPoints
             (
                 zeroPoints
-              + scaleFactor*pInterp.interpolate(U)().internalField()
+              + scaleFactor*pInterp.interpolate(U)().primitiveField()
             );
 
             mesh.polyMesh::movePoints(newPoints);

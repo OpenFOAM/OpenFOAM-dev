@@ -100,7 +100,7 @@ void Foam::inverseDistanceDiffusivity::correct()
         dimless,
         zeroGradientFvPatchScalarField::typeName
     );
-    y_.internalFieldRef() = y();
+    y_.primitiveFieldRef() = y();
     y_.correctBoundaryConditions();
 
     faceDiffusivity_ = 1.0/fvc::interpolate(y_);

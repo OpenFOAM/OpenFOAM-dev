@@ -127,7 +127,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::pointPatchField<Type>::patchInternalField() const
 {
-    return patchInternalField(internalField());
+    return patchInternalField(primitiveField());
 }
 
 
@@ -141,12 +141,12 @@ Foam::pointPatchField<Type>::patchInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 
@@ -175,12 +175,12 @@ void Foam::pointPatchField<Type>::addToInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 
@@ -213,12 +213,12 @@ void Foam::pointPatchField<Type>::addToInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 
@@ -252,12 +252,12 @@ void Foam::pointPatchField<Type>::setInInternalField
 ) const
 {
     // Check size
-    if (iF.size() != internalField().size())
+    if (iF.size() != primitiveField().size())
     {
         FatalErrorInFunction
             << "given internal field does not correspond to the mesh. "
             << "Field size: " << iF.size()
-            << " mesh size: " << internalField().size()
+            << " mesh size: " << primitiveField().size()
             << abort(FatalError);
     }
 

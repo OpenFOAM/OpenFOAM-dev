@@ -169,9 +169,9 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
     {
         InfoInFunction
             << "ddtCouplingCoeff mean max min = "
-            << gAverage(ddtCouplingCoeff.internalField())
-            << " " << gMax(ddtCouplingCoeff.internalField())
-            << " " << gMin(ddtCouplingCoeff.internalField())
+            << gAverage(ddtCouplingCoeff.primitiveField())
+            << " " << gMax(ddtCouplingCoeff.primitiveField())
+            << " " << gMin(ddtCouplingCoeff.primitiveField())
             << endl;
     }
 

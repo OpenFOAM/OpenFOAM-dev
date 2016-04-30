@@ -38,7 +38,7 @@ inline
 const typename
 Foam::GeometricField<Type, PatchField, GeoMesh>::Internal&
 Foam::GeometricField<Type, PatchField, GeoMesh>::
-dimensionedInternalField() const
+internalField() const
 {
     return *this;
 }
@@ -48,7 +48,7 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 inline
 const typename
 Foam::GeometricField<Type, PatchField, GeoMesh>::Internal::FieldType&
-Foam::GeometricField<Type, PatchField, GeoMesh>::internalField() const
+Foam::GeometricField<Type, PatchField, GeoMesh>::primitiveField() const
 {
     return *this;
 }

@@ -636,7 +636,7 @@ int main(int argc, char *argv[])
 
         {
             // Internal field
-            cellDistance.internalFieldRef() = signedDistance
+            cellDistance.primitiveFieldRef() = signedDistance
             (
                 distSqr,
                 fvm.C(),
@@ -701,7 +701,7 @@ int main(int argc, char *argv[])
                 -sqr(GREAT)             // null value
             );
 
-            pointDistance.internalFieldRef() = signedDistance
+            pointDistance.primitiveFieldRef() = signedDistance
             (
                 pointDistSqr,
                 fvm.points(),

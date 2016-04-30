@@ -61,7 +61,7 @@ void Foam::domainDecomposition::distributeCells()
             ),
             *this
         );
-        cellWeights = weights.internalField();
+        cellWeights = weights.primitiveField();
     }
 
     cellToProc_ = decomposePtr().decompose(*this, cellWeights);

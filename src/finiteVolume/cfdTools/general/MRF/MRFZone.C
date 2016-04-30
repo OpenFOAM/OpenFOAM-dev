@@ -319,7 +319,7 @@ void Foam::MRFZone::addCoriolis
     }
 
     const labelList& cells = mesh_.cellZones()[cellZoneID_];
-    vectorField& ddtUc = ddtU.internalFieldRef();
+    vectorField& ddtUc = ddtU.primitiveFieldRef();
     const vectorField& Uc = U;
 
     const vector Omega = this->Omega();

@@ -35,7 +35,7 @@ else
 
     //solve(fvm::ddt(rho) + fvc::div(rhoPhi));
     //Info<< "density error = "
-    //    << max((mag(rho - rhoNew)/mag(rhoNew))().internalField()) << endl;
+    //    << max((mag(rho - rhoNew)/mag(rhoNew))().primitiveField()) << endl;
 
     rho == rhoNew;
 }

@@ -292,9 +292,9 @@ correctThermo()
         Tf.correctBoundaryConditions();
 
         Info<< "Tf." << pair.name()
-            << ": min = " << min(Tf.internalField())
-            << ", mean = " << average(Tf.internalField())
-            << ", max = " << max(Tf.internalField())
+            << ": min = " << min(Tf.primitiveField())
+            << ", mean = " << average(Tf.primitiveField())
+            << ", max = " << max(Tf.primitiveField())
             << endl;
 
         // Update the interface compositions

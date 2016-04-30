@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
             zeroGradientFvPatchVectorField::typeName
         );
 
-        cloudVolSUSu.internalFieldRef() = -cloudSU.source()/mesh.V();
+        cloudVolSUSu.primitiveFieldRef() = -cloudSU.source()/mesh.V();
         cloudVolSUSu.correctBoundaryConditions();
         cloudSU.source() = Zero;
 

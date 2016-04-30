@@ -45,7 +45,7 @@ void Foam::MRFZone::makeRelativeRhoFlux
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
-    scalarField& phii = phi.internalFieldRef();
+    scalarField& phii = phi.primitiveFieldRef();
 
     // Internal faces
     forAll(internalFaces_, i)
@@ -145,7 +145,7 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
 
     const vectorField& Cfi = Cf;
     const vectorField& Sfi = Sf;
-    scalarField& phii = phi.internalFieldRef();
+    scalarField& phii = phi.primitiveFieldRef();
 
     // Internal faces
     forAll(internalFaces_, i)

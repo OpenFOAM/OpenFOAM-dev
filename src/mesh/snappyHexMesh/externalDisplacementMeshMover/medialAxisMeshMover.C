@@ -2142,7 +2142,7 @@ bool Foam::medialAxisMeshMover::move
 
     pointField patchDisp
     (
-        pointDisplacement_.internalField(),
+        pointDisplacement_.primitiveField(),
         pp.meshPoints()
     );
 

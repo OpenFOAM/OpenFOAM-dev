@@ -31,12 +31,12 @@ License
 template<class BasicSolidThermo, class MixtureType>
 void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 {
-    scalarField& TCells = this->T_.internalFieldRef();
+    scalarField& TCells = this->T_.primitiveFieldRef();
 
     const scalarField& hCells = this->he_;
     const scalarField& pCells = this->p_;
-    scalarField& rhoCells = this->rho_.internalFieldRef();
-    scalarField& alphaCells = this->alpha_.internalFieldRef();
+    scalarField& rhoCells = this->rho_.primitiveFieldRef();
+    scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
     forAll(TCells, celli)
     {
@@ -218,7 +218,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
     );
 
     volVectorField& Kappa = tKappa.ref();
-    vectorField& KappaCells = Kappa.internalFieldRef();
+    vectorField& KappaCells = Kappa.primitiveFieldRef();
     const scalarField& TCells = this->T_;
     const scalarField& pCells = this->p_;
 

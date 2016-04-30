@@ -164,7 +164,7 @@ public:
         virtual bool write() const;
 
         //- Return an internal field of the average
-        virtual tmp<Field<Type>> internalField() const = 0;
+        virtual tmp<Field<Type>> primitiveField() const = 0;
 
         //- Assign to another average
         inline void operator=(const AveragingMethod<Type>& x);

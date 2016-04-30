@@ -66,7 +66,7 @@ Foam::geometricOneField::v() const
 
 
 inline typename Foam::geometricOneField::Internal::FieldType
-Foam::geometricOneField::internalField() const
+Foam::geometricOneField::primitiveField() const
 {
     return typename Internal::FieldType();
 }
