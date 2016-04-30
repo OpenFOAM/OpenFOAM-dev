@@ -16,7 +16,7 @@ runParallel snappyHexMesh -overwrite
 
 find . -type f -iname "*level*" -exec rm {} \;
 
-ls -d processor* | xargs -I {} cp -r 0.org ./{}/0
+ls -d processor* | xargs -I {} cp -r 0.orig ./{}/0
 
 runParallel topoSet
 runParallel `getApplication`

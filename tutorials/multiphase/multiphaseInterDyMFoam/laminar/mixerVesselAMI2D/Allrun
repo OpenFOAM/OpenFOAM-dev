@@ -9,7 +9,7 @@ application=`getApplication`
 ./makeMesh
 
 rm -rf 0
-cp -r 0.org 0
+cp -r 0.orig 0
 runApplication setFields
 
 #runApplication $application

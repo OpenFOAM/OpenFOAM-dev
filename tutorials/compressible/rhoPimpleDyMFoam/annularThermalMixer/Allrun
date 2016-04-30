@@ -17,7 +17,7 @@ runApplication createPatch -overwrite
 runApplication createBaffles -overwrite
 runApplication mergeOrSplitBaffles -split -overwrite
 
-cp -r 0.org 0
+cp -r 0.orig 0
 
 runApplication $(getApplication)
 

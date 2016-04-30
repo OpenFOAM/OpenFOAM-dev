@@ -31,4 +31,4 @@ runApplication createPatch -overwrite
 #runApplication moveDynamicMesh -checkAMI
 
 # - set the initial fields
-cp -rf 0.org 0
+cp -rf 0.orig 0

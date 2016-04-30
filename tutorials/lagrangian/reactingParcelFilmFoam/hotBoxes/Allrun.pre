@@ -4,7 +4,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-cp -rf 0.org 0
+cp -rf 0.orig 0
 
 # create the underlying block mesh
 runApplication blockMesh
@@ -26,7 +26,7 @@ runApplication changeDictionary
 
 # Copy the system settings over to the wall film region
 rm -rf system/wallFilmRegion
-cp -r system/wallFilmRegion.org system/wallFilmRegion
+cp -r system/wallFilmRegion.orig system/wallFilmRegion
 
 find ./0 -maxdepth 1 -type f -exec \
     sed -i -e "s/wallFilm/\"(region0_to.*)\"/g" {} \;

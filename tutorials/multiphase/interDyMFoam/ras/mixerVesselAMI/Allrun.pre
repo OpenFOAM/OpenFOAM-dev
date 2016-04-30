@@ -20,7 +20,7 @@ runApplication mergeOrSplitBaffles -split -overwrite
 runApplication createPatch -overwrite
 
 # Copy fields after meshing to avoind the generation of unnecessary patch fields
-\cp -r 0.org 0
+\cp -r 0.orig 0
 
 # Initialize alpha
 runApplication setFields

@@ -8,7 +8,7 @@ application=`getApplication`
 
 ./Allmesh
 
-cp 0/alpha.water.org 0/alpha.water
+cp 0/alpha.water.orig 0/alpha.water
 runApplication setFields
 
 runApplication $application

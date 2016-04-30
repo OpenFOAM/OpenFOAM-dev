@@ -156,22 +156,22 @@ then
 fi
 
 echo "Modifying ${MAIN_CONTROL_DICT}"
-if [ -e ${MAIN_CONTROL_DICT}.org ]
+if [ -e ${MAIN_CONTROL_DICT}.orig ]
 then
-    echo "File ${MAIN_CONTROL_DICT}.org already exists"
+    echo "File ${MAIN_CONTROL_DICT}.orig already exists"
     echo "Did Alltest fail in some way and then run again?"
     exit 1
 fi
 
 # Clean up on termination and on Ctrl-C
-trap 'mv ${MAIN_CONTROL_DICT}.org ${MAIN_CONTROL_DICT} 2>/dev/null; exit 0' \
+trap 'mv ${MAIN_CONTROL_DICT}.orig ${MAIN_CONTROL_DICT} 2>/dev/null; exit 0' \
     EXIT TERM INT
-cp ${MAIN_CONTROL_DICT} ${MAIN_CONTROL_DICT}.org
+cp ${MAIN_CONTROL_DICT} ${MAIN_CONTROL_DICT}.orig
 
 sed \
 -e s/"\(fvSchemes[ \t]*\)\([0-9]\);"/"\1 1;"/g \
 -e s/"\(solution[ \t]*\)\([0-9]\);"/"\1 1;"/g \
-${MAIN_CONTROL_DICT}.org > ${MAIN_CONTROL_DICT}
+${MAIN_CONTROL_DICT}.orig > ${MAIN_CONTROL_DICT}
 
 echo "Copying the tutorials"
 cp -a ${TUTORIALS_DIR} ${TEST_RUN_DIR}
@@ -181,13 +181,13 @@ cd ${TEST_RUN_DIR} || exit 1
 
 for CD in `find . -name "controlDict*"`
 do
-    mv ${CD} ${CD}.org
+    mv ${CD} ${CD}.orig
     sed \
     -e s/"\(startFrom[ \t]*\)\([a-zA-Z]*\);"/"\1 latestTime;"/g \
     -e s/"\(stopAt[ \t]*\)\([a-zA-Z]*\);"/"\1 nextWrite;"/g \
     -e s/"\(writeControl[ \t]*\)\([a-zA-Z]*\);"/"\1 timeStep;"/g \
     -e s/"\(writeInterval[ \t]*\)\([0-9a-zA-Z.-]*\);"/"\1 1;"/g \
-    ${CD}.org > ${CD}
+    ${CD}.orig > ${CD}
 done
 
 if [ "$DEFAULT_SCHEMES" = true ]
@@ -197,8 +197,8 @@ then
     do
         for S in $FV_SCHEMES
         do
-            mv ${FV_SC} ${FV_SC}.org
-            sed -e /"${S}"/,/$p/d ${FV_SC}.org > ${FV_SC}
+            mv ${FV_SC} ${FV_SC}.orig
+            sed -e /"${S}"/,/$p/d ${FV_SC}.orig > ${FV_SC}
         done
         setDefaultFvSchemes >> ${FV_SC}
     done
