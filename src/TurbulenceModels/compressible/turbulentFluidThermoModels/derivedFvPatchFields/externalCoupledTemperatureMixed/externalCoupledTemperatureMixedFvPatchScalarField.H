@@ -28,44 +28,56 @@ Group
     grpCoupledBoundaryConditions
 
 Description
-    This boundary condition provides a temperatue interface to an external
+    This boundary condition provides a temperature interface to an external
     application.  Values are transferred as plain text files, where OpenFOAM
     data is written as:
 
-        # Patch: \<patch name\>
-        \<magSf1\> \<value1\> \<qDot1\> \<htc1\>
-        \<magSf2\> \<value2\> \<qDot2\> \<htc2\>
-        \<magSf3\> \<value3\> \<qDot3\> \<htc2\>
+    \verbatim
+        # Patch: <patch name>
+        <magSf1> <value1> <qDot1> <htc1>
+        <magSf2> <value2> <qDot2> <htc2>
+        <magSf3> <value3> <qDot3> <htc2>
         ...
-        \<magSfN\> \<valueN\> \<qDotN\> \<htcN\>
+        <magSfN> <valueN> <qDotN> <htcN>
+    \endverbatim
 
     and received as the constituent pieces of the `mixed' condition, i.e.
 
-        # Patch: \<patch name\>
-        \<value1\> \<gradient1\> \<valueFracion1\>
-        \<value2\> \<gradient2\> \<valueFracion2\>
-        \<value3\> \<gradient3\> \<valueFracion3\>
+    \verbatim
+        # Patch: <patch name>
+        <value1> <gradient1> <valueFraction1>
+        <value2> <gradient2> <valueFraction2>
+        <value3> <gradient3> <valueFraction3>
         ...
-        \<valueN\> \<gradientN\> \<valueFracionN\>
+        <valueN> <gradientN> <valueFractionN>
+    \endverbatim
 
     Data is sent/received as a single file for all patches from the directory
 
-        $FOAM_CASE/\<commsDir\>
+    \verbatim
+        $FOAM_CASE/<commsDir>
+    \endverbatim
 
     At start-up, the boundary creates a lock file, i.e..
 
+    \verbatim
         OpenFOAM.lock
+    \endverbatim
 
     ... to signal the external source to wait.  During the boundary condition
     update, boundary values are written to file, e.g.
 
-        \<fileName\>.out
+    \verbatim
+        <fileName>.out
+    \endverbatim
 
     The lock file is then removed, instructing the external source to take
     control of the program execution.  When ready, the external program
     should create the return values, e.g. to file
 
-        \<fileName\>.in
+    \verbatim
+        <fileName>.in
+    \endverbatim
 
     ... and then re-instate the lock file.  The boundary condition will then
     read the return values, and pass program execution back to OpenFOAM.
@@ -85,13 +97,13 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
-    {
-        type            externalCoupledTemperature;
-        commsDir        "$FOAM_CASE/comms";
-        fileName        data;
-        calcFrequency   1;
-    }
+        myPatch
+        {
+            type            externalCoupledTemperature;
+            commsDir        "$FOAM_CASE/comms";
+            fileName        data;
+            calcFrequency   1;
+        }
     \endverbatim
 
 SeeAlso

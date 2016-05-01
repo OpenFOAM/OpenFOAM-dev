@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,24 +55,24 @@ Description
         type            compressible::turbulentTemperatureRadCoupledMixed;
         Tnbr            T;
         kappa           lookup;
-        KappaName       kappa;
+        kappaName       kappa;
         QrNbr           Qr; // or none. Name of Qr field on neighbour region
         Qr              Qr; // or none. Name of Qr field on local region
         thicknessLayers (0.1 0.2 0.3 0.4);
-        kappaLayers     (1 2 3 4)
+        kappaLayers     (1 2 3 4);
         value           uniform 300;
     }
     \endverbatim
 
     Needs to be on underlying mapped(Wall)FvPatch.
 
-    Note: kappa : heat conduction at patch. Gets supplied how to
-            lookup/calculate
-     kappa:
-    - 'lookup' : lookup volScalarField (or volSymmTensorField) with name
-    - 'fluidThermo' : use fluidThermo and compressible::RASmodel to calculate K
-    - 'solidThermo' : use solidThermo kappa()
-    - 'directionalSolidThermo' directionalKappa()
+    Note:
+
+    \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.
+
+
+SeeAlso
+    Foam::temperatureCoupledBase
 
 SourceFiles
     turbulentTemperatureRadCoupledMixedFvPatchScalarField.C

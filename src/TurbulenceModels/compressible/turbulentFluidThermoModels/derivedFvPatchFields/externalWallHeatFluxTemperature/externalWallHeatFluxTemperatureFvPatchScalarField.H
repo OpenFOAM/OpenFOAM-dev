@@ -82,7 +82,7 @@ Description
     }
     \endverbatim
 
-  Note:
+    Note:
 
     \li Only supply \c h and \c Ta, or \c q in the dictionary (see above)
     \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.

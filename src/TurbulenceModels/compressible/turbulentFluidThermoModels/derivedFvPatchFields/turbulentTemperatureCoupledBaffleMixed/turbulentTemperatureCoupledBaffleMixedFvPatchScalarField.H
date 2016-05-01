@@ -27,14 +27,12 @@ Class
 
 Description
     Mixed boundary condition for temperature, to be used for heat-transfer
-    on back-to-back baffles.Optional thin thermal layer
-    resistances can be specified through thicknessLayers and kappaLayers
-    entries.
+    on back-to-back baffles. Optional thin thermal layer resistances can be
+    specified through thicknessLayers and kappaLayers entries.
 
     The thermal conductivity, \c kappa, can either be retrieved from the
     mesh database using the \c lookup option, or from a \c solidThermo
     or \c fluidThermo thermophysical package.
-
 
     Specifies gradient and temperature such that the equations are the same
     on both sides:
@@ -64,7 +62,7 @@ Description
         kappa           lookup;
         kappaName       kappa;
         thicknessLayers (0.1 0.2 0.3 0.4);
-        kappaLayers     (1 2 3 4)
+        kappaLayers     (1 2 3 4);
         value           uniform 300;
     }
     \endverbatim

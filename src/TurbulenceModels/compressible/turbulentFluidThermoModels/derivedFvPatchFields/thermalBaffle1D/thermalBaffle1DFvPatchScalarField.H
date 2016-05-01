@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermalBaffle1DFvPatchScalarField
+    Foam::compressible::thermalBaffle1DFvPatchScalarField
 
 Group
     grpThermoBoundaryConditions
