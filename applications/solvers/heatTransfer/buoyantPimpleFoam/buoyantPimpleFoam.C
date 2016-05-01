@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "createTimeControls.H"
+        #include "readTimeControls.H"
         #include "compressibleCourantNo.H"
         #include "setDeltaT.H"
 

@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "createTimeControls.H"
+        #include "readTimeControls.H"
         #include "readSolidTimeControls.H"
         #include "readPIMPLEControls.H"
 
