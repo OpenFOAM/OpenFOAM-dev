@@ -88,6 +88,9 @@ class objectRegistry;
 class dictionary;
 class mapPolyMesh;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                          Class cloudInfo Declaration
 \*---------------------------------------------------------------------------*/
@@ -145,6 +148,16 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Construct on free-store and return pointer if successful
+        //  otherwise return a null-pointer
+        static autoPtr<cloudInfo> New
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
 
     //- Destructor
     virtual ~cloudInfo();
@@ -185,6 +198,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

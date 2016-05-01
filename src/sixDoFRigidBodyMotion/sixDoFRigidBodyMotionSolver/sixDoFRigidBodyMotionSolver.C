@@ -216,13 +216,13 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
     {
         dictionary forcesDict;
 
-        forcesDict.add("type", forces::typeName);
+        forcesDict.add("type", functionObjects::forces::typeName);
         forcesDict.add("patches", patches_);
         forcesDict.add("rhoInf", rhoInf_);
         forcesDict.add("rhoName", rhoName_);
         forcesDict.add("CofR", motion_.centreOfRotation());
 
-        forces f("forces", db(), forcesDict);
+        functionObjects::forces f("forces", db(), forcesDict);
 
         f.calcForcesMoment();
 

@@ -104,7 +104,10 @@ Foam::functionObjects::histogram::New
 {
     if (isA<fvMesh>(obr))
     {
-        return autoPtr<histogram>(new histogram(name, obr, dict));
+        return autoPtr<histogram>
+        (
+            new histogram(name, obr, dict, loadFromFiles)
+        );
     }
     else
     {

@@ -31,7 +31,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::partialWrite::loadField
+void Foam::functionObjects::partialWrite::loadField
 (
     const word& fieldName,
     UPtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
@@ -83,7 +83,7 @@ void Foam::partialWrite::loadField
 
 
 template<class Type>
-void Foam::partialWrite::changeWriteOptions
+void Foam::functionObjects::partialWrite::changeWriteOptions
 (
     UPtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,
     UPtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds,

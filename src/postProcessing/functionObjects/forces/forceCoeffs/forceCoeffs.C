@@ -26,6 +26,7 @@ License
 #include "forceCoeffs.H"
 #include "dictionary.H"
 #include "Time.H"
+#include "fvMesh.H"
 #include "Pstream.H"
 #include "IOmanip.H"
 
@@ -33,13 +34,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(forceCoeffs, 0);
+}
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::forceCoeffs::writeFileHeader(const label i)
+void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
 {
     if (i == 0)
     {
@@ -119,7 +123,7 @@ void Foam::forceCoeffs::writeFileHeader(const label i)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::forceCoeffs::forceCoeffs
+Foam::functionObjects::forceCoeffs::forceCoeffs
 (
     const word& name,
     const objectRegistry& obr,
@@ -141,15 +145,38 @@ Foam::forceCoeffs::forceCoeffs
 }
 
 
+Foam::autoPtr<Foam::functionObjects::forceCoeffs>
+Foam::functionObjects::forceCoeffs::New
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    if (isA<fvMesh>(obr))
+    {
+        return autoPtr<forceCoeffs>
+        (
+            new forceCoeffs(name, obr, dict, loadFromFiles)
+        );
+    }
+    else
+    {
+        return autoPtr<forceCoeffs>();
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::forceCoeffs::~forceCoeffs()
+Foam::functionObjects::forceCoeffs::~forceCoeffs()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::forceCoeffs::read(const dictionary& dict)
+void Foam::functionObjects::forceCoeffs::read(const dictionary& dict)
 {
     if (active_)
     {
@@ -170,25 +197,19 @@ void Foam::forceCoeffs::read(const dictionary& dict)
 }
 
 
-void Foam::forceCoeffs::execute()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::forceCoeffs::execute()
+{}
 
 
-void Foam::forceCoeffs::end()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::forceCoeffs::end()
+{}
 
 
-void Foam::forceCoeffs::timeSet()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::forceCoeffs::timeSet()
+{}
 
 
-void Foam::forceCoeffs::write()
+void Foam::functionObjects::forceCoeffs::write()
 {
     forces::calcForcesMoment();
 

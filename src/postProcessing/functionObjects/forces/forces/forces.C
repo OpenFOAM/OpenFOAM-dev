@@ -37,13 +37,19 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(forces, 0);
+}
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-Foam::wordList Foam::forces::createFileNames(const dictionary& dict) const
+Foam::wordList Foam::functionObjects::forces::createFileNames
+(
+    const dictionary& dict
+) const
 {
     DynamicList<word> names(1);
 
@@ -65,7 +71,7 @@ Foam::wordList Foam::forces::createFileNames(const dictionary& dict) const
 }
 
 
-void Foam::forces::writeFileHeader(const label i)
+void Foam::functionObjects::forces::writeFileHeader(const label i)
 {
     if (i == 0)
     {
@@ -153,7 +159,7 @@ void Foam::forces::writeFileHeader(const label i)
 }
 
 
-void Foam::forces::initialise()
+void Foam::functionObjects::forces::initialise()
 {
     if (initialised_ || !active_)
     {
@@ -202,7 +208,8 @@ void Foam::forces::initialise()
 }
 
 
-Foam::tmp<Foam::volSymmTensorField> Foam::forces::devRhoReff() const
+Foam::tmp<Foam::volSymmTensorField>
+Foam::functionObjects::forces::devRhoReff() const
 {
     typedef compressible::turbulenceModel cmpTurbModel;
     typedef incompressible::turbulenceModel icoTurbModel;
@@ -264,7 +271,7 @@ Foam::tmp<Foam::volSymmTensorField> Foam::forces::devRhoReff() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::forces::mu() const
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::mu() const
 {
     if (obr_.foundObject<fluidThermo>(basicThermo::dictName))
     {
@@ -303,7 +310,7 @@ Foam::tmp<Foam::volScalarField> Foam::forces::mu() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::forces::rho() const
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::rho() const
 {
     if (rhoName_ == "rhoInf")
     {
@@ -331,7 +338,7 @@ Foam::tmp<Foam::volScalarField> Foam::forces::rho() const
 }
 
 
-Foam::scalar Foam::forces::rho(const volScalarField& p) const
+Foam::scalar Foam::functionObjects::forces::rho(const volScalarField& p) const
 {
     if (p.dimensions() == dimPressure)
     {
@@ -351,7 +358,7 @@ Foam::scalar Foam::forces::rho(const volScalarField& p) const
 }
 
 
-void Foam::forces::applyBins
+void Foam::functionObjects::forces::applyBins
 (
     const vectorField& Md,
     const vectorField& fN,
@@ -388,7 +395,7 @@ void Foam::forces::applyBins
 }
 
 
-void Foam::forces::writeForces()
+void Foam::functionObjects::forces::writeForces()
 {
     if (log_) Info
         << type() << " " << name_ << " output:" << nl
@@ -434,7 +441,7 @@ void Foam::forces::writeForces()
 }
 
 
-void Foam::forces::writeBins()
+void Foam::functionObjects::forces::writeBins()
 {
     if (nBin_ == 1)
     {
@@ -515,7 +522,7 @@ void Foam::forces::writeBins()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::forces::forces
+Foam::functionObjects::forces::forces
 (
     const word& name,
     const objectRegistry& obr,
@@ -570,7 +577,30 @@ Foam::forces::forces
 }
 
 
-Foam::forces::forces
+Foam::autoPtr<Foam::functionObjects::forces>
+Foam::functionObjects::forces::New
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    if (isA<fvMesh>(obr))
+    {
+        return autoPtr<forces>
+        (
+            new forces(name, obr, dict, loadFromFiles)
+        );
+    }
+    else
+    {
+        return autoPtr<forces>();
+    }
+}
+
+
+Foam::functionObjects::forces::forces
 (
     const word& name,
     const objectRegistry& obr,
@@ -619,13 +649,13 @@ Foam::forces::forces
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::forces::~forces()
+Foam::functionObjects::forces::~forces()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::forces::read(const dictionary& dict)
+void Foam::functionObjects::forces::read(const dictionary& dict)
 {
     if (active_)
     {
@@ -758,25 +788,19 @@ void Foam::forces::read(const dictionary& dict)
 }
 
 
-void Foam::forces::execute()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::forces::execute()
+{}
 
 
-void Foam::forces::end()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::forces::end()
+{}
 
 
-void Foam::forces::timeSet()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::forces::timeSet()
+{}
 
 
-void Foam::forces::write()
+void Foam::functionObjects::forces::write()
 {
     calcForcesMoment();
 
@@ -798,7 +822,7 @@ void Foam::forces::write()
 }
 
 
-void Foam::forces::calcForcesMoment()
+void Foam::functionObjects::forces::calcForcesMoment()
 {
     initialise();
 
@@ -943,13 +967,13 @@ void Foam::forces::calcForcesMoment()
 }
 
 
-Foam::vector Foam::forces::forceEff() const
+Foam::vector Foam::functionObjects::forces::forceEff() const
 {
     return sum(force_[0]) + sum(force_[1]) + sum(force_[2]);
 }
 
 
-Foam::vector Foam::forces::momentEff() const
+Foam::vector Foam::functionObjects::forces::momentEff() const
 {
     return sum(moment_[0]) + sum(moment_[1]) + sum(moment_[2]);
 }

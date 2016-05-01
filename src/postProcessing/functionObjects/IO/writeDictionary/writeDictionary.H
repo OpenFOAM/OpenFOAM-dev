@@ -54,6 +54,9 @@ class dictionary;
 class polyMesh;
 class mapPolyMesh;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                        Class writeDictionary Declaration
 \*---------------------------------------------------------------------------*/
@@ -117,6 +120,16 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Construct on free-store and return pointer if successful
+        //  otherwise return a null-pointer
+        static autoPtr<writeDictionary> New
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
 
     //- Destructor
     virtual ~writeDictionary();
@@ -157,6 +170,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

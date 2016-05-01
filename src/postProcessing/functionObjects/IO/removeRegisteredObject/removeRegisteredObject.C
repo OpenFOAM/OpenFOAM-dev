@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(removeRegisteredObject, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(removeRegisteredObject, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::removeRegisteredObject::removeRegisteredObject
+Foam::functionObjects::removeRegisteredObject::removeRegisteredObject
 (
     const word& name,
     const objectRegistry& obr,
@@ -53,21 +56,37 @@ Foam::removeRegisteredObject::removeRegisteredObject
 }
 
 
+Foam::autoPtr<Foam::functionObjects::removeRegisteredObject>
+Foam::functionObjects::removeRegisteredObject::New
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return autoPtr<removeRegisteredObject>
+    (
+        new removeRegisteredObject(name, obr, dict, loadFromFiles)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::removeRegisteredObject::~removeRegisteredObject()
+Foam::functionObjects::removeRegisteredObject::~removeRegisteredObject()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::removeRegisteredObject::read(const dictionary& dict)
+void Foam::functionObjects::removeRegisteredObject::read(const dictionary& dict)
 {
     dict.lookup("objectNames") >> objectNames_;
 }
 
 
-void Foam::removeRegisteredObject::execute()
+void Foam::functionObjects::removeRegisteredObject::execute()
 {
     forAll(objectNames_, i)
     {
@@ -90,22 +109,18 @@ void Foam::removeRegisteredObject::execute()
 }
 
 
-void Foam::removeRegisteredObject::end()
+void Foam::functionObjects::removeRegisteredObject::end()
 {
     execute();
 }
 
 
-void Foam::removeRegisteredObject::timeSet()
-{
-    // Do nothing - only valid on execute
-}
+void Foam::functionObjects::removeRegisteredObject::timeSet()
+{}
 
 
-void Foam::removeRegisteredObject::write()
-{
-    // Do nothing - only valid on execute
-}
+void Foam::functionObjects::removeRegisteredObject::write()
+{}
 
 
 // ************************************************************************* //

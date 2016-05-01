@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(writeRegisteredObject, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(writeRegisteredObject, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::writeRegisteredObject::writeRegisteredObject
+Foam::functionObjects::writeRegisteredObject::writeRegisteredObject
 (
     const word& name,
     const objectRegistry& obr,
@@ -54,40 +57,50 @@ Foam::writeRegisteredObject::writeRegisteredObject
 }
 
 
+Foam::autoPtr<Foam::functionObjects::writeRegisteredObject>
+Foam::functionObjects::writeRegisteredObject::New
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return autoPtr<writeRegisteredObject>
+    (
+        new writeRegisteredObject(name, obr, dict, loadFromFiles)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::writeRegisteredObject::~writeRegisteredObject()
+Foam::functionObjects::writeRegisteredObject::~writeRegisteredObject()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::writeRegisteredObject::read(const dictionary& dict)
+void Foam::functionObjects::writeRegisteredObject::read(const dictionary& dict)
 {
     dict.lookup("objectNames") >> objectNames_;
     dict.readIfPresent("exclusiveWriting", exclusiveWriting_);
 }
 
 
-void Foam::writeRegisteredObject::execute()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::writeRegisteredObject::execute()
+{}
 
 
-void Foam::writeRegisteredObject::end()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::writeRegisteredObject::end()
+{}
 
 
-void Foam::writeRegisteredObject::timeSet()
-{
-    // Do nothing - only valid on write
-}
+void Foam::functionObjects::writeRegisteredObject::timeSet()
+{}
 
 
-void Foam::writeRegisteredObject::write()
+void Foam::functionObjects::writeRegisteredObject::write()
 {
     Info<< type() << " " << name_ << " output:" << nl;
 

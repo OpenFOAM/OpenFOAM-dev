@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(writeDictionary, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(writeDictionary, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::writeDictionary::tryDirectory
+bool Foam::functionObjects::writeDictionary::tryDirectory
 (
     const label dictI,
     const word& location,
@@ -86,7 +89,7 @@ bool Foam::writeDictionary::tryDirectory
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::writeDictionary::writeDictionary
+Foam::functionObjects::writeDictionary::writeDictionary
 (
     const word& name,
     const objectRegistry& obr,
@@ -100,20 +103,35 @@ Foam::writeDictionary::writeDictionary
     digests_()
 {
     read(dict);
-
     execute();
+}
+
+
+Foam::autoPtr<Foam::functionObjects::writeDictionary>
+Foam::functionObjects::writeDictionary::New
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return autoPtr<writeDictionary>
+    (
+        new writeDictionary(name, obr, dict, loadFromFiles)
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::writeDictionary::~writeDictionary()
+Foam::functionObjects::writeDictionary::~writeDictionary()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::writeDictionary::read(const dictionary& dict)
+void Foam::functionObjects::writeDictionary::read(const dictionary& dict)
 {
     wordList dictNames(dict.lookup("dictNames"));
     HashSet<word> uniqueNames(dictNames);
@@ -137,7 +155,7 @@ void Foam::writeDictionary::read(const dictionary& dict)
 }
 
 
-void Foam::writeDictionary::execute()
+void Foam::functionObjects::writeDictionary::execute()
 {
     bool firstDict = true;
     forAll(dictNames_, i)
@@ -193,22 +211,18 @@ void Foam::writeDictionary::execute()
 }
 
 
-void Foam::writeDictionary::end()
+void Foam::functionObjects::writeDictionary::end()
 {
     execute();
 }
 
 
-void Foam::writeDictionary::timeSet()
-{
-    // do nothing
-}
+void Foam::functionObjects::writeDictionary::timeSet()
+{}
 
 
-void Foam::writeDictionary::write()
-{
-    // do nothing
-}
+void Foam::functionObjects::writeDictionary::write()
+{}
 
 
 // ************************************************************************* //
