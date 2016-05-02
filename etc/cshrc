@@ -210,7 +210,10 @@ _foamSource $WM_PROJECT_DIR/etc/config.csh/aliases
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/mpi`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/paraview`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/ensight`
-_foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/CGAL`
+
+if ( ($?FOAMY_HEX_MESH) ) then
+    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/CGAL`
+endif
 
 
 # Clean environment paths again. Only remove duplicates
@@ -232,6 +235,7 @@ if ( $?LD_PRELOAD ) then
     set cleaned=`$foamClean "$LD_PRELOAD"`
     if ( $status == 0 ) setenv LD_PRELOAD $cleaned
 endif
+
 
 # cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
