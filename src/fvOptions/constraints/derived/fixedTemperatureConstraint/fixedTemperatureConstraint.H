@@ -137,7 +137,7 @@ public:
     // Member Functions
 
         //- Constrain energy equation to fix the temperature
-        virtual void constrain(fvMatrix<scalar>& eqn, const label fieldI);
+        virtual void constrain(fvMatrix<scalar>& eqn, const label fieldi);
 
 
         // IO

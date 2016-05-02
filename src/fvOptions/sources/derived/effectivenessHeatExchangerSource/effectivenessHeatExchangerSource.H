@@ -251,7 +251,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<scalar>& eqn,
-                const label fieldI
+                const label fieldi
             )
             {
                 NotImplemented;
@@ -265,7 +265,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
 

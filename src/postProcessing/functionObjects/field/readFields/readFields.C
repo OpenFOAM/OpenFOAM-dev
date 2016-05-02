@@ -97,9 +97,9 @@ void Foam::functionObjects::readFields::execute()
     sSymmtf_.clear();
     stf_.clear();
 
-    forAll(fieldSet_, fieldI)
+    forAll(fieldSet_, fieldi)
     {
-        const word& fieldName = fieldSet_[fieldI];
+        const word& fieldName = fieldSet_[fieldi];
 
         // If necessary load field
         loadField<scalar>(fieldName, vsf_, ssf_);

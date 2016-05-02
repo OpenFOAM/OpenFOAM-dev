@@ -92,9 +92,9 @@ void Foam::functionObjects::residuals::writeFileHeader(const label i)
         writeHeader(file(), "Residuals");
         writeCommented(file(), "Time");
 
-        forAll(fieldSet_, fieldI)
+        forAll(fieldSet_, fieldi)
         {
-            const word& fieldName = fieldSet_[fieldI];
+            const word& fieldName = fieldSet_[fieldi];
 
             writeFileHeader<scalar>(fieldName);
             writeFileHeader<vector>(fieldName);
@@ -128,9 +128,9 @@ void Foam::functionObjects::residuals::write()
     {
         writeTime(file());
 
-        forAll(fieldSet_, fieldI)
+        forAll(fieldSet_, fieldi)
         {
-            const word& fieldName = fieldSet_[fieldI];
+            const word& fieldName = fieldSet_[fieldi];
 
             writeResidual<scalar>(fieldName);
             writeResidual<vector>(fieldName);

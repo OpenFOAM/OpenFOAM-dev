@@ -103,7 +103,7 @@ Foam::tmp<GeoField> Foam::uniformInterpolate
         (
             times[i]
         );
-        const GeoField& fieldI = timeIFields.lookupObject
+        const GeoField& fieldi = timeIFields.lookupObject
         <
             const GeoField
         >
@@ -111,7 +111,7 @@ Foam::tmp<GeoField> Foam::uniformInterpolate
             fieldName
         );
 
-        fld += weights[i]*fieldI;
+        fld += weights[i]*fieldi;
     }
 
     return tfld;

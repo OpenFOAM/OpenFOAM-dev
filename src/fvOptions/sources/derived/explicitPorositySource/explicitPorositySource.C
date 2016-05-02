@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ Foam::fv::explicitPorositySource::explicitPorositySource
 void Foam::fv::explicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -99,7 +99,7 @@ void Foam::fv::explicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -113,7 +113,7 @@ void Foam::fv::explicitPorositySource::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());

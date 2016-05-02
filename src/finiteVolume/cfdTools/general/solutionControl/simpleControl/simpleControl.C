@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ bool Foam::simpleControl::criteriaSatisfied()
     forAllConstIter(dictionary, solverDict, iter)
     {
         const word& variableName = iter().keyword();
-        const label fieldI = applyToField(variableName);
-        if (fieldI != -1)
+        const label fieldi = applyToField(variableName);
+        if (fieldi != -1)
         {
             scalar lastResidual = 0;
             const scalar residual =
@@ -65,7 +65,7 @@ bool Foam::simpleControl::criteriaSatisfied()
 
             checked = true;
 
-            bool absCheck = residual < residualControl_[fieldI].absTol;
+            bool absCheck = residual < residualControl_[fieldi].absTol;
             achieved = achieved && absCheck;
 
             if (debug)
@@ -73,7 +73,7 @@ bool Foam::simpleControl::criteriaSatisfied()
                 Info<< algorithmName_ << " solution statistics:" << endl;
 
                 Info<< "    " << variableName << ": tolerance = " << residual
-                    << " (" << residualControl_[fieldI].absTol << ")"
+                    << " (" << residualControl_[fieldi].absTol << ")"
                     << endl;
             }
         }

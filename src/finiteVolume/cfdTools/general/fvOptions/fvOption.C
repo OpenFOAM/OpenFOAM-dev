@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ void Foam::fv::option::checkApplied() const
 void Foam::fv::option::addSup
 (
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -134,7 +134,7 @@ void Foam::fv::option::addSup
 void Foam::fv::option::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -142,7 +142,7 @@ void Foam::fv::option::addSup
 void Foam::fv::option::addSup
 (
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -150,7 +150,7 @@ void Foam::fv::option::addSup
 void Foam::fv::option::addSup
 (
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -158,7 +158,7 @@ void Foam::fv::option::addSup
 void Foam::fv::option::addSup
 (
     fvMatrix<tensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -167,7 +167,7 @@ void Foam::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -176,7 +176,7 @@ void Foam::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -185,7 +185,7 @@ void Foam::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -194,7 +194,7 @@ void Foam::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -203,7 +203,7 @@ void Foam::fv::option::addSup
 (
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -213,10 +213,10 @@ void Foam::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -225,10 +225,10 @@ void Foam::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -237,10 +237,10 @@ void Foam::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -249,10 +249,10 @@ void Foam::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
@@ -261,25 +261,25 @@ void Foam::fv::option::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(alpha*rho, eqn, fieldI);
+    addSup(alpha*rho, eqn, fieldi);
 }
 
 
-void Foam::fv::option::constrain(fvMatrix<scalar>& eqn, const label fieldI)
+void Foam::fv::option::constrain(fvMatrix<scalar>& eqn, const label fieldi)
 {}
 
 
-void Foam::fv::option::constrain(fvMatrix<vector>& eqn, const label fieldI)
+void Foam::fv::option::constrain(fvMatrix<vector>& eqn, const label fieldi)
 {}
 
 
 void Foam::fv::option::constrain
 (
     fvMatrix<sphericalTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
@@ -287,12 +287,12 @@ void Foam::fv::option::constrain
 void Foam::fv::option::constrain
 (
     fvMatrix<symmTensor>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {}
 
 
-void Foam::fv::option::constrain(fvMatrix<tensor>& eqn, const label fieldI)
+void Foam::fv::option::constrain(fvMatrix<tensor>& eqn, const label fieldi)
 {}
 
 

@@ -190,9 +190,9 @@ void Foam::lagrangianFieldDecomposer::decomposeFields
 {
     if (particleIndices_.size())
     {
-        forAll(fields, fieldI)
+        forAll(fields, fieldi)
         {
-            decomposeField(cloudName, fields[fieldI])().write();
+            decomposeField(cloudName, fields[fieldi])().write();
         }
     }
 }
@@ -207,9 +207,9 @@ void Foam::lagrangianFieldDecomposer::decomposeFieldFields
 {
     if (particleIndices_.size())
     {
-        forAll(fields, fieldI)
+        forAll(fields, fieldi)
         {
-            decomposeFieldField(cloudName, fields[fieldI])().write();
+            decomposeFieldField(cloudName, fields[fieldi])().write();
         }
     }
 }

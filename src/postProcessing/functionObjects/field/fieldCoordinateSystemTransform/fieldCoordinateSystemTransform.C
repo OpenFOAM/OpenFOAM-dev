@@ -96,14 +96,14 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::execute()
 {
     Info<< type() << " " << name_ << " output:" << nl;
 
-    forAll(fieldSet_, fieldI)
+    forAll(fieldSet_, fieldi)
     {
         // If necessary load field
-        transform<scalar>(fieldSet_[fieldI]);
-        transform<vector>(fieldSet_[fieldI]);
-        transform<sphericalTensor>(fieldSet_[fieldI]);
-        transform<symmTensor>(fieldSet_[fieldI]);
-        transform<tensor>(fieldSet_[fieldI]);
+        transform<scalar>(fieldSet_[fieldi]);
+        transform<vector>(fieldSet_[fieldi]);
+        transform<sphericalTensor>(fieldSet_[fieldi]);
+        transform<symmTensor>(fieldSet_[fieldi]);
+        transform<tensor>(fieldSet_[fieldi]);
     }
 }
 
@@ -122,9 +122,9 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::write()
 {
     Info<< type() << " " << name_ << " output:" << nl;
 
-    forAll(fieldSet_, fieldI)
+    forAll(fieldSet_, fieldi)
     {
-        const word fieldName = fieldSet_[fieldI] + ":Transformed";
+        const word fieldName = fieldSet_[fieldi] + ":Transformed";
 
         const regIOobject& field =
             obr_.lookupObject<regIOobject>(fieldName);

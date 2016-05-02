@@ -47,11 +47,11 @@ pyrolysisChemistryModel
     cellCounter_(0)
 {
     // create the fields for the chemistry sources
-    forAll(this->RRs_, fieldI)
+    forAll(this->RRs_, fieldi)
     {
         IOobject header
         (
-            this->Ys_[fieldI].name() + "0",
+            this->Ys_[fieldi].name() + "0",
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ
@@ -62,12 +62,12 @@ pyrolysisChemistryModel
         {
             Ys0_.set
             (
-                fieldI,
+                fieldi,
                 new volScalarField
                 (
                     IOobject
                     (
-                        this->Ys_[fieldI].name() + "0",
+                        this->Ys_[fieldi].name() + "0",
                         mesh.time().timeName(),
                         mesh,
                         IOobject::MUST_READ,
@@ -94,12 +94,12 @@ pyrolysisChemistryModel
 
             Ys0_.set
             (
-                fieldI,
+                fieldi,
                 new volScalarField
                 (
                     IOobject
                     (
-                        this->Ys_[fieldI].name() + "0",
+                        this->Ys_[fieldi].name() + "0",
                         mesh.time().timeName(),
                         mesh,
                         IOobject::NO_READ,
@@ -110,22 +110,22 @@ pyrolysisChemistryModel
             );
 
             // Calculate inital values of Ysi0 = rho*delta*Yi
-            Ys0_[fieldI].primitiveFieldRef() =
+            Ys0_[fieldi].primitiveFieldRef() =
                 this->solidThermo().rho()
-               *max(this->Ys_[fieldI], scalar(0.001))*mesh.V();
+               *max(this->Ys_[fieldi], scalar(0.001))*mesh.V();
         }
     }
 
-    forAll(RRg_, fieldI)
+    forAll(RRg_, fieldi)
     {
         RRg_.set
         (
-            fieldI,
+            fieldi,
             new DimensionedField<scalar, volMesh>
             (
                 IOobject
                 (
-                    "RRg." + pyrolisisGases_[fieldI],
+                    "RRg." + pyrolisisGases_[fieldi],
                     mesh.time().timeName(),
                     mesh,
                     IOobject::NO_READ,

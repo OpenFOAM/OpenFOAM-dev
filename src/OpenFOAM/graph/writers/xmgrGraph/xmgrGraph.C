@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,20 +46,20 @@ void Foam::xmgrGraph::write(const graph& g, Ostream& os) const
         << "@xaxis label " << g.xName() << nl
         << "@yaxis label " << g.yName() << endl;
 
-    label fieldI = 0;
+    label fieldi = 0;
 
     forAllConstIter(graph, g, iter)
     {
-        os  << "@s" << fieldI << " legend "
+        os  << "@s" << fieldi << " legend "
             << iter()->name() << nl
-            << "@target G0.S" << fieldI << nl
+            << "@target G0.S" << fieldi << nl
             << "@type xy" << endl;
 
         writeXY(g.x(), *iter(), os);
 
         os << endl;
 
-        fieldI++;
+        fieldi++;
     }
 }
 

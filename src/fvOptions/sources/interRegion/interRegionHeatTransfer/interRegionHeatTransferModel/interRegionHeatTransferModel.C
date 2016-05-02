@@ -167,7 +167,7 @@ Foam::fv::interRegionHeatTransferModel::~interRegionHeatTransferModel()
 void Foam::fv::interRegionHeatTransferModel::addSup
 (
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     setNbrModel();
@@ -265,10 +265,10 @@ void Foam::fv::interRegionHeatTransferModel::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
-    addSup(eqn, fieldI);
+    addSup(eqn, fieldi);
 }
 
 

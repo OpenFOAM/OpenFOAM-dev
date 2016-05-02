@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ void ${typeName}FvOption${SourceType}::correct
 void ${typeName}FvOption${SourceType}::addSup
 (
     fvMatrix<${TemplateType}>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (${verbose:-false})
@@ -165,7 +165,7 @@ void ${typeName}FvOption${SourceType}::addSup
 (
     const volScalarField& rho,
     fvMatrix<${TemplateType}>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (${verbose:-false})
@@ -182,7 +182,7 @@ void ${typeName}FvOption${SourceType}::addSup
 void ${typeName}FvOption${SourceType}::setValue
 (
     fvMatrix<${TemplateType}>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (${verbose:-false})

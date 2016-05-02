@@ -53,11 +53,11 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -67,7 +67,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
                         << fieldName << endl;
                 }
 
-                source.addSup(mtx, fieldI);
+                source.addSup(mtx, fieldi);
             }
         }
     }
@@ -109,11 +109,11 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -123,7 +123,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
                         << fieldName << endl;
                 }
 
-                source.addSup(rho, mtx, fieldI);
+                source.addSup(rho, mtx, fieldi);
             }
         }
     }
@@ -168,11 +168,11 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -182,7 +182,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
                         << fieldName << endl;
                 }
 
-                source.addSup(alpha, rho, mtx, fieldI);
+                source.addSup(alpha, rho, mtx, fieldi);
             }
         }
     }
@@ -251,11 +251,11 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn)
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(eqn.psi().name());
+        label fieldi = source.applyToField(eqn.psi().name());
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {
@@ -265,7 +265,7 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn)
                         << " to field " << eqn.psi().name() << endl;
                 }
 
-                source.constrain(eqn, fieldI);
+                source.constrain(eqn, fieldi);
             }
         }
     }
@@ -284,11 +284,11 @@ void Foam::fv::optionList::correct
     {
         option& source = this->operator[](i);
 
-        label fieldI = source.applyToField(fieldName);
+        label fieldi = source.applyToField(fieldName);
 
-        if (fieldI != -1)
+        if (fieldi != -1)
         {
-            source.setApplied(fieldI);
+            source.setApplied(fieldi);
 
             if (source.isActive())
             {

@@ -75,9 +75,9 @@ void writeSurfFields
         << "FIELD attributes " << surfVectorFields.size() << std::endl;
 
     // surfVectorFields
-    forAll(surfVectorFields, fieldI)
+    forAll(surfVectorFields, fieldi)
     {
-        const surfaceVectorField& svf = surfVectorFields[fieldI];
+        const surfaceVectorField& svf = surfVectorFields[fieldi];
 
         str << svf.name() << " 3 "
             << mesh.nFaces() << " float" << std::endl;

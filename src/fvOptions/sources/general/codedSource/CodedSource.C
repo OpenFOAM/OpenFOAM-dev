@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ template<class Type>
 void Foam::fv::CodedSource<Type>::addSup
 (
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -176,7 +176,7 @@ void Foam::fv::CodedSource<Type>::addSup
     }
 
     updateLibrary(redirectType_);
-    redirectFvOption().addSup(eqn, fieldI);
+    redirectFvOption().addSup(eqn, fieldi);
 }
 
 
@@ -185,7 +185,7 @@ void Foam::fv::CodedSource<Type>::addSup
 (
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -195,7 +195,7 @@ void Foam::fv::CodedSource<Type>::addSup
     }
 
     updateLibrary(redirectType_);
-    redirectFvOption().addSup(rho, eqn, fieldI);
+    redirectFvOption().addSup(rho, eqn, fieldi);
 }
 
 
@@ -203,7 +203,7 @@ template<class Type>
 void Foam::fv::CodedSource<Type>::constrain
 (
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -213,7 +213,7 @@ void Foam::fv::CodedSource<Type>::constrain
     }
 
     updateLibrary(redirectType_);
-    redirectFvOption().constrain(eqn, fieldI);
+    redirectFvOption().constrain(eqn, fieldi);
 }
 
 

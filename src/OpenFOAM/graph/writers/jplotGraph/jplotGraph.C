@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,12 @@ void Foam::jplotGraph::write(const graph& g, Ostream& os) const
     os  << "# JPlot file" << nl
         << "# column 1: " << g.xName() << endl;
 
-    label fieldI = 0;
+    label fieldi = 0;
 
     forAllConstIter(graph, g, iter)
     {
-        os  << "# column " << fieldI + 2 << ": " << (*iter()).name() << endl;
-        fieldI++;
+        os  << "# column " << fieldi + 2 << ": " << (*iter()).name() << endl;
+        fieldi++;
     }
 
     g.writeTable(os);

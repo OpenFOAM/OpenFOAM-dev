@@ -59,16 +59,16 @@ solidChemistryModel
     reactingCells_(mesh.nCells(), true)
 {
     // create the fields for the chemistry sources
-    forAll(RRs_, fieldI)
+    forAll(RRs_, fieldi)
     {
         RRs_.set
         (
-            fieldI,
+            fieldi,
             new DimensionedField<scalar, volMesh>
             (
                 IOobject
                 (
-                    "RRs." + Ys_[fieldI].name(),
+                    "RRs." + Ys_[fieldi].name(),
                     mesh.time().timeName(),
                     mesh,
                     IOobject::NO_READ,

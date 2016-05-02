@@ -56,16 +56,16 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
     RR_(nSpecie_)
 {
     // create the fields for the chemistry sources
-    forAll(RR_, fieldI)
+    forAll(RR_, fieldi)
     {
         RR_.set
         (
-            fieldI,
+            fieldi,
             new DimensionedField<scalar, volMesh>
             (
                 IOobject
                 (
-                    "RR." + Y_[fieldI].name(),
+                    "RR." + Y_[fieldi].name(),
                     mesh.time().timeName(),
                     mesh,
                     IOobject::NO_READ,

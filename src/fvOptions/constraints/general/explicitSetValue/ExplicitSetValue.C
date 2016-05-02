@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ template<class Type>
 void Foam::fv::ExplicitSetValue<Type>::constrain
 (
     fvMatrix<Type>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     if (debug)
@@ -81,7 +81,7 @@ void Foam::fv::ExplicitSetValue<Type>::constrain
             << ">::constrain for source " << name_ << endl;
     }
 
-    List<Type> values(cells_.size(), injectionRate_[fieldI]);
+    List<Type> values(cells_.size(), injectionRate_[fieldi]);
 
     eqn.setValues(cells_, values);
 }

@@ -66,10 +66,10 @@ void Foam::surfaceMeshWriter::write
     const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 )
 {
-    forAll(sflds, fieldI)
+    forAll(sflds, fieldi)
     {
         const GeometricField<Type, fvsPatchField, surfaceMesh>& fld =
-            sflds[fieldI];
+            sflds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
             << pp_.size() << " float" << std::endl;

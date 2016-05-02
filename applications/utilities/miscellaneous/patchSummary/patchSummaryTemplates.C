@@ -33,7 +33,7 @@ void Foam::addToFieldList
 (
     PtrList<GeoField>& fieldList,
     const IOobject& obj,
-    const label fieldI,
+    const label fieldi,
     const typename GeoField::Mesh& mesh
 )
 {
@@ -41,7 +41,7 @@ void Foam::addToFieldList
     {
         fieldList.set
         (
-            fieldI,
+            fieldi,
             new GeoField(obj, mesh)
         );
         Info<< "    " << GeoField::typeName << tab << obj.name() << endl;
@@ -56,14 +56,14 @@ void Foam::outputFieldList
     const label patchi
 )
 {
-    forAll(fieldList, fieldI)
+    forAll(fieldList, fieldi)
     {
-        if (fieldList.set(fieldI))
+        if (fieldList.set(fieldi))
         {
             Info<< "    " << pTraits<typename GeoField::value_type>::typeName
                 << tab << tab
-                << fieldList[fieldI].name() << tab << tab
-                << fieldList[fieldI].boundaryField()[patchi].type() << nl;
+                << fieldList[fieldi].name() << tab << tab
+                << fieldList[fieldi].boundaryField()[patchi].type() << nl;
         }
     }
 }
@@ -77,14 +77,14 @@ void Foam::collectFieldList
     HashTable<word>& fieldToType
 )
 {
-    forAll(fieldList, fieldI)
+    forAll(fieldList, fieldi)
     {
-        if (fieldList.set(fieldI))
+        if (fieldList.set(fieldi))
         {
             fieldToType.insert
             (
-                fieldList[fieldI].name(),
-                fieldList[fieldI].boundaryField()[patchi].type()
+                fieldList[fieldi].name(),
+                fieldList[fieldi].boundaryField()[patchi].type()
             );
         }
     }

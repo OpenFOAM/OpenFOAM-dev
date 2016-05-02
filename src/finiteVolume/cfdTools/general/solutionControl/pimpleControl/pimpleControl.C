@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,8 +67,8 @@ bool Foam::pimpleControl::criteriaSatisfied()
     forAllConstIter(dictionary, solverDict, iter)
     {
         const word& variableName = iter().keyword();
-        const label fieldI = applyToField(variableName);
-        if (fieldI != -1)
+        const label fieldi = applyToField(variableName);
+        if (fieldi != -1)
         {
             scalar residual = 0;
             const scalar firstResidual =
@@ -78,21 +78,21 @@ bool Foam::pimpleControl::criteriaSatisfied()
 
             if (storeIni)
             {
-                residualControl_[fieldI].initialResidual = firstResidual;
+                residualControl_[fieldi].initialResidual = firstResidual;
             }
 
-            const bool absCheck = residual < residualControl_[fieldI].absTol;
+            const bool absCheck = residual < residualControl_[fieldi].absTol;
             bool relCheck = false;
 
             scalar relative = 0.0;
             if (!storeIni)
             {
                 const scalar iniRes =
-                    residualControl_[fieldI].initialResidual
+                    residualControl_[fieldi].initialResidual
                   + ROOTVSMALL;
 
                 relative = residual/iniRes;
-                relCheck = relative < residualControl_[fieldI].relTol;
+                relCheck = relative < residualControl_[fieldi].relTol;
             }
 
             achieved = achieved && (absCheck || relCheck);
@@ -104,11 +104,11 @@ bool Foam::pimpleControl::criteriaSatisfied()
                 Info<< "    " << variableName
                     << " PIMPLE iter " << corr_
                     << ": ini res = "
-                    << residualControl_[fieldI].initialResidual
+                    << residualControl_[fieldi].initialResidual
                     << ", abs tol = " << residual
-                    << " (" << residualControl_[fieldI].absTol << ")"
+                    << " (" << residualControl_[fieldi].absTol << ")"
                     << ", rel tol = " << relative
-                    << " (" << residualControl_[fieldI].relTol << ")"
+                    << " (" << residualControl_[fieldi].relTol << ")"
                     << endl;
             }
         }

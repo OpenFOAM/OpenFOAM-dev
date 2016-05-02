@@ -116,17 +116,17 @@ void writeVTKFields
 {
     label step = max(floor(8/pTraits<Type>::nComponents), 1);
 
-    forAll(values, fieldI)
+    forAll(values, fieldi)
     {
-        Info<< "        writing field " << fieldNames[fieldI] << endl;
-        os  << nl << fieldNames[fieldI] << ' ' << pTraits<Type>::nComponents
-            << ' ' << values[fieldI].size() << " float" << nl;
+        Info<< "        writing field " << fieldNames[fieldi] << endl;
+        os  << nl << fieldNames[fieldi] << ' ' << pTraits<Type>::nComponents
+            << ' ' << values[fieldi].size() << " float" << nl;
         label offset = 0;
         forAll(addr, trackI)
         {
             const List<label> ids(addr[trackI]);
 
-            List<Type> data(UIndirectList<Type>(values[fieldI], ids));
+            List<Type> data(UIndirectList<Type>(values[fieldi], ids));
             label nData = data.size() - 1;
             forAll(data, i)
             {

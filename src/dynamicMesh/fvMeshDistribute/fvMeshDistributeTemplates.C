@@ -108,7 +108,7 @@ void Foam::fvMeshDistribute::mapBoundaryFields
             << abort(FatalError);
     }
 
-    label fieldI = 0;
+    label fieldi = 0;
 
     forAllIter(typename HashTable<fldType*>, flds, iter)
     {
@@ -116,7 +116,7 @@ void Foam::fvMeshDistribute::mapBoundaryFields
         typename fldType::Boundary& bfld =
             fld.boundaryFieldRef();
 
-        const FieldField<fvsPatchField, T>& oldBfld = oldBflds[fieldI++];
+        const FieldField<fvsPatchField, T>& oldBfld = oldBflds[fieldi++];
 
         // Pull from old boundary field into bfld.
 

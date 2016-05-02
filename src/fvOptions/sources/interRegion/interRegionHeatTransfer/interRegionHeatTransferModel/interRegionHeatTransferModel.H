@@ -174,7 +174,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<scalar>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Source term to compressible energy equation
@@ -182,7 +182,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
-                const label fieldI
+                const label fieldi
             );
 
             //- Calculate heat transfer coefficient

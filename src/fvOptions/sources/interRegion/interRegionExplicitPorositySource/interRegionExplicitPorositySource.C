@@ -134,7 +134,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 void Foam::fv::interRegionExplicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     initialise();
@@ -188,7 +188,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldI
+    const label fieldi
 )
 {
     initialise();

@@ -108,7 +108,7 @@ public:
         // Evaluation
 
             //- Set value on field
-            virtual void constrain(fvMatrix<Type>& eqn, const label fieldI);
+            virtual void constrain(fvMatrix<Type>& eqn, const label fieldi);
 
 
         // IO

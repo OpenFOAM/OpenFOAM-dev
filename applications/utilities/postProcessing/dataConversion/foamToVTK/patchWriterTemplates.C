@@ -34,9 +34,9 @@ void Foam::patchWriter::write
     const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds
 )
 {
-    forAll(flds, fieldI)
+    forAll(flds, fieldi)
     {
-        const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldI];
+        const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
             << nFaces_ << " float" << std::endl;
@@ -69,10 +69,10 @@ void Foam::patchWriter::write
     const PtrList<GeometricField<Type, pointPatchField, pointMesh>>& flds
 )
 {
-    forAll(flds, fieldI)
+    forAll(flds, fieldi)
     {
         const GeometricField<Type, pointPatchField, pointMesh>& fld =
-            flds[fieldI];
+            flds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
             << nPoints_ << " float" << std::endl;
@@ -99,9 +99,9 @@ void Foam::patchWriter::write
     const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds
 )
 {
-    forAll(flds, fieldI)
+    forAll(flds, fieldi)
     {
-        const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldI];
+        const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldi];
 
         os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
             << nPoints_ << " float" << std::endl;
