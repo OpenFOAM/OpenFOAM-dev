@@ -75,26 +75,13 @@ Foam::functionObjects::histogram::histogram
 )
 :
     functionObjectFile(obr, typeName),
-    name_(name),
-    active_(true)
+    name_(name)
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
+    read(dict);
 }
 
 
-Foam::autoPtr<Foam::functionObjects::histogram>
-Foam::functionObjects::histogram::New
+bool Foam::functionObjects::histogram::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -102,17 +89,8 @@ Foam::functionObjects::histogram::New
     const bool loadFromFiles
 )
 {
-    if (isA<fvMesh>(obr))
-    {
-        return autoPtr<histogram>
-        (
-            new histogram(name, obr, dict, loadFromFiles)
-        );
-    }
-    else
-    {
-        return autoPtr<histogram>();
-    }
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
@@ -126,16 +104,13 @@ Foam::functionObjects::histogram::~histogram()
 
 void Foam::functionObjects::histogram::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        dict.lookup("field") >> fieldName_;
-        dict.lookup("max") >> max_;
-        min_ = dict.lookupOrDefault<scalar>("min", 0);
-        dict.lookup("nBins") >> nBins_;
+    dict.lookup("field") >> fieldName_;
+    dict.lookup("max") >> max_;
+    min_ = dict.lookupOrDefault<scalar>("min", 0);
+    dict.lookup("nBins") >> nBins_;
 
-        word format(dict.lookup("setFormat"));
-        formatterPtr_ = writer<scalar>::New(format);
-    }
+    word format(dict.lookup("setFormat"));
+    formatterPtr_ = writer<scalar>::New(format);
 }
 
 
@@ -153,87 +128,84 @@ void Foam::functionObjects::histogram::timeSet()
 
 void Foam::functionObjects::histogram::write()
 {
-    if (active_)
+    Info<< type() << " " << name_ << " output:" << nl;
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+
+    autoPtr<volScalarField> fieldPtr;
+    if (obr_.foundObject<volScalarField>(fieldName_))
     {
-        Info<< type() << " " << name_ << " output:" << nl;
-
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        autoPtr<volScalarField> fieldPtr;
-        if (obr_.foundObject<volScalarField>(fieldName_))
-        {
-            Info<< "    Looking up field " << fieldName_ << endl;
-        }
-        else
-        {
-            Info<< "    Reading field " << fieldName_ << endl;
-            fieldPtr.reset
-            (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        fieldName_,
-                        mesh.time().timeName(),
-                        mesh,
-                        IOobject::MUST_READ,
-                        IOobject::NO_WRITE
-                    ),
-                    mesh
-                )
-            );
-        }
-
-        const volScalarField& field =
+        Info<< "    Looking up field " << fieldName_ << endl;
+    }
+    else
+    {
+        Info<< "    Reading field " << fieldName_ << endl;
+        fieldPtr.reset
         (
-             fieldPtr.valid()
-           ? fieldPtr()
-           : obr_.lookupObject<volScalarField>(fieldName_)
-        );
-
-        // Calculate the mid-points of bins for the graph axis
-        pointField xBin(nBins_);
-        const scalar delta = (max_- min_)/nBins_;
-
-        scalar x = min_ + 0.5*delta;
-        forAll(xBin, i)
-        {
-            xBin[i] = point(x, 0, 0);
-            x += delta;
-        }
-
-        scalarField volFrac(nBins_, 0);
-        const scalarField& V = mesh.V();
-
-        forAll(field, celli)
-        {
-            const label bini = (field[celli] - min_)/delta;
-            if (bini >= 0 && bini < nBins_)
-            {
-                volFrac[bini] += V[celli];
-            }
-        }
-
-        Pstream::listCombineGather(volFrac, plusEqOp<scalar>());
-
-        if (Pstream::master())
-        {
-            const scalar sumVol = sum(volFrac);
-
-            if (sumVol > SMALL)
-            {
-                volFrac /= sumVol;
-
-                const coordSet coords
+            new volScalarField
+            (
+                IOobject
                 (
-                    "Volume_Fraction",
-                    "x",
-                    xBin,
-                    mag(xBin)
-                );
+                    fieldName_,
+                    mesh.time().timeName(),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE
+                ),
+                mesh
+            )
+        );
+    }
 
-                writeGraph(coords, field.name(), volFrac);
-            }
+    const volScalarField& field =
+    (
+         fieldPtr.valid()
+       ? fieldPtr()
+       : obr_.lookupObject<volScalarField>(fieldName_)
+    );
+
+    // Calculate the mid-points of bins for the graph axis
+    pointField xBin(nBins_);
+    const scalar delta = (max_- min_)/nBins_;
+
+    scalar x = min_ + 0.5*delta;
+    forAll(xBin, i)
+    {
+        xBin[i] = point(x, 0, 0);
+        x += delta;
+    }
+
+    scalarField volFrac(nBins_, 0);
+    const scalarField& V = mesh.V();
+
+    forAll(field, celli)
+    {
+        const label bini = (field[celli] - min_)/delta;
+        if (bini >= 0 && bini < nBins_)
+        {
+            volFrac[bini] += V[celli];
+        }
+    }
+
+    Pstream::listCombineGather(volFrac, plusEqOp<scalar>());
+
+    if (Pstream::master())
+    {
+        const scalar sumVol = sum(volFrac);
+
+        if (sumVol > SMALL)
+        {
+            volFrac /= sumVol;
+
+            const coordSet coords
+            (
+                "Volume_Fraction",
+                "x",
+                xBin,
+                mag(xBin)
+            );
+
+            writeGraph(coords, field.name(), volFrac);
         }
     }
 }

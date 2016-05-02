@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::calcFvcDiv
+    Foam::functionObjects::calcFvcDiv
 
 Group
     grpFVFunctionObjects
@@ -59,6 +59,9 @@ class polyMesh;
 class mapPolyMesh;
 class dimensionSet;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                          Class calcFvcDiv Declaration
 \*---------------------------------------------------------------------------*/
@@ -72,9 +75,6 @@ class calcFvcDiv
 
         //- Reference to the database
         const objectRegistry& obr_;
-
-        //- On/off switch
-        bool active_;
 
         //- Name of field to process
         word fieldName_;
@@ -126,6 +126,16 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
 
     //- Destructor
     virtual ~calcFvcDiv();
@@ -166,6 +176,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

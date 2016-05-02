@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(Q, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(Q, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Q::Q
+Foam::functionObjects::Q::Q
 (
     const word& name,
     const objectRegistry& obr,
@@ -48,113 +51,99 @@ Foam::Q::Q
 :
     name_(name),
     obr_(obr),
-    active_(true),
     UName_("U")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
 
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volScalarField* QPtr
+    volScalarField* QPtr
+    (
+        new volScalarField
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    type(),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                type(),
+                mesh.time().timeName(),
                 mesh,
-                dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
+        )
+    );
 
-        mesh.objectRegistry::store(QPtr);
-    }
+    mesh.objectRegistry::store(QPtr);
+}
+
+
+bool Foam::functionObjects::Q::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Q::~Q()
+Foam::functionObjects::Q::~Q()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Q::read(const dictionary& dict)
+void Foam::functionObjects::Q::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
-    }
+    UName_ = dict.lookupOrDefault<word>("UName", "U");
 }
 
 
-void Foam::Q::execute()
+void Foam::functionObjects::Q::execute()
 {
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        const volVectorField& U =
-            mesh.lookupObject<volVectorField>(UName_);
+    const volVectorField& U =
+        mesh.lookupObject<volVectorField>(UName_);
 
-        const volTensorField gradU(fvc::grad(U));
+    const volTensorField gradU(fvc::grad(U));
 
-        volScalarField& Q =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+    volScalarField& Q =
+        const_cast<volScalarField&>
+        (
+            mesh.lookupObject<volScalarField>(type())
+        );
 
-        Q = 0.5*(sqr(tr(gradU)) - tr(((gradU) & (gradU))));
-    }
+    Q = 0.5*(sqr(tr(gradU)) - tr(((gradU) & (gradU))));
 }
 
 
-void Foam::Q::end()
+void Foam::functionObjects::Q::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::Q::timeSet()
+void Foam::functionObjects::Q::timeSet()
+{}
+
+
+void Foam::functionObjects::Q::write()
 {
-    // Do nothing
-}
+    const volScalarField& Q =
+        obr_.lookupObject<volScalarField>(type());
 
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << Q.name() << nl
+        << endl;
 
-void Foam::Q::write()
-{
-    if (active_)
-    {
-        const volScalarField& Q =
-            obr_.lookupObject<volScalarField>(type());
-
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << Q.name() << nl
-            << endl;
-
-        Q.write();
-    }
+    Q.write();
 }
 
 

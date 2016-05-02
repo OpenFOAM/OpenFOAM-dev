@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,35 +34,34 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(abortCalculation, 0);
-}
-
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
+namespace functionObjects
 {
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::abortCalculation::actionType,
-        3
-    >::names[] =
-    {
-        "noWriteNow",
-        "writeNow",
-        "nextWrite"
-    };
+    defineTypeNameAndDebug(abortCalculation, 0);
+}
 }
 
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::abortCalculation::actionType,
+    3
+>::names[] =
+{
+    "noWriteNow",
+    "writeNow",
+    "nextWrite"
+};
 
-const Foam::NamedEnum<Foam::abortCalculation::actionType, 3>
-    Foam::abortCalculation::actionTypeNames_;
+const Foam::NamedEnum
+<
+    Foam::functionObjects::abortCalculation::actionType,
+    3
+> Foam::functionObjects::abortCalculation::actionTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::abortCalculation::removeFile() const
+void Foam::functionObjects::abortCalculation::removeFile() const
 {
     bool hasAbort = isFile(abortFile_);
     reduce(hasAbort, orOp<bool>());
@@ -77,7 +76,7 @@ void Foam::abortCalculation::removeFile() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::abortCalculation::abortCalculation
+Foam::functionObjects::abortCalculation::abortCalculation
 (
     const word& name,
     const objectRegistry& obr,
@@ -98,15 +97,28 @@ Foam::abortCalculation::abortCalculation
 }
 
 
+bool Foam::functionObjects::abortCalculation::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return true;
+}
+
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::abortCalculation::~abortCalculation()
+Foam::functionObjects::abortCalculation::~abortCalculation()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::abortCalculation::read(const dictionary& dict)
+void Foam::functionObjects::abortCalculation::read(const dictionary& dict)
 {
     if (dict.found("action"))
     {
@@ -124,7 +136,7 @@ void Foam::abortCalculation::read(const dictionary& dict)
 }
 
 
-void Foam::abortCalculation::execute()
+void Foam::functionObjects::abortCalculation::execute()
 {
     bool hasAbort = isFile(abortFile_);
     reduce(hasAbort, orOp<bool>());
@@ -173,22 +185,18 @@ void Foam::abortCalculation::execute()
 }
 
 
-void Foam::abortCalculation::end()
+void Foam::functionObjects::abortCalculation::end()
 {
     removeFile();
 }
 
 
-void Foam::abortCalculation::timeSet()
-{
-    // Do nothing - only valid on execute
-}
+void Foam::functionObjects::abortCalculation::timeSet()
+{}
 
 
-void Foam::abortCalculation::write()
-{
-    // Do nothing - only valid on execute
-}
+void Foam::functionObjects::abortCalculation::write()
+{}
 
 
 // ************************************************************************* //

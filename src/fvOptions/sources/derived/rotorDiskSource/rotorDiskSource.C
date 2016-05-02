@@ -96,7 +96,6 @@ void Foam::fv::rotorDiskSource::checkData()
                 }
                 case ifLocal:
                 {
-                    // Do nothing
                     break;
                 }
                 default:

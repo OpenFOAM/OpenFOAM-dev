@@ -303,7 +303,6 @@ void Foam::meshToMesh0::interpolate
                 }
                 case CELL_VOLUME_WEIGHT:
                 {
-                    // Do nothing
                     break;
                 }
 

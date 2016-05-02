@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::processorField
+    Foam::functionObjects::processorField
 
 Group
     grpFieldFunctionObjects
@@ -76,6 +76,9 @@ class objectRegistry;
 class dictionary;
 class mapPolyMesh;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                        Class processorField Declaration
 \*---------------------------------------------------------------------------*/
@@ -91,9 +94,6 @@ protected:
 
         //- Reference to the database
         const objectRegistry& obr_;
-
-        //- on/off switch
-        bool active_;
 
 
 private:
@@ -118,6 +118,16 @@ public:
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
         processorField
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
         (
             const word& name,
             const objectRegistry&,
@@ -165,6 +175,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

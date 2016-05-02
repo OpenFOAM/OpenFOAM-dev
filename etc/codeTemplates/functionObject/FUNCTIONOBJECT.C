@@ -71,21 +71,15 @@ void Foam::FUNCTIONOBJECT::read(const dictionary& dict)
 
 
 void Foam::FUNCTIONOBJECT::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::FUNCTIONOBJECT::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::FUNCTIONOBJECT::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::FUNCTIONOBJECT::write()

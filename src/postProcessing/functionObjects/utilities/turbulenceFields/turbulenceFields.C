@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,43 +32,65 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(turbulenceFields, 0);
-
-    template<>
-    const char* NamedEnum<turbulenceFields::compressibleField, 8>::names[] =
-    {
-        "k",
-        "epsilon",
-        "mut",
-        "muEff",
-        "alphat",
-        "alphaEff",
-        "R",
-        "devRhoReff"
-    };
-    const NamedEnum<turbulenceFields::compressibleField, 8>
-        turbulenceFields::compressibleFieldNames_;
-
-    template<>
-    const char* NamedEnum<turbulenceFields::incompressibleField, 6>::names[] =
-    {
-        "k",
-        "epsilon",
-        "nut",
-        "nuEff",
-        "R",
-        "devReff"
-    };
-    const NamedEnum<turbulenceFields::incompressibleField, 6>
-        turbulenceFields::incompressibleFieldNames_;
-
-    const word turbulenceFields::modelName = turbulenceModel::propertiesName;
 }
+}
+
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::turbulenceFields::compressibleField,
+    8
+>::names[] =
+{
+    "k",
+    "epsilon",
+    "mut",
+    "muEff",
+    "alphat",
+    "alphaEff",
+    "R",
+    "devRhoReff"
+};
+
+const Foam::NamedEnum
+<
+    Foam::functionObjects::turbulenceFields::compressibleField,
+    8
+> Foam::functionObjects::turbulenceFields::compressibleFieldNames_;
+
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::turbulenceFields::incompressibleField,
+    6
+>::names[] =
+{
+    "k",
+    "epsilon",
+    "nut",
+    "nuEff",
+    "R",
+    "devReff"
+};
+
+const Foam::NamedEnum
+<
+    Foam::functionObjects::turbulenceFields::incompressibleField,
+    6
+> Foam::functionObjects::turbulenceFields::incompressibleFieldNames_;
+
+const Foam::word Foam::functionObjects::turbulenceFields::modelName
+(
+    Foam::turbulenceModel::propertiesName
+);
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool Foam::turbulenceFields::compressible()
+bool Foam::functionObjects::turbulenceFields::compressible()
 {
     if (obr_.foundObject<compressible::turbulenceModel>(modelName))
     {
@@ -80,9 +102,9 @@ bool Foam::turbulenceFields::compressible()
     }
     else
     {
-        WarningInFunction
-            << "Turbulence model not found in database, deactivating";
-        active_ = false;
+        FatalErrorInFunction
+            << "Turbulence model not found in database, deactivating"
+            << exit(FatalError);
     }
 
     return false;
@@ -91,7 +113,7 @@ bool Foam::turbulenceFields::compressible()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::turbulenceFields::turbulenceFields
+Foam::functionObjects::turbulenceFields::turbulenceFields
 (
     const word& name,
     const objectRegistry& obr,
@@ -101,64 +123,73 @@ Foam::turbulenceFields::turbulenceFields
 :
     name_(name),
     obr_(obr),
-    active_(true),
     fieldSet_()
 {
-    // Check if the available mesh is an fvMesh otherise deactivate
-    if (isA<fvMesh>(obr_))
+    read(dict);
+}
+
+
+bool Foam::functionObjects::turbulenceFields::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    if (!isA<fvMesh>(obr))
     {
-        read(dict);
+        return false;
+    }
+
+    if
+    (
+        obr.foundObject<compressible::turbulenceModel>(modelName)
+     || obr.foundObject<incompressible::turbulenceModel>(modelName)
+    )
+    {
+        return true;
     }
     else
     {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << endl;
+        return false;
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::turbulenceFields::~turbulenceFields()
+Foam::functionObjects::turbulenceFields::~turbulenceFields()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::turbulenceFields::read(const dictionary& dict)
+void Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        fieldSet_.insert(wordList(dict.lookup("fields")));
+    fieldSet_.insert(wordList(dict.lookup("fields")));
 
-        Info<< type() << " " << name_ << ": ";
-        if (fieldSet_.size())
+    Info<< type() << " " << name_ << ": ";
+    if (fieldSet_.size())
+    {
+        Info<< "storing fields:" << nl;
+        forAllConstIter(wordHashSet, fieldSet_, iter)
         {
-            Info<< "storing fields:" << nl;
-            forAllConstIter(wordHashSet, fieldSet_, iter)
-            {
-                Info<< "    " << modelName << ':' << iter.key() << nl;
-            }
-            Info<< endl;
+            Info<< "    " << modelName << ':' << iter.key() << nl;
         }
-        else
-        {
-            Info<< "no fields requested to be stored" << nl << endl;
-        }
+        Info<< endl;
+    }
+    else
+    {
+        Info<< "no fields requested to be stored" << nl << endl;
     }
 }
 
 
-void Foam::turbulenceFields::execute()
+void Foam::functionObjects::turbulenceFields::execute()
 {
     bool comp = compressible();
-
-    if (!active_)
-    {
-        return;
-    }
 
     if (comp)
     {
@@ -269,20 +300,17 @@ void Foam::turbulenceFields::execute()
 }
 
 
-void Foam::turbulenceFields::end()
+void Foam::functionObjects::turbulenceFields::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::turbulenceFields::timeSet()
+void Foam::functionObjects::turbulenceFields::timeSet()
 {}
 
 
-void Foam::turbulenceFields::write()
+void Foam::functionObjects::turbulenceFields::write()
 {}
 
 

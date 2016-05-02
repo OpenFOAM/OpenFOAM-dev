@@ -31,7 +31,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class TurbulenceModel>
-void Foam::yPlus::calcYPlus
+void Foam::functionObjects::yPlus::calcYPlus
 (
     const TurbulenceModel& turbulenceModel,
     const fvMesh& mesh,

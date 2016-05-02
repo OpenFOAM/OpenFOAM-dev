@@ -75,9 +75,7 @@ bool Foam::radiation::noRadiation::read()
 
 
 void Foam::radiation::noRadiation::calculate()
-{
-    // Do nothing
-}
+{}
 
 
 Foam::tmp<Foam::volScalarField> Foam::radiation::noRadiation::Rp() const

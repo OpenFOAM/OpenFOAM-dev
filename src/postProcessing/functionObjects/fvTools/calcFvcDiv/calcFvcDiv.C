@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(calcFvcDiv, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(calcFvcDiv, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::volScalarField& Foam::calcFvcDiv::divField
+Foam::volScalarField& Foam::functionObjects::calcFvcDiv::divField
 (
     const word& divName,
     const dimensionSet& dims
@@ -76,7 +79,7 @@ Foam::volScalarField& Foam::calcFvcDiv::divField
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::calcFvcDiv::calcFvcDiv
+Foam::functionObjects::calcFvcDiv::calcFvcDiv
 (
     const word& name,
     const objectRegistry& obr,
@@ -86,93 +89,82 @@ Foam::calcFvcDiv::calcFvcDiv
 :
     name_(name),
     obr_(obr),
-    active_(true),
     fieldName_("undefined-fieldName"),
     resultName_("undefined-resultName")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating." << nl
-            << endl;
-    }
-
     read(dict);
+}
+
+
+bool Foam::functionObjects::calcFvcDiv::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::calcFvcDiv::~calcFvcDiv()
+Foam::functionObjects::calcFvcDiv::~calcFvcDiv()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::calcFvcDiv::read(const dictionary& dict)
+void Foam::functionObjects::calcFvcDiv::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        dict.lookup("fieldName") >> fieldName_;
-        dict.lookup("resultName") >> resultName_;
+    dict.lookup("fieldName") >> fieldName_;
+    dict.lookup("resultName") >> resultName_;
 
-        if (resultName_ == "none")
-        {
-            resultName_ = "fvc::div(" + fieldName_ + ")";
-        }
+    if (resultName_ == "none")
+    {
+        resultName_ = "fvc::div(" + fieldName_ + ")";
     }
 }
 
 
-void Foam::calcFvcDiv::execute()
+void Foam::functionObjects::calcFvcDiv::execute()
 {
-    if (active_)
+    bool processed = false;
+
+    calcDiv<surfaceScalarField>(fieldName_, resultName_, processed);
+    calcDiv<volVectorField>(fieldName_, resultName_, processed);
+
+    if (!processed)
     {
-        bool processed = false;
-
-        calcDiv<surfaceScalarField>(fieldName_, resultName_, processed);
-        calcDiv<volVectorField>(fieldName_, resultName_, processed);
-
-        if (!processed)
-        {
-            WarningInFunction
-                << "Unprocessed field " << fieldName_ << endl;
-        }
+        WarningInFunction
+            << "Unprocessed field " << fieldName_ << endl;
     }
 }
 
 
-void Foam::calcFvcDiv::end()
+void Foam::functionObjects::calcFvcDiv::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::calcFvcDiv::timeSet()
-{
-    // Do nothing
-}
+void Foam::functionObjects::calcFvcDiv::timeSet()
+{}
 
 
-void Foam::calcFvcDiv::write()
+void Foam::functionObjects::calcFvcDiv::write()
 {
-    if (active_)
+    if (obr_.foundObject<regIOobject>(resultName_))
     {
-        if (obr_.foundObject<regIOobject>(resultName_))
-        {
-            const regIOobject& field =
-                obr_.lookupObject<regIOobject>(resultName_);
+        const regIOobject& field =
+            obr_.lookupObject<regIOobject>(resultName_);
 
-            Info<< type() << " " << name_ << " output:" << nl
-                << "    writing field " << field.name() << nl << endl;
+        Info<< type() << " " << name_ << " output:" << nl
+            << "    writing field " << field.name() << nl << endl;
 
-            field.write();
-        }
+        field.write();
     }
 }
 

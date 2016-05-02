@@ -99,9 +99,6 @@ class histogram
         //- Name of this histogram
         word name_;
 
-        //- on/off switch
-        bool active_;
-
         //- Name of field
         word fieldName_;
 
@@ -152,9 +149,9 @@ public:
             const bool loadFromFiles = false
         );
 
-        //- Construct on free-store and return pointer if successful
-        //  otherwise return a null-pointer
-        static autoPtr<histogram> New
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
         (
             const word& name,
             const objectRegistry&,

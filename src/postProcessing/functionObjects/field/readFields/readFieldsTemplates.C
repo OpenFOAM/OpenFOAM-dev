@@ -31,7 +31,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::readFields::loadField
+void Foam::functionObjects::readFields::loadField
 (
     const word& fieldName,
     PtrList<GeometricField<Type, fvPatchField, volMesh>>& vflds,

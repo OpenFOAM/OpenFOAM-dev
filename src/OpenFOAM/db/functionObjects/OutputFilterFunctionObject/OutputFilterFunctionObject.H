@@ -111,7 +111,7 @@ class OutputFilterFunctionObject
         void readDict();
 
         //- Creates most of the data associated with this object.
-        void allocateFilter();
+        bool allocateFilter();
 
         //- Destroys most of the data associated with this object.
         void destroyFilter();

@@ -138,7 +138,7 @@ void Foam::calc(const argList& args, const Time& runTime, const fvMesh& mesh)
         return;
     }
 
-    dsmcFields dF
+    functionObjects::dsmcFields dF
     (
         "dsmcFieldsUtility",
         mesh,

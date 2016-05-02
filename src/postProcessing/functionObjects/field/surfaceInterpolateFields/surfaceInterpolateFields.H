@@ -84,6 +84,9 @@ class objectRegistry;
 class dictionary;
 class mapPolyMesh;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                   Class surfaceInterpolateFields Declaration
 \*---------------------------------------------------------------------------*/
@@ -98,9 +101,6 @@ protected:
         word name_;
 
         const objectRegistry& obr_;
-
-        //- on/off switch
-        bool active_;
 
         //- Fields to process
         //wordList fieldSet_;
@@ -152,6 +152,16 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
 
     //- Destructor
     virtual ~surfaceInterpolateFields();
@@ -192,6 +202,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

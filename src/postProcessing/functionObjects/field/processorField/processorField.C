@@ -31,13 +31,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(processorField, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(processorField, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::processorField::processorField
+Foam::functionObjects::processorField::processorField
 (
     const word& name,
     const objectRegistry& obr,
@@ -46,96 +49,85 @@ Foam::processorField::processorField
 )
 :
     name_(name),
-    obr_(obr),
-    active_(true)
+    obr_(obr)
 {
-    // Check if the available mesh is an fvMesh otherise deactivate
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict);
+    read(dict);
 
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volScalarField* procFieldPtr
+    volScalarField* procFieldPtr
+    (
+        new volScalarField
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    "processorID",
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                "processorID",
+                mesh.time().timeName(),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", dimless, 0.0)
+        )
+    );
 
-        mesh.objectRegistry::store(procFieldPtr);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << endl;
-    }
+    mesh.objectRegistry::store(procFieldPtr);
 }
+
+
+bool Foam::functionObjects::processorField::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
+}
+
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::processorField::~processorField()
+Foam::functionObjects::processorField::~processorField()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::processorField::read(const dictionary& dict)
+void Foam::functionObjects::processorField::read(const dictionary& dict)
+{}
+
+
+void Foam::functionObjects::processorField::execute()
 {
-    // do nothing
+    const volScalarField& procField =
+        obr_.lookupObject<volScalarField>("processorID");
+
+    const_cast<volScalarField&>(procField) ==
+        dimensionedScalar("proci", dimless, Pstream::myProcNo());
 }
 
 
-void Foam::processorField::execute()
+void Foam::functionObjects::processorField::end()
 {
-    if (active_)
-    {
-        const volScalarField& procField =
-            obr_.lookupObject<volScalarField>("processorID");
-
-        const_cast<volScalarField&>(procField) ==
-            dimensionedScalar("proci", dimless, Pstream::myProcNo());
-    }
+    execute();
 }
 
 
-void Foam::processorField::end()
+void Foam::functionObjects::processorField::timeSet()
+{}
+
+
+void Foam::functionObjects::processorField::write()
 {
-    if (active_)
-    {
-        execute();
-    }
-}
+    const volScalarField& procField =
+        obr_.lookupObject<volScalarField>("processorID");
 
-
-void Foam::processorField::timeSet()
-{
-    // Do nothing
-}
-
-
-void Foam::processorField::write()
-{
-    if (active_)
-    {
-        const volScalarField& procField =
-            obr_.lookupObject<volScalarField>("processorID");
-
-        procField.write();
-    }
+    procField.write();
 }
 
 

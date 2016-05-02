@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(vorticity, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::vorticity::vorticity
+Foam::functionObjects::vorticity::vorticity
 (
     const word& name,
     const objectRegistry& obr,
@@ -48,113 +51,98 @@ Foam::vorticity::vorticity
 :
     name_(name),
     obr_(obr),
-    active_(true),
     UName_("U"),
     outputName_(typeName)
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
 
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volVectorField* vorticityPtr
+    volVectorField* vorticityPtr
+    (
+        new volVectorField
         (
-            new volVectorField
+            IOobject
             (
-                IOobject
-                (
-                    outputName_,
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                outputName_,
+                mesh.time().timeName(),
                 mesh,
-                dimensionedVector("0", dimless/dimTime, Zero)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedVector("0", dimless/dimTime, Zero)
+        )
+    );
 
-        mesh.objectRegistry::store(vorticityPtr);
-    }
+    mesh.objectRegistry::store(vorticityPtr);
+}
+
+
+bool Foam::functionObjects::vorticity::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::vorticity::~vorticity()
+Foam::functionObjects::vorticity::~vorticity()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::vorticity::read(const dictionary& dict)
+void Foam::functionObjects::vorticity::read(const dictionary& dict)
 {
-    if (active_)
+    UName_ = dict.lookupOrDefault<word>("UName", "U");
+    if (UName_ != "U")
     {
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
-        if (UName_ != "U")
-        {
-            outputName_ = typeName + "(" + UName_ + ")";
-        }
+        outputName_ = typeName + "(" + UName_ + ")";
     }
 }
 
 
-void Foam::vorticity::execute()
+void Foam::functionObjects::vorticity::execute()
 {
-    if (active_)
-    {
-        const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
+    const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
 
-        volVectorField& vorticity =
-            const_cast<volVectorField&>
-            (
-                obr_.lookupObject<volVectorField>(outputName_)
-            );
+    volVectorField& vorticity = const_cast<volVectorField&>
+    (
+        obr_.lookupObject<volVectorField>(outputName_)
+    );
 
-        vorticity = fvc::curl(U);
-    }
+    vorticity = fvc::curl(U);
 }
 
 
-void Foam::vorticity::end()
+void Foam::functionObjects::vorticity::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::vorticity::timeSet()
+void Foam::functionObjects::vorticity::timeSet()
+{}
+
+
+void Foam::functionObjects::vorticity::write()
 {
-    // Do nothing
-}
+    const volVectorField& vorticity =
+        obr_.lookupObject<volVectorField>(outputName_);
 
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << vorticity.name() << nl
+        << endl;
 
-void Foam::vorticity::write()
-{
-    if (active_)
-    {
-        const volVectorField& vorticity =
-            obr_.lookupObject<volVectorField>(outputName_);
-
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << vorticity.name() << nl
-            << endl;
-
-        vorticity.write();
-    }
+    vorticity.write();
 }
 
 

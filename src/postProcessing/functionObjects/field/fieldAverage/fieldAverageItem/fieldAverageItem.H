@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fieldAverageItem
+    Foam::functionObjects::fieldAverageItem
 
 Description
     Helper class to describe what form of averaging to apply.  A set will be
@@ -62,11 +62,13 @@ namespace Foam
 class Istream;
 class Ostream;
 
+namespace functionObjects
+{
+
 // Forward declaration of friend functions and operators
 class fieldAverageItem;
 Istream& operator>>(Istream&, fieldAverageItem&);
 Ostream& operator<<(Ostream&, const fieldAverageItem&);
-
 
 /*---------------------------------------------------------------------------*\
                       Class fieldAverageItem Declaration
@@ -97,9 +99,6 @@ public:
 private:
 
     // Private data
-
-        //- Active flag
-        Switch active_;
 
         //- Field name
         word fieldName_;
@@ -150,18 +149,6 @@ public:
     // Member Functions
 
         // Access
-
-            //- Return const access to the active flag
-            const Switch& active() const
-            {
-                return active_;
-            }
-
-            //- Return non-const access to the active flag
-            Switch& active()
-            {
-                return active_;
-            }
 
             //- Return const access to the field name
             const word& fieldName() const
@@ -277,6 +264,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fieldValues::faceSource
+    Foam::functionObjects::fieldValues::faceSource
 
 Group
     grpFieldFunctionObjects
@@ -152,6 +152,8 @@ namespace Foam
 
 class sampledSurface;
 
+namespace functionObjects
+{
 namespace fieldValues
 {
 
@@ -337,14 +339,26 @@ public:
     TypeName("faceSource");
 
 
-    //- Construct from components
-    faceSource
-    (
-        const word& name,
-        const objectRegistry& obr,
-        const dictionary& dict,
-        const bool loadFromFiles = false
-    );
+    // Constructors
+
+        //- Construct from components
+        faceSource
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict,
+            const bool loadFromFiles = false
+        );
+
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
 
 
     //- Destructor
@@ -426,6 +440,7 @@ vector faceSource::processValues
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace fieldValues
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

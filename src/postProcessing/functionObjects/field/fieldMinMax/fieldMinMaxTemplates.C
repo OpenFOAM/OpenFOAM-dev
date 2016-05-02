@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fieldMinMax::output
+void Foam::functionObjects::fieldMinMax::output
 (
     const word& fieldName,
     const word& outputName,
@@ -99,7 +99,7 @@ void Foam::fieldMinMax::output
 
 
 template<class Type>
-void Foam::fieldMinMax::calcMinMaxFields
+void Foam::functionObjects::fieldMinMax::calcMinMaxFields
 (
     const word& fieldName,
     const modeType& mode

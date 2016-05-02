@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,13 +30,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(readFields, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(readFields, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::readFields::readFields
+Foam::functionObjects::readFields::readFields
 (
     const word& name,
     const objectRegistry& obr,
@@ -46,92 +49,80 @@ Foam::readFields::readFields
 :
     name_(name),
     obr_(obr),
-    active_(true),
     fieldSet_()
 {
-    // Check if the available mesh is an fvMesh otherise deactivate
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << endl;
-    }
+    read(dict);
+}
+
+
+bool Foam::functionObjects::readFields::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::readFields::~readFields()
+Foam::functionObjects::readFields::~readFields()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::readFields::read(const dictionary& dict)
+void Foam::functionObjects::readFields::read(const dictionary& dict)
 {
-    if (active_)
+    dict.lookup("fields") >> fieldSet_;
+}
+
+
+void Foam::functionObjects::readFields::execute()
+{
+    // Clear out any previously loaded fields
+    vsf_.clear();
+    vvf_.clear();
+    vSpheretf_.clear();
+    vSymmtf_.clear();
+    vtf_.clear();
+
+    ssf_.clear();
+    svf_.clear();
+    sSpheretf_.clear();
+    sSymmtf_.clear();
+    stf_.clear();
+
+    forAll(fieldSet_, fieldI)
     {
-        dict.lookup("fields") >> fieldSet_;
+        const word& fieldName = fieldSet_[fieldI];
+
+        // If necessary load field
+        loadField<scalar>(fieldName, vsf_, ssf_);
+        loadField<vector>(fieldName, vvf_, svf_);
+        loadField<sphericalTensor>(fieldName, vSpheretf_, sSpheretf_);
+        loadField<symmTensor>(fieldName, vSymmtf_, sSymmtf_);
+        loadField<tensor>(fieldName, vtf_, stf_);
     }
 }
 
 
-void Foam::readFields::execute()
+void Foam::functionObjects::readFields::end()
 {
-    if (active_)
-    {
-        // Clear out any previously loaded fields
-        vsf_.clear();
-        vvf_.clear();
-        vSpheretf_.clear();
-        vSymmtf_.clear();
-        vtf_.clear();
-
-        ssf_.clear();
-        svf_.clear();
-        sSpheretf_.clear();
-        sSymmtf_.clear();
-        stf_.clear();
-
-        forAll(fieldSet_, fieldI)
-        {
-            const word& fieldName = fieldSet_[fieldI];
-
-            // If necessary load field
-            loadField<scalar>(fieldName, vsf_, ssf_);
-            loadField<vector>(fieldName, vvf_, svf_);
-            loadField<sphericalTensor>(fieldName, vSpheretf_, sSpheretf_);
-            loadField<symmTensor>(fieldName, vSymmtf_, sSymmtf_);
-            loadField<tensor>(fieldName, vtf_, stf_);
-        }
-    }
+    execute();
 }
 
 
-void Foam::readFields::end()
-{
-    if (active_)
-    {
-        execute();
-    }
-}
+void Foam::functionObjects::readFields::timeSet()
+{}
 
 
-void Foam::readFields::timeSet()
-{
-    // Do nothing
-}
-
-
-void Foam::readFields::write()
-{
-    // Do nothing
-}
+void Foam::functionObjects::readFields::write()
+{}
 
 
 // ************************************************************************* //

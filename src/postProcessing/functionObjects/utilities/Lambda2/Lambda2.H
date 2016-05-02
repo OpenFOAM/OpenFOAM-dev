@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Lambda2
+    Foam::functionObjects::Lambda2
 
 Group
     grpUtilitiesFunctionObjects
@@ -57,6 +57,9 @@ class dictionary;
 class polyMesh;
 class mapPolyMesh;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                           Class Lambda2 Declaration
 \*---------------------------------------------------------------------------*/
@@ -70,9 +73,6 @@ class Lambda2
 
         //- Reference to the database
         const objectRegistry& obr_;
-
-        //- On/off switch
-        bool active_;
 
         //- Name of velocity field, default is "U"
         word UName_;
@@ -98,6 +98,16 @@ public:
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
         Lambda2
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
         (
             const word& name,
             const objectRegistry&,
@@ -145,6 +155,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

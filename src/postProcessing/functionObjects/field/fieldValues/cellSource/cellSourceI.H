@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,19 +27,18 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::fieldValues::cellSource::sourceType&
-Foam::fieldValues::cellSource::source() const
+inline const Foam::functionObjects::fieldValues::cellSource::sourceType&
+Foam::functionObjects::fieldValues::cellSource::source() const
 {
     return source_;
 }
 
 
 inline const Foam::labelList&
-Foam::fieldValues::cellSource::cellId() const
+Foam::functionObjects::fieldValues::cellSource::cellId() const
 {
     return cellId_;
 }
 
 
 // ************************************************************************* //
-

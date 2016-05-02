@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoundedStreamLine
+    Foam::functionObjects::wallBoundedStreamLine
 
 Group
     grpFieldFunctionObjects
@@ -127,6 +127,9 @@ class mapPolyMesh;
 class meshSearch;
 class sampledSet;
 
+namespace functionObjects
+{
+
 /*---------------------------------------------------------------------------*\
                     Class wallBoundedStreamLine Declaration
 \*---------------------------------------------------------------------------*/
@@ -146,10 +149,6 @@ class wallBoundedStreamLine
 
         //- Load fields from files (not from objectRegistry)
         bool loadFromFiles_;
-
-        //- On/off switch
-        bool active_;
-
 
         //- List of fields to sample
         wordList fields_;
@@ -250,6 +249,16 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
+
 
     //- Destructor
     virtual ~wallBoundedStreamLine();
@@ -283,14 +292,12 @@ public:
 
         //- Update for mesh point-motion
         virtual void movePoints(const polyMesh&);
-
-        ////- Update for changes of mesh due to readUpdate
-        //virtual void readUpdate(const polyMesh::readUpdateState state);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

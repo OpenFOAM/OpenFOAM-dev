@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,33 +27,34 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    const word fieldAverageItem::EXT_MEAN = "Mean";
-    const word fieldAverageItem::EXT_PRIME2MEAN = "Prime2Mean";
+const Foam::word Foam::functionObjects::fieldAverageItem::EXT_MEAN
+(
+    "Mean"
+);
 
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::fieldAverageItem::baseType,
-        2
-    >::names[] =
-    {
-        "iteration",
-        "time"
-    };
-}
+const Foam::word Foam::functionObjects::fieldAverageItem::EXT_PRIME2MEAN
+(
+    "Prime2Mean"
+);
 
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::fieldAverageItem::baseType,
+    2
+>::names[] = { "iteration", "time"};
 
-const Foam::NamedEnum<Foam::fieldAverageItem::baseType, 2>
-    Foam::fieldAverageItem::baseTypeNames_;
+const Foam::NamedEnum
+<
+    Foam::functionObjects::fieldAverageItem::baseType,
+    2
+> Foam::functionObjects::fieldAverageItem::baseTypeNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fieldAverageItem::fieldAverageItem()
+Foam::functionObjects::fieldAverageItem::fieldAverageItem()
 :
-    active_(false),
     fieldName_("unknown"),
     mean_(0),
     meanFieldName_("unknown"),
@@ -65,9 +66,11 @@ Foam::fieldAverageItem::fieldAverageItem()
 {}
 
 
-Foam::fieldAverageItem::fieldAverageItem(const fieldAverageItem& faItem)
+Foam::functionObjects::fieldAverageItem::fieldAverageItem
+(
+    const fieldAverageItem& faItem
+)
 :
-    active_(faItem.active_),
     fieldName_(faItem.fieldName_),
     mean_(faItem.mean_),
     meanFieldName_(faItem.meanFieldName_),
@@ -81,13 +84,16 @@ Foam::fieldAverageItem::fieldAverageItem(const fieldAverageItem& faItem)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fieldAverageItem::~fieldAverageItem()
+Foam::functionObjects::fieldAverageItem::~fieldAverageItem()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::fieldAverageItem::operator=(const fieldAverageItem& rhs)
+void Foam::functionObjects::fieldAverageItem::operator=
+(
+    const fieldAverageItem& rhs
+)
 {
     // Check for assignment to self
     if (this == &rhs)
@@ -98,7 +104,6 @@ void Foam::fieldAverageItem::operator=(const fieldAverageItem& rhs)
     }
 
     // Set updated values
-    active_ = rhs.active_;
     fieldName_ = rhs.fieldName_;
     mean_ = rhs.mean_;
     meanFieldName_ = rhs.meanFieldName_;

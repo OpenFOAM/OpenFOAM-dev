@@ -34,7 +34,10 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(regionSizeDistribution, 0);
+    namespace functionObjects
+    {
+        defineTypeNameAndDebug(regionSizeDistribution, 0);
+    }
 
     //- Plus op for FixedList<scalar>
     template<class T, unsigned Size>
@@ -58,7 +61,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::regionSizeDistribution::writeGraph
+void Foam::functionObjects::regionSizeDistribution::writeGraph
 (
     const coordSet& coords,
     const word& valueName,
@@ -81,7 +84,7 @@ void Foam::regionSizeDistribution::writeGraph
 }
 
 
-void Foam::regionSizeDistribution::writeAlphaFields
+void Foam::functionObjects::regionSizeDistribution::writeAlphaFields
 (
     const regionSplit& regions,
     const Map<label>& patchRegions,
@@ -163,7 +166,8 @@ void Foam::regionSizeDistribution::writeAlphaFields
 }
 
 
-Foam::Map<Foam::label> Foam::regionSizeDistribution::findPatchRegions
+Foam::Map<Foam::label>
+Foam::functionObjects::regionSizeDistribution::findPatchRegions
 (
     const polyMesh& mesh,
     const regionSplit& regions
@@ -209,7 +213,8 @@ Foam::Map<Foam::label> Foam::regionSizeDistribution::findPatchRegions
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::regionSizeDistribution::divide
+Foam::tmp<Foam::scalarField>
+Foam::functionObjects::regionSizeDistribution::divide
 (
     const scalarField& num,
     const scalarField& denom
@@ -233,7 +238,7 @@ Foam::tmp<Foam::scalarField> Foam::regionSizeDistribution::divide
 }
 
 
-void Foam::regionSizeDistribution::writeGraphs
+void Foam::functionObjects::regionSizeDistribution::writeGraphs
 (
     const word& fieldName,              // name of field
     const labelList& indices,           // index of bin for each region
@@ -274,7 +279,7 @@ void Foam::regionSizeDistribution::writeGraphs
 }
 
 
-void Foam::regionSizeDistribution::writeGraphs
+void Foam::functionObjects::regionSizeDistribution::writeGraphs
 (
     const word& fieldName,              // name of field
     const scalarField& cellField,       // per cell field data
@@ -314,7 +319,7 @@ void Foam::regionSizeDistribution::writeGraphs
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::regionSizeDistribution::regionSizeDistribution
+Foam::functionObjects::regionSizeDistribution::regionSizeDistribution
 (
     const word& name,
     const objectRegistry& obr,
@@ -325,537 +330,526 @@ Foam::regionSizeDistribution::regionSizeDistribution
     functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
-    active_(true),
     alphaName_(dict.lookup("field")),
     patchNames_(dict.lookup("patches"))
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
+    read(dict);
+}
+
+
+bool Foam::functionObjects::regionSizeDistribution::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::regionSizeDistribution::~regionSizeDistribution()
+Foam::functionObjects::regionSizeDistribution::~regionSizeDistribution()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::regionSizeDistribution::read(const dictionary& dict)
+void Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
 {
-    if (active_)
+    dict.lookup("field") >> alphaName_;
+    dict.lookup("patches") >> patchNames_;
+    dict.lookup("threshold") >> threshold_;
+    dict.lookup("maxDiameter") >> maxDiam_;
+    minDiam_ = 0.0;
+    dict.readIfPresent("minDiameter", minDiam_);
+    dict.lookup("nBins") >> nBins_;
+    dict.lookup("fields") >> fields_;
+
+    word format(dict.lookup("setFormat"));
+    formatterPtr_ = writer<scalar>::New(format);
+
+    if (dict.found("coordinateSystem"))
     {
-        dict.lookup("field") >> alphaName_;
-        dict.lookup("patches") >> patchNames_;
-        dict.lookup("threshold") >> threshold_;
-        dict.lookup("maxDiameter") >> maxDiam_;
-        minDiam_ = 0.0;
-        dict.readIfPresent("minDiameter", minDiam_);
-        dict.lookup("nBins") >> nBins_;
-        dict.lookup("fields") >> fields_;
+        coordSysPtr_.reset(new coordinateSystem(obr_, dict));
 
-        word format(dict.lookup("setFormat"));
-        formatterPtr_ = writer<scalar>::New(format);
-
-        if (dict.found("coordinateSystem"))
-        {
-            coordSysPtr_.reset(new coordinateSystem(obr_, dict));
-
-            Info<< "Transforming all vectorFields with coordinate system "
-                << coordSysPtr_().name() << endl;
-        }
+        Info<< "Transforming all vectorFields with coordinate system "
+            << coordSysPtr_().name() << endl;
     }
 }
 
 
-void Foam::regionSizeDistribution::execute()
+void Foam::functionObjects::regionSizeDistribution::execute()
+{}
+
+
+void Foam::functionObjects::regionSizeDistribution::end()
+{}
+
+
+void Foam::functionObjects::regionSizeDistribution::timeSet()
+{}
+
+
+void Foam::functionObjects::regionSizeDistribution::write()
 {
-    // Do nothing - only valid on write
-}
+    Info<< type() << " " << name_ << " output:" << nl;
 
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-void Foam::regionSizeDistribution::end()
-{
-    // Do nothing - only valid on write
-}
-
-
-void Foam::regionSizeDistribution::timeSet()
-{
-    // Do nothing - only valid on write
-}
-
-
-void Foam::regionSizeDistribution::write()
-{
-    if (active_)
+    autoPtr<volScalarField> alphaPtr;
+    if (obr_.foundObject<volScalarField>(alphaName_))
     {
-        Info<< type() << " " << name_ << " output:" << nl;
-
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        autoPtr<volScalarField> alphaPtr;
-        if (obr_.foundObject<volScalarField>(alphaName_))
-        {
-            Info<< "    Looking up field " << alphaName_ << endl;
-        }
-        else
-        {
-            Info<< "    Reading field " << alphaName_ << endl;
-            alphaPtr.reset
-            (
-                new volScalarField
-                (
-                    IOobject
-                    (
-                        alphaName_,
-                        mesh.time().timeName(),
-                        mesh,
-                        IOobject::MUST_READ,
-                        IOobject::NO_WRITE
-                    ),
-                    mesh
-                )
-            );
-        }
-
-
-        const volScalarField& alpha =
+        Info<< "    Looking up field " << alphaName_ << endl;
+    }
+    else
+    {
+        Info<< "    Reading field " << alphaName_ << endl;
+        alphaPtr.reset
         (
-             alphaPtr.valid()
-           ? alphaPtr()
-           : obr_.lookupObject<volScalarField>(alphaName_)
-        );
-
-        Info<< "    Volume of alpha          = "
-            << fvc::domainIntegrate(alpha).value()
-            << endl;
-
-        const scalar meshVol = gSum(mesh.V());
-        const scalar maxDropletVol = 1.0/6.0*pow(maxDiam_, 3);
-        const scalar delta = (maxDiam_-minDiam_)/nBins_;
-
-        Info<< "    Mesh volume              = " << meshVol << endl;
-        Info<< "    Maximum droplet diameter = " << maxDiam_ << endl;
-        Info<< "    Maximum droplet volume   = " << maxDropletVol << endl;
-
-
-        // Determine blocked faces
-        boolList blockedFace(mesh.nFaces(), false);
-        label nBlocked = 0;
-
-        {
-            for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
-            {
-                scalar ownVal = alpha[mesh.faceOwner()[facei]];
-                scalar neiVal = alpha[mesh.faceNeighbour()[facei]];
-
-                if
+            new volScalarField
+            (
+                IOobject
                 (
-                    (ownVal < threshold_ && neiVal > threshold_)
-                 || (ownVal > threshold_ && neiVal < threshold_)
-                )
-                {
-                    blockedFace[facei] = true;
-                    nBlocked++;
-                }
-            }
+                    alphaName_,
+                    mesh.time().timeName(),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::NO_WRITE
+                ),
+                mesh
+            )
+        );
+    }
 
-            // Block coupled faces
-            forAll(alpha.boundaryField(), patchi)
+
+    const volScalarField& alpha =
+    (
+         alphaPtr.valid()
+       ? alphaPtr()
+       : obr_.lookupObject<volScalarField>(alphaName_)
+    );
+
+    Info<< "    Volume of alpha          = "
+        << fvc::domainIntegrate(alpha).value()
+        << endl;
+
+    const scalar meshVol = gSum(mesh.V());
+    const scalar maxDropletVol = 1.0/6.0*pow(maxDiam_, 3);
+    const scalar delta = (maxDiam_-minDiam_)/nBins_;
+
+    Info<< "    Mesh volume              = " << meshVol << endl;
+    Info<< "    Maximum droplet diameter = " << maxDiam_ << endl;
+    Info<< "    Maximum droplet volume   = " << maxDropletVol << endl;
+
+
+    // Determine blocked faces
+    boolList blockedFace(mesh.nFaces(), false);
+    label nBlocked = 0;
+
+    {
+        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
+        {
+            scalar ownVal = alpha[mesh.faceOwner()[facei]];
+            scalar neiVal = alpha[mesh.faceNeighbour()[facei]];
+
+            if
+            (
+                (ownVal < threshold_ && neiVal > threshold_)
+             || (ownVal > threshold_ && neiVal < threshold_)
+            )
             {
-                const fvPatchScalarField& fvp = alpha.boundaryField()[patchi];
-                if (fvp.coupled())
+                blockedFace[facei] = true;
+                nBlocked++;
+            }
+        }
+
+        // Block coupled faces
+        forAll(alpha.boundaryField(), patchi)
+        {
+            const fvPatchScalarField& fvp = alpha.boundaryField()[patchi];
+            if (fvp.coupled())
+            {
+                tmp<scalarField> townFld(fvp.patchInternalField());
+                const scalarField& ownFld = townFld();
+                tmp<scalarField> tnbrFld(fvp.patchNeighbourField());
+                const scalarField& nbrFld = tnbrFld();
+
+                label start = fvp.patch().patch().start();
+
+                forAll(ownFld, i)
                 {
-                    tmp<scalarField> townFld(fvp.patchInternalField());
-                    const scalarField& ownFld = townFld();
-                    tmp<scalarField> tnbrFld(fvp.patchNeighbourField());
-                    const scalarField& nbrFld = tnbrFld();
+                    scalar ownVal = ownFld[i];
+                    scalar neiVal = nbrFld[i];
 
-                    label start = fvp.patch().patch().start();
-
-                    forAll(ownFld, i)
+                    if
+                    (
+                        (ownVal < threshold_ && neiVal > threshold_)
+                     || (ownVal > threshold_ && neiVal < threshold_)
+                    )
                     {
-                        scalar ownVal = ownFld[i];
-                        scalar neiVal = nbrFld[i];
-
-                        if
-                        (
-                            (ownVal < threshold_ && neiVal > threshold_)
-                         || (ownVal > threshold_ && neiVal < threshold_)
-                        )
-                        {
-                            blockedFace[start+i] = true;
-                            nBlocked++;
-                        }
+                        blockedFace[start+i] = true;
+                        nBlocked++;
                     }
                 }
             }
         }
+    }
 
 
-        regionSplit regions(mesh, blockedFace);
+    regionSplit regions(mesh, blockedFace);
 
-        Info<< "    Determined " << regions.nRegions()
-            << " disconnected regions" << endl;
-
-
-        if (debug)
-        {
-            volScalarField region
-            (
-                IOobject
-                (
-                    "region",
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh,
-                dimensionedScalar("zero", dimless, 0)
-            );
-            Info<< "    Dumping region as volScalarField to " << region.name()
-                << endl;
-
-            forAll(regions, celli)
-            {
-                region[celli] = regions[celli];
-            }
-            region.correctBoundaryConditions();
-            region.write();
-        }
+    Info<< "    Determined " << regions.nRegions()
+        << " disconnected regions" << endl;
 
 
-        // Determine regions connected to supplied patches
-        Map<label> patchRegions(findPatchRegions(mesh, regions));
-
-
-
-        // Sum all regions
-        const scalarField alphaVol(alpha.primitiveField()*mesh.V());
-        Map<scalar> allRegionVolume(regionSum(regions, mesh.V()));
-        Map<scalar> allRegionAlphaVolume(regionSum(regions, alphaVol));
-        Map<label> allRegionNumCells
+    if (debug)
+    {
+        volScalarField region
         (
-            regionSum
+            IOobject
             (
-                regions,
-                labelField(mesh.nCells(), 1.0)
-            )
+                "region",
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("zero", dimless, 0)
         );
+        Info<< "    Dumping region as volScalarField to " << region.name()
+            << endl;
 
-        if (debug)
+        forAll(regions, celli)
         {
-            Info<< "    " << token::TAB << "Region"
-                << token::TAB << "Volume(mesh)"
-                << token::TAB << "Volume(" << alpha.name() << "):"
-                << token::TAB << "nCells"
-                << endl;
-            scalar meshSumVol = 0.0;
-            scalar alphaSumVol = 0.0;
-            label nCells = 0;
+            region[celli] = regions[celli];
+        }
+        region.correctBoundaryConditions();
+        region.write();
+    }
 
-            Map<scalar>::const_iterator vIter = allRegionVolume.begin();
-            Map<scalar>::const_iterator aIter = allRegionAlphaVolume.begin();
-            Map<label>::const_iterator numIter = allRegionNumCells.begin();
-            for
+
+    // Determine regions connected to supplied patches
+    Map<label> patchRegions(findPatchRegions(mesh, regions));
+
+
+
+    // Sum all regions
+    const scalarField alphaVol(alpha.primitiveField()*mesh.V());
+    Map<scalar> allRegionVolume(regionSum(regions, mesh.V()));
+    Map<scalar> allRegionAlphaVolume(regionSum(regions, alphaVol));
+    Map<label> allRegionNumCells
+    (
+        regionSum
+        (
+            regions,
+            labelField(mesh.nCells(), 1.0)
+        )
+    );
+
+    if (debug)
+    {
+        Info<< "    " << token::TAB << "Region"
+            << token::TAB << "Volume(mesh)"
+            << token::TAB << "Volume(" << alpha.name() << "):"
+            << token::TAB << "nCells"
+            << endl;
+        scalar meshSumVol = 0.0;
+        scalar alphaSumVol = 0.0;
+        label nCells = 0;
+
+        Map<scalar>::const_iterator vIter = allRegionVolume.begin();
+        Map<scalar>::const_iterator aIter = allRegionAlphaVolume.begin();
+        Map<label>::const_iterator numIter = allRegionNumCells.begin();
+        for
+        (
+            ;
+            vIter != allRegionVolume.end()
+         && aIter != allRegionAlphaVolume.end();
+            ++vIter, ++aIter, ++numIter
+        )
+        {
+            Info<< "    " << token::TAB << vIter.key()
+                << token::TAB << vIter()
+                << token::TAB << aIter()
+                << token::TAB << numIter()
+                << endl;
+
+            meshSumVol += vIter();
+            alphaSumVol += aIter();
+            nCells += numIter();
+        }
+        Info<< "    " << token::TAB << "Total:"
+            << token::TAB << meshSumVol
+            << token::TAB << alphaSumVol
+            << token::TAB << nCells
+            << endl;
+        Info<< endl;
+    }
+
+
+
+
+    {
+        Info<< "    Patch connected regions (liquid core):" << endl;
+        Info<< token::TAB << "    Region"
+            << token::TAB << "Volume(mesh)"
+            << token::TAB << "Volume(" << alpha.name() << "):"
+            << endl;
+        forAllConstIter(Map<label>, patchRegions, iter)
+        {
+            label regionI = iter.key();
+            Info<< "    " << token::TAB << iter.key()
+                << token::TAB << allRegionVolume[regionI]
+                << token::TAB << allRegionAlphaVolume[regionI] << endl;
+
+        }
+        Info<< endl;
+    }
+
+    {
+        Info<< "    Background regions:" << endl;
+        Info<< "    " << token::TAB << "Region"
+            << token::TAB << "Volume(mesh)"
+            << token::TAB << "Volume(" << alpha.name() << "):"
+            << endl;
+        Map<scalar>::const_iterator vIter = allRegionVolume.begin();
+        Map<scalar>::const_iterator aIter = allRegionAlphaVolume.begin();
+
+        for
+        (
+            ;
+            vIter != allRegionVolume.end()
+         && aIter != allRegionAlphaVolume.end();
+            ++vIter, ++aIter
+        )
+        {
+            if
             (
-                ;
-                vIter != allRegionVolume.end()
-             && aIter != allRegionAlphaVolume.end();
-                ++vIter, ++aIter, ++numIter
+               !patchRegions.found(vIter.key())
+             && vIter() >= maxDropletVol
             )
             {
                 Info<< "    " << token::TAB << vIter.key()
                     << token::TAB << vIter()
-                    << token::TAB << aIter()
-                    << token::TAB << numIter()
-                    << endl;
-
-                meshSumVol += vIter();
-                alphaSumVol += aIter();
-                nCells += numIter();
+                    << token::TAB << aIter() << endl;
             }
-            Info<< "    " << token::TAB << "Total:"
-                << token::TAB << meshSumVol
-                << token::TAB << alphaSumVol
-                << token::TAB << nCells
-                << endl;
-            Info<< endl;
+        }
+        Info<< endl;
+    }
+
+
+
+    // Split alpha field
+    // ~~~~~~~~~~~~~~~~~
+    // Split into
+    //  - liquidCore            : region connected to inlet patches
+    //  - per region a volume   : for all other regions
+    //  - backgroundAlpha       : remaining alpha
+    writeAlphaFields(regions, patchRegions, allRegionVolume, alpha);
+
+
+    // Extract droplet-only allRegionVolume, i.e. delete liquid core
+    // (patchRegions) and background regions from maps.
+    // Note that we have to use mesh volume (allRegionVolume) and not
+    // allRegionAlphaVolume since background might not have alpha in it.
+    forAllIter(Map<scalar>, allRegionVolume, vIter)
+    {
+        label regionI = vIter.key();
+        if
+        (
+            patchRegions.found(regionI)
+         || vIter() >= maxDropletVol
+        )
+        {
+            allRegionVolume.erase(vIter);
+            allRegionAlphaVolume.erase(regionI);
+            allRegionNumCells.erase(regionI);
+        }
+    }
+
+    if (allRegionVolume.size())
+    {
+        // Construct mids of bins for plotting
+        pointField xBin(nBins_);
+
+        scalar x = 0.5*delta;
+        forAll(xBin, i)
+        {
+            xBin[i] = point(x, 0, 0);
+            x += delta;
         }
 
+        const coordSet coords("diameter", "x", xBin, mag(xBin));
 
 
+        // Get in region order the alpha*volume and diameter
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        {
-            Info<< "    Patch connected regions (liquid core):" << endl;
-            Info<< token::TAB << "    Region"
-                << token::TAB << "Volume(mesh)"
-                << token::TAB << "Volume(" << alpha.name() << "):"
-                << endl;
-            forAllConstIter(Map<label>, patchRegions, iter)
-            {
-                label regionI = iter.key();
-                Info<< "    " << token::TAB << iter.key()
-                    << token::TAB << allRegionVolume[regionI]
-                    << token::TAB << allRegionAlphaVolume[regionI] << endl;
+        const labelList sortedRegions = allRegionAlphaVolume.sortedToc();
 
-            }
-            Info<< endl;
-        }
-
-        {
-            Info<< "    Background regions:" << endl;
-            Info<< "    " << token::TAB << "Region"
-                << token::TAB << "Volume(mesh)"
-                << token::TAB << "Volume(" << alpha.name() << "):"
-                << endl;
-            Map<scalar>::const_iterator vIter = allRegionVolume.begin();
-            Map<scalar>::const_iterator aIter = allRegionAlphaVolume.begin();
-
-            for
+        scalarField sortedVols
+        (
+            extractData
             (
-                ;
-                vIter != allRegionVolume.end()
-             && aIter != allRegionAlphaVolume.end();
-                ++vIter, ++aIter
+                sortedRegions,
+                allRegionAlphaVolume
             )
-            {
-                if
-                (
-                   !patchRegions.found(vIter.key())
-                 && vIter() >= maxDropletVol
-                )
-                {
-                    Info<< "    " << token::TAB << vIter.key()
-                        << token::TAB << vIter()
-                        << token::TAB << aIter() << endl;
-                }
-            }
-            Info<< endl;
-        }
+        );
 
-
-
-        // Split alpha field
-        // ~~~~~~~~~~~~~~~~~
-        // Split into
-        //  - liquidCore            : region connected to inlet patches
-        //  - per region a volume   : for all other regions
-        //  - backgroundAlpha       : remaining alpha
-        writeAlphaFields(regions, patchRegions, allRegionVolume, alpha);
-
-
-        // Extract droplet-only allRegionVolume, i.e. delete liquid core
-        // (patchRegions) and background regions from maps.
-        // Note that we have to use mesh volume (allRegionVolume) and not
-        // allRegionAlphaVolume since background might not have alpha in it.
-        forAllIter(Map<scalar>, allRegionVolume, vIter)
+        // Calculate the diameters
+        scalarField sortedDiameters(sortedVols.size());
+        forAll(sortedDiameters, i)
         {
-            label regionI = vIter.key();
-            if
+            sortedDiameters[i] = Foam::cbrt
             (
-                patchRegions.found(regionI)
-             || vIter() >= maxDropletVol
-            )
-            {
-                allRegionVolume.erase(vIter);
-                allRegionAlphaVolume.erase(regionI);
-                allRegionNumCells.erase(regionI);
-            }
-        }
-
-        if (allRegionVolume.size())
-        {
-            // Construct mids of bins for plotting
-            pointField xBin(nBins_);
-
-            scalar x = 0.5*delta;
-            forAll(xBin, i)
-            {
-                xBin[i] = point(x, 0, 0);
-                x += delta;
-            }
-
-            const coordSet coords("diameter", "x", xBin, mag(xBin));
-
-
-            // Get in region order the alpha*volume and diameter
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-            const labelList sortedRegions = allRegionAlphaVolume.sortedToc();
-
-            scalarField sortedVols
-            (
-                extractData
-                (
-                    sortedRegions,
-                    allRegionAlphaVolume
-                )
+                sortedVols[i]
+               *6/constant::mathematical::pi
             );
+        }
 
-            // Calculate the diameters
-            scalarField sortedDiameters(sortedVols.size());
-            forAll(sortedDiameters, i)
+        // Determine the bin index for all the diameters
+        labelList indices(sortedDiameters.size());
+        forAll(sortedDiameters, i)
+        {
+            indices[i] = (sortedDiameters[i]-minDiam_)/delta;
+        }
+
+        // Calculate the counts per diameter bin
+        scalarField binCount(nBins_, 0.0);
+        forAll(sortedDiameters, i)
+        {
+            binCount[indices[i]] += 1.0;
+        }
+
+        // Write counts
+        if (Pstream::master())
+        {
+            writeGraph(coords, "count", binCount);
+        }
+
+        // Write to screen
+        {
+            Info<< "    Bins:" << endl;
+            Info<< "    " << token::TAB << "Bin"
+                << token::TAB << "Min diameter"
+                << token::TAB << "Count:"
+                << endl;
+
+            scalar diam = 0.0;
+            forAll(binCount, binI)
             {
-                sortedDiameters[i] = Foam::cbrt
+                Info<< "    " << token::TAB << binI
+                    << token::TAB << diam
+                    << token::TAB << binCount[binI] << endl;
+                diam += delta;
+            }
+            Info<< endl;
+        }
+
+
+        // Write average and deviation of droplet volume.
+        writeGraphs
+        (
+            "volume",           // name of field
+            indices,            // per region the bin index
+            sortedVols,         // per region field data
+            binCount,           // per bin number of regions
+            coords              // graph data for bins
+        );
+
+        // Collect some more field
+        {
+            wordList scalarNames(obr_.names(volScalarField::typeName));
+            labelList selected = findStrings(fields_, scalarNames);
+
+            forAll(selected, i)
+            {
+                const word& fldName = scalarNames[selected[i]];
+                Info<< "    Scalar field " << fldName << endl;
+
+                const scalarField& fld = obr_.lookupObject
+                <
+                    volScalarField
+                >(fldName).primitiveField();
+
+                writeGraphs
                 (
-                    sortedVols[i]
-                   *6/constant::mathematical::pi
+                    fldName,            // name of field
+                    alphaVol*fld,       // per cell field data
+
+                    regions,            // per cell the region(=droplet)
+                    sortedRegions,      // valid regions in sorted order
+                    1.0/sortedVols,     // per region normalisation
+
+                    indices,            // index of bin for each region
+                    binCount,           // per bin number of regions
+                    coords              // graph data for bins
                 );
             }
+        }
+        {
+            wordList vectorNames(obr_.names(volVectorField::typeName));
+            labelList selected = findStrings(fields_, vectorNames);
 
-            // Determine the bin index for all the diameters
-            labelList indices(sortedDiameters.size());
-            forAll(sortedDiameters, i)
+            forAll(selected, i)
             {
-                indices[i] = (sortedDiameters[i]-minDiam_)/delta;
-            }
+                const word& fldName = vectorNames[selected[i]];
+                Info<< "    Vector field " << fldName << endl;
 
-            // Calculate the counts per diameter bin
-            scalarField binCount(nBins_, 0.0);
-            forAll(sortedDiameters, i)
-            {
-                binCount[indices[i]] += 1.0;
-            }
+                vectorField fld = obr_.lookupObject
+                <
+                    volVectorField
+                >(fldName).primitiveField();
 
-            // Write counts
-            if (Pstream::master())
-            {
-                writeGraph(coords, "count", binCount);
-            }
-
-            // Write to screen
-            {
-                Info<< "    Bins:" << endl;
-                Info<< "    " << token::TAB << "Bin"
-                    << token::TAB << "Min diameter"
-                    << token::TAB << "Count:"
-                    << endl;
-
-                scalar diam = 0.0;
-                forAll(binCount, binI)
+                if (coordSysPtr_.valid())
                 {
-                    Info<< "    " << token::TAB << binI
-                        << token::TAB << diam
-                        << token::TAB << binCount[binI] << endl;
-                    diam += delta;
+                    Info<< "Transforming vector field " << fldName
+                        << " with coordinate system "
+                        << coordSysPtr_().name()
+                        << endl;
+
+                    fld = coordSysPtr_().localVector(fld);
                 }
-                Info<< endl;
-            }
 
 
-            // Write average and deviation of droplet volume.
-            writeGraphs
-            (
-                "volume",           // name of field
-                indices,            // per region the bin index
-                sortedVols,         // per region field data
-                binCount,           // per bin number of regions
-                coords              // graph data for bins
-            );
+                // Components
 
-            // Collect some more field
-            {
-                wordList scalarNames(obr_.names(volScalarField::typeName));
-                labelList selected = findStrings(fields_, scalarNames);
-
-                forAll(selected, i)
+                for (direction cmp = 0; cmp < vector::nComponents; cmp++)
                 {
-                    const word& fldName = scalarNames[selected[i]];
-                    Info<< "    Scalar field " << fldName << endl;
-
-                    const scalarField& fld = obr_.lookupObject
-                    <
-                        volScalarField
-                    >(fldName).primitiveField();
-
                     writeGraphs
                     (
-                        fldName,            // name of field
-                        alphaVol*fld,       // per cell field data
+                        fldName + vector::componentNames[cmp],
+                        alphaVol*fld.component(cmp),// per cell field data
 
-                        regions,            // per cell the region(=droplet)
-                        sortedRegions,      // valid regions in sorted order
-                        1.0/sortedVols,     // per region normalisation
+                        regions,        // per cell the region(=droplet)
+                        sortedRegions,  // valid regions in sorted order
+                        1.0/sortedVols, // per region normalisation
 
-                        indices,            // index of bin for each region
-                        binCount,           // per bin number of regions
-                        coords              // graph data for bins
+                        indices,        // index of bin for each region
+                        binCount,       // per bin number of regions
+                        coords          // graph data for bins
                     );
                 }
-            }
-            {
-                wordList vectorNames(obr_.names(volVectorField::typeName));
-                labelList selected = findStrings(fields_, vectorNames);
 
-                forAll(selected, i)
-                {
-                    const word& fldName = vectorNames[selected[i]];
-                    Info<< "    Vector field " << fldName << endl;
+                // Magnitude
+                writeGraphs
+                (
+                    fldName + "mag",    // name of field
+                    alphaVol*mag(fld),  // per cell field data
 
-                    vectorField fld = obr_.lookupObject
-                    <
-                        volVectorField
-                    >(fldName).primitiveField();
+                    regions,            // per cell the region(=droplet)
+                    sortedRegions,      // valid regions in sorted order
+                    1.0/sortedVols,     // per region normalisation
 
-                    if (coordSysPtr_.valid())
-                    {
-                        Info<< "Transforming vector field " << fldName
-                            << " with coordinate system "
-                            << coordSysPtr_().name()
-                            << endl;
-
-                        fld = coordSysPtr_().localVector(fld);
-                    }
-
-
-                    // Components
-
-                    for (direction cmp = 0; cmp < vector::nComponents; cmp++)
-                    {
-                        writeGraphs
-                        (
-                            fldName + vector::componentNames[cmp],
-                            alphaVol*fld.component(cmp),// per cell field data
-
-                            regions,        // per cell the region(=droplet)
-                            sortedRegions,  // valid regions in sorted order
-                            1.0/sortedVols, // per region normalisation
-
-                            indices,        // index of bin for each region
-                            binCount,       // per bin number of regions
-                            coords          // graph data for bins
-                        );
-                    }
-
-                    // Magnitude
-                    writeGraphs
-                    (
-                        fldName + "mag",    // name of field
-                        alphaVol*mag(fld),  // per cell field data
-
-                        regions,            // per cell the region(=droplet)
-                        sortedRegions,      // valid regions in sorted order
-                        1.0/sortedVols,     // per region normalisation
-
-                        indices,            // index of bin for each region
-                        binCount,           // per bin number of regions
-                        coords              // graph data for bins
-                    );
-                }
+                    indices,            // index of bin for each region
+                    binCount,           // per bin number of regions
+                    coords              // graph data for bins
+                );
             }
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "surfaceFields.H"
 
 template<class FieldType>
-FieldType& Foam::calcMag::magField
+FieldType& Foam::functionObjects::calcMag::magField
 (
     const word& magName,
     const dimensionSet& dims
@@ -68,7 +68,7 @@ FieldType& Foam::calcMag::magField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::calcMag::calc
+void Foam::functionObjects::calcMag::calc
 (
     const word& fieldName,
     const word& resultName,

@@ -62,15 +62,13 @@ Foam::functionObjects::cloudInfo::cloudInfo
 :
     functionObjectFiles(obr, name),
     name_(name),
-    obr_(obr),
-    active_(true)
+    obr_(obr)
 {
     read(dict);
 }
 
 
-Foam::autoPtr<Foam::functionObjects::cloudInfo>
-Foam::functionObjects::cloudInfo::New
+bool Foam::functionObjects::cloudInfo::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -78,10 +76,7 @@ Foam::functionObjects::cloudInfo::New
     const bool loadFromFiles
 )
 {
-    return autoPtr<cloudInfo>
-    (
-        new cloudInfo(name, obr, dict, loadFromFiles)
-    );
+    return true;
 }
 
 
@@ -95,24 +90,21 @@ Foam::functionObjects::cloudInfo::~cloudInfo()
 
 void Foam::functionObjects::cloudInfo::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        functionObjectFiles::resetNames(dict.lookup("clouds"));
+    functionObjectFiles::resetNames(dict.lookup("clouds"));
 
-        Info<< type() << " " << name_ << ": ";
-        if (names().size())
+    Info<< type() << " " << name_ << ": ";
+    if (names().size())
+    {
+        Info<< "applying to clouds:" << nl;
+        forAll(names(), i)
         {
-            Info<< "applying to clouds:" << nl;
-            forAll(names(), i)
-            {
-                Info<< "    " << names()[i] << nl;
-            }
-            Info<< endl;
+            Info<< "    " << names()[i] << nl;
         }
-        else
-        {
-            Info<< "no clouds to be processed" << nl << endl;
-        }
+        Info<< endl;
+    }
+    else
+    {
+        Info<< "no clouds to be processed" << nl << endl;
     }
 }
 
@@ -131,29 +123,26 @@ void Foam::functionObjects::cloudInfo::timeSet()
 
 void Foam::functionObjects::cloudInfo::write()
 {
-    if (active_)
+    functionObjectFiles::write();
+
+    forAll(names(), i)
     {
-        functionObjectFiles::write();
+        const word& cloudName = names()[i];
 
-        forAll(names(), i)
+        const kinematicCloud& cloud =
+            obr_.lookupObject<kinematicCloud>(cloudName);
+
+        label nParcels = returnReduce(cloud.nParcels(), sumOp<label>());
+        scalar massInSystem =
+            returnReduce(cloud.massInSystem(), sumOp<scalar>());
+
+        if (Pstream::master())
         {
-            const word& cloudName = names()[i];
-
-            const kinematicCloud& cloud =
-                obr_.lookupObject<kinematicCloud>(cloudName);
-
-            label nParcels = returnReduce(cloud.nParcels(), sumOp<label>());
-            scalar massInSystem =
-                returnReduce(cloud.massInSystem(), sumOp<scalar>());
-
-            if (Pstream::master())
-            {
-                writeTime(file(i));
-                file(i)
-                    << token::TAB
-                    << nParcels << token::TAB
-                    << massInSystem << endl;
-            }
+            writeTime(file(i));
+            file(i)
+                << token::TAB
+                << nParcels << token::TAB
+                << massInSystem << endl;
         }
     }
 }

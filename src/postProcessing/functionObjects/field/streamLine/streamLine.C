@@ -40,14 +40,17 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(streamLine, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(streamLine, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::indirectPrimitivePatch>
-Foam::streamLine::wallPatch() const
+Foam::functionObjects::streamLine::wallPatch() const
 {
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
 
@@ -57,7 +60,6 @@ Foam::streamLine::wallPatch() const
 
     forAll(patches, patchi)
     {
-        //if (!polyPatch::constraintType(patches[patchi].type()))
         if (isA<wallPolyPatch>(patches[patchi]))
         {
             nFaces += patches[patchi].size();
@@ -70,7 +72,6 @@ Foam::streamLine::wallPatch() const
 
     forAll(patches, patchi)
     {
-        //if (!polyPatch::constraintType(patches[patchi].type()))
         if (isA<wallPolyPatch>(patches[patchi]))
         {
             const polyPatch& pp = patches[patchi];
@@ -97,7 +98,7 @@ Foam::streamLine::wallPatch() const
 }
 
 
-void Foam::streamLine::track()
+void Foam::functionObjects::streamLine::track()
 {
     const Time& runTime = obr_.time();
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
@@ -121,7 +122,7 @@ void Foam::streamLine::track()
                 mesh,
                 seedPoints[i],
                 seedPoints.cells()[i],
-                lifeTime_               // lifetime
+                lifeTime_
             )
         );
     }
@@ -294,7 +295,7 @@ void Foam::streamLine::track()
     }
 
 
-    // additional particle info
+    // Additional particle info
     streamLineParticle::trackingData td
     (
         particles,
@@ -322,7 +323,7 @@ void Foam::streamLine::track()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::streamLine::streamLine
+Foam::functionObjects::streamLine::streamLine
 (
     const word& name,
     const objectRegistry& obr,
@@ -334,244 +335,217 @@ Foam::streamLine::streamLine
     name_(name),
     obr_(obr),
     loadFromFiles_(loadFromFiles),
-    active_(true),
     nSubCycle_(0)
 {
-    // Only active if a fvMesh is available
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict_);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating."
-            << nl << endl;
-    }
+    read(dict_);
+}
+
+
+bool Foam::functionObjects::streamLine::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::streamLine::~streamLine()
+Foam::functionObjects::streamLine::~streamLine()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::streamLine::read(const dictionary& dict)
+void Foam::functionObjects::streamLine::read(const dictionary& dict)
 {
-    if (active_)
+    Info<< type() << " " << name_ << ":" << nl;
+
+    dict.lookup("fields") >> fields_;
+    if (dict.found("UName"))
     {
-        Info<< type() << " " << name_ << ":" << nl;
-
-        //dict_ = dict;
-        dict.lookup("fields") >> fields_;
-        if (dict.found("UName"))
-        {
-            dict.lookup("UName") >> UName_;
-        }
-        else
-        {
-            UName_ = "U";
-            if (dict.found("U"))
-            {
-                IOWarningInFunction(dict)
-                    << "Using deprecated entry \"U\"."
-                    << " Please use \"UName\" instead."
-                    << endl;
-                dict.lookup("U") >> UName_;
-            }
-        }
-
-        if (findIndex(fields_, UName_) == -1)
-        {
-            FatalIOErrorInFunction(dict)
-                << "Velocity field for tracking " << UName_
-                << " should be present in the list of fields " << fields_
-                << exit(FatalIOError);
-        }
-
-
-        dict.lookup("trackForward") >> trackForward_;
-        dict.lookup("lifeTime") >> lifeTime_;
-        if (lifeTime_ < 1)
-        {
-            FatalErrorInFunction
-                << "Illegal value " << lifeTime_ << " for lifeTime"
-                << exit(FatalError);
-        }
-
-
-        bool subCycling = dict.found("nSubCycle");
-        bool fixedLength = dict.found("trackLength");
-
-        if (subCycling && fixedLength)
-        {
-            FatalIOErrorInFunction(dict)
-                << "Cannot both specify automatic time stepping (through '"
-                << "nSubCycle' specification) and fixed track length (through '"
-                << "trackLength')"
-                << exit(FatalIOError);
-        }
-
-
-        nSubCycle_ = 1;
-        if (dict.readIfPresent("nSubCycle", nSubCycle_))
-        {
-            trackLength_ = VGREAT;
-            if (nSubCycle_ < 1)
-            {
-                nSubCycle_ = 1;
-            }
-            Info<< "    automatic track length specified through"
-                << " number of sub cycles : " << nSubCycle_ << nl << endl;
-        }
-        else
-        {
-            dict.lookup("trackLength") >> trackLength_;
-
-            Info<< "    fixed track length specified : "
-                << trackLength_ << nl << endl;
-        }
-
-
-        interpolationScheme_ = dict.lookupOrDefault
-        (
-            "interpolationScheme",
-            interpolationCellPoint<scalar>::typeName
-        );
-
-        //Info<< "    using interpolation " << interpolationScheme_
-        //    << endl;
-
-        cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
-        dict.lookup("seedSampleSet") >> seedSet_;
-
-        const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-        meshSearchPtr_.reset(new meshSearch(mesh));
-
-        const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
-        sampledSetPtr_ = sampledSet::New
-        (
-            seedSet_,
-            mesh,
-            meshSearchPtr_(),
-            coeffsDict
-        );
-        coeffsDict.lookup("axis") >> sampledSetAxis_;
-
-        scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
-        vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));
+        dict.lookup("UName") >> UName_;
     }
-}
-
-
-void Foam::streamLine::execute()
-{
-//    const Time& runTime = obr_.time();
-//    Pout<< "**streamLine::execute : time:" << runTime.timeName() << endl;
-//
-//    bool isOutputTime = false;
-//
-//    const functionObjectList& fobs = runTime.functionObjects();
-//
-//    forAll(fobs, i)
-//    {
-//        if (isA<streamLineFunctionObject>(fobs[i]))
-//        {
-//            const streamLineFunctionObject& fo =
-//                dynamic_cast<const streamLineFunctionObject&>(fobs[i]);
-//
-//            if (fo.name() == name_)
-//            {
-//                Pout<< "found me:" << i << endl;
-//                if (fo.outputControl().output())
-//                {
-//                    isOutputTime = true;
-//                    break;
-//                }
-//            }
-//        }
-//    }
-//
-//
-//    if (active_ && isOutputTime)
-//    {
-//        track();
-//    }
-}
-
-
-void Foam::streamLine::end()
-{}
-
-
-void Foam::streamLine::timeSet()
-{}
-
-
-void Foam::streamLine::write()
-{
-    if (active_)
+    else
     {
-        Info<< type() << " " << name_ << " output:" << nl;
-
-        const Time& runTime = obr_.time();
-        const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-
-        // Do all injection and tracking
-        track();
-
-
-        if (Pstream::parRun())
+        UName_ = "U";
+        if (dict.found("U"))
         {
-            // Append slave tracks to master ones
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            IOWarningInFunction(dict)
+                << "Using deprecated entry \"U\"."
+                << " Please use \"UName\" instead."
+                << endl;
+            dict.lookup("U") >> UName_;
+        }
+    }
 
-            globalIndex globalTrackIDs(allTracks_.size());
+    if (findIndex(fields_, UName_) == -1)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Velocity field for tracking " << UName_
+            << " should be present in the list of fields " << fields_
+            << exit(FatalIOError);
+    }
 
-            // Construct a distribution map to pull all to the master.
-            labelListList sendMap(Pstream::nProcs());
-            labelListList recvMap(Pstream::nProcs());
 
-            if (Pstream::master())
+    dict.lookup("trackForward") >> trackForward_;
+    dict.lookup("lifeTime") >> lifeTime_;
+    if (lifeTime_ < 1)
+    {
+        FatalErrorInFunction
+            << "Illegal value " << lifeTime_ << " for lifeTime"
+            << exit(FatalError);
+    }
+
+
+    bool subCycling = dict.found("nSubCycle");
+    bool fixedLength = dict.found("trackLength");
+
+    if (subCycling && fixedLength)
+    {
+        FatalIOErrorInFunction(dict)
+            << "Cannot both specify automatic time stepping (through '"
+            << "nSubCycle' specification) and fixed track length (through '"
+            << "trackLength')"
+            << exit(FatalIOError);
+    }
+
+
+    nSubCycle_ = 1;
+    if (dict.readIfPresent("nSubCycle", nSubCycle_))
+    {
+        trackLength_ = VGREAT;
+        if (nSubCycle_ < 1)
+        {
+            nSubCycle_ = 1;
+        }
+        Info<< "    automatic track length specified through"
+            << " number of sub cycles : " << nSubCycle_ << nl << endl;
+    }
+    else
+    {
+        dict.lookup("trackLength") >> trackLength_;
+
+        Info<< "    fixed track length specified : "
+            << trackLength_ << nl << endl;
+    }
+
+
+    interpolationScheme_ = dict.lookupOrDefault
+    (
+        "interpolationScheme",
+        interpolationCellPoint<scalar>::typeName
+    );
+
+    cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
+    dict.lookup("seedSampleSet") >> seedSet_;
+
+    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
+
+    meshSearchPtr_.reset(new meshSearch(mesh));
+
+    const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
+    sampledSetPtr_ = sampledSet::New
+    (
+        seedSet_,
+        mesh,
+        meshSearchPtr_(),
+        coeffsDict
+    );
+    coeffsDict.lookup("axis") >> sampledSetAxis_;
+
+    scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
+    vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));
+}
+
+
+void Foam::functionObjects::streamLine::execute()
+{}
+
+
+void Foam::functionObjects::streamLine::end()
+{}
+
+
+void Foam::functionObjects::streamLine::timeSet()
+{}
+
+
+void Foam::functionObjects::streamLine::write()
+{
+    Info<< type() << " " << name_ << " output:" << nl;
+
+    const Time& runTime = obr_.time();
+    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
+
+
+    // Do all injection and tracking
+    track();
+
+
+    if (Pstream::parRun())
+    {
+        // Append slave tracks to master ones
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        globalIndex globalTrackIDs(allTracks_.size());
+
+        // Construct a distribution map to pull all to the master.
+        labelListList sendMap(Pstream::nProcs());
+        labelListList recvMap(Pstream::nProcs());
+
+        if (Pstream::master())
+        {
+            // Master: receive all. My own first, then consecutive
+            // processors.
+            label trackI = 0;
+
+            forAll(recvMap, proci)
             {
-                // Master: receive all. My own first, then consecutive
-                // processors.
-                label trackI = 0;
-
-                forAll(recvMap, proci)
+                labelList& fromProc = recvMap[proci];
+                fromProc.setSize(globalTrackIDs.localSize(proci));
+                forAll(fromProc, i)
                 {
-                    labelList& fromProc = recvMap[proci];
-                    fromProc.setSize(globalTrackIDs.localSize(proci));
-                    forAll(fromProc, i)
-                    {
-                        fromProc[i] = trackI++;
-                    }
+                    fromProc[i] = trackI++;
                 }
             }
+        }
 
-            labelList& toMaster = sendMap[0];
-            toMaster.setSize(globalTrackIDs.localSize());
-            forAll(toMaster, i)
-            {
-                toMaster[i] = i;
-            }
+        labelList& toMaster = sendMap[0];
+        toMaster.setSize(globalTrackIDs.localSize());
+        forAll(toMaster, i)
+        {
+            toMaster[i] = i;
+        }
 
-            const mapDistribute distMap
-            (
-                globalTrackIDs.size(),
-                sendMap.xfer(),
-                recvMap.xfer()
-            );
+        const mapDistribute distMap
+        (
+            globalTrackIDs.size(),
+            sendMap.xfer(),
+            recvMap.xfer()
+        );
 
 
-            // Distribute the track positions. Note: use scheduled comms
-            // to prevent buffering.
+        // Distribute the track positions. Note: use scheduled comms
+        // to prevent buffering.
+        mapDistribute::distribute
+        (
+            Pstream::scheduled,
+            distMap.schedule(),
+            distMap.constructSize(),
+            distMap.subMap(),
+            distMap.constructMap(),
+            allTracks_
+        );
+
+        // Distribute the scalars
+        forAll(allScalars_, scalarI)
+        {
             mapDistribute::distribute
             (
                 Pstream::scheduled,
@@ -579,193 +553,168 @@ void Foam::streamLine::write()
                 distMap.constructSize(),
                 distMap.subMap(),
                 distMap.constructMap(),
-                allTracks_
+                allScalars_[scalarI]
             );
-
-            // Distribute the scalars
-            forAll(allScalars_, scalarI)
-            {
-                mapDistribute::distribute
-                (
-                    Pstream::scheduled,
-                    distMap.schedule(),
-                    distMap.constructSize(),
-                    distMap.subMap(),
-                    distMap.constructMap(),
-                    allScalars_[scalarI]
-                );
-            }
-            // Distribute the vectors
-            forAll(allVectors_, vectorI)
-            {
-                mapDistribute::distribute
-                (
-                    Pstream::scheduled,
-                    distMap.schedule(),
-                    distMap.constructSize(),
-                    distMap.subMap(),
-                    distMap.constructMap(),
-                    allVectors_[vectorI]
-                );
-            }
         }
+        // Distribute the vectors
+        forAll(allVectors_, vectorI)
+        {
+            mapDistribute::distribute
+            (
+                Pstream::scheduled,
+                distMap.schedule(),
+                distMap.constructSize(),
+                distMap.subMap(),
+                distMap.constructMap(),
+                allVectors_[vectorI]
+            );
+        }
+    }
 
 
-        label n = 0;
+    label n = 0;
+    forAll(allTracks_, trackI)
+    {
+        n += allTracks_[trackI].size();
+    }
+
+    Info<< "    Tracks:" << allTracks_.size() << nl
+        << "    Total samples:" << n
+        << endl;
+
+
+    // Massage into form suitable for writers
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    if (Pstream::master() && allTracks_.size())
+    {
+        // Make output directory
+
+        fileName vtkPath
+        (
+            Pstream::parRun()
+          ? runTime.path()/".."/"postProcessing"/"sets"/name()
+          : runTime.path()/"postProcessing"/"sets"/name()
+        );
+        if (mesh.name() != fvMesh::defaultRegion)
+        {
+            vtkPath = vtkPath/mesh.name();
+        }
+        vtkPath = vtkPath/mesh.time().timeName();
+
+        mkDir(vtkPath);
+
+        // Convert track positions
+
+        PtrList<coordSet> tracks(allTracks_.size());
         forAll(allTracks_, trackI)
         {
-            n += allTracks_[trackI].size();
+            tracks.set
+            (
+                trackI,
+                new coordSet
+                (
+                    "track" + Foam::name(trackI),
+                    sampledSetAxis_                 //"xyz"
+                )
+            );
+            tracks[trackI].transfer(allTracks_[trackI]);
         }
 
-        Info<< "    Tracks:" << allTracks_.size() << nl
-            << "    Total samples:" << n
-            << endl;
+        // Convert scalar values
 
-
-        // Massage into form suitable for writers
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        if (Pstream::master() && allTracks_.size())
+        if (allScalars_.size() > 0)
         {
-            // Make output directory
+            List<List<scalarField>> scalarValues(allScalars_.size());
 
-            fileName vtkPath
+            forAll(allScalars_, scalarI)
+            {
+                DynamicList<scalarList>& allTrackVals =
+                    allScalars_[scalarI];
+                scalarValues[scalarI].setSize(allTrackVals.size());
+
+                forAll(allTrackVals, trackI)
+                {
+                    scalarList& trackVals = allTrackVals[trackI];
+                    scalarValues[scalarI][trackI].transfer(trackVals);
+                }
+            }
+
+            fileName vtkFile
             (
-                Pstream::parRun()
-              ? runTime.path()/".."/"postProcessing"/"sets"/name()
-              : runTime.path()/"postProcessing"/"sets"/name()
+                vtkPath
+              / scalarFormatterPtr_().getFileName
+                (
+                    tracks[0],
+                    scalarNames_
+                )
             );
-            if (mesh.name() != fvMesh::defaultRegion)
+
+            Info<< "    Writing data to " << vtkFile.path() << endl;
+
+            scalarFormatterPtr_().write
+            (
+                true,           // writeTracks
+                tracks,
+                scalarNames_,
+                scalarValues,
+                OFstream(vtkFile)()
+            );
+        }
+
+        // Convert vector values
+
+        if (allVectors_.size() > 0)
+        {
+            List<List<vectorField>> vectorValues(allVectors_.size());
+
+            forAll(allVectors_, vectorI)
             {
-                vtkPath = vtkPath/mesh.name();
-            }
-            vtkPath = vtkPath/mesh.time().timeName();
+                DynamicList<vectorList>& allTrackVals =
+                    allVectors_[vectorI];
+                vectorValues[vectorI].setSize(allTrackVals.size());
 
-            mkDir(vtkPath);
-
-            // Convert track positions
-
-            PtrList<coordSet> tracks(allTracks_.size());
-            forAll(allTracks_, trackI)
-            {
-                tracks.set
-                (
-                    trackI,
-                    new coordSet
-                    (
-                        "track" + Foam::name(trackI),
-                        sampledSetAxis_                 //"xyz"
-                    )
-                );
-                tracks[trackI].transfer(allTracks_[trackI]);
-            }
-
-            // Convert scalar values
-
-            if (allScalars_.size() > 0)
-            {
-                List<List<scalarField>> scalarValues(allScalars_.size());
-
-                forAll(allScalars_, scalarI)
+                forAll(allTrackVals, trackI)
                 {
-                    DynamicList<scalarList>& allTrackVals =
-                        allScalars_[scalarI];
-                    scalarValues[scalarI].setSize(allTrackVals.size());
-
-                    forAll(allTrackVals, trackI)
-                    {
-                        scalarList& trackVals = allTrackVals[trackI];
-                        scalarValues[scalarI][trackI].transfer(trackVals);
-                    }
+                    vectorList& trackVals = allTrackVals[trackI];
+                    vectorValues[vectorI][trackI].transfer(trackVals);
                 }
-
-                fileName vtkFile
-                (
-                    vtkPath
-                  / scalarFormatterPtr_().getFileName
-                    (
-                        tracks[0],
-                        scalarNames_
-                    )
-                );
-
-                Info<< "    Writing data to " << vtkFile.path() << endl;
-
-                scalarFormatterPtr_().write
-                (
-                    true,           // writeTracks
-                    tracks,
-                    scalarNames_,
-                    scalarValues,
-                    OFstream(vtkFile)()
-                );
             }
 
-            // Convert vector values
-
-            if (allVectors_.size() > 0)
-            {
-                List<List<vectorField>> vectorValues(allVectors_.size());
-
-                forAll(allVectors_, vectorI)
-                {
-                    DynamicList<vectorList>& allTrackVals =
-                        allVectors_[vectorI];
-                    vectorValues[vectorI].setSize(allTrackVals.size());
-
-                    forAll(allTrackVals, trackI)
-                    {
-                        vectorList& trackVals = allTrackVals[trackI];
-                        vectorValues[vectorI][trackI].transfer(trackVals);
-                    }
-                }
-
-                fileName vtkFile
+            fileName vtkFile
+            (
+                vtkPath
+              / vectorFormatterPtr_().getFileName
                 (
-                    vtkPath
-                  / vectorFormatterPtr_().getFileName
-                    (
-                        tracks[0],
-                        vectorNames_
-                    )
-                );
+                    tracks[0],
+                    vectorNames_
+                )
+            );
 
-                //Info<< "    Writing vector data to " << vtkFile << endl;
-
-                vectorFormatterPtr_().write
-                (
-                    true,           // writeTracks
-                    tracks,
-                    vectorNames_,
-                    vectorValues,
-                    OFstream(vtkFile)()
-                );
-            }
+            vectorFormatterPtr_().write
+            (
+                true,           // writeTracks
+                tracks,
+                vectorNames_,
+                vectorValues,
+                OFstream(vtkFile)()
+            );
         }
     }
 }
 
 
-void Foam::streamLine::updateMesh(const mapPolyMesh&)
+void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh&)
 {
     read(dict_);
 }
 
 
-void Foam::streamLine::movePoints(const polyMesh&)
+void Foam::functionObjects::streamLine::movePoints(const polyMesh&)
 {
     // Moving mesh affects the search tree
     read(dict_);
 }
-
-
-//void Foam::streamLine::readUpdate(const polyMesh::readUpdateState state)
-//{
-//    if (state != UNCHANGED)
-//    {
-//        read(dict_);
-//    }
-//}
 
 
 // ************************************************************************* //

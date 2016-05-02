@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(calcFvcGrad, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(calcFvcGrad, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::calcFvcGrad::calcFvcGrad
+Foam::functionObjects::calcFvcGrad::calcFvcGrad
 (
     const word& name,
     const objectRegistry& obr,
@@ -48,93 +51,82 @@ Foam::calcFvcGrad::calcFvcGrad
 :
     name_(name),
     obr_(obr),
-    active_(true),
     fieldName_("undefined-fieldName"),
     resultName_("undefined-resultName")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating." << nl
-            << endl;
-    }
-
     read(dict);
+}
+
+
+bool Foam::functionObjects::calcFvcGrad::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::calcFvcGrad::~calcFvcGrad()
+Foam::functionObjects::calcFvcGrad::~calcFvcGrad()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::calcFvcGrad::read(const dictionary& dict)
+void Foam::functionObjects::calcFvcGrad::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        dict.lookup("fieldName") >> fieldName_;
-        dict.lookup("resultName") >> resultName_;
+    dict.lookup("fieldName") >> fieldName_;
+    dict.lookup("resultName") >> resultName_;
 
-        if (resultName_ == "none")
-        {
-            resultName_ = "fvc::grad(" + fieldName_ + ")";
-        }
+    if (resultName_ == "none")
+    {
+        resultName_ = "fvc::grad(" + fieldName_ + ")";
     }
 }
 
 
-void Foam::calcFvcGrad::execute()
+void Foam::functionObjects::calcFvcGrad::execute()
 {
-    if (active_)
+    bool processed = false;
+
+    calcGrad<scalar>(fieldName_, resultName_, processed);
+    calcGrad<vector>(fieldName_, resultName_, processed);
+
+    if (!processed)
     {
-        bool processed = false;
-
-        calcGrad<scalar>(fieldName_, resultName_, processed);
-        calcGrad<vector>(fieldName_, resultName_, processed);
-
-        if (!processed)
-        {
-            WarningInFunction
-                << "Unprocessed field " << fieldName_ << endl;
-        }
+        WarningInFunction
+            << "Unprocessed field " << fieldName_ << endl;
     }
 }
 
 
-void Foam::calcFvcGrad::end()
+void Foam::functionObjects::calcFvcGrad::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::calcFvcGrad::timeSet()
-{
-    // Do nothing
-}
+void Foam::functionObjects::calcFvcGrad::timeSet()
+{}
 
 
-void Foam::calcFvcGrad::write()
+void Foam::functionObjects::calcFvcGrad::write()
 {
-    if (active_)
+    if (obr_.foundObject<regIOobject>(resultName_))
     {
-        if (obr_.foundObject<regIOobject>(resultName_))
-        {
-            const regIOobject& field =
-                obr_.lookupObject<regIOobject>(resultName_);
+        const regIOobject& field =
+            obr_.lookupObject<regIOobject>(resultName_);
 
-            Info<< type() << " " << name_ << " output:" << nl
-                << "    writing field " << field.name() << nl << endl;
+        Info<< type() << " " << name_ << " output:" << nl
+            << "    writing field " << field.name() << nl << endl;
 
-            field.write();
-        }
+        field.write();
     }
 }
 

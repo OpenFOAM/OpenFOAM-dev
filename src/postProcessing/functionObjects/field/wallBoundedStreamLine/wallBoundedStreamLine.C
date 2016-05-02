@@ -42,14 +42,17 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(wallBoundedStreamLine, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(wallBoundedStreamLine, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::indirectPrimitivePatch>
-Foam::wallBoundedStreamLine::wallPatch() const
+Foam::functionObjects::wallBoundedStreamLine::wallPatch() const
 {
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
 
@@ -99,7 +102,7 @@ Foam::wallBoundedStreamLine::wallPatch() const
 }
 
 
-Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
+Foam::tetIndices Foam::functionObjects::wallBoundedStreamLine::findNearestTet
 (
     const PackedBoolList& isWallPatch,
     const point& seedPt,
@@ -156,7 +159,7 @@ Foam::tetIndices Foam::wallBoundedStreamLine::findNearestTet
 }
 
 
-void Foam::wallBoundedStreamLine::track()
+void Foam::functionObjects::wallBoundedStreamLine::track()
 {
     const Time& runTime = obr_.time();
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
@@ -432,7 +435,7 @@ void Foam::wallBoundedStreamLine::track()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallBoundedStreamLine::wallBoundedStreamLine
+Foam::functionObjects::wallBoundedStreamLine::wallBoundedStreamLine
 (
     const word& name,
     const objectRegistry& obr,
@@ -443,180 +446,175 @@ Foam::wallBoundedStreamLine::wallBoundedStreamLine
     dict_(dict),
     name_(name),
     obr_(obr),
-    loadFromFiles_(loadFromFiles),
-    active_(true)
+    loadFromFiles_(loadFromFiles)
 {
-    // Only active if a fvMesh is available
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict_);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << nl << endl;
-    }
+    read(dict_);
+}
+
+
+bool Foam::functionObjects::wallBoundedStreamLine::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallBoundedStreamLine::~wallBoundedStreamLine()
+Foam::functionObjects::wallBoundedStreamLine::~wallBoundedStreamLine()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::wallBoundedStreamLine::read(const dictionary& dict)
+void Foam::functionObjects::wallBoundedStreamLine::read(const dictionary& dict)
 {
-    if (active_)
+    //dict_ = dict;
+    dict.lookup("fields") >> fields_;
+    if (dict.found("UName"))
     {
-        //dict_ = dict;
-        dict.lookup("fields") >> fields_;
-        if (dict.found("UName"))
+        dict.lookup("UName") >> UName_;
+    }
+    else
+    {
+        UName_ = "U";
+        if (dict.found("U"))
         {
-            dict.lookup("UName") >> UName_;
-        }
-        else
-        {
-            UName_ = "U";
-            if (dict.found("U"))
-            {
-                IOWarningInFunction
-                (
-                    dict
-                )   << "Using deprecated entry \"U\"."
-                    << " Please use \"UName\" instead."
-                    << endl;
-                dict.lookup("U") >> UName_;
-            }
-        }
-
-        if (findIndex(fields_, UName_) == -1)
-        {
-            FatalIOErrorInFunction
+            IOWarningInFunction
             (
                 dict
-            )   << "Velocity field for tracking " << UName_
-                << " should be present in the list of fields " << fields_
-                << exit(FatalIOError);
+            )   << "Using deprecated entry \"U\"."
+                << " Please use \"UName\" instead."
+                << endl;
+            dict.lookup("U") >> UName_;
         }
+    }
 
-
-        dict.lookup("trackForward") >> trackForward_;
-        dict.lookup("lifeTime") >> lifeTime_;
-        if (lifeTime_ < 1)
-        {
-            FatalErrorInFunction
-                << "Illegal value " << lifeTime_ << " for lifeTime"
-                << exit(FatalError);
-        }
-        trackLength_ = VGREAT;
-        if (dict.found("trackLength"))
-        {
-            dict.lookup("trackLength") >> trackLength_;
-
-            Info<< type() << " : fixed track length specified : "
-                << trackLength_ << nl << endl;
-        }
-
-
-        interpolationScheme_ = dict.lookupOrDefault
+    if (findIndex(fields_, UName_) == -1)
+    {
+        FatalIOErrorInFunction
         (
-            "interpolationScheme",
-            interpolationCellPoint<scalar>::typeName
-        );
+            dict
+        )   << "Velocity field for tracking " << UName_
+            << " should be present in the list of fields " << fields_
+            << exit(FatalIOError);
+    }
 
-        //Info<< typeName << " using interpolation " << interpolationScheme_
-        //    << endl;
 
-        cloudName_ = dict.lookupOrDefault<word>
+    dict.lookup("trackForward") >> trackForward_;
+    dict.lookup("lifeTime") >> lifeTime_;
+    if (lifeTime_ < 1)
+    {
+        FatalErrorInFunction
+            << "Illegal value " << lifeTime_ << " for lifeTime"
+            << exit(FatalError);
+    }
+    trackLength_ = VGREAT;
+    if (dict.found("trackLength"))
+    {
+        dict.lookup("trackLength") >> trackLength_;
+
+        Info<< type() << " : fixed track length specified : "
+            << trackLength_ << nl << endl;
+    }
+
+
+    interpolationScheme_ = dict.lookupOrDefault
+    (
+        "interpolationScheme",
+        interpolationCellPoint<scalar>::typeName
+    );
+
+    cloudName_ = dict.lookupOrDefault<word>
+    (
+        "cloudName",
+        "wallBoundedStreamLine"
+    );
+    dict.lookup("seedSampleSet") >> seedSet_;
+
+    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
+
+    const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
+
+    sampledSetPtr_ = sampledSet::New
+    (
+        seedSet_,
+        mesh,
+        meshSearchMeshObject::New(mesh),
+        coeffsDict
+    );
+    coeffsDict.lookup("axis") >> sampledSetAxis_;
+
+    scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
+    vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));
+
+
+    // Make sure that the mesh is trackable
+    if (debug)
+    {
+        // 1. positive volume decomposition tets
+        faceSet faces(mesh, "lowQualityTetFaces", mesh.nFaces()/100+1);
+        if
         (
-            "cloudName",
-            "wallBoundedStreamLine"
-        );
-        dict.lookup("seedSampleSet") >> seedSet_;
-
-        const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-        const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
-
-        sampledSetPtr_ = sampledSet::New
-        (
-            seedSet_,
-            mesh,
-            meshSearchMeshObject::New(mesh),
-            coeffsDict
-        );
-        coeffsDict.lookup("axis") >> sampledSetAxis_;
-
-        scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
-        vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));
-
-
-        // Make sure that the mesh is trackable
-        if (debug)
-        {
-            // 1. positive volume decomposition tets
-            faceSet faces(mesh, "lowQualityTetFaces", mesh.nFaces()/100+1);
-            if
+            polyMeshTetDecomposition::checkFaceTets
             (
-                polyMeshTetDecomposition::checkFaceTets
-                (
-                    mesh,
-                    polyMeshTetDecomposition::minTetQuality,
-                    true,
-                    &faces
-                )
+                mesh,
+                polyMeshTetDecomposition::minTetQuality,
+                true,
+                &faces
             )
+        )
+        {
+            label nFaces = returnReduce(faces.size(), sumOp<label>());
+
+            WarningInFunction
+                << "Found " << nFaces
+                <<" faces with low quality or negative volume "
+                << "decomposition tets. Writing to faceSet " << faces.name()
+                << endl;
+        }
+
+        // 2. all edges on a cell having two faces
+        EdgeMap<label> numFacesPerEdge;
+        forAll(mesh.cells(), celli)
+        {
+            const cell& cFaces = mesh.cells()[celli];
+
+            numFacesPerEdge.clear();
+
+            forAll(cFaces, cFacei)
             {
-                label nFaces = returnReduce(faces.size(), sumOp<label>());
-
-                WarningInFunction
-                    << "Found " << nFaces
-                    <<" faces with low quality or negative volume "
-                    << "decomposition tets. Writing to faceSet " << faces.name()
-                    << endl;
-            }
-
-            // 2. all edges on a cell having two faces
-            EdgeMap<label> numFacesPerEdge;
-            forAll(mesh.cells(), celli)
-            {
-                const cell& cFaces = mesh.cells()[celli];
-
-                numFacesPerEdge.clear();
-
-                forAll(cFaces, cFacei)
+                label facei = cFaces[cFacei];
+                const face& f = mesh.faces()[facei];
+                forAll(f, fp)
                 {
-                    label facei = cFaces[cFacei];
-                    const face& f = mesh.faces()[facei];
-                    forAll(f, fp)
+                    const edge e(f[fp], f.nextLabel(fp));
+                    EdgeMap<label>::iterator eFnd =
+                        numFacesPerEdge.find(e);
+                    if (eFnd != numFacesPerEdge.end())
                     {
-                        const edge e(f[fp], f.nextLabel(fp));
-                        EdgeMap<label>::iterator eFnd =
-                            numFacesPerEdge.find(e);
-                        if (eFnd != numFacesPerEdge.end())
-                        {
-                            eFnd()++;
-                        }
-                        else
-                        {
-                            numFacesPerEdge.insert(e, 1);
-                        }
+                        eFnd()++;
+                    }
+                    else
+                    {
+                        numFacesPerEdge.insert(e, 1);
                     }
                 }
+            }
 
-                forAllConstIter(EdgeMap<label>, numFacesPerEdge, iter)
+            forAllConstIter(EdgeMap<label>, numFacesPerEdge, iter)
+            {
+                if (iter() != 2)
                 {
-                    if (iter() != 2)
-                    {
-                        FatalErrorInFunction
-                            << "problem cell:" << celli
-                            << abort(FatalError);
-                    }
+                    FatalErrorInFunction
+                        << "problem cell:" << celli
+                        << abort(FatalError);
                 }
             }
         }
@@ -624,75 +622,86 @@ void Foam::wallBoundedStreamLine::read(const dictionary& dict)
 }
 
 
-void Foam::wallBoundedStreamLine::execute()
+void Foam::functionObjects::wallBoundedStreamLine::execute()
 {}
 
 
-void Foam::wallBoundedStreamLine::end()
+void Foam::functionObjects::wallBoundedStreamLine::end()
 {}
 
 
-void Foam::wallBoundedStreamLine::timeSet()
+void Foam::functionObjects::wallBoundedStreamLine::timeSet()
 {}
 
 
-void Foam::wallBoundedStreamLine::write()
+void Foam::functionObjects::wallBoundedStreamLine::write()
 {
-    if (active_)
+    const Time& runTime = obr_.time();
+    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
+
+
+    // Do all injection and tracking
+    track();
+
+
+    if (Pstream::parRun())
     {
-        const Time& runTime = obr_.time();
-        const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
+        // Append slave tracks to master ones
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        globalIndex globalTrackIDs(allTracks_.size());
 
-        // Do all injection and tracking
-        track();
+        // Construct a distribution map to pull all to the master.
+        labelListList sendMap(Pstream::nProcs());
+        labelListList recvMap(Pstream::nProcs());
 
-
-        if (Pstream::parRun())
+        if (Pstream::master())
         {
-            // Append slave tracks to master ones
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // Master: receive all. My own first, then consecutive
+            // processors.
+            label trackI = 0;
 
-            globalIndex globalTrackIDs(allTracks_.size());
-
-            // Construct a distribution map to pull all to the master.
-            labelListList sendMap(Pstream::nProcs());
-            labelListList recvMap(Pstream::nProcs());
-
-            if (Pstream::master())
+            forAll(recvMap, proci)
             {
-                // Master: receive all. My own first, then consecutive
-                // processors.
-                label trackI = 0;
-
-                forAll(recvMap, proci)
+                labelList& fromProc = recvMap[proci];
+                fromProc.setSize(globalTrackIDs.localSize(proci));
+                forAll(fromProc, i)
                 {
-                    labelList& fromProc = recvMap[proci];
-                    fromProc.setSize(globalTrackIDs.localSize(proci));
-                    forAll(fromProc, i)
-                    {
-                        fromProc[i] = trackI++;
-                    }
+                    fromProc[i] = trackI++;
                 }
             }
+        }
 
-            labelList& toMaster = sendMap[0];
-            toMaster.setSize(globalTrackIDs.localSize());
-            forAll(toMaster, i)
-            {
-                toMaster[i] = i;
-            }
+        labelList& toMaster = sendMap[0];
+        toMaster.setSize(globalTrackIDs.localSize());
+        forAll(toMaster, i)
+        {
+            toMaster[i] = i;
+        }
 
-            const mapDistribute distMap
-            (
-                globalTrackIDs.size(),
-                sendMap.xfer(),
-                recvMap.xfer()
-            );
+        const mapDistribute distMap
+        (
+            globalTrackIDs.size(),
+            sendMap.xfer(),
+            recvMap.xfer()
+        );
 
 
-            // Distribute the track positions. Note: use scheduled comms
-            // to prevent buffering.
+        // Distribute the track positions. Note: use scheduled comms
+        // to prevent buffering.
+        mapDistribute::distribute
+        (
+            Pstream::scheduled,
+            distMap.schedule(),
+            distMap.constructSize(),
+            distMap.subMap(),
+            distMap.constructMap(),
+            allTracks_
+        );
+
+        // Distribute the scalars
+        forAll(allScalars_, scalarI)
+        {
             mapDistribute::distribute
             (
                 Pstream::scheduled,
@@ -700,193 +709,170 @@ void Foam::wallBoundedStreamLine::write()
                 distMap.constructSize(),
                 distMap.subMap(),
                 distMap.constructMap(),
-                allTracks_
+                allScalars_[scalarI]
             );
-
-            // Distribute the scalars
-            forAll(allScalars_, scalarI)
-            {
-                mapDistribute::distribute
-                (
-                    Pstream::scheduled,
-                    distMap.schedule(),
-                    distMap.constructSize(),
-                    distMap.subMap(),
-                    distMap.constructMap(),
-                    allScalars_[scalarI]
-                );
-            }
-            // Distribute the vectors
-            forAll(allVectors_, vectorI)
-            {
-                mapDistribute::distribute
-                (
-                    Pstream::scheduled,
-                    distMap.schedule(),
-                    distMap.constructSize(),
-                    distMap.subMap(),
-                    distMap.constructMap(),
-                    allVectors_[vectorI]
-                );
-            }
         }
+        // Distribute the vectors
+        forAll(allVectors_, vectorI)
+        {
+            mapDistribute::distribute
+            (
+                Pstream::scheduled,
+                distMap.schedule(),
+                distMap.constructSize(),
+                distMap.subMap(),
+                distMap.constructMap(),
+                allVectors_[vectorI]
+            );
+        }
+    }
 
 
-        label n = 0;
+    label n = 0;
+    forAll(allTracks_, trackI)
+    {
+        n += allTracks_[trackI].size();
+    }
+
+    Info<< "    Tracks:" << allTracks_.size() << nl
+        << "    Total samples:" << n << endl;
+
+
+    // Massage into form suitable for writers
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    if (Pstream::master() && allTracks_.size())
+    {
+        // Make output directory
+
+        fileName vtkPath
+        (
+            Pstream::parRun()
+          ? runTime.path()/".."/"postProcessing"/"sets"/name()
+          : runTime.path()/"postProcessing"/"sets"/name()
+        );
+        if (mesh.name() != fvMesh::defaultRegion)
+        {
+            vtkPath = vtkPath/mesh.name();
+        }
+        vtkPath = vtkPath/mesh.time().timeName();
+
+        mkDir(vtkPath);
+
+        // Convert track positions
+
+        PtrList<coordSet> tracks(allTracks_.size());
         forAll(allTracks_, trackI)
         {
-            n += allTracks_[trackI].size();
+            tracks.set
+            (
+                trackI,
+                new coordSet
+                (
+                    "track" + Foam::name(trackI),
+                    sampledSetAxis_                 //"xyz"
+                )
+            );
+            tracks[trackI].transfer(allTracks_[trackI]);
         }
 
-        Info<< "    Tracks:" << allTracks_.size() << nl
-            << "    Total samples:" << n << endl;
+        // Convert scalar values
 
-
-        // Massage into form suitable for writers
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        if (Pstream::master() && allTracks_.size())
+        if (allScalars_.size() > 0)
         {
-            // Make output directory
+            List<List<scalarField>> scalarValues(allScalars_.size());
 
-            fileName vtkPath
+            forAll(allScalars_, scalarI)
+            {
+                DynamicList<scalarList>& allTrackVals =
+                    allScalars_[scalarI];
+                scalarValues[scalarI].setSize(allTrackVals.size());
+
+                forAll(allTrackVals, trackI)
+                {
+                    scalarList& trackVals = allTrackVals[trackI];
+                    scalarValues[scalarI][trackI].transfer(trackVals);
+                }
+            }
+
+            fileName vtkFile
             (
-                Pstream::parRun()
-              ? runTime.path()/".."/"postProcessing"/"sets"/name()
-              : runTime.path()/"postProcessing"/"sets"/name()
+                vtkPath
+              / scalarFormatterPtr_().getFileName
+                (
+                    tracks[0],
+                    scalarNames_
+                )
             );
-            if (mesh.name() != fvMesh::defaultRegion)
+
+            Info<< "Writing data to " << vtkFile.path() << endl;
+
+            scalarFormatterPtr_().write
+            (
+                true,           // writeTracks
+                tracks,
+                scalarNames_,
+                scalarValues,
+                OFstream(vtkFile)()
+            );
+        }
+
+        // Convert vector values
+
+        if (allVectors_.size() > 0)
+        {
+            List<List<vectorField>> vectorValues(allVectors_.size());
+
+            forAll(allVectors_, vectorI)
             {
-                vtkPath = vtkPath/mesh.name();
-            }
-            vtkPath = vtkPath/mesh.time().timeName();
+                DynamicList<vectorList>& allTrackVals =
+                    allVectors_[vectorI];
+                vectorValues[vectorI].setSize(allTrackVals.size());
 
-            mkDir(vtkPath);
-
-            // Convert track positions
-
-            PtrList<coordSet> tracks(allTracks_.size());
-            forAll(allTracks_, trackI)
-            {
-                tracks.set
-                (
-                    trackI,
-                    new coordSet
-                    (
-                        "track" + Foam::name(trackI),
-                        sampledSetAxis_                 //"xyz"
-                    )
-                );
-                tracks[trackI].transfer(allTracks_[trackI]);
-            }
-
-            // Convert scalar values
-
-            if (allScalars_.size() > 0)
-            {
-                List<List<scalarField>> scalarValues(allScalars_.size());
-
-                forAll(allScalars_, scalarI)
+                forAll(allTrackVals, trackI)
                 {
-                    DynamicList<scalarList>& allTrackVals =
-                        allScalars_[scalarI];
-                    scalarValues[scalarI].setSize(allTrackVals.size());
-
-                    forAll(allTrackVals, trackI)
-                    {
-                        scalarList& trackVals = allTrackVals[trackI];
-                        scalarValues[scalarI][trackI].transfer(trackVals);
-                    }
+                    vectorList& trackVals = allTrackVals[trackI];
+                    vectorValues[vectorI][trackI].transfer(trackVals);
                 }
-
-                fileName vtkFile
-                (
-                    vtkPath
-                  / scalarFormatterPtr_().getFileName
-                    (
-                        tracks[0],
-                        scalarNames_
-                    )
-                );
-
-                Info<< "Writing data to " << vtkFile.path() << endl;
-
-                scalarFormatterPtr_().write
-                (
-                    true,           // writeTracks
-                    tracks,
-                    scalarNames_,
-                    scalarValues,
-                    OFstream(vtkFile)()
-                );
             }
 
-            // Convert vector values
-
-            if (allVectors_.size() > 0)
-            {
-                List<List<vectorField>> vectorValues(allVectors_.size());
-
-                forAll(allVectors_, vectorI)
-                {
-                    DynamicList<vectorList>& allTrackVals =
-                        allVectors_[vectorI];
-                    vectorValues[vectorI].setSize(allTrackVals.size());
-
-                    forAll(allTrackVals, trackI)
-                    {
-                        vectorList& trackVals = allTrackVals[trackI];
-                        vectorValues[vectorI][trackI].transfer(trackVals);
-                    }
-                }
-
-                fileName vtkFile
+            fileName vtkFile
+            (
+                vtkPath
+              / vectorFormatterPtr_().getFileName
                 (
-                    vtkPath
-                  / vectorFormatterPtr_().getFileName
-                    (
-                        tracks[0],
-                        vectorNames_
-                    )
-                );
+                    tracks[0],
+                    vectorNames_
+                )
+            );
 
-                //Info<< "Writing vector data to " << vtkFile << endl;
-
-                vectorFormatterPtr_().write
-                (
-                    true,           // writeTracks
-                    tracks,
-                    vectorNames_,
-                    vectorValues,
-                    OFstream(vtkFile)()
-                );
-            }
+            vectorFormatterPtr_().write
+            (
+                true,           // writeTracks
+                tracks,
+                vectorNames_,
+                vectorValues,
+                OFstream(vtkFile)()
+            );
         }
     }
 }
 
 
-void Foam::wallBoundedStreamLine::updateMesh(const mapPolyMesh&)
+void Foam::functionObjects::wallBoundedStreamLine::updateMesh
+(
+    const mapPolyMesh&
+)
 {
     read(dict_);
 }
 
 
-void Foam::wallBoundedStreamLine::movePoints(const polyMesh&)
+void Foam::functionObjects::wallBoundedStreamLine::movePoints(const polyMesh&)
 {
     // Moving mesh affects the search tree
     read(dict_);
 }
-
-
-//void Foam::wallBoundedStreamLine::readUpdate
-//(const polyMesh::readUpdateState state)
-//{
-//    if (state != UNCHANGED)
-//    {
-//        read(dict_);
-//    }
-//}
 
 
 // ************************************************************************* //

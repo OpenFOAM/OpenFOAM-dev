@@ -94,6 +94,16 @@ public:
             const bool loadFromFile = false
         );
 
+        //- Return true if the construction of this functionObject is viable
+        static bool viable
+        (
+            const word& outputFilterName,
+            const objectRegistry&,
+            const word& dictName = OutputFilter::typeName() + "Dict",
+            const IOobject::readOption rOpt = IOobject::MUST_READ_IF_MODIFIED,
+            const bool loadFromFiles = false
+        );
+
         //- Construct for given objectRegistry and dictionary
         //  Dictionary read from full path.
         //  Allow the possibility to load fields from files
@@ -114,10 +124,7 @@ public:
     // Member Functions
 
         //- Return name
-        virtual const word& name() const
-        {
-            return IOdictionary::name();
-        }
+        virtual const word& name() const;
 
         //- Inherit read from OutputFilter
         using OutputFilter::read;
@@ -132,18 +139,10 @@ public:
         virtual void write();
 
         //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh& mpm)
-        {
-            read();
-            OutputFilter::updateMesh(mpm);
-        }
+        virtual void updateMesh(const mapPolyMesh& mpm);
 
         //- Update for changes of mesh
-        virtual void movePoints(const polyMesh& mesh)
-        {
-            read();
-            OutputFilter::movePoints(mesh);
-        }
+        virtual void movePoints(const polyMesh& mesh);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,19 @@ Foam::sampledSurfaces::sampledSurfaces
 }
 
 
+bool Foam::sampledSurfaces::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return true;
+}
+
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::sampledSurfaces::~sampledSurfaces()
@@ -130,21 +143,15 @@ void Foam::sampledSurfaces::verbose(const bool verbosity)
 
 
 void Foam::sampledSurfaces::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::sampledSurfaces::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::sampledSurfaces::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::sampledSurfaces::write()

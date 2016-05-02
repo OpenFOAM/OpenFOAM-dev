@@ -140,13 +140,11 @@ Foam::functionObjects::forceCoeffs::forceCoeffs
     Aref_(0.0)
 {
     read(dict);
-
     Info<< endl;
 }
 
 
-Foam::autoPtr<Foam::functionObjects::forceCoeffs>
-Foam::functionObjects::forceCoeffs::New
+bool Foam::functionObjects::forceCoeffs::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -154,17 +152,8 @@ Foam::functionObjects::forceCoeffs::New
     const bool loadFromFiles
 )
 {
-    if (isA<fvMesh>(obr))
-    {
-        return autoPtr<forceCoeffs>
-        (
-            new forceCoeffs(name, obr, dict, loadFromFiles)
-        );
-    }
-    else
-    {
-        return autoPtr<forceCoeffs>();
-    }
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
@@ -178,22 +167,19 @@ Foam::functionObjects::forceCoeffs::~forceCoeffs()
 
 void Foam::functionObjects::forceCoeffs::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        forces::read(dict);
+    forces::read(dict);
 
-        // Directions for lift and drag forces, and pitch moment
-        dict.lookup("liftDir") >> liftDir_;
-        dict.lookup("dragDir") >> dragDir_;
-        dict.lookup("pitchAxis") >> pitchAxis_;
+    // Directions for lift and drag forces, and pitch moment
+    dict.lookup("liftDir") >> liftDir_;
+    dict.lookup("dragDir") >> dragDir_;
+    dict.lookup("pitchAxis") >> pitchAxis_;
 
-        // Free stream velocity magnitude
-        dict.lookup("magUInf") >> magUInf_;
+    // Free stream velocity magnitude
+    dict.lookup("magUInf") >> magUInf_;
 
-        // Reference length and area scales
-        dict.lookup("lRef") >> lRef_;
-        dict.lookup("Aref") >> Aref_;
-    }
+    // Reference length and area scales
+    dict.lookup("lRef") >> lRef_;
+    dict.lookup("Aref") >> Aref_;
 }
 
 
@@ -212,11 +198,6 @@ void Foam::functionObjects::forceCoeffs::timeSet()
 void Foam::functionObjects::forceCoeffs::write()
 {
     forces::calcForcesMoment();
-
-    if (!active_)
-    {
-        return;
-    }
 
     if (Pstream::master())
     {

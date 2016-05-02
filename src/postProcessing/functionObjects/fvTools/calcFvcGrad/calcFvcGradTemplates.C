@@ -35,7 +35,11 @@ Foam::GeometricField
     Foam::fvPatchField,
     Foam::volMesh
 >&
-Foam::calcFvcGrad::gradField(const word& gradName, const dimensionSet& dims)
+Foam::functionObjects::calcFvcGrad::gradField
+(
+    const word& gradName,
+    const dimensionSet& dims
+)
 {
     Info<< "gradField" << endl;
 
@@ -78,7 +82,7 @@ Foam::calcFvcGrad::gradField(const word& gradName, const dimensionSet& dims)
 
 
 template<class Type>
-void Foam::calcFvcGrad::calcGrad
+void Foam::functionObjects::calcFvcGrad::calcGrad
 (
     const word& fieldName,
     const word& resultName,

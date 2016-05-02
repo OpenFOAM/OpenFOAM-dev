@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,13 +33,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(Lambda2, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Lambda2::Lambda2
+Foam::functionObjects::Lambda2::Lambda2
 (
     const word& name,
     const objectRegistry& obr,
@@ -49,119 +52,105 @@ Foam::Lambda2::Lambda2
 :
     name_(name),
     obr_(obr),
-    active_(true),
     UName_("U")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
 
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volScalarField* Lambda2Ptr
+    volScalarField* Lambda2Ptr
+    (
+        new volScalarField
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    type(),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                type(),
+                mesh.time().timeName(),
                 mesh,
-                dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
+        )
+    );
 
-        mesh.objectRegistry::store(Lambda2Ptr);
-    }
+    mesh.objectRegistry::store(Lambda2Ptr);
+}
+
+
+bool Foam::functionObjects::Lambda2::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Lambda2::~Lambda2()
+Foam::functionObjects::Lambda2::~Lambda2()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Lambda2::read(const dictionary& dict)
+void Foam::functionObjects::Lambda2::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
-    }
+    UName_ = dict.lookupOrDefault<word>("UName", "U");
 }
 
 
-void Foam::Lambda2::execute()
+void Foam::functionObjects::Lambda2::execute()
 {
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        const volVectorField& U =
-            mesh.lookupObject<volVectorField>(UName_);
+    const volVectorField& U =
+        mesh.lookupObject<volVectorField>(UName_);
 
-        const volTensorField gradU(fvc::grad(U));
+    const volTensorField gradU(fvc::grad(U));
 
-        const volTensorField SSplusWW
+    const volTensorField SSplusWW
+    (
+        (symm(gradU) & symm(gradU))
+      + (skew(gradU) & skew(gradU))
+    );
+
+    volScalarField& Lambda2 =
+        const_cast<volScalarField&>
         (
-            (symm(gradU) & symm(gradU))
-          + (skew(gradU) & skew(gradU))
+            mesh.lookupObject<volScalarField>(type())
         );
 
-        volScalarField& Lambda2 =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
-
-        Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);
-    }
+    Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);
 }
 
 
-void Foam::Lambda2::end()
+void Foam::functionObjects::Lambda2::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::Lambda2::timeSet()
+void Foam::functionObjects::Lambda2::timeSet()
+{}
+
+
+void Foam::functionObjects::Lambda2::write()
 {
-    // Do nothing
-}
+    const volScalarField& Lambda2 =
+        obr_.lookupObject<volScalarField>(type());
 
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << Lambda2.name() << nl
+        << endl;
 
-void Foam::Lambda2::write()
-{
-    if (active_)
-    {
-        const volScalarField& Lambda2 =
-            obr_.lookupObject<volScalarField>(type());
-
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << Lambda2.name() << nl
-            << endl;
-
-        Lambda2.write();
-    }
+    Lambda2.write();
 }
 
 

@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::fieldValues::fieldValueDelta::applyOperation
+Type Foam::functionObjects::fieldValues::fieldValueDelta::applyOperation
 (
     const Type& value1,
     const Type& value2
@@ -79,7 +79,10 @@ Type Foam::fieldValues::fieldValueDelta::applyOperation
 
 
 template<class Type>
-void Foam::fieldValues::fieldValueDelta::processFields(bool& found)
+void Foam::functionObjects::fieldValues::fieldValueDelta::processFields
+(
+    bool& found
+)
 {
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;

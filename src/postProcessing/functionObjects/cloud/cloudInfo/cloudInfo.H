@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cloudInfo
+    Foam::functionObjects::cloudInfo
 
 Group
     grpCloudFunctionObjects
@@ -109,9 +109,6 @@ protected:
         //- Reference to the database
         const objectRegistry& obr_;
 
-        //- on/off switch
-        bool active_;
-
 
     // Protected Member Functions
 
@@ -148,9 +145,9 @@ public:
             const bool loadFromFiles = false
         );
 
-        //- Construct on free-store and return pointer if successful
-        //  otherwise return a null-pointer
-        static autoPtr<cloudInfo> New
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
         (
             const word& name,
             const objectRegistry&,

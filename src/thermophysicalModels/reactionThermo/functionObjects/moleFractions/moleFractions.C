@@ -102,6 +102,20 @@ Foam::moleFractions<ThermoType>::moleFractions
 }
 
 
+template<class ThermoType>
+bool Foam::moleFractions<ThermoType>::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ThermoType>

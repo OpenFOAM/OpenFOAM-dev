@@ -162,6 +162,18 @@ Foam::sampledSets::sampledSets
 }
 
 
+bool Foam::sampledSets::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::sampledSets::~sampledSets()
@@ -177,21 +189,15 @@ void Foam::sampledSets::verbose(const bool verbosity)
 
 
 void Foam::sampledSets::execute()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::sampledSets::end()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::sampledSets::timeSet()
-{
-    // Do nothing - only valid on write
-}
+{}
 
 
 void Foam::sampledSets::write()

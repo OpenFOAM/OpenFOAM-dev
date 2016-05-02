@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::surfaceInterpolateFields::interpolateFields
+void Foam::functionObjects::surfaceInterpolateFields::interpolateFields
 (
     PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const

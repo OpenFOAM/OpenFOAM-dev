@@ -107,8 +107,7 @@ Foam::functionObjects::writeDictionary::writeDictionary
 }
 
 
-Foam::autoPtr<Foam::functionObjects::writeDictionary>
-Foam::functionObjects::writeDictionary::New
+bool Foam::functionObjects::writeDictionary::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -116,10 +115,7 @@ Foam::functionObjects::writeDictionary::New
     const bool loadFromFiles
 )
 {
-    return autoPtr<writeDictionary>
-    (
-        new writeDictionary(name, obr, dict, loadFromFiles)
-    );
+    return true;
 }
 
 

@@ -161,7 +161,7 @@ void Foam::functionObjects::forces::writeFileHeader(const label i)
 
 void Foam::functionObjects::forces::initialise()
 {
-    if (initialised_ || !active_)
+    if (initialised_)
     {
         return;
     }
@@ -170,11 +170,9 @@ void Foam::functionObjects::forces::initialise()
     {
         if (!obr_.foundObject<volVectorField>(fDName_))
         {
-            active_ = false;
-            WarningInFunction
-                << "Could not find " << fDName_ << " in database." << nl
-                << "    De-activating forces."
-                << endl;
+            FatalErrorInFunction
+                << "Could not find " << fDName_ << " in database."
+                << exit(FatalError);
         }
     }
     else
@@ -189,10 +187,9 @@ void Foam::functionObjects::forces::initialise()
             )
         )
         {
-            active_ = false;
-
-            WarningInFunction
-                << "Could not find " << UName_ << ", " << pName_;
+            FatalErrorInFunction
+                << "Could not find " << UName_ << ", " << pName_
+                << exit(FatalError);
 
             if (rhoName_ != "rhoInf")
             {
@@ -534,7 +531,6 @@ Foam::functionObjects::forces::forces
     functionObjectFiles(obr, name, createFileNames(dict)),
     name_(name),
     obr_(obr),
-    active_(true),
     log_(true),
     force_(3),
     moment_(3),
@@ -557,28 +553,15 @@ Foam::functionObjects::forces::forces
     binCumulative_(true),
     initialised_(false)
 {
-    // Check if the available mesh is an fvMesh otherise deactivate
-    if (isA<fvMesh>(obr_))
+    if (readFields)
     {
-        if (readFields)
-        {
-            read(dict);
-            Info<< endl;
-        }
+        read(dict);
+        Info<< endl;
     }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << endl;
-    }
-
 }
 
 
-Foam::autoPtr<Foam::functionObjects::forces>
-Foam::functionObjects::forces::New
+bool Foam::functionObjects::forces::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -586,17 +569,8 @@ Foam::functionObjects::forces::New
     const bool loadFromFiles
 )
 {
-    if (isA<fvMesh>(obr))
-    {
-        return autoPtr<forces>
-        (
-            new forces(name, obr, dict, loadFromFiles)
-        );
-    }
-    else
-    {
-        return autoPtr<forces>();
-    }
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
@@ -616,7 +590,6 @@ Foam::functionObjects::forces::forces
     functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
-    active_(true),
     log_(true),
     force_(3),
     moment_(3),
@@ -657,133 +630,130 @@ Foam::functionObjects::forces::~forces()
 
 void Foam::functionObjects::forces::read(const dictionary& dict)
 {
-    if (active_)
+    initialised_ = false;
+
+    log_ = dict.lookupOrDefault<Switch>("log", false);
+
+    if (log_) Info<< type() << " " << name_ << ":" << nl;
+
+    directForceDensity_ = dict.lookupOrDefault("directForceDensity", false);
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    patchSet_ = pbm.patchSet(wordReList(dict.lookup("patches")));
+
+    if (directForceDensity_)
     {
-        initialised_ = false;
+        // Optional entry for fDName
+        fDName_ = dict.lookupOrDefault<word>("fDName", "fD");
+    }
+    else
+    {
+        // Optional entries U and p
+        pName_ = dict.lookupOrDefault<word>("pName", "p");
+        UName_ = dict.lookupOrDefault<word>("UName", "U");
+        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
 
-        log_ = dict.lookupOrDefault<Switch>("log", false);
+        // Reference density needed for incompressible calculations
+        rhoRef_ = readScalar(dict.lookup("rhoInf"));
 
-        if (log_) Info<< type() << " " << name_ << ":" << nl;
+        // Reference pressure, 0 by default
+        pRef_ = dict.lookupOrDefault<scalar>("pRef", 0.0);
+    }
 
-        directForceDensity_ = dict.lookupOrDefault("directForceDensity", false);
+    coordSys_.clear();
 
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-        const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+    // Centre of rotation for moment calculations
+    // specified directly, from coordinate system, or implicitly (0 0 0)
+    if (!dict.readIfPresent<point>("CofR", coordSys_.origin()))
+    {
+        coordSys_ = coordinateSystem(obr_, dict);
+        localSystem_ = true;
+    }
 
-        patchSet_ = pbm.patchSet(wordReList(dict.lookup("patches")));
+    dict.readIfPresent("porosity", porosity_);
+    if (porosity_)
+    {
+        if (log_) Info<< "    Including porosity effects" << endl;
+    }
+    else
+    {
+        if (log_) Info<< "    Not including porosity effects" << endl;
+    }
 
-        if (directForceDensity_)
+    if (dict.found("binData"))
+    {
+        const dictionary& binDict(dict.subDict("binData"));
+        binDict.lookup("nBin") >> nBin_;
+
+        if (nBin_ < 0)
         {
-            // Optional entry for fDName
-            fDName_ = dict.lookupOrDefault<word>("fDName", "fD");
+            FatalIOErrorInFunction(dict)
+                << "Number of bins (nBin) must be zero or greater"
+                << exit(FatalIOError);
         }
-        else
+        else if ((nBin_ == 0) || (nBin_ == 1))
         {
-            // Optional entries U and p
-            pName_ = dict.lookupOrDefault<word>("pName", "p");
-            UName_ = dict.lookupOrDefault<word>("UName", "U");
-            rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
-
-            // Reference density needed for incompressible calculations
-            rhoRef_ = readScalar(dict.lookup("rhoInf"));
-
-            // Reference pressure, 0 by default
-            pRef_ = dict.lookupOrDefault<scalar>("pRef", 0.0);
-        }
-
-        coordSys_.clear();
-
-        // Centre of rotation for moment calculations
-        // specified directly, from coordinate system, or implicitly (0 0 0)
-        if (!dict.readIfPresent<point>("CofR", coordSys_.origin()))
-        {
-            coordSys_ = coordinateSystem(obr_, dict);
-            localSystem_ = true;
-        }
-
-        dict.readIfPresent("porosity", porosity_);
-        if (porosity_)
-        {
-            if (log_) Info<< "    Including porosity effects" << endl;
-        }
-        else
-        {
-            if (log_) Info<< "    Not including porosity effects" << endl;
-        }
-
-        if (dict.found("binData"))
-        {
-            const dictionary& binDict(dict.subDict("binData"));
-            binDict.lookup("nBin") >> nBin_;
-
-            if (nBin_ < 0)
+            nBin_ = 1;
+            forAll(force_, i)
             {
-                FatalIOErrorInFunction(dict)
-                    << "Number of bins (nBin) must be zero or greater"
-                    << exit(FatalIOError);
-            }
-            else if ((nBin_ == 0) || (nBin_ == 1))
-            {
-                nBin_ = 1;
-                forAll(force_, i)
-                {
-                    force_[i].setSize(1);
-                    moment_[i].setSize(1);
-                }
-            }
-
-            if (nBin_ > 1)
-            {
-                binDict.lookup("direction") >> binDir_;
-                binDir_ /= mag(binDir_);
-
-                binMin_ = GREAT;
-                scalar binMax = -GREAT;
-                forAllConstIter(labelHashSet, patchSet_, iter)
-                {
-                    label patchi = iter.key();
-                    const polyPatch& pp = pbm[patchi];
-                    scalarField d(pp.faceCentres() & binDir_);
-                    binMin_ = min(min(d), binMin_);
-                    binMax = max(max(d), binMax);
-                }
-                reduce(binMin_, minOp<scalar>());
-                reduce(binMax, maxOp<scalar>());
-
-                // slightly boost binMax so that region of interest is fully
-                // within bounds
-                binMax = 1.0001*(binMax - binMin_) + binMin_;
-
-                binDx_ = (binMax - binMin_)/scalar(nBin_);
-
-                // create the bin points used for writing
-                binPoints_.setSize(nBin_);
-                forAll(binPoints_, i)
-                {
-                    binPoints_[i] = (i + 0.5)*binDir_*binDx_;
-                }
-
-                binDict.lookup("cumulative") >> binCumulative_;
-
-                // allocate storage for forces and moments
-                forAll(force_, i)
-                {
-                    force_[i].setSize(nBin_);
-                    moment_[i].setSize(nBin_);
-                }
+                force_[i].setSize(1);
+                moment_[i].setSize(1);
             }
         }
 
-        if (nBin_ == 1)
+        if (nBin_ > 1)
         {
+            binDict.lookup("direction") >> binDir_;
+            binDir_ /= mag(binDir_);
+
+            binMin_ = GREAT;
+            scalar binMax = -GREAT;
+            forAllConstIter(labelHashSet, patchSet_, iter)
+            {
+                label patchi = iter.key();
+                const polyPatch& pp = pbm[patchi];
+                scalarField d(pp.faceCentres() & binDir_);
+                binMin_ = min(min(d), binMin_);
+                binMax = max(max(d), binMax);
+            }
+            reduce(binMin_, minOp<scalar>());
+            reduce(binMax, maxOp<scalar>());
+
+            // slightly boost binMax so that region of interest is fully
+            // within bounds
+            binMax = 1.0001*(binMax - binMin_) + binMin_;
+
+            binDx_ = (binMax - binMin_)/scalar(nBin_);
+
+            // create the bin points used for writing
+            binPoints_.setSize(nBin_);
+            forAll(binPoints_, i)
+            {
+                binPoints_[i] = (i + 0.5)*binDir_*binDx_;
+            }
+
+            binDict.lookup("cumulative") >> binCumulative_;
+
             // allocate storage for forces and moments
-            force_[0].setSize(1);
-            force_[1].setSize(1);
-            force_[2].setSize(1);
-            moment_[0].setSize(1);
-            moment_[1].setSize(1);
-            moment_[2].setSize(1);
+            forAll(force_, i)
+            {
+                force_[i].setSize(nBin_);
+                moment_[i].setSize(nBin_);
+            }
         }
+    }
+
+    if (nBin_ == 1)
+    {
+        // allocate storage for forces and moments
+        force_[0].setSize(1);
+        force_[1].setSize(1);
+        force_[2].setSize(1);
+        moment_[0].setSize(1);
+        moment_[1].setSize(1);
+        moment_[2].setSize(1);
     }
 }
 
@@ -804,11 +774,6 @@ void Foam::functionObjects::forces::write()
 {
     calcForcesMoment();
 
-    if (!active_)
-    {
-        return;
-    }
-
     if (Pstream::master())
     {
         functionObjectFiles::write();
@@ -825,11 +790,6 @@ void Foam::functionObjects::forces::write()
 void Foam::functionObjects::forces::calcForcesMoment()
 {
     initialise();
-
-    if (!active_)
-    {
-        return;
-    }
 
     force_[0] = Zero;
     force_[1] = Zero;

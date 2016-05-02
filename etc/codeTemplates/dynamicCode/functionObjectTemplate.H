@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,16 @@ public:
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
         ${typeName}FunctionObject
+        (
+            const word& name,
+            const objectRegistry& unused,
+            const dictionary&,
+            const bool loadFromFilesUnused = false
+        );
+
+        //- Construct for given objectRegistry and dictionary.
+        //  Allow the possibility to load fields from files
+        static bool viable
         (
             const word& name,
             const objectRegistry& unused,

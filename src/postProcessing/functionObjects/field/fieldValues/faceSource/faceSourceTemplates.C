@@ -32,7 +32,10 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::fieldValues::faceSource::validField(const word& fieldName) const
+bool Foam::functionObjects::fieldValues::faceSource::validField
+(
+    const word& fieldName
+) const
 {
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sf;
     typedef GeometricField<Type, fvPatchField, volMesh> vf;
@@ -51,7 +54,8 @@ bool Foam::fieldValues::faceSource::validField(const word& fieldName) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::getFieldValues
+Foam::tmp<Foam::Field<Type>>
+Foam::functionObjects::fieldValues::faceSource::getFieldValues
 (
     const word& fieldName,
     const bool mustGet,
@@ -120,7 +124,7 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::getFieldValues
 
 
 template<class Type>
-Type Foam::fieldValues::faceSource::processSameTypeValues
+Type Foam::functionObjects::fieldValues::faceSource::processSameTypeValues
 (
     const Field<Type>& values,
     const vectorField& Sf,
@@ -236,10 +240,12 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
 
             break;
         }
-        default:
-        {
-            // Do nothing
-        }
+        case opAreaNormalAverage:
+        {}
+        case opAreaNormalIntegrate:
+        {}
+        case opNone:
+        {}
     }
 
     return result;
@@ -247,7 +253,7 @@ Type Foam::fieldValues::faceSource::processSameTypeValues
 
 
 template<class Type>
-Type Foam::fieldValues::faceSource::processValues
+Type Foam::functionObjects::fieldValues::faceSource::processValues
 (
     const Field<Type>& values,
     const vectorField& Sf,
@@ -262,7 +268,7 @@ Type Foam::fieldValues::faceSource::processValues
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::fieldValues::faceSource::writeValues
+bool Foam::functionObjects::fieldValues::faceSource::writeValues
 (
     const word& fieldName,
     const scalarField& weightField,
@@ -348,7 +354,8 @@ bool Foam::fieldValues::faceSource::writeValues
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
+Foam::tmp<Foam::Field<Type>>
+Foam::functionObjects::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
     const bool applyOrientation
@@ -389,7 +396,8 @@ Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::fieldValues::faceSource::filterField
+Foam::tmp<Foam::Field<Type>>
+Foam::functionObjects::fieldValues::faceSource::filterField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
     const bool applyOrientation

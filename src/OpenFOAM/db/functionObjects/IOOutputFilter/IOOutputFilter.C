@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,32 @@ Foam::IOOutputFilter<OutputFilter>::IOOutputFilter
 
 
 template<class OutputFilter>
+bool Foam::IOOutputFilter<OutputFilter>::viable
+(
+    const word& outputFilterName,
+    const objectRegistry& obr,
+    const word& dictName,
+    const IOobject::readOption rOpt,
+    const bool readFromFiles
+)
+{
+    IOdictionary dict
+    (
+        IOobject
+        (
+            dictName,
+            obr.time().system(),
+            obr,
+            rOpt,
+            IOobject::NO_WRITE
+        )
+    );
+
+    return OutputFilter::viable(outputFilterName, obr, dict, readFromFiles);
+}
+
+
+template<class OutputFilter>
 Foam::IOOutputFilter<OutputFilter>::IOOutputFilter
 (
     const word& outputFilterName,
@@ -100,6 +126,13 @@ Foam::IOOutputFilter<OutputFilter>::~IOOutputFilter()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class OutputFilter>
+const Foam::word& Foam::IOOutputFilter<OutputFilter>::name() const
+{
+    return IOdictionary::name();
+}
+
+
+template<class OutputFilter>
 bool Foam::IOOutputFilter<OutputFilter>::read()
 {
     if (regIOobject::read())
@@ -118,6 +151,22 @@ template<class OutputFilter>
 void Foam::IOOutputFilter<OutputFilter>::write()
 {
     OutputFilter::write();
+}
+
+
+template<class OutputFilter>
+void Foam::IOOutputFilter<OutputFilter>::updateMesh(const mapPolyMesh& mpm)
+{
+    read();
+    OutputFilter::updateMesh(mpm);
+}
+
+
+template<class OutputFilter>
+void Foam::IOOutputFilter<OutputFilter>::movePoints(const polyMesh& mesh)
+{
+    read();
+    OutputFilter::movePoints(mesh);
 }
 
 

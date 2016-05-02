@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,12 +43,6 @@ inline const Foam::objectRegistry& Foam::fieldValue::obr() const
 inline const Foam::dictionary& Foam::fieldValue::dict() const
 {
     return dict_;
-}
-
-
-inline bool Foam::fieldValue::active() const
-{
-    return active_;
 }
 
 

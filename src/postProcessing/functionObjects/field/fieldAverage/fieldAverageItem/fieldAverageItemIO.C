@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fieldAverageItem::fieldAverageItem(Istream& is)
+Foam::functionObjects::fieldAverageItem::fieldAverageItem(Istream& is)
 :
-    active_(false),
     fieldName_("unknown"),
     mean_(0),
     meanFieldName_("unknown"),
@@ -40,7 +39,11 @@ Foam::fieldAverageItem::fieldAverageItem(Istream& is)
     base_(ITER),
     window_(-1.0)
 {
-    is.check("Foam::fieldAverageItem::fieldAverageItem(Foam::Istream&)");
+    is.check
+    (
+        "Foam::functionObjects::fieldAverageItem::fieldAverageItem"
+        "(Foam::Istream&)"
+    );
 
     const dictionaryEntry entry(dictionary::null, is);
 
@@ -63,17 +66,20 @@ Foam::fieldAverageItem::fieldAverageItem(Istream& is)
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, fieldAverageItem& faItem)
+Foam::Istream& Foam::functionObjects::operator>>
+(
+    Istream& is,
+    fieldAverageItem& faItem
+)
 {
     is.check
     (
         "Foam::Istream& Foam::operator>>"
-        "(Foam::Istream&, Foam::fieldAverageItem&)"
+        "(Foam::Istream&, Foam::functionObjects::fieldAverageItem&)"
     );
 
     const dictionaryEntry entry(dictionary::null, is);
 
-    faItem.active_ = false;
     faItem.fieldName_ = entry.keyword();
     entry.lookup("mean") >> faItem.mean_;
     entry.lookup("prime2Mean") >> faItem.prime2Mean_;
@@ -97,12 +103,16 @@ Foam::Istream& Foam::operator>>(Istream& is, fieldAverageItem& faItem)
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const fieldAverageItem& faItem)
+Foam::Ostream& Foam::functionObjects::operator<<
+(
+    Ostream& os,
+    const fieldAverageItem& faItem
+)
 {
     os.check
     (
         "Foam::Ostream& Foam::operator<<"
-        "(Foam::Ostream&, const Foam::fieldAverageItem&)"
+        "(Foam::Ostream&, const Foam::functionObjects::fieldAverageItem&)"
     );
 
     os  << faItem.fieldName_ << nl << token::BEGIN_BLOCK << nl;
@@ -129,7 +139,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const fieldAverageItem& faItem)
     os.check
     (
         "Foam::Ostream& Foam::operator<<"
-        "(Foam::Ostream&, const Foam::fieldAverageItem&)"
+        "(Foam::Ostream&, const Foam::functionObjects::fieldAverageItem&)"
     );
 
     return os;

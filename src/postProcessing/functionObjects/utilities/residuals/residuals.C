@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(residuals, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::residuals::residuals
+Foam::functionObjects::residuals::residuals
 (
     const word& name,
     const objectRegistry& obr,
@@ -49,40 +52,40 @@ Foam::residuals::residuals
     functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
-    active_(true),
     fieldSet_()
 {
-    // Check if the available mesh is an fvMesh otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << endl;
-    }
-
     read(dict);
+}
+
+
+bool Foam::functionObjects::residuals::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::residuals::~residuals()
+Foam::functionObjects::residuals::~residuals()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::residuals::read(const dictionary& dict)
+void Foam::functionObjects::residuals::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        dict.lookup("fields") >> fieldSet_;
-    }
+    dict.lookup("fields") >> fieldSet_;
 }
 
 
-void Foam::residuals::writeFileHeader(const label i)
+void Foam::functionObjects::residuals::writeFileHeader(const label i)
 {
     if (Pstream::master())
     {
@@ -105,41 +108,38 @@ void Foam::residuals::writeFileHeader(const label i)
 }
 
 
-void Foam::residuals::execute()
+void Foam::functionObjects::residuals::execute()
 {}
 
 
-void Foam::residuals::end()
+void Foam::functionObjects::residuals::end()
 {}
 
 
-void Foam::residuals::timeSet()
+void Foam::functionObjects::residuals::timeSet()
 {}
 
 
-void Foam::residuals::write()
+void Foam::functionObjects::residuals::write()
 {
-    if (active_)
+    functionObjectFiles::write();
+
+    if (Pstream::master())
     {
-        functionObjectFiles::write();
+        writeTime(file());
 
-        if (Pstream::master())
+        forAll(fieldSet_, fieldI)
         {
-            writeTime(file());
+            const word& fieldName = fieldSet_[fieldI];
 
-            forAll(fieldSet_, fieldI)
-            {
-                const word& fieldName = fieldSet_[fieldI];
-
-                writeResidual<scalar>(fieldName);
-                writeResidual<vector>(fieldName);
-                writeResidual<sphericalTensor>(fieldName);
-                writeResidual<symmTensor>(fieldName);
-                writeResidual<tensor>(fieldName);
-            }
-
-            file() << endl;
+            writeResidual<scalar>(fieldName);
+            writeResidual<vector>(fieldName);
+            writeResidual<sphericalTensor>(fieldName);
+            writeResidual<symmTensor>(fieldName);
+            writeResidual<tensor>(fieldName);
         }
+
+        file() << endl;
     }
 }
 

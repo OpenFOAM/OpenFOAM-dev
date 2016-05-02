@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Map<Type> Foam::regionSizeDistribution::regionSum
+Foam::Map<Type> Foam::functionObjects::regionSizeDistribution::regionSum
 (
     const regionSplit& regions,
     const Field<Type>& fld
@@ -60,9 +60,8 @@ Foam::Map<Type> Foam::regionSizeDistribution::regionSum
 }
 
 
-// Get data in sortedToc order
 template<class Type>
-Foam::List<Type> Foam::regionSizeDistribution::extractData
+Foam::List<Type> Foam::functionObjects::regionSizeDistribution::extractData
 (
     const UList<label>& keys,
     const Map<Type>& regionData

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(calcMag, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(calcMag, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::calcMag::calcMag
+Foam::functionObjects::calcMag::calcMag
 (
     const word& name,
     const objectRegistry& obr,
@@ -48,96 +51,85 @@ Foam::calcMag::calcMag
 :
     name_(name),
     obr_(obr),
-    active_(true),
     fieldName_("undefined-fieldName"),
     resultName_("undefined-resultName")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating." << nl
-            << endl;
-    }
-
     read(dict);
+}
+
+
+bool Foam::functionObjects::calcMag::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::calcMag::~calcMag()
+Foam::functionObjects::calcMag::~calcMag()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::calcMag::read(const dictionary& dict)
+void Foam::functionObjects::calcMag::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        dict.lookup("fieldName") >> fieldName_;
-        dict.lookup("resultName") >> resultName_;
+    dict.lookup("fieldName") >> fieldName_;
+    dict.lookup("resultName") >> resultName_;
 
-        if (resultName_ == "none")
-        {
-            resultName_ = "mag(" + fieldName_ + ")";
-        }
+    if (resultName_ == "none")
+    {
+        resultName_ = "mag(" + fieldName_ + ")";
     }
 }
 
 
-void Foam::calcMag::execute()
+void Foam::functionObjects::calcMag::execute()
 {
-    if (active_)
+    bool processed = false;
+
+    calc<scalar>(fieldName_, resultName_, processed);
+    calc<vector>(fieldName_, resultName_, processed);
+    calc<sphericalTensor>(fieldName_, resultName_, processed);
+    calc<symmTensor>(fieldName_, resultName_, processed);
+    calc<tensor>(fieldName_, resultName_, processed);
+
+    if (!processed)
     {
-        bool processed = false;
-
-        calc<scalar>(fieldName_, resultName_, processed);
-        calc<vector>(fieldName_, resultName_, processed);
-        calc<sphericalTensor>(fieldName_, resultName_, processed);
-        calc<symmTensor>(fieldName_, resultName_, processed);
-        calc<tensor>(fieldName_, resultName_, processed);
-
-        if (!processed)
-        {
-            WarningInFunction
-                << "Unprocessed field " << fieldName_ << endl;
-        }
+        WarningInFunction
+            << "Unprocessed field " << fieldName_ << endl;
     }
 }
 
 
-void Foam::calcMag::end()
+void Foam::functionObjects::calcMag::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::calcMag::timeSet()
-{
-    // Do nothing
-}
+void Foam::functionObjects::calcMag::timeSet()
+{}
 
 
-void Foam::calcMag::write()
+void Foam::functionObjects::calcMag::write()
 {
-    if (active_)
+    if (obr_.foundObject<regIOobject>(resultName_))
     {
-        if (obr_.foundObject<regIOobject>(resultName_))
-        {
-            const regIOobject& field =
-                obr_.lookupObject<regIOobject>(resultName_);
+        const regIOobject& field =
+            obr_.lookupObject<regIOobject>(resultName_);
 
-            Info<< type() << " " << name_ << " output:" << nl
-                << "    writing field " << field.name() << nl << endl;
+        Info<< type() << " " << name_ << " output:" << nl
+            << "    writing field " << field.name() << nl << endl;
 
-            field.write();
-        }
+        field.write();
     }
 }
 

@@ -32,14 +32,17 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(CourantNo, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField::Internal>
-Foam::CourantNo::byRho
+Foam::functionObjects::CourantNo::byRho
 (
     const tmp<volScalarField::Internal>& Co
 ) const
@@ -57,7 +60,7 @@ Foam::CourantNo::byRho
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::CourantNo::CourantNo
+Foam::functionObjects::CourantNo::CourantNo
 (
     const word& name,
     const objectRegistry& obr,
@@ -67,118 +70,105 @@ Foam::CourantNo::CourantNo
 :
     name_(name),
     obr_(obr),
-    active_(true),
     phiName_("phi"),
     rhoName_("rho")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
 
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        volScalarField* CourantNoPtr
+    volScalarField* CourantNoPtr
+    (
+        new volScalarField
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    type(),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                type(),
+                mesh.time().timeName(),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0),
-                zeroGradientFvPatchScalarField::typeName
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", dimless, 0.0),
+            zeroGradientFvPatchScalarField::typeName
+        )
+    );
 
-        mesh.objectRegistry::store(CourantNoPtr);
-    }
+    mesh.objectRegistry::store(CourantNoPtr);
+}
+
+
+bool Foam::functionObjects::CourantNo::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::CourantNo::~CourantNo()
+Foam::functionObjects::CourantNo::~CourantNo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::CourantNo::read(const dictionary& dict)
+void Foam::functionObjects::CourantNo::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
-    }
+    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+    rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
 }
 
 
-void Foam::CourantNo::execute()
+void Foam::functionObjects::CourantNo::execute()
 {
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        const surfaceScalarField& phi =
-            mesh.lookupObject<surfaceScalarField>(phiName_);
+    const surfaceScalarField& phi =
+        mesh.lookupObject<surfaceScalarField>(phiName_);
 
-        volScalarField& Co =
-            const_cast<volScalarField&>
-            (
-                mesh.lookupObject<volScalarField>(type())
-            );
+    volScalarField& Co = const_cast<volScalarField&>
+    (
+        mesh.lookupObject<volScalarField>(type())
+    );
 
-        Co.ref() = byRho
-        (
-            (0.5*mesh.time().deltaT())
-           *fvc::surfaceSum(mag(phi))()()
-           /mesh.V()
-        );
-        Co.correctBoundaryConditions();
-    }
+    Co.ref() = byRho
+    (
+        (0.5*mesh.time().deltaT())
+       *fvc::surfaceSum(mag(phi))()()
+       /mesh.V()
+    );
+    Co.correctBoundaryConditions();
 }
 
 
-void Foam::CourantNo::end()
+void Foam::functionObjects::CourantNo::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::CourantNo::timeSet()
+void Foam::functionObjects::CourantNo::timeSet()
 {}
 
 
-void Foam::CourantNo::write()
+void Foam::functionObjects::CourantNo::write()
 {
-    if (active_)
-    {
-        const volScalarField& CourantNo =
-            obr_.lookupObject<volScalarField>(type());
+    const volScalarField& CourantNo =
+        obr_.lookupObject<volScalarField>(type());
 
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << CourantNo.name() << nl
-            << endl;
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << CourantNo.name() << nl
+        << endl;
 
-        CourantNo.write();
-    }
+    CourantNo.write();
 }
 
 

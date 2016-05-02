@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,16 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(systemCall, 0);
+namespace functionObjects
+{
+    defineTypeNameAndDebug(systemCall, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::systemCall::systemCall
+Foam::functionObjects::systemCall::systemCall
 (
     const word& name,
     const objectRegistry&,
@@ -54,15 +57,27 @@ Foam::systemCall::systemCall
 }
 
 
+bool Foam::functionObjects::systemCall::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::systemCall::~systemCall()
+Foam::functionObjects::systemCall::~systemCall()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::systemCall::read(const dictionary& dict)
+void Foam::functionObjects::systemCall::read(const dictionary& dict)
 {
     dict.readIfPresent("executeCalls", executeCalls_);
     dict.readIfPresent("endCalls", endCalls_);
@@ -93,7 +108,7 @@ void Foam::systemCall::read(const dictionary& dict)
 }
 
 
-void Foam::systemCall::execute()
+void Foam::functionObjects::systemCall::execute()
 {
     forAll(executeCalls_, callI)
     {
@@ -102,7 +117,7 @@ void Foam::systemCall::execute()
 }
 
 
-void Foam::systemCall::end()
+void Foam::functionObjects::systemCall::end()
 {
     forAll(endCalls_, callI)
     {
@@ -111,13 +126,11 @@ void Foam::systemCall::end()
 }
 
 
-void Foam::systemCall::timeSet()
-{
-    // Do nothing
-}
+void Foam::functionObjects::systemCall::timeSet()
+{}
 
 
-void Foam::systemCall::write()
+void Foam::functionObjects::systemCall::write()
 {
     forAll(writeCalls_, callI)
     {

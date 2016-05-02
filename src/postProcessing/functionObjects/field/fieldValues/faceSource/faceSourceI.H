@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,33 +27,32 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::fieldValues::faceSource::sourceType&
-Foam::fieldValues::faceSource::source() const
+inline const Foam::functionObjects::fieldValues::faceSource::sourceType&
+Foam::functionObjects::fieldValues::faceSource::source() const
 {
     return source_;
 }
 
 
 inline const Foam::labelList&
-Foam::fieldValues::faceSource::faceId() const
+Foam::functionObjects::fieldValues::faceSource::faceId() const
 {
     return faceId_;
 }
 
 
 inline const Foam::labelList&
-Foam::fieldValues::faceSource::facePatch() const
+Foam::functionObjects::fieldValues::faceSource::facePatch() const
 {
     return facePatchId_;
 }
 
 
 inline const Foam::labelList&
-Foam::fieldValues::faceSource::faceSign() const
+Foam::functionObjects::fieldValues::faceSource::faceSign() const
 {
     return faceSign_;
 }
 
 
 // ************************************************************************* //
-

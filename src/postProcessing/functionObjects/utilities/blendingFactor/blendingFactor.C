@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,13 +30,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(blendingFactor, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blendingFactor::blendingFactor
+Foam::functionObjects::blendingFactor::blendingFactor
 (
     const word& name,
     const objectRegistry& obr,
@@ -46,80 +49,69 @@ Foam::blendingFactor::blendingFactor
 :
     name_(name),
     obr_(obr),
-    active_(true),
     phiName_("unknown-phiName"),
     fieldName_("unknown-fieldName")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
+}
+
+
+bool Foam::functionObjects::blendingFactor::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::blendingFactor::~blendingFactor()
+Foam::functionObjects::blendingFactor::~blendingFactor()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::blendingFactor::read(const dictionary& dict)
+void Foam::functionObjects::blendingFactor::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-        dict.lookup("fieldName") >> fieldName_;
-    }
+    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+    dict.lookup("fieldName") >> fieldName_;
 }
 
 
-void Foam::blendingFactor::execute()
+void Foam::functionObjects::blendingFactor::execute()
 {
-    if (active_)
-    {
-        calc<scalar>();
-        calc<vector>();
-    }
+    calc<scalar>();
+    calc<vector>();
 }
 
 
-void Foam::blendingFactor::end()
+void Foam::functionObjects::blendingFactor::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
-void Foam::blendingFactor::timeSet()
+void Foam::functionObjects::blendingFactor::timeSet()
+{}
+
+
+void Foam::functionObjects::blendingFactor::write()
 {
-    // Do nothing
-}
+    const word fieldName = "blendingFactor:" + fieldName_;
 
+    const volScalarField& blendingFactor =
+        obr_.lookupObject<volScalarField>(fieldName);
 
-void Foam::blendingFactor::write()
-{
-    if (active_)
-    {
-        const word fieldName = "blendingFactor:" + fieldName_;
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << blendingFactor.name() << nl
+        << endl;
 
-        const volScalarField& blendingFactor =
-            obr_.lookupObject<volScalarField>(fieldName);
-
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << blendingFactor.name() << nl
-            << endl;
-
-        blendingFactor.write();
-    }
+    blendingFactor.write();
 }
 
 

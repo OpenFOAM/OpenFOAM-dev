@@ -56,8 +56,7 @@ Foam::functionObjects::removeRegisteredObject::removeRegisteredObject
 }
 
 
-Foam::autoPtr<Foam::functionObjects::removeRegisteredObject>
-Foam::functionObjects::removeRegisteredObject::New
+bool Foam::functionObjects::removeRegisteredObject::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -65,10 +64,7 @@ Foam::functionObjects::removeRegisteredObject::New
     const bool loadFromFiles
 )
 {
-    return autoPtr<removeRegisteredObject>
-    (
-        new removeRegisteredObject(name, obr, dict, loadFromFiles)
-    );
+    return true;
 }
 
 

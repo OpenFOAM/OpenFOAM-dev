@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fieldValues::fieldValueDelta
+    Foam::functionObjects::fieldValues::fieldValueDelta
 
 Group
     grpFieldFunctionObjects
@@ -84,7 +84,8 @@ SourceFiles
 
 namespace Foam
 {
-
+namespace functionObjects
+{
 namespace fieldValues
 {
 
@@ -162,14 +163,26 @@ public:
     TypeName("fieldValueDelta");
 
 
-    //- Construct from components
-    fieldValueDelta
-    (
-        const word& name,
-        const objectRegistry& obr,
-        const dictionary& dict,
-        const bool loadFromFiles = false
-    );
+    // Constructors
+
+        //- Construct from components
+        fieldValueDelta
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict,
+            const bool loadFromFiles = false
+        );
+
+        //- Return true if the construction of this functionObject is viable
+        //  i.e. the prerequisites for construction are available
+        static bool viable
+        (
+            const word& name,
+            const objectRegistry&,
+            const dictionary&,
+            const bool loadFromFiles = false
+        );
 
 
     //- Destructor
@@ -206,6 +219,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace fieldValues
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

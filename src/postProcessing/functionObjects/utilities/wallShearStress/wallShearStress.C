@@ -34,13 +34,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(wallShearStress, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::wallShearStress::writeFileHeader(const label i)
+void Foam::functionObjects::wallShearStress::writeFileHeader(const label i)
 {
     // Add headers to output data
     writeHeader(file(), "Wall shear stress");
@@ -52,7 +55,7 @@ void Foam::wallShearStress::writeFileHeader(const label i)
 }
 
 
-void Foam::wallShearStress::calcShearStress
+void Foam::functionObjects::wallShearStress::calcShearStress
 (
     const fvMesh& mesh,
     const volSymmTensorField& Reff,
@@ -91,7 +94,7 @@ void Foam::wallShearStress::calcShearStress
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::wallShearStress::wallShearStress
+Foam::functionObjects::wallShearStress::wallShearStress
 (
     const word& name,
     const objectRegistry& obr,
@@ -102,194 +105,180 @@ Foam::wallShearStress::wallShearStress
     functionObjectFiles(obr, name, typeName),
     name_(name),
     obr_(obr),
-    active_(true),
     log_(true),
     patchSet_()
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        volVectorField* wallShearStressPtr
+    volVectorField* wallShearStressPtr
+    (
+        new volVectorField
         (
-            new volVectorField
+            IOobject
             (
-                IOobject
-                (
-                    type(),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                type(),
+                mesh.time().timeName(),
                 mesh,
-                dimensionedVector
-                (
-                    "0",
-                    sqr(dimLength)/sqr(dimTime),
-                    Zero
-                )
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedVector
+            (
+                "0",
+                sqr(dimLength)/sqr(dimTime),
+                Zero
             )
-        );
+        )
+    );
 
-        mesh.objectRegistry::store(wallShearStressPtr);
-    }
+    mesh.objectRegistry::store(wallShearStressPtr);
 
     read(dict);
 }
 
 
+bool Foam::functionObjects::wallShearStress::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::wallShearStress::~wallShearStress()
+Foam::functionObjects::wallShearStress::~wallShearStress()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::wallShearStress::read(const dictionary& dict)
+void Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 {
-    if (active_)
+    log_ = dict.lookupOrDefault<Switch>("log", true);
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    patchSet_ =
+        mesh.boundaryMesh().patchSet
+        (
+            wordReList(dict.lookupOrDefault("patches", wordReList()))
+        );
+
+    Info<< type() << " " << name_ << ":" << nl;
+
+    if (patchSet_.empty())
     {
-        log_ = dict.lookupOrDefault<Switch>("log", true);
-
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-        const polyBoundaryMesh& pbm = mesh.boundaryMesh();
-
-        patchSet_ =
-            mesh.boundaryMesh().patchSet
-            (
-                wordReList(dict.lookupOrDefault("patches", wordReList()))
-            );
-
-        Info<< type() << " " << name_ << ":" << nl;
-
-        if (patchSet_.empty())
+        forAll(pbm, patchi)
         {
-            forAll(pbm, patchi)
+            if (isA<wallPolyPatch>(pbm[patchi]))
             {
-                if (isA<wallPolyPatch>(pbm[patchi]))
-                {
-                    patchSet_.insert(patchi);
-                }
+                patchSet_.insert(patchi);
             }
-
-            Info<< "    processing all wall patches" << nl << endl;
         }
-        else
+
+        Info<< "    processing all wall patches" << nl << endl;
+    }
+    else
+    {
+        Info<< "    processing wall patches: " << nl;
+        labelHashSet filteredPatchSet;
+        forAllConstIter(labelHashSet, patchSet_, iter)
         {
-            Info<< "    processing wall patches: " << nl;
-            labelHashSet filteredPatchSet;
-            forAllConstIter(labelHashSet, patchSet_, iter)
+            label patchi = iter.key();
+            if (isA<wallPolyPatch>(pbm[patchi]))
             {
-                label patchi = iter.key();
-                if (isA<wallPolyPatch>(pbm[patchi]))
-                {
-                    filteredPatchSet.insert(patchi);
-                    Info<< "        " << pbm[patchi].name() << endl;
-                }
-                else
-                {
-                    WarningInFunction
-                        << "Requested wall shear stress on non-wall boundary "
-                        << "type patch: " << pbm[patchi].name() << endl;
-                }
+                filteredPatchSet.insert(patchi);
+                Info<< "        " << pbm[patchi].name() << endl;
             }
-
-            Info<< endl;
-
-            patchSet_ = filteredPatchSet;
+            else
+            {
+                WarningInFunction
+                    << "Requested wall shear stress on non-wall boundary "
+                    << "type patch: " << pbm[patchi].name() << endl;
+            }
         }
+
+        Info<< endl;
+
+        patchSet_ = filteredPatchSet;
     }
 }
 
 
-void Foam::wallShearStress::execute()
+void Foam::functionObjects::wallShearStress::execute()
 {
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
 
-    if (active_)
+    functionObjectFiles::write();
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+
+    volVectorField& wallShearStress =
+        const_cast<volVectorField&>
+        (
+            mesh.lookupObject<volVectorField>(type())
+        );
+
+    if (log_) Info<< type() << " " << name_ << " output:" << nl;
+
+
+    tmp<volSymmTensorField> Reff;
+    if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
     {
-        functionObjectFiles::write();
+        const cmpModel& model =
+            mesh.lookupObject<cmpModel>(turbulenceModel::propertiesName);
 
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        volVectorField& wallShearStress =
-            const_cast<volVectorField&>
-            (
-                mesh.lookupObject<volVectorField>(type())
-            );
-
-        if (log_) Info<< type() << " " << name_ << " output:" << nl;
-
-
-        tmp<volSymmTensorField> Reff;
-        if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
-        {
-            const cmpModel& model =
-                mesh.lookupObject<cmpModel>(turbulenceModel::propertiesName);
-
-            Reff = model.devRhoReff();
-        }
-        else if (mesh.foundObject<icoModel>(turbulenceModel::propertiesName))
-        {
-            const icoModel& model =
-                mesh.lookupObject<icoModel>(turbulenceModel::propertiesName);
-
-            Reff = model.devReff();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Unable to find turbulence model in the "
-                << "database" << exit(FatalError);
-        }
-
-        calcShearStress(mesh, Reff(), wallShearStress);
+        Reff = model.devRhoReff();
     }
+    else if (mesh.foundObject<icoModel>(turbulenceModel::propertiesName))
+    {
+        const icoModel& model =
+            mesh.lookupObject<icoModel>(turbulenceModel::propertiesName);
+
+        Reff = model.devReff();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Unable to find turbulence model in the "
+            << "database" << exit(FatalError);
+    }
+
+    calcShearStress(mesh, Reff(), wallShearStress);
 }
 
 
-void Foam::wallShearStress::end()
+void Foam::functionObjects::wallShearStress::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::wallShearStress::timeSet()
+void Foam::functionObjects::wallShearStress::timeSet()
+{}
+
+
+void Foam::functionObjects::wallShearStress::write()
 {
-    // Do nothing
-}
+    functionObjectFiles::write();
 
+    const volVectorField& wallShearStress =
+        obr_.lookupObject<volVectorField>(type());
 
-void Foam::wallShearStress::write()
-{
-    if (active_)
-    {
-        functionObjectFiles::write();
+    if (log_) Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << wallShearStress.name() << nl
+        << endl;
 
-        const volVectorField& wallShearStress =
-            obr_.lookupObject<volVectorField>(type());
-
-        if (log_) Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << wallShearStress.name() << nl
-            << endl;
-
-        wallShearStress.write();
-    }
+    wallShearStress.write();
 }
 
 

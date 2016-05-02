@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,13 +35,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(Peclet, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Peclet::Peclet
+Foam::functionObjects::Peclet::Peclet
 (
     const word& name,
     const objectRegistry& obr,
@@ -51,178 +54,164 @@ Foam::Peclet::Peclet
 :
     name_(name),
     obr_(obr),
-    active_(true),
     phiName_("phi"),
     rhoName_("rho")
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
 
-    if (active_)
-    {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
-        surfaceScalarField* PecletPtr
+    surfaceScalarField* PecletPtr
+    (
+        new surfaceScalarField
         (
-            new surfaceScalarField
+            IOobject
             (
-                IOobject
-                (
-                    type(),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                type(),
+                mesh.time().timeName(),
                 mesh,
-                dimensionedScalar("0", dimless, 0.0)
-            )
-        );
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", dimless, 0.0)
+        )
+    );
 
-        mesh.objectRegistry::store(PecletPtr);
-    }
+    mesh.objectRegistry::store(PecletPtr);
+}
+
+
+bool Foam::functionObjects::Peclet::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Peclet::~Peclet()
+Foam::functionObjects::Peclet::~Peclet()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::Peclet::read(const dictionary& dict)
+void Foam::functionObjects::Peclet::read(const dictionary& dict)
 {
-    if (active_)
-    {
-        phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
-    }
+    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+    rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
 }
 
 
-void Foam::Peclet::execute()
+void Foam::functionObjects::Peclet::execute()
 {
     typedef compressible::turbulenceModel cmpTurbModel;
     typedef incompressible::turbulenceModel icoTurbModel;
 
-    if (active_)
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+
+    tmp<volScalarField> nuEff;
+    if (mesh.foundObject<cmpTurbModel>(turbulenceModel::propertiesName))
     {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        tmp<volScalarField> nuEff;
-        if (mesh.foundObject<cmpTurbModel>(turbulenceModel::propertiesName))
-        {
-            const cmpTurbModel& model =
-                mesh.lookupObject<cmpTurbModel>
-                (
-                    turbulenceModel::propertiesName
-                );
-
-            const volScalarField& rho =
-                mesh.lookupObject<volScalarField>(rhoName_);
-
-            nuEff = model.muEff()/rho;
-        }
-        else if
-        (
-            mesh.foundObject<icoTurbModel>(turbulenceModel::propertiesName)
-        )
-        {
-            const icoTurbModel& model =
-                mesh.lookupObject<icoTurbModel>
-                (
-                    turbulenceModel::propertiesName
-                );
-
-            nuEff = model.nuEff();
-        }
-        else if (mesh.foundObject<dictionary>("transportProperties"))
-        {
-            const dictionary& model =
-                mesh.lookupObject<dictionary>("transportProperties");
-
-            nuEff =
-                tmp<volScalarField>
-                (
-                    new volScalarField
-                    (
-                        IOobject
-                        (
-                            "nuEff",
-                            mesh.time().timeName(),
-                            mesh,
-                            IOobject::NO_READ,
-                            IOobject::NO_WRITE
-                        ),
-                        mesh,
-                        dimensionedScalar(model.lookup("nu"))
-                    )
-                );
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Unable to determine the viscosity"
-                << exit(FatalError);
-        }
-
-        const surfaceScalarField& phi =
-            mesh.lookupObject<surfaceScalarField>(phiName_);
-
-        surfaceScalarField& Peclet =
-            const_cast<surfaceScalarField&>
+        const cmpTurbModel& model =
+            mesh.lookupObject<cmpTurbModel>
             (
-                mesh.lookupObject<surfaceScalarField>(type())
+                turbulenceModel::propertiesName
             );
 
-        Peclet =
-            mag(phi)
-           /(
-                mesh.magSf()
-               *mesh.surfaceInterpolation::deltaCoeffs()
-               *fvc::interpolate(nuEff)
+        const volScalarField& rho =
+            mesh.lookupObject<volScalarField>(rhoName_);
+
+        nuEff = model.muEff()/rho;
+    }
+    else if
+    (
+        mesh.foundObject<icoTurbModel>(turbulenceModel::propertiesName)
+    )
+    {
+        const icoTurbModel& model =
+            mesh.lookupObject<icoTurbModel>
+            (
+                turbulenceModel::propertiesName
+            );
+
+        nuEff = model.nuEff();
+    }
+    else if (mesh.foundObject<dictionary>("transportProperties"))
+    {
+        const dictionary& model =
+            mesh.lookupObject<dictionary>("transportProperties");
+
+        nuEff =
+            tmp<volScalarField>
+            (
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        "nuEff",
+                        mesh.time().timeName(),
+                        mesh,
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    mesh,
+                    dimensionedScalar(model.lookup("nu"))
+                )
             );
     }
-}
-
-
-void Foam::Peclet::end()
-{
-    if (active_)
+    else
     {
-        execute();
+        FatalErrorInFunction
+            << "Unable to determine the viscosity"
+            << exit(FatalError);
     }
+
+    const surfaceScalarField& phi =
+        mesh.lookupObject<surfaceScalarField>(phiName_);
+
+    surfaceScalarField& Peclet =
+        const_cast<surfaceScalarField&>
+        (
+            mesh.lookupObject<surfaceScalarField>(type())
+        );
+
+    Peclet =
+        mag(phi)
+       /(
+            mesh.magSf()
+           *mesh.surfaceInterpolation::deltaCoeffs()
+           *fvc::interpolate(nuEff)
+        );
 }
 
-void Foam::Peclet::timeSet()
+
+void Foam::functionObjects::Peclet::end()
 {
-    // Do nothing
+    execute();
 }
 
+void Foam::functionObjects::Peclet::timeSet()
+{}
 
-void Foam::Peclet::write()
+
+void Foam::functionObjects::Peclet::write()
 {
-    if (active_)
-    {
-        const surfaceScalarField& Peclet =
-            obr_.lookupObject<surfaceScalarField>(type());
+    const surfaceScalarField& Peclet =
+        obr_.lookupObject<surfaceScalarField>(type());
 
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << Peclet.name() << nl
-            << endl;
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << Peclet.name() << nl
+        << endl;
 
-        Peclet.write();
-    }
+    Peclet.write();
 }
 
 

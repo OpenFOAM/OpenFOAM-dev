@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::turbulenceFields::processField
+void Foam::functionObjects::turbulenceFields::processField
 (
     const word& fieldName,
     const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue

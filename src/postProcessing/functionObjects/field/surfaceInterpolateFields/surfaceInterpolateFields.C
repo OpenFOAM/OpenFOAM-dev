@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,13 +29,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(surfaceInterpolateFields, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::surfaceInterpolateFields::surfaceInterpolateFields
+Foam::functionObjects::surfaceInterpolateFields::surfaceInterpolateFields
 (
     const word& name,
     const objectRegistry& obr,
@@ -45,109 +48,99 @@ Foam::surfaceInterpolateFields::surfaceInterpolateFields
 :
     name_(name),
     obr_(obr),
-    active_(true),
     fieldSet_()
 {
-    // Check if the available mesh is an fvMesh otherise deactivate
-    if (isA<fvMesh>(obr_))
-    {
-        read(dict);
-    }
-    else
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_
-            << endl;
-    }
+    read(dict);
+}
+
+
+bool Foam::functionObjects::surfaceInterpolateFields::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::surfaceInterpolateFields::~surfaceInterpolateFields()
+Foam::functionObjects::surfaceInterpolateFields::~surfaceInterpolateFields()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::surfaceInterpolateFields::read(const dictionary& dict)
+void Foam::functionObjects::surfaceInterpolateFields::read
+(
+    const dictionary& dict
+)
 {
-    if (active_)
+    dict.lookup("fields") >> fieldSet_;
+}
+
+
+void Foam::functionObjects::surfaceInterpolateFields::execute()
+{
+    Info<< type() << " " << name_ << " output:" << nl;
+
+    // Clear out any previously loaded fields
+    ssf_.clear();
+    svf_.clear();
+    sSpheretf_.clear();
+    sSymmtf_.clear();
+    stf_.clear();
+
+    interpolateFields<scalar>(ssf_);
+    interpolateFields<vector>(svf_);
+    interpolateFields<sphericalTensor>(sSpheretf_);
+    interpolateFields<symmTensor>(sSymmtf_);
+    interpolateFields<tensor>(stf_);
+
+    Info<< endl;
+}
+
+
+void Foam::functionObjects::surfaceInterpolateFields::end()
+{
+    execute();
+}
+
+
+void Foam::functionObjects::surfaceInterpolateFields::timeSet()
+{}
+
+
+void Foam::functionObjects::surfaceInterpolateFields::write()
+{
+    Info<< type() << " " << name_ << " output:" << nl;
+
+    Info<< "    Writing interpolated surface fields to "
+        << obr_.time().timeName() << endl;
+
+    forAll(ssf_, i)
     {
-        dict.lookup("fields") >> fieldSet_;
+        ssf_[i].write();
     }
-}
-
-
-void Foam::surfaceInterpolateFields::execute()
-{
-    if (active_)
+    forAll(svf_, i)
     {
-        Info<< type() << " " << name_ << " output:" << nl;
-
-        // Clear out any previously loaded fields
-        ssf_.clear();
-        svf_.clear();
-        sSpheretf_.clear();
-        sSymmtf_.clear();
-        stf_.clear();
-
-        interpolateFields<scalar>(ssf_);
-        interpolateFields<vector>(svf_);
-        interpolateFields<sphericalTensor>(sSpheretf_);
-        interpolateFields<symmTensor>(sSymmtf_);
-        interpolateFields<tensor>(stf_);
-
-        Info<< endl;
+        svf_[i].write();
     }
-}
-
-
-void Foam::surfaceInterpolateFields::end()
-{
-    if (active_)
+    forAll(sSpheretf_, i)
     {
-        execute();
+        sSpheretf_[i].write();
     }
-}
-
-
-void Foam::surfaceInterpolateFields::timeSet()
-{
-    // Do nothing
-}
-
-
-void Foam::surfaceInterpolateFields::write()
-{
-    if (active_)
+    forAll(sSymmtf_, i)
     {
-        Info<< type() << " " << name_ << " output:" << nl;
-
-        Info<< "    Writing interpolated surface fields to "
-            << obr_.time().timeName() << endl;
-
-        forAll(ssf_, i)
-        {
-            ssf_[i].write();
-        }
-        forAll(svf_, i)
-        {
-            svf_[i].write();
-        }
-        forAll(sSpheretf_, i)
-        {
-            sSpheretf_[i].write();
-        }
-        forAll(sSymmtf_, i)
-        {
-            sSymmtf_[i].write();
-        }
-        forAll(stf_, i)
-        {
-            stf_[i].write();
-        }
+        sSymmtf_[i].write();
+    }
+    forAll(stf_, i)
+    {
+        stf_[i].write();
     }
 }
 

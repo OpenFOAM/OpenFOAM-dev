@@ -76,9 +76,7 @@ bool Foam::radiation::opaqueSolid::read()
 
 
 void Foam::radiation::opaqueSolid::calculate()
-{
-    // Do nothing
-}
+{}
 
 
 Foam::tmp<Foam::volScalarField> Foam::radiation::opaqueSolid::Rp() const

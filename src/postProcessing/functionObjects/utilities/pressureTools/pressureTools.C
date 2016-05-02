@@ -31,13 +31,16 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(pressureTools, 0);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::word Foam::pressureTools::pName() const
+Foam::word Foam::functionObjects::pressureTools::pName() const
 {
     word fieldName = pName_;
 
@@ -59,7 +62,7 @@ Foam::word Foam::pressureTools::pName() const
 }
 
 
-Foam::dimensionedScalar Foam::pressureTools::rhoScale
+Foam::dimensionedScalar Foam::functionObjects::pressureTools::rhoScale
 (
     const volScalarField& p
 ) const
@@ -75,7 +78,7 @@ Foam::dimensionedScalar Foam::pressureTools::rhoScale
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::pressureTools::rho
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressureTools::rho
 (
     const volScalarField& p
 ) const
@@ -107,7 +110,7 @@ Foam::tmp<Foam::volScalarField> Foam::pressureTools::rho
 }
 
 
-Foam::dimensionedScalar Foam::pressureTools::pRef() const
+Foam::dimensionedScalar Foam::functionObjects::pressureTools::pRef() const
 {
     dimensionedScalar value("pRef", dimPressure, 0.0);
 
@@ -120,7 +123,7 @@ Foam::dimensionedScalar Foam::pressureTools::pRef() const
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::pressureTools::pDyn
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressureTools::pDyn
 (
     const volScalarField& p
 ) const
@@ -155,7 +158,8 @@ Foam::tmp<Foam::volScalarField> Foam::pressureTools::pDyn
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::pressureTools::convertToCoeff
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::pressureTools::convertToCoeff
 (
     const volScalarField& p
 ) const
@@ -179,7 +183,7 @@ Foam::tmp<Foam::volScalarField> Foam::pressureTools::convertToCoeff
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pressureTools::pressureTools
+Foam::functionObjects::pressureTools::pressureTools
 (
     const word& name,
     const objectRegistry& obr,
@@ -189,7 +193,6 @@ Foam::pressureTools::pressureTools
 :
     name_(name),
     obr_(obr),
-    active_(true),
     pName_("p"),
     UName_("U"),
     rhoName_("rho"),
@@ -200,144 +203,130 @@ Foam::pressureTools::pressureTools
     UInf_(Zero),
     rhoInf_(0.0)
 {
-    // Check if the available mesh is an fvMesh, otherwise deactivate
-    if (!isA<fvMesh>(obr_))
-    {
-        active_ = false;
-        WarningInFunction
-            << "No fvMesh available, deactivating " << name_ << nl
-            << endl;
-    }
-
     read(dict);
 
-    if (active_)
+    dimensionSet pDims(dimPressure);
+
+    if (calcCoeff_)
     {
-        dimensionSet pDims(dimPressure);
-
-        if (calcCoeff_)
-        {
-            pDims /= dimPressure;
-        }
-
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-        volScalarField* pPtr
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    pName(),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh,
-                dimensionedScalar("0", pDims, 0.0)
-            )
-        );
-
-        mesh.objectRegistry::store(pPtr);
+        pDims /= dimPressure;
     }
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+
+    volScalarField* pPtr
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                pName(),
+                mesh.time().timeName(),
+                mesh,
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", pDims, 0.0)
+        )
+    );
+
+    mesh.objectRegistry::store(pPtr);
+}
+
+
+bool Foam::functionObjects::pressureTools::viable
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const bool loadFromFiles
+)
+{
+    // Construction is viable if the available mesh is an fvMesh
+    return isA<fvMesh>(obr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::pressureTools::~pressureTools()
+Foam::functionObjects::pressureTools::~pressureTools()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pressureTools::read(const dictionary& dict)
+void Foam::functionObjects::pressureTools::read(const dictionary& dict)
 {
-    if (active_)
+    dict.readIfPresent("pName", pName_);
+    dict.readIfPresent("UName", UName_);
+    dict.readIfPresent("rhoName", rhoName_);
+
+    if (rhoName_ == "rhoInf")
     {
-        dict.readIfPresent("pName", pName_);
-        dict.readIfPresent("UName", UName_);
-        dict.readIfPresent("rhoName", rhoName_);
+        dict.lookup("rhoInf") >> rhoInf_;
+    }
 
-        if (rhoName_ == "rhoInf")
+    dict.lookup("calcTotal") >> calcTotal_;
+    if (calcTotal_)
+    {
+        dict.lookup("pRef") >> pRef_;
+    }
+
+    dict.lookup("calcCoeff") >> calcCoeff_;
+    if (calcCoeff_)
+    {
+        dict.lookup("pInf") >> pInf_;
+        dict.lookup("UInf") >> UInf_;
+        dict.lookup("rhoInf") >> rhoInf_;
+
+        scalar zeroCheck = 0.5*rhoInf_*magSqr(UInf_) + pInf_;
+
+        if (mag(zeroCheck) < ROOTVSMALL)
         {
-            dict.lookup("rhoInf") >> rhoInf_;
-        }
-
-        dict.lookup("calcTotal") >> calcTotal_;
-        if (calcTotal_)
-        {
-            dict.lookup("pRef") >> pRef_;
-        }
-
-        dict.lookup("calcCoeff") >> calcCoeff_;
-        if (calcCoeff_)
-        {
-            dict.lookup("pInf") >> pInf_;
-            dict.lookup("UInf") >> UInf_;
-            dict.lookup("rhoInf") >> rhoInf_;
-
-            scalar zeroCheck = 0.5*rhoInf_*magSqr(UInf_) + pInf_;
-
-            if (mag(zeroCheck) < ROOTVSMALL)
-            {
-                WarningInFunction
-                    << type() << " " << name_ << ": "
-                    << "Coefficient calculation requested, but reference "
-                    << "pressure level is zero.  Please check the supplied "
-                    << "values of pInf, UInf and rhoInf" << endl;
-            }
+            WarningInFunction
+                << type() << " " << name_ << ": "
+                << "Coefficient calculation requested, but reference "
+                << "pressure level is zero.  Please check the supplied "
+                << "values of pInf, UInf and rhoInf" << endl;
         }
     }
 }
 
 
-void Foam::pressureTools::execute()
+void Foam::functionObjects::pressureTools::execute()
 {
-    if (active_)
-    {
-        const volScalarField& p = obr_.lookupObject<volScalarField>(pName_);
+    const volScalarField& p = obr_.lookupObject<volScalarField>(pName_);
 
-        volScalarField& pResult =
-            const_cast<volScalarField&>
-            (
-                obr_.lookupObject<volScalarField>(pName())
-            );
+    volScalarField& pResult = const_cast<volScalarField&>
+    (
+        obr_.lookupObject<volScalarField>(pName())
+    );
 
-        pResult == convertToCoeff(rhoScale(p)*p + pDyn(p) + pRef());
-    }
+    pResult == convertToCoeff(rhoScale(p)*p + pDyn(p) + pRef());
 }
 
 
-void Foam::pressureTools::end()
+void Foam::functionObjects::pressureTools::end()
 {
-    if (active_)
-    {
-        execute();
-    }
+    execute();
 }
 
 
-void Foam::pressureTools::timeSet()
+void Foam::functionObjects::pressureTools::timeSet()
+{}
+
+
+void Foam::functionObjects::pressureTools::write()
 {
-    // Do nothing
-}
+    const volScalarField& pResult =
+        obr_.lookupObject<volScalarField>(pName());
 
+    Info<< type() << " " << name_ << " output:" << nl
+        << "    writing field " << pResult.name() << nl
+        << endl;
 
-void Foam::pressureTools::write()
-{
-    if (active_)
-    {
-        const volScalarField& pResult =
-            obr_.lookupObject<volScalarField>(pName());
-
-        Info<< type() << " " << name_ << " output:" << nl
-            << "    writing field " << pResult.name() << nl
-            << endl;
-
-        pResult.write();
-    }
+    pResult.write();
 }
 
 
