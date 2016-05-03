@@ -584,61 +584,84 @@ void Foam::globalMeshData::calcPointConnectivity
             transforms.nullTransformIndex()
         );
     }
-    // Send over.
+    // Send to master
     globalPointSlavesMap().distribute(myData);
 
 
     // String of connected points with their transform
     allPointConnectivity.setSize(globalPointSlavesMap().constructSize());
+    allPointConnectivity = labelPairList(0);
+
+    // Pass1: do the master points since these also update local slaves
+    //        (e.g. from local cyclics)
     forAll(slaves, pointI)
     {
         // Reconstruct string of connected points
         const labelList& pSlaves = slaves[pointI];
         const labelList& pTransformSlaves = transformedSlaves[pointI];
-        labelPairList& pConnectivity = allPointConnectivity[pointI];
-        pConnectivity.setSize(1+pSlaves.size()+pTransformSlaves.size());
-        label connI = 0;
 
-        // Add myself
-        pConnectivity[connI++] = myData[pointI];
-        // Add untransformed points
-        forAll(pSlaves, i)
+        if (pSlaves.size()+pTransformSlaves.size())
         {
-            pConnectivity[connI++] = myData[pSlaves[i]];
-        }
-        // Add transformed points.
-        forAll(pTransformSlaves, i)
-        {
-            // Get transform from index
-            label transformI = globalPointSlavesMap().whichTransform
-            (
-                pTransformSlaves[i]
-            );
-            // Add transform to connectivity
-            const labelPair& n = myData[pTransformSlaves[i]];
-            label proci = globalIndexAndTransform::processor(n);
-            label index = globalIndexAndTransform::index(n);
-            pConnectivity[connI++] = globalIndexAndTransform::encode
-            (
-                proci,
-                index,
-                transformI
-            );
-        }
+            labelPairList& pConnectivity = allPointConnectivity[pointI];
 
-        // Put back in slots
-        forAll(pSlaves, i)
-        {
-            allPointConnectivity[pSlaves[i]] = pConnectivity;
-        }
-        forAll(pTransformSlaves, i)
-        {
-            allPointConnectivity[pTransformSlaves[i]] = pConnectivity;
+            pConnectivity.setSize(1+pSlaves.size()+pTransformSlaves.size());
+            label connI = 0;
+
+            // Add myself
+            pConnectivity[connI++] = myData[pointI];
+            // Add untransformed points
+            forAll(pSlaves, i)
+            {
+                pConnectivity[connI++] = myData[pSlaves[i]];
+            }
+            // Add transformed points.
+            forAll(pTransformSlaves, i)
+            {
+                // Get transform from index
+                label transformI = globalPointSlavesMap().whichTransform
+                (
+                    pTransformSlaves[i]
+                );
+                // Add transform to connectivity
+                const labelPair& n = myData[pTransformSlaves[i]];
+                label proci = globalIndexAndTransform::processor(n);
+                label index = globalIndexAndTransform::index(n);
+                pConnectivity[connI++] = globalIndexAndTransform::encode
+                (
+                    proci,
+                    index,
+                    transformI
+                );
+            }
+
+            // Put back in slots
+            forAll(pSlaves, i)
+            {
+                allPointConnectivity[pSlaves[i]] = pConnectivity;
+            }
+            forAll(pTransformSlaves, i)
+            {
+                allPointConnectivity[pTransformSlaves[i]] = pConnectivity;
+            }
         }
     }
+
+
+    // Pass2: see if anything is still unset (should not be the case)
+    forAll(slaves, pointI)
+    {
+        labelPairList& pConnectivity = allPointConnectivity[pointI];
+
+        if (pConnectivity.size() == 0)
+        {
+            pConnectivity.setSize(1, myData[pointI]);
+        }
+    }
+
+
     globalPointSlavesMap().reverseDistribute
     (
-        allPointConnectivity.size(),
+        slaves.size(),
         allPointConnectivity
     );
 }
@@ -792,13 +815,13 @@ void Foam::globalMeshData::calcGlobalPointEdges
     // Push back
     globalPointSlavesMap().reverseDistribute
     (
-        globalPointEdges.size(),
+        slaves.size(),
         globalPointEdges
     );
     // Push back
     globalPointSlavesMap().reverseDistribute
     (
-        globalPointPoints.size(),
+        slaves.size(),
         globalPointPoints
     );
 }
@@ -880,7 +903,7 @@ void Foam::globalMeshData::calcGlobalEdgeSlaves() const
 
 
     // 1. collect point connectivity - basically recreating globalPoints output.
-    // All points will now have a string of points. The transforms are
+    // All points will now have a string of coupled points. The transforms are
     // in respect to the master.
     List<labelPairList> allPointConnectivity;
     calcPointConnectivity(allPointConnectivity);
