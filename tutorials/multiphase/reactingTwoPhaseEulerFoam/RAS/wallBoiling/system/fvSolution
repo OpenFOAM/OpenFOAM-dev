@@ -35,7 +35,7 @@ solvers
         agglomerator    faceAreaPair;
         mergeLevels     1;
         tolerance       1e-8;
-        relTol          0.1;
+        relTol          0.01;
         maxIter         100;
         minIter         2;
     }
@@ -98,7 +98,7 @@ relaxationFactors
 {
     fields
     {
-        iDmdt 0.4;
+        iDmdt           0.1;
     }
 
     equations
