@@ -41,8 +41,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dsmcFields_H
-#define dsmcFields_H
+#ifndef functionObjects_dsmcFields_H
+#define functionObjects_dsmcFields_H
 
 #include "typeInfo.H"
 #include "autoPtr.H"

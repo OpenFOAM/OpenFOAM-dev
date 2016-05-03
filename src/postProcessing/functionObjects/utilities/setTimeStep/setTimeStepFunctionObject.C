@@ -30,6 +30,8 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(setTimeStepFunctionObject, 0);
 
     addToRunTimeSelectionTable
@@ -39,11 +41,12 @@ namespace Foam
         dictionary
     );
 }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::setTimeStepFunctionObject::setTimeStepFunctionObject
+Foam::functionObjects::setTimeStepFunctionObject::setTimeStepFunctionObject
 (
     const word& name,
     const Time& runTime,
@@ -60,43 +63,46 @@ Foam::setTimeStepFunctionObject::setTimeStepFunctionObject
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::setTimeStepFunctionObject::on()
+void Foam::functionObjects::setTimeStepFunctionObject::on()
 {
     enabled_ = true;
 }
 
 
-void Foam::setTimeStepFunctionObject::off()
+void Foam::functionObjects::setTimeStepFunctionObject::off()
 {
     enabled_ = false;
 }
 
 
-bool Foam::setTimeStepFunctionObject::start()
+bool Foam::functionObjects::setTimeStepFunctionObject::start()
 {
     return true;
 }
 
 
-bool Foam::setTimeStepFunctionObject::execute(const bool forceWrite)
+bool Foam::functionObjects::setTimeStepFunctionObject::execute
+(
+    const bool forceWrite
+)
 {
     return true;
 }
 
 
-bool Foam::setTimeStepFunctionObject::end()
+bool Foam::functionObjects::setTimeStepFunctionObject::end()
 {
     return true;
 }
 
 
-bool Foam::setTimeStepFunctionObject::timeSet()
+bool Foam::functionObjects::setTimeStepFunctionObject::timeSet()
 {
     return true;
 }
 
 
-bool Foam::setTimeStepFunctionObject::adjustTimeStep()
+bool Foam::functionObjects::setTimeStepFunctionObject::adjustTimeStep()
 {
     if (enabled())
     {
@@ -114,7 +120,10 @@ bool Foam::setTimeStepFunctionObject::adjustTimeStep()
 }
 
 
-bool Foam::setTimeStepFunctionObject::read(const dictionary& dict)
+bool Foam::functionObjects::setTimeStepFunctionObject::read
+(
+    const dictionary& dict
+)
 {
     enabled_ = dict.lookupOrDefault("enabled", true);
 
@@ -141,11 +150,17 @@ bool Foam::setTimeStepFunctionObject::read(const dictionary& dict)
 }
 
 
-void Foam::setTimeStepFunctionObject::updateMesh(const mapPolyMesh& mpm)
+void Foam::functionObjects::setTimeStepFunctionObject::updateMesh
+(
+    const mapPolyMesh& mpm
+)
 {}
 
 
-void Foam::setTimeStepFunctionObject::movePoints(const polyMesh& mesh)
+void Foam::functionObjects::setTimeStepFunctionObject::movePoints
+(
+    const polyMesh& mesh
+)
 {}
 
 

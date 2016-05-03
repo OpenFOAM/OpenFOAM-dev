@@ -39,8 +39,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blendingFactor_H
-#define blendingFactor_H
+#ifndef functionObjects_blendingFactor_H
+#define functionObjects_blendingFactor_H
 
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"

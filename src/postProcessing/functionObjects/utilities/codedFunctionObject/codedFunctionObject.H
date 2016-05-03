@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef codedFunctionObject_H
-#define codedFunctionObject_H
+#ifndef functionObjects_codedFunctionObject_H
+#define functionObjects_codedFunctionObject_H
 
 #include "functionObject.H"
 #include "codedBase.H"

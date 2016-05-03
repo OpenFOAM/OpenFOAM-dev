@@ -37,8 +37,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Peclet_H
-#define Peclet_H
+#ifndef functionObjects_Peclet_H
+#define functionObjects_Peclet_H
 
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"

@@ -39,8 +39,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef setTimeStepFunctionObject_H
-#define setTimeStepFunctionObject_H
+#ifndef functionObjects_setTimeStepFunctionObject_H
+#define functionObjects_setTimeStepFunctionObject_H
 
 #include "functionObject.H"
 #include "dictionary.H"
@@ -49,6 +49,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
@@ -150,6 +152,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

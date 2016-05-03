@@ -136,8 +136,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef faceSource_H
-#define faceSource_H
+#ifndef functionObjects_faceSource_H
+#define functionObjects_faceSource_H
 
 #include "NamedEnum.H"
 #include "fieldValue.H"

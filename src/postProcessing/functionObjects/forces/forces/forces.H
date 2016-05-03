@@ -110,8 +110,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef forces_H
-#define forces_H
+#ifndef functionObjects_forces_H
+#define functionObjects_forces_H
 
 #include "functionObjectFiles.H"
 #include "coordinateSystem.H"

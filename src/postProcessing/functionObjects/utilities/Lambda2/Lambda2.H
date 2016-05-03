@@ -38,8 +38,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Lambda2_H
-#define Lambda2_H
+#ifndef functionObjects_Lambda2_H
+#define functionObjects_Lambda2_H
 
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"

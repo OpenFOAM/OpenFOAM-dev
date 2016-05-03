@@ -73,8 +73,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fieldValueDelta_H
-#define fieldValueDelta_H
+#ifndef functionObjects_fieldValueDelta_H
+#define functionObjects_fieldValueDelta_H
 
 #include "functionObjectFiles.H"
 #include "fieldValue.H"

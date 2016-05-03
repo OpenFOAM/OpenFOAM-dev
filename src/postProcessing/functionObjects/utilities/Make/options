@@ -21,8 +21,6 @@ LIB_LIBS = \
     -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
-    -llagrangian \
-    -lDSMC \
     -lfiniteVolume \
     -lmeshTools \
     -lsampling

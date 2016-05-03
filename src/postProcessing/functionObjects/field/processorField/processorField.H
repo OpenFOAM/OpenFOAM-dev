@@ -57,8 +57,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef processorField_H
-#define processorField_H
+#ifndef functionObjects_processorField_H
+#define functionObjects_processorField_H
 
 #include "OFstream.H"
 #include "pointFieldFwd.H"

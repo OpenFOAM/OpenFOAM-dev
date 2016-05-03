@@ -103,8 +103,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef regionSizeDistribution_H
-#define regionSizeDistribution_H
+#ifndef functionObjects_regionSizeDistribution_H
+#define functionObjects_regionSizeDistribution_H
 
 #include "functionObjectFiles.H"
 #include "pointFieldFwd.H"

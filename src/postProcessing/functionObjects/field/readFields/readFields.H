@@ -63,8 +63,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef readFields_H
-#define readFields_H
+#ifndef functionObjects_readFields_H
+#define functionObjects_readFields_H
 
 #include "OFstream.H"
 #include "pointFieldFwd.H"

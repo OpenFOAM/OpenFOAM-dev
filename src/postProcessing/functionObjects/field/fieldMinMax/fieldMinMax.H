@@ -75,8 +75,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fieldMinMax_H
-#define fieldMinMax_H
+#ifndef functionObjects_fieldMinMax_H
+#define functionObjects_fieldMinMax_H
 
 #include "functionObjectFiles.H"
 #include "Switch.H"

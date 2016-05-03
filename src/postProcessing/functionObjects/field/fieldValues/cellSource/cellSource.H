@@ -102,8 +102,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellSource_H
-#define cellSource_H
+#ifndef functionObjects_cellSource_H
+#define functionObjects_cellSource_H
 
 #include "NamedEnum.H"
 #include "fieldValue.H"

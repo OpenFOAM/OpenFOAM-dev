@@ -70,8 +70,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nearWallFields_H
-#define nearWallFields_H
+#ifndef functionObjects_nearWallFields_H
+#define functionObjects_nearWallFields_H
 
 #include "OFstream.H"
 #include "volFields.H"

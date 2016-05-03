@@ -90,8 +90,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef forceCoeffs_H
-#define forceCoeffs_H
+#ifndef functionObjects_forceCoeffs_H
+#define functionObjects_forceCoeffs_H
 
 #include "forces.H"
 

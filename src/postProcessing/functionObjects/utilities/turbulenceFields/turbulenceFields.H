@@ -84,8 +84,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef turbulenceFields_H
-#define turbulenceFields_H
+#ifndef functionObjects_turbulenceFields_H
+#define functionObjects_turbulenceFields_H
 
 #include "HashSet.H"
 #include "IOobject.H"

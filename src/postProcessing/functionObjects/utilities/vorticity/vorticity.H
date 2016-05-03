@@ -36,8 +36,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef vorticity_H
-#define vorticity_H
+#ifndef functionObjects_vorticity_H
+#define functionObjects_vorticity_H
 
 #include "volFieldsFwd.H"
 

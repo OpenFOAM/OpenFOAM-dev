@@ -41,8 +41,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Q_H
-#define Q_H
+#ifndef functionObjects_Q_H
+#define functionObjects_Q_H
 
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"

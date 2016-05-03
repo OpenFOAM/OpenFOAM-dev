@@ -35,8 +35,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fieldValue_H
-#define fieldValue_H
+#ifndef functionObjects_fieldValue_H
+#define functionObjects_fieldValue_H
 
 #include "functionObjectFiles.H"
 #include "Switch.H"

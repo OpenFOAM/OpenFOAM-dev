@@ -45,8 +45,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef scalarTransport_H
-#define scalarTransport_H
+#ifndef functionObjects_scalarTransport_H
+#define functionObjects_scalarTransport_H
 
 #include "volFields.H"
 #include "surfaceFieldsFwd.H"

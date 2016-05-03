@@ -100,8 +100,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef wallBoundedStreamLine_H
-#define wallBoundedStreamLine_H
+#ifndef functionObjects_wallBoundedStreamLine_H
+#define functionObjects_wallBoundedStreamLine_H
 
 #include "volFieldsFwd.H"
 #include "pointFieldFwd.H"

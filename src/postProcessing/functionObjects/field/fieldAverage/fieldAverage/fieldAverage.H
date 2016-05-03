@@ -119,8 +119,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fieldAverage_H
-#define fieldAverage_H
+#ifndef functionObjects_fieldAverage_H
+#define functionObjects_fieldAverage_H
 
 #include "volFieldsFwd.H"
 #include "Switch.H"

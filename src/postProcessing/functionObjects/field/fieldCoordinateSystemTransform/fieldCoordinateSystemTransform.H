@@ -74,8 +74,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fieldCoordinateSystemTransform_H
-#define fieldCoordinateSystemTransform_H
+#ifndef functionObjects_fieldCoordinateSystemTransform_H
+#define functionObjects_fieldCoordinateSystemTransform_H
 
 #include "OFstream.H"
 #include "volFields.H"

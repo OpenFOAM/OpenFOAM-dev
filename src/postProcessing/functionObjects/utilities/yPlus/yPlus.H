@@ -37,8 +37,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef yPlus_H
-#define yPlus_H
+#ifndef functionObjects_yPlus_H
+#define functionObjects_yPlus_H
 
 #include "functionObjectFiles.H"
 #include "volFieldsFwd.H"

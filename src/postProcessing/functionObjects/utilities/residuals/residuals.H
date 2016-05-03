@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef residuals_H
-#define residuals_H
+#ifndef functionObjects_residuals_H
+#define functionObjects_residuals_H
 
 #include "functionObjectFiles.H"
 #include "primitiveFieldsFwd.H"

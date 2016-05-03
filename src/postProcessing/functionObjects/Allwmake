@@ -6,13 +6,9 @@ targetType=libso
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-wmake $targetType cloud
 wmake $targetType field
 wmake $targetType forces
-wmake $targetType fvTools
-wmake $targetType IO
-wmake $targetType jobControl
-wmake $targetType systemCall
+wmake $targetType lagrangian
 wmake $targetType utilities
 
 #------------------------------------------------------------------------------

@@ -1,4 +1,0 @@
-abort/abort.C
-abort/abortFunctionObject.C
-
-LIB = $(FOAM_LIBBIN)/libjobControl
