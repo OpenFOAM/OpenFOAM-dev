@@ -116,6 +116,10 @@
 
     rho = alpha1*rho1 + alpha2*rho2;
 
+    // Correct p_rgh for consistency with p and the updated densities
+    p_rgh = p - rho*gh;
+    p_rgh.correctBoundaryConditions();
+
     K = 0.5*magSqr(U);
 
     Info<< "max(U) " << max(mag(U)).value() << endl;

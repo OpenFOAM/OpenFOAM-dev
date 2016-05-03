@@ -83,6 +83,11 @@ while (pimple.correct())
     // Update continuity errors due to temperature changes
     #include "correctContErrs.H"
 
+    volScalarField rho("rho", fluid.rho());
+
+    // Correct p_rgh for consistency with p and the updated densities
+    p_rgh = p - rho*gh;
+
     // Correct fixed-flux BCs to be consistent with the velocity BCs
     MRF.correctBoundaryFlux(U1, phi1);
     MRF.correctBoundaryFlux(U2, phi2);
@@ -112,9 +117,6 @@ while (pimple.correct())
          +  max(phase2.residualAlpha() - alpha2, scalar(0))
            *rho2*U2.oldTime()/runTime.deltaT()
         );
-
-    // Mean density for buoyancy force and p_rgh -> p
-    volScalarField rho("rho", fluid.rho());
 
     surfaceScalarField ghSnGradRho
     (

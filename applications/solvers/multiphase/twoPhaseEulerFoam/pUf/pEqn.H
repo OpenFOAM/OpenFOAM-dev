@@ -95,6 +95,11 @@ while (pimple.correct())
     // Update continuity errors due to temperature changes
     #include "correctContErrs.H"
 
+    volScalarField rho("rho", fluid.rho());
+
+    // Correct p_rgh for consistency with p and the updated densities
+    p_rgh = p - rho*gh;
+
     surfaceScalarField rhof1(fvc::interpolate(rho1));
     surfaceScalarField rhof2(fvc::interpolate(rho2));
 
@@ -114,7 +119,6 @@ while (pimple.correct())
         max(alphaf2, phase2.residualAlpha())*rAUf2
     );
 
-    volScalarField rho("rho", fluid.rho());
     surfaceScalarField ghSnGradRho
     (
         "ghSnGradRho",

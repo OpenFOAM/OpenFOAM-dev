@@ -92,6 +92,11 @@ while (pimple.correct())
     // Update continuity errors due to temperature changes
     fluid.correct();
 
+    volScalarField rho("rho", fluid.rho());
+
+    // Correct p_rgh for consistency with p and the updated densities
+    p_rgh = p - rho*gh;
+
     PtrList<volVectorField> HbyAs(phases.size());
 
     forAll(phases, phasei)
@@ -120,9 +125,6 @@ while (pimple.correct())
                *phase.rho()*phase.U().oldTime()/runTime.deltaT()
             );
     }
-
-    // Mean density for buoyancy force and p_rgh -> p
-    volScalarField rho("rho", fluid.rho());
 
     surfaceScalarField ghSnGradRho
     (

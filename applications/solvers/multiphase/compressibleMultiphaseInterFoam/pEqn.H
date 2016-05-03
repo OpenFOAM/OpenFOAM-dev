@@ -95,9 +95,6 @@
 
         if (pimple.finalNonOrthogonalIter())
         {
-            // p = max(p_rgh + mixture.rho()*gh, pMin);
-            // p_rgh = p - mixture.rho()*gh;
-
             phasei = 0;
             forAllIter
             (
@@ -124,6 +121,10 @@
     // Update densities from change in p_rgh
     mixture.correctRho(p_rgh - p_rgh_0);
     rho = mixture.rho();
+
+    // Correct p_rgh for consistency with p and the updated densities
+    p_rgh = p - rho*gh;
+    p_rgh.correctBoundaryConditions();
 
     K = 0.5*magSqr(U);
 

@@ -95,6 +95,7 @@ while (pimple.correct())
 {
     // Update continuity errors due to temperature changes
     fluid.correct();
+
     volScalarField rho("rho", fluid.rho());
 
     // Correct p_rgh for consistency with p and the updated densities

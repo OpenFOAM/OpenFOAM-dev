@@ -146,6 +146,10 @@ int main(int argc, char *argv[])
 
         rho = alpha1*rho1 + alpha2*rho2;
 
+        // Correct p_rgh for consistency with p and the updated densities
+        p_rgh = p - rho*gh;
+        p_rgh.correctBoundaryConditions();
+
         runTime.write();
 
         Info<< "ExecutionTime = "
