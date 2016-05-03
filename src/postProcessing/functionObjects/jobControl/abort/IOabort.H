@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,22 +21,29 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::IOabort
+
+Description
+    Instance of the generic IOOutputFilter for abort.
+
 \*---------------------------------------------------------------------------*/
 
-#include "abortCalculationFunctionObject.H"
+#ifndef IOabort_H
+#define IOabort_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "abort.H"
+#include "IOOutputFilter.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineNamedTemplateTypeNameAndDebug(abortCalculationFunctionObject, 0);
-
-    addToRunTimeSelectionTable
-    (
-        functionObject,
-        abortCalculationFunctionObject,
-        dictionary
-    );
+    typedef IOOutputFilter<abort> IOabort;
 }
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

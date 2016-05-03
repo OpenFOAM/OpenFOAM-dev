@@ -22,29 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::abortCalculationFunctionObject
+    Foam::abortFunctionObject
 
 Description
-    FunctionObject wrapper around abortCalculation to allow it to be created via
+    FunctionObject wrapper around abort to allow it to be created via
     the functions entry within controlDict.
 
 SourceFiles
-    abortCalculationFunctionObject.C
+    abortFunctionObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef abortCalculationFunctionObject_H
-#define abortCalculationFunctionObject_H
+#ifndef abortFunctionObject_H
+#define abortFunctionObject_H
 
-#include "abortCalculation.H"
+#include "abort.H"
 #include "OutputFilterFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef OutputFilterFunctionObject<functionObjects::abortCalculation>
-        abortCalculationFunctionObject;
+    typedef OutputFilterFunctionObject<functionObjects::abort>
+        abortFunctionObject;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

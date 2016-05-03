@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::abortCalculation
+    Foam::functionObjects::abort
 
 Group
     grpJobControlFunctionObjects
@@ -37,13 +37,13 @@ Description
     - nextWrite
 
 SourceFiles
-    abortCalculation.C
-    IOabortCalculation.H
+    abort.C
+    IOabort.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef abortCalculation_H
-#define abortCalculation_H
+#ifndef abort_H
+#define abort_H
 
 #include "NamedEnum.H"
 
@@ -62,10 +62,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class abortCalculation Declaration
+                      Class abort Declaration
 \*---------------------------------------------------------------------------*/
 
-class abortCalculation
+class abort
 {
 public:
 
@@ -104,10 +104,10 @@ private:
         void removeFile() const;
 
         //- Disallow default bitwise copy construct
-        abortCalculation(const abortCalculation&);
+        abort(const abort&);
 
         //- Disallow default bitwise assignment
-        void operator=(const abortCalculation&);
+        void operator=(const abort&);
 
 
 public:
@@ -119,7 +119,7 @@ public:
     // Constructors
 
         //- Construct for given objectRegistry and dictionary.
-        abortCalculation
+        abort
         (
             const word& name,
             const objectRegistry&,
@@ -139,7 +139,7 @@ public:
 
 
     //- Destructor
-    virtual ~abortCalculation();
+    virtual ~abort();
 
 
     // Member Functions

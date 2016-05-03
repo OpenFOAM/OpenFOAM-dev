@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "abortCalculation.H"
+#include "abort.H"
 #include "dictionary.H"
 #include "error.H"
 #include "Time.H"
@@ -36,14 +36,14 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(abortCalculation, 0);
+    defineTypeNameAndDebug(abort, 0);
 }
 }
 
 template<>
 const char* Foam::NamedEnum
 <
-    Foam::functionObjects::abortCalculation::actionType,
+    Foam::functionObjects::abort::actionType,
     3
 >::names[] =
 {
@@ -54,14 +54,14 @@ const char* Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::abortCalculation::actionType,
+    Foam::functionObjects::abort::actionType,
     3
-> Foam::functionObjects::abortCalculation::actionTypeNames_;
+> Foam::functionObjects::abort::actionTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::abortCalculation::removeFile() const
+void Foam::functionObjects::abort::removeFile() const
 {
     bool hasAbort = isFile(abortFile_);
     reduce(hasAbort, orOp<bool>());
@@ -76,7 +76,7 @@ void Foam::functionObjects::abortCalculation::removeFile() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::abortCalculation::abortCalculation
+Foam::functionObjects::abort::abort
 (
     const word& name,
     const objectRegistry& obr,
@@ -97,7 +97,7 @@ Foam::functionObjects::abortCalculation::abortCalculation
 }
 
 
-bool Foam::functionObjects::abortCalculation::viable
+bool Foam::functionObjects::abort::viable
 (
     const word& name,
     const objectRegistry& obr,
@@ -112,13 +112,13 @@ bool Foam::functionObjects::abortCalculation::viable
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::abortCalculation::~abortCalculation()
+Foam::functionObjects::abort::~abort()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::abortCalculation::read(const dictionary& dict)
+void Foam::functionObjects::abort::read(const dictionary& dict)
 {
     if (dict.found("action"))
     {
@@ -136,7 +136,7 @@ void Foam::functionObjects::abortCalculation::read(const dictionary& dict)
 }
 
 
-void Foam::functionObjects::abortCalculation::execute()
+void Foam::functionObjects::abort::execute()
 {
     bool hasAbort = isFile(abortFile_);
     reduce(hasAbort, orOp<bool>());
@@ -185,17 +185,17 @@ void Foam::functionObjects::abortCalculation::execute()
 }
 
 
-void Foam::functionObjects::abortCalculation::end()
+void Foam::functionObjects::abort::end()
 {
     removeFile();
 }
 
 
-void Foam::functionObjects::abortCalculation::timeSet()
+void Foam::functionObjects::abort::timeSet()
 {}
 
 
-void Foam::functionObjects::abortCalculation::write()
+void Foam::functionObjects::abort::write()
 {}
 
 
