@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::writeRegisteredObject
 
 Group
-    grpIOFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     This function object allows specification of different writing frequency

@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::wallShearStress
 
 Group
-    grpUtilitiesFunctionObjects
+    grpForcesFunctionObjects
 
 Description
     This function object evaluates and outputs the shear stress at wall

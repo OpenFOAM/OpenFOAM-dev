@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::abort
 
 Group
-    grpJobControlFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     Watches for presence of the named file in the $FOAM_CASE directory

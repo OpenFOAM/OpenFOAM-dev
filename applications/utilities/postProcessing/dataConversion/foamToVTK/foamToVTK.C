@@ -191,7 +191,7 @@ void print(Ostream& os, const wordList& flds)
 labelList getSelectedPatches
 (
     const polyBoundaryMesh& patches,
-    const List<wordRe>& excludePatches  //HashSet<word>& excludePatches
+    const List<wordRe>& excludePatches
 )
 {
     DynamicList<label> patchIDs(patches.size());
@@ -205,7 +205,7 @@ labelList getSelectedPatches
         if
         (
             isType<emptyPolyPatch>(pp)
-            || (Pstream::parRun() && isType<processorPolyPatch>(pp))
+         || (Pstream::parRun() && isType<processorPolyPatch>(pp))
         )
         {
             Info<< "    discarding empty/processor patch " << patchi

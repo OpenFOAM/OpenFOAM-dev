@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::removeRegisteredObject
 
 Group
-    grpIOFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     This function object removes registered objects if present in the database

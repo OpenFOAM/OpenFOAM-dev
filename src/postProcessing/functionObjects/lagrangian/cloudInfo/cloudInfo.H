@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::cloudInfo
 
 Group
-    grpCloudFunctionObjects
+    grpLagrangianFunctionObjects
 
 Description
     This function object outputs Lagrangian cloud information to a file.  The

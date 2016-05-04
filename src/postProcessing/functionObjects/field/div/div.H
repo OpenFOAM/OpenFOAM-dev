@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::div
 
 Group
-    grpFVFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates the divergence of a field.  The operation is

@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::partialWrite
 
 Group
-    grpIOFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     This function object allows user-selected fields/registered objects to be

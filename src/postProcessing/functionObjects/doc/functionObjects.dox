@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,12 +36,9 @@ utility.
 
 \linebreak
 The current range of features comprises of:
-- \ref grpCloudFunctionObjects
+- \ref grpLagrangianFunctionObjects
 - \ref grpFieldFunctionObjects
 - \ref grpForcesFunctionObjects
-- \ref grpFVFunctionObjects
-- \ref grpIOFunctionObjects
-- \ref grpJobControlFunctionObjects
 - \ref grpUtilitiesFunctionObjects
 
 \linebreak
@@ -78,7 +75,7 @@ Where:
     region   | name of region for multi-region cases | no       |
     enabled  | on/off switch                         | no       | yes
     timeStart| start time                            | no       |
-    timeEnd  | end time                              | no       | 
+    timeEnd  | end time                              | no       |
     outputControl | when to output: either 'outputTime' or 'timeStep'| no | timeStep
     outputInterval| steps between output when outputControl=timeStep | no | 1
 \endtable
@@ -88,7 +85,7 @@ typically used as the name of the output directory for any derived data.  The
 \c type entry defines the type of function object properties that follow.
 Since the function objects are packaged into separate libraries, the user must
 tell the code where to find the function object implementation, identified
-using the \c libs entry.  
+using the \c libs entry.
 
 
 \*---------------------------------------------------------------------------*/

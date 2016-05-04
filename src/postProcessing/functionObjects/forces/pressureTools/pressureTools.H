@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::pressureTools
 
 Group
-    grpUtilitiesFunctionObjects
+    grpForcesFunctionObjects
 
 Description
     This function object includes tools to manipulate the pressure into

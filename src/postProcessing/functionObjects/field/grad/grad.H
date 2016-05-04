@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::grad
 
 Group
-    grpFVFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates the gradient of a field.  The operation is

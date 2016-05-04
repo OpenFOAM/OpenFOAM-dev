@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::mag
 
 Group
-    grpFVFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates the magnitude of a field.  The operation
