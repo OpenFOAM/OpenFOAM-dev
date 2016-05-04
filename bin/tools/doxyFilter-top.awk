@@ -31,16 +31,17 @@
 #       block documents the application itself.
 #
 #------------------------------------------------------------------------------
+
 BEGIN {
     state = 0
 }
 
-# a '/*' at the beginning of a line starts a comment block
+# A '/*' at the beginning of a line starts a comment block
 /^ *\/\*/ {
    state++
 }
 
-# check first line
+# Check first line
 # either started with a comment or skip documentation for the whole file
 FNR == 1 {
    if (!state)
@@ -50,7 +51,7 @@ FNR == 1 {
    }
 }
 
-# a '*/' ends the comment block
+# A '*/' ends the comment block
 # skip documentation for rest of the file
 /\*\// {
     if (state == 1)
@@ -62,7 +63,7 @@ FNR == 1 {
     next
 }
 
-# print everything within the first comment block
+# Print everything within the first comment block
 {
     if (state)
     {

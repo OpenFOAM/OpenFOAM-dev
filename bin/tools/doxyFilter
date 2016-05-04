@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -47,7 +47,6 @@ then
         filePath=$realFilePath
     fi
 
-    # dirName=$(echo "$filePath" | sed -e 's@/[^/]*$@@' )
     dirName=${filePath%/[^/]*}
     fileName=${filePath##*/}
 
@@ -57,9 +56,6 @@ then
     */applications/solvers/*.C | */applications/utilities/*.C )
         awkScript=$WM_PROJECT_DIR/bin/tools/doxyFilter-top.awk
         ;;
-#    */applications/solvers/*.H | */applications/utilities/*.H )
-#        awkScript=$WM_PROJECT_DIR/bin/tools/doxyFilter-ignore.awk
-#        ;;
     esac
 
     awk -f $WM_PROJECT_DIR/bin/tools/doxyFilter-table.awk $1 | \
@@ -70,4 +66,5 @@ then
         -e s@%fileName%@$fileName@g \
         -e s@%dirName%@$dirName@g
 fi
+
 #------------------------------------------------------------------------------

@@ -31,6 +31,7 @@
 #       to skip documenting all classes/variables
 #
 #------------------------------------------------------------------------------
+
 BEGIN {
    print "//! @file %filePath%"
    print "//! @cond OpenFOAMIgnoreAppDoxygen"
@@ -41,4 +42,5 @@ BEGIN {
 END {
    print "//! @endcond"
 }
+
 #------------------------------------------------------------------------------

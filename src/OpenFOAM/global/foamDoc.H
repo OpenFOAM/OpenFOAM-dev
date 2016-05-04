@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-\mainpage OpenFOAM&reg;: open source CFD
+\mainpage OpenFOAM&reg;: Open-Source CFD
 
 \section about About OpenFOAM
 
@@ -36,29 +36,24 @@ License
     turbulence and heat transfer, to solid dynamics and electromagnetics.
     <a href="http://www.openfoam.org/features">More ...</a>
 
+\section layout OpenFOAM Directory Structure
 
-\section layout Code Layout
-
-    The OpenFOAM source code comprises of four main components:
+    OpenFOAM comprises of four main directories:
     - src:
-        the core OpenFOAM source code
+        The core OpenFOAM libraries
 
     - applications:
-        collections of library functionality wrapped up into applications,
-        such as solvers and utilities
+        Solvers and utilities
 
     - tutorials:
-        a suite of test cases that highlight a broad cross-section of
-        OpenFOAM's capabilities
+        Test-cases that demonstrate a wide-range of OpenFOAM functionality
 
     - doc:
-        supporting documentation
+        Documentation
 
-
-\section usingTheCode Using the code
+\section usingOpenFOAM Using OpenFOAM
 
     - \subpage pagePostProcessing
-    - \subpage pageBoundaryConditions
-
+    - Post-processing using Foam::functionObjects
 
 \*---------------------------------------------------------------------------*/

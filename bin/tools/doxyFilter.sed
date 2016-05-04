@@ -7,7 +7,7 @@
 #     equivalent
 #------------------------------------------------------------------------------
 
-# new FSF address
+# New FSF address
 /^License/,/\*\//{
 /^License/,\%http://www.gnu.org/licenses%{
 s?^License.*?\*\/\
@@ -26,7 +26,7 @@ s?^License.*?\*\/\
 }
 
 
-# remove entry
+# Remove entry
 /^Application *$/{
 N
 N
@@ -34,7 +34,7 @@ d
 }
 
 
-# remove entry
+# Remove entry
 /^Global *$/{
 N
 N
@@ -79,7 +79,7 @@ s/Class *\n *\(.*\) */\\class \1/
 # Group
 #     groupName
 # =>
-# \ingroup namespaceName
+# \ingroup groupName
 #
 /^Group *$/,/^[^ ]/{
 s/^Group//
@@ -108,7 +108,7 @@ s/^    /\\typedef /
 }
 
 
-# add anchor and use \brief
+# Add anchor and use \brief
 # the first paragraph will be 'brief' and the others 'detail'
 /^Description *$/,/^[^ ]/{
 /^Description/c\
@@ -136,7 +136,7 @@ s/^    //
 }
 
 
-# remove ToDo paragraph to avoid them showing on related pages
+# Remove ToDo paragraph to avoid them showing on related pages
 /^To[Dd]o *$/,/^[^ ]/{
 s/^To[Dd]o *$//
 s/^    .*//
@@ -174,10 +174,10 @@ s? *\([a-zA-Z0-9]*\.[a-zA-Z]*\)?  <li><a href="%dirName%/\1">\1</a></li>?
 s/.*\*\//\*\//
 
 
-# convert /heading in source files to bold font and add some space
+# Convert /heading in source files to bold font and add some space
 s#\\heading \(.*\)#<br><b>\1</b>#g
 
-# add a linebreak
+# Add a linebreak
 s#\\linebreak#<br>#g
 
 }

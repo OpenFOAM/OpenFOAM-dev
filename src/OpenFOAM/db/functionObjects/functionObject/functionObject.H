@@ -21,6 +21,70 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Namespace
+    Foam::functionObjects
+
+Description
+    Namespace for functionObjects.
+
+    OpenFOAM includes a collection of functionObjects selected by the user at
+    run-time to manipulate the simulation and provide mechanisms to extract
+    field and derived quantities.  Alternatively, the same actions can be
+    executed after the simulation using the \c execFlowFunctionObjects utility.
+
+    \linebreak
+    The current range of features are sub-divided into the following categories:
+    - \ref grpLagrangianFunctionObjects
+    - \ref grpFieldFunctionObjects
+    - \ref grpForcesFunctionObjects
+    - \ref grpUtilitiesFunctionObjects
+
+    \linebreak
+    \subsection secFunctionObjects Using function objects
+
+    FunctionObjects are selected by additional entries in the
+    $FOAM_CASE/system/controlDict dictionary.  Each object is listed in the \c
+    functions sub-dictionary, e.g. to select the \c functionObjectType
+    functionObject the following entry would be specified:
+
+    \verbatim
+        functions
+        {
+            myFunctionObject    // Name of functionObject entry
+            {
+                type                functionObjectType;
+                functionObjectLibs  ("libMyFunctionObjectlib.so");
+                region              defaultRegion;
+                enabled             yes;
+                timeStart           0;
+                timeEnd             10;
+                outputControl       outputTime;
+                outputInterval      1;
+                ...
+            }
+        }
+    \endverbatim
+
+    Where:
+    \table
+        Property | Description                       | Required | Default value
+        type     | Type of function object               | yes      |
+        functionObjectLibs | Libraries containing object implementation | yes |
+        region   | Name of region for multi-region cases | no       |
+        enabled  | On/off switch                         | no       | yes
+        timeStart| Start time                            | no       |
+        timeEnd  | End time                              | no       |
+        outputControl | Either 'outputTime' or 'timeStep'| no | timeStep
+        outputInterval| Steps between output for outputControl=timeStep | no | 1
+    \endtable
+
+    The sub-dictionary name \c myFunctionObject is chosen by the user, and is
+    typically used as the name of the output directory for any data written by
+    the functionObject.  The \c type entry defines the type of function object
+    properties that follow.  FunctionObjects are packaged into separate
+    libraries and the \c libs entry is used to specify which library
+    should be loaded.
+
 Class
     Foam::functionObject
 

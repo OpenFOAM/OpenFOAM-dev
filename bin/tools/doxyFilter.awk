@@ -52,16 +52,15 @@ BEGIN {
     next
 }
 
-
 /^ *\/\// {
-    # start comment block
+    # Start comment block
     if (state == 1)
     {
         printf "/*! "
         state = 2
     }
 
-    # inside comment block
+    # Inside comment block
     if (state == 2)
     {
         if (!sub(/^ *\/\/  /, ""))
@@ -74,9 +73,8 @@ BEGIN {
     next
 }
 
-
 {
-    # end comment block
+    # End comment block
     if (state == 2)
     {
         printf "*/ "
