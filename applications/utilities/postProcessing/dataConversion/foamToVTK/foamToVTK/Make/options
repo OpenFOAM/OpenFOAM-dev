@@ -1,11 +1,9 @@
 EXE_INC = \
-    -IfoamToVTK/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
-EXE_LIBS = \
-    -lfoamToVTK \
+LIB_LIBS = \
     -lfiniteVolume \
     -llagrangian \
     -lgenericPatchFields \

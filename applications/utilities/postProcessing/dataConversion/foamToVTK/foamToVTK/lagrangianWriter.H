@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,47 +21,95 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InClass
-    Foam::readFields
+Class
+    Foam::lagrangianWriter
 
 Description
+    Write fields (internal).
 
 SourceFiles
-    readFields.C
+    lagrangianWriter.C
+    lagrangianWriterTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef readFields_H
-#define readFields_H
+#ifndef lagrangianWriter_H
+#define lagrangianWriter_H
 
-#include "fvMesh.H"
-#include "PtrList.H"
-#include "IOobjectList.H"
-#include "HashSet.H"
+#include "OFstream.H"
+#include "Cloud.H"
+#include "volFields.H"
+#include "pointFields.H"
+#include "vtkMesh.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Read the fields and optionally subset and put on the pointer list
-template<class GeoField>
-void readFields
-(
-    const vtkMesh& vMesh,
-    const typename GeoField::Mesh& mesh,
-    const IOobjectList& objects,
-    const HashSet<word>& selectedFields,
-    PtrList<GeoField>& fields
-);
+class volPointInterpolation;
+
+/*---------------------------------------------------------------------------*\
+                           Class lagrangianWriter Declaration
+\*---------------------------------------------------------------------------*/
+
+class lagrangianWriter
+{
+    const vtkMesh& vMesh_;
+
+    const bool binary_;
+
+    const fileName fName_;
+
+    const word cloudName_;
+
+    std::ofstream os_;
+
+    label nParcels_;
+
+
+public:
+
+    // Constructors
+
+        //- Construct from components
+        lagrangianWriter
+        (
+            const vtkMesh&,
+            const bool binary,
+            const fileName&,
+            const word&,
+            const bool dummyCloud
+        );
+
+
+    // Member Functions
+
+        std::ofstream& os()
+        {
+            return os_;
+        }
+
+        void writeParcelHeader(const label nFields);
+
+        //- Write IOField
+        template<class Type>
+        void writeIOField(const wordList&);
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "readFields.C"
+    #include "lagrangianWriterTemplates.C"
 #endif
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

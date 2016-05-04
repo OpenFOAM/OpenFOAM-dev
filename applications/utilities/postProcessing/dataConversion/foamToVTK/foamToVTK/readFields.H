@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,39 +22,46 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 InClass
-    Foam::writeFaceSet
+    Foam::readFields
 
 Description
-    Write faceSet to vtk polydata file. Only one data which is original
-    faceID.
 
 SourceFiles
-    writeFaceSet.C
+    readFields.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef writeFaceSet_H
-#define writeFaceSet_H
+#ifndef readFields_H
+#define readFields_H
 
-#include "vtkMesh.H"
-#include "faceSet.H"
+#include "fvMesh.H"
+#include "PtrList.H"
+#include "IOobjectList.H"
+#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Write lagrangian fields.
-void writeFaceSet
+// Read the fields and optionally subset and put on the pointer list
+template<class GeoField>
+void readFields
 (
-    const bool binary,
     const vtkMesh& vMesh,
-    const faceSet& set,
-    const fileName& fileName
+    const typename GeoField::Mesh& mesh,
+    const IOobjectList& objects,
+    const HashSet<word>& selectedFields,
+    PtrList<GeoField>& fields
 );
 
 } // End namespace Foam
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "readFields.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

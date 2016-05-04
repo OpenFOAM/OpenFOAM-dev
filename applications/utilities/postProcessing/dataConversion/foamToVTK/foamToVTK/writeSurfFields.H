@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,61 +21,43 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InClass
+    Foam::writeSurfFields
+
+Description
+    Write a patch with its data.
+
+SourceFiles
+    writeSurfFields.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "readFields.H"
-#include "IOobjectList.H"
+#ifndef writeSurfFields_H
+#define writeSurfFields_H
+
+#include "vtkMesh.H"
+#include "surfaceMesh.H"
+#include "surfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
-
-template<class GeoField>
-void readFields
+// Write surface vector fields
+void writeSurfFields
 (
+    const bool binary,
     const vtkMesh& vMesh,
-    const typename GeoField::Mesh& mesh,
-    const IOobjectList& objects,
-    const HashSet<word>& selectedFields,
-    PtrList<GeoField>& fields
-)
-{
-    // Search list of objects for volScalarFields
-    IOobjectList fieldObjects(objects.lookupClass(GeoField::typeName));
+    const fileName& fileName,
+    const PtrList<surfaceVectorField>& surfVectorFields
+);
 
-    // Construct the vol scalar fields
-    fields.setSize(fieldObjects.size());
-    label nFields = 0;
-
-    forAllIter(IOobjectList, fieldObjects, iter)
-    {
-        if (selectedFields.empty() || selectedFields.found(iter()->name()))
-        {
-            fields.set
-            (
-                nFields,
-                vMesh.interpolate
-                (
-                    GeoField
-                    (
-                        *iter(),
-                        mesh
-                    )
-                )
-            );
-            nFields++;
-        }
-    }
-
-    fields.setSize(nFields);
-}
+} // End namespace Foam
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+#endif
 
 // ************************************************************************* //
