@@ -25,7 +25,7 @@ Class
     Foam::probes
 
 Group
-    grpFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     Set of locations to sample.

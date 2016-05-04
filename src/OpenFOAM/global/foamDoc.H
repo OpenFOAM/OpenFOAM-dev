@@ -53,7 +53,7 @@ License
 
 \section usingOpenFOAM Using OpenFOAM
 
-    - \subpage pagePostProcessing
-    - Post-processing using Foam::functionObjects
+    - \ref grpFunctionObjects namespace Foam::functionObjects
+    - \subpage pageBoundaryConditions
 
 \*---------------------------------------------------------------------------*/

@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::systemCall
 
 Group
-    grpFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     This function object executes system calls, entered in the form of a

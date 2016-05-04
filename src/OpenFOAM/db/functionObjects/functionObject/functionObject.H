@@ -33,13 +33,6 @@ Description
     executed after the simulation using the \c execFlowFunctionObjects utility.
 
     \linebreak
-    The current range of features are sub-divided into the following categories:
-    - \ref grpLagrangianFunctionObjects
-    - \ref grpFieldFunctionObjects
-    - \ref grpForcesFunctionObjects
-    - \ref grpUtilitiesFunctionObjects
-
-    \linebreak
     \subsection secFunctionObjects Using function objects
 
     FunctionObjects are selected by additional entries in the

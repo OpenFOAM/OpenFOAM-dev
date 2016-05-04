@@ -25,7 +25,7 @@ Class
     Foam::sampledSet
 
 Group
-    grpFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     Holds list of sampling points which is filled at construction time.

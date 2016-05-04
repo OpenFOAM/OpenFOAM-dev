@@ -25,7 +25,7 @@ Class
     Foam::sampledSurface
 
 Group
-    grpFunctionObjects
+    grpUtilitiesFunctionObjects
 
 Description
     An abstract class for surfaces with sampling.
