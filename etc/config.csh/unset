@@ -37,23 +37,10 @@ if ( $?WM_PROJECT_DIR ) then
     if ( ! -f "$foamClean" || ! -x "$foamClean" ) unset foamClean
 endif
 
-set foamOldDirs=""
-
-# The old dirs to be cleaned from the various environment variables
-# - remove anything under top-level directory.
-# NB: the WM_PROJECT_INST_DIR might not be identical between versions
-#
-if ( $?WM_PROJECT_INST_DIR ) then
-    set foamOldDirs="$WM_PROJECT_INST_DIR"
-endif
-
-if ( $?WM_PROJECT ) then
-    set foamOldDirs="$HOME/$WM_PROJECT/$LOGNAME $foamOldDirs"
-endif
-
-if ( $?WM_PROJECT_SITE ) then
-    set foamOldDirs="$WM_PROJECT_SITE $foamOldDirs"
-endif
+# The old dirs to be cleaned from the environment variables
+set foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR \
+    $HOME/$WM_PROJECT/$LOGNAME $WM_PROJECT_SITE \
+    $FOAM_SITE_APPBIN $FOAM_SITE_LIBBIN $ParaView_DIR"
 
 
 #------------------------------------------------------------------------------
@@ -64,12 +51,15 @@ unsetenv WM_ARCH_OPTION
 unsetenv WM_CC
 unsetenv WM_CFLAGS
 unsetenv WM_COMPILER
+unsetenv WM_COMPILER_TYPE
 unsetenv WM_COMPILER_LIB_ARCH
 unsetenv WM_COMPILE_OPTION
 unsetenv WM_CXX
 unsetenv WM_CXXFLAGS
 unsetenv WM_DIR
 unsetenv WM_HOSTS
+unsetenv WM_LABEL_OPTION
+unsetenv WM_LABEL_SIZE
 unsetenv WM_LDFLAGS
 unsetenv WM_LINK_LANGUAGE
 unsetenv WM_MPLIB
@@ -126,6 +116,8 @@ unsetenv ENSIGHT9_READER
 unsetenv CMAKE_HOME
 unsetenv ParaView_DIR
 unsetenv ParaView_INCLUDE_DIR
+unsetenv ParaView_MAJOR
+unsetenv ParaView_VERSION
 unsetenv PV_PLUGIN_PATH
 
 
