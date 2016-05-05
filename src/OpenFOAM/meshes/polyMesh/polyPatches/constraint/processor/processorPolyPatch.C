@@ -273,10 +273,10 @@ void Foam::processorPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
                 label vertI = 0;
 
-                forAll(faceCentres(), facei)
+                forAll(faceCentres(), facej)
                 {
-                    const point& c0 = neighbFaceCentres_[facei];
-                    const point& c1 = faceCentres()[facei];
+                    const point& c0 = neighbFaceCentres_[facej];
+                    const point& c1 = faceCentres()[facej];
 
                     writeOBJ(ccStr, c0, c1, vertI);
                 }
