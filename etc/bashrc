@@ -104,15 +104,9 @@ export FOAM_SIGFPE=
 
 ################################################################################
 
-# The old dirs to be cleaned from the various environment variables
-# - remove anything under top-level directory.
-# NB: the WM_PROJECT_INST_DIR might not be identical between versions
-foamOldDirs="$FOAM_INST_DIR $WM_PROJECT_SITE $HOME/$WM_PROJECT/$USER"
-if [ "$WM_PROJECT_INST_DIR" != "$FOAM_INST_DIR" ]
-then
-    foamOldDirs="$WM_PROJECT_INST_DIR $foamOldDirs"
-fi
-
+# The old dirs to be cleaned from the environment variables
+foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR \
+    $WM_PROJECT_SITE $HOME/$WM_PROJECT/$USER"
 
 # Location of installation
 # ~~~~~~~~~~~~~~~~~~~~~~~~

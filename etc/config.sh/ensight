@@ -30,7 +30,7 @@
 #
 #------------------------------------------------------------------------------
 
-# fallback value
+# Fallback value
 if [ ! -d "$CEI_HOME" ]
 then
     export CEI_HOME=/usr/local/ensight/CEI
@@ -39,13 +39,13 @@ fi
 if [ -r $CEI_HOME ]
 then
 
-    # special treatment for 32bit OpenFOAM and 64bit Ensight
+    # Special treatment for 32bit OpenFOAM and 64bit Ensight
     if [ "$WM_ARCH" = linux -a `uname -m` = x86_64 ]
     then
         export CEI_ARCH=linux_2.6_32
     fi
 
-    # add to path if required
+    # Add to path if required
     if [ "$CEI_HOME/bin/ensight" != "`which ensight 2>/dev/null`" ]
     then
         export PATH=$CEI_HOME/bin:$PATH

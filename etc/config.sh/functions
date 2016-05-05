@@ -54,7 +54,7 @@ then
         do
             case "$1" in
             -*)
-                # stray option (not meant for us here) -> get out
+                # Stray option (not meant for us here) -> get out
                 break
                 ;;
             *=)
@@ -68,7 +68,7 @@ then
                 eval "export $1"
                 ;;
             *)
-                # filename: source it
+                # Filename: source it
                 if [ -f "$1" ]
                 then
                     _foamSource "$1"

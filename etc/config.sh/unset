@@ -44,7 +44,7 @@ then
 fi
 
 #------------------------------------------------------------------------------
-# unset WM_* environment variables
+# Unset WM_* environment variables
 
 unset WM_ARCH
 unset WM_ARCH_OPTION
@@ -75,7 +75,7 @@ unset WM_THIRD_PARTY_DIR
 
 
 #------------------------------------------------------------------------------
-# unset FOAM_* environment variables
+# Unset FOAM_* environment variables
 
 unset FOAM_APPBIN
 unset FOAM_APP
@@ -100,14 +100,14 @@ unset FOAM_UTILITIES
 
 
 #------------------------------------------------------------------------------
-# unset MPI-related environment variables
+# Unset MPI-related environment variables
 
 unset MPI_ARCH_PATH
 unset MPI_BUFFER_SIZE
 unset OPAL_PREFIX
 
 #------------------------------------------------------------------------------
-# unset Ensight/ParaView-related environment variables
+# Unset Ensight/ParaView-related environment variables
 
 unset ENSIGHT9_READER
 unset CMAKE_HOME
@@ -117,7 +117,7 @@ unset PV_PLUGIN_PATH
 
 
 #------------------------------------------------------------------------------
-# cleanup environment
+# Cleanup environment
 # PATH, LD_LIBRARY_PATH, MANPATH
 
 if [ -n "$foamClean" ]
@@ -137,7 +137,7 @@ unset cleaned foamClean foamOldDirs
 
 
 #------------------------------------------------------------------------------
-# cleanup aliases
+# Cleanup aliases
 
 unalias wmSET
 unalias wm64
