@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # Remove surface
-\rm -f constant/triSurface/bullet.stl.gz
+rm -f constant/triSurface/bullet.stl.gz
 
 # Remove copy of 0.orig
 rm -rf 0

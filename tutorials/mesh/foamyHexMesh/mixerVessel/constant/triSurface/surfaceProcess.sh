@@ -2,7 +2,7 @@
 
 cd ${0%/*} || exit 1    # Run from this directory
 
-\cp rawSurfaces/*.stl .
+cp rawSurfaces/*.stl .
 
 
 # Vessel surface
@@ -25,10 +25,10 @@ surfaceOrient -inside shaft.stl "(0 0.1 1)" shaft.stl
 surfaceSplitByTopology stirrer.stl stirrer.stl
 surfaceOrient -inside stirrer.stl "(0 0.1 1)" stirrer.stl
 
-\mv stirrer_bafflePart_0.stl stirrer_baffles.stl
+mv stirrer_bafflePart_0.stl stirrer_baffles.stl
 
 surfaceCheck stirrer_baffles.stl
-\mv stirrer_baffles_0.obj stirrer_baffles_plate.obj
+mv stirrer_baffles_0.obj stirrer_baffles_plate.obj
 
 
 #------------------------------------------------------------------------------

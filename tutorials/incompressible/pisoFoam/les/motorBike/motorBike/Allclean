@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # remove surface
-\rm -f constant/triSurface/motorBike.obj.gz
+rm -f constant/triSurface/motorBike.obj.gz
 
 rm -rf 0 > /dev/null 2>&1
 

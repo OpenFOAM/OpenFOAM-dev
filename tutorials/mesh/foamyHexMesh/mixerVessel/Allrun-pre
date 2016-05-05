@@ -19,7 +19,7 @@ intersectSurfaces()
 # Set application name
 application=$(getApplication)
 
-\rm -rf 0
+rm -rf 0
 
 
 # Run the surface preparation script
@@ -71,7 +71,7 @@ done
 
 
 # Meshing
-\cp system/controlDict.mesh system/controlDict
+cp system/controlDict.mesh system/controlDict
 
 runApplication blockMesh -region backgroundMeshDecomposition
 
@@ -97,8 +97,8 @@ runApplication reconstructParMesh -latestTime
 # Copy the mesh from the latest time folder into polyMesh and delete that
 # latest time folder
 latestTime=$(foamListTimes -latestTime)
-\cp -r $latestTime/polyMesh constant
-\rm -rf $latestTime
+cp -r $latestTime/polyMesh constant
+rm -rf $latestTime
 
 
 #------------------------------------------------------------------------------
