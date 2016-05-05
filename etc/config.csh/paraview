@@ -33,11 +33,11 @@
 #     are required for building plugins
 #------------------------------------------------------------------------------
 
-# clean the PATH
+# Clean the PATH
 set cleaned=`$WM_PROJECT_DIR/bin/foamCleanPath "$PATH" "$ParaView_DIR $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake- $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-"`
 if ( $status == 0 ) setenv PATH $cleaned
 
-# determine the cmake to be used
+# Determine the cmake to be used
 unsetenv CMAKE_HOME
 foreach cmake ( cmake-3.2.1 cmake-2.8.12.1 cmake-2.8.8 cmake-2.8.4 cmake-2.8.3 cmake-2.8.1 )
     set cmake=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cmake
@@ -70,15 +70,15 @@ while ( $#argv > 0 )
 end
 
 
-# set MAJOR version to correspond to VERSION
+# Set MAJOR version to correspond to VERSION
 # ParaView_MAJOR is "<digits>.<digits>" from ParaView_VERSION
 switch ("$ParaView_VERSION")
 case "$ParaView_MAJOR".*:
-    # version and major appear to correspond
+    # Version and major appear to correspond
     breaksw
 
 case [0-9]*:
-    # extract major from the version
+    # Extract major from the version
     setenv ParaView_MAJOR `echo ${ParaView_VERSION} | \
         sed -e 's/^\([0-9][0-9]*\.[0-9][0-9]*\).*$/\1/'`
     breaksw
@@ -90,7 +90,7 @@ set paraviewArchName=ParaView-$ParaView_VERSION
 
 setenv ParaView_DIR $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$paraviewArchName
 
-# set paths if binaries or source are present
+# Set paths if binaries or source are present
 if ( -r $ParaView_DIR || -r $paraviewInstDir ) then
     setenv ParaView_INCLUDE_DIR $ParaView_DIR/include/paraview-${ParaView_MAJOR}
     if (! -r $ParaView_INCLUDE_DIR && -r $ParaView_DIR/include/paraview-3.0) then
@@ -112,7 +112,7 @@ if ( -r $ParaView_DIR || -r $paraviewInstDir ) then
     endif
 
 
-    # add in python libraries if required
+    # Add in python libraries if required
     set paraviewPython=$ParaView_DIR/Utilities/VTKPythonWrapping
     if ( -r $paraviewPython ) then
         if ($?PYTHONPATH) then
