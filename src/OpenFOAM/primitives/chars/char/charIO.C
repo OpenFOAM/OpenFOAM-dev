@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,19 +21,20 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Reads a char from an input stream, for a given version
-    number and File format. If an ascii File is being read, then the line
-    numbers are counted and an erroneous read is reported.
-
 \*---------------------------------------------------------------------------*/
-
-#include "error.H"
 
 #include "char.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+char Foam::readChar(Istream& is)
+{
+   char c;
+   is.read(c);
+   return c;
+}
+
 
 Foam::Istream& Foam::operator>>(Istream& is, char& c)
 {
@@ -48,14 +49,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const char c)
     os.write(c);
     os.check("Ostream& operator<<(Ostream&, const char)");
     return os;
-}
-
-
-char Foam::readChar(Istream& is)
-{
-   char c;
-   is.read(c);
-   return c;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,23 +25,38 @@ Primitive
     direction
 
 Description
-    Direction is an integer type used to represent the Cartesian directions
-    etc.  Currently it is a typedef to char which is limited to the range
-    (0, 255) which should be adequate.
+    Direction is an 8-bit unsigned integer type used to represent the Cartesian
+    directions etc.
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef direction_H
 #define direction_H
 
-#include "char.H"
+#define __STDC_LIMIT_MACROS
+#include <stdint.h>
+#include <iostream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef unsigned char direction;
-}
+
+class Istream;
+class Ostream;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+typedef uint8_t direction;
+
+direction readDirection(Istream&);
+Istream& operator>>(Istream&, direction&);
+Ostream& operator<<(Ostream&, const direction);
+std::ostream& operator<<(std::ostream&, const direction);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "int32.H"
+#include "direction.H"
 #include "IOstreams.H"
-
-#include <inttypes.h>
-#include <sstream>
-#include <cerrno>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::word Foam::name(const int32_t val)
+Foam::direction Foam::readDirection(Istream& is)
 {
-    std::ostringstream buf;
-    buf << val;
-    return buf.str();
+    direction val;
+    is >> val;
+
+    return val;
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Istream& Foam::operator>>(Istream& is, int32_t& i)
+Foam::Istream& Foam::operator>>(Istream& is, direction& d)
 {
     token t(is);
 
@@ -54,66 +49,38 @@ Foam::Istream& Foam::operator>>(Istream& is, int32_t& i)
 
     if (t.isLabel())
     {
-        i = int32_t(t.labelToken());
+        d = direction(t.labelToken());
     }
     else
     {
         is.setBad();
         FatalIOErrorInFunction(is)
-            << "wrong token type - expected int32_t, found " << t.info()
+            << "wrong token type - expected direction, found " << t.info()
             << exit(FatalIOError);
 
         return is;
     }
 
     // Check state of Istream
-    is.check("Istream& operator>>(Istream&, int32_t&)");
+    is.check("Istream& operator>>(Istream&, direction&)");
 
     return is;
 }
 
 
-int32_t Foam::readInt32(Istream& is)
+Foam::Ostream& Foam::operator<<(Ostream& os, const direction d)
 {
-    int32_t val;
-    is >> val;
-
-    return val;
-}
-
-
-bool Foam::read(const char* buf, int32_t& s)
-{
-    char *endptr = NULL;
-    errno = 0;
-    intmax_t l = strtoimax(buf, &endptr, 10);
-    s = int32_t(l);
-    return
-        (*endptr == 0) && (errno == 0)
-     && (l >= INT32_MIN) && (l <= INT32_MAX);
-}
-
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const int32_t i)
-{
-    os.write(label(i));
-    os.check("Ostream& operator<<(Ostream&, const int32_t)");
+    os.write(label(d));
+    os.check("Ostream& operator<<(Ostream&, const direction)");
     return os;
 }
 
 
-#if WM_ARCH_OPTION == 32
-Foam::Istream& Foam::operator>>(Istream& is, long& i)
+std::ostream& Foam::operator<<(std::ostream& os, const direction d)
 {
-    return operator>>(is, reinterpret_cast<int32_t&>(i));
-}
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const long i)
-{
-    os << int32_t(i);
+    os << int(d);
     return os;
 }
-#endif
 
 
 // ************************************************************************* //
