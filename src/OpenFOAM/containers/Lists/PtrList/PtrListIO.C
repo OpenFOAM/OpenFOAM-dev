@@ -182,29 +182,4 @@ Foam::Istream& Foam::operator>>(Istream& is, PtrList<T>& L)
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operators * * * * * * * * * * * * * //
-
-template<class T>
-Foam::Ostream& Foam::operator<<(Ostream& os, const PtrList<T>& L)
-{
-    // Write size and start delimiter
-    os  << nl << indent << L.size() << nl
-        << indent << token::BEGIN_LIST << incrIndent;
-
-    // Write contents
-    forAll(L, i)
-    {
-        os << nl << L[i];
-    }
-
-    // Write end delimiter
-    os << nl << decrIndent << indent << token::END_LIST << nl;
-
-    // Check state of IOstream
-    os.check("Ostream& operator<<(Ostream&, const PtrList&)");
-
-    return os;
-}
-
-
 // ************************************************************************* //

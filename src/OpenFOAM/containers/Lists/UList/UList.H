@@ -73,10 +73,10 @@ class UList
 {
     // Private data
 
-        //- Number of elements in UList.
+        //- Number of elements in UList
         label size_;
 
-        //- Vector of values of type T.
+        //- Vector of values of type T
         T* __restrict__ v_;
 
 
@@ -89,7 +89,7 @@ class UList
         //  of list derived from UList and it is confusing and prone to error
         //  for the default assignment to be either.  The solution is to
         //  disallow default assignment and provide separate 'shallowCopy' and
-        //  'deepCopy' member functions.
+        //  'deepCopy' member functions
         void operator=(const UList<T>&) = delete;
 
 
@@ -151,7 +151,7 @@ public:
 
     // Constructors
 
-        //- Null constructor.
+        //- Null constructor
         inline UList();
 
         //- Construct from components
@@ -180,58 +180,58 @@ public:
 
             //- Return a const pointer to the first data element,
             //  similar to the STL front() method and the string::data() method
-            //  This can be used (with caution) when interfacing with C code.
+            //  This can be used (with caution) when interfacing with C code
             inline const T* cdata() const;
 
             //- Return a pointer to the first data element,
             //  similar to the STL front() method and the string::data() method
-            //  This can be used (with caution) when interfacing with C code.
+            //  This can be used (with caution) when interfacing with C code
             inline T* data();
 
-            //- Return the first element of the list.
+            //- Return the first element of the list
             inline T& first();
 
-            //- Return first element of the list.
+            //- Return first element of the list
             inline const T& first() const;
 
-            //- Return the last element of the list.
+            //- Return the last element of the list
             inline T& last();
 
-            //- Return the last element of the list.
+            //- Return the last element of the list
             inline const T& last() const;
 
 
         // Check
 
-            //- Check start is within valid range (0 ... size-1).
+            //- Check start is within valid range (0 ... size-1)
             inline void checkStart(const label start) const;
 
-            //- Check size is within valid range (0 ... size).
+            //- Check size is within valid range (0 ... size)
             inline void checkSize(const label size) const;
 
-            //- Check index i is within valid range (0 ... size-1).
+            //- Check index i is within valid range (0 ... size-1)
             inline void checkIndex(const label i) const;
 
 
-        //- Copy the pointer held by the given UList.
+        //- Copy the pointer held by the given UList
         inline void shallowCopy(const UList<T>&);
 
-        //- Copy elements of the given UList.
+        //- Copy elements of the given UList
         void deepCopy(const UList<T>&);
 
-        //- Write the UList as a dictionary entry.
+        //- Write the UList as a dictionary entry
         void writeEntry(Ostream&) const;
 
-        //- Write the UList as a dictionary entry with keyword.
+        //- Write the UList as a dictionary entry with keyword
         void writeEntry(const word& keyword, Ostream&) const;
 
 
     // Member operators
 
-        //- Return element of UList.
+        //- Return element of UList
         inline T& operator[](const label);
 
-        //- Return element of constant UList.
+        //- Return element of constant UList
         //  Note that the bool specialization adds lazy evaluation so reading
         //  an out-of-range element returns false without any ill-effects
         inline const T& operator[](const label) const;
@@ -248,11 +248,11 @@ public:
 
     // STL type definitions
 
-        //- Type of values the UList contains.
+        //- Type of values the UList contains
         typedef T value_type;
 
         //- Type that can be used for storing into
-        //  UList::value_type objects.
+        //  UList::value_type objects
         typedef T& reference;
 
         //- Type that can be used for storing into
@@ -260,85 +260,85 @@ public:
         typedef const T& const_reference;
 
         //- The type that can represent the difference between any two
-        //  UList iterator objects.
+        //  UList iterator objects
         typedef label difference_type;
 
-        //- The type that can represent the size of a UList.
+        //- The type that can represent the size of a UList
         typedef label size_type;
 
 
     // STL iterator
 
-        //- Random access iterator for traversing UList.
+        //- Random access iterator for traversing UList
         typedef T* iterator;
 
-        //- Return an iterator to begin traversing the UList.
+        //- Return an iterator to begin traversing the UList
         inline iterator begin();
 
-        //- Return an iterator to end traversing the UList.
+        //- Return an iterator to end traversing the UList
         inline iterator end();
 
 
     // STL const_iterator
 
-        //- Random access iterator for traversing UList.
+        //- Random access iterator for traversing UList
         typedef const T* const_iterator;
 
-        //- Return const_iterator to begin traversing the constant UList.
+        //- Return const_iterator to begin traversing the constant UList
         inline const_iterator cbegin() const;
 
-        //- Return const_iterator to end traversing the constant UList.
+        //- Return const_iterator to end traversing the constant UList
         inline const_iterator cend() const;
 
-        //- Return const_iterator to begin traversing the constant UList.
+        //- Return const_iterator to begin traversing the constant UList
         inline const_iterator begin() const;
 
-        //- Return const_iterator to end traversing the constant UList.
+        //- Return const_iterator to end traversing the constant UList
         inline const_iterator end() const;
 
 
     // STL reverse_iterator
 
-        //- Reverse iterator for reverse traversal of UList.
+        //- Reverse iterator for reverse traversal of UList
         typedef T* reverse_iterator;
 
-        //- Return reverse_iterator to begin reverse traversing the UList.
+        //- Return reverse_iterator to begin reverse traversing the UList
         inline reverse_iterator rbegin();
 
-        //- Return reverse_iterator to end reverse traversing the UList.
+        //- Return reverse_iterator to end reverse traversing the UList
         inline reverse_iterator rend();
 
 
     // STL const_reverse_iterator
 
-        //- Reverse iterator for reverse traversal of constant UList.
+        //- Reverse iterator for reverse traversal of constant UList
         typedef const T* const_reverse_iterator;
 
-        //- Return const_reverse_iterator to begin reverse traversing the UList.
+        //- Return const_reverse_iterator to begin reverse traversing the UList
         inline const_reverse_iterator crbegin() const;
 
-        //- Return const_reverse_iterator to end reverse traversing the UList.
+        //- Return const_reverse_iterator to end reverse traversing the UList
         inline const_reverse_iterator crend() const;
 
-        //- Return const_reverse_iterator to begin reverse traversing the UList.
+        //- Return const_reverse_iterator to begin reverse traversing the UList
         inline const_reverse_iterator rbegin() const;
 
-        //- Return const_reverse_iterator to end reverse traversing the UList.
+        //- Return const_reverse_iterator to end reverse traversing the UList
         inline const_reverse_iterator rend() const;
 
 
     // STL member functions
 
-        //- Return the number of elements in the UList.
+        //- Return the number of elements in the UList
         inline label size() const;
 
-        //- Return size of the largest possible UList.
+        //- Return size of the largest possible UList
         inline label max_size() const;
 
-        //- Return true if the UList is empty (ie, size() is zero).
+        //- Return true if the UList is empty (ie, size() is zero)
         inline bool empty() const;
 
-        //- Swap two ULists of the same type in constant time.
+        //- Swap two ULists of the same type in constant time
         void swap(UList<T>&);
 
 
@@ -346,28 +346,28 @@ public:
 
         //- Equality operation on ULists of the same type.
         //  Returns true when the ULists are element-wise equal
-        //  (using UList::value_type::operator==).  Takes linear time.
+        //  (using UList::value_type::operator==).  Takes linear time
         bool operator==(const UList<T>&) const;
 
-        //- The opposite of the equality operation. Takes linear time.
+        //- The opposite of the equality operation. Takes linear time
         bool operator!=(const UList<T>&) const;
 
-        //- Compare two ULists lexicographically. Takes linear time.
+        //- Compare two ULists lexicographically. Takes linear time
         bool operator<(const UList<T>&) const;
 
-        //- Compare two ULists lexicographically. Takes linear time.
+        //- Compare two ULists lexicographically. Takes linear time
         bool operator>(const UList<T>&) const;
 
-        //- Return true if !(a > b). Takes linear time.
+        //- Return true if !(a > b). Takes linear time
         bool operator<=(const UList<T>&) const;
 
-        //- Return true if !(a < b). Takes linear time.
+        //- Return true if !(a < b). Takes linear time
         bool operator>=(const UList<T>&) const;
 
 
     // Ostream operator
 
-        // Write UList to Ostream.
+        // Write UList to Ostream
         friend Ostream& operator<< <T>
         (
             Ostream&,
@@ -375,7 +375,7 @@ public:
         );
 
         //- Read UList contents from Istream. Requires size to have been set
-        //  before.
+        //  before
         friend Istream& operator>> <T>
         (
             Istream&,
@@ -413,7 +413,7 @@ inline void reverse(UList<T>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "UListI.H"
+#include "UListI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

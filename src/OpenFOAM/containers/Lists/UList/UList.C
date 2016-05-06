@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-
 #include "UList.H"
 #include "ListLoopM.H"
 #include "contiguous.H"

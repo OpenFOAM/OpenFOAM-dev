@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-
 #include "PtrList.H"
 #include "SLPtrList.H"
 
@@ -33,25 +31,25 @@ License
 template<class T>
 Foam::PtrList<T>::PtrList()
 :
-    ptrs_()
+    UPtrList<T>()
 {}
 
 
 template<class T>
 Foam::PtrList<T>::PtrList(const label s)
 :
-    ptrs_(s, reinterpret_cast<T*>(0))
+    UPtrList<T>(s)
 {}
 
 
 template<class T>
 Foam::PtrList<T>::PtrList(const PtrList<T>& a)
 :
-    ptrs_(a.size())
+    UPtrList<T>(a.size())
 {
     forAll(*this, i)
     {
-        ptrs_[i] = (a[i]).clone().ptr();
+        this->ptrs_[i] = (a[i]).clone().ptr();
     }
 }
 
@@ -60,11 +58,11 @@ template<class T>
 template<class CloneArg>
 Foam::PtrList<T>::PtrList(const PtrList<T>& a, const CloneArg& cloneArg)
 :
-    ptrs_(a.size())
+    UPtrList<T>(a.size())
 {
     forAll(*this, i)
     {
-        ptrs_[i] = (a[i]).clone(cloneArg).ptr();
+        this->ptrs_[i] = (a[i]).clone(cloneArg).ptr();
     }
 }
 
@@ -79,13 +77,13 @@ Foam::PtrList<T>::PtrList(const Xfer<PtrList<T>>& lst)
 template<class T>
 Foam::PtrList<T>::PtrList(PtrList<T>& a, bool reuse)
 :
-    ptrs_(a.ptrs_, reuse)
+    UPtrList<T>(a, reuse)
 {
     if (!reuse)
     {
         forAll(*this, i)
         {
-            ptrs_[i] = (a[i]).clone().ptr();
+            this->ptrs_[i] = (a[i]).clone().ptr();
         }
     }
 }
@@ -94,7 +92,7 @@ Foam::PtrList<T>::PtrList(PtrList<T>& a, bool reuse)
 template<class T>
 Foam::PtrList<T>::PtrList(const SLPtrList<T>& sll)
 :
-    ptrs_(sll.size())
+    UPtrList<T>(sll.size())
 {
     if (sll.size())
     {
@@ -106,7 +104,7 @@ Foam::PtrList<T>::PtrList(const SLPtrList<T>& sll)
             ++iter
         )
         {
-            ptrs_[i++] = (iter()).clone().ptr();
+            this->ptrs_[i++] = (iter()).clone().ptr();
         }
     }
 }
@@ -119,9 +117,9 @@ Foam::PtrList<T>::~PtrList()
 {
     forAll(*this, i)
     {
-        if (ptrs_[i])
+        if (this->ptrs_[i])
         {
-            delete ptrs_[i];
+            delete this->ptrs_[i];
         }
     }
 }
@@ -140,7 +138,7 @@ void Foam::PtrList<T>::setSize(const label newSize)
             << abort(FatalError);
     }
 
-    label oldSize = size();
+    label oldSize = this->size();
 
     if (newSize == 0)
     {
@@ -151,22 +149,22 @@ void Foam::PtrList<T>::setSize(const label newSize)
         label i;
         for (i=newSize; i<oldSize; i++)
         {
-            if (ptrs_[i])
+            if (this->ptrs_[i])
             {
-                delete ptrs_[i];
+                delete this->ptrs_[i];
             }
         }
 
-        ptrs_.setSize(newSize);
+        this->ptrs_.setSize(newSize);
     }
     else // newSize > oldSize
     {
-        ptrs_.setSize(newSize);
+        this->ptrs_.setSize(newSize);
 
         label i;
         for (i=oldSize; i<newSize; i++)
         {
-            ptrs_[i] = NULL;
+            this->ptrs_[i] = NULL;
         }
     }
 }
@@ -177,13 +175,13 @@ void Foam::PtrList<T>::clear()
 {
     forAll(*this, i)
     {
-        if (ptrs_[i])
+        if (this->ptrs_[i])
         {
-            delete ptrs_[i];
+            delete this->ptrs_[i];
         }
     }
 
-    ptrs_.clear();
+    this->ptrs_.clear();
 }
 
 
@@ -191,33 +189,33 @@ template<class T>
 void Foam::PtrList<T>::transfer(PtrList<T>& a)
 {
     clear();
-    ptrs_.transfer(a.ptrs_);
+    this->ptrs_.transfer(a.ptrs_);
 }
 
 
 template<class T>
 void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
 {
-    if (oldToNew.size() != size())
+    if (oldToNew.size() != this->size())
     {
         FatalErrorInFunction
             << "Size of map (" << oldToNew.size()
-            << ") not equal to list size (" << size()
+            << ") not equal to list size (" << this->size()
             << ") for type " << typeid(T).name()
             << abort(FatalError);
     }
 
-    List<T*> newPtrs_(ptrs_.size(), reinterpret_cast<T*>(0));
+    List<T*> newPtrs_(this->ptrs_.size(), reinterpret_cast<T*>(0));
 
     forAll(*this, i)
     {
         label newI = oldToNew[i];
 
-        if (newI < 0 || newI >= size())
+        if (newI < 0 || newI >= this->size())
         {
             FatalErrorInFunction
                 << "Illegal index " << newI << nl
-                << "Valid indices are 0.." << size()-1
+                << "Valid indices are 0.." << this->size()-1
                 << " for type " << typeid(T).name()
                 << abort(FatalError);
         }
@@ -229,7 +227,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
                 << " already set for type " << typeid(T).name()
                 << abort(FatalError);
         }
-        newPtrs_[newI] = ptrs_[i];
+        newPtrs_[newI] = this->ptrs_[i];
     }
 
     forAll(newPtrs_, i)
@@ -242,7 +240,7 @@ void Foam::PtrList<T>::reorder(const labelUList& oldToNew)
         }
     }
 
-    ptrs_.transfer(newPtrs_);
+    this->ptrs_.transfer(newPtrs_);
 }
 
 
@@ -258,16 +256,16 @@ void Foam::PtrList<T>::operator=(const PtrList<T>& a)
             << abort(FatalError);
     }
 
-    if (size() == 0)
+    if (this->size() == 0)
     {
         setSize(a.size());
 
         forAll(*this, i)
         {
-            ptrs_[i] = (a[i]).clone().ptr();
+            this->ptrs_[i] = (a[i]).clone().ptr();
         }
     }
-    else if (a.size() == size())
+    else if (a.size() == this->size())
     {
         forAll(*this, i)
         {
