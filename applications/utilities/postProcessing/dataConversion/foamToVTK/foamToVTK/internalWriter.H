@@ -91,7 +91,7 @@ public:
         template<class Type, template<class> class PatchField, class GeoMesh>
         void write
         (
-            const PtrList<GeometricField<Type, PatchField, GeoMesh>>&
+            const UPtrList<const GeometricField<Type, PatchField, GeoMesh>>&
         );
 
         //- Interpolate and write volFields
@@ -99,7 +99,7 @@ public:
         void write
         (
             const volPointInterpolation&,
-            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>&
         );
 };
 

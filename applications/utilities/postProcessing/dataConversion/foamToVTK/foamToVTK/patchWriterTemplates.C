@@ -31,14 +31,14 @@ License
 template<class Type>
 void Foam::patchWriter::write
 (
-    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds
+    const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>& flds
 )
 {
     forAll(flds, fieldi)
     {
         const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldi];
 
-        os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
+        os_ << fld.name() << ' ' << int(pTraits<Type>::nComponents) << ' '
             << nFaces_ << " float" << std::endl;
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nFaces_);
@@ -66,7 +66,7 @@ void Foam::patchWriter::write
 template<class Type>
 void Foam::patchWriter::write
 (
-    const PtrList<GeometricField<Type, pointPatchField, pointMesh>>& flds
+    const UPtrList<const GeometricField<Type, pointPatchField, pointMesh>>& flds
 )
 {
     forAll(flds, fieldi)
@@ -74,7 +74,7 @@ void Foam::patchWriter::write
         const GeometricField<Type, pointPatchField, pointMesh>& fld =
             flds[fieldi];
 
-        os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
+        os_ << fld.name() << ' ' << int(pTraits<Type>::nComponents) << ' '
             << nPoints_ << " float" << std::endl;
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nPoints_);
@@ -96,14 +96,14 @@ template<class Type>
 void Foam::patchWriter::write
 (
     const PrimitivePatchInterpolation<primitivePatch>& pInter,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds
+    const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>& flds
 )
 {
     forAll(flds, fieldi)
     {
         const GeometricField<Type, fvPatchField, volMesh>& fld = flds[fieldi];
 
-        os_ << fld.name() << ' ' << pTraits<Type>::nComponents << ' '
+        os_ << fld.name() << ' ' << int(pTraits<Type>::nComponents) << ' '
             << nPoints_ << " float" << std::endl;
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nPoints_);

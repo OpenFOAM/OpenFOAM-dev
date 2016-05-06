@@ -50,7 +50,7 @@ void writeSurfFields
     const bool binary,
     const vtkMesh& vMesh,
     const fileName& fileName,
-    const PtrList<surfaceVectorField>& surfVectorFields
+    const UPtrList<const surfaceVectorField>& surfVectorFields
 );
 
 } // End namespace Foam

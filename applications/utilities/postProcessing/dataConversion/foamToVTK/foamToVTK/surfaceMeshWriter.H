@@ -99,7 +99,10 @@ public:
         template<class Type>
         void write
         (
-            const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>&
+            const UPtrList
+            <
+                const GeometricField<Type, fvsPatchField, surfaceMesh>
+            >&
         );
 };
 

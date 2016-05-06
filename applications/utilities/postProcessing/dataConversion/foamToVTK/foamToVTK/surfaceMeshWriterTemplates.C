@@ -63,7 +63,10 @@ Foam::tmp<Field<Type>> Foam::surfaceMeshWriter::getFaceField
 template<class Type>
 void Foam::surfaceMeshWriter::write
 (
-    const PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
+    const UPtrList
+    <
+        const GeometricField<Type, fvsPatchField, surfaceMesh>
+    >& sflds
 )
 {
     forAll(sflds, fieldi)

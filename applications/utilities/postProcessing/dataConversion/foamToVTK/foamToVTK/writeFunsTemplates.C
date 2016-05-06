@@ -74,7 +74,7 @@ void Foam::writeFuns::write
 
     label nValues = mesh.nCells() + superCells.size();
 
-    os  << vvf.name() << ' ' << pTraits<Type>::nComponents << ' '
+    os  << vvf.name() << ' ' << int(pTraits<Type>::nComponents) << ' '
         << nValues << " float" << std::endl;
 
     DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nValues);
@@ -106,7 +106,7 @@ void Foam::writeFuns::write
     const labelList& addPointCellLabels = topo.addPointCellLabels();
     const label nTotPoints = mesh.nPoints() + addPointCellLabels.size();
 
-    os  << pvf.name() << ' ' << pTraits<Type>::nComponents << ' '
+    os  << pvf.name() << ' ' << int(pTraits<Type>::nComponents) << ' '
         << nTotPoints << " float" << std::endl;
 
     DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nTotPoints);
@@ -139,7 +139,7 @@ void Foam::writeFuns::write
     const labelList& addPointCellLabels = topo.addPointCellLabels();
     const label nTotPoints = mesh.nPoints() + addPointCellLabels.size();
 
-    os  << vvf.name() << ' ' << pTraits<Type>::nComponents << ' '
+    os  << vvf.name() << ' ' << int(pTraits<Type>::nComponents) << ' '
         << nTotPoints << " float" << std::endl;
 
     DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nTotPoints);

@@ -31,7 +31,7 @@ License
 template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::internalWriter::write
 (
-    const PtrList<GeometricField<Type, PatchField, GeoMesh>>& flds
+    const UPtrList<const GeometricField<Type, PatchField, GeoMesh>>& flds
 )
 {
     forAll(flds, i)
@@ -45,7 +45,7 @@ template<class Type>
 void Foam::internalWriter::write
 (
     const volPointInterpolation& pInterp,
-    const PtrList<GeometricField<Type, fvPatchField, volMesh>>& flds
+    const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>& flds
 )
 {
     forAll(flds, i)

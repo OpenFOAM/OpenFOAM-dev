@@ -114,14 +114,17 @@ public:
         template<class Type>
         void write
         (
-            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>&
         );
 
         //- Write pointFields
         template<class Type>
         void write
         (
-            const PtrList<GeometricField<Type, pointPatchField, pointMesh>>&
+            const UPtrList
+            <
+                const GeometricField<Type, pointPatchField, pointMesh>
+            >&
         );
 
         //- Interpolate and write volFields
@@ -129,7 +132,7 @@ public:
         void write
         (
             const PrimitivePatchInterpolation<primitivePatch>&,
-            const PtrList<GeometricField<Type, fvPatchField, volMesh>>&
+            const UPtrList<const GeometricField<Type, fvPatchField, volMesh>>&
         );
 };
 

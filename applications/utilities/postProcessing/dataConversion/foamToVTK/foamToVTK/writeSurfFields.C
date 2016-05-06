@@ -30,19 +30,14 @@ License
 #include "emptyFvsPatchFields.H"
 #include "fvsPatchFields.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-void writeSurfFields
+void Foam::writeSurfFields
 (
     const bool binary,
     const vtkMesh& vMesh,
     const fileName& fileName,
-    const PtrList<surfaceVectorField>& surfVectorFields
+    const UPtrList<const surfaceVectorField>& surfVectorFields
 )
 {
     const fvMesh& mesh = vMesh.mesh();
@@ -116,9 +111,5 @@ void writeSurfFields
     }
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
