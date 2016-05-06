@@ -27,8 +27,6 @@ EXE_LIBS = \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModels \
     -linterfaceProperties \
-    -lIOFunctionObjects \
-    -ljobControl \
     -llagrangian \
     -llagrangianIntermediate \
     -llaminarFlameSpeedModels \
@@ -52,7 +50,6 @@ EXE_LIBS = \
     -lspecie \
     -lsurfaceFilmModels \
     -lsurfMesh \
-    -lsystemCall \
     -lthermophysicalFunctions \
     -ltopoChangerFvMesh \
     -ltriSurface \
