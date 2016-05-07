@@ -31,7 +31,6 @@ PaSRCoeffs
 {
     Cmix                1.0;
     turbulentReaction   yes;
-    useReactionRate     true;
 }
 
 // ************************************************************************* //
