@@ -163,13 +163,13 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of field min/max
+        //- Return name of the functionObject
         virtual const word& name() const
         {
             return name_;
         }
 
-        //- Read the field min/max data
+        //- Read the controls
         virtual void read(const dictionary&);
 
         //- Execute, currently does nothing

@@ -67,7 +67,7 @@ functions
         // Execute upon options:
         //  timeStep
         //  outputTime
-        //  adjustableTime
+        //  adjustableRunTime
         //  runTime
         //  clockTime
         //  cpuTime
@@ -81,7 +81,7 @@ functions
         outputInterval  1; // (timeStep, outputTime)
 
         // Interval of time (sec) to write down(
-        writeInterval   10.5 //(adjustableTime, runTime, clockTime, cpuTime)
+        writeInterval   10.5 //(adjustableRunTime, runTime, clockTime, cpuTime)
     }
 
     dumpObjects
@@ -96,7 +96,7 @@ functions
         // When to write:
         //  timeStep            (with optional outputInterval)
         //  outputTime          (with optional outputInterval)
-        //  adjustableTime
+        //  adjustableRunTime
         //  runTime
         //  clockTime
         //  cpuTime
@@ -105,7 +105,7 @@ functions
          // Write every writeInterval (only valid for timeStemp, outputTime)
         outputInterval  1;
 
-         // Interval of time (valid for adjustableTime, runTime, clockTime,
+         // Interval of time (valid for adjustableRunTime, runTime, clockTime,
         //  cpuTime)
         writeInterval   10.5;
 

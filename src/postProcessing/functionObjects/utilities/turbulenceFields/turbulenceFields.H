@@ -220,7 +220,7 @@ public:
             return name_;
         }
 
-        //- Read the field min/max data
+        //- Read the controls
         virtual void read(const dictionary&);
 
         //- Execute, currently does nothing

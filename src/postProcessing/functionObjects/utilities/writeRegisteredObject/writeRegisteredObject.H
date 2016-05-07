@@ -34,7 +34,7 @@ Description
 
     \li \c timeStep
     \li \c outputTime
-    \li \c adjustableTime
+    \li \c adjustableRunTime
     \li \c runTime
     \li \c clockTime
     \li \c cpuTime
