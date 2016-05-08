@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,6 +171,9 @@ public:
 
         //- Max screen width for displaying usage (default: 80)
         static string::size_type usageMax;
+
+        //- Standard name for the post-processing option
+        static word postProcessOptionName;
 
         //! \cond internalClass
         class initValidTables
@@ -367,6 +370,8 @@ public:
             //- Remove the parallel options
             static void noParallel();
 
+            //- Return true if the post-processing option is specified
+            static bool postProcess(int argc, char *argv[]);
 
             //- Set option directly (use with caution)
             //  An option with an empty param is a bool option.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "functionObjectList.H"
 #include "Time.H"
 #include "mapPolyMesh.H"
+#include "argList.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -90,6 +91,42 @@ Foam::functionObjectList::functionObjectList
     execution_(execution),
     updated_(false)
 {}
+
+
+Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
+(
+    const argList& args,
+    const Time& runTime,
+    dictionary& functionObjectsDict
+)
+{
+    autoPtr<functionObjectList> functionObjectsPtr;
+
+    if (args.optionFound("dict"))
+    {
+        functionObjectsDict = IOdictionary
+        (
+            IOobject
+            (
+                args["dict"],
+                runTime,
+                IOobject::MUST_READ_IF_MODIFIED
+            )
+        );
+
+        functionObjectsPtr.reset
+        (
+            new functionObjectList(runTime, functionObjectsDict)
+        );
+    }
+    else
+    {
+        functionObjectsPtr.reset(new functionObjectList(runTime));
+    }
+    functionObjectsPtr->start();
+
+    return functionObjectsPtr;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

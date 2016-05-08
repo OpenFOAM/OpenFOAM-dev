@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,6 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressibleCreatePhi_H
-#define compressibleCreatePhi_H
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Info<< "Reading/calculating face flux field phi\n" << endl;
@@ -49,8 +46,5 @@ surfaceScalarField phi
     linearInterpolate(rho*U) & mesh.Sf()
 );
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

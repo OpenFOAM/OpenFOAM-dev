@@ -50,6 +50,7 @@ namespace Foam
 {
 
 class mapPolyMesh;
+class argList;
 
 /*---------------------------------------------------------------------------*\
                      Class functionObjectList Declaration
@@ -107,7 +108,6 @@ public:
             const bool execution=true
         );
 
-
         //- Construct from Time, a dictionary with "functions" entry
         //  and the execution setting.
         //  \param[in]  t - the other Time instance to construct from
@@ -121,6 +121,19 @@ public:
             const Time& t,
             const dictionary& parentDict,
             const bool execution=true
+        );
+
+        //- Construct and return a functionObjectList for an application.
+        //
+        //  If the "dict" argument is specified the functionObjectList is
+        //  constructed from that dictionary which is returned as
+        //  functionObjectsDict otherwise the functionObjectList is constructed
+        //  from the "functions" sub-dictionary of "system/controlDict"
+        static autoPtr<functionObjectList> New
+        (
+            const argList& args,
+            const Time& runTime,
+            dictionary& functionObjectsDict
         );
 
 
