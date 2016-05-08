@@ -42,12 +42,12 @@ Description
 #define CREATE_MESH createMesh.H
 #endif
 
-#ifndef CREATE_FIELDS_1
-#define CREATE_FIELDS_1 createFields.H
+#ifndef CREATE_FIELDS
+#define CREATE_FIELDS createFields.H
 #endif
 
-#ifndef CREATE_CONTROLS
-#define CREATE_CONTROLS createControls.H
+#ifndef CREATE_CONTROL
+#define CREATE_CONTROL createControl.H
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,7 +71,7 @@ if (argList::postProcess(argc, argv))
     #include "createTime.H"
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include INCLUDE_FILE(CREATE_MESH)
-    #include INCLUDE_FILE(CREATE_CONTROLS)
+    #include INCLUDE_FILE(CREATE_CONTROL)
 
     // Externally stored dictionary for functionObjectList
     // if not constructed from runTime
@@ -96,7 +96,7 @@ if (argList::postProcess(argc, argv))
                 functionObjectList::New(args, runTime, functionObjectsDict);
         }
 
-        #include INCLUDE_FILE(CREATE_FIELDS_1)
+        #include INCLUDE_FILE(CREATE_FIELDS)
 
         #ifdef CREATE_FIELDS_2
         #include INCLUDE_FILE(CREATE_FIELDS_2)
@@ -132,7 +132,7 @@ if (argList::postProcess(argc, argv))
 #undef INCLUDE_FILE2
 
 #undef CREATE_MESH
-#undef CREATE_FIELDS_1
-#undef CREATE_CONTROLS
+#undef CREATE_FIELDS
+#undef CREATE_CONTROL
 
 // ************************************************************************* //

@@ -52,18 +52,23 @@ Description
 
 int main(int argc, char *argv[])
 {
+    #include "postProcess.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
-
-    pimpleControl pimple(mesh);
-
+    #include "createControl.H"
     #include "createFields.H"
     #include "createUf.H"
     #include "createControls.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
+
+    volScalarField& p = mixture.p();
+    volScalarField& T = mixture.T();
+    const volScalarField& psi1 = mixture.thermo1().psi();
+    const volScalarField& psi2 = mixture.thermo2().psi();
 
     turbulence->validate();
 

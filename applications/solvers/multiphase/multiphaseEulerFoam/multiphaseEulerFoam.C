@@ -45,20 +45,30 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "postProcess.H"
 
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-
-    pimpleControl pimple(mesh);
-
+    #include "createControl.H"
     #include "createFields.H"
-    #include "createMRFZones.H"
     #include "initContinuityErrs.H"
     #include "createTimeControls.H"
     #include "correctPhi.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
+
+    scalar slamDampCoeff
+    (
+        fluid.lookupOrDefault<scalar>("slamDampCoeff", 1)
+    );
+
+    dimensionedScalar maxSlamVelocity
+    (
+        "maxSlamVelocity",
+        dimVelocity,
+        fluid.lookupOrDefault<scalar>("maxSlamVelocity", GREAT)
+    );
 
     turbulence->validate();
 

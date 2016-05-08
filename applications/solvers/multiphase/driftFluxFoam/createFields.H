@@ -33,10 +33,6 @@ Info<< "Reading incompressibleTwoPhaseInteractingMixture\n" << endl;
 incompressibleTwoPhaseInteractingMixture mixture(U, phi);
 
 volScalarField& alpha1(mixture.alpha1());
-volScalarField& alpha2(mixture.alpha2());
-
-const dimensionedScalar& rho1 = mixture.rhod();
-const dimensionedScalar& rho2 = mixture.rhoc();
 
 // Mixture density
 volScalarField rho
@@ -76,8 +72,6 @@ autoPtr<relativeVelocityModel> UdmModelPtr
         mixture
     )
 );
-
-relativeVelocityModel& UdmModel(UdmModelPtr());
 
 
 // Construct compressible turbulence model

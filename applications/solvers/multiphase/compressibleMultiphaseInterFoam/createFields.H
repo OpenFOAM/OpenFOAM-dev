@@ -31,9 +31,6 @@ volVectorField U
 Info<< "Constructing multiphaseMixtureThermo\n" << endl;
 multiphaseMixtureThermo mixture(U, phi);
 
-volScalarField& p = mixture.p();
-volScalarField& T = mixture.T();
-
 volScalarField rho
 (
     IOobject

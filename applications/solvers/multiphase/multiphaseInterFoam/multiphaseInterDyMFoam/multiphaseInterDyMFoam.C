@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
-    #include "createControls.H"
+    #include "createControl.H"
     #include "createTimeControls.H"
     #include "createDyMControls.H"
     #include "createFields.H"

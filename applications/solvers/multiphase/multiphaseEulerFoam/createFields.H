@@ -51,18 +51,6 @@ forAllIter(PtrDictionary<phaseModel>, fluid.phases(), iter)
     phi += fvc::interpolate(alpha)*phase.phi();
 }
 
-scalar slamDampCoeff
-(
-    fluid.lookupOrDefault<scalar>("slamDampCoeff", 1)
-);
-
-dimensionedScalar maxSlamVelocity
-(
-    "maxSlamVelocity",
-    dimVelocity,
-    fluid.lookupOrDefault<scalar>("maxSlamVelocity", GREAT)
-);
-
 
 volScalarField rho
 (
@@ -114,3 +102,6 @@ setRefCell
     pRefValue
 );
 mesh.setFluxRequired(p_rgh.name());
+
+
+#include "createMRFZones.H"

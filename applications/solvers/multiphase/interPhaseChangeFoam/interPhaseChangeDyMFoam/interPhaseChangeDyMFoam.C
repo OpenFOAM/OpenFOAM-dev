@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "createControls.H"
+    #include "createControl.H"
     #include "createTimeControls.H"
     #include "../interFoam/interDyMFoam/createDyMControls.H"
     #include "initContinuityErrs.H"
