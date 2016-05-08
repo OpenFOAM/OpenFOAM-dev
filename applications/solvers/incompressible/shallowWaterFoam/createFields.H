@@ -1,3 +1,5 @@
+#include "readGravitationalAcceleration.H"
+
 Info<< "Reading field h\n" << endl;
 volScalarField h
 (

@@ -37,12 +37,12 @@ Description
 
 int main(int argc, char *argv[])
 {
+    #include "postProcess.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMeshNoClear.H"
-
-    pisoControl piso(mesh);
-
+    #include "createControl.H"
     #include "createFields.H"
     #include "initContinuityErrs.H"
 

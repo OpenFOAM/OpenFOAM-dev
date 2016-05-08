@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,6 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef createPhia_H
-#define createPhia_H
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Info<< "Reading/calculating face flux field phia\n" << endl;
@@ -49,8 +46,5 @@ surfaceScalarField phia
     linearInterpolate(Ua) & mesh.Sf()
 );
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //
