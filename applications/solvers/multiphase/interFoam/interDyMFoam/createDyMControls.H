@@ -1,5 +1,3 @@
-#include "createTimeControls.H"
-
 bool correctPhi
 (
     pimple.dict().lookupOrDefault<Switch>("correctPhi", true)
