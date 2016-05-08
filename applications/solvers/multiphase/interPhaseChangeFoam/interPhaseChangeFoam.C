@@ -53,12 +53,12 @@ Description
 
 int main(int argc, char *argv[])
 {
+    #include "postProcess.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-
-    pimpleControl pimple(mesh);
-
+    #include "createControls.H"
     #include "createFields.H"
     #include "createFvOptions.H"
     #include "createTimeControls.H"

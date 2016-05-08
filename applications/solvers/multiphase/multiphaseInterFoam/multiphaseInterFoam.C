@@ -43,12 +43,12 @@ Description
 
 int main(int argc, char *argv[])
 {
+    #include "postProcess.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-
-    pimpleControl pimple(mesh);
-
+    #include "createControls.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createMRF.H"
@@ -59,6 +59,8 @@ int main(int argc, char *argv[])
     #include "setInitialDeltaT.H"
 
     turbulence->validate();
+
+    const surfaceScalarField& rhoPhi(mixture.rhoPhi());
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

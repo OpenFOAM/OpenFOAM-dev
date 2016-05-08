@@ -44,13 +44,12 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "postProcess.H"
 
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-
-    pimpleControl pimple(mesh);
-
+    #include "createControls.H"
     #include "createTimeControls.H"
     #include "createFields.H"
     #include "createMRF.H"
