@@ -21,9 +21,6 @@
     );
 
     volScalarField& p = thermo.p();
-    const volScalarField& psi = thermo.psi();
-    const volScalarField& T = thermo.T();
-
 
     Info<< "\nReading field U\n" << endl;
     volVectorField U

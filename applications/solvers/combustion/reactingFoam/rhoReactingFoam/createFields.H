@@ -40,8 +40,6 @@ volVectorField U
 
 
 volScalarField& p = thermo.p();
-const volScalarField& psi = thermo.psi();
-const volScalarField& T = thermo.T();
 
 #include "compressibleCreatePhi.H"
 
@@ -102,3 +100,5 @@ volScalarField dQ
     mesh,
     dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
 );
+
+#include "createMRF.H"

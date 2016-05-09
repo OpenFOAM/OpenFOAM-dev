@@ -38,6 +38,10 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#ifndef CREATE_TIME
+    #define CREATE_TIME createTime.H
+#endif
+
 #ifndef CREATE_MESH
     #define CREATE_MESH createMesh.H
 #endif
@@ -70,7 +74,7 @@ if (argList::postProcess(argc, argv))
     #include "addDictOption.H"
 
     #include "setRootCase.H"
-    #include "createTime.H"
+    #include INCLUDE_FILE(CREATE_TIME)
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include INCLUDE_FILE(CREATE_MESH)
 

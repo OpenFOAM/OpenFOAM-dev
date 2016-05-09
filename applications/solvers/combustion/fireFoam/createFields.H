@@ -35,8 +35,6 @@ volScalarField rho
 );
 
 volScalarField& p = thermo.p();
-const volScalarField& T = thermo.T();
-const volScalarField& psi = thermo.psi();
 
 Info<< "\nReading field U\n" << endl;
 volVectorField U
@@ -156,3 +154,8 @@ volScalarField dpdt
 
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
+
+#include "createClouds.H"
+#include "createSurfaceFilmModel.H"
+#include "createPyrolysisModel.H"
+#include "createRadiationModel.H"

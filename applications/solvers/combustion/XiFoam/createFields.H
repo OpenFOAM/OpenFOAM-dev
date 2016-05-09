@@ -23,7 +23,6 @@ volScalarField rho
 );
 
 volScalarField& p = thermo.p();
-const volScalarField& psi = thermo.psi();
 
 volScalarField& b = composition.Y("b");
 Info<< "min(b) = " << min(b).value() << endl;
@@ -139,3 +138,5 @@ if (composition.contains("ft"))
 fields.add(b);
 fields.add(thermo.he());
 fields.add(thermo.heu());
+
+#include "createMRF.H"
