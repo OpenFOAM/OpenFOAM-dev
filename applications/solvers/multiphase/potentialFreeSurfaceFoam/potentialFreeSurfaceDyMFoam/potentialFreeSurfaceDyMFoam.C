@@ -59,7 +59,6 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createDyMControls.H"
     #include "createFields.H"
-    #include "createMRF.H"
     #include "createFvOptions.H"
 
     volScalarField rAU

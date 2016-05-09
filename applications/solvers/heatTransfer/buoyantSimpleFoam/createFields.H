@@ -86,3 +86,5 @@ mesh.setFluxRequired(p_rgh.name());
 
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
 dimensionedScalar totalVolume = sum(mesh.V());
+
+#include "createMRF.H"

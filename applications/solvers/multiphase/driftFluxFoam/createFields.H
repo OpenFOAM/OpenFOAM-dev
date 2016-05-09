@@ -130,3 +130,5 @@ mesh.setFluxRequired(alpha1.name());
 
 // MULES Correction
 tmp<surfaceScalarField> talphaPhiCorr0;
+
+#include "createMRF.H"

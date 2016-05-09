@@ -79,7 +79,6 @@ int main(int argc, char *argv[])
     pisoControl potentialFlow(mesh, "potentialFlow");
 
     #include "createFields.H"
-    #include "createMRF.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

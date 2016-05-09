@@ -91,3 +91,5 @@ if (p_rgh.needReference())
 }
 
 mesh.setFluxRequired(p_rgh.name());
+
+#include "createMRF.H"

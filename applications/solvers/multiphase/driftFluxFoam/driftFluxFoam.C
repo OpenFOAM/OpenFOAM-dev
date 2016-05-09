@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
     #include "createControl.H"
     #include "createTimeControls.H"
     #include "createFields.H"
-    #include "createMRF.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 
