@@ -142,3 +142,8 @@ volScalarField dQ
     mesh,
     dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
 );
+
+#include "createMRF.H"
+#include "createClouds.H"
+#include "createRadiationModel.H"
+#include "createSurfaceFilmModel.H"

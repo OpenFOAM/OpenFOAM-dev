@@ -1,3 +1,5 @@
+#include "readTransportProperties.H"
+
 Info<< "Reading field p\n" << endl;
 volScalarField p
 (
@@ -29,3 +31,5 @@ volVectorField U
 #include "createPhi.H"
 
 mesh.setFluxRequired(p.name());
+
+#include "readTurbulenceProperties.H"

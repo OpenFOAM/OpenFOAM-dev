@@ -1,3 +1,5 @@
+#include "readGravitationalAcceleration.H"
+
 Info<< "Creating combustion model\n" << endl;
 
 autoPtr<combustionModels::psiCombustionModel> combustion
@@ -141,3 +143,7 @@ volScalarField dQ
     mesh,
     dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
 );
+
+#include "createMRF.H"
+#include "createClouds.H"
+#include "createRadiationModel.H"

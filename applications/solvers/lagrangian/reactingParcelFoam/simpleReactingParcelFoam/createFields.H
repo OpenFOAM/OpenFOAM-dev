@@ -1,3 +1,5 @@
+#include "readGravitationalAcceleration.H"
+
 Info<< "Creating combustion model\n" << endl;
 
 autoPtr<combustionModels::rhoCombustionModel> combustion
@@ -24,8 +26,6 @@ if (!composition.contains(inertSpecie))
 }
 
 volScalarField& p = thermo.p();
-const volScalarField& T = thermo.T();
-const volScalarField& psi = thermo.psi();
 
 volScalarField rho
 (
@@ -117,3 +117,7 @@ volScalarField dQ
     mesh,
     dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
 );
+
+#include "createMRF.H"
+#include "createRadiationModel.H"
+#include "createClouds.H"

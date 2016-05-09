@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,18 +45,14 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "postProcess.H"
 
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    #include "readGravitationalAcceleration.H"
-
-    simpleControl simple(mesh);
-
+    #include "createControl.H"
     #include "createFields.H"
-    #include "createRadiationModel.H"
-    #include "createClouds.H"
-    #include "createMRF.H"
+    #include "createFieldRefs.H"
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 

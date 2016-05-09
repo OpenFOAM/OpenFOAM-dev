@@ -1,107 +1,109 @@
-    Info<< "Reading field U\n" << endl;
-    volVectorField U
+#include "readGravitationalAcceleration.H"
+
+Info<< "Reading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-    #include "createPhi.H"
-
-    singlePhaseTransportModel laminarTransport(U, phi);
-
-    dimensionedScalar rhoInfValue
-    (
-        "rhoInf",
-        dimDensity,
-        laminarTransport
-    );
-
-    volScalarField rhoInf
-    (
-        IOobject
-        (
-            "rho",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        rhoInfValue
-    );
-
-    autoPtr<incompressible::turbulenceModel> turbulence
-    (
-        incompressible::turbulenceModel::New(U, phi, laminarTransport)
-    );
-
-    volScalarField mu
-    (
-        IOobject
-        (
-            "mu",
-            runTime.timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        laminarTransport.nu()*rhoInfValue
-    );
-
-    word kinematicCloudName("kinematicCloud");
-    args.optionReadIfPresent("cloudName", kinematicCloudName);
-
-    Info<< "Constructing kinematicCloud " << kinematicCloudName << endl;
-    basicKinematicCollidingCloud kinematicCloud
-    (
-        kinematicCloudName,
-        rhoInf,
-        U,
-        mu,
-        g
-    );
-
-    IOobject Hheader
-    (
-        "H",
+        "U",
         runTime.timeName(),
         mesh,
         IOobject::MUST_READ,
         IOobject::AUTO_WRITE
-    );
+    ),
+    mesh
+);
 
-    autoPtr<volVectorField> HPtr;
+#include "createPhi.H"
 
-    if (Hheader.headerOk())
-    {
-        Info<< "\nReading field H\n" << endl;
+singlePhaseTransportModel laminarTransport(U, phi);
 
-        HPtr.reset(new volVectorField (Hheader, mesh));
-    }
+dimensionedScalar rhoInfValue
+(
+    "rhoInf",
+    dimDensity,
+    laminarTransport
+);
 
-    IOobject HdotGradHheader
+volScalarField rhoInf
+(
+    IOobject
     (
-        "HdotGradH",
+        "rho",
         runTime.timeName(),
         mesh,
-        IOobject::MUST_READ,
+        IOobject::NO_READ,
         IOobject::AUTO_WRITE
-    );
+    ),
+    mesh,
+    rhoInfValue
+);
 
-    autoPtr<volVectorField> HdotGradHPtr;
+autoPtr<incompressible::turbulenceModel> turbulence
+(
+    incompressible::turbulenceModel::New(U, phi, laminarTransport)
+);
 
-    if (HdotGradHheader.headerOk())
-    {
-        Info<< "Reading field HdotGradH" << endl;
+volScalarField mu
+(
+    IOobject
+    (
+        "mu",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    laminarTransport.nu()*rhoInfValue
+);
 
-        HdotGradHPtr.reset(new volVectorField(HdotGradHheader, mesh));
-    }
+word kinematicCloudName("kinematicCloud");
+args.optionReadIfPresent("cloudName", kinematicCloudName);
 
-    #include "createNonInertialFrameFields.H"
+Info<< "Constructing kinematicCloud " << kinematicCloudName << endl;
+basicKinematicCollidingCloud kinematicCloud
+(
+    kinematicCloudName,
+    rhoInf,
+    U,
+    mu,
+    g
+);
+
+IOobject Hheader
+(
+    "H",
+    runTime.timeName(),
+    mesh,
+    IOobject::MUST_READ,
+    IOobject::AUTO_WRITE
+);
+
+autoPtr<volVectorField> HPtr;
+
+if (Hheader.headerOk())
+{
+    Info<< "\nReading field H\n" << endl;
+
+    HPtr.reset(new volVectorField (Hheader, mesh));
+}
+
+IOobject HdotGradHheader
+(
+    "HdotGradH",
+    runTime.timeName(),
+    mesh,
+    IOobject::MUST_READ,
+    IOobject::AUTO_WRITE
+);
+
+autoPtr<volVectorField> HdotGradHPtr;
+
+if (HdotGradHheader.headerOk())
+{
+    Info<< "Reading field HdotGradH" << endl;
+
+    HdotGradHPtr.reset(new volVectorField(HdotGradHheader, mesh));
+}
+
+#include "createNonInertialFrameFields.H"

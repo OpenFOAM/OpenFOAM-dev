@@ -41,16 +41,13 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "postProcess.H"
 
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createMeshNoClear.H"
-
-    pisoControl piso(mesh);
-
-    #include "readTransportProperties.H"
+    #include "createControl.H"
     #include "createFields.H"
-    #include "readTurbulenceProperties.H"
     #include "initContinuityErrs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

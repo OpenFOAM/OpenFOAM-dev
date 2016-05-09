@@ -1,3 +1,5 @@
+#include "readGravitationalAcceleration.H"
+
 word continuousPhaseName
 (
     IOdictionary
