@@ -1,55 +1,17 @@
-    Info<< "\nReading field U\n" << endl;
-    volVectorField U
+Info<< "\nReading field U\n" << endl;
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
-    word polyatomicCloudName("polyatomicCloud");
-
-    potential polyPot
-    (
+        "U",
+        runTime.timeName(),
         mesh,
-        IOdictionary
-        (
-            IOobject
-            (
-                polyatomicCloudName +  "Properties",
-                mesh.time().constant(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        )
-    );
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
-    polyatomicCloud polyatomics(polyatomicCloudName, mesh, polyPot);
+potential pot(mesh);
 
-    word monoatomicCloudName("monoatomicCloud");
-
-    potential monoPot
-    (
-        mesh,
-        IOdictionary
-        (
-            IOobject
-            (
-                monoatomicCloudName +  "Properties",
-                mesh.time().constant(),
-                mesh,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        )
-    );
-
-    monoatomicCloud monoatomics(monoatomicCloudName, mesh, monoPot);
+moleculeCloud molecules(mesh, pot);
