@@ -43,17 +43,14 @@ Description
 
 int main(int argc, char *argv[])
 {
+    #define NO_CONTROL
+    #define CREATE_MESH createMeshesPostProcess.H
+    #include "postProcess.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
-
-    regionProperties rp(runTime);
-
-    #include "createFluidMeshes.H"
-    #include "createSolidMeshes.H"
-
-    #include "createFluidFields.H"
-    #include "createSolidFields.H"
-
+    #include "createMeshes.H"
+    #include "createFields.H"
     #include "initContinuityErrs.H"
 
 

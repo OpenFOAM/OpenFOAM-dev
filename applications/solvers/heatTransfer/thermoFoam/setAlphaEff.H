@@ -1,49 +1,47 @@
-    Info<< "Creating turbulence model\n" << endl;
-    tmp<volScalarField> talphaEff;
+Info<< "Creating turbulence model\n" << endl;
+tmp<volScalarField> talphaEff;
 
-    IOobject turbulencePropertiesHeader
+IOobject turbulencePropertiesHeader
+(
+    "turbulenceProperties",
+    runTime.constant(),
+    mesh,
+    IOobject::MUST_READ_IF_MODIFIED,
+    IOobject::NO_WRITE,
+    false
+);
+
+if (turbulencePropertiesHeader.headerOk())
+{
+    autoPtr<compressible::turbulenceModel> turbulence
     (
-        "turbulenceProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE,
-        false
+        compressible::turbulenceModel::New
+        (
+            rho,
+            U,
+            phi,
+            thermo
+        )
     );
 
-    if (turbulencePropertiesHeader.headerOk())
-    {
-        autoPtr<compressible::turbulenceModel> turbulence
+    talphaEff = turbulence->alphaEff();
+}
+else
+{
+    talphaEff = tmp<volScalarField>
+    (
+        new volScalarField
         (
-            compressible::turbulenceModel::New
+            IOobject
             (
-                rho,
-                U,
-                phi,
-                thermo
-            )
-        );
-
-        talphaEff = turbulence->alphaEff();
-    }
-    else
-    {
-        talphaEff = tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "alphaEff",
-                    runTime.timeName(),
-                    mesh,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
+                "alphaEff",
+                runTime.timeName(),
                 mesh,
-                dimensionedScalar("0", dimMass/dimLength/dimTime, 0.0)
-            )
-        );
-    }
-
-    const volScalarField& alphaEff = talphaEff();
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh,
+            dimensionedScalar("0", dimMass/dimLength/dimTime, 0.0)
+        )
+    );
+}

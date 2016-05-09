@@ -1,4 +1,5 @@
 EXE_INC = \
+    -I. \
     -I../buoyantBoussinesqSimpleFoam \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
