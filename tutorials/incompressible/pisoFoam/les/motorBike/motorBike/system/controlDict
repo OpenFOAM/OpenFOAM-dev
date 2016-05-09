@@ -49,12 +49,6 @@ runTimeModifiable true;
 
 functions
 {
-    readFields
-    {
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
-        type            readFields;
-        fields          (p U);
-    }
     streamLines
     {
         type            streamLine;
