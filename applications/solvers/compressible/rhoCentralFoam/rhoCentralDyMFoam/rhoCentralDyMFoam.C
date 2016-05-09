@@ -42,10 +42,14 @@ Description
 
 int main(int argc, char *argv[])
 {
+    #define NO_CONTROL
+    #include "postProcess.H"
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "createFields.H"
+    #include "createFieldRefs.H"
     #include "createTimeControls.H"
 
     turbulence->validate();

@@ -1,3 +1,6 @@
+#include "readThermodynamicProperties.H"
+#include "readTransportProperties.H"
+
 Info<< "Reading field p\n" << endl;
 volScalarField p
 (

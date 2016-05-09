@@ -21,7 +21,6 @@ volScalarField rho
 );
 
 volScalarField& p = thermo.p();
-const volScalarField& psi = thermo.psi();
 
 Info<< "Reading field U\n" << endl;
 volVectorField U
@@ -81,3 +80,5 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
+
+#include "createMRF.H"

@@ -8,8 +8,6 @@ psiThermo& thermo = pThermo();
 thermo.validate(args.executable(), "e");
 
 volScalarField& p = thermo.p();
-volScalarField& e = thermo.he();
-const volScalarField& psi = thermo.psi();
 
 volScalarField rho
 (
@@ -54,3 +52,5 @@ autoPtr<compressible::turbulenceModel> turbulence
 
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
+
+#include "createMRF.H"

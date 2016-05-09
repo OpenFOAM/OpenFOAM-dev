@@ -80,3 +80,5 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
+
+#include "createMRF.H"

@@ -8,7 +8,6 @@ psiThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
 volScalarField& p = thermo.p();
-const volScalarField& psi = thermo.psi();
 
 volScalarField rho
 (
@@ -90,3 +89,5 @@ volScalarField dpdt
 
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
+
+#include "createMRF.H"
