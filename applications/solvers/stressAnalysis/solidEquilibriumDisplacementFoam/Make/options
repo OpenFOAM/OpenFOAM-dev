@@ -1,4 +1,5 @@
 EXE_INC = \
+    -I. \
     -I../solidDisplacementFoam \
     -ItractionDisplacementCorrectionStress \
     -I$(LIB_SRC)/finiteVolume/lnInclude \

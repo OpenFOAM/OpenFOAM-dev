@@ -39,21 +39,23 @@ Description
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifndef CREATE_MESH
-#define CREATE_MESH createMesh.H
+    #define CREATE_MESH createMesh.H
 #endif
 
 #ifndef CREATE_FIELDS
-#define CREATE_FIELDS createFields.H
+    #define CREATE_FIELDS createFields.H
 #endif
 
 #ifndef CREATE_CONTROL
-#define CREATE_CONTROL createControl.H
+    #define CREATE_CONTROL createControl.H
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define INCLUDE_FILE(X) INCLUDE_FILE2(X)
 #define INCLUDE_FILE2(X) #X
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Foam::argList::addBoolOption
 (
@@ -71,7 +73,10 @@ if (argList::postProcess(argc, argv))
     #include "createTime.H"
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include INCLUDE_FILE(CREATE_MESH)
+
+    #ifndef NO_CONTROL
     #include INCLUDE_FILE(CREATE_CONTROL)
+    #endif
 
     // Externally stored dictionary for functionObjectList
     // if not constructed from runTime

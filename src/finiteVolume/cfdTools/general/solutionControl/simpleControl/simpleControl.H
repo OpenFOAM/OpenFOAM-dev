@@ -35,6 +35,9 @@ Description
 
 #include "solutionControl.H"
 
+//- Declare that pimpleControl will be used
+#define SIMPLE_CONTROL
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

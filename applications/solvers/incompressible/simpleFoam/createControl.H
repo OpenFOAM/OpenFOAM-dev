@@ -1,1 +1,0 @@
-simpleControl simple(mesh);

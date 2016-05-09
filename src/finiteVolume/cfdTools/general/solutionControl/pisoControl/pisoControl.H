@@ -34,6 +34,10 @@ Description
 
 #include "pimpleControl.H"
 
+//- Declare that pisoControl will be used
+#define PISO_CONTROL
+#undef PIMPLE_CONTROL
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

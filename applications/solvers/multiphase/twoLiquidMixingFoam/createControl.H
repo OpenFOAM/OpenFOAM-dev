@@ -1,1 +1,0 @@
-pimpleControl pimple(mesh);

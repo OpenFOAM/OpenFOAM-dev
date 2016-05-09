@@ -55,14 +55,12 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #include "postProcess.H"
 
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-
-    pisoControl piso(mesh);
-    pisoControl bpiso(mesh, "BPISO");
-
+    #include "createControl.H"
     #include "createFields.H"
     #include "initContinuityErrs.H"
 

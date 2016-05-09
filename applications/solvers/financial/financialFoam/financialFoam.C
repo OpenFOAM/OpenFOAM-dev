@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,10 @@ Description
 
 int main(int argc, char *argv[])
 {
-    #include "setRootCase.H"
+    #define NO_CONTROL
+    #include "postProcess.H"
 
+    #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
     #include "createFields.H"

@@ -1,3 +1,6 @@
+#include "readMechanicalProperties.H"
+#include "readThermalProperties.H"
+
 Info<< "Reading field D\n" << endl;
 volVectorField D
 (
