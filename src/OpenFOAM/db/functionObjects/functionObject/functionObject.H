@@ -30,7 +30,7 @@ Description
     OpenFOAM includes a collection of functionObjects selected by the user at
     run-time to manipulate the simulation and provide mechanisms to extract
     field and derived quantities.  Alternatively, the same actions can be
-    executed after the simulation using the \c execFlowFunctionObjects utility.
+    executed after the simulation using the \c -postProcess command-line option.
 
     \linebreak
     \subsection secFunctionObjects Using function objects
