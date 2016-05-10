@@ -63,7 +63,6 @@ SeeAlso
 
 SourceFiles
     surfaceInterpolateFields.C
-    IOsurfaceInterpolateFields.H
 
 \*---------------------------------------------------------------------------*/
 

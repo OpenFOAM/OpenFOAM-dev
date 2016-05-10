@@ -86,7 +86,6 @@ SeeAlso
 
 SourceFiles
     forceCoeffs.C
-    IOforceCoeffs.H
 
 \*---------------------------------------------------------------------------*/
 

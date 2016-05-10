@@ -53,7 +53,6 @@ Description
 
 SourceFiles
     timeActivatedFileUpdate.C
-    IOtimeActivatedFileUpdate.H
 
 \*---------------------------------------------------------------------------*/
 

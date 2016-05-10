@@ -53,7 +53,6 @@ Description
 
 SourceFiles
     FUNCTIONOBJECT.C
-    IOFUNCTIONOBJECT.H
 
 \*---------------------------------------------------------------------------*/
 

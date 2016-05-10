@@ -37,7 +37,6 @@ Description
 
 SourceFiles
     dsmcFields.C
-    IOdsmcFields.H
 
 \*---------------------------------------------------------------------------*/
 

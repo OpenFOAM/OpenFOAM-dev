@@ -71,7 +71,6 @@ SeeAlso
 
 SourceFiles
     fieldMinMax.C
-    IOfieldMinMax.H
 
 \*---------------------------------------------------------------------------*/
 

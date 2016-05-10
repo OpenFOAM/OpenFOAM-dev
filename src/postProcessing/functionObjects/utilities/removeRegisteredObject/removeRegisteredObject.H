@@ -54,7 +54,6 @@ SeeAlso
 
 SourceFiles
     removeRegisteredObject.C
-    IOremoveRegisteredObject.H
 
 \*---------------------------------------------------------------------------*/
 

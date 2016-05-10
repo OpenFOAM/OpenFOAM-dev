@@ -41,7 +41,6 @@ Description
 
 SourceFiles
     scalarTransport.C
-    IOscalarTransport.H
 
 \*---------------------------------------------------------------------------*/
 

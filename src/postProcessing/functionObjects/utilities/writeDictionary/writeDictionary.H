@@ -32,7 +32,6 @@ Description
 
 SourceFiles
     writeDictionary.C
-    IOwriteDictionary.H
 
 \*---------------------------------------------------------------------------*/
 
