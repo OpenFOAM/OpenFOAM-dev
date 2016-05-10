@@ -27,13 +27,13 @@ Application
 Description
     Legacy VTK file format writer.
 
-    - handles volScalar, volVector, pointScalar, pointVector, surfaceScalar
+    - Handles volFields, pointFields, surfaceScalarField, surfaceVectorField
       fields.
-    - mesh topo changes.
-    - both ascii and binary.
-    - single time step writing.
-    - write subset only.
-    - automatic decomposition of cells; polygons on boundary undecomposed since
+    - Mesh topo changes.
+    - Both ascii and binary.
+    - Single time step writing.
+    - Write subset only.
+    - Automatic decomposition of cells; polygons on boundary undecomposed since
       handled by vtk.
 
 Usage

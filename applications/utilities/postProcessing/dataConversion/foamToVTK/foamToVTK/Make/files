@@ -9,4 +9,7 @@ writeSurfFields.C
 vtkMesh.C
 vtkTopo.C
 
+writeVTK/writeVTK.C
+writeVTK/writeVTKFunctionObject.C
+
 LIB = $(FOAM_LIBBIN)/libfoamToVTK
