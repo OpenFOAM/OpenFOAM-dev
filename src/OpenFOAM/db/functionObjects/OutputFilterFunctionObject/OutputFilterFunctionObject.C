@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "OutputFilterFunctionObject.H"
-#include "IOOutputFilter.H"
 #include "polyMesh.H"
 #include "mapPolyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -32,10 +31,8 @@ License
 // * * * * * * * * * * * * * * * Private Members * * * * * * * * * * * * * * //
 
 template<class OutputFilter>
-void Foam::OutputFilterFunctionObject<OutputFilter>::readDict()
+void Foam::OutputFilterFunctionObject<OutputFilter>::readControls()
 {
-    dict_.readIfPresent("region", regionName_);
-    dict_.readIfPresent("dictionary", dictName_);
     dict_.readIfPresent("timeStart", timeStart_);
     dict_.readIfPresent("timeEnd", timeEnd_);
     dict_.readIfPresent("nStepsToStartTimeChange", nStepsToStartTimeChange_);
@@ -64,8 +61,7 @@ Foam::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
     functionObject(name),
     time_(t),
     dict_(dict),
-    regionName_(polyMesh::defaultRegion),
-    dictName_(),
+    regionName_(dict.lookupOrDefault("region", polyMesh::defaultRegion)),
     timeStart_(-VGREAT),
     timeEnd_(VGREAT),
     nStepsToStartTimeChange_
@@ -73,41 +69,15 @@ Foam::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
         dict.lookupOrDefault("nStepsToStartTimeChange", 3)
     ),
     outputControl_(t, dict, "output"),
-    evaluateControl_(t, dict, "evaluate")
+    evaluateControl_(t, dict, "evaluate"),
+    filter_
+    (
+        name,
+        time_.lookupObject<objectRegistry>(regionName_),
+        dict_
+    )
 {
-    readDict();
-
-    if (dictName_.size())
-    {
-        ptr_.reset
-        (
-            new IOOutputFilter<OutputFilter>
-            (
-                name,
-                time_.lookupObject<objectRegistry>(regionName_),
-                dictName_
-            )
-        );
-    }
-    else
-    {
-        ptr_.reset
-        (
-            new OutputFilter
-            (
-                name,
-                time_.lookupObject<objectRegistry>(regionName_),
-                dict_
-            )
-        );
-    }
-
-    if (!ptr_.valid())
-    {
-        FatalErrorInFunction
-            << "Cannot construct " << OutputFilter::typeName
-            << exit(FatalError);
-    }
+    readControls();
 }
 
 
@@ -123,12 +93,12 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::execute
     {
         if (evaluateControl_.output())
         {
-            ptr_->execute();
+            filter_.execute();
         }
 
         if (forceWrite || outputControl_.output())
         {
-            ptr_->write();
+            filter_.write();
         }
     }
 
@@ -139,11 +109,11 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::execute
 template<class OutputFilter>
 bool Foam::OutputFilterFunctionObject<OutputFilter>::end()
 {
-    ptr_->end();
+    filter_.end();
 
     if (outputControl_.output())
     {
-        ptr_->write();
+        filter_.write();
     }
 
     return true;
@@ -155,7 +125,7 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::timeSet()
 {
     if (active())
     {
-        ptr_->timeSet();
+        filter_.timeSet();
     }
 
     return true;
@@ -169,7 +139,7 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
     (
         active()
      && outputControl_.outputControl()
-     == outputFilterOutputControl::ocAdjustableTime
+     == outputFilterOutputControl::ocAdjustableRunTime
     )
     {
         const label  outputTimeIndex = outputControl_.outputTimeLastDump();
@@ -219,7 +189,8 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::read
         dict_ = dict;
 
         outputControl_.read(dict);
-        readDict();
+        evaluateControl_.read(dict);
+        readControls();
 
         return true;
     }
@@ -238,7 +209,7 @@ void Foam::OutputFilterFunctionObject<OutputFilter>::updateMesh
 {
     if (active() && mpm.mesh().name() == regionName_)
     {
-        ptr_->updateMesh(mpm);
+        filter_.updateMesh(mpm);
     }
 }
 
@@ -251,7 +222,7 @@ void Foam::OutputFilterFunctionObject<OutputFilter>::movePoints
 {
     if (active() && mesh.name() == regionName_)
     {
-        ptr_->movePoints(mesh);
+        filter_.movePoints(mesh);
     }
 }
 

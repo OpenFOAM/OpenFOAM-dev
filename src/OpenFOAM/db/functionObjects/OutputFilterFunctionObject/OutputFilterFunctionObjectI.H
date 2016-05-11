@@ -50,14 +50,6 @@ Foam::OutputFilterFunctionObject<OutputFilter>::regionName() const
 
 
 template<class OutputFilter>
-inline const Foam::word&
-Foam::OutputFilterFunctionObject<OutputFilter>::dictName() const
-{
-    return dictName_;
-}
-
-
-template<class OutputFilter>
 inline const Foam::outputFilterOutputControl&
 Foam::OutputFilterFunctionObject<OutputFilter>::outputControl() const
 {
@@ -69,7 +61,7 @@ template<class OutputFilter>
 inline const OutputFilter&
 Foam::OutputFilterFunctionObject<OutputFilter>::outputFilter() const
 {
-    return ptr_();
+    return filter_;
 }
 
 

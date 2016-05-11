@@ -72,10 +72,7 @@ class OutputFilterFunctionObject
         // Optional user inputs
 
             //- Name of region - defaults to name of polyMesh::defaultRegion
-            word regionName_;
-
-            //- Dictionary name to supply required inputs
-            word dictName_;
+            const word regionName_;
 
             //- Activation time - defaults to -VGREAT
             scalar timeStart_;
@@ -94,14 +91,14 @@ class OutputFilterFunctionObject
         //- Evaluate controls
         outputFilterOutputControl evaluateControl_;
 
-        //- Pointer to the output filter
-        autoPtr<OutputFilter> ptr_;
+        //- The output filter
+        OutputFilter filter_;
 
 
     // Private Member Functions
 
         //- Read relevant dictionary entries
-        void readDict();
+        void readControls();
 
         //- Returns true if within time bounds
         bool active() const;
@@ -142,9 +139,6 @@ public:
 
             //- Return the region name
             inline const word& regionName() const;
-
-            //- Return the optional dictionary name
-            inline const word& dictName() const;
 
             //- Return the output control object
             inline const outputFilterOutputControl& outputControl() const;
