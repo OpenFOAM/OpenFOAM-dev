@@ -158,9 +158,6 @@ public:
 
         // Function object control
 
-            //- Called at the start of the time-loop
-            virtual bool start();
-
             //- Called at each ++ or += of the time-loop. forceWrite overrides
             //  the usual outputControl behaviour and forces writing always
             //  (used in post-processing mode)

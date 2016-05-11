@@ -183,9 +183,6 @@ public:
         //- Name
         virtual const word& name() const;
 
-        //- Called at the start of the time-loop
-        virtual bool start() = 0;
-
         //- Called at each ++ or += of the time-loop. forceWrite overrides
         //  the usual outputControl behaviour and forces writing always
         //  (used in post-processing mode)

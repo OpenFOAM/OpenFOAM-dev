@@ -171,9 +171,6 @@ public:
         //- Dynamically compiled functionObject
         functionObject& redirectFunctionObject() const;
 
-        //- Called at the start of the time-loop
-        virtual bool start();
-
         //- Called at each ++ or += of the time-loop. forceWrite overrides the
         //  outputControl behaviour.
         virtual bool execute(const bool forceWrite);

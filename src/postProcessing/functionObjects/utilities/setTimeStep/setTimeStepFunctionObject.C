@@ -75,12 +75,6 @@ Foam::functionObjects::setTimeStepFunctionObject::time() const
 }
 
 
-bool Foam::functionObjects::setTimeStepFunctionObject::start()
-{
-    return true;
-}
-
-
 bool Foam::functionObjects::setTimeStepFunctionObject::execute
 (
     const bool forceWrite

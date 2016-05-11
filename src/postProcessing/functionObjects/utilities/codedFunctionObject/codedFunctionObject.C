@@ -136,6 +136,9 @@ Foam::codedFunctionObject::codedFunctionObject
     {
         read(dict_);
     }
+
+    updateLibrary(redirectType_);
+    redirectFunctionObject();
 }
 
 
@@ -147,8 +150,7 @@ Foam::codedFunctionObject::~codedFunctionObject()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::functionObject&
-Foam::codedFunctionObject::redirectFunctionObject() const
+Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 {
     if (!redirectFunctionObjectPtr_.valid())
     {
@@ -163,13 +165,6 @@ Foam::codedFunctionObject::redirectFunctionObject() const
         );
     }
     return redirectFunctionObjectPtr_();
-}
-
-
-bool Foam::codedFunctionObject::start()
-{
-    updateLibrary(redirectType_);
-    return redirectFunctionObject().start();
 }
 
 
