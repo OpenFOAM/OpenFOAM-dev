@@ -699,7 +699,7 @@ Foam::Time::~Time()
         removeWatch(controlDict_.watchIndex());
     }
 
-    // destroy function objects first
+    // Destroy function objects first
     functionObjects_.clear();
 }
 

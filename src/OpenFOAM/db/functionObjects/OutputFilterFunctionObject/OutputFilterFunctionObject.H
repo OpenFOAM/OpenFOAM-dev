@@ -77,13 +77,6 @@ class OutputFilterFunctionObject
             //- Dictionary name to supply required inputs
             word dictName_;
 
-            //- Switch for the execution - defaults to 'yes/on'
-            bool enabled_;
-
-            //- Switch to store filter in between writes or use on-the-fly
-            //  construction - defaults to true
-            bool storeFilter_;
-
             //- Activation time - defaults to -VGREAT
             scalar timeStart_;
 
@@ -112,9 +105,6 @@ class OutputFilterFunctionObject
 
         //- Creates most of the data associated with this object.
         bool allocateFilter();
-
-        //- Destroys most of the data associated with this object.
-        void destroyFilter();
 
         //- Returns true if active (enabled and within time bounds)
         bool active() const;
@@ -148,62 +138,33 @@ public:
         // Access
 
             //- Return time database
-            virtual const Time& time() const
-            {
-                return time_;
-            }
+            inline const Time& time() const;
 
             //- Return the input dictionary
-            virtual const dictionary& dict() const
-            {
-                return dict_;
-            }
+            inline const dictionary& dict() const;
 
             //- Return the region name
-            virtual const word& regionName() const
-            {
-                return regionName_;
-            }
+            inline const word& regionName() const;
 
             //- Return the optional dictionary name
-            virtual const word& dictName() const
-            {
-                return dictName_;
-            }
-
-            //- Return the enabled flag
-            virtual bool enabled() const
-            {
-                return enabled_;
-            }
+            inline const word& dictName() const;
 
             //- Return the output control object
-            virtual const outputFilterOutputControl& outputControl() const
-            {
-                return outputControl_;
-            }
+            inline const outputFilterOutputControl& outputControl() const;
 
             //- Return the output filter
-            virtual const OutputFilter& outputFilter() const
-            {
-                return ptr_();
-            }
+            inline const OutputFilter& outputFilter() const;
 
 
         // Function object control
 
-            //- Switch the function object on
-            virtual void on();
-
-            //- Switch the function object off
-            virtual void off();
-
-
             //- Called at the start of the time-loop
             virtual bool start();
 
-            //- Called at each ++ or += of the time-loop
-            virtual bool execute(const bool forceWrite);
+            //- Called at each ++ or += of the time-loop. forceWrite overrides
+            //  the usual outputControl behaviour and forces writing always
+            //  (used in post-processing mode)
+            virtual bool execute(const bool forceWrite = false);
 
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();
@@ -228,6 +189,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "OutputFilterFunctionObjectI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

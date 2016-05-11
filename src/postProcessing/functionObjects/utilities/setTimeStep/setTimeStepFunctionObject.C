@@ -54,24 +54,24 @@ Foam::functionObjects::setTimeStepFunctionObject::setTimeStepFunctionObject
 )
 :
     functionObject(name),
-    time_(runTime),
-    enabled_(true)
+    time_(runTime)
 {
     read(dict);
 }
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::setTimeStepFunctionObject::~setTimeStepFunctionObject()
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::setTimeStepFunctionObject::on()
+const Foam::Time&
+Foam::functionObjects::setTimeStepFunctionObject::time() const
 {
-    enabled_ = true;
-}
-
-
-void Foam::functionObjects::setTimeStepFunctionObject::off()
-{
-    enabled_ = false;
+    return time_;
 }
 
 
@@ -104,19 +104,13 @@ bool Foam::functionObjects::setTimeStepFunctionObject::timeSet()
 
 bool Foam::functionObjects::setTimeStepFunctionObject::adjustTimeStep()
 {
-    if (enabled())
-    {
-        // Wanted timestep
-        scalar newDeltaT = timeStepPtr_().value(time_.timeOutputValue());
+    const_cast<Time&>(time()).setDeltaT
+    (
+        timeStepPtr_().value(time_.timeOutputValue()),
+        false
+    );
 
-        const_cast<Time&>(time()).setDeltaT(newDeltaT, false);
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return true;
 }
 
 
@@ -125,27 +119,23 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
     const dictionary& dict
 )
 {
-    enabled_ = dict.lookupOrDefault("enabled", true);
+    timeStepPtr_ = Function1<scalar>::New("deltaT", dict);
 
-    if (enabled_)
+    // Check that adjustTimeStep is active
+    const dictionary& controlDict = time_.controlDict();
+
+    Switch adjust;
+    if
+    (
+       !controlDict.readIfPresent<Switch>("adjustTimeStep", adjust)
+    || !adjust
+    )
     {
-        timeStepPtr_ = Function1<scalar>::New("deltaT", dict);
-
-        // Check that time has adjustTimeStep
-        const dictionary& controlDict = time_.controlDict();
-
-        Switch adjust;
-        if
-        (
-            !controlDict.readIfPresent<Switch>("adjustTimeStep", adjust)
-         || !adjust
-        )
-        {
-            FatalIOErrorInFunction(dict)
-                << "Need to have 'adjustTimeStep' true to enable external"
-                << " timestep control" << exit(FatalIOError);
-        }
+        FatalIOErrorInFunction(dict)
+            << "Need to set 'adjustTimeStep' true to allow timestep control"
+            << exit(FatalIOError);
     }
+
     return true;
 }
 
