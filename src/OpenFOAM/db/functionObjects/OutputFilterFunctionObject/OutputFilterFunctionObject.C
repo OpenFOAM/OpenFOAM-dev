@@ -51,38 +51,6 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::active() const
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::allocateFilter()
-{
-    if (dictName_.size())
-    {
-        ptr_.reset
-        (
-            new IOOutputFilter<OutputFilter>
-            (
-                name(),
-                time_.lookupObject<objectRegistry>(regionName_),
-                dictName_
-            )
-        );
-    }
-    else
-    {
-        ptr_.reset
-        (
-            new OutputFilter
-            (
-                name(),
-                time_.lookupObject<objectRegistry>(regionName_),
-                dict_
-            )
-        );
-    }
-
-    return ptr_.valid();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class OutputFilter>
@@ -108,7 +76,33 @@ Foam::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
     evaluateControl_(t, dict, "evaluate")
 {
     readDict();
-    if (!allocateFilter())
+
+    if (dictName_.size())
+    {
+        ptr_.reset
+        (
+            new IOOutputFilter<OutputFilter>
+            (
+                name,
+                time_.lookupObject<objectRegistry>(regionName_),
+                dictName_
+            )
+        );
+    }
+    else
+    {
+        ptr_.reset
+        (
+            new OutputFilter
+            (
+                name,
+                time_.lookupObject<objectRegistry>(regionName_),
+                dict_
+            )
+        );
+    }
+
+    if (!ptr_.valid())
     {
         FatalErrorInFunction
             << "Cannot construct " << OutputFilter::typeName
@@ -192,9 +186,9 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
 
         scalar nSteps = timeToNextWrite/deltaT - SMALL;
 
-        // function objects modify deltaT inside nStepsToStartTimeChange range
-        // NOTE: Potential problem if two function objects dump inside the same
-        // interval
+        // functionObjects modify deltaT within nStepsToStartTimeChange
+        // NOTE: Potential problems arise if two function objects dump within
+        // the same interval
         if (nSteps < nStepsToStartTimeChange_)
         {
             label nStepsToNextWrite = label(nSteps) + 1;

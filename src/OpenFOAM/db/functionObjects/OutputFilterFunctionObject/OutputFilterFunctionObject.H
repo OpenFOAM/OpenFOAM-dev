@@ -103,10 +103,7 @@ class OutputFilterFunctionObject
         //- Read relevant dictionary entries
         void readDict();
 
-        //- Creates most of the data associated with this object.
-        bool allocateFilter();
-
-        //- Returns true if active (enabled and within time bounds)
+        //- Returns true if within time bounds
         bool active() const;
 
         //- Disallow default bitwise copy construct
@@ -158,9 +155,9 @@ public:
 
         // Function object control
 
-            //- Called at each ++ or += of the time-loop. forceWrite overrides
-            //  the usual outputControl behaviour and forces writing always
-            //  (used in post-processing mode)
+            //- Called at each ++ or += of the time-loop.
+            //  forceWrite overrides the usual outputControl behaviour and
+            //  forces writing (used in post-processing mode)
             virtual bool execute(const bool forceWrite = false);
 
             //- Called when Time::run() determines that the time-loop exits
