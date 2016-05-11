@@ -355,15 +355,26 @@ bool Foam::functionObjectList::read()
                 {
                    foPtr = functionObject::New(key, time_, dict);
                 }
-                catch (...)
-                {}
+                catch (Foam::IOerror& ioErr)
+                {
+                    Info<< ioErr << nl << endl;
+                    ::exit(1);
+                }
+                catch (Foam::error& err)
+                {
+                    WarningInFunction
+                        << "Caught FatalError " << err << nl << endl;
+                }
                 FatalError.dontThrowExceptions();
                 FatalIOError.dontThrowExceptions();
 
                 if (foPtr.valid())
                 {
                     objPtr = foPtr.ptr();
-                    ok = objPtr->start() && ok;
+                }
+                else
+                {
+                    ok = false;
                 }
             }
 
