@@ -64,10 +64,10 @@ public:
         //- Extrusion controls
         enum extrudeMode
         {
-            NOEXTRUDE,      /*!< Do not extrude. No layers added. */
-            EXTRUDE,        /*!< Extrude */
-            EXTRUDEREMOVE   /*!< Extrude but afterwards remove added */
-                            /*!< faces locally */
+            NOEXTRUDE,      //!< Do not extrude. No layers added.
+            EXTRUDE,        //!< Extrude
+            EXTRUDEREMOVE   //!< Extrude but afterwards remove added
+                            //!< faces locally
         };
 
 private:

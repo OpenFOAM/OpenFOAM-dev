@@ -137,9 +137,9 @@ public:
         //- Enumeration for how the userdata is to be mapped upon refinement.
         enum mapType
         {
-            MASTERONLY = 1, /*!< maintain master only */
-            KEEPALL = 2,    /*!< have slaves (upon refinement) from master */
-            REMOVE = 4      /*!< set value to -1 any face that was refined */
+            MASTERONLY = 1, //!< maintain master only
+            KEEPALL = 2,    //!< have slaves (upon refinement) from master
+            REMOVE = 4      //!< set value to -1 any face that was refined
         };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,13 +56,13 @@ public:
     //- The output control options
     enum outputControls
     {
-        ocTimeStep,       /*!< execution is coupled to the time-step */
-        ocOutputTime,     /*!< execution is coupled to the output-time */
-        ocAdjustableTime, /*!< Adjust time step for dumping */
-        ocRunTime,        /*!< run time for dumping */
-        ocClockTime,      /*!< clock time for dumping */
-        ocCpuTime,        /*!< cpu time for dumping */
-        ocNone            /*!< no output */
+        ocTimeStep,           //!< execution is coupled to the time-step
+        ocOutputTime,         //!< execution is coupled to the output-time
+        ocAdjustableRunTime,  //!< Adjust time step for dumping
+        ocRunTime,            //!< run time for dumping
+        ocClockTime,          //!< clock time for dumping
+        ocCpuTime,            //!< cpu time for dumping
+        ocNone                //!< no output
     };
 
 
@@ -86,7 +86,8 @@ private:
         //  a value <= 1 means execute at every time step
         label outputInterval_;
 
-        //- Dumping counter for ocOutputTime or index dump for ocAdjustableTime
+        //- Dumping counter for ocOutputTime or index dump
+        //  for ocAdjustableRunTime
         label outputTimeLastDump_;
 
         //- Dump each deltaT (adjust Ttime)

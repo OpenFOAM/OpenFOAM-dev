@@ -73,9 +73,9 @@ public:
         //- Enumeration defining the type of action
         enum actionType
         {
-            noWriteNow,    /*!< stop immediately without writing data */
-            writeNow,      /*!< write data and stop immediately */
-            nextWrite      /*!< stop the next time data are written */
+            noWriteNow,    //!< stop immediately without writing data
+            writeNow,      //!< write data and stop immediately
+            nextWrite      //!< stop the next time data are written
         };
 
 private:
