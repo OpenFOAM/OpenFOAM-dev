@@ -30,7 +30,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(FUNCTIONOBJECT, 0);
+    defineTypeNameAndDebug(FUNCTIONOBJECT, 0);
 }
 
 
@@ -83,8 +83,7 @@ void Foam::FUNCTIONOBJECT::timeSet()
 
 
 void Foam::FUNCTIONOBJECT::write()
-{
-}
+{}
 
 
 // ************************************************************************* //

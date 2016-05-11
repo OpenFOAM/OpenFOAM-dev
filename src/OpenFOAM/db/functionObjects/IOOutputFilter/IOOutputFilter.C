@@ -67,32 +67,6 @@ Foam::IOOutputFilter<OutputFilter>::IOOutputFilter
 
 
 template<class OutputFilter>
-bool Foam::IOOutputFilter<OutputFilter>::viable
-(
-    const word& outputFilterName,
-    const objectRegistry& obr,
-    const word& dictName,
-    const IOobject::readOption rOpt,
-    const bool readFromFiles
-)
-{
-    IOdictionary dict
-    (
-        IOobject
-        (
-            dictName,
-            obr.time().system(),
-            obr,
-            rOpt,
-            IOobject::NO_WRITE
-        )
-    );
-
-    return OutputFilter::viable(outputFilterName, obr, dict, readFromFiles);
-}
-
-
-template<class OutputFilter>
 Foam::IOOutputFilter<OutputFilter>::IOOutputFilter
 (
     const word& outputFilterName,

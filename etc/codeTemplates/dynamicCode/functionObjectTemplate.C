@@ -76,18 +76,6 @@ ${typeName}FunctionObject::${typeName}FunctionObject
 }
 
 
-bool ${typeName}FunctionObject::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool
-)
-{
-    return true;
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 ${typeName}FunctionObject::~${typeName}FunctionObject()

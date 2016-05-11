@@ -448,20 +448,13 @@ Foam::functionObjects::wallBoundedStreamLine::wallBoundedStreamLine
     obr_(obr),
     loadFromFiles_(loadFromFiles)
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict_);
-}
-
-
-bool Foam::functionObjects::wallBoundedStreamLine::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

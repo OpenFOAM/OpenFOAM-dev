@@ -203,6 +203,12 @@ Foam::functionObjects::pressureTools::pressureTools
     UInf_(Zero),
     rhoInf_(0.0)
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
 
     dimensionSet pDims(dimPressure);
@@ -232,19 +238,6 @@ Foam::functionObjects::pressureTools::pressureTools
     );
 
     mesh.objectRegistry::store(pPtr);
-}
-
-
-bool Foam::functionObjects::pressureTools::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

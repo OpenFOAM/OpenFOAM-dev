@@ -54,20 +54,13 @@ Foam::functionObjects::grad::grad
     fieldName_("undefined-fieldName"),
     resultName_("undefined-resultName")
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
-}
-
-
-bool Foam::functionObjects::grad::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

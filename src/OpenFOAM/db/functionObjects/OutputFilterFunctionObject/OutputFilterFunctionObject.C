@@ -56,49 +56,27 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::allocateFilter()
 {
     if (dictName_.size())
     {
-        if
+        ptr_.reset
         (
-            IOOutputFilter<OutputFilter>::viable
+            new IOOutputFilter<OutputFilter>
             (
                 name(),
                 time_.lookupObject<objectRegistry>(regionName_),
                 dictName_
             )
-        )
-        {
-            ptr_.reset
-            (
-                new IOOutputFilter<OutputFilter>
-                (
-                    name(),
-                    time_.lookupObject<objectRegistry>(regionName_),
-                    dictName_
-                )
-            );
-        }
+        );
     }
     else
     {
-        if
+        ptr_.reset
         (
-            OutputFilter::viable
+            new OutputFilter
             (
                 name(),
                 time_.lookupObject<objectRegistry>(regionName_),
                 dict_
             )
-        )
-        {
-            ptr_.reset
-            (
-                new OutputFilter
-                (
-                    name(),
-                    time_.lookupObject<objectRegistry>(regionName_),
-                    dict_
-                )
-            );
-        }
+        );
     }
 
     return ptr_.valid();

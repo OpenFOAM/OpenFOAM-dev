@@ -134,7 +134,7 @@ public:
     // Member Functions
 
         //- Return name of the FUNCTIONOBJECT
-        virtual const word& name() const
+        const word& name() const
         {
             return name_;
         }

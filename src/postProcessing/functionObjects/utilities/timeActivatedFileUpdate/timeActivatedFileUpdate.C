@@ -84,18 +84,6 @@ Foam::functionObjects::timeActivatedFileUpdate::timeActivatedFileUpdate
 }
 
 
-bool Foam::functionObjects::timeActivatedFileUpdate::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::timeActivatedFileUpdate::~timeActivatedFileUpdate()

@@ -287,18 +287,6 @@ Foam::probes::probes
 }
 
 
-bool Foam::probes::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::probes::~probes()

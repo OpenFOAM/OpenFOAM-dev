@@ -57,18 +57,6 @@ Foam::functionObjects::systemCall::systemCall
 }
 
 
-bool Foam::functionObjects::systemCall::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::systemCall::~systemCall()

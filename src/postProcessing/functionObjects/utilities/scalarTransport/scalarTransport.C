@@ -176,25 +176,18 @@ Foam::functionObjects::scalarTransport::scalarTransport
         boundaryTypes()
     )
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
 
     if (resetOnStartUp_)
     {
         T_ == dimensionedScalar("zero", dimless, 0.0);
     }
-}
-
-
-bool Foam::functionObjects::scalarTransport::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

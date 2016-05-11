@@ -97,19 +97,6 @@ Foam::functionObjects::abort::abort
 }
 
 
-bool Foam::functionObjects::abort::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
-}
-
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::abort::~abort()

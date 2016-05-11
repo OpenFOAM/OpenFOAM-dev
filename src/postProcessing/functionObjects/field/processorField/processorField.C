@@ -51,6 +51,12 @@ Foam::functionObjects::processorField::processorField
     name_(name),
     obr_(obr)
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
@@ -74,20 +80,6 @@ Foam::functionObjects::processorField::processorField
 
     mesh.objectRegistry::store(procFieldPtr);
 }
-
-
-bool Foam::functionObjects::processorField::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
-}
-
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

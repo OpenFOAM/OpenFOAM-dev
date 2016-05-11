@@ -118,20 +118,13 @@ Foam::functionObjects::fieldValues::fieldValueDelta::fieldValueDelta
     source1Ptr_(NULL),
     source2Ptr_(NULL)
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
-}
-
-
-bool Foam::functionObjects::fieldValues::fieldValueDelta::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

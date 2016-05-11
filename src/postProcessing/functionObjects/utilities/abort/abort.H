@@ -126,16 +126,6 @@ public:
             const bool loadFromFilesUnused = false
         );
 
-        //- Return true if the construction of this functionObject is viable
-        //  i.e. the prerequisites for construction are available
-        static bool viable
-        (
-            const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
-        );
-
 
     //- Destructor
     virtual ~abort();

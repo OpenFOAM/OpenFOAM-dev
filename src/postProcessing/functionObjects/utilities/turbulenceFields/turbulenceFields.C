@@ -125,36 +125,24 @@ Foam::functionObjects::turbulenceFields::turbulenceFields
     obr_(obr),
     fieldSet_()
 {
-    read(dict);
-}
-
-
-bool Foam::functionObjects::turbulenceFields::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
     if (!isA<fvMesh>(obr))
     {
-        return false;
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
     }
 
     if
     (
-        obr.foundObject<compressible::turbulenceModel>(modelName)
-     || obr.foundObject<incompressible::turbulenceModel>(modelName)
+       !obr.foundObject<compressible::turbulenceModel>(modelName)
+    && !obr.foundObject<incompressible::turbulenceModel>(modelName)
     )
     {
-        return true;
+        FatalErrorInFunction
+            << "Cannot find turbulenceModel in objectRegistry"
+            << exit(FatalError);
     }
-    else
-    {
-        return false;
-    }
+
+    read(dict);
 }
 
 

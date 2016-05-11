@@ -202,18 +202,6 @@ Foam::patchProbes::patchProbes
 }
 
 
-bool Foam::patchProbes::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::patchProbes::~patchProbes()

@@ -54,6 +54,12 @@ Foam::functionObjects::vorticity::vorticity
     UName_("U"),
     outputName_(typeName)
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
@@ -76,19 +82,6 @@ Foam::functionObjects::vorticity::vorticity
     );
 
     mesh.objectRegistry::store(vorticityPtr);
-}
-
-
-bool Foam::functionObjects::vorticity::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

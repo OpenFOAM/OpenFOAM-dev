@@ -35,8 +35,9 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(sampledSets, 0);
-bool sampledSets::verbose_ = false;
+    defineTypeNameAndDebug(sampledSets, 0);
+
+    bool sampledSets::verbose_ = false;
 }
 
 
@@ -159,18 +160,6 @@ Foam::sampledSets::sampledSets
     }
 
     read(dict);
-}
-
-
-bool Foam::sampledSets::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
 }
 
 

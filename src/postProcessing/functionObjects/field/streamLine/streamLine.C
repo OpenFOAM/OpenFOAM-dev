@@ -337,20 +337,13 @@ Foam::functionObjects::streamLine::streamLine
     loadFromFiles_(loadFromFiles),
     nSubCycle_(0)
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict_);
-}
-
-
-bool Foam::functionObjects::streamLine::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

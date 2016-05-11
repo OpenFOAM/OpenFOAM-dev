@@ -102,16 +102,6 @@ public:
             const bool loadFromFilesUnused = false
         );
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
-        static bool viable
-        (
-            const word& name,
-            const objectRegistry& unused,
-            const dictionary&,
-            const bool loadFromFilesUnused = false
-        );
-
 
     //- Destructor
     virtual ~${typeName}FunctionObject();

@@ -53,6 +53,12 @@ Foam::functionObjects::Q::Q
     obr_(obr),
     UName_("U")
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
@@ -75,19 +81,6 @@ Foam::functionObjects::Q::Q
     );
 
     mesh.objectRegistry::store(QPtr);
-}
-
-
-bool Foam::functionObjects::Q::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

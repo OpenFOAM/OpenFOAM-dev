@@ -52,20 +52,13 @@ Foam::functionObjects::blendingFactor::blendingFactor
     phiName_("unknown-phiName"),
     fieldName_("unknown-fieldName")
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
-}
-
-
-bool Foam::functionObjects::blendingFactor::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

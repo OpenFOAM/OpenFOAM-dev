@@ -94,16 +94,6 @@ public:
             const bool loadFromFile = false
         );
 
-        //- Return true if the construction of this functionObject is viable
-        static bool viable
-        (
-            const word& outputFilterName,
-            const objectRegistry&,
-            const word& dictName = OutputFilter::typeName() + "Dict",
-            const IOobject::readOption rOpt = IOobject::MUST_READ_IF_MODIFIED,
-            const bool loadFromFiles = false
-        );
-
         //- Construct for given objectRegistry and dictionary
         //  Dictionary read from full path.
         //  Allow the possibility to load fields from files

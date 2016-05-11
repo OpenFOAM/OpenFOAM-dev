@@ -60,6 +60,12 @@ Foam::moleFractions<ThermoType>::moleFractions
     name_(name),
     mesh_(refCast<const fvMesh>(obr))
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     if (mesh_.foundObject<ThermoType>(basicThermo::dictName))
     {
         const ThermoType& thermo =
@@ -99,20 +105,6 @@ Foam::moleFractions<ThermoType>::moleFractions
             << ThermoType::typeName
             << exit(FatalError);
     }
-}
-
-
-template<class ThermoType>
-bool Foam::moleFractions<ThermoType>::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

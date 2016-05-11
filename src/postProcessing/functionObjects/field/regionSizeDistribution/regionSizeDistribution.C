@@ -333,20 +333,13 @@ Foam::functionObjects::regionSizeDistribution::regionSizeDistribution
     alphaName_(dict.lookup("field")),
     patchNames_(dict.lookup("patches"))
 {
+    if (!isA<fvMesh>(obr))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
     read(dict);
-}
-
-
-bool Foam::functionObjects::regionSizeDistribution::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    // Construction is viable if the available mesh is an fvMesh
-    return isA<fvMesh>(obr);
 }
 
 

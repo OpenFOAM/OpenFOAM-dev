@@ -107,18 +107,6 @@ Foam::functionObjects::writeDictionary::writeDictionary
 }
 
 
-bool Foam::functionObjects::writeDictionary::viable
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-{
-    return true;
-}
-
-
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::writeDictionary::~writeDictionary()
