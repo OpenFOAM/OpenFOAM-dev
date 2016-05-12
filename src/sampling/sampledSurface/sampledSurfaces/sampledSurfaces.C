@@ -30,6 +30,7 @@ License
 #include "IOmanip.H"
 #include "volPointInterpolation.H"
 #include "PatchTools.H"
+#include "mapPolyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -245,17 +246,23 @@ void Foam::sampledSurfaces::read(const dictionary& dict)
 }
 
 
-void Foam::sampledSurfaces::updateMesh(const mapPolyMesh&)
+void Foam::sampledSurfaces::updateMesh(const mapPolyMesh& mpm)
 {
-    expire();
+    if (&mpm.mesh() == &mesh_)
+    {
+        expire();
+    }
 
     // pointMesh and interpolation will have been reset in mesh.update
 }
 
 
-void Foam::sampledSurfaces::movePoints(const polyMesh&)
+void Foam::sampledSurfaces::movePoints(const polyMesh& mesh)
 {
-    expire();
+    if (&mesh == &mesh_)
+    {
+        expire();
+    }
 }
 
 

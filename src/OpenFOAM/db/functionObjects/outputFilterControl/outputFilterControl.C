@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "outputFilterOutputControl.H"
+#include "outputFilterControl.H"
 #include "PstreamReduceOps.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
@@ -31,10 +31,11 @@ License
 namespace Foam
 {
     template<>
-    const char* NamedEnum<outputFilterOutputControl::outputControls, 7>::
+    const char* NamedEnum<outputFilterControl::writeControls, 8>::
     names[] =
     {
         "timeStep",
+        "writeTime",
         "outputTime",
         "adjustableRunTime",
         "runTime",
@@ -44,13 +45,13 @@ namespace Foam
     };
 }
 
-const Foam::NamedEnum<Foam::outputFilterOutputControl::outputControls, 7>
-    Foam::outputFilterOutputControl::outputControlNames_;
+const Foam::NamedEnum<Foam::outputFilterControl::writeControls, 8>
+    Foam::outputFilterControl::writeControlNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::outputFilterOutputControl::outputFilterOutputControl
+Foam::outputFilterControl::outputFilterControl
 (
     const Time& t,
     const dictionary& dict,
@@ -59,10 +60,10 @@ Foam::outputFilterOutputControl::outputFilterOutputControl
 :
     time_(t),
     prefix_(prefix),
-    outputControl_(ocTimeStep),
+    writeControl_(ocTimeStep),
     outputInterval_(0),
-    outputTimeLastDump_(0),
-    writeInterval_(-1)
+    writeInterval_(-1),
+    outputTimeLastDump_(0)
 {
     read(dict);
 }
@@ -70,27 +71,41 @@ Foam::outputFilterOutputControl::outputFilterOutputControl
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::outputFilterOutputControl::~outputFilterOutputControl()
+Foam::outputFilterControl::~outputFilterControl()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::outputFilterOutputControl::read(const dictionary& dict)
+void Foam::outputFilterControl::read(const dictionary& dict)
 {
-    const word controlName(prefix_ + "Control");
-    const word intervalName(prefix_ + "Interval");
+    word controlName(prefix_ + "Control");
+    word intervalName(prefix_ + "Interval");
+
+    // For backward compatibility support the deprecated 'outputControl' option
+    // now superseded by 'writeControl' for compatibility with Time
+    if (prefix_ == "write" && dict.found("outputControl"))
+    {
+        IOWarningInFunction(dict)
+            << "Using deprecated 'outputControl'" << nl
+            << "    Please use 'writeControl' with 'writeInterval'"
+            << endl;
+
+        // Change to the old names for this option
+        controlName = "outputControl";
+        intervalName = "outputInterval";
+    }
 
     if (dict.found(controlName))
     {
-        outputControl_ = outputControlNames_.read(dict.lookup(controlName));
+        writeControl_ = writeControlNames_.read(dict.lookup(controlName));
     }
     else
     {
-        outputControl_ = ocTimeStep;
+        writeControl_ = ocTimeStep;
     }
 
-    switch (outputControl_)
+    switch (writeControl_)
     {
         case ocTimeStep:
         {
@@ -98,6 +113,7 @@ void Foam::outputFilterOutputControl::read(const dictionary& dict)
             break;
         }
 
+        case ocWriteTime:
         case ocOutputTime:
         {
             outputInterval_ = dict.lookupOrDefault<label>(intervalName, 1);
@@ -109,22 +125,21 @@ void Foam::outputFilterOutputControl::read(const dictionary& dict)
         case ocCpuTime:
         case ocAdjustableRunTime:
         {
-            writeInterval_ = readScalar(dict.lookup("writeInterval"));
+            writeInterval_ = readScalar(dict.lookup(intervalName));
             break;
         }
 
         default:
         {
-            // do nothing
             break;
         }
     }
 }
 
 
-bool Foam::outputFilterOutputControl::output()
+bool Foam::outputFilterControl::output()
 {
-    switch (outputControl_)
+    switch (writeControl_)
     {
         case ocTimeStep:
         {
@@ -136,11 +151,12 @@ bool Foam::outputFilterOutputControl::output()
             break;
         }
 
+        case ocWriteTime:
         case ocOutputTime:
         {
             if (time_.outputTime())
             {
-                outputTimeLastDump_ ++;
+                outputTimeLastDump_++;
                 return !(outputTimeLastDump_ % outputInterval_);
             }
             break;
@@ -155,7 +171,7 @@ bool Foam::outputFilterOutputControl::output()
                     (time_.value() - time_.startTime().value())
                   + 0.5*time_.deltaTValue()
                 )
-                / writeInterval_
+               /writeInterval_
             );
 
             if (outputIndex > outputTimeLastDump_)
@@ -171,7 +187,7 @@ bool Foam::outputFilterOutputControl::output()
             label outputIndex = label
             (
                 returnReduce(time_.elapsedCpuTime(), maxOp<double>())
-                / writeInterval_
+               /writeInterval_
             );
             if (outputIndex > outputTimeLastDump_)
             {
@@ -186,7 +202,7 @@ bool Foam::outputFilterOutputControl::output()
             label outputIndex = label
             (
                 returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
-                / writeInterval_
+               /writeInterval_
             );
             if (outputIndex > outputTimeLastDump_)
             {
@@ -203,10 +219,9 @@ bool Foam::outputFilterOutputControl::output()
 
         default:
         {
-            // this error should not actually be possible
             FatalErrorInFunction
                 << "Undefined output control: "
-                << outputControlNames_[outputControl_] << nl
+                << writeControlNames_[writeControl_] << nl
                 << abort(FatalError);
             break;
         }

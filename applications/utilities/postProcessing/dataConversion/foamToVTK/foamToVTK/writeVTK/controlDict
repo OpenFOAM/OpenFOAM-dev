@@ -58,16 +58,16 @@ functions
         functionObjectLibs ("libfoamToVTK.so");
 
         // When to write:
-        //  timeStep            (with optional outputInterval)
-        //  outputTime          (with optional outputInterval)
+        //  timeStep            (with optional writeInterval)
+        //  outputTime          (with optional writeInterval)
         //  adjustableTime
         //  runTime
         //  clockTime
         //  cpuTime
-        outputControl   outputTime;
+        writeControl   outputTime;
 
         // Write every writeInterval (only valid for timeStemp, outputTime)
-        outputInterval  1;
+        writeInterval  1;
 
         // Interval of time (valid for adjustableTime, runTime, clockTime,
         //  cpuTime)

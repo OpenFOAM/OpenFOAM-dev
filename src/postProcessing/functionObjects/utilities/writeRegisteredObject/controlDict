@@ -71,14 +71,14 @@ functions
         //  runTime
         //  clockTime
         //  cpuTime
-        outputControl   outputTime;
+        writeControl   outputTime;
 
         // Objects (fields or lagrangian fields in any of the clouds)
         // to write every outputTime
         objectNames    (p positions nParticle);
 
         // Write as normal every writeInterval'th outputTime.
-        outputInterval  1; // (timeStep, outputTime)
+        writeInterval  1; // (timeStep, outputTime)
 
         // Interval of time (sec) to write down(
         writeInterval   10.5 //(adjustableRunTime, runTime, clockTime, cpuTime)
@@ -94,16 +94,16 @@ functions
         functionObjectLibs ("libIOFunctionObjects.so");
 
         // When to write:
-        //  timeStep            (with optional outputInterval)
-        //  outputTime          (with optional outputInterval)
+        //  timeStep            (with optional writeInterval)
+        //  outputTime          (with optional writeInterval)
         //  adjustableRunTime
         //  runTime
         //  clockTime
         //  cpuTime
-        outputControl   outputTime;
+        writeControl   outputTime;
 
          // Write every writeInterval (only valid for timeStemp, outputTime)
-        outputInterval  1;
+        writeInterval  1;
 
          // Interval of time (valid for adjustableRunTime, runTime, clockTime,
         //  cpuTime)

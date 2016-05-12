@@ -26,7 +26,7 @@ inletMassFlowRate
 
     operation       sum;
 
-    outputControl   timeStep;
+    writeControl   timeStep;
 }
 
 outletMassFlowRate
@@ -49,7 +49,7 @@ outletMassFlowRate
 
     operation       sum;
 
-    outputControl   timeStep;
+    writeControl   timeStep;
 }
 
 totalMass

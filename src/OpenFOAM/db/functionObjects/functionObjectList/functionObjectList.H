@@ -171,7 +171,7 @@ public:
         bool start();
 
         //- Called at each ++ or += of the time-loop. forceWrite overrides
-        //  the usual outputControl behaviour and forces writing always
+        //  the usual writeControl behaviour and forces writing always
         //  (used in post-processing mode)
         bool execute(const bool forceWrite = false);
 

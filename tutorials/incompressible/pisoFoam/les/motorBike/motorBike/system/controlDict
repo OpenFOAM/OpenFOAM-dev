@@ -52,7 +52,7 @@ functions
     streamLines
     {
         type            streamLine;
-        outputControl   outputTime;
+        writeControl   outputTime;
         setFormat       vtk;
         UName           U;
         trackForward    true;
@@ -74,7 +74,7 @@ functions
     {
         type            surfaces;
         functionObjectLibs ( "libsampling.so" );
-        outputControl   outputTime;
+        writeControl   outputTime;
         surfaceFormat   vtk;
         fields          ( p U );
         interpolationScheme cellPoint;
@@ -97,8 +97,8 @@ functions
     {
         type            forceCoeffs;
         functionObjectLibs ( "libforces.so" );
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
         patches         ( "motorBike.*" );
         pName           p;
         UName           U;

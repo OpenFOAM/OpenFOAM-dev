@@ -10,7 +10,7 @@ surfaces
 {
     type            surfaces;
     functionObjectLibs ("libsampling.so");
-    outputControl   outputTime;
+    writeControl   outputTime;
 
     surfaceFormat   vtk;
     fields          (p U Q);

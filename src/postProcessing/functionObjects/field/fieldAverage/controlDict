@@ -58,7 +58,7 @@ functions
         enabled         true;
 
         // When to output the average fields
-        outputControl   outputTime;
+        writeControl   outputTime;
 
         // Fields to be averaged - runTime modifiable
         fields

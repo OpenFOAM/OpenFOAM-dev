@@ -352,9 +352,11 @@ void Foam::probes::read(const dictionary& dict)
 
 void Foam::probes::updateMesh(const mapPolyMesh& mpm)
 {
-    if (debug)
+    DebugInfo<< "probes: updateMesh" << endl;
+
+    if (&mpm.mesh() != &mesh_)
     {
-        Info<< "probes: updateMesh" << endl;
+        return;
     }
 
     if (fixedLocations_)
@@ -427,14 +429,11 @@ void Foam::probes::updateMesh(const mapPolyMesh& mpm)
 }
 
 
-void Foam::probes::movePoints(const polyMesh&)
+void Foam::probes::movePoints(const polyMesh& mesh)
 {
-    if (debug)
-    {
-        Info<< "probes: movePoints" << endl;
-    }
+    DebugInfo<< "probes: movePoints" << endl;
 
-    if (fixedLocations_)
+    if (fixedLocations_ && &mesh == &mesh_)
     {
         findElements(mesh_);
     }

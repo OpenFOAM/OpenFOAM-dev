@@ -37,6 +37,7 @@ License
 #include "PatchTools.H"
 #include "meshSearchMeshObject.H"
 #include "faceSet.H"
+#include "mapPolyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -854,17 +855,30 @@ void Foam::functionObjects::wallBoundedStreamLine::write()
 
 void Foam::functionObjects::wallBoundedStreamLine::updateMesh
 (
-    const mapPolyMesh&
+    const mapPolyMesh& mpm
 )
 {
-    read(dict_);
+    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
+
+    if (&mpm.mesh() == &mesh_)
+    {
+        read(dict_);
+    }
 }
 
 
-void Foam::functionObjects::wallBoundedStreamLine::movePoints(const polyMesh&)
+void Foam::functionObjects::wallBoundedStreamLine::movePoints
+(
+    const polyMesh& mesh
+)
 {
-    // Moving mesh affects the search tree
-    read(dict_);
+    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
+
+    if (&mesh == &mesh_)
+    {
+        // Moving mesh affects the search tree
+        read(dict_);
+    }
 }
 
 

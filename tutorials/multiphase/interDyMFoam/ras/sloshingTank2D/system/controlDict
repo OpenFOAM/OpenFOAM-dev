@@ -58,7 +58,7 @@ functions
     {
         type            probes;
         functionObjectLibs ("libsampling.so");
-        outputControl   outputTime;
+        writeControl   outputTime;
         probeLocations
         (
             (0 9.95 19.77)
@@ -75,7 +75,7 @@ functions
     {
         type            surfaces;
         functionObjectLibs ("libsampling.so");
-        outputControl   outputTime;
+        writeControl   outputTime;
         surfaceFormat   raw;
         fields
         (

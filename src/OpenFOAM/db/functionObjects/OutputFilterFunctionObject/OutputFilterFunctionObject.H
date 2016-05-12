@@ -44,7 +44,7 @@ SourceFiles
 
 #include "functionObject.H"
 #include "dictionary.H"
-#include "outputFilterOutputControl.H"
+#include "outputFilterControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -71,9 +71,6 @@ class OutputFilterFunctionObject
 
         // Optional user inputs
 
-            //- Name of region - defaults to name of polyMesh::defaultRegion
-            const word regionName_;
-
             //- Activation time - defaults to -VGREAT
             scalar timeStart_;
 
@@ -86,10 +83,10 @@ class OutputFilterFunctionObject
 
 
         //- Output controls
-        outputFilterOutputControl outputControl_;
+        outputFilterControl writeControl_;
 
         //- Evaluate controls
-        outputFilterOutputControl evaluateControl_;
+        outputFilterControl evaluateControl_;
 
         //- The output filter
         OutputFilter filter_;
@@ -141,7 +138,7 @@ public:
             inline const word& regionName() const;
 
             //- Return the output control object
-            inline const outputFilterOutputControl& outputControl() const;
+            inline const outputFilterControl& writeControl() const;
 
             //- Return the output filter
             inline const OutputFilter& outputFilter() const;
@@ -150,7 +147,7 @@ public:
         // Function object control
 
             //- Called at each ++ or += of the time-loop.
-            //  forceWrite overrides the usual outputControl behaviour and
+            //  forceWrite overrides the usual writeControl behaviour and
             //  forces writing (used in post-processing mode)
             virtual bool execute(const bool forceWrite = false);
 

@@ -25,35 +25,28 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class OutputFilter>
-inline const Foam::Time&
-Foam::OutputFilterFunctionObject<OutputFilter>::time() const
+inline const Foam::Time& Foam::outputFilterControl::time() const
 {
     return time_;
 }
 
 
-template<class OutputFilter>
-inline const Foam::dictionary&
-Foam::OutputFilterFunctionObject<OutputFilter>::dict() const
-{
-    return dict_;
-}
-
-
-template<class OutputFilter>
-inline const Foam::outputFilterControl&
-Foam::OutputFilterFunctionObject<OutputFilter>::writeControl() const
+inline Foam::outputFilterControl::writeControls
+Foam::outputFilterControl::writeControl() const
 {
     return writeControl_;
 }
 
 
-template<class OutputFilter>
-inline const OutputFilter&
-Foam::OutputFilterFunctionObject<OutputFilter>::outputFilter() const
+inline Foam::scalar Foam::outputFilterControl::writeInterval() const
 {
-    return filter_;
+    return writeInterval_;
+}
+
+
+inline Foam::label Foam::outputFilterControl::outputTimeLastDump() const
+{
+    return outputTimeLastDump_;
 }
 
 

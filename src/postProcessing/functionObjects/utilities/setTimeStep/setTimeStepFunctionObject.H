@@ -32,7 +32,7 @@ Description
     solvers with adjustTimeStep control (e.g. pimpleFoam). Makes no attempt
     to cooperate with other timeStep 'controllers' (maxCo, other
     functionObjects). Supports 'enabled' flag but none of othe other ones
-    'timeStart', 'timeEnd', 'outputControl' etc.
+    'timeStart', 'timeEnd', 'writeControl' etc.
 
 SourceFiles
     setTimeStepFunctionObject.C
@@ -125,10 +125,10 @@ public:
             virtual bool read(const dictionary&);
 
             //- Update for changes of mesh
-            virtual void updateMesh(const mapPolyMesh& mpm);
+            virtual void updateMesh(const mapPolyMesh&);
 
             //- Update for changes of mesh
-            virtual void movePoints(const polyMesh& mesh);
+            virtual void movePoints(const polyMesh&);
 };
 
 

@@ -218,7 +218,7 @@ db/functionObjects/functionObject/functionObject.C
 db/functionObjects/functionObjectList/functionObjectList.C
 db/functionObjects/functionObjectFile/functionObjectFile.C
 db/functionObjects/functionObjectFiles/functionObjectFiles.C
-db/functionObjects/outputFilterOutputControl/outputFilterOutputControl.C
+db/functionObjects/outputFilterControl/outputFilterControl.C
 
 
 Time = db/Time

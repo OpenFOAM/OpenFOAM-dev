@@ -172,7 +172,7 @@ public:
         functionObject& redirectFunctionObject() const;
 
         //- Called at each ++ or += of the time-loop. forceWrite overrides the
-        //  outputControl behaviour.
+        //  writeControl behaviour.
         virtual bool execute(const bool forceWrite);
 
         //- Called when Time::run() determines that the time-loop exits.

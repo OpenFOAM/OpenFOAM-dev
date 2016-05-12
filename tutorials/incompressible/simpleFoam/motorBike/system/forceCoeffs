@@ -12,7 +12,7 @@ forceCoeffs1
 
     functionObjectLibs ( "libforces.so" );
 
-    outputControl   timeStep;
+    writeControl   timeStep;
     timeInterval    1;
 
     log         yes;

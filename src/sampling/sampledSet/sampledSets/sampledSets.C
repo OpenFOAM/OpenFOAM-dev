@@ -30,6 +30,7 @@ License
 #include "ListListOps.H"
 #include "SortableList.H"
 #include "volPointInterpolation.H"
+#include "mapPolyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -296,15 +297,21 @@ void Foam::sampledSets::correct()
 }
 
 
-void Foam::sampledSets::updateMesh(const mapPolyMesh&)
+void Foam::sampledSets::updateMesh(const mapPolyMesh& mpm)
 {
-    correct();
+    if (&mpm.mesh() == &mesh_)
+    {
+        correct();
+    }
 }
 
 
-void Foam::sampledSets::movePoints(const polyMesh&)
+void Foam::sampledSets::movePoints(const polyMesh& mesh)
 {
-    correct();
+    if (&mesh == &mesh_)
+    {
+        correct();
+    }
 }
 
 

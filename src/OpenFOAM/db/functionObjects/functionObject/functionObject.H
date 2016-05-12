@@ -51,8 +51,8 @@ Description
                 enabled             yes;
                 timeStart           0;
                 timeEnd             10;
-                outputControl       outputTime;
-                outputInterval      1;
+                writeControl        outputTime;
+                writeInterval       1;
                 ...
             }
         }
@@ -62,13 +62,27 @@ Description
     \table
         Property | Description                       | Required | Default value
         type     | Type of function object               | yes      |
-        functionObjectLibs | Libraries containing object implementation | yes |
+        functionObjectLibs | Libraries containing implementation | yes |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
         timeStart| Start time                            | no       |
         timeEnd  | End time                              | no       |
-        outputControl | Either 'outputTime' or 'timeStep'| no | timeStep
-        outputInterval| Steps between output for outputControl=timeStep | no | 1
+        evaluateControl | See time controls below        | no       | timeStep
+        evaluateInterval   | Steps between output           | no       |
+        writeControl   | See time controls below        | no       | timeStep
+        writeInterval   | Steps between output           | no       |
+    \endtable
+
+    Time controls:
+    \table
+        Option            | Description
+        timeStep          | Execute/write every 'writeInterval' time-steps
+        outputTime        | Execute/write every 'writeInterval' output times
+        adjustableRunTime | Execute/write every 'writeInterval' run time period
+        runTime           | Execute/write every 'writeInterval' run time period
+        clockTime       | Execute/write every 'writeInterval' clock time period
+        cpuTime           | Execute/write every 'writeInterval' CPU time period
+        none              | Execute/write every time-step
     \endtable
 
     The sub-dictionary name \c myFunctionObject is chosen by the user, and is
@@ -184,7 +198,7 @@ public:
         virtual const word& name() const;
 
         //- Called at each ++ or += of the time-loop. forceWrite overrides
-        //  the usual outputControl behaviour and forces writing always
+        //  the usual writeControl behaviour and forces writing always
         //  (used in post-processing mode)
         virtual bool execute(const bool forceWrite) = 0;
 

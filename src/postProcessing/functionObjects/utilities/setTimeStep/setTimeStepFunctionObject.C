@@ -136,14 +136,14 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
 
 void Foam::functionObjects::setTimeStepFunctionObject::updateMesh
 (
-    const mapPolyMesh& mpm
+    const mapPolyMesh&
 )
 {}
 
 
 void Foam::functionObjects::setTimeStepFunctionObject::movePoints
 (
-    const polyMesh& mesh
+    const polyMesh&
 )
 {}
 

@@ -35,6 +35,7 @@ License
 #include "mapDistribute.H"
 #include "interpolationCellPoint.H"
 #include "PatchTools.H"
+#include "mapPolyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -697,16 +698,26 @@ void Foam::functionObjects::streamLine::write()
 }
 
 
-void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh&)
+void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh& mpm)
 {
-    read(dict_);
+    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
+
+    if (&mpm.mesh() == &mesh_)
+    {
+        read(dict_);
+    }
 }
 
 
-void Foam::functionObjects::streamLine::movePoints(const polyMesh&)
+void Foam::functionObjects::streamLine::movePoints(const polyMesh& mesh)
 {
-    // Moving mesh affects the search tree
-    read(dict_);
+    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
+
+    if (&mesh == &mesh_)
+    {
+        // Moving mesh affects the search tree
+        read(dict_);
+    }
 }
 
 

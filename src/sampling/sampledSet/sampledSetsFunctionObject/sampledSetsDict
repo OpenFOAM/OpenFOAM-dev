@@ -15,7 +15,7 @@ functions
 
         functionObjectLibs ("libsampling.so");
 
-        outputControl   outputTime;
+        writeControl   outputTime;
         setFormat       gnuplot;
         fields          (p U);
         interpolationScheme cellPoint;

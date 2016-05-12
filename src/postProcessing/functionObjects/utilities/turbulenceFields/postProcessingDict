@@ -21,8 +21,8 @@ functions
         type            turbulenceFields;
         functionObjectLibs ("libutilityFunctionObjects.so");
         enabled         true;
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
 
         fields
         (

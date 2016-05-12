@@ -51,8 +51,8 @@ functions
     {
         type                forces;
         functionObjectLibs  ( "libforces.so" );
-        outputControl       timeStep;
-        outputInterval      10;
+        writeControl       timeStep;
+        writeInterval      10;
         patches             (wing);
         pName               p;
         UName               U;

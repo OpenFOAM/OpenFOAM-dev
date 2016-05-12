@@ -51,8 +51,8 @@ functions
     {
         type            forceCoeffs;
         functionObjectLibs ( "libforces.so" );
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
 
         patches
         (

@@ -57,7 +57,7 @@ functions
     {
         type            faceSource;
         functionObjectLibs ("libfieldFunctionObjects.so");
-        outputControl   timeStep;
+        writeControl   timeStep;
         log             true;
         // Output field values as well
         valueOutput     false;

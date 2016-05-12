@@ -57,7 +57,7 @@ functions
     {
         type            forces;
         functionObjectLibs ("libforces.so");
-        outputControl   outputTime;
+        writeControl   outputTime;
         patches         (floatingObject);
         pName           p;
         UName           U;
@@ -72,8 +72,8 @@ functions
         type            faceSource;
         functionObjectLibs ("libfieldFunctionObjects.so");
         enabled         yes;
-        outputControl   timeStep;
-        outputInterval  1;
+        writeControl   timeStep;
+        writeInterval  1;
         log             yes;
         writeTotalArea  no;
         valueOutput     no;
