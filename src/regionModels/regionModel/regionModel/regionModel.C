@@ -527,7 +527,7 @@ void Foam::regionModels::regionModel::evolve()
             Info<< endl << decrIndent;
         }
 
-        if (time_.outputTime())
+        if (time_.writeTime())
         {
             outputProperties().writeObject
             (

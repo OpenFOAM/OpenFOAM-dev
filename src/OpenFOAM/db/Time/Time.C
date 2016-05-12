@@ -91,21 +91,7 @@ void Foam::Time::adjustDeltaT()
         timeToNextWrite = max
         (
             0.0,
-            (outputTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
-        );
-    }
-    if (secondaryWriteControl_ == wcAdjustableRunTime)
-    {
-        adjustTime = true;
-        timeToNextWrite = max
-        (
-            0.0,
-            min
-            (
-                timeToNextWrite,
-                (secondaryOutputTimeIndex_ + 1)*secondaryWriteInterval_
-              - (value() - startTime_)
-            )
+            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
         );
     }
 
@@ -376,10 +362,7 @@ Foam::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0), // bit less to allow calculations
     purgeWrite_(0),
-    secondaryPurgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
     sigWriteNow_(true, *this),
@@ -471,10 +454,7 @@ Foam::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
-    secondaryPurgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
     sigWriteNow_(true, *this),
@@ -573,10 +553,7 @@ Foam::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
-    secondaryPurgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
     sigWriteNow_(true, *this),
@@ -671,10 +648,7 @@ Foam::Time::Time
     stopAt_(saEndTime),
     writeControl_(wcTimeStep),
     writeInterval_(GREAT),
-    secondaryWriteControl_(wcTimeStep),
-    secondaryWriteInterval_(labelMax/10.0),
     purgeWrite_(0),
-    secondaryPurgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
 
@@ -1115,124 +1089,61 @@ Foam::Time& Foam::Time::operator++()
             }
         }
 
-
-        outputTime_ = false;
-        primaryOutputTime_ = false;
-        secondaryOutputTime_ = false;
+        writeTime_ = false;
 
         switch (writeControl_)
         {
             case wcTimeStep:
-                primaryOutputTime_ = !(timeIndex_ % label(writeInterval_));
+                writeTime_ = !(timeIndex_ % label(writeInterval_));
             break;
 
             case wcRunTime:
             case wcAdjustableRunTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     ((value() - startTime_) + 0.5*deltaT_)
                   / writeInterval_
                 );
 
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    primaryOutputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
 
             case wcCpuTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     returnReduce(elapsedCpuTime(), maxOp<double>())
                   / writeInterval_
                 );
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    primaryOutputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
 
             case wcClockTime:
             {
-                label outputIndex = label
+                label writeIndex = label
                 (
                     returnReduce(label(elapsedClockTime()), maxOp<label>())
                   / writeInterval_
                 );
-                if (outputIndex > outputTimeIndex_)
+                if (writeIndex > writeTimeIndex_)
                 {
-                    primaryOutputTime_ = true;
-                    outputTimeIndex_ = outputIndex;
+                    writeTime_ = true;
+                    writeTimeIndex_ = writeIndex;
                 }
             }
             break;
         }
-
-
-        // Adapt for secondaryWrite controls
-        switch (secondaryWriteControl_)
-        {
-            case wcTimeStep:
-                secondaryOutputTime_ =
-                    !(timeIndex_ % label(secondaryWriteInterval_));
-            break;
-
-            case wcRunTime:
-            case wcAdjustableRunTime:
-            {
-                label outputIndex = label
-                (
-                    ((value() - startTime_) + 0.5*deltaT_)
-                  / secondaryWriteInterval_
-                );
-
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    secondaryOutputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-
-            case wcCpuTime:
-            {
-                label outputIndex = label
-                (
-                    returnReduce(elapsedCpuTime(), maxOp<double>())
-                  / secondaryWriteInterval_
-                );
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    secondaryOutputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-
-            case wcClockTime:
-            {
-                label outputIndex = label
-                (
-                    returnReduce(label(elapsedClockTime()), maxOp<label>())
-                  / secondaryWriteInterval_
-                );
-                if (outputIndex > secondaryOutputTimeIndex_)
-                {
-                    secondaryOutputTime_ = true;
-                    secondaryOutputTimeIndex_ = outputIndex;
-                }
-            }
-            break;
-        }
-
-
-        outputTime_ = primaryOutputTime_ || secondaryOutputTime_;
 
 
         // Check if endTime needs adjustment to stop at the next run()/end()
@@ -1245,25 +1156,23 @@ Foam::Time& Foam::Time::operator++()
             else if (stopAt_ == saWriteNow)
             {
                 endTime_ = value();
-                outputTime_ = true;
-                primaryOutputTime_ = true;
+                writeTime_ = true;
             }
-            else if (stopAt_ == saNextWrite && outputTime_ == true)
+            else if (stopAt_ == saNextWrite && writeTime_ == true)
             {
                 endTime_ = value();
             }
         }
 
-        // Override outputTime if one-shot writing
+        // Override writeTime if one-shot writing
         if (writeOnce_)
         {
-            primaryOutputTime_ = true;
-            outputTime_ = true;
+            writeTime_ = true;
             writeOnce_ = false;
         }
 
         // Adjust the precision of the time directory name if necessary
-        if (outputTime_)
+        if (writeTime_)
         {
             // Tolerance used when testing time equivalence
             const scalar timeTol =

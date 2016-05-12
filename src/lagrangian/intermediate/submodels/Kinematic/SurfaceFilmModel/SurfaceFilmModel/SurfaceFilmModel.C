@@ -269,7 +269,7 @@ void Foam::SurfaceFilmModel<CloudType>::info(Ostream& os)
     os  << "    Parcels absorbed into film      = " << nTransTotal << nl
         << "    New film detached parcels       = " << nInjectTotal << endl;
 
-    if (this->outputTime())
+    if (this->writeTime())
     {
         this->setModelProperty("nParcelsTransferred", nTransTotal);
         this->setModelProperty("nParcelsInjected", nInjectTotal);

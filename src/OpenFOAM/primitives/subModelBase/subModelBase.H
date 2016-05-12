@@ -153,7 +153,7 @@ public:
             virtual void cacheFields(const bool store);
 
             //- Flag to indicate when to write a property
-            virtual bool outputTime() const;
+            virtual bool writeTime() const;
 
 
         // Edit

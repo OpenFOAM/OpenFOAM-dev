@@ -54,7 +54,7 @@ functions
         functionObjectLibs ("libfieldFunctionObjects.so");
 
         // Output every
-        writeControl   outputTime;
+        writeControl   writeTime;
         // writeInterval 10;
 
         setFormat       vtk; //gnuplot, raw etc. See sampleDict.

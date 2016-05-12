@@ -31,7 +31,7 @@ License
 namespace Foam
 {
     template<>
-    const char* NamedEnum<outputFilterControl::writeControls, 8>::
+    const char* NamedEnum<outputFilterControl::timeControls, 8>::
     names[] =
     {
         "timeStep",
@@ -45,8 +45,8 @@ namespace Foam
     };
 }
 
-const Foam::NamedEnum<Foam::outputFilterControl::writeControls, 8>
-    Foam::outputFilterControl::writeControlNames_;
+const Foam::NamedEnum<Foam::outputFilterControl::timeControls, 8>
+    Foam::outputFilterControl::timeControlNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -60,10 +60,10 @@ Foam::outputFilterControl::outputFilterControl
 :
     time_(t),
     prefix_(prefix),
-    writeControl_(ocTimeStep),
-    outputInterval_(0),
-    writeInterval_(-1),
-    outputTimeLastDump_(0)
+    timeControl_(ocTimeStep),
+    intervalSteps_(0),
+    interval_(-1),
+    executionIndex_(0)
 {
     read(dict);
 }
@@ -98,25 +98,25 @@ void Foam::outputFilterControl::read(const dictionary& dict)
 
     if (dict.found(controlName))
     {
-        writeControl_ = writeControlNames_.read(dict.lookup(controlName));
+        timeControl_ = timeControlNames_.read(dict.lookup(controlName));
     }
     else
     {
-        writeControl_ = ocTimeStep;
+        timeControl_ = ocTimeStep;
     }
 
-    switch (writeControl_)
+    switch (timeControl_)
     {
         case ocTimeStep:
         {
-            outputInterval_ = dict.lookupOrDefault<label>(intervalName, 0);
+            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 0);
             break;
         }
 
         case ocWriteTime:
         case ocOutputTime:
         {
-            outputInterval_ = dict.lookupOrDefault<label>(intervalName, 1);
+            intervalSteps_ = dict.lookupOrDefault<label>(intervalName, 1);
             break;
         }
 
@@ -125,7 +125,7 @@ void Foam::outputFilterControl::read(const dictionary& dict)
         case ocCpuTime:
         case ocAdjustableRunTime:
         {
-            writeInterval_ = readScalar(dict.lookup(intervalName));
+            interval_ = readScalar(dict.lookup(intervalName));
             break;
         }
 
@@ -137,16 +137,16 @@ void Foam::outputFilterControl::read(const dictionary& dict)
 }
 
 
-bool Foam::outputFilterControl::output()
+bool Foam::outputFilterControl::execute()
 {
-    switch (writeControl_)
+    switch (timeControl_)
     {
         case ocTimeStep:
         {
             return
             (
-                (outputInterval_ <= 1)
-             || !(time_.timeIndex() % outputInterval_)
+                (intervalSteps_ <= 1)
+             || !(time_.timeIndex() % intervalSteps_)
             );
             break;
         }
@@ -154,10 +154,10 @@ bool Foam::outputFilterControl::output()
         case ocWriteTime:
         case ocOutputTime:
         {
-            if (time_.outputTime())
+            if (time_.writeTime())
             {
-                outputTimeLastDump_++;
-                return !(outputTimeLastDump_ % outputInterval_);
+                executionIndex_++;
+                return !(executionIndex_ % intervalSteps_);
             }
             break;
         }
@@ -165,18 +165,18 @@ bool Foam::outputFilterControl::output()
         case ocRunTime:
         case ocAdjustableRunTime:
         {
-            label outputIndex = label
+            label executionIndex = label
             (
                 (
                     (time_.value() - time_.startTime().value())
                   + 0.5*time_.deltaTValue()
                 )
-               /writeInterval_
+               /interval_
             );
 
-            if (outputIndex > outputTimeLastDump_)
+            if (executionIndex > executionIndex_)
             {
-                outputTimeLastDump_ = outputIndex;
+                executionIndex_ = executionIndex;
                 return true;
             }
             break;
@@ -184,14 +184,14 @@ bool Foam::outputFilterControl::output()
 
         case ocCpuTime:
         {
-            label outputIndex = label
+            label executionIndex = label
             (
                 returnReduce(time_.elapsedCpuTime(), maxOp<double>())
-               /writeInterval_
+               /interval_
             );
-            if (outputIndex > outputTimeLastDump_)
+            if (executionIndex > executionIndex_)
             {
-                outputTimeLastDump_ = outputIndex;
+                executionIndex_ = executionIndex;
                 return true;
             }
             break;
@@ -199,14 +199,14 @@ bool Foam::outputFilterControl::output()
 
         case ocClockTime:
         {
-            label outputIndex = label
+            label executionIndex = label
             (
                 returnReduce(label(time_.elapsedClockTime()), maxOp<label>())
-               /writeInterval_
+               /interval_
             );
-            if (outputIndex > outputTimeLastDump_)
+            if (executionIndex > executionIndex_)
             {
-                outputTimeLastDump_ = outputIndex;
+                executionIndex_ = executionIndex;
                 return true;
             }
             break;
@@ -221,7 +221,7 @@ bool Foam::outputFilterControl::output()
         {
             FatalErrorInFunction
                 << "Undefined output control: "
-                << writeControlNames_[writeControl_] << nl
+                << timeControlNames_[timeControl_] << nl
                 << abort(FatalError);
             break;
         }

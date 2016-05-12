@@ -93,12 +93,12 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::execute
 {
     if (active())
     {
-        if (evaluateControl_.output())
+        if (evaluateControl_.execute())
         {
             filter_.execute();
         }
 
-        if (forceWrite || writeControl_.output())
+        if (forceWrite || writeControl_.execute())
         {
             filter_.write();
         }
@@ -113,7 +113,7 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::end()
 {
     filter_.end();
 
-    if (writeControl_.output())
+    if (writeControl_.execute())
     {
         filter_.write();
     }
@@ -140,17 +140,17 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
     if
     (
         active()
-     && writeControl_.writeControl()
+     && writeControl_.control()
      == outputFilterControl::ocAdjustableRunTime
     )
     {
-        const label  outputTimeIndex = writeControl_.outputTimeLastDump();
-        const scalar writeInterval = writeControl_.writeInterval();
+        const label  writeTimeIndex = writeControl_.executionIndex();
+        const scalar writeInterval = writeControl_.interval();
 
         scalar timeToNextWrite = max
         (
             0.0,
-            (outputTimeIndex + 1)*writeInterval
+            (writeTimeIndex + 1)*writeInterval
           - (time_.value() - time_.startTime().value())
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,9 +93,9 @@ filmSubModelBase::~filmSubModelBase()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-bool filmSubModelBase::outputTime() const
+bool filmSubModelBase::writeTime() const
 {
-    return active() && owner_.time().outputTime();
+    return active() && owner_.time().writeTime();
 }
 
 

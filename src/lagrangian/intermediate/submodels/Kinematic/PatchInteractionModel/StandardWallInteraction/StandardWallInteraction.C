@@ -199,7 +199,7 @@ void Foam::StandardWallInteraction<CloudType>::info(Ostream& os)
         << "      - escape                      = " << npe << ", " << mpe << nl
         << "      - stick                       = " << nps << ", " << mps << nl;
 
-    if (this->outputTime())
+    if (this->writeTime())
     {
         this->setModelProperty("nEscape", npe);
         this->setModelProperty("massEscape", mpe);

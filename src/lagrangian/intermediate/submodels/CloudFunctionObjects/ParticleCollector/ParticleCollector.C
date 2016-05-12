@@ -52,12 +52,12 @@ void Foam::ParticleCollector<CloudType>::makeLogFile
         if (Pstream::master())
         {
             // Create directory if does not exist
-            mkDir(this->outputTimeDir());
+            mkDir(this->writeTimeDir());
 
             // Open new file at start up
             outputFilePtr_.reset
             (
-                new OFstream(this->outputTimeDir()/(type() + ".dat"))
+                new OFstream(this->writeTimeDir()/(type() + ".dat"))
             );
 
             outputFilePtr_()
@@ -457,7 +457,7 @@ void Foam::ParticleCollector<CloudType>::write()
 
             writer->write
             (
-                this->outputTimeDir(),
+                this->writeTimeDir(),
                 "collector",
                 points_,
                 faces_,
@@ -468,7 +468,7 @@ void Foam::ParticleCollector<CloudType>::write()
 
             writer->write
             (
-                this->outputTimeDir(),
+                this->writeTimeDir(),
                 "collector",
                 points_,
                 faces_,

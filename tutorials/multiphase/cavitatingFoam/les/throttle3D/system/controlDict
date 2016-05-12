@@ -56,7 +56,7 @@ functions
         type            fieldAverage;
         functionObjectLibs ( "libfieldFunctionObjects.so" );
         enabled         false;
-        writeControl   outputTime;
+        writeControl   writeTime;
         fields
         (
             U

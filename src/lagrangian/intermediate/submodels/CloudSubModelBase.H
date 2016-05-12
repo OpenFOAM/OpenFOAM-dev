@@ -105,7 +105,7 @@ public:
             const CloudType& owner() const;
 
             //- Flag to indicate when to write a property
-            virtual bool outputTime() const;
+            virtual bool writeTime() const;
 
 
         // Edit

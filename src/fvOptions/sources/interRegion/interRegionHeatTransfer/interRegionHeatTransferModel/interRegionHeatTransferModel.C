@@ -209,7 +209,7 @@ void Foam::fv::interRegionHeatTransferModel::addSup
             << fvc::domainIntegrate(htc_).value()
             << endl;
 
-        if (mesh_.time().outputTime())
+        if (mesh_.time().writeTime())
         {
             Tmapped.write();
             htc_.write();

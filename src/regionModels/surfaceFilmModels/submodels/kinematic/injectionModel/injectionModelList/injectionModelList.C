@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,7 +166,7 @@ void injectionModelList::info(Ostream& os)
             << mass[i] << endl;
     }
 
-    if (owner().time().outputTime())
+    if (owner().time().writeTime())
     {
         setBaseProperty("massInjected", mass);
         massInjected_ = 0.0;

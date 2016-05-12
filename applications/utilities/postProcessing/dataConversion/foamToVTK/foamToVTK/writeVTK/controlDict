@@ -59,14 +59,14 @@ functions
 
         // When to write:
         //  timeStep            (with optional writeInterval)
-        //  outputTime          (with optional writeInterval)
+        //  writeTime          (with optional writeInterval)
         //  adjustableTime
         //  runTime
         //  clockTime
         //  cpuTime
-        writeControl   outputTime;
+        writeControl   writeTime;
 
-        // Write every writeInterval (only valid for timeStemp, outputTime)
+        // Write every writeInterval (only valid for timeStemp, writeTime)
         writeInterval  1;
 
         // Interval of time (valid for adjustableTime, runTime, clockTime,

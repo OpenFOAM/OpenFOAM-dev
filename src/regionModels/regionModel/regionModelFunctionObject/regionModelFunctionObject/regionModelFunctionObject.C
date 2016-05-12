@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ void Foam::regionModels::regionModelFunctionObject::preEvolveRegion()
 
 void Foam::regionModels::regionModelFunctionObject::postEvolveRegion()
 {
-    if (owner_.regionMesh().time().outputTime())
+    if (owner_.regionMesh().time().writeTime())
     {
         write();
     }

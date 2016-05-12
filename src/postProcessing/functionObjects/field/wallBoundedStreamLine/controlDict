@@ -63,7 +63,7 @@ functions
         type nearWallFields;
 
         // Output every
-        writeControl   outputTime;
+        writeControl   writeTime;
         //writeInterval  1;
 
         // Fields to be sampled. Per field original name and mapped field to
@@ -86,7 +86,7 @@ functions
         type            wallBoundedStreamLine;
 
         // Output every
-        writeControl   timeStep;   //outputTime;
+        writeControl   timeStep;   //writeTime;
         // writeInterval 10;
 
         setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot;

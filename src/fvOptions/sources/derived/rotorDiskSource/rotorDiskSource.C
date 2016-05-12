@@ -537,7 +537,7 @@ void Foam::fv::rotorDiskSource::addSup
     // Add source to rhs of eqn
     eqn -= force;
 
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         force.write();
     }
@@ -575,7 +575,7 @@ void Foam::fv::rotorDiskSource::addSup
     // Add source to rhs of eqn
     eqn -= force;
 
-    if (mesh_.time().outputTime())
+    if (mesh_.time().writeTime())
     {
         force.write();
     }

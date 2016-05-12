@@ -57,7 +57,7 @@ functions
     {
         type            forces;
         functionObjectLibs ("libforces.so");
-        writeControl   outputTime;
+        writeControl   writeTime;
         patches         (floatingObject);
         pName           p;
         UName           U;

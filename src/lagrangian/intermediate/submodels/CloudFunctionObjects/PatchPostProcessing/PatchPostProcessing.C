@@ -69,13 +69,13 @@ void Foam::PatchPostProcessing<CloudType>::write()
             const fvMesh& mesh = this->owner().mesh();
 
             // Create directory if it doesn't exist
-            mkDir(this->outputTimeDir());
+            mkDir(this->writeTimeDir());
 
             const word& patchName = mesh.boundaryMesh()[patchIDs_[i]].name();
 
             OFstream patchOutFile
             (
-                this->outputTimeDir()/patchName + ".post",
+                this->writeTimeDir()/patchName + ".post",
                 IOstream::ASCII,
                 IOstream::currentVersion,
                 mesh.time().writeCompression()

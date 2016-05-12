@@ -51,7 +51,7 @@ Description
                 enabled             yes;
                 timeStart           0;
                 timeEnd             10;
-                writeControl        outputTime;
+                writeControl        writeTime;
                 writeInterval       1;
                 ...
             }
@@ -77,7 +77,7 @@ Description
     \table
         Option            | Description
         timeStep          | Execute/write every 'writeInterval' time-steps
-        outputTime        | Execute/write every 'writeInterval' output times
+        writeTime        | Execute/write every 'writeInterval' output times
         adjustableRunTime | Execute/write every 'writeInterval' run time period
         runTime           | Execute/write every 'writeInterval' run time period
         clockTime       | Execute/write every 'writeInterval' clock time period

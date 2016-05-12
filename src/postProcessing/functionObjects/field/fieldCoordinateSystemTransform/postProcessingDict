@@ -28,7 +28,7 @@ functions
         enabled         true;
 
         // When to output the average fields
-        writeControl   outputTime;
+        writeControl   writeTime;
 
         // Fields to be transformed - runTime modifiable
         fields

@@ -33,7 +33,7 @@ Description
     as the main time database through the writeControl setting:
 
     \li \c timeStep
-    \li \c outputTime
+    \li \c writeTime
     \li \c adjustableRunTime
     \li \c runTime
     \li \c clockTime

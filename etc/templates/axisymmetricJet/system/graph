@@ -18,7 +18,7 @@ graph
 {
     type            sets;
     functionObjectLibs ("libsampling.so");
-    writeControl   outputTime;
+    writeControl   writeTime;
 
     interpolationScheme cellPointFace;
 

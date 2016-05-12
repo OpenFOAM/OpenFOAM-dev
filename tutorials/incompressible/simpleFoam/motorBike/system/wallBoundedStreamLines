@@ -15,7 +15,7 @@ near
     type nearWallFields;
 
     // Output every
-    writeControl   outputTime;
+    writeControl   writeTime;
 
     // Fields to be sampled. Per field original name and mapped field to
     // create.
@@ -40,7 +40,7 @@ wallBoundedStreamLines
     type            wallBoundedStreamLine;
 
     // Output every
-    writeControl   outputTime;
+    writeControl   writeTime;
 
     setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot;
 

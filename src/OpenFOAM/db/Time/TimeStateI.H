@@ -25,28 +25,52 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::Time& Foam::outputFilterControl::time() const
+
+inline Foam::scalar Foam::TimeState::timeOutputValue() const
 {
-    return time_;
+    return timeToUserTime(value());
 }
 
 
-inline Foam::outputFilterControl::timeControls
-Foam::outputFilterControl::control() const
+inline Foam::label Foam::TimeState::timeIndex() const
 {
-    return timeControl_;
+    return timeIndex_;
 }
 
 
-inline Foam::scalar Foam::outputFilterControl::interval() const
+inline Foam::scalar Foam::TimeState::deltaTValue() const
 {
-    return interval_;
+    return deltaT_;
 }
 
 
-inline Foam::label Foam::outputFilterControl::executionIndex() const
+inline Foam::scalar Foam::TimeState::deltaT0Value() const
 {
-    return executionIndex_;
+    return deltaT0_;
+}
+
+
+inline Foam::dimensionedScalar Foam::TimeState::deltaT() const
+{
+    return dimensionedScalar("deltaT", dimTime, deltaT_);
+}
+
+
+inline Foam::dimensionedScalar Foam::TimeState::deltaT0() const
+{
+    return dimensionedScalar("deltaT0", dimTime, deltaT0_);
+}
+
+
+inline bool Foam::TimeState::writeTime() const
+{
+    return writeTime_;
+}
+
+
+inline bool Foam::TimeState::outputTime() const
+{
+    return writeTime_;
 }
 
 

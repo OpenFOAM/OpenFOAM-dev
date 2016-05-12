@@ -57,7 +57,7 @@ functions
     {
         type            fieldAverage;
         functionObjectLibs ( "libfieldFunctionObjects.so" );
-        writeControl   outputTime;
+        writeControl   writeTime;
         fields
         (
             U.particles

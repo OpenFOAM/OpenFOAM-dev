@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,12 +114,12 @@ CloudType& Foam::CloudSubModelBase<CloudType>::owner()
 
 
 template<class CloudType>
-bool Foam::CloudSubModelBase<CloudType>::outputTime() const
+bool Foam::CloudSubModelBase<CloudType>::writeTime() const
 {
     return
         active()
      && owner_.solution().transient()
-     && owner_.db().time().outputTime();
+     && owner_.db().time().writeTime();
 }
 
 

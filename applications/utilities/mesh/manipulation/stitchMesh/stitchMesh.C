@@ -476,7 +476,7 @@ int main(int argc, char *argv[])
 
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
-    // Bypass runTime write (since only writes at outputTime)
+    // Bypass runTime write (since only writes at writeTime)
     if
     (
        !runTime.objectRegistry::writeObject

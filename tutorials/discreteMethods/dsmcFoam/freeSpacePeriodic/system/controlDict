@@ -53,7 +53,7 @@ functions
     {
         type            fieldAverage;
         functionObjectLibs ( "libfieldFunctionObjects.so" );
-        writeControl   outputTime;
+        writeControl   writeTime;
 
         fields
         (
@@ -118,7 +118,7 @@ functions
         type            dsmcFields;
         functionObjectLibs ( "libutilityFunctionObjects.so" );
         enabled         true;
-        writeControl   outputTime;
+        writeControl   writeTime;
     }
 }
 

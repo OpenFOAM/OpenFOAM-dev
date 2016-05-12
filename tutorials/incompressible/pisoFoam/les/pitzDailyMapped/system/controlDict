@@ -78,7 +78,7 @@ functions
         type            fieldAverage;
         functionObjectLibs ("libfieldFunctionObjects.so");
         enabled         true;
-        writeControl   outputTime;
+        writeControl   writeTime;
 
         fields
         (
@@ -107,7 +107,7 @@ functions
         // Where to load it from (if not already in solver)
         functionObjectLibs ("libsampling.so");
         enabled         true;
-        writeControl   outputTime;
+        writeControl   writeTime;
 
         interpolationScheme cellPoint;
 

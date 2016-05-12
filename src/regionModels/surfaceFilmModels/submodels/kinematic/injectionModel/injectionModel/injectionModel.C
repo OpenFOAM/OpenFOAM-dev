@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ injectionModel::~injectionModel()
 
 void injectionModel::correct()
 {
-    if (outputTime())
+    if (writeTime())
     {
         scalar injectedMass0 = getModelProperty<scalar>("injectedMass");
         injectedMass0 += returnReduce(injectedMass_, sumOp<scalar>());

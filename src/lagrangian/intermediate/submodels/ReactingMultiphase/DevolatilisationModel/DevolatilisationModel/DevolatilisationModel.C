@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::DevolatilisationModel<CloudType>::info(Ostream& os)
 
     Info<< "    Mass transfer devolatilisation  = " << massTotal << nl;
 
-    if (this->outputTime())
+    if (this->writeTime())
     {
         this->setBaseProperty("mass", massTotal);
         dMass_ = 0.0;

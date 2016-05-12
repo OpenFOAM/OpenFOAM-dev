@@ -167,7 +167,7 @@ void Foam::fv::rotorDiskSource::writeField
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
-    if (mesh_.time().outputTime() || writeNow)
+    if (mesh_.time().writeTime() || writeNow)
     {
         tmp<fieldType> tfield
         (

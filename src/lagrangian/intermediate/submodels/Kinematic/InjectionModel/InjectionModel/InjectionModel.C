@@ -628,7 +628,7 @@ void Foam::InjectionModel<CloudType>::info(Ostream& os)
         << "        number of parcels added     = " << parcelsAddedTotal_ << nl
         << "        mass introduced             = " << massInjected_ << nl;
 
-    if (this->outputTime())
+    if (this->writeTime())
     {
         this->setModelProperty("massInjected", massInjected_);
         this->setModelProperty("nInjections", nInjections_);

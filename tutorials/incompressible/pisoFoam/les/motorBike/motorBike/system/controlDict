@@ -52,7 +52,7 @@ functions
     streamLines
     {
         type            streamLine;
-        writeControl   outputTime;
+        writeControl   writeTime;
         setFormat       vtk;
         UName           U;
         trackForward    true;
@@ -74,7 +74,7 @@ functions
     {
         type            surfaces;
         functionObjectLibs ( "libsampling.so" );
-        writeControl   outputTime;
+        writeControl   writeTime;
         surfaceFormat   vtk;
         fields          ( p U );
         interpolationScheme cellPoint;

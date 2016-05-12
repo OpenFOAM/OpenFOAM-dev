@@ -179,7 +179,7 @@ public:
             const fileName& outputDir() const;
 
             //- Return the output time path
-            fileName outputTimeDir() const;
+            fileName writeTimeDir() const;
 };
 
 

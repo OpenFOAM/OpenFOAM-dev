@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ void Foam::CloudFunctionObject<CloudType>::preEvolve()
 template<class CloudType>
 void Foam::CloudFunctionObject<CloudType>::postEvolve()
 {
-    if (this->owner().time().outputTime())
+    if (this->owner().time().writeTime())
     {
         this->write();
     }
@@ -158,7 +158,7 @@ const Foam::fileName& Foam::CloudFunctionObject<CloudType>::outputDir() const
 
 
 template<class CloudType>
-Foam::fileName Foam::CloudFunctionObject<CloudType>::outputTimeDir() const
+Foam::fileName Foam::CloudFunctionObject<CloudType>::writeTimeDir() const
 {
     return outputDir_/this->owner().time().timeName();
 }

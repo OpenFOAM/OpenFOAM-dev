@@ -1,4 +1,4 @@
-if (runTime.outputTime())
+if (runTime.writeTime())
 {
     allSpeciesN_RU = List<scalarField>
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ void thixotropicViscosity::correct
     // Shear rate
     volScalarField gDot("gDot", alpha*mag(U - Uw)/(delta + film.deltaSmall()));
 
-    if (debug && runTime.outputTime())
+    if (debug && runTime.writeTime())
     {
         gDot.write();
     }

@@ -132,20 +132,8 @@ protected:
 
         scalar writeInterval_;
 
-        // Additional writing
-
-            writeControls secondaryWriteControl_;
-
-            scalar secondaryWriteInterval_;
-
         label  purgeWrite_;
-        mutable FIFOStack<word> previousOutputTimes_;
-
-        // Additional purging
-
-            label  secondaryPurgeWrite_;
-            mutable FIFOStack<word> previousSecondaryOutputTimes_;
-
+        mutable FIFOStack<word> previousWriteTimes_;
 
         // One-shot writing
         bool writeOnce_;
@@ -157,7 +145,7 @@ protected:
         autoPtr<TimeState> prevTimeState_;
 
 
-        // Signal handlers for secondary writing
+        // Signal handlers for writing
 
             //- Enable one-shot writing upon signal
             sigWriteNow sigWriteNow_;

@@ -100,7 +100,7 @@ void phaseChangeModel::correct
     availableMass -= dMass;
     dMass.correctBoundaryConditions();
 
-    if (outputTime())
+    if (writeTime())
     {
         scalar phaseChangeMass = getModelProperty<scalar>("phaseChangeMass");
         phaseChangeMass += returnReduce(totalMassPC_, sumOp<scalar>());

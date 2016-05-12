@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,6 @@ namespace Foam
                            Class TimeState Declaration
 \*---------------------------------------------------------------------------*/
 
-
 class TimeState
 :
     public dimensionedScalar
@@ -59,16 +58,9 @@ protected:
         scalar deltaTSave_;
         scalar deltaT0_;
         bool deltaTchanged_;
+        label writeTimeIndex_;
+        bool writeTime_;
 
-        label outputTimeIndex_;
-        //- Is outputTime because of primary?
-        bool primaryOutputTime_;
-
-        label secondaryOutputTimeIndex_;
-        //- Is outputTime because of secondary?
-        bool secondaryOutputTime_;
-
-        bool outputTime_;
 
 public:
 
@@ -92,40 +84,42 @@ public:
             virtual scalar timeToUserTime(const scalar t) const;
 
             //- Return current time value
-            scalar timeOutputValue() const;
+            inline scalar timeOutputValue() const;
 
             //- Return current time index
-            label timeIndex() const;
+            inline label timeIndex() const;
 
             //- Return time step value
-            inline scalar deltaTValue() const
-            {
-                return deltaT_;
-            }
+            inline scalar deltaTValue() const;
 
             //- Return old time step value
-            inline scalar deltaT0Value() const
-            {
-                return deltaT0_;
-            }
+            inline scalar deltaT0Value() const;
 
             //- Return time step
-            dimensionedScalar deltaT() const;
+            inline dimensionedScalar deltaT() const;
 
             //- Return old time step
-            dimensionedScalar deltaT0() const;
+            inline dimensionedScalar deltaT0() const;
 
 
         // Check
 
-            //- Return true if this is an output time (primary or secondary)
-            bool outputTime() const;
+            //- Return true if this is a write time
+            inline bool writeTime() const;
+
+            //- Return true if this is a write time.
+            //  Provided for backward-compatibility
+            inline bool outputTime() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "TimeStateI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

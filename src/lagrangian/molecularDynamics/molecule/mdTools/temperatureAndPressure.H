@@ -48,7 +48,7 @@ accumulatedNMols += singleStepNMols;
 
 accumulatedDOFs += singleStepDOFs;
 
-if (runTime.outputTime())
+if (runTime.writeTime())
 {
     if (accumulatedNMols)
     {

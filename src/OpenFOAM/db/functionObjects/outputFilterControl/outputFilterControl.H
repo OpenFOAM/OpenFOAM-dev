@@ -54,15 +54,15 @@ class outputFilterControl
 public:
 
     //- The output control options
-    enum writeControls
+    enum timeControls
     {
         ocTimeStep,           //!< execution is coupled to the time-step
         ocWriteTime,          //!< execution is coupled to the write-time
         ocOutputTime,         //!< execution is coupled to the output-time
-        ocAdjustableRunTime,  //!< Adjust time step for dumping
-        ocRunTime,            //!< run time for dumping
-        ocClockTime,          //!< clock time for dumping
-        ocCpuTime,            //!< cpu time for dumping
+        ocAdjustableRunTime,  //!< Adjust time step for execution
+        ocRunTime,            //!< run time for execution
+        ocClockTime,          //!< clock time for execution
+        ocCpuTime,            //!< cpu time for execution
         ocNone                //!< no output
     };
 
@@ -77,28 +77,29 @@ private:
         //- Prefix
         const word prefix_;
 
-        //- String representation of writeControls enums
-        static const NamedEnum<writeControls, 8> writeControlNames_;
+        //- String representation of timeControls enums
+        static const NamedEnum<timeControls, 8> timeControlNames_;
 
         //- Type of output
-        writeControls writeControl_;
+        timeControls timeControl_;
 
-        //- The execution interval (in time steps) when using \c timeStep mode,
+        //- Execution interval steps for timeStep mode
         //  a value <= 1 means execute at every time step
-        label outputInterval_;
+        label intervalSteps_;
 
-        //- Dump each deltaT (adjust Ttime)
-        scalar writeInterval_;
+        //- Execution interval
+        scalar interval_;
 
-        //- Dumping counter for ocOutputTime or index dump
-        //  for ocAdjustableRunTime
-        label outputTimeLastDump_;
+        //- Index of previous execution
+        label executionIndex_;
 
 
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
         outputFilterControl(const outputFilterControl&);
+
+        //- Disallow default bitwise assignment
         void operator=(const outputFilterControl&);
 
 
@@ -124,20 +125,20 @@ public:
         //- Read from dictionary
         void read(const dictionary&);
 
-        //- Return const access to the Time object
+        //- Return Time
         inline const Time& time() const;
 
-        //- Flag to indicate whether to output
-        bool output();
+        //- Flag to indicate whether to execute
+        bool execute();
 
-        //- Return writeControl
-        inline writeControls writeControl() const;
+        //- Return control
+        inline timeControls control() const;
 
-        //- Return writeInterval
-        inline scalar writeInterval() const;
+        //- Return interval
+        inline scalar interval() const;
 
-        //- Return outputTimeLastDump
-        inline label outputTimeLastDump() const;
+        //- Return the index of the previous execution
+        inline label executionIndex() const;
 };
 
 

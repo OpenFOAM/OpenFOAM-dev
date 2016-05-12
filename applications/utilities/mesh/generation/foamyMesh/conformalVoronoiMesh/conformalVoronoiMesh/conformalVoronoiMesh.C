@@ -1525,7 +1525,7 @@ void Foam::conformalVoronoiMesh::move()
         << "They will not be inserted." << endl;
 
     // Save displacements to file.
-    if (foamyHexMeshControls().objOutput() && time().outputTime())
+    if (foamyHexMeshControls().objOutput() && time().writeTime())
     {
         Info<< "Writing point displacement vectors to file." << endl;
         OFstream str
@@ -1706,7 +1706,7 @@ void Foam::conformalVoronoiMesh::move()
         printVertexInfo(Info);
     }
 
-    if (time().outputTime())
+    if (time().writeTime())
     {
         writeMesh(time().timeName());
     }

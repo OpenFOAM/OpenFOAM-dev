@@ -33,13 +33,6 @@ writeInterval   1;
 
 purgeWrite      0;
 
-
-//- Uncomment to have regular (every 2 hours of run time) restart files
-//secondaryWriteControl    cpuTime; // runtime
-//secondaryWriteInterval   7200;    // seconds
-//secondaryPurgeWrite      1;       // keep all but last dump
-
-
 writeFormat     binary;
 
 writePrecision  8;

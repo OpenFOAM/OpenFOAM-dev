@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,8 @@ Foam::TimeState::TimeState()
     deltaTSave_(0),
     deltaT0_(0),
     deltaTchanged_(false),
-    outputTimeIndex_(0),
-    primaryOutputTime_(false),
-    secondaryOutputTimeIndex_(0),
-    secondaryOutputTime_(false),
-    outputTime_(false)
+    writeTimeIndex_(0),
+    writeTime_(false)
 {}
 
 
@@ -61,36 +58,6 @@ Foam::scalar Foam::TimeState::userTimeToTime(const scalar theta) const
 Foam::scalar Foam::TimeState::timeToUserTime(const scalar t) const
 {
     return t;
-}
-
-
-Foam::scalar Foam::TimeState::timeOutputValue() const
-{
-    return timeToUserTime(value());
-}
-
-
-Foam::label Foam::TimeState::timeIndex() const
-{
-    return timeIndex_;
-}
-
-
-Foam::dimensionedScalar Foam::TimeState::deltaT() const
-{
-    return dimensionedScalar("deltaT", dimTime, deltaT_);
-}
-
-
-Foam::dimensionedScalar Foam::TimeState::deltaT0() const
-{
-    return dimensionedScalar("deltaT0", dimTime, deltaT0_);
-}
-
-
-bool Foam::TimeState::outputTime() const
-{
-    return outputTime_;
 }
 
 

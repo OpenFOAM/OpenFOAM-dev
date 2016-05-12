@@ -74,7 +74,7 @@ void Foam::functionObjects::partialWrite::read(const dictionary& dict)
 
     Info<< type() << " " << name() << ":" << nl
         << "    dumping every " << writeInterval_
-        << " th outputTime : " << nl << endl ;
+        << " th writeTime : " << nl << endl ;
 
     forAllConstIter(HashSet<word>, objectNames_, iter)
     {
@@ -123,7 +123,7 @@ void Foam::functionObjects::partialWrite::end()
 
 void Foam::functionObjects::partialWrite::timeSet()
 {
-    if (obr_.time().outputTime())
+    if (obr_.time().writeTime())
     {
         writeInstance_++;
 

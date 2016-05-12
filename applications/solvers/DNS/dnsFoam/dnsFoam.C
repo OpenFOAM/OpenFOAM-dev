@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 
         runTime.write();
 
-        if (runTime.outputTime())
+        if (runTime.writeTime())
         {
             calcEk(U, K).write
             (

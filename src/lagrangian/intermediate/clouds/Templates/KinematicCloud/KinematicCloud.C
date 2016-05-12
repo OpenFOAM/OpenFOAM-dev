@@ -233,7 +233,7 @@ void Foam::KinematicCloud<CloudType>::postEvolve()
 
     solution_.nextIter();
 
-    if (this->db().time().outputTime())
+    if (this->db().time().writeTime())
     {
         outputProperties_.writeObject
         (

@@ -10,7 +10,7 @@ cuttingPlane
 {
     type            surfaces;
     functionObjectLibs ("libsampling.so");
-    writeControl   outputTime;
+    writeControl   writeTime;
 
     surfaceFormat   vtk;
     fields          ( p U );
