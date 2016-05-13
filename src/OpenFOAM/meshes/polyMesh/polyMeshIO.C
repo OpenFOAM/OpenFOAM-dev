@@ -438,6 +438,9 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         points_.transfer(newPoints);
         points_.instance() = pointsInst;
 
+        // Calculate the geometry for the patches (transformation tensors etc.)
+        boundary_.calcGeometry();
+
         // Derived info
         bounds_ = boundBox(points_);
 
