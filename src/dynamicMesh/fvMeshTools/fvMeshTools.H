@@ -112,7 +112,7 @@ public:
     //- Change patchField to zero on registered fields
     static void zeroPatchFields(fvMesh& mesh, const label patchI);
 
-    // -Reorder and remove trailing patches. If validBoundary call is parallel
+    //- Reorder and remove trailing patches. If validBoundary call is parallel
     //  synced and all add the same patch with same settings
     static void reorderPatches
     (
@@ -121,7 +121,6 @@ public:
         const label nPatches,
         const bool validBoundary
     );
-
 };
 
 
