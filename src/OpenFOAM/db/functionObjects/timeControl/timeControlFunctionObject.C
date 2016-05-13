@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,15 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "OutputFilterFunctionObject.H"
+#include "timeControlFunctionObject.H"
 #include "polyMesh.H"
 #include "mapPolyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace functionObjects
+{
+    defineTypeNameAndDebug(timeControl, 0);
+}
+}
+
+
 // * * * * * * * * * * * * * * * Private Members * * * * * * * * * * * * * * //
 
-template<class OutputFilter>
-void Foam::OutputFilterFunctionObject<OutputFilter>::readControls()
+void Foam::functionObjects::timeControl::readControls()
 {
     dict_.readIfPresent("timeStart", timeStart_);
     dict_.readIfPresent("timeEnd", timeEnd_);
@@ -39,8 +49,7 @@ void Foam::OutputFilterFunctionObject<OutputFilter>::readControls()
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::active() const
+bool Foam::functionObjects::timeControl::active() const
 {
     return
         time_.value() >= timeStart_
@@ -50,8 +59,7 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::active() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class OutputFilter>
-Foam::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
+Foam::functionObjects::timeControl::timeControl
 (
     const word& name,
     const Time& t,
@@ -67,17 +75,9 @@ Foam::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
     (
         dict.lookupOrDefault("nStepsToStartTimeChange", 3)
     ),
+    executeControl_(t, dict, "execute"),
     writeControl_(t, dict, "write"),
-    evaluateControl_(t, dict, "evaluate"),
-    filter_
-    (
-        name,
-        time_.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        ),
-        dict_
-    )
+    foPtr_(functionObject::New(name, t, dict_))
 {
     readControls();
 }
@@ -85,17 +85,13 @@ Foam::OutputFilterFunctionObject<OutputFilter>::OutputFilterFunctionObject
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::timeControl::execute(const bool postProcess)
 {
     if (active())
     {
-        if (postProcess || evaluateControl_.execute())
+        if (postProcess || executeControl_.execute())
         {
-            filter_.execute();
+            foPtr_->execute();
         }
     }
 
@@ -103,17 +99,13 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::execute
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::timeControl::write(const bool postProcess)
 {
     if (active())
     {
         if (postProcess || writeControl_.execute())
         {
-            filter_.write();
+            foPtr_->write();
         }
     }
 
@@ -121,40 +113,37 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::write
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::end()
+bool Foam::functionObjects::timeControl::end()
 {
-    filter_.end();
+    foPtr_->end();
 
     if (writeControl_.execute())
     {
-        filter_.write();
+        foPtr_->write();
     }
 
     return true;
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::timeSet()
+bool Foam::functionObjects::timeControl::timeSet()
 {
     if (active())
     {
-        filter_.timeSet();
+        foPtr_->timeSet();
     }
 
     return true;
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
+bool Foam::functionObjects::timeControl::adjustTimeStep()
 {
     if
     (
         active()
      && writeControl_.control()
-     == timeControl::ocAdjustableRunTime
+     == Foam::timeControl::ocAdjustableRunTime
     )
     {
         const label  writeTimeIndex = writeControl_.executionIndex();
@@ -193,8 +182,7 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::adjustTimeStep()
 }
 
 
-template<class OutputFilter>
-bool Foam::OutputFilterFunctionObject<OutputFilter>::read
+bool Foam::functionObjects::timeControl::read
 (
     const dictionary& dict
 )
@@ -204,7 +192,7 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::read
         dict_ = dict;
 
         writeControl_.read(dict);
-        evaluateControl_.read(dict);
+        executeControl_.read(dict);
         readControls();
 
         return true;
@@ -216,28 +204,26 @@ bool Foam::OutputFilterFunctionObject<OutputFilter>::read
 }
 
 
-template<class OutputFilter>
-void Foam::OutputFilterFunctionObject<OutputFilter>::updateMesh
+void Foam::functionObjects::timeControl::updateMesh
 (
     const mapPolyMesh& mpm
 )
 {
     if (active())
     {
-        filter_.updateMesh(mpm);
+        foPtr_->updateMesh(mpm);
     }
 }
 
 
-template<class OutputFilter>
-void Foam::OutputFilterFunctionObject<OutputFilter>::movePoints
+void Foam::functionObjects::timeControl::movePoints
 (
     const polyMesh& mesh
 )
 {
     if (active())
     {
-        filter_.movePoints(mesh);
+        foPtr_->movePoints(mesh);
     }
 }
 

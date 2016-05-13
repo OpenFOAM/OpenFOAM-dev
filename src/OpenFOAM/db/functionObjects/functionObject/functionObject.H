@@ -197,10 +197,15 @@ public:
         //- Name
         virtual const word& name() const;
 
-        //- Called at each ++ or += of the time-loop. forceWrite overrides
-        //  the usual writeControl behaviour and forces writing always
-        //  (used in post-processing mode)
-        virtual bool execute(const bool forceWrite) = 0;
+        //- Called at each ++ or += of the time-loop.
+        //  postProcess overrides the usual executeControl behaviour and
+        //  forces execution (used in post-processing mode)
+        virtual bool execute(const bool postProcess = false) = 0;
+
+        //- Called at each ++ or += of the time-loop.
+        //  postProcess overrides the usual writeControl behaviour and
+        //  forces writing always (used in post-processing mode)
+        virtual bool write(const bool postProcess = false) = 0;
 
         //- Called when Time::run() determines that the time-loop exits.
         //  By default it simply calls execute().

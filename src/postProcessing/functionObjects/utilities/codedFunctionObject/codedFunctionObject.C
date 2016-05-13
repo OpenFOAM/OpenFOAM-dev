@@ -168,10 +168,17 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 }
 
 
-bool Foam::codedFunctionObject::execute(const bool forceWrite)
+bool Foam::codedFunctionObject::execute(const bool postProcess)
 {
     updateLibrary(redirectType_);
-    return redirectFunctionObject().execute(forceWrite);
+    return redirectFunctionObject().execute(postProcess);
+}
+
+
+bool Foam::codedFunctionObject::write(const bool postProcess)
+{
+    updateLibrary(redirectType_);
+    return redirectFunctionObject().write(postProcess);
 }
 
 

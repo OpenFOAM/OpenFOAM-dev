@@ -22,23 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::outputFilterControl
+    Foam::timeControl
 
 Description
-    An output control for function objects.
-    The default is time-step execution at every interval.
+    General time dependent execution controller.
+    The default to execute every time-step.
 
 SourceFiles
-    outputFilterControl.C
+    timeControl.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef outputFilterControl_H
-#define outputFilterControl_H
+#ifndef timeControl_H
+#define timeControl_H
 
-#include "dictionary.H"
 #include "Time.H"
-#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,14 +44,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class outputFilterControl Declaration
+                  Class timeControl Declaration
 \*---------------------------------------------------------------------------*/
 
-class outputFilterControl
+class timeControl
 {
 public:
 
-    //- The output control options
+    //- The time control options
     enum timeControls
     {
         ocTimeStep,           //!< execution is coupled to the time-step
@@ -63,7 +61,7 @@ public:
         ocRunTime,            //!< run time for execution
         ocClockTime,          //!< clock time for execution
         ocCpuTime,            //!< cpu time for execution
-        ocNone                //!< no output
+        ocNone                //!< no execution
     };
 
 
@@ -80,7 +78,7 @@ private:
         //- String representation of timeControls enums
         static const NamedEnum<timeControls, 8> timeControlNames_;
 
-        //- Type of output
+        //- Type of time control
         timeControls timeControl_;
 
         //- Execution interval steps for timeStep mode
@@ -97,10 +95,10 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct and assignment
-        outputFilterControl(const outputFilterControl&);
+        timeControl(const timeControl&);
 
         //- Disallow default bitwise assignment
-        void operator=(const outputFilterControl&);
+        void operator=(const timeControl&);
 
 
 public:
@@ -108,7 +106,7 @@ public:
     // Constructors
 
         //- Construct from Time object and dictionary
-        outputFilterControl
+        timeControl
         (
             const Time&,
             const dictionary&,
@@ -117,7 +115,7 @@ public:
 
 
     //- Destructor
-    ~outputFilterControl();
+    ~timeControl();
 
 
     // Member Functions
@@ -148,7 +146,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "outputFilterControlI.H"
+#include "timeControlI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

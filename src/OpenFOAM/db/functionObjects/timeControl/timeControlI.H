@@ -25,26 +25,25 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::Time& Foam::outputFilterControl::time() const
+inline const Foam::Time& Foam::timeControl::time() const
 {
     return time_;
 }
 
 
-inline Foam::outputFilterControl::timeControls
-Foam::outputFilterControl::control() const
+inline Foam::timeControl::timeControls Foam::timeControl::control() const
 {
     return timeControl_;
 }
 
 
-inline Foam::scalar Foam::outputFilterControl::interval() const
+inline Foam::scalar Foam::timeControl::interval() const
 {
     return interval_;
 }
 
 
-inline Foam::label Foam::outputFilterControl::executionIndex() const
+inline Foam::label Foam::timeControl::executionIndex() const
 {
     return executionIndex_;
 }

@@ -218,8 +218,8 @@ db/functionObjects/functionObject/functionObject.C
 db/functionObjects/functionObjectList/functionObjectList.C
 db/functionObjects/functionObjectFile/functionObjectFile.C
 db/functionObjects/functionObjectFiles/functionObjectFiles.C
-db/functionObjects/outputFilterControl/outputFilterControl.C
-
+db/functionObjects/timeControl/timeControl.C
+db/functionObjects/timeControl/timeControlFunctionObject.C
 
 Time = db/Time
 $(Time)/TimePaths.C

@@ -77,7 +77,16 @@ Foam::functionObjects::setTimeStepFunctionObject::time() const
 
 bool Foam::functionObjects::setTimeStepFunctionObject::execute
 (
-    const bool forceWrite
+    const bool postProcess
+)
+{
+    return true;
+}
+
+
+bool Foam::functionObjects::setTimeStepFunctionObject::write
+(
+    const bool postProcess
 )
 {
     return true;

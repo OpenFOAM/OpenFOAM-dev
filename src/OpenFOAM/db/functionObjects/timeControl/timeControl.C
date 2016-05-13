@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "outputFilterControl.H"
+#include "timeControl.H"
 #include "PstreamReduceOps.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
@@ -31,7 +31,7 @@ License
 namespace Foam
 {
     template<>
-    const char* NamedEnum<outputFilterControl::timeControls, 8>::
+    const char* NamedEnum<timeControl::timeControls, 8>::
     names[] =
     {
         "timeStep",
@@ -45,13 +45,13 @@ namespace Foam
     };
 }
 
-const Foam::NamedEnum<Foam::outputFilterControl::timeControls, 8>
-    Foam::outputFilterControl::timeControlNames_;
+const Foam::NamedEnum<Foam::timeControl::timeControls, 8>
+    Foam::timeControl::timeControlNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::outputFilterControl::outputFilterControl
+Foam::timeControl::timeControl
 (
     const Time& t,
     const dictionary& dict,
@@ -71,13 +71,13 @@ Foam::outputFilterControl::outputFilterControl
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::outputFilterControl::~outputFilterControl()
+Foam::timeControl::~timeControl()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::outputFilterControl::read(const dictionary& dict)
+void Foam::timeControl::read(const dictionary& dict)
 {
     word controlName(prefix_ + "Control");
     word intervalName(prefix_ + "Interval");
@@ -137,7 +137,7 @@ void Foam::outputFilterControl::read(const dictionary& dict)
 }
 
 
-bool Foam::outputFilterControl::execute()
+bool Foam::timeControl::execute()
 {
     switch (timeControl_)
     {

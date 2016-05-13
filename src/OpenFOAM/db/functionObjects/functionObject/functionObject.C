@@ -110,7 +110,7 @@ const Foam::word& Foam::functionObject::name() const
 
 bool Foam::functionObject::end()
 {
-    return execute(false);
+    return execute();
 }
 
 

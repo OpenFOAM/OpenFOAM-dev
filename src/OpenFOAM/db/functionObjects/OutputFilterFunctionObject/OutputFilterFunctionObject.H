@@ -44,7 +44,7 @@ SourceFiles
 
 #include "functionObject.H"
 #include "dictionary.H"
-#include "outputFilterControl.H"
+#include "timeControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -83,10 +83,10 @@ class OutputFilterFunctionObject
 
 
         //- Output controls
-        outputFilterControl writeControl_;
+        timeControl writeControl_;
 
         //- Evaluate controls
-        outputFilterControl evaluateControl_;
+        timeControl evaluateControl_;
 
         //- The output filter
         OutputFilter filter_;
@@ -138,7 +138,7 @@ public:
             inline const word& regionName() const;
 
             //- Return the output control object
-            inline const outputFilterControl& writeControl() const;
+            inline const timeControl& writeControl() const;
 
             //- Return the output filter
             inline const OutputFilter& outputFilter() const;
@@ -147,9 +147,14 @@ public:
         // Function object control
 
             //- Called at each ++ or += of the time-loop.
-            //  forceWrite overrides the usual writeControl behaviour and
+            //  postProcess overrides the usual executeControl behaviour and
+            //  forces execution (used in post-processing mode)
+            virtual bool execute(const bool postProcess = false);
+
+            //- Called at each ++ or += of the time-loop.
+            //  postProcess overrides the usual writeControl behaviour and
             //  forces writing (used in post-processing mode)
-            virtual bool execute(const bool forceWrite = false);
+            virtual bool write(const bool postProcess = false);
 
             //- Called when Time::run() determines that the time-loop exits
             virtual bool end();

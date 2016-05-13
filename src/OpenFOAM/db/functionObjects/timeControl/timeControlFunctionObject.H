@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,28 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::setTimeStepFunctionObject
-
-Group
-    grpUtilitiesFunctionObjects
+    Foam::functionObjects::timeControl
 
 Description
-    Overrides the timeStep. Can only be used with
-    solvers with adjustTimeStep control (e.g. pimpleFoam). Makes no attempt
-    to cooperate with other timeStep 'controllers' (maxCo, other
-    functionObjects). Supports 'enabled' flag but none of othe other ones
-    'timeStart', 'timeEnd', 'writeControl' etc.
+
+Note
+    Since the timeIndex is used directly from Foam::Time, it is unaffected
+    by user-time conversions. For example, Foam::engineTime might cause \a
+    writeInterval to be degrees crank angle, but the functionObject
+    execution \a interval would still be in timestep.
 
 SourceFiles
-    setTimeStepFunctionObject.C
+    timeControlFunctionObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_setTimeStepFunctionObject_H
-#define functionObjects_setTimeStepFunctionObject_H
+#ifndef functionObjects_timeControl_H
+#define functionObjects_timeControl_H
 
 #include "functionObject.H"
-#include "Function1.H"
+#include "dictionary.H"
+#include "timeControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,10 +52,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class setTimeStepFunctionObject Declaration
+                 Class timeControl Declaration
 \*---------------------------------------------------------------------------*/
 
-class setTimeStepFunctionObject
+class timeControl
 :
     public functionObject
 {
@@ -65,38 +64,63 @@ class setTimeStepFunctionObject
         //- Reference to the time database
         const Time& time_;
 
-        //- Time step function/table
-        autoPtr<Function1<scalar>> timeStepPtr_;
+        //- Input dictionary
+        dictionary dict_;
 
 
-    // Private member functions
+        // Optional user inputs
+
+            //- Activation time - defaults to -VGREAT
+            scalar timeStart_;
+
+            //- De-activation time - defaults to VGREAT
+            scalar timeEnd_;
+
+            //- Number of steps before the dump-time during which deltaT
+            //  may be changed (valid for adjustableRunTime)
+            label nStepsToStartTimeChange_;
+
+
+        //- Execute controls
+        Foam::timeControl executeControl_;
+
+        //- Write controls
+        Foam::timeControl writeControl_;
+
+        //- The functionObject to execute
+        autoPtr<functionObject> foPtr_;
+
+
+    // Private Member Functions
+
+        //- Read relevant dictionary entries
+        void readControls();
+
+        //- Returns true if within time bounds
+        bool active() const;
 
         //- Disallow default bitwise copy construct
-        setTimeStepFunctionObject(const setTimeStepFunctionObject&);
+        timeControl(const timeControl&);
 
         //- Disallow default bitwise assignment
-        void operator=(const setTimeStepFunctionObject&);
+        void operator=(const timeControl&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("setTimeStep");
+    TypeName("timeControl");
 
 
     // Constructors
 
         //- Construct from components
-        setTimeStepFunctionObject
+        timeControl
         (
             const word& name,
-            const Time& runTime,
-            const dictionary& dict
+            const Time&,
+            const dictionary&
         );
-
-
-    // Destructor
-    virtual ~setTimeStepFunctionObject();
 
 
     // Member Functions
@@ -104,7 +128,22 @@ public:
         // Access
 
             //- Return time database
-            const Time& time() const;
+            inline const Time& time() const;
+
+            //- Return the input dictionary
+            inline const dictionary& dict() const;
+
+            //- Return the region name
+            inline const word& regionName() const;
+
+            //- Return the execute control object
+            inline const Foam::timeControl& executeControl() const;
+
+            //- Return the write control object
+            inline const Foam::timeControl& writeControl() const;
+
+            //- Return the functionObject filter
+            inline const functionObject& filter() const;
 
 
         // Function object control
@@ -116,7 +155,7 @@ public:
 
             //- Called at each ++ or += of the time-loop.
             //  postProcess overrides the usual writeControl behaviour and
-            //  forces writing always (used in post-processing mode)
+            //  forces writing (used in post-processing mode)
             virtual bool write(const bool postProcess = false);
 
             //- Called when Time::run() determines that the time-loop exits
@@ -132,10 +171,10 @@ public:
             virtual bool read(const dictionary&);
 
             //- Update for changes of mesh
-            virtual void updateMesh(const mapPolyMesh&);
+            virtual void updateMesh(const mapPolyMesh& mpm);
 
             //- Update for changes of mesh
-            virtual void movePoints(const polyMesh&);
+            virtual void movePoints(const polyMesh& mesh);
 };
 
 
@@ -143,6 +182,10 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "timeControlFunctionObjectI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
