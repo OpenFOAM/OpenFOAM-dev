@@ -49,7 +49,7 @@ Description
 #include "faceCoupleInfo.H"
 #include "fvMeshAdder.H"
 #include "polyTopoChange.H"
-#include "zeroGradientFvPatchFields.H"
+#include "extrapolatedCalculatedFvPatchFields.H"
 
 using namespace Foam;
 
@@ -401,13 +401,14 @@ void writeCellDistance
             ),
             masterMesh,
             dimensionedScalar("cellDist", dimless, 0),
-            zeroGradientFvPatchScalarField::typeName
+            extrapolatedCalculatedFvPatchScalarField::typeName
         );
 
         forAll(cellDecomposition, celli)
         {
             cellDist[celli] = cellDecomposition[celli];
         }
+        cellDist.correctBoundaryConditions();
 
         cellDist.write();
 

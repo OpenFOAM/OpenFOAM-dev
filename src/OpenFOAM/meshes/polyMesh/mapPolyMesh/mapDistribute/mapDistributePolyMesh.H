@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,46 +52,43 @@ class mapPolyMesh;
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class mapDistributePolyMesh Declaration
+                     Class mapDistributePolyMesh Declaration
 \*---------------------------------------------------------------------------*/
 
 class mapDistributePolyMesh
 {
     // Private data
 
-        const polyMesh& mesh_;
-
         //- Number of old live points
-        const label nOldPoints_;
+        label nOldPoints_;
 
         //- Number of old live faces
-        const label nOldFaces_;
+        label nOldFaces_;
 
         //- Number of old live cells
-        const label nOldCells_;
+        label nOldCells_;
 
         //- List of the old patch sizes
         labelList oldPatchSizes_;
 
         //- List of the old patch start labels
-        const labelList oldPatchStarts_;
+        labelList oldPatchStarts_;
 
         //- List of numbers of mesh points per old patch
-        const labelList oldPatchNMeshPoints_;
+        labelList oldPatchNMeshPoints_;
 
 
         //- Point distribute map
-        const mapDistribute pointMap_;
+        mapDistribute pointMap_;
 
         //- Face distribute map
-        const mapDistribute faceMap_;
+        mapDistribute faceMap_;
 
         //- Cell distribute map
-        const mapDistribute cellMap_;
+        mapDistribute cellMap_;
 
         //- Patch distribute map
-        const mapDistribute patchMap_;
-
+        mapDistribute patchMap_;
 
 
     // Private Member Functions
@@ -101,13 +98,13 @@ class mapDistributePolyMesh
         //- Disallow default bitwise copy construct
         mapDistributePolyMesh(const mapDistributePolyMesh&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const mapDistributePolyMesh&);
-
 
 public:
 
     // Constructors
+
+        //- Construct null
+        mapDistributePolyMesh();
 
         //- Construct from components. Note that mesh has to be changed already
         //  since uses mesh.nPoints etc as the new size.
@@ -132,18 +129,39 @@ public:
             const Xfer<labelListList>& constructPointMap,
             const Xfer<labelListList>& constructFaceMap,
             const Xfer<labelListList>& constructCellMap,
-            const Xfer<labelListList>& constructPatchMap
+            const Xfer<labelListList>& constructPatchMap,
+
+            const bool subFaceHasFlip = false,
+            const bool constructFaceHasFlip = false
         );
+
+        //- Construct from components
+        mapDistributePolyMesh
+        (
+            // mesh before changes
+            const label nOldPoints,
+            const label nOldFaces,
+            const label nOldCells,
+            const Xfer<labelList>& oldPatchStarts,
+            const Xfer<labelList>& oldPatchNMeshPoints,
+
+            // how to subset pieces of mesh to send across
+            const Xfer<mapDistribute>& pointMap,
+            const Xfer<mapDistribute>& faceMap,
+            const Xfer<mapDistribute>& cellMap,
+            const Xfer<mapDistribute>& patchMap
+        );
+
+        //- Construct by transferring parameter content
+        mapDistributePolyMesh(const Xfer<mapDistributePolyMesh>&);
+
+        //- Construct from Istream
+        mapDistributePolyMesh(Istream&);
 
 
     // Member Functions
 
         // Access
-
-            const polyMesh& mesh() const
-            {
-                return mesh_;
-            }
 
             //- Number of points in mesh before distribution
             label nOldPoints() const
@@ -206,7 +224,13 @@ public:
             }
 
 
-        // Edit
+        // Other
+
+            //- Transfer the contents of the argument and annul the argument.
+            void transfer(mapDistributePolyMesh&);
+
+            //- Transfer contents to the Xfer container
+            Xfer<mapDistributePolyMesh> xfer();
 
             //- Distribute list of point data
             template<class T>
@@ -251,6 +275,19 @@ public:
             {
                 NotImplemented;
             }
+
+    // Member operators
+
+        void operator=(const mapDistributePolyMesh&);
+
+
+    // IOstream operators
+
+        //- Read dictionary from Istream
+        friend Istream& operator>>(Istream&, mapDistributePolyMesh&);
+
+        //- Write dictionary to Ostream
+        friend Ostream& operator<<(Ostream&, const mapDistributePolyMesh&);
 };
 
 

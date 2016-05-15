@@ -37,6 +37,8 @@ Description
 namespace Foam
 {
 
+class mapDistributeBase;
+
 /*---------------------------------------------------------------------------*\
                            Class FieldMapper Declaration
 \*---------------------------------------------------------------------------*/
@@ -63,6 +65,19 @@ public:
         virtual label size() const = 0;
 
         virtual bool direct() const = 0;
+
+        virtual bool distributed() const
+        {
+            return false;
+        }
+
+        virtual const mapDistributeBase& distributeMap() const
+        {
+            FatalErrorInFunction
+                << "attempt to access null distributeMap"
+                << abort(FatalError);
+            return *reinterpret_cast<mapDistributeBase*>(NULL);
+        }
 
         //- Are there unmapped values? I.e. do all size() elements get
         //  get value

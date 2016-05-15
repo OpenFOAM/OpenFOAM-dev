@@ -82,6 +82,14 @@ class fvMeshDistribute
 
     // Private Member Functions
 
+        static void inplaceRenumberWithFlip
+        (
+            const labelUList& oldToNew,
+            const bool oldToNewHasFlip,
+            const bool lstHasFlip,
+            labelUList& lst
+        );
+
         //- Find indices with value
         static labelList select
         (
@@ -117,6 +125,18 @@ class fvMeshDistribute
                 const PtrList<FieldField<fvsPatchField, T>>& oldBflds
             );
 
+            //- Save internal fields of surfaceFields
+            template<class T>
+            void saveInternalFields(PtrList<Field<T>>& iflds) const;
+
+            //- Set value of patch faces resulting from internal faces
+            template<class T>
+            void mapExposedFaces
+            (
+                const mapPolyMesh& map,
+                const PtrList<Field<T>>& oldFlds
+            );
+
             //- Init patch fields of certain type
             template<class GeoField, class PatchFieldType>
             void initPatchFields
@@ -150,6 +170,7 @@ class fvMeshDistribute
             (
                 labelListList& constructPointMap
             );
+
 
         // Coupling information
 
@@ -240,7 +261,7 @@ class fvMeshDistribute
             (
                 const labelList& neighbourNewProc,  // new processor per b. face
                 const labelList& referPatchID,      // -1 or original patch
-                const List<Map<label>>& procPatchID// patchID
+                const List<Map<label>>& procPatchID // patchID
             );
 
             //- Send mesh and coupling data.

@@ -150,6 +150,40 @@ void subsetPointFields
 }
 
 
+template<class Type>
+void subsetDimensionedFields
+(
+    const fvMeshSubset& subsetter,
+    const wordList& fieldNames,
+    PtrList<DimensionedField<Type, volMesh> >& subFields
+)
+{
+    const fvMesh& baseMesh = subsetter.baseMesh();
+
+    forAll(fieldNames, i)
+    {
+        const word& fieldName = fieldNames[i];
+
+        Info<< "Subsetting field " << fieldName << endl;
+
+        DimensionedField<Type, volMesh> fld
+        (
+            IOobject
+            (
+                fieldName,
+                baseMesh.time().timeName(),
+                baseMesh,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE
+            ),
+            baseMesh
+        );
+
+        subFields.set(i, subsetter.interpolate(fld));
+    }
+}
+
+
 
 int main(int argc, char *argv[])
 {
@@ -361,6 +395,42 @@ int main(int argc, char *argv[])
     subsetPointFields(subsetter, pMesh, pointTensorNames, pointTensorFlds);
 
 
+    // Read dimensioned fields and subset
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    typedef volScalarField::Internal dimScalType;
+    wordList scalarDimNames(objects.names(dimScalType::typeName));
+    PtrList<dimScalType> scalarDimFlds(scalarDimNames.size());
+    subsetDimensionedFields(subsetter, scalarDimNames, scalarDimFlds);
+
+    typedef volVectorField::Internal dimVecType;
+    wordList vectorDimNames(objects.names(dimVecType::typeName));
+    PtrList<dimVecType> vectorDimFlds(vectorDimNames.size());
+    subsetDimensionedFields(subsetter, vectorDimNames, vectorDimFlds);
+
+    typedef volSphericalTensorField::Internal dimSphereType;
+    wordList sphericalTensorDimNames(objects.names(dimSphereType::typeName));
+    PtrList<dimSphereType> sphericalTensorDimFlds
+    (
+        sphericalTensorDimNames.size()
+    );
+    subsetDimensionedFields
+    (
+        subsetter,
+        sphericalTensorDimNames,
+        sphericalTensorDimFlds
+    );
+
+    typedef volSymmTensorField::Internal dimSymmTensorType;
+    wordList symmTensorDimNames(objects.names(dimSymmTensorType::typeName));
+    PtrList<dimSymmTensorType> symmTensorDimFlds(symmTensorDimNames.size());
+    subsetDimensionedFields(subsetter, symmTensorDimNames, symmTensorDimFlds);
+
+    typedef volTensorField::Internal dimTensorType;
+    wordList tensorDimNames(objects.names(dimTensorType::typeName));
+    PtrList<dimTensorType> tensorDimFlds(tensorDimNames.size());
+    subsetDimensionedFields(subsetter, tensorDimNames, tensorDimFlds);
+
 
     // Write mesh and fields to new time
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -459,6 +529,33 @@ int main(int argc, char *argv[])
     {
         pointTensorFlds[i].rename(pointTensorNames[i]);
         pointTensorFlds[i].write();
+    }
+
+    // DimensionedFields
+    forAll(scalarDimFlds, i)
+    {
+        scalarDimFlds[i].rename(scalarDimNames[i]);
+        scalarDimFlds[i].write();
+    }
+    forAll(vectorDimFlds, i)
+    {
+        vectorDimFlds[i].rename(vectorDimNames[i]);
+        vectorDimFlds[i].write();
+    }
+    forAll(sphericalTensorDimFlds, i)
+    {
+        sphericalTensorDimFlds[i].rename(sphericalTensorDimNames[i]);
+        sphericalTensorDimFlds[i].write();
+    }
+    forAll(symmTensorDimFlds, i)
+    {
+        symmTensorDimFlds[i].rename(symmTensorDimNames[i]);
+        symmTensorDimFlds[i].write();
+    }
+    forAll(tensorDimFlds, i)
+    {
+        tensorDimFlds[i].rename(tensorDimNames[i]);
+        tensorDimFlds[i].write();
     }
 
 

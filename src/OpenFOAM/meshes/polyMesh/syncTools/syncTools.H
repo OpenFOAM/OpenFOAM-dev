@@ -164,7 +164,8 @@ public:
                 const polyMesh&,
                 UList<T>&,
                 const CombineOp& cop,
-                const TransformOp& top
+                const TransformOp& top,
+                const bool parRun = Pstream::parRun()
             );
 
 
@@ -556,7 +557,8 @@ public:
             (
                 const polyMesh& mesh,
                 PackedList<nBits>& faceValues,
-                const CombineOp& cop
+                const CombineOp& cop,
+                const bool parRun = Pstream::parRun()
             );
 
             template<unsigned nBits>

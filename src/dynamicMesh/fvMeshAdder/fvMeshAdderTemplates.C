@@ -280,6 +280,12 @@ void Foam::fvMeshAdder::MapVolFields
         ++fieldIter
     )
     {
+        if (debug)
+        {
+            Pout<< "MapVolFields : Storing old time for " << fieldIter()->name()
+                << endl;
+        }
+
         const_cast<GeometricField<Type, fvPatchField, volMesh>*>(fieldIter())
             ->storeOldTimes();
     }
@@ -303,6 +309,12 @@ void Foam::fvMeshAdder::MapVolFields
         {
             const GeometricField<Type, fvPatchField, volMesh>& fldToAdd =
                 *fieldsToAdd[fld.name()];
+
+            if (debug)
+            {
+                Pout<< "MapVolFields : mapping " << fld.name()
+                    << " and " << fldToAdd.name() << endl;
+            }
 
             MapVolField<Type>(meshMap, fld, fldToAdd);
         }
@@ -585,8 +597,13 @@ void Foam::fvMeshAdder::MapSurfaceFields
         ++fieldIter
     )
     {
-        const_cast<fldType*>(fieldIter())
-            ->storeOldTimes();
+        if (debug)
+        {
+            Pout<< "MapSurfaceFields : Storing old time for "
+                << fieldIter()->name() << endl;
+        }
+
+        const_cast<fldType*>(fieldIter())->storeOldTimes();
     }
 
 
@@ -604,11 +621,93 @@ void Foam::fvMeshAdder::MapSurfaceFields
         {
             const fldType& fldToAdd = *fieldsToAdd[fld.name()];
 
+            if (debug)
+            {
+                Pout<< "MapSurfaceFields : mapping " << fld.name()
+                    << " and " << fldToAdd.name() << endl;
+            }
+
             MapSurfaceField<Type>(meshMap, fld, fldToAdd);
         }
         else
         {
             WarningInFunction
+                << "Not mapping field " << fld.name()
+                << " since not present on mesh to add"
+                << endl;
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::fvMeshAdder::MapDimField
+(
+    const mapAddedPolyMesh& meshMap,
+
+    DimensionedField<Type, volMesh>& fld,
+    const DimensionedField<Type, volMesh>& fldToAdd
+)
+{
+    const fvMesh& mesh = fld.mesh();
+
+    // Store old field
+    Field<Type> oldField(fld);
+
+    fld.setSize(mesh.nCells());
+
+    fld.rmap(oldField, meshMap.oldCellMap());
+    fld.rmap(fldToAdd, meshMap.addedCellMap());
+}
+
+
+template<class Type>
+void Foam::fvMeshAdder::MapDimFields
+(
+    const mapAddedPolyMesh& meshMap,
+    const fvMesh& mesh,
+    const fvMesh& meshToAdd
+)
+{
+    typedef DimensionedField<Type, volMesh> fldType;
+
+    // Note: use strict flag on lookupClass to avoid picking up
+    //       volFields
+    HashTable<const fldType*> fields
+    (
+        mesh.objectRegistry::lookupClass<fldType>(true)
+    );
+
+    HashTable<const fldType*> fieldsToAdd
+    (
+        meshToAdd.objectRegistry::lookupClass<fldType>(true)
+    );
+
+    for
+    (
+        typename HashTable<const fldType*>::
+            iterator fieldIter = fields.begin();
+        fieldIter != fields.end();
+        ++fieldIter
+    )
+    {
+        fldType& fld = const_cast<fldType&>(*fieldIter());
+
+        if (fieldsToAdd.found(fld.name()))
+        {
+            const fldType& fldToAdd = *fieldsToAdd[fld.name()];
+
+            if (debug)
+            {
+                Pout<< "MapDimFields : mapping " << fld.name()
+                    << " and " << fldToAdd.name() << endl;
+            }
+
+            MapDimField<Type>(meshMap, fld, fldToAdd);
+        }
+        else
+        {
+            WarningIn("fvMeshAdder::MapDimFields(..)")
                 << "Not mapping field " << fld.name()
                 << " since not present on mesh to add"
                 << endl;

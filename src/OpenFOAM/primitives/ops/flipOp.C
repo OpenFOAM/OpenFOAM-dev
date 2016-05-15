@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,53 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ptscotchDecomp.H"
+#include "flipOp.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Insert at front of list
-template<class Type>
-void Foam::ptscotchDecomp::prepend
-(
-    const UList<Type>& extraLst,
-    List<Type>& lst
-)
+template<>
+Foam::scalar Foam::flipOp::operator()(const scalar& v) const
 {
-    label nExtra = extraLst.size();
-
-    // Make space for initial elements
-    lst.setSize(lst.size() + nExtra);
-    for (label i = lst.size()-1; i >= nExtra; i--)
-    {
-        lst[i] = lst[i-nExtra];
-    }
-
-    // Insert at front
-    forAll(extraLst, i)
-    {
-        lst[i] = extraLst[i];
-    }
+    return -v;
 }
 
 
-// Insert at back of list
-template<class Type>
-void Foam::ptscotchDecomp::append
-(
-    const UList<Type>& extraLst,
-    List<Type>& lst
-)
+template<> Foam::vector Foam::flipOp::operator()(const vector& v) const
 {
-    label sz = lst.size();
+    return -v;
+}
 
-    // Make space for initial elements
-    lst.setSize(sz + extraLst.size());
 
-    // Insert at back
-    forAll(extraLst, i)
-    {
-        lst[sz++] = extraLst[i];
-    }
+template<>Foam::sphericalTensor Foam::flipOp::operator()
+(
+    const sphericalTensor& v
+) const
+{
+    return -v;
+}
+
+
+template<> Foam::symmTensor Foam::flipOp::operator()
+(
+    const symmTensor& v
+) const
+{
+    return -v;
+}
+
+
+template<> Foam::tensor Foam::flipOp::operator()(const tensor& v) const
+{
+    return -v;
+}
+
+
+template<> Foam::triad Foam::flipOp::operator()
+(
+    const triad& v
+) const
+{
+    return -v;
 }
 
 

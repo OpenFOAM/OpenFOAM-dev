@@ -94,6 +94,9 @@ $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C
 $(strings)/stringOps/stringOps.C
 
+ops = primitives/ops
+$(ops)/flipOp.C
+
 primitives/hashes/Hasher/Hasher.C
 
 sha1 = primitives/hashes/SHA1
@@ -216,8 +219,8 @@ $(dll)/codedBase/codedBase.C
 
 db/functionObjects/functionObject/functionObject.C
 db/functionObjects/functionObjectList/functionObjectList.C
-db/functionObjects/functionObjectFile/functionObjectFile.C
-db/functionObjects/functionObjectFiles/functionObjectFiles.C
+db/functionObjects/writeFile/writeFile.C
+db/functionObjects/writeFiles/writeFiles.C
 db/functionObjects/timeControl/timeControl.C
 db/functionObjects/timeControl/timeControlFunctionObject.C
 
@@ -513,6 +516,7 @@ $(mapPolyMesh)/mapPolyMesh.C
 $(mapPolyMesh)/faceMapper/faceMapper.C
 $(mapPolyMesh)/cellMapper/cellMapper.C
 $(mapPolyMesh)/mapDistribute/mapDistribute.C
+$(mapPolyMesh)/mapDistribute/mapDistributeBase.C
 $(mapPolyMesh)/mapDistribute/mapDistributePolyMesh.C
 $(mapPolyMesh)/mapDistribute/IOmapDistribute.C
 $(mapPolyMesh)/mapAddedPolyMesh.C

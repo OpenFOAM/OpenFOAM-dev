@@ -67,13 +67,6 @@ class ptscotchDecomp
 {
     // Private Member Functions
 
-        //- Insert list in front of list.
-        template<class Type>
-        static void prepend(const UList<Type>&, List<Type>&);
-        //- Insert list at end of list.
-        template<class Type>
-        static void append(const UList<Type>&, List<Type>&);
-
         //- Check and print error message
         static void check(const int, const char*);
 
@@ -174,12 +167,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "ptscotchDecompTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

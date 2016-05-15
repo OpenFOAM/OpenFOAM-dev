@@ -256,7 +256,8 @@ void Foam::multiDirRefinement::refineHex8
                 false
             ),
             List<refinementHistory::splitCell8>(0),
-            labelList(0)
+            labelList(0),
+            false
         )                                   // refinement history
     );
 

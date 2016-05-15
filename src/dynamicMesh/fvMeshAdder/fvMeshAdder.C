@@ -28,6 +28,14 @@ License
 #include "faceCoupleInfo.H"
 #include "fvMesh.H"
 
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
+
+namespace Foam
+{
+defineTypeNameAndDebug(fvMeshAdder, 0);
+}
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::labelList Foam::fvMeshAdder::calcPatchMap
@@ -104,6 +112,12 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::fvMeshAdder::add
     fvMeshAdder::MapSurfaceFields<sphericalTensor>(mapPtr, mesh0, mesh1);
     fvMeshAdder::MapSurfaceFields<symmTensor>(mapPtr, mesh0, mesh1);
     fvMeshAdder::MapSurfaceFields<tensor>(mapPtr, mesh0, mesh1);
+
+    fvMeshAdder::MapDimFields<scalar>(mapPtr, mesh0, mesh1);
+    fvMeshAdder::MapDimFields<vector>(mapPtr, mesh0, mesh1);
+    fvMeshAdder::MapDimFields<sphericalTensor>(mapPtr, mesh0, mesh1);
+    fvMeshAdder::MapDimFields<symmTensor>(mapPtr, mesh0, mesh1);
+    fvMeshAdder::MapDimFields<tensor>(mapPtr, mesh0, mesh1);
 
     return mapPtr;
 }

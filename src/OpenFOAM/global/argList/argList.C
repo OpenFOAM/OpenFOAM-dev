@@ -784,9 +784,6 @@ void Foam::argList::parse
         if (Pstream::master())
         {
             slaveProcs.setSize(Pstream::nProcs() - 1);
-            string  slaveMachine;
-            label slavePid;
-
             label proci = 0;
             for
             (
@@ -796,15 +793,30 @@ void Foam::argList::parse
             )
             {
                 IPstream fromSlave(Pstream::scheduled, slave);
-                fromSlave >> slaveMachine >> slavePid;
+
+                string slaveBuild;
+                string slaveMachine;
+                label slavePid;
+                fromSlave >> slaveBuild >> slaveMachine >> slavePid;
 
                 slaveProcs[proci++] = slaveMachine + "." + name(slavePid);
+
+                // Check build string to make sure all processors are running
+                // the same build
+                if (slaveBuild != Foam::FOAMbuild)
+                {
+                    FatalErrorIn(executable())
+                        << "Master is running version " << Foam::FOAMbuild
+                        << "; slave " << proci << " is running version "
+                        << slaveBuild
+                        << exit(FatalError);
+                }
             }
         }
         else
         {
             OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
-            toMaster << hostName() << pid();
+            toMaster << string(Foam::FOAMbuild) << hostName() << pid();
         }
     }
 

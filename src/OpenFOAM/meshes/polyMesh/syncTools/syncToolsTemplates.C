@@ -1284,7 +1284,8 @@ void Foam::syncTools::syncBoundaryFaceList
     const polyMesh& mesh,
     UList<T>& faceValues,
     const CombineOp& cop,
-    const TransformOp& top
+    const TransformOp& top,
+    const bool parRun
 )
 {
     const label nBFaces = mesh.nFaces() - mesh.nInternalFaces();
@@ -1299,7 +1300,7 @@ void Foam::syncTools::syncBoundaryFaceList
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    if (Pstream::parRun())
+    if (parRun)
     {
         PstreamBuffers pBufs(Pstream::nonBlocking);
 
@@ -1405,7 +1406,8 @@ void Foam::syncTools::syncFaceList
 (
     const polyMesh& mesh,
     PackedList<nBits>& faceValues,
-    const CombineOp& cop
+    const CombineOp& cop,
+    const bool parRun
 )
 {
     if (faceValues.size() != mesh.nFaces())
@@ -1418,7 +1420,7 @@ void Foam::syncTools::syncFaceList
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    if (Pstream::parRun())
+    if (parRun)
     {
         PstreamBuffers pBufs(Pstream::nonBlocking);
 

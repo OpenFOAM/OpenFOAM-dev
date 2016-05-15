@@ -96,6 +96,7 @@ Usage
 #include "fvFieldDecomposer.H"
 #include "pointFieldDecomposer.H"
 #include "lagrangianFieldDecomposer.H"
+#include "decompositionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -260,7 +261,8 @@ int main(int argc, char *argv[])
             ++nProcs;
         }
 
-        // get requested numberOfSubdomains
+        // get requested numberOfSubdomains. Note: have no mesh yet so
+        // cannot use decompositionModel::New
         const label nDomains = readLabel
         (
             IOdictionary
@@ -818,16 +820,6 @@ int main(int argc, char *argv[])
 
 
                 processorDb.setTime(runTime);
-
-                // remove files remnants that can cause horrible problems
-                // - mut and nut are used to mark the new turbulence models,
-                //   their existence prevents old models from being upgraded
-                {
-                    fileName timeDir(processorDb.path()/processorDb.timeName());
-
-                    rm(timeDir/"mut");
-                    rm(timeDir/"nut");
-                }
 
                 // read the mesh
                 if (!procMeshList.set(proci))

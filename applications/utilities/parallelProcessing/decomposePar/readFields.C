@@ -23,9 +23,47 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "GeometricField.H"
 #include "readFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::readFields
+(
+    const typename GeoMesh::Mesh& mesh,
+    const IOobjectList& objects,
+    PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+    const bool readOldTime
+)
+{
+    typedef GeometricField<Type, PatchField, GeoMesh> GeoField;
+
+    // Search list of objects for fields of type GeomField
+    IOobjectList fieldObjects(objects.lookupClass(GeoField::typeName));
+
+    // Remove the cellDist field
+    IOobjectList::iterator celDistIter = fieldObjects.find("cellDist");
+    if (celDistIter != fieldObjects.end())
+    {
+        fieldObjects.erase(celDistIter);
+    }
+
+    // Get sorted set of names (different processors might read objects in
+    // different order)
+    const wordList masterNames(fieldObjects.sortedNames());
+
+    // Construct the fields
+    fields.setSize(masterNames.size());
+
+    forAll(masterNames, i)
+    {
+        const IOobject& io = *fieldObjects[masterNames[i]];
+
+        fields.set(i, new GeoField(io, mesh, readOldTime));
+    }
+}
+
 
 template<class Mesh, class GeoField>
 void Foam::readFields
@@ -38,24 +76,21 @@ void Foam::readFields
     // Search list of objects for fields of type GeomField
     IOobjectList fieldObjects(objects.lookupClass(GeoField::typeName));
 
-    // Remove the cellDist field
-    IOobjectList::iterator celDistIter = fieldObjects.find("cellDist");
-    if (celDistIter != fieldObjects.end())
-    {
-        fieldObjects.erase(celDistIter);
-    }
-
     // Construct the fields
     fields.setSize(fieldObjects.size());
 
-    label fieldi = 0;
-    forAllIter(IOobjectList, fieldObjects, iter)
+    // Get sorted set of names (different processors might read objects in
+    // different order)
+    const wordList masterNames(fieldObjects.sortedNames());
+
+    // Construct the fields
+    fields.setSize(masterNames.size());
+
+    forAll(masterNames, i)
     {
-        fields.set
-        (
-            fieldi++,
-            new GeoField(*iter(), mesh)
-        );
+        const IOobject& io = *fieldObjects[masterNames[i]];
+
+        fields.set(i, new GeoField(io, mesh));
     }
 }
 

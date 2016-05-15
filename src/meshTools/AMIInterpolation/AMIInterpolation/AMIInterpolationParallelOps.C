@@ -97,7 +97,7 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::calcOverlappingProcs
 
     forAll(procBb, proci)
     {
-        const List<treeBoundBox>& bbs = procBb[proci];
+        const treeBoundBoxList& bbs = procBb[proci];
 
         forAll(bbs, bbI)
         {

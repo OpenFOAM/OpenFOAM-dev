@@ -222,6 +222,7 @@ bool Foam::objectRegistry::checkIn(regIOobject& io) const
     {
         Pout<< "objectRegistry::checkIn(regIOobject&) : "
             << name() << " : checking in " << io.name()
+            << " of type " << io.type()
             << endl;
     }
 
@@ -354,6 +355,7 @@ bool Foam::objectRegistry::writeObject
             Pout<< "objectRegistry::write() : "
                 << name() << " : Considering writing object "
                 << iter.key()
+                << " of type " << iter()->type()
                 << " with writeOpt " << iter()->writeOpt()
                 << " to file " << iter()->objectPath()
                 << endl;

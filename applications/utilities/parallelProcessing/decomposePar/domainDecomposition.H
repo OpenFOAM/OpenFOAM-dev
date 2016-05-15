@@ -61,9 +61,6 @@ class domainDecomposition
         //- Optional: points at the facesInstance
         autoPtr<pointIOField> facesInstancePointsPtr_;
 
-        //- Mesh decomposition control dictionary
-        IOdictionary decompositionDict_;
-
         //- Number of processors in decomposition
         label nProcs_;
 

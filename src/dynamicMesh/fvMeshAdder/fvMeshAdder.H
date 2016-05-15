@@ -26,7 +26,7 @@ Class
 
 Description
     Adds two fvMeshes without using any polyMesh morphing.
-    Uses fvMeshAdder.
+    Uses polyMeshAdder.
 
 SourceFiles
     fvMeshAdder.C
@@ -42,6 +42,7 @@ SourceFiles
 #include "fvPatchFieldsFwd.H"
 #include "fvsPatchFieldsFwd.H"
 #include "fvPatchFieldMapper.H"
+#include "DimensionedField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,7 +102,21 @@ private:
             const GeometricField<Type, fvsPatchField, surfaceMesh>& fldToAdd
         );
 
+        //- Update single dimensionedField.
+        template<class Type>
+        static void MapDimField
+        (
+            const mapAddedPolyMesh& meshMap,
+
+            DimensionedField<Type, volMesh>& fld,
+            const DimensionedField<Type, volMesh>& fldToAdd
+        );
+
 public:
+
+    // Declare name of the class and its debug switch
+    ClassName("fvMeshAdder");
+
 
     // Member Functions
 
@@ -126,6 +141,15 @@ public:
         //- Map all surfaceFields of Type
         template<class Type>
         static void MapSurfaceFields
+        (
+            const mapAddedPolyMesh&,
+            const fvMesh& mesh,
+            const fvMesh& meshToAdd
+        );
+
+        //- Map all DimensionedFields of Type
+        template<class Type>
+        static void MapDimFields
         (
             const mapAddedPolyMesh&,
             const fvMesh& mesh,

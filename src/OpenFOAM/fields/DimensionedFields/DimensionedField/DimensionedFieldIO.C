@@ -80,6 +80,24 @@ Foam::DimensionedField<Type, GeoMesh>::DimensionedField
 }
 
 
+template<class Type, class GeoMesh>
+Foam::DimensionedField<Type, GeoMesh>::DimensionedField
+(
+    const IOobject& io,
+    const Mesh& mesh,
+    const dictionary& fieldDict,
+    const word& fieldDictEntry
+)
+:
+    regIOobject(io),
+    Field<Type>(0),
+    mesh_(mesh),
+    dimensions_(dimless)
+{
+    readField(fieldDict, fieldDictEntry);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type, class GeoMesh>

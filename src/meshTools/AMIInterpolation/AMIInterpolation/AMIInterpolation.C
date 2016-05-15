@@ -27,6 +27,7 @@ License
 #include "AMIMethod.H"
 #include "meshTools.H"
 #include "mapDistribute.H"
+#include "flipOp.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -933,7 +934,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
                 tgtMagSf_,
                 triMode_,
                 reverseTarget_,
-                requireMatch_
+                requireMatch_ && (lowWeightCorrection_ < 0)
             )
         );
 
@@ -978,27 +979,33 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
         // send data back to originating procs. Note that contributions
         // from different processors get added (ListAppendEqOp)
 
-        mapDistribute::distribute
+        mapDistributeBase::distribute
         (
             Pstream::nonBlocking,
             List<labelPair>(),
             tgtPatch.size(),
             map.constructMap(),
+            false,                      // has flip
             map.subMap(),
+            false,                      // has flip
             tgtAddress_,
             ListAppendEqOp<label>(),
+            flipOp(),                   // flip operation
             labelList()
         );
 
-        mapDistribute::distribute
+        mapDistributeBase::distribute
         (
             Pstream::nonBlocking,
             List<labelPair>(),
             tgtPatch.size(),
             map.constructMap(),
+            false,
             map.subMap(),
+            false,
             tgtWeights_,
             ListAppendEqOp<scalar>(),
+            flipOp(),
             scalarList()
         );
 
@@ -1050,7 +1057,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
                 tgtMagSf_,
                 triMode_,
                 reverseTarget_,
-                requireMatch_
+                requireMatch_ && (lowWeightCorrection_ < 0)
             )
         );
 

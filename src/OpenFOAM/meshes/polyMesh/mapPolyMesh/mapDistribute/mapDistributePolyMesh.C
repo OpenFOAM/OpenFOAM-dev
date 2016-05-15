@@ -33,28 +33,46 @@ void Foam::mapDistributePolyMesh::calcPatchSizes()
 {
     oldPatchSizes_.setSize(oldPatchStarts_.size());
 
-    // Calculate old patch sizes
-    for (label patchi = 0; patchi < oldPatchStarts_.size() - 1; patchi++)
+    if (oldPatchStarts_.size())
     {
-        oldPatchSizes_[patchi] =
-            oldPatchStarts_[patchi + 1] - oldPatchStarts_[patchi];
-    }
+        // Calculate old patch sizes
+        for (label patchi = 0; patchi < oldPatchStarts_.size() - 1; patchi++)
+        {
+            oldPatchSizes_[patchi] =
+                oldPatchStarts_[patchi + 1] - oldPatchStarts_[patchi];
+        }
 
-    // Set the last one by hand
-    const label lastPatchID = oldPatchStarts_.size() - 1;
+        // Set the last one by hand
+        const label lastPatchID = oldPatchStarts_.size() - 1;
 
-    oldPatchSizes_[lastPatchID] = nOldFaces_ - oldPatchStarts_[lastPatchID];
+        oldPatchSizes_[lastPatchID] = nOldFaces_ - oldPatchStarts_[lastPatchID];
 
-    if (min(oldPatchSizes_) < 0)
-    {
-        FatalErrorInFunction
-            << "Calculated negative old patch size:" << oldPatchSizes_ << nl
-            << "Error in mapping data" << abort(FatalError);
+        if (min(oldPatchSizes_) < 0)
+        {
+            FatalErrorInFunction
+                << "Calculated negative old patch size:" << oldPatchSizes_ << nl
+                << "Error in mapping data" << abort(FatalError);
+        }
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::mapDistributePolyMesh::mapDistributePolyMesh()
+:
+    nOldPoints_(0),
+    nOldFaces_(0),
+    nOldCells_(0),
+    oldPatchSizes_(0),
+    oldPatchStarts_(0),
+    oldPatchNMeshPoints_(0),
+    pointMap_(),
+    faceMap_(),
+    cellMap_(),
+    patchMap_()
+{}
+
 
 Foam::mapDistributePolyMesh::mapDistributePolyMesh
 (
@@ -77,10 +95,12 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
     const Xfer<labelListList>& constructPointMap,
     const Xfer<labelListList>& constructFaceMap,
     const Xfer<labelListList>& constructCellMap,
-    const Xfer<labelListList>& constructPatchMap
+    const Xfer<labelListList>& constructPatchMap,
+
+    const bool subFaceHasFlip,
+    const bool constructFaceHasFlip
 )
 :
-    mesh_(mesh),
     nOldPoints_(nOldPoints),
     nOldFaces_(nOldFaces),
     nOldCells_(nOldCells),
@@ -88,7 +108,14 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
     oldPatchStarts_(oldPatchStarts),
     oldPatchNMeshPoints_(oldPatchNMeshPoints),
     pointMap_(mesh.nPoints(), subPointMap, constructPointMap),
-    faceMap_(mesh.nFaces(), subFaceMap, constructFaceMap),
+    faceMap_
+    (
+        mesh.nFaces(),
+        subFaceMap,
+        constructFaceMap,
+        subFaceHasFlip,
+        constructFaceHasFlip
+    ),
     cellMap_(mesh.nCells(), subCellMap, constructCellMap),
     patchMap_(mesh.boundaryMesh().size(), subPatchMap, constructPatchMap)
 {
@@ -96,7 +123,83 @@ Foam::mapDistributePolyMesh::mapDistributePolyMesh
 }
 
 
+Foam::mapDistributePolyMesh::mapDistributePolyMesh
+(
+    // mesh before changes
+    const label nOldPoints,
+    const label nOldFaces,
+    const label nOldCells,
+    const Xfer<labelList>& oldPatchStarts,
+    const Xfer<labelList>& oldPatchNMeshPoints,
+
+    // how to transfer pieces of mesh
+    const Xfer<mapDistribute>& pointMap,
+    const Xfer<mapDistribute>& faceMap,
+    const Xfer<mapDistribute>& cellMap,
+    const Xfer<mapDistribute>& patchMap
+)
+:
+    nOldPoints_(nOldPoints),
+    nOldFaces_(nOldFaces),
+    nOldCells_(nOldCells),
+    oldPatchSizes_(oldPatchStarts().size()),
+    oldPatchStarts_(oldPatchStarts),
+    oldPatchNMeshPoints_(oldPatchNMeshPoints),
+    pointMap_(pointMap),
+    faceMap_(faceMap),
+    cellMap_(cellMap),
+    patchMap_(patchMap)
+{
+    calcPatchSizes();
+}
+
+
+Foam::mapDistributePolyMesh::mapDistributePolyMesh
+(
+    const Xfer<mapDistributePolyMesh>& map
+)
+:
+    nOldPoints_(map().nOldPoints_),
+    nOldFaces_(map().nOldFaces_),
+    nOldCells_(map().nOldCells_),
+    oldPatchSizes_(map().oldPatchSizes_.xfer()),
+    oldPatchStarts_(map().oldPatchStarts_.xfer()),
+    oldPatchNMeshPoints_(map().oldPatchNMeshPoints_.xfer()),
+    pointMap_(map().pointMap_.xfer()),
+    faceMap_(map().faceMap_.xfer()),
+    cellMap_(map().cellMap_.xfer()),
+    patchMap_(map().patchMap_.xfer())
+{}
+
+
+Foam::mapDistributePolyMesh::mapDistributePolyMesh(Istream& is)
+{
+    is  >> *this;
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::mapDistributePolyMesh::transfer(mapDistributePolyMesh& rhs)
+{
+    nOldPoints_ = rhs.nOldPoints_;
+    nOldFaces_ = rhs.nOldFaces_;
+    nOldCells_ = rhs.nOldCells_;
+    oldPatchSizes_.transfer(rhs.oldPatchSizes_);
+    oldPatchStarts_.transfer(rhs.oldPatchStarts_);
+    oldPatchNMeshPoints_.transfer(rhs.oldPatchNMeshPoints_);
+    pointMap_.transfer(rhs.pointMap_);
+    faceMap_.transfer(rhs.faceMap_);
+    cellMap_.transfer(rhs.cellMap_);
+    patchMap_.transfer(rhs.patchMap_);
+}
+
+
+Foam::Xfer<Foam::mapDistributePolyMesh> Foam::mapDistributePolyMesh::xfer()
+{
+    return xferMove(*this);
+}
+
 
 void Foam::mapDistributePolyMesh::distributePointIndices(labelList& lst) const
 {
@@ -186,10 +289,61 @@ void Foam::mapDistributePolyMesh::distributePatchIndices(labelList& lst) const
 }
 
 
-// * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::mapDistributePolyMesh::operator=(const mapDistributePolyMesh& rhs)
+{
+    nOldPoints_ = rhs.nOldPoints_;
+    nOldFaces_ = rhs.nOldFaces_;
+    nOldCells_ = rhs.nOldCells_;
+    oldPatchSizes_ = rhs.oldPatchSizes_;
+    oldPatchStarts_ = rhs.oldPatchStarts_;
+    oldPatchNMeshPoints_ = rhs.oldPatchNMeshPoints_;
+    pointMap_ = rhs.pointMap_;
+    faceMap_ = rhs.faceMap_;
+    cellMap_ = rhs.cellMap_;
+    patchMap_ = rhs.patchMap_;
+}
 
 
-// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Istream Operator  * * * * * * * * * * * * * * //
+
+Foam::Istream& Foam::operator>>(Istream& is, mapDistributePolyMesh& map)
+{
+    is.fatalCheck("operator>>(Istream&, mapDistributePolyMesh&)");
+
+    is  >> map.nOldPoints_
+        >> map.nOldFaces_
+        >> map.nOldCells_
+        >> map.oldPatchSizes_
+        >> map.oldPatchStarts_
+        >> map.oldPatchNMeshPoints_
+        >> map.pointMap_
+        >> map.faceMap_
+        >> map.cellMap_
+        >> map.patchMap_;
+
+    return is;
+}
+
+
+// * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const mapDistributePolyMesh& map)
+{
+    os  << map.nOldPoints_
+        << token::SPACE << map.nOldFaces_
+        << token::SPACE << map.nOldCells_ << token::NL
+        << map.oldPatchSizes_ << token::NL
+        << map.oldPatchStarts_ << token::NL
+        << map.oldPatchNMeshPoints_ << token::NL
+        << map.pointMap_ << token::NL
+        << map.faceMap_ << token::NL
+        << map.cellMap_ << token::NL
+        << map.patchMap_;
+
+    return os;
+}
 
 
 // ************************************************************************* //

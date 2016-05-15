@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,8 @@ SourceFiles
 #define decompositionMethod_H
 
 #include "polyMesh.H"
-#include "pointField.H"
 #include "CompactListList.H"
+#include "decompositionConstraint.H"
 
 namespace Foam
 {
@@ -56,6 +56,8 @@ protected:
         const dictionary& decompositionDict_;
         label nProcessors_;
 
+        //- Optional constraints
+        PtrList<decompositionConstraint> constraints_;
 
 private:
 
@@ -98,14 +100,7 @@ public:
     // Constructors
 
         //- Construct given the decomposition dictionary
-        decompositionMethod(const dictionary& decompositionDict)
-        :
-            decompositionDict_(decompositionDict),
-            nProcessors_
-            (
-                readLabel(decompositionDict.lookup("numberOfSubdomains"))
-            )
-        {}
+        decompositionMethod(const dictionary& decompositionDict);
 
 
     //- Destructor
@@ -226,6 +221,19 @@ public:
                 CompactListList<label>& cellCells
             );
 
+            //- Helper: determine (local or global) cellCells and face weights
+            //  from mesh agglomeration.
+            //  Uses mag of faceArea as weights
+            static void calcCellCells
+            (
+                const polyMesh& mesh,
+                const labelList& agglom,
+                const label nLocalCoarse,
+                const bool parallel,
+                CompactListList<label>& cellCells,
+                CompactListList<scalar>& cellCellWeights
+            );
+
             //- Helper: extract constraints:
             //  blockedface: existing faces where owner and neighbour on same
             //               proc
@@ -239,6 +247,19 @@ public:
                 PtrList<labelList>& specifiedProcessorFaces,
                 labelList& specifiedProcessor,
                 List<labelPair>& explicitConnections
+            );
+
+            //- Helper: apply constraints to a decomposition. This gives
+            //  constraints opportunity to modify decomposition in case
+            //  the native decomposition method has not obeyed all constraints
+            void applyConstraints
+            (
+                const polyMesh& mesh,
+                const boolList& blockedFace,
+                const PtrList<labelList>& specifiedProcessorFaces,
+                const labelList& specifiedProcessor,
+                const List<labelPair>& explicitConnections,
+                labelList& finalDecomp
             );
 
             // Decompose a mesh with constraints:

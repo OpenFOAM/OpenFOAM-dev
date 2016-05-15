@@ -52,7 +52,7 @@ void Pstream::gather
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const commsStruct& myComm = comms[UPstream::myProcNo(comm)];
@@ -151,7 +151,7 @@ void Pstream::scatter
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const commsStruct& myComm = comms[UPstream::myProcNo(comm)];

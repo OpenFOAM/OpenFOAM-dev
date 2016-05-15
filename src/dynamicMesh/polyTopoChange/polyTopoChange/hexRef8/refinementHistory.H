@@ -28,7 +28,7 @@ Description
     All refinement history. Used in unrefinement.
 
     - visibleCells: valid for the current mesh and contains per cell -1
-    (cell unrefined) or an index into splitCells_.
+      (cell unrefined) or an index into splitCells_.
     - splitCells: for every split contains the parent (also index into
       splitCells) and optionally a subsplit as 8 indices into splitCells.
       Note that the numbers in splitCells are not cell labels, they are purely
@@ -74,9 +74,10 @@ SourceFiles
 #include "DynamicList.H"
 #include "labelList.H"
 #include "FixedList.H"
-#include "SLList.H"
 #include "autoPtr.H"
 #include "regIOobject.H"
+#include "boolList.H"
+#include "labelPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -122,50 +123,11 @@ public:
         splitCell8(const splitCell8&);
 
         //- Copy operator since autoPtr otherwise 'steals' storage.
-        void operator=(const splitCell8& s)
-        {
-            // Check for assignment to self
-            if (this == &s)
-            {
-                FatalErrorInFunction
-                    << "Attempted assignment to self"
-                    << abort(FatalError);
-            }
+        void operator=(const splitCell8& s);
 
-            parent_ = s.parent_;
+        bool operator==(const splitCell8& s) const;
 
-            addedCellsPtr_.reset
-            (
-                s.addedCellsPtr_.valid()
-              ? new FixedList<label, 8>(s.addedCellsPtr_())
-              : NULL
-            );
-        }
-
-        bool operator==(const splitCell8& s) const
-        {
-            if (addedCellsPtr_.valid() != s.addedCellsPtr_.valid())
-            {
-                return false;
-            }
-            else if (parent_ != s.parent_)
-            {
-                return false;
-            }
-            else if (addedCellsPtr_.valid())
-            {
-                return addedCellsPtr_() == s.addedCellsPtr_();
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        bool operator!=(const splitCell8& s) const
-        {
-            return !operator==(s);
-        }
+        bool operator!=(const splitCell8& s) const;
 
         friend Istream& operator>>(Istream&, splitCell8&);
         friend Ostream& operator<<(Ostream&, const splitCell8&);
@@ -175,6 +137,9 @@ public:
 private:
 
     // Private data
+
+        //- Is active?
+        bool active_;
 
         //- Storage for splitCells
         DynamicList<splitCell8> splitCells_;
@@ -226,6 +191,15 @@ private:
             labelList& splitCellNum
         ) const;
 
+        // For distribution:
+
+            //- Mark index and all its descendants
+            void mark(const label, const label, labelList&) const;
+
+            //- Mark cells according to top parent. Return number of clusters
+            //  (set of cells originating from same parent)
+            label markCommonCells(labelList& cellToCluster) const;
+
 public:
 
     // Declare name of the class and its debug switch
@@ -234,25 +208,47 @@ public:
 
     // Constructors
 
-        //- Construct (read) given an IOobject
+        //- Construct (read) given an IOobject. If global number of visible
+        //  cells > 0 becomes active
         refinementHistory(const IOobject&);
 
-        //- Construct (read) or construct null
+        //- Construct (read) or construct from components
         refinementHistory
         (
             const IOobject&,
             const List<splitCell8>& splitCells,
-            const labelList& visibleCells
+            const labelList& visibleCells,
+            const bool active
         );
 
         //- Construct (read) or construct from initial number of cells
-        //  (all visible)
+        //  (all visible). If global number of visible
+        //  cells > 0 becomes active
         refinementHistory(const IOobject&, const label nCells);
+
+        //- Construct (read) or construct from initial number of cells
+        //  (all visible) and active flag
+        refinementHistory
+        (
+            const IOobject&,
+            const label nCells,
+            const bool active
+        );
 
         //- Construct as copy
         refinementHistory(const IOobject&, const refinementHistory&);
 
-        //- Construct from Istream
+        //- Construct from multiple refinement histories. If global number of
+        //  visible cells > 0 becomes active
+        refinementHistory
+        (
+            const IOobject&,
+            const UPtrList<const labelList>& cellMaps,
+            const UPtrList<const refinementHistory>&
+        );
+
+        //- Construct from Istream. If global number of
+        //  visible cells > 0 becomes active
         refinementHistory(const IOobject&, Istream&);
 
 
@@ -278,12 +274,16 @@ public:
             return freeSplitCells_;
         }
 
-        //- Is there unrefinement history. Note that this will fall over if
-        //  there are 0 cells in the mesh. But this gives problems with
-        //  lots of other programs anyway.
+        //- Is there unrefinement history?
         bool active() const
         {
-            return visibleCells_.size() > 0;
+            return active_;
+        }
+
+        //- Is there unrefinement history?
+        bool& active()
+        {
+            return active_;
         }
 
         //- Get parent of cell
@@ -314,6 +314,23 @@ public:
             const labelList& combinedCells
         );
 
+        //- Low level clone
+        autoPtr<refinementHistory> clone
+        (
+            const IOobject& io,
+            const labelList& decomposition,
+            const labelList& splitCellProc,
+            const labelList& splitCellNum,
+            const label procI,
+            labelList& oldToNewSplit
+        ) const;
+
+        //- Create clone from subset
+        autoPtr<refinementHistory> clone
+        (
+            const IOobject& io,
+            const labelList& cellMap
+        ) const;
 
         //- Update numbering for mesh changes
         void updateMesh(const mapPolyMesh&);
@@ -343,20 +360,44 @@ public:
         void writeDebug() const;
 
 
-        //- ReadData function required for regIOobject read operation
+        //- Read object. If global number of visible cells > 0 becomes active
+        virtual bool read();
+
+        //- ReadData function required for regIOobject read operation. Note:
+        //  does not do a reduction - does not set active_ flag
         virtual bool readData(Istream&);
 
         //- WriteData function required for regIOobject write operation
         virtual bool writeData(Ostream&) const;
 
+        // Helpers for decompositionConstraint
 
-    // Friend Functions
+            //- Add my decomposition constraints
+            void add
+            (
+                boolList& blockedFace,
+                PtrList<labelList>& specifiedProcessorFaces,
+                labelList& specifiedProcessor,
+                List<labelPair>& explicitConnections
+            ) const;
 
-    // Friend Operators
+            //- Apply any additional post-decomposition constraints
+            void apply
+            (
+                const boolList& blockedFace,
+                const PtrList<labelList>& specifiedProcessorFaces,
+                const labelList& specifiedProcessor,
+                const List<labelPair>& explicitConnections,
+                labelList& decomposition
+            ) const;
+
 
     // IOstream Operators
 
+        //- Istream operator. Note: does not do a reduction - does not set
+        //  active_ flag
         friend Istream& operator>>(Istream&, refinementHistory&);
+
         friend Ostream& operator<<(Ostream&, const refinementHistory&);
 };
 

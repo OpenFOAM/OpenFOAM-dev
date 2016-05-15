@@ -2,12 +2,12 @@ EXE_INC = \
     -I$(WM_THIRD_PARTY_DIR)/tecio/tecsrc/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 
 EXE_LIBS = \
     -llagrangian \
-    -lfiniteVolume \
+    -ldynamicMesh \
     -lgenericPatchFields \
-    -lmeshTools \
     -L$(FOAM_EXT_LIBBIN) -ltecio

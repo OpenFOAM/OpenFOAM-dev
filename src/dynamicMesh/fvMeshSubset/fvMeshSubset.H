@@ -41,10 +41,12 @@ Description
       a face on a coupled patch 'losing' its neighbour it will move the
       face into the oldInternalFaces patch.
 
-    - if a user supplied patch is used the mapping becomes a problem.
-    Do the new faces get the value of the internal face they came from?
-    What if e.g. the user supplied patch is a fixedValue 0? So for now
-    they get the face of existing patch face 0.
+    - if a user supplied patch is used it is up to the destination
+      patchField to handle exposed internal faces (mapping from face -1).
+      If not provided the default is to assign the internalField. All the
+      basic patch field types (e.g. fixedValue) will give a warning and
+      preferably derived patch field types should be used that know how to
+      handle exposed faces (e.g. use uniformFixedValue instead of fixedValue)
 
 SourceFiles
     fvMeshSubset.C
@@ -94,6 +96,9 @@ private:
         //- Patch mapping array
         labelList patchMap_;
 
+        //- Optional face mapping array with flip encoded
+        mutable autoPtr<labelList> faceFlipMapPtr_;
+
 
     // Private Member Functions
 
@@ -123,6 +128,13 @@ private:
 
         //- Create zones for submesh
         void subsetZones();
+
+        //- Helper: extract cells-to-remove from cells-to-keep
+        labelList getCellsToRemove
+        (
+            const labelList& region,
+            const label currentRegion
+        ) const;
 
         //- Disallow default bitwise copy construct
         fvMeshSubset(const fvMeshSubset&);
@@ -174,6 +186,32 @@ public:
             );
 
 
+            //- Two step subsetting
+
+                //- Get labels of exposed faces.
+                //  These are
+                //  - internal faces that become boundary faces
+                //  - coupled faces that become uncoupled (since one of the
+                //    sides gets deleted)
+                labelList getExposedFaces
+                (
+                    const labelList& region,
+                    const label currentRegion,
+                    const bool syncCouples = true
+                ) const;
+
+                //- For every exposed face (from above getExposedFaces)
+                //  used supplied (existing!) patch
+                void setLargeCellSubset
+                (
+                    const labelList& region,
+                    const label currentRegion,
+                    const labelList& exposedFaces,
+                    const labelList& patchIDs,
+                    const bool syncCouples = true
+                );
+
+
         // Access
 
             //- Original mesh
@@ -195,6 +233,9 @@ public:
 
             //- Return face map
             const labelList& faceMap() const;
+
+            //- Return face map with sign to encode flipped faces
+            const labelList& faceFlipMap() const;
 
             //- Return cell map
             const labelList& cellMap() const;
@@ -224,7 +265,8 @@ public:
                 const GeometricField<Type, fvPatchField, volMesh>&
             ) const;
 
-            //- Map surface field
+            //- Map surface field. Optionally negates value if flipping
+            //  a face (from exposing an internal face)
             template<class Type>
             static tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
             interpolate
@@ -232,14 +274,17 @@ public:
                 const GeometricField<Type, fvsPatchField, surfaceMesh>&,
                 const fvMesh& sMesh,
                 const labelList& patchMap,
-                const labelList& faceMap
+                const labelList& cellMap,
+                const labelList& faceMap,
+                const bool negateIfFlipped = true
             );
 
             template<class Type>
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
             interpolate
             (
-                const GeometricField<Type, fvsPatchField, surfaceMesh>&
+                const GeometricField<Type, fvsPatchField, surfaceMesh>&,
+                const bool negateIfFlipped = true
             ) const;
 
             //- Map point field
@@ -259,6 +304,20 @@ public:
             (
                 const GeometricField<Type, pointPatchField, pointMesh>&
             ) const;
+
+            //- Map dimensioned field
+            template<class Type>
+            static tmp<DimensionedField<Type, volMesh>>
+            interpolate
+            (
+                const DimensionedField<Type, volMesh>&,
+                const fvMesh& sMesh,
+                const labelList& cellMap
+            );
+
+            template<class Type>
+            tmp<DimensionedField<Type, volMesh>>
+            interpolate(const DimensionedField<Type, volMesh>&) const;
 };
 
 

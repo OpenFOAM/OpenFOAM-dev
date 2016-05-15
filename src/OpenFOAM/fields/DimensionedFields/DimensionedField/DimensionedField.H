@@ -155,6 +155,15 @@ public:
             const word& fieldDictEntry="value"
         );
 
+        //- Construct from dictionary
+        DimensionedField
+        (
+            const IOobject&,
+            const Mesh& mesh,
+            const dictionary& fieldDict,
+            const word& fieldDictEntry="value"
+        );
+
         //- Construct as copy
         DimensionedField
         (

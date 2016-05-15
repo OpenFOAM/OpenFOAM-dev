@@ -175,7 +175,7 @@ void Foam::meshRefinement::calcNeighbourData
 
                 label own = faceCells[i];
                 label ownLevel = cellLevel[own];
-                label faceLevel = meshCutter_.getAnchorLevel(pp.start()+i);
+                label faceLevel = meshCutter_.faceLevel(pp.start()+i);
 
                 // Normal distance from face centre to cell centre
                 scalar d = ((faceCentres[i] - cellCentres[own]) & fn);

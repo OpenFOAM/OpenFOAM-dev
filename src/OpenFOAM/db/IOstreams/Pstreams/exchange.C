@@ -61,7 +61,9 @@ void Foam::Pstream::exchange
 
     recvBufs.setSize(sendBufs.size());
 
-    if (UPstream::nProcs(comm) > 1)
+    recvBufs.setSize(sendBufs.size());
+
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         label startOfRequests = Pstream::nRequests();
 

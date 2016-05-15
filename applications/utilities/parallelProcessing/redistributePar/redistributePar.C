@@ -236,13 +236,15 @@ void writeDecomposition
             false                   // do not register
         ),
         mesh,
-        dimensionedScalar(name, dimless, -1)
+        dimensionedScalar(name, dimless, -1),
+        extrapolatedCalculatedFvPatchScalarField::typeName
     );
 
     forAll(procCells, cI)
     {
         procCells[cI] = decomp[cI];
     }
+    procCells.correctBoundaryConditions();
 
     procCells.write();
 }

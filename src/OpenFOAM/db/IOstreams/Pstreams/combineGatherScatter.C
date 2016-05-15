@@ -50,7 +50,7 @@ void Foam::Pstream::combineGather
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const commsStruct& myComm = comms[UPstream::myProcNo(comm)];
@@ -177,7 +177,7 @@ void Foam::Pstream::combineScatter
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const UPstream::commsStruct& myComm = comms[UPstream::myProcNo(comm)];
@@ -278,7 +278,7 @@ void Foam::Pstream::listCombineGather
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const commsStruct& myComm = comms[UPstream::myProcNo(comm)];
@@ -412,7 +412,7 @@ void Foam::Pstream::listCombineScatter
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const UPstream::commsStruct& myComm = comms[UPstream::myProcNo(comm)];
@@ -525,7 +525,7 @@ void Foam::Pstream::mapCombineGather
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const commsStruct& myComm = comms[UPstream::myProcNo(comm)];
@@ -625,7 +625,7 @@ void Foam::Pstream::mapCombineScatter
     const label comm
 )
 {
-    if (UPstream::nProcs(comm) > 1)
+    if (UPstream::parRun() && UPstream::nProcs(comm) > 1)
     {
         // Get my communication order
         const UPstream::commsStruct& myComm = comms[UPstream::myProcNo(comm)];

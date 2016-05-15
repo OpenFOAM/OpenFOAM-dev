@@ -411,7 +411,7 @@ public:
         // Refinement
 
             //- Gets level such that the face has four points <= level.
-            label getAnchorLevel(const label facei) const;
+            label faceLevel(const label facei) const;
 
             //- Given valid mesh and current cell level and proposed
             //  cells to refine calculate any clashes (due to 2:1) and return
