@@ -24,28 +24,39 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "FUNCTIONOBJECT.H"
-#include "dictionary.H"
+#include "Time.H"
+#include "fvMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(FUNCTIONOBJECT, 0);
+    addToRunTimeSelectionTable(functionObject, FUNCTIONOBJECT, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::FUNCTIONOBJECT::FUNCTIONOBJECT
+Foam::functionObjects::FUNCTIONOBJECT::FUNCTIONOBJECT
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     wordData_(dict.lookupOrDefault<word>("wordData", "defaultWord")),
     scalarData_(readScalar(dict.lookup("scalarData"))),
     labelData_(readLabel(dict.lookup("labelData")))
@@ -56,34 +67,44 @@ Foam::FUNCTIONOBJECT::FUNCTIONOBJECT
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::FUNCTIONOBJECT::~FUNCTIONOBJECT()
+Foam::functionObjects::FUNCTIONOBJECT::~FUNCTIONOBJECT()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::FUNCTIONOBJECT::read(const dictionary& dict)
+bool Foam::functionObjects::FUNCTIONOBJECT::read(const dictionary& dict)
 {
     dict.readIfPresent("wordData", wordData_);
     dict.lookup("scalarData") >> scalarData_;
     dict.lookup("labelData") >> labelData_;
+
+    return true;
 }
 
 
-void Foam::FUNCTIONOBJECT::execute()
-{}
+bool Foam::functionObjects::FUNCTIONOBJECT::execute(const bool postProcess)
+{
+    return true;
+}
 
 
-void Foam::FUNCTIONOBJECT::end()
-{}
+bool Foam::functionObjects::FUNCTIONOBJECT::end()
+{
+    return true;
+}
 
 
-void Foam::FUNCTIONOBJECT::timeSet()
-{}
+bool Foam::functionObjects::FUNCTIONOBJECT::timeSet()
+{
+    return true;
+}
 
 
-void Foam::FUNCTIONOBJECT::write()
-{}
+bool Foam::functionObjects::FUNCTIONOBJECT::write(const bool postProcess)
+{
+    return true;
+}
 
 
 // ************************************************************************* //

@@ -42,8 +42,6 @@ Usage: $Script [-h | -help] <functionObjectName>
   <functionObjectName> (dir)
   - <functionObjectName>.H
   - <functionObjectName>.C
-  - <functionObjectName>FunctionObject.H
-  - <functionObjectName>FunctionObject.C
   - IO<functionObjectName>.H
   - Make (dir)
     - files
