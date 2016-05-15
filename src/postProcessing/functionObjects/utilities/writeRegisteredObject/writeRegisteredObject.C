@@ -24,8 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "writeRegisteredObject.H"
-#include "dictionary.H"
 #include "Time.H"
+#include "polyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(writeRegisteredObject, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        writeRegisteredObject,
+        dictionary
+    );
 }
 }
 
@@ -43,14 +51,19 @@ namespace functionObjects
 Foam::functionObjects::writeRegisteredObject::writeRegisteredObject
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     exclusiveWriting_(false),
-    obr_(obr),
     objectNames_()
 {
     read(dict);
@@ -65,28 +78,30 @@ Foam::functionObjects::writeRegisteredObject::~writeRegisteredObject()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::writeRegisteredObject::read(const dictionary& dict)
+bool Foam::functionObjects::writeRegisteredObject::read(const dictionary& dict)
 {
     dict.lookup("objectNames") >> objectNames_;
     dict.readIfPresent("exclusiveWriting", exclusiveWriting_);
+
+    return true;
 }
 
 
-void Foam::functionObjects::writeRegisteredObject::execute()
-{}
-
-
-void Foam::functionObjects::writeRegisteredObject::end()
-{}
-
-
-void Foam::functionObjects::writeRegisteredObject::timeSet()
-{}
-
-
-void Foam::functionObjects::writeRegisteredObject::write()
+bool Foam::functionObjects::writeRegisteredObject::execute
+(
+    const bool postProcess
+)
 {
-    Info<< type() << " " << name_ << " output:" << nl;
+    return true;
+}
+
+
+bool Foam::functionObjects::writeRegisteredObject::write
+(
+    const bool postProcess
+)
+{
+    Info<< type() << " " << name() << " output:" << nl;
 
     DynamicList<word> allNames(obr_.toc().size());
     forAll(objectNames_, i)
@@ -124,6 +139,8 @@ void Foam::functionObjects::writeRegisteredObject::write()
 
         obj.write();
     }
+
+    return true;
 }
 
 

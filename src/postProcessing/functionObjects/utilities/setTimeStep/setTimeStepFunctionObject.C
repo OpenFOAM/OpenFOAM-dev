@@ -75,36 +75,6 @@ Foam::functionObjects::setTimeStepFunctionObject::time() const
 }
 
 
-bool Foam::functionObjects::setTimeStepFunctionObject::execute
-(
-    const bool postProcess
-)
-{
-    return true;
-}
-
-
-bool Foam::functionObjects::setTimeStepFunctionObject::write
-(
-    const bool postProcess
-)
-{
-    return true;
-}
-
-
-bool Foam::functionObjects::setTimeStepFunctionObject::end()
-{
-    return true;
-}
-
-
-bool Foam::functionObjects::setTimeStepFunctionObject::timeSet()
-{
-    return true;
-}
-
-
 bool Foam::functionObjects::setTimeStepFunctionObject::adjustTimeStep()
 {
     const_cast<Time&>(time()).setDeltaT
@@ -143,18 +113,22 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
 }
 
 
-void Foam::functionObjects::setTimeStepFunctionObject::updateMesh
+bool Foam::functionObjects::setTimeStepFunctionObject::execute
 (
-    const mapPolyMesh&
+    const bool postProcess
 )
-{}
+{
+    return true;
+}
 
 
-void Foam::functionObjects::setTimeStepFunctionObject::movePoints
+bool Foam::functionObjects::setTimeStepFunctionObject::write
 (
-    const polyMesh&
+    const bool postProcess
 )
-{}
+{
+    return true;
+}
 
 
 // ************************************************************************* //

@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cloudInfo.H"
-#include "dictionary.H"
 #include "kinematicCloud.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,6 +34,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(cloudInfo, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        cloudInfo,
+        dictionary
+    );
 }
 }
 
@@ -55,14 +62,11 @@ void Foam::functionObjects::cloudInfo::writeFileHeader(const label i)
 Foam::functionObjects::cloudInfo::cloudInfo
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name),
-    name_(name),
-    obr_(obr)
+    writeFiles(name, runTime, dict, name)
 {
     read(dict);
 }
@@ -76,11 +80,11 @@ Foam::functionObjects::cloudInfo::~cloudInfo()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::cloudInfo::read(const dictionary& dict)
+bool Foam::functionObjects::cloudInfo::read(const dictionary& dict)
 {
-    functionObjectFiles::resetNames(dict.lookup("clouds"));
+    writeFiles::resetNames(dict.lookup("clouds"));
 
-    Info<< type() << " " << name_ << ": ";
+    Info<< type() << " " << name() << ": ";
     if (names().size())
     {
         Info<< "applying to clouds:" << nl;
@@ -94,24 +98,20 @@ void Foam::functionObjects::cloudInfo::read(const dictionary& dict)
     {
         Info<< "no clouds to be processed" << nl << endl;
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::cloudInfo::execute()
-{}
-
-
-void Foam::functionObjects::cloudInfo::end()
-{}
-
-
-void Foam::functionObjects::cloudInfo::timeSet()
-{}
-
-
-void Foam::functionObjects::cloudInfo::write()
+bool Foam::functionObjects::cloudInfo::execute(const bool postProcess)
 {
-    functionObjectFiles::write();
+    return true;
+}
+
+
+bool Foam::functionObjects::cloudInfo::write(const bool postProcess)
+{
+    writeFiles::write();
 
     forAll(names(), i)
     {
@@ -133,6 +133,8 @@ void Foam::functionObjects::cloudInfo::write()
                 << massInSystem << endl;
         }
     }
+
+    return true;
 }
 
 

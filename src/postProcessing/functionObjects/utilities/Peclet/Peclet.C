@@ -30,6 +30,7 @@ License
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
 #include "surfaceInterpolate.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,6 +39,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(Peclet, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        Peclet,
+        dictionary
+    );
 }
 }
 
@@ -47,17 +55,22 @@ namespace functionObjects
 Foam::functionObjects::Peclet::Peclet
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     phiName_("phi"),
     rhoName_("rho")
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -96,14 +109,16 @@ Foam::functionObjects::Peclet::~Peclet()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::Peclet::read(const dictionary& dict)
+bool Foam::functionObjects::Peclet::read(const dictionary& dict)
 {
     phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
     rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+
+    return true;
 }
 
 
-void Foam::functionObjects::Peclet::execute()
+bool Foam::functionObjects::Peclet::execute(const bool postProcess)
 {
     typedef compressible::turbulenceModel cmpTurbModel;
     typedef incompressible::turbulenceModel icoTurbModel;
@@ -183,28 +198,23 @@ void Foam::functionObjects::Peclet::execute()
            *mesh.surfaceInterpolation::deltaCoeffs()
            *fvc::interpolate(nuEff)
         );
+
+    return true;
 }
 
 
-void Foam::functionObjects::Peclet::end()
-{
-    execute();
-}
-
-void Foam::functionObjects::Peclet::timeSet()
-{}
-
-
-void Foam::functionObjects::Peclet::write()
+bool Foam::functionObjects::Peclet::write(const bool postProcess)
 {
     const surfaceScalarField& Peclet =
         obr_.lookupObject<surfaceScalarField>(type());
 
-    Info<< type() << " " << name_ << " output:" << nl
+    Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << Peclet.name() << nl
         << endl;
 
     Peclet.write();
+
+    return true;
 }
 
 

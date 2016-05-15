@@ -40,11 +40,8 @@ SourceFiles
 #ifndef functionObjects_grad_H
 #define functionObjects_grad_H
 
+#include "functionObject.H"
 #include "volFieldsFwd.H"
-#include "surfaceFieldsFwd.H"
-#include "pointFieldFwd.H"
-#include "OFstream.H"
-#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,9 +50,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 class dimensionSet;
 
 namespace functionObjects
@@ -66,13 +60,12 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class grad
+:
+    public functionObject
 {
     // Private data
 
-        //- Name of this grad object
-        word name_;
-
-        //- Reference to the database
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Name of field to process
@@ -118,14 +111,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         grad
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -135,34 +126,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of grad
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the grad data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Calculate the gradient field
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the grad and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Write the gradient field
+        virtual bool write(const bool postProcess = false);
 };
 
 

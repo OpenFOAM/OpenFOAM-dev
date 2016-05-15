@@ -91,7 +91,7 @@ Note
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::timeControl
     Foam::sampledSet
     Foam::streamLine
 
@@ -103,17 +103,14 @@ SourceFiles
 #ifndef functionObjects_wallBoundedStreamLine_H
 #define functionObjects_wallBoundedStreamLine_H
 
+#include "functionObject.H"
 #include "volFieldsFwd.H"
-#include "pointFieldFwd.H"
-#include "Switch.H"
 #include "DynamicList.H"
 #include "scalarList.H"
 #include "vectorList.H"
-#include "polyMesh.H"
 #include "writer.H"
 #include "indirectPrimitivePatch.H"
 #include "tetIndices.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -122,8 +119,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class mapPolyMesh;
 class meshSearch;
 class sampledSet;
 
@@ -135,20 +130,16 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class wallBoundedStreamLine
+:
+    public functionObject
 {
     // Private data
-
-        //- Input dictionary
-        dictionary dict_;
-
-        //- Name of this set of field averages.
-        word name_;
 
         //- Database this class is registered to
         const objectRegistry& obr_;
 
-        //- Load fields from files (not from objectRegistry)
-        bool loadFromFiles_;
+        //- Input dictionary
+        dictionary dict_;
 
         //- List of fields to sample
         wordList fields_;
@@ -239,14 +230,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         wallBoundedStreamLine
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -256,26 +245,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of field averages
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the field average data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute the averaging
-        virtual void execute();
+        //- Do nothing
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute the averaging at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the field average data and write
-        virtual void write();
+        //- Calculate and write the wall-bounded streamlines
+        virtual bool write(const bool postProcess = false);
 
         //- Update for changes of mesh
         virtual void updateMesh(const mapPolyMesh&);

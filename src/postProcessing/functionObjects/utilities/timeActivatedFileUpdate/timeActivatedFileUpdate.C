@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "timeActivatedFileUpdate.H"
-#include "objectRegistry.H"
 #include "Time.H"
-#include "dictionary.H"
+#include "polyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(timeActivatedFileUpdate, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        timeActivatedFileUpdate,
+        dictionary
+    );
 }
 }
 
@@ -47,7 +54,7 @@ void Foam::functionObjects::timeActivatedFileUpdate::updateFile()
     while
     (
         i < timeVsFile_.size()-1
-     && timeVsFile_[i+1].first() < obr_.time().value()
+     && timeVsFile_[i+1].first() < time_.value()
     )
     {
         i++;
@@ -69,13 +76,12 @@ void Foam::functionObjects::timeActivatedFileUpdate::updateFile()
 Foam::functionObjects::timeActivatedFileUpdate::timeActivatedFileUpdate
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    time_(runTime),
     fileToUpdate_(dict.lookup("fileToUpdate")),
     timeVsFile_(),
     lastIndex_(-1)
@@ -92,7 +98,7 @@ Foam::functionObjects::timeActivatedFileUpdate::~timeActivatedFileUpdate()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::timeActivatedFileUpdate::read
+bool Foam::functionObjects::timeActivatedFileUpdate::read
 (
     const dictionary& dict
 )
@@ -120,27 +126,29 @@ void Foam::functionObjects::timeActivatedFileUpdate::read
     Info<< endl;
 
     updateFile();
+
+    return true;
 }
 
 
-void Foam::functionObjects::timeActivatedFileUpdate::execute()
+bool Foam::functionObjects::timeActivatedFileUpdate::execute
+(
+    const bool postProcess
+)
 {
     updateFile();
+
+    return true;
 }
 
 
-void Foam::functionObjects::timeActivatedFileUpdate::end()
+bool Foam::functionObjects::timeActivatedFileUpdate::write
+(
+    const bool postProcess
+)
 {
-    execute();
+    return true;
 }
-
-
-void Foam::functionObjects::timeActivatedFileUpdate::timeSet()
-{}
-
-
-void Foam::functionObjects::timeActivatedFileUpdate::write()
-{}
 
 
 // ************************************************************************* //

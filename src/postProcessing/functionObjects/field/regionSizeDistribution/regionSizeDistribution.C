@@ -24,11 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "regionSizeDistribution.H"
-#include "volFields.H"
-#include "regionSplit.H"
 #include "fvcVolumeIntegrate.H"
-#include "mathematicalConstants.H"
-#include "stringListOps.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,6 +34,13 @@ namespace Foam
     namespace functionObjects
     {
         defineTypeNameAndDebug(regionSizeDistribution, 0);
+
+        addToRunTimeSelectionTable
+        (
+            functionObject,
+            regionSizeDistribution,
+            dictionary
+        );
     }
 
     //- Plus op for FixedList<scalar>
@@ -322,18 +326,15 @@ void Foam::functionObjects::regionSizeDistribution::writeGraphs
 Foam::functionObjects::regionSizeDistribution::regionSizeDistribution
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name, typeName),
-    name_(name),
-    obr_(obr),
+    writeFile(name, runTime, dict, name),
     alphaName_(dict.lookup("field")),
     patchNames_(dict.lookup("patches"))
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -351,7 +352,7 @@ Foam::functionObjects::regionSizeDistribution::~regionSizeDistribution()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
+bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
 {
     dict.lookup("field") >> alphaName_;
     dict.lookup("patches") >> patchNames_;
@@ -372,24 +373,26 @@ void Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
         Info<< "Transforming all vectorFields with coordinate system "
             << coordSysPtr_().name() << endl;
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::regionSizeDistribution::execute()
-{}
-
-
-void Foam::functionObjects::regionSizeDistribution::end()
-{}
-
-
-void Foam::functionObjects::regionSizeDistribution::timeSet()
-{}
-
-
-void Foam::functionObjects::regionSizeDistribution::write()
+bool Foam::functionObjects::regionSizeDistribution::execute
+(
+    const bool postProcess
+)
 {
-    Info<< type() << " " << name_ << " output:" << nl;
+    return true;
+}
+
+
+bool Foam::functionObjects::regionSizeDistribution::write
+(
+    const bool postProcess
+)
+{
+    Info<< type() << " " << name() << " output:" << nl;
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -846,6 +849,8 @@ void Foam::functionObjects::regionSizeDistribution::write()
             }
         }
     }
+
+    return true;
 }
 
 

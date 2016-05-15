@@ -38,8 +38,8 @@ SourceFiles
 #ifndef functionObjects_writeDictionary_H
 #define functionObjects_writeDictionary_H
 
+#include "functionObject.H"
 #include "wordList.H"
-#include "runTimeSelectionTables.H"
 #include "SHA1Digest.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,9 +49,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -61,13 +58,10 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class writeDictionary
+:
+    public functionObject
 {
-protected:
-
     // Private data
-
-        //- Name of this set of writeDictionary
-        word name_;
 
         //- Reference to the database
         const objectRegistry& obr_;
@@ -109,14 +103,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         writeDictionary
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -126,34 +118,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the writeDictionary
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the writeDictionary data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Write the writeDictionary
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

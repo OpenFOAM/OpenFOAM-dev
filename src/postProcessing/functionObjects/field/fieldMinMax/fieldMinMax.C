@@ -25,6 +25,7 @@ License
 
 #include "fieldMinMax.H"
 #include "fieldTypes.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,6 +34,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(fieldMinMax, 0);
+    addToRunTimeSelectionTable(functionObject, fieldMinMax, dictionary);
 }
 }
 
@@ -50,51 +52,7 @@ const Foam::NamedEnum
 > Foam::functionObjects::fieldMinMax::modeTypeNames_;
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::functionObjects::fieldMinMax::fieldMinMax
-(
-    const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
-)
-:
-    functionObjectFiles(obr, name, typeName),
-    name_(name),
-    obr_(obr),
-    log_(true),
-    location_(true),
-    mode_(mdMag),
-    fieldSet_()
-{
-    if (!isA<fvMesh>(obr))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
-    read(dict);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::fieldMinMax::~fieldMinMax()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::functionObjects::fieldMinMax::read(const dictionary& dict)
-{
-    log_ = dict.lookupOrDefault<Switch>("log", true);
-    location_ = dict.lookupOrDefault<Switch>("location", true);
-
-    mode_ = modeTypeNames_[dict.lookupOrDefault<word>("mode", "magnitude")];
-    dict.lookup("fields") >> fieldSet_;
-}
-
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::functionObjects::fieldMinMax::writeFileHeader(const label i)
 {
@@ -136,24 +94,64 @@ void Foam::functionObjects::fieldMinMax::writeFileHeader(const label i)
 }
 
 
-void Foam::functionObjects::fieldMinMax::execute()
-{}
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-
-void Foam::functionObjects::fieldMinMax::end()
-{}
-
-
-void Foam::functionObjects::fieldMinMax::timeSet()
-{}
-
-
-void Foam::functionObjects::fieldMinMax::write()
+Foam::functionObjects::fieldMinMax::fieldMinMax
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    writeFiles(name, runTime, dict, name),
+    location_(true),
+    mode_(mdMag),
+    fieldSet_()
 {
-    functionObjectFiles::write();
+    if (!isA<fvMesh>(obr_))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
+    read(dict);
+    resetName(typeName);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::fieldMinMax::~fieldMinMax()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::fieldMinMax::read(const dictionary& dict)
+{
+    writeFiles::read(dict);
+
+    location_ = dict.lookupOrDefault<Switch>("location", true);
+
+    mode_ = modeTypeNames_[dict.lookupOrDefault<word>("mode", "magnitude")];
+    dict.lookup("fields") >> fieldSet_;
+
+    return true;
+}
+
+
+bool Foam::functionObjects::fieldMinMax::execute(const bool postProcess)
+{
+    return true;
+}
+
+
+bool Foam::functionObjects::fieldMinMax::write(const bool postProcess)
+{
+    writeFiles::write();
 
     if (!location_) writeTime(file());
-    if (log_) Info<< type() << " " << name_ <<  " output:" << nl;
+    if (log_) Info<< type() << " " << name() <<  " output:" << nl;
 
     forAll(fieldSet_, fieldi)
     {
@@ -166,6 +164,8 @@ void Foam::functionObjects::fieldMinMax::write()
 
     if (!location_) file()<< endl;
     if (log_) Info<< endl;
+
+    return true;
 }
 
 

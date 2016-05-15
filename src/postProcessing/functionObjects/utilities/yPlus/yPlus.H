@@ -31,6 +31,11 @@ Description
     Evaluates and outputs turbulence y+ for  models.  Values written to
     time directories as field 'yPlus'
 
+SeeAlso
+    Foam::functionObject
+    Foam::functionObjects::writeFiles
+    Foam::functionObjects::timeControl
+
 SourceFiles
     yPlus.C
 
@@ -39,10 +44,8 @@ SourceFiles
 #ifndef functionObjects_yPlus_H
 #define functionObjects_yPlus_H
 
-#include "functionObjectFiles.H"
+#include "writeFiles.H"
 #include "volFieldsFwd.H"
-#include "Switch.H"
-#include "OFstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,9 +54,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 class fvMesh;
 
 namespace functionObjects
@@ -65,17 +65,9 @@ namespace functionObjects
 
 class yPlus
 :
-    public functionObjectFiles
+    public writeFiles
 {
     // Private data
-
-        //- Name of this set of yPlus objects
-        word name_;
-
-        const objectRegistry& obr_;
-
-        //- Switch to send output to Info as well as to file
-        Switch log_;
 
         //- Name of mass/volume flux field (optional, default = phi)
         word phiName_;
@@ -110,14 +102,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         yPlus
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -127,34 +117,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of yPlus
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the yPlus data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Calculate the yPlus and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

@@ -25,6 +25,7 @@ License
 
 #include "histogram.H"
 #include "volFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,6 +34,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(histogram, 0);
+    addToRunTimeSelectionTable(functionObject, histogram, dictionary);
 }
 }
 
@@ -69,15 +71,13 @@ void Foam::functionObjects::histogram::writeGraph
 Foam::functionObjects::histogram::histogram
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFile(obr, typeName),
-    name_(name)
+    writeFile(name, runTime, dict, name)
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -95,7 +95,7 @@ Foam::functionObjects::histogram::~histogram()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::histogram::read(const dictionary& dict)
+bool Foam::functionObjects::histogram::read(const dictionary& dict)
 {
     dict.lookup("field") >> fieldName_;
     dict.lookup("max") >> max_;
@@ -104,24 +104,20 @@ void Foam::functionObjects::histogram::read(const dictionary& dict)
 
     word format(dict.lookup("setFormat"));
     formatterPtr_ = writer<scalar>::New(format);
+
+    return true;
 }
 
 
-void Foam::functionObjects::histogram::execute()
-{}
-
-
-void Foam::functionObjects::histogram::end()
-{}
-
-
-void Foam::functionObjects::histogram::timeSet()
-{}
-
-
-void Foam::functionObjects::histogram::write()
+bool Foam::functionObjects::histogram::execute(const bool postProcess)
 {
-    Info<< type() << " " << name_ << " output:" << nl;
+    return true;
+}
+
+
+bool Foam::functionObjects::histogram::write(const bool postProcess)
+{
+    Info<< type() << " " << name() << " output:" << nl;
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -201,6 +197,8 @@ void Foam::functionObjects::histogram::write()
             writeGraph(coords, field.name(), volFrac);
         }
     }
+
+    return true;
 }
 
 

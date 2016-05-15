@@ -128,6 +128,14 @@ public:
 
     // Constructors
 
+        //- Construct from Time and dictionary
+        patchProbes
+        (
+            const word& name,
+            const Time& time,
+            const dictionary& dict
+        );
+
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
         patchProbes
@@ -146,14 +154,15 @@ public:
     //- Public members
 
         //- Sample and write
-        virtual void write();
+        virtual bool write();
 
         //- Read
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Find elements containing patchProbes
         virtual void findElements(const fvMesh&);
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

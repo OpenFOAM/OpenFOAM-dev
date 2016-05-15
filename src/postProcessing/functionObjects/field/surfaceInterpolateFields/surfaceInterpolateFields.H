@@ -59,7 +59,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::timeControl
 
 SourceFiles
     surfaceInterpolateFields.C
@@ -69,8 +69,8 @@ SourceFiles
 #ifndef functionObjects_surfaceInterpolateFields_H
 #define functionObjects_surfaceInterpolateFields_H
 
-#include "OFstream.H"
-#include "surfaceFields.H"
+#include "functionObject.H"
+#include "surfaceFieldsFwd.H"
 #include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -91,18 +91,17 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class surfaceInterpolateFields
+:
+    public functionObject
 {
 protected:
 
     // Protected data
 
-        //- Name of this set of surfaceInterpolateFields object
-        word name_;
-
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Fields to process
-        //wordList fieldSet_;
         List<Tuple2<word, word>> fieldSet_;
 
         //- Locally constructed fields
@@ -146,9 +145,8 @@ public:
         surfaceInterpolateFields
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -158,34 +156,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the surfaceInterpolateFields object
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the controls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Calculate the interpolated fields
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Write the interpolated fields
+        virtual bool write(const bool postProcess = false);
 };
 
 

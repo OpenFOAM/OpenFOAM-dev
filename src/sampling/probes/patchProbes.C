@@ -29,12 +29,21 @@ License
 #include "mappedPatchBase.H"
 #include "treeBoundBox.H"
 #include "treeDataFace.H"
+#include "addToRunTimeSelectionTable.H"
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(patchProbes, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        patchProbes,
+        dictionary
+    );
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -184,12 +193,32 @@ void Foam::patchProbes::findElements(const fvMesh& mesh)
 Foam::patchProbes::patchProbes
 (
     const word& name,
+    const Time& t,
+    const dictionary& dict
+)
+:
+    probes(name, t, dict)
+{
+    // When constructing probes above it will have called the
+    // probes::findElements (since the virtual mechanism not yet operating).
+    // Not easy to workaround (apart from feeding through flag into constructor)
+    // so clear out any cells found for now.
+    elementList_.clear();
+    faceList_.clear();
+
+    read(dict);
+}
+
+
+Foam::patchProbes::patchProbes
+(
+    const word& name,
     const objectRegistry& obr,
     const dictionary& dict,
     const bool loadFromFiles
 )
 :
-    probes(name, obr, dict, loadFromFiles)
+    probes(name, obr, dict)
 {
     // When constructing probes above it will have called the
     // probes::findElements (since the virtual mechanism not yet operating).
@@ -208,7 +237,7 @@ Foam::patchProbes::~patchProbes()
 {}
 
 
-void Foam::patchProbes::write()
+bool Foam::patchProbes::write()
 {
     if (this->size() && prepare())
     {
@@ -224,12 +253,15 @@ void Foam::patchProbes::write()
         sampleAndWriteSurfaceFields(surfaceSymmTensorFields_);
         sampleAndWriteSurfaceFields(surfaceTensorFields_);
     }
+
+    return true;
 }
 
-void Foam::patchProbes::read(const dictionary& dict)
+
+bool Foam::patchProbes::read(const dictionary& dict)
 {
     dict.lookup("patchName") >> patchName_;
-    probes::read(dict);
+    return probes::read(dict);
 }
 
 

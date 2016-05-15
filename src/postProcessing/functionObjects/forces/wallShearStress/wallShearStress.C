@@ -29,6 +29,7 @@ License
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
 #include "wallPolyPatch.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,6 +38,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(wallShearStress, 0);
+    addToRunTimeSelectionTable(functionObject, wallShearStress, dictionary);
 }
 }
 
@@ -97,18 +99,14 @@ void Foam::functionObjects::wallShearStress::calcShearStress
 Foam::functionObjects::wallShearStress::wallShearStress
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name, typeName),
-    name_(name),
-    obr_(obr),
-    log_(true),
+    writeFiles(name, runTime, dict, name),
     patchSet_()
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -141,6 +139,7 @@ Foam::functionObjects::wallShearStress::wallShearStress
     mesh.objectRegistry::store(wallShearStressPtr);
 
     read(dict);
+    resetName(typeName);
 }
 
 
@@ -152,9 +151,9 @@ Foam::functionObjects::wallShearStress::~wallShearStress()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::wallShearStress::read(const dictionary& dict)
+bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 {
-    log_ = dict.lookupOrDefault<Switch>("log", true);
+    writeFiles::read(dict);
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
@@ -165,7 +164,7 @@ void Foam::functionObjects::wallShearStress::read(const dictionary& dict)
             wordReList(dict.lookupOrDefault("patches", wordReList()))
         );
 
-    Info<< type() << " " << name_ << ":" << nl;
+    Info<< type() << " " << name() << ":" << nl;
 
     if (patchSet_.empty())
     {
@@ -203,15 +202,17 @@ void Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 
         patchSet_ = filteredPatchSet;
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::wallShearStress::execute()
+bool Foam::functionObjects::wallShearStress::execute(const bool postProcess)
 {
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
 
-    functionObjectFiles::write();
+    writeFiles::write();
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -221,7 +222,7 @@ void Foam::functionObjects::wallShearStress::execute()
             mesh.lookupObject<volVectorField>(type())
         );
 
-    if (log_) Info<< type() << " " << name_ << " output:" << nl;
+    if (log_) Info<< type() << " " << name() << " output:" << nl;
 
 
     tmp<volSymmTensorField> Reff;
@@ -247,31 +248,25 @@ void Foam::functionObjects::wallShearStress::execute()
     }
 
     calcShearStress(mesh, Reff(), wallShearStress);
+
+    return true;
 }
 
 
-void Foam::functionObjects::wallShearStress::end()
+bool Foam::functionObjects::wallShearStress::write(const bool postProcess)
 {
-    execute();
-}
-
-
-void Foam::functionObjects::wallShearStress::timeSet()
-{}
-
-
-void Foam::functionObjects::wallShearStress::write()
-{
-    functionObjectFiles::write();
+    writeFiles::write();
 
     const volVectorField& wallShearStress =
         obr_.lookupObject<volVectorField>(type());
 
-    if (log_) Info<< type() << " " << name_ << " output:" << nl
+    if (log_) Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << wallShearStress.name() << nl
         << endl;
 
     wallShearStress.write();
+
+    return true;
 }
 
 

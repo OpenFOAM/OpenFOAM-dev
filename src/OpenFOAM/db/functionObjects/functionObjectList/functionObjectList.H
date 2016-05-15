@@ -29,7 +29,8 @@ Description
     that is called for each object.
 
 See Also
-    Foam::functionObject and Foam::OutputFilterFunctionObject
+    Foam::functionObject
+    Foam::functionObjects::timeControl
 
 SourceFiles
     functionObjectList.C
@@ -158,6 +159,9 @@ public:
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
 
+        //- Read and set the function objects if their data have changed
+        bool read();
+
         //- Switch the function objects on
         void on();
 
@@ -183,9 +187,6 @@ public:
 
         //- Called at the end of Time::adjustDeltaT() if adjustTime is true
         bool adjustTimeStep();
-
-        //- Read and set the function objects if their data have changed
-        bool read();
 
         //- Update for changes of mesh
         void updateMesh(const mapPolyMesh& mpm);

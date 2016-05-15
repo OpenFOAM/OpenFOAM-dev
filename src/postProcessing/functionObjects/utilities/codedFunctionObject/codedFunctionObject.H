@@ -66,7 +66,6 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
     Foam::codedBase
 
 SourceFiles
@@ -151,14 +150,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         codedFunctionObject
         (
             const word& name,
             const Time& time,
-            const dictionary& dict,
-            bool readNow=true   // allow child-classes to avoid compilation
+            const dictionary& dict
         );
 
 
@@ -190,12 +187,6 @@ public:
 
         //- Read and set the function object if its data have changed
         virtual bool read(const dictionary&);
-
-        //- Update mesh
-        virtual void updateMesh(const mapPolyMesh&);
-
-        //- Move points
-        virtual void movePoints(const polyMesh&);
 };
 
 

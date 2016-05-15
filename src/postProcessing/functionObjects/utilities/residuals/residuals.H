@@ -51,7 +51,8 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFiles
+    Foam::functionObjects::timeControl
 
 SourceFiles
     residuals.C
@@ -61,26 +62,12 @@ SourceFiles
 #ifndef functionObjects_residuals_H
 #define functionObjects_residuals_H
 
-#include "functionObjectFiles.H"
-#include "primitiveFieldsFwd.H"
-#include "volFieldsFwd.H"
-#include "HashSet.H"
-#include "OFstream.H"
-#include "Switch.H"
-#include "NamedEnum.H"
-#include "solverPerformance.H"
+#include "writeFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -90,23 +77,17 @@ namespace functionObjects
 
 class residuals
 :
-    public functionObjectFiles
+    public writeFiles
 {
 protected:
 
     // Protected data
 
-        //- Name of this set of residuals
-        //  Also used as the name of the output directory
-        word name_;
-
-        const objectRegistry& obr_;
-
         //- Fields to write residuals
         wordList fieldSet_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Output field header information
         template<class Type>
@@ -114,6 +95,10 @@ protected:
 
         //- Output file header information
         virtual void writeFileHeader(const label i);
+
+        //- Calculate the field min/max
+        template<class Type>
+        void writeResidual(const word& fieldName);
 
 
 private:
@@ -135,14 +120,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         residuals
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -152,38 +135,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the functionObject
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the controls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the field min/max
-        template<class Type>
-        void writeResidual(const word& fieldName);
+        virtual bool execute(const bool postProcess = false);
 
         //- Write the residuals
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

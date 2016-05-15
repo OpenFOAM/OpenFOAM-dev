@@ -81,8 +81,8 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
-    Foam::forces
+    Foam::functionObjects::timeControl
+    Foam::functionObjects::forces
 
 SourceFiles
     forceCoeffs.C
@@ -161,14 +161,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         forceCoeffs
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary&
         );
 
 
@@ -179,19 +177,13 @@ public:
     // Member Functions
 
         //- Read the forces data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Write the forces
-        virtual void write();
+        virtual bool write(const bool postProcess = false);
 };
 
 

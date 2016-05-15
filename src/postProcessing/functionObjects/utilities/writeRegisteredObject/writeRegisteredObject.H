@@ -64,7 +64,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::timeControl
 
 SourceFiles
     writeRegisteredObject.C
@@ -74,8 +74,8 @@ SourceFiles
 #ifndef functionObjects_writeRegisteredObject_H
 #define functionObjects_writeRegisteredObject_H
 
+#include "functionObject.H"
 #include "wordReList.H"
-#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,9 +84,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -96,26 +93,22 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class writeRegisteredObject
+:
+    public functionObject
 {
     // Private data
-
-        //- Name of this set of writeRegisteredObject
-        word name_;
-
-        //- Takes over the writing from Db
-        bool exclusiveWriting_;
 
         //- Refererence to Db
         const objectRegistry& obr_;
 
-        // Read from dictionary
+        //- Takes over the writing from Db
+        bool exclusiveWriting_;
 
-            //- Names of objects to control
-            wordReList objectNames_;
+        //- Names of objects to control
+        wordReList objectNames_;
 
 
     // Private Member Functions
-
 
         //- Disallow default bitwise copy construct
         writeRegisteredObject(const writeRegisteredObject&);
@@ -132,14 +125,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         writeRegisteredObject
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -149,34 +140,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the writeRegisteredObject
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the writeRegisteredObject data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Do nothing
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Write the writeRegisteredObject
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Write the registered objects
+        virtual bool write(const bool postProcess = false);
 };
 
 

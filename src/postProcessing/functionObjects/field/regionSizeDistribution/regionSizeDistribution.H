@@ -96,7 +96,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFile
 
 SourceFiles
     regionSizeDistribution.C
@@ -106,8 +106,7 @@ SourceFiles
 #ifndef functionObjects_regionSizeDistribution_H
 #define functionObjects_regionSizeDistribution_H
 
-#include "functionObjectFiles.H"
-#include "pointFieldFwd.H"
+#include "writeFile.H"
 #include "writer.H"
 #include "Map.H"
 #include "volFieldsFwd.H"
@@ -121,10 +120,7 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class mapPolyMesh;
 class regionSplit;
-class polyMesh;
 
 namespace functionObjects
 {
@@ -135,14 +131,9 @@ namespace functionObjects
 
 class regionSizeDistribution
 :
-    public functionObjectFiles
+    public writeFile
 {
     // Private data
-
-        //- Name of this set of regionSizeDistribution objects
-        word name_;
-
-        const objectRegistry& obr_;
 
         //- Name of field
         word alphaName_;
@@ -250,9 +241,8 @@ public:
         regionSizeDistribution
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary&
         );
 
 
@@ -263,34 +253,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of regionSizeDistribution
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the regionSizeDistribution data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        //- Do nothing
+        virtual bool execute(const bool postProcess = false);
 
         //- Calculate the regionSizeDistribution and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

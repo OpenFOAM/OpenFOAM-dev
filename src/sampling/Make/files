@@ -1,7 +1,6 @@
 probes/probes.C
 probes/patchProbes.C
 probes/probesGrouping.C
-probes/probesFunctionObject/probesFunctionObject.C
 
 sampledSet/circle/circleSet.C
 sampledSet/cloud/cloudSet.C
@@ -14,7 +13,6 @@ sampledSet/patchSeed/patchSeedSet.C
 sampledSet/sampledSet/sampledSet.C
 sampledSet/sampledSets/sampledSets.C
 sampledSet/sampledSets/sampledSetsGrouping.C
-sampledSet/sampledSetsFunctionObject/sampledSetsFunctionObject.C
 sampledSet/triSurfaceMeshPointSet/triSurfaceMeshPointSet.C
 sampledSet/uniform/uniformSet.C
 sampledSet/array/arraySet.C
@@ -33,7 +31,6 @@ sampledSurface/sampledCuttingPlane/sampledCuttingPlane.C
 sampledSurface/sampledSurface/sampledSurface.C
 sampledSurface/sampledSurfaces/sampledSurfaces.C
 sampledSurface/sampledSurfaces/sampledSurfacesGrouping.C
-sampledSurface/sampledSurfacesFunctionObject/sampledSurfacesFunctionObject.C
 sampledSurface/sampledTriSurfaceMesh/sampledTriSurfaceMesh.C
 sampledSurface/thresholdCellFaces/thresholdCellFaces.C
 sampledSurface/thresholdCellFaces/sampledThresholdCellFaces.C

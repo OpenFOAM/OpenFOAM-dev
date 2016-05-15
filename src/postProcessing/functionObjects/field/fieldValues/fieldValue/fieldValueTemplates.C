@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fieldValue::combineFields(Field<Type>& field)
+void Foam::functionObjects::fieldValue::combineFields(Field<Type>& field)
 {
     List<Field<Type>> allValues(Pstream::nProcs());
 
@@ -51,7 +51,7 @@ void Foam::fieldValue::combineFields(Field<Type>& field)
 
 
 template<class Type>
-void Foam::fieldValue::combineFields(tmp<Field<Type>>& field)
+void Foam::functionObjects::fieldValue::combineFields(tmp<Field<Type>>& field)
 {
     combineFields(field());
 }

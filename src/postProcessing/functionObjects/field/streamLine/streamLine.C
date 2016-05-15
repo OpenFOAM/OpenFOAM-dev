@@ -36,6 +36,7 @@ License
 #include "interpolationCellPoint.H"
 #include "PatchTools.H"
 #include "mapPolyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -44,6 +45,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(streamLine, 0);
+    addToRunTimeSelectionTable(functionObject, streamLine, dictionary);
 }
 }
 
@@ -101,7 +103,6 @@ Foam::functionObjects::streamLine::wallPatch() const
 
 void Foam::functionObjects::streamLine::track()
 {
-    const Time& runTime = obr_.time();
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
 
     IDLList<streamLineParticle> initialParticles;
@@ -140,116 +141,74 @@ void Foam::functionObjects::streamLine::track()
 
     label UIndex = -1;
 
-    if (loadFromFiles_)
+    label nScalar = 0;
+    label nVector = 0;
+
+    forAll(fields_, i)
     {
-        IOobjectList allObjects(mesh, runTime.timeName());
-
-        IOobjectList objects(2*fields_.size());
-        forAll(fields_, i)
+        if (mesh.foundObject<volScalarField>(fields_[i]))
         {
-            objects.add(*allObjects[fields_[i]]);
+            nScalar++;
         }
-
-        ReadFields(mesh, objects, vsFlds);
-        vsInterp.setSize(vsFlds.size());
-        forAll(vsFlds, i)
+        else if (mesh.foundObject<volVectorField>(fields_[i]))
         {
+            nVector++;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Cannot find field " << fields_[i] << nl
+                << "Valid scalar fields are:"
+                << mesh.names(volScalarField::typeName) << nl
+                << "Valid vector fields are:"
+                << mesh.names(volVectorField::typeName)
+                << exit(FatalError);
+        }
+    }
+    vsInterp.setSize(nScalar);
+    nScalar = 0;
+    vvInterp.setSize(nVector);
+    nVector = 0;
+
+    forAll(fields_, i)
+    {
+        if (mesh.foundObject<volScalarField>(fields_[i]))
+        {
+            const volScalarField& f = mesh.lookupObject<volScalarField>
+            (
+                fields_[i]
+            );
             vsInterp.set
             (
-                i,
+                nScalar++,
                 interpolation<scalar>::New
                 (
                     interpolationScheme_,
-                    vsFlds[i]
+                    f
                 )
             );
         }
-        ReadFields(mesh, objects, vvFlds);
-        vvInterp.setSize(vvFlds.size());
-        forAll(vvFlds, i)
+        else if (mesh.foundObject<volVectorField>(fields_[i]))
         {
+            const volVectorField& f = mesh.lookupObject<volVectorField>
+            (
+                fields_[i]
+            );
+
+            if (f.name() == UName_)
+            {
+                UIndex = nVector;
+            }
+
             vvInterp.set
             (
-                i,
+                nVector++,
                 interpolation<vector>::New
                 (
                     interpolationScheme_,
-                    vvFlds[i]
+                    f
                 )
             );
-        }
-    }
-    else
-    {
-        label nScalar = 0;
-        label nVector = 0;
-
-        forAll(fields_, i)
-        {
-            if (mesh.foundObject<volScalarField>(fields_[i]))
-            {
-                nScalar++;
-            }
-            else if (mesh.foundObject<volVectorField>(fields_[i]))
-            {
-                nVector++;
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "Cannot find field " << fields_[i] << nl
-                    << "Valid scalar fields are:"
-                    << mesh.names(volScalarField::typeName) << nl
-                    << "Valid vector fields are:"
-                    << mesh.names(volVectorField::typeName)
-                    << exit(FatalError);
-            }
-        }
-        vsInterp.setSize(nScalar);
-        nScalar = 0;
-        vvInterp.setSize(nVector);
-        nVector = 0;
-
-        forAll(fields_, i)
-        {
-            if (mesh.foundObject<volScalarField>(fields_[i]))
-            {
-                const volScalarField& f = mesh.lookupObject<volScalarField>
-                (
-                    fields_[i]
-                );
-                vsInterp.set
-                (
-                    nScalar++,
-                    interpolation<scalar>::New
-                    (
-                        interpolationScheme_,
-                        f
-                    )
-                );
-            }
-            else if (mesh.foundObject<volVectorField>(fields_[i]))
-            {
-                const volVectorField& f = mesh.lookupObject<volVectorField>
-                (
-                    fields_[i]
-                );
-
-                if (f.name() == UName_)
-                {
-                    UIndex = nVector;
-                }
-
-                vvInterp.set
-                (
-                    nVector++,
-                    interpolation<vector>::New
-                    (
-                        interpolationScheme_,
-                        f
-                    )
-                );
-            }
         }
     }
 
@@ -327,18 +286,22 @@ void Foam::functionObjects::streamLine::track()
 Foam::functionObjects::streamLine::streamLine
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     dict_(dict),
-    name_(name),
-    obr_(obr),
-    loadFromFiles_(loadFromFiles),
     nSubCycle_(0)
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -356,9 +319,9 @@ Foam::functionObjects::streamLine::~streamLine()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::streamLine::read(const dictionary& dict)
+bool Foam::functionObjects::streamLine::read(const dictionary& dict)
 {
-    Info<< type() << " " << name_ << ":" << nl;
+    Info<< type() << " " << name() << ":" << nl;
 
     dict.lookup("fields") >> fields_;
     if (dict.found("UName"))
@@ -455,24 +418,20 @@ void Foam::functionObjects::streamLine::read(const dictionary& dict)
 
     scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
     vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));
+
+    return true;
 }
 
 
-void Foam::functionObjects::streamLine::execute()
-{}
-
-
-void Foam::functionObjects::streamLine::end()
-{}
-
-
-void Foam::functionObjects::streamLine::timeSet()
-{}
-
-
-void Foam::functionObjects::streamLine::write()
+bool Foam::functionObjects::streamLine::execute(const bool postProcess)
 {
-    Info<< type() << " " << name_ << " output:" << nl;
+    return true;
+}
+
+
+bool Foam::functionObjects::streamLine::write(const bool postProcess)
+{
+    Info<< type() << " " << name() << " output:" << nl;
 
     const Time& runTime = obr_.time();
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
@@ -527,41 +486,54 @@ void Foam::functionObjects::streamLine::write()
 
         // Distribute the track positions. Note: use scheduled comms
         // to prevent buffering.
-        mapDistribute::distribute
+        mapDistributeBase::distribute
         (
             Pstream::scheduled,
             distMap.schedule(),
             distMap.constructSize(),
             distMap.subMap(),
+            false,
             distMap.constructMap(),
-            allTracks_
+            false,
+            allTracks_,
+            flipOp()
         );
 
         // Distribute the scalars
         forAll(allScalars_, scalarI)
         {
-            mapDistribute::distribute
+            allScalars_[scalarI].shrink();
+            mapDistributeBase::distribute
             (
                 Pstream::scheduled,
                 distMap.schedule(),
                 distMap.constructSize(),
                 distMap.subMap(),
+                false,
                 distMap.constructMap(),
-                allScalars_[scalarI]
+                false,
+                allScalars_[scalarI],
+                flipOp()
             );
+            allScalars_[scalarI].setCapacity(allScalars_[scalarI].size());
         }
         // Distribute the vectors
         forAll(allVectors_, vectorI)
         {
-            mapDistribute::distribute
+            allVectors_[vectorI].shrink();
+            mapDistributeBase::distribute
             (
                 Pstream::scheduled,
                 distMap.schedule(),
                 distMap.constructSize(),
                 distMap.subMap(),
+                false,
                 distMap.constructMap(),
-                allVectors_[vectorI]
+                false,
+                allVectors_[vectorI],
+                flipOp()
             );
+            allVectors_[vectorI].setCapacity(allVectors_[vectorI].size());
         }
     }
 
@@ -695,6 +667,8 @@ void Foam::functionObjects::streamLine::write()
             );
         }
     }
+
+    return true;
 }
 
 

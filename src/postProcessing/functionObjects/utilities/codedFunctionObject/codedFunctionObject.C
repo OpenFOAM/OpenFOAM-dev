@@ -64,32 +64,30 @@ void Foam::codedFunctionObject::prepare
     dynCode.setFilterVariable("codeTimeSet", codeTimeSet_);
     //dynCode.setFilterVariable("codeWrite", codeWrite_);
 
-    // compile filtered C template
+    // Compile filtered C template
     dynCode.addCompileFile("functionObjectTemplate.C");
-    dynCode.addCompileFile("FilterFunctionObjectTemplate.C");
 
-    // copy filtered H template
-    dynCode.addCopyFile("FilterFunctionObjectTemplate.H");
+    // Copy filtered H template
     dynCode.addCopyFile("functionObjectTemplate.H");
 
-    // debugging: make BC verbose
+    // Debugging: make BC verbose
     //         dynCode.setFilterVariable("verbose", "true");
     //         Info<<"compile " << redirectType_ << " sha1: "
     //             << context.sha1() << endl;
 
-    // define Make/options
+    // Define Make/options
     dynCode.setMakeOptions
-        (
-            "EXE_INC = -g \\\n"
-            "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-            "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
-            + context.options()
-            + "\n\nLIB_LIBS = \\\n"
-            + "    -lOpenFOAM \\\n"
-            + "    -lfiniteVolume \\\n"
-            + "    -lmeshTools \\\n"
-            + context.libs()
-        );
+    (
+        "EXE_INC = -g \\\n"
+        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
+        "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
+        + context.options()
+        + "\n\nLIB_LIBS = \\\n"
+        + "    -lOpenFOAM \\\n"
+        + "    -lfiniteVolume \\\n"
+        + "    -lmeshTools \\\n"
+        + context.libs()
+    );
 }
 
 
@@ -123,8 +121,7 @@ Foam::codedFunctionObject::codedFunctionObject
 (
     const word& name,
     const Time& time,
-    const dictionary& dict,
-    bool readNow
+    const dictionary& dict
 )
 :
     functionObject(name),
@@ -132,10 +129,7 @@ Foam::codedFunctionObject::codedFunctionObject
     time_(time),
     dict_(dict)
 {
-    if (readNow)
-    {
-        read(dict_);
-    }
+    read(dict_);
 
     updateLibrary(redirectType_);
     redirectFunctionObject();
@@ -293,14 +287,6 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
     updateLibrary(redirectType_);
     return redirectFunctionObject().read(dict);
 }
-
-
-void Foam::codedFunctionObject::updateMesh(const mapPolyMesh&)
-{}
-
-
-void Foam::codedFunctionObject::movePoints(const polyMesh&)
-{}
 
 
 // ************************************************************************* //

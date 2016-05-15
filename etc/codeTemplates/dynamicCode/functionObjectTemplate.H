@@ -33,8 +33,7 @@ SourceFiles
 #ifndef functionObjectTemplate_H
 #define functionObjectTemplate_H
 
-#include "stringList.H"
-#include "pointField.H"
+#include "functionObject.H"
 
 //{{{ begin codeInclude
 ${codeInclude}
@@ -47,9 +46,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
@@ -57,13 +53,12 @@ class fvMesh;
 \*---------------------------------------------------------------------------*/
 
 class ${typeName}FunctionObject
+:
+    public functionObject
 {
     // Private data
 
-        //- Name of this set of system calls
-        word name_;
-
-        //- Registry
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
 //{{{ begin codeData
@@ -92,14 +87,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         ${typeName}FunctionObject
         (
             const word& name,
-            const objectRegistry& unused,
-            const dictionary&,
-            const bool loadFromFilesUnused = false
+            const Time& runTime,
+            const dictionary&
         );
 
 
@@ -109,34 +102,20 @@ public:
 
     // Member Functions
 
-        //- Return name of the system call set
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the system calls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute the "executeCalls" at each time-step
-        virtual void execute();
+        virtual bool execute(const bool postProcess = false);
 
         //- Execute the "endCalls" at the final time-loop
-        virtual void end();
+        virtual bool end();
 
         //- Write, execute the "writeCalls"
-        virtual void write();
+        virtual bool write(const bool postProcess = false);
 
         //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool timeSet();
 };
 
 

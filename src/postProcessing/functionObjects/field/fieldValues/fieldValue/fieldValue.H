@@ -38,12 +38,9 @@ SourceFiles
 #ifndef functionObjects_fieldValue_H
 #define functionObjects_fieldValue_H
 
-#include "functionObjectFiles.H"
+#include "writeFiles.H"
 #include "Switch.H"
-#include "OFstream.H"
-#include "dictionary.H"
 #include "Field.H"
-#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,10 +48,10 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class objectRegistry;
 class fvMesh;
-class polyMesh;
-class mapPolyMesh;
+
+namespace functionObjects
+{
 
 /*---------------------------------------------------------------------------*\
                        Class fieldValue Declaration
@@ -62,24 +59,15 @@ class mapPolyMesh;
 
 class fieldValue
 :
-    public functionObjectFiles
+    public writeFiles
 {
 
 protected:
 
     // Protected data
 
-        //- Name of this fieldValue object
-        word name_;
-
-        //- Database this class is registered to
-        const objectRegistry& obr_;
-
         //- Construction dictionary
         dictionary dict_;
-
-        //- Switch to send output to Info as well as to file
-        Switch log_;
 
         //- Name of source object
         word sourceName_;
@@ -92,6 +80,17 @@ protected:
 
         //- Results dictionary for external access of results
         dictionary resultDict_;
+
+
+    // Protected Member Functions
+
+        //- Combine fields from all processor domains into single field
+        template<class Type>
+        void combineFields(Field<Type>& field);
+
+        //- Combine fields from all processor domains into single field
+        template<class Type>
+        void combineFields(tmp<Field<Type>>&);
 
 
 public:
@@ -109,103 +108,80 @@ public:
             (
                 const word& name,
                 const objectRegistry& obr,
-                const dictionary& dict,
-                const bool loadFromFiles
+                const dictionary& dict
             ),
-            (name, obr, dict, loadFromFiles)
+            (name, obr, dict)
         );
 
-    //- Construct from components
-    fieldValue
-    (
-        const word& name,
-        const objectRegistry& obr,
-        const dictionary& dict,
-        const word& valueType,
-        const bool loadFromFiles = false
-    );
 
-    //- Return a reference to the selected fieldValue
-    static autoPtr<fieldValue> New
-    (
-        const word& name,
-        const objectRegistry& obr,
-        const dictionary& dict,
-        const bool loadFromFiles = false,
-        const bool output = true
-    );
+    // Constructors
+
+        //- Construct from Time and dictionary
+        fieldValue
+        (
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict,
+            const word& valueType
+        );
+
+        //- Construct from objectRegistry and dictionary
+        fieldValue
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict,
+            const word& valueType
+        );
+
+        //- Return a reference to the selected fieldValue
+        static autoPtr<fieldValue> New
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict,
+            const bool output = true
+        );
+
 
     //- Destructor
     virtual ~fieldValue();
 
 
-    // Public Member Functions
+    // Member Functions
 
-        // Access
+        //- Return the reference to the construction dictionary
+        inline const dictionary& dict() const;
 
-            //- Return the name of the geometric source
-            inline const word& name() const;
+        //- Return the source name
+        inline const word& sourceName() const;
 
-            //- Return the reference to the object registry
-            inline const objectRegistry& obr() const;
+        //- Return the list of field names
+        inline const wordList& fields() const;
 
-            //- Return the reference to the construction dictionary
-            inline const dictionary& dict() const;
+        //- Return the output field values flag
+        inline const Switch& valueOutput() const;
 
-            //- Return the switch to send output to Info as well as to file
-            inline const Switch& log() const;
+        //- Helper function to return the reference to the mesh
+        inline const fvMesh& mesh() const;
 
-            //- Return the source name
-            inline const word& sourceName() const;
+        //- Return access to the latest set of results
+        inline const dictionary& resultDict() const;
 
-            //- Return the list of field names
-            inline const wordList& fields() const;
+        //- Read from dictionary
+        virtual bool read(const dictionary& dict);
 
-            //- Return the output field values flag
-            inline const Switch& valueOutput() const;
+        //- Execute
+        virtual bool execute(const bool postProcess = false);
 
-            //- Helper function to return the reference to the mesh
-            inline const fvMesh& mesh() const;
-
-            //- Return access to the latest set of results
-            inline const dictionary& resultDict() const;
-
-
-        // Function object functions
-
-            //- Read from dictionary
-            virtual void read(const dictionary& dict);
-
-            //- Write to screen/file
-            virtual void write();
-
-            //- Execute
-            virtual void execute();
-
-            //- Execute the at the final time-loop, currently does nothing
-            virtual void end();
-
-            //- Called when time was set at the end of the Time::operator++
-            virtual void timeSet();
-
-            //- Update mesh
-            virtual void updateMesh(const mapPolyMesh&);
-
-            //- Move points
-            virtual void movePoints(const polyMesh&);
-
-            //- Combine fields from all processor domains into single field
-            template<class Type>
-            void combineFields(Field<Type>& field);
-
-            //- Combine fields from all processor domains into single field
-            template<class Type>
-            void combineFields(tmp<Field<Type>>&);
+        //- Write to screen/file
+        virtual bool write(const bool postProcess = false);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

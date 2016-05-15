@@ -27,6 +27,7 @@ License
 #include "volFields.H"
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +36,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(yPlus, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        yPlus,
+        dictionary
+    );
 }
 }
 
@@ -59,18 +67,14 @@ void Foam::functionObjects::yPlus::writeFileHeader(const label i)
 Foam::functionObjects::yPlus::yPlus
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name, typeName),
-    name_(name),
-    obr_(obr),
-    log_(true),
+    writeFiles(name, runTime, dict, name),
     phiName_("phi")
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -96,6 +100,8 @@ Foam::functionObjects::yPlus::yPlus
     );
 
     mesh.objectRegistry::store(yPlusPtr);
+
+    resetName(typeName);
 }
 
 
@@ -107,19 +113,21 @@ Foam::functionObjects::yPlus::~yPlus()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::yPlus::read(const dictionary& dict)
+bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 {
-    log_ = dict.lookupOrDefault<Switch>("log", true);
+    writeFiles::read(dict);
     phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
+
+    return true;
 }
 
 
-void Foam::functionObjects::yPlus::execute()
+bool Foam::functionObjects::yPlus::execute(const bool postProcess)
 {
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
 
-    functionObjectFiles::write();
+    writeFiles::write();
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -129,7 +137,7 @@ void Foam::functionObjects::yPlus::execute()
             mesh.lookupObject<volScalarField>(type())
         );
 
-    if (log_) Info<< type() << " " << name_ << " output:" << nl;
+    if (log_) Info<< type() << " " << name() << " output:" << nl;
 
     tmp<volSymmTensorField> Reff;
     if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
@@ -152,22 +160,14 @@ void Foam::functionObjects::yPlus::execute()
             << "Unable to find turbulence model in the "
             << "database" << exit(FatalError);
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::yPlus::end()
+bool Foam::functionObjects::yPlus::write(const bool postProcess)
 {
-    execute();
-}
-
-
-void Foam::functionObjects::yPlus::timeSet()
-{}
-
-
-void Foam::functionObjects::yPlus::write()
-{
-    functionObjectFiles::write();
+    writeFiles::write();
 
     const volScalarField& yPlus =
         obr_.lookupObject<volScalarField>(type());
@@ -175,6 +175,8 @@ void Foam::functionObjects::yPlus::write()
     if (log_) Info<< "    writing field " << yPlus.name() << nl << endl;
 
     yPlus.write();
+
+    return true;
 }
 
 

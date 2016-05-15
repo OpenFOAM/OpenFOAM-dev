@@ -101,41 +101,24 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return time database
+        const Time& time() const;
 
-            //- Return time database
-            const Time& time() const;
+        //- Called at the end of Time::adjustDeltaT() if adjustTime is true
+        virtual bool adjustTimeStep();
 
+        //- Read and set the function object if its data have changed
+        virtual bool read(const dictionary&);
 
-        // Function object control
+        //- Called at each ++ or += of the time-loop.
+        //  postProcess overrides the usual executeControl behaviour and
+        //  forces execution (used in post-processing mode)
+        virtual bool execute(const bool postProcess = false);
 
-            //- Called at each ++ or += of the time-loop.
-            //  postProcess overrides the usual executeControl behaviour and
-            //  forces execution (used in post-processing mode)
-            virtual bool execute(const bool postProcess = false);
-
-            //- Called at each ++ or += of the time-loop.
-            //  postProcess overrides the usual writeControl behaviour and
-            //  forces writing always (used in post-processing mode)
-            virtual bool write(const bool postProcess = false);
-
-            //- Called when Time::run() determines that the time-loop exits
-            virtual bool end();
-
-            //- Called when time was set at the end of the Time::operator++
-            virtual bool timeSet();
-
-            //- Called at the end of Time::adjustDeltaT() if adjustTime is true
-            virtual bool adjustTimeStep();
-
-            //- Read and set the function object if its data have changed
-            virtual bool read(const dictionary&);
-
-            //- Update for changes of mesh
-            virtual void updateMesh(const mapPolyMesh&);
-
-            //- Update for changes of mesh
-            virtual void movePoints(const polyMesh&);
+        //- Called at each ++ or += of the time-loop.
+        //  postProcess overrides the usual writeControl behaviour and
+        //  forces writing always (used in post-processing mode)
+        virtual bool write(const bool postProcess = false);
 };
 
 

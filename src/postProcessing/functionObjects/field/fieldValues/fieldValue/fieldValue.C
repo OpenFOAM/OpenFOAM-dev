@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldValue.H"
-#include "fvMesh.H"
 #include "Time.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -32,82 +31,89 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(fieldValue, 0);
     defineRunTimeSelectionTable(fieldValue, dictionary);
 }
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void Foam::fieldValue::read(const dictionary& dict)
-{
-    dict_ = dict;
-
-    log_ = dict.lookupOrDefault<Switch>("log", true);
-    dict.lookup("fields") >> fields_;
-    dict.lookup("valueOutput") >> valueOutput_;
-}
-
-
-void Foam::fieldValue::write()
-{
-    functionObjectFiles::write();
-
-    if (log_) Info<< type() << " " << name_ << " output:" << nl;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fieldValue::fieldValue
+Foam::functionObjects::fieldValue::fieldValue
 (
     const word& name,
-    const objectRegistry& obr,
+    const Time& runTime,
     const dictionary& dict,
-    const word& valueType,
-    const bool loadFromFiles
+    const word& valueType
 )
 :
-    functionObjectFiles(obr, name, valueType),
-    name_(name),
-    obr_(obr),
+    writeFiles(name, runTime, dict, name),
     dict_(dict),
-    log_(true),
     sourceName_(word::null),
     fields_(dict.lookup("fields")),
     valueOutput_(dict.lookup("valueOutput")),
     resultDict_(fileName("name"), dictionary::null)
 {
     read(dict);
+    resetName(valueType);
+}
+
+
+Foam::functionObjects::fieldValue::fieldValue
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const word& valueType
+)
+:
+    writeFiles(name, obr, dict, name),
+    dict_(dict),
+    sourceName_(word::null),
+    fields_(dict.lookup("fields")),
+    valueOutput_(dict.lookup("valueOutput")),
+    resultDict_(fileName("name"), dictionary::null)
+{
+    read(dict);
+    resetName(valueType);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fieldValue::~fieldValue()
+Foam::functionObjects::fieldValue::~fieldValue()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fieldValue::execute()
-{}
+bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
+{
+    dict_ = dict;
+    writeFiles::read(dict);
+    dict.lookup("fields") >> fields_;
+    dict.lookup("valueOutput") >> valueOutput_;
+
+    return true;
+}
 
 
-void Foam::fieldValue::end()
-{}
+bool Foam::functionObjects::fieldValue::execute(const bool postProcess)
+{
+    return true;
+}
 
 
-void Foam::fieldValue::timeSet()
-{}
+bool Foam::functionObjects::fieldValue::write(const bool postProcess)
+{
+    writeFiles::write();
 
+    if (log_) Info<< type() << " " << name() << " output:" << nl;
 
-void Foam::fieldValue::updateMesh(const mapPolyMesh&)
-{}
-
-
-void Foam::fieldValue::movePoints(const polyMesh&)
-{}
+    return true;
+}
 
 
 // ************************************************************************* //

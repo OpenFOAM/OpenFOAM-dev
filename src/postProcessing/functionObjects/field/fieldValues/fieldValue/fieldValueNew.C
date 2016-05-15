@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,12 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::fieldValue> Foam::fieldValue::New
+Foam::autoPtr<Foam::functionObjects::fieldValue>
+Foam::functionObjects::fieldValue::New
 (
     const word& name,
     const objectRegistry& obr,
     const dictionary& dict,
-    const bool loadFromFiles,
     const bool output
 )
 {
@@ -56,16 +56,7 @@ Foam::autoPtr<Foam::fieldValue> Foam::fieldValue::New
             << exit(FatalError);
     }
 
-    return autoPtr<fieldValue>
-    (
-        cstrIter()
-        (
-            name,
-            obr,
-            dict,
-            loadFromFiles
-        )
-    );
+    return autoPtr<fieldValue>(cstrIter()(name, obr, dict));
 }
 
 

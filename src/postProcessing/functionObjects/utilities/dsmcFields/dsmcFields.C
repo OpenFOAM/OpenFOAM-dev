@@ -27,8 +27,8 @@ License
 #include "volFields.H"
 #include "dictionary.H"
 #include "dsmcCloud.H"
-
 #include "constants.H"
+#include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant;
 
@@ -39,6 +39,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(dsmcFields, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        dsmcFields,
+        dictionary
+    );
 }
 }
 
@@ -48,15 +55,20 @@ namespace functionObjects
 Foam::functionObjects::dsmcFields::dsmcFields
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr)
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    )
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -74,23 +86,19 @@ Foam::functionObjects::dsmcFields::~dsmcFields()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::dsmcFields::read(const dictionary& dict)
-{}
+bool Foam::functionObjects::dsmcFields::read(const dictionary& dict)
+{
+    return true;
+}
 
 
-void Foam::functionObjects::dsmcFields::execute()
-{}
+bool Foam::functionObjects::dsmcFields::execute(const bool postProcess)
+{
+    return true;
+}
 
 
-void Foam::functionObjects::dsmcFields::end()
-{}
-
-
-void Foam::functionObjects::dsmcFields::timeSet()
-{}
-
-
-void Foam::functionObjects::dsmcFields::write()
+bool Foam::functionObjects::dsmcFields::write(const bool postProcess)
 {
     word rhoNMeanName = "rhoNMean";
     word rhoMMeanName = "rhoMMean";
@@ -254,6 +262,8 @@ void Foam::functionObjects::dsmcFields::write()
         p.write();
 
         Info<< "dsmcFields written." << nl << endl;
+
+        return true;
     }
     else
     {
@@ -261,6 +271,8 @@ void Foam::functionObjects::dsmcFields::write()
             << ") found in rhoNMean field. "
             << "Not calculating dsmcFields to avoid division by zero."
             << endl;
+
+        return false;
     }
 }
 

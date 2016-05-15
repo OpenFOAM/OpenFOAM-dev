@@ -44,19 +44,13 @@ SourceFiles
 #ifndef functionObjects_abort_H
 #define functionObjects_abort_H
 
+#include "functionObject.H"
 #include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -65,6 +59,8 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class abort
+:
+    public functionObject
 {
 public:
 
@@ -82,10 +78,8 @@ private:
 
     // Private data
 
-        //- Name of the abort file unless otherwise specified
-        word name_;
-
-        const objectRegistry& obr_;
+        //- Reference to the Time
+        const Time& time_;
 
         //- The fully-qualified name of the abort file
         fileName abortFile_;
@@ -117,13 +111,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
+        //- Construct from Time and dictionary
         abort
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFilesUnused = false
+            const Time& runTime,
+            const dictionary&
         );
 
 
@@ -133,34 +126,17 @@ public:
 
     // Member Functions
 
-        //- Return name of the abort file
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the dictionary settings
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, check existence of abort file and take action
-        virtual void execute();
+        virtual bool execute(const bool postProcess = false);
+
+        //- Execute, check existence of abort file and take action
+        virtual bool write(const bool postProcess = false);
 
         //- Execute at the final time-loop, used for cleanup
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Execute, check existence of abort file and take action
-        virtual void write();
-
-        //- Update for changes of mesh - does nothing
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh - does nothing
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool end();
 };
 
 

@@ -76,9 +76,8 @@ SourceFiles
 #ifndef functionObjects_fieldValueDelta_H
 #define functionObjects_fieldValueDelta_H
 
-#include "functionObjectFiles.H"
+#include "writeFiles.H"
 #include "fieldValue.H"
-#include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -95,7 +94,7 @@ namespace fieldValues
 
 class fieldValueDelta
 :
-    public functionObjectFiles
+    public writeFiles
 {
 public:
         //- Operation type enumeration
@@ -115,18 +114,6 @@ public:
 private:
 
     // Private data
-
-        //- Name of this fieldValue object
-        word name_;
-
-        //- Database this class is registered to
-        const objectRegistry& obr_;
-
-        //- Flag to indicate to load from files
-        bool loadFromFiles_;
-
-        //- Switch to send output to Info as well as to file
-        Switch log_;
 
         //- Operation to apply to values
         operationType operation_;
@@ -151,7 +138,7 @@ private:
 
 protected:
 
-    // Functions to be over-ridden from IOoutputFilter class
+    // Protected Member Functions
 
         //- Output file header information
         virtual void writeFileHeader(const label i);
@@ -165,13 +152,12 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from Time and dictionary
         fieldValueDelta
         (
             const word& name,
-            const objectRegistry& obr,
-            const dictionary& dict,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -181,28 +167,14 @@ public:
 
     // Public Member Functions
 
-        // Function object functions
+        //- Read from dictionary
+        virtual bool read(const dictionary&);
 
-            //- Read from dictionary
-            virtual void read(const dictionary&);
+        //- Do nothing
+        virtual bool execute(const bool postProcess = false);
 
-            //- Calculate and write
-            virtual void write();
-
-            //- Execute
-            virtual void execute();
-
-            //- Execute the at the final time-loop, currently does nothing
-            virtual void end();
-
-             //- Called when time was set at the end of the Time::operator++
-            virtual void timeSet();
-
-            //- Update mesh
-            virtual void updateMesh(const mapPolyMesh&);
-
-            //- Move points
-            virtual void movePoints(const polyMesh&);
+        //- Calculate and write
+        virtual bool write(const bool postProcess = false);
 };
 
 

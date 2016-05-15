@@ -59,7 +59,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFile
 
 SourceFiles
     histogram.C
@@ -70,19 +70,12 @@ SourceFiles
 #define functionObjects_histogram_H
 
 #include "writer.H"
-#include "volFieldsFwd.H"
-#include "functionObjectFile.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class mapPolyMesh;
-class polyMesh;
-
 namespace functionObjects
 {
 
@@ -92,12 +85,9 @@ namespace functionObjects
 
 class histogram
 :
-    public functionObjectFile
+    public writeFile
 {
     // Private data
-
-        //- Name of this histogram
-        word name_;
 
         //- Name of field
         word fieldName_;
@@ -139,52 +129,31 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         histogram
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
     // Destructor
-
-        virtual ~histogram();
+    virtual ~histogram();
 
 
     // Member Functions
 
-        //- Return name of the set of histogram
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the histogram data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the histogram and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Calculate the histogram and write.
+        //  postProcess overrides the usual writeControl behaviour and
+        //  forces writing always (used in post-processing mode)
+        virtual bool write(const bool postProcess = false);
 };
 
 

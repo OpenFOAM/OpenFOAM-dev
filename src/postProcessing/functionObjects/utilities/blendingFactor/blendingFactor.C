@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blendingFactor.H"
-#include "dictionary.H"
+#include "volFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,6 +34,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(blendingFactor, 0);
+    addToRunTimeSelectionTable(functionObject, blendingFactor, dictionary);
 }
 }
 
@@ -42,17 +44,22 @@ namespace functionObjects
 Foam::functionObjects::blendingFactor::blendingFactor
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     phiName_("unknown-phiName"),
     fieldName_("unknown-fieldName")
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -70,41 +77,38 @@ Foam::functionObjects::blendingFactor::~blendingFactor()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::blendingFactor::read(const dictionary& dict)
+bool Foam::functionObjects::blendingFactor::read(const dictionary& dict)
 {
     phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
     dict.lookup("fieldName") >> fieldName_;
+
+    return true;
 }
 
 
-void Foam::functionObjects::blendingFactor::execute()
+bool Foam::functionObjects::blendingFactor::execute(const bool postProcess)
 {
     calc<scalar>();
     calc<vector>();
+
+    return true;
 }
 
 
-void Foam::functionObjects::blendingFactor::end()
-{
-    execute();
-}
-
-void Foam::functionObjects::blendingFactor::timeSet()
-{}
-
-
-void Foam::functionObjects::blendingFactor::write()
+bool Foam::functionObjects::blendingFactor::write(const bool postProcess)
 {
     const word fieldName = "blendingFactor:" + fieldName_;
 
     const volScalarField& blendingFactor =
         obr_.lookupObject<volScalarField>(fieldName);
 
-    Info<< type() << " " << name_ << " output:" << nl
+    Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << blendingFactor.name() << nl
         << endl;
 
     blendingFactor.write();
+
+    return true;
 }
 
 

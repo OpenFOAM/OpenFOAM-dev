@@ -38,6 +38,7 @@ SourceFiles
 #ifndef functionObjects_vorticity_H
 #define functionObjects_vorticity_H
 
+#include "functionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,9 +48,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -59,11 +57,10 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class vorticity
+:
+    public functionObject
 {
     // Private data
-
-        //- Name of this set of vorticity objects
-        word name_;
 
         //- Reference to the database
         const objectRegistry& obr_;
@@ -92,14 +89,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         vorticity
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -109,34 +104,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of vorticity
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the vorticity data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Calculate the vorticity and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

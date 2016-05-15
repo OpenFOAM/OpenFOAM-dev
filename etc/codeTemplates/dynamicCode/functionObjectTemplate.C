@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "functionObjectTemplate.H"
-#include "Time.H"
 #include "fvCFD.H"
 #include "unitConversion.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,6 +36,36 @@ namespace Foam
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(${typeName}FunctionObject, 0);
+
+addRemovableToRunTimeSelectionTable
+(
+    functionObject,
+    ${typeName}FunctionObject,
+    dictionary
+);
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+extern "C"
+{
+    // dynamicCode:
+    // SHA1 = ${SHA1sum}
+    //
+    // unique function name that can be checked if the correct library version
+    // has been loaded
+    void ${typeName}_${SHA1sum}(bool load)
+    {
+        if (load)
+        {
+            // code that can be explicitly executed after loading
+        }
+        else
+        {
+            // code that can be explicitly executed before unloading
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Local Functions * * * * * * * * * * * * * * //
@@ -64,13 +94,18 @@ const fvMesh& ${typeName}FunctionObject::mesh() const
 ${typeName}FunctionObject::${typeName}FunctionObject
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr)
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    )
 {
     read(dict);
 }
@@ -84,7 +119,7 @@ ${typeName}FunctionObject::~${typeName}FunctionObject()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void ${typeName}FunctionObject::read(const dictionary& dict)
+bool ${typeName}FunctionObject::read(const dictionary& dict)
 {
     if (${verbose:-false})
     {
@@ -94,10 +129,12 @@ void ${typeName}FunctionObject::read(const dictionary& dict)
 //{{{ begin code
     ${codeRead}
 //}}} end code
+
+    return true;
 }
 
 
-void ${typeName}FunctionObject::execute()
+bool ${typeName}FunctionObject::execute(const bool postProcess)
 {
     if (${verbose:-false})
     {
@@ -107,10 +144,12 @@ void ${typeName}FunctionObject::execute()
 //{{{ begin code
     ${codeExecute}
 //}}} end code
+
+    return true;
 }
 
 
-void ${typeName}FunctionObject::end()
+bool ${typeName}FunctionObject::end()
 {
     if (${verbose:-false})
     {
@@ -120,10 +159,12 @@ void ${typeName}FunctionObject::end()
 //{{{ begin code
     ${codeEnd}
 //}}} end code
+
+    return true;
 }
 
 
-void ${typeName}FunctionObject::timeSet()
+bool ${typeName}FunctionObject::timeSet()
 {
     if (${verbose:-false})
     {
@@ -133,10 +174,12 @@ void ${typeName}FunctionObject::timeSet()
 //{{{ begin codeTime
     ${codeTimeSet}
 //}}} end code
+
+    return true;
 }
 
 
-void ${typeName}FunctionObject::write()
+bool ${typeName}FunctionObject::write(const bool postProcess)
 {
     if (${verbose:-false})
     {
@@ -146,11 +189,13 @@ void ${typeName}FunctionObject::write()
 //{{{ begin code
     ${code}
 //}}} end code
+
+    return true;
 }
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
 
 // ************************************************************************* //

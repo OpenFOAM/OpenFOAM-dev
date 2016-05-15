@@ -27,6 +27,7 @@ License
 #include "Time.H"
 #include "mapPolyMesh.H"
 #include "argList.H"
+#include "timeControlFunctionObject.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -354,7 +355,21 @@ bool Foam::functionObjectList::read()
                 FatalIOError.throwExceptions();
                 try
                 {
-                   foPtr = functionObject::New(key, time_, dict);
+                    if
+                    (
+                        dict.found("writeControl")
+                     || dict.found("outputControl")
+                    )
+                    {
+                        foPtr.set
+                        (
+                            new functionObjects::timeControl(key, time_, dict)
+                        );
+                    }
+                    else
+                    {
+                        foPtr = functionObject::New(key, time_, dict);
+                    }
                 }
                 catch (Foam::IOerror& ioErr)
                 {

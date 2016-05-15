@@ -51,10 +51,10 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 (
     const word& name,
     const Time& t,
-    const dictionary& functionDict
+    const dictionary& dict
 )
 {
-    const word functionType(functionDict.lookup("type"));
+    const word functionType(dict.lookup("type"));
 
     if (debug)
     {
@@ -63,7 +63,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 
     const_cast<Time&>(t).libs().open
     (
-        functionDict,
+        dict,
         "functionObjectLibs",
         dictionaryConstructorTablePtr_
     );
@@ -90,7 +90,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
             << exit(FatalError);
     }
 
-    return autoPtr<functionObject>(cstrIter()(name, t, functionDict));
+    return autoPtr<functionObject>(cstrIter()(name, t, dict));
 }
 
 
@@ -124,6 +124,14 @@ bool Foam::functionObject::adjustTimeStep()
 {
     return false;
 }
+
+
+void Foam::functionObject::updateMesh(const mapPolyMesh&)
+{}
+
+
+void Foam::functionObject::movePoints(const polyMesh&)
+{}
 
 
 // ************************************************************************* //

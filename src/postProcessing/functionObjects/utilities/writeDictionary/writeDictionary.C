@@ -24,9 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "writeDictionary.H"
-#include "dictionary.H"
 #include "Time.H"
-#include "HashSet.H"
+#include "polyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(writeDictionary, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        writeDictionary,
+        dictionary
+    );
 }
 }
 
@@ -66,7 +73,7 @@ bool Foam::functionObjects::writeDictionary::tryDirectory
         {
             if (firstDict)
             {
-                Info<< type() << " " << name_ << " output:" << nl << endl;
+                Info<< type() << " " << name() << " output:" << nl << endl;
 
                 IOobject::writeDivider(Info);
                 Info<< endl;
@@ -92,13 +99,18 @@ bool Foam::functionObjects::writeDictionary::tryDirectory
 Foam::functionObjects::writeDictionary::writeDictionary
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     dictNames_(),
     digests_()
 {
@@ -115,7 +127,7 @@ Foam::functionObjects::writeDictionary::~writeDictionary()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::writeDictionary::read(const dictionary& dict)
+bool Foam::functionObjects::writeDictionary::read(const dictionary& dict)
 {
     wordList dictNames(dict.lookup("dictNames"));
     HashSet<word> uniqueNames(dictNames);
@@ -123,7 +135,7 @@ void Foam::functionObjects::writeDictionary::read(const dictionary& dict)
 
     digests_.setSize(dictNames_.size(), SHA1Digest());
 
-    Info<< type() << " " << name_ << ": monitoring dictionaries:" << nl;
+    Info<< type() << " " << name() << ": monitoring dictionaries:" << nl;
     if (dictNames_.size())
     {
         forAll(dictNames_, i)
@@ -136,10 +148,12 @@ void Foam::functionObjects::writeDictionary::read(const dictionary& dict)
         Info<< "    none" << nl;
     }
     Info<< endl;
+
+    return true;
 }
 
 
-void Foam::functionObjects::writeDictionary::execute()
+bool Foam::functionObjects::writeDictionary::execute(const bool postProcess)
 {
     bool firstDict = true;
     forAll(dictNames_, i)
@@ -153,7 +167,7 @@ void Foam::functionObjects::writeDictionary::execute()
             {
                 if (firstDict)
                 {
-                    Info<< type() << " " << name_ << " output:" << nl << endl;
+                    Info<< type() << " " << name() << " output:" << nl << endl;
 
                     IOobject::writeDivider(Info);
                     Info<< endl;
@@ -192,21 +206,15 @@ void Foam::functionObjects::writeDictionary::execute()
             }
         }
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::writeDictionary::end()
+bool Foam::functionObjects::writeDictionary::write(const bool postProcess)
 {
-    execute();
+    return true;
 }
-
-
-void Foam::functionObjects::writeDictionary::timeSet()
-{}
-
-
-void Foam::functionObjects::writeDictionary::write()
-{}
 
 
 // ************************************************************************* //

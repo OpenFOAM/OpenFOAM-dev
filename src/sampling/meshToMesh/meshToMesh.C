@@ -265,28 +265,34 @@ void Foam::meshToMesh::calculate(const word& methodName)
         }
 
         // set up as a reverse distribute
-        mapDistribute::distribute
+        mapDistributeBase::distribute
         (
             Pstream::nonBlocking,
             List<labelPair>(),
             tgtRegion_.nCells(),
             map.constructMap(),
+            false,
             map.subMap(),
+            false,
             tgtToSrcCellAddr_,
             ListPlusEqOp<label>(),
+            flipOp(),
             labelList()
         );
 
         // set up as a reverse distribute
-        mapDistribute::distribute
+        mapDistributeBase::distribute
         (
             Pstream::nonBlocking,
             List<labelPair>(),
             tgtRegion_.nCells(),
             map.constructMap(),
+            false,
             map.subMap(),
+            false,
             tgtToSrcCellWght_,
             ListPlusEqOp<scalar>(),
+            flipOp(),
             scalarList()
         );
 

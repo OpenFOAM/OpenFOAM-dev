@@ -67,7 +67,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFiles
 
 SourceFiles
     fieldMinMax.C
@@ -77,21 +77,13 @@ SourceFiles
 #ifndef functionObjects_fieldMinMax_H
 #define functionObjects_fieldMinMax_H
 
-#include "functionObjectFiles.H"
-#include "Switch.H"
+#include "writeFiles.H"
 #include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -101,7 +93,7 @@ namespace functionObjects
 
 class fieldMinMax
 :
-    public functionObjectFiles
+    public writeFiles
 {
 public:
 
@@ -117,15 +109,6 @@ protected:
 
         //- Mode type names
         static const NamedEnum<modeType, 2> modeTypeNames_;
-
-        //- Name of this set of field min/max
-        //  Also used as the name of the output directory
-        word name_;
-
-        const objectRegistry& obr_;
-
-        //- Switch to send output to Info as well
-        Switch log_;
 
         //- Switch to write location of min/max values
         Switch location_;
@@ -159,6 +142,14 @@ protected:
         //- Disallow default bitwise assignment
         void operator=(const fieldMinMax&);
 
+        //- Calculate the field min/max
+        template<class Type>
+        void calcMinMaxFields
+        (
+            const word& fieldName,
+            const modeType& mode
+        );
+
         //- Output file header information
         virtual void writeFileHeader(const label i);
 
@@ -171,14 +162,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         fieldMinMax
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -188,42 +177,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of field min/max
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the field min/max data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the field min/max
-        template<class Type>
-        void calcMinMaxFields
-        (
-            const word& fieldName,
-            const modeType& mode
-        );
+        virtual bool execute(const bool postProcess = false);
 
         //- Write the fieldMinMax
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

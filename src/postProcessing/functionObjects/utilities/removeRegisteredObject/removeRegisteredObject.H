@@ -50,7 +50,6 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
 
 SourceFiles
     removeRegisteredObject.C
@@ -60,8 +59,8 @@ SourceFiles
 #ifndef functionObjects_removeRegisteredObject_H
 #define functionObjects_removeRegisteredObject_H
 
+#include "functionObject.H"
 #include "wordList.H"
-#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,9 +69,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -82,23 +78,17 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class removeRegisteredObject
+:
+    public functionObject
 {
-protected:
-
     // Private data
 
-        //- Name of this set of removeRegisteredObject
-        word name_;
-
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
-        // Read from dictionary
+        //- Names of objects to control
+        wordList objectNames_;
 
-            //- Names of objects to control
-            wordList objectNames_;
-
-
-private:
 
     // Private member functions
 
@@ -117,14 +107,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         removeRegisteredObject
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -134,34 +122,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the removeRegisteredObject
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the removeRegisteredObject data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Remove the registered objects
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Write the removeRegisteredObject
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Do nothing
+        virtual bool write(const bool postProcess = false);
 };
 
 

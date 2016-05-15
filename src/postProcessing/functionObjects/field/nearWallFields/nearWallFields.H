@@ -62,7 +62,6 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
 
 SourceFiles
     nearWallFields.C
@@ -72,7 +71,7 @@ SourceFiles
 #ifndef functionObjects_nearWallFields_H
 #define functionObjects_nearWallFields_H
 
-#include "OFstream.H"
+#include "functionObject.H"
 #include "volFields.H"
 #include "Tuple2.H"
 #include "interpolationCellPoint.H"
@@ -84,8 +83,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -95,14 +92,14 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class nearWallFields
+:
+    public functionObject
 {
 protected:
 
     // Protected data
 
-        //- Name of this set of nearWallFields object
-        word name_;
-
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         // Read from dictionary
@@ -191,9 +188,8 @@ public:
         nearWallFields
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -203,34 +199,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the nearWallFields object
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the controls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Calculate the near-wall fields
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Write the near-wall fields
+        virtual bool write(const bool postProcess = false);
 };
 
 

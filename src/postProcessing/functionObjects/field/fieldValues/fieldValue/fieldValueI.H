@@ -28,55 +28,39 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::word& Foam::fieldValue::name() const
-{
-    return name_;
-}
-
-
-inline const Foam::objectRegistry& Foam::fieldValue::obr() const
-{
-    return obr_;
-}
-
-
-inline const Foam::dictionary& Foam::fieldValue::dict() const
+inline const Foam::dictionary& Foam::functionObjects::fieldValue::dict() const
 {
     return dict_;
 }
 
 
-inline const Foam::Switch& Foam::fieldValue::log() const
-{
-    return log_;
-}
-
-
-inline const Foam::word& Foam::fieldValue::sourceName() const
+inline const Foam::word& Foam::functionObjects::fieldValue::sourceName() const
 {
     return sourceName_;
 }
 
 
-inline const Foam::wordList& Foam::fieldValue::fields() const
+inline const Foam::wordList& Foam::functionObjects::fieldValue::fields() const
 {
     return fields_;
 }
 
 
-inline const Foam::Switch& Foam::fieldValue::valueOutput() const
+inline const Foam::Switch&
+Foam::functionObjects::fieldValue::valueOutput() const
 {
     return valueOutput_;
 }
 
 
-inline const Foam::fvMesh& Foam::fieldValue::mesh() const
+inline const Foam::fvMesh& Foam::functionObjects::fieldValue::mesh() const
 {
     return refCast<const fvMesh>(obr_);
 }
 
 
-inline const Foam::dictionary& Foam::fieldValue::resultDict() const
+inline const Foam::dictionary&
+Foam::functionObjects::fieldValue::resultDict() const
 {
     return resultDict_;
 }

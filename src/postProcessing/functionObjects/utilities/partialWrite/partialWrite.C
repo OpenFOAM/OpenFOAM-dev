@@ -24,11 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "partialWrite.H"
-#include "dictionary.H"
 #include "Time.H"
-#include "IOobjectList.H"
 #include "polyMesh.H"
-#include "cloud.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(partialWrite, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        partialWrite,
+        dictionary
+    );
 }
 }
 
@@ -46,13 +51,18 @@ namespace functionObjects
 Foam::functionObjects::partialWrite::partialWrite
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr)
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    )
 {
     read(dict);
 }
@@ -66,7 +76,7 @@ Foam::functionObjects::partialWrite::~partialWrite()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::partialWrite::read(const dictionary& dict)
+bool Foam::functionObjects::partialWrite::read(const dictionary& dict)
 {
     dict.lookup("objectNames") >> objectNames_;
     dict.lookup("writeInterval") >> writeInterval_;
@@ -110,18 +120,18 @@ void Foam::functionObjects::partialWrite::read(const dictionary& dict)
         loadField<symmTensor>(iter.key(), vSymmtf_, sSymmtf_);
         loadField<tensor>(iter.key(), vtf_, stf_);
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::partialWrite::execute()
-{}
+bool Foam::functionObjects::partialWrite::execute(const bool postProcess)
+{
+    return true;
+}
 
 
-void Foam::functionObjects::partialWrite::end()
-{}
-
-
-void Foam::functionObjects::partialWrite::timeSet()
+bool Foam::functionObjects::partialWrite::timeSet()
 {
     if (obr_.time().writeTime())
     {
@@ -168,12 +178,14 @@ void Foam::functionObjects::partialWrite::timeSet()
             changeWriteOptions<tensor>(vtf_, stf_, IOobject::NO_WRITE);
         }
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::partialWrite::write()
+bool Foam::functionObjects::partialWrite::write(const bool postProcess)
 {
-    // Fields are written in the standard manner
+    return true;
 }
 
 

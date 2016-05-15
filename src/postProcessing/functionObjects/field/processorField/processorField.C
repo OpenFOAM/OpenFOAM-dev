@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "processorField.H"
-#include "dictionary.H"
-#include "Pstream.H"
+#include "volFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,6 +34,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(processorField, 0);
+    addToRunTimeSelectionTable(functionObject, processorField, dictionary);
 }
 }
 
@@ -43,15 +44,20 @@ namespace functionObjects
 Foam::functionObjects::processorField::processorField
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr)
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    )
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -90,36 +96,32 @@ Foam::functionObjects::processorField::~processorField()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::processorField::read(const dictionary& dict)
-{}
+bool Foam::functionObjects::processorField::read(const dictionary& dict)
+{
+    return true;
+}
 
 
-void Foam::functionObjects::processorField::execute()
+bool Foam::functionObjects::processorField::execute(const bool postProcess)
 {
     const volScalarField& procField =
         obr_.lookupObject<volScalarField>("processorID");
 
     const_cast<volScalarField&>(procField) ==
         dimensionedScalar("proci", dimless, Pstream::myProcNo());
+
+    return true;
 }
 
 
-void Foam::functionObjects::processorField::end()
-{
-    execute();
-}
-
-
-void Foam::functionObjects::processorField::timeSet()
-{}
-
-
-void Foam::functionObjects::processorField::write()
+bool Foam::functionObjects::processorField::write(const bool postProcess)
 {
     const volScalarField& procField =
         obr_.lookupObject<volScalarField>("processorID");
 
     procField.write();
+
+    return true;
 }
 
 

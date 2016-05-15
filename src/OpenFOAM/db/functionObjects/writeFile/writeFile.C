@@ -1,0 +1,198 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+\*---------------------------------------------------------------------------*/
+
+#include "writeFile.H"
+#include "Time.H"
+#include "polyMesh.H"
+#include "IOmanip.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const Foam::word Foam::functionObjects::writeFile::outputPrefix
+(
+    "postProcessing"
+);
+
+Foam::label Foam::functionObjects::writeFile::addChars = 7;
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::functionObjects::writeFile::initStream(Ostream& os) const
+{
+    os.setf(ios_base::scientific, ios_base::floatfield);
+    os.width(charWidth());
+}
+
+
+Foam::fileName Foam::functionObjects::writeFile::baseFileDir() const
+{
+    fileName baseDir = obr_.time().path();
+
+    if (Pstream::parRun())
+    {
+        // Put in undecomposed case (Note: gives problems for
+        // distributed data running)
+        baseDir = baseDir/".."/outputPrefix;
+    }
+    else
+    {
+        baseDir = baseDir/outputPrefix;
+    }
+
+    // Append mesh name if not default region
+    if (isA<polyMesh>(obr_))
+    {
+        const polyMesh& mesh = refCast<const polyMesh>(obr_);
+        if (mesh.name() != polyMesh::defaultRegion)
+        {
+            baseDir = baseDir/mesh.name();
+        }
+    }
+
+    return baseDir;
+}
+
+
+Foam::fileName Foam::functionObjects::writeFile::baseTimeDir() const
+{
+    return baseFileDir()/prefix_/obr_.time().timeName();
+}
+
+
+void Foam::functionObjects::writeFile::writeFileHeader(const label i)
+{}
+
+
+Foam::Omanip<int> Foam::functionObjects::writeFile::valueWidth
+(
+    const label offset
+) const
+{
+    return setw(IOstream::defaultPrecision() + addChars + offset);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::writeFile::writeFile
+(
+    const word& name,
+    const Time& t,
+    const dictionary& dict,
+    const word& prefix
+)
+:
+    functionObject(name),
+    time_(t),
+    obr_
+    (
+        time_.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
+    prefix_(prefix),
+    log_(true)
+{}
+
+
+Foam::functionObjects::writeFile::writeFile
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict,
+    const word& prefix
+)
+:
+    functionObject(name),
+    time_(obr.time()),
+    obr_(obr),
+    prefix_(prefix),
+    log_(true)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::writeFile::~writeFile()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::writeFile::read(const dictionary& dict)
+{
+    log_ = dict.lookupOrDefault<Switch>("log", true);
+
+    return true;
+}
+
+
+Foam::label Foam::functionObjects::writeFile::charWidth() const
+{
+    return IOstream::defaultPrecision() + addChars;
+}
+
+
+void Foam::functionObjects::writeFile::writeCommented
+(
+    Ostream& os,
+    const string& str
+) const
+{
+    os  << setw(1) << "#" << setw(1) << ' '
+        << setw(charWidth() - 2) << str.c_str();
+}
+
+
+void Foam::functionObjects::writeFile::writeTabbed
+(
+    Ostream& os,
+    const string& str
+) const
+{
+    os  << tab << setw(charWidth()) << str.c_str();
+}
+
+
+void Foam::functionObjects::writeFile::writeHeader
+(
+    Ostream& os,
+    const string& str
+) const
+{
+    os  << setw(1) << "#" << setw(1) << ' '
+        << setf(ios_base::left) << setw(charWidth() - 2) << str.c_str() << nl;
+}
+
+
+void Foam::functionObjects::writeFile::writeTime(Ostream& os) const
+{
+    os  << setw(charWidth()) << obr_.time().timeName();
+}
+
+
+// ************************************************************************* //

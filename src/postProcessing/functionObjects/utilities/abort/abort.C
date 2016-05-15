@@ -29,6 +29,7 @@ License
 #include "Time.H"
 #include "OSspecific.H"
 #include "PstreamReduceOps.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -37,6 +38,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(abort, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        abort,
+        dictionary
+    );
 }
 }
 
@@ -68,7 +76,7 @@ void Foam::functionObjects::abort::removeFile() const
 
     if (hasAbort && Pstream::master())
     {
-        // cleanup ABORT file (on master only)
+        // Cleanup ABORT file (on master only)
         rm(abortFile_);
     }
 }
@@ -79,20 +87,19 @@ void Foam::functionObjects::abort::removeFile() const
 Foam::functionObjects::abort::abort
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    time_(runTime),
     abortFile_("$FOAM_CASE/" + name),
     action_(nextWrite)
 {
     abortFile_.expand();
     read(dict);
 
-    // remove any old files from previous runs
+    // Remove any old files from previous runs
     removeFile();
 }
 
@@ -105,7 +112,7 @@ Foam::functionObjects::abort::~abort()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::abort::read(const dictionary& dict)
+bool Foam::functionObjects::abort::read(const dictionary& dict)
 {
     if (dict.found("action"))
     {
@@ -120,10 +127,12 @@ void Foam::functionObjects::abort::read(const dictionary& dict)
     {
         abortFile_.expand();
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::abort::execute()
+bool Foam::functionObjects::abort::execute(const bool postProcess)
 {
     bool hasAbort = isFile(abortFile_);
     reduce(hasAbort, orOp<bool>());
@@ -134,10 +143,10 @@ void Foam::functionObjects::abort::execute()
         {
             case noWriteNow :
             {
-                if (obr_.time().stopAt(Time::saNoWriteNow))
+                if (time_.stopAt(Time::saNoWriteNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
-                        << obr_.time().timeIndex()
+                        << time_.timeIndex()
                         << "): stop without writing data"
                         << endl;
                 }
@@ -146,10 +155,10 @@ void Foam::functionObjects::abort::execute()
 
             case writeNow :
             {
-                if (obr_.time().stopAt(Time::saWriteNow))
+                if (time_.stopAt(Time::saWriteNow))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
-                        << obr_.time().timeIndex()
+                        << time_.timeIndex()
                         << "): stop+write data"
                         << endl;
                 }
@@ -158,10 +167,10 @@ void Foam::functionObjects::abort::execute()
 
             case nextWrite :
             {
-                if (obr_.time().stopAt(Time::saNextWrite))
+                if (time_.stopAt(Time::saNextWrite))
                 {
                     Info<< "USER REQUESTED ABORT (timeIndex="
-                        << obr_.time().timeIndex()
+                        << time_.timeIndex()
                         << "): stop after next data write"
                         << endl;
                 }
@@ -169,21 +178,22 @@ void Foam::functionObjects::abort::execute()
             }
         }
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::abort::end()
+bool Foam::functionObjects::abort::write(const bool postProcess)
+{
+    return true;
+}
+
+
+bool Foam::functionObjects::abort::end()
 {
     removeFile();
+    return true;
 }
-
-
-void Foam::functionObjects::abort::timeSet()
-{}
-
-
-void Foam::functionObjects::abort::write()
-{}
 
 
 // ************************************************************************* //

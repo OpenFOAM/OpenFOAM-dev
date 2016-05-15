@@ -24,18 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "moleFractionsFunctionObjects.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTemplateTypeNameAndDebugWithName
-    (
-        moleFractions<psiReactionThermo>,
-        "psiReactionThermoMoleFractions",
-        0
-    );
-
     defineTemplateTypeNameAndDebugWithName
     (
         psiReactionThermoMoleFractionsFunctionObject,
@@ -48,13 +42,6 @@ namespace Foam
         functionObject,
         psiReactionThermoMoleFractionsFunctionObject,
         dictionary
-    );
-
-    defineTemplateTypeNameAndDebugWithName
-    (
-        moleFractions<rhoReactionThermo>,
-        "rhoReactionThermoMoleFractions",
-        0
     );
 
     defineTemplateTypeNameAndDebugWithName

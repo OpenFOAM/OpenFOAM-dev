@@ -36,6 +36,7 @@ SourceFiles
 #ifndef sampledSets_H
 #define sampledSets_H
 
+#include "functionObject.H"
 #include "sampledSet.H"
 #include "volFieldsFwd.H"
 #include "meshSearch.H"
@@ -49,6 +50,8 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of classes
+class Time;
 class objectRegistry;
 class dictionary;
 class fvMesh;
@@ -59,6 +62,7 @@ class fvMesh;
 
 class sampledSets
 :
+    public functionObject,
     public PtrList<sampledSet>
 {
     // Private classes
@@ -152,10 +156,6 @@ class sampledSets
 
 
     // Private data
-
-        //- Name of this set of sets,
-        //  Also used as the name of the sampledSets directory.
-        word name_;
 
         //- Const reference to fvMesh
         const fvMesh& mesh_;
@@ -256,6 +256,14 @@ public:
 
     // Constructors
 
+        //- Construct from Time and dictionary
+        sampledSets
+        (
+            const word& name,
+            const Time& time,
+            const dictionary& dict
+        );
+
         //- Construct for given objectRegistry and dictionary
         //  allow the possibility to load fields from files
         sampledSets
@@ -273,29 +281,17 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of probes
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Set verbosity level
         void verbose(const bool verbosity = true);
 
+        //- Read the sampledSets
+        virtual bool read(const dictionary&);
+
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Sample and write
-        virtual void write();
-
-        //- Read the sampledSets
-        virtual void read(const dictionary&);
+        virtual bool write(const bool postProcess = false);
 
         //- Correct for mesh changes
         void correct();

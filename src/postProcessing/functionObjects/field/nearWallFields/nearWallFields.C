@@ -28,6 +28,7 @@ License
 #include "findCellParticle.H"
 #include "mappedPatchBase.H"
 #include "OBJstream.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -36,6 +37,7 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(nearWallFields, 0);
+    addToRunTimeSelectionTable(functionObject, nearWallFields, dictionary);
 }
 }
 
@@ -224,16 +226,21 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 Foam::functionObjects::nearWallFields::nearWallFields
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     fieldSet_()
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -256,7 +263,7 @@ Foam::functionObjects::nearWallFields::~nearWallFields()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::nearWallFields::read(const dictionary& dict)
+bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
 {
     if (debug)
     {
@@ -295,15 +302,17 @@ void Foam::functionObjects::nearWallFields::read(const dictionary& dict)
         reverseFieldMap_.insert(sampleFldName, fldName);
     }
 
-    Info<< type() << " " << name_ << ": Sampling " << fieldMap_.size()
+    Info<< type() << " " << name() << ": Sampling " << fieldMap_.size()
         << " fields" << endl;
 
     // Do analysis
     calcAddressing();
+
+    return true;
 }
 
 
-void Foam::functionObjects::nearWallFields::execute()
+bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
 {
     if (debug)
     {
@@ -320,7 +329,7 @@ void Foam::functionObjects::nearWallFields::execute()
      && vtf_.empty()
     )
     {
-        Info<< type() << " " << name_ << ": Creating " << fieldMap_.size()
+        Info<< type() << " " << name() << ": Creating " << fieldMap_.size()
             << " fields" << endl;
 
         createFields(vsf_);
@@ -332,7 +341,7 @@ void Foam::functionObjects::nearWallFields::execute()
         Info<< endl;
     }
 
-    Info<< type() << " " << name_ << " output:" << nl;
+    Info<< type() << " " << name() << " output:" << nl;
 
     Info<< "    Sampling fields to " << obr_.time().timeName()
         << endl;
@@ -342,25 +351,12 @@ void Foam::functionObjects::nearWallFields::execute()
     sampleFields(vSpheretf_);
     sampleFields(vSymmtf_);
     sampleFields(vtf_);
+
+    return true;
 }
 
 
-void Foam::functionObjects::nearWallFields::end()
-{
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
-
-    execute();
-}
-
-
-void Foam::functionObjects::nearWallFields::timeSet()
-{}
-
-
-void Foam::functionObjects::nearWallFields::write()
+bool Foam::functionObjects::nearWallFields::write(const bool postProcess)
 {
     if (debug)
     {
@@ -392,6 +388,8 @@ void Foam::functionObjects::nearWallFields::write()
     }
 
     Info<< endl;
+
+    return true;
 }
 
 

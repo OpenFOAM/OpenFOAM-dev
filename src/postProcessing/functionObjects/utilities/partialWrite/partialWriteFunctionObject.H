@@ -21,34 +21,26 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::partialWriteFunctionObject
-
-Description
-    FunctionObject wrapper around partialWrite to allow them to be
-    created via the functions list within controlDict.
-
-SourceFiles
-    partialWriteFunctionObject.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef partialWriteFunctionObject_H
-#define partialWriteFunctionObject_H
+#include "partialWriteFunctionObject.H"
 
-#include "partialWrite.H"
-#include "OutputFilterFunctionObject.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef OutputFilterFunctionObject<functionObjects::partialWrite>
-        partialWriteFunctionObject;
+    defineNamedTemplateTypeNameAndDebug
+    (
+        partialWriteFunctionObject,
+        0
+    );
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        partialWriteFunctionObject,
+        dictionary
+    );
 }
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

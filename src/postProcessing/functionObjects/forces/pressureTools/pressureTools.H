@@ -108,6 +108,7 @@ SourceFiles
 #ifndef functionObjects_pressureTools_H
 #define functionObjects_pressureTools_H
 
+#include "functionObject.H"
 #include "volFieldsFwd.H"
 #include "dimensionedScalar.H"
 
@@ -118,9 +119,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -130,13 +128,12 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class pressureTools
+:
+    public functionObject
 {
     // Private data
 
-        //- Name of this set of pressureTools objects
-        word name_;
-
-        //- Reference to the database
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Name of pressure field, default is "p"
@@ -208,14 +205,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         pressureTools
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary&
         );
 
 
@@ -225,34 +220,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of pressureTools
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the pressureTools data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Calculate the pressureTools and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

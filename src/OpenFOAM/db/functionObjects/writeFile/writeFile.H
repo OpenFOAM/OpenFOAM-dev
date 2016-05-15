@@ -1,0 +1,183 @@
+/*---------------------------------------------------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+License
+    This file is part of OpenFOAM.
+
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+
+Class
+    Foam::functionObjects::writeFile
+
+Description
+    functionObject base class for writing single files
+
+See Also
+    Foam::functionObject
+    Foam::OutputFilterFunctionObject
+
+SourceFiles
+    functionObjectFile.C
+
+\*---------------------------------------------------------------------------*/
+
+#ifndef functionObjects_writeFile_H
+#define functionObjects_writeFile_H
+
+#include "functionObject.H"
+#include "Time.H"
+#include "IOmanip.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace functionObjects
+{
+
+/*---------------------------------------------------------------------------*\
+                     Class functionObjectFile Declaration
+\*---------------------------------------------------------------------------*/
+
+class writeFile
+:
+    public functionObject
+{
+
+protected:
+
+    // Protected data
+
+        //- Reference to the Time
+        const Time& time_;
+
+        //- Reference to the objectRegistry
+        const objectRegistry& obr_;
+
+        //- Prefix
+        const word prefix_;
+
+        //- Switch to send output to Info as well as to file
+        Switch log_;
+
+
+    // Protected Member Functions
+
+        //- Initialise the output stream for writing
+        virtual void initStream(Ostream& os) const;
+
+        //- Return the base directory for output
+        virtual fileName baseFileDir() const;
+
+        //- Return the base directory for the current time value
+        virtual fileName baseTimeDir() const;
+
+        //- File header information
+        virtual void writeFileHeader(const label i = 0);
+
+        //- Return the value width when writing to stream with optional offset
+        virtual Omanip<int> valueWidth(const label offset = 0) const;
+
+        //- Disallow default bitwise copy construct
+        writeFile(const writeFile&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeFile&);
+
+
+public:
+
+    //- Directory prefix
+    static const word outputPrefix;
+
+    //- Additional characters for writing
+    static label addChars;
+
+
+    // Constructors
+
+        //- Construct from name, Time, dictionary and prefix
+        writeFile
+        (
+            const word& name,
+            const Time& t,
+            const dictionary& dict,
+            const word& prefix
+        );
+
+        //- Construct from name, objectRegistry, dictionary and prefix
+        writeFile
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict,
+            const word& prefix
+        );
+
+
+    //- Destructor
+    virtual ~writeFile();
+
+
+    // Member Functions
+
+        //- Read optional controls
+        virtual bool read(const dictionary&);
+
+        //- Write a commented string to stream
+        void writeCommented(Ostream& os, const string& str) const;
+
+        //- Write a tabbed string to stream
+        void writeTabbed(Ostream& os, const string& str) const;
+
+        //- Write a commented header to stream
+        void writeHeader(Ostream& os, const string& str) const;
+
+        //- Write the current time to stream
+        void writeTime(Ostream& os) const;
+
+        //- Write a (commented) header property and value pair
+        template<class Type>
+        void writeHeaderValue
+        (
+            Ostream& os,
+            const string& property,
+            const Type& value
+        ) const;
+
+        //- Return width of character stream output
+        label charWidth() const;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace functionObjects
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "writeFileTemplates.C"
+#endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
+
+// ************************************************************************* //

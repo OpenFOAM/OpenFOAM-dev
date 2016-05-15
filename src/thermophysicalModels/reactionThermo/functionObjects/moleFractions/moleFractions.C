@@ -51,21 +51,13 @@ template<class ThermoType>
 Foam::moleFractions<ThermoType>::moleFractions
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& t,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name),
-    name_(name),
-    mesh_(refCast<const fvMesh>(obr))
+    writeFiles(name, t, dict, typeName),
+    mesh_(refCast<const fvMesh>(obr_))
 {
-    if (!isA<fvMesh>(obr))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     if (mesh_.foundObject<ThermoType>(basicThermo::dictName))
     {
         const ThermoType& thermo =
@@ -118,33 +110,28 @@ Foam::moleFractions<ThermoType>::~moleFractions()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::moleFractions<ThermoType>::read
+bool Foam::moleFractions<ThermoType>::read
 (
     const dictionary& dict
 )
-{}
-
-
-template<class ThermoType>
-void Foam::moleFractions<ThermoType>::execute()
 {
-    calculateMoleFractions();
+    return true;
 }
 
 
 template<class ThermoType>
-void Foam::moleFractions<ThermoType>::end()
-{}
+bool Foam::moleFractions<ThermoType>::execute(const bool postProcess)
+{
+    calculateMoleFractions();
+    return true;
+}
 
 
 template<class ThermoType>
-void Foam::moleFractions<ThermoType>::timeSet()
-{}
-
-
-template<class ThermoType>
-void Foam::moleFractions<ThermoType>::write()
-{}
+bool Foam::moleFractions<ThermoType>::write(const bool postProcess)
+{
+    return true;
+}
 
 
 // ************************************************************************* //

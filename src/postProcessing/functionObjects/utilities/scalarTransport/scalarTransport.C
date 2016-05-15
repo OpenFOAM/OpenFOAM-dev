@@ -36,6 +36,7 @@ License
 #include "fvmSup.H"
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -44,6 +45,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(scalarTransport, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        scalarTransport,
+        dictionary
+    );
 }
 }
 
@@ -145,13 +153,21 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::DT
 Foam::functionObjects::scalarTransport::scalarTransport
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    mesh_(refCast<const fvMesh>(obr)),
+    functionObject(name),
+    mesh_
+    (
+        refCast<const fvMesh>
+        (
+            runTime.lookupObject<objectRegistry>
+            (
+                dict.lookupOrDefault("region", polyMesh::defaultRegion)
+            )
+        )
+    ),
     phiName_(dict.lookupOrDefault<word>("phiName", "phi")),
     UName_(dict.lookupOrDefault<word>("UName", "U")),
     rhoName_(dict.lookupOrDefault<word>("rhoName", "rho")),
@@ -176,12 +192,6 @@ Foam::functionObjects::scalarTransport::scalarTransport
         boundaryTypes()
     )
 {
-    if (!isA<fvMesh>(obr))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 
     if (resetOnStartUp_)
@@ -199,7 +209,7 @@ Foam::functionObjects::scalarTransport::~scalarTransport()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::scalarTransport::read(const dictionary& dict)
+bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 {
     Info<< type() << ":" << nl;
 
@@ -220,10 +230,12 @@ void Foam::functionObjects::scalarTransport::read(const dictionary& dict)
     dict.lookup("autoSchemes") >> autoSchemes_;
 
     fvOptions_.reset(dict.subDict("fvOptions"));
+
+    return true;
 }
 
 
-void Foam::functionObjects::scalarTransport::execute()
+bool Foam::functionObjects::scalarTransport::execute(const bool postProcess)
 {
     Info<< type() << " output:" << endl;
 
@@ -304,21 +316,15 @@ void Foam::functionObjects::scalarTransport::execute()
     }
 
     Info<< endl;
+
+    return true;
 }
 
 
-void Foam::functionObjects::scalarTransport::end()
+bool Foam::functionObjects::scalarTransport::write(const bool postProcess)
 {
-    execute();
+    return true;
 }
-
-
-void Foam::functionObjects::scalarTransport::timeSet()
-{}
-
-
-void Foam::functionObjects::scalarTransport::write()
-{}
 
 
 // ************************************************************************* //

@@ -128,7 +128,6 @@ Note
 SeeAlso
     Foam::fieldValues
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
 
 SourceFiles
     faceSource.C
@@ -139,11 +138,8 @@ SourceFiles
 #ifndef functionObjects_faceSource_H
 #define functionObjects_faceSource_H
 
-#include "NamedEnum.H"
 #include "fieldValue.H"
-#include "surfaceFieldsFwd.H"
-#include "volFieldsFwd.H"
-#include "surfaceWriter.H"
+#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -151,6 +147,7 @@ namespace Foam
 {
 
 class sampledSurface;
+class surfaceWriter;
 
 namespace functionObjects
 {
@@ -341,13 +338,20 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from name, Time and dictionary
+        faceSource
+        (
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict
+        );
+
+        //- Construct from name, objectRegistry and dictionary
         faceSource
         (
             const word& name,
             const objectRegistry& obr,
-            const dictionary& dict,
-            const bool loadFromFiles = false
+            const dictionary& dict
         );
 
 
@@ -357,57 +361,52 @@ public:
 
     // Public Member Functions
 
-        // Access
+        //- Return the source type
+        inline const sourceType& source() const;
 
-            //- Return the source type
-            inline const sourceType& source() const;
+        //- Return the local list of face IDs
+        inline const labelList& faceId() const;
 
-            //- Return the local list of face IDs
-            inline const labelList& faceId() const;
+        //- Return the local list of patch ID per face
+        inline const labelList& facePatch() const;
 
-            //- Return the local list of patch ID per face
-            inline const labelList& facePatch() const;
+        //- Return the list of +1/-1 representing face flip map
+        inline const labelList& faceSign() const;
 
-            //- Return the list of +1/-1 representing face flip map
-            inline const labelList& faceSign() const;
+        //- Templated helper function to output field values
+        template<class Type>
+        bool writeValues
+        (
+            const word& fieldName,
+            const scalarField& weightField,
+            const bool orient
+        );
 
+        //- Filter a surface field according to faceIds
+        template<class Type>
+        tmp<Field<Type>> filterField
+        (
+            const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
+            const bool applyOrientation
+        ) const;
 
-        // Function object functions
+        //- Filter a volume field according to faceIds
+        template<class Type>
+        tmp<Field<Type>> filterField
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& field,
+            const bool applyOrientation
+        ) const;
 
-            //- Read from dictionary
-            virtual void read(const dictionary&);
+        //- Read from dictionary
+        virtual bool read(const dictionary&);
 
-            //- Calculate and write
-            virtual void write();
-
-            //- Templated helper function to output field values
-            template<class Type>
-            bool writeValues
-            (
-                const word& fieldName,
-                const scalarField& weightField,
-                const bool orient
-            );
-
-            //- Filter a surface field according to faceIds
-            template<class Type>
-            tmp<Field<Type>> filterField
-            (
-                const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
-                const bool applyOrientation
-            ) const;
-
-            //- Filter a volume field according to faceIds
-            template<class Type>
-            tmp<Field<Type>> filterField
-            (
-                const GeometricField<Type, fvPatchField, volMesh>& field,
-                const bool applyOrientation
-            ) const;
+        //- Calculate and write
+        virtual bool write(const bool postProcess = false);
 };
 
 
-//- Specialisation of processing scalars
+//- Specialisation for scalar
 template<>
 scalar faceSource::processValues
 (
@@ -417,7 +416,7 @@ scalar faceSource::processValues
 ) const;
 
 
-//- Specialisation of processing vectors
+//- Specialisation for vector
 template<>
 vector faceSource::processValues
 (

@@ -25,9 +25,9 @@ License
 
 #include "Lambda2.H"
 #include "volFields.H"
-#include "dictionary.H"
 #include "zeroGradientFvPatchFields.H"
 #include "fvcGrad.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -36,6 +36,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(Lambda2, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        Lambda2,
+        dictionary
+    );
 }
 }
 
@@ -45,16 +52,21 @@ namespace functionObjects
 Foam::functionObjects::Lambda2::Lambda2
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     UName_("U")
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -93,13 +105,15 @@ Foam::functionObjects::Lambda2::~Lambda2()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::Lambda2::read(const dictionary& dict)
+bool Foam::functionObjects::Lambda2::read(const dictionary& dict)
 {
     UName_ = dict.lookupOrDefault<word>("UName", "U");
+
+    return true;
 }
 
 
-void Foam::functionObjects::Lambda2::execute()
+bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
 {
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -121,29 +135,23 @@ void Foam::functionObjects::Lambda2::execute()
         );
 
     Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);
+
+    return true;
 }
 
 
-void Foam::functionObjects::Lambda2::end()
-{
-    execute();
-}
-
-
-void Foam::functionObjects::Lambda2::timeSet()
-{}
-
-
-void Foam::functionObjects::Lambda2::write()
+bool Foam::functionObjects::Lambda2::write(const bool postProcess)
 {
     const volScalarField& Lambda2 =
         obr_.lookupObject<volScalarField>(type());
 
-    Info<< type() << " " << name_ << " output:" << nl
+    Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << Lambda2.name() << nl
         << endl;
 
     Lambda2.write();
+
+    return true;
 }
 
 

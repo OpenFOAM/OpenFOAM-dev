@@ -39,10 +39,8 @@ SourceFiles
 #ifndef functionObjects_Peclet_H
 #define functionObjects_Peclet_H
 
+#include "functionObject.H"
 #include "volFieldsFwd.H"
-#include "surfaceFieldsFwd.H"
-#include "OFstream.H"
-#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,9 +49,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -63,11 +58,10 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class Peclet
+:
+    public functionObject
 {
     // Private data
-
-        //- Name of this set of Peclet objects
-        word name_;
 
         //- Reference to the database
         const objectRegistry& obr_;
@@ -101,9 +95,8 @@ public:
         Peclet
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -113,34 +106,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of Peclet
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the Peclet data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Calculate the Peclet number field
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the Peclet and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Write the Peclet number field
+        virtual bool write(const bool postProcess = false);
 };
 
 

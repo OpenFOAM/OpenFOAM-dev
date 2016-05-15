@@ -26,6 +26,7 @@ License
 #include "systemCall.H"
 #include "Time.H"
 #include "dynamicCode.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(systemCall, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        systemCall,
+        dictionary
+    );
 }
 }
 
@@ -43,12 +51,11 @@ namespace functionObjects
 Foam::functionObjects::systemCall::systemCall
 (
     const word& name,
-    const objectRegistry&,
-    const dictionary& dict,
-    const bool
+    const Time&,
+    const dictionary& dict
 )
 :
-    name_(name),
+    functionObject(name),
     executeCalls_(),
     endCalls_(),
     writeCalls_()
@@ -65,7 +72,7 @@ Foam::functionObjects::systemCall::~systemCall()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::systemCall::read(const dictionary& dict)
+bool Foam::functionObjects::systemCall::read(const dictionary& dict)
 {
     dict.readIfPresent("executeCalls", executeCalls_);
     dict.readIfPresent("endCalls", endCalls_);
@@ -93,37 +100,41 @@ void Foam::functionObjects::systemCall::read(const dictionary& dict)
             << "    $WM_PROJECT_DIR/etc/controlDict" << nl << nl
             << exit(FatalError);
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::systemCall::execute()
+bool Foam::functionObjects::systemCall::execute(const bool postProcess)
 {
     forAll(executeCalls_, callI)
     {
         Foam::system(executeCalls_[callI]);
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::systemCall::end()
+bool Foam::functionObjects::systemCall::end()
 {
     forAll(endCalls_, callI)
     {
         Foam::system(endCalls_[callI]);
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::systemCall::timeSet()
-{}
-
-
-void Foam::functionObjects::systemCall::write()
+bool Foam::functionObjects::systemCall::write(const bool postProcess)
 {
     forAll(writeCalls_, callI)
     {
         Foam::system(writeCalls_[callI]);
     }
+
+    return true;
 }
 
 

@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "residuals.H"
-#include "volFields.H"
-#include "dictionary.H"
-#include "Time.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +33,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(residuals, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        residuals,
+        dictionary
+    );
 }
 }
 
@@ -44,23 +49,21 @@ namespace functionObjects
 Foam::functionObjects::residuals::residuals
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name, typeName),
-    name_(name),
-    obr_(obr),
+    writeFiles(name, runTime, dict, name),
     fieldSet_()
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
     }
 
     read(dict);
+    resetName(typeName);
 }
 
 
@@ -72,9 +75,11 @@ Foam::functionObjects::residuals::~residuals()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::residuals::read(const dictionary& dict)
+bool Foam::functionObjects::residuals::read(const dictionary& dict)
 {
     dict.lookup("fields") >> fieldSet_;
+
+    return true;
 }
 
 
@@ -101,21 +106,16 @@ void Foam::functionObjects::residuals::writeFileHeader(const label i)
 }
 
 
-void Foam::functionObjects::residuals::execute()
-{}
-
-
-void Foam::functionObjects::residuals::end()
-{}
-
-
-void Foam::functionObjects::residuals::timeSet()
-{}
-
-
-void Foam::functionObjects::residuals::write()
+bool Foam::functionObjects::residuals::execute(const bool postProcess)
 {
-    functionObjectFiles::write();
+
+    return true;
+}
+
+
+bool Foam::functionObjects::residuals::write(const bool postProcess)
+{
+    writeFiles::write();
 
     if (Pstream::master())
     {
@@ -134,6 +134,8 @@ void Foam::functionObjects::residuals::write()
 
         file() << endl;
     }
+
+    return true;
 }
 
 

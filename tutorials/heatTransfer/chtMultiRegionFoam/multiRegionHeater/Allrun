@@ -18,7 +18,7 @@ done
 
 for i in bottomWater topAir heater leftSolid rightSolid
 do
-   runApplication -s $i  changeDictionary -region $i
+   runApplication -s $i changeDictionary -region $i
 done
 
 

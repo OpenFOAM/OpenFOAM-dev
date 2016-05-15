@@ -1,13 +1,6 @@
 pressureTools/pressureTools.C
-pressureTools/pressureToolsFunctionObject.C
-
 wallShearStress/wallShearStress.C
-wallShearStress/wallShearStressFunctionObject.C
-
 forces/forces.C
-forces/forcesFunctionObject.C
-
 forceCoeffs/forceCoeffs.C
-forceCoeffs/forceCoeffsFunctionObject.C
 
 LIB = $(FOAM_LIBBIN)/libforces

@@ -95,7 +95,6 @@ Description
 SeeAlso
     Foam::fieldValues
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
 
 SourceFiles
     cellSource.C
@@ -105,10 +104,8 @@ SourceFiles
 #ifndef functionObjects_cellSource_H
 #define functionObjects_cellSource_H
 
-#include "NamedEnum.H"
 #include "fieldValue.H"
-#include "labelList.H"
-#include "volFieldsFwd.H"
+#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -241,13 +238,20 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from name, Time and dictionary
+        cellSource
+        (
+            const word& name,
+            const Time& runTime,
+            const dictionary& dict
+        );
+
+        //- Construct from name, objectRegistry and dictionary
         cellSource
         (
             const word& name,
             const objectRegistry& obr,
-            const dictionary& dict,
-            const bool loadFromFiles = false
+            const dictionary& dict
         );
 
 
@@ -257,30 +261,25 @@ public:
 
     // Public Member Functions
 
-        // Access
+        //- Return the source type
+        inline const sourceType& source() const;
 
-            //- Return the source type
-            inline const sourceType& source() const;
+        //- Return the local list of cell IDs
+        inline const labelList& cellId() const;
 
-            //- Return the local list of cell IDs
-            inline const labelList& cellId() const;
+        //- Templated helper function to output field values
+        template<class Type>
+        bool writeValues(const word& fieldName);
 
+        //- Filter a field according to cellIds
+        template<class Type>
+        tmp<Field<Type>> filterField(const Field<Type>& field) const;
 
-        // Function object functions
+        //- Read from dictionary
+        virtual bool read(const dictionary&);
 
-            //- Read from dictionary
-            virtual void read(const dictionary&);
-
-            //- Calculate and write
-            virtual void write();
-
-            //- Templated helper function to output field values
-            template<class Type>
-            bool writeValues(const word& fieldName);
-
-            //- Filter a field according to cellIds
-            template<class Type>
-            tmp<Field<Type>> filterField(const Field<Type>& field) const;
+        //- Calculate and write
+        virtual bool write(const bool postProcess = false);
 };
 
 

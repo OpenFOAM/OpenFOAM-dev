@@ -24,8 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "removeRegisteredObject.H"
-#include "dictionary.H"
 #include "Time.H"
+#include "polyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(removeRegisteredObject, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        removeRegisteredObject,
+        dictionary
+    );
 }
 }
 
@@ -43,13 +51,18 @@ namespace functionObjects
 Foam::functionObjects::removeRegisteredObject::removeRegisteredObject
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     objectNames_()
 {
     read(dict);
@@ -64,13 +77,18 @@ Foam::functionObjects::removeRegisteredObject::~removeRegisteredObject()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::removeRegisteredObject::read(const dictionary& dict)
+bool Foam::functionObjects::removeRegisteredObject::read(const dictionary& dict)
 {
     dict.lookup("objectNames") >> objectNames_;
+
+    return true;
 }
 
 
-void Foam::functionObjects::removeRegisteredObject::execute()
+bool Foam::functionObjects::removeRegisteredObject::execute
+(
+    const bool postProcess
+)
 {
     forAll(objectNames_, i)
     {
@@ -81,7 +99,7 @@ void Foam::functionObjects::removeRegisteredObject::execute()
 
             if (obj.ownedByRegistry())
             {
-                Info<< type() << " " << name_ << " output:" << nl
+                Info<< type() << " " << name() << " output:" << nl
                     << "    removing object " << obj.name() << nl
                     << endl;
 
@@ -90,21 +108,18 @@ void Foam::functionObjects::removeRegisteredObject::execute()
             }
         }
     }
+
+    return true;
 }
 
 
-void Foam::functionObjects::removeRegisteredObject::end()
+bool Foam::functionObjects::removeRegisteredObject::write
+(
+    const bool postProcess
+)
 {
-    execute();
+    return true;
 }
-
-
-void Foam::functionObjects::removeRegisteredObject::timeSet()
-{}
-
-
-void Foam::functionObjects::removeRegisteredObject::write()
-{}
 
 
 // ************************************************************************* //

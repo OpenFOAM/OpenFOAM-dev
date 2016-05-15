@@ -61,7 +61,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFiles
 
 SourceFiles
     cloudInfo.C
@@ -71,22 +71,12 @@ SourceFiles
 #ifndef functionObjects_cloudInfo_H
 #define functionObjects_cloudInfo_H
 
-#include "functionObjectFiles.H"
-#include "PtrList.H"
-#include "pointFieldFwd.H"
-#include "volFields.H"
-#include "surfaceFields.H"
+#include "writeFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -96,18 +86,9 @@ namespace functionObjects
 
 class cloudInfo
 :
-    public functionObjectFiles
+    public writeFiles
 {
 protected:
-
-    // Protected data
-
-        //- Name of this set of cloudInfo object
-        word name_;
-
-        //- Reference to the database
-        const objectRegistry& obr_;
-
 
     // Protected Member Functions
 
@@ -134,14 +115,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         cloudInfo
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary&
         );
 
 
@@ -151,34 +130,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the cloudInfo object
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the controls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

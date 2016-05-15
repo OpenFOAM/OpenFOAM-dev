@@ -77,7 +77,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::timeControl
 
 SourceFiles
     turbulenceFields.C
@@ -87,6 +87,7 @@ SourceFiles
 #ifndef functionObjects_turbulenceFields_H
 #define functionObjects_turbulenceFields_H
 
+#include "functionObject.H"
 #include "HashSet.H"
 #include "NamedEnum.H"
 #include "volFieldsFwd.H"
@@ -98,9 +99,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -110,6 +108,8 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class turbulenceFields
+:
+    public functionObject
 {
 public:
 
@@ -144,9 +144,7 @@ protected:
 
     // Protected data
 
-        //- Name of this set of turbulenceFields object
-        word name_;
-
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Fields to load
@@ -186,14 +184,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         turbulenceFields
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -203,34 +199,15 @@ public:
 
     // Member Functions
 
-        //- Return name of the turbulenceFields object
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the controls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Calculate turbulence fields
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Do nothing.
+        //  The turbulence fields are registered and written automatically
+        virtual bool write(const bool postProcess = false);
 };
 
 

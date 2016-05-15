@@ -24,14 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "forces.H"
-#include "volFields.H"
-#include "dictionary.H"
-#include "Time.H"
-#include "wordReList.H"
 #include "fvcGrad.H"
 #include "porosityModel.H"
 #include "turbulentTransportModel.H"
 #include "turbulentFluidThermoModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -40,6 +37,8 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(forces, 0);
+
+    addToRunTimeSelectionTable(functionObject, forces, dictionary);
 }
 }
 
@@ -395,7 +394,7 @@ void Foam::functionObjects::forces::applyBins
 void Foam::functionObjects::forces::writeForces()
 {
     if (log_) Info
-        << type() << " " << name_ << " output:" << nl
+        << type() << " " << name() << " output:" << nl
         << "    sum of forces:" << nl
         << "        pressure : " << sum(force_[0]) << nl
         << "        viscous  : " << sum(force_[1]) << nl
@@ -522,16 +521,11 @@ void Foam::functionObjects::forces::writeBins()
 Foam::functionObjects::forces::forces
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles,
-    const bool readFields
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name, createFileNames(dict)),
-    name_(name),
-    obr_(obr),
-    log_(true),
+    writeFiles(name, runTime, dict, name),
     force_(3),
     moment_(3),
     patchSet_(),
@@ -553,16 +547,14 @@ Foam::functionObjects::forces::forces
     binCumulative_(true),
     initialised_(false)
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
     }
 
-    if (readFields)
-    {
-        read(dict);
-    }
+    read(dict);
+    resetNames(createFileNames(dict));
 }
 
 
@@ -570,30 +562,21 @@ Foam::functionObjects::forces::forces
 (
     const word& name,
     const objectRegistry& obr,
-    const labelHashSet& patchSet,
-    const word& pName,
-    const word& UName,
-    const word& rhoName,
-    const scalar rhoInf,
-    const scalar pRef,
-    const coordinateSystem& coordSys
+    const dictionary& dict
 )
 :
-    functionObjectFiles(obr, name, typeName),
-    name_(name),
-    obr_(obr),
-    log_(true),
+    writeFiles(name, obr, dict, name),
     force_(3),
     moment_(3),
-    patchSet_(patchSet),
-    pName_(pName),
-    UName_(UName),
-    rhoName_(rhoName),
+    patchSet_(),
+    pName_(word::null),
+    UName_(word::null),
+    rhoName_(word::null),
     directForceDensity_(false),
     fDName_(""),
-    rhoRef_(rhoInf),
-    pRef_(pRef),
-    coordSys_(coordSys),
+    rhoRef_(VGREAT),
+    pRef_(0),
+    coordSys_(),
     localSystem_(false),
     porosity_(false),
     nBin_(1),
@@ -604,11 +587,14 @@ Foam::functionObjects::forces::forces
     binCumulative_(true),
     initialised_(false)
 {
-    forAll(force_, i)
+    if (!isA<fvMesh>(obr_))
     {
-        force_[i].setSize(nBin_);
-        moment_[i].setSize(nBin_);
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
     }
+
+    read(dict);
+    resetNames(createFileNames(dict));
 }
 
 
@@ -620,13 +606,13 @@ Foam::functionObjects::forces::~forces()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::forces::read(const dictionary& dict)
+bool Foam::functionObjects::forces::read(const dictionary& dict)
 {
+    writeFiles::read(dict);
+
     initialised_ = false;
 
-    log_ = dict.lookupOrDefault<Switch>("log", false);
-
-    if (log_) Info<< type() << " " << name_ << ":" << nl;
+    if (log_) Info<< type() << " " << name() << ":" << nl;
 
     directForceDensity_ = dict.lookupOrDefault("directForceDensity", false);
 
@@ -747,35 +733,8 @@ void Foam::functionObjects::forces::read(const dictionary& dict)
         moment_[1].setSize(1);
         moment_[2].setSize(1);
     }
-}
 
-
-void Foam::functionObjects::forces::execute()
-{}
-
-
-void Foam::functionObjects::forces::end()
-{}
-
-
-void Foam::functionObjects::forces::timeSet()
-{}
-
-
-void Foam::functionObjects::forces::write()
-{
-    calcForcesMoment();
-
-    if (Pstream::master())
-    {
-        functionObjectFiles::write();
-
-        writeForces();
-
-        writeBins();
-
-        if (log_) Info<< endl;
-    }
+    return true;
 }
 
 
@@ -928,6 +887,31 @@ Foam::vector Foam::functionObjects::forces::forceEff() const
 Foam::vector Foam::functionObjects::forces::momentEff() const
 {
     return sum(moment_[0]) + sum(moment_[1]) + sum(moment_[2]);
+}
+
+
+bool Foam::functionObjects::forces::execute(const bool postProcess)
+{
+    return true;
+}
+
+
+bool Foam::functionObjects::forces::write(const bool postProcess)
+{
+    calcForcesMoment();
+
+    if (Pstream::master())
+    {
+        writeFiles::write();
+
+        writeForces();
+
+        writeBins();
+
+        if (log_) Info<< endl;
+    }
+
+    return true;
 }
 
 

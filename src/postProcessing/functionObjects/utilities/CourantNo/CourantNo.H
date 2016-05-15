@@ -40,19 +40,13 @@ SourceFiles
 #ifndef functionObjects_CourantNo_H
 #define functionObjects_CourantNo_H
 
+#include "functionObject.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -61,11 +55,10 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class CourantNo
+:
+    public functionObject
 {
     // Private data
-
-        //- Name of this set of CourantNo objects
-        word name_;
 
         //- Reference to the database
         const objectRegistry& obr_;
@@ -100,14 +93,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         CourantNo
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time&,
+            const dictionary&
         );
 
 
@@ -117,34 +108,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of CourantNo
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the CourantNo data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool execute(const bool postProcess = false);
 
         //- Calculate the CourantNo and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

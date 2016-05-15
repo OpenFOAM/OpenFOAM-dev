@@ -54,7 +54,7 @@ Description
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::timeControl
 
 SourceFiles
     partialWrite.C
@@ -64,8 +64,8 @@ SourceFiles
 #ifndef functionObjects_partialWrite_H
 #define functionObjects_partialWrite_H
 
+#include "functionObject.H"
 #include "HashSet.H"
-#include "runTimeSelectionTables.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -73,13 +73,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -88,14 +81,14 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class partialWrite
+:
+    public functionObject
 {
 protected:
 
-    // Private data
+    // Protected data
 
-        //- Name of this partialWrite functionObject
-        word name_;
-
+        //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Loaded fields
@@ -111,6 +104,7 @@ protected:
         UPtrList<surfaceSymmTensorField> sSymmtf_;
         UPtrList<surfaceTensorField> stf_;
 
+
         // Read from dictionary
 
             //- Names of objects to dump always
@@ -120,10 +114,11 @@ protected:
             label writeInterval_;
 
 
-
         //- Current dump instance. If reaches writeInterval do a full write.
         label writeInstance_;
 
+
+private:
 
     // Private Member Functions
 
@@ -160,14 +155,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         partialWrite
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -177,34 +170,18 @@ public:
 
     // Member Functions
 
-        //- Return name of the partialWrite
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the partialWrite data
-        virtual void read(const dictionary&);
-
-        //- Execute
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
+        virtual bool read(const dictionary&);
 
         //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool timeSet();
 
-        //- Write the partialWrite
-        virtual void write();
+        //- Execute
+        virtual bool execute(const bool postProcess = false);
 
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Do nothing.
+        //  The fields are registered and written automatically
+        virtual bool write(const bool postProcess = false);
 };
 
 

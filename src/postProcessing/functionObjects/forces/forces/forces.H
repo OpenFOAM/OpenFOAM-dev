@@ -101,7 +101,8 @@ Note
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFiles
+    Foam::functionObjects::timeControl
     Foam::forceCoeffs
 
 SourceFiles
@@ -112,28 +113,15 @@ SourceFiles
 #ifndef functionObjects_forces_H
 #define functionObjects_forces_H
 
-#include "functionObjectFiles.H"
+#include "writeFiles.H"
 #include "coordinateSystem.H"
-#include "coordinateSystems.H"
-#include "primitiveFieldsFwd.H"
 #include "volFieldsFwd.H"
 #include "HashSet.H"
-#include "Tuple2.H"
-#include "OFstream.H"
-#include "Switch.H"
-#include "writer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -143,20 +131,11 @@ namespace functionObjects
 
 class forces
 :
-    public functionObjectFiles
+    public writeFiles
 {
 protected:
 
     // Protected data
-
-        //- Name of this set of forces,
-        //  Also used as the name of the probes directory.
-        word name_;
-
-        const objectRegistry& obr_;
-
-        //- Switch to send output to Info as well as to file
-        Switch log_;
 
         //- Pressure, viscous and porous force per bin
         List<Field<vector>> force_;
@@ -281,29 +260,20 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         forces
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false,
-            const bool readFields = true
+            const Time& runTime,
+            const dictionary& dict
         );
 
-        //- Construct from components
+        //- Construct from objectRegistry and dictionary
         forces
         (
             const word& name,
-            const objectRegistry&,
-            const labelHashSet& patchSet,
-            const word& pName,
-            const word& UName,
-            const word& rhoName,
-            const scalar rhoInf,
-            const scalar pRef,
-            const coordinateSystem& coordSys
+            const objectRegistry& obr,
+            const dictionary&
         );
 
 
@@ -313,26 +283,8 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of forces
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the forces data
-        virtual void read(const dictionary&);
-
-        //- Execute, currently does nothing
-        virtual void execute();
-
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Write the forces
-        virtual void write();
+        virtual bool read(const dictionary&);
 
         //- Calculate the forces and moments
         virtual void calcForcesMoment();
@@ -343,13 +295,11 @@ public:
         //- Return the total moment
         virtual vector momentEff() const;
 
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
+        //- Execute, currently does nothing
+        virtual bool execute(const bool postProcess = false);
 
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Write the forces
+        virtual bool write(const bool postProcess = false);
 };
 
 

@@ -25,8 +25,8 @@ Typedef
     Foam::moleFractionsFunctionObject
 
 Description
-    FunctionObject wrapper around moleFractions to allow
-    it to be created via the functions entry within controlDict.
+    Instantiate the moleFractions functionObject for
+    psiReactionThermo and rhoReactionThermo
 
 SourceFiles
     moleFractionsFunctionObjects.C
@@ -36,7 +36,6 @@ SourceFiles
 #ifndef moleFractionsFunctionObjects_H
 #define moleFractionsFunctionObjects_H
 
-#include "OutputFilterFunctionObject.H"
 #include "moleFractions.H"
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
@@ -45,11 +44,10 @@ SourceFiles
 
 namespace Foam
 {
-    typedef OutputFilterFunctionObject<moleFractions<psiReactionThermo>>
+    typedef moleFractions<psiReactionThermo>
         psiReactionThermoMoleFractionsFunctionObject;
 
-
-    typedef OutputFilterFunctionObject<moleFractions<rhoReactionThermo>>
+    typedef moleFractions<rhoReactionThermo>
         rhoReactionThermoMoleFractionsFunctionObject;
 }
 

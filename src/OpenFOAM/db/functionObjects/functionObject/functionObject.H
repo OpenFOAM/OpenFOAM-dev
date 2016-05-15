@@ -99,7 +99,8 @@ Description
     Abstract base-class for Time/database function objects.
 
 See Also
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjectList
+    Foam::functionObjects::timeControl
 
 SourceFiles
     functionObject.C
@@ -194,8 +195,11 @@ public:
 
     // Member Functions
 
-        //- Name
-        virtual const word& name() const;
+        //- Return the name of this functionObject
+        const word& name() const;
+
+        //- Read and set the function object if its data have changed
+        virtual bool read(const dictionary&) = 0;
 
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and
@@ -217,14 +221,11 @@ public:
         //- Called at the end of Time::adjustDeltaT() if adjustTime is true
         virtual bool adjustTimeStep();
 
-        //- Read and set the function object if its data have changed
-        virtual bool read(const dictionary&) = 0;
+        //- Update for changes of mesh
+        virtual void updateMesh(const mapPolyMesh& mpm);
 
         //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh& mpm) = 0;
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh& mesh) = 0;
+        virtual void movePoints(const polyMesh& mesh);
 };
 
 

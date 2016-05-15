@@ -25,8 +25,8 @@ License
 
 #include "Q.H"
 #include "volFields.H"
-#include "dictionary.H"
 #include "fvcGrad.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +35,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(Q, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        Q,
+        dictionary
+    );
 }
 }
 
@@ -44,16 +51,21 @@ namespace functionObjects
 Foam::functionObjects::Q::Q
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     UName_("U")
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -92,13 +104,15 @@ Foam::functionObjects::Q::~Q()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::Q::read(const dictionary& dict)
+bool Foam::functionObjects::Q::read(const dictionary& dict)
 {
     UName_ = dict.lookupOrDefault<word>("UName", "U");
+
+    return true;
 }
 
 
-void Foam::functionObjects::Q::execute()
+bool Foam::functionObjects::Q::execute(const bool postProcess)
 {
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -114,29 +128,23 @@ void Foam::functionObjects::Q::execute()
         );
 
     Q = 0.5*(sqr(tr(gradU)) - tr(((gradU) & (gradU))));
+
+    return true;
 }
 
 
-void Foam::functionObjects::Q::end()
-{
-    execute();
-}
-
-
-void Foam::functionObjects::Q::timeSet()
-{}
-
-
-void Foam::functionObjects::Q::write()
+bool Foam::functionObjects::Q::write(const bool postProcess)
 {
     const volScalarField& Q =
         obr_.lookupObject<volScalarField>(type());
 
-    Info<< type() << " " << name_ << " output:" << nl
+    Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << Q.name() << nl
         << endl;
 
     Q.write();
+
+    return true;
 }
 
 

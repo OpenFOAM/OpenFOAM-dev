@@ -27,6 +27,7 @@ License
 #include "surfaceFields.H"
 #include "fvcSurfaceIntegrate.H"
 #include "zeroGradientFvPatchFields.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,6 +36,13 @@ namespace Foam
 namespace functionObjects
 {
     defineTypeNameAndDebug(CourantNo, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        CourantNo,
+        dictionary
+    );
 }
 }
 
@@ -63,17 +71,22 @@ Foam::functionObjects::CourantNo::byRho
 Foam::functionObjects::CourantNo::CourantNo
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    name_(name),
-    obr_(obr),
+    functionObject(name),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    ),
     phiName_("phi"),
     rhoName_("rho")
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -113,14 +126,16 @@ Foam::functionObjects::CourantNo::~CourantNo()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::CourantNo::read(const dictionary& dict)
+bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
 {
     phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
     rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+
+    return true;
 }
 
 
-void Foam::functionObjects::CourantNo::execute()
+bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
 {
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -139,29 +154,23 @@ void Foam::functionObjects::CourantNo::execute()
        /mesh.V()
     );
     Co.correctBoundaryConditions();
+
+    return true;
 }
 
 
-void Foam::functionObjects::CourantNo::end()
-{
-    execute();
-}
-
-
-void Foam::functionObjects::CourantNo::timeSet()
-{}
-
-
-void Foam::functionObjects::CourantNo::write()
+bool Foam::functionObjects::CourantNo::write(const bool postProcess)
 {
     const volScalarField& CourantNo =
         obr_.lookupObject<volScalarField>(type());
 
-    Info<< type() << " " << name_ << " output:" << nl
+    Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << CourantNo.name() << nl
         << endl;
 
     CourantNo.write();
+
+    return true;
 }
 
 

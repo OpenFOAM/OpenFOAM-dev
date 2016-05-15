@@ -31,6 +31,7 @@ License
 #include "SortableList.H"
 #include "volPointInterpolation.H"
 #include "mapPolyMesh.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,8 +39,15 @@ namespace Foam
 {
     defineTypeNameAndDebug(sampledSets, 0);
 
-    bool sampledSets::verbose_ = false;
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        sampledSets,
+        dictionary
+    );
 }
+
+bool Foam::sampledSets::verbose_ = false;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -133,13 +141,55 @@ void Foam::sampledSets::combineSampledSets
 Foam::sampledSets::sampledSets
 (
     const word& name,
+    const Time& t,
+    const dictionary& dict
+)
+:
+    functionObject(name),
+    PtrList<sampledSet>(),
+    mesh_
+    (
+        refCast<const fvMesh>
+        (
+            t.lookupObject<objectRegistry>
+            (
+                dict.lookupOrDefault("region", polyMesh::defaultRegion)
+            )
+        )
+    ),
+    loadFromFiles_(false),
+    outputPath_(fileName::null),
+    searchEngine_(mesh_),
+    interpolationScheme_(word::null),
+    writeFormat_(word::null)
+{
+    if (Pstream::parRun())
+    {
+        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name;
+    }
+    else
+    {
+        outputPath_ = mesh_.time().path()/"postProcessing"/name;
+    }
+    if (mesh_.name() != fvMesh::defaultRegion)
+    {
+        outputPath_ = outputPath_/mesh_.name();
+    }
+
+    read(dict);
+}
+
+
+Foam::sampledSets::sampledSets
+(
+    const word& name,
     const objectRegistry& obr,
     const dictionary& dict,
     const bool loadFromFiles
 )
 :
+    functionObject(name),
     PtrList<sampledSet>(),
-    name_(name),
     mesh_(refCast<const fvMesh>(obr)),
     loadFromFiles_(loadFromFiles),
     outputPath_(fileName::null),
@@ -149,11 +199,11 @@ Foam::sampledSets::sampledSets
 {
     if (Pstream::parRun())
     {
-        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name_;
+        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name;
     }
     else
     {
-        outputPath_ = mesh_.time().path()/"postProcessing"/name_;
+        outputPath_ = mesh_.time().path()/"postProcessing"/name;
     }
     if (mesh_.name() != fvMesh::defaultRegion)
     {
@@ -178,19 +228,13 @@ void Foam::sampledSets::verbose(const bool verbosity)
 }
 
 
-void Foam::sampledSets::execute()
-{}
+bool Foam::sampledSets::execute(const bool postProcess)
+{
+    return true;
+}
 
 
-void Foam::sampledSets::end()
-{}
-
-
-void Foam::sampledSets::timeSet()
-{}
-
-
-void Foam::sampledSets::write()
+bool Foam::sampledSets::write(const bool postProcess)
 {
     if (size())
     {
@@ -230,10 +274,12 @@ void Foam::sampledSets::write()
             sampleAndWrite(tensorFields_);
         }
     }
+
+    return true;
 }
 
 
-void Foam::sampledSets::read(const dictionary& dict)
+bool Foam::sampledSets::read(const dictionary& dict)
 {
     dict_ = dict;
 
@@ -276,6 +322,8 @@ void Foam::sampledSets::read(const dictionary& dict)
         }
         Pout<< ")" << endl;
     }
+
+    return true;
 }
 
 

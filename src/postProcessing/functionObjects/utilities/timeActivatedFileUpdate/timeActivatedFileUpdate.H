@@ -59,6 +59,7 @@ SourceFiles
 #ifndef functionObjects_timeActivatedFileUpdate_H
 #define functionObjects_timeActivatedFileUpdate_H
 
+#include "functionObject.H"
 #include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,10 +68,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
+class Time;
 
 namespace functionObjects
 {
@@ -80,14 +78,13 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class timeActivatedFileUpdate
+:
+    public functionObject
 {
     // Private data
 
-        //- Name of this set of timeActivatedFileUpdate objects
-        word name_;
-
-        //- Owner database
-        const objectRegistry& obr_;
+        //- Reference to Time
+        const Time& time_;
 
         //- Name of file to update
         fileName fileToUpdate_;
@@ -119,14 +116,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         timeActivatedFileUpdate
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -136,34 +131,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of timeActivatedFileUpdate
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the timeActivatedFileUpdate data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Execute file updates
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the timeActivatedFileUpdate and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Do nothing
+        virtual bool write(const bool postProcess = false);
 };
 
 

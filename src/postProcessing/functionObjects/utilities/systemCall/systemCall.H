@@ -76,7 +76,7 @@ Note
 
 SeeAlso
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::timeControl
 
 SourceFiles
     systemCall.C
@@ -86,19 +86,13 @@ SourceFiles
 #ifndef functionObjects_systemCall_H
 #define functionObjects_systemCall_H
 
+#include "functionObject.H"
 #include "stringList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
-
 namespace functionObjects
 {
 
@@ -107,13 +101,12 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class systemCall
+:
+    public functionObject
 {
 protected:
 
     // Private data
-
-        //- Name of this set of system calls
-        word name_;
 
         //- List of calls to execute - every step
         stringList executeCalls_;
@@ -144,14 +137,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         systemCall
         (
             const word& name,
-            const objectRegistry& unused,
-            const dictionary&,
-            const bool loadFromFilesUnused = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -161,34 +152,17 @@ public:
 
     // Member Functions
 
-        //- Return name of the system call set
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the system calls
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
         //- Execute the "executeCalls" at each time-step
-        virtual void execute();
+        virtual bool execute(const bool postProcess = false);
 
         //- Execute the "endCalls" at the final time-loop
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
+        virtual bool end();
 
         //- Write, execute the "writeCalls"
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        virtual bool write(const bool postProcess = false);
 };
 
 

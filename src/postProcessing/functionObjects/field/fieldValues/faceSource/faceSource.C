@@ -44,6 +44,7 @@ namespace fieldValues
 {
     defineTypeNameAndDebug(faceSource, 0);
     addToRunTimeSelectionTable(fieldValue, faceSource, dictionary);
+    addToRunTimeSelectionTable(functionObject, faceSource, dictionary);
 }
 }
 }
@@ -106,7 +107,7 @@ void Foam::functionObjects::fieldValues::faceSource::setFaceZoneFaces()
     if (zoneId < 0)
     {
         FatalErrorInFunction
-            << type() << " " << name_ << ": "
+            << type() << " " << name() << ": "
             << sourceTypeNames_[source_] << "(" << sourceName_ << "):" << nl
             << "    Unknown face zone name: " << sourceName_
             << ". Valid face zones are: " << mesh().faceZones().names()
@@ -191,7 +192,7 @@ void Foam::functionObjects::fieldValues::faceSource::setPatchFaces()
     if (patchid < 0)
     {
         FatalErrorInFunction
-            << type() << " " << name_ << ": "
+            << type() << " " << name() << ": "
             << sourceTypeNames_[source_] << "(" << sourceName_ << "):" << nl
             << "    Unknown patch name: " << sourceName_
             << ". Valid patch names are: "
@@ -228,7 +229,7 @@ void Foam::functionObjects::fieldValues::faceSource::sampledSurfaceFaces
 {
     surfacePtr_ = sampledSurface::New
     (
-        name_,
+        name(),
         mesh(),
         dict.subDict("sampledSurfaceDict")
     );
@@ -443,7 +444,7 @@ void Foam::functionObjects::fieldValues::faceSource::initialise
         default:
         {
             FatalErrorInFunction
-                << type() << " " << name_ << ": "
+                << type() << " " << name() << ": "
                 << sourceTypeNames_[source_] << "(" << sourceName_ << "):"
                 << nl << "    Unknown source type. Valid source types are:"
                 << sourceTypeNames_.sortedToc() << nl << exit(FatalError);
@@ -453,7 +454,7 @@ void Foam::functionObjects::fieldValues::faceSource::initialise
     if (nFaces_ == 0)
     {
         FatalErrorInFunction
-            << type() << " " << name_ << ": "
+            << type() << " " << name() << ": "
             << sourceTypeNames_[source_] << "(" << sourceName_ << "):" << nl
             << "    Source has no faces" << exit(FatalError);
     }
@@ -465,7 +466,7 @@ void Foam::functionObjects::fieldValues::faceSource::initialise
 
     totalArea_ = totalArea();
 
-    Info<< type() << " " << name_ << ":" << nl
+    Info<< type() << " " << name() << ":" << nl
         << "    total faces  = " << nFaces_
         << nl
         << "    total area   = " << totalArea_
@@ -641,12 +642,11 @@ Foam::vector Foam::functionObjects::fieldValues::faceSource::processValues
 Foam::functionObjects::fieldValues::faceSource::faceSource
 (
     const word& name,
-    const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const Time& runTime,
+    const dictionary& dict
 )
 :
-    fieldValue(name, obr, dict, typeName, loadFromFiles),
+    fieldValue(name, runTime, dict, typeName),
     surfaceWriterPtr_(NULL),
     source_(sourceTypeNames_.read(dict.lookup("source"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
@@ -660,7 +660,37 @@ Foam::functionObjects::fieldValues::faceSource::faceSource
     facePatchId_(),
     faceSign_()
 {
-    if (!isA<fvMesh>(obr))
+    if (!isA<fvMesh>(obr_))
+    {
+        FatalErrorInFunction
+            << "objectRegistry is not an fvMesh" << exit(FatalError);
+    }
+
+    read(dict);
+}
+
+Foam::functionObjects::fieldValues::faceSource::faceSource
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict
+)
+:
+    fieldValue(name, obr, dict, typeName),
+    surfaceWriterPtr_(NULL),
+    source_(sourceTypeNames_.read(dict.lookup("source"))),
+    operation_(operationTypeNames_.read(dict.lookup("operation"))),
+    weightFieldName_("none"),
+    orientWeightField_(false),
+    orientedFieldsStart_(labelMax),
+    scaleFactor_(1.0),
+    writeArea_(dict.lookupOrDefault("writeArea", false)),
+    nFaces_(0),
+    faceId_(),
+    facePatchId_(),
+    faceSign_()
+{
+    if (!isA<fvMesh>(obr_))
     {
         FatalErrorInFunction
             << "objectRegistry is not an fvMesh" << exit(FatalError);
@@ -678,17 +708,22 @@ Foam::functionObjects::fieldValues::faceSource::~faceSource()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::faceSource::read
+bool Foam::functionObjects::fieldValues::faceSource::read
 (
     const dictionary& dict
 )
 {
     fieldValue::read(dict);
     initialise(dict);
+
+    return true;
 }
 
 
-void Foam::functionObjects::fieldValues::faceSource::write()
+bool Foam::functionObjects::fieldValues::faceSource::write
+(
+    const bool postProcess
+)
 {
     fieldValue::write();
 
@@ -757,6 +792,8 @@ void Foam::functionObjects::fieldValues::faceSource::write()
     }
 
     if (log_) Info<< endl;
+
+    return true;
 }
 
 

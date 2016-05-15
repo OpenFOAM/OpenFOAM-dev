@@ -43,8 +43,7 @@ SourceFiles
 #ifndef functionObjects_dsmcFields_H
 #define functionObjects_dsmcFields_H
 
-#include "typeInfo.H"
-#include "autoPtr.H"
+#include "functionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,9 +52,6 @@ namespace Foam
 
 // Forward declaration of classes
 class objectRegistry;
-class dictionary;
-class polyMesh;
-class mapPolyMesh;
 
 namespace functionObjects
 {
@@ -65,11 +61,10 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class dsmcFields
+:
+    public functionObject
 {
     // Private data
-
-        //- Name of this set of dsmcFields objects
-        word name_;
 
         const objectRegistry& obr_;
 
@@ -91,14 +86,12 @@ public:
 
     // Constructors
 
-        //- Construct for given objectRegistry and dictionary.
-        //  Allow the possibility to load fields from files
+        //- Construct from Time and dictionary
         dsmcFields
         (
             const word& name,
-            const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const Time& runTime,
+            const dictionary& dict
         );
 
 
@@ -108,34 +101,14 @@ public:
 
     // Member Functions
 
-        //- Return name of the set of dsmcFields
-        virtual const word& name() const
-        {
-            return name_;
-        }
-
         //- Read the dsmcFields data
-        virtual void read(const dictionary&);
+        virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
-        virtual void execute();
+        //- Do nothing
+        virtual bool execute(const bool postProcess = false);
 
-        //- Execute at the final time-loop, currently does nothing
-        virtual void end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual void timeSet();
-
-        //- Calculate the dsmcFields and write
-        virtual void write();
-
-        //- Update for changes of mesh
-        virtual void updateMesh(const mapPolyMesh&)
-        {}
-
-        //- Update for changes of mesh
-        virtual void movePoints(const polyMesh&)
-        {}
+        //- Calculate and write the DSMC fields
+        virtual bool write(const bool postProcess = false);
 };
 
 
