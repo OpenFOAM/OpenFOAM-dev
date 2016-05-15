@@ -27,7 +27,8 @@
 # Description
 #     Setup file for CGAL (& boost) include/libraries.
 #     Sourced from OpenFOAM-<VERSION>/etc/cshrc
-##------------------------------------------------------------------------------
+#
+#------------------------------------------------------------------------------
 
 set boost_version=boost-system
 set cgal_version=CGAL-4.7

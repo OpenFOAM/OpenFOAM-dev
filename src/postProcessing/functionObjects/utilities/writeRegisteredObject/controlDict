@@ -81,7 +81,7 @@ functions
         writeInterval  1; // (timeStep, writeTime)
 
         // Interval of time (sec) to write down(
-        writeInterval   10.5 //(adjustableRunTime, runTime, clockTime, cpuTime)
+        writeInterval   10.5; //(adjustableRunTime, runTime, clockTime, cpuTime)
     }
 
     dumpObjects

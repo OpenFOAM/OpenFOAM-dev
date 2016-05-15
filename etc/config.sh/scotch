@@ -31,6 +31,10 @@
 # Note
 #     A csh version is not needed, since the values here are only sourced
 #     during the wmake process
+#
+#     If Scotch is to be entirely disabled, either rename this file or create
+#     an empty one with the same name at a user or site location.
+#
 #------------------------------------------------------------------------------
 
 export SCOTCH_VERSION=scotch_6.0.3

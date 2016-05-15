@@ -33,6 +33,11 @@
 #
 #         boost_version=boost-system
 #         cgal_version=cgal-system
+#
+# Note
+#     If CGAL/Boost is to be entirely disabled, either rename this file or
+#     create an empty one with the same name at a user or site location.
+#
 #------------------------------------------------------------------------------
 
 boost_version=boost-system
