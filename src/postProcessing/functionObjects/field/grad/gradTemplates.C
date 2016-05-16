@@ -46,9 +46,7 @@ Foam::functionObjects::grad::gradField
     typedef typename outerProduct<vector, Type>::type gradType;
     typedef GeometricField<gradType, fvPatchField, volMesh> vfGradType;
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-    if (!mesh.foundObject<vfGradType>(gradName))
+    if (!mesh_.foundObject<vfGradType>(gradName))
     {
         vfGradType* gradFieldPtr
         (
@@ -57,12 +55,12 @@ Foam::functionObjects::grad::gradField
                 IOobject
                 (
                     gradName,
-                    mesh.time().timeName(),
-                    mesh,
+                    mesh_.time().timeName(),
+                    mesh_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                mesh_,
                 dimensioned<gradType>
                 (
                     "zero",
@@ -72,10 +70,10 @@ Foam::functionObjects::grad::gradField
             )
         );
 
-        mesh.objectRegistry::store(gradFieldPtr);
+        mesh_.objectRegistry::store(gradFieldPtr);
     }
 
-    const vfGradType& field = mesh.lookupObject<vfGradType>(gradName);
+    const vfGradType& field = mesh_.lookupObject<vfGradType>(gradName);
 
     return const_cast<vfGradType&>(field);
 }
@@ -95,12 +93,9 @@ void Foam::functionObjects::grad::calcGrad
     typedef typename outerProduct<vector, Type>::type gradType;
     typedef GeometricField<gradType, fvPatchField, volMesh> vfGradType;
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-
-    if (mesh.foundObject<vfType>(fieldName))
+    if (mesh_.foundObject<vfType>(fieldName))
     {
-        const vfType& vf = mesh.lookupObject<vfType>(fieldName);
+        const vfType& vf = mesh_.lookupObject<vfType>(fieldName);
 
         vfGradType& field = gradField<Type>(resultName, vf.dimensions());
 
@@ -109,9 +104,9 @@ void Foam::functionObjects::grad::calcGrad
 
         processed = true;
     }
-    else if (mesh.foundObject<sfType>(fieldName))
+    else if (mesh_.foundObject<sfType>(fieldName))
     {
-        const sfType& sf = mesh.lookupObject<sfType>(fieldName);
+        const sfType& sf = mesh_.lookupObject<sfType>(fieldName);
 
         vfGradType& field = gradField<Type>(resultName, sf.dimensions());
 

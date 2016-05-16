@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,26 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::div
-
-Group
-    grpFieldFunctionObjects
+    Foam::functionObjects::fvMeshFunctionObject
 
 Description
-    This function object calculates the divergence of a field.  The operation is
-    limited to surfaceScalarFields and volVectorFields, and the output is a
-    volScalarField.
+    Specialization of Foam::functionObject for an Foam::fvMesh, providing a
+    reference to the Foam::fvMesh.
+
+    If the selected region is not an Foam::fvMesh a Foam::FatalError will be
+    generated.
+
+SeeAlso
+    Foam::regionFunctionObject
+    Foam::functionObject
 
 SourceFiles
-    div.C
+    fvMeshFunctionObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_div_H
-#define functionObjects_div_H
+#ifndef functionObjects_fvMeshFunctionObject_H
+#define functionObjects_fvMeshFunctionObject_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "regionFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,63 +51,49 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class dimensionSet;
+class fvMesh;
 
 namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class div Declaration
+                     Class fvMeshFunctionObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class div
+class fvMeshFunctionObject
 :
-    public fvMeshFunctionObject
+    public regionFunctionObject
 {
-    // Private data
 
-        //- Name of field to process
-        word fieldName_;
+protected:
 
-        //- Name of result field
-        word resultName_;
+    // Protected member data
 
+        //- Reference to the fvMesh
+        const fvMesh& mesh_;
+
+
+private:
 
     // Private Member Functions
 
-        //- Helper function to create/store/return the divergence field
-        volScalarField& divField
-        (
-            const word& gradName,
-            const dimensionSet& dims
-        );
-
-        //- Helper function to calculate the divergence of different field types
-        template<class FieldType>
-        void calcDiv
-        (
-            const word& fieldName,
-            const word& resultName,
-            bool& processed
-        );
-
         //- Disallow default bitwise copy construct
-        div(const div&);
+        fvMeshFunctionObject(const fvMeshFunctionObject&);
 
         //- Disallow default bitwise assignment
-        void operator=(const div&);
+        void operator=(const fvMeshFunctionObject&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("div");
+    TypeName("fvMeshFunctionObject");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        div
+        fvMeshFunctionObject
         (
             const word& name,
             const Time& runTime,
@@ -114,19 +102,7 @@ public:
 
 
     //- Destructor
-    virtual ~div();
-
-
-    // Member Functions
-
-        //- Read the div data
-        virtual bool read(const dictionary&);
-
-        //- Calculate the divergence field
-        virtual bool execute(const bool postProcess = false);
-
-        //- Write the divergence field
-        virtual bool write(const bool postProcess = false);
+    virtual ~fvMeshFunctionObject();
 };
 
 
@@ -134,12 +110,6 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "divTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

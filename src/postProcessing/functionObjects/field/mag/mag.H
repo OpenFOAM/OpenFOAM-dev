@@ -40,7 +40,7 @@ SourceFiles
 #ifndef functionObjects_mag_H
 #define functionObjects_mag_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,7 +49,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class objectRegistry;
 class dimensionSet;
 
 namespace functionObjects
@@ -61,12 +60,9 @@ namespace functionObjects
 
 class mag
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Name of field to process
         word fieldName_;

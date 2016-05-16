@@ -100,20 +100,12 @@ Foam::Omanip<int> Foam::functionObjects::writeFile::valueWidth
 Foam::functionObjects::writeFile::writeFile
 (
     const word& name,
-    const Time& t,
+    const Time& runTime,
     const dictionary& dict,
     const word& prefix
 )
 :
-    functionObject(name),
-    time_(t),
-    obr_
-    (
-        time_.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    regionFunctionObject(name, runTime, dict),
     prefix_(prefix),
     log_(true)
 {}
@@ -127,9 +119,7 @@ Foam::functionObjects::writeFile::writeFile
     const word& prefix
 )
 :
-    functionObject(name),
-    time_(obr.time()),
-    obr_(obr),
+    regionFunctionObject(name, obr, dict),
     prefix_(prefix),
     log_(true)
 {}

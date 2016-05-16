@@ -47,9 +47,7 @@ Foam::volScalarField& Foam::functionObjects::div::divField
     const dimensionSet& dims
 )
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-    if (!mesh.foundObject<volScalarField>(divName))
+    if (!mesh_.foundObject<volScalarField>(divName))
     {
         volScalarField* divFieldPtr
         (
@@ -58,20 +56,20 @@ Foam::volScalarField& Foam::functionObjects::div::divField
                 IOobject
                 (
                     divName,
-                    mesh.time().timeName(),
-                    mesh,
+                    mesh_.time().timeName(),
+                    mesh_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                mesh_,
                 dimensionedScalar("zero", dims/dimLength, 0.0)
             )
         );
 
-        mesh.objectRegistry::store(divFieldPtr);
+        mesh_.objectRegistry::store(divFieldPtr);
     }
 
-    const volScalarField& field = mesh.lookupObject<volScalarField>(divName);
+    const volScalarField& field = mesh_.lookupObject<volScalarField>(divName);
 
     return const_cast<volScalarField&>(field);
 }
@@ -86,23 +84,8 @@ Foam::functionObjects::div::div
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
-    fieldName_("undefined-fieldName"),
-    resultName_("undefined-resultName")
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 

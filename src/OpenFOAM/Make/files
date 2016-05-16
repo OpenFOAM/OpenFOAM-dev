@@ -223,6 +223,7 @@ db/functionObjects/writeFile/writeFile.C
 db/functionObjects/writeFiles/writeFiles.C
 db/functionObjects/timeControl/timeControl.C
 db/functionObjects/timeControl/timeControlFunctionObject.C
+db/functionObjects/regionFunctionObject/regionFunctionObject.C
 
 Time = db/Time
 $(Time)/TimePaths.C

@@ -36,11 +36,9 @@ void Foam::functionObjects::div::calcDiv
     bool& processed
 )
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-    if (mesh.foundObject<FieldType>(fieldName))
+    if (mesh_.foundObject<FieldType>(fieldName))
     {
-        const FieldType& vf = mesh.lookupObject<FieldType>(fieldName);
+        const FieldType& vf = mesh_.lookupObject<FieldType>(fieldName);
 
         volScalarField& field = divField(resultName, vf.dimensions());
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,26 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::div
-
-Group
-    grpFieldFunctionObjects
+    Foam::functionObjects::regionFunctionObject
 
 Description
-    This function object calculates the divergence of a field.  The operation is
-    limited to surfaceScalarFields and volVectorFields, and the output is a
-    volScalarField.
+    Specialization of Foam::functionObject for a region and providing a
+    reference to the region Foam::objectRegistry.
+
+SeeAlso
+    Foam::functionObject
 
 SourceFiles
-    div.C
+    regionFunctionObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_div_H
-#define functionObjects_div_H
+#ifndef functionObjects_regionFunctionObject_H
+#define functionObjects_regionFunctionObject_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "functionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,84 +47,71 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class dimensionSet;
+class objectRegistry;
 
 namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class div Declaration
+                     Class regionFunctionObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class div
+class regionFunctionObject
 :
-    public fvMeshFunctionObject
+    public functionObject
 {
-    // Private data
 
-        //- Name of field to process
-        word fieldName_;
+protected:
 
-        //- Name of result field
-        word resultName_;
+    // Protected member data
 
+        //- Reference to the Time
+        const Time& time_;
+
+        //- Reference to the region objectRegistry
+        const objectRegistry& obr_;
+
+
+private:
 
     // Private Member Functions
 
-        //- Helper function to create/store/return the divergence field
-        volScalarField& divField
-        (
-            const word& gradName,
-            const dimensionSet& dims
-        );
-
-        //- Helper function to calculate the divergence of different field types
-        template<class FieldType>
-        void calcDiv
-        (
-            const word& fieldName,
-            const word& resultName,
-            bool& processed
-        );
-
         //- Disallow default bitwise copy construct
-        div(const div&);
+        regionFunctionObject(const regionFunctionObject&);
 
         //- Disallow default bitwise assignment
-        void operator=(const div&);
+        void operator=(const regionFunctionObject&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("div");
+    TypeName("regionFunctionObject");
 
 
     // Constructors
 
-        //- Construct from Time and dictionary
-        div
+        //- Construct from Time and dictionary.
+        //  The region objectRegistry is looked-up runTime with the name
+        //  looked-up from the dictionary (defaults to polyMesh::defaultRegion)
+        regionFunctionObject
         (
             const word& name,
             const Time& runTime,
             const dictionary& dict
         );
 
+        //- Construct from the region objectRegistry and dictionary
+        regionFunctionObject
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict
+        );
+
 
     //- Destructor
-    virtual ~div();
-
-
-    // Member Functions
-
-        //- Read the div data
-        virtual bool read(const dictionary&);
-
-        //- Calculate the divergence field
-        virtual bool execute(const bool postProcess = false);
-
-        //- Write the divergence field
-        virtual bool write(const bool postProcess = false);
+    virtual ~regionFunctionObject();
 };
 
 
@@ -134,12 +119,6 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "divTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

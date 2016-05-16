@@ -35,9 +35,7 @@ FieldType& Foam::functionObjects::mag::magField
     const dimensionSet& dims
 )
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-    if (!mesh.foundObject<FieldType>(magName))
+    if (!mesh_.foundObject<FieldType>(magName))
     {
         FieldType* magFieldPtr
         (
@@ -46,20 +44,20 @@ FieldType& Foam::functionObjects::mag::magField
                 IOobject
                 (
                     magName,
-                    mesh.time().timeName(),
-                    mesh,
+                    mesh_.time().timeName(),
+                    mesh_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                mesh_,
                 dimensionedScalar("zero", dims, 0.0)
             )
         );
 
-        mesh.objectRegistry::store(magFieldPtr);
+        mesh_.objectRegistry::store(magFieldPtr);
     }
 
-    const FieldType& f = mesh.lookupObject<FieldType>(magName);
+    const FieldType& f = mesh_.lookupObject<FieldType>(magName);
 
     return const_cast<FieldType&>(f);
 }
@@ -78,11 +76,9 @@ void Foam::functionObjects::mag::calc
     typedef GeometricField<Type, fvPatchField, volMesh> vfType;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> sfType;
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-    if (mesh.foundObject<vfType>(fieldName))
+    if (mesh_.foundObject<vfType>(fieldName))
     {
-        const vfType& vf = mesh.lookupObject<vfType>(fieldName);
+        const vfType& vf = mesh_.lookupObject<vfType>(fieldName);
 
         volScalarField& field =
             magField<volScalarField>(resultName_, vf.dimensions());
@@ -91,9 +87,9 @@ void Foam::functionObjects::mag::calc
 
         processed = true;
     }
-    else if (mesh.foundObject<sfType>(fieldName))
+    else if (mesh_.foundObject<sfType>(fieldName))
     {
-        const sfType& sf = mesh.lookupObject<sfType>(fieldName);
+        const sfType& sf = mesh_.lookupObject<sfType>(fieldName);
 
         surfaceScalarField& field =
             magField<surfaceScalarField>(resultName_, sf.dimensions());

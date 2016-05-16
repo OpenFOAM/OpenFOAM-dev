@@ -32,6 +32,10 @@ Description
     the bended convection schemes.  The output is a volume field (cells) whose
     value is calculated via the maximum blending factor for any cell face.
 
+SeeAlso
+    Foam::fvMeshFunctionObject
+    Foam::functionObject
+
 SourceFiles
     blendingFactor.C
 
@@ -40,7 +44,7 @@ SourceFiles
 #ifndef functionObjects_blendingFactor_H
 #define functionObjects_blendingFactor_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,12 +64,9 @@ namespace functionObjects
 
 class blendingFactor
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Name of flux field, default is "phi"
         word phiName_;

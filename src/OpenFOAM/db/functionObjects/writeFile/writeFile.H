@@ -28,8 +28,8 @@ Description
     functionObject base class for writing single files
 
 See Also
+    Foam::regionFunctionObject
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
 
 SourceFiles
     functionObjectFile.C
@@ -39,7 +39,7 @@ SourceFiles
 #ifndef functionObjects_writeFile_H
 #define functionObjects_writeFile_H
 
-#include "functionObject.H"
+#include "regionFunctionObject.H"
 #include "Time.H"
 #include "IOmanip.H"
 
@@ -56,18 +56,12 @@ namespace functionObjects
 
 class writeFile
 :
-    public functionObject
+    public regionFunctionObject
 {
 
 protected:
 
     // Protected data
-
-        //- Reference to the Time
-        const Time& time_;
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Prefix
         const word prefix_;

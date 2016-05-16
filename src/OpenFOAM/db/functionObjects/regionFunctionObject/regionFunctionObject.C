@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "blendingFactor.H"
-#include "volFields.H"
-#include "addToRunTimeSelectionTable.H"
+#include "regionFunctionObject.H"
+#include "Time.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,68 +33,49 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(blendingFactor, 0);
-    addToRunTimeSelectionTable(functionObject, blendingFactor, dictionary);
+    defineTypeNameAndDebug(regionFunctionObject, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::blendingFactor::blendingFactor
+Foam::functionObjects::regionFunctionObject::regionFunctionObject
 (
     const word& name,
     const Time& runTime,
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
-{
-    read(dict);
-}
+    functionObject(name),
+    time_(runTime),
+    obr_
+    (
+        runTime.lookupObject<objectRegistry>
+        (
+            dict.lookupOrDefault("region", polyMesh::defaultRegion)
+        )
+    )
+{}
+
+
+Foam::functionObjects::regionFunctionObject::regionFunctionObject
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict
+)
+:
+    functionObject(name),
+    time_(obr.time()),
+    obr_(obr)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::blendingFactor::~blendingFactor()
+Foam::functionObjects::regionFunctionObject::~regionFunctionObject()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::blendingFactor::read(const dictionary& dict)
-{
-    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-    dict.lookup("fieldName") >> fieldName_;
-
-    return true;
-}
-
-
-bool Foam::functionObjects::blendingFactor::execute(const bool postProcess)
-{
-    calc<scalar>();
-    calc<vector>();
-
-    return true;
-}
-
-
-bool Foam::functionObjects::blendingFactor::write(const bool postProcess)
-{
-    const word fieldName = "blendingFactor:" + fieldName_;
-
-    const volScalarField& blendingFactor =
-        obr_.lookupObject<volScalarField>(fieldName);
-
-    Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << blendingFactor.name() << nl
-        << endl;
-
-    blendingFactor.write();
-
-    return true;
-}
 
 
 // ************************************************************************* //
