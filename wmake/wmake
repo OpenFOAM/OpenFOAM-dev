@@ -82,6 +82,7 @@ or a special target:
   libo              Compile statically linked lib (.o)
   libso             Compile dynamically linked lib (.so)
   dep               Compile lnInclude and dependencies only
+  updatedep         Compile dependencies only (in case of broken dependencies)
 
 USAGE
     exit 1
@@ -376,6 +377,26 @@ case "$targetType" in
         fi
         ;;
 esac
+
+
+#------------------------------------------------------------------------------
+# When WM_UPDATE_DEPENDENCIES is set, use forced dependency files update
+#------------------------------------------------------------------------------
+
+if [ -n "$WM_UPDATE_DEPENDENCIES" ]
+then
+
+    $make -f $WM_DIR/makefiles/general MAKE_DIR=$MakeDir \
+        OBJECTS_DIR=$objectsDir updatedep
+    makeExitCode=$?
+
+    if [ $makeExitCode -ne 0 ]
+    then
+        exit $makeExitCode
+    fi
+
+    unset makeExitCode
+fi
 
 
 #------------------------------------------------------------------------------

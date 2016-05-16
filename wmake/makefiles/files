@@ -47,7 +47,7 @@ SFILES          = $(OBJECTS_DIR)/sourceFiles
 
 
 #------------------------------------------------------------------------------
-# Declare dependecy of all make system files on FILES
+# Declare dependency of all make system files on FILES
 # Causes all derived files to be remade if any are changed or missing
 #------------------------------------------------------------------------------
 

@@ -184,7 +184,7 @@ lnInclude: $(MAKE_DIR)/files $(MAKE_DIR)/options
 
 
 #------------------------------------------------------------------------------
-# Declare all qbject files depend on $(OBJECTS_DIR)/options
+# Declare all object files depend on $(OBJECTS_DIR)/options
 #------------------------------------------------------------------------------
 
 $(OBJECTS) : $(OBJECTS_DIR)/options
@@ -192,13 +192,15 @@ $(foreach S,$(SOURCE),$(eval $(OBJECTS_DIR)/$(basename $S).o : $(OBJECTS_DIR)/$S
 
 
 #------------------------------------------------------------------------------
-# Set depedency rule and include dependency lists
+# Set dependency rule and include dependency lists
 #------------------------------------------------------------------------------
 
-.PHONY: dep
+.PHONY: dep updatedep
 dep: $(DEPENDENCIES)
 
-ifeq ($(findstring lnInclude,$(MAKECMDGOALS)),)
+updatedep: dep
+
+ifeq ($(findstring lnInclude,$(MAKECMDGOALS))$(findstring updatedep,$(MAKECMDGOALS)),)
 -include $(DEPENDENCIES)
 endif
 

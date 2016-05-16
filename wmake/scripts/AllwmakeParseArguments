@@ -127,6 +127,9 @@ do
         -update)
             wrmdep -update
             wmakeLnIncludeAll
+
+            # Set WM_UPDATE_DEPENDENCIES, so that wmake will pick up on it
+            export WM_UPDATE_DEPENDENCIES=yes
             ;;
         # Generate documentation
         doc)
