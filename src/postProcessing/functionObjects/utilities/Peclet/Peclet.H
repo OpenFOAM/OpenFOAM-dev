@@ -31,6 +31,9 @@ Description
     This function object calculates and outputs the Peclet number as a
     surfaceScalarField.
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     Peclet.C
 
@@ -39,17 +42,13 @@ SourceFiles
 #ifndef functionObjects_Peclet_H
 #define functionObjects_Peclet_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -59,12 +58,9 @@ namespace functionObjects
 
 class Peclet
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the database
-        const objectRegistry& obr_;
 
         //- Name of flux field, default is "phi"
         word phiName_;

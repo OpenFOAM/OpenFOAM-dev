@@ -157,25 +157,9 @@ Foam::functionObjects::scalarTransport::scalarTransport
     const dictionary& dict
 )
 :
-    functionObject(name),
-    mesh_
-    (
-        refCast<const fvMesh>
-        (
-            runTime.lookupObject<objectRegistry>
-            (
-                dict.lookupOrDefault("region", polyMesh::defaultRegion)
-            )
-        )
-    ),
-    phiName_(dict.lookupOrDefault<word>("phiName", "phi")),
-    UName_(dict.lookupOrDefault<word>("UName", "U")),
-    rhoName_(dict.lookupOrDefault<word>("rhoName", "rho")),
+    fvMeshFunctionObject(name, runTime, dict),
     DT_(0.0),
-    userDT_(false),
-    resetOnStartUp_(false),
     nCorr_(0),
-    autoSchemes_(false),
     fvOptions_(mesh_),
     T_
     (

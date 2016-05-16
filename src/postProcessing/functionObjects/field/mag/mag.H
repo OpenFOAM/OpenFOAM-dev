@@ -32,6 +32,9 @@ Description
     can be applied to any volume or surface fieldsm and the output is a
     volume or surface scalar field.
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     mag.C
 

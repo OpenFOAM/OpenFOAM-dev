@@ -55,25 +55,9 @@ Foam::functionObjects::Q::Q
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
-    UName_("U")
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volScalarField* QPtr
     (
@@ -82,17 +66,17 @@ Foam::functionObjects::Q::Q
             IOobject
             (
                 type(),
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
         )
     );
 
-    mesh.objectRegistry::store(QPtr);
+    mesh_.objectRegistry::store(QPtr);
 }
 
 
@@ -114,17 +98,15 @@ bool Foam::functionObjects::Q::read(const dictionary& dict)
 
 bool Foam::functionObjects::Q::execute(const bool postProcess)
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     const volVectorField& U =
-        mesh.lookupObject<volVectorField>(UName_);
+        mesh_.lookupObject<volVectorField>(UName_);
 
     const volTensorField gradU(fvc::grad(U));
 
     volScalarField& Q =
         const_cast<volScalarField&>
         (
-            mesh.lookupObject<volScalarField>(type())
+            mesh_.lookupObject<volScalarField>(type())
         );
 
     Q = 0.5*(sqr(tr(gradU)) - tr(((gradU) & (gradU))));
@@ -136,7 +118,7 @@ bool Foam::functionObjects::Q::execute(const bool postProcess)
 bool Foam::functionObjects::Q::write(const bool postProcess)
 {
     const volScalarField& Q =
-        obr_.lookupObject<volScalarField>(type());
+        mesh_.lookupObject<volScalarField>(type());
 
     Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << Q.name() << nl

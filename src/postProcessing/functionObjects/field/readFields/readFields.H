@@ -54,7 +54,7 @@ Description
     \endtable
 
 SeeAlso
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
     readFields.C
@@ -64,7 +64,7 @@ SourceFiles
 #ifndef functionObjects_readFields_H
 #define functionObjects_readFields_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 
@@ -72,10 +72,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -85,14 +81,11 @@ namespace functionObjects
 
 class readFields
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
 protected:
 
     // Protected data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Fields to load
         wordList fieldSet_;

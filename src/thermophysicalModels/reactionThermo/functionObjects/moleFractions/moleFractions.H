@@ -49,7 +49,7 @@ Description
     depending on the thermodynamics package used in the solver.
 
 SeeAlso
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
     moleFractions.C
@@ -59,8 +59,8 @@ SourceFiles
 #ifndef moleFractions_H
 #define moleFractions_H
 
-#include "writeFiles.H"
-#include "volFields.H"
+#include "fvMeshFunctionObject.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,12 +74,9 @@ namespace Foam
 template<class ThermoType>
 class moleFractions
 :
-    public functionObjects::writeFiles
+    public functionObjects::fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the mesh
-        const fvMesh& mesh_;
 
         //- Species mole fractions
         PtrList<volScalarField> X_;

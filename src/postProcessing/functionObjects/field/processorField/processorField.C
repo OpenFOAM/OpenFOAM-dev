@@ -48,24 +48,9 @@ Foam::functionObjects::processorField::processorField
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    )
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volScalarField* procFieldPtr
     (
@@ -74,17 +59,17 @@ Foam::functionObjects::processorField::processorField
             IOobject
             (
                 "processorID",
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("0", dimless, 0.0)
         )
     );
 
-    mesh.objectRegistry::store(procFieldPtr);
+    mesh_.objectRegistry::store(procFieldPtr);
 }
 
 
@@ -105,7 +90,7 @@ bool Foam::functionObjects::processorField::read(const dictionary& dict)
 bool Foam::functionObjects::processorField::execute(const bool postProcess)
 {
     const volScalarField& procField =
-        obr_.lookupObject<volScalarField>("processorID");
+        mesh_.lookupObject<volScalarField>("processorID");
 
     const_cast<volScalarField&>(procField) ==
         dimensionedScalar("proci", dimless, Pstream::myProcNo());
@@ -117,7 +102,7 @@ bool Foam::functionObjects::processorField::execute(const bool postProcess)
 bool Foam::functionObjects::processorField::write(const bool postProcess)
 {
     const volScalarField& procField =
-        obr_.lookupObject<volScalarField>("processorID");
+        mesh_.lookupObject<volScalarField>("processorID");
 
     procField.write();
 

@@ -38,22 +38,20 @@ Foam::volScalarField& Foam::functionObjects::blendingFactor::factor
 {
     const word fieldName = "blendingFactor:" + field.name();
 
-    if (!obr_.foundObject<volScalarField>(fieldName))
+    if (!mesh_.foundObject<volScalarField>(fieldName))
     {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
         volScalarField* factorPtr =
             new volScalarField
             (
                 IOobject
                 (
                     fieldName,
-                    mesh.time().timeName(),
-                    mesh,
+                    mesh_.time().timeName(),
+                    mesh_,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                mesh_,
                 dimensionedScalar("0", dimless, 0.0),
                 zeroGradientFvPatchScalarField::typeName
             );
@@ -64,7 +62,7 @@ Foam::volScalarField& Foam::functionObjects::blendingFactor::factor
     return
         const_cast<volScalarField&>
         (
-            obr_.lookupObject<volScalarField>(fieldName)
+            mesh_.lookupObject<volScalarField>(fieldName)
         );
 }
 
@@ -74,23 +72,21 @@ void Foam::functionObjects::blendingFactor::calc()
 {
     typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
 
-    if (!obr_.foundObject<fieldType>(fieldName_))
+    if (!mesh_.foundObject<fieldType>(fieldName_))
     {
         return;
     }
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
-    const fieldType& field = mesh.lookupObject<fieldType>(fieldName_);
+    const fieldType& field = mesh_.lookupObject<fieldType>(fieldName_);
 
     const word divScheme("div(" + phiName_ + ',' + fieldName_ + ')');
-    ITstream& its = mesh.divScheme(divScheme);
+    ITstream& its = mesh_.divScheme(divScheme);
 
     const surfaceScalarField& phi =
-        mesh.lookupObject<surfaceScalarField>(phiName_);
+        mesh_.lookupObject<surfaceScalarField>(phiName_);
 
     tmp<fv::convectionScheme<Type>> cs =
-        fv::convectionScheme<Type>::New(mesh, phi, its);
+        fv::convectionScheme<Type>::New(mesh_, phi, its);
 
     const fv::gaussConvectionScheme<Type>& gcs =
         refCast<const fv::gaussConvectionScheme<Type>>(cs());

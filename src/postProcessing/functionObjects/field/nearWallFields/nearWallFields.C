@@ -46,14 +46,12 @@ namespace functionObjects
 
 void Foam::functionObjects::nearWallFields::calcAddressing()
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     // Count number of faces
     label nPatchFaces = 0;
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
-        nPatchFaces += mesh.boundary()[patchi].size();
+        nPatchFaces += mesh_.boundary()[patchi].size();
     }
 
     // Global indexing
@@ -65,7 +63,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     }
 
     // Construct cloud
-    Cloud<findCellParticle> cloud(mesh, IDLList<findCellParticle>());
+    Cloud<findCellParticle> cloud(mesh_, IDLList<findCellParticle>());
 
     // Add particles to track to sample locations
     nPatchFaces = 0;
@@ -73,7 +71,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
-        const fvPatch& patch = mesh.boundary()[patchi];
+        const fvPatch& patch = mesh_.boundary()[patchi];
 
         vectorField nf(patch.nf());
         vectorField faceCellCentres(patch.patch().faceCellCentres());
@@ -88,7 +86,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
             (
                 mappedPatchBase::facePoint
                 (
-                    mesh,
+                    mesh_,
                     meshFacei,
                     polyMesh::FACE_DIAG_TRIS
                 )
@@ -112,14 +110,14 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
             label celli = -1;
             label tetFacei = -1;
             label tetPtI = -1;
-            mesh.findCellFacePt(start, celli, tetFacei, tetPtI);
+            mesh_.findCellFacePt(start, celli, tetFacei, tetPtI);
 
             // Add to cloud. Add originating face as passive data
             cloud.addParticle
             (
                 new findCellParticle
                 (
-                    mesh,
+                    mesh_,
                     start,
                     celli,
                     tetFacei,
@@ -140,8 +138,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         // Dump particles
         OBJstream str
         (
-            mesh.time().path()
-           /"wantedTracks_" + mesh.time().timeName() + ".obj"
+            mesh_.time().path()
+           /"wantedTracks_" + mesh_.time().timeName() + ".obj"
         );
         InfoInFunction << "Dumping tracks to " << str.name() << endl;
 
@@ -155,14 +153,14 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 
 
     // Per cell: empty or global wall index and end location
-    cellToWalls_.setSize(mesh.nCells());
-    cellToSamples_.setSize(mesh.nCells());
+    cellToWalls_.setSize(mesh_.nCells());
+    cellToSamples_.setSize(mesh_.nCells());
 
     // Database to pass into findCellParticle::move
     findCellParticle::trackingData td(cloud, cellToWalls_, cellToSamples_);
 
     // Track all particles to their end position.
-    scalar maxTrackLen = 2.0*mesh.bounds().mag();
+    scalar maxTrackLen = 2.0*mesh_.bounds().mag();
 
 
     //Debug: collect start points
@@ -202,8 +200,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         {
             OBJstream str
             (
-                mesh.time().path()
-               /"obtainedTracks_" + mesh.time().timeName() + ".obj"
+                mesh_.time().path()
+               /"obtainedTracks_" + mesh_.time().timeName() + ".obj"
             );
             InfoInFunction << "Dumping obtained to " << str.name() << endl;
 
@@ -230,22 +228,9 @@ Foam::functionObjects::nearWallFields::nearWallFields
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    fvMeshFunctionObject(name, runTime, dict),
     fieldSet_()
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 
@@ -270,11 +255,9 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
         InfoInFunction << endl;
     }
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     dict.lookup("fields") >> fieldSet_;
     patchSet_ =
-        mesh.boundaryMesh().patchSet(wordReList(dict.lookup("patches")));
+        mesh_.boundaryMesh().patchSet(wordReList(dict.lookup("patches")));
     distance_ = readScalar(dict.lookup("distance"));
 
 
@@ -343,7 +326,7 @@ bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
 
     Info<< type() << " " << name() << " output:" << nl;
 
-    Info<< "    Sampling fields to " << obr_.time().timeName()
+    Info<< "    Sampling fields to " << time_.timeName()
         << endl;
 
     sampleFields(vsf_);
@@ -363,7 +346,7 @@ bool Foam::functionObjects::nearWallFields::write(const bool postProcess)
         InfoInFunction << endl;
     }
 
-    Info<< "    Writing sampled fields to " << obr_.time().timeName()
+    Info<< "    Writing sampled fields to " << time_.timeName()
         << endl;
 
     forAll(vsf_, i)

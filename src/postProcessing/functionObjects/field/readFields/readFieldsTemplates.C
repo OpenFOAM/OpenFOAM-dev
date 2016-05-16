@@ -59,13 +59,11 @@ void Foam::functionObjects::readFields::loadField
     }
     else
     {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
         IOobject fieldHeader
         (
             fieldName,
-            mesh.time().timeName(),
-            mesh,
+            mesh_.time().timeName(),
+            mesh_,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         );
@@ -80,7 +78,7 @@ void Foam::functionObjects::readFields::loadField
             Info<< "    Reading " << fieldName << endl;
             label sz = vflds.size();
             vflds.setSize(sz+1);
-            vflds.set(sz, new vfType(fieldHeader, mesh));
+            vflds.set(sz, new vfType(fieldHeader, mesh_));
         }
         else if
         (
@@ -92,7 +90,7 @@ void Foam::functionObjects::readFields::loadField
             Info<< "    Reading " << fieldName << endl;
             label sz = sflds.size();
             sflds.setSize(sz+1);
-            sflds.set(sz, new sfType(fieldHeader, mesh));
+            sflds.set(sz, new sfType(fieldHeader, mesh_));
         }
     }
 }

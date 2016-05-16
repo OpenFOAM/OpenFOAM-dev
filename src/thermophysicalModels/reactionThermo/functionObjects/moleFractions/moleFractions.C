@@ -51,12 +51,11 @@ template<class ThermoType>
 Foam::moleFractions<ThermoType>::moleFractions
 (
     const word& name,
-    const Time& t,
+    const Time& runTime,
     const dictionary& dict
 )
 :
-    writeFiles(name, t, dict, typeName),
-    mesh_(refCast<const fvMesh>(obr_))
+    fvMeshFunctionObject(name, runTime, dict)
 {
     if (mesh_.foundObject<ThermoType>(basicThermo::dictName))
     {

@@ -35,6 +35,9 @@ Description
         Q = 0.5(sqr(tr(\nabla U)) - tr(((\nabla U) \cdot (\nabla U))))
     \f]
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     Q.C
 
@@ -43,17 +46,13 @@ SourceFiles
 #ifndef functionObjects_Q_H
 #define functionObjects_Q_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -63,12 +62,9 @@ namespace functionObjects
 
 class Q
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the database
-        const objectRegistry& obr_;
 
         //- Name of velocity field, default is "U"
         word UName_;

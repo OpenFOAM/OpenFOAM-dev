@@ -30,6 +30,9 @@ Group
 Description
     This function object calculates the vorticity, the curl of the velocity.
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     vorticity.C
 
@@ -38,17 +41,13 @@ SourceFiles
 #ifndef functionObjects_vorticity_H
 #define functionObjects_vorticity_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -58,12 +57,9 @@ namespace functionObjects
 
 class vorticity
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the database
-        const objectRegistry& obr_;
 
         //- Name of velocity field, default is "U"
         word UName_;

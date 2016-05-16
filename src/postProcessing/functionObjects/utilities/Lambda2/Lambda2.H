@@ -32,6 +32,9 @@ Description
     of the sum of the square of the symmetrical and anti-symmetrical parts of
     the velocity gradient tensor.
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     Lambda2.C
 
@@ -40,17 +43,13 @@ SourceFiles
 #ifndef functionObjects_Lambda2_H
 #define functionObjects_Lambda2_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -60,12 +59,9 @@ namespace functionObjects
 
 class Lambda2
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the database
-        const objectRegistry& obr_;
 
         //- Name of velocity field, default is "U"
         word UName_;

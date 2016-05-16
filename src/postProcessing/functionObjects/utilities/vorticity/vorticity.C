@@ -55,26 +55,10 @@ Foam::functionObjects::vorticity::vorticity
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
-    UName_("U"),
+    fvMeshFunctionObject(name, runTime, dict),
     outputName_(typeName)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volVectorField* vorticityPtr
     (
@@ -83,17 +67,17 @@ Foam::functionObjects::vorticity::vorticity
             IOobject
             (
                 outputName_,
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedVector("0", dimless/dimTime, Zero)
         )
     );
 
-    mesh.objectRegistry::store(vorticityPtr);
+    mesh_.objectRegistry::store(vorticityPtr);
 }
 
 
@@ -119,11 +103,11 @@ bool Foam::functionObjects::vorticity::read(const dictionary& dict)
 
 bool Foam::functionObjects::vorticity::execute(const bool postProcess)
 {
-    const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
+    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
     volVectorField& vorticity = const_cast<volVectorField&>
     (
-        obr_.lookupObject<volVectorField>(outputName_)
+        mesh_.lookupObject<volVectorField>(outputName_)
     );
 
     vorticity = fvc::curl(U);
@@ -135,7 +119,7 @@ bool Foam::functionObjects::vorticity::execute(const bool postProcess)
 bool Foam::functionObjects::vorticity::write(const bool postProcess)
 {
     const volVectorField& vorticity =
-        obr_.lookupObject<volVectorField>(outputName_);
+        mesh_.lookupObject<volVectorField>(outputName_);
 
     Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << vorticity.name() << nl

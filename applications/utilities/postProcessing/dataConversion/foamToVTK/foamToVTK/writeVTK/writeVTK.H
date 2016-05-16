@@ -54,7 +54,7 @@ Description
     \endtable
 
 SeeAlso
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::timeControl
 
 SourceFiles
@@ -66,18 +66,13 @@ SourceFiles
 #ifndef functionObjects_writeVTK_H
 #define functionObjects_writeVTK_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "wordReList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class Time;
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -87,15 +82,9 @@ namespace functionObjects
 
 class writeVTK
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the Time
-        const Time& time_;
-
-        //- Refererence to objectRegistry
-        const objectRegistry& obr_;
 
         //- Names of objects
         wordReList objectNames_;

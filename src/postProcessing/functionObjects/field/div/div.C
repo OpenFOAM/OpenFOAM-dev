@@ -131,10 +131,10 @@ bool Foam::functionObjects::div::execute(const bool postProcess)
 
 bool Foam::functionObjects::div::write(const bool postProcess)
 {
-    if (obr_.foundObject<regIOobject>(resultName_))
+    if (mesh_.foundObject<regIOobject>(resultName_))
     {
         const regIOobject& field =
-            obr_.lookupObject<regIOobject>(resultName_);
+            mesh_.lookupObject<regIOobject>(resultName_);
 
         Info<< type() << " " << name() << " output:" << nl
             << "    writing field " << field.name() << nl << endl;

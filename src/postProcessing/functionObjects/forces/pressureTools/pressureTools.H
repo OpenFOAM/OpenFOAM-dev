@@ -100,6 +100,9 @@ Description
         rhoInf       | Freestream density for coefficient calculation | no |
     \endtable
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     pressureTools.C
 
@@ -108,7 +111,7 @@ SourceFiles
 #ifndef functionObjects_pressureTools_H
 #define functionObjects_pressureTools_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 #include "dimensionedScalar.H"
 
@@ -116,10 +119,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -129,12 +128,9 @@ namespace functionObjects
 
 class pressureTools
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Name of pressure field, default is "p"
         word pName_;

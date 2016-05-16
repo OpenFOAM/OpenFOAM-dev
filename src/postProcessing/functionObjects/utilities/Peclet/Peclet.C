@@ -59,26 +59,9 @@ Foam::functionObjects::Peclet::Peclet
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
-    phiName_("phi"),
-    rhoName_("rho")
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     surfaceScalarField* PecletPtr
     (
@@ -87,17 +70,17 @@ Foam::functionObjects::Peclet::Peclet
             IOobject
             (
                 type(),
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("0", dimless, 0.0)
         )
     );
 
-    mesh.objectRegistry::store(PecletPtr);
+    mesh_.objectRegistry::store(PecletPtr);
 }
 
 
@@ -123,39 +106,37 @@ bool Foam::functionObjects::Peclet::execute(const bool postProcess)
     typedef compressible::turbulenceModel cmpTurbModel;
     typedef incompressible::turbulenceModel icoTurbModel;
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     tmp<volScalarField> nuEff;
-    if (mesh.foundObject<cmpTurbModel>(turbulenceModel::propertiesName))
+    if (mesh_.foundObject<cmpTurbModel>(turbulenceModel::propertiesName))
     {
         const cmpTurbModel& model =
-            mesh.lookupObject<cmpTurbModel>
+            mesh_.lookupObject<cmpTurbModel>
             (
                 turbulenceModel::propertiesName
             );
 
         const volScalarField& rho =
-            mesh.lookupObject<volScalarField>(rhoName_);
+            mesh_.lookupObject<volScalarField>(rhoName_);
 
         nuEff = model.muEff()/rho;
     }
     else if
     (
-        mesh.foundObject<icoTurbModel>(turbulenceModel::propertiesName)
+        mesh_.foundObject<icoTurbModel>(turbulenceModel::propertiesName)
     )
     {
         const icoTurbModel& model =
-            mesh.lookupObject<icoTurbModel>
+            mesh_.lookupObject<icoTurbModel>
             (
                 turbulenceModel::propertiesName
             );
 
         nuEff = model.nuEff();
     }
-    else if (mesh.foundObject<dictionary>("transportProperties"))
+    else if (mesh_.foundObject<dictionary>("transportProperties"))
     {
         const dictionary& model =
-            mesh.lookupObject<dictionary>("transportProperties");
+            mesh_.lookupObject<dictionary>("transportProperties");
 
         nuEff =
             tmp<volScalarField>
@@ -165,12 +146,12 @@ bool Foam::functionObjects::Peclet::execute(const bool postProcess)
                     IOobject
                     (
                         "nuEff",
-                        mesh.time().timeName(),
-                        mesh,
+                        mesh_.time().timeName(),
+                        mesh_,
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    mesh,
+                    mesh_,
                     dimensionedScalar(model.lookup("nu"))
                 )
             );
@@ -183,19 +164,19 @@ bool Foam::functionObjects::Peclet::execute(const bool postProcess)
     }
 
     const surfaceScalarField& phi =
-        mesh.lookupObject<surfaceScalarField>(phiName_);
+        mesh_.lookupObject<surfaceScalarField>(phiName_);
 
     surfaceScalarField& Peclet =
         const_cast<surfaceScalarField&>
         (
-            mesh.lookupObject<surfaceScalarField>(type())
+            mesh_.lookupObject<surfaceScalarField>(type())
         );
 
     Peclet =
         mag(phi)
        /(
-            mesh.magSf()
-           *mesh.surfaceInterpolation::deltaCoeffs()
+            mesh_.magSf()
+           *mesh_.surfaceInterpolation::deltaCoeffs()
            *fvc::interpolate(nuEff)
         );
 
@@ -206,7 +187,7 @@ bool Foam::functionObjects::Peclet::execute(const bool postProcess)
 bool Foam::functionObjects::Peclet::write(const bool postProcess)
 {
     const surfaceScalarField& Peclet =
-        obr_.lookupObject<surfaceScalarField>(type());
+        mesh_.lookupObject<surfaceScalarField>(type());
 
     Info<< type() << " " << name() << " output:" << nl
         << "    writing field " << Peclet.name() << nl

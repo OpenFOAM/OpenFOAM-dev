@@ -75,26 +75,9 @@ Foam::functionObjects::CourantNo::CourantNo
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
-    phiName_("phi"),
-    rhoName_("rho")
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volScalarField* CourantNoPtr
     (
@@ -103,18 +86,18 @@ Foam::functionObjects::CourantNo::CourantNo
             IOobject
             (
                 type(),
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("0", dimless, 0.0),
             zeroGradientFvPatchScalarField::typeName
         )
     );
 
-    mesh.objectRegistry::store(CourantNoPtr);
+    mesh_.objectRegistry::store(CourantNoPtr);
 }
 
 
@@ -137,21 +120,19 @@ bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
 
 bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     const surfaceScalarField& phi =
-        mesh.lookupObject<surfaceScalarField>(phiName_);
+        mesh_.lookupObject<surfaceScalarField>(phiName_);
 
     volScalarField& Co = const_cast<volScalarField&>
     (
-        mesh.lookupObject<volScalarField>(type())
+        mesh_.lookupObject<volScalarField>(type())
     );
 
     Co.ref() = byRho
     (
-        (0.5*mesh.time().deltaT())
+        (0.5*mesh_.time().deltaT())
        *fvc::surfaceSum(mag(phi))()()
-       /mesh.V()
+       /mesh_.V()
     );
     Co.correctBoundaryConditions();
 

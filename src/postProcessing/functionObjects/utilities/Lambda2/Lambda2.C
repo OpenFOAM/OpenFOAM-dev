@@ -56,25 +56,9 @@ Foam::functionObjects::Lambda2::Lambda2
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
-    UName_("U")
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volScalarField* Lambda2Ptr
     (
@@ -83,17 +67,17 @@ Foam::functionObjects::Lambda2::Lambda2
             IOobject
             (
                 type(),
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
         )
     );
 
-    mesh.objectRegistry::store(Lambda2Ptr);
+    mesh_.objectRegistry::store(Lambda2Ptr);
 }
 
 
@@ -115,10 +99,8 @@ bool Foam::functionObjects::Lambda2::read(const dictionary& dict)
 
 bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
 {
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     const volVectorField& U =
-        mesh.lookupObject<volVectorField>(UName_);
+        mesh_.lookupObject<volVectorField>(UName_);
 
     const volTensorField gradU(fvc::grad(U));
 
@@ -131,7 +113,7 @@ bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
     volScalarField& Lambda2 =
         const_cast<volScalarField&>
         (
-            mesh.lookupObject<volScalarField>(type())
+            mesh_.lookupObject<volScalarField>(type())
         );
 
     Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);

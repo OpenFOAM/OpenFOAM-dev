@@ -48,7 +48,7 @@ Description
     \endtable
 
 SeeAlso
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
     processorField.C
@@ -58,16 +58,12 @@ SourceFiles
 #ifndef functionObjects_processorField_H
 #define functionObjects_processorField_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -77,18 +73,8 @@ namespace functionObjects
 
 class processorField
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
-protected:
-
-    // Protected data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
-
-
-private:
-
     // Private member functions
 
         //- Disallow default bitwise copy construct

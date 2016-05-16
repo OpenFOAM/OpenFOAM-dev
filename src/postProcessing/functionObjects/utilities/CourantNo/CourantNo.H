@@ -32,6 +32,9 @@ Description
     volScalarField.  The field is stored on the mesh database so that it can
     be retrieved and used for other applications.
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     CourantNo.C
 
@@ -40,7 +43,7 @@ SourceFiles
 #ifndef functionObjects_CourantNo_H
 #define functionObjects_CourantNo_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,12 +59,9 @@ namespace functionObjects
 
 class CourantNo
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the database
-        const objectRegistry& obr_;
 
         //- Name of flux field, default is "phi"
         word phiName_;

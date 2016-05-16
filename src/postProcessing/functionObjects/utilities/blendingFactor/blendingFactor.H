@@ -33,8 +33,7 @@ Description
     value is calculated via the maximum blending factor for any cell face.
 
 SeeAlso
-    Foam::fvMeshFunctionObject
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
     blendingFactor.C

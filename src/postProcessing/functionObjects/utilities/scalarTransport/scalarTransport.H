@@ -39,6 +39,9 @@ Description
     - the diffusivity can be set manually using the DT entry, or retrieved
       from the turbulence model (if applicable)
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     scalarTransport.C
 
@@ -47,7 +50,7 @@ SourceFiles
 #ifndef functionObjects_scalarTransport_H
 #define functionObjects_scalarTransport_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFields.H"
 #include "surfaceFieldsFwd.H"
 #include "fvOptionList.H"
@@ -56,10 +59,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -69,12 +68,9 @@ namespace functionObjects
 
 class scalarTransport
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Reference to the mesh database
-        const fvMesh& mesh_;
 
         //- Name of flux field (optional)
         word phiName_;

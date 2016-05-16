@@ -32,6 +32,9 @@ Description
     limited to surfaceScalarFields and volVectorFields, and the output is a
     volScalarField.
 
+SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     div.C
 
@@ -62,7 +65,7 @@ class div
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private member data
 
         //- Name of field to process
         word fieldName_;
