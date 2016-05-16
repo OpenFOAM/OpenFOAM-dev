@@ -33,7 +33,7 @@ SourceFiles
 #ifndef functionObjectTemplate_H
 #define functionObjectTemplate_H
 
-#include "functionObject.H"
+#include "regionFunctionObject.H"
 
 //{{{ begin codeInclude
 ${codeInclude}
@@ -45,7 +45,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class objectRegistry;
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
@@ -54,12 +53,9 @@ class fvMesh;
 
 class ${typeName}FunctionObject
 :
-    public functionObject
+    public functionObjects::regionFunctionObject
 {
     // Private data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
 //{{{ begin codeData
         ${codeData}
@@ -67,8 +63,6 @@ class ${typeName}FunctionObject
 
 
     // Private Member Functions
-
-        const objectRegistry& obr() const;
 
         const fvMesh& mesh() const;
 

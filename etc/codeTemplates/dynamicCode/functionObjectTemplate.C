@@ -77,12 +77,6 @@ ${localCode}
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const objectRegistry& ${typeName}FunctionObject::obr() const
-{
-    return obr_;
-}
-
-
 const fvMesh& ${typeName}FunctionObject::mesh() const
 {
     return refCast<const fvMesh>(obr_);
@@ -98,14 +92,7 @@ ${typeName}FunctionObject::${typeName}FunctionObject
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    )
+    functionObjects::regionFunctionObject(name, runTime, dict)
 {
     read(dict);
 }
