@@ -73,7 +73,7 @@ functions
     cuttingPlane
     {
         type            surfaces;
-        functionObjectLibs ( "libsampling.so" );
+        libs ( "libsampling.so" );
         writeControl   writeTime;
         surfaceFormat   vtk;
         fields          ( p U );
@@ -96,7 +96,7 @@ functions
     forces
     {
         type            forceCoeffs;
-        functionObjectLibs ( "libforces.so" );
+        libs ( "libforces.so" );
         writeControl   timeStep;
         writeInterval  1;
         patches         ( "motorBike.*" );

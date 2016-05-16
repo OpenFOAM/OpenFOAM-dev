@@ -43,7 +43,7 @@ Description
     nearWallFields1
     {
         type        nearWallFields;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         fields      ((p pNear)(U UNear));
         patches     (movingWall);

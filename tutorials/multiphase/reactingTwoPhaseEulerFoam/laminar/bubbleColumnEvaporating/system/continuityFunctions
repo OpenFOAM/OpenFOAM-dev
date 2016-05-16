@@ -9,7 +9,7 @@
 inletMassFlowRate
 {
     type            faceSource;
-    functionObjectLibs ("libfieldFunctionObjects.so");
+    libs ("libfieldFunctionObjects.so");
 
     fields
     (
@@ -32,7 +32,7 @@ inletMassFlowRate
 outletMassFlowRate
 {
     type            faceSource;
-    functionObjectLibs ("libfieldFunctionObjects.so");
+    libs ("libfieldFunctionObjects.so");
 
     fields
     (
@@ -55,7 +55,7 @@ outletMassFlowRate
 totalMass
 {
     type            coded;
-    functionObjectLibs ("libutilityFunctionObjects.so");
+    libs ("libutilityFunctionObjects.so");
     redirectType    error;
 
     code

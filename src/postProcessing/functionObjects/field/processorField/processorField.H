@@ -36,7 +36,7 @@ Description
     processorField1
     {
         type        processorField;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
     }
     \endverbatim

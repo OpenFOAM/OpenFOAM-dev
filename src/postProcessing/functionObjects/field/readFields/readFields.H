@@ -36,7 +36,7 @@ Description
     readFields1
     {
         type        readFields;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         fields
         (

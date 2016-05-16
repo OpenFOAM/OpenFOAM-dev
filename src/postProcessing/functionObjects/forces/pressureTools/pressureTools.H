@@ -81,7 +81,7 @@ Description
     pressureTools1
     {
         type        pressureTools;
-        functionObjectLibs ("libutilityFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
         ...
         calcTotal   no;
         calcCoeff   yes;

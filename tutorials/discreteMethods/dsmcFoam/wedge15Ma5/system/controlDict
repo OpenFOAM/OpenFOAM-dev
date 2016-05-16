@@ -52,7 +52,7 @@ functions
     fieldAverage1
     {
         type            fieldAverage;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs ( "libfieldFunctionObjects.so" );
         writeControl   writeTime;
 
         fields
@@ -117,7 +117,7 @@ functions
     dsmcFields1
     {
         type            dsmcFields;
-        functionObjectLibs ( "libutilityFunctionObjects.so" );
+        libs ( "libutilityFunctionObjects.so" );
         enabled         true;
         writeControl   writeTime;
     }
@@ -126,7 +126,7 @@ functions
     {
         type            forces;
         enabled         true;
-        functionObjectLibs ( "libforces.so" );
+        libs ( "libforces.so" );
         writeControl   writeTime;
         patches         ( obstacle );
         directForceDensity true;

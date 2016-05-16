@@ -56,7 +56,7 @@ functions
     probes
     {
         type            probes;
-        functionObjectLibs ("libsampling.so");
+        libs ("libsampling.so");
         writeControl   timeStep;
         writeInterval  1;
         probeLocations

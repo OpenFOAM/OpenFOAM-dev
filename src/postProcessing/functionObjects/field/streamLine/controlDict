@@ -51,7 +51,7 @@ functions
         type            streamLine;
 
         // Where to load it from (if not already in solver)
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
 
         // Output every
         writeControl   writeTime;

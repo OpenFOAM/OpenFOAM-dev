@@ -9,7 +9,7 @@
 streamLines
 {
     // Where to load it from
-    functionObjectLibs ("libfieldFunctionObjects.so");
+    libs ("libfieldFunctionObjects.so");
 
     type            streamLine;
 

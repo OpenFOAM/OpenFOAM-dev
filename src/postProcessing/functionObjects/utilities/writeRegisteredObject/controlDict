@@ -58,7 +58,7 @@ functions
         type            partialWrite;
 
         // Where to load it from
-        functionObjectLibs ("libIOFunctionObjects.so");
+        libs ("libIOFunctionObjects.so");
 
         // Optional mesh region to operate on. Only one partialWrite per
         // region allowed.
@@ -91,7 +91,7 @@ functions
         type            writeRegisteredObject;
 
         // Where to load it from
-        functionObjectLibs ("libIOFunctionObjects.so");
+        libs ("libIOFunctionObjects.so");
 
         // When to write:
         //  timeStep            (with optional writeInterval)

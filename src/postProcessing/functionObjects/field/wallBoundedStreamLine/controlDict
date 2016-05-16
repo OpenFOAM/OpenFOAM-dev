@@ -49,7 +49,7 @@ functions
     readFields
     {
         // Where to load it from (if not already in solver)
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
 
         type            readFields;
         fields          (p U k);
@@ -58,7 +58,7 @@ functions
     near
     {
         // Where to load it from
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
 
         type nearWallFields;
 
@@ -82,7 +82,7 @@ functions
     streamLines
     {
         // Where to load it from (if not already in solver)
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         type            wallBoundedStreamLine;
 
         // Output every

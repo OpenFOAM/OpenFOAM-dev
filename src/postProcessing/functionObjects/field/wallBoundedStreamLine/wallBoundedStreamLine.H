@@ -37,7 +37,7 @@ Description
     wallBoundedStreamLine1
     {
         type            wallBoundedStreamLine;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         setFormat       vtk;
         UName           UNear;

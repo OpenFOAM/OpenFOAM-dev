@@ -43,7 +43,7 @@ Description
     surfaceInterpolateFields1
     {
         type        surfaceInterpolateFields;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         fields      ((p pNear)(U UNear));
     }

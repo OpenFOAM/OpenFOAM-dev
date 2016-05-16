@@ -43,7 +43,7 @@ Description
     turbulenceFields1
     {
         type        turbulenceFields;
-        functionObjectLibs ("libutilityFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
         ...
         fields
         (

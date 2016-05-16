@@ -42,7 +42,7 @@ Description
     faceSource1
     {
         type            faceSource;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         log             yes;
         valueOutput     true;

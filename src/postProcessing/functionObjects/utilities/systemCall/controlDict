@@ -49,7 +49,7 @@ functions
     systemCall1
     {
         type            systemCall;
-        functionObjectLibs ("libsystemCall.so");
+        libs ("libsystemCall.so");
         enabled         true;
         writeControl   writeTime;
 

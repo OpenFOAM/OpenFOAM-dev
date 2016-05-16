@@ -52,7 +52,7 @@ functions
     fieldAverage1
     {
         type            fieldAverage;
-        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        libs ( "libfieldFunctionObjects.so" );
         writeControl   writeTime;
         restartOnOutput   off;
 
@@ -117,7 +117,7 @@ functions
     dsmcFields1
     {
         type            dsmcFields;
-        functionObjectLibs ( "libutilityFunctionObjects.so" );
+        libs ( "libutilityFunctionObjects.so" );
         enabled         true;
         writeControl   writeTime;
     }

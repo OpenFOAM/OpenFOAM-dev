@@ -10,7 +10,7 @@ forces
 {
     type        forces;
 
-    functionObjectLibs ( "libforces.so" );
+    libs ( "libforces.so" );
 
     writeControl   timeStep;
     timeInterval    1;

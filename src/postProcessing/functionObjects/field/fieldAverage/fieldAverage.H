@@ -67,7 +67,7 @@ Description
     fieldAverage1
     {
         type fieldAverage;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         restartOnRestart    false;
         restartOnOutput     false;

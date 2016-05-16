@@ -61,12 +61,24 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
         Info<< "Selecting function " << functionType << endl;
     }
 
-    const_cast<Time&>(t).libs().open
-    (
-        dict,
-        "functionObjectLibs",
-        dictionaryConstructorTablePtr_
-    );
+    if (dict.found("functionObjectLibs"))
+    {
+        const_cast<Time&>(t).libs().open
+        (
+            dict,
+            "functionObjectLibs",
+            dictionaryConstructorTablePtr_
+        );
+    }
+    else
+    {
+        const_cast<Time&>(t).libs().open
+        (
+            dict,
+            "libs",
+            dictionaryConstructorTablePtr_
+        );
+    }
 
     if (!dictionaryConstructorTablePtr_)
     {

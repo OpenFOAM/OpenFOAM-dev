@@ -1,3 +1,4 @@
 cloudInfo/cloudInfo.C
+icoUncoupledKinematicCloud/icoUncoupledKinematicCloud.C
 
 LIB = $(FOAM_LIBBIN)/liblagrangianFunctionObjects

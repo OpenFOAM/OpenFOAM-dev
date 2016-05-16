@@ -64,12 +64,6 @@ void Foam::functionObjects::writeFiles::createFiles()
 }
 
 
-void Foam::functionObjects::writeFiles::write()
-{
-    createFiles();
-}
-
-
 void Foam::functionObjects::writeFiles::resetNames(const wordList& names)
 {
     names_.clear();
@@ -197,6 +191,14 @@ Foam::OFstream& Foam::functionObjects::writeFiles::file(const label i)
     }
 
     return filePtrs_[i];
+}
+
+
+bool Foam::functionObjects::writeFiles::write(const bool postProcess)
+{
+    createFiles();
+
+    return true;
 }
 
 

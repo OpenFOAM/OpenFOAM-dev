@@ -37,7 +37,7 @@ Description
     partialWrite1
     {
         type        partialWrite;
-        functionObjectLibs ("libIOFunctionObjects.so");
+        libs ("libIOFunctionObjects.so");
         ...
         objectNames (p U T);
         writeInterval 100;

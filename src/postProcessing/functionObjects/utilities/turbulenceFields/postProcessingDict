@@ -19,7 +19,7 @@ functions
     turbulenceFields1
     {
         type            turbulenceFields;
-        functionObjectLibs ("libutilityFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
         enabled         true;
         writeControl   timeStep;
         writeInterval  1;

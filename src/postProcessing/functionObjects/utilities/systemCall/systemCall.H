@@ -40,7 +40,7 @@ Description
     systemCall1
     {
         type        systemCall;
-        functionObjectLibs ("libsystemCall.so");
+        libs ("libsystemCall.so");
         ...
         executeCalls
         (

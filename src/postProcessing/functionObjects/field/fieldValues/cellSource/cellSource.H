@@ -39,7 +39,7 @@ Description
     cellSource1
     {
         type            cellSource;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         log             true;
         valueOutput     true;

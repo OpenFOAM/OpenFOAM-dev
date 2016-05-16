@@ -53,7 +53,7 @@ functions
 {
     probes
     {
-        functionObjectLibs ( "libsampling.so" );
+        libs ( "libsampling.so" );
         type probes;
         name probes;
         writeControl timeStep;

@@ -37,7 +37,7 @@ Description
     fieldCoordinateSystemTransform1
     {
         type        fieldCoordinateSystemTransform;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         fields
         (

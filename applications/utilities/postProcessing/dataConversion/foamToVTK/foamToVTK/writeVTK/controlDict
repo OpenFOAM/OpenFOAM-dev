@@ -55,7 +55,7 @@ functions
         type            writeVTK;
 
         // Where to load it from
-        functionObjectLibs ("libfoamToVTK.so");
+        libs ("libfoamToVTK.so");
 
         // When to write:
         //  timeStep            (with optional writeInterval)

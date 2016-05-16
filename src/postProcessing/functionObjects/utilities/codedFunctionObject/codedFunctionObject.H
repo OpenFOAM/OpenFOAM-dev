@@ -48,7 +48,7 @@ Description
     \verbatim
     difference
     {
-        functionObjectLibs ("libutilityFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
 
         type coded;
         // Name of on-the-fly generated functionObject

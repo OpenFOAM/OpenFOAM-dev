@@ -74,9 +74,6 @@ protected:
         //- Create the output file
         virtual void createFiles();
 
-        //- Write function
-        virtual void write();
-
         //- Reset the list of names from a wordList
         virtual void resetNames(const wordList& names);
 
@@ -130,6 +127,9 @@ public:
 
         //- Return file 'i'
         OFstream& file(const label i);
+
+        //- Write function
+        virtual bool write(const bool postProcess = false);
 };
 
 

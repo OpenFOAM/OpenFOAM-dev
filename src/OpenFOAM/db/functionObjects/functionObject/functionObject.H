@@ -46,7 +46,7 @@ Description
             myFunctionObject    // Name of functionObject entry
             {
                 type                functionObjectType;
-                functionObjectLibs  ("libMyFunctionObjectlib.so");
+                libs  ("libMyFunctionObjectlib.so");
                 region              defaultRegion;
                 enabled             yes;
                 timeStart           0;
@@ -62,7 +62,7 @@ Description
     \table
         Property | Description                       | Required | Default value
         type     | Type of function object               | yes      |
-        functionObjectLibs | Libraries containing implementation | yes |
+        libs | Libraries containing implementation | yes |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
         timeStart| Start time                            | no       |

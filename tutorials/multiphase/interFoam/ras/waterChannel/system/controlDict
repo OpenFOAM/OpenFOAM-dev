@@ -56,7 +56,7 @@ functions
     inletFlux
     {
         type            faceSource;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         writeControl   timeStep;
         log             true;
         // Output field values as well

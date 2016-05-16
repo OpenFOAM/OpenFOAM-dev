@@ -37,7 +37,7 @@ Description
     streamLine1
     {
         type            streamLine;
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         setFormat       vtk;
         UName           U;

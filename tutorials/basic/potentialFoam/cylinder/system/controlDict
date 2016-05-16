@@ -50,7 +50,7 @@ functions
     difference
     {
         // Load the library containing the 'coded' functionObject
-        functionObjectLibs ("libutilityFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
 
         type coded;
 

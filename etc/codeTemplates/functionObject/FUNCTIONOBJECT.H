@@ -34,7 +34,7 @@ Description
     FUNCTIONOBJECT1
     {
         type           FUNCTIONOBJECT;
-        functionObjectLibs ("libFUNCTIONOBJECTFunctionObject.so");
+        libs ("libFUNCTIONOBJECTFunctionObject.so");
         ...
         wordData       someWord;
         scalarData     1.0;

@@ -56,7 +56,7 @@ functions
     timeStep
     {
         type coded;
-        functionObjectLibs ("libutilityFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
         redirectType setDeltaT;
 
         code

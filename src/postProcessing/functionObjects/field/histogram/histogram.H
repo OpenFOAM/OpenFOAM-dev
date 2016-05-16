@@ -36,7 +36,7 @@ Description
     {
         type            histogram;
 
-        functionObjectLibs ("libfieldFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
 
         field           p;
         nBins           100;
