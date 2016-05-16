@@ -49,14 +49,7 @@ Foam::functionObjects::FUNCTIONOBJECT::FUNCTIONOBJECT
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    fvMeshFunctionObject(name, runTime, dict),
     wordData_(dict.lookupOrDefault<word>("wordData", "defaultWord")),
     scalarData_(readScalar(dict.lookup("scalarData"))),
     labelData_(readLabel(dict.lookup("labelData")))

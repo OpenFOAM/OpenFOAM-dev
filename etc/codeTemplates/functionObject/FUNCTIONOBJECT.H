@@ -59,16 +59,12 @@ SourceFiles
 #ifndef FUNCTIONOBJECT_H
 #define FUNCTIONOBJECT_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -78,23 +74,18 @@ namespace functionObjects
 
 class FUNCTIONOBJECT
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
 
-        //- Refererence to the objectRegistry
-        const objectRegistry& obr_;
+        //- word
+        word wordData_;
 
-        // Read from dictionary
+        //- scalar
+        scalar scalarData_;
 
-            //- word
-            word wordData_;
-
-            //- scalar
-            scalar scalarData_;
-
-            //- label
-            label labelData_;
+        //- label
+        label labelData_;
 
 
     // Private Member Functions
