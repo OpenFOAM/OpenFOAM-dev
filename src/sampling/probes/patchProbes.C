@@ -237,7 +237,7 @@ Foam::patchProbes::~patchProbes()
 {}
 
 
-bool Foam::patchProbes::write()
+bool Foam::patchProbes::write(const bool postProcess)
 {
     if (this->size() && prepare())
     {
