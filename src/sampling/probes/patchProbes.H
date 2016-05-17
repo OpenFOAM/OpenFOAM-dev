@@ -154,7 +154,7 @@ public:
     //- Public members
 
         //- Sample and write
-        virtual bool write(const bool postProcess);
+        virtual bool write(const bool postProcess = false);
 
         //- Read
         virtual bool read(const dictionary&);
