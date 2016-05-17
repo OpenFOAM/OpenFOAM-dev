@@ -78,9 +78,9 @@ void Foam::probes::sampleAndWrite
 
         os  << setw(w) << vField.time().timeToUserTime(vField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            os  << ' ' << setw(w) << values[probeI];
+            os  << ' ' << setw(w) << values[probei];
         }
         os  << endl;
     }
@@ -102,9 +102,9 @@ void Foam::probes::sampleAndWrite
 
         os  << setw(w) << sField.time().timeToUserTime(sField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            os  << ' ' << setw(w) << values[probeI];
+            os  << ' ' << setw(w) << values[probei];
         }
         os  << endl;
     }
@@ -233,16 +233,16 @@ Foam::probes::sample
             interpolation<Type>::New(interpolationScheme_, vField)
         );
 
-        forAll(*this, probeI)
+        forAll(*this, probei)
         {
-            if (elementList_[probeI] >= 0)
+            if (elementList_[probei] >= 0)
             {
-                const vector& position = operator[](probeI);
+                const vector& position = operator[](probei);
 
-                values[probeI] = interpolator().interpolate
+                values[probei] = interpolator().interpolate
                 (
                     position,
-                    elementList_[probeI],
+                    elementList_[probei],
                     -1
                 );
             }
@@ -250,11 +250,11 @@ Foam::probes::sample
     }
     else
     {
-        forAll(*this, probeI)
+        forAll(*this, probei)
         {
-            if (elementList_[probeI] >= 0)
+            if (elementList_[probei] >= 0)
             {
-                values[probeI] = vField[elementList_[probeI]];
+                values[probei] = vField[elementList_[probei]];
             }
         }
     }
@@ -296,11 +296,11 @@ Foam::probes::sample
 
     Field<Type>& values = tValues.ref();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        if (faceList_[probeI] >= 0)
+        if (faceList_[probei] >= 0)
         {
-            values[probeI] = sField[faceList_[probeI]];
+            values[probei] = sField[faceList_[probei]];
         }
     }
 

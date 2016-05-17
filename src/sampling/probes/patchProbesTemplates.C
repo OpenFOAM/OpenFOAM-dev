@@ -47,9 +47,9 @@ void Foam::patchProbes::sampleAndWrite
             << setw(w)
             << vField.time().timeToUserTime(vField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            probeStream << ' ' << setw(w) << values[probeI];
+            probeStream << ' ' << setw(w) << values[probei];
         }
         probeStream << endl;
     }
@@ -73,9 +73,9 @@ void Foam::patchProbes::sampleAndWrite
             << setw(w)
             << sField.time().timeToUserTime(sField.time().value());
 
-        forAll(values, probeI)
+        forAll(values, probei)
         {
-            probeStream << ' ' << setw(w) << values[probeI];
+            probeStream << ' ' << setw(w) << values[probei];
         }
         probeStream << endl;
     }
@@ -206,15 +206,15 @@ Foam::patchProbes::sample
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        label facei = elementList_[probeI];
+        label facei = elementList_[probei];
 
         if (facei >= 0)
         {
             label patchi = patches.whichPatch(facei);
             label localFacei = patches[patchi].whichFace(facei);
-            values[probeI] = vField.boundaryField()[patchi][localFacei];
+            values[probei] = vField.boundaryField()[patchi][localFacei];
         }
     }
 
@@ -257,15 +257,15 @@ Foam::patchProbes::sample
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    forAll(*this, probeI)
+    forAll(*this, probei)
     {
-        label facei = elementList_[probeI];
+        label facei = elementList_[probei];
 
         if (facei >= 0)
         {
             label patchi = patches.whichPatch(facei);
             label localFacei = patches[patchi].whichFace(facei);
-            values[probeI] = sField.boundaryField()[patchi][localFacei];
+            values[probei] = sField.boundaryField()[patchi][localFacei];
         }
     }
 
