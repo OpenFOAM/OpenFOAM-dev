@@ -28,19 +28,19 @@ Group
     grpLagrangianFunctionObjects
 
 Description
-    This Foam::functionObject tracks a uncoupled kinematic particle cloud in the
+    This functionObject tracks a uncoupled kinematic particle cloud in the
     specified velocity field of an incompressible flow (laminar, RANS or LES).
 
     It may be used in conjunction with any transient single-phase incompressible
-    flow solver such as \c pisoFoam or \c pimpleFoam and tracks the particles or
+    flow solver such as pisoFoam or pimpleFoam and tracks the particles or
     parcels without affecting the the flow-field.
 
-    The \c kinematicCloud requires the the density of the fluid which is
-    looked-up from \c constant/transportProperties dictionary and the
-    acceleration due to gravity which is read from the \c constant/g file if
-    present or defaults to zero.
+    The kinematicCloud requires the the density of the fluid which is looked-up
+    from constant/transportProperties dictionary and the acceleration due to
+    gravity which is read from the constant/g file if present or defaults to
+    zero.
 
-    The \c kinematicCloud properties are read from the \c
+    The kinematicCloud properties are read from the
     constant/kinematicCloudProperties dictionary in the usual manner.
 
     Example of function object specification:
