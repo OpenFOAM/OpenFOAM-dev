@@ -410,6 +410,39 @@ void Foam::Time::readModifiedObjects()
 }
 
 
+bool Foam::Time::writeTimeDict() const
+{
+    const word tmName(timeName());
+
+    IOdictionary timeDict
+    (
+        IOobject
+        (
+            "time",
+            tmName,
+            "uniform",
+            *this,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
+    timeDict.add("value", timeName(timeToUserTime(value()), maxPrecision_));
+    timeDict.add("name", string(tmName));
+    timeDict.add("index", timeIndex_);
+    timeDict.add("deltaT", timeToUserTime(deltaT_));
+    timeDict.add("deltaT0", timeToUserTime(deltaT0_));
+
+    return timeDict.regIOobject::writeObject
+    (
+        IOstream::ASCII,
+        IOstream::currentVersion,
+        IOstream::UNCOMPRESSED
+    );
+}
+
+
 bool Foam::Time::writeObject
 (
     IOstream::streamFormat fmt,
@@ -419,37 +452,19 @@ bool Foam::Time::writeObject
 {
     if (writeTime())
     {
-        const word tmName(timeName());
+        bool writeOK = writeTimeDict();
 
-        IOdictionary timeDict
-        (
-            IOobject
-            (
-                "time",
-                tmName,
-                "uniform",
-                *this,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            )
-        );
-
-        timeDict.add("value", timeName(timeToUserTime(value()), maxPrecision_));
-        timeDict.add("name", string(tmName));
-        timeDict.add("index", timeIndex_);
-        timeDict.add("deltaT", timeToUserTime(deltaT_));
-        timeDict.add("deltaT0", timeToUserTime(deltaT0_));
-
-        timeDict.regIOobject::writeObject(fmt, ver, cmp);
-        bool writeOK = objectRegistry::writeObject(fmt, ver, cmp);
+        if (writeOK)
+        {
+            writeOK = objectRegistry::writeObject(fmt, ver, cmp);
+        }
 
         if (writeOK)
         {
             // Does the writeTime trigger purging?
             if (writeTime_ && purgeWrite_)
             {
-                previousWriteTimes_.push(tmName);
+                previousWriteTimes_.push(timeName());
 
                 while (previousWriteTimes_.size() > purgeWrite_)
                 {

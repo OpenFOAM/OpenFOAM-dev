@@ -103,6 +103,11 @@ bool Foam::functionObjects::writeRegisteredObject::write
 {
     Info<< type() << " " << name() << " output:" << nl;
 
+    if (!obr_.time().writeTime())
+    {
+        obr_.time().writeTimeDict();
+    }
+
     DynamicList<word> allNames(obr_.toc().size());
     forAll(objectNames_, i)
     {

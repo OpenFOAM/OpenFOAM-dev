@@ -372,6 +372,9 @@ public:
                 const word& constantName = "constant"
             );
 
+            //- Write time dictionary to the <time>/uniform directory
+            virtual bool writeTimeDict() const;
+
             //- Write using given format, version and compression
             virtual bool writeObject
             (
