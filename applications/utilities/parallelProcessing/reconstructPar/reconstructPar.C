@@ -91,6 +91,11 @@ int main(int argc, char *argv[])
         "specify a list of fields to be reconstructed. Eg, '(U T p)' - "
         "regular expressions not currently supported"
     );
+    argList::addBoolOption
+    (
+        "noFields",
+        "skip reconstructing fields"
+    );
     argList::addOption
     (
         "lagrangianFields",
@@ -122,6 +127,14 @@ int main(int argc, char *argv[])
     if (args.optionFound("fields"))
     {
         args.optionLookup("fields")() >> selectedFields;
+    }
+
+    const bool noFields = args.optionFound("noFields");
+
+    if (noFields)
+    {
+        Info<< "Skipping reconstructing fields"
+            << nl << endl;
     }
 
     const bool noLagrangian = args.optionFound("noLagrangian");
@@ -368,6 +381,7 @@ int main(int argc, char *argv[])
                 databases[0].timeName()
             );
 
+            if (!noFields)
             {
                 // If there are any FV fields, reconstruct them
                 Info<< "Reconstructing FV fields" << nl << endl;
@@ -466,6 +480,7 @@ int main(int argc, char *argv[])
                 }
             }
 
+            if (!noFields)
             {
                 Info<< "Reconstructing point fields" << nl << endl;
 
@@ -744,130 +759,162 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                // Construct all sets
-                PtrList<cellSet> cellSets(cSetNames.size());
-                PtrList<faceSet> faceSets(fSetNames.size());
-                PtrList<pointSet> pointSets(pSetNames.size());
-
-                Info<< "Reconstructing sets:" << endl;
-                if (cSetNames.size())
+                if (cSetNames.size() || fSetNames.size() || pSetNames.size())
                 {
-                    Info<< "    cellSets " << cSetNames.sortedToc() << endl;
-                }
-                if (fSetNames.size())
-                {
-                    Info<< "    faceSets " << fSetNames.sortedToc() << endl;
-                }
-                if (pSetNames.size())
-                {
-                    Info<< "    pointSets " << pSetNames.sortedToc() << endl;
-                }
+                    // Construct all sets
+                    PtrList<cellSet> cellSets(cSetNames.size());
+                    PtrList<faceSet> faceSets(fSetNames.size());
+                    PtrList<pointSet> pointSets(pSetNames.size());
 
-                // Load sets
-                forAll(procMeshes.meshes(), proci)
-                {
-                    const fvMesh& procMesh = procMeshes.meshes()[proci];
-
-                    IOobjectList objects
-                    (
-                        procMesh,
-                        databases[0].timeName(),    //procMesh.facesInstance(),
-                        polyMesh::meshSubDir/"sets"
-                    );
-
-                    // cellSets
-                    const labelList& cellMap =
-                        procMeshes.cellProcAddressing()[proci];
-
-                    IOobjectList cSets(objects.lookupClass(cellSet::typeName));
-                    forAllConstIter(IOobjectList, cSets, iter)
+                    Info<< "Reconstructing sets:" << endl;
+                    if (cSetNames.size())
                     {
-                        // Load cellSet
-                        const cellSet procSet(*iter());
-                        label setI = cSetNames[iter.key()];
-                        if (!cellSets.set(setI))
-                        {
-                            cellSets.set
-                            (
-                                setI,
-                                new cellSet(mesh, iter.key(), procSet.size())
-                            );
-                        }
-                        cellSet& cSet = cellSets[setI];
-                        cSet.instance() = runTime.timeName();
-
-                        forAllConstIter(cellSet, procSet, iter)
-                        {
-                            cSet.insert(cellMap[iter.key()]);
-                        }
+                        Info<< "    cellSets "
+                            << cSetNames.sortedToc() << endl;
+                    }
+                    if (fSetNames.size())
+                    {
+                        Info<< "    faceSets "
+                            << fSetNames.sortedToc() << endl;
+                    }
+                    if (pSetNames.size())
+                    {
+                        Info<< "    pointSets "
+                            << pSetNames.sortedToc() << endl;
                     }
 
-                    // faceSets
-                    const labelList& faceMap =
+                    // Load sets
+                    forAll(procMeshes.meshes(), proci)
+                    {
+                        const fvMesh& procMesh = procMeshes.meshes()[proci];
+
+                        IOobjectList objects
+                        (
+                            procMesh,
+                            databases[0].timeName(),
+                            polyMesh::meshSubDir/"sets"
+                        );
+
+                        // cellSets
+                        const labelList& cellMap =
+                            procMeshes.cellProcAddressing()[proci];
+
+                        IOobjectList cSets
+                        (
+                            objects.lookupClass(cellSet::typeName)
+                        );
+
+                        forAllConstIter(IOobjectList, cSets, iter)
+                        {
+                            // Load cellSet
+                            const cellSet procSet(*iter());
+                            label setI = cSetNames[iter.key()];
+                            if (!cellSets.set(setI))
+                            {
+                                cellSets.set
+                                (
+                                    setI,
+                                    new cellSet
+                                    (
+                                        mesh,
+                                        iter.key(),
+                                        procSet.size()
+                                    )
+                                );
+                            }
+                            cellSet& cSet = cellSets[setI];
+                            cSet.instance() = runTime.timeName();
+
+                            forAllConstIter(cellSet, procSet, iter)
+                            {
+                                cSet.insert(cellMap[iter.key()]);
+                            }
+                        }
+
+                        // faceSets
+                        const labelList& faceMap =
                         procMeshes.faceProcAddressing()[proci];
 
-                    IOobjectList fSets(objects.lookupClass(faceSet::typeName));
-                    forAllConstIter(IOobjectList, fSets, iter)
-                    {
-                        // Load faceSet
-                        const faceSet procSet(*iter());
-                        label setI = fSetNames[iter.key()];
-                        if (!faceSets.set(setI))
-                        {
-                            faceSets.set
-                            (
-                                setI,
-                                new faceSet(mesh, iter.key(), procSet.size())
-                            );
-                        }
-                        faceSet& fSet = faceSets[setI];
-                        fSet.instance() = runTime.timeName();
+                        IOobjectList fSets
+                        (
+                            objects.lookupClass(faceSet::typeName)
+                        );
 
-                        forAllConstIter(faceSet, procSet, iter)
+                        forAllConstIter(IOobjectList, fSets, iter)
                         {
-                            fSet.insert(mag(faceMap[iter.key()])-1);
+                            // Load faceSet
+                            const faceSet procSet(*iter());
+                            label setI = fSetNames[iter.key()];
+                            if (!faceSets.set(setI))
+                            {
+                                faceSets.set
+                                (
+                                    setI,
+                                    new faceSet
+                                    (
+                                        mesh,
+                                        iter.key(),
+                                        procSet.size()
+                                    )
+                                );
+                            }
+                            faceSet& fSet = faceSets[setI];
+                            fSet.instance() = runTime.timeName();
+
+                            forAllConstIter(faceSet, procSet, iter)
+                            {
+                                fSet.insert(mag(faceMap[iter.key()])-1);
+                            }
+                        }
+                        // pointSets
+                        const labelList& pointMap =
+                            procMeshes.pointProcAddressing()[proci];
+
+                        IOobjectList pSets
+                        (
+                            objects.lookupClass(pointSet::typeName)
+                        );
+                        forAllConstIter(IOobjectList, pSets, iter)
+                        {
+                            // Load pointSet
+                            const pointSet propSet(*iter());
+                            label setI = pSetNames[iter.key()];
+                            if (!pointSets.set(setI))
+                            {
+                                pointSets.set
+                                (
+                                    setI,
+                                    new pointSet
+                                    (
+                                        mesh,
+                                        iter.key(),
+                                        propSet.size()
+                                    )
+                                );
+                            }
+                            pointSet& pSet = pointSets[setI];
+                            pSet.instance() = runTime.timeName();
+
+                            forAllConstIter(pointSet, propSet, iter)
+                            {
+                                pSet.insert(pointMap[iter.key()]);
+                            }
                         }
                     }
-                    // pointSets
-                    const labelList& pointMap =
-                        procMeshes.pointProcAddressing()[proci];
 
-                    IOobjectList pSets(objects.lookupClass(pointSet::typeName));
-                    forAllConstIter(IOobjectList, pSets, iter)
+                    // Write sets
+                    forAll(cellSets, i)
                     {
-                        // Load pointSet
-                        const pointSet propSet(*iter());
-                        label setI = pSetNames[iter.key()];
-                        if (!pointSets.set(setI))
-                        {
-                            pointSets.set
-                            (
-                                setI,
-                                new pointSet(mesh, iter.key(), propSet.size())
-                            );
-                        }
-                        pointSet& pSet = pointSets[setI];
-                        pSet.instance() = runTime.timeName();
-
-                        forAllConstIter(pointSet, propSet, iter)
-                        {
-                            pSet.insert(pointMap[iter.key()]);
-                        }
+                        cellSets[i].write();
                     }
-                }
-
-                // Write sets
-                forAll(cellSets, i)
-                {
-                    cellSets[i].write();
-                }
-                forAll(faceSets, i)
-                {
-                    faceSets[i].write();
-                }
-                forAll(pointSets, i)
-                {
-                    pointSets[i].write();
+                    forAll(faceSets, i)
+                    {
+                        faceSets[i].write();
+                    }
+                    forAll(pointSets, i)
+                    {
+                        pointSets[i].write();
+                    }
                 }
             }
 
