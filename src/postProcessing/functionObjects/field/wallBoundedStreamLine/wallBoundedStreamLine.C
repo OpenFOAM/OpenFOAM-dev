@@ -781,7 +781,7 @@ bool Foam::functionObjects::wallBoundedStreamLine::write(const bool postProcess)
                 )
             );
 
-            Info<< "Writing data to " << vtkFile.path() << endl;
+            Info<< "    Writing data to " << vtkFile.path() << endl;
 
             scalarFormatterPtr_().write
             (

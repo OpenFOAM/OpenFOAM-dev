@@ -57,7 +57,7 @@ void Foam::functionObjects::histogram::writeGraph
         outputPath/formatterPtr_().getFileName(coords, fieldNames)
     );
 
-    Info<< "Writing histogram of " << fieldName
+    Info<< "    Writing histogram of " << fieldName
         << " to " << graphFile.name() << endl;
 
     List<const scalarField*> yPtrs(1);
