@@ -136,6 +136,21 @@ bool ${typeName}FunctionObject::execute(const bool postProcess)
 }
 
 
+bool ${typeName}FunctionObject::write(const bool postProcess)
+{
+    if (${verbose:-false})
+    {
+        Info<<"write ${typeName} sha1: ${SHA1sum}\n";
+    }
+
+//{{{ begin code
+    ${codeWrite}
+//}}} end code
+
+    return true;
+}
+
+
 bool ${typeName}FunctionObject::end()
 {
     if (${verbose:-false})
@@ -145,36 +160,6 @@ bool ${typeName}FunctionObject::end()
 
 //{{{ begin code
     ${codeEnd}
-//}}} end code
-
-    return true;
-}
-
-
-bool ${typeName}FunctionObject::timeSet()
-{
-    if (${verbose:-false})
-    {
-        Info<<"timeSet ${typeName} sha1: ${SHA1sum}\n";
-    }
-
-//{{{ begin codeTime
-    ${codeTimeSet}
-//}}} end code
-
-    return true;
-}
-
-
-bool ${typeName}FunctionObject::write(const bool postProcess)
-{
-    if (${verbose:-false})
-    {
-        Info<<"write ${typeName} sha1: ${SHA1sum}\n";
-    }
-
-//{{{ begin code
-    ${code}
 //}}} end code
 
     return true;

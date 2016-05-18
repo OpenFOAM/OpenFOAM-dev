@@ -57,12 +57,11 @@ void Foam::codedFunctionObject::prepare
 {
     // Set additional rewrite rules
     dynCode.setFilterVariable("typeName", redirectType_);
+    dynCode.setFilterVariable("codeData", codeData_);
     dynCode.setFilterVariable("codeRead", codeRead_);
     dynCode.setFilterVariable("codeExecute", codeExecute_);
+    dynCode.setFilterVariable("codeWrite", codeWrite_);
     dynCode.setFilterVariable("codeEnd", codeEnd_);
-    dynCode.setFilterVariable("codeData", codeData_);
-    dynCode.setFilterVariable("codeTimeSet", codeTimeSet_);
-    //dynCode.setFilterVariable("codeWrite", codeWrite_);
 
     // Compile filtered C template
     dynCode.addCompileFile("functionObjectTemplate.C");
@@ -71,9 +70,9 @@ void Foam::codedFunctionObject::prepare
     dynCode.addCopyFile("functionObjectTemplate.H");
 
     // Debugging: make BC verbose
-    //         dynCode.setFilterVariable("verbose", "true");
-    //         Info<<"compile " << redirectType_ << " sha1: "
-    //             << context.sha1() << endl;
+    // dynCode.setFilterVariable("verbose", "true");
+    // Info<<"compile " << redirectType_ << " sha1: "
+    //     << context.sha1() << endl;
 
     // Define Make/options
     dynCode.setMakeOptions
@@ -81,12 +80,12 @@ void Foam::codedFunctionObject::prepare
         "EXE_INC = -g \\\n"
         "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
         "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
-        + context.options()
-        + "\n\nLIB_LIBS = \\\n"
-        + "    -lOpenFOAM \\\n"
-        + "    -lfiniteVolume \\\n"
-        + "    -lmeshTools \\\n"
-        + context.libs()
+      + context.options()
+      + "\n\nLIB_LIBS = \\\n"
+      + "    -lOpenFOAM \\\n"
+      + "    -lfiniteVolume \\\n"
+      + "    -lmeshTools \\\n"
+      + context.libs()
     );
 }
 
@@ -183,13 +182,6 @@ bool Foam::codedFunctionObject::end()
 }
 
 
-bool Foam::codedFunctionObject::timeSet()
-{
-    updateLibrary(redirectType_);
-    return redirectFunctionObject().timeSet();
-}
-
-
 bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
     dict.lookup("redirectType") >> redirectType_;
@@ -248,6 +240,24 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
         );
     }
 
+    const entry* writePtr = dict.lookupEntryPtr
+    (
+        "codeWrite",
+        false,
+        false
+    );
+    if (writePtr)
+    {
+        codeWrite_ = stringOps::trim(writePtr->stream());
+        stringOps::inplaceExpand(codeWrite_, dict);
+        dynamicCodeContext::addLineDirective
+        (
+            codeWrite_,
+            writePtr->startLineNumber(),
+            dict.name()
+        );
+    }
+
     const entry* endPtr = dict.lookupEntryPtr
     (
         "codeEnd",
@@ -262,24 +272,6 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
         (
             codeEnd_,
             endPtr->startLineNumber(),
-            dict.name()
-        );
-    }
-
-    const entry* timeSetPtr = dict.lookupEntryPtr
-    (
-        "codeTimeSet",
-        false,
-        false
-    );
-    if (timeSetPtr)
-    {
-        codeTimeSet_ = stringOps::trim(timeSetPtr->stream());
-        stringOps::inplaceExpand(codeTimeSet_, dict);
-        dynamicCodeContext::addLineDirective
-        (
-            codeTimeSet_,
-            timeSetPtr->startLineNumber(),
             dict.name()
         );
     }

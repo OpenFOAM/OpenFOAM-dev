@@ -41,7 +41,6 @@ Description
         codeRead    : c++; upon functionObject::read();
         codeEnd     : c++; upon functionObject::end();
         codeData    : c++; local member data (null constructed);
-        codeTimeSet : c++; upon functionObject::timeSet();
         localCode   : c++; local static functions
 
     Example of function object specification:
@@ -108,8 +107,8 @@ protected:
         string codeData_;
         string codeRead_;
         string codeExecute_;
+        string codeWrite_;
         string codeEnd_;
-        string codeTimeSet_;
 
         //- Underlying functionObject
         mutable autoPtr<functionObject> redirectFunctionObjectPtr_;
@@ -181,9 +180,6 @@ public:
         //- Called when Time::run() determines that the time-loop exits.
         //  By default it simply calls execute().
         virtual bool end();
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual bool timeSet();
 
         //- Read and set the function object if its data have changed
         virtual bool read(const dictionary&);

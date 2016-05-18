@@ -107,9 +107,6 @@ public:
 
         //- Write, execute the "writeCalls"
         virtual bool write(const bool postProcess = false);
-
-        //- Called when time was set at the end of the Time::operator++
-        virtual bool timeSet();
 };
 
 

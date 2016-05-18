@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 #include "stringOps.H"
 #include "OSHA1stream.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
@@ -39,19 +38,24 @@ Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
     options_(),
     libs_()
 {
-    // expand dictionary entries
+    // Expand dictionary entries
 
-    {
-        const entry& codeEntry = dict.lookupEntry("code", false, false);
-        code_ = stringOps::trim(codeEntry.stream());
-        stringOps::inplaceExpand(code_, dict);
-    }
-
-    // note: removes any leading/trailing whitespace
+    // Note: removes any leading/trailing whitespace
     // - necessary for compilation options, convenient for includes
     // and body.
 
-    // optional
+    const entry* codePtr = dict.lookupEntryPtr
+    (
+        "code",
+        false,
+        false
+    );
+    if (codePtr)
+    {
+        code_ = stringOps::trim(codePtr->stream());
+        stringOps::inplaceExpand(code_, dict);
+    }
+
     const entry* includePtr = dict.lookupEntryPtr
     (
         "codeInclude",
@@ -64,7 +68,6 @@ Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
         stringOps::inplaceExpand(include_, dict);
     }
 
-    // optional
     const entry* optionsPtr = dict.lookupEntryPtr
     (
         "codeOptions",
@@ -77,7 +80,6 @@ Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
         stringOps::inplaceExpand(options_, dict);
     }
 
-    // optional
     const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
     if (libsPtr)
     {
@@ -85,7 +87,6 @@ Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
         stringOps::inplaceExpand(libs_, dict);
     }
 
-    // optional
     const entry* localPtr = dict.lookupEntryPtr("localCode", false, false);
     if (localPtr)
     {
@@ -93,20 +94,20 @@ Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
         stringOps::inplaceExpand(localCode_, dict);
     }
 
-    // calculate SHA1 digest from include, options, localCode, code
+    // Calculate SHA1 digest from include, options, localCode, code
     OSHA1stream os;
     os  << include_ << options_ << libs_ << localCode_ << code_;
     sha1_ = os.digest();
 
 
-
     // Add line number after calculating sha1 since includes processorDDD
     // in path which differs between processors.
 
+    if (codePtr)
     {
-        const entry& codeEntry = dict.lookupEntry("code", false, false);
-        addLineDirective(code_, codeEntry.startLineNumber(), dict.name());
+        addLineDirective(code_, codePtr->startLineNumber(), dict.name());
     }
+
     if (includePtr)
     {
         addLineDirective(include_, includePtr->startLineNumber(), dict.name());
@@ -114,7 +115,6 @@ Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
 
     // Do not add line directive to options_ (Make/options) and libs since
     // they are preprocessed as a single line at this point. Can be fixed.
-
     if (localPtr)
     {
         addLineDirective(localCode_, localPtr->startLineNumber(), dict.name());

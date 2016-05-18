@@ -54,11 +54,10 @@ functions
 
         type coded;
 
-        writeControl timeStep;
-
         // Name of on-the-fly generated functionObject
         redirectType error;
-        code
+
+        codeEnd
         #{
             // Lookup U
             Info<< "Looking up field U\n" << endl;
