@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,14 +30,14 @@ License
 template<class Type>
 Foam::label Foam::WallSiteData<Type>::patchIndex() const
 {
-    return patchI_;
+    return patchi_;
 }
 
 
 template<class Type>
 Foam::label& Foam::WallSiteData<Type>::patchIndex()
 {
-    return patchI_;
+    return patchi_;
 }
 
 

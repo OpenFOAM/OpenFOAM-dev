@@ -237,7 +237,7 @@ endOfSection               {space}")"{space}
 %{
     // Point data
     label pointGroupNumberOfComponents = 3;
-    label pointI = 0; // index used for reading points
+    label pointi = 0; // index used for reading points
 
     // Face data
     label faceGroupElementType = -1;
@@ -343,7 +343,7 @@ endOfSection               {space}")"{space}
         readHexLabel(pointGroupDataStream);
 
         // In FOAM, indices start from zero - adjust
-        pointI = pointGroupStartIndex.last() - 1;
+        pointi = pointGroupStartIndex.last() - 1;
 
         // reset number of components to default
         pointGroupNumberOfComponents = 3;
@@ -381,8 +381,8 @@ endOfSection               {space}")"{space}
         scalar x = readScalar(vertexXyzStream);
         scalar y = readScalar(vertexXyzStream);
 
-        points[pointI] = point(x, y, 0);
-        pointI++;
+        points[pointi] = point(x, y, 0);
+        pointi++;
     }
 
 <readPoints3D>{spaceNl}{scalarList} {
@@ -394,19 +394,19 @@ endOfSection               {space}")"{space}
         scalar y = readScalar(vertexXyzStream);
         scalar z = readScalar(vertexXyzStream);
 
-        points[pointI] = convertToMeters*point(x, y, z);
-        pointI++;
+        points[pointi] = convertToMeters*point(x, y, z);
+        pointi++;
     }
 
 <readPoints2D,readPoints3D>{spaceNl}{endOfSection} {
 
         // check read of points
-        if (pointI != pointGroupEndIndex.last())
+        if (pointi != pointGroupEndIndex.last())
         {
             Info<< "problem with reading points: "
                 << "start index: " << pointGroupStartIndex.last()
                 << " end index: " << pointGroupEndIndex.last()
-                << " last points read: " << pointI << endl;
+                << " last points read: " << pointi << endl;
         }
 
         yy_pop_state();
@@ -986,18 +986,18 @@ int main(int argc, char *argv[])
         // points given by Fluent need to represent the FRONT plane of the
         // geometry. Therefore, the extrusion will be in -z direction
         //
-        forAll(oldPoints, pointI)
+        forAll(oldPoints, pointi)
         {
-            points[nNewPoints] = oldPoints[pointI];
+            points[nNewPoints] = oldPoints[pointi];
 
             points[nNewPoints].z() = zOffset;
 
             nNewPoints++;
         }
 
-        forAll(oldPoints, pointI)
+        forAll(oldPoints, pointi)
         {
-            points[nNewPoints] = oldPoints[pointI];
+            points[nNewPoints] = oldPoints[pointi];
 
             points[nNewPoints].z() = -zOffset;
 

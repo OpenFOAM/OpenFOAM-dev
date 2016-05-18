@@ -305,7 +305,7 @@ public:
 
             //- Boundary edges get extruded into boundary faces. Determine patch
             //  for these faces. This might be a to-be-created processor patch
-            //  (patchI >= mesh.boundaryMesh().size()) in which case the
+            //  (patchi >= mesh.boundaryMesh().size()) in which case the
             //  nbrProcToPatch, patchToNbrProc give the correspondence. nPatches
             //  is the new number of patches.
             static void calcSidePatch

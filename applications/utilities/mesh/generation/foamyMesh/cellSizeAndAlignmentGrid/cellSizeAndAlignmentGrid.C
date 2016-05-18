@@ -537,9 +537,9 @@ int main(int argc, char *argv[])
             // Enforce the boundary conditions
             const triad& fixedAlignment = fixedAlignments[pI];
 
-            forAll(pPoints, adjPointI)
+            forAll(pPoints, adjPointi)
             {
-                const label adjPointIndex = pPoints[adjPointI];
+                const label adjPointIndex = pPoints[adjPointi];
 
                 scalar dist = mag(points[pI] - points[adjPointIndex]);
 

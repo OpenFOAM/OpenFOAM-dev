@@ -139,7 +139,7 @@ bool Foam::trackedParticle::hitPatch
 (
     const polyPatch&,
     trackingData& td,
-    const label patchI,
+    const label patchi,
     const scalar trackFraction,
     const tetIndices& tetIs
 )
@@ -228,11 +228,11 @@ void Foam::trackedParticle::hitPatch
 
 void Foam::trackedParticle::correctAfterParallelTransfer
 (
-    const label patchI,
+    const label patchi,
     trackingData& td
 )
 {
-    particle::correctAfterParallelTransfer(patchI, td);
+    particle::correctAfterParallelTransfer(patchi, td);
 
     label edgeI = k();
     if (edgeI != -1)

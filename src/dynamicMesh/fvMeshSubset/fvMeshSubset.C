@@ -69,10 +69,10 @@ void Foam::fvMeshSubset::markPoints
     Map<label>& pointMap
 )
 {
-    forAll(curPoints, pointI)
+    forAll(curPoints, pointi)
     {
         // Note: insert will only insert if not yet there.
-        pointMap.insert(curPoints[pointI], 0);
+        pointMap.insert(curPoints[pointi], 0);
     }
 }
 
@@ -83,9 +83,9 @@ void Foam::fvMeshSubset::markPoints
     labelList& pointMap
 )
 {
-    forAll(curPoints, pointI)
+    forAll(curPoints, pointi)
     {
-        pointMap[curPoints[pointI]] = 0;
+        pointMap[curPoints[pointi]] = 0;
     }
 }
 
@@ -580,9 +580,9 @@ void Foam::fvMeshSubset::setCellSubset
     pointMap_ = globalPointMap.toc();
     sort(pointMap_);
 
-    forAll(pointMap_, pointI)
+    forAll(pointMap_, pointi)
     {
-        globalPointMap[pointMap_[pointI]] = pointI;
+        globalPointMap[pointMap_[pointi]] = pointi;
     }
 
     Pout<< "Number of cells in new mesh: " << nCellsInSet << endl;
@@ -594,9 +594,9 @@ void Foam::fvMeshSubset::setCellSubset
 
     label nNewPoints = 0;
 
-    forAll(pointMap_, pointI)
+    forAll(pointMap_, pointi)
     {
-        newPoints[nNewPoints] = oldPoints[pointMap_[pointI]];
+        newPoints[nNewPoints] = oldPoints[pointMap_[pointi]];
         nNewPoints++;
     }
 
@@ -1086,9 +1086,9 @@ void Foam::fvMeshSubset::setLargeCellSubset
     // Grab the points map
     label nPointsInSet = 0;
 
-    forAll(globalPointMap, pointI)
+    forAll(globalPointMap, pointi)
     {
-        if (globalPointMap[pointI] != -1)
+        if (globalPointMap[pointi] != -1)
         {
             nPointsInSet++;
         }
@@ -1097,12 +1097,12 @@ void Foam::fvMeshSubset::setLargeCellSubset
 
     nPointsInSet = 0;
 
-    forAll(globalPointMap, pointI)
+    forAll(globalPointMap, pointi)
     {
-        if (globalPointMap[pointI] != -1)
+        if (globalPointMap[pointi] != -1)
         {
-            pointMap_[nPointsInSet] = pointI;
-            globalPointMap[pointI] = nPointsInSet;
+            pointMap_[nPointsInSet] = pointi;
+            globalPointMap[pointi] = nPointsInSet;
             nPointsInSet++;
         }
     }
@@ -1116,9 +1116,9 @@ void Foam::fvMeshSubset::setLargeCellSubset
 
     label nNewPoints = 0;
 
-    forAll(pointMap_, pointI)
+    forAll(pointMap_, pointi)
     {
-        newPoints[nNewPoints] = oldPoints[pointMap_[pointI]];
+        newPoints[nNewPoints] = oldPoints[pointMap_[pointi]];
         nNewPoints++;
     }
 

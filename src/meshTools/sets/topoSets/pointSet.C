@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,11 +132,11 @@ void pointSet::sync(const polyMesh& mesh)
 
     labelHashSet newContents(size());
 
-    forAll(contents, pointI)
+    forAll(contents, pointi)
     {
-        if (contents[pointI])
+        if (contents[pointi])
         {
-            newContents.insert(pointI);
+            newContents.insert(pointi);
         }
     }
 

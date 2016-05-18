@@ -168,7 +168,7 @@ void Foam::cellSplitter::setRefinement
 
         label anchorPoint = mesh_.cellPoints()[celli][0];
 
-        label addedPointI =
+        label addedPointi =
             meshMod.setAction
             (
                 polyAddPoint
@@ -179,9 +179,9 @@ void Foam::cellSplitter::setRefinement
                     true            // supports a cell
                 )
             );
-        addedPoints_.insert(celli, addedPointI);
+        addedPoints_.insert(celli, addedPointi);
 
-        //Pout<< "Added point " << addedPointI
+        //Pout<< "Added point " << addedPointi
         //    << iter() << " in cell " << celli << " with centre "
         //    << mesh_.cellCentres()[celli] << endl;
     }
@@ -242,7 +242,7 @@ void Foam::cellSplitter::setRefinement
     {
         label celli = iter.key();
 
-        label midPointI = addedPoints_[celli];
+        label midPointi = addedPoints_[celli];
 
         const cell& cFaces = mesh_.cells()[celli];
 
@@ -283,13 +283,13 @@ void Foam::cellSplitter::setRefinement
                     // edge used in face order.
                     newF[0] = e[1];
                     newF[1] = e[0];
-                    newF[2] = midPointI;
+                    newF[2] = midPointi;
                 }
                 else
                 {
                     newF[0] = e[0];
                     newF[1] = e[1];
-                    newF[2] = midPointI;
+                    newF[2] = midPointi;
                 }
 
                 // Now newF points away from cell0
@@ -329,13 +329,13 @@ void Foam::cellSplitter::setRefinement
                     // edge used in face order.
                     newF[0] = e[1];
                     newF[1] = e[0];
-                    newF[2] = midPointI;
+                    newF[2] = midPointi;
                 }
                 else
                 {
                     newF[0] = e[0];
                     newF[1] = e[1];
-                    newF[2] = midPointI;
+                    newF[2] = midPointi;
                 }
 
                 // Now newF points away from cell1
@@ -473,13 +473,13 @@ void Foam::cellSplitter::updateMesh(const mapPolyMesh& morphMap)
 
         label newCelli = morphMap.reverseCellMap()[oldCelli];
 
-        label oldPointI = iter();
+        label oldPointi = iter();
 
-        label newPointI = morphMap.reversePointMap()[oldPointI];
+        label newPointi = morphMap.reversePointMap()[oldPointi];
 
-        if (newCelli >= 0 && newPointI >= 0)
+        if (newCelli >= 0 && newPointi >= 0)
         {
-            newAddedPoints.insert(newCelli, newPointI);
+            newAddedPoints.insert(newCelli, newPointi);
         }
     }
 

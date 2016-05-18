@@ -187,19 +187,19 @@ void Foam::pointConstraints::makePatchPatchAddressing()
         globalPointSlavesMap.distribute(constraints);
 
         // Combine master with slave constraints
-        forAll(globalPointSlaves, pointI)
+        forAll(globalPointSlaves, pointi)
         {
-            const labelList& slaves = globalPointSlaves[pointI];
+            const labelList& slaves = globalPointSlaves[pointi];
 
             // Combine master constraint with slave constraints
             forAll(slaves, i)
             {
-                constraints[pointI].combine(constraints[slaves[i]]);
+                constraints[pointi].combine(constraints[slaves[i]]);
             }
             // Duplicate master constraint into slave slots
             forAll(slaves, i)
             {
-                constraints[slaves[i]] = constraints[pointI];
+                constraints[slaves[i]] = constraints[pointi];
             }
         }
 
@@ -211,23 +211,23 @@ void Foam::pointConstraints::makePatchPatchAddressing()
         );
 
         // Add back into patchPatch constraints
-        forAll(constraints, coupledPointI)
+        forAll(constraints, coupledPointi)
         {
-            if (constraints[coupledPointI].first() != 0)
+            if (constraints[coupledPointi].first() != 0)
             {
-                label meshPointI = cpMeshPoints[coupledPointI];
+                label meshPointi = cpMeshPoints[coupledPointi];
 
-                Map<label>::iterator iter = patchPatchPointSet.find(meshPointI);
+                Map<label>::iterator iter = patchPatchPointSet.find(meshPointi);
 
                 label constraintI = -1;
 
                 if (iter == patchPatchPointSet.end())
                 {
-                    //Pout<< indent << "on meshpoint:" << meshPointI
-                    //    << " coupled:" << coupledPointI
-                    //    << " at:" << mesh.points()[meshPointI]
+                    //Pout<< indent << "on meshpoint:" << meshPointi
+                    //    << " coupled:" << coupledPointi
+                    //    << " at:" << mesh.points()[meshPointi]
                     //    << " have new constraint:"
-                    //    << constraints[coupledPointI]
+                    //    << constraints[coupledPointi]
                     //    << endl;
 
                     // Allocate new constraint
@@ -235,17 +235,17 @@ void Foam::pointConstraints::makePatchPatchAddressing()
                     {
                         patchPatchPoints.setSize(pppi+100);
                     }
-                    patchPatchPointSet.insert(meshPointI, pppi);
-                    patchPatchPoints[pppi] = meshPointI;
+                    patchPatchPointSet.insert(meshPointi, pppi);
+                    patchPatchPoints[pppi] = meshPointi;
                     constraintI = pppi++;
                 }
                 else
                 {
-                    //Pout<< indent << "on meshpoint:" << meshPointI
-                    //    << " coupled:" << coupledPointI
-                    //    << " at:" << mesh.points()[meshPointI]
+                    //Pout<< indent << "on meshpoint:" << meshPointi
+                    //    << " coupled:" << coupledPointi
+                    //    << " at:" << mesh.points()[meshPointi]
                     //    << " have possibly extended constraint:"
-                    //    << constraints[coupledPointI]
+                    //    << constraints[coupledPointi]
                     //    << endl;
 
                     constraintI = iter();
@@ -255,7 +255,7 @@ void Foam::pointConstraints::makePatchPatchAddressing()
                 // on coupled.
                 patchPatchPointConstraints_[constraintI].combine
                 (
-                    constraints[coupledPointI]
+                    constraints[coupledPointi]
                 );
             }
         }

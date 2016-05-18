@@ -113,7 +113,7 @@ void Foam::meshReader::calcPointCells() const
 
     // report and remove unused points
     // - adjust points, pointCells, and cellFaces accordingly
-    label pointI = 0;
+    label pointi = 0;
     labelList oldToNew(nPoints, -1);
 
     forAll(ptCells, i)
@@ -121,16 +121,16 @@ void Foam::meshReader::calcPointCells() const
         ptCells[i].setSize(cellCount[i]);
         if (cellCount[i] > 0)
         {
-            oldToNew[i] = pointI++;
+            oldToNew[i] = pointi++;
         }
     }
 
     // report unused points
-    if (nPoints > pointI)
+    if (nPoints > pointi)
     {
-        Info<< "removing " << (nPoints - pointI) << " unused points" << endl;
+        Info<< "removing " << (nPoints - pointi) << " unused points" << endl;
 
-        nPoints = pointI;
+        nPoints = pointi;
 
         // adjust points and truncate - bend const-ness
         pointField& adjustedPoints = const_cast<pointField&>(points_);

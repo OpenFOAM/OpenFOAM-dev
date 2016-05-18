@@ -122,9 +122,9 @@ void Foam::ensightSetWriter<Type>::write
 
         for (direction cmpt = 0; cmpt < vector::nComponents; cmpt++)
         {
-            forAll(points, pointI)
+            forAll(points, pointi)
             {
-                const scalar comp = points[pointI][cmpt];
+                const scalar comp = points[pointi][cmpt];
                 if (mag(comp) >= scalar(floatScalarVSMALL))
                 {
                     os  << setw(12) << comp << nl;
@@ -137,9 +137,9 @@ void Foam::ensightSetWriter<Type>::write
         }
         os  << "point" << nl
             << setw(10) << points.size() << nl;
-        forAll(points, pointI)
+        forAll(points, pointi)
         {
-            os  << setw(10) << pointI+1 << nl;
+            os  << setw(10) << pointi+1 << nl;
         }
     }
 
@@ -240,9 +240,9 @@ void Foam::ensightSetWriter<Type>::write
 
             for (direction cmpt = 0; cmpt < vector::nComponents; cmpt++)
             {
-                forAll(points, pointI)
+                forAll(points, pointi)
                 {
-                    const scalar comp = points[pointI][cmpt];
+                    const scalar comp = points[pointi][cmpt];
                     if (mag(comp) >= scalar(floatScalarVSMALL))
                     {
                         os  << setw(12) << comp << nl;

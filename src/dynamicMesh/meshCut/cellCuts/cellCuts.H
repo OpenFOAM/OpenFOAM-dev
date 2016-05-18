@@ -322,7 +322,7 @@ class cellCuts
             void walkEdges
             (
                 const label celli,
-                const label pointI,
+                const label pointi,
                 const label status,
 
                 Map<label>& edgeStatus,

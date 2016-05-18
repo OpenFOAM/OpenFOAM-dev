@@ -386,7 +386,7 @@ bool Foam::KinematicParcel<ParcelType>::hitPatch
 (
     const polyPatch& pp,
     TrackData& td,
-    const label patchI,
+    const label patchi,
     const scalar trackFraction,
     const tetIndices& tetIs
 )

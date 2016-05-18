@@ -53,9 +53,9 @@ void Foam::dxSurfaceWriter::writeGeometry
         << "object 1 class array type float rank 1 shape 3 items "
         << points.size() << " data follows" << nl;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os  << float(pt.x()) << ' ' << float(pt.y()) << ' ' << float(pt.z())
             << nl;

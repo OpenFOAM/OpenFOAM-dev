@@ -235,15 +235,15 @@ Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
                 vector localDelta = Zero;
                 forAll(f, pti)
                 {
-                    const label pointI = f[pti];
+                    const label pointi = f[pti];
 
                     if
                     (
-                        mag((nbrCf - (oldPoints[pointI] + newDelta)) & n)
+                        mag((nbrCf - (oldPoints[pointi] + newDelta)) & n)
                       > minDelta
                     )
                     {
-                        newPoints[pointI] = oldPoints[pointI] + newDelta;
+                        newPoints[pointi] = oldPoints[pointi] + newDelta;
                         localDelta = newDelta;
                         cellMoveMap[celli] = 1;
                     }
@@ -257,14 +257,14 @@ Foam::tmp<Foam::labelField> Foam::regionModels::regionModel1D::moveMesh
             newDelta += (deltaV[celli]/mag(sf))*n;
             forAll(f, pti)
             {
-                const label pointI = f[pti];
+                const label pointi = f[pti];
                 if
                 (
-                    mag((nbrCf - (oldPoints[pointI] + newDelta)) & n)
+                    mag((nbrCf - (oldPoints[pointi] + newDelta)) & n)
                   > minDelta
                 )
                 {
-                    newPoints[pointI] = oldPoints[pointI] + newDelta;
+                    newPoints[pointi] = oldPoints[pointi] + newDelta;
                     cellMoveMap[celli] = 1;
                 }
             }

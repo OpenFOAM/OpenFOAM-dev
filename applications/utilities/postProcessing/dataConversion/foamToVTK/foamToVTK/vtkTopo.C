@@ -120,7 +120,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
     cellTypes_.setSize(cellShapes.size() + nAddCells);
 
     // Set counters for additional points and additional cells
-    label addPointI = 0, addCelli = 0;
+    label addPointi = 0, addCelli = 0;
 
     forAll(cellShapes, celli)
     {
@@ -191,10 +191,10 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
             // Polyhedral cell. Decompose into tets + pyramids.
 
             // Mapping from additional point to cell
-            addPointCellLabels_[addPointI] = celli;
+            addPointCellLabels_[addPointi] = celli;
 
             // The new vertex from the cell-centre
-            const label newVertexLabel = mesh_.nPoints() + addPointI;
+            const label newVertexLabel = mesh_.nPoints() + addPointi;
 
             // Whether to insert cell in place of original or not.
             bool substituteCell = true;
@@ -305,7 +305,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
                 }
             }
 
-            addPointI++;
+            addPointi++;
         }
         else
         {

@@ -42,15 +42,15 @@ void Foam::CPCCellToCellStencil::calcPointBoundaryData
 
     forAll(boundaryPoints, i)
     {
-        label pointI = boundaryPoints[i];
+        label pointi = boundaryPoints[i];
 
         neiGlobal.insert
         (
-            pointI,
+            pointi,
             calcFaceCells
             (
                 isValidBFace,
-                mesh().pointFaces()[pointI],
+                mesh().pointFaces()[pointi],
                 pointGlobals
             )
         );
@@ -95,12 +95,12 @@ void Foam::CPCCellToCellStencil::calcCellStencil
 
     forAll(boundaryPoints, i)
     {
-        label pointI = boundaryPoints[i];
+        label pointi = boundaryPoints[i];
 
-        const labelList& pGlobals = neiGlobal[pointI];
+        const labelList& pGlobals = neiGlobal[pointi];
 
         // Distribute to all pointCells
-        const labelList& pCells = mesh().pointCells(pointI);
+        const labelList& pCells = mesh().pointCells(pointi);
 
         forAll(pCells, j)
         {
@@ -120,19 +120,19 @@ void Foam::CPCCellToCellStencil::calcCellStencil
     // Do remaining points cells
     labelHashSet pointGlobals;
 
-    for (label pointI = 0; pointI < mesh().nPoints(); pointI++)
+    for (label pointi = 0; pointi < mesh().nPoints(); pointi++)
     {
         labelList pGlobals
         (
             calcFaceCells
             (
                 isValidBFace,
-                mesh().pointFaces()[pointI],
+                mesh().pointFaces()[pointi],
                 pointGlobals
             )
         );
 
-        const labelList& pCells = mesh().pointCells(pointI);
+        const labelList& pCells = mesh().pointCells(pointi);
 
         forAll(pCells, j)
         {

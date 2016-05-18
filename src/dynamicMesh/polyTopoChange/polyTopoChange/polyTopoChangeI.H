@@ -27,9 +27,9 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-inline bool Foam::polyTopoChange::pointRemoved(const label pointI) const
+inline bool Foam::polyTopoChange::pointRemoved(const label pointi) const
 {
-    const point& pt = points_[pointI];
+    const point& pt = points_[pointi];
 
     return
         pt.x() > 0.5*vector::max.x()

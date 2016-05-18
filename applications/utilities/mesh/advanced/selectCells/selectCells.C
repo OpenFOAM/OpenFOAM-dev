@@ -192,15 +192,15 @@ void cutBySurface
 
         label nRemoved = 0;
 
-        forAll(pts, pointI)
+        forAll(pts, pointi)
         {
-            const point& pt = pts[pointI];
+            const point& pt = pts[pointi];
 
             pointIndexHit hitInfo = tree.findNearest(pt, sqr(nearDist));
 
             if (hitInfo.hit())
             {
-                const labelList& pCells = mesh.pointCells()[pointI];
+                const labelList& pCells = mesh.pointCells()[pointi];
 
                 forAll(pCells, i)
                 {
@@ -218,11 +218,11 @@ void cutBySurface
 //
 //        label nRemoved = 0;
 //
-//        forAll(nearest, pointI)
+//        forAll(nearest, pointi)
 //        {
-//            if (mag(nearest[pointI] - pts[pointI]) < nearDist)
+//            if (mag(nearest[pointi] - pts[pointi]) < nearDist)
 //            {
-//                const labelList& pCells = mesh.pointCells()[pointI];
+//                const labelList& pCells = mesh.pointCells()[pointi];
 //
 //                forAll(pCells, i)
 //                {

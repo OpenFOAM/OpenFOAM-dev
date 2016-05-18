@@ -60,13 +60,13 @@ void Foam::pointMapper::calcAddressing() const
 
         label nInsertedPoints = 0;
 
-        forAll(directAddr, pointI)
+        forAll(directAddr, pointi)
         {
-            if (directAddr[pointI] < 0)
+            if (directAddr[pointi] < 0)
             {
                 // Found inserted point
-                directAddr[pointI] = 0;
-                insertedPoints[nInsertedPoints] = pointI;
+                directAddr[pointi] = 0;
+                insertedPoints[nInsertedPoints] = pointi;
                 nInsertedPoints++;
             }
         }
@@ -91,19 +91,19 @@ void Foam::pointMapper::calcAddressing() const
             // Get addressing
             const labelList& mo = cfc[cfcI].masterObjects();
 
-            label pointI = cfc[cfcI].index();
+            label pointi = cfc[cfcI].index();
 
-            if (addr[pointI].size())
+            if (addr[pointi].size())
             {
                 FatalErrorInFunction
-                    << "Master point " << pointI
+                    << "Master point " << pointi
                     << " mapped from points " << mo
                     << " already destination of mapping." << abort(FatalError);
             }
 
             // Map from masters, uniform weights
-            addr[pointI] = mo;
-            w[pointI] = scalarList(mo.size(), 1.0/mo.size());
+            addr[pointi] = mo;
+            w[pointi] = scalarList(mo.size(), 1.0/mo.size());
         }
 
 
@@ -112,13 +112,13 @@ void Foam::pointMapper::calcAddressing() const
 
         const labelList& cm = mpm_.pointMap();
 
-        forAll(cm, pointI)
+        forAll(cm, pointi)
         {
-            if (cm[pointI] > -1 && addr[pointI].empty())
+            if (cm[pointi] > -1 && addr[pointi].empty())
             {
                 // Mapped from a single point
-                addr[pointI] = labelList(1, cm[pointI]);
-                w[pointI] = scalarList(1, 1.0);
+                addr[pointi] = labelList(1, cm[pointi]);
+                w[pointi] = scalarList(1, 1.0);
             }
         }
 
@@ -129,15 +129,15 @@ void Foam::pointMapper::calcAddressing() const
 
         label nInsertedPoints = 0;
 
-        forAll(addr, pointI)
+        forAll(addr, pointi)
         {
-            if (addr[pointI].empty())
+            if (addr[pointi].empty())
             {
                 // Mapped from a dummy point. Take point 0 with weight 1.
-                addr[pointI] = labelList(1, label(0));
-                w[pointI] = scalarList(1, 1.0);
+                addr[pointi] = labelList(1, label(0));
+                w[pointi] = scalarList(1, 1.0);
 
-                insertedPoints[nInsertedPoints] = pointI;
+                insertedPoints[nInsertedPoints] = pointi;
                 nInsertedPoints++;
             }
         }

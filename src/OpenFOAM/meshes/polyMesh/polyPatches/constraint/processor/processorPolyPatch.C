@@ -354,15 +354,15 @@ void Foam::processorPolyPatch::initUpdateMesh(PstreamBuffers& pBufs)
         labelList pointFace(nPoints());
         labelList pointIndex(nPoints());
 
-        for (label patchPointI = 0; patchPointI < nPoints(); patchPointI++)
+        for (label patchPointi = 0; patchPointi < nPoints(); patchPointi++)
         {
-            label facei = pointFaces()[patchPointI][0];
+            label facei = pointFaces()[patchPointi][0];
 
-            pointFace[patchPointI] = facei;
+            pointFace[patchPointi] = facei;
 
             const face& f = localFaces()[facei];
 
-            pointIndex[patchPointI] = findIndex(f, patchPointI);
+            pointIndex[patchPointi] = findIndex(f, patchPointi);
         }
 
         // Express all edges as patch face and index in face.
@@ -433,32 +433,32 @@ void Foam::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
         neighbPointsPtr_.reset(new labelList(nPoints(), -1));
         labelList& neighbPoints = neighbPointsPtr_();
 
-        forAll(nbrPointFace, nbrPointI)
+        forAll(nbrPointFace, nbrPointi)
         {
             // Find face and index in face on this side.
-            const face& f = localFaces()[nbrPointFace[nbrPointI]];
+            const face& f = localFaces()[nbrPointFace[nbrPointi]];
 
-            label index = (f.size() - nbrPointIndex[nbrPointI]) % f.size();
-            label patchPointI = f[index];
+            label index = (f.size() - nbrPointIndex[nbrPointi]) % f.size();
+            label patchPointi = f[index];
 
-            if (neighbPoints[patchPointI] == -1)
+            if (neighbPoints[patchPointi] == -1)
             {
                 // First reference of point
-                neighbPoints[patchPointI] = nbrPointI;
+                neighbPoints[patchPointi] = nbrPointi;
             }
-            else if (neighbPoints[patchPointI] >= 0)
+            else if (neighbPoints[patchPointi] >= 0)
             {
                 // Point already visited. Mark as duplicate.
-                neighbPoints[patchPointI] = -2;
+                neighbPoints[patchPointi] = -2;
             }
         }
 
         // Reset all duplicate entries to -1.
-        forAll(neighbPoints, patchPointI)
+        forAll(neighbPoints, patchPointi)
         {
-            if (neighbPoints[patchPointI] == -2)
+            if (neighbPoints[patchPointi] == -2)
             {
-                neighbPoints[patchPointI] = -1;
+                neighbPoints[patchPointi] = -1;
             }
         }
 

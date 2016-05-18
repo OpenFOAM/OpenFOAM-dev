@@ -70,13 +70,13 @@ int main(int argc, char *argv[])
     label minIndex = -1;
     scalar minDist = GREAT;
 
-    forAll(localPoints, pointI)
+    forAll(localPoints, pointi)
     {
-        const scalar dist = mag(localPoints[pointI] - samplePt);
+        const scalar dist = mag(localPoints[pointi] - samplePt);
         if (dist < minDist)
         {
             minDist = dist;
-            minIndex = pointI;
+            minIndex = pointi;
         }
     }
 

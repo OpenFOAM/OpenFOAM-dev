@@ -67,18 +67,18 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     labelList mirrorPointLookup(oldPoints.size(), -1);
 
     // Grab the old points
-    forAll(oldPoints, pointI)
+    forAll(oldPoints, pointi)
     {
-        newPoints[nNewPoints] = oldPoints[pointI];
+        newPoints[nNewPoints] = oldPoints[pointi];
         nNewPoints++;
     }
 
-    forAll(oldPoints, pointI)
+    forAll(oldPoints, pointi)
     {
         scalar alpha =
             mirrorPlane.normalIntersect
             (
-                oldPoints[pointI],
+                oldPoints[pointi],
                 mirrorPlane.normal()
             );
 
@@ -87,10 +87,10 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         {
             // The point gets mirrored
             newPoints[nNewPoints] =
-                oldPoints[pointI] + 2.0*alpha*mirrorPlane.normal();
+                oldPoints[pointi] + 2.0*alpha*mirrorPlane.normal();
 
             // remember the point correspondence
-            mirrorPointLookup[pointI] = nNewPoints;
+            mirrorPointLookup[pointi] = nNewPoints;
             nNewPoints++;
         }
         else
@@ -98,9 +98,9 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             // The point is on the plane and does not get mirrored
             // Adjust plane location
             newPoints[nNewPoints] =
-                oldPoints[pointI] + alpha*mirrorPlane.normal();
+                oldPoints[pointi] + alpha*mirrorPlane.normal();
 
-            mirrorPointLookup[pointI] = pointI;
+            mirrorPointLookup[pointi] = pointi;
         }
     }
 
@@ -179,9 +179,9 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             const face& origFace = curPatch[facei];
 
             face mirrorFace(origFace.size());
-            forAll(mirrorFace, pointI)
+            forAll(mirrorFace, pointi)
             {
-                mirrorFace[pointI] = mirrorPointLookup[origFace[pointI]];
+                mirrorFace[pointi] = mirrorPointLookup[origFace[pointi]];
             }
 
             if (origFace == mirrorFace)

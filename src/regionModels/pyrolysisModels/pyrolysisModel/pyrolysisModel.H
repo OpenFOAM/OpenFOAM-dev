@@ -212,7 +212,7 @@ public:
                 //- External hook to add mass to the primary region
                 virtual scalar addMassSources
                 (
-                    const label patchI,
+                    const label patchi,
                     const label facei
                 );
 

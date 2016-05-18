@@ -35,7 +35,7 @@ Description
     E.g.
     \verbatim
         // Construct iterative mesh mover.
-        motionSmoother meshMover(mesh, labelList(1, patchI));
+        motionSmoother meshMover(mesh, labelList(1, patchi));
 
         // Set desired displacement:
         meshMover.displacement() = ..
@@ -269,7 +269,7 @@ class motionSmootherAlgo
         ) const;
 
         //- Helper function. Is point internal?
-        bool isInternalPoint(const label pointI) const;
+        bool isInternalPoint(const label pointi) const;
 
         //- Given a set of faces that cause smoothing and a number of
         //  iterations determine the maximum set of points who are affected

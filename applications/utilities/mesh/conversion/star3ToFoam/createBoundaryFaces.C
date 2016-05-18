@@ -117,10 +117,10 @@ void Foam::starMesh::markBoundaryFaces()
             const face& curFace = patchFaces[facei];
             const labelList& facePoints = curFace;
 
-            forAll(facePoints, pointI)
+            forAll(facePoints, pointi)
             {
                 const labelList& facePointCells =
-                    PointCells[facePoints[pointI]];
+                    PointCells[facePoints[pointi]];
 
                 forAll(facePointCells, celli)
                 {

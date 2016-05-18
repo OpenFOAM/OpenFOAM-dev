@@ -766,9 +766,9 @@ int main(int argc, char *argv[])
         //    Info<< "Writing edges of intersection to selfInter.obj" << endl;
         //
         //    OFstream intStream("selfInter.obj");
-        //    forAll(inter.cutPoints(), cutPointI)
+        //    forAll(inter.cutPoints(), cutPointi)
         //    {
-        //        const point& pt = inter.cutPoints()[cutPointI];
+        //        const point& pt = inter.cutPoints()[cutPointi];
         //
         //        intStream << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z()
         //            << endl;

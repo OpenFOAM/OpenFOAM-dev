@@ -2566,7 +2566,7 @@ void Foam::conformalVoronoiMesh::removeUnusedPoints
         }
     }
 
-    label pointI = 0;
+    label pointi = 0;
 
     labelList oldToNew(pts.size(), label(-1));
 
@@ -2577,7 +2577,7 @@ void Foam::conformalVoronoiMesh::removeUnusedPoints
     {
         if (ptUsed[ptUI] == true)
         {
-            oldToNew[ptUI] = pointI++;
+            oldToNew[ptUI] = pointi++;
         }
     }
 
@@ -2585,12 +2585,12 @@ void Foam::conformalVoronoiMesh::removeUnusedPoints
     inplaceReorder(oldToNew, boundaryPts);
 
     Info<< "    Removing "
-        << returnReduce(pts.size() - pointI, sumOp<label>())
+        << returnReduce(pts.size() - pointi, sumOp<label>())
         << " unused points"
         << endl;
 
-    pts.setSize(pointI);
-    boundaryPts.setSize(pointI);
+    pts.setSize(pointi);
+    boundaryPts.setSize(pointi);
 
     // Renumber the faces to use the new point numbers
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -199,7 +199,7 @@ template<class TrackingData>
 inline void Foam::pointEdgePoint::leaveDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -225,7 +225,7 @@ template<class TrackingData>
 inline void Foam::pointEdgePoint::enterDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -240,14 +240,14 @@ template<class TrackingData>
 inline bool Foam::pointEdgePoint::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointEdgePoint& edgeInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(mesh.points()[pointI], edgeInfo, tol, td);
+    return update(mesh.points()[pointi], edgeInfo, tol, td);
 }
 
 
@@ -256,13 +256,13 @@ template<class TrackingData>
 inline bool Foam::pointEdgePoint::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointEdgePoint& newPointInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(mesh.points()[pointI], newPointInfo, tol, td);
+    return update(mesh.points()[pointi], newPointInfo, tol, td);
 }
 
 
@@ -285,7 +285,7 @@ inline bool Foam::pointEdgePoint::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointEdgePoint& pointInfo,
     const scalar tol,
     TrackingData& td

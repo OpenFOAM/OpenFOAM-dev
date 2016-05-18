@@ -167,7 +167,7 @@ Foam::PatchTools::subsetMap
 )
 {
     label facei  = 0;
-    label pointI = 0;
+    label pointi = 0;
 
     const List<Face>& localFaces = p.localFaces();
 
@@ -192,7 +192,7 @@ Foam::PatchTools::subsetMap
                 if (!pointHad[ptLabel])
                 {
                     pointHad[ptLabel]  = true;
-                    pointMap[pointI++] = ptLabel;
+                    pointMap[pointi++] = ptLabel;
                 }
             }
         }
@@ -200,7 +200,7 @@ Foam::PatchTools::subsetMap
 
     // Trim
     faceMap.setSize(facei);
-    pointMap.setSize(pointI);
+    pointMap.setSize(pointi);
 }
 
 
@@ -233,11 +233,11 @@ void Foam::PatchTools::calcBounds
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
-            if (pointIsUsed.set(pointI, 1u))
+            label pointi = f[fp];
+            if (pointIsUsed.set(pointi, 1u))
             {
-                bb.min() = ::Foam::min(bb.min(), points[pointI]);
-                bb.max() = ::Foam::max(bb.max(), points[pointI]);
+                bb.min() = ::Foam::min(bb.min(), points[pointi]);
+                bb.max() = ::Foam::max(bb.max(), points[pointi]);
                 nPoints++;
             }
         }

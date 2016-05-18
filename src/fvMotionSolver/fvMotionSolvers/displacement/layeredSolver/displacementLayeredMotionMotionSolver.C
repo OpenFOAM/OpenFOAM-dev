@@ -73,11 +73,11 @@ void Foam::displacementLayeredMotionMotionSolver::calcZoneMask
         forAll(cz, i)
         {
             const labelList& cPoints = mesh().cellPoints(cz[i]);
-            forAll(cPoints, cPointI)
+            forAll(cPoints, cPointi)
             {
-                if (!isZonePoint[cPoints[cPointI]])
+                if (!isZonePoint[cPoints[cPointi]])
                 {
-                    isZonePoint[cPoints[cPointI]] = 1;
+                    isZonePoint[cPoints[cPointi]] = 1;
                     nPoints++;
                 }
             }
@@ -155,13 +155,13 @@ void Foam::displacementLayeredMotionMotionSolver::walkStructured
     // Mark points inside cellZone.
     // Note that we use points0, not mesh.points()
     // so as not to accumulate errors.
-    forAll(isZonePoint, pointI)
+    forAll(isZonePoint, pointi)
     {
-        if (isZonePoint[pointI])
+        if (isZonePoint[pointi])
         {
-            allPointInfo[pointI] = pointEdgeStructuredWalk
+            allPointInfo[pointi] = pointEdgeStructuredWalk
             (
-                points0()[pointI],  // location of data
+                points0()[pointi],  // location of data
                 vector::max,        // not valid
                 0.0,
                 Zero        // passive data
@@ -200,12 +200,12 @@ void Foam::displacementLayeredMotionMotionSolver::walkStructured
     );
 
     // Extract distance and passive data
-    forAll(allPointInfo, pointI)
+    forAll(allPointInfo, pointi)
     {
-        if (isZonePoint[pointI])
+        if (isZonePoint[pointi])
         {
-            distance[pointI] = allPointInfo[pointI].dist();
-            data[pointI] = allPointInfo[pointI].data();
+            distance[pointi] = allPointInfo[pointi].dist();
+            data[pointi] = allPointInfo[pointi].data();
         }
     }
 }
@@ -428,14 +428,14 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
             dimensionedScalar("zero", dimLength, 0.0)
         );
 
-        forAll(distance, pointI)
+        forAll(distance, pointi)
         {
-            scalar d1 = patchDist[0][pointI];
-            scalar d2 = patchDist[1][pointI];
+            scalar d1 = patchDist[0][pointi];
+            scalar d2 = patchDist[1][pointi];
             if (d1 + d2 > SMALL)
             {
                 scalar s = d1/(d1 + d2);
-                distance[pointI] = s;
+                distance[pointi] = s;
             }
         }
 
@@ -450,28 +450,28 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
 
     if (interpolationScheme == "oneSided")
     {
-        forAll(pointDisplacement_, pointI)
+        forAll(pointDisplacement_, pointi)
         {
-            if (isZonePoint[pointI])
+            if (isZonePoint[pointi])
             {
-                pointDisplacement_[pointI] = patchDisp[0][pointI];
+                pointDisplacement_[pointi] = patchDisp[0][pointi];
             }
         }
     }
     else if (interpolationScheme == "linear")
     {
-        forAll(pointDisplacement_, pointI)
+        forAll(pointDisplacement_, pointi)
         {
-            if (isZonePoint[pointI])
+            if (isZonePoint[pointi])
             {
-                scalar d1 = patchDist[0][pointI];
-                scalar d2 = patchDist[1][pointI];
+                scalar d1 = patchDist[0][pointi];
+                scalar d2 = patchDist[1][pointi];
                 scalar s = d1/(d1 + d2 + VSMALL);
 
-                const vector& pd1 = patchDisp[0][pointI];
-                const vector& pd2 = patchDisp[1][pointI];
+                const vector& pd1 = patchDisp[0][pointi];
+                const vector& pd2 = patchDisp[1][pointi];
 
-                pointDisplacement_[pointI] = (1 - s)*pd1 + s*pd2;
+                pointDisplacement_[pointi] = (1 - s)*pd1 + s*pd2;
             }
         }
     }
@@ -565,21 +565,21 @@ void Foam::displacementLayeredMotionMotionSolver::updateMesh
 
     const vectorField displacement(this->newPoints() - points0_);
 
-    forAll(points0_, pointI)
+    forAll(points0_, pointi)
     {
-        label oldPointI = mpm.pointMap()[pointI];
+        label oldPointi = mpm.pointMap()[pointi];
 
-        if (oldPointI >= 0)
+        if (oldPointi >= 0)
         {
-            label masterPointI = mpm.reversePointMap()[oldPointI];
+            label masterPointi = mpm.reversePointMap()[oldPointi];
 
-            if ((masterPointI != pointI))
+            if ((masterPointi != pointi))
             {
                 // newly inserted point in this cellZone
 
                 // need to set point0 so that it represents the position that
                 // it would have had if it had existed for all time
-                points0_[pointI] -= displacement[pointI];
+                points0_[pointi] -= displacement[pointi];
             }
         }
     }

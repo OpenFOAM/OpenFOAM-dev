@@ -53,9 +53,9 @@ Foam::PatchTools::sortedPointEdges
 
     DynamicList<label> newEdgeList;
 
-    forAll(pointEdges, pointI)
+    forAll(pointEdges, pointi)
     {
-        const labelList& pEdges = pointEdges[pointI];
+        const labelList& pEdges = pointEdges[pointi];
 
         label nPointEdges = pEdges.size();
 
@@ -97,7 +97,7 @@ Foam::PatchTools::sortedPointEdges
                 if
                 (
                     nextEdgeI != edgeI
-                 && (nextEdge.start() == pointI || nextEdge.end() == pointI)
+                 && (nextEdge.start() == pointi || nextEdge.end() == pointi)
                 )
                 {
                     edgeI = nextEdgeI;
@@ -143,7 +143,7 @@ Foam::PatchTools::sortedPointEdges
                 }
             }
 
-            sortedPointEdges[pointI] = newEdgeList;
+            sortedPointEdges[pointi] = newEdgeList;
         }
     }
 

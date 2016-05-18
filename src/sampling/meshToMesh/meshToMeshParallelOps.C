@@ -403,14 +403,14 @@ void Foam::meshToMesh::distributeCells
                 face& f = subFaces[subFacei];
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
-                    if (reversePointMap[pointI] == -1)
+                    label pointi = f[fp];
+                    if (reversePointMap[pointi] == -1)
                     {
-                        reversePointMap[pointI] = subPoints.size();
-                        subPoints.append(tgtMesh.points()[pointI]);
+                        reversePointMap[pointi] = subPoints.size();
+                        subPoints.append(tgtMesh.points()[pointi]);
                     }
 
-                    f[fp] = reversePointMap[pointI];
+                    f[fp] = reversePointMap[pointi];
                 }
             }
 

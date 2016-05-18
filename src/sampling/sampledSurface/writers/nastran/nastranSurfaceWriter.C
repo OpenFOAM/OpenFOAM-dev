@@ -87,7 +87,7 @@ void Foam::nastranSurfaceWriter::formatOS(OFstream& os) const
 void Foam::nastranSurfaceWriter::writeCoord
 (
     const point& p,
-    const label pointI,
+    const label pointi,
     OFstream& os
 ) const
 {
@@ -110,7 +110,7 @@ void Foam::nastranSurfaceWriter::writeCoord
             os  << setw(8) << "GRID";
             os.unsetf(ios_base::left);
             os.setf(ios_base::right);
-            os  << setw(8) << pointI + 1
+            os  << setw(8) << pointi + 1
                 << "        " 
                 << setw(8) << p.x()
                 << setw(8) << p.y()
@@ -126,7 +126,7 @@ void Foam::nastranSurfaceWriter::writeCoord
             os  << setw(8) << "GRID*";
             os.unsetf(ios_base::left);
             os.setf(ios_base::right);
-            os  << setw(16) << pointI + 1
+            os  << setw(16) << pointi + 1
                 << "                "
                 << setw(16) << p.x()
                 << setw(16) << p.y()
@@ -145,7 +145,7 @@ void Foam::nastranSurfaceWriter::writeCoord
         case wfFree:
         {
             os  << "GRID"
-                << ',' << pointI + 1
+                << ',' << pointi + 1
                 << ','
                 << ',' << p.x()
                 << ',' << p.y()
@@ -271,9 +271,9 @@ void Foam::nastranSurfaceWriter::writeGeometry
         << "$ Points" << nl
         << "$" << nl;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        writeCoord(points[pointI], pointI, os);
+        writeCoord(points[pointi], pointi, os);
     }
 
 

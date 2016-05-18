@@ -43,9 +43,9 @@ typedef PrimitivePatch<face, List, const pointField&> myPrimitivePatch;
 
 void writeObj(Ostream& os,const pointField& points)
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os  << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
     }

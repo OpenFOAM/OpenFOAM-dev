@@ -43,7 +43,7 @@ void
 Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
 visitPointRegion
 (
-    const label pointI,
+    const label pointi,
     const labelList& pFaces,
     const label startFacei,
     const label startEdgeI,
@@ -57,7 +57,7 @@ visitPointRegion
         // Mark face as been visited.
         pFacesHad[index] = true;
 
-        // Step to next edge on face which is still using pointI
+        // Step to next edge on face which is still using pointi
         const labelList& fEdges = faceEdges()[startFacei];
 
         label nextEdgeI = -1;
@@ -68,7 +68,7 @@ visitPointRegion
 
             const edge& e = edges()[edgeI];
 
-            if (edgeI != startEdgeI && (e[0] == pointI || e[1] == pointI))
+            if (edgeI != startEdgeI && (e[0] == pointi || e[1] == pointi))
             {
                 nextEdgeI = edgeI;
 
@@ -80,7 +80,7 @@ visitPointRegion
         {
             FatalErrorInFunction
                 << "Problem: cannot find edge out of " << fEdges
-                << "on face " << startFacei << " that uses point " << pointI
+                << "on face " << startFacei << " that uses point " << pointi
                 << " and is not edge " << startEdgeI << abort(FatalError);
         }
 
@@ -93,7 +93,7 @@ visitPointRegion
             {
                 visitPointRegion
                 (
-                    pointI,
+                    pointi,
                     pFaces,
                     eFaces[i],
                     nextEdgeI,
@@ -237,26 +237,26 @@ checkPointManifold
 
     bool foundError = false;
 
-    forAll(pf, pointI)
+    forAll(pf, pointi)
     {
-        const labelList& pFaces = pf[pointI];
+        const labelList& pFaces = pf[pointi];
 
         // Visited faces (as indices into pFaces)
         boolList pFacesHad(pFaces.size(), false);
 
         // Starting edge
-        const labelList& pEdges = pe[pointI];
+        const labelList& pEdges = pe[pointi];
         label startEdgeI = pEdges[0];
 
         const labelList& eFaces = ef[startEdgeI];
 
         forAll(eFaces, i)
         {
-            // Visit all faces using pointI, starting from eFaces[i] and
+            // Visit all faces using pointi, starting from eFaces[i] and
             // startEdgeI. Mark off all faces visited in pFacesHad.
             this->visitPointRegion
             (
-                pointI,
+                pointi,
                 pFaces,
                 eFaces[i],  // starting face for walk
                 startEdgeI, // starting edge for walk
@@ -264,7 +264,7 @@ checkPointManifold
             );
         }
 
-        // After this all faces using pointI should have been visited and
+        // After this all faces using pointi should have been visited and
         // marked off in pFacesHad.
 
         label unset = findIndex(pFacesHad, false);
@@ -273,16 +273,16 @@ checkPointManifold
         {
             foundError = true;
 
-            label meshPointI = mp[pointI];
+            label meshPointi = mp[pointi];
 
             if (setPtr)
             {
-                setPtr->insert(meshPointI);
+                setPtr->insert(meshPointi);
             }
 
             if (report)
             {
-                Info<< "Point " << meshPointI
+                Info<< "Point " << meshPointi
                     << " uses faces which are not connected through an edge"
                     << nl
                     << "This means that the surface formed by this patched"

@@ -459,20 +459,20 @@ void Foam::removeCells::setRefinement
     // Remove points that are no longer used.
     // Loop rewritten to not use pointFaces.
 
-    forAll(nFacesUsingPoint, pointI)
+    forAll(nFacesUsingPoint, pointi)
     {
-        if (nFacesUsingPoint[pointI] == 0)
+        if (nFacesUsingPoint[pointi] == 0)
         {
-            //Pout<< "Removing unused point " << pointI
-            //    << " at:" << mesh_.points()[pointI] << endl;
+            //Pout<< "Removing unused point " << pointi
+            //    << " at:" << mesh_.points()[pointi] << endl;
 
-            meshMod.setAction(polyRemovePoint(pointI));
+            meshMod.setAction(polyRemovePoint(pointi));
         }
-        else if (nFacesUsingPoint[pointI] == 1)
+        else if (nFacesUsingPoint[pointi] == 1)
         {
             WarningInFunction
-                << "point " << pointI << " at coordinate "
-                << mesh_.points()[pointI]
+                << "point " << pointi << " at coordinate "
+                << mesh_.points()[pointi]
                 << " is only used by 1 face after removing cells."
                 << " This probably results in an illegal mesh."
                 << endl;

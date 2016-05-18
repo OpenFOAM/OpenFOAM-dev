@@ -115,23 +115,23 @@ void Foam::refinementFeatures::read
 
             labelList oldToNew(eMesh.points().size(), -1);
             DynamicField<point> newPoints(eMesh.points().size());
-            forAll(pointEdges, pointI)
+            forAll(pointEdges, pointi)
             {
-                if (pointEdges[pointI].size() > 2)
+                if (pointEdges[pointi].size() > 2)
                 {
-                    oldToNew[pointI] = newPoints.size();
-                    newPoints.append(eMesh.points()[pointI]);
+                    oldToNew[pointi] = newPoints.size();
+                    newPoints.append(eMesh.points()[pointi]);
                 }
-                //else if (pointEdges[pointI].size() == 2)
+                //else if (pointEdges[pointi].size() == 2)
                 //MEJ: do something based on a feature angle?
             }
             label nFeatures = newPoints.size();
-            forAll(oldToNew, pointI)
+            forAll(oldToNew, pointi)
             {
-                if (oldToNew[pointI] == -1)
+                if (oldToNew[pointi] == -1)
                 {
-                    oldToNew[pointI] = newPoints.size();
-                    newPoints.append(eMesh.points()[pointI]);
+                    oldToNew[pointi] = newPoints.size();
+                    newPoints.append(eMesh.points()[pointi]);
                 }
             }
 
@@ -372,14 +372,14 @@ void Foam::refinementFeatures::findHigherLevel
     scalarField candidateDistSqr(pt.size());
     label candidateI = 0;
 
-    forAll(maxLevel, pointI)
+    forAll(maxLevel, pointi)
     {
         forAllReverse(levels, levelI)
         {
-            if (levels[levelI] > maxLevel[pointI])
+            if (levels[levelI] > maxLevel[pointi])
             {
-                candidates[candidateI] = pt[pointI];
-                candidateMap[candidateI] = pointI;
+                candidates[candidateI] = pt[pointi];
+                candidateMap[candidateI] = pointi;
                 candidateDistSqr[candidateI] = sqr(distances[levelI]);
                 candidateI++;
                 break;
@@ -415,10 +415,10 @@ void Foam::refinementFeatures::findHigherLevel
                 mag(nearInfo[candidateI].hitPoint()-candidates[candidateI])
             );
 
-            label pointI = candidateMap[candidateI];
+            label pointi = candidateMap[candidateI];
 
             // pt is inbetween shell[minDistI] and shell[minDistI+1]
-            maxLevel[pointI] = levels[minDistI+1];
+            maxLevel[pointi] = levels[minDistI+1];
         }
     }
 }
@@ -474,12 +474,12 @@ Foam::refinementFeatures::refinementFeatures
 //        const labelListList& pointEdges = eMesh.pointEdges();
 //
 //        DynamicList<label> featurePoints;
-//        forAll(pointEdges, pointI)
+//        forAll(pointEdges, pointi)
 //        {
-//            const labelList& pEdges = pointEdges[pointI];
+//            const labelList& pEdges = pointEdges[pointi];
 //            if (pEdges.size() > 2)
 //            {
-//                featurePoints.append(pointI);
+//                featurePoints.append(pointi);
 //            }
 //            else if (pEdges.size() == 2)
 //            {
@@ -487,9 +487,9 @@ Foam::refinementFeatures::refinementFeatures
 //                const edge& e0 = edges[pEdges[0]];
 //                const edge& e1 = edges[pEdges[1]];
 //
-//                const point& p = points[pointI];
-//                const point& p0 = points[e0.otherVertex(pointI)];
-//                const point& p1 = points[e1.otherVertex(pointI)];
+//                const point& p = points[pointi];
+//                const point& p0 = points[e0.otherVertex(pointi)];
+//                const point& p1 = points[e1.otherVertex(pointi)];
 //
 //                vector v0 = p-p0;
 //                scalar v0Mag = mag(v0);
@@ -504,7 +504,7 @@ Foam::refinementFeatures::refinementFeatures
 //                 && ((v0/v0Mag & v1/v1Mag) < minCos)
 //                )
 //                {
-//                    featurePoints.append(pointI);
+//                    featurePoints.append(pointi);
 //                }
 //            }
 //        }
@@ -671,10 +671,10 @@ void Foam::refinementFeatures::findNearestRegionEdge
 //                    label nearFeatI = nearFeature[sampleI];
 //                    const indexedOctree<treeDataPoint>& nearTree =
 //                        pointTrees_[nearFeatI];
-//                    label featPointI =
+//                    label featPointi =
 //                        nearTree.shapes().pointLabels()[nearIndex[sampleI]];
 //                    const point& featPt =
-//                        operator[](nearFeatI).points()[featPointI];
+//                        operator[](nearFeatI).points()[featPointi];
 //                    distSqr = magSqr(featPt-sample);
 //                }
 //                else

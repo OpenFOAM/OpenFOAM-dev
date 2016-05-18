@@ -295,7 +295,7 @@ void readPoints(IFstream& inFile, pointField& points, Map<label>& mshToFoam)
     points.setSize(nVerts);
     mshToFoam.resize(2*nVerts);
 
-    for (label pointI = 0; pointI < nVerts; pointI++)
+    for (label pointi = 0; pointi < nVerts; pointi++)
     {
         label mshLabel;
         scalar xVal, yVal, zVal;
@@ -306,13 +306,13 @@ void readPoints(IFstream& inFile, pointField& points, Map<label>& mshToFoam)
 
         lineStr >> mshLabel >> xVal >> yVal >> zVal;
 
-        point& pt = points[pointI];
+        point& pt = points[pointi];
 
         pt.x() = xVal;
         pt.y() = yVal;
         pt.z() = zVal;
 
-        mshToFoam.insert(mshLabel, pointI);
+        mshToFoam.insert(mshLabel, pointi);
     }
 
     Info<< "Vertices read:" << mshToFoam.size() << endl;

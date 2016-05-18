@@ -343,13 +343,13 @@ void Foam::meshRefinement::testSyncPointList
         maxEqOp<scalar>(),
         -GREAT
     );
-    forAll(minFld, pointI)
+    forAll(minFld, pointi)
     {
-        const scalar& minVal = minFld[pointI];
-        const scalar& maxVal = maxFld[pointI];
+        const scalar& minVal = minFld[pointi];
+        const scalar& maxVal = maxFld[pointi];
         if (mag(minVal-maxVal) > SMALL)
         {
-            Pout<< msg << " at:" << mesh.points()[pointI] << nl
+            Pout<< msg << " at:" << mesh.points()[pointi] << nl
                 << "    minFld:" << minVal << nl
                 << "    maxFld:" << maxVal << nl
                 << endl;
@@ -390,13 +390,13 @@ void Foam::meshRefinement::testSyncPointList
         maxMagSqrEqOp<point>(),
         vector::zero
     );
-    forAll(minFld, pointI)
+    forAll(minFld, pointi)
     {
-        const point& minVal = minFld[pointI];
-        const point& maxVal = maxFld[pointI];
+        const point& minVal = minFld[pointi];
+        const point& maxVal = maxFld[pointi];
         if (mag(minVal-maxVal) > SMALL)
         {
-            Pout<< msg << " at:" << mesh.points()[pointI] << nl
+            Pout<< msg << " at:" << mesh.points()[pointi] << nl
                 << "    minFld:" << minVal << nl
                 << "    maxFld:" << maxVal << nl
                 << endl;
@@ -1731,11 +1731,11 @@ Foam::labelList Foam::meshRefinement::intersectedPoints() const
     // Pack
     labelList boundaryPoints(nBoundaryPoints);
     nBoundaryPoints = 0;
-    forAll(isBoundaryPoint, pointI)
+    forAll(isBoundaryPoint, pointi)
     {
-        if (isBoundaryPoint.get(pointI) == 1u)
+        if (isBoundaryPoint.get(pointi) == 1u)
         {
-            boundaryPoints[nBoundaryPoints++] = pointI;
+            boundaryPoints[nBoundaryPoints++] = pointi;
         }
     }
 
@@ -1978,13 +1978,13 @@ void Foam::meshRefinement::calculateEdgeWeights
     );
 
     // Inplace invert
-    forAll(invSumWeight, pointI)
+    forAll(invSumWeight, pointi)
     {
-        scalar w = invSumWeight[pointI];
+        scalar w = invSumWeight[pointi];
 
         if (w > 0.0)
         {
-            invSumWeight[pointI] = 1.0/w;
+            invSumWeight[pointi] = 1.0/w;
         }
     }
 }
@@ -2624,9 +2624,9 @@ Foam::PackedBoolList Foam::meshRefinement::getMasterPoints
     const globalIndex globalPoints(meshPoints.size());
 
     labelList myPoints(meshPoints.size());
-    forAll(meshPoints, pointI)
+    forAll(meshPoints, pointi)
     {
-        myPoints[pointI] = globalPoints.toGlobal(pointI);
+        myPoints[pointi] = globalPoints.toGlobal(pointi);
     }
 
     syncTools::syncPointList
@@ -2640,11 +2640,11 @@ Foam::PackedBoolList Foam::meshRefinement::getMasterPoints
 
 
     PackedBoolList isPatchMasterPoint(meshPoints.size());
-    forAll(meshPoints, pointI)
+    forAll(meshPoints, pointi)
     {
-        if (myPoints[pointI] == globalPoints.toGlobal(pointI))
+        if (myPoints[pointi] == globalPoints.toGlobal(pointi))
         {
-            isPatchMasterPoint[pointI] = true;
+            isPatchMasterPoint[pointi] = true;
         }
     }
 
@@ -2820,9 +2820,9 @@ void Foam::meshRefinement::dumpRefinementLevel() const
 
         const labelList& pointLevel = meshCutter_.pointLevel();
 
-        forAll(pointRefLevel, pointI)
+        forAll(pointRefLevel, pointi)
         {
-            pointRefLevel[pointI] = pointLevel[pointI];
+            pointRefLevel[pointi] = pointLevel[pointi];
         }
 
         pointRefLevel.write();

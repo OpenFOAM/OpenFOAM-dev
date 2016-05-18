@@ -403,8 +403,8 @@ public:
             //- External hook to add sources to the film
             virtual void addSources
             (
-                const label patchI,            // patchI on primary region
-                const label facei,             // facei of patchI
+                const label patchi,            // patchi on primary region
+                const label facei,             // facei of patchi
                 const scalar massSource,       // [kg]
                 const vector& momentumSource,  // [kg.m/s] (tang'l momentum)
                 const scalar pressureSource,   // [kg.m/s] (normal momentum)

@@ -76,24 +76,24 @@ void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
 
         vectorField binPoints(nBin_);
         writeCommented(file(i), "x co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            binPoints[pointI] = (binMin_ + (pointI + 1)*binDx_)*binDir_;
-            file(i) << tab << binPoints[pointI].x();
+            binPoints[pointi] = (binMin_ + (pointi + 1)*binDx_)*binDir_;
+            file(i) << tab << binPoints[pointi].x();
         }
         file(i) << nl;
 
         writeCommented(file(i), "y co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            file(i) << tab << binPoints[pointI].y();
+            file(i) << tab << binPoints[pointi].y();
         }
         file(i) << nl;
 
         writeCommented(file(i), "z co-ords  :");
-        forAll(binPoints, pointI)
+        forAll(binPoints, pointi)
         {
-            file(i) << tab << binPoints[pointI].z();
+            file(i) << tab << binPoints[pointi].z();
         }
         file(i) << nl;
 

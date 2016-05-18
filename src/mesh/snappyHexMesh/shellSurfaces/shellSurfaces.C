@@ -250,14 +250,14 @@ void Foam::shellSurfaces::findHigherLevel
         scalarField candidateDistSqr(pt.size());
         label candidateI = 0;
 
-        forAll(maxLevel, pointI)
+        forAll(maxLevel, pointi)
         {
             forAllReverse(levels, levelI)
             {
-                if (levels[levelI] > maxLevel[pointI])
+                if (levels[levelI] > maxLevel[pointi])
                 {
-                    candidates[candidateI] = pt[pointI];
-                    candidateMap[candidateI] = pointI;
+                    candidates[candidateI] = pt[pointi];
+                    candidateMap[candidateI] = pointi;
                     candidateDistSqr[candidateI] = sqr(distances[levelI]);
                     candidateI++;
                     break;
@@ -289,10 +289,10 @@ void Foam::shellSurfaces::findHigherLevel
                     mag(nearInfo[candidateI].hitPoint()-candidates[candidateI])
                 );
 
-                label pointI = candidateMap[candidateI];
+                label pointi = candidateMap[candidateI];
 
                 // pt is inbetween shell[minDistI] and shell[minDistI+1]
-                maxLevel[pointI] = levels[minDistI+1];
+                maxLevel[pointi] = levels[minDistI+1];
             }
         }
     }
@@ -307,12 +307,12 @@ void Foam::shellSurfaces::findHigherLevel
         labelList candidateMap(pt.size());
         label candidateI = 0;
 
-        forAll(maxLevel, pointI)
+        forAll(maxLevel, pointi)
         {
-            if (levels[0] > maxLevel[pointI])
+            if (levels[0] > maxLevel[pointi])
             {
-                candidates[candidateI] = pt[pointI];
-                candidateMap[candidateI] = pointI;
+                candidates[candidateI] = pt[pointi];
+                candidateMap[candidateI] = pointi;
                 candidateI++;
             }
         }
@@ -325,7 +325,7 @@ void Foam::shellSurfaces::findHigherLevel
 
         forAll(volType, i)
         {
-            label pointI = candidateMap[i];
+            label pointi = candidateMap[i];
 
             if
             (
@@ -339,7 +339,7 @@ void Foam::shellSurfaces::findHigherLevel
                 )
             )
             {
-                maxLevel[pointI] = levels[0];
+                maxLevel[pointi] = levels[0];
             }
         }
     }

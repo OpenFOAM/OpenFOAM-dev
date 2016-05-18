@@ -105,13 +105,13 @@ int main(int argc, char *argv[])
 
     pointField points(nNodes);
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
         scalar x,y,z;
 
         str >> x >> y >> z;
 
-        points[pointI] = point(x, y, z);
+        points[pointi] = point(x, y, z);
     }
 
 

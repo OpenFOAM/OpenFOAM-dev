@@ -133,10 +133,10 @@ void Foam::isoSurface::syncUnseparatedPoints
 
                 pointField patchInfo(meshPts.size());
 
-                forAll(nbrPts, pointI)
+                forAll(nbrPts, pointi)
                 {
-                    label nbrPointI = nbrPts[pointI];
-                    patchInfo[nbrPointI] = pointValues[meshPts[pointI]];
+                    label nbrPointi = nbrPts[pointi];
+                    patchInfo[nbrPointi] = pointValues[meshPts[pointi]];
                 }
 
                 OPstream toNbr(Pstream::blocking, pp.neighbProcNo());
@@ -168,13 +168,13 @@ void Foam::isoSurface::syncUnseparatedPoints
 
                 const labelList& meshPts = pp.meshPoints();
 
-                forAll(meshPts, pointI)
+                forAll(meshPts, pointi)
                 {
-                    label meshPointI = meshPts[pointI];
+                    label meshPointi = meshPts[pointi];
                     minEqOp<point>()
                     (
-                        pointValues[meshPointI],
-                        nbrPatchInfo[pointI]
+                        pointValues[meshPointi],
+                        nbrPatchInfo[pointi]
                     );
                 }
             }
@@ -231,9 +231,9 @@ void Foam::isoSurface::syncUnseparatedPoints
 
         forAll(pd.sharedPointLabels(), i)
         {
-            label meshPointI = pd.sharedPointLabels()[i];
+            label meshPointi = pd.sharedPointLabels()[i];
             // Fill my entries in the shared points
-            sharedPts[pd.sharedPointAddr()[i]] = pointValues[meshPointI];
+            sharedPts[pd.sharedPointAddr()[i]] = pointValues[meshPointi];
         }
 
         // Combine on master.
@@ -244,8 +244,8 @@ void Foam::isoSurface::syncUnseparatedPoints
         // my local information.
         forAll(pd.sharedPointLabels(), i)
         {
-            label meshPointI = pd.sharedPointLabels()[i];
-            pointValues[meshPointI] = sharedPts[pd.sharedPointAddr()[i]];
+            label meshPointi = pd.sharedPointLabels()[i];
+            pointValues[meshPointi] = sharedPts[pd.sharedPointAddr()[i]];
         }
     }
 }
@@ -589,9 +589,9 @@ void Foam::isoSurface::calcSnappedCc
                     snappedCc[celli] = snappedPoints.size();
                     snappedPoints.append(otherPointSum/nOther);
 
-                    //Pout<< "    point:" << pointI
-                    //    << " replacing coord:" << mesh_.points()[pointI]
-                    //    << " by average:" << collapsedPoint[pointI] << endl;
+                    //Pout<< "    point:" << pointi
+                    //    << " replacing coord:" << mesh_.points()[pointi]
+                    //    << " by average:" << collapsedPoint[pointi] << endl;
                 }
             }
             else if (localTriPoints.size() == 3)
@@ -602,9 +602,9 @@ void Foam::isoSurface::calcSnappedCc
                 snappedCc[celli] = snappedPoints.size();
                 snappedPoints.append(sum(points)/points.size());
 
-                //Pout<< "    point:" << pointI
-                //    << " replacing coord:" << mesh_.points()[pointI]
-                //    << " by average:" << collapsedPoint[pointI] << endl;
+                //Pout<< "    point:" << pointi
+                //    << " replacing coord:" << mesh_.points()[pointi]
+                //    << " by average:" << collapsedPoint[pointi] << endl;
             }
             else
             {
@@ -635,9 +635,9 @@ void Foam::isoSurface::calcSnappedCc
                 {
                     snappedCc[celli] = snappedPoints.size();
                     snappedPoints.append(calcCentre(surf));
-                    //Pout<< "    point:" << pointI << " nZones:" << nZones
-                    //    << " replacing coord:" << mesh_.points()[pointI]
-                    //    << " by average:" << collapsedPoint[pointI] << endl;
+                    //Pout<< "    point:" << pointi << " nZones:" << nZones
+                    //    << " replacing coord:" << mesh_.points()[pointi]
+                    //    << " by average:" << collapsedPoint[pointi] << endl;
                 }
             }
         }
@@ -666,14 +666,14 @@ void Foam::isoSurface::calcSnappedPoint
     // Work arrays
     DynamicList<point, 64> localTriPoints(100);
 
-    forAll(mesh_.pointFaces(), pointI)
+    forAll(mesh_.pointFaces(), pointi)
     {
-        if (isBoundaryPoint.get(pointI) == 1)
+        if (isBoundaryPoint.get(pointi) == 1)
         {
             continue;
         }
 
-        const labelList& pFaces = mesh_.pointFaces()[pointI];
+        const labelList& pFaces = mesh_.pointFaces()[pointi];
 
         bool anyCut = false;
 
@@ -725,20 +725,20 @@ void Foam::isoSurface::calcSnappedPoint
             FixedList<scalar, 4> s;
             FixedList<point, 4> pt;
 
-            label fp = findIndex(f, pointI);
-            s[0] = isoFraction(pVals[pointI], cVals[own]);
-            pt[0] = (1.0-s[0])*pts[pointI] + s[0]*cc[own];
+            label fp = findIndex(f, pointi);
+            s[0] = isoFraction(pVals[pointi], cVals[own]);
+            pt[0] = (1.0-s[0])*pts[pointi] + s[0]*cc[own];
 
-            s[1] = isoFraction(pVals[pointI], nbrValue);
-            pt[1] = (1.0-s[1])*pts[pointI] + s[1]*nbrPoint;
+            s[1] = isoFraction(pVals[pointi], nbrValue);
+            pt[1] = (1.0-s[1])*pts[pointi] + s[1]*nbrPoint;
 
-            label nextPointI = f[f.fcIndex(fp)];
-            s[2] = isoFraction(pVals[pointI], pVals[nextPointI]);
-            pt[2] = (1.0-s[2])*pts[pointI] + s[2]*pts[nextPointI];
+            label nextPointi = f[f.fcIndex(fp)];
+            s[2] = isoFraction(pVals[pointi], pVals[nextPointi]);
+            pt[2] = (1.0-s[2])*pts[pointi] + s[2]*pts[nextPointi];
 
-            label prevPointI = f[f.rcIndex(fp)];
-            s[3] = isoFraction(pVals[pointI], pVals[prevPointI]);
-            pt[3] = (1.0-s[3])*pts[pointI] + s[3]*pts[prevPointI];
+            label prevPointi = f[f.rcIndex(fp)];
+            s[3] = isoFraction(pVals[pointi], pVals[prevPointi]);
+            pt[3] = (1.0-s[3])*pts[pointi] + s[3]*pts[prevPointi];
 
             if
             (
@@ -780,7 +780,7 @@ void Foam::isoSurface::calcSnappedPoint
             // points.
             if (nOther > 0)
             {
-                collapsedPoint[pointI] = otherPointSum/nOther;
+                collapsedPoint[pointi] = otherPointSum/nOther;
             }
         }
         else if (localTriPoints.size() == 3)
@@ -788,7 +788,7 @@ void Foam::isoSurface::calcSnappedPoint
             // Single triangle. No need for any analysis. Average points.
             pointField points;
             points.transfer(localTriPoints);
-            collapsedPoint[pointI] = sum(points)/points.size();
+            collapsedPoint[pointi] = sum(points)/points.size();
         }
         else
         {
@@ -817,7 +817,7 @@ void Foam::isoSurface::calcSnappedPoint
 
             if (nZones == 1)
             {
-                collapsedPoint[pointI] = calcCentre(surf);
+                collapsedPoint[pointi] = calcCentre(surf);
             }
         }
     }
@@ -830,12 +830,12 @@ void Foam::isoSurface::calcSnappedPoint
     snappedPoint.setSize(mesh_.nPoints());
     snappedPoint = -1;
 
-    forAll(collapsedPoint, pointI)
+    forAll(collapsedPoint, pointi)
     {
-        if (collapsedPoint[pointI] != point::max)
+        if (collapsedPoint[pointi] != point::max)
         {
-            snappedPoint[pointI] = snappedPoints.size();
-            snappedPoints.append(collapsedPoint[pointI]);
+            snappedPoint[pointi] = snappedPoints.size();
+            snappedPoints.append(collapsedPoint[pointi]);
         }
     }
 }
@@ -897,19 +897,19 @@ Foam::triSurface Foam::isoSurface::stitchTriPoints
     List<labelledTri> tris;
     {
         DynamicList<labelledTri> dynTris(nTris);
-        label rawPointI = 0;
+        label rawPointi = 0;
         DynamicList<label> newToOldTri(nTris);
 
         for (label oldTriI = 0; oldTriI < nTris; oldTriI++)
         {
             labelledTri tri
             (
-                triPointReverseMap[rawPointI],
-                triPointReverseMap[rawPointI+1],
-                triPointReverseMap[rawPointI+2],
+                triPointReverseMap[rawPointi],
+                triPointReverseMap[rawPointi+1],
+                triPointReverseMap[rawPointi+2],
                 0
             );
-            rawPointI += 3;
+            rawPointi += 3;
 
             if ((tri[0] != tri[1]) && (tri[0] != tri[2]) && (tri[1] != tri[2]))
             {
@@ -1112,7 +1112,7 @@ Foam::triSurface Foam::isoSurface::subsetMesh
     oldToNewPoints.setSize(s.points().size());
     oldToNewPoints = -1;
     {
-        label pointI = 0;
+        label pointi = 0;
 
         forAll(include, oldFacei)
         {
@@ -1123,17 +1123,17 @@ Foam::triSurface Foam::isoSurface::subsetMesh
 
                 forAll(tri, fp)
                 {
-                    label oldPointI = tri[fp];
+                    label oldPointi = tri[fp];
 
-                    if (oldToNewPoints[oldPointI] == -1)
+                    if (oldToNewPoints[oldPointi] == -1)
                     {
-                        oldToNewPoints[oldPointI] = pointI;
-                        newToOldPoints[pointI++] = oldPointI;
+                        oldToNewPoints[oldPointi] = pointi;
+                        newToOldPoints[pointi++] = oldPointi;
                     }
                 }
             }
         }
-        newToOldPoints.setSize(pointI);
+        newToOldPoints.setSize(pointi);
     }
 
     // Extract points

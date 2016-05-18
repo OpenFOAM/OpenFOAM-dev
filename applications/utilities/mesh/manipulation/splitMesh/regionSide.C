@@ -69,13 +69,13 @@ Foam::label Foam::regionSide::otherEdge
     const primitiveMesh& mesh,
     const label facei,
     const label edgeI,
-    const label pointI
+    const label pointi
 )
 {
     const edge& e = mesh.edges()[edgeI];
 
     // Get other point on edge.
-    label freePointI = e.otherVertex(pointI);
+    label freePointi = e.otherVertex(pointi);
 
     const labelList& fEdges = mesh.faceEdges()[facei];
 
@@ -87,12 +87,12 @@ Foam::label Foam::regionSide::otherEdge
         if
         (
             (
-                otherE.start() == pointI
-             && otherE.end() != freePointI
+                otherE.start() == pointi
+             && otherE.end() != freePointi
             )
          || (
-                otherE.end() == pointI
-             && otherE.start() != freePointI
+                otherE.end() == pointi
+             && otherE.start() != freePointi
             )
         )
         {
@@ -103,7 +103,7 @@ Foam::label Foam::regionSide::otherEdge
 
     FatalErrorInFunction
         << "Cannot find other edge on face " << facei << " that uses point "
-        << pointI << " but not point " << freePointI << endl
+        << pointi << " but not point " << freePointi << endl
         << "Edges on face:" << fEdges
         << " verts:" << UIndirectList<edge>(mesh.edges(), fEdges)()
         << " Vertices on face:"
@@ -214,7 +214,7 @@ void Foam::regionSide::visitConnectedFaces
 }
 
 
-// From edge on face connected to point on region (regionPointI) cross
+// From edge on face connected to point on region (regionPointi) cross
 // to all other edges using this point by walking across faces
 // Does not cross regionEdges so stays on one side
 // of region
@@ -222,7 +222,7 @@ void Foam::regionSide::walkPointConnectedFaces
 (
     const primitiveMesh& mesh,
     const labelHashSet& regionEdges,
-    const label regionPointI,
+    const label regionPointi,
     const label startFacei,
     const label startEdgeI,
     labelHashSet& visitedEdges
@@ -233,15 +233,15 @@ void Foam::regionSide::walkPointConnectedFaces
 
     if (debug)
     {
-        Info<< "walkPointConnectedFaces : regionPointI:" << regionPointI
+        Info<< "walkPointConnectedFaces : regionPointi:" << regionPointi
             << " facei:" << startFacei
             << " edgeI:" << startEdgeI << " verts:"
             << mesh.edges()[startEdgeI]
             << endl;
     }
 
-    // Cross facei i.e. get edge not startEdgeI which uses regionPointI
-    label edgeI = otherEdge(mesh, startFacei, startEdgeI, regionPointI);
+    // Cross facei i.e. get edge not startEdgeI which uses regionPointi
+    label edgeI = otherEdge(mesh, startFacei, startEdgeI, regionPointi);
 
     if (!regionEdges.found(edgeI))
     {
@@ -271,7 +271,7 @@ void Foam::regionSide::walkPointConnectedFaces
                 (
                     mesh,
                     regionEdges,
-                    regionPointI,
+                    regionPointi,
                     facei,
                     edgeI,
                     visitedEdges

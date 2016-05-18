@@ -582,44 +582,44 @@ Foam::booleanSurface::booleanSurface
         cutSurf1.nPoints() - cutSurf1.nSurfacePoints()
     );
 
-    label combinedPointI = 0;
+    label combinedPointi = 0;
 
-    forAll(subSurf1.points(), pointI)
+    forAll(subSurf1.points(), pointi)
     {
         // Label in cutSurf
-        label cutSurfPointI = pointMap1[pointI];
+        label cutSurfPointi = pointMap1[pointi];
 
-        if (!cutSurf1.isSurfacePoint(cutSurfPointI))
+        if (!cutSurf1.isSurfacePoint(cutSurfPointi))
         {
-            // Label in original intersection is equal to the cutSurfPointI
+            // Label in original intersection is equal to the cutSurfPointi
 
             // Remember label in combinedPoints for intersection point.
-            intersectionLabels[cutSurfPointI] = combinedPointI;
+            intersectionLabels[cutSurfPointi] = combinedPointi;
         }
 
         // Copy point
-        combinedPoints[combinedPointI++] = subSurf1.points()[pointI];
+        combinedPoints[combinedPointi++] = subSurf1.points()[pointi];
     }
 
     // Append points from subSurf2 (if they are not intersection points)
     // and construct mapping
     labelList pointMap(subSurf2.nPoints());
 
-    forAll(subSurf2.points(), pointI)
+    forAll(subSurf2.points(), pointi)
     {
         // Label in cutSurf
-        label cutSurfPointI = pointMap2[pointI];
+        label cutSurfPointi = pointMap2[pointi];
 
-        if (!cutSurf2.isSurfacePoint(cutSurfPointI))
+        if (!cutSurf2.isSurfacePoint(cutSurfPointi))
         {
             // Lookup its label in combined point list.
-            pointMap[pointI] = intersectionLabels[cutSurfPointI];
+            pointMap[pointi] = intersectionLabels[cutSurfPointi];
         }
         else
         {
-            pointMap[pointI] = combinedPointI;
+            pointMap[pointi] = combinedPointi;
 
-            combinedPoints[combinedPointI++] = subSurf2.points()[pointI];
+            combinedPoints[combinedPointi++] = subSurf2.points()[pointi];
         }
     }
 
@@ -813,21 +813,21 @@ Foam::booleanSurface::booleanSurface
 
     // Copy all points from 1 and non-intersection ones from 2.
 
-    label combinedPointI = 0;
+    label combinedPointi = 0;
 
-    forAll(cutSurf1.points(), pointI)
+    forAll(cutSurf1.points(), pointi)
     {
-        combinedPoints[combinedPointI++] = cutSurf1.points()[pointI];
+        combinedPoints[combinedPointi++] = cutSurf1.points()[pointi];
     }
 
     for
     (
-        label pointI = 0;
-        pointI < cutSurf2.nSurfacePoints();
-        pointI++
+        label pointi = 0;
+        pointi < cutSurf2.nSurfacePoints();
+        pointi++
     )
     {
-        combinedPoints[combinedPointI++] = cutSurf2.points()[pointI];
+        combinedPoints[combinedPointi++] = cutSurf2.points()[pointi];
     }
 
     // Point order is now

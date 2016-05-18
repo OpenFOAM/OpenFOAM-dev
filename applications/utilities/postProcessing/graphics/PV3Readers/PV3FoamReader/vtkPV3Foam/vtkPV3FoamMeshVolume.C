@@ -158,7 +158,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
     vtkmesh->Allocate(mesh.nCells() + nAddCells);
 
     // Set counters for additional points and additional cells
-    label addPointI = 0, addCelli = 0;
+    label addPointi = 0, addCelli = 0;
 
     // Create storage for points - needed for mapping from OpenFOAM to VTK
     // data types - max 'order' = hex = 8 points
@@ -353,10 +353,10 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
             // Polyhedral cell. Decompose into tets + prisms.
 
             // Mapping from additional point to cell
-            addPointCellLabels[addPointI] = celli;
+            addPointCellLabels[addPointi] = celli;
 
             // The new vertex from the cell-centre
-            const label newVertexLabel = mesh.nPoints() + addPointI;
+            const label newVertexLabel = mesh.nPoints() + addPointi;
             vtkInsertNextOpenFOAMPoint(vtkpoints, mesh.C()[celli]);
 
             // Whether to insert cell in place of original or not.
@@ -460,7 +460,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
                 }
             }
 
-            addPointI++;
+            addPointi++;
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,17 +197,17 @@ bool Foam::fileFormats::NASedgeFormat::read
         label nUsed = 0;
 
         pointField& pts = storedPoints();
-        forAll(pts, pointI)
+        forAll(pts, pointi)
         {
-            if (usedPoints.get(pointI))
+            if (usedPoints.get(pointi))
             {
-                if (nUsed != pointI)
+                if (nUsed != pointi)
                 {
-                    pts[nUsed] = pts[pointI];
+                    pts[nUsed] = pts[pointi];
                 }
 
                 // map prev -> new id
-                mapPointId[pointI] = nUsed;
+                mapPointId[pointi] = nUsed;
 
                 ++nUsed;
             }

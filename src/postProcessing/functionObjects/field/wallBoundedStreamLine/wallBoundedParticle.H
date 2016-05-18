@@ -150,7 +150,7 @@ protected:
         (
             const polyPatch&,
             TrackData& td,
-            const label patchI,
+            const label patchi,
             const scalar trackFraction,
             const tetIndices& tetIs
         );

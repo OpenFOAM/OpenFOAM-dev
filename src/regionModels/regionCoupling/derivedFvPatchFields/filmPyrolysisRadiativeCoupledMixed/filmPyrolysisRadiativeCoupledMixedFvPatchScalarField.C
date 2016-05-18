@@ -227,7 +227,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
     const mappedPatchBase& mpp =
         refCast<const mappedPatchBase>(patch().patch());
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
     const label nbrPatchi = mpp.samplePolyPatch().index();
     const polyMesh& mesh = patch().boundaryMesh().mesh();
     const polyMesh& nbrMesh = mpp.sampleMesh();
@@ -274,7 +274,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
     label coupledPatchi = -1;
     if (pyrolysisRegionName_ == mesh.name())
     {
-        coupledPatchi = patchI;
+        coupledPatchi = patchi;
         if (QrName_ != "none")
         {
             Qr = nbrPatch.lookupPatchField<volScalarField, scalar>(QrName_);

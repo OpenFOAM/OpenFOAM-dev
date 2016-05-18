@@ -207,10 +207,10 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
         pointZoneIndices[zoneI] = zoneIndex(pointZoneNames_, pz[zoneI].name());
     }
 
-    forAll(p, pointI)
+    forAll(p, pointi)
     {
         // Grab zone ID.  If a point is not in a zone, it will return -1
-        zoneID = pz.whichZone(pointI);
+        zoneID = pz.whichZone(pointi);
 
         if (zoneID >= 0)
         {
@@ -218,15 +218,15 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
             zoneID = pointZoneIndices[zoneID];
         }
 
-        renumberPoints[pointI] =
+        renumberPoints[pointi] =
             meshMod_.setAction
             (
                 polyAddPoint
                 (
-                    p[pointI],            // Point to add
+                    p[pointi],            // Point to add
                     -1,                   // Master point (straight addition)
                     zoneID,               // Zone for point
-                    pointI < m.nPoints()  // Is in cell?
+                    pointi < m.nPoints()  // Is in cell?
                 )
             );
     }
@@ -309,9 +309,9 @@ void Foam::mergePolyMesh::addMesh(const polyMesh& m)
 
         face newFace(curFace.size());
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            newFace[pointI] = renumberPoints[curFace[pointI]];
+            newFace[pointi] = renumberPoints[curFace[pointi]];
         }
 
         if (debug)

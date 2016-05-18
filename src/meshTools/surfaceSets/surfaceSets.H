@@ -79,7 +79,7 @@ class surfaceSets
         //static scalar minEdgeLen
         //(
         //    const primitiveMesh& mesh,
-        //    const label pointI
+        //    const label pointi
         //);
         //
         ////- Returns true if cell uses at least one selected point

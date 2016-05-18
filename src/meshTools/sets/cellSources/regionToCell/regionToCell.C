@@ -224,11 +224,11 @@ void Foam::regionToCell::shrinkRegions
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     label nChanged = 0;
-    forAll(boundaryPoint, pointI)
+    forAll(boundaryPoint, pointi)
     {
-        if (boundaryPoint[pointI])
+        if (boundaryPoint[pointi])
         {
-            const labelList& pCells = mesh_.pointCells(pointI);
+            const labelList& pCells = mesh_.pointCells(pointi);
             forAll(pCells, i)
             {
                 label celli = pCells[i];
@@ -313,11 +313,11 @@ void Foam::regionToCell::erode
         // Select all cells using these points
 
         label nChanged = 0;
-        forAll(boundaryPoint, pointI)
+        forAll(boundaryPoint, pointi)
         {
-            if (boundaryPoint[pointI])
+            if (boundaryPoint[pointi])
             {
-                const labelList& pCells = mesh_.pointCells(pointI);
+                const labelList& pCells = mesh_.pointCells(pointi);
                 forAll(pCells, i)
                 {
                     label celli = pCells[i];

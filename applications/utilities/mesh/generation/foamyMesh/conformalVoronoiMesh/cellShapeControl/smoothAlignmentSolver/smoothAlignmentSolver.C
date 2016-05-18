@@ -364,9 +364,9 @@ void Foam::smoothAlignmentSolver::smoothAlignments
 
             triad& newTriad = triadAv[pI];
 
-            forAll(pPoints, adjPointI)
+            forAll(pPoints, adjPointi)
             {
-                const label adjPointIndex = pPoints[adjPointI];
+                const label adjPointIndex = pPoints[adjPointi];
 
                 scalar dist = mag(points[pI] - points[adjPointIndex]);
 

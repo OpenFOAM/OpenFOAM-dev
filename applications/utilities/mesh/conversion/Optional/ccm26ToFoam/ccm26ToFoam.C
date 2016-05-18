@@ -801,8 +801,8 @@ int main(int argc, char *argv[])
 
     // Renumber vertex labels to Foam point labels
     {
-        label maxCCMPointI = max(foamPointMap);
-        labelList toFoamPoints(invert(maxCCMPointI+1, foamPointMap));
+        label maxCCMPointi = max(foamPointMap);
+        labelList toFoamPoints(invert(maxCCMPointi+1, foamPointMap));
 
         forAll(foamFaces, facei)
         {

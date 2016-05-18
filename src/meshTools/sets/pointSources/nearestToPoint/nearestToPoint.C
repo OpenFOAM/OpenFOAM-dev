@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,27 +55,27 @@ void Foam::nearestToPoint::combine(topoSet& set, const bool add) const
 {
     // Do linear search since usually just a few points.
 
-    forAll(points_, pointI)
+    forAll(points_, pointi)
     {
         const pointField& pts = mesh_.points();
 
         if (pts.size())
         {
-            label minPointI = 0;
-            scalar minDistSqr = magSqr(pts[minPointI] - points_[pointI]);
+            label minPointi = 0;
+            scalar minDistSqr = magSqr(pts[minPointi] - points_[pointi]);
 
             for (label i = 1; i < pts.size(); i++)
             {
-                scalar distSqr = magSqr(pts[i] - points_[pointI]);
+                scalar distSqr = magSqr(pts[i] - points_[pointi]);
 
                 if (distSqr < minDistSqr)
                 {
                     minDistSqr = distSqr;
-                    minPointI = i;
+                    minPointi = i;
                 }
             }
 
-            addOrDelete(set, minPointI, add);
+            addOrDelete(set, minPointi, add);
         }
     }
 }

@@ -145,10 +145,10 @@ void Foam::cellCuts::writeUncutOBJ
 
     forAll(cPoints, i)
     {
-        label pointI = cPoints[i];
-        if (pointIsCut_[pointI])
+        label pointi = cPoints[i];
+        if (pointIsCut_[pointi])
         {
-            meshTools::writeOBJ(cutStream, mesh().points()[pointI]);
+            meshTools::writeOBJ(cutStream, mesh().points()[pointi]);
         }
     }
 
@@ -1129,18 +1129,18 @@ void Foam::cellCuts::calcCellLoops(const labelList& cutCells)
 void Foam::cellCuts::walkEdges
 (
     const label celli,
-    const label pointI,
+    const label pointi,
     const label status,
 
     Map<label>& edgeStatus,
     Map<label>& pointStatus
 ) const
 {
-    if (pointStatus.insert(pointI, status))
+    if (pointStatus.insert(pointi, status))
     {
-        // First visit to pointI
+        // First visit to pointi
 
-        const labelList& pEdges = mesh().pointEdges()[pointI];
+        const labelList& pEdges = mesh().pointEdges()[pointi];
 
         forAll(pEdges, pEdgeI)
         {
@@ -1154,7 +1154,7 @@ void Foam::cellCuts::walkEdges
             {
                 // First visit to edgeI so recurse.
 
-                label v2 = mesh().edges()[edgeI].otherVertex(pointI);
+                label v2 = mesh().edges()[edgeI].otherVertex(pointi);
 
                 walkEdges(celli, v2, status, edgeStatus, pointStatus);
             }
@@ -1175,15 +1175,15 @@ Foam::labelList Foam::cellCuts::nonAnchorPoints
 
     forAll(cellPoints, i)
     {
-        label pointI = cellPoints[i];
+        label pointi = cellPoints[i];
 
         if
         (
-            findIndex(anchorPoints, pointI) == -1
-         && findIndex(loop, vertToEVert(pointI)) == -1
+            findIndex(anchorPoints, pointi) == -1
+         && findIndex(loop, vertToEVert(pointi)) == -1
         )
         {
-            newElems[newElemI++] = pointI;
+            newElems[newElemI++] = pointi;
         }
     }
 
@@ -1358,9 +1358,9 @@ bool Foam::cellCuts::calcAnchors
 
     forAllConstIter(Map<label>, pointStatus, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        const labelList& pFaces = mesh().pointFaces()[pointI];
+        const labelList& pFaces = mesh().pointFaces()[pointi];
 
         if (iter() == 1)
         {

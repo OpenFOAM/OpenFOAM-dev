@@ -226,13 +226,13 @@ void Foam::extrude2DMesh::setRefinement
     {
         label offset = layer * points.size();
 
-        forAll(points, pointI)
+        forAll(points, pointi)
         {
             // Don't need the surface normal for either linearDirection or
             // wedge. Will need to add to be able to use others.
             point newPoint = model_
             (
-                points[pointI],
+                points[pointi],
                 vector(),
                 layer
             );
@@ -240,7 +240,7 @@ void Foam::extrude2DMesh::setRefinement
             meshMod.addPoint
             (
                 newPoint,
-                pointI + offset,
+                pointi + offset,
                 -1,             // zoneID
                 true            // inCell
             );
@@ -390,24 +390,24 @@ void Foam::extrude2DMesh::setRefinement
 
         const face& f = faces[nextFacei];
 
-        label nextPointI;
+        label nextPointi;
         if (mesh_.faceOwner()[nextFacei] == celli)
         {
             frontFace[0] = f[0];
-            nextPointI = f[1];
+            nextPointi = f[1];
         }
         else
         {
             frontFace[0] = f[1];
-            nextPointI = f[0];
+            nextPointi = f[0];
         }
 
 
         for (label i = 1; i < frontFace.size(); i++)
         {
-            frontFace[i] = nextPointI;
+            frontFace[i] = nextPointi;
 
-            // Find face containing pointI
+            // Find face containing pointi
             forAll(cFaces, cFacei)
             {
                 label facei = cFaces[cFacei];
@@ -415,15 +415,15 @@ void Foam::extrude2DMesh::setRefinement
                 {
                     const face& f = faces[facei];
 
-                    if (f[0] == nextPointI)
+                    if (f[0] == nextPointi)
                     {
-                        nextPointI = f[1];
+                        nextPointi = f[1];
                         nextFacei = facei;
                         break;
                     }
-                    else if (f[1] == nextPointI)
+                    else if (f[1] == nextPointi)
                     {
-                        nextPointI = f[0];
+                        nextPointi = f[0];
                         nextFacei = facei;
                         break;
                     }
@@ -486,24 +486,24 @@ void Foam::extrude2DMesh::setRefinement
 
         const face& f = faces[nextFacei];
 
-        label nextPointI;
+        label nextPointi;
         if (mesh_.faceOwner()[nextFacei] == celli)
         {
             frontFace[0] = f[0];
-            nextPointI = f[1];
+            nextPointi = f[1];
         }
         else
         {
             frontFace[0] = f[1];
-            nextPointI = f[0];
+            nextPointi = f[0];
         }
 
 
         for (label i = 1; i < frontFace.size(); i++)
         {
-            frontFace[i] = nextPointI;
+            frontFace[i] = nextPointi;
 
-            // Find face containing pointI
+            // Find face containing pointi
             forAll(cFaces, cFacei)
             {
                 label facei = cFaces[cFacei];
@@ -511,15 +511,15 @@ void Foam::extrude2DMesh::setRefinement
                 {
                     const face& f = faces[facei];
 
-                    if (f[0] == nextPointI)
+                    if (f[0] == nextPointi)
                     {
-                        nextPointI = f[1];
+                        nextPointi = f[1];
                         nextFacei = facei;
                         break;
                     }
-                    else if (f[1] == nextPointI)
+                    else if (f[1] == nextPointi)
                     {
-                        nextPointI = f[0];
+                        nextPointi = f[0];
                         nextFacei = facei;
                         break;
                     }

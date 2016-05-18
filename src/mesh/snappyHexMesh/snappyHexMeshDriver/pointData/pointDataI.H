@@ -92,7 +92,7 @@ template<class TrackingData>
 inline bool Foam::pointData::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointData& edgeInfo,
     const scalar tol,
@@ -104,7 +104,7 @@ inline bool Foam::pointData::updatePoint
         pointEdgePoint::updatePoint
         (
             mesh,
-            pointI,
+            pointi,
             edgeI,
             edgeInfo,
             tol,
@@ -127,7 +127,7 @@ template<class TrackingData>
 inline bool Foam::pointData::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointData& newPointInfo,
     const scalar tol,
     TrackingData& td
@@ -138,7 +138,7 @@ inline bool Foam::pointData::updatePoint
         pointEdgePoint::updatePoint
         (
             mesh,
-            pointI,
+            pointi,
             newPointInfo,
             tol,
             td
@@ -184,7 +184,7 @@ inline bool Foam::pointData::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointData& pointInfo,
     const scalar tol,
     TrackingData& td
@@ -197,7 +197,7 @@ inline bool Foam::pointData::updateEdge
         (
             mesh,
             edgeI,
-            pointI,
+            pointi,
             pointInfo,
             tol,
             td

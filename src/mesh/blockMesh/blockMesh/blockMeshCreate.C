@@ -82,15 +82,15 @@ void Foam::blockMesh::createPoints() const
                 << endl;
         }
 
-        forAll(blockPoints, blockPointI)
+        forAll(blockPoints, blockPointi)
         {
             points_
             [
                 mergeList_
                 [
-                    blockOffsets_[blockI] + blockPointI
+                    blockOffsets_[blockI] + blockPointi
                 ]
-            ] = scaleFactor_ * blockPoints[blockPointI];
+            ] = scaleFactor_ * blockPoints[blockPointi];
         }
     }
 }
@@ -122,12 +122,12 @@ void Foam::blockMesh::createCells() const
         {
             labelList cellPoints(blockCells[blockCelli].size());
 
-            forAll(cellPoints, cellPointI)
+            forAll(cellPoints, cellPointi)
             {
-                cellPoints[cellPointI] =
+                cellPoints[cellPointi] =
                     mergeList_
                     [
-                        blockCells[blockCelli][cellPointI]
+                        blockCells[blockCelli][cellPointi]
                       + blockOffsets_[blockI]
                     ];
             }

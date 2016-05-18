@@ -51,9 +51,9 @@ void Foam::slidingInterface::clearCouple
     const labelList& cutPointZoneLabels =
         mesh.pointZones()[cutPointZoneID_.index()];
 
-    forAll(cutPointZoneLabels, pointI)
+    forAll(cutPointZoneLabels, pointi)
     {
-        ref.setAction(polyRemovePoint(cutPointZoneLabels[pointI]));
+        ref.setAction(polyRemovePoint(cutPointZoneLabels[pointi]));
     }
 
     // Remove all faces from the face zone

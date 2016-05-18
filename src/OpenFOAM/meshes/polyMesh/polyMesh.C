@@ -1315,24 +1315,24 @@ bool Foam::polyMesh::pointInCell
 
                 forAll(f, fp)
                 {
-                    label pointI;
-                    label nextPointI;
+                    label pointi;
+                    label nextPointi;
 
                     if (isOwn)
                     {
-                        pointI = f[fp];
-                        nextPointI = f.nextLabel(fp);
+                        pointi = f[fp];
+                        nextPointi = f.nextLabel(fp);
                     }
                     else
                     {
-                        pointI = f.nextLabel(fp);
-                        nextPointI = f[fp];
+                        pointi = f.nextLabel(fp);
+                        nextPointi = f[fp];
                     }
 
                     triPointRef faceTri
                     (
-                        points()[pointI],
-                        points()[nextPointI],
+                        points()[pointi],
+                        points()[nextPointi],
                         fc
                     );
 

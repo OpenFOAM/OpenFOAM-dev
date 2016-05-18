@@ -64,16 +64,16 @@ Foam::PatchTools::pointNormals
     {
         // Collect local pointFaces (sized on patch points only)
         List<List<point>> pointFaceNormals(map.constructSize());
-        forAll(p.meshPoints(), patchPointI)
+        forAll(p.meshPoints(), patchPointi)
         {
-            label meshPointI = p.meshPoints()[patchPointI];
-            Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointI);
+            label meshPointi = p.meshPoints()[patchPointi];
+            Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointi);
             if (fnd != coupledPatchMP.end())
             {
-                label coupledPointI = fnd();
+                label coupledPointi = fnd();
 
-                List<point>& pNormals = pointFaceNormals[coupledPointI];
-                const labelList& pFaces = p.pointFaces()[patchPointI];
+                List<point>& pNormals = pointFaceNormals[coupledPointi];
+                const labelList& pFaces = p.pointFaces()[patchPointi];
                 pNormals.setSize(pFaces.size());
                 forAll(pFaces, i)
                 {
@@ -99,16 +99,16 @@ Foam::PatchTools::pointNormals
         const labelListList& transformedSlaves =
             globalData.globalPointTransformedSlaves();
 
-        forAll(slaves, coupledPointI)
+        forAll(slaves, coupledPointi)
         {
-            const labelList& slaveSlots = slaves[coupledPointI];
+            const labelList& slaveSlots = slaves[coupledPointi];
             const labelList& transformedSlaveSlots =
-                transformedSlaves[coupledPointI];
+                transformedSlaves[coupledPointi];
 
-            point& n = coupledPointNormals[coupledPointI];
+            point& n = coupledPointNormals[coupledPointi];
 
             // Local entries
-            const List<point>& local = pointFaceNormals[coupledPointI];
+            const List<point>& local = pointFaceNormals[coupledPointi];
 
             label nFaces =
                 local.size()
@@ -178,14 +178,14 @@ Foam::PatchTools::pointNormals
 
 
     // 2. Override patch normals on coupled points
-    forAll(p.meshPoints(), patchPointI)
+    forAll(p.meshPoints(), patchPointi)
     {
-        label meshPointI = p.meshPoints()[patchPointI];
-        Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointI);
+        label meshPointi = p.meshPoints()[patchPointi];
+        Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointi);
         if (fnd != coupledPatchMP.end())
         {
-            label coupledPointI = fnd();
-            extrudeN[patchPointI] = coupledPointNormals[coupledPointI];
+            label coupledPointi = fnd();
+            extrudeN[patchPointi] = coupledPointNormals[coupledPointi];
         }
     }
 

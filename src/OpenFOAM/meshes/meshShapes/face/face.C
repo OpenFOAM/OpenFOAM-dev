@@ -618,9 +618,9 @@ Foam::face Foam::face::reverseFace() const
 
     newList[0] = f[0];
 
-    for (label pointI = 1; pointI < newList.size(); pointI++)
+    for (label pointi = 1; pointi < newList.size(); pointi++)
     {
-        newList[pointI] = f[size() - pointI];
+        newList[pointi] = f[size() - pointi];
     }
 
     return face(xferMove(newList));
@@ -764,9 +764,9 @@ Foam::edgeList Foam::face::edges() const
 
     edgeList e(points.size());
 
-    for (label pointI = 0; pointI < points.size() - 1; ++pointI)
+    for (label pointi = 0; pointi < points.size() - 1; ++pointi)
     {
-        e[pointI] = edge(points[pointI], points[pointI + 1]);
+        e[pointi] = edge(points[pointi], points[pointi + 1]);
     }
 
     // Add last edge

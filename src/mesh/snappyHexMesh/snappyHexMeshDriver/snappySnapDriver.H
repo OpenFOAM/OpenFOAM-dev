@@ -130,7 +130,7 @@ class snappySnapDriver
                     const scalar featureCos,
                     const indirectPrimitivePatch& pp,
                     const PackedBoolList& isFeatureEdge,
-                    const label pointI
+                    const label pointi
                 ) const;
 
                 void smoothAndConstrain
@@ -298,7 +298,7 @@ class snappySnapDriver
                     const indirectPrimitivePatch& pp,
                     const scalarField& snapDist,
                     const vectorField& nearestDisp,
-                    const label pointI,
+                    const label pointi,
 
                     const List<List<point>>& pointFaceSurfNormals,
                     const List<List<point>>& pointFaceDisp,
@@ -411,7 +411,7 @@ class snappySnapDriver
 
                     const indirectPrimitivePatch& pp,
                     const scalarField& snapDist,
-                    const label pointI,
+                    const label pointi,
                     const point& estimatedPt,
 
                     List<List<DynamicList<point>>>&,
@@ -432,7 +432,7 @@ class snappySnapDriver
 
                     const indirectPrimitivePatch& pp,
                     const scalarField& snapDist,
-                    const label pointI,
+                    const label pointi,
                     const point& estimatedPt,
 
                     // Feature-point to pp point

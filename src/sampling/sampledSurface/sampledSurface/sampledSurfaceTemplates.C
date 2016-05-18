@@ -181,15 +181,15 @@ Foam::sampledSurface::pointAverage
 
     labelField nPointCells(mesh.nCells(), 0);
     {
-        for (label pointI = 0; pointI < mesh.nPoints(); pointI++)
+        for (label pointi = 0; pointi < mesh.nPoints(); pointi++)
         {
-            const labelList& pCells = mesh.pointCells(pointI);
+            const labelList& pCells = mesh.pointCells(pointi);
 
             forAll(pCells, i)
             {
                 label celli = pCells[i];
 
-                cellAvg[celli] += pfld[pointI];
+                cellAvg[celli] += pfld[pointi];
                 nPointCells[celli]++;
             }
         }

@@ -245,11 +245,11 @@ void Foam::thresholdCellFaces::calculate
 
     pointField surfPoints(nPoints);
     nPoints = 0;
-    forAll(oldToNewPoints, pointI)
+    forAll(oldToNewPoints, pointi)
     {
-        if (oldToNewPoints[pointI] >= 0)
+        if (oldToNewPoints[pointi] >= 0)
         {
-            surfPoints[oldToNewPoints[pointI]] = origPoints[pointI];
+            surfPoints[oldToNewPoints[pointi]] = origPoints[pointi];
             nPoints++;
         }
     }

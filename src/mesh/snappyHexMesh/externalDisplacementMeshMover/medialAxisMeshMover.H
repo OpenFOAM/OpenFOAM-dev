@@ -148,7 +148,7 @@ class medialAxisMeshMover
             //- Unmark extrusion at given point
             static bool unmarkExtrusion
             (
-                const label patchPointI,
+                const label patchPointi,
                 pointField& patchDisp,
                 List<snappyLayerDriver::extrudeMode>& extrudeStatus
             );

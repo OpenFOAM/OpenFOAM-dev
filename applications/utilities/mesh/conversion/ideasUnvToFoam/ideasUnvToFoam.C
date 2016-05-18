@@ -212,20 +212,20 @@ void readPoints
         string line;
         is.getLine(line);
 
-        label pointI = readLabel(IStringStream(line.substr(0, 10))());
+        label pointi = readLabel(IStringStream(line.substr(0, 10))());
 
-        if (pointI == -1)
+        if (pointi == -1)
         {
             break;
         }
-        else if (pointI != points.size()+1 && !hasWarned)
+        else if (pointi != points.size()+1 && !hasWarned)
         {
             hasWarned = true;
 
             IOWarningInFunction
             (
                 is
-            )   << "Points not in order starting at point " << pointI
+            )   << "Points not in order starting at point " << pointi
                 //<< " at line " << is.lineNumber()
                 //<< abort(FatalError);
                 << endl;
@@ -237,7 +237,7 @@ void readPoints
         pt[1] = readUnvScalar(line.substr(25, 25));
         pt[2] = readUnvScalar(line.substr(50, 25));
 
-        unvPointID.append(pointI);
+        unvPointID.append(pointi);
         points.append(pt);
     }
 
@@ -279,9 +279,9 @@ void readCells
 
     // Invert point numbering.
     label maxUnvPoint = 0;
-    forAll(unvPointID, pointI)
+    forAll(unvPointID, pointi)
     {
-        maxUnvPoint = max(maxUnvPoint, unvPointID[pointI]);
+        maxUnvPoint = max(maxUnvPoint, unvPointID[pointi]);
     }
     labelList unvToFoam(invert(maxUnvPoint+1, unvPointID));
 
@@ -605,10 +605,10 @@ void readDOFS
         }
 
         IStringStream lineStr(line);
-        label pointI;
-        lineStr >> pointI;
+        label pointi;
+        lineStr >> pointi;
 
-        vertices.append(pointI);
+        vertices.append(pointi);
     }
 
     Info<< "For DOF set " << group
@@ -781,9 +781,9 @@ int main(int argc, char *argv[])
 
     // Invert point numbering.
     label maxUnvPoint = 0;
-    forAll(unvPointID, pointI)
+    forAll(unvPointID, pointi)
     {
-        maxUnvPoint = max(maxUnvPoint, unvPointID[pointI]);
+        maxUnvPoint = max(maxUnvPoint, unvPointID[pointi]);
     }
     labelList unvToFoam(invert(maxUnvPoint+1, unvPointID));
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,37 +143,37 @@ bool Foam::pointZone::checkParallelSync(const bool report) const
     labelList minZone(mesh.nPoints(), labelMax);
     forAll(*this, i)
     {
-        label pointI = operator[](i);
-        maxZone[pointI] = index();
-        minZone[pointI] = index();
+        label pointi = operator[](i);
+        maxZone[pointi] = index();
+        minZone[pointi] = index();
     }
     syncTools::syncPointList(mesh, maxZone, maxEqOp<label>(), label(-1));
     syncTools::syncPointList(mesh, minZone, minEqOp<label>(), labelMax);
 
     bool error = false;
 
-    forAll(maxZone, pointI)
+    forAll(maxZone, pointi)
     {
         // Check point in same (or no) zone on all processors
         if
         (
             (
-                maxZone[pointI] != -1
-             || minZone[pointI] != labelMax
+                maxZone[pointi] != -1
+             || minZone[pointi] != labelMax
             )
-         && (maxZone[pointI] != minZone[pointI])
+         && (maxZone[pointi] != minZone[pointi])
         )
         {
             if (report && !error)
             {
                 Info<< " ***Problem with pointZone " << index()
                     << " named " << name()
-                    << ". Point " << pointI
-                    << " at " << mesh.points()[pointI]
+                    << ". Point " << pointi
+                    << " at " << mesh.points()[pointi]
                     << " is in zone "
-                    << (minZone[pointI] == labelMax ? -1 : minZone[pointI])
+                    << (minZone[pointi] == labelMax ? -1 : minZone[pointi])
                     << " on some processors and in zone "
-                    << maxZone[pointI]
+                    << maxZone[pointi]
                     << " on some other processors." << nl
                     << "(suppressing further warnings)"
                     << endl;

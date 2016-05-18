@@ -74,12 +74,12 @@ bool Foam::meshStructure::isStructuredCell
             label nLayerPlus1 = 0;
             forAll(f, fp)
             {
-                label pointI = f[fp];
-                if (pointLayer_[pointI] == layerI)
+                label pointi = f[fp];
+                if (pointLayer_[pointi] == layerI)
                 {
                     nLayer++;
                 }
-                else if (pointLayer_[pointI] == layerI+1)
+                else if (pointLayer_[pointi] == layerI+1)
                 {
                     nLayerPlus1++;
                 }
@@ -227,10 +227,10 @@ void Foam::meshStructure::correct
         // Start of changes
         labelList patchPoints(pp.nPoints());
         List<pointTopoDistanceData> patchData(pp.nPoints());
-        forAll(pp.meshPoints(), patchPointI)
+        forAll(pp.meshPoints(), patchPointi)
         {
-            patchPoints[patchPointI] = pp.meshPoints()[patchPointI];
-            patchData[patchPointI] = pointTopoDistanceData(patchPointI, 0);
+            patchPoints[patchPointi] = pp.meshPoints()[patchPointi];
+            patchData[patchPointi] = pointTopoDistanceData(patchPointi, 0);
         }
 
 
@@ -246,10 +246,10 @@ void Foam::meshStructure::correct
             mesh.globalData().nTotalPoints()  // max iterations
         );
 
-        forAll(pointData, pointI)
+        forAll(pointData, pointi)
         {
-            pointToPatchPointAddressing_[pointI] = pointData[pointI].data();
-            pointLayer_[pointI] = pointData[pointI].distance();
+            pointToPatchPointAddressing_[pointi] = pointData[pointi].data();
+            pointLayer_[pointi] = pointData[pointi].distance();
         }
 
 
@@ -304,15 +304,15 @@ void Foam::meshStructure::correct
                     // See if there is any edge
                     forAll(f, fp)
                     {
-                        label pointI = f[fp];
-                        label nextPointI = f.nextLabel(fp);
+                        label pointi = f[fp];
+                        label nextPointi = f.nextLabel(fp);
 
                         EdgeMap<label>::const_iterator fnd = pointsToEdge.find
                         (
                             edge
                             (
-                                pointData[pointI].data(),
-                                pointData[nextPointI].data()
+                                pointData[pointi].data(),
+                                pointData[nextPointi].data()
                             )
                         );
                         if (fnd != pointsToEdge.end())

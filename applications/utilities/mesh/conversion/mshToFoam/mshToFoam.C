@@ -123,13 +123,13 @@ int main(int argc, char *argv[])
     pointField points(nPoints);
 
 
-    for (label pointI = 0; pointI < nPoints; pointI++)
+    for (label pointi = 0; pointi < nPoints; pointi++)
     {
         scalar x, y, z;
 
         mshStream >> x >> y >> z;
 
-        points[pointI] = point(x, y, z);
+        points[pointi] = point(x, y, z);
     }
 
 

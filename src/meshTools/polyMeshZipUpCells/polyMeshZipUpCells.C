@@ -183,15 +183,15 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
             {
                 const edge& curEdge = singleEdges[edgeI];
 
-                forAll(cellPoints, pointI)
+                forAll(cellPoints, pointi)
                 {
                     if
                     (
-                        cellPoints[pointI] == curEdge.start()
-                     || cellPoints[pointI] == curEdge.end()
+                        cellPoints[pointi] == curEdge.start()
+                     || cellPoints[pointi] == curEdge.end()
                     )
                     {
-                        pointUsage[pointI]++;
+                        pointUsage[pointi]++;
                     }
                 }
             }
@@ -209,18 +209,18 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                 label newEdgeEnd = singleEdges[edgeI].end();
 
                 // check that the edge has not got all ends blocked
-                forAll(cellPoints, pointI)
+                forAll(cellPoints, pointi)
                 {
-                    if (cellPoints[pointI] == newEdgeStart)
+                    if (cellPoints[pointi] == newEdgeStart)
                     {
-                        if (pointUsage[pointI] > 2)
+                        if (pointUsage[pointi] > 2)
                         {
                             blockedHead = true;
                         }
                     }
-                    else if (cellPoints[pointI] == newEdgeEnd)
+                    else if (cellPoints[pointi] == newEdgeEnd)
                     {
-                        if (pointUsage[pointI] > 2)
+                        if (pointUsage[pointi] > 2)
                         {
                             blockedTail = true;
                         }
@@ -266,11 +266,11 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                     #endif
 
                     // Check if head or tail are blocked
-                    forAll(cellPoints, pointI)
+                    forAll(cellPoints, pointi)
                     {
-                        if (cellPoints[pointI] == newEdgeStart)
+                        if (cellPoints[pointi] == newEdgeStart)
                         {
-                            if (pointUsage[pointI] > 2)
+                            if (pointUsage[pointi] > 2)
                             {
                                 #ifdef DEBUG_CHAIN
                                 Info<< "start head blocked" << endl;
@@ -279,9 +279,9 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                                 blockHead = true;
                             }
                         }
-                        else if (cellPoints[pointI] == newEdgeEnd)
+                        else if (cellPoints[pointi] == newEdgeEnd)
                         {
-                            if (pointUsage[pointI] > 2)
+                            if (pointUsage[pointi] > 2)
                             {
                                 #ifdef DEBUG_CHAIN
                                 Info<< "start tail blocked" << endl;
@@ -361,11 +361,11 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                                     << " curEdgeEnd: " << curEdgeEnd << endl;
                                 #endif
 
-                                forAll(cellPoints, pointI)
+                                forAll(cellPoints, pointi)
                                 {
-                                    if (cellPoints[pointI] == curEdgeStart)
+                                    if (cellPoints[pointi] == curEdgeStart)
                                     {
-                                        if (pointUsage[pointI] > 2)
+                                        if (pointUsage[pointi] > 2)
                                         {
                                             #ifdef DEBUG_CHAIN
                                             Info<< "head blocked" << endl;
@@ -374,9 +374,9 @@ bool Foam::polyMeshZipUpCells(polyMesh& mesh)
                                             blockHead = true;
                                         }
                                     }
-                                    else if (cellPoints[pointI] == curEdgeEnd)
+                                    else if (cellPoints[pointi] == curEdgeEnd)
                                     {
-                                        if (pointUsage[pointI] > 2)
+                                        if (pointUsage[pointi] > 2)
                                         {
                                             #ifdef DEBUG_CHAIN
                                             Info<< "tail blocked" << endl;

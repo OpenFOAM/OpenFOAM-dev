@@ -52,19 +52,19 @@ Description
     \par points
 
     - unchanged:
-        - pointMap[pointI] contains old point label
-        - reversePointMap[oldPointI] contains new point label
+        - pointMap[pointi] contains old point label
+        - reversePointMap[oldPointi] contains new point label
     - removed:
-        - reversePointMap[oldPointI] contains -1
+        - reversePointMap[oldPointi] contains -1
     - merged into point:
-        - reversePointMap[oldPointI] contains <-1 : -newPointI-2
-        - pointMap[pointI] contains the old master point label
-        - pointsFromPoints gives for pointI all the old point labels
+        - reversePointMap[oldPointi] contains <-1 : -newPointi-2
+        - pointMap[pointi] contains the old master point label
+        - pointsFromPoints gives for pointi all the old point labels
           (including the old master point!)
     - added-from-same:
-        - pointMap[pointI] contains the old master point label
+        - pointMap[pointi] contains the old master point label
     - appended:
-        - pointMap[pointI] contains -1
+        - pointMap[pointi] contains -1
 
     \par faces
 
@@ -468,9 +468,9 @@ public:
 
                 //- If point is removed return point (on new mesh) it merged
                 //  into
-                label mergedPoint(const label oldPointI) const
+                label mergedPoint(const label oldPointi) const
                 {
-                    label i = reversePointMap_[oldPointI];
+                    label i = reversePointMap_[oldPointi];
 
                     if (i == -1)
                     {
@@ -483,7 +483,7 @@ public:
                     else
                     {
                         FatalErrorInFunction
-                            << "old point label " << oldPointI
+                            << "old point label " << oldPointi
                             << " has reverseMap " << i << endl
                             << "Only call mergedPoint for removed points."
                             << abort(FatalError);

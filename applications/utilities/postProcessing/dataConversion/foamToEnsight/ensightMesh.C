@@ -529,9 +529,9 @@ void Foam::ensightMesh::writePrims
 
                 List<int> temp(cellPoints.size());
 
-                forAll(cellPoints, pointI)
+                forAll(cellPoints, pointi)
                 {
-                    temp[pointI] = cellPoints[pointI] + 1;
+                    temp[pointi] = cellPoints[pointi] + 1;
                 }
                 ensightGeometryFile.write(temp);
             }
@@ -548,9 +548,9 @@ void Foam::ensightMesh::writePrims
             {
                 const cellShape& cellPoints = cellShapes[i];
 
-                forAll(cellPoints, pointI)
+                forAll(cellPoints, pointi)
                 {
-                    temp[n] = cellPoints[pointI] + 1;
+                    temp[n] = cellPoints[pointi] + 1;
                     n++;
                 }
             }
@@ -639,15 +639,15 @@ void Foam::ensightMesh::writePolysPoints
             // EnSight prefers to have all the faces of an nfaced cell
             // oriented in the same way.
             List<int> temp(np);
-            forAll(f, pointI)
+            forAll(f, pointi)
             {
                 if (reverseOrder)
                 {
-                    temp[np-1-pointI] = f[pointI] + 1;
+                    temp[np-1-pointi] = f[pointi] + 1;
                 }
                 else
                 {
-                    temp[pointI] = f[pointI] + 1;
+                    temp[pointi] = f[pointi] + 1;
                 }
             }
             ensightGeometryFile.write(temp);
@@ -833,9 +833,9 @@ void Foam::ensightMesh::writeFacePrims
         const face& patchFace = patchFaces[i];
 
         List<int> temp(patchFace.size());
-        forAll(patchFace, pointI)
+        forAll(patchFace, pointi)
         {
-            temp[pointI] = patchFace[pointI] + 1;
+            temp[pointi] = patchFace[pointi] + 1;
         }
 
         ensightGeometryFile.write(temp);

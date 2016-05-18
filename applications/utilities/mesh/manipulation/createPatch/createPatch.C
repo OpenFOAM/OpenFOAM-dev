@@ -339,12 +339,12 @@ void syncPoints
                 const labelList& meshPts = procPatch.meshPoints();
                 const labelList& nbrPts = procPatch.neighbPoints();
 
-                forAll(nbrPts, pointI)
+                forAll(nbrPts, pointi)
                 {
-                    label nbrPointI = nbrPts[pointI];
-                    if (nbrPointI >= 0 && nbrPointI < patchInfo.size())
+                    label nbrPointi = nbrPts[pointi];
+                    if (nbrPointi >= 0 && nbrPointi < patchInfo.size())
                     {
-                        patchInfo[nbrPointI] = points[meshPts[pointI]];
+                        patchInfo[nbrPointi] = points[meshPts[pointi]];
                     }
                 }
 
@@ -397,10 +397,10 @@ void syncPoints
 
                 const labelList& meshPts = procPatch.meshPoints();
 
-                forAll(meshPts, pointI)
+                forAll(meshPts, pointi)
                 {
-                    label meshPointI = meshPts[pointI];
-                    points[meshPointI] = nbrPatchInfo[pointI];
+                    label meshPointi = meshPts[pointi];
+                    points[meshPointi] = nbrPatchInfo[pointi];
                 }
             }
         }
@@ -478,9 +478,9 @@ void syncPoints
 
         forAll(pd.sharedPointLabels(), i)
         {
-            label meshPointI = pd.sharedPointLabels()[i];
+            label meshPointi = pd.sharedPointLabels()[i];
             // Fill my entries in the shared points
-            sharedPts[pd.sharedPointAddr()[i]] = points[meshPointI];
+            sharedPts[pd.sharedPointAddr()[i]] = points[meshPointi];
         }
 
         // Combine on master.
@@ -491,8 +491,8 @@ void syncPoints
         // my local information.
         forAll(pd.sharedPointLabels(), i)
         {
-            label meshPointI = pd.sharedPointLabels()[i];
-            points[meshPointI] = sharedPts[pd.sharedPointAddr()[i]];
+            label meshPointi = pd.sharedPointLabels()[i];
+            points[meshPointi] = sharedPts[pd.sharedPointAddr()[i]];
         }
     }
 }

@@ -136,8 +136,8 @@ displacementInterpolationMotionSolver
 
             forAll(fz().meshPoints(), localI)
             {
-                label pointI = fz().meshPoints()[localI];
-                const scalar coord = points0()[pointI][dir];
+                label pointi = fz().meshPoints()[localI];
+                const scalar coord = points0()[pointi][dir];
                 minCoord = min(minCoord, coord);
                 maxCoord = max(maxCoord, coord);
             }
@@ -240,15 +240,15 @@ displacementInterpolationMotionSolver
         // Count all the points inbetween rangeI and rangeI+1
         labelList nRangePoints(rangeToCoord.size(), 0);
 
-        forAll(meshCoords, pointI)
+        forAll(meshCoords, pointi)
         {
-            label rangeI = findLower(rangeToCoord, meshCoords[pointI]);
+            label rangeI = findLower(rangeToCoord, meshCoords[pointi]);
 
             if (rangeI == -1 || rangeI == rangeToCoord.size()-1)
             {
                 FatalErrorInFunction
-                    << "Did not find point " << points0()[pointI]
-                    << " coordinate " << meshCoords[pointI]
+                    << "Did not find point " << points0()[pointi]
+                    << " coordinate " << meshCoords[pointi]
                     << " in ranges " << rangeToCoord
                     << abort(FatalError);
             }
@@ -277,13 +277,13 @@ displacementInterpolationMotionSolver
             rangeWeights[rangeI].setSize(nRangePoints[rangeI]);
         }
         nRangePoints = 0;
-        forAll(meshCoords, pointI)
+        forAll(meshCoords, pointi)
         {
-            label rangeI = findLower(rangeToCoord, meshCoords[pointI]);
+            label rangeI = findLower(rangeToCoord, meshCoords[pointi]);
             label& nPoints = nRangePoints[rangeI];
-            rangePoints[rangeI][nPoints] = pointI;
+            rangePoints[rangeI][nPoints] = pointi;
             rangeWeights[rangeI][nPoints] =
-                (meshCoords[pointI]-rangeToCoord[rangeI])
+                (meshCoords[pointi]-rangeToCoord[rangeI])
               / (rangeToCoord[rangeI+1]-rangeToCoord[rangeI]);
             nPoints++;
         }
@@ -359,10 +359,10 @@ Foam::displacementInterpolationMotionSolver::curPoints() const
 
             forAll(rPoints, i)
             {
-                label pointI = rPoints[i];
+                label pointi = rPoints[i];
                 scalar w = rWeights[i];
-                //curPoints[pointI] += (1.0-w)*minDisp+w*maxDisp;
-                curPoints[pointI][dir] += (1.0-w)*minDisp+w*maxDisp;
+                //curPoints[pointi] += (1.0-w)*minDisp+w*maxDisp;
+                curPoints[pointi][dir] += (1.0-w)*minDisp+w*maxDisp;
             }
         }
     }

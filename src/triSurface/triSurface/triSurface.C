@@ -183,7 +183,7 @@ Foam::string Foam::triSurface::getLineNoComment(IFstream& is)
 void Foam::triSurface::checkTriangles(const bool verbose)
 {
     // Simple check on indices ok.
-    const label maxPointI = points().size() - 1;
+    const label maxPointi = points().size() - 1;
 
     forAll(*this, facei)
     {
@@ -191,12 +191,12 @@ void Foam::triSurface::checkTriangles(const bool verbose)
 
         forAll(f, fp)
         {
-            if (f[fp] < 0 || f[fp] > maxPointI)
+            if (f[fp] < 0 || f[fp] > maxPointi)
             {
                 FatalErrorInFunction
                     << "triangle " << f
                     << " uses point indices outside point range 0.."
-                    << maxPointI
+                    << maxPointi
                     << exit(FatalError);
             }
         }
@@ -951,7 +951,7 @@ void Foam::triSurface::subsetMeshMap
     const List<labelledTri>& locFaces = localFaces();
 
     label facei = 0;
-    label pointI = 0;
+    label pointi = 0;
 
     faceMap.setSize(locFaces.size());
 
@@ -975,7 +975,7 @@ void Foam::triSurface::subsetMeshMap
                 if (!pointHad[labI])
                 {
                     pointHad[labI] = true;
-                    pointMap[pointI++] = labI;
+                    pointMap[pointi++] = labI;
                 }
             }
         }
@@ -983,7 +983,7 @@ void Foam::triSurface::subsetMeshMap
 
     // Trim
     faceMap.setSize(facei);
-    pointMap.setSize(pointI);
+    pointMap.setSize(pointi);
 }
 
 
@@ -1079,11 +1079,11 @@ void Foam::triSurface::writeStats(Ostream& os) const
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
-            if (pointIsUsed.set(pointI, 1))
+            label pointi = f[fp];
+            if (pointIsUsed.set(pointi, 1))
             {
-                bb.min() = ::Foam::min(bb.min(), points()[pointI]);
-                bb.max() = ::Foam::max(bb.max(), points()[pointI]);
+                bb.min() = ::Foam::min(bb.min(), points()[pointi]);
+                bb.max() = ::Foam::max(bb.max(), points()[pointi]);
                 nPoints++;
             }
         }

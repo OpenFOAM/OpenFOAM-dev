@@ -106,9 +106,9 @@ Foam::label Foam::meshCutter::findInternalFacePoint
 {
     forAll(pointLabels, labelI)
     {
-        label pointI = pointLabels[labelI];
+        label pointi = pointLabels[labelI];
 
-        const labelList& pFaces = mesh().pointFaces()[pointI];
+        const labelList& pFaces = mesh().pointFaces()[pointi];
 
         forAll(pFaces, pFacei)
         {
@@ -116,7 +116,7 @@ Foam::label Foam::meshCutter::findInternalFacePoint
 
             if (mesh().isInternalFace(facei))
             {
-                return pointI;
+                return pointi;
             }
         }
     }
@@ -564,7 +564,7 @@ void Foam::meshCutter::setRefinement
             }
 
             // One of the edge end points should be master point of nbCelli.
-            label masterPointI = e.start();
+            label masterPointi = e.start();
 
             const point& v0 = mesh().points()[e.start()];
             const point& v1 = mesh().points()[e.end()];
@@ -573,26 +573,26 @@ void Foam::meshCutter::setRefinement
 
             point newPt = weight*v1 + (1.0-weight)*v0;
 
-            label addedPointI =
+            label addedPointi =
                 meshMod.setAction
                 (
                     polyAddPoint
                     (
                         newPt,              // point
-                        masterPointI,       // master point
+                        masterPointi,       // master point
                         -1,                 // zone for point
                         true                // supports a cell
                     )
                 );
 
             // Store on (hash of) edge.
-            addedPoints_.insert(e, addedPointI);
+            addedPoints_.insert(e, addedPointi);
 
             if (debug & 2)
             {
-                Pout<< "Added point " << addedPointI
+                Pout<< "Added point " << addedPointi
                     << " to vertex "
-                    << masterPointI << " of edge " << edgeI
+                    << masterPointi << " of edge " << edgeI
                     << " vertices " << e << endl;
             }
         }
@@ -647,7 +647,7 @@ void Foam::meshCutter::setRefinement
             face newFace(loopToFace(celli, loop));
 
             // Pick any anchor point on cell
-            label masterPointI = findInternalFacePoint(anchorPts[celli]);
+            label masterPointi = findInternalFacePoint(anchorPts[celli]);
 
             label addedFacei =
                 meshMod.setAction
@@ -657,7 +657,7 @@ void Foam::meshCutter::setRefinement
                         newFace,                // face
                         celli,                  // owner
                         addedCells_[celli],     // neighbour
-                        masterPointI,           // master point
+                        masterPointi,           // master point
                         -1,                     // master edge
                         -1,                     // master face for addition
                         false,                  // flux flip
@@ -1059,28 +1059,28 @@ void Foam::meshCutter::updateMesh(const mapPolyMesh& morphMap)
 
             label newEnd = morphMap.reversePointMap()[e.end()];
 
-            label addedPointI = iter();
+            label addedPointi = iter();
 
-            label newAddedPointI = morphMap.reversePointMap()[addedPointI];
+            label newAddedPointi = morphMap.reversePointMap()[addedPointi];
 
-            if ((newStart >= 0) && (newEnd >= 0) && (newAddedPointI >= 0))
+            if ((newStart >= 0) && (newEnd >= 0) && (newAddedPointi >= 0))
             {
                 edge newE = edge(newStart, newEnd);
 
                 if
                 (
                     (debug & 2)
-                 && (e != newE || newAddedPointI != addedPointI)
+                 && (e != newE || newAddedPointi != addedPointi)
                 )
                 {
                     Pout<< "meshCutter::updateMesh :"
                         << " updating addedPoints for edge " << e
-                        << " from " << addedPointI
-                        << " to " << newAddedPointI
+                        << " from " << addedPointi
+                        << " to " << newAddedPointi
                         << endl;
                 }
 
-                newAddedPoints.insert(newE, newAddedPointI);
+                newAddedPoints.insert(newE, newAddedPointi);
             }
         }
 

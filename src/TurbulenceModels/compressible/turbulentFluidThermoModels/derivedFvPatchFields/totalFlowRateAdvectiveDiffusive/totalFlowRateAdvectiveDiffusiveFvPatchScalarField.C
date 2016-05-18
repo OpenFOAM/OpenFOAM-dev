@@ -152,7 +152,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const label patchI = patch().index();
+    const label patchi = patch().index();
 
     const LESModel<EddyDiffusivity<compressible::turbulenceModel>>& turbModel =
         db().lookupObject
@@ -170,7 +170,7 @@ void Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::updateCoeffs()
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const scalarField alphap(turbModel.alphaEff(patchI));
+    const scalarField alphap(turbModel.alphaEff(patchi));
 
     refValue() = massFluxFraction_;
     refGrad() = 0.0;

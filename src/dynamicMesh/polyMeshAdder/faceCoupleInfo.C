@@ -57,7 +57,7 @@ void Foam::faceCoupleInfo::writeOBJ
 
     if (compact)
     {
-        label newPointI = 0;
+        label newPointi = 0;
 
         forAll(edges, edgeI)
         {
@@ -65,22 +65,22 @@ void Foam::faceCoupleInfo::writeOBJ
 
             forAll(e, eI)
             {
-                label pointI = e[eI];
+                label pointi = e[eI];
 
-                if (pointMap[pointI] == -1)
+                if (pointMap[pointi] == -1)
                 {
-                    pointMap[pointI] = newPointI++;
+                    pointMap[pointi] = newPointi++;
 
-                    meshTools::writeOBJ(str, points[pointI]);
+                    meshTools::writeOBJ(str, points[pointi]);
                 }
             }
         }
     }
     else
     {
-        forAll(points, pointI)
+        forAll(points, pointi)
         {
-            meshTools::writeOBJ(str, points[pointI]);
+            meshTools::writeOBJ(str, points[pointi]);
         }
 
         pointMap = identity(points.size());
@@ -352,13 +352,13 @@ bool Foam::faceCoupleInfo::regionEdge
 
             label meshFacei = slavePatch().addressing()[facei];
 
-            label patchI = slaveMesh.boundaryMesh().whichPatch(meshFacei);
+            label patchi = slaveMesh.boundaryMesh().whichPatch(meshFacei);
 
             if (patch0 == -1)
             {
-                patch0 = patchI;
+                patch0 = patchi;
             }
-            else if (patchI != patch0)
+            else if (patchi != patch0)
             {
                 // Found two different patches connected to this edge.
                 return true;
@@ -376,25 +376,25 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
     const bool patchDivision,
     const labelList& cutToMasterEdges,
     const labelList& cutToSlaveEdges,
-    const label pointI,
+    const label pointi,
     const label edgeStart,
     const label edgeEnd
 ) const
 {
-    // Find edge using pointI that is most aligned with vector between master
+    // Find edge using pointi that is most aligned with vector between master
     // points. Patchdivision tells us whether or not to use patch information to
     // match edges.
 
     const pointField& localPoints = cutFaces().localPoints();
 
-    const labelList& pEdges = cutFaces().pointEdges()[pointI];
+    const labelList& pEdges = cutFaces().pointEdges()[pointi];
 
     if (report)
     {
         Pout<< "mostAlignedEdge : finding nearest edge among "
             << UIndirectList<edge>(cutFaces().edges(), pEdges)()
-            << " connected to point " << pointI
-            << " coord:" << localPoints[pointI]
+            << " connected to point " << pointi
+            << " coord:" << localPoints[pointi]
             << " running between " << edgeStart << " coord:"
             << localPoints[edgeStart]
             << " and " << edgeEnd << " coord:"
@@ -425,9 +425,9 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
         {
             const edge& e = cutFaces().edges()[edgeI];
 
-            label otherPointI = e.otherVertex(pointI);
+            label otherPointi = e.otherVertex(pointi);
 
-            if (otherPointI == edgeEnd)
+            if (otherPointi == edgeEnd)
             {
                 // Shortcut: found edge end point.
                 if (report)
@@ -440,7 +440,7 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
 
             // Get angle between edge and edge to masterEnd
 
-            vector eVec(localPoints[otherPointI] - localPoints[pointI]);
+            vector eVec(localPoints[otherPointi] - localPoints[pointi]);
 
             scalar magEVec = mag(eVec);
 
@@ -448,8 +448,8 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
             {
                 WarningInFunction
                     << "Crossing zero sized edge " << edgeI
-                    << " coords:" << localPoints[otherPointI]
-                    << localPoints[pointI]
+                    << " coords:" << localPoints[otherPointi]
+                    << localPoints[pointi]
                     << " when walking from " << localPoints[edgeStart]
                     << " to " << localPoints[edgeEnd]
                     << endl;
@@ -458,15 +458,15 @@ Foam::label Foam::faceCoupleInfo::mostAlignedCutEdge
 
             eVec /= magEVec;
 
-            vector eToEndPoint(localPoints[edgeEnd] - localPoints[otherPointI]);
+            vector eToEndPoint(localPoints[edgeEnd] - localPoints[otherPointi]);
             eToEndPoint /= mag(eToEndPoint);
 
             scalar cosAngle = eVec & eToEndPoint;
 
             if (report)
             {
-                Pout<< "    edge:" << e << " points:" << localPoints[pointI]
-                    << localPoints[otherPointI]
+                Pout<< "    edge:" << e << " points:" << localPoints[pointi]
+                    << localPoints[otherPointi]
                     << "  vec:" << eVec
                     << "  vecToEnd:" << eToEndPoint
                     << " cosAngle:" << cosAngle
@@ -751,11 +751,11 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
 
         forAll(cutF, cutFp)
         {
-            label cutPointI = cutF[cutFp];
-            label patchPointI = patchF[patchFp];
+            label cutPointi = cutF[cutFp];
+            label patchPointi = patchF[patchFp];
 
-            //const point& cutPt = cutPoints[cutPointI];
-            //const point& patchPt = patchPoints[patchPointI];
+            //const point& cutPt = cutPoints[cutPointi];
+            //const point& patchPt = patchPoints[patchPointi];
             //if (mag(cutPt - patchPt) > SMALL)
             //{
             //    FatalErrorInFunction
@@ -764,34 +764,34 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
             //    << abort(FatalError);
             //}
 
-            if (patchToCutPoints[patchPointI] == -1)
+            if (patchToCutPoints[patchPointi] == -1)
             {
-                patchToCutPoints[patchPointI] = cutPointI;
+                patchToCutPoints[patchPointi] = cutPointi;
             }
-            else if (patchToCutPoints[patchPointI] != cutPointI)
+            else if (patchToCutPoints[patchPointi] != cutPointi)
             {
                 // Multiple cut points connecting to same patch.
                 // Check if already have region & region master for this set
-                label otherCutPointI = patchToCutPoints[patchPointI];
+                label otherCutPointi = patchToCutPoints[patchPointi];
 
                 //Pout<< "PatchPoint:" << patchPt
-                //    << " matches to:" << cutPointI
-                //    << " coord:" << cutPoints[cutPointI]
-                //    << " and to:" << otherCutPointI
-                //    << " coord:" << cutPoints[otherCutPointI]
+                //    << " matches to:" << cutPointi
+                //    << " coord:" << cutPoints[cutPointi]
+                //    << " and to:" << otherCutPointi
+                //    << " coord:" << cutPoints[otherCutPointi]
                 //    << endl;
 
-                if (cutPointRegion[otherCutPointI] != -1)
+                if (cutPointRegion[otherCutPointi] != -1)
                 {
                     // Have region for this set. Copy.
-                    label region = cutPointRegion[otherCutPointI];
-                    cutPointRegion[cutPointI] = region;
+                    label region = cutPointRegion[otherCutPointi];
+                    cutPointRegion[cutPointi] = region;
 
                     // Update region master with min point label
                     cutPointRegionMaster[region] = min
                     (
                         cutPointRegionMaster[region],
-                        cutPointI
+                        cutPointi
                     );
                 }
                 else
@@ -800,10 +800,10 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
                     label region = cutPointRegionMaster.size();
                     cutPointRegionMaster.append
                     (
-                        min(cutPointI, otherCutPointI)
+                        min(cutPointi, otherCutPointi)
                     );
-                    cutPointRegion[cutPointI] = region;
-                    cutPointRegion[otherCutPointI] = region;
+                    cutPointRegion[cutPointi] = region;
+                    cutPointRegion[otherCutPointi] = region;
                 }
             }
 
@@ -822,33 +822,33 @@ bool Foam::faceCoupleInfo::matchPointsThroughFaces
     compactToCut.setSize(cutPointRegion.size());
     cutToCompact.setSize(cutPointRegion.size());
     cutToCompact = -1;
-    label compactPointI = 0;
+    label compactPointi = 0;
 
     forAll(cutPointRegion, i)
     {
         if (cutPointRegion[i] == -1)
         {
             // Unduplicated point. Allocate new compacted point.
-            cutToCompact[i] = compactPointI;
-            compactToCut[compactPointI] = i;
-            compactPointI++;
+            cutToCompact[i] = compactPointi;
+            compactToCut[compactPointi] = i;
+            compactPointi++;
         }
         else
         {
             // Duplicate point. Get master.
 
-            label masterPointI = cutPointRegionMaster[cutPointRegion[i]];
+            label masterPointi = cutPointRegionMaster[cutPointRegion[i]];
 
-            if (cutToCompact[masterPointI] == -1)
+            if (cutToCompact[masterPointi] == -1)
             {
-                cutToCompact[masterPointI] = compactPointI;
-                compactToCut[compactPointI] = masterPointI;
-                compactPointI++;
+                cutToCompact[masterPointi] = compactPointi;
+                compactToCut[compactPointi] = masterPointi;
+                compactPointi++;
             }
-            cutToCompact[i] = cutToCompact[masterPointI];
+            cutToCompact[i] = cutToCompact[masterPointi];
         }
     }
-    compactToCut.setSize(compactPointI);
+    compactToCut.setSize(compactPointi);
 
     return compactToCut.size() != cutToCompact.size();
 }
@@ -1681,10 +1681,10 @@ void Foam::faceCoupleInfo::subDivisionMatch
 
         // Find edges between cutPoint0 and cutPoint1.
 
-        label cutPointI = cutPoint0;
+        label cutPointi = cutPoint0;
         do
         {
-            // Find edge (starting at pointI on cut), aligned with master
+            // Find edge (starting at pointi on cut), aligned with master
             // edge.
             label cutEdgeI =
                 mostAlignedCutEdge
@@ -1694,7 +1694,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
                     patchDivision,
                     cutToMasterEdges,
                     cutToSlaveEdges,
-                    cutPointI,
+                    cutPointi,
                     cutPoint0,
                     cutPoint1
                 );
@@ -1709,7 +1709,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
                     patchDivision,
                     cutToMasterEdges,
                     cutToSlaveEdges,
-                    cutPointI,
+                    cutPointi,
                     cutPoint0,
                     cutPoint1
                 );
@@ -1725,7 +1725,7 @@ void Foam::faceCoupleInfo::subDivisionMatch
                         UIndirectList<edge>
                         (
                             cutFaces().edges(),
-                            cutFaces().pointEdges()[cutPointI]
+                            cutFaces().pointEdges()[cutPointi]
                         )
                     ),
                     cutFaces().localPoints(),
@@ -1744,9 +1744,9 @@ void Foam::faceCoupleInfo::subDivisionMatch
 
             cutToMasterEdges[cutEdgeI] = masterEdgeI;
 
-            cutPointI = cutEdges[cutEdgeI].otherVertex(cutPointI);
+            cutPointi = cutEdges[cutEdgeI].otherVertex(cutPointi);
 
-        } while (cutPointI != cutPoint1);
+        } while (cutPointi != cutPoint1);
     }
 
     if (debug)

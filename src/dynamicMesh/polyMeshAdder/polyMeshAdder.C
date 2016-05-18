@@ -518,7 +518,7 @@ void Foam::polyMeshAdder::mergePrimitives
 
     // Storage for new points
     allPoints.setSize(mesh0.nPoints() + mesh1.nPoints());
-    label allPointI = 0;
+    label allPointi = 0;
 
     from0ToAllPoints.setSize(mesh0.nPoints());
     from0ToAllPoints = -1;
@@ -553,7 +553,7 @@ void Foam::polyMeshAdder::mergePrimitives
 
         forAll(cutPoints, i)
         {
-            allPoints[allPointI] = cutPoints[i];
+            allPoints[allPointi] = cutPoints[i];
 
             // Mark all master and slave points referring to this point.
 
@@ -561,44 +561,44 @@ void Foam::polyMeshAdder::mergePrimitives
 
             forAll(masterPoints, j)
             {
-                label mesh0PointI = masterPatch.meshPoints()[masterPoints[j]];
-                from0ToAllPoints[mesh0PointI] = allPointI;
+                label mesh0Pointi = masterPatch.meshPoints()[masterPoints[j]];
+                from0ToAllPoints[mesh0Pointi] = allPointi;
             }
 
             const labelList& slavePoints = cutToSlavePoints[i];
 
             forAll(slavePoints, j)
             {
-                label mesh1PointI = slavePatch.meshPoints()[slavePoints[j]];
-                from1ToAllPoints[mesh1PointI] = allPointI;
+                label mesh1Pointi = slavePatch.meshPoints()[slavePoints[j]];
+                from1ToAllPoints[mesh1Pointi] = allPointi;
             }
-            allPointI++;
+            allPointi++;
         }
     }
 
     // Add uncoupled mesh0 points
-    forAll(mesh0.points(), pointI)
+    forAll(mesh0.points(), pointi)
     {
-        if (from0ToAllPoints[pointI] == -1)
+        if (from0ToAllPoints[pointi] == -1)
         {
-            allPoints[allPointI] = mesh0.points()[pointI];
-            from0ToAllPoints[pointI] = allPointI;
-            allPointI++;
+            allPoints[allPointi] = mesh0.points()[pointi];
+            from0ToAllPoints[pointi] = allPointi;
+            allPointi++;
         }
     }
 
     // Add uncoupled mesh1 points
-    forAll(mesh1.points(), pointI)
+    forAll(mesh1.points(), pointi)
     {
-        if (from1ToAllPoints[pointI] == -1)
+        if (from1ToAllPoints[pointi] == -1)
         {
-            allPoints[allPointI] = mesh1.points()[pointI];
-            from1ToAllPoints[pointI] = allPointI;
-            allPointI++;
+            allPoints[allPointi] = mesh1.points()[pointi];
+            from1ToAllPoints[pointi] = allPointi;
+            allPointi++;
         }
     }
 
-    allPoints.setSize(allPointI);
+    allPoints.setSize(allPointi);
 
 
     // Faces
@@ -903,15 +903,15 @@ void Foam::polyMeshAdder::mergePointZones
         forAll(pz, i)
         {
             label point0 = pz[i];
-            label allPointI = from0ToAllPoints[point0];
+            label allPointi = from0ToAllPoints[point0];
 
-            if (pointToZone[allPointI] == -1)
+            if (pointToZone[allPointi] == -1)
             {
-                pointToZone[allPointI] = zoneI;
+                pointToZone[allPointi] = zoneI;
             }
-            else if (pointToZone[allPointI] != zoneI)
+            else if (pointToZone[allPointi] != zoneI)
             {
-                labelList& pZones = addPointToZones[allPointI];
+                labelList& pZones = addPointToZones[allPointi];
                 if (findIndex(pZones, zoneI) == -1)
                 {
                     pZones.append(zoneI);
@@ -929,15 +929,15 @@ void Foam::polyMeshAdder::mergePointZones
         forAll(pz, i)
         {
             label point1 = pz[i];
-            label allPointI = from1ToAllPoints[point1];
+            label allPointi = from1ToAllPoints[point1];
 
-            if (pointToZone[allPointI] == -1)
+            if (pointToZone[allPointi] == -1)
             {
-                pointToZone[allPointI] = allZoneI;
+                pointToZone[allPointi] = allZoneI;
             }
-            else if (pointToZone[allPointI] != allZoneI)
+            else if (pointToZone[allPointi] != allZoneI)
             {
-                labelList& pZones = addPointToZones[allPointI];
+                labelList& pZones = addPointToZones[allPointi];
                 if (findIndex(pZones, allZoneI) == -1)
                 {
                     pZones.append(allZoneI);
@@ -950,17 +950,17 @@ void Foam::polyMeshAdder::mergePointZones
 
     // 1. Count
     labelList nPoints(zoneNames.size(), 0);
-    forAll(pointToZone, allPointI)
+    forAll(pointToZone, allPointi)
     {
-        label zoneI = pointToZone[allPointI];
+        label zoneI = pointToZone[allPointi];
         if (zoneI != -1)
         {
             nPoints[zoneI]++;
         }
     }
-    forAll(addPointToZones, allPointI)
+    forAll(addPointToZones, allPointi)
     {
-        const labelList& pZones = addPointToZones[allPointI];
+        const labelList& pZones = addPointToZones[allPointi];
         forAll(pZones, i)
         {
             nPoints[pZones[i]]++;
@@ -973,20 +973,20 @@ void Foam::polyMeshAdder::mergePointZones
     {
         pzPoints[zoneI].setCapacity(nPoints[zoneI]);
     }
-    forAll(pointToZone, allPointI)
+    forAll(pointToZone, allPointi)
     {
-        label zoneI = pointToZone[allPointI];
+        label zoneI = pointToZone[allPointi];
         if (zoneI != -1)
         {
-            pzPoints[zoneI].append(allPointI);
+            pzPoints[zoneI].append(allPointi);
         }
     }
-    forAll(addPointToZones, allPointI)
+    forAll(addPointToZones, allPointi)
     {
-        const labelList& pZones = addPointToZones[allPointI];
+        const labelList& pZones = addPointToZones[allPointi];
         forAll(pZones, i)
         {
-            pzPoints[pZones[i]].append(allPointI);
+            pzPoints[pZones[i]].append(allPointi);
         }
     }
     forAll(pzPoints, i)
@@ -2018,7 +2018,7 @@ Foam::Map<Foam::label> Foam::polyMeshAdder::findSharedPoints
 
     forAll(sharedPointLabels, i)
     {
-        label pointI = sharedPointLabels[i];
+        label pointi = sharedPointLabels[i];
 
         label sharedI = sharedPointAddr[i];
 
@@ -2035,22 +2035,22 @@ Foam::Map<Foam::label> Foam::polyMeshAdder::findSharedPoints
             label sz = connectedPointLabels.size();
 
             // Check just to make sure.
-            if (findIndex(connectedPointLabels, pointI) != -1)
+            if (findIndex(connectedPointLabels, pointi) != -1)
             {
                 FatalErrorInFunction
                     << "Duplicate point in sharedPoint addressing." << endl
-                    << "When trying to add point " << pointI << " on shared "
+                    << "When trying to add point " << pointi << " on shared "
                     << sharedI  << " with connected points "
                     << connectedPointLabels
                     << abort(FatalError);
             }
 
             connectedPointLabels.setSize(sz+1);
-            connectedPointLabels[sz] = pointI;
+            connectedPointLabels[sz] = pointi;
         }
         else
         {
-            sharedToMesh.insert(sharedI, labelList(1, pointI));
+            sharedToMesh.insert(sharedI, labelList(1, pointi));
         }
     }
 
@@ -2106,27 +2106,27 @@ Foam::Map<Foam::label> Foam::polyMeshAdder::findSharedPoints
                     if (mergeSet.size() > 1)
                     {
                         // Pick lowest numbered point
-                        label masterPointI = labelMax;
+                        label masterPointi = labelMax;
 
                         forAll(mergeSet, i)
                         {
-                            label pointI = connectedPointLabels[mergeSet[i]];
+                            label pointi = connectedPointLabels[mergeSet[i]];
 
-                            masterPointI = min(masterPointI, pointI);
+                            masterPointi = min(masterPointi, pointi);
                         }
 
                         forAll(mergeSet, i)
                         {
-                            label pointI = connectedPointLabels[mergeSet[i]];
+                            label pointi = connectedPointLabels[mergeSet[i]];
 
-                            //Pout<< "Merging point " << pointI
-                            //    << " at " << mesh.points()[pointI]
+                            //Pout<< "Merging point " << pointi
+                            //    << " at " << mesh.points()[pointi]
                             //    << " into master point "
-                            //    << masterPointI
-                            //    << " at " << mesh.points()[masterPointI]
+                            //    << masterPointi
+                            //    << " at " << mesh.points()[masterPointi]
                             //    << endl;
 
-                            pointToMaster.insert(pointI, masterPointI);
+                            pointToMaster.insert(pointi, masterPointi);
                         }
                     }
                 }
@@ -2216,15 +2216,15 @@ void Foam::polyMeshAdder::mergePoints
 )
 {
     // Remove all non-master points.
-    forAll(mesh.points(), pointI)
+    forAll(mesh.points(), pointi)
     {
-        Map<label>::const_iterator iter = pointToMaster.find(pointI);
+        Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
         if (iter != pointToMaster.end())
         {
-            if (iter() != pointI)
+            if (iter() != pointi)
             {
-                meshMod.removePoint(pointI, iter());
+                meshMod.removePoint(pointi, iter());
             }
         }
     }
@@ -2241,13 +2241,13 @@ void Foam::polyMeshAdder::mergePoints
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
-            Map<label>::const_iterator iter = pointToMaster.find(pointI);
+            Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
             if (iter != pointToMaster.end())
             {
-                if (iter() != pointI)
+                if (iter() != pointi)
                 {
                     hasMerged = true;
                     break;
@@ -2261,9 +2261,9 @@ void Foam::polyMeshAdder::mergePoints
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
 
-                Map<label>::const_iterator iter = pointToMaster.find(pointI);
+                Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
                 if (iter != pointToMaster.end())
                 {

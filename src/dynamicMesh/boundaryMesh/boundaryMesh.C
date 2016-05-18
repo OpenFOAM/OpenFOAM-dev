@@ -51,12 +51,12 @@ const scalar boundaryMesh::distanceTol_ = 1e-2;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Returns number of feature edges connected to pointI
-Foam::label Foam::boundaryMesh::nFeatureEdges(label pointI) const
+// Returns number of feature edges connected to pointi
+Foam::label Foam::boundaryMesh::nFeatureEdges(label pointi) const
 {
     label nFeats = 0;
 
-    const labelList& pEdges = mesh().pointEdges()[pointI];
+    const labelList& pEdges = mesh().pointEdges()[pointi];
 
     forAll(pEdges, pEdgeI)
     {
@@ -71,7 +71,7 @@ Foam::label Foam::boundaryMesh::nFeatureEdges(label pointI) const
 }
 
 
-// Returns next feature edge connected to pointI
+// Returns next feature edge connected to pointi
 Foam::label Foam::boundaryMesh::nextFeatureEdge
 (
     const label edgeI,
@@ -99,7 +99,7 @@ Foam::label Foam::boundaryMesh::nextFeatureEdge
 }
 
 
-// Finds connected feature edges, starting from startPointI and returns
+// Finds connected feature edges, starting from startPointi and returns
 // feature labels (not edge labels). Marks feature edges handled in
 // featVisited.
 Foam::labelList Foam::boundaryMesh::collectSegment
@@ -575,10 +575,10 @@ void Foam::boundaryMesh::read(const polyMesh& mesh)
 
         Pout<< "** Start of Points **" << endl;
 
-        forAll(msh.points(), pointI)
+        forAll(msh.points(), pointi)
         {
-            Pout<< "    " << pointI
-                << " coord:" << msh.points()[pointI]
+            Pout<< "    " << pointi
+                << " coord:" << msh.points()[pointi]
                 << endl;
         }
 

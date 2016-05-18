@@ -461,9 +461,9 @@ fvMeshSubset::interpolate
             forAll(subMeshPoints, localI)
             {
                 // Get mesh point on original mesh.
-                label meshPointI = pointMap[subMeshPoints[localI]];
+                label meshPointi = pointMap[subMeshPoints[localI]];
 
-                Map<label>::const_iterator iter = meshPointMap.find(meshPointI);
+                Map<label>::const_iterator iter = meshPointMap.find(meshPointi);
 
                 if (iter != meshPointMap.end())
                 {

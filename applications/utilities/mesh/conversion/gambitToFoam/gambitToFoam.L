@@ -663,20 +663,20 @@ int main(int argc, char *argv[])
     // make a point mapping array
     label maxPointIndex = 0;
 
-    forAll(pointMap, pointI)
+    forAll(pointMap, pointi)
     {
-        if (pointMap[pointI] > maxPointIndex)
+        if (pointMap[pointi] > maxPointIndex)
         {
-            maxPointIndex = pointMap[pointI];
+            maxPointIndex = pointMap[pointi];
         }
     }
 
 
     labelList pointLookup(maxPointIndex + 1, -1);
 
-    forAll(pointMap, pointI)
+    forAll(pointMap, pointi)
     {
-        pointLookup[pointMap[pointI] ] = pointI;
+        pointLookup[pointMap[pointi] ] = pointi;
     }
 
     // make a cell mapping array

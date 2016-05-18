@@ -79,7 +79,7 @@ class regionSide
             const primitiveMesh& mesh,
             const label facei,
             const label edgeI,
-            const label pointI
+            const label pointi
         );
 
         //- From facei, side celli, cross to other faces/cells by
@@ -94,14 +94,14 @@ class regionSide
             labelHashSet& visitedFace
         );
 
-        //- From edge on face connected to point on region (regionPointI) cross
+        //- From edge on face connected to point on region (regionPointi) cross
         //  to all other edges using this point by walking across faces
         //  Does not cross regionEdges so stays on one side of region
         void walkPointConnectedFaces
         (
             const primitiveMesh& mesh,
             const labelHashSet& regionEdges,
-            const label regionPointI,
+            const label regionPointi,
             const label startFacei,
             const label startEdgeI,
             labelHashSet& visitedEdges

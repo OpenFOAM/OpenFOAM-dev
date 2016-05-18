@@ -224,7 +224,7 @@ public:
             (
                 const polyPatch&,
                 trackingData& td,
-                const label patchI,
+                const label patchi,
                 const scalar trackFraction,
                 const tetIndices& tetIs
             );

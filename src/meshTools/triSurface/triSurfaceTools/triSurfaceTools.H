@@ -83,7 +83,7 @@ class triSurfaceTools
                 const triSurface& surf,
                 const label facei,
                 const label edgeI,
-                const label newPointI,
+                const label newPointi,
                 DynamicList<labelledTri>& newFaces
             );
             static triSurface doRefine
@@ -205,7 +205,7 @@ class triSurfaceTools
                 const triSurface& s,
                 const label triI,
                 const label excludeEdgeI,
-                const label excludePointI,
+                const label excludePointi,
                 const point& triPoint,
                 const plane& cutPlane,
                 const point& toPoint
@@ -234,7 +234,7 @@ class triSurfaceTools
                 const labelList& eFaces,
                 const surfaceLocation& start,
                 const label excludeEdgeI,
-                const label excludePointI,
+                const label excludePointi,
                 const surfaceLocation& end,
                 const plane& cutPlane
             );

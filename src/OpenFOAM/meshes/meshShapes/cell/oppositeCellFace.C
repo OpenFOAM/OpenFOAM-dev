@@ -70,13 +70,13 @@ Foam::label Foam::cell::opposingFaceLabel
 
             // Compare every vertex of the current face agains the
             // vertices of the master face
-            forAll(curFace, pointI)
+            forAll(curFace, pointi)
             {
-                const label l = curFace[pointI];
+                const label l = curFace[pointi];
 
-                forAll(masterFace, masterPointI)
+                forAll(masterFace, masterPointi)
                 {
-                    if (masterFace[masterPointI] == l)
+                    if (masterFace[masterPointi] == l)
                     {
                         sharedPoint = true;
                         break;
@@ -149,7 +149,7 @@ Foam::oppositeFace Foam::cell::opposingFace
             oppFaceLabel
         );
 
-        forAll(masterFace, pointI)
+        forAll(masterFace, pointi)
         {
             // Go through the list of edges and find the edge from this vertex
             // to the slave face
@@ -159,19 +159,19 @@ Foam::oppositeFace Foam::cell::opposingFace
                 {
                     // Get the other vertex
                     label otherVertex =
-                        e[edgeI].otherVertex(masterFace[pointI]);
+                        e[edgeI].otherVertex(masterFace[pointi]);
 
                     if (otherVertex != -1)
                     {
                         // Found an edge coming from this vertex.
                         // Check all vertices of the slave to find out
                         // if it exists.
-                        forAll(slaveFace, slavePointI)
+                        forAll(slaveFace, slavePointi)
                         {
-                            if (slaveFace[slavePointI] == otherVertex)
+                            if (slaveFace[slavePointi] == otherVertex)
                             {
                                 usedEdges[edgeI] = true;
-                                oppFace[pointI] = otherVertex;
+                                oppFace[pointi] = otherVertex;
 
                                 break;
                             }

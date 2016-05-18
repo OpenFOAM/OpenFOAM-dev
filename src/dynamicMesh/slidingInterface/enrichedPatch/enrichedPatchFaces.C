@@ -156,13 +156,13 @@ void Foam::enrichedPatch::calcEnrichedFaces
 
                 pointField slavePosOnEdge(slavePointsOnEdge.size());
 
-                forAll(slavePointsOnEdge, edgePointI)
+                forAll(slavePointsOnEdge, edgePointi)
                 {
-                    slavePosOnEdge[edgePointI] =
-                        pointMap().find(slavePointsOnEdge[edgePointI])();
+                    slavePosOnEdge[edgePointi] =
+                        pointMap().find(slavePointsOnEdge[edgePointi])();
 
-                    edgePointWeights[edgePointI] =
-                        (e & (slavePosOnEdge[edgePointI] - startPoint));
+                    edgePointWeights[edgePointi] =
+                        (e & (slavePosOnEdge[edgePointi] - startPoint));
                 }
 
                 if (debug)
@@ -292,13 +292,13 @@ void Foam::enrichedPatch::calcEnrichedFaces
 
                 pointField masterPosOnEdge(masterPointsOnEdge.size());
 
-                forAll(masterPointsOnEdge, edgePointI)
+                forAll(masterPointsOnEdge, edgePointi)
                 {
-                    masterPosOnEdge[edgePointI] =
-                        pointMap().find(masterPointsOnEdge[edgePointI])();
+                    masterPosOnEdge[edgePointi] =
+                        pointMap().find(masterPointsOnEdge[edgePointi])();
 
-                    edgePointWeights[edgePointI] =
-                        (e & (masterPosOnEdge[edgePointI] - startPoint));
+                    edgePointWeights[edgePointi] =
+                        (e & (masterPosOnEdge[edgePointi] - startPoint));
                 }
 
                 if (debug)

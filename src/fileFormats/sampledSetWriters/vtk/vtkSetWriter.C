@@ -90,13 +90,13 @@ void Foam::vtkSetWriter<Type>::write
 
         const Field<Type>& fld = *valueSets[setI];
 
-        forAll(fld, pointI)
+        forAll(fld, pointi)
         {
-            if (pointI != 0)
+            if (pointi != 0)
             {
                 os  << ' ';
             }
-            writer<Type>::write(fld[pointI], os);
+            writer<Type>::write(fld[pointi], os);
         }
         os  << nl;
     }

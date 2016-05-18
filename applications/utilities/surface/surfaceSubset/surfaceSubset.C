@@ -124,16 +124,16 @@ int main(int argc, char *argv[])
 
         // pick up cells sharing the point
 
-        forAll(markedPoints, pointI)
+        forAll(markedPoints, pointi)
         {
             if
             (
-                markedPoints[pointI] < 0
-             || markedPoints[pointI] >= surf1.nPoints()
+                markedPoints[pointi] < 0
+             || markedPoints[pointi] >= surf1.nPoints()
             )
             {
                 FatalErrorInFunction
-                    << "localPoint label " << markedPoints[pointI]
+                    << "localPoint label " << markedPoints[pointi]
                     << "out of range."
                     << " The mesh has got "
                     << surf1.nPoints() << " localPoints."
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
             }
 
             const labelList& curFaces =
-                surf1.pointFaces()[markedPoints[pointI]];
+                surf1.pointFaces()[markedPoints[pointi]];
 
             forAll(curFaces, i)
             {

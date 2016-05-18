@@ -1112,17 +1112,17 @@ void Foam::conformationSurfaces::findEdgeNearest
         );
 
         // Update minDistSqr and arguments
-        forAll(hitInfo, pointI)
+        forAll(hitInfo, pointi)
         {
-            if (hitInfo[pointI].hit())
+            if (hitInfo[pointi].hit())
             {
-                minDistSqr[pointI] = magSqr
+                minDistSqr[pointi] = magSqr
                 (
-                    hitInfo[pointI].hitPoint()
-                  - samples[pointI]
+                    hitInfo[pointi].hitPoint()
+                  - samples[pointi]
                 );
-                edgeHits[pointI] = hitInfo[pointI];
-                featuresHit[pointI] = testI;
+                edgeHits[pointi] = hitInfo[pointi];
+                featuresHit[pointi] = testI;
             }
         }
     }

@@ -110,7 +110,7 @@ class boundaryMesh
     // Private Member Functions
 
         //- Number of connected feature edges.
-        label nFeatureEdges(label pointI) const;
+        label nFeatureEdges(label pointi) const;
 
         //- Step to next feature edge
         label nextFeatureEdge(const label edgeI, const label vertI) const;

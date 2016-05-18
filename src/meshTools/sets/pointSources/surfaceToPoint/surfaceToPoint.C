@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,13 +71,13 @@ void Foam::surfaceToPoint::combine(topoSet& set, const bool add) const
     {
         boolList pointInside(querySurf.calcInside(mesh_.points()));
 
-        forAll(pointInside, pointI)
+        forAll(pointInside, pointi)
         {
-            bool isInside = pointInside[pointI];
+            bool isInside = pointInside[pointi];
 
             if ((isInside && includeInside_) || (!isInside && includeOutside_))
             {
-                addOrDelete(set, pointI, add);
+                addOrDelete(set, pointi, add);
             }
         }
     }
@@ -89,15 +89,15 @@ void Foam::surfaceToPoint::combine(topoSet& set, const bool add) const
         // Box dimensions to search in octree.
         const vector span(nearDist_, nearDist_, nearDist_);
 
-        forAll(meshPoints, pointI)
+        forAll(meshPoints, pointi)
         {
-            const point& pt = meshPoints[pointI];
+            const point& pt = meshPoints[pointi];
 
             pointIndexHit inter = querySurf.nearest(pt, span);
 
             if (inter.hit() && (mag(inter.hitPoint() - pt) < nearDist_))
             {
-                addOrDelete(set, pointI, add);
+                addOrDelete(set, pointi, add);
             }
         }
     }

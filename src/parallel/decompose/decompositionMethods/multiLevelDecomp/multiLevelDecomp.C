@@ -273,13 +273,13 @@ void Foam::multiLevelDecomp::decompose
 
                 label nPoints = 0;
                 labelList nOutsideConnections(n, 0);
-                forAll(pointPoints, pointI)
+                forAll(pointPoints, pointi)
                 {
-                    if ((dist[pointI] / nNext) == blockI)
+                    if ((dist[pointi] / nNext) == blockI)
                     {
                         nPoints++;
 
-                        const labelList& pPoints = pointPoints[pointI];
+                        const labelList& pPoints = pointPoints[pointi];
 
                         forAll(pPoints, i)
                         {

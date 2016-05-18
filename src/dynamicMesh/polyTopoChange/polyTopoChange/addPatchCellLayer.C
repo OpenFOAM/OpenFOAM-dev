@@ -67,20 +67,20 @@ Foam::label Foam::addPatchCellLayer::nbrFace
 
 void Foam::addPatchCellLayer::addVertex
 (
-    const label pointI,
+    const label pointi,
     face& f,
     label& fp
 )
 {
     if (fp == 0)
     {
-        f[fp++] = pointI;
+        f[fp++] = pointi;
     }
     else
     {
-        if (f[fp-1] != pointI && f[0] != pointI)
+        if (f[fp-1] != pointi && f[0] != pointi)
         {
-            f[fp++] = pointI;
+            f[fp++] = pointi;
         }
     }
 }
@@ -875,16 +875,16 @@ void Foam::addPatchCellLayer::setRefinement
             // Non-synced
             forAll(meshPoints, i)
             {
-                label meshPointI = meshPoints[i];
+                label meshPointi = meshPoints[i];
 
-                if (n[meshPointI] != nPointLayers[i])
+                if (n[meshPointi] != nPointLayers[i])
                 {
                     FatalErrorInFunction
-                        << "At mesh point:" << meshPointI
-                        << " coordinate:" << mesh_.points()[meshPointI]
+                        << "At mesh point:" << meshPointi
+                        << " coordinate:" << mesh_.points()[meshPointi]
                         << " specified nLayers:" << nPointLayers[i] << endl
                         << "On coupled point a different nLayers:"
-                        << n[meshPointI] << " was specified."
+                        << n[meshPointi] << " was specified."
                         << abort(FatalError);
                 }
             }
@@ -899,9 +899,9 @@ void Foam::addPatchCellLayer::setRefinement
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    nFromFace[pointI] = max(nFromFace[pointI], nFaceLayers[i]);
+                    nFromFace[pointi] = max(nFromFace[pointi], nFaceLayers[i]);
                 }
             }
             syncTools::syncPointList
@@ -914,20 +914,20 @@ void Foam::addPatchCellLayer::setRefinement
 
             forAll(nPointLayers, i)
             {
-                label meshPointI = meshPoints[i];
+                label meshPointi = meshPoints[i];
 
                 if
                 (
                     nPointLayers[i] > 0
-                 && nPointLayers[i] != nFromFace[meshPointI]
+                 && nPointLayers[i] != nFromFace[meshPointi]
                 )
                 {
                     FatalErrorInFunction
-                        << "At mesh point:" << meshPointI
-                        << " coordinate:" << mesh_.points()[meshPointI]
+                        << "At mesh point:" << meshPointi
+                        << " coordinate:" << mesh_.points()[meshPointi]
                         << " specified nLayers:" << nPointLayers[i] << endl
                         << "but the max nLayers of surrounding faces is:"
-                        << nFromFace[meshPointI]
+                        << nFromFace[meshPointi]
                         << abort(FatalError);
                 }
             }
@@ -946,17 +946,17 @@ void Foam::addPatchCellLayer::setRefinement
 
             forAll(meshPoints, i)
             {
-                label meshPointI = meshPoints[i];
+                label meshPointi = meshPoints[i];
 
-                if (mag(d[meshPointI] - firstLayerDisp[i]) > SMALL)
+                if (mag(d[meshPointi] - firstLayerDisp[i]) > SMALL)
                 {
                     FatalErrorInFunction
-                        << "At mesh point:" << meshPointI
-                        << " coordinate:" << mesh_.points()[meshPointI]
+                        << "At mesh point:" << meshPointi
+                        << " coordinate:" << mesh_.points()[meshPointi]
                         << " specified displacement:" << firstLayerDisp[i]
                         << endl
                         << "On coupled point a different displacement:"
-                        << d[meshPointI] << " was specified."
+                        << d[meshPointi] << " was specified."
                         << abort(FatalError);
                 }
             }
@@ -1057,11 +1057,11 @@ void Foam::addPatchCellLayer::setRefinement
     // Mark points that do not get extruded by setting size of addedPoints_ to 0
     label nTruncated = 0;
 
-    forAll(nPointLayers, patchPointI)
+    forAll(nPointLayers, patchPointi)
     {
-        if (nPointLayers[patchPointI] > 0)
+        if (nPointLayers[patchPointi] > 0)
         {
-            addedPoints_[patchPointI].setSize(nPointLayers[patchPointI]);
+            addedPoints_[patchPointi].setSize(nPointLayers[patchPointi]);
         }
         else
         {
@@ -1085,17 +1085,17 @@ void Foam::addPatchCellLayer::setRefinement
     if (!addToMesh_)
     {
         copiedPatchPoints.setSize(firstLayerDisp.size());
-        forAll(firstLayerDisp, patchPointI)
+        forAll(firstLayerDisp, patchPointi)
         {
-            if (addedPoints_[patchPointI].size())
+            if (addedPoints_[patchPointi].size())
             {
-                label meshPointI = meshPoints[patchPointI];
-                label zoneI = mesh_.pointZones().whichZone(meshPointI);
-                copiedPatchPoints[patchPointI] = meshMod.setAction
+                label meshPointi = meshPoints[patchPointi];
+                label zoneI = mesh_.pointZones().whichZone(meshPointi);
+                copiedPatchPoints[patchPointi] = meshMod.setAction
                 (
                     polyAddPoint
                     (
-                        mesh_.points()[meshPointI],         // point
+                        mesh_.points()[meshPointi],         // point
                         -1,         // master point
                         zoneI,      // zone for point
                         true        // supports a cell
@@ -1107,19 +1107,19 @@ void Foam::addPatchCellLayer::setRefinement
 
 
     // Create points for additional layers
-    forAll(firstLayerDisp, patchPointI)
+    forAll(firstLayerDisp, patchPointi)
     {
-        if (addedPoints_[patchPointI].size())
+        if (addedPoints_[patchPointi].size())
         {
-            label meshPointI = meshPoints[patchPointI];
+            label meshPointi = meshPoints[patchPointi];
 
-            label zoneI = mesh_.pointZones().whichZone(meshPointI);
+            label zoneI = mesh_.pointZones().whichZone(meshPointi);
 
-            point pt = mesh_.points()[meshPointI];
+            point pt = mesh_.points()[meshPointi];
 
-            vector disp = firstLayerDisp[patchPointI];
+            vector disp = firstLayerDisp[patchPointi];
 
-            forAll(addedPoints_[patchPointI], i)
+            forAll(addedPoints_[patchPointi], i)
             {
                 pt += disp;
 
@@ -1128,15 +1128,15 @@ void Foam::addPatchCellLayer::setRefinement
                     polyAddPoint
                     (
                         pt,         // point
-                        (addToMesh_ ? meshPointI : -1), // master point
+                        (addToMesh_ ? meshPointi : -1), // master point
                         zoneI,      // zone for point
                         true        // supports a cell
                     )
                 );
 
-                addedPoints_[patchPointI][i] = addedVertI;
+                addedPoints_[patchPointi][i] = addedVertI;
 
-                disp *= expansionRatio[patchPointI];
+                disp *= expansionRatio[patchPointi];
             }
         }
     }
@@ -1729,23 +1729,23 @@ void Foam::addPatchCellLayer::updateMesh
     {
         labelListList newAddedPoints(pointMap.size());
 
-        forAll(newAddedPoints, newPointI)
+        forAll(newAddedPoints, newPointi)
         {
-            label oldPointI = pointMap[newPointI];
+            label oldPointi = pointMap[newPointi];
 
-            const labelList& added = addedPoints_[oldPointI];
+            const labelList& added = addedPoints_[oldPointi];
 
-            labelList& newAdded = newAddedPoints[newPointI];
+            labelList& newAdded = newAddedPoints[newPointi];
             newAdded.setSize(added.size());
             label newI = 0;
 
             forAll(added, i)
             {
-                label newPointI = morphMap.reversePointMap()[added[i]];
+                label newPointi = morphMap.reversePointMap()[added[i]];
 
-                if (newPointI >= 0)
+                if (newPointi >= 0)
                 {
-                    newAdded[newI++] = newPointI;
+                    newAdded[newI++] = newPointi;
                 }
             }
             newAdded.setSize(newI);

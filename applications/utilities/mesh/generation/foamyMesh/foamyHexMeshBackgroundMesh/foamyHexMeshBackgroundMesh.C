@@ -352,14 +352,14 @@ tmp<scalarField> signedDistance
         // Push back to original
         forAll(volType, i)
         {
-            label pointI = surfIndices[i];
-            scalar dist = mag(points[pointI] - nearest[pointI].hitPoint());
+            label pointi = surfIndices[i];
+            scalar dist = mag(points[pointi] - nearest[pointi].hitPoint());
 
             volumeType vT = volType[i];
 
             if (vT == volumeType::OUTSIDE)
             {
-                fld[pointI] = dist;
+                fld[pointi] = dist;
             }
             else if (vT == volumeType::INSIDE)
             {

@@ -75,24 +75,24 @@ void Foam::duplicatePoints::setRefinement
 
     forAllConstIter(Map<label>, meshPointMap, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
         label localI = iter();
         const labelList& regions = pointRegions[localI];
 
         duplicates_[localI].setSize(regions.size());
-        duplicates_[localI][0] = pointI;
+        duplicates_[localI][0] = pointi;
         for (label i = 1; i < regions.size(); i++)
         {
             duplicates_[localI][i] = meshMod.addPoint
             (
-                mesh_.points()[pointI],  // point
-                pointI,                 // master point
+                mesh_.points()[pointi],  // point
+                pointi,                 // master point
                 -1,                     // zone for point
                 true                    // supports a cell
             );
         }
 
-        //Pout<< "For point:" << pointI << " coord:" << mesh_.points()[pointI]
+        //Pout<< "For point:" << pointi << " coord:" << mesh_.points()[pointi]
         //    << endl;
         //forAll(duplicates_[localI], i)
         //{
@@ -121,9 +121,9 @@ void Foam::duplicatePoints::setRefinement
         newFace.setSize(f.size());
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
-            Map<label>::const_iterator iter = meshPointMap.find(pointI);
+            Map<label>::const_iterator iter = meshPointMap.find(pointi);
 
             if (iter != meshPointMap.end())
             {
@@ -141,7 +141,7 @@ void Foam::duplicatePoints::setRefinement
             }
             else
             {
-                newFace[fp] = pointI;
+                newFace[fp] = pointi;
             }
         }
 

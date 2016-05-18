@@ -145,17 +145,17 @@ void Foam::slidingInterface::decoupleInterface
         }
 
         // Recover retired points on the slave side
-        forAll(newFace, pointI)
+        forAll(newFace, pointi)
         {
-            Map<label>::const_iterator rpmIter = rpm.find(newFace[pointI]);
+            Map<label>::const_iterator rpmIter = rpm.find(newFace[pointi]);
             if (rpmIter != rpm.end())
             {
                 // Master of retired point; grab its original
-                // Pout<< "Reinstating retired point: " << newFace[pointI]
-                //     << " with old: " << rpm.find(newFace[pointI])()
+                // Pout<< "Reinstating retired point: " << newFace[pointi]
+                //     << " with old: " << rpm.find(newFace[pointi])()
                 //     << endl;
 
-                newFace[pointI] = rpmIter();
+                newFace[pointi] = rpmIter();
             }
         }
 
@@ -193,17 +193,17 @@ void Foam::slidingInterface::decoupleInterface
 
         bool changed = false;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
             // Check if the point is removed
-            if (ref.pointRemoved(oldFace[pointI]))
+            if (ref.pointRemoved(oldFace[pointi]))
             {
                 // Point removed; skip it
                 changed = true;
             }
             else
             {
-                newFaceLabels.append(oldFace[pointI]);
+                newFaceLabels.append(oldFace[pointi]);
             }
         }
 
@@ -304,33 +304,33 @@ void Foam::slidingInterface::decoupleInterface
 
         bool changed = false;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
             // Check if the point is removed or retired
-            if (rpm.found(oldFace[pointI]))
+            if (rpm.found(oldFace[pointi]))
             {
                 // Master of retired point; grab its original
                 changed = true;
 
-                // Pout<< "Reinstating retired point: " << oldFace[pointI]
-                //     << " with old: " << rpm.find(oldFace[pointI])()
+                // Pout<< "Reinstating retired point: " << oldFace[pointi]
+                //     << " with old: " << rpm.find(oldFace[pointi])()
                 //     << endl;
 
-                newFaceLabels.append(rpm.find(oldFace[pointI])());
+                newFaceLabels.append(rpm.find(oldFace[pointi])());
             }
-            else if (ref.pointRemoved(oldFace[pointI]))
+            else if (ref.pointRemoved(oldFace[pointi]))
             {
                 // Point removed; skip it
                 changed = true;
             }
-            else if (masterPm.found(oldFace[pointI]))
+            else if (masterPm.found(oldFace[pointi]))
             {
                 // Point from master patch only; skip it
                 changed = true;
             }
             else
             {
-                newFaceLabels.append(oldFace[pointI]);
+                newFaceLabels.append(oldFace[pointi]);
             }
         }
 
@@ -391,16 +391,16 @@ void Foam::slidingInterface::decoupleInterface
     const labelList& slaveMeshPoints =
         mesh.faceZones()[slaveFaceZoneID_.index()]().meshPoints();
 
-    forAll(slaveMeshPoints, pointI)
+    forAll(slaveMeshPoints, pointi)
     {
         ref.setAction
         (
             polyModifyPoint
             (
-                slaveMeshPoints[pointI],             // point ID
-                points[slaveMeshPoints[pointI]],     // point
+                slaveMeshPoints[pointi],             // point ID
+                points[slaveMeshPoints[pointi]],     // point
                 false,                               // remove from zone
-                mesh.pointZones().whichZone(slaveMeshPoints[pointI]), // zone
+                mesh.pointZones().whichZone(slaveMeshPoints[pointi]), // zone
                 true                                // in a cell
             )
         );

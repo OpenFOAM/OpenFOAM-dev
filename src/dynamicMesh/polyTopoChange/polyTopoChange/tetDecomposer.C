@@ -57,7 +57,7 @@ void Foam::tetDecomposer::modifyFace
     const label facei,
     const label own,
     const label nei,
-    const label patchI,
+    const label patchi,
     const label zoneI,
     const bool zoneFlip
 ) const
@@ -72,7 +72,7 @@ void Foam::tetDecomposer::modifyFace
             own,                        // owner
             nei,                        // neighbour
             false,                      // face flip
-            patchI,                     // patch for face
+            patchi,                     // patch for face
             zoneI,                      // zone for face
             zoneFlip                    // face flip in zone
         );
@@ -86,7 +86,7 @@ void Foam::tetDecomposer::modifyFace
             nei,                        // owner
             own,                        // neighbour
             true,                       // face flip
-            patchI,                     // patch for face
+            patchi,                     // patch for face
             zoneI,                      // zone for face
             !zoneFlip                   // face flip in zone
         );
@@ -103,7 +103,7 @@ void Foam::tetDecomposer::addFace
     const label masterPointID,
     const label masterEdgeID,
     const label masterFaceID,
-    const label patchI,
+    const label patchi,
     const label zoneI,
     const bool zoneFlip
 ) const
@@ -120,7 +120,7 @@ void Foam::tetDecomposer::addFace
             masterEdgeID,               // master edge
             masterFaceID,               // master face
             false,                      // face flip
-            patchI,                     // patch for face
+            patchi,                     // patch for face
             zoneI,                      // zone for face
             zoneFlip                    // face flip in zone
         );
@@ -136,7 +136,7 @@ void Foam::tetDecomposer::addFace
             masterEdgeID,               // master edge
             masterFaceID,               // master face
             true,                       // face flip
-            patchI,                     // patch for face
+            patchi,                     // patch for face
             zoneI,                      // zone for face
             !zoneFlip                   // face flip in zone
         );
@@ -189,12 +189,12 @@ void Foam::tetDecomposer::setRefinement
     forAll(mesh_.cellCentres(), celli)
     {
         // Any point on the cell
-        label masterPointI = mesh_.faces()[mesh_.cells()[celli][0]][0];
+        label masterPointi = mesh_.faces()[mesh_.cells()[celli][0]][0];
 
         cellToPoint_[celli] = meshMod.addPoint
         (
             mesh_.cellCentres()[celli],
-            masterPointI,
+            masterPointi,
             -1,
             true
         );
@@ -208,12 +208,12 @@ void Foam::tetDecomposer::setRefinement
         forAll(mesh_.faceCentres(), facei)
         {
             // Any point on the face
-            const label masterPointI = mesh_.faces()[facei][0];
+            const label masterPointi = mesh_.faces()[facei][0];
 
             faceToPoint_[facei] = meshMod.addPoint
             (
                 mesh_.faceCentres()[facei],
-                masterPointI,
+                masterPointi,
                 -1,
                 true
             );
@@ -326,10 +326,10 @@ void Foam::tetDecomposer::setRefinement
         const labelList& addedNei = faceNeighbourCells_[facei];
         const face& f = mesh_.faces()[facei];
 
-        label patchI = -1;
+        label patchi = -1;
         if (facei >= mesh_.nInternalFaces())
         {
-            patchI = mesh_.boundaryMesh().whichPatch(facei);
+            patchi = mesh_.boundaryMesh().whichPatch(facei);
         }
 
         label zoneI = mesh_.faceZones().whichZone(facei);
@@ -361,7 +361,7 @@ void Foam::tetDecomposer::setRefinement
                             facei,
                             addedOwn[fp],
                             addedNei[fp],
-                            patchI,
+                            patchi,
                             zoneI,
                             zoneFlip
                         );
@@ -377,7 +377,7 @@ void Foam::tetDecomposer::setRefinement
                             -1,                 //point
                             -1,                 //edge
                             facei,              //face
-                            patchI,
+                            patchi,
                             zoneI,
                             zoneFlip
                         );
@@ -403,7 +403,7 @@ void Foam::tetDecomposer::setRefinement
                         f[fp],      //point
                         -1,         //edge
                         -1,         //face
-                        -1,         //patchI
+                        -1,         //patchi
                         zoneI,
                         zoneFlip
                     );
@@ -427,7 +427,7 @@ void Foam::tetDecomposer::setRefinement
                         f[fp],      //point
                         -1,         //edge
                         -1,         //face
-                        -1,         //patchI
+                        -1,         //patchi
                         zoneI,
                         zoneFlip
                     );
@@ -468,7 +468,7 @@ void Foam::tetDecomposer::setRefinement
                             facei,
                             addedOwn[triI],
                             addedNei[triI],
-                            patchI,
+                            patchi,
                             zoneI,
                             zoneFlip
                         );
@@ -484,7 +484,7 @@ void Foam::tetDecomposer::setRefinement
                             -1,                 //point
                             -1,                 //edge
                             facei,              //face
-                            patchI,
+                            patchi,
                             zoneI,
                             zoneFlip
                         );
@@ -511,7 +511,7 @@ void Foam::tetDecomposer::setRefinement
                         f[fp],      //point
                         -1,         //edge
                         -1,         //face
-                        -1,         //patchI
+                        -1,         //patchi
                         zoneI,
                         zoneFlip
                     );
@@ -536,7 +536,7 @@ void Foam::tetDecomposer::setRefinement
                             f[fp],      //point
                             -1,         //edge
                             -1,         //face
-                            -1,         //patchI
+                            -1,         //patchi
                             zoneI,
                             zoneFlip
                         );
@@ -683,7 +683,7 @@ void Foam::tetDecomposer::setRefinement
                         -1,         //masterPoint
                         -1,         //fEdges[fp], //masterEdge
                         facei,      //masterFace
-                        -1,         //patchI
+                        -1,         //patchi
                         zoneI,
                         zoneFlip
                     );

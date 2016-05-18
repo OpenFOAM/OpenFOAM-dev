@@ -223,9 +223,9 @@ Foam::meshTriangulation::meshTriangulation
     if (faceCentreDecomposition)
     {
         newPoints.setSize(mesh.nPoints() + faces.size());
-        forAll(mesh.points(), pointI)
+        forAll(mesh.points(), pointi)
         {
-            newPoints[pointI] = mesh.points()[pointI];
+            newPoints[pointi] = mesh.points()[pointi];
         }
         // Face centres
         forAll(faces, facei)

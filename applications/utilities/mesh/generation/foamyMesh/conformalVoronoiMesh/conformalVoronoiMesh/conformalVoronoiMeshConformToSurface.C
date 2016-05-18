@@ -1831,10 +1831,10 @@ Foam::conformalVoronoiMesh::nearestFeatureEdgeLocations
     {
         label index = elems[elemI];
 
-        const Foam::point& pointI
+        const Foam::point& pointi
             = edgeLocationTreePtr_().shapes().shapePoints()[index];
 
-        pointIndexHit nearHit(true, pointI, index);
+        pointIndexHit nearHit(true, pointi, index);
 
         dynPointHit.append(nearHit);
     }

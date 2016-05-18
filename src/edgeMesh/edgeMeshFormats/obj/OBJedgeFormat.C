@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,14 +191,14 @@ bool Foam::fileFormats::OBJedgeFormat::read(const fileName& filename)
     // cull unused points
     label nUsed = 0;
 
-    forAll(dynPoints, pointI)
+    forAll(dynPoints, pointi)
     {
-        if (dynUsedPoints[pointI] >= 0)
+        if (dynUsedPoints[pointi] >= 0)
         {
-            if (nUsed != pointI)
+            if (nUsed != pointi)
             {
-                dynPoints[nUsed] = dynPoints[pointI];
-                dynUsedPoints[pointI] = nUsed;   // new position
+                dynPoints[nUsed] = dynPoints[pointi];
+                dynUsedPoints[pointi] = nUsed;   // new position
             }
             ++nUsed;
         }

@@ -566,9 +566,9 @@ void Foam::combineFaces::setRefinement
 
     const labelListList& pointFaces = mesh_.pointFaces();
 
-    forAll(pointFaces, pointI)
+    forAll(pointFaces, pointi)
     {
-        nPointFaces[pointI] = pointFaces[pointI].size();
+        nPointFaces[pointi] = pointFaces[pointi].size();
     }
 
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
@@ -700,11 +700,11 @@ void Foam::combineFaces::setRefinement
     // Remove all unused points. Store position if undoable.
     if (!undoable_)
     {
-        forAll(nPointFaces, pointI)
+        forAll(nPointFaces, pointi)
         {
-            if (nPointFaces[pointI] == 0)
+            if (nPointFaces[pointi] == 0)
             {
-                meshMod.setAction(polyRemovePoint(pointI));
+                meshMod.setAction(polyRemovePoint(pointi));
             }
         }
     }
@@ -712,9 +712,9 @@ void Foam::combineFaces::setRefinement
     {
         // Count removed points
         label n = 0;
-        forAll(nPointFaces, pointI)
+        forAll(nPointFaces, pointi)
         {
-            if (nPointFaces[pointI] == 0)
+            if (nPointFaces[pointi] == 0)
             {
                 n++;
             }
@@ -726,16 +726,16 @@ void Foam::combineFaces::setRefinement
 
         // Remove points and store position
         n = 0;
-        forAll(nPointFaces, pointI)
+        forAll(nPointFaces, pointi)
         {
-            if (nPointFaces[pointI] == 0)
+            if (nPointFaces[pointi] == 0)
             {
-                meshMod.setAction(polyRemovePoint(pointI));
+                meshMod.setAction(polyRemovePoint(pointi));
 
-                savedPointLabels_[n] = pointI;
-                savedPoints_[n] = mesh_.points()[pointI];
+                savedPointLabels_[n] = pointi;
+                savedPoints_[n] = mesh_.points()[pointi];
 
-                meshToSaved.insert(pointI, n);
+                meshToSaved.insert(pointi, n);
                 n++;
             }
         }
@@ -751,11 +751,11 @@ void Foam::combineFaces::setRefinement
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    if (nPointFaces[pointI] == 0)
+                    if (nPointFaces[pointi] == 0)
                     {
-                        f[fp] = -meshToSaved[pointI]-1;
+                        f[fp] = -meshToSaved[pointi]-1;
                     }
                 }
             }
@@ -784,11 +784,11 @@ void Foam::combineFaces::updateMesh(const mapPolyMesh& map)
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    if (pointI >= 0)
+                    if (pointi >= 0)
                     {
-                        f[fp] = map.reversePointMap()[pointI];
+                        f[fp] = map.reversePointMap()[pointi];
 
                         if (f[fp] < 0)
                         {
@@ -879,11 +879,11 @@ void Foam::combineFaces::setUnrefinement
 
             forAll(f, fp)
             {
-                label pointI = f[fp];
+                label pointi = f[fp];
 
-                if (pointI < 0)
+                if (pointi < 0)
                 {
-                    label localI = -pointI-1;
+                    label localI = -pointi-1;
 
                     if (addedPoints[localI] == -1)
                     {

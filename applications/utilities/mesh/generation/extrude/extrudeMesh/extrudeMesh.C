@@ -581,25 +581,25 @@ int main(int argc, char *argv[])
         // Determine points and extrusion
         pointField layer0Points(extrudePatch.nPoints());
         pointField displacement(extrudePatch.nPoints());
-        forAll(displacement, pointI)
+        forAll(displacement, pointi)
         {
-            const vector& patchNormal = extrudePatchPointNormals[pointI];
+            const vector& patchNormal = extrudePatchPointNormals[pointi];
 
             // layer0 point
-            layer0Points[pointI] = model()
+            layer0Points[pointi] = model()
             (
-                extrudePatch.localPoints()[pointI],
+                extrudePatch.localPoints()[pointi],
                 patchNormal,
                 0
             );
             // layerN point
             point extrudePt = model()
             (
-                extrudePatch.localPoints()[pointI],
+                extrudePatch.localPoints()[pointi],
                 patchNormal,
                 model().nLayers()
             );
-            displacement[pointI] = extrudePt - layer0Points[pointI];
+            displacement[pointi] = extrudePt - layer0Points[pointi];
         }
 
 
@@ -659,27 +659,27 @@ int main(int argc, char *argv[])
         );
 
         // Reset points according to extrusion model
-        forAll(layerExtrude.addedPoints(), pointI)
+        forAll(layerExtrude.addedPoints(), pointi)
         {
-            const labelList& pPoints = layerExtrude.addedPoints()[pointI];
-            forAll(pPoints, pPointI)
+            const labelList& pPoints = layerExtrude.addedPoints()[pointi];
+            forAll(pPoints, pPointi)
             {
-                label meshPointI = pPoints[pPointI];
+                label meshPointi = pPoints[pPointi];
 
                 point modelPt
                 (
                     model()
                     (
-                        extrudePatch.localPoints()[pointI],
-                        extrudePatchPointNormals[pointI],
-                        pPointI+1       // layer
+                        extrudePatch.localPoints()[pointi],
+                        extrudePatchPointNormals[pointi],
+                        pPointi+1       // layer
                     )
                 );
 
                 const_cast<DynamicList<point>&>
                 (
                     meshMod().points()
-                )[meshPointI] = modelPt;
+                )[meshPointi] = modelPt;
             }
         }
 

@@ -73,32 +73,32 @@ Foam::PackedBoolList Foam::syncTools::getMasterPoints(const polyMesh& mesh)
     const labelListList& transformedSlaves =
             globalData.globalPointTransformedSlaves();
 
-    forAll(meshPoints, coupledPointI)
+    forAll(meshPoints, coupledPointi)
     {
-        label meshPointI = meshPoints[coupledPointI];
+        label meshPointi = meshPoints[coupledPointi];
         if
         (
             (
-                slaves[coupledPointI].size()
-              + transformedSlaves[coupledPointI].size()
+                slaves[coupledPointi].size()
+              + transformedSlaves[coupledPointi].size()
             )
           > 0
         )
         {
-            isMasterPoint[meshPointI] = true;
+            isMasterPoint[meshPointi] = true;
         }
-        donePoint[meshPointI] = true;
+        donePoint[meshPointi] = true;
     }
 
 
     // Do all other points
     // ~~~~~~~~~~~~~~~~~~~
 
-    forAll(donePoint, pointI)
+    forAll(donePoint, pointi)
     {
-        if (!donePoint[pointI])
+        if (!donePoint[pointi])
         {
-            isMasterPoint[pointI] = true;
+            isMasterPoint[pointi] = true;
         }
     }
 

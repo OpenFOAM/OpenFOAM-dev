@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ template<class TrackingData>
 inline void Foam::pointEdgeCollapse::leaveDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -196,7 +196,7 @@ template<class TrackingData>
 inline void Foam::pointEdgeCollapse::enterDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -211,7 +211,7 @@ template<class TrackingData>
 inline bool Foam::pointEdgeCollapse::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const pointEdgeCollapse& edgeInfo,
     const scalar tol,
@@ -227,7 +227,7 @@ template<class TrackingData>
 inline bool Foam::pointEdgeCollapse::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const pointEdgeCollapse& newPointInfo,
     const scalar tol,
     TrackingData& td
@@ -256,7 +256,7 @@ inline bool Foam::pointEdgeCollapse::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const pointEdgeCollapse& pointInfo,
     const scalar tol,
     TrackingData& td

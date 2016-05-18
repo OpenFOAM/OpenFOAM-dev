@@ -109,7 +109,7 @@ public:
         // Per patch calculation
 
             //- Anisotropic thermal conductivity [W/m/K]
-            virtual tmp<vectorField> Kappa(const label patchI) const;
+            virtual tmp<vectorField> Kappa(const label patchi) const;
 };
 
 

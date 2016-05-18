@@ -145,9 +145,9 @@ Foam::label Foam::cellDistFuncs::getPointNeighbours
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
+        label pointi = f[fp];
 
-        const labelList& pointNbs = patch.pointFaces()[pointI];
+        const labelList& pointNbs = patch.pointFaces()[pointi];
 
         forAll(pointNbs, nbI)
         {
@@ -344,9 +344,9 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
             const labelList& meshPoints = patch.meshPoints();
             const labelListList& pointFaces = patch.pointFaces();
 
-            forAll(meshPoints, meshPointI)
+            forAll(meshPoints, meshPointi)
             {
-                label vertI = meshPoints[meshPointI];
+                label vertI = meshPoints[meshPointi];
 
                 const labelList& neighbours = mesh().pointCells(vertI);
 
@@ -356,7 +356,7 @@ void Foam::cellDistFuncs::correctBoundaryPointCells
 
                     if (!nearestFace.found(celli))
                     {
-                        const labelList& wallFaces = pointFaces[meshPointI];
+                        const labelList& wallFaces = pointFaces[meshPointi];
 
                         label minFacei = -1;
 

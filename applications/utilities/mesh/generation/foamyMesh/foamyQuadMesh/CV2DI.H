@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,9 +130,9 @@ inline const Foam::point2D& Foam::CV2D::toPoint2D(const point& p) const
 inline const Foam::point2DField Foam::CV2D::toPoint2D(const pointField& p) const
 {
     point2DField temp(p.size());
-    forAll(temp, pointI)
+    forAll(temp, pointi)
     {
-        temp[pointI] = point2D(p[pointI].x(), p[pointI].y());
+        temp[pointi] = point2D(p[pointi].x(), p[pointi].y());
     }
     return temp;
 }

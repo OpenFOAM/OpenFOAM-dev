@@ -165,7 +165,7 @@ class meshCutter
         //- Returns -1 or the cell in cellLabels that is cut.
         label findCutCell(const cellCuts&, const labelList&) const;
 
-        //- Returns first pointI in pointLabels that uses an internal
+        //- Returns first pointi in pointLabels that uses an internal
         //  face. Used to find point to inflate cell/face from (has to be
         //  connected to internal face)
         label findInternalFacePoint(const labelList& pointLabels) const;

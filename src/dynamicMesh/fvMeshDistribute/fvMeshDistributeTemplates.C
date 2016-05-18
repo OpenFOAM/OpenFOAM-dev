@@ -211,9 +211,9 @@ void Foam::fvMeshDistribute::mapExposedFaces
 
         // Pull from old internal field into bfld.
 
-        forAll(bfld, patchI)
+        forAll(bfld, patchi)
         {
-            fvsPatchField<T>& patchFld = bfld[patchI];
+            fvsPatchField<T>& patchFld = bfld[patchi];
 
             forAll(patchFld, i)
             {

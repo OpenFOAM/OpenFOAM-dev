@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ public:
             inline void leaveDomain
             (
                 const polyPatch& patch,
-                const label patchPointI,
+                const label patchPointi,
                 const point& pos,
                 TrackingData& td
             );
@@ -139,7 +139,7 @@ public:
             inline void enterDomain
             (
                 const polyPatch& patch,
-                const label patchPointI,
+                const label patchPointi,
                 const point& pos,
                 TrackingData& td
             );
@@ -157,7 +157,7 @@ public:
             inline bool updatePoint
             (
                 const polyMesh& mesh,
-                const label pointI,
+                const label pointi,
                 const label edgeI,
                 const pointEdgeStructuredWalk& edgeInfo,
                 const scalar tol,
@@ -170,7 +170,7 @@ public:
             inline bool updatePoint
             (
                 const polyMesh& mesh,
-                const label pointI,
+                const label pointi,
                 const pointEdgeStructuredWalk& newPointInfo,
                 const scalar tol,
                 TrackingData& td
@@ -192,7 +192,7 @@ public:
             (
                 const polyMesh& mesh,
                 const label edgeI,
-                const label pointI,
+                const label pointi,
                 const pointEdgeStructuredWalk& pointInfo,
                 const scalar tol,
                 TrackingData& td

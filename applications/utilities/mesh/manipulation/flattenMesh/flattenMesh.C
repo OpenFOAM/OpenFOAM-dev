@@ -76,15 +76,15 @@ int main(int argc, char *argv[])
     scalar minCmptVal = bb.min()[planeNormalCmpt];
     scalar maxCmptVal = bb.max()[planeNormalCmpt];
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        if (points[pointI][planeNormalCmpt] < midCmptVal)
+        if (points[pointi][planeNormalCmpt] < midCmptVal)
         {
-            points[pointI][planeNormalCmpt] = minCmptVal;
+            points[pointi][planeNormalCmpt] = minCmptVal;
         }
         else
         {
-            points[pointI][planeNormalCmpt] = maxCmptVal;
+            points[pointi][planeNormalCmpt] = maxCmptVal;
         }
     }
 

@@ -89,16 +89,16 @@ using namespace Foam;
 //    {
 //        const vectorField& faceAreas = mesh.faceAreas();
 //
-//        forAll(meshPoints, patchPointI)
+//        forAll(meshPoints, patchPointi)
 //        {
-//            label meshPointI = meshPoints[patchPointI];
-//            Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointI);
+//            label meshPointi = meshPoints[patchPointi];
+//            Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointi);
 //            if (fnd != coupledPatchMP.end())
 //            {
-//                label coupledPointI = fnd();
+//                label coupledPointi = fnd();
 //
-//                List<point>& pNormals = pointFaceNormals[coupledPointI];
-//                const labelList& pFaces = p.pointFaces()[patchPointI];
+//                List<point>& pNormals = pointFaceNormals[coupledPointi];
+//                const labelList& pFaces = p.pointFaces()[patchPointi];
 //                pNormals.setSize(pFaces.size());
 //                forAll(pFaces, i)
 //                {
@@ -125,24 +125,24 @@ using namespace Foam;
 //
 //    pointField coupledPointNormals(map.constructSize(), Zero);
 //
-//    forAll(meshPoints, patchPointI)
+//    forAll(meshPoints, patchPointi)
 //    {
-//        label meshPointI = meshPoints[patchPointI];
-//        Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointI);
+//        label meshPointi = meshPoints[patchPointi];
+//        Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointi);
 //        if (fnd != coupledPatchMP.end())
 //        {
-//            label coupledPointI = fnd();
-//            const labelList& slaveSlots = slaves[coupledPointI];
+//            label coupledPointi = fnd();
+//            const labelList& slaveSlots = slaves[coupledPointi];
 //            const labelList& transformedSlaveSlots =
-//                transformedSlaves[coupledPointI];
+//                transformedSlaves[coupledPointi];
 //
 //            label nFaces = slaveSlots.size()+transformedSlaveSlots.size();
 //            if (nFaces > 0)
 //            {
 //                // Combine
-//                point& n = coupledPointNormals[coupledPointI];
+//                point& n = coupledPointNormals[coupledPointi];
 //
-//                n += sum(pointFaceNormals[coupledPointI]);
+//                n += sum(pointFaceNormals[coupledPointi]);
 //
 //                forAll(slaveSlots, i)
 //                {
@@ -178,14 +178,14 @@ using namespace Foam;
 //
 //
 //    // Override patch normals
-//    forAll(meshPoints, patchPointI)
+//    forAll(meshPoints, patchPointi)
 //    {
-//        label meshPointI = meshPoints[patchPointI];
-//        Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointI);
+//        label meshPointi = meshPoints[patchPointi];
+//        Map<label>::const_iterator fnd = coupledPatchMP.find(meshPointi);
 //        if (fnd != coupledPatchMP.end())
 //        {
-//            label coupledPointI = fnd();
-//            extrudeN[patchPointI] = coupledPointNormals[coupledPointI];
+//            label coupledPointi = fnd();
+//            extrudeN[patchPointi] = coupledPointNormals[coupledPointi];
 //        }
 //    }
 //
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
         forAll(en, patchEdgeI)
         {
             const edge& patchE = pp.edges()[patchEdgeI];
-            //str.write(pp.localPoints()[pointI], en[pointI]);
+            //str.write(pp.localPoints()[pointi], en[pointi]);
             const point pt = patchE.centre(pp.localPoints());
             str.write(linePointRef(pt, pt + 0.1*en[patchEdgeI]));
         }
@@ -264,9 +264,9 @@ int main(int argc, char *argv[])
 //                identity(pp.size())+pp.start()
 //            )
 //        );
-//        forAll(pn, pointI)
+//        forAll(pn, pointi)
 //        {
-//            str.write(linePointRef(pp.localPoints()[pointI], pn[pointI]));
+//            str.write(linePointRef(pp.localPoints()[pointi], pn[pointi]));
 //        }
 //    }
 //    {
@@ -281,9 +281,9 @@ int main(int argc, char *argv[])
 //                identity(pp.size())+pp.start()
 //            )
 //        );
-//        forAll(pn, pointI)
+//        forAll(pn, pointi)
 //        {
-//            str.write(linePointRef(pp.localPoints()[pointI], pn[pointI]));
+//            str.write(linePointRef(pp.localPoints()[pointi], pn[pointi]));
 //        }
 //    }
 

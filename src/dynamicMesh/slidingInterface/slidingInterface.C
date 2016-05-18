@@ -450,10 +450,10 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
         const pointField& slaveLocalPoints = slavePatch.localPoints();
         const vectorField& slavePointNormals = slavePatch.pointNormals();
 
-        forAll(cutPoints, pointI)
+        forAll(cutPoints, pointi)
         {
             // Try to find the cut point in retired points
-            Map<label>::const_iterator rpmIter = rpm.find(cutPoints[pointI]);
+            Map<label>::const_iterator rpmIter = rpm.find(cutPoints[pointi]);
 
             if (rpmIter != rpm.end())
             {
@@ -463,7 +463,7 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 }
 
                 // Cut point is a retired point
-                motionPoints[cutPoints[pointI]] =
+                motionPoints[cutPoints[pointi]] =
                     projectedSlavePoints[slaveZonePointMap.find(rpmIter())()];
             }
             else
@@ -472,12 +472,12 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 // must be an edge-to-edge intersection.
 
                 Map<Pair<edge>>::const_iterator cpepmIter =
-                    cpepm.find(cutPoints[pointI]);
+                    cpepm.find(cutPoints[pointi]);
 
                 if (cpepmIter != cpepm.end())
                 {
                     // Pout<< "Need to re-create hit for point "
-                    //     << cutPoints[pointI]
+                    //     << cutPoints[pointi]
                     //     << " lookup: " << cpepmIter()
                     //     << endl;
 
@@ -597,7 +597,7 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                             )
                             {
                                 // Cut both master and slave.
-                                motionPoints[cutPoints[pointI]] =
+                                motionPoints[cutPoints[pointi]] =
                                     masterCutPoint;
                             }
                         }
@@ -627,7 +627,7 @@ void Foam::slidingInterface::modifyMotionPoints(pointField& motionPoints) const
                 else
                 {
                     FatalErrorInFunction
-                        << "Cut point " << cutPoints[pointI]
+                        << "Cut point " << cutPoints[pointi]
                         << " not recognised as either the projected "
                         << "or as intersection point.  Error in point "
                         << "projection or data mapping"

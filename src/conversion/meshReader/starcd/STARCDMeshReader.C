@@ -165,22 +165,22 @@ void Foam::meshReaders::STARCD::readPoints
 
         label lineLabel;
 
-        label pointI = 0;
+        label pointi = 0;
         while ((is >> lineLabel).good())
         {
-            is  >> points_[pointI].x()
-                >> points_[pointI].y()
-                >> points_[pointI].z();
+            is  >> points_[pointi].x()
+                >> points_[pointi].y()
+                >> points_[pointi].z();
 
             // might need again in the future
-            ////  origPointId[pointI] = lineLabel;
-            mapToFoamPointId_[lineLabel] = pointI;
-            pointI++;
+            ////  origPointId[pointi] = lineLabel;
+            mapToFoamPointId_[lineLabel] = pointi;
+            pointi++;
         }
 
-        if (nPoints > pointI)
+        if (nPoints > pointi)
         {
-            nPoints = pointI;
+            nPoints = pointi;
             points_.setSize(nPoints);
             // might need again in the future
             //// origPointId.setSize(nPoints);
@@ -999,20 +999,20 @@ void Foam::meshReaders::STARCD::cullPoints()
     }
 
     // the new ordering and the count of unused points
-    label pointI = 0;
+    label pointi = 0;
     forAll(oldToNew, i)
     {
         if (oldToNew[i] >= 0)
         {
-            oldToNew[i] = pointI++;
+            oldToNew[i] = pointi++;
         }
     }
 
     // report unused points
-    if (nPoints > pointI)
+    if (nPoints > pointi)
     {
-        Info<< "Unused    points  = " << (nPoints - pointI) << endl;
-        nPoints = pointI;
+        Info<< "Unused    points  = " << (nPoints - pointi) << endl;
+        nPoints = pointi;
 
         // adjust points and truncate
         inplaceReorder(oldToNew, points_);

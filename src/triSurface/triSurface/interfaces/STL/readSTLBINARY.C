@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
     List<floatVector> STLpoints(3*nTris);
     setSize(nTris);
 
-    label pointI = 0;
+    label pointi = 0;
 
     for (label i = 0; i < nTris; i++)
     {
@@ -106,9 +106,9 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
         STLtriangle stlTri(STLfile);
 
         // Set the STLpoints to the vertices of the STL triangle
-        STLpoints[pointI++] = stlTri.a();
-        STLpoints[pointI++] = stlTri.b();
-        STLpoints[pointI++] = stlTri.c();
+        STLpoints[pointi++] = stlTri.a();
+        STLpoints[pointi++] = stlTri.b();
+        STLpoints[pointi++] = stlTri.c();
         operator[](i).region() = stlTri.attrib();
     }
 
@@ -125,10 +125,10 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
     pointField& sp = storedPoints();
 
     sp.setSize(nUniquePoints);
-    forAll(STLpoints, pointI)
+    forAll(STLpoints, pointi)
     {
-        const floatVector& pt = STLpoints[pointI];
-        sp[pointMap[pointI]] = vector
+        const floatVector& pt = STLpoints[pointi];
+        sp[pointMap[pointi]] = vector
         (
             scalar(pt.x()),
             scalar(pt.y()),
@@ -137,12 +137,12 @@ bool Foam::triSurface::readSTLBINARY(const fileName& STLfileName)
     }
 
     // Assign triangles
-    pointI = 0;
+    pointi = 0;
     forAll(*this, i)
     {
-        operator[](i)[0] = pointMap[pointI++];
-        operator[](i)[1] = pointMap[pointI++];
-        operator[](i)[2] = pointMap[pointI++];
+        operator[](i)[0] = pointMap[pointi++];
+        operator[](i)[1] = pointMap[pointi++];
+        operator[](i)[2] = pointMap[pointi++];
     }
 
     return true;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,9 +54,9 @@ vtkPolyData* Foam::vtkPV3Foam::pointZoneVTKMesh
     vtkPoints* vtkpoints = vtkPoints::New();
     vtkpoints->Allocate(pointLabels.size());
 
-    forAll(pointLabels, pointI)
+    forAll(pointLabels, pointi)
     {
-        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[pointLabels[pointI]]);
+        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[pointLabels[pointi]]);
     }
 
     vtkmesh->SetPoints(vtkpoints);

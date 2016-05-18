@@ -229,10 +229,10 @@ void Foam::meshReader::createPolyCells()
             const labelList& curPoints = curFace;
 
             // For all points
-            forAll(curPoints, pointI)
+            forAll(curPoints, pointi)
             {
                 // get the list of cells sharing this point
-                const labelList& curNeighbours = ptCells[curPoints[pointI]];
+                const labelList& curNeighbours = ptCells[curPoints[pointi]];
 
                 // For all neighbours
                 forAll(curNeighbours, neiI)
@@ -257,7 +257,7 @@ void Foam::meshReader::createPolyCells()
 #ifdef DEBUG_FACE_ORDERING
                                 Info<< " cell " << celli
                                     << " face " << facei
-                                    << " point " << pointI
+                                    << " point " << pointi
                                     << " nei " << curNei
                                     << " neiFace " << neiFacei
                                     << endl;

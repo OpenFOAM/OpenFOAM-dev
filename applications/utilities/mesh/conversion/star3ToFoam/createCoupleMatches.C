@@ -1311,17 +1311,17 @@ void Foam::starMesh::createCoupleMatches()
             // onto the master face to ensure closedness
             vector pointProjectionNormal = -masterFace.normal(points_);
 
-            forAll(intersectedFace, intPointI)
+            forAll(intersectedFace, intPointi)
             {
                 #ifdef DEBUG_COUPLE_PROJECTION
                 Info<< "Proj: old point: "
-                    << points_[intersectedFace[intPointI]] << endl;
+                    << points_[intersectedFace[intPointi]] << endl;
                 #endif
 
                 pointHit projHit =
                     masterFace.ray
                     (
-                        points_[intersectedFace[intPointI]],
+                        points_[intersectedFace[intPointi]],
                         pointProjectionNormal,
                         points_,
                         intersection::FULL_RAY
@@ -1329,12 +1329,12 @@ void Foam::starMesh::createCoupleMatches()
 
                 if (projHit.hit())
                 {
-                    points_[intersectedFace[intPointI]] =
+                    points_[intersectedFace[intPointi]] =
                         projHit.hitPoint();
 
                     #ifdef DEBUG_COUPLE_PROJECTION
                     Info<< "      new point: "
-                        << points_[intersectedFace[intPointI]] << endl;
+                        << points_[intersectedFace[intPointi]] << endl;
                     #endif
                 }
             }

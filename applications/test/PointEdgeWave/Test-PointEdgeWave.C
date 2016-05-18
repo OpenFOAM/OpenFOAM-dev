@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
 
         forAll(pp.meshPoints(), ppI)
         {
-            label meshPointI = pp.meshPoints()[ppI];
-            wallPoints[nPoints] = meshPointI;
-            wallInfo[nPoints] = pointEdgePoint(mesh.points()[meshPointI], 0.0);
+            label meshPointi = pp.meshPoints()[ppI];
+            wallPoints[nPoints] = meshPointi;
+            wallInfo[nPoints] = pointEdgePoint(mesh.points()[meshPointi], 0.0);
             nPoints++;
         }
     }
@@ -120,9 +120,9 @@ int main(int argc, char *argv[])
         dimensionedScalar("wallDist", dimLength, 0.0)
     );
 
-    forAll(allPointInfo, pointI)
+    forAll(allPointInfo, pointi)
     {
-        psf[pointI] = Foam::sqrt(allPointInfo[pointI].distSqr());
+        psf[pointi] = Foam::sqrt(allPointInfo[pointi].distSqr());
     }
 
     Info<< "Writing wallDist pointScalarField to " << runTime.value()

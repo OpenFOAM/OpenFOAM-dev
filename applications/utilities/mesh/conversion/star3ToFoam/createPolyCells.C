@@ -97,10 +97,10 @@ void Foam::starMesh::createPolyCells()
             const labelList& curPoints = curFace;
 
             // For all points
-            forAll(curPoints, pointI)
+            forAll(curPoints, pointi)
             {
                 // get the list of cells sharing this point
-                const labelList& curNeighbours = PointCells[curPoints[pointI]];
+                const labelList& curNeighbours = PointCells[curPoints[pointi]];
 
                 // For all neighbours
                 forAll(curNeighbours, neiI)

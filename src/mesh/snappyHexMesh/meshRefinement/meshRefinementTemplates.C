@@ -192,8 +192,8 @@ void Foam::meshRefinement::collectAndPrint
     sortedOrder(magAllPoints, visitOrder);
     forAll(visitOrder, i)
     {
-        label allPointI = visitOrder[i];
-        Info<< allPoints[allPointI] << " : " << allData[allPointI]
+        label allPointi = visitOrder[i];
+        Info<< allPoints[allPointi] << " : " << allData[allPointi]
             << endl;
     }
 }

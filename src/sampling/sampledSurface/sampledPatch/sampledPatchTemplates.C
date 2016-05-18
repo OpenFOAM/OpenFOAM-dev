@@ -93,20 +93,20 @@ Foam::sampledPatch::interpolateField
 
         forAll(f, faceVertI)
         {
-            label pointI = f[faceVertI];
+            label pointi = f[faceVertI];
 
-            if (!pointDone[pointI])
+            if (!pointDone[pointi])
             {
                 label facei = patchFacei + pp.start();
                 label celli = own[facei];
 
-                values[pointI] = interpolator.interpolate
+                values[pointi] = interpolator.interpolate
                 (
-                    points()[pointI],
+                    points()[pointi],
                     celli,
                     facei
                 );
-                pointDone[pointI] = true;
+                pointDone[pointi] = true;
             }
         }
     }

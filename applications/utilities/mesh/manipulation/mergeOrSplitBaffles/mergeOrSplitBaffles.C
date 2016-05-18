@@ -369,16 +369,16 @@ int main(int argc, char *argv[])
 
         pointSet dupPoints(mesh, "duplicatedPoints", 100);
 
-        forAll(pointMap, pointI)
+        forAll(pointMap, pointi)
         {
-            label oldPointI = pointMap[pointI];
+            label oldPointi = pointMap[pointi];
 
-            nDupPerPoint[oldPointI]++;
+            nDupPerPoint[oldPointi]++;
 
-            if (nDupPerPoint[oldPointI] > 1)
+            if (nDupPerPoint[oldPointi] > 1)
             {
-                dupPoints.insert(map().reversePointMap()[oldPointI]);
-                dupPoints.insert(pointI);
+                dupPoints.insert(map().reversePointMap()[oldPointi]);
+                dupPoints.insert(pointi);
             }
         }
 

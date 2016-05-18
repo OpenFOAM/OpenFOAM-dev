@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 template<class Type>
 Foam::WallSiteData<Type>::WallSiteData()
 :
-    patchI_(),
+    patchi_(),
     wallData_()
 {}
 
@@ -38,11 +38,11 @@ Foam::WallSiteData<Type>::WallSiteData()
 template<class Type>
 Foam::WallSiteData<Type>::WallSiteData
 (
-    label patchI,
+    label patchi,
     const Type& wallData
 )
 :
-    patchI_(patchI),
+    patchi_(patchi),
     wallData_(wallData)
 {}
 
@@ -62,7 +62,7 @@ bool Foam::WallSiteData<Type>::operator==
     const WallSiteData<Type>& rhs
 ) const
 {
-    return patchI_ == rhs.patchI_ && wallData_ == rhs.wallData_;
+    return patchi_ == rhs.patchi_ && wallData_ == rhs.wallData_;
 }
 
 
@@ -85,7 +85,7 @@ Foam::Istream& Foam::operator>>
     WallSiteData<Type>& wIS
 )
 {
-    is  >> wIS.patchI_ >> wIS.wallData_;
+    is  >> wIS.patchi_ >> wIS.wallData_;
 
     // Check state of Istream
     is.check
@@ -105,7 +105,7 @@ Foam::Ostream& Foam::operator<<
     const WallSiteData<Type>& wIS
 )
 {
-    os  << wIS.patchI_ << token::SPACE << wIS.wallData_;
+    os  << wIS.patchi_ << token::SPACE << wIS.wallData_;
 
     // Check state of Ostream
     os.check

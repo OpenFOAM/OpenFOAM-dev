@@ -102,7 +102,7 @@ public:
             //- External hook to add sources to the film
             virtual void addSources
             (
-                const label patchI,
+                const label patchi,
                 const label facei,
                 const scalar massSource,
                 const vector& momentumSource,

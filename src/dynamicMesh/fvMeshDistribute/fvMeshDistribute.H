@@ -149,8 +149,8 @@ class fvMeshDistribute
             void correctBoundaryConditions();
 
             //- Delete all processor patches. Move any processor faces into
-            //  patchI.
-            autoPtr<mapPolyMesh> deleteProcPatches(const label patchI);
+            //  patchi.
+            autoPtr<mapPolyMesh> deleteProcPatches(const label patchi);
 
             //- Repatch the mesh. This is only necessary for the proc
             //  boundary faces. newPatchID is over all boundary faces: -1 or

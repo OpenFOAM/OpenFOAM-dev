@@ -248,9 +248,9 @@ void Foam::processorMeshes::reconstructPoints(fvMesh& mesh)
                 << abort(FatalError);
         }
 
-        forAll(pointProcAddressingI, pointI)
+        forAll(pointProcAddressingI, pointi)
         {
-            newPoints[pointProcAddressingI[pointI]] = procPoints[pointI];
+            newPoints[pointProcAddressingI[pointi]] = procPoints[pointi];
         }
     }
 

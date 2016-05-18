@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,19 +60,19 @@ void Foam::primitiveMesh::calcPointPoints() const
         ppPtr_ = new labelListList(pe.size());
         labelListList& pp = *ppPtr_;
 
-        forAll(pe, pointI)
+        forAll(pe, pointi)
         {
-            pp[pointI].setSize(pe[pointI].size());
+            pp[pointi].setSize(pe[pointi].size());
 
-            forAll(pe[pointI], ppi)
+            forAll(pe[pointi], ppi)
             {
-                if (e[pe[pointI][ppi]].start() == pointI)
+                if (e[pe[pointi][ppi]].start() == pointi)
                 {
-                    pp[pointI][ppi] = e[pe[pointI][ppi]].end();
+                    pp[pointi][ppi] = e[pe[pointi][ppi]].end();
                 }
-                else if (e[pe[pointI][ppi]].end() == pointI)
+                else if (e[pe[pointi][ppi]].end() == pointi)
                 {
-                    pp[pointI][ppi] = e[pe[pointI][ppi]].start();
+                    pp[pointi][ppi] = e[pe[pointi][ppi]].start();
                 }
                 else
                 {
@@ -101,18 +101,18 @@ const Foam::labelListList& Foam::primitiveMesh::pointPoints() const
 
 const Foam::labelList& Foam::primitiveMesh::pointPoints
 (
-    const label pointI,
+    const label pointi,
     DynamicList<label>& storage
 ) const
 {
     if (hasPointPoints())
     {
-        return pointPoints()[pointI];
+        return pointPoints()[pointi];
     }
     else
     {
         const edgeList& edges = this->edges();
-        const labelList& pEdges = pointEdges()[pointI];
+        const labelList& pEdges = pointEdges()[pointi];
 
         storage.clear();
 
@@ -123,7 +123,7 @@ const Foam::labelList& Foam::primitiveMesh::pointPoints
 
         forAll(pEdges, i)
         {
-            storage.append(edges[pEdges[i]].otherVertex(pointI));
+            storage.append(edges[pEdges[i]].otherVertex(pointi));
         }
 
         return storage;
@@ -133,10 +133,10 @@ const Foam::labelList& Foam::primitiveMesh::pointPoints
 
 const Foam::labelList& Foam::primitiveMesh::pointPoints
 (
-    const label pointI
+    const label pointi
 ) const
 {
-    return pointPoints(pointI, labels_);
+    return pointPoints(pointi, labels_);
 }
 
 

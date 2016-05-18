@@ -330,11 +330,11 @@ void Foam::twoDPointCorrector::correctDisplacement
     {
         const edge& e = meshEdges[neIndices[edgeI]];
 
-        label startPointI = e.start();
-        point pStart = p[startPointI] + disp[startPointI];
+        label startPointi = e.start();
+        point pStart = p[startPointi] + disp[startPointi];
 
-        label endPointI = e.end();
-        point pEnd = p[endPointI] + disp[endPointI];
+        label endPointi = e.end();
+        point pEnd = p[endPointi] + disp[endPointi];
 
         // calculate average point position
         point A = 0.5*(pStart + pEnd);
@@ -344,14 +344,14 @@ void Foam::twoDPointCorrector::correctDisplacement
         {
             snapToWedge(pn, A, pStart);
             snapToWedge(pn, A, pEnd);
-            disp[startPointI] = pStart - p[startPointI];
-            disp[endPointI] = pEnd - p[endPointI];
+            disp[startPointi] = pStart - p[startPointi];
+            disp[endPointi] = pEnd - p[endPointi];
         }
         else
         {
             // correct point locations
-            disp[startPointI] = (A + pn*(pn & (pStart - A))) - p[startPointI];
-            disp[endPointI] = (A + pn*(pn & (pEnd - A))) - p[endPointI];
+            disp[startPointi] = (A + pn*(pn & (pStart - A))) - p[startPointi];
+            disp[endPointi] = (A + pn*(pn & (pEnd - A))) - p[endPointi];
         }
     }
 }

@@ -91,9 +91,9 @@ void Foam::DelaunayMesh<Triangulation>::addPatches
     label nPatches = patchFaces.size();
 
     patchDicts.setSize(nPatches);
-    forAll(patchDicts, patchI)
+    forAll(patchDicts, patchi)
     {
-        patchDicts.set(patchI, new dictionary());
+        patchDicts.set(patchi, new dictionary());
     }
 
     label nBoundaryFaces = 0;

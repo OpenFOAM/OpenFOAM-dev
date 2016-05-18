@@ -731,22 +731,22 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
 
         forAll(cPoints, i)
         {
-            label pointI = cPoints[i];
+            label pointi = cPoints[i];
 
-            if (pointLevel[pointI] <= cellLevel[celli])
+            if (pointLevel[pointi] <= cellLevel[celli])
             {
                 // Anchor point
-                if (isBoundaryPoint[pointI])
+                if (isBoundaryPoint[pointi])
                 {
                     nBoundaryAnchors++;
                 }
                 else
                 {
                     // Anchor point which is not on the surface
-                    nonBoundaryAnchor = pointI;
+                    nonBoundaryAnchor = pointi;
                 }
             }
-            else if (isBoundaryPoint[pointI])
+            else if (isBoundaryPoint[pointi])
             {
                 nNonAnchorBoundary++;
             }
@@ -835,9 +835,9 @@ Foam::labelList Foam::meshRefinement::markFacesOnProblemCells
 
     forAllConstIter(labelHashSet, nonBoundaryAnchors, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        const labelList& pCells = mesh_.pointCells(pointI, dynPCells);
+        const labelList& pCells = mesh_.pointCells(pointi, dynPCells);
 
         // Count number of 'hasSevenBoundaryAnchorPoints' cells.
         label n = 0;

@@ -101,7 +101,7 @@ private:
         void writeCoord
         (
             const point& p,
-            const label pointI,
+            const label pointi,
             OFstream& os
         ) const;
 

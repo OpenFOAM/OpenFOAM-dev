@@ -241,15 +241,15 @@ int main(int argc, char *argv[])
     // Create mesh subsetting engine
     fvMeshSubset subsetter(mesh);
 
-    label patchI = -1;
+    label patchi = -1;
 
     if (args.optionFound("patch"))
     {
         const word patchName = args["patch"];
 
-        patchI = mesh.boundaryMesh().findPatchID(patchName);
+        patchi = mesh.boundaryMesh().findPatchID(patchName);
 
-        if (patchI == -1)
+        if (patchi == -1)
         {
             FatalErrorInFunction
                 << nl << "Valid patches are " << mesh.boundaryMesh().names()
@@ -269,7 +269,7 @@ int main(int argc, char *argv[])
 
     cellSet currentSet(mesh, setName);
 
-    subsetter.setLargeCellSubset(currentSet, patchI, true);
+    subsetter.setLargeCellSubset(currentSet, patchi, true);
 
     IOobjectList objects(mesh, runTime.timeName());
 

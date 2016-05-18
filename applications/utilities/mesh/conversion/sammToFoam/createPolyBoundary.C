@@ -59,10 +59,10 @@ void Foam::sammMesh::createPolyBoundary()
             // mark it in the cellPolys_
             const labelList& facePoints = curFace;
 
-            forAll(facePoints, pointI)
+            forAll(facePoints, pointi)
             {
                 const labelList& facePointCells =
-                    PointCells[facePoints[pointI]];
+                    PointCells[facePoints[pointi]];
 
                 forAll(facePointCells, celli)
                 {

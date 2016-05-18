@@ -141,10 +141,10 @@ meshEdges
     // local-to-global point label translation is necessary
     forAll(PatchEdges, edgeI)
     {
-        const label globalPointI = pp[PatchEdges[edgeI].start()];
-        const edge curEdge(globalPointI, pp[PatchEdges[edgeI].end()]);
+        const label globalPointi = pp[PatchEdges[edgeI].start()];
+        const edge curEdge(globalPointi, pp[PatchEdges[edgeI].end()]);
 
-        const labelList& pe = pointEdges[globalPointI];
+        const labelList& pe = pointEdges[globalPointi];
 
         forAll(pe, i)
         {

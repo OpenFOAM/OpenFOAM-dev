@@ -265,8 +265,8 @@ public:
             //- External hook to add mass to the primary region
             virtual scalar addMassSources
             (
-                const label patchI,            // patchI on primary region
-                const label facei              // facei of patchI
+                const label patchi,            // patchi on primary region
+                const label facei              // facei of patchi
             );
 
             //- Mean diffusion number of the solid region

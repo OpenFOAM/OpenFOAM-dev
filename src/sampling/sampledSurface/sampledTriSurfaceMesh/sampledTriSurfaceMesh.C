@@ -271,7 +271,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
     labelList reversePointMap(s.points().size(), -1);
 
     {
-        label newPointI = 0;
+        label newPointi = 0;
         label newFacei = 0;
 
         forAll(s, facei)
@@ -285,14 +285,14 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                 {
                     if (reversePointMap[f[fp]] == -1)
                     {
-                        pointMap[newPointI] = f[fp];
-                        reversePointMap[f[fp]] = newPointI++;
+                        pointMap[newPointi] = f[fp];
+                        reversePointMap[f[fp]] = newPointi++;
                     }
                 }
             }
         }
         faceMap.setSize(newFacei);
-        pointMap.setSize(newPointI);
+        pointMap.setSize(newPointi);
     }
 
 
@@ -345,11 +345,11 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             // samplePoints_   : per surface point a location inside the cell
             // sampleElements_ : per surface point the cell
 
-            forAll(points(), pointI)
+            forAll(points(), pointi)
             {
-                const point& pt = points()[pointI];
-                label celli = cellOrFaceLabels[pointToFace[pointI]];
-                sampleElements_[pointI] = celli;
+                const point& pt = points()[pointi];
+                label celli = cellOrFaceLabels[pointToFace[pointi]];
+                sampleElements_[pointi] = celli;
 
                 // Check if point inside cell
                 if
@@ -357,12 +357,12 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                     mesh().pointInCell
                     (
                         pt,
-                        sampleElements_[pointI],
+                        sampleElements_[pointi],
                         meshSearcher.decompMode()
                     )
                 )
                 {
-                    samplePoints_[pointI] = pt;
+                    samplePoints_[pointi] = pt;
                 }
                 else
                 {
@@ -378,7 +378,7 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
                         if (info.distance() < minDistSqr)
                         {
                             minDistSqr = info.distance();
-                            samplePoints_[pointI] = info.rawPoint();
+                            samplePoints_[pointi] = info.rawPoint();
                         }
                     }
                 }
@@ -389,12 +389,12 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             // samplePoints_   : per surface point a location inside the cell
             // sampleElements_ : per surface point the cell
 
-            forAll(points(), pointI)
+            forAll(points(), pointi)
             {
-                const point& pt = points()[pointI];
-                label celli = cellOrFaceLabels[pointToFace[pointI]];
-                sampleElements_[pointI] = celli;
-                samplePoints_[pointI] = pt;
+                const point& pt = points()[pointi];
+                label celli = cellOrFaceLabels[pointToFace[pointi]];
+                sampleElements_[pointi] = celli;
+                samplePoints_[pointi] = pt;
             }
         }
         else
@@ -403,12 +403,12 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             // sampleElements_ : per surface point the boundary face containing
             //                   the location
 
-            forAll(points(), pointI)
+            forAll(points(), pointi)
             {
-                const point& pt = points()[pointI];
-                label facei = cellOrFaceLabels[pointToFace[pointI]];
-                sampleElements_[pointI] = facei;
-                samplePoints_[pointI] =  mesh().faces()[facei].nearestPoint
+                const point& pt = points()[pointi];
+                label facei = cellOrFaceLabels[pointToFace[pointi]];
+                sampleElements_[pointi] = facei;
+                samplePoints_[pointi] =  mesh().faces()[facei].nearestPoint
                 (
                     pt,
                     mesh().points()
@@ -444,15 +444,15 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
         {
             if (sampleSource_ == cells || sampleSource_ == insideCells)
             {
-                forAll(samplePoints_, pointI)
+                forAll(samplePoints_, pointi)
                 {
-                    meshTools::writeOBJ(str, points()[pointI]);
+                    meshTools::writeOBJ(str, points()[pointi]);
                     vertI++;
 
-                    meshTools::writeOBJ(str, samplePoints_[pointI]);
+                    meshTools::writeOBJ(str, samplePoints_[pointi]);
                     vertI++;
 
-                    label celli = sampleElements_[pointI];
+                    label celli = sampleElements_[pointi];
                     meshTools::writeOBJ(str, mesh().cellCentres()[celli]);
                     vertI++;
                     str << "l " << vertI-2 << ' ' << vertI-1 << ' ' << vertI
@@ -461,15 +461,15 @@ bool Foam::sampledTriSurfaceMesh::update(const meshSearch& meshSearcher)
             }
             else
             {
-                forAll(samplePoints_, pointI)
+                forAll(samplePoints_, pointi)
                 {
-                    meshTools::writeOBJ(str, points()[pointI]);
+                    meshTools::writeOBJ(str, points()[pointi]);
                     vertI++;
 
-                    meshTools::writeOBJ(str, samplePoints_[pointI]);
+                    meshTools::writeOBJ(str, samplePoints_[pointi]);
                     vertI++;
 
-                    label facei = sampleElements_[pointI];
+                    label facei = sampleElements_[pointi];
                     meshTools::writeOBJ(str, mesh().faceCentres()[facei]);
                     vertI++;
                     str << "l " << vertI-2 << ' ' << vertI-1 << ' ' << vertI

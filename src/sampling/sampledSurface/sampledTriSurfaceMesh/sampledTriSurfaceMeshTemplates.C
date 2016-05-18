@@ -98,12 +98,12 @@ Foam::sampledTriSurfaceMesh::interpolateField
     {
         // Sample cells.
 
-        forAll(sampleElements_, pointI)
+        forAll(sampleElements_, pointi)
         {
-            values[pointI] = interpolator.interpolate
+            values[pointi] = interpolator.interpolate
             (
-                samplePoints_[pointI],
-                sampleElements_[pointI]
+                samplePoints_[pointi],
+                sampleElements_[pointi]
             );
         }
     }
@@ -111,13 +111,13 @@ Foam::sampledTriSurfaceMesh::interpolateField
     {
         // Sample boundary faces.
 
-        forAll(samplePoints_, pointI)
+        forAll(samplePoints_, pointi)
         {
-            label facei = sampleElements_[pointI];
+            label facei = sampleElements_[pointi];
 
-            values[pointI] = interpolator.interpolate
+            values[pointi] = interpolator.interpolate
             (
-                samplePoints_[pointI],
+                samplePoints_[pointi],
                 mesh().faceOwner()[facei],
                 facei
             );

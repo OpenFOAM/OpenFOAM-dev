@@ -87,13 +87,13 @@ void Foam::snappyLayerDriver::sumWeights
         scalar(0.0)         // null value
     );
 
-    forAll(invSumWeight, pointI)
+    forAll(invSumWeight, pointi)
     {
-        scalar w = invSumWeight[pointI];
+        scalar w = invSumWeight[pointi];
 
         if (w > 0.0)
         {
-            invSumWeight[pointI] = 1.0/w;
+            invSumWeight[pointi] = 1.0/w;
         }
     }
 }
@@ -144,19 +144,19 @@ void Foam::snappyLayerDriver::smoothField
         );
 
         // Transfer to field
-        forAll(field, pointI)
+        forAll(field, pointi)
         {
             //full smoothing neighbours + point value
-            average[pointI] = 0.5*(field[pointI]+average[pointI]);
+            average[pointi] = 0.5*(field[pointi]+average[pointi]);
 
             // perform monotonic smoothing
             if
             (
-                average[pointI] < field[pointI]
-             && average[pointI] >= fieldMin[pointI]
+                average[pointi] < field[pointi]
+             && average[pointi] >= fieldMin[pointi]
             )
             {
-                field[pointI] = average[pointI];
+                field[pointi] = average[pointi];
             }
         }
 
@@ -325,12 +325,12 @@ void Foam::snappyLayerDriver::smoothPatchNormals
         }
 
         // Transfer to normals vector field
-        forAll(average, pointI)
+        forAll(average, pointi)
         {
             // full smoothing neighbours + point value
-            average[pointI] = 0.5*(normals[pointI]+average[pointI]);
-            normals[pointI] = average[pointI];
-            normals[pointI] /= mag(normals[pointI]) + VSMALL;
+            average[pointi] = 0.5*(normals[pointi]+average[pointi]);
+            normals[pointi] = average[pointi];
+            normals[pointi] /= mag(normals[pointi]) + VSMALL;
         }
     }
 }
@@ -358,8 +358,8 @@ void Foam::snappyLayerDriver::smoothNormals
     // Internal points that are fixed
     forAll(fixedPoints, i)
     {
-        label meshPointI = fixedPoints[i];
-        isFixedPoint.set(meshPointI, 1);
+        label meshPointi = fixedPoints[i];
+        isFixedPoint.set(meshPointi, 1);
     }
 
     // Make sure that points that are coupled to meshPoints but not on a patch
@@ -412,14 +412,14 @@ void Foam::snappyLayerDriver::smoothNormals
 
 
         // Transfer to normals vector field
-        forAll(average, pointI)
+        forAll(average, pointi)
         {
-            if (isFixedPoint.get(pointI) == 0)
+            if (isFixedPoint.get(pointi) == 0)
             {
                 //full smoothing neighbours + point value
-                average[pointI] = 0.5*(normals[pointI]+average[pointI]);
-                normals[pointI] = average[pointI];
-                normals[pointI] /= mag(normals[pointI]) + VSMALL;
+                average[pointi] = 0.5*(normals[pointi]+average[pointi]);
+                normals[pointi] = average[pointi];
+                normals[pointi] /= mag(normals[pointi]) + VSMALL;
             }
         }
     }
@@ -708,16 +708,16 @@ void Foam::snappyLayerDriver::findIsolatedRegions
         const labelListList& pointFaces = pp.pointFaces();
 
         boolList keptPoints(pp.nPoints(), false);
-        forAll(keptPoints, patchPointI)
+        forAll(keptPoints, patchPointi)
         {
-            const labelList& pFaces = pointFaces[patchPointI];
+            const labelList& pFaces = pointFaces[patchPointi];
 
             forAll(pFaces, i)
             {
                 label facei = pFaces[i];
                 if (extrudedFaces[facei])
                 {
-                    keptPoints[patchPointI] = true;
+                    keptPoints[patchPointi] = true;
                     break;
                 }
             }
@@ -734,15 +734,15 @@ void Foam::snappyLayerDriver::findIsolatedRegions
 
         label nChanged = 0;
 
-        forAll(keptPoints, patchPointI)
+        forAll(keptPoints, patchPointi)
         {
-            if (!keptPoints[patchPointI])
+            if (!keptPoints[patchPointi])
             {
                 if
                 (
                     unmarkExtrusion
                     (
-                        patchPointI,
+                        patchPointi,
                         patchDisp,
                         patchNLayers,
                         extrudeStatus
@@ -957,15 +957,15 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
         // Seed data.
         List<pointData> wallInfo(meshPoints.size());
 
-        forAll(meshPoints, patchPointI)
+        forAll(meshPoints, patchPointi)
         {
-            label pointI = meshPoints[patchPointI];
-            wallInfo[patchPointI] = pointData
+            label pointi = meshPoints[patchPointi];
+            wallInfo[patchPointi] = pointData
             (
-                points[pointI],
+                points[pointi],
                 0.0,
-                pointI,                       // passive scalar
-                pointNormals[patchPointI]     // surface normals
+                pointi,                       // passive scalar
+                pointNormals[patchPointi]     // surface normals
             );
         }
 
@@ -1009,12 +1009,12 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
         scalarField distSqr(pointWallDist.size());
         //NA scalarField passiveS(pointWallDist.size());
         pointField passiveV(pointWallDist.size());
-        forAll(pointWallDist, pointI)
+        forAll(pointWallDist, pointi)
         {
-            origin[pointI] = pointWallDist[pointI].origin();
-            distSqr[pointI] = pointWallDist[pointI].distSqr();
-            //passiveS[pointI] = pointWallDist[pointI].s();
-            passiveV[pointI] = pointWallDist[pointI].v();
+            origin[pointi] = pointWallDist[pointi].origin();
+            distSqr[pointi] = pointWallDist[pointi].distSqr();
+            //passiveS[pointi] = pointWallDist[pointi].s();
+            passiveV[pointi] = pointWallDist[pointi].v();
         }
         meshRefinement::testSyncPointList("origin", mesh, origin);
         meshRefinement::testSyncPointList("distSqr", mesh, distSqr);
@@ -1085,22 +1085,22 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
 
                     forAll(e, ep)
                     {
-                        label pointI = e[ep];
+                        label pointi = e[ep];
 
-                        if (!pointMedialDist[pointI].valid(dummyTrackData))
+                        if (!pointMedialDist[pointi].valid(dummyTrackData))
                         {
-                            maxPoints.append(pointI);
+                            maxPoints.append(pointi);
                             maxInfo.append
                             (
                                 pointData
                                 (
-                                    medialAxisPt,   //points[pointI],
-                                    magSqr(points[pointI]-medialAxisPt),//0.0,
-                                    pointI,         // passive data
+                                    medialAxisPt,   //points[pointi],
+                                    magSqr(points[pointi]-medialAxisPt),//0.0,
+                                    pointi,         // passive data
                                     Zero    // passive data
                                 )
                             );
-                            pointMedialDist[pointI] = maxInfo.last();
+                            pointMedialDist[pointi] = maxInfo.last();
                         }
                     }
                 }
@@ -1142,21 +1142,21 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
 
                     forAll(meshPoints, i)
                     {
-                        label pointI = meshPoints[i];
-                        if (!pointMedialDist[pointI].valid(dummyTrackData))
+                        label pointi = meshPoints[i];
+                        if (!pointMedialDist[pointi].valid(dummyTrackData))
                         {
-                            maxPoints.append(pointI);
+                            maxPoints.append(pointi);
                             maxInfo.append
                             (
                                 pointData
                                 (
-                                    points[pointI],
+                                    points[pointi],
                                     0.0,
-                                    pointI,         // passive data
+                                    pointi,         // passive data
                                     Zero    // passive data
                                 )
                             );
-                            pointMedialDist[pointI] = maxInfo.last();
+                            pointMedialDist[pointi] = maxInfo.last();
                         }
                     }
                 }
@@ -1176,18 +1176,18 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
 
                     forAll(meshPoints, i)
                     {
-                        label pointI = meshPoints[i];
+                        label pointi = meshPoints[i];
 
                         if
                         (
-                            pointWallDist[pointI].valid(dummyTrackData)
-                        && !pointMedialDist[pointI].valid(dummyTrackData)
+                            pointWallDist[pointi].valid(dummyTrackData)
+                        && !pointMedialDist[pointi].valid(dummyTrackData)
                         )
                         {
                             // Check if angle not too large.
                             scalar cosAngle =
                             (
-                               -pointWallDist[pointI].v()
+                               -pointWallDist[pointi].v()
                               & pointNormals[i]
                             );
                             if (cosAngle > featureAngleCos)
@@ -1195,18 +1195,18 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
                                 // Extrusion direction practically perpendicular
                                 // to the patch. Disable movement at the patch.
 
-                                maxPoints.append(pointI);
+                                maxPoints.append(pointi);
                                 maxInfo.append
                                 (
                                     pointData
                                     (
-                                        points[pointI],
+                                        points[pointi],
                                         0.0,
-                                        pointI,         // passive data
+                                        pointi,         // passive data
                                         Zero    // passive data
                                     )
                                 );
-                                pointMedialDist[pointI] = maxInfo.last();
+                                pointMedialDist[pointi] = maxInfo.last();
                             }
                             else
                             {
@@ -1236,10 +1236,10 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
         );
 
         // Extract medial axis distance as pointScalarField
-        forAll(pointMedialDist, pointI)
+        forAll(pointMedialDist, pointi)
         {
-            medialDist[pointI] = Foam::sqrt(pointMedialDist[pointI].distSqr());
-            medialVec[pointI] = pointMedialDist[pointI].origin();
+            medialDist[pointi] = Foam::sqrt(pointMedialDist[pointi].distSqr());
+            medialVec[pointi] = pointMedialDist[pointi].origin();
         }
 
         // Check
@@ -1279,16 +1279,16 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
     }
 
     // Calculate ratio point medial distance to point wall distance
-    forAll(medialRatio, pointI)
+    forAll(medialRatio, pointi)
     {
-        if (!pointWallDist[pointI].valid(dummyTrackData))
+        if (!pointWallDist[pointi].valid(dummyTrackData))
         {
-            medialRatio[pointI] = 0.0;
+            medialRatio[pointi] = 0.0;
         }
         else
         {
-            scalar wDist2 = pointWallDist[pointI].distSqr();
-            scalar mDist = medialDist[pointI];
+            scalar wDist2 = pointWallDist[pointi].distSqr();
+            scalar mDist = medialDist[pointi];
 
             if (wDist2 < sqr(SMALL) && mDist < SMALL)
             //- Note: maybe less strict:
@@ -1297,11 +1297,11 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
             // && mDist < meshRefiner_.mergeDistance()
             //)
             {
-                medialRatio[pointI] = 0.0;
+                medialRatio[pointi] = 0.0;
             }
             else
             {
-                medialRatio[pointI] = mDist / (Foam::sqrt(wDist2) + mDist);
+                medialRatio[pointi] = mDist / (Foam::sqrt(wDist2) + mDist);
             }
         }
     }
@@ -1396,11 +1396,11 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
 
     thickness = mag(patchDisp);
 
-    forAll(thickness, patchPointI)
+    forAll(thickness, patchPointi)
     {
-        if (extrudeStatus[patchPointI] == NOEXTRUDE)
+        if (extrudeStatus[patchPointi] == NOEXTRUDE)
         {
-            thickness[patchPointI] = 0.0;
+            thickness[patchPointi] = 0.0;
         }
     }
 
@@ -1443,23 +1443,23 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
             << medialVecStr().name() << endl;
     }
 
-    forAll(meshPoints, patchPointI)
+    forAll(meshPoints, patchPointi)
     {
-        if (extrudeStatus[patchPointI] != NOEXTRUDE)
+        if (extrudeStatus[patchPointi] != NOEXTRUDE)
         {
-            label pointI = meshPoints[patchPointI];
+            label pointi = meshPoints[patchPointi];
 
             //- Option 1: look only at extrusion thickness v.s. distance
             //  to nearest (medial axis or static) point.
-            scalar mDist = medialDist[pointI];
-            scalar thicknessRatio = thickness[patchPointI]/(mDist+VSMALL);
+            scalar mDist = medialDist[pointi];
+            scalar thicknessRatio = thickness[patchPointi]/(mDist+VSMALL);
 
             //- Option 2: Look at component in the direction
             //  of nearest (medial axis or static) point.
             vector n =
-                patchDisp[patchPointI]
-              / (mag(patchDisp[patchPointI]) + VSMALL);
-            vector mVec = mesh.points()[pointI]-medialVec[pointI];
+                patchDisp[patchPointi]
+              / (mag(patchDisp[patchPointi]) + VSMALL);
+            vector mVec = mesh.points()[pointi]-medialVec[pointi];
             mVec /= mag(mVec)+VSMALL;
             thicknessRatio *= (n&mVec);
 
@@ -1469,13 +1469,13 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
                 if (debug)
                 {
                     Pout<< "truncating displacement at "
-                        << mesh.points()[pointI]
-                        << " from " << thickness[patchPointI]
+                        << mesh.points()[pointi]
+                        << " from " << thickness[patchPointi]
                         << " to "
                         <<  0.5
                            *(
-                                minThickness[patchPointI]
-                               +thickness[patchPointI]
+                                minThickness[patchPointi]
+                               +thickness[patchPointi]
                             )
                         << " medial direction:" << mVec
                         << " extrusion direction:" << n
@@ -1483,30 +1483,30 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
                         << endl;
                 }
 
-                thickness[patchPointI] =
-                    0.5*(minThickness[patchPointI]+thickness[patchPointI]);
+                thickness[patchPointi] =
+                    0.5*(minThickness[patchPointi]+thickness[patchPointi]);
 
-                patchDisp[patchPointI] = thickness[patchPointI]*n;
+                patchDisp[patchPointi] = thickness[patchPointi]*n;
 
-                if (isMasterPoint[pointI])
+                if (isMasterPoint[pointi])
                 {
                     numThicknessRatioExclude++;
                 }
 
                 if (str.valid())
                 {
-                    const point& pt = mesh.points()[pointI];
-                    str().write(linePointRef(pt, pt+patchDisp[patchPointI]));
+                    const point& pt = mesh.points()[pointi];
+                    str().write(linePointRef(pt, pt+patchDisp[patchPointi]));
                 }
                 if (medialVecStr.valid())
                 {
-                    const point& pt = mesh.points()[pointI];
+                    const point& pt = mesh.points()[pointi];
                     medialVecStr().write
                     (
                         linePointRef
                         (
                             pt,
-                            medialVec[pointI]
+                            medialVec[pointi]
                         )
                     );
                 }
@@ -1537,11 +1537,11 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
     );
 
     // Update thickess for changed extrusion
-    forAll(thickness, patchPointI)
+    forAll(thickness, patchPointi)
     {
-        if (extrudeStatus[patchPointI] == NOEXTRUDE)
+        if (extrudeStatus[patchPointi] == NOEXTRUDE)
         {
-            thickness[patchPointI] = 0.0;
+            thickness[patchPointi] = 0.0;
         }
     }
 
@@ -1575,15 +1575,15 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
         // Seed data.
         List<pointData> wallInfo(meshPoints.size());
 
-        forAll(meshPoints, patchPointI)
+        forAll(meshPoints, patchPointi)
         {
-            label pointI = meshPoints[patchPointI];
-            wallPoints[patchPointI] = pointI;
-            wallInfo[patchPointI] = pointData
+            label pointi = meshPoints[patchPointi];
+            wallPoints[patchPointi] = pointi;
+            wallInfo[patchPointi] = pointData
             (
-                points[pointI],
+                points[pointi],
                 0.0,
-                thickness[patchPointI],       // transport layer thickness
+                thickness[patchPointi],       // transport layer thickness
                 Zero                  // passive vector
             );
         }
@@ -1604,23 +1604,23 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
     // Calculate scaled displacement vector
     pointVectorField& displacement = meshMover.displacement();
 
-    forAll(displacement, pointI)
+    forAll(displacement, pointi)
     {
-        if (!pointWallDist[pointI].valid(dummyTrackData))
+        if (!pointWallDist[pointi].valid(dummyTrackData))
         {
-            displacement[pointI] = Zero;
+            displacement[pointi] = Zero;
         }
         else
         {
             // 1) displacement on nearest wall point, scaled by medialRatio
             //    (wall distance / medial distance)
-            // 2) pointWallDist[pointI].s() is layer thickness transported
+            // 2) pointWallDist[pointi].s() is layer thickness transported
             //    from closest wall point.
             // 3) shrink in opposite direction of addedPoints
-            displacement[pointI] =
-                -medialRatio[pointI]
-                *pointWallDist[pointI].s()
-                *dispVec[pointI];
+            displacement[pointi] =
+                -medialRatio[pointi]
+                *pointWallDist[pointi].s()
+                *dispVec[pointi];
         }
     }
 
@@ -1723,9 +1723,9 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
 
         // pointWallDist
         scalarField pWallDist(pointWallDist.size());
-        forAll(pointWallDist, pointI)
+        forAll(pointWallDist, pointi)
         {
-            pWallDist[pointI] = pointWallDist[pointI].s();
+            pWallDist[pointi] = pointWallDist[pointi].s();
         }
         meshRefinement::testSyncPointList("pointWallDist", mesh, pWallDist);
 

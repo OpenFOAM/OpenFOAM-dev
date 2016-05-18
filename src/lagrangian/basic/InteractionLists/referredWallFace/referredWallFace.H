@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class referredWallFace
         pointField pts_;
 
         //- Index of originating patch
-        label patchI_;
+        label patchi_;
 
 
 public:
@@ -84,7 +84,7 @@ public:
         (
             const face& f,
             const pointField& pts,
-            label patchI
+            label patchi
         );
 
         //- Construct as copy

@@ -67,9 +67,9 @@ void Foam::primitiveMesh::calcPointCells() const
         {
             const labelList curPoints = cf[celli].labels(faces());
 
-            forAll(curPoints, pointI)
+            forAll(curPoints, pointi)
             {
-                label ptI = curPoints[pointI];
+                label ptI = curPoints[pointi];
 
                 npc[ptI]++;
             }
@@ -81,9 +81,9 @@ void Foam::primitiveMesh::calcPointCells() const
         pcPtr_ = new labelListList(npc.size());
         labelListList& pointCellAddr = *pcPtr_;
 
-        forAll(pointCellAddr, pointI)
+        forAll(pointCellAddr, pointi)
         {
-            pointCellAddr[pointI].setSize(npc[pointI]);
+            pointCellAddr[pointi].setSize(npc[pointi]);
         }
         npc = 0;
 
@@ -92,9 +92,9 @@ void Foam::primitiveMesh::calcPointCells() const
         {
             const labelList curPoints = cf[celli].labels(faces());
 
-            forAll(curPoints, pointI)
+            forAll(curPoints, pointi)
             {
-                label ptI = curPoints[pointI];
+                label ptI = curPoints[pointi];
 
                 pointCellAddr[ptI][npc[ptI]++] = celli;
             }
@@ -118,19 +118,19 @@ const Foam::labelListList& Foam::primitiveMesh::pointCells() const
 
 const Foam::labelList& Foam::primitiveMesh::pointCells
 (
-    const label pointI,
+    const label pointi,
     DynamicList<label>& storage
 ) const
 {
     if (hasPointCells())
     {
-        return pointCells()[pointI];
+        return pointCells()[pointi];
     }
     else
     {
         const labelList& own = faceOwner();
         const labelList& nei = faceNeighbour();
-        const labelList& pFaces = pointFaces()[pointI];
+        const labelList& pFaces = pointFaces()[pointi];
 
         storage.clear();
 
@@ -171,9 +171,9 @@ const Foam::labelList& Foam::primitiveMesh::pointCells
 }
 
 
-const Foam::labelList& Foam::primitiveMesh::pointCells(const label pointI) const
+const Foam::labelList& Foam::primitiveMesh::pointCells(const label pointi) const
 {
-    return pointCells(pointI, labels_);
+    return pointCells(pointi, labels_);
 }
 
 

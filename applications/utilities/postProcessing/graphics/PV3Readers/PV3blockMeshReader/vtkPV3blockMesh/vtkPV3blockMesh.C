@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,9 +252,9 @@ Foam::vtkPV3blockMesh::~vtkPV3blockMesh()
 
     // Hmm. pointNumberTextActors are not getting removed
     //
-    forAll(pointNumberTextActorsPtrs_, pointI)
+    forAll(pointNumberTextActorsPtrs_, pointi)
     {
-        pointNumberTextActorsPtrs_[pointI]->Delete();
+        pointNumberTextActorsPtrs_[pointi]->Delete();
     }
     pointNumberTextActorsPtrs_.clear();
 
@@ -420,10 +420,10 @@ void Foam::vtkPV3blockMesh::renderPointNumbers
 {
     // always remove old actors first
 
-    forAll(pointNumberTextActorsPtrs_, pointI)
+    forAll(pointNumberTextActorsPtrs_, pointi)
     {
-        renderer->RemoveViewProp(pointNumberTextActorsPtrs_[pointI]);
-        pointNumberTextActorsPtrs_[pointI]->Delete();
+        renderer->RemoveViewProp(pointNumberTextActorsPtrs_[pointi]);
+        pointNumberTextActorsPtrs_[pointi]->Delete();
     }
     pointNumberTextActorsPtrs_.clear();
 
@@ -433,11 +433,11 @@ void Foam::vtkPV3blockMesh::renderPointNumbers
         const scalar scaleFactor = meshPtr_->scaleFactor();
 
         pointNumberTextActorsPtrs_.setSize(cornerPts.size());
-        forAll(cornerPts, pointI)
+        forAll(cornerPts, pointi)
         {
             vtkTextActor* txt = vtkTextActor::New();
 
-            txt->SetInput(Foam::name(pointI).c_str());
+            txt->SetInput(Foam::name(pointi).c_str());
 
             // Set text properties
             vtkTextProperty* tprop = txt->GetTextProperty();
@@ -454,9 +454,9 @@ void Foam::vtkPV3blockMesh::renderPointNumbers
 
             txt->GetPositionCoordinate()->SetValue
             (
-                cornerPts[pointI].x()*scaleFactor,
-                cornerPts[pointI].y()*scaleFactor,
-                cornerPts[pointI].z()*scaleFactor
+                cornerPts[pointi].x()*scaleFactor,
+                cornerPts[pointi].y()*scaleFactor,
+                cornerPts[pointi].z()*scaleFactor
             );
 
             // Add text to each renderer
@@ -464,7 +464,7 @@ void Foam::vtkPV3blockMesh::renderPointNumbers
 
             // Maintain a list of text labels added so that they can be
             // removed later
-            pointNumberTextActorsPtrs_[pointI] = txt;
+            pointNumberTextActorsPtrs_[pointi] = txt;
         }
     }
 }

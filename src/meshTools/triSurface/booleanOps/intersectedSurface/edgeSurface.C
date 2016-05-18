@@ -47,9 +47,9 @@ void Foam::edgeSurface::writeOBJ
     Ostream& os
 )
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
     }
@@ -71,9 +71,9 @@ void Foam::edgeSurface::writeOBJ
     Ostream& os
 )
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
     }
@@ -101,9 +101,9 @@ void Foam::edgeSurface::calcPointEdges()
         pointNEdges[e[1]]++;
     }
 
-    forAll(pointEdges_, pointI)
+    forAll(pointEdges_, pointi)
     {
-        pointEdges_[pointI].setSize(pointNEdges[pointI]);
+        pointEdges_[pointi].setSize(pointNEdges[pointi]);
     }
 
     pointNEdges = 0;
@@ -142,20 +142,20 @@ Foam::edgeSurface::edgeSurface
     // Copy points (surface ones first)
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    label pointI = 0;
+    label pointi = 0;
 
     const pointField& surfPoints = surf.localPoints();
 
     forAll(surfPoints, i)
     {
-        points_[pointI++] = surfPoints[i];
+        points_[pointi++] = surfPoints[i];
     }
 
     const pointField& cutPoints = inter.cutPoints();
 
     forAll(cutPoints, i)
     {
-        points_[pointI++] = cutPoints[i];
+        points_[pointi++] = cutPoints[i];
     }
 
 

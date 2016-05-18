@@ -432,10 +432,10 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
 
     setSize(lexer.nTriangles());
     sp.setSize(nUniquePoints);
-    forAll(STLpoints, pointI)
+    forAll(STLpoints, pointi)
     {
-        const floatVector& pt = STLpoints[pointI];
-        sp[pointMap[pointI]] = vector
+        const floatVector& pt = STLpoints[pointi];
+        sp[pointMap[pointi]] = vector
         (
             scalar(pt.x()),
             scalar(pt.y()),
@@ -444,12 +444,12 @@ bool triSurface::readSTLASCII(const fileName& STLfileName)
     }
 
     // Assign triangles
-    label pointI = 0;
+    label pointi = 0;
     forAll(*this, i)
     {
-        operator[](i)[0] = pointMap[pointI++];
-        operator[](i)[1] = pointMap[pointI++];
-        operator[](i)[2] = pointMap[pointI++];
+        operator[](i)[0] = pointMap[pointi++];
+        operator[](i)[1] = pointMap[pointi++];
+        operator[](i)[2] = pointMap[pointi++];
         operator[](i).region() = STLlabels[i];
     }
 

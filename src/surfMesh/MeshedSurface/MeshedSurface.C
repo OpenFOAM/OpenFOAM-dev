@@ -673,7 +673,7 @@ bool Foam::MeshedSurface<Face>::checkFaces
 
     label newFacei = 0;
     // Detect badly labelled faces and mark degenerate faces
-    const label maxPointI = this->points().size() - 1;
+    const label maxPointi = this->points().size() - 1;
     forAll(faceLst, facei)
     {
         Face& f = faceLst[facei];
@@ -683,12 +683,12 @@ bool Foam::MeshedSurface<Face>::checkFaces
         {
             forAll(f, fp)
             {
-                if (f[fp] < 0 || f[fp] > maxPointI)
+                if (f[fp] < 0 || f[fp] > maxPointi)
                 {
                     FatalErrorInFunction
                         << "face " << f
                         << " uses point indices outside point range 0.."
-                    << maxPointI
+                    << maxPointi
                         << exit(FatalError);
                 }
             }
@@ -947,10 +947,10 @@ Foam::MeshedSurface<Face> Foam::MeshedSurface<Face>::subsetMesh
     // Create compact coordinate list and forward mapping array
     pointField newPoints(pointMap.size());
     labelList oldToNew(locPoints.size());
-    forAll(pointMap, pointI)
+    forAll(pointMap, pointi)
     {
-        newPoints[pointI] = locPoints[pointMap[pointI]];
-        oldToNew[pointMap[pointI]] = pointI;
+        newPoints[pointi] = locPoints[pointMap[pointi]];
+        oldToNew[pointMap[pointi]] = pointi;
     }
 
     // create/copy a new zones list, each zone with zero size

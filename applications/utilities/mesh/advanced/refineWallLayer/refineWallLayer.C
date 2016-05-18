@@ -114,11 +114,11 @@ int main(int argc, char *argv[])
         const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
         const labelList& meshPoints = pp.meshPoints();
 
-        forAll(meshPoints, pointI)
+        forAll(meshPoints, pointi)
         {
-            label meshPointI = meshPoints[pointI];
+            label meshPointi = meshPoints[pointi];
 
-            const labelList& pCells = mesh.pointCells()[meshPointI];
+            const labelList& pCells = mesh.pointCells()[meshPointi];
 
             forAll(pCells, pCelli)
             {
@@ -156,9 +156,9 @@ int main(int argc, char *argv[])
         const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
         const labelList& meshPoints = pp.meshPoints();
 
-        forAll(meshPoints, pointI)
+        forAll(meshPoints, pointi)
         {
-            vertOnPatch[meshPoints[pointI]] = true;
+            vertOnPatch[meshPoints[pointi]] = true;
         }
     }
 
@@ -167,24 +167,24 @@ int main(int argc, char *argv[])
         const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
         const labelList& meshPoints = pp.meshPoints();
 
-        forAll(meshPoints, pointI)
+        forAll(meshPoints, pointi)
         {
-            label meshPointI = meshPoints[pointI];
+            label meshPointi = meshPoints[pointi];
 
-            const labelList& pEdges = mesh.pointEdges()[meshPointI];
+            const labelList& pEdges = mesh.pointEdges()[meshPointi];
 
             forAll(pEdges, pEdgeI)
             {
                 const label edgeI = pEdges[pEdgeI];
                 const edge& e = mesh.edges()[edgeI];
 
-                label otherPointI = e.otherVertex(meshPointI);
+                label otherPointi = e.otherVertex(meshPointi);
 
-                if (!vertOnPatch[otherPointI])
+                if (!vertOnPatch[otherPointi])
                 {
                     allCutEdges.append(edgeI);
 
-                    if (e.start() == meshPointI)
+                    if (e.start() == meshPointi)
                     {
                         allCutEdgeWeights.append(weight);
                     }

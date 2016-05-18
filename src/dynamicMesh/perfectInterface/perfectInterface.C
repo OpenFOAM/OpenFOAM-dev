@@ -258,11 +258,11 @@ void Foam::perfectInterface::setRefinement
     labelHashSet affectedFaces(2*pp1.size());
     forAll(meshPts1, i)
     {
-        label meshPointI = meshPts1[i];
+        label meshPointi = meshPts1[i];
 
-        if (meshPointI != renumberPoints[meshPointI])
+        if (meshPointi != renumberPoints[meshPointi])
         {
-            const labelList& pFaces = mesh.pointFaces()[meshPointI];
+            const labelList& pFaces = mesh.pointFaces()[meshPointi];
 
             forAll(pFaces, pFacei)
             {
@@ -307,7 +307,7 @@ void Foam::perfectInterface::setRefinement
 
         label nbr = -1;
 
-        label patchI = -1;
+        label patchi = -1;
 
         if (mesh.isInternalFace(facei))
         {
@@ -315,7 +315,7 @@ void Foam::perfectInterface::setRefinement
         }
         else
         {
-            patchI = patches.whichPatch(facei);
+            patchi = patches.whichPatch(facei);
         }
 
         label zoneID = mesh.faceZones().whichZone(facei);
@@ -338,7 +338,7 @@ void Foam::perfectInterface::setRefinement
                 mesh.faceOwner()[facei],    // owner
                 nbr,                        // neighbour
                 false,                      // face flip
-                patchI,                     // patch for face
+                patchi,                     // patch for face
                 false,                      // remove from zone
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone
@@ -350,11 +350,11 @@ void Foam::perfectInterface::setRefinement
     // 3. Remove patch1 points
     forAll(meshPts1, i)
     {
-        label meshPointI = meshPts1[i];
+        label meshPointi = meshPts1[i];
 
-        if (meshPointI != renumberPoints[meshPointI])
+        if (meshPointi != renumberPoints[meshPointi])
         {
-            ref.setAction(polyRemovePoint(meshPointI));
+            ref.setAction(polyRemovePoint(meshPointi));
         }
     }
 

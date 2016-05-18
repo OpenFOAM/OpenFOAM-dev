@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 
     const point half(0.5*(meshBb.min() + meshBb.max()));
 
-    forAll(newPoints, pointI)
+    forAll(newPoints, pointi)
     {
-        point& pt = newPoints[pointI];
+        point& pt = newPoints[pointi];
 
         // expand around half
         pt.y() +=  pt.y() - half.y();

@@ -590,9 +590,9 @@ void Foam::polyMeshFilter::checkMeshEdgesAndRelaxEdges
             scalar sumMinEdgeLen = 0;
             label nEdges = 0;
 
-            forAll(e, pointI)
+            forAll(e, pointi)
             {
-                const labelList& pEdges = mesh_.pointEdges()[e[pointI]];
+                const labelList& pEdges = mesh_.pointEdges()[e[pointi]];
 
                 forAll(pEdges, pEdgeI)
                 {
@@ -862,25 +862,25 @@ void Foam::polyMeshFilter::updateOldToNewPointMap
     labelList& origToCurrentPointMap
 ) const
 {
-    forAll(origToCurrentPointMap, origPointI)
+    forAll(origToCurrentPointMap, origPointi)
     {
-        label oldPointI = origToCurrentPointMap[origPointI];
+        label oldPointi = origToCurrentPointMap[origPointi];
 
-        if (oldPointI != -1)
+        if (oldPointi != -1)
         {
-            label newPointI = currToNew[oldPointI];
+            label newPointi = currToNew[oldPointi];
 
-            if (newPointI >= 0)
+            if (newPointi >= 0)
             {
-                origToCurrentPointMap[origPointI] = newPointI;
+                origToCurrentPointMap[origPointi] = newPointi;
             }
-            else if (newPointI == -1)
+            else if (newPointi == -1)
             {
-                origToCurrentPointMap[origPointI] = -1;
+                origToCurrentPointMap[origPointi] = -1;
             }
             else
             {
-                origToCurrentPointMap[origPointI] = -newPointI-2;
+                origToCurrentPointMap[origPointi] = -newPointi-2;
             }
         }
     }

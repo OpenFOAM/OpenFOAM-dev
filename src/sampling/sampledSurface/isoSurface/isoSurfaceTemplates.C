@@ -460,26 +460,26 @@ Foam::label Foam::isoSurface::generateFaceTriPoints
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
-        label nextPointI = f[f.fcIndex(fp)];
+        label pointi = f[fp];
+        label nextPointi = f[f.fcIndex(fp)];
 
         generateTriPoints
         (
-            pVals[pointI],
-            pCoords[pointI],
-            snappedPoint[pointI] != -1,
+            pVals[pointi],
+            pCoords[pointi],
+            snappedPoint[pointi] != -1,
             (
-                snappedPoint[pointI] != -1
-              ? snappedPoints[snappedPoint[pointI]]
+                snappedPoint[pointi] != -1
+              ? snappedPoints[snappedPoint[pointi]]
               : Type(Zero)
             ),
 
-            pVals[nextPointI],
-            pCoords[nextPointI],
-            snappedPoint[nextPointI] != -1,
+            pVals[nextPointi],
+            pCoords[nextPointi],
+            snappedPoint[nextPointi] != -1,
             (
-                snappedPoint[nextPointI] != -1
-              ? snappedPoints[snappedPoint[nextPointI]]
+                snappedPoint[nextPointi] != -1
+              ? snappedPoints[snappedPoint[nextPointi]]
               : Type(Zero)
             ),
 
@@ -748,12 +748,12 @@ Foam::isoSurface::interpolate
 
     forAll(unmergedValues, i)
     {
-        label mergedPointI = triPointMergeMap[i];
+        label mergedPointi = triPointMergeMap[i];
 
-        if (mergedPointI >= 0)
+        if (mergedPointi >= 0)
         {
-            values[mergedPointI] += unmergedValues[i];
-            nValues[mergedPointI]++;
+            values[mergedPointi] += unmergedValues[i];
+            nValues[mergedPointi]++;
         }
     }
 

@@ -985,50 +985,50 @@ void Foam::extendedEdgeMesh::add(const extendedEdgeMesh& fem)
     labelList reversePointMap(points().size());
     labelList reverseFemPointMap(fem.points().size());
 
-    label newPointI = 0;
+    label newPointi = 0;
     for (label i = 0; i < concaveStart(); i++)
     {
-        reversePointMap[i] = newPointI++;
+        reversePointMap[i] = newPointi++;
     }
     for (label i = 0; i < fem.concaveStart(); i++)
     {
-        reverseFemPointMap[i] = newPointI++;
+        reverseFemPointMap[i] = newPointi++;
     }
 
     // Concave
-    label newConcaveStart = newPointI;
+    label newConcaveStart = newPointi;
     for (label i = concaveStart(); i < mixedStart(); i++)
     {
-        reversePointMap[i] = newPointI++;
+        reversePointMap[i] = newPointi++;
     }
     for (label i = fem.concaveStart(); i < fem.mixedStart(); i++)
     {
-        reverseFemPointMap[i] = newPointI++;
+        reverseFemPointMap[i] = newPointi++;
     }
 
     // Mixed
-    label newMixedStart = newPointI;
+    label newMixedStart = newPointi;
     for (label i = mixedStart(); i < nonFeatureStart(); i++)
     {
-        reversePointMap[i] = newPointI++;
+        reversePointMap[i] = newPointi++;
     }
     for (label i = fem.mixedStart(); i < fem.nonFeatureStart(); i++)
     {
-        reverseFemPointMap[i] = newPointI++;
+        reverseFemPointMap[i] = newPointi++;
     }
 
     // Non-feature
-    label newNonFeatureStart = newPointI;
+    label newNonFeatureStart = newPointi;
     for (label i = nonFeatureStart(); i < points().size(); i++)
     {
-        reversePointMap[i] = newPointI++;
+        reversePointMap[i] = newPointi++;
     }
     for (label i = fem.nonFeatureStart(); i < fem.points().size(); i++)
     {
-        reverseFemPointMap[i] = newPointI++;
+        reverseFemPointMap[i] = newPointi++;
     }
 
-    pointField newPoints(newPointI);
+    pointField newPoints(newPointi);
     newPoints.rmap(points(), reversePointMap);
     newPoints.rmap(fem.points(), reverseFemPointMap);
 
@@ -1234,17 +1234,17 @@ void Foam::extendedEdgeMesh::flipNormals()
 
     // Flip convex and concave points
 
-    label newPointI = 0;
+    label newPointi = 0;
     // Concave points become convex
     for (label i = concaveStart(); i < mixedStart(); i++)
     {
-        reversePointMap[i] = newPointI++;
+        reversePointMap[i] = newPointi++;
     }
     // Convex points become concave
-    label newConcaveStart = newPointI;
+    label newConcaveStart = newPointi;
     for (label i = 0; i < concaveStart(); i++)
     {
-        reversePointMap[i] = newPointI++;
+        reversePointMap[i] = newPointi++;
     }
 
 

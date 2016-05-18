@@ -133,12 +133,12 @@ int main(int argc, char *argv[])
         Info<< "Additional Points:" << extraPoints.size() << endl;
 
         vectorField pointsAll(points1);
-        label pointI = pointsAll.size();
+        label pointi = pointsAll.size();
         pointsAll.setSize(pointsAll.size() + extraPoints.size());
 
         forAll(extraPoints, i)
         {
-            pointsAll[pointI++] = extraPoints[i];
+            pointsAll[pointi++] = extraPoints[i];
         }
 
         combinedSurf = triSurface(surface1, surface1.patches(), pointsAll);

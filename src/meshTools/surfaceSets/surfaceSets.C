@@ -45,14 +45,14 @@ License
 //Foam::scalar Foam::surfaceSets::minEdgeLen
 //(
 //    const primitiveMesh& mesh,
-//    const label pointI
+//    const label pointi
 //)
 //{
 //    const edgeList& edges = mesh.edges();
 //
 //    const pointField& points = mesh.points();
 //
-//    const labelList& pEdges = mesh.pointEdges()[pointI];
+//    const labelList& pEdges = mesh.pointEdges()[pointi];
 //
 //    scalar minLen = GREAT;
 //
@@ -131,14 +131,14 @@ License
 //
 //            forAll(f, fp)
 //            {
-//                label pointI = f[fp];
+//                label pointi = f[fp];
 //
-//                if (outsidePoints.insert(pointI))
+//                if (outsidePoints.insert(pointi))
 //                {
 //                    // Calculate new position for this outside point
 //                    tmp<pointField> tnearest =
-//                        querySurf.calcNearest(pointField(1, points[pointI]));
-//                    newPoints[pointI] = tnearest()[0];
+//                        querySurf.calcNearest(pointField(1, points[pointi]));
+//                    newPoints[pointi] = tnearest()[0];
 //                }
 //            }
 //        }
@@ -200,15 +200,15 @@ License
 //
 //    forAll(candidates, i)
 //    {
-//        label pointI = candidates[i];
+//        label pointi = candidates[i];
 //
-//        scalar minLen = minEdgeLen(mesh, pointI);
+//        scalar minLen = minEdgeLen(mesh, pointi);
 //
-//        scalar dist = mag(nearest[i] - points[pointI]);
+//        scalar dist = mag(nearest[i] - points[pointi]);
 //
 //        if (dist < edgeFactor * minLen)
 //        {
-//            nearPointSet.insert(pointI);
+//            nearPointSet.insert(pointi);
 //        }
 //    }
 //}
@@ -308,15 +308,15 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    if (pointSide[pointI] == NOTSET)
+                    if (pointSide[pointi] == NOTSET)
                     {
-                        pointSide[pointI] = INSIDE;
+                        pointSide[pointi] = INSIDE;
                     }
-                    else if (pointSide[pointI] == OUTSIDE)
+                    else if (pointSide[pointi] == OUTSIDE)
                     {
-                        pointSide[pointI] = MIXED;
+                        pointSide[pointi] = MIXED;
                     }
                     else
                     {
@@ -336,15 +336,15 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
+                    label pointi = f[fp];
 
-                    if (pointSide[pointI] == NOTSET)
+                    if (pointSide[pointi] == NOTSET)
                     {
-                        pointSide[pointI] = OUTSIDE;
+                        pointSide[pointi] = OUTSIDE;
                     }
-                    else if (pointSide[pointI] == INSIDE)
+                    else if (pointSide[pointi] == INSIDE)
                     {
-                        pointSide[pointI] = MIXED;
+                        pointSide[pointi] = MIXED;
                     }
                     else
                     {
@@ -358,11 +358,11 @@ Foam::labelHashSet Foam::surfaceSets::getHangingCells
 
     //OFstream mixedStr("mixed.obj");
     //
-    //forAll(pointSide, pointI)
+    //forAll(pointSide, pointi)
     //{
-    //    if (pointSide[pointI] == MIXED)
+    //    if (pointSide[pointi] == MIXED)
     //    {
-    //        const point& pt = points[pointI];
+    //        const point& pt = points[pointi];
     //
     //        mixedStr << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z()
     //            << endl;

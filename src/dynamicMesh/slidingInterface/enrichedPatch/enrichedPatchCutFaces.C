@@ -123,11 +123,11 @@ void Foam::enrichedPatch::calcCutFaces() const
         // }
         // {
         //     pointField facePoints = curLocalFace.points(lp);
-        //     forAll(curLocalFace, pointI)
+        //     forAll(curLocalFace, pointi)
         //     {
-        //         Pout<< "v " << facePoints[pointI].x() << " "
-        //             << facePoints[pointI].y() << " "
-        //             << facePoints[pointI].z() << endl;
+        //         Pout<< "v " << facePoints[pointi].x() << " "
+        //             << facePoints[pointi].y() << " "
+        //             << facePoints[pointi].z() << endl;
         //     }
         // }
 
@@ -451,16 +451,16 @@ void Foam::enrichedPatch::calcCutFaces() const
 
                             for
                             (
-                                label pointI = 1;
-                                pointI < cutFaceGlobal.size();
-                                pointI++
+                                label pointi = 1;
+                                pointi < cutFaceGlobal.size();
+                                pointi++
                             )
                             {
                                 Map<labelList>::const_iterator
                                     mpfAddrPointIter =
                                         masterPointFaceAddr.find
                                         (
-                                            cutFaceGlobal[pointI]
+                                            cutFaceGlobal[pointi]
                                         );
 
                                 if
@@ -499,16 +499,16 @@ void Foam::enrichedPatch::calcCutFaces() const
                             // If all point are found attempt matching
                             if (!miss)
                             {
-                                forAll(hits, pointI)
+                                forAll(hits, pointi)
                                 {
-                                    if (hits[pointI] == cutFaceGlobal.size())
+                                    if (hits[pointi] == cutFaceGlobal.size())
                                     {
                                         // Found other side.
                                         otherSideFound = true;
 
                                         cfMaster.append
                                         (
-                                            masterFacesOfPZero[pointI]
+                                            masterFacesOfPZero[pointi]
                                         );
 
                                         cfSlave.append(facei);
@@ -520,7 +520,7 @@ void Foam::enrichedPatch::calcCutFaces() const
                                         if (debug)
                                         {
                                             Pout<< " other side: "
-                                                << masterFacesOfPZero[pointI]
+                                                << masterFacesOfPZero[pointi]
                                                 << endl;
                                         }
                                     } // end of hits

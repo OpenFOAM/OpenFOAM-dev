@@ -284,9 +284,9 @@ public:
         }
 
         //- Is point coming from original surface?
-        bool isSurfacePoint(const label pointI) const
+        bool isSurfacePoint(const label pointi) const
         {
-            return pointI < nSurfacePoints_;
+            return pointi < nSurfacePoints_;
         }
 };
 

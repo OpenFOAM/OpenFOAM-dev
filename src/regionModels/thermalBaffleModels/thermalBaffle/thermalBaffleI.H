@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,10 +42,10 @@ inline tmp<scalarField> thermalBaffle::he
 (
     const scalarField& p,
     const scalarField& T,
-    const label patchI
+    const label patchi
 ) const
 {
-    return thermo_->he(p, T, patchI);
+    return thermo_->he(p, T, patchi);
 }
 
 

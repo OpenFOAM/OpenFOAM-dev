@@ -74,16 +74,16 @@ void Foam::motionSmootherAlgo::testSyncPositions
 
 void Foam::motionSmootherAlgo::checkFld(const pointScalarField& fld)
 {
-    forAll(fld, pointI)
+    forAll(fld, pointi)
     {
-        const scalar val = fld[pointI];
+        const scalar val = fld[pointi];
 
         if ((val > -GREAT) && (val < GREAT))
         {}
         else
         {
             FatalErrorInFunction
-                << "Problem : point:" << pointI << " value:" << val
+                << "Problem : point:" << pointi << " value:" << val
                 << abort(FatalError);
         }
     }
@@ -148,13 +148,13 @@ void Foam::motionSmootherAlgo::minSmooth
 
     forAll(meshPoints, i)
     {
-        label pointI = meshPoints[i];
-        if (isAffectedPoint.get(pointI) == 1)
+        label pointi = meshPoints[i];
+        if (isAffectedPoint.get(pointi) == 1)
         {
-            newFld[pointI] = min
+            newFld[pointi] = min
             (
-                fld[pointI],
-                0.5*fld[pointI] + 0.5*avgFld[pointI]
+                fld[pointi],
+                0.5*fld[pointi] + 0.5*avgFld[pointi]
             );
         }
     }
@@ -180,14 +180,14 @@ void Foam::motionSmootherAlgo::minSmooth
     );
     const pointScalarField& avgFld = tavgFld();
 
-    forAll(fld, pointI)
+    forAll(fld, pointi)
     {
-        if (isAffectedPoint.get(pointI) == 1 && isInternalPoint(pointI))
+        if (isAffectedPoint.get(pointi) == 1 && isInternalPoint(pointi))
         {
-            newFld[pointI] = min
+            newFld[pointi] = min
             (
-                fld[pointI],
-                0.5*fld[pointI] + 0.5*avgFld[pointI]
+                fld[pointi],
+                0.5*fld[pointi] + 0.5*avgFld[pointi]
             );
         }
     }
@@ -230,11 +230,11 @@ void Foam::motionSmootherAlgo::scaleField
 {
     forAll(meshPoints, i)
     {
-        label pointI = meshPoints[i];
+        label pointi = meshPoints[i];
 
-        if (pointLabels.found(pointI))
+        if (pointLabels.found(pointi))
         {
-            fld[pointI] *= scale;
+            fld[pointi] *= scale;
         }
     }
 }
@@ -272,19 +272,19 @@ void Foam::motionSmootherAlgo::subtractField
 {
     forAll(meshPoints, i)
     {
-        label pointI = meshPoints[i];
+        label pointi = meshPoints[i];
 
-        if (pointLabels.found(pointI))
+        if (pointLabels.found(pointi))
         {
-            fld[pointI] = max(0.0, fld[pointI]-f);
+            fld[pointi] = max(0.0, fld[pointi]-f);
         }
     }
 }
 
 
-bool Foam::motionSmootherAlgo::isInternalPoint(const label pointI) const
+bool Foam::motionSmootherAlgo::isInternalPoint(const label pointi) const
 {
-    return isInternalPoint_.get(pointI) == 1;
+    return isInternalPoint_.get(pointi) == 1;
 }
 
 
@@ -516,9 +516,9 @@ void Foam::motionSmootherAlgo::setDisplacement
     const labelList& ppMeshPoints = pp.meshPoints();
 
     // Set internal point data from displacement on combined patch points.
-    forAll(ppMeshPoints, patchPointI)
+    forAll(ppMeshPoints, patchPointi)
     {
-        displacement[ppMeshPoints[patchPointI]] = patchDisp[patchPointI];
+        displacement[ppMeshPoints[patchPointi]] = patchDisp[patchPointi];
     }
 
 
@@ -541,18 +541,18 @@ void Foam::motionSmootherAlgo::setDisplacement
     {
         OFstream str(mesh.db().path()/"changedPoints.obj");
         label nVerts = 0;
-        forAll(ppMeshPoints, patchPointI)
+        forAll(ppMeshPoints, patchPointi)
         {
-            const vector& newDisp = displacement[ppMeshPoints[patchPointI]];
+            const vector& newDisp = displacement[ppMeshPoints[patchPointi]];
 
-            if (mag(newDisp-patchDisp[patchPointI]) > SMALL)
+            if (mag(newDisp-patchDisp[patchPointi]) > SMALL)
             {
-                const point& pt = mesh.points()[ppMeshPoints[patchPointI]];
+                const point& pt = mesh.points()[ppMeshPoints[patchPointi]];
 
                 meshTools::writeOBJ(str, pt);
                 nVerts++;
                 //Pout<< "Point:" << pt
-                //    << " oldDisp:" << patchDisp[patchPointI]
+                //    << " oldDisp:" << patchDisp[patchPointi]
                 //    << " newDisp:" << newDisp << endl;
             }
         }
@@ -561,9 +561,9 @@ void Foam::motionSmootherAlgo::setDisplacement
     }
 
     // Now reset input displacement
-    forAll(ppMeshPoints, patchPointI)
+    forAll(ppMeshPoints, patchPointi)
     {
-        patchDisp[patchPointI] = displacement[ppMeshPoints[patchPointI]];
+        patchDisp[patchPointi] = displacement[ppMeshPoints[patchPointi]];
     }
 }
 

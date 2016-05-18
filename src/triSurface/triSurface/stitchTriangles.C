@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,8 +111,8 @@ bool Foam::triSurface::stitchTriangles
 
                 forAll(f, fp)
                 {
-                    label pointI = f[fp];
-                    if (pointIsUsed.set(pointI, 1))
+                    label pointi = f[fp];
+                    if (pointIsUsed.set(pointi, 1))
                     {
                         nPoints++;
                     }
@@ -123,16 +123,16 @@ bool Foam::triSurface::stitchTriangles
             {
                 // 2. Compact.
                 pointMap.setSize(ps.size());
-                label newPointI = 0;
-                forAll(pointIsUsed, pointI)
+                label newPointi = 0;
+                forAll(pointIsUsed, pointi)
                 {
-                    if (pointIsUsed[pointI])
+                    if (pointIsUsed[pointi])
                     {
-                        ps[newPointI] = ps[pointI];
-                        pointMap[pointI] = newPointI++;
+                        ps[newPointi] = ps[pointi];
+                        pointMap[pointi] = newPointi++;
                     }
                 }
-                ps.setSize(newPointI);
+                ps.setSize(newPointi);
 
                 newTriangleI = 0;
                 forAll(*this, i)

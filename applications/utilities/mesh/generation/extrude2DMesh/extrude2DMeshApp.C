@@ -78,28 +78,28 @@ static const NamedEnum<ExtrudeMode, 2> ExtrudeModeNames;
 //    pointField layer1Points(fMesh.nPoints());
 //    pointField displacement(fMesh.nPoints());
 
-//    forAll(layer0Points, pointI)
+//    forAll(layer0Points, pointi)
 //    {
 //        const labelList& meshPoints = fMesh.meshPoints();
-//        label meshPointI = meshPoints[pointI];
+//        label meshPointi = meshPoints[pointi];
 
-//        layer0Points[meshPointI] = model
+//        layer0Points[meshPointi] = model
 //        (
-//            fMesh.points()[meshPointI],
-//            fMesh.pointNormals()[pointI],
+//            fMesh.points()[meshPointi],
+//            fMesh.pointNormals()[pointi],
 //            0
 //        );
 
-//        layer1Points[meshPointI] = model
+//        layer1Points[meshPointi] = model
 //        (
-//            fMesh.points()[meshPointI],
-//            fMesh.pointNormals()[pointI],
+//            fMesh.points()[meshPointi],
+//            fMesh.pointNormals()[pointi],
 //            1
 //        );
 
-//        displacement[pointI] =
-//            layer1Points[meshPointI]
-//          - layer0Points[meshPointI];
+//        displacement[pointi] =
+//            layer1Points[meshPointi]
+//          - layer0Points[meshPointi];
 //    }
 
 //    fMesh.movePoints(layer0Points);

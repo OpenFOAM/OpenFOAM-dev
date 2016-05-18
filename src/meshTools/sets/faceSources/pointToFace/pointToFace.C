@@ -77,8 +77,8 @@ void Foam::pointToFace::combine(topoSet& set, const bool add) const
         // Add faces with any point in loadedSet
         forAllConstIter(pointSet, loadedSet, iter)
         {
-            const label pointI = iter.key();
-            const labelList& pFaces = mesh_.pointFaces()[pointI];
+            const label pointi = iter.key();
+            const labelList& pFaces = mesh_.pointFaces()[pointi];
 
             forAll(pFaces, pFacei)
             {
@@ -95,8 +95,8 @@ void Foam::pointToFace::combine(topoSet& set, const bool add) const
 
         forAllConstIter(pointSet, loadedSet, iter)
         {
-            const label pointI = iter.key();
-            const labelList& pFaces = mesh_.pointFaces()[pointI];
+            const label pointi = iter.key();
+            const labelList& pFaces = mesh_.pointFaces()[pointi];
 
             forAll(pFaces, pFacei)
             {

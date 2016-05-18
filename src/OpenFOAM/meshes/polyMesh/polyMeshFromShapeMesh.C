@@ -61,9 +61,9 @@ Foam::labelListList Foam::polyMesh::cellShapePointCells
 
     labelListList pointCellAddr(pc.size());
 
-    forAll(pc, pointI)
+    forAll(pc, pointi)
     {
-        pointCellAddr[pointI].transfer(pc[pointI]);
+        pointCellAddr[pointi].transfer(pc[pointi]);
     }
 
     return pointCellAddr;
@@ -89,9 +89,9 @@ Foam::labelList Foam::polyMesh::facePatchFaceCells
         const face& curFace = patchFaces[fI];
         const labelList& facePoints = patchFaces[fI];
 
-        forAll(facePoints, pointI)
+        forAll(facePoints, pointi)
         {
-            const labelList& facePointCells = pointCells[facePoints[pointI]];
+            const labelList& facePointCells = pointCells[facePoints[pointi]];
 
             forAll(facePointCells, celli)
             {
@@ -203,11 +203,11 @@ void Foam::polyMesh::setTopology
             const labelList& curPoints = curFace;
 
             // For all points
-            forAll(curPoints, pointI)
+            forAll(curPoints, pointi)
             {
                 // dGget the list of cells sharing this point
                 const labelList& curNeighbours =
-                    PointCells[curPoints[pointI]];
+                    PointCells[curPoints[pointi]];
 
                 // For all neighbours
                 forAll(curNeighbours, neiI)

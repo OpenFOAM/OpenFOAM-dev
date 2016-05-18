@@ -353,17 +353,17 @@ void Foam::searchableSphere::getVolumeType
     volType.setSize(points.size());
     volType = volumeType::INSIDE;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         if (magSqr(pt - centre_) <= sqr(radius_))
         {
-            volType[pointI] = volumeType::INSIDE;
+            volType[pointi] = volumeType::INSIDE;
         }
         else
         {
-            volType[pointI] = volumeType::OUTSIDE;
+            volType[pointi] = volumeType::OUTSIDE;
         }
     }
 }

@@ -1312,13 +1312,13 @@ bool Foam::primitiveMesh::checkPoints
 
     const labelListList& pf = pointFaces();
 
-    forAll(pf, pointI)
+    forAll(pf, pointi)
     {
-        if (pf[pointI].empty())
+        if (pf[pointi].empty())
         {
             if (setPtr)
             {
-                setPtr->insert(pointI);
+                setPtr->insert(pointi);
             }
 
             nFaceErrors++;
@@ -1326,15 +1326,15 @@ bool Foam::primitiveMesh::checkPoints
     }
 
 
-    forAll(pf, pointI)
+    forAll(pf, pointi)
     {
-        const labelList& pc = pointCells(pointI);
+        const labelList& pc = pointCells(pointi);
 
         if (pc.empty())
         {
             if (setPtr)
             {
-                setPtr->insert(pointI);
+                setPtr->insert(pointi);
             }
 
             nCellErrors++;
@@ -1598,9 +1598,9 @@ bool Foam::primitiveMesh::checkFaceFaces
 
         forAll(curFace, fp)
         {
-            label pointI = curFace[fp];
+            label pointi = curFace[fp];
 
-            const labelList& nbs = pf[pointI];
+            const labelList& nbs = pf[pointi];
 
             forAll(nbs, nbI)
             {

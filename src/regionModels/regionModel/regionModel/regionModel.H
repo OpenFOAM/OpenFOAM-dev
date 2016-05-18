@@ -228,11 +228,11 @@ public:
 
             // Addressing
 
-                //- Return true if patchI on the local region is a coupled
+                //- Return true if patchi on the local region is a coupled
                 //  patch to the primary region
                 inline bool isCoupledPatch(const label regionPatchi) const;
 
-                //- Return true if patchI on the primary region is a coupled
+                //- Return true if patchi on the primary region is a coupled
                 //  patch to the local region
                 inline bool isRegionPatch(const label primaryPatchi) const;
 

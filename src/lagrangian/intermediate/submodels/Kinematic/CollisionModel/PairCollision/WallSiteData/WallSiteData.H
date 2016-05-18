@@ -67,7 +67,7 @@ class WallSiteData
     // Private data
 
         //- Index of originating patch
-        label patchI_;
+        label patchi_;
 
         //- Wall data
         Type wallData_;
@@ -83,7 +83,7 @@ public:
         //- Construct from components
         WallSiteData
         (
-            label patchI,
+            label patchi,
             const Type& wallData
         );
 

@@ -139,20 +139,20 @@ void Foam::targetVolumeToCell::combine(topoSet& set, const bool add) const
         const boundBox& bb = mesh_.bounds();
         pointField points(bb.points());
 
-        //label minPointI = -1;
-        label maxPointI = -1;
-        forAll(points, pointI)
+        //label minPointi = -1;
+        label maxPointi = -1;
+        forAll(points, pointi)
         {
-            scalar c = (points[pointI]&n_);
+            scalar c = (points[pointi]&n_);
             if (c > maxComp)
             {
                 maxComp = c;
-                maxPointI = pointI;
+                maxPointi = pointi;
             }
             else if (c < minComp)
             {
                 minComp = c;
-                //minPointI = pointI;
+                //minPointi = pointi;
             }
         }
 
@@ -164,7 +164,7 @@ void Foam::targetVolumeToCell::combine(topoSet& set, const bool add) const
         if (maxCells != nTotCells)
         {
             WarningInFunction
-                << "Plane " << plane(points[maxPointI], n_)
+                << "Plane " << plane(points[maxPointi], n_)
                 << " selects " << maxCells
                 << " cells instead of all " << nTotCells
                 << " cells. Results might be wrong." << endl;

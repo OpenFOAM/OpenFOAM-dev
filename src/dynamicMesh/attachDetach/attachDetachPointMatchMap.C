@@ -95,28 +95,28 @@ void Foam::attachDetach::calcPointMatchMap() const
         const face& curMasterPoints = masterLocalFaces[facei];
         const face& curSlavePoints = slaveLocalFaces[facei];
 
-        forAll(curMasterPoints, pointI)
+        forAll(curMasterPoints, pointi)
         {
             // If the master and slave point labels are the same, the
             // point remains.  Otherwise, the slave point is removed and
             // replaced by the master
             if
             (
-                masterMeshPoints[curMasterPoints[pointI]]
-             != slaveMeshPoints[curSlavePoints[pointI]]
+                masterMeshPoints[curMasterPoints[pointi]]
+             != slaveMeshPoints[curSlavePoints[pointi]]
             )
             {
                 // Pout<< "Matching slave point "
-                //     << slaveMeshPoints[curSlavePoints[pointI]]
+                //     << slaveMeshPoints[curSlavePoints[pointi]]
                 //     << " with "
-                //     << masterMeshPoints[curMasterPoints[pointI]]
+                //     << masterMeshPoints[curMasterPoints[pointi]]
                 //     << endl;
 
                 // Grab the addressing
                 removedPointMap.insert
                 (
-                    slaveMeshPoints[curSlavePoints[pointI]],
-                    masterMeshPoints[curMasterPoints[pointI]]
+                    slaveMeshPoints[curSlavePoints[pointi]],
+                    masterMeshPoints[curMasterPoints[pointi]]
                 );
             }
         }

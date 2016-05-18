@@ -543,10 +543,10 @@ Foam::UnsortedMeshedSurface<Face>::subsetMesh
     // Create compact coordinate list and forward mapping array
     pointField newPoints(pointMap.size());
     labelList  oldToNew(locPoints.size());
-    forAll(pointMap, pointI)
+    forAll(pointMap, pointi)
     {
-        newPoints[pointI] = locPoints[pointMap[pointI]];
-        oldToNew[pointMap[pointI]] = pointI;
+        newPoints[pointi] = locPoints[pointMap[pointi]];
+        oldToNew[pointMap[pointi]] = pointi;
     }
 
     // Renumber face node labels and compact

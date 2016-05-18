@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,22 +130,22 @@ bool Foam::triSurface::readTRI(const fileName& TRIfileName)
 
     pointField rawPoints(STLpoints.size());
 
-    label pointI = 0;
+    label pointi = 0;
     forAllConstIter(SLList<STLpoint>, STLpoints, iter)
     {
-        rawPoints[pointI++] = *iter;
+        rawPoints[pointi++] = *iter;
     }
 
     setSize(STLlabels.size());
 
     // Assign triangles
-    pointI = 0;
+    pointi = 0;
     SLList<label>::const_iterator iter = STLlabels.begin();
     forAll(*this, i)
     {
-        operator[](i)[0] = pointI++;
-        operator[](i)[1] = pointI++;
-        operator[](i)[2] = pointI++;
+        operator[](i)[0] = pointi++;
+        operator[](i)[1] = pointi++;
+        operator[](i)[2] = pointi++;
         operator[](i).region() = *iter;
         ++iter;
     }

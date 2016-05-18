@@ -80,7 +80,7 @@ protected:
 
     // Protected Member Functions
 
-        //- Returns local patchI if patch is in patchIds_ list
+        //- Returns local patchi if patch is in patchIds_ list
         label applyToPatch(const label globalPatchi) const;
 
         //- Write post-processing info

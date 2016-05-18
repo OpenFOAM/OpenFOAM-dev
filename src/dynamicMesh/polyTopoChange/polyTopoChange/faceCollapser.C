@@ -153,7 +153,7 @@ void Foam::faceCollapser::filterFace
     {
         label nei = -1;
 
-        label patchI = -1;
+        label patchi = -1;
 
         if (mesh_.isInternalFace(facei))
         {
@@ -161,7 +161,7 @@ void Foam::faceCollapser::filterFace
         }
         else
         {
-            patchI = mesh_.boundaryMesh().whichPatch(facei);
+            patchi = mesh_.boundaryMesh().whichPatch(facei);
         }
 
         // Get current zone info
@@ -185,7 +185,7 @@ void Foam::faceCollapser::filterFace
                 mesh_.faceOwner()[facei],   // owner
                 nei,                        // neighbour
                 false,                      // face flip
-                patchI,                     // patch for face
+                patchi,                     // patch for face
                 false,                      // remove from zone
                 zoneID,                     // zone for face
                 zoneFlip                    // face flip in zone

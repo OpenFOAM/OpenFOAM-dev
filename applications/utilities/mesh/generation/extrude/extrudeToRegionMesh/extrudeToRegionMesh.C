@@ -2440,16 +2440,16 @@ int main(int argc, char *argv[])
         (
             meshMod.points()
         );
-        label meshPointI = extrudePatch.localPoints().size();
+        label meshPointi = extrudePatch.localPoints().size();
         forAll(localRegionPoints, regionI)
         {
-            label pointI = localRegionPoints[regionI];
-            point pt = extrudePatch.localPoints()[pointI];
+            label pointi = localRegionPoints[regionI];
+            point pt = extrudePatch.localPoints()[pointi];
             const vector& n = localRegionNormals[regionI];
 
             for (label layerI = 1; layerI <= model().nLayers(); layerI++)
             {
-                newPoints[meshPointI++] = model()(pt, n, layerI);
+                newPoints[meshPointi++] = model()(pt, n, layerI);
             }
         }
 

@@ -97,10 +97,10 @@ projectPoints
     label curFace = 0;
     label nNSquaredSearches = 0;
 
-    forAll(slavePointOrder, pointI)
+    forAll(slavePointOrder, pointi)
     {
         // Pick up slave point and direction
-        const label curLocalPointLabel = slavePointOrder[pointI];
+        const label curLocalPointLabel = slavePointOrder[pointi];
 
         const PointType& curPoint =
             points_[slaveMeshPoints[curLocalPointLabel]];
@@ -119,7 +119,7 @@ projectPoints
 
         // Force the full search for the first point to ensure good
         // starting face
-        if (pointI == 0)
+        if (pointi == 0)
         {
             doNSquaredSearch = true;
         }

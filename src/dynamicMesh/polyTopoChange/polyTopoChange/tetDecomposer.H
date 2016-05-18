@@ -103,7 +103,7 @@ private:
             const label facei,
             const label own,
             const label nei,
-            const label patchI,
+            const label patchi,
             const label zoneI,
             const bool zoneFlip
         ) const;
@@ -118,7 +118,7 @@ private:
             const label masterPointID,
             const label masterEdgeID,
             const label masterFaceID,
-            const label patchI,
+            const label patchi,
             const label zoneI,
             const bool zoneFlip
         ) const;

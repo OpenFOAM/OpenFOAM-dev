@@ -53,14 +53,14 @@ bool Foam::meshSearch::findNearer
 {
     bool nearer = false;
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        scalar distSqr = magSqr(points[pointI] - sample);
+        scalar distSqr = magSqr(points[pointi] - sample);
 
         if (distSqr < nearestDistSqr)
         {
             nearestDistSqr = distSqr;
-            nearestI = pointI;
+            nearestI = pointi;
             nearer = true;
         }
     }
@@ -82,14 +82,14 @@ bool Foam::meshSearch::findNearer
 
     forAll(indices, i)
     {
-        label pointI = indices[i];
+        label pointi = indices[i];
 
-        scalar distSqr = magSqr(points[pointI] - sample);
+        scalar distSqr = magSqr(points[pointi] - sample);
 
         if (distSqr < nearestDistSqr)
         {
             nearestDistSqr = distSqr;
-            nearestI = pointI;
+            nearestI = pointi;
             nearer = true;
         }
     }

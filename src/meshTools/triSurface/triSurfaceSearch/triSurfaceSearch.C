@@ -55,10 +55,10 @@ bool Foam::triSurfaceSearch::checkUniqueHit
     {
         // near point
 
-        const label nearPointI = f[nearLabel];
+        const label nearPointi = f[nearLabel];
 
         const labelList& pointFaces =
-            surface().pointFaces()[surface().meshPointMap()[nearPointI]];
+            surface().pointFaces()[surface().meshPointMap()[nearPointi]];
 
         forAll(pointFaces, pI)
         {
@@ -394,7 +394,7 @@ void Foam::triSurfaceSearch::findLineAll
 
     treeDataTriSurface::findAllIntersectOp allIntersectOp(octree, shapeMask);
 
-    forAll(start, pointI)
+    forAll(start, pointi)
     {
         hits.clear();
         shapeMask.clear();
@@ -404,14 +404,14 @@ void Foam::triSurfaceSearch::findLineAll
             // See if any intersection between pt and end
             pointIndexHit inter = octree.findLine
             (
-                start[pointI],
-                end[pointI],
+                start[pointi],
+                end[pointi],
                 allIntersectOp
             );
 
             if (inter.hit())
             {
-                vector lineVec = end[pointI] - start[pointI];
+                vector lineVec = end[pointi] - start[pointi];
                 lineVec /= mag(lineVec) + VSMALL;
 
                 if
@@ -435,7 +435,7 @@ void Foam::triSurfaceSearch::findLineAll
             }
         }
 
-        info[pointI].transfer(hits);
+        info[pointi].transfer(hits);
     }
 
     indexedOctree<treeDataTriSurface>::perturbTol() = oldTol;

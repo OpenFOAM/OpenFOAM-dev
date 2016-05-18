@@ -54,9 +54,9 @@ vtkPolyData* Foam::vtkPVFoam::pointZoneVTKMesh
     vtkPoints* vtkpoints = vtkPoints::New();
     vtkpoints->Allocate(pointLabels.size());
 
-    forAll(pointLabels, pointI)
+    forAll(pointLabels, pointi)
     {
-        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[pointLabels[pointI]]);
+        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[pointLabels[pointi]]);
     }
 
     vtkmesh->SetPoints(vtkpoints);

@@ -233,9 +233,9 @@ bool Foam::slidingInterface::projectPoints() const
     {
         label nHits = 0;
 
-        forAll(slavePointFaceHits, pointI)
+        forAll(slavePointFaceHits, pointi)
         {
-            if (slavePointFaceHits[pointI].hit())
+            if (slavePointFaceHits[pointi].hit())
             {
                 nHits++;
             }
@@ -268,17 +268,17 @@ bool Foam::slidingInterface::projectPoints() const
                 << "Adjusting point projection for integral match: ";
         }
 
-        forAll(slavePointFaceHits, pointI)
+        forAll(slavePointFaceHits, pointi)
         {
-            if (slavePointFaceHits[pointI].hit())
+            if (slavePointFaceHits[pointi].hit())
             {
                 // Grab the hit point
-                projectedSlavePoints[pointI] =
+                projectedSlavePoints[pointi] =
                     masterLocalFaces
-                        [slavePointFaceHits[pointI].hitObject()].ray
+                        [slavePointFaceHits[pointi].hitObject()].ray
                         (
-                            slaveLocalPoints[pointI],
-                            slavePointNormals[pointI],
+                            slaveLocalPoints[pointi],
+                            slavePointNormals[pointi],
                             masterLocalPoints,
                             projectionAlgo_
                         ).hitPoint();
@@ -287,22 +287,22 @@ bool Foam::slidingInterface::projectPoints() const
             {
                 // Grab the nearest point on the face (edge)
                 pointHit missAdjust =
-                    masterLocalFaces[slavePointFaceHits[pointI].hitObject()].ray
+                    masterLocalFaces[slavePointFaceHits[pointi].hitObject()].ray
                     (
-                        slaveLocalPoints[pointI],
-                        slavePointNormals[pointI],
+                        slaveLocalPoints[pointi],
+                        slavePointNormals[pointi],
                         masterLocalPoints,
                         projectionAlgo_
                     );
 
                 const point nearPoint = missAdjust.missPoint();
                 const point missPoint =
-                    slaveLocalPoints[pointI]
-                  + slavePointNormals[pointI]*missAdjust.distance();
+                    slaveLocalPoints[pointi]
+                  + slavePointNormals[pointi]*missAdjust.distance();
 
                 // Calculate the tolerance
                 const scalar mergeTol =
-                    integralAdjTol_*minSlavePointLength[pointI];
+                    integralAdjTol_*minSlavePointLength[pointi];
 
                 // Adjust the hit
                 if (mag(nearPoint - missPoint) < mergeTol)
@@ -313,21 +313,21 @@ bool Foam::slidingInterface::projectPoints() const
                     }
 
 //                     Pout<< "Moving slave point in integral adjustment "
-//                         << pointI << " miss point: " << missPoint
+//                         << pointi << " miss point: " << missPoint
 //                         << " near point: " << nearPoint
 //                         << " mergeTol: " << mergeTol
 //                         << " dist: " << mag(nearPoint - missPoint) << endl;
 
-                    projectedSlavePoints[pointI] = nearPoint;
+                    projectedSlavePoints[pointi] = nearPoint;
 
-                    slavePointFaceHits[pointI] =
-                        objectHit(true, slavePointFaceHits[pointI].hitObject());
+                    slavePointFaceHits[pointi] =
+                        objectHit(true, slavePointFaceHits[pointi].hitObject());
 
                     nAdjustedPoints++;
                 }
                 else
                 {
-                    projectedSlavePoints[pointI] = slaveLocalPoints[pointI];
+                    projectedSlavePoints[pointi] = slaveLocalPoints[pointi];
 
                     if (debug)
                     {
@@ -344,17 +344,17 @@ bool Foam::slidingInterface::projectPoints() const
     }
     else if (matchType_ == PARTIAL)
     {
-        forAll(slavePointFaceHits, pointI)
+        forAll(slavePointFaceHits, pointi)
         {
-            if (slavePointFaceHits[pointI].hit())
+            if (slavePointFaceHits[pointi].hit())
             {
                 // Grab the hit point
-                projectedSlavePoints[pointI] =
+                projectedSlavePoints[pointi] =
                     masterLocalFaces
-                        [slavePointFaceHits[pointI].hitObject()].ray
+                        [slavePointFaceHits[pointi].hitObject()].ray
                         (
-                            slaveLocalPoints[pointI],
-                            slavePointNormals[pointI],
+                            slaveLocalPoints[pointi],
+                            slavePointNormals[pointi],
                             masterLocalPoints,
                             projectionAlgo_
                         ).hitPoint();
@@ -362,7 +362,7 @@ bool Foam::slidingInterface::projectPoints() const
             else
             {
                 // The point remains where it started from
-                projectedSlavePoints[pointI] = slaveLocalPoints[pointI];
+                projectedSlavePoints[pointi] = slaveLocalPoints[pointi];
             }
         }
     }
@@ -435,43 +435,43 @@ bool Foam::slidingInterface::projectPoints() const
 
     label nMergedPoints = 0;
 
-    forAll(projectedSlavePoints, pointI)
+    forAll(projectedSlavePoints, pointi)
     {
-        if (slavePointFaceHits[pointI].hit())
+        if (slavePointFaceHits[pointi].hit())
         {
             // Taking a non-const reference so the point can be adjusted
-            point& curPoint = projectedSlavePoints[pointI];
+            point& curPoint = projectedSlavePoints[pointi];
 
             // Get the hit face
             const face& hitFace =
-                masterLocalFaces[slavePointFaceHits[pointI].hitObject()];
+                masterLocalFaces[slavePointFaceHits[pointi].hitObject()];
 
             label mergePoint = -1;
             scalar mergeDist = GREAT;
 
             // Try all point before deciding on best fit.
-            forAll(hitFace, hitPointI)
+            forAll(hitFace, hitPointi)
             {
                 scalar dist =
-                    mag(masterLocalPoints[hitFace[hitPointI]] - curPoint);
+                    mag(masterLocalPoints[hitFace[hitPointi]] - curPoint);
 
                 // Calculate the tolerance
                 const scalar mergeTol =
                     pointMergeTol_*
                     min
                     (
-                        minSlavePointLength[pointI],
-                        minMasterPointLength[hitFace[hitPointI]]
+                        minSlavePointLength[pointi],
+                        minMasterPointLength[hitFace[hitPointi]]
                     );
 
                 if (dist < mergeTol && dist < mergeDist)
                 {
-                    mergePoint = hitFace[hitPointI];
+                    mergePoint = hitFace[hitPointi];
                     mergeDist = dist;
 
 //                     Pout<< "Merging slave point "
-//                         << slavePatch.meshPoints()[pointI] << " at "
-//                         << slaveLocalPoints[pointI] << " with master "
+//                         << slavePatch.meshPoints()[pointi] << " at "
+//                         << slaveLocalPoints[pointi] << " with master "
 //                         << masterPatch.meshPoints()[mergePoint] << " at "
 //                         << masterLocalPoints[mergePoint]
 //                         << ". dist: " << mergeDist
@@ -484,9 +484,9 @@ bool Foam::slidingInterface::projectPoints() const
                 // Point is to be merged with master point
                 nMergedPoints++;
 
-                slavePointPointHits[pointI] = mergePoint;
+                slavePointPointHits[pointi] = mergePoint;
                 curPoint = masterLocalPoints[mergePoint];
-                masterPointPointHits[mergePoint] = pointI;
+                masterPointPointHits[mergePoint] = pointi;
             }
         }
     }
@@ -532,24 +532,24 @@ bool Foam::slidingInterface::projectPoints() const
 
     label nMovedPoints = 0;
 
-    forAll(projectedSlavePoints, pointI)
+    forAll(projectedSlavePoints, pointi)
     {
         // Eliminate the points merged into points
-        if (slavePointPointHits[pointI] < 0)
+        if (slavePointPointHits[pointi] < 0)
         {
             // Get current point position
-            point& curPoint = projectedSlavePoints[pointI];
+            point& curPoint = projectedSlavePoints[pointi];
 
             // Get the hit face
             const labelList& hitFaceEdges =
-                masterFaceEdges[slavePointFaceHits[pointI].hitObject()];
+                masterFaceEdges[slavePointFaceHits[pointi].hitObject()];
 
             // Calculate the tolerance
             const scalar mergeLength =
                 min
                 (
-                    minSlavePointLength[pointI],
-                    minMasterFaceLength[slavePointFaceHits[pointI].hitObject()]
+                    minSlavePointLength[pointi],
+                    minMasterFaceLength[slavePointFaceHits[pointi].hitObject()]
                 );
 
             const scalar mergeTol = pointMergeTol_*mergeLength;
@@ -566,22 +566,22 @@ bool Foam::slidingInterface::projectPoints() const
                 if (edgeHit.hit())
                 {
                     scalar dist =
-                        mag(edgeHit.hitPoint() - projectedSlavePoints[pointI]);
+                        mag(edgeHit.hitPoint() - projectedSlavePoints[pointi]);
 
                     if (dist < mergeTol && dist < minDistance)
                     {
                         // Point is to be moved onto master edge
                         nMovedPoints++;
 
-                        slavePointEdgeHits[pointI] = hitFaceEdges[edgeI];
-                        projectedSlavePoints[pointI] = edgeHit.hitPoint();
+                        slavePointEdgeHits[pointi] = hitFaceEdges[edgeI];
+                        projectedSlavePoints[pointi] = edgeHit.hitPoint();
 
                         minDistance = dist;
 
 //                         Pout<< "Moving slave point "
-//                             << slavePatch.meshPoints()[pointI]
-//                             << " (" << pointI
-//                             << ") at " << slaveLocalPoints[pointI]
+//                             << slavePatch.meshPoints()[pointi]
+//                             << " (" << pointi
+//                             << ") at " << slaveLocalPoints[pointi]
 //                             << " onto master edge " << hitFaceEdges[edgeI]
 //                             << " or ("
 //                             << masterLocalPoints[curEdge.start()]
@@ -593,14 +593,14 @@ bool Foam::slidingInterface::projectPoints() const
                 }
             } // end of hit face edges
 
-            if (slavePointEdgeHits[pointI] > -1)
+            if (slavePointEdgeHits[pointi] > -1)
             {
                 // Projected slave point has moved.  Re-attempt merge with
                 // master points of the edge
-                point& curPoint = projectedSlavePoints[pointI];
+                point& curPoint = projectedSlavePoints[pointi];
 
                 const edge& hitMasterEdge =
-                    masterEdges[slavePointEdgeHits[pointI]];
+                    masterEdges[slavePointEdgeHits[pointi]];
 
                 label mergePoint = -1;
                 scalar mergeDist = GREAT;
@@ -615,7 +615,7 @@ bool Foam::slidingInterface::projectPoints() const
                         pointMergeTol_*
                         min
                         (
-                            minSlavePointLength[pointI],
+                            minSlavePointLength[pointi],
                             minMasterPointLength[hitMasterEdge[hmeI]]
                     );
 
@@ -625,9 +625,9 @@ bool Foam::slidingInterface::projectPoints() const
                         mergeDist = hmeDist;
 
 //                     Pout<< "Merging slave point; SECOND TRY "
-//                         << slavePatch.meshPoints()[pointI] << " local "
-//                         << pointI << " at "
-//                         << slaveLocalPoints[pointI] << " with master "
+//                         << slavePatch.meshPoints()[pointi] << " local "
+//                         << pointi << " at "
+//                         << slaveLocalPoints[pointi] << " with master "
 //                         << masterPatch.meshPoints()[mergePoint] << " at "
 //                         << masterLocalPoints[mergePoint]
 //                         << ". hmeDist: " << mergeDist
@@ -638,16 +638,16 @@ bool Foam::slidingInterface::projectPoints() const
                 if (mergePoint > -1)
                 {
                     // Point is to be merged with master point
-                    slavePointPointHits[pointI] = mergePoint;
+                    slavePointPointHits[pointi] = mergePoint;
                     curPoint = masterLocalPoints[mergePoint];
-                    masterPointPointHits[mergePoint] = pointI;
+                    masterPointPointHits[mergePoint] = pointi;
 
-                    slavePointFaceHits[pointI] =
-                        objectHit(true, slavePointFaceHits[pointI].hitObject());
+                    slavePointFaceHits[pointi] =
+                        objectHit(true, slavePointFaceHits[pointi].hitObject());
 
 
                     // Disable edge merge
-                    slavePointEdgeHits[pointI] = -1;
+                    slavePointEdgeHits[pointi] = -1;
                 }
             }
         }
@@ -893,9 +893,9 @@ bool Foam::slidingInterface::projectPoints() const
             {
                 const face& f = masterLocalFaces[curFaces[facei]];
 
-                forAll(f, pointI)
+                forAll(f, pointi)
                 {
-                    curPointMap.insert(f[pointI]);
+                    curPointMap.insert(f[pointi]);
                 }
             }
 
@@ -945,9 +945,9 @@ bool Foam::slidingInterface::projectPoints() const
 
             edgeNormalInPlane /= mag(edgeNormalInPlane);
 
-            forAll(curMasterPoints, pointI)
+            forAll(curMasterPoints, pointi)
             {
-                const label cmp = curMasterPoints[pointI];
+                const label cmp = curMasterPoints[pointi];
 
                 // Skip the current point if the edge start or end has
                 // been adjusted onto in
@@ -1174,16 +1174,16 @@ bool Foam::slidingInterface::projectPoints() const
 
         const List<objectHit>& oldPointFaceHits = *slavePointFaceHitsPtr_;
 
-        forAll(slavePointFaceHits, pointI)
+        forAll(slavePointFaceHits, pointi)
         {
             if
             (
-                slavePointPointHits[pointI] < 0
-             && slavePointEdgeHits[pointI] < 0
+                slavePointPointHits[pointi] < 0
+             && slavePointEdgeHits[pointi] < 0
             )
             {
                 // This is a straight face hit
-                if (slavePointFaceHits[pointI] != oldPointFaceHits[pointI])
+                if (slavePointFaceHits[pointi] != oldPointFaceHits[pointi])
                 {
                     // Two lists are different
                     faceHitsDifferent = true;

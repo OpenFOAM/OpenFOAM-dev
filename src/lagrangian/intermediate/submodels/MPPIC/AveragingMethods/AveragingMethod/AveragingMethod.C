@@ -219,13 +219,13 @@ bool Foam::AveragingMethod<Type>::write() const
 
             forAll(vertices, vertexI)
             {
-                const label pointI = vertices[vertexI];
+                const label pointi = vertices[vertexI];
 
-                pointVolume[pointI] += v;
-                pointValue[pointI] +=
-                    v*interpolate(mesh_.points()[pointI], tetIs);
-                pointGrad[pointI] +=
-                    v*interpolateGrad(mesh_.points()[pointI], tetIs);
+                pointVolume[pointi] += v;
+                pointValue[pointi] +=
+                    v*interpolate(mesh_.points()[pointi], tetIs);
+                pointGrad[pointi] +=
+                    v*interpolateGrad(mesh_.points()[pointi], tetIs);
             }
         }
     }

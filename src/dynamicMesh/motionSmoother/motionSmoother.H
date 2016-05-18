@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
     E.g.
     \verbatim
         // Construct iterative mesh mover.
-        motionSmoother meshMover(mesh, labelList(1, patchI));
+        motionSmoother meshMover(mesh, labelList(1, patchi));
 
         // Set desired displacement:
         meshMover.displacement() = ..

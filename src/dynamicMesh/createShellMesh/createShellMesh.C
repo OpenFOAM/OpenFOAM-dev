@@ -522,21 +522,21 @@ void Foam::createShellMesh::setRefinement
     // ~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // Original point numbers in local point ordering so no need to store.
-    forAll(patch_.localPoints(), pointI)
+    forAll(patch_.localPoints(), pointi)
     {
-        //label addedPointI =
+        //label addedPointi =
         meshMod.addPoint
         (
-            patch_.localPoints()[pointI],   // point
+            patch_.localPoints()[pointi],   // point
             pointToPointMap.size(),         // masterPointID
             -1,                             // zoneID
             true                            // inCell
         );
-        pointToPointMap.append(pointI);
+        pointToPointMap.append(pointi);
 
-        //Pout<< "Added bottom point " << addedPointI
-        //    << " at " << patch_.localPoints()[pointI]
-        //    << "  from point " << pointI
+        //Pout<< "Added bottom point " << addedPointi
+        //    << " at " << patch_.localPoints()[pointi]
+        //    << "  from point " << pointi
         //    << endl;
     }
 
@@ -547,9 +547,9 @@ void Foam::createShellMesh::setRefinement
     labelList addedPoints(nLayers*regionPoints_.size());
     forAll(regionPoints_, regionI)
     {
-        label pointI = regionPoints_[regionI];
+        label pointi = regionPoints_[regionI];
 
-        point pt = patch_.localPoints()[pointI];
+        point pt = patch_.localPoints()[pointi];
         point disp = firstLayerDisp[regionI];
         for (label layerI = 0; layerI < nLayers; layerI++)
         {
@@ -562,7 +562,7 @@ void Foam::createShellMesh::setRefinement
                 -1,                     // zoneID
                 true                    // inCell
             );
-            pointToPointMap.append(pointI);
+            pointToPointMap.append(pointi);
 
             disp *= expansionRatio;
         }
@@ -617,16 +617,16 @@ void Foam::createShellMesh::setRefinement
 
             label own = addedCells[facei*nLayers+layerI];
             label nei;
-            label patchI;
+            label patchi;
             if (layerI == nLayers-1)
             {
                 nei = -1;
-                patchI = topPatchID[facei];
+                patchi = topPatchID[facei];
             }
             else
             {
                 nei = addedCells[facei*nLayers+layerI+1];
-                patchI = -1;
+                patchi = -1;
             }
 
             meshMod.addFace
@@ -638,7 +638,7 @@ void Foam::createShellMesh::setRefinement
                 -1,                         // masterEdgeID
                 faceToFaceMap.size(),       // masterFaceID : current facei
                 false,                      // flipFaceFlux
-                patchI,                     // patchID
+                patchi,                     // patchID
                 -1,                         // zoneID
                 false                       // zoneFlip
             );
@@ -746,7 +746,7 @@ void Foam::createShellMesh::setRefinement
 
             label minCelli = addedCells[nLayers*eFaces[0]+layerI];
             label maxCelli;
-            label patchI;
+            label patchi;
             if (ePatches.size() == 0)
             {
                 maxCelli = addedCells[nLayers*eFaces[1]+layerI];
@@ -756,12 +756,12 @@ void Foam::createShellMesh::setRefinement
                     Swap(minCelli, maxCelli);
                     newF = newF.reverseFace();
                 }
-                patchI = -1;
+                patchi = -1;
             }
             else
             {
                 maxCelli = -1;
-                patchI = ePatches[0];
+                patchi = ePatches[0];
             }
 
             //{
@@ -789,7 +789,7 @@ void Foam::createShellMesh::setRefinement
                 -1,                     // masterEdgeID
                 faceToFaceMap.size(),   // masterFaceID
                 false,                  // flipFaceFlux
-                patchI,                 // patchID
+                patchi,                 // patchID
                 -1,                     // zoneID
                 false                   // zoneFlip
             );

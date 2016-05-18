@@ -192,18 +192,18 @@ void Foam::edgeCollapser::collapseToEdge
 
     forAll(facePtsNeg, fPtI)
     {
-        const label facePointI = facePtsNeg[fPtI];
-        const label facePtPriority = pointPriority[facePointI];
+        const label facePointi = facePtsNeg[fPtI];
+        const label facePtPriority = pointPriority[facePointi];
 
         if (facePtPriority > maxPriority)
         {
             maxPriority = facePtPriority;
             maxPriorityPts.clear();
-            maxPriorityPts.append(facePointI);
+            maxPriorityPts.append(facePointi);
         }
         else if (facePtPriority == maxPriority)
         {
-            maxPriorityPts.append(facePointI);
+            maxPriorityPts.append(facePointi);
         }
     }
 
@@ -242,18 +242,18 @@ void Foam::edgeCollapser::collapseToEdge
 
     forAll(facePtsPos, fPtI)
     {
-        const label facePointI = facePtsPos[fPtI];
-        const label facePtPriority = pointPriority[facePointI];
+        const label facePointi = facePtsPos[fPtI];
+        const label facePtPriority = pointPriority[facePointi];
 
         if (facePtPriority > maxPriority)
         {
             maxPriority = facePtPriority;
             maxPriorityPts.clear();
-            maxPriorityPts.append(facePointI);
+            maxPriorityPts.append(facePointi);
         }
         else if (facePtPriority == maxPriority)
         {
-            maxPriorityPts.append(facePointI);
+            maxPriorityPts.append(facePointi);
         }
     }
 
@@ -304,18 +304,18 @@ void Foam::edgeCollapser::collapseToPoint
 
     forAll(facePts, fPtI)
     {
-        const label facePointI = facePts[fPtI];
-        const label facePtPriority = pointPriority[facePointI];
+        const label facePointi = facePts[fPtI];
+        const label facePtPriority = pointPriority[facePointi];
 
         if (facePtPriority > maxPriority)
         {
             maxPriority = facePtPriority;
             maxPriorityPts.clear();
-            maxPriorityPts.append(facePointI);
+            maxPriorityPts.append(facePointi);
         }
         else if (facePtPriority == maxPriority)
         {
-            maxPriorityPts.append(facePointI);
+            maxPriorityPts.append(facePointi);
         }
     }
 
@@ -806,48 +806,48 @@ Foam::label Foam::edgeCollapser::edgeMaster
 
 void Foam::edgeCollapser::checkBoundaryPointMergeEdges
 (
-    const label pointI,
-    const label otherPointI,
+    const label pointi,
+    const label otherPointi,
     const labelList& pointPriority,
     Map<point>& collapsePointToLocation
 ) const
 {
    const pointField& points = mesh_.points();
 
-   const label e0Priority = pointPriority[pointI];
-   const label e1Priority = pointPriority[otherPointI];
+   const label e0Priority = pointPriority[pointi];
+   const label e1Priority = pointPriority[otherPointi];
 
    if (e0Priority > e1Priority)
    {
        collapsePointToLocation.set
        (
-           otherPointI,
-           points[pointI]
+           otherPointi,
+           points[pointi]
        );
    }
    else if (e0Priority < e1Priority)
    {
        collapsePointToLocation.set
        (
-           pointI,
-           points[otherPointI]
+           pointi,
+           points[otherPointi]
        );
    }
    else // e0Priority == e1Priority
    {
        collapsePointToLocation.set
        (
-           pointI,
-           points[otherPointI]
+           pointi,
+           points[otherPointi]
        );
 
 //       Foam::point averagePt
 //       (
-//           0.5*(points[otherPointI] + points[pointI])
+//           0.5*(points[otherPointi] + points[pointi])
 //       );
 //
-//       collapsePointToLocation.set(pointI, averagePt);
-//       collapsePointToLocation.set(otherPointI, averagePt);
+//       collapsePointToLocation.set(pointi, averagePt);
+//       collapsePointToLocation.set(otherPointi, averagePt);
    }
 }
 
@@ -890,10 +890,10 @@ Foam::label Foam::edgeCollapser::breakStringsAtEdges
                     {
                         const label edgeI = ptEdgesStart[ptEdgeI];
 
-                        const label nbrPointI
+                        const label nbrPointi
                             = edges[edgeI].otherVertex(e.start());
                         const label nbrIndex
-                            = allPointInfo[nbrPointI].collapseIndex();
+                            = allPointInfo[nbrPointi].collapseIndex();
 
                         if
                         (
@@ -964,20 +964,20 @@ Foam::label Foam::edgeCollapser::countEdgesOnFace
 
     forAll(f, fpI)
     {
-        const label pointI = f[fpI];
-        const label newPointI = allPointInfo[pointI].collapseIndex();
+        const label pointi = f[fpI];
+        const label newPointi = allPointInfo[pointi].collapseIndex();
 
-        if (newPointI == -2)
+        if (newPointi == -2)
         {
             nEdges++;
         }
         else
         {
-            const label prevPointI = f[f.fcIndex(fpI)];
-            const label prevNewPointI
-                = allPointInfo[prevPointI].collapseIndex();
+            const label prevPointi = f[f.fcIndex(fpI)];
+            const label prevNewPointi
+                = allPointInfo[prevPointi].collapseIndex();
 
-            if (newPointI != prevNewPointI)
+            if (newPointi != prevNewPointi)
             {
                 nEdges++;
             }
@@ -1045,38 +1045,38 @@ Foam::label Foam::edgeCollapser::syncCollapse
         {
             const edge& e = edges[edgeI];
 
-            label masterPointI = e.start();
+            label masterPointi = e.start();
 
             // Choose the point on the edge with the highest priority.
             if (pointPriority[e.end()] > pointPriority[e.start()])
             {
-                masterPointI = e.end();
+                masterPointi = e.end();
             }
 
-            label masterPointPriority = pointPriority[masterPointI];
+            label masterPointPriority = pointPriority[masterPointi];
 
-            label index = globalPoints.toGlobal(masterPointI);
+            label index = globalPoints.toGlobal(masterPointi);
 
-            if (!collapsePointToLocation.found(masterPointI))
+            if (!collapsePointToLocation.found(masterPointi))
             {
-                const label otherVertex = e.otherVertex(masterPointI);
+                const label otherVertex = e.otherVertex(masterPointi);
 
                 if (!collapsePointToLocation.found(otherVertex))
                 {
                     FatalErrorInFunction
-                        << masterPointI << " on edge " << edgeI << " " << e
+                        << masterPointi << " on edge " << edgeI << " " << e
                         << " is not marked for collapse."
                         << abort(FatalError);
                 }
                 else
                 {
-                    masterPointI = otherVertex;
-                    masterPointPriority = pointPriority[masterPointI];
-                    index = globalPoints.toGlobal(masterPointI);
+                    masterPointi = otherVertex;
+                    masterPointPriority = pointPriority[masterPointi];
+                    index = globalPoints.toGlobal(masterPointi);
                 }
             }
 
-            const point& collapsePoint = collapsePointToLocation[masterPointI];
+            const point& collapsePoint = collapsePointToLocation[masterPointi];
 
             const pointEdgeCollapse pec
             (
@@ -1131,29 +1131,29 @@ void Foam::edgeCollapser::filterFace
 
     forAll(f, fp)
     {
-        label pointI = f[fp];
+        label pointi = f[fp];
 
-        label collapseIndex = allPointInfo[pointI].collapseIndex();
+        label collapseIndex = allPointInfo[pointi].collapseIndex();
 
         // Do we have a local point for this index?
         if (collapseStrings.found(collapseIndex))
         {
-            label localPointI = collapseStrings[collapseIndex][0];
+            label localPointi = collapseStrings[collapseIndex][0];
 
-            if (findIndex(SubList<label>(f, newFp), localPointI) == -1)
+            if (findIndex(SubList<label>(f, newFp), localPointi) == -1)
             {
-                f[newFp++] = localPointI;
+                f[newFp++] = localPointi;
             }
         }
         else if (collapseIndex == -1)
         {
             WarningInFunction
-                << "Point " << pointI << " was not visited by PointEdgeWave"
+                << "Point " << pointi << " was not visited by PointEdgeWave"
                 << endl;
         }
         else
         {
-            f[newFp++] = pointI;
+            f[newFp++] = pointi;
         }
     }
 
@@ -1173,35 +1173,35 @@ void Foam::edgeCollapser::filterFace
         label fp1 = fp-1;
         label fp2 = fp-2;
 
-        label pointI = f[fp];
+        label pointi = f[fp];
 
         // Search for previous occurrence.
-        label index = findIndex(SubList<label>(f, fp), pointI);
+        label index = findIndex(SubList<label>(f, fp), pointi);
 
         if (index == fp1)
         {
             WarningInFunction
                 << "Removing consecutive duplicate vertex in face "
                 << f << endl;
-            // Don't store current pointI
+            // Don't store current pointi
         }
         else if (index == fp2)
         {
             WarningInFunction
                 << "Removing non-consecutive duplicate vertex in face "
                 << f << endl;
-            // Don't store current pointI and remove previous
+            // Don't store current pointi and remove previous
             newFp--;
         }
         else if (index != -1)
         {
             WarningInFunction
                 << "Pinched face " << f << endl;
-            f[newFp++] = pointI;
+            f[newFp++] = pointi;
         }
         else
         {
-            f[newFp++] = pointI;
+            f[newFp++] = pointi;
         }
     }
 
@@ -1321,9 +1321,9 @@ bool Foam::edgeCollapser::setRefinement
     {
         // 1. Count elements per collapseIndex
         Map<label> nPerIndex(mesh_.nPoints()/10);
-        forAll(allPointInfo, pointI)
+        forAll(allPointInfo, pointi)
         {
-            label collapseIndex = allPointInfo[pointI].collapseIndex();
+            label collapseIndex = allPointInfo[pointi].collapseIndex();
 
             if (collapseIndex != -1 && collapseIndex != -2)
             {
@@ -1347,13 +1347,13 @@ bool Foam::edgeCollapser::setRefinement
         }
 
         // 3. Fill
-        forAll(allPointInfo, pointI)
+        forAll(allPointInfo, pointi)
         {
-            const label collapseIndex = allPointInfo[pointI].collapseIndex();
+            const label collapseIndex = allPointInfo[pointi].collapseIndex();
 
             if (collapseIndex != -1 && collapseIndex != -2)
             {
-                collapseStrings[collapseIndex].append(pointI);
+                collapseStrings[collapseIndex].append(pointi);
             }
         }
     }
@@ -1532,35 +1532,35 @@ bool Foam::edgeCollapser::setRefinement
         }
 
         // Remove unused vertices that have not been marked for removal already
-        forAll(usedPoint, pointI)
+        forAll(usedPoint, pointi)
         {
-            if (!usedPoint[pointI])
+            if (!usedPoint[pointi])
             {
-                removedPoints[pointI] = true;
-                meshMod.removePoint(pointI, -1);
+                removedPoints[pointi] = true;
+                meshMod.removePoint(pointi, -1);
                 meshChanged = true;
             }
         }
     }
 
     // Modify the point location of the remaining points
-    forAll(allPointInfo, pointI)
+    forAll(allPointInfo, pointi)
     {
-        const label collapseIndex = allPointInfo[pointI].collapseIndex();
-        const point& collapsePoint = allPointInfo[pointI].collapsePoint();
+        const label collapseIndex = allPointInfo[pointi].collapseIndex();
+        const point& collapsePoint = allPointInfo[pointi].collapsePoint();
 
         if
         (
-            removedPoints[pointI] == false
+            removedPoints[pointi] == false
          && collapseIndex != -1
          && collapseIndex != -2
         )
         {
             meshMod.modifyPoint
             (
-                pointI,
+                pointi,
                 collapsePoint,
-                pointZones.whichZone(pointI),
+                pointZones.whichZone(pointi),
                 false
             );
         }
@@ -1571,11 +1571,11 @@ bool Foam::edgeCollapser::setRefinement
     const faceZoneMesh& faceZones = mesh_.faceZones();
 
     // Renumber faces that use points
-    forAll(allPointInfo, pointI)
+    forAll(allPointInfo, pointi)
     {
-        if (removedPoints[pointI] == true)
+        if (removedPoints[pointi] == true)
         {
-            const labelList& changedFaces = pointFaces[pointI];
+            const labelList& changedFaces = pointFaces[pointi];
 
             forAll(changedFaces, changedFacei)
             {
@@ -1712,20 +1712,20 @@ void Foam::edgeCollapser::consistentCollapse
         );
 
         // Mark all edges attached to the point for collapse
-        forAll(markedPoints, pointI)
+        forAll(markedPoints, pointi)
         {
-            if (markedPoints[pointI])
+            if (markedPoints[pointi])
             {
-                const label index = allPointInfo[pointI].collapseIndex();
+                const label index = allPointInfo[pointi].collapseIndex();
 
-                const labelList& ptEdges = pointEdges[pointI];
+                const labelList& ptEdges = pointEdges[pointi];
 
                 forAll(ptEdges, ptEdgeI)
                 {
                     const label edgeI = ptEdges[ptEdgeI];
-                    const label nbrPointI = edges[edgeI].otherVertex(pointI);
+                    const label nbrPointi = edges[edgeI].otherVertex(pointi);
                     const label nbrIndex
-                        = allPointInfo[nbrPointI].collapseIndex();
+                        = allPointInfo[nbrPointi].collapseIndex();
 
                     if (collapseEdge[edgeI] && nbrIndex == index)
                     {
@@ -1850,9 +1850,9 @@ Foam::label Foam::edgeCollapser::markSmallEdges
             {
                 collapseEdge[edgeI] = true;
 
-                label masterPointI = edgeMaster(pointPriority, e);
+                label masterPointi = edgeMaster(pointPriority, e);
 
-                if (masterPointI == -1)
+                if (masterPointi == -1)
                 {
                     const point average
                         = 0.5*(points[e.start()] + points[e.end()]);
@@ -1861,9 +1861,9 @@ Foam::label Foam::edgeCollapser::markSmallEdges
                 }
                 else
                 {
-                    const point& collapsePt = points[masterPointI];
+                    const point& collapsePt = points[masterPointi];
 
-                    collapsePointToLocation.set(masterPointI, collapsePt);
+                    collapsePointToLocation.set(masterPointi, collapsePt);
                 }
 
 
@@ -1901,11 +1901,11 @@ Foam::label Foam::edgeCollapser::markMergeEdges
 
     if (nTotRemove > 0)
     {
-        forAll(pointEdges, pointI)
+        forAll(pointEdges, pointi)
         {
-            if (pointCanBeDeleted[pointI])
+            if (pointCanBeDeleted[pointi])
             {
-                const labelList& pEdges = pointEdges[pointI];
+                const labelList& pEdges = pointEdges[pointi];
 
                 if (pEdges.size() == 2)
                 {
@@ -1933,8 +1933,8 @@ Foam::label Foam::edgeCollapser::markMergeEdges
 
                             checkBoundaryPointMergeEdges
                             (
-                                pointI,
-                                edges[e0].otherVertex(pointI),
+                                pointi,
+                                edges[e0].otherVertex(pointi),
                                 pointPriority,
                                 collapsePointToLocation
                             );
@@ -1945,8 +1945,8 @@ Foam::label Foam::edgeCollapser::markMergeEdges
 
                             checkBoundaryPointMergeEdges
                             (
-                                pointI,
-                                edges[e1].otherVertex(pointI),
+                                pointi,
+                                edges[e1].otherVertex(pointi),
                                 pointPriority,
                                 collapsePointToLocation
                             );

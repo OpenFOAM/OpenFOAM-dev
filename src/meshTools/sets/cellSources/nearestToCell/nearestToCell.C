@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,9 +53,9 @@ Foam::topoSetSource::addToUsageTable Foam::nearestToCell::usage_
 
 void Foam::nearestToCell::combine(topoSet& set, const bool add) const
 {
-    forAll(points_, pointI)
+    forAll(points_, pointi)
     {
-        addOrDelete(set, mesh_.findNearestCell(points_[pointI]), add);
+        addOrDelete(set, mesh_.findNearestCell(points_[pointi]), add);
     }
 }
 

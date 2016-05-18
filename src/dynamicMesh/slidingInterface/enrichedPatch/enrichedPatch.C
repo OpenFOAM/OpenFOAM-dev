@@ -86,9 +86,9 @@ void Foam::enrichedPatch::calcLocalFaces() const
 
         curlf.setSize(f.size());
 
-        forAll(f, pointI)
+        forAll(f, pointi)
         {
-            curlf[pointI] = mpLookup.find(f[pointI])();
+            curlf[pointi] = mpLookup.find(f[pointi])();
         }
     }
 }
@@ -229,13 +229,13 @@ bool Foam::enrichedPatch::checkSupport() const
     {
         const face& curFace = faces[facei];
 
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
-            if (!pointMap().found(curFace[pointI]))
+            if (!pointMap().found(curFace[pointi]))
             {
                 WarningInFunction
-                    << "Point " << pointI << " of face " << facei
-                    << " global point index: " << curFace[pointI]
+                    << "Point " << pointi << " of face " << facei
+                    << " global point index: " << curFace[pointi]
                     << " not supported in point map.  This is not allowed."
                     << endl;
 
@@ -254,9 +254,9 @@ void Foam::enrichedPatch::writeOBJ(const fileName& fName) const
 
     const pointField& lp = localPoints();
 
-    forAll(lp, pointI)
+    forAll(lp, pointi)
     {
-        meshTools::writeOBJ(str, lp[pointI]);
+        meshTools::writeOBJ(str, lp[pointi]);
     }
 
     const faceList& faces = localFaces();

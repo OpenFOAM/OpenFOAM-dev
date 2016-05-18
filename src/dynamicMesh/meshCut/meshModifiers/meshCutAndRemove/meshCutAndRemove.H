@@ -87,14 +87,14 @@ class meshCutAndRemove
         //- Returns -1 or the cell in cellLabels that is cut.
         label findCutCell(const cellCuts&, const labelList&) const;
 
-        //- Returns first pointI in pointLabels that uses an internal
+        //- Returns first pointi in pointLabels that uses an internal
         //  face. Used to find point to inflate cell/face from (has to be
         //  connected to internal face)
         label findInternalFacePoint(const labelList& pointLabels) const;
 
         //- Find point on face that is part of original mesh and that is
         //  point connected to the patch
-        label findPatchFacePoint(const face& f, const label patchI) const;
+        label findPatchFacePoint(const face& f, const label patchi) const;
 
         //- Get new owner and neighbour of face. Checks anchor points to see if
         // need to get original or added cell.
@@ -121,7 +121,7 @@ class meshCutAndRemove
         (
             polyTopoChange& meshMod,
             const label facei,
-            const label masterPointI,
+            const label masterPointi,
             const face& newFace,
             const label owner,
             const label neighbour,

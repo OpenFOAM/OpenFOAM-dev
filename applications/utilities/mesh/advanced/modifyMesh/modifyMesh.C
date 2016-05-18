@@ -79,9 +79,9 @@ label findPoint(const primitivePatch& pp, const point& nearPoint)
 
     forAll(meshPoints, i)
     {
-        label pointI = meshPoints[i];
+        label pointi = meshPoints[i];
 
-        scalar distSqr = magSqr(nearPoint - points[pointI]);
+        scalar distSqr = magSqr(nearPoint - points[pointi]);
 
         if (distSqr < minDistSqr)
         {
@@ -89,12 +89,12 @@ label findPoint(const primitivePatch& pp, const point& nearPoint)
             almostMinI = minI;
 
             minDistSqr = distSqr;
-            minI = pointI;
+            minI = pointi;
         }
         else if (distSqr < almostMinDistSqr)
         {
             almostMinDistSqr = distSqr;
-            almostMinI = pointI;
+            almostMinI = pointi;
         }
     }
 
@@ -292,14 +292,14 @@ label findCell(const primitiveMesh& mesh, const point& nearPoint)
 
         forAll(cPoints, i)
         {
-            label pointI = cPoints[i];
+            label pointi = cPoints[i];
 
-            scalar distSqr = magSqr(nearPoint - mesh.points()[pointI]);
+            scalar distSqr = magSqr(nearPoint - mesh.points()[pointi]);
 
             if (distSqr < minDistSqr)
             {
                 minDistSqr = distSqr;
-                minI = pointI;
+                minI = pointi;
             }
         }
 
@@ -429,11 +429,11 @@ int main(int argc, char *argv[])
     {
         const Pair<point>& pts = pointsToMove[i];
 
-        label pointI = findPoint(allBoundary, pts.first());
+        label pointi = findPoint(allBoundary, pts.first());
 
-        if (pointI == -1 || !pointToPos.insert(pointI, pts.second()))
+        if (pointi == -1 || !pointToPos.insert(pointi, pts.second()))
         {
-            Info<< "Could not insert mesh point " << pointI
+            Info<< "Could not insert mesh point " << pointi
                 << " for input point " << pts.first() << nl
                 << "Perhaps the point is already marked for moving?" << endl;
             validInputs = false;

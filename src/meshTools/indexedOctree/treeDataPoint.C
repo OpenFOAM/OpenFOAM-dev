@@ -104,8 +104,8 @@ bool Foam::treeDataPoint::overlaps
     const treeBoundBox& cubeBb
 ) const
 {
-    label pointI = (useSubset_ ? pointLabels_[index] : index);
-    return cubeBb.contains(points_[pointI]);
+    label pointi = (useSubset_ ? pointLabels_[index] : index);
+    return cubeBb.contains(points_[pointi]);
 }
 
 
@@ -116,9 +116,9 @@ bool Foam::treeDataPoint::overlaps
     const scalar radiusSqr
 ) const
 {
-    label pointI = (useSubset_ ? pointLabels_[index] : index);
+    label pointi = (useSubset_ ? pointLabels_[index] : index);
 
-    if (magSqr(points_[pointI] - centre) <= radiusSqr)
+    if (magSqr(points_[pointi] - centre) <= radiusSqr)
     {
         return true;
     }
@@ -142,14 +142,14 @@ void Foam::treeDataPoint::findNearestOp::operator()
     forAll(indices, i)
     {
         const label index = indices[i];
-        label pointI =
+        label pointi =
         (
             shape.useSubset()
           ? shape.pointLabels()[index]
           : index
         );
 
-        const point& pt = shape.points()[pointI];
+        const point& pt = shape.points()[pointi];
 
         scalar distSqr = magSqr(pt - sample);
 
@@ -186,14 +186,14 @@ void Foam::treeDataPoint::findNearestOp::operator()
     forAll(indices, i)
     {
         const label index = indices[i];
-        label pointI =
+        label pointi =
         (
             shape.useSubset()
           ? shape.pointLabels()[index]
           : index
         );
 
-        const point& shapePt = shape.points()[pointI];
+        const point& shapePt = shape.points()[pointi];
 
         if (tightest.contains(shapePt))
         {

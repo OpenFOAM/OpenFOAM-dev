@@ -107,7 +107,7 @@ public:
             inline bool updatePoint
             (
                 const polyMesh& mesh,
-                const label pointI,
+                const label pointi,
                 const label edgeI,
                 const pointData& edgeInfo,
                 const scalar tol,
@@ -120,7 +120,7 @@ public:
             inline bool updatePoint
             (
                 const polyMesh& mesh,
-                const label pointI,
+                const label pointi,
                 const pointData& newPointInfo,
                 const scalar tol,
                 TrackingData& td
@@ -142,7 +142,7 @@ public:
             (
                 const polyMesh& mesh,
                 const label edgeI,
-                const label pointI,
+                const label pointi,
                 const pointData& pointInfo,
                 const scalar tol,
                 TrackingData& td

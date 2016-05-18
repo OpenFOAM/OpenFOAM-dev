@@ -169,22 +169,22 @@ class isoSurfaceCell
             labelList& snappedCc
         ) const;
 
-        //- Generate triangles for face connected to pointI
+        //- Generate triangles for face connected to pointi
         void genPointTris
         (
             const scalarField& cellValues,
             const scalarField& pointValues,
-            const label pointI,
+            const label pointi,
             const label facei,
             const label celli,
             DynamicList<point, 64>& localTriPoints
         ) const;
 
-        //- Generate triangles for tet connected to pointI
+        //- Generate triangles for tet connected to pointi
         void genPointTris
         (
             const scalarField& pointValues,
-            const label pointI,
+            const label pointi,
             const label facei,
             const label celli,
             DynamicList<point, 64>& localTriPoints

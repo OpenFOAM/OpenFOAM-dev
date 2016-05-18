@@ -59,9 +59,9 @@ void Foam::intersectedSurface::writeOBJ
     Ostream& os
 )
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
     }
@@ -83,9 +83,9 @@ void Foam::intersectedSurface::writeOBJ
     Ostream& os
 )
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
     }
@@ -119,15 +119,15 @@ void Foam::intersectedSurface::writeLocalOBJ
 
         forAll(e, i)
         {
-            label pointI = e[i];
+            label pointi = e[i];
 
-            if (pointMap[pointI] == -1)
+            if (pointMap[pointi] == -1)
             {
-                const point& pt = points[pointI];
+                const point& pt = points[pointi];
 
                 os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
 
-                pointMap[pointI] = maxVertI++;
+                pointMap[pointi] = maxVertI++;
             }
         }
     }
@@ -150,9 +150,9 @@ void Foam::intersectedSurface::writeOBJ
     Ostream& os
 )
 {
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
-        const point& pt = points[pointI];
+        const point& pt = points[pointi];
 
         os << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
     }
@@ -640,7 +640,7 @@ void Foam::intersectedSurface::findNearestVisited
     const Map<DynamicList<label>>& facePointEdges,
     const Map<label>& pointVisited,
     const point& pt,
-    const label excludePointI,
+    const label excludePointi,
 
     label& minVertI,
     scalar& minDist
@@ -651,21 +651,21 @@ void Foam::intersectedSurface::findNearestVisited
 
     forAllConstIter(Map<label>, pointVisited, iter)
     {
-        label pointI = iter.key();
+        label pointi = iter.key();
 
-        if (pointI != excludePointI)
+        if (pointi != excludePointi)
         {
             label nVisits = iter();
 
-            if (nVisits == 2*facePointEdges[pointI].size())
+            if (nVisits == 2*facePointEdges[pointi].size())
             {
                 // Fully visited (i.e. both sides of all edges)
-                scalar dist = mag(eSurf.points()[pointI] - pt);
+                scalar dist = mag(eSurf.points()[pointi] - pt);
 
                 if (dist < minDist)
                 {
                     minDist = dist;
-                    minVertI = pointI;
+                    minVertI = pointi;
                 }
             }
         }
@@ -721,9 +721,9 @@ Foam::faceList Foam::intersectedSurface::resplitFace
         OFstream str0("visitedNone.obj");
         OFstream str1("visitedOnce.obj");
         OFstream str2("visitedTwice.obj");
-        forAll(eSurf.points(), pointI)
+        forAll(eSurf.points(), pointi)
         {
-            const point& pt = eSurf.points()[pointI];
+            const point& pt = eSurf.points()[pointi];
 
             str0 << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
             str1 << "v " << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
@@ -767,12 +767,12 @@ Foam::faceList Foam::intersectedSurface::resplitFace
     {
         forAllConstIter(Map<label>, pointVisited, iter)
         {
-            label pointI = iter.key();
+            label pointi = iter.key();
 
             label nVisits = iter();
 
-            Pout<< "point:" << pointI << "  nVisited:" << nVisits
-                << "  pointEdges:" << facePointEdges[pointI].size() << endl;
+            Pout<< "point:" << pointi << "  nVisited:" << nVisits
+                << "  pointEdges:" << facePointEdges[pointi].size() << endl;
         }
     }
 
@@ -788,9 +788,9 @@ Foam::faceList Foam::intersectedSurface::resplitFace
 
         forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
-            label pointI = iter.key();
+            label pointi = iter.key();
 
-            label nVisits = pointVisited[pointI];
+            label nVisits = pointVisited[pointi];
 
             const DynamicList<label>& pEdges = iter();
 
@@ -807,7 +807,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
                     facei,
                     facePointEdges,
                     pointVisited,
-                    eSurf.points()[pointI],
+                    eSurf.points()[pointi],
                     -1,                         // Do not exclude vertex
                     nearVertI,
                     nearDist
@@ -818,7 +818,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
                 {
                     minDist = nearDist;
                     visitedVert0 = nearVertI;
-                    unvisitedVert0 = pointI;
+                    unvisitedVert0 = pointi;
                 }
             }
         }
@@ -833,11 +833,11 @@ Foam::faceList Foam::intersectedSurface::resplitFace
 
         forAllConstIter(Map<DynamicList<label>>, facePointEdges, iter)
         {
-            label pointI = iter.key();
+            label pointi = iter.key();
 
-            if (pointI != unvisitedVert0)
+            if (pointi != unvisitedVert0)
             {
-                label nVisits = pointVisited[pointI];
+                label nVisits = pointVisited[pointi];
 
                 const DynamicList<label>& pEdges = iter();
 
@@ -854,7 +854,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
                         facei,
                         facePointEdges,
                         pointVisited,
-                        eSurf.points()[pointI],
+                        eSurf.points()[pointi],
                         visitedVert0,           // vertex to exclude
                         nearVertI,
                         nearDist
@@ -865,7 +865,7 @@ Foam::faceList Foam::intersectedSurface::resplitFace
                     {
                         minDist = nearDist;
                         visitedVert1 = nearVertI;
-                        unvisitedVert1 = pointI;
+                        unvisitedVert1 = pointi;
                     }
                 }
             }

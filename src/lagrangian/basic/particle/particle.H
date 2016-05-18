@@ -249,7 +249,7 @@ protected:
         (
             const polyPatch&,
             TrackData& td,
-            const label patchI,
+            const label patchi,
             const scalar trackFraction,
             const tetIndices& tetIs
         );
@@ -481,7 +481,7 @@ public:
             //- Which face of this patch is this particle on
             inline label patchFace
             (
-                const label patchI,
+                const label patchi,
                 const label facei
             ) const;
 
@@ -550,12 +550,12 @@ public:
         //- Convert global addressing to the processor patch
         //  local equivalents
         template<class TrackData>
-        void prepareForParallelTransfer(const label patchI, TrackData& td);
+        void prepareForParallelTransfer(const label patchi, TrackData& td);
 
         //- Convert processor patch addressing to the global equivalents
         //  and set the celli to the face-neighbour
         template<class TrackData>
-        void correctAfterParallelTransfer(const label patchI, TrackData& td);
+        void correctAfterParallelTransfer(const label patchi, TrackData& td);
 
 
     // I-O

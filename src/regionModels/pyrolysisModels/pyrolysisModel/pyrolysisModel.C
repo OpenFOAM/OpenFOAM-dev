@@ -129,7 +129,7 @@ pyrolysisModel::~pyrolysisModel()
 
 scalar pyrolysisModel::addMassSources
 (
-    const label patchI,
+    const label patchi,
     const label facei
 )
 {

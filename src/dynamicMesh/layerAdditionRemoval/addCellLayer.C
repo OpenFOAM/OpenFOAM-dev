@@ -125,18 +125,18 @@ void Foam::layerAdditionRemoval::addCellLayer
     // Add the new points
     labelList addedPoints(mp.size());
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
         // Add the point nominal thickness away from the master zone point
         // and grab the label
-        addedPoints[pointI] =
+        addedPoints[pointi] =
             ref.setAction
             (
                 polyAddPoint
                 (
-                    points[mp[pointI]]                  // point
-                  + addDelta_*pointOffsets[pointI],
-                    mp[pointI],                         // master point
+                    points[mp[pointi]]                  // point
+                  + addDelta_*pointOffsets[pointi],
+                    mp[pointi],                         // master point
                     -1,                                 // zone for point
                     true                                // supports a cell
                 )
@@ -200,9 +200,9 @@ void Foam::layerAdditionRemoval::addCellLayer
 
         face newFace(oldFace.size());
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            newFace[pointI] = addedPoints[oldFace[pointI]];
+            newFace[pointi] = addedPoints[oldFace[pointi]];
         }
 
         bool flipFaceFlux = false;
@@ -509,12 +509,12 @@ void Foam::layerAdditionRemoval::addCellLayer
     // Create the master layer point map
     Map<label> masterLayerPointMap(2*mp.size());
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
         masterLayerPointMap.insert
         (
-            mp[pointI],
-            addedPoints[pointI]
+            mp[pointi],
+            addedPoints[pointi]
         );
     }
 
@@ -534,17 +534,17 @@ void Foam::layerAdditionRemoval::addCellLayer
 
         bool changed = false;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            if (masterLayerPointMap.found(oldFace[pointI]))
+            if (masterLayerPointMap.found(oldFace[pointi]))
             {
                 changed = true;
 
-                newFace[pointI] = masterLayerPointMap.find(oldFace[pointI])();
+                newFace[pointi] = masterLayerPointMap.find(oldFace[pointi])();
             }
             else
             {
-                newFace[pointI] = oldFace[pointI];
+                newFace[pointi] = oldFace[pointi];
             }
         }
 

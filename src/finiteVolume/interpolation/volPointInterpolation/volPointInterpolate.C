@@ -228,14 +228,14 @@ void Foam::volPointInterpolation::interpolateBoundaryField
 
     forAll(boundary.meshPoints(), i)
     {
-        label pointI = boundary.meshPoints()[i];
+        label pointi = boundary.meshPoints()[i];
 
-        if (isPatchPoint_[pointI])
+        if (isPatchPoint_[pointi])
         {
             const labelList& pFaces = boundary.pointFaces()[i];
             const scalarList& pWeights = boundaryPointWeights_[i];
 
-            Type& val = pfi[pointI];
+            Type& val = pfi[pointi];
 
             val = Zero;
             forAll(pFaces, j)

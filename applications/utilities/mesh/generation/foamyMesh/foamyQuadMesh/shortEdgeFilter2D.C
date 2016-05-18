@@ -433,14 +433,14 @@ Foam::shortEdgeFilter2D::filter()
     // Maintain addressing from new to old point field
     labelList newPtToOldPt(totalNewPoints, -1);
 
-    forAll(points, pointI)
+    forAll(points, pointi)
     {
         // If the point is NOT going to be removed.
-        if (pointsToRemove[pointI] == -1)
+        if (pointsToRemove[pointi] == -1)
         {
-            newPoints[pointI - numberRemoved] = points[pointI];
-            newPointNumbers[pointI] =  pointI - numberRemoved;
-            newPtToOldPt[pointI - numberRemoved] = pointI;
+            newPoints[pointi - numberRemoved] = points[pointi];
+            newPointNumbers[pointi] =  pointi - numberRemoved;
+            newPtToOldPt[pointi - numberRemoved] = pointi;
         }
         else
         {
@@ -466,31 +466,31 @@ Foam::shortEdgeFilter2D::filter()
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
             // If not removing the point, then add it to the new face.
-            if (pointsToRemove[pointI] == -1)
+            if (pointsToRemove[pointi] == -1)
             {
-                newFace[newFaceSize++] = newPointNumbers[pointI];
+                newFace[newFaceSize++] = newPointNumbers[pointi];
             }
             else
             {
-                label newPointI = pointsToRemove[pointI];
+                label newPointi = pointsToRemove[pointi];
                 // Replace deleted point with point that it is being
                 // collapsed to.
                 if
                 (
-                    f.nextLabel(fp) != newPointI
-                 && f.prevLabel(fp) != newPointI
+                    f.nextLabel(fp) != newPointi
+                 && f.prevLabel(fp) != newPointi
                 )
                 {
-                    label pChain = newPointI;
+                    label pChain = newPointi;
                     label totalChain = 0;
                     for (label nChain = 0; nChain <= totalChain; ++nChain)
                     {
                         if (newPointNumbers[pChain] != -1)
                         {
                             newFace[newFaceSize++] = newPointNumbers[pChain];
-                            newPointNumbers[pointI] = newPointNumbers[pChain];
+                            newPointNumbers[pointi] = newPointNumbers[pChain];
                             maxChain = max(totalChain, maxChain);
                         }
                         else
@@ -498,7 +498,7 @@ Foam::shortEdgeFilter2D::filter()
                             WarningInFunction
                                 << "Point " << pChain
                                 << " marked for deletion as well as point "
-                                << pointI << nl
+                                << pointi << nl
                                 << "    Incrementing maxChain by 1 from "
                                 << totalChain << " to " << totalChain + 1
                                 << endl;
@@ -509,9 +509,9 @@ Foam::shortEdgeFilter2D::filter()
                 }
                 else
                 {
-                    if (newPointNumbers[newPointI] != -1)
+                    if (newPointNumbers[newPointi] != -1)
                     {
-                        newPointNumbers[pointI] = newPointNumbers[newPointI];
+                        newPointNumbers[pointi] = newPointNumbers[newPointi];
                     }
                 }
             }
@@ -549,12 +549,12 @@ Foam::shortEdgeFilter2D::filter()
         patchSizes_
     );
 
-    forAll(newPointNumbers, pointI)
+    forAll(newPointNumbers, pointi)
     {
-        if (newPointNumbers[pointI] == -1)
+        if (newPointNumbers[pointi] == -1)
         {
             WarningInFunction
-                << pointI << " will be deleted and " << newPointNumbers[pointI]
+                << pointi << " will be deleted and " << newPointNumbers[pointi]
                 << ", so it will not be replaced. "
                 << "This will cause edges to be deleted." << endl;
         }

@@ -60,22 +60,22 @@ void Foam::enrichedPatch::calcMasterPointFaces() const
     {
         const face& curFace = ef[facei + slavePatch_.size()];
 //         Pout<< "Cur face in pfAddr: " << curFace << endl;
-        forAll(curFace, pointI)
+        forAll(curFace, pointi)
         {
             Map<DynamicList<label>>::iterator mpfIter =
-                mpf.find(curFace[pointI]);
+                mpf.find(curFace[pointi]);
 
             if (mpfIter == mpf.end())
             {
                 // Not found, add new dynamic list
                 mpf.insert
                 (
-                    curFace[pointI],
+                    curFace[pointi],
                     DynamicList<label>(primitiveMesh::facesPerPoint_)
                 );
 
                 // Iterator is invalidated - have to find again
-                mpf.find(curFace[pointI])().append(facei);
+                mpf.find(curFace[pointi])().append(facei);
             }
             else
             {
@@ -87,19 +87,19 @@ void Foam::enrichedPatch::calcMasterPointFaces() const
     // Add the projected points which hit the face
     const labelList& slaveMeshPoints = slavePatch_.meshPoints();
 
-    forAll(slavePointFaceHits_, pointI)
+    forAll(slavePointFaceHits_, pointi)
     {
         if
         (
-            slavePointPointHits_[pointI] < 0
-         && slavePointEdgeHits_[pointI] < 0
-         && slavePointFaceHits_[pointI].hit()
+            slavePointPointHits_[pointi] < 0
+         && slavePointEdgeHits_[pointi] < 0
+         && slavePointFaceHits_[pointi].hit()
         )
         {
             // Get the index of projected point corresponding to this slave
             // point
             const label mergedSmp =
-                pointMergeMap().find(slaveMeshPoints[pointI])();
+                pointMergeMap().find(slaveMeshPoints[pointi])();
 
             Map<DynamicList<label>>::iterator mpfIter =
                 mpf.find(mergedSmp);
@@ -116,12 +116,12 @@ void Foam::enrichedPatch::calcMasterPointFaces() const
                 // Iterator is invalidated - have to find again
                 mpf.find(mergedSmp)().append
                 (
-                    slavePointFaceHits_[pointI].hitObject()
+                    slavePointFaceHits_[pointi].hitObject()
                 );
             }
             else
             {
-                mpfIter().append(slavePointFaceHits_[pointI].hitObject());
+                mpfIter().append(slavePointFaceHits_[pointi].hitObject());
             }
         }
     }

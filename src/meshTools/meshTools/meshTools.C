@@ -71,19 +71,19 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
     const vectorField& pointNormals = pp.pointNormals();
     const labelListList& pointFaces = pp.pointFaces();
 
-    forAll(pointFaces, pointI)
+    forAll(pointFaces, pointi)
     {
-        const labelList& pFaces = pointFaces[pointI];
+        const labelList& pFaces = pointFaces[pointi];
 
-        if (visNormal(pointNormals[pointI], faceNormals, pFaces))
+        if (visNormal(pointNormals[pointi], faceNormals, pFaces))
         {
-            pn[pointI] = pointNormals[pointI];
+            pn[pointi] = pointNormals[pointi];
         }
         else
         {
             WarningInFunction
                 << "Average point normal not visible for point:"
-                << pp.meshPoints()[pointI] << endl;
+                << pp.meshPoints()[pointi] << endl;
 
             label visOctant =
                 mXmYmZMask
@@ -167,16 +167,16 @@ Foam::vectorField Foam::meshTools::calcBoxPointNormals(const primitivePatch& pp)
             if (visI != -1)
             {
                 // Take a vector in this octant.
-                pn[pointI] = octantNormal[visI];
+                pn[pointi] = octantNormal[visI];
             }
             else
             {
-                pn[pointI] = Zero;
+                pn[pointi] = Zero;
 
                 WarningInFunction
-                    << "No visible octant for point:" << pp.meshPoints()[pointI]
-                    << " cooord:" << pp.points()[pp.meshPoints()[pointI]] << nl
-                    << "Normal set to " << pn[pointI] << endl;
+                    << "No visible octant for point:" << pp.meshPoints()[pointi]
+                    << " cooord:" << pp.points()[pp.meshPoints()[pointi]] << nl
+                    << "Normal set to " << pn[pointi] << endl;
             }
         }
     }

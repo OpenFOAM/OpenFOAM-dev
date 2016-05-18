@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,32 +166,32 @@ void Foam::componentDisplacementMotionSolver::updateMesh(const mapPolyMesh& mpm)
 
     scalarField newPoints0(mpm.pointMap().size());
 
-    forAll(newPoints0, pointI)
+    forAll(newPoints0, pointi)
     {
-        label oldPointI = mpm.pointMap()[pointI];
+        label oldPointi = mpm.pointMap()[pointi];
 
-        if (oldPointI >= 0)
+        if (oldPointi >= 0)
         {
-            label masterPointI = mpm.reversePointMap()[oldPointI];
+            label masterPointi = mpm.reversePointMap()[oldPointi];
 
-            if (masterPointI == pointI)
+            if (masterPointi == pointi)
             {
-                newPoints0[pointI] = points0_[oldPointI];
+                newPoints0[pointi] = points0_[oldPointi];
             }
             else
             {
                 // New point. Assume motion is scaling.
-                newPoints0[pointI] =
-                    points0_[oldPointI]
-                  + scale*(points[pointI]-points[masterPointI]);
+                newPoints0[pointi] =
+                    points0_[oldPointi]
+                  + scale*(points[pointi]-points[masterPointi]);
             }
         }
         else
         {
             FatalErrorInFunction
                 << "Cannot work out coordinates of introduced vertices."
-                << " New vertex " << pointI << " at coordinate "
-                << points[pointI] << exit(FatalError);
+                << " New vertex " << pointi << " at coordinate "
+                << points[pointi] << exit(FatalError);
         }
     }
     points0_.transfer(newPoints0);

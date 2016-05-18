@@ -113,13 +113,13 @@ void Foam::fluentFvMesh::writeFluentMesh() const
 
     const pointField& p = points();
 
-    forAll(p, pointI)
+    forAll(p, pointi)
     {
         fluentMeshFile
             << "    "
-            << p[pointI].x() << " "
-            << p[pointI].y()
-            << " " << p[pointI].z() << std::endl;
+            << p[pointi].x() << " "
+            << p[pointi].y()
+            << " " << p[pointi].z() << std::endl;
     }
 
     fluentMeshFile

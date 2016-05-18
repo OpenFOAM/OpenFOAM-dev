@@ -276,23 +276,23 @@ Foam::labelList Foam::conformalVoronoiMesh::calcCellZones
                 selectInside = false;
             }
 
-            forAll(volType, pointI)
+            forAll(volType, pointi)
             {
-                if (cellToSurface[pointI] == -1)
+                if (cellToSurface[pointi] == -1)
                 {
                     if
                     (
                         (
-                            volType[pointI] == volumeType::INSIDE
+                            volType[pointi] == volumeType::INSIDE
                          && selectInside
                         )
                      || (
-                            volType[pointI] == volumeType::OUTSIDE
+                            volType[pointi] == volumeType::OUTSIDE
                          && !selectInside
                         )
                     )
                     {
-                        cellToSurface[pointI] = surfI;
+                        cellToSurface[pointi] = surfI;
                     }
                 }
             }

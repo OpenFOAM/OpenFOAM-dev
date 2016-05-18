@@ -116,13 +116,13 @@ void Foam::volPointInterpolation::calcBoundaryAddressing()
             orEqOp<bool>()
         );
 
-        forAll(isPatchPoint_, pointI)
+        forAll(isPatchPoint_, pointi)
         {
-            if (isPatchPoint_[pointI] != oldData[pointI])
+            if (isPatchPoint_[pointi] != oldData[pointi])
             {
                 Pout<< "volPointInterpolation::calcBoundaryAddressing():"
-                    << " added dangling mesh point:" << pointI
-                    << " at:" << mesh().points()[pointI]
+                    << " added dangling mesh point:" << pointi
+                    << " at:" << mesh().points()[pointi]
                     << endl;
             }
         }
@@ -210,16 +210,16 @@ void Foam::volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
 
     forAll(boundary.meshPoints(), i)
     {
-        label pointI = boundary.meshPoints()[i];
+        label pointi = boundary.meshPoints()[i];
 
-        if (isPatchPoint_[pointI])
+        if (isPatchPoint_[pointi])
         {
             const labelList& pFaces = boundary.pointFaces()[i];
 
             scalarList& pw = boundaryPointWeights_[i];
             pw.setSize(pFaces.size());
 
-            sumWeights[pointI] = 0.0;
+            sumWeights[pointi] = 0.0;
 
             forAll(pFaces, i)
             {
@@ -227,8 +227,8 @@ void Foam::volPointInterpolation::makeBoundaryWeights(scalarField& sumWeights)
                 {
                     label facei = mesh().nInternalFaces() + pFaces[i];
 
-                    pw[i] = 1.0/mag(points[pointI] - faceCentres[facei]);
-                    sumWeights[pointI] += pw[i];
+                    pw[i] = 1.0/mag(points[pointi] - faceCentres[facei]);
+                    sumWeights[pointi] += pw[i];
                 }
                 else
                 {
@@ -277,13 +277,13 @@ void Foam::volPointInterpolation::makeWeights()
 
     //forAll(boundary.meshPoints(), i)
     //{
-    //    label pointI = boundary.meshPoints()[i];
+    //    label pointi = boundary.meshPoints()[i];
     //
-    //    if (isPatchPoint_[pointI])
+    //    if (isPatchPoint_[pointi])
     //    {
     //        Pout<< "Calculated Weight at boundary point:" << i
-    //            << " at:" << mesh().points()[pointI]
-    //            << " sumWeight:" << sumWeights[pointI]
+    //            << " at:" << mesh().points()[pointi]
+    //            << " sumWeight:" << sumWeights[pointi]
     //            << " from:" << boundaryPointWeights_[i]
     //            << endl;
     //    }
@@ -309,13 +309,13 @@ void Foam::volPointInterpolation::makeWeights()
 
 
     // Normalise internal weights
-    forAll(pointWeights_, pointI)
+    forAll(pointWeights_, pointi)
     {
-        scalarList& pw = pointWeights_[pointI];
+        scalarList& pw = pointWeights_[pointi];
         // Note:pw only sized for !isPatchPoint
         forAll(pw, i)
         {
-            pw[i] /= sumWeights[pointI];
+            pw[i] /= sumWeights[pointi];
         }
     }
 
@@ -324,13 +324,13 @@ void Foam::volPointInterpolation::makeWeights()
 
     forAll(boundary.meshPoints(), i)
     {
-        label pointI = boundary.meshPoints()[i];
+        label pointi = boundary.meshPoints()[i];
 
         scalarList& pw = boundaryPointWeights_[i];
         // Note:pw only sized for isPatchPoint
         forAll(pw, i)
         {
-            pw[i] /= sumWeights[pointI];
+            pw[i] /= sumWeights[pointi];
         }
     }
 

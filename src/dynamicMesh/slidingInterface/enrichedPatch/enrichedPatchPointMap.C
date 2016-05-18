@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,14 +47,14 @@ void Foam::enrichedPatch::completePointMap() const
     const labelList& masterMeshPoints = masterPatch_.meshPoints();
     const pointField& masterLocalPoints = masterPatch_.localPoints();
 
-    forAll(masterMeshPoints, pointI)
+    forAll(masterMeshPoints, pointi)
     {
-        if (!pmm.found(masterMeshPoints[pointI]))
+        if (!pmm.found(masterMeshPoints[pointi]))
         {
             pointMap_.insert
             (
-                masterMeshPoints[pointI],
-                masterLocalPoints[pointI]
+                masterMeshPoints[pointi],
+                masterLocalPoints[pointi]
             );
         }
     }
@@ -63,14 +63,14 @@ void Foam::enrichedPatch::completePointMap() const
     const labelList& slaveMeshPoints = slavePatch_.meshPoints();
     const pointField& slaveLocalPoints = slavePatch_.localPoints();
 
-    forAll(slaveMeshPoints, pointI)
+    forAll(slaveMeshPoints, pointi)
     {
-        if (!pmm.found(slaveMeshPoints[pointI]))
+        if (!pmm.found(slaveMeshPoints[pointi]))
         {
             pointMap_.insert
             (
-                slaveMeshPoints[pointI],
-                slaveLocalPoints[pointI]
+                slaveMeshPoints[pointi],
+                slaveLocalPoints[pointi]
             );
         }
     }

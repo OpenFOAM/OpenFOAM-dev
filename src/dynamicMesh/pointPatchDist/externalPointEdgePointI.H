@@ -197,7 +197,7 @@ template<class TrackingData>
 inline void Foam::externalPointEdgePoint::leaveDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -221,7 +221,7 @@ template<class TrackingData>
 inline void Foam::externalPointEdgePoint::enterDomain
 (
     const polyPatch& patch,
-    const label patchPointI,
+    const label patchPointi,
     const point& coord,
     TrackingData& td
 )
@@ -235,14 +235,14 @@ template<class TrackingData>
 inline bool Foam::externalPointEdgePoint::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const label edgeI,
     const externalPointEdgePoint& edgeInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(td.points_[pointI], edgeInfo, tol, td);
+    return update(td.points_[pointi], edgeInfo, tol, td);
 }
 
 
@@ -250,13 +250,13 @@ template<class TrackingData>
 inline bool Foam::externalPointEdgePoint::updatePoint
 (
     const polyMesh& mesh,
-    const label pointI,
+    const label pointi,
     const externalPointEdgePoint& newPointInfo,
     const scalar tol,
     TrackingData& td
 )
 {
-    return update(td.points_[pointI], newPointInfo, tol, td);
+    return update(td.points_[pointi], newPointInfo, tol, td);
 }
 
 
@@ -277,7 +277,7 @@ inline bool Foam::externalPointEdgePoint::updateEdge
 (
     const polyMesh& mesh,
     const label edgeI,
-    const label pointI,
+    const label pointi,
     const externalPointEdgePoint& pointInfo,
     const scalar tol,
     TrackingData& td

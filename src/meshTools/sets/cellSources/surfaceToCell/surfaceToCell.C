@@ -66,13 +66,13 @@ Foam::topoSetSource::addToUsageTable Foam::surfaceToCell::usage_
 Foam::label Foam::surfaceToCell::getNearest
 (
     const triSurfaceSearch& querySurf,
-    const label pointI,
+    const label pointi,
     const point& pt,
     const vector& span,
     Map<label>& cache
 )
 {
-    Map<label>::const_iterator iter = cache.find(pointI);
+    Map<label>::const_iterator iter = cache.find(pointi);
 
     if (iter != cache.end())
     {
@@ -87,7 +87,7 @@ Foam::label Foam::surfaceToCell::getNearest
         label triI = inter.index();
 
         // Store triangle on point
-        cache.insert(pointI, triI);
+        cache.insert(pointi, triI);
 
         return triI;
     }
@@ -119,14 +119,14 @@ bool Foam::surfaceToCell::differingPointNormals
 
         forAll(f, fp)
         {
-            label pointI = f[fp];
+            label pointi = f[fp];
 
             label pointTriI =
                 getNearest
                 (
                     querySurf,
-                    pointI,
-                    points[pointI],
+                    pointi,
+                    points[pointi],
                     span,
                     pointToNearest
                 );

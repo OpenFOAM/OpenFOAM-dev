@@ -60,9 +60,9 @@ void triSurface::writeDXGeometry
     os  << "# The irregular positions" << endl
         << "object 1 class array type float rank 1 shape 3 items "
         << nPoints() << " data follows" << endl;
-    forAll(localPoints(), pointI)
+    forAll(localPoints(), pointi)
     {
-        const point& pt = localPoints()[pointI];
+        const point& pt = localPoints()[pointi];
         os  << pt.x() << ' ' << pt.y() << ' ' << pt.z() << endl;
     }
     os  << endl;
@@ -182,9 +182,9 @@ void triSurface::writeDX(const scalarField& field, Ostream& os) const
         // Positions dependent data
         os  << "object 3 class array type float rank 0 items " << field.size()
             << " data follows" << endl;
-        forAll(field, pointI)
+        forAll(field, pointi)
         {
-            os  << field[pointI] << endl;
+            os  << field[pointi] << endl;
         }
         os  << endl
             << "attribute \"dep\" string \"positions\"" << endl << endl;
@@ -227,11 +227,11 @@ void triSurface::writeDX(const vectorField& field, Ostream& os) const
         // Positions dependent data
         os  << "object 3 class array type float rank 1 shape 3 items "
             << field.size() << " data follows" << endl;
-        forAll(field, pointI)
+        forAll(field, pointi)
         {
-            os  << field[pointI].x() << ' '
-                << field[pointI].y() << ' '
-                << field[pointI].z() << endl;
+            os  << field[pointi].x() << ' '
+                << field[pointi].y() << ' '
+                << field[pointi].z() << endl;
         }
         os  << endl
             << "attribute \"dep\" string \"positions\"" << endl << endl;

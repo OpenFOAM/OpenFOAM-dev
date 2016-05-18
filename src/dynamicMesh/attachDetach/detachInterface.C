@@ -146,25 +146,25 @@ void Foam::attachDetach::detachInterface
 // Pout<< "addedPoints before point creation: " << addedPoints << endl;
 
     // Create new points for face zone
-    forAll(addedPoints, pointI)
+    forAll(addedPoints, pointi)
     {
-        if (addedPoints[pointI] < 0)
+        if (addedPoints[pointi] < 0)
         {
-            addedPoints[pointI] =
+            addedPoints[pointi] =
                 ref.setAction
                 (
                     polyAddPoint
                     (
-                        points[mp[pointI]],        // point
-                        mp[pointI],                // master point
+                        points[mp[pointi]],        // point
+                        mp[pointi],                // master point
                         -1,                        // zone ID
                         true                       // supports a cell
                     )
                 );
-            //Pout<< "Adding point " << addedPoints[pointI]
-            //    << " coord1:" << points[mp[pointI]]
-            //    << " coord2:" << masterFaceLayer.localPoints()[pointI]
-            //    << " for original point " << mp[pointI] << endl;
+            //Pout<< "Adding point " << addedPoints[pointi]
+            //    << " coord1:" << points[mp[pointi]]
+            //    << " coord2:" << masterFaceLayer.localPoints()[pointi]
+            //    << " for original point " << mp[pointi] << endl;
         }
     }
 
@@ -187,9 +187,9 @@ void Foam::attachDetach::detachInterface
 
         face newFace(oldFace.size());
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            newFace[pointI] = addedPoints[oldFace[pointI]];
+            newFace[pointi] = addedPoints[oldFace[pointi]];
         }
 
         if (mfFlip[facei])
@@ -378,12 +378,12 @@ void Foam::attachDetach::detachInterface
     // Create the master layer point map
     Map<label> masterLayerPointMap(2*mp.size());
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
         masterLayerPointMap.insert
         (
-            mp[pointI],
-            addedPoints[pointI]
+            mp[pointi],
+            addedPoints[pointi]
         );
     }
 
@@ -403,17 +403,17 @@ void Foam::attachDetach::detachInterface
 
         bool changed = false;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            if (masterLayerPointMap.found(oldFace[pointI]))
+            if (masterLayerPointMap.found(oldFace[pointi]))
             {
                 changed = true;
 
-                newFace[pointI] = masterLayerPointMap.find(oldFace[pointI])();
+                newFace[pointi] = masterLayerPointMap.find(oldFace[pointi])();
             }
             else
             {
-                newFace[pointI] = oldFace[pointI];
+                newFace[pointi] = oldFace[pointi];
             }
         }
 

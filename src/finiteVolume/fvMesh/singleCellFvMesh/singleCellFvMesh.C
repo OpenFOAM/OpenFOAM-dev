@@ -364,10 +364,10 @@ void Foam::singleCellFvMesh::agglomerateMesh
 
             forAll(oldFz, i)
             {
-                label newPointI  = reversePointMap_[oldFz[i]];
-                if (newPointI != -1)
+                label newPointi  = reversePointMap_[oldFz[i]];
+                if (newPointi != -1)
                 {
-                    newAddressing.append(newPointI);
+                    newAddressing.append(newPointi);
                 }
             }
 

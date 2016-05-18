@@ -173,8 +173,8 @@ private:
         //- Decides which points in an edge to collapse, based on their priority
         void checkBoundaryPointMergeEdges
         (
-            const label pointI,
-            const label otherPointI,
+            const label pointi,
+            const label otherPointi,
             const labelList& pointPriority,
             Map<point>& collapsePointToLocation
         ) const;

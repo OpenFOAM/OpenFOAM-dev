@@ -96,13 +96,13 @@ calcLocalPointOrder() const
                     const labelList& curPoints = lf[curFace];
 
                     // mark points
-                    forAll(curPoints, pointI)
+                    forAll(curPoints, pointi)
                     {
-                        if (!visitedPoint[curPoints[pointI]])
+                        if (!visitedPoint[curPoints[pointi]])
                         {
-                            visitedPoint[curPoints[pointI]] = true;
+                            visitedPoint[curPoints[pointi]] = true;
 
-                            pointOrder[nPoints] = curPoints[pointI];
+                            pointOrder[nPoints] = curPoints[pointi];
 
                             nPoints++;
                         }

@@ -154,18 +154,18 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     Map<label>& pointMergeMap = cutPatch.pointMergeMap();
 
     // Create mapping for every merged point of the slave patch
-    forAll(slavePointPointHits, pointI)
+    forAll(slavePointPointHits, pointi)
     {
-        if (slavePointPointHits[pointI] >= 0)
+        if (slavePointPointHits[pointi] >= 0)
         {
-            // Pout<< "Inserting point merge pair: " << slaveMeshPoints[pointI]
-            //     << " : " << masterMeshPoints[slavePointPointHits[pointI]]
+            // Pout<< "Inserting point merge pair: " << slaveMeshPoints[pointi]
+            //     << " : " << masterMeshPoints[slavePointPointHits[pointi]]
             //     << endl;
 
             pointMergeMap.insert
             (
-                slaveMeshPoints[pointI],
-                masterMeshPoints[slavePointPointHits[pointI]]
+                slaveMeshPoints[pointi],
+                masterMeshPoints[slavePointPointHits[pointi]]
             );
         }
     }
@@ -175,15 +175,15 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     List<labelHashSet> usedMasterEdges(slaveEdges.size());
 
     // Collect of slave point hits
-    forAll(slavePointPointHits, pointI)
+    forAll(slavePointPointHits, pointi)
     {
         // For point hits, add all point-edges from master side to all point
-        const labelList& curSlaveEdges = slavePointEdges[pointI];
+        const labelList& curSlaveEdges = slavePointEdges[pointi];
 
-        if (slavePointPointHits[pointI] > -1)
+        if (slavePointPointHits[pointi] > -1)
         {
             const labelList& curMasterEdges =
-                masterPointEdges[slavePointPointHits[pointI]];
+                masterPointEdges[slavePointPointHits[pointi]];
 
             // Mark all current master edges as used for all the current slave
             // edges
@@ -197,14 +197,14 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                 }
             }
         }
-        else if (slavePointEdgeHits[pointI] > -1)
+        else if (slavePointEdgeHits[pointi] > -1)
         {
             // For edge hits, add the master edge
             forAll(curSlaveEdges, slaveEdgeI)
             {
                 usedMasterEdges[curSlaveEdges[slaveEdgeI]].insert
                 (
-                    slavePointEdgeHits[pointI]
+                    slavePointEdgeHits[pointi]
                 );
             }
         }
@@ -213,14 +213,14 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     // Collect off master point hits
     // For every master point that has hit an edge, add all edges coming from
     // that point to the slave edge that has been hit
-    forAll(masterPointEdgeHits, masterPointI)
+    forAll(masterPointEdgeHits, masterPointi)
     {
-        if (masterPointEdgeHits[masterPointI] > -1)
+        if (masterPointEdgeHits[masterPointi] > -1)
         {
-            const labelList& curMasterEdges = masterPointEdges[masterPointI];
+            const labelList& curMasterEdges = masterPointEdges[masterPointi];
 
             labelHashSet& sm =
-                usedMasterEdges[masterPointEdgeHits[masterPointI]];
+                usedMasterEdges[masterPointEdgeHits[masterPointi]];
 
             forAll(curMasterEdges, masterEdgeI)
             {
@@ -243,17 +243,17 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     List<DynamicList<label>> pointsIntoSlaveEdges(slaveEdges.size());
 
     // Add all points from the slave patch that have hit the edge
-    forAll(slavePointEdgeHits, pointI)
+    forAll(slavePointEdgeHits, pointi)
     {
-        if (slavePointEdgeHits[pointI] > -1)
+        if (slavePointEdgeHits[pointi] > -1)
         {
             // Create a new point on the master edge
 
             point edgeCutPoint =
-                masterEdges[slavePointEdgeHits[pointI]].line
+                masterEdges[slavePointEdgeHits[pointi]].line
                 (
                     masterLocalPoints
-                ).nearestDist(projectedSlavePoints[pointI]).hitPoint();
+                ).nearestDist(projectedSlavePoints[pointi]).hitPoint();
 
             label newPoint =
                 ref.setAction
@@ -261,23 +261,23 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                     polyAddPoint
                     (
                         edgeCutPoint,             // point
-                        slaveMeshPoints[pointI],  // master point
+                        slaveMeshPoints[pointi],  // master point
                         cutPointZoneID_.index(),  // zone for point
                         true                      // supports a cell
                     )
                 );
 
             // Pout<< "Inserting merge pair off edge: "
-            //     << slaveMeshPoints[pointI] << " " << newPoint
+            //     << slaveMeshPoints[pointi] << " " << newPoint
             //     << " cut point: " << edgeCutPoint
-            //     << " orig: " << slaveLocalPoints[pointI]
-            //     << " proj: " << projectedSlavePoints[pointI]
+            //     << " orig: " << slaveLocalPoints[pointi]
+            //     << " proj: " << projectedSlavePoints[pointi]
             //     << endl;
 
             // Add the new edge point into the merge map
-            pointMergeMap.insert(slaveMeshPoints[pointI], newPoint);
+            pointMergeMap.insert(slaveMeshPoints[pointi], newPoint);
 
-            pointsIntoMasterEdges[slavePointEdgeHits[pointI]].append
+            pointsIntoMasterEdges[slavePointEdgeHits[pointi]].append
             (
                 newPoint
             );
@@ -303,13 +303,13 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     }
 
     // Add all points from the slave patch that have hit a face
-    forAll(slavePointFaceHits, pointI)
+    forAll(slavePointFaceHits, pointi)
     {
         if
         (
-            slavePointPointHits[pointI] < 0
-         && slavePointEdgeHits[pointI] < 0
-         && slavePointFaceHits[pointI].hit()
+            slavePointPointHits[pointi] < 0
+         && slavePointEdgeHits[pointi] < 0
+         && slavePointFaceHits[pointi].hit()
         )
         {
             label newPoint =
@@ -317,43 +317,43 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                 (
                     polyAddPoint
                     (
-                        projectedSlavePoints[pointI],   // point
-                        slaveMeshPoints[pointI],        // master point
+                        projectedSlavePoints[pointi],   // point
+                        slaveMeshPoints[pointi],        // master point
                         cutPointZoneID_.index(),        // zone for point
                         true                            // supports a cell
                     )
                 );
 
             // Pout<< "Inserting merge pair off face: "
-            //     << slaveMeshPoints[pointI]
+            //     << slaveMeshPoints[pointi]
             //     << " " << newPoint
             //     << endl;
 
             // Add the new edge point into the merge map
-            pointMergeMap.insert(slaveMeshPoints[pointI], newPoint);
+            pointMergeMap.insert(slaveMeshPoints[pointi], newPoint);
 
             // Add the point into the enriched patch map
             pointMap.insert
             (
                 newPoint,
-                projectedSlavePoints[pointI]
+                projectedSlavePoints[pointi]
             );
 
             if (debug)
             {
                 Pout<< "f: " << newPoint << " = "
-                    << projectedSlavePoints[pointI] << endl;
+                    << projectedSlavePoints[pointi] << endl;
             }
         }
     }
 
-    forAll(masterPointEdgeHits, pointI)
+    forAll(masterPointEdgeHits, pointi)
     {
-        if (masterPointEdgeHits[pointI] > -1)
+        if (masterPointEdgeHits[pointi] > -1)
         {
-            pointsIntoSlaveEdges[masterPointEdgeHits[pointI]].append
+            pointsIntoSlaveEdges[masterPointEdgeHits[pointi]].append
             (
-                masterMeshPoints[pointI]
+                masterMeshPoints[pointi]
             );
         }
     }
@@ -1282,16 +1282,16 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         face oldFace(oldRichFace.size());
         label nOldFace = 0;
 
-        forAll(oldRichFace, pointI)
+        forAll(oldRichFace, pointi)
         {
-            if (ref.pointRemoved(oldRichFace[pointI]))
+            if (ref.pointRemoved(oldRichFace[pointi]))
             {
                 changed = true;
             }
             else
             {
                 // Point off patch
-                oldFace[nOldFace] = oldRichFace[pointI];
+                oldFace[nOldFace] = oldRichFace[pointi];
                 nOldFace++;
             }
         }
@@ -1304,25 +1304,25 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
         DynamicList<label> newFaceLabels(2*oldFace.size());
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
-            if (masterMeshPointMap.found(oldFace[pointI]))
+            if (masterMeshPointMap.found(oldFace[pointi]))
             {
                 // Point is in master patch. Add it
 
                 // If the point is a direct hit, grab its label; otherwise
                 // keep the original
-                if (pointMergeMap.found(oldFace[pointI]))
+                if (pointMergeMap.found(oldFace[pointi]))
                 {
                     changed = true;
                     newFaceLabels.append
                     (
-                        pointMergeMap.find(oldFace[pointI])()
+                        pointMergeMap.find(oldFace[pointi])()
                     );
                 }
                 else
                 {
-                    newFaceLabels.append(oldFace[pointI]);
+                    newFaceLabels.append(oldFace[pointi]);
                 }
 
                 // Find if there are additional points inserted onto the edge
@@ -1332,18 +1332,18 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
                 //    out of the current point.
                 // 2) If the next point in the face to pick the right edge
                 const label localFirstLabel =
-                    masterMeshPointMap.find(oldFace[pointI])();
+                    masterMeshPointMap.find(oldFace[pointi])();
 
                 const labelList& curEdges = masterPointEdges[localFirstLabel];
 
-                const label  nextLabel = oldFace.nextLabel(pointI);
+                const label  nextLabel = oldFace.nextLabel(pointi);
 
                 Map<label>::const_iterator mmpmIter =
                     masterMeshPointMap.find(nextLabel);
 
                 if (mmpmIter != masterMeshPointMap.end())
                 {
-                    // Pout<< "found label pair " << oldFace[pointI]
+                    // Pout<< "found label pair " << oldFace[pointi]
                     //     << " and " << nextLabel;
                     // Find the points on the edge between them
                     const label localNextLabel = mmpmIter();
@@ -1450,7 +1450,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             }
             else
             {
-                newFaceLabels.append(oldFace[pointI]);
+                newFaceLabels.append(oldFace[pointi]);
             }
         }
 
@@ -1553,22 +1553,22 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         face oldFace(oldRichFace.size());
         label nOldFace = 0;
 
-        forAll(oldRichFace, pointI)
+        forAll(oldRichFace, pointi)
         {
             if
             (
-                rpm.found(oldRichFace[pointI])
-             || slaveMeshPointMap.found(oldRichFace[pointI])
+                rpm.found(oldRichFace[pointi])
+             || slaveMeshPointMap.found(oldRichFace[pointi])
             )
             {
                 // Point definitely live. Add it
-                oldFace[nOldFace] = oldRichFace[pointI];
+                oldFace[nOldFace] = oldRichFace[pointi];
                 nOldFace++;
             }
             else if
             (
-                ref.pointRemoved(oldRichFace[pointI])
-             || masterMeshPointMap.found(oldRichFace[pointI])
+                ref.pointRemoved(oldRichFace[pointi])
+             || masterMeshPointMap.found(oldRichFace[pointi])
             )
             {
                 // Point removed and not on slave patch
@@ -1579,7 +1579,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             else
             {
                 // Point off patch
-                oldFace[nOldFace] = oldRichFace[pointI];
+                oldFace[nOldFace] = oldRichFace[pointi];
                 nOldFace++;
             }
         }
@@ -1592,12 +1592,12 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
         //     << " old face: " << oldFace
         //     << endl;
 
-        forAll(oldFace, pointI)
+        forAll(oldFace, pointi)
         {
             // Try to find the point in retired points
-            label curP = oldFace[pointI];
+            label curP = oldFace[pointi];
 
-            Map<label>::const_iterator rpmIter = rpm.find(oldFace[pointI]);
+            Map<label>::const_iterator rpmIter = rpm.find(oldFace[pointi]);
 
             if (rpmIter != rpm.end())
             {
@@ -1636,7 +1636,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
                 const labelList& curEdges = slavePointEdges[localFirstLabel];
 
-                label nextLabel = oldFace.nextLabel(pointI);
+                label nextLabel = oldFace.nextLabel(pointi);
 
                 Map<label>::const_iterator rpmNextIter =
                     rpm.find(nextLabel);
@@ -1757,7 +1757,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             }
             else
             {
-                newFaceLabels.append(oldFace[pointI]);
+                newFaceLabels.append(oldFace[pointi]);
             }
         }
 
@@ -1852,9 +1852,9 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
 
     label nRetiredPoints = 0;
 
-    forAll(slaveMeshPoints, pointI)
+    forAll(slaveMeshPoints, pointi)
     {
-        if (pointMergeMap.found(slaveMeshPoints[pointI]))
+        if (pointMergeMap.found(slaveMeshPoints[pointi]))
         {
             // Retire the point - only used for supporting the detached
             // slave patch
@@ -1864,29 +1864,29 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             // (
             //    polyModifyPoint
             //    (
-            //        slaveMeshPoints[pointI],             // point ID
-            //        points[slaveMeshPoints[pointI]],     // point
+            //        slaveMeshPoints[pointi],             // point ID
+            //        points[slaveMeshPoints[pointi]],     // point
             //        false,                               // remove from zone
-            //        mesh.pointZones().whichZone(slaveMeshPoints[pointI]),
+            //        mesh.pointZones().whichZone(slaveMeshPoints[pointi]),
             //                                             // zone
             //        false                                // in a cell
             //    )
             // );
-            //Pout<< "MJ retire slave point " << slaveMeshPoints[pointI]
-            //    << " coord " << points[slaveMeshPoints[pointI]]
+            //Pout<< "MJ retire slave point " << slaveMeshPoints[pointi]
+            //    << " coord " << points[slaveMeshPoints[pointi]]
             //    << endl;
             ref.setAction
             (
                 polyRemovePoint
                 (
-                    slaveMeshPoints[pointI]
+                    slaveMeshPoints[pointi]
                 )
             );
 
             addToRpm.insert
             (
-                pointMergeMap.find(slaveMeshPoints[pointI])(),
-                slaveMeshPoints[pointI]
+                pointMergeMap.find(slaveMeshPoints[pointi])(),
+                slaveMeshPoints[pointi]
             );
         }
         else
@@ -1895,10 +1895,10 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
             (
                 polyModifyPoint
                 (
-                    slaveMeshPoints[pointI],             // point ID
-                    points[slaveMeshPoints[pointI]],     // point
+                    slaveMeshPoints[pointi],             // point ID
+                    points[slaveMeshPoints[pointi]],     // point
                     false,                               // remove from zone
-                    mesh.pointZones().whichZone(slaveMeshPoints[pointI]),// zone
+                    mesh.pointZones().whichZone(slaveMeshPoints[pointi]),// zone
                     true                                 // in a cell
                 )
             );

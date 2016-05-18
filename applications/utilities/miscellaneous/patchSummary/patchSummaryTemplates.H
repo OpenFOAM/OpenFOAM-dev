@@ -46,14 +46,14 @@ namespace Foam
     void outputFieldList
     (
         const PtrList<GeoField>& fieldList,
-        const label patchI
+        const label patchi
     );
 
     template<class GeoField>
     void collectFieldList
     (
         const PtrList<GeoField>& fieldList,
-        const label patchI,
+        const label patchi,
         HashTable<word>& fieldToType
     );
 } // End namespace Foam

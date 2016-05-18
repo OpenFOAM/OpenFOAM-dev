@@ -82,11 +82,11 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
 
         // Any points created out-of-nothing get set to the current coordinate
         // for lack of anything better.
-        forAll(mpm.pointMap(), newPointI)
+        forAll(mpm.pointMap(), newPointi)
         {
-            if (mpm.pointMap()[newPointI] == -1)
+            if (mpm.pointMap()[newPointi] == -1)
             {
-                newMotionPoints[newPointI] = points_[newPointI];
+                newMotionPoints[newPointi] = points_[newPointi];
             }
         }
     }

@@ -124,7 +124,7 @@ public:
         (
             const bool nearCellValue,
             const GeometricField<Type, fvPatchField, volMesh>& vfld,
-            const label patchI
+            const label patchi
         ) const;
 
         //- Get mixed field: fvsPatchField for boundary faces and

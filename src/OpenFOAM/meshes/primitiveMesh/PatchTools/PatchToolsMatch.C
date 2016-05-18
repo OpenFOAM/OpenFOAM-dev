@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,18 +52,18 @@ void Foam::PatchTools::matchPoints
 
     label nMatches = 0;
 
-    forAll(p1.meshPoints(), pointI)
+    forAll(p1.meshPoints(), pointi)
     {
-        label meshPointI = p1.meshPoints()[pointI];
+        label meshPointi = p1.meshPoints()[pointi];
 
         Map<label>::const_iterator iter = p2.meshPointMap().find
         (
-            meshPointI
+            meshPointi
         );
 
         if (iter != p2.meshPointMap().end())
         {
-            p1PointLabels[nMatches] = pointI;
+            p1PointLabels[nMatches] = pointi;
             p2PointLabels[nMatches] = iter();
             nMatches++;
         }

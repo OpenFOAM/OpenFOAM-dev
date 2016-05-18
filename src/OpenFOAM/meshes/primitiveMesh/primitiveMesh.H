@@ -830,20 +830,20 @@ public:
             //- pointCells using pointFaces
             const labelList& pointCells
             (
-                const label pointI,
+                const label pointi,
                 DynamicList<label>&
             ) const;
 
-            const labelList& pointCells(const label pointI) const;
+            const labelList& pointCells(const label pointi) const;
 
             //- pointPoints using edges, pointEdges
             const labelList& pointPoints
             (
-                const label pointI,
+                const label pointi,
                 DynamicList<label>&
             ) const;
 
-            const labelList& pointPoints(const label pointI) const;
+            const labelList& pointPoints(const label pointi) const;
 
             //- faceEdges using pointFaces, edges, pointEdges
             const labelList& faceEdges

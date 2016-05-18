@@ -307,11 +307,11 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //            )()
 //        );
 //
-//        label pointI = findIndex(pointDualAddressing, -1);
-//        if (pointI != -1)
+//        label pointi = findIndex(pointDualAddressing, -1);
+//        if (pointi != -1)
 //        {
 //            WarningInFunction
-//                << "Delaunay vertex " << pointI
+//                << "Delaunay vertex " << pointi
 //                << " does not have a corresponding dual cell." << endl;
 //        }
 //
@@ -350,21 +350,21 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //                points
 //            );
 //
-//            forAll(pointDualAddressing, pointI)
+//            forAll(pointDualAddressing, pointi)
 //            {
-//                label index = pointDualAddressing[pointI];
+//                label index = pointDualAddressing[pointi];
 //
 //                if (index > 0)
 //                {
 //                    label celli = index-1;
-//                    dualPoints[pointI] = mesh.cellCentres()[celli];
+//                    dualPoints[pointi] = mesh.cellCentres()[celli];
 //                }
 //                else if (index < 0)
 //                {
 //                    label facei = -index-1;
 //                    if (facei >= mesh.nInternalFaces())
 //                    {
-//                        dualPoints[pointI] = mesh.faceCentres()[facei];
+//                        dualPoints[pointi] = mesh.faceCentres()[facei];
 //                    }
 //                }
 //            }
@@ -1388,8 +1388,8 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::findRemainingProtrusionSet
 
     forAllConstIter(labelHashSet, protrudingBoundaryPoints, iter)
     {
-        const label pointI = iter.key();
-        const labelList& pCells = mesh.pointCells()[pointI];
+        const label pointi = iter.key();
+        const labelList& pCells = mesh.pointCells()[pointi];
 
         forAll(pCells, pCI)
         {

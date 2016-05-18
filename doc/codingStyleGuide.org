@@ -435,7 +435,7 @@
 
         Within the implementation, a loop over all patches is done:
         \code
-            forAll(patches, patchI)
+            forAll(patches, patchi)
             {
                 ...  // some operation
             }

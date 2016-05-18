@@ -338,16 +338,16 @@ bool Foam::boundaryCutter::splitFace
 
         forAll(extendedFace, i)
         {
-            label pointI = extendedFace[fp];
+            label pointi = extendedFace[fp];
 
-            newFace.append(pointI);
+            newFace.append(pointi);
 
             if
             (
                 newFace.size() > 2
              && (
-                    pointI >= mesh_.nPoints()
-                 || pointToPos.found(pointI)
+                    pointi >= mesh_.nPoints()
+                 || pointToPos.found(pointi)
                 )
             )
             {
@@ -460,7 +460,7 @@ void Foam::boundaryCutter::setRefinement
             // point on feature to move to
             const point& featurePoint = cuts[cutI];
 
-            label addedPointI =
+            label addedPointi =
                 meshMod.setAction
                 (
                     polyAddPoint
@@ -480,16 +480,16 @@ void Foam::boundaryCutter::setRefinement
 
                 label sz = addedPoints.size();
                 addedPoints.setSize(sz+1);
-                addedPoints[sz] = addedPointI;
+                addedPoints[sz] = addedPointi;
             }
             else
             {
-                edgeToAddedPoints.insert(edgeI, labelList(1, addedPointI));
+                edgeToAddedPoints.insert(edgeI, labelList(1, addedPointi));
             }
 
             if (debug)
             {
-                Pout<< "Added point " << addedPointI << " for edge " << edgeI
+                Pout<< "Added point " << addedPointi << " for edge " << edgeI
                     << " with cuts:" << edgeToAddedPoints[edgeI] << endl;
             }
         }
@@ -523,7 +523,7 @@ void Foam::boundaryCutter::setRefinement
                 << abort(FatalError);
         }
 
-        label addedPointI =
+        label addedPointi =
             meshMod.setAction
             (
                 polyAddPoint
@@ -534,11 +534,11 @@ void Foam::boundaryCutter::setRefinement
                     true    // supports a cell
                 )
             );
-        faceAddedPoint_.insert(facei, addedPointI);
+        faceAddedPoint_.insert(facei, addedPointi);
 
         if (debug)
         {
-            Pout<< "Added point " << addedPointI << " for feature point "
+            Pout<< "Added point " << addedPointi << " for feature point "
                 << iter() << " on face " << facei << " with centre "
                 << mesh_.faceCentres()[facei] << endl;
         }
@@ -563,7 +563,7 @@ void Foam::boundaryCutter::setRefinement
         // Get face with new points on cut edges.
         face newFace(addEdgeCutsToFace(facei, edgeToAddedPoints));
 
-        label addedPointI = iter();
+        label addedPointi = iter();
 
         // Information about old face
         label patchID, zoneID, zoneFlip;
@@ -581,7 +581,7 @@ void Foam::boundaryCutter::setRefinement
 
             tri[0] = newFace[fp];
             tri[1] = nextV;
-            tri[2] = addedPointI;
+            tri[2] = addedPointi;
 
             if (fp == 0)
             {
@@ -847,13 +847,13 @@ void Foam::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
             label newFacei = morphMap.reverseFaceMap()[oldFacei];
 
-            label oldPointI = iter();
+            label oldPointi = iter();
 
-            label newPointI = morphMap.reversePointMap()[oldPointI];
+            label newPointi = morphMap.reversePointMap()[oldPointi];
 
-            if (newFacei >= 0 && newPointI >= 0)
+            if (newFacei >= 0 && newPointi >= 0)
             {
-                newAddedPoints.insert(newFacei, newPointI);
+                newAddedPoints.insert(newFacei, newPointi);
             }
         }
 
@@ -895,12 +895,12 @@ void Foam::boundaryCutter::updateMesh(const mapPolyMesh& morphMap)
 
                 forAll(addedPoints, i)
                 {
-                    label newAddedPointI =
+                    label newAddedPointi =
                         morphMap.reversePointMap()[addedPoints[i]];
 
-                    if (newAddedPointI >= 0)
+                    if (newAddedPointi >= 0)
                     {
-                        newAddedPoints[newI++] = newAddedPointI;
+                        newAddedPoints[newI++] = newAddedPointi;
                     }
                 }
                 if (newI > 0)

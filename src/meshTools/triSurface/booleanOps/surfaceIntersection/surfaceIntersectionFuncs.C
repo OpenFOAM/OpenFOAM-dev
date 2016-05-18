@@ -64,10 +64,10 @@ void Foam::surfaceIntersection::writeOBJ
 Foam::scalar Foam::surfaceIntersection::minEdgeLen
 (
     const triSurface& surf,
-    const label pointI
+    const label pointi
 )
 {
-    const labelList& pEdges = surf.pointEdges()[pointI];
+    const labelList& pEdges = surf.pointEdges()[pointi];
 
     scalar minLen = GREAT;
 
@@ -265,13 +265,13 @@ void Foam::surfaceIntersection::writeIntersectedEdges
     // Dump all points (surface followed by cutPoints)
     const pointField& pts = surf.localPoints();
 
-    forAll(pts, pointI)
+    forAll(pts, pointi)
     {
-        writeOBJ(pts[pointI], os);
+        writeOBJ(pts[pointi], os);
     }
-    forAll(cutPoints(), cutPointI)
+    forAll(cutPoints(), cutPointi)
     {
-        writeOBJ(cutPoints()[cutPointI], os);
+        writeOBJ(cutPoints()[cutPointi], os);
     }
 
     forAll(edgeCutVerts, edgeI)

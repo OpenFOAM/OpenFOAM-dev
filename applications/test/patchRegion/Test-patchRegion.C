@@ -125,22 +125,22 @@ int main(int argc, char *argv[])
             {
                 label faceRegion = allFaceInfo[facei].regions()[fp];
 
-                label pointI = f[fp];
+                label pointi = f[fp];
 
-                if (currentRegion[pointI] == -1)
+                if (currentRegion[pointi] == -1)
                 {
-                    currentRegion[pointI] = faceRegion;
+                    currentRegion[pointi] = faceRegion;
                 }
-                else if (currentRegion[pointI] != faceRegion)
+                else if (currentRegion[pointi] != faceRegion)
                 {
-                    if (duplicateRegion[pointI] == -1)
+                    if (duplicateRegion[pointi] == -1)
                     {
                         Pout<< "Multi region point:"
-                            << patch.localPoints()[pointI]
-                            << " with region:" << currentRegion[pointI]
+                            << patch.localPoints()[pointi]
+                            << " with region:" << currentRegion[pointi]
                             << " and region:" << faceRegion
                             << endl;
-                        duplicateRegion[pointI] = currentRegion[pointI];
+                        duplicateRegion[pointi] = currentRegion[pointi];
                     }
                 }
             }

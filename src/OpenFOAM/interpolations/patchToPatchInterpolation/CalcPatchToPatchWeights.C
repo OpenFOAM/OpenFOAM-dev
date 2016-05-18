@@ -73,27 +73,27 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
 
     bool doWeights = false;
 
-    forAll(pointAddressing, pointI)
+    forAll(pointAddressing, pointi)
     {
         doWeights = false;
 
         const typename FromPatch::FaceType& hitFace =
-            fromPatchFaces[proj[pointI].hitObject()];
+            fromPatchFaces[proj[pointi].hitObject()];
 
         point hitPoint = Zero;
 
-        if (proj[pointI].hit())
+        if (proj[pointi].hit())
         {
             // A hit exists
             doWeights = true;
 
-            pointAddressing[pointI] = proj[pointI].hitObject();
+            pointAddressing[pointi] = proj[pointi].hitObject();
 
             pointHit curHit =
                 hitFace.ray
                 (
-                    toPatchPoints[pointI],
-                    projectionDirection[pointI],
+                    toPatchPoints[pointi],
+                    projectionDirection[pointi],
                     fromPatchPoints,
                     alg_,
                     dir_
@@ -102,17 +102,17 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
             // Grab distance to target
             if (dir_ == intersection::CONTACT_SPHERE)
             {
-                pointDistance[pointI] =
+                pointDistance[pointi] =
                     hitFace.contactSphereDiameter
                     (
-                        toPatchPoints[pointI],
-                        projectionDirection[pointI],
+                        toPatchPoints[pointi],
+                        projectionDirection[pointi],
                         fromPatchPoints
                     );
             }
             else
             {
-                pointDistance[pointI] = curHit.distance();
+                pointDistance[pointi] = curHit.distance();
             }
 
             // Grab hit point
@@ -124,8 +124,8 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
             pointHit ph =
                 hitFace.ray
                 (
-                    toPatchPoints[pointI],
-                    projectionDirection[pointI],
+                    toPatchPoints[pointi],
+                    projectionDirection[pointi],
                     fromPatchPoints,
                     alg_,
                     dir_
@@ -134,8 +134,8 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
             scalar dist =
                 Foam::mag
                 (
-                    toPatchPoints[pointI]
-                  + projectionDirection[pointI]*ph.distance()
+                    toPatchPoints[pointi]
+                  + projectionDirection[pointi]*ph.distance()
                   - ph.missPoint()
                 );
 
@@ -144,7 +144,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
 
             // Do shortest edge of hit object
             edgeList hitFaceEdges =
-                fromPatchFaces[proj[pointI].hitObject()].edges();
+                fromPatchFaces[proj[pointi].hitObject()].edges();
 
             forAll(hitFaceEdges, edgeI)
             {
@@ -156,7 +156,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                     );
             }
 
-            const labelList& curEdges = toPatchPointEdges[pointI];
+            const labelList& curEdges = toPatchPointEdges[pointi];
 
             forAll(curEdges, edgeI)
             {
@@ -173,7 +173,7 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 // This point is being corrected
                 doWeights = true;
 
-                pointAddressing[pointI] = proj[pointI].hitObject();
+                pointAddressing[pointi] = proj[pointi].hitObject();
 
                 // Grab nearest point on face as hit point
                 hitPoint = ph.missPoint();
@@ -181,22 +181,22 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
                 // Grab distance to target
                 if (dir_ == intersection::CONTACT_SPHERE)
                 {
-                    pointDistance[pointI] =
+                    pointDistance[pointi] =
                         hitFace.contactSphereDiameter
                         (
-                            toPatchPoints[pointI],
-                            projectionDirection[pointI],
+                            toPatchPoints[pointi],
+                            projectionDirection[pointi],
                             fromPatchPoints
                         );
                 }
                 else
                 {
-                    pointDistance[pointI] =
+                    pointDistance[pointi] =
                         (
-                            projectionDirection[pointI]
-                            /mag(projectionDirection[pointI])
+                            projectionDirection[pointi]
+                            /mag(projectionDirection[pointi])
                         )
-                      & (hitPoint - toPatchPoints[pointI]);
+                      & (hitPoint - toPatchPoints[pointi]);
                 }
             }
         }
@@ -204,29 +204,29 @@ void PatchToPatchInterpolation<FromPatch, ToPatch>::calcPointAddressing() const
         if (doWeights)
         {
             // Set interpolation pointWeights
-            pointWeights.set(pointI, new scalarField(hitFace.size()));
+            pointWeights.set(pointi, new scalarField(hitFace.size()));
 
             pointField hitFacePoints = hitFace.points(fromPatchPoints);
 
-            forAll(hitFacePoints, masterPointI)
+            forAll(hitFacePoints, masterPointi)
             {
-                pointWeights[pointI][masterPointI] =
+                pointWeights[pointi][masterPointi] =
                     1.0/
                     (
                         mag
                         (
-                            hitFacePoints[masterPointI]
+                            hitFacePoints[masterPointi]
                           - hitPoint
                         )
                       + VSMALL
                     );
             }
 
-            pointWeights[pointI] /= sum(pointWeights[pointI]);
+            pointWeights[pointi] /= sum(pointWeights[pointi]);
         }
         else
         {
-            pointWeights.set(pointI, new scalarField(0));
+            pointWeights.set(pointi, new scalarField(0));
         }
     }
 }

@@ -2609,11 +2609,11 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
 
         const labelListList& pointFaces = mesh_.pointFaces();
 
-        forAll(pointFaces, pointI)
+        forAll(pointFaces, pointi)
         {
-            if (pointBaffle[pointI] != -1)
+            if (pointBaffle[pointi] != -1)
             {
-                const labelList& pFaces = pointFaces[pointI];
+                const labelList& pFaces = pointFaces[pointi];
 
                 forAll(pFaces, pFacei)
                 {
@@ -2621,7 +2621,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitMesh
 
                     if (ownPatch[facei] == -1)
                     {
-                        ownPatch[facei] = pointBaffle[pointI];
+                        ownPatch[facei] = pointBaffle[pointi];
                     }
                 }
             }

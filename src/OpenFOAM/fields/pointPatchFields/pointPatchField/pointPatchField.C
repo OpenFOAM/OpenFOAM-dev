@@ -196,9 +196,9 @@ void Foam::pointPatchField<Type>::addToInternalField
     // Get the addressing
     const labelList& mp = patch().meshPoints();
 
-    forAll(mp, pointI)
+    forAll(mp, pointi)
     {
-        iF[mp[pointI]] += pF[pointI];
+        iF[mp[pointi]] += pF[pointi];
     }
 }
 
@@ -236,8 +236,8 @@ void Foam::pointPatchField<Type>::addToInternalField
 
     forAll(points, i)
     {
-        label pointI = points[i];
-        iF[mp[pointI]] += pF[pointI];
+        label pointi = points[i];
+        iF[mp[pointi]] += pF[pointi];
     }
 }
 
@@ -270,9 +270,9 @@ void Foam::pointPatchField<Type>::setInInternalField
             << abort(FatalError);
     }
 
-    forAll(meshPoints, pointI)
+    forAll(meshPoints, pointi)
     {
-        iF[meshPoints[pointI]] = pF[pointI];
+        iF[meshPoints[pointi]] = pF[pointi];
     }
 }
 

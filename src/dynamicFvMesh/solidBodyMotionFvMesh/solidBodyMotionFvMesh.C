@@ -155,8 +155,8 @@ Foam::solidBodyMotionFvMesh::solidBodyMotionFvMesh(const IOobject& io)
                 const face& f = faces()[c[j]];
                 forAll(f, k)
                 {
-                    label pointI = f[k];
-                    movePts[pointI] = true;
+                    label pointi = f[k];
+                    movePts[pointi] = true;
                 }
             }
         }

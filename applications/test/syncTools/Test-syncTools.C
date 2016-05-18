@@ -215,10 +215,10 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
         {
             const point pt = localPoints[i] + 1e-4*rndGen.vector01();
 
-            label meshPointI = allBoundary.meshPoints()[i];
+            label meshPointi = allBoundary.meshPoints()[i];
 
-            sparseData.insert(meshPointI, pt);
-            fullData[meshPointI] = pt;
+            sparseData.insert(meshPointi, pt);
+            fullData[meshPointi] = pt;
         }
 
         //Pout<< "sparseData:" << sparseData << endl;
@@ -241,18 +241,18 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
 
         // Compare.
         // 1. Is all fullData also present in sparseData and same value
-        forAll(fullData, meshPointI)
+        forAll(fullData, meshPointi)
         {
-            const point& fullPt = fullData[meshPointI];
+            const point& fullPt = fullData[meshPointi];
 
             if (fullPt != point(GREAT, GREAT, GREAT))
             {
-                const point& sparsePt = sparseData[meshPointI];
+                const point& sparsePt = sparseData[meshPointi];
 
                 if (fullPt != sparsePt)
                 {
                     FatalErrorInFunction
-                        << "point:" << meshPointI
+                        << "point:" << meshPointi
                         << " full:" << fullPt
                         << " sparse:" << sparsePt
                         << exit(FatalError);
@@ -264,13 +264,13 @@ void testSparseData(const polyMesh& mesh, Random& rndGen)
         forAllConstIter(Map<point>, sparseData, iter)
         {
             const point& sparsePt = iter();
-            label meshPointI = iter.key();
-            const point& fullPt = fullData[meshPointI];
+            label meshPointi = iter.key();
+            const point& fullPt = fullData[meshPointi];
 
             if (fullPt != sparsePt)
             {
                 FatalErrorInFunction
-                    << "point:" << meshPointI
+                    << "point:" << meshPointi
                     << " full:" << fullPt
                     << " sparse:" << sparsePt
                     << exit(FatalError);
@@ -387,14 +387,14 @@ void testPointSync(const polyMesh& mesh, Random& rndGen)
             point(GREAT, GREAT, GREAT)
         );
 
-        forAll(syncedPoints, pointI)
+        forAll(syncedPoints, pointi)
         {
-            if (mag(syncedPoints[pointI] - mesh.points()[pointI]) > SMALL)
+            if (mag(syncedPoints[pointi] - mesh.points()[pointi]) > SMALL)
             {
                 FatalErrorInFunction
-                    << "Point " << pointI
-                    << " original location " << mesh.points()[pointI]
-                    << " synced location " << syncedPoints[pointI]
+                    << "Point " << pointi
+                    << " original location " << mesh.points()[pointi]
+                    << " synced location " << syncedPoints[pointi]
                     << exit(FatalError);
             }
         }
@@ -407,11 +407,11 @@ void testPointSync(const polyMesh& mesh, Random& rndGen)
 
         PackedBoolList isMasterPoint(syncTools::getMasterPoints(mesh));
 
-        forAll(isMasterPoint, pointI)
+        forAll(isMasterPoint, pointi)
         {
-            if (isMasterPoint[pointI])
+            if (isMasterPoint[pointi])
             {
-                nMasters[pointI] = 1;
+                nMasters[pointi] = 1;
             }
         }
 
@@ -423,14 +423,14 @@ void testPointSync(const polyMesh& mesh, Random& rndGen)
             0
         );
 
-        forAll(nMasters, pointI)
+        forAll(nMasters, pointi)
         {
-            if (nMasters[pointI] != 1)
+            if (nMasters[pointi] != 1)
             {
                 WarningInFunction
-                    << "Point " << pointI
-                    << " original location " << mesh.points()[pointI]
-                    << " has " << nMasters[pointI]
+                    << "Point " << pointi
+                    << " original location " << mesh.points()[pointi]
+                    << " has " << nMasters[pointi]
                     << " masters."
                     << endl;
             }
