@@ -51,7 +51,7 @@ Description
 
         type coded;
         // Name of on-the-fly generated functionObject
-        redirectType writeMagU;
+        name writeMagU;
         code
         #{
             // Lookup U
@@ -102,7 +102,7 @@ protected:
         //- Input dictionary
         dictionary dict_;
 
-        word redirectType_;
+        word name_;
 
         string codeData_;
         string codeRead_;

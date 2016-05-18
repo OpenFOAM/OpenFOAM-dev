@@ -47,7 +47,7 @@ runTimeModifiable true;
 
 functions
 {
-    difference
+    error
     {
         // Load the library containing the 'coded' functionObject
         libs ("libutilityFunctionObjects.so");
@@ -55,7 +55,7 @@ functions
         type coded;
 
         // Name of on-the-fly generated functionObject
-        redirectType error;
+        name error;
 
         codeEnd
         #{
@@ -63,7 +63,7 @@ functions
             Info<< "Looking up field U\n" << endl;
             const volVectorField& U = mesh().lookupObject<volVectorField>("U");
 
-            Info<< "Reading inlet velocity  uInfX\n" << endl;
+            Info<< "Reading inlet velocity uInfX\n" << endl;
 
             scalar ULeft = 0.0;
             label leftI = mesh().boundaryMesh().findPatchID("left");

@@ -107,8 +107,8 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
     const dynamicCodeContext& context
 ) const
 {
-    // take no chances - typeName must be identical to redirectType_
-    dynCode.setFilterVariable("typeName", redirectType_);
+    // take no chances - typeName must be identical to name_
+    dynCode.setFilterVariable("typeName", name_);
 
     // set TemplateType and FieldType filter variables
     // (for pointPatchField)
@@ -123,7 +123,7 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
 
     // debugging: make BC verbose
     //  dynCode.setFilterVariable("verbose", "true");
-    //  Info<<"compile " << redirectType_ << " sha1: "
+    //  Info<<"compile " << name_ << " sha1: "
     //      << context.sha1() << endl;
 
     // define Make/options
@@ -149,7 +149,7 @@ const
     (
         dict_.found("code")
       ? dict_
-      : this->dict().subDict(redirectType_)
+      : this->dict().subDict(name_)
     );
 }
 
@@ -200,7 +200,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper),
     codedBase(),
     dict_(ptf.dict_),
-    redirectType_(ptf.redirectType_),
+    name_(ptf.name_),
     redirectPatchFieldPtr_()
 {}
 
@@ -217,10 +217,15 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
     fixedValuePointPatchField<Type>(p, iF, dict, valueRequired),
     codedBase(),
     dict_(dict),
-    redirectType_(dict.lookup("redirectType")),
+    name_
+    (
+        dict.found("redirectType")
+      ? dict.lookup("redirectType")
+      : dict.lookup("name")
+    ),
     redirectPatchFieldPtr_()
 {
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
 }
 
 
@@ -233,7 +238,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf),
     codedBase(),
     dict_(ptf.dict_),
-    redirectType_(ptf.redirectType_),
+    name_(ptf.name_),
     redirectPatchFieldPtr_()
 {}
 
@@ -248,7 +253,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
     fixedValuePointPatchField<Type>(ptf, iF),
     codedBase(),
     dict_(ptf.dict_),
-    redirectType_(ptf.redirectType_),
+    name_(ptf.name_),
     redirectPatchFieldPtr_()
 {}
 
@@ -265,7 +270,7 @@ Foam::codedFixedValuePointPatchField<Type>::redirectPatchField() const
         // Make sure to construct the patchfield with up-to-date value
 
         OStringStream os;
-        os.writeKeyword("type") << redirectType_ << token::END_STATEMENT
+        os.writeKeyword("type") << name_ << token::END_STATEMENT
             << nl;
         static_cast<const Field<Type>&>(*this).writeEntry("value", os);
         IStringStream is(os.str());
@@ -294,7 +299,7 @@ void Foam::codedFixedValuePointPatchField<Type>::updateCoeffs()
     }
 
     // Make sure library containing user-defined pointPatchField is up-to-date
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
 
     const pointPatchField<Type>& fvp = redirectPatchField();
 
@@ -314,7 +319,7 @@ void Foam::codedFixedValuePointPatchField<Type>::evaluate
 )
 {
     // Make sure library containing user-defined pointPatchField is up-to-date
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
 
     const pointPatchField<Type>& fvp = redirectPatchField();
 
@@ -328,7 +333,7 @@ template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::write(Ostream& os) const
 {
     fixedValuePointPatchField<Type>::write(os);
-    os.writeKeyword("redirectType") << redirectType_
+    os.writeKeyword("name") << name_
         << token::END_STATEMENT << nl;
 
     if (dict_.found("codeInclude"))

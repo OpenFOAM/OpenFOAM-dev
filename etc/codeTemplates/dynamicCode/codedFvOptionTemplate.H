@@ -56,7 +56,7 @@ Description
         scalarCodedSourceCoeffs
         {
             fieldNames      (h);
-            redirectType    sourceTime;
+            name    sourceTime;
 
             codeInclude
             #{

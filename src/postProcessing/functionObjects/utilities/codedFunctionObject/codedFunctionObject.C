@@ -56,7 +56,7 @@ void Foam::codedFunctionObject::prepare
 ) const
 {
     // Set additional rewrite rules
-    dynCode.setFilterVariable("typeName", redirectType_);
+    dynCode.setFilterVariable("typeName", name_);
     dynCode.setFilterVariable("codeData", codeData_);
     dynCode.setFilterVariable("codeRead", codeRead_);
     dynCode.setFilterVariable("codeExecute", codeExecute_);
@@ -71,7 +71,7 @@ void Foam::codedFunctionObject::prepare
 
     // Debugging: make BC verbose
     // dynCode.setFilterVariable("verbose", "true");
-    // Info<<"compile " << redirectType_ << " sha1: "
+    // Info<<"compile " << name_ << " sha1: "
     //     << context.sha1() << endl;
 
     // Define Make/options
@@ -130,7 +130,7 @@ Foam::codedFunctionObject::codedFunctionObject
 {
     read(dict_);
 
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
     redirectFunctionObject();
 }
 
@@ -148,11 +148,11 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
     if (!redirectFunctionObjectPtr_.valid())
     {
         dictionary constructDict(dict_);
-        constructDict.set("type", redirectType_);
+        constructDict.set("type", name_);
 
         redirectFunctionObjectPtr_ = functionObject::New
         (
-            redirectType_,
+            name_,
             time_,
             constructDict
         );
@@ -163,28 +163,36 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 
 bool Foam::codedFunctionObject::execute(const bool postProcess)
 {
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
     return redirectFunctionObject().execute(postProcess);
 }
 
 
 bool Foam::codedFunctionObject::write(const bool postProcess)
 {
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
     return redirectFunctionObject().write(postProcess);
 }
 
 
 bool Foam::codedFunctionObject::end()
 {
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
     return redirectFunctionObject().end();
 }
 
 
 bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
-    dict.lookup("redirectType") >> redirectType_;
+    // Backward compatibility
+    if (dict.found("redirectType"))
+    {
+        dict.lookup("redirectType") >> name_;
+    }
+    else
+    {
+        dict.lookup("name") >> name_;
+    }
 
     const entry* dataPtr = dict.lookupEntryPtr
     (
@@ -276,7 +284,7 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
         );
     }
 
-    updateLibrary(redirectType_);
+    updateLibrary(name_);
     return redirectFunctionObject().read(dict);
 }
 

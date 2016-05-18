@@ -56,7 +56,7 @@ totalMass
 {
     type            coded;
     libs ("libutilityFunctionObjects.so");
-    redirectType    error;
+    name    error;
 
     code
     #{

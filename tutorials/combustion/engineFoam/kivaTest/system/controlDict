@@ -57,7 +57,7 @@ functions
     {
         type coded;
         libs ("libutilityFunctionObjects.so");
-        redirectType setDeltaT;
+        name setDeltaT;
 
         code
         #{

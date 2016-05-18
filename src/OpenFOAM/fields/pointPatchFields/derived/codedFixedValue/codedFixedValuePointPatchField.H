@@ -34,7 +34,7 @@ Description
     {
         type            codedFixedValue;
         value           uniform 0;
-        redirectType    rampedFixedValue;   // name of generated bc
+        name    rampedFixedValue;   // name of generated bc
 
         code
         #{
@@ -110,7 +110,7 @@ class codedFixedValuePointPatchField
         //- Dictionary contents for the boundary condition
         mutable dictionary dict_;
 
-        const word redirectType_;
+        const word name_;
 
         mutable autoPtr<pointPatchField<Type>> redirectPatchFieldPtr_;
 

@@ -26,7 +26,7 @@ boundaryField
     inlet
     {
         type            codedFixedValue;
-        redirectType    swirl;
+        name    swirl;
 
         code
         #{

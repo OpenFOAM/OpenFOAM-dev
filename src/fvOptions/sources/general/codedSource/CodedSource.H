@@ -65,7 +65,7 @@ Description
             selectionMode   all;
 
             fieldNames      (h);
-            redirectType    sourceTime;
+            name    sourceTime;
 
             codeInclude
             #{
@@ -141,7 +141,7 @@ protected:
 
     // Protected data
 
-        word redirectType_;
+        word name_;
 
         string codeCorrect_;
         string codeAddSup_;
