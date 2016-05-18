@@ -130,9 +130,6 @@ public:
         //- Execute at the final time-loop, currently does nothing
         virtual bool end();
 
-        //- Called when time was set at the end of the Time::operator++
-        virtual bool timeSet();
-
         //- Write the FUNCTIONOBJECT
         virtual bool write(const bool postProcess = false);
 };

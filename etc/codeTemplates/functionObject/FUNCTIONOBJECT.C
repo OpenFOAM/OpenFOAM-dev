@@ -88,12 +88,6 @@ bool Foam::functionObjects::FUNCTIONOBJECT::end()
 }
 
 
-bool Foam::functionObjects::FUNCTIONOBJECT::timeSet()
-{
-    return true;
-}
-
-
 bool Foam::functionObjects::FUNCTIONOBJECT::write(const bool postProcess)
 {
     return true;

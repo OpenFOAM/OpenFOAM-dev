@@ -44,7 +44,7 @@ Description
     writeRegisteredObject1
     {
         type        writeRegisteredObject;
-        libs ("libIOFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
         exclusiveWriting     true;
         ...
         objectNames (obj1 obj2);

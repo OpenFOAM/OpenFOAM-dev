@@ -35,7 +35,7 @@ Description
     removeRegisteredObject1
     {
         type        removeRegisteredObject;
-        libs ("libIOFunctionObjects.so");
+        libs ("libutilityFunctionObjects.so");
         ...
         objectNames (obj1 obj2);
     }

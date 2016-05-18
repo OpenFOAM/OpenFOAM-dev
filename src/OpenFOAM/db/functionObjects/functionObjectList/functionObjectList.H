@@ -182,9 +182,6 @@ public:
         //- Called when Time::run() determines that the time-loop exits
         bool end();
 
-        //- Called when time was set at the end of the Time::operator++
-        bool timeSet();
-
         //- Called at the end of Time::adjustDeltaT() if adjustTime is true
         bool adjustTimeStep();
 

@@ -14,7 +14,6 @@ yPlus/yPlus.C
 setTimeStep/setTimeStepFunctionObject.C
 systemCall/systemCall.C
 abort/abort.C
-partialWrite/partialWrite.C
 removeRegisteredObject/removeRegisteredObject.C
 writeDictionary/writeDictionary.C
 writeRegisteredObject/writeRegisteredObject.C

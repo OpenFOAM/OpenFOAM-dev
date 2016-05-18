@@ -40,7 +40,7 @@ Description
         writeVTK1
         {
             type        writeVTK;
-            libs ("libIOFunctionObjects.so");
+            libs ("libutilityFunctionObjects.so");
             ...
             objectNames (obj1 obj2);
         }

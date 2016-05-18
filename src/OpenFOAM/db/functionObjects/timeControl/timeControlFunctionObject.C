@@ -118,16 +118,6 @@ bool Foam::functionObjects::timeControl::end()
 }
 
 
-bool Foam::functionObjects::timeControl::timeSet()
-{
-    if (active())
-    {
-        foPtr_->timeSet();
-    }
-
-    return true;
-}
-
 
 bool Foam::functionObjects::timeControl::adjustTimeStep()
 {

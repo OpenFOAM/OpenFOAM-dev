@@ -126,12 +126,6 @@ bool Foam::functionObject::end()
 }
 
 
-bool Foam::functionObject::timeSet()
-{
-    return false;
-}
-
-
 bool Foam::functionObject::adjustTimeStep()
 {
     return false;

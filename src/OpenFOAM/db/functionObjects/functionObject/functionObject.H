@@ -215,9 +215,6 @@ public:
         //  By default it simply calls execute().
         virtual bool end();
 
-        //- Called when time was set at the end of the Time::operator++
-        virtual bool timeSet();
-
         //- Called at the end of Time::adjustDeltaT() if adjustTime is true
         virtual bool adjustTimeStep();
 

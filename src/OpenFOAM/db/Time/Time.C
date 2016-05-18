@@ -1248,8 +1248,6 @@ Foam::Time& Foam::Time::operator++()
                 }
             }
         }
-
-        functionObjects_.timeSet();
     }
 
     return *this;
