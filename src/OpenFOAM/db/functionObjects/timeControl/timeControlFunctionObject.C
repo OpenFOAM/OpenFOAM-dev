@@ -87,12 +87,9 @@ Foam::functionObjects::timeControl::timeControl
 
 bool Foam::functionObjects::timeControl::execute(const bool postProcess)
 {
-    if (active())
+    if (active() && (postProcess || executeControl_.execute()))
     {
-        if (postProcess || executeControl_.execute())
-        {
-            foPtr_->execute();
-        }
+        foPtr_->execute();
     }
 
     return true;
@@ -101,12 +98,9 @@ bool Foam::functionObjects::timeControl::execute(const bool postProcess)
 
 bool Foam::functionObjects::timeControl::write(const bool postProcess)
 {
-    if (active())
+    if (active() && (postProcess || writeControl_.execute()))
     {
-        if (postProcess || writeControl_.execute())
-        {
-            foPtr_->write();
-        }
+        foPtr_->write();
     }
 
     return true;
@@ -115,11 +109,9 @@ bool Foam::functionObjects::timeControl::write(const bool postProcess)
 
 bool Foam::functionObjects::timeControl::end()
 {
-    foPtr_->end();
-
-    if (writeControl_.execute())
+    if (active() && (executeControl_.execute() || writeControl_.execute()))
     {
-        foPtr_->write();
+        foPtr_->end();
     }
 
     return true;
