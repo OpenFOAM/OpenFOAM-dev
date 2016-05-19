@@ -52,7 +52,7 @@ void Foam::codedFixedValuePointPatchField<Type>::setFieldTemplates
 {
     word fieldType(pTraits<Type>::typeName);
 
-    // template type for pointPatchField
+    // Template type for pointPatchField
     dynCode.setFilterVariable("TemplateType", fieldType);
 
     // Name for pointPatchField - eg, ScalarField, VectorField, ...
@@ -107,26 +107,26 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
     const dynamicCodeContext& context
 ) const
 {
-    // take no chances - typeName must be identical to name_
+    // Take no chances - typeName must be identical to name_
     dynCode.setFilterVariable("typeName", name_);
 
-    // set TemplateType and FieldType filter variables
+    // Set TemplateType and FieldType filter variables
     // (for pointPatchField)
     setFieldTemplates(dynCode);
 
-    // compile filtered C template
+    // Compile filtered C template
     dynCode.addCompileFile(codeTemplateC);
 
-    // copy filtered H template
+    // Copy filtered H template
     dynCode.addCopyFile(codeTemplateH);
 
 
-    // debugging: make BC verbose
-    //  dynCode.setFilterVariable("verbose", "true");
-    //  Info<<"compile " << name_ << " sha1: "
-    //      << context.sha1() << endl;
+    // Debugging: make BC verbose
+    //   dynCode.setFilterVariable("verbose", "true");
+    //   Info<<"compile " << name_ << " sha1: "
+    //       << context.sha1() << endl;
 
-    // define Make/options
+    // Define Make/options
     dynCode.setMakeOptions
         (
             "EXE_INC = -g \\\n"
@@ -144,7 +144,7 @@ template<class Type>
 const Foam::dictionary& Foam::codedFixedValuePointPatchField<Type>::codeDict()
 const
 {
-    // use system/codeDict or in-line
+    // Use system/codeDict or in-line
     return
     (
         dict_.found("code")
@@ -168,7 +168,7 @@ Foam::string Foam::codedFixedValuePointPatchField<Type>::description() const
 template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::clearRedirect() const
 {
-    // remove instantiation of pointPatchField provided by library
+    // Remove instantiation of pointPatchField provided by library
     redirectPatchFieldPtr_.clear();
 }
 

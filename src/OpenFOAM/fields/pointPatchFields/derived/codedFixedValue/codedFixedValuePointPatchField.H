@@ -114,6 +114,7 @@ class codedFixedValuePointPatchField
 
         mutable autoPtr<pointPatchField<Type>> redirectPatchFieldPtr_;
 
+
     // Private Member Functions
 
         const IOdictionary& dict() const;
@@ -135,6 +136,7 @@ class codedFixedValuePointPatchField
 
         // Get the dictionary to initialize the codeContext
         virtual const dictionary& codeDict() const;
+
 
 public:
 
@@ -216,7 +218,6 @@ public:
                 )
             );
         }
-
 
 
     // Member functions

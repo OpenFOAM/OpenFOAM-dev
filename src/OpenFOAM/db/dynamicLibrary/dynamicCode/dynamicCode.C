@@ -92,7 +92,7 @@ void Foam::dynamicCode::checkSecurity
 Foam::word Foam::dynamicCode::libraryBaseName(const fileName& libPath)
 {
     word libName(libPath.name(true));
-    libName.erase(0, 3);    // remove leading 'lib' from name
+    libName.erase(0, 3);    // Remove leading 'lib' from name
     return libName;
 }
 
@@ -127,8 +127,8 @@ void Foam::dynamicCode::copyAndFilter
     {
         is.getLine(line);
 
-        // expand according to mapping
-        // expanding according to env variables might cause too many
+        // Expand according to mapping.
+        // Expanding according to env variables might cause too many
         // surprises
         stringOps::inplaceExpand(line, mapping);
         os.writeQuoted(line, false) << nl;
@@ -144,7 +144,7 @@ bool Foam::dynamicCode::resolveTemplates
     DynamicList<fileName>& badFiles
 )
 {
-    // try to get template from FOAM_CODESTREAM_TEMPLATES
+    // Try to get template from FOAM_CODESTREAM_TEMPLATES
     const fileName templateDir(Foam::getEnv(codeTemplateEnvName));
 
     bool allOkay = true;
@@ -162,7 +162,7 @@ bool Foam::dynamicCode::resolveTemplates
             }
         }
 
-        // not found - fallback to ~OpenFOAM expansion
+        // Not found - fallback to ~OpenFOAM expansion
         if (file.empty())
         {
             file = findEtcFile(codeTemplateDirName/templateName);
@@ -329,7 +329,7 @@ void Foam::dynamicCode::clear()
     filterVars_.set("typeName", codeName_);
     filterVars_.set("SHA1sum", SHA1Digest().str());
 
-    // provide default Make/options
+    // Provide default Make/options
     makeOptions_ =
         "EXE_INC = -g\n"
         "\n\nLIB_LIBS = ";
@@ -408,7 +408,7 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
     DynamicList<fileName> resolvedFiles(nFiles);
     DynamicList<fileName> badFiles(nFiles);
 
-    // resolve template, or add to bad-files
+    // Resolve template, or add to bad-files
     resolveTemplates(compileFiles_, resolvedFiles, badFiles);
     resolveTemplates(copyFiles_, resolvedFiles, badFiles);
 
