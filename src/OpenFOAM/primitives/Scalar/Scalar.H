@@ -139,12 +139,16 @@ inline Scalar neg(const Scalar s)
 }
 
 
+//- Return the positive part of s
 inline Scalar posPart(const Scalar s)
 {
     return (s > 0)? s: 0;
 }
 
 
+//- Return the negative part of s.
+//  Note: this function returns the actual negative part of s as a
+//  negative number and does not change the sign
 inline Scalar negPart(const Scalar s)
 {
     return (s < 0)? s: 0;
