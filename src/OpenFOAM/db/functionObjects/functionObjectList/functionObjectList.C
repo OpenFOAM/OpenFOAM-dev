@@ -284,12 +284,19 @@ bool Foam::functionObjectList::read()
                 << exit(FatalIOError);
         }
 
-        const dictionary& functionDicts = entryPtr->dict();
+        const dictionary& functionsDict = entryPtr->dict();
 
-        newPtrs.setSize(functionDicts.size());
-        newDigs.setSize(functionDicts.size());
+        const_cast<Time&>(time_).libs().open
+        (
+            functionsDict,
+            "libs",
+            functionObject::dictionaryConstructorTablePtr_
+        );
 
-        forAllConstIter(dictionary, functionDicts, iter)
+        newPtrs.setSize(functionsDict.size());
+        newDigs.setSize(functionsDict.size());
+
+        forAllConstIter(dictionary, functionsDict, iter)
         {
             const word& key = iter().keyword();
 

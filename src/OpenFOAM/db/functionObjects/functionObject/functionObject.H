@@ -160,8 +160,8 @@ public:
             autoPtr,
             functionObject,
             dictionary,
-            (const word& name, const Time& t, const dictionary& dict),
-            (name, t, dict)
+            (const word& name, const Time& runTime, const dictionary& dict),
+            (name, runTime, dict)
         );
 
 

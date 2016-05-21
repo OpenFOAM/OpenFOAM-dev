@@ -50,7 +50,7 @@ Foam::functionObject::functionObject(const word& name)
 Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 (
     const word& name,
-    const Time& t,
+    const Time& runTime,
     const dictionary& dict
 )
 {
@@ -63,7 +63,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 
     if (dict.found("functionObjectLibs"))
     {
-        const_cast<Time&>(t).libs().open
+        const_cast<Time&>(runTime).libs().open
         (
             dict,
             "functionObjectLibs",
@@ -72,7 +72,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
     }
     else
     {
-        const_cast<Time&>(t).libs().open
+        const_cast<Time&>(runTime).libs().open
         (
             dict,
             "libs",
@@ -102,7 +102,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
             << exit(FatalError);
     }
 
-    return autoPtr<functionObject>(cstrIter()(name, t, dict));
+    return autoPtr<functionObject>(cstrIter()(name, runTime, dict));
 }
 
 
