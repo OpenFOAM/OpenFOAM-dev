@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "vorticity.H"
-#include "fvcCurl.H"
+#include "Peclet.H"
+#include "turbulenceModel.H"
+#include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -33,12 +34,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(vorticity, 0);
+    defineTypeNameAndDebug(Peclet, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        vorticity,
+        Peclet,
         dictionary
     );
 }
@@ -47,41 +48,67 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::vorticity::vorticity
+Foam::functionObjects::Peclet::Peclet
 (
     const word& name,
     const Time& runTime,
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, "U", "vorticity")
-{}
+    fieldExpression(name, runTime, dict, "phi", "Pe")
+{
+    read(dict);
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::vorticity::~vorticity()
+Foam::functionObjects::Peclet::~Peclet()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::vorticity::execute(const bool postProcess)
+bool Foam::functionObjects::Peclet::read(const dictionary& dict)
 {
-    if (foundField<volVectorField>(fieldName_))
+    fieldExpression::read(dict);
+
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+
+    return true;
+}
+
+
+bool Foam::functionObjects::Peclet::execute(const bool postProcess)
+{
+    if (foundField<surfaceScalarField>(phiName_))
     {
+        tmp<volScalarField> nuEff
+        (
+            mesh_.lookupObject<turbulenceModel>
+            (
+                turbulenceModel::propertiesName
+            ).nuEff()
+        );
+
+        const surfaceScalarField& phi =
+            mesh_.lookupObject<surfaceScalarField>(phiName_);
+
         return store
         (
             resultName_,
-            fvc::curl(lookupField<volVectorField>(fieldName_))
+            mag(phi)
+           /(
+                mesh_.magSf()
+               *mesh_.surfaceInterpolation::deltaCoeffs()
+               *fvc::interpolate(nuEff)
+            )
         );
     }
     else
     {
         return false;
     }
-
-    return true;
 }
 
 

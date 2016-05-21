@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Lambda2.H"
-#include "volFields.H"
-#include "zeroGradientFvPatchFields.H"
 #include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -56,29 +54,8 @@ Foam::functionObjects::Lambda2::Lambda2
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
-{
-    read(dict);
-
-    volScalarField* Lambda2Ptr
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
-        )
-    );
-
-    mesh_.objectRegistry::store(Lambda2Ptr);
-}
+    fieldExpression(name, runTime, dict, "U", "Lambda2")
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -89,51 +66,30 @@ Foam::functionObjects::Lambda2::~Lambda2()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::Lambda2::read(const dictionary& dict)
-{
-    UName_ = dict.lookupOrDefault<word>("U", "U");
-
-    return true;
-}
-
-
 bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
 {
-    const volVectorField& U =
-        mesh_.lookupObject<volVectorField>(UName_);
+    if (foundField<volVectorField>(fieldName_))
+    {
+        const volVectorField& U = lookupField<volVectorField>(fieldName_);
+        const tmp<volTensorField> tgradU(fvc::grad(U));
+        const volTensorField& gradU = tgradU();
 
-    const volTensorField gradU(fvc::grad(U));
-
-    const volTensorField SSplusWW
-    (
-        (symm(gradU) & symm(gradU))
-      + (skew(gradU) & skew(gradU))
-    );
-
-    volScalarField& Lambda2 =
-        const_cast<volScalarField&>
+        const volTensorField SSplusWW
         (
-            mesh_.lookupObject<volScalarField>(type())
+            (symm(gradU) & symm(gradU))
+          + (skew(gradU) & skew(gradU))
         );
 
-    Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);
-
-    return true;
-}
-
-
-bool Foam::functionObjects::Lambda2::write(const bool postProcess)
-{
-    const volScalarField& Lambda2 =
-        obr_.lookupObject<volScalarField>(type());
-
-    Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << Lambda2.name() << nl
-        << endl;
-
-    Lambda2.write();
-
-    return true;
+        return store
+        (
+            resultName_,
+           -eigenValues(SSplusWW)().component(vector::Y)
+        );
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

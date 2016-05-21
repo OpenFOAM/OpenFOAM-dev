@@ -75,29 +75,9 @@ Foam::functionObjects::CourantNo::CourantNo
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fieldExpression(name, runTime, dict, "phi", "Co")
 {
     read(dict);
-
-    volScalarField* CourantNoPtr
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("0", dimless, 0.0),
-            zeroGradientFvPatchScalarField::typeName
-        )
-    );
-
-    mesh_.objectRegistry::store(CourantNoPtr);
 }
 
 
@@ -111,6 +91,8 @@ Foam::functionObjects::CourantNo::~CourantNo()
 
 bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
 {
+    fieldExpression::read(dict);
+
     phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
 
@@ -120,38 +102,64 @@ bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
 
 bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
 {
-    const surfaceScalarField& phi =
-        mesh_.lookupObject<surfaceScalarField>(phiName_);
+    if (foundField<surfaceScalarField>(phiName_))
+    {
+        const surfaceScalarField& phi =
+            lookupField<surfaceScalarField>(phiName_);
 
-    volScalarField& Co = const_cast<volScalarField&>
-    (
-        mesh_.lookupObject<volScalarField>(type())
-    );
+        tmp<volScalarField::Internal> Coi
+        (
+            byRho
+            (
+                (0.5*mesh_.time().deltaT())
+               *fvc::surfaceSum(mag(phi))()()
+               /mesh_.V()
+            )
+        );
 
-    Co.ref() = byRho
-    (
-        (0.5*mesh_.time().deltaT())
-       *fvc::surfaceSum(mag(phi))()()
-       /mesh_.V()
-    );
-    Co.correctBoundaryConditions();
+        if (foundField<volScalarField>(resultName_))
+        {
+            volScalarField& Co
+            (
+                const_cast<volScalarField&>
+                (
+                    lookupField<volScalarField>(resultName_)
+                )
+            );
 
-    return true;
-}
+            Co.ref() = Coi();
+            Co.correctBoundaryConditions();
+        }
+        else
+        {
+            tmp<volScalarField> tCo
+            (
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        resultName_,
+                        mesh_.time().timeName(),
+                        mesh_,
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    mesh_,
+                    dimensionedScalar("0", dimless, 0.0),
+                    zeroGradientFvPatchScalarField::typeName
+                )
+            );
+            tCo.ref().ref() = Coi();
+            tCo.ref().correctBoundaryConditions();
+            mesh_.objectRegistry::store(tCo.ptr());
+        }
 
-
-bool Foam::functionObjects::CourantNo::write(const bool postProcess)
-{
-    const volScalarField& CourantNo =
-        obr_.lookupObject<volScalarField>(type());
-
-    Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << CourantNo.name() << nl
-        << endl;
-
-    CourantNo.write();
-
-    return true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

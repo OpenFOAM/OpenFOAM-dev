@@ -88,7 +88,7 @@ public:
 
     // Member Functions
 
-        //- Calculate the Q-field
+        //- Calculate the Q field
         virtual bool execute(const bool postProcess = false);
 };
 

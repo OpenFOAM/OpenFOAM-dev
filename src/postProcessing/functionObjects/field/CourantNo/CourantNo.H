@@ -33,6 +33,7 @@ Description
     be retrieved and used for other applications.
 
 SeeAlso
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
@@ -43,7 +44,7 @@ SourceFiles
 #ifndef functionObjects_CourantNo_H
 #define functionObjects_CourantNo_H
 
-#include "fvMeshFunctionObject.H"
+#include "fieldExpression.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -59,7 +60,7 @@ namespace functionObjects
 
 class CourantNo
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
     // Private data
 
@@ -77,12 +78,6 @@ class CourantNo
         (
             const tmp<volScalarField::Internal>& Co
         ) const;
-
-        //- Disallow default bitwise copy construct
-        CourantNo(const CourantNo&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CourantNo&);
 
 
 public:
@@ -113,9 +108,6 @@ public:
 
         //- Execute, currently does nothing
         virtual bool execute(const bool postProcess = false);
-
-        //- Calculate the CourantNo and write
-        virtual bool write(const bool postProcess = false);
 };
 
 

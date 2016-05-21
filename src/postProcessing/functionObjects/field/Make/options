@@ -4,7 +4,8 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
-    -I$(LIB_SRC)/surfMesh/lnInclude
+    -I$(LIB_SRC)/surfMesh/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude
 
 LIB_LIBS = \
     -lfiniteVolume \

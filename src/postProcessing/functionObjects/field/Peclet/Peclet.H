@@ -32,6 +32,7 @@ Description
     surfaceScalarField.
 
 SeeAlso
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
@@ -42,8 +43,7 @@ SourceFiles
 #ifndef functionObjects_Peclet_H
 #define functionObjects_Peclet_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "fieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,24 +58,12 @@ namespace functionObjects
 
 class Peclet
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
     // Private data
 
         //- Name of flux field, default is "phi"
         word phiName_;
-
-        //- Name of density field (compressible cases only), default is "rho"
-        word rhoName_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        Peclet(const Peclet&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Peclet&);
 
 
 public:
@@ -107,9 +95,6 @@ public:
 
         //- Calculate the Peclet number field
         virtual bool execute(const bool postProcess = false);
-
-        //- Write the Peclet number field
-        virtual bool write(const bool postProcess = false);
 };
 
 

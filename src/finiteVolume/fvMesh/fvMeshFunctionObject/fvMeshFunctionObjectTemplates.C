@@ -52,7 +52,7 @@ template<class FieldType>
 bool Foam::functionObjects::fvMeshFunctionObject::store
 (
     word& fieldName,
-    tmp<FieldType> tfield,
+    const tmp<FieldType>& tfield,
     bool cacheable
 )
 {

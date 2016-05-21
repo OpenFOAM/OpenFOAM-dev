@@ -40,5 +40,6 @@ vorticity/vorticity.C
 Q/Q.C
 Lambda2/Lambda2.C
 CourantNo/CourantNo.C
+Peclet/Peclet.C
 
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

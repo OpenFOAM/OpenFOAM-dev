@@ -33,6 +33,7 @@ Description
     the velocity gradient tensor.
 
 SeeAlso
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
@@ -43,8 +44,7 @@ SourceFiles
 #ifndef functionObjects_Lambda2_H
 #define functionObjects_Lambda2_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "fieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,22 +59,8 @@ namespace functionObjects
 
 class Lambda2
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
-    // Private data
-
-        //- Name of velocity field, default is "U"
-        word UName_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        Lambda2(const Lambda2&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Lambda2&);
-
 
 public:
 
@@ -99,14 +85,8 @@ public:
 
     // Member Functions
 
-        //- Read the Lambda2 data
-        virtual bool read(const dictionary&);
-
-        //- Calculate Lambda2
+        //- Calculate the Lambda2 field
         virtual bool execute(const bool postProcess = false);
-
-        //- Write Lambda2
-        virtual bool write(const bool postProcess = false);
 };
 
 
