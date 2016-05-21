@@ -152,8 +152,8 @@ files)
         find $objectsDir -name '*.dep' -print | xargs -t rm 2>/dev/null
     else
         echo "removing .dep files referring to $1 ..."
-        find $objectsDir -name '*.dep' -exec grep "$1" '{}' \; \
-             -exec rm '{}' \;
+        find $objectsDir -name '*.dep' -exec grep -q "$1" '{}' \; \
+             -exec rm '{}' \; -print
     fi
 
     ;;
