@@ -46,8 +46,8 @@ bool Foam::functionObjects::fvMeshFunctionObject::write(const word& fieldName)
     {
         const regIOobject& field = mesh_.lookupObject<regIOobject>(fieldName);
 
-        Info<< type() << " " << name() << " writing:" << nl
-            << "    field " << field.name() << nl << endl;
+        Info<< "functionObjects::" << type() << " " << name()
+            << " writing field: " << field.name() << endl;
 
         field.write();
 
