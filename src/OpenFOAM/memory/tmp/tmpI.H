@@ -158,7 +158,7 @@ inline Foam::word Foam::tmp<T>::typeName() const
 
 
 template<class T>
-inline T& Foam::tmp<T>::ref()
+inline T& Foam::tmp<T>::ref() const
 {
     if (isTmp())
     {

@@ -124,7 +124,7 @@ public:
 
             //- Return non-const reference or generate a fatal error
             //  if the object is const.
-            inline T& ref();
+            inline T& ref() const;
 
             //- Return tmp pointer for reuse.
             //  Returns a clone if the object is not a temporary
