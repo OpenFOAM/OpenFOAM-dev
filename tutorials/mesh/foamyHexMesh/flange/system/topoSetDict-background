@@ -136,7 +136,7 @@ FoamFile
 //    // values of field within certain range
 //    source fieldToCell;
 //    {
-//        fieldName   U;      // Note: uses mag(U) since volVectorField
+//        field   U;      // Note: uses mag(U) since volVectorField
 //        min         0.1;
 //        max         0.5;
 //    }

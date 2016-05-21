@@ -55,7 +55,7 @@ Foam::fv::variableHeatTransfer::variableHeatTransfer
 )
 :
     interRegionHeatTransferModel(name, modelType, dict, mesh),
-    UNbrName_(coeffs_.lookupOrDefault<word>("UNbrName", "U")),
+    UNbrName_(coeffs_.lookupOrDefault<word>("UNbr", "U")),
     a_(0),
     b_(0),
     c_(0),
@@ -130,7 +130,7 @@ bool Foam::fv::variableHeatTransfer::read(const dictionary& dict)
 {
     if (interRegionHeatTransferModel::read(dict))
     {
-        coeffs_.readIfPresent("UNbrName", UNbrName_);
+        coeffs_.readIfPresent("UNbr", UNbrName_);
 
         coeffs_.readIfPresent("a", a_);
         coeffs_.readIfPresent("b", b_);

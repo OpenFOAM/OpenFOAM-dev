@@ -37,7 +37,7 @@ Description
     {
         type                uniformInterpolatedDisplacement;
         value               uniform (0 0 0);
-        fieldName           wantedDisplacement;
+        field               wantedDisplacement;
         interpolationScheme linear;
     }
     \endverbatim

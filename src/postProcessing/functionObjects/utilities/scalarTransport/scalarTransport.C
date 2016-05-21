@@ -197,9 +197,9 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 {
     Info<< type() << ":" << nl;
 
-    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-    UName_ = dict.lookupOrDefault<word>("UName", "U");
-    rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
+    rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
 
     userDT_ = false;
     if (dict.readIfPresent("DT", DT_))

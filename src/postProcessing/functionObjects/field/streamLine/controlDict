@@ -59,9 +59,6 @@ functions
 
         setFormat       vtk; //gnuplot, raw etc. See sampleDict.
 
-        // Velocity field to use for tracking.
-        UName U;
-
         // Interpolation method. Default is cellPoint. See sampleDict.
         //interpolationScheme pointMVC;
 

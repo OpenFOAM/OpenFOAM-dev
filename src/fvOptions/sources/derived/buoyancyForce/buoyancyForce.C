@@ -68,7 +68,7 @@ Foam::fv::buoyancyForce::buoyancyForce
         )
     )
 {
-    coeffs_.lookup("fieldNames") >> fieldNames_;
+    coeffs_.lookup("fields") >> fieldNames_;
 
     if (fieldNames_.size() != 1)
     {

@@ -31,7 +31,7 @@ boundaryField
         type            uniformFixedValue;
         uniformValue    (0 0 0);
 //        type            mapped;
-//        fieldName       Usf;
+//        field       Usf;
 //        average         (0 0 0);
 //        setAverage      no;
 //        value           uniform (0 0 0);

@@ -40,7 +40,7 @@ phaseHydrostaticPressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    phaseName_("alpha"),
+    phaseFraction_("alpha"),
     rho_(0.0),
     pRefValue_(0.0),
     pRefPoint_(Zero)
@@ -60,7 +60,7 @@ phaseHydrostaticPressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    phaseName_(dict.lookupOrDefault<word>("phaseName", "alpha")),
+    phaseFraction_(dict.lookupOrDefault<word>("phaseFraction", "alpha")),
     rho_(readScalar(dict.lookup("rho"))),
     pRefValue_(readScalar(dict.lookup("pRefValue"))),
     pRefPoint_(dict.lookup("pRefPoint"))
@@ -94,7 +94,7 @@ phaseHydrostaticPressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
-    phaseName_(ptf.phaseName_),
+    phaseFraction_(ptf.phaseFraction_),
     rho_(ptf.rho_),
     pRefValue_(ptf.pRefValue_),
     pRefPoint_(ptf.pRefPoint_)
@@ -108,7 +108,7 @@ phaseHydrostaticPressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf),
-    phaseName_(ptf.phaseName_)
+    phaseFraction_(ptf.phaseFraction_)
 {}
 
 
@@ -120,7 +120,7 @@ phaseHydrostaticPressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf, iF),
-    phaseName_(ptf.phaseName_),
+    phaseFraction_(ptf.phaseFraction_),
     rho_(ptf.rho_),
     pRefValue_(ptf.pRefValue_),
     pRefPoint_(ptf.pRefPoint_)
@@ -139,7 +139,7 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::updateCoeffs()
     const scalarField& alphap =
         patch().lookupPatchField<volScalarField, scalar>
         (
-            phaseName_
+            phaseFraction_
         );
 
     const uniformDimensionedVectorField& g =
@@ -161,10 +161,10 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::updateCoeffs()
 void Foam::phaseHydrostaticPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    if (phaseName_ != "alpha")
+    if (phaseFraction_ != "alpha")
     {
-        os.writeKeyword("phaseName")
-            << phaseName_ << token::END_STATEMENT << nl;
+        os.writeKeyword("phaseFraction")
+            << phaseFraction_ << token::END_STATEMENT << nl;
     }
     os.writeKeyword("rho") << rho_ << token::END_STATEMENT << nl;
     os.writeKeyword("pRefValue") << pRefValue_ << token::END_STATEMENT << nl;
@@ -182,8 +182,7 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::operator=
 {
     fvPatchScalarField::operator=
     (
-        valueFraction()*refValue()
-        + (1 - valueFraction())*ptf
+        valueFraction()*refValue() + (1 - valueFraction())*ptf
     );
 }
 

@@ -324,9 +324,9 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     Info<< type() << " " << name() << ":" << nl;
 
     dict.lookup("fields") >> fields_;
-    if (dict.found("UName"))
+    if (dict.found("U"))
     {
-        dict.lookup("UName") >> UName_;
+        dict.lookup("U") >> UName_;
     }
     else
     {

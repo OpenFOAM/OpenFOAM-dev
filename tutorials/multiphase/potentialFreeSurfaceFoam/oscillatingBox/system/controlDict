@@ -57,11 +57,9 @@ functions
     {
         type            forces;
         libs ("libforces.so");
-        writeControl   writeTime;
+        writeControl    writeTime;
         patches         (floatingObject);
-        pName           p;
-        UName           U;
-        rhoName         rhoInf;
+        rho             rhoInf;
         log             yes;
         rhoInf          1000;
         CofR            (0 0 0);

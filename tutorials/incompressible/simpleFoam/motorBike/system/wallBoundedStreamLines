@@ -48,7 +48,7 @@ wallBoundedStreamLines
     setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot;
 
     // Velocity field to use for tracking.
-    UName UNear;
+    U     UNear;
 
     // Interpolation method. Default is cellPoint. See sampleDict.
     //interpolationScheme pointMVC;

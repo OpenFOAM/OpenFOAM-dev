@@ -47,8 +47,7 @@ dictionaryReplacement
             {
                 type            compressible::turbulentTemperatureCoupledBaffleMixed;
                 Tnbr            T;
-                kappa           solidThermo;
-                kappaName       none;
+                kappaMethod     solidThermo;
                 value           uniform 300;
             }
             minY

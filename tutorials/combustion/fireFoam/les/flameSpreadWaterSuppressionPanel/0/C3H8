@@ -45,16 +45,12 @@ boundaryField
     inlet
     {
         type                totalFlowRateAdvectiveDiffusive;
-        phi                 phi;
-        rho                 rho;
         value               uniform 1;
     }
 
     region0_to_pyrolysisRegion_coupledWall
     {
         type                totalFlowRateAdvectiveDiffusive;
-        phi                 phi;
-        rho                 rho;
         massFluxFraction    1.0;
         value               $internalField;
     }

@@ -37,7 +37,7 @@ sixDoFRigidBodyMotionCoeffs
     );
     angularMomentum (0 0 -2);
     g               (0 -9.81 0);
-    rhoName         rhoInf;
+    rho             rhoInf;
     rhoInf          1;
     report          on;
 

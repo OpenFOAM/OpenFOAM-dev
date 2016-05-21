@@ -30,8 +30,6 @@ boundaryField
     {
         type            waveTransmissive;
         field           p;
-        phi             phi;
-        rho             rho;
         psi             thermo:psi;
         fieldInf        101325;
         gamma           1.4;
@@ -44,8 +42,6 @@ boundaryField
         type            totalPressure;
         value           uniform 101325;
         p0              uniform 101325;
-        U               U;
-        phi             phi;
         rho             none;
         psi             thermo:psi;
         gamma           1.4;

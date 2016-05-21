@@ -37,16 +37,13 @@ boundaryField
     "(top|sides)"
     {
         type            pressureInletOutletVelocity;
-        phi             phi;
         value           $internalField;
     }
 
     "(region0_to.*)"
     {
         type            mappedFlowRate;
-        phi             phi;
         nbrPhi          phiGas;
-        rho             rho;
         value           uniform (0 0 0);
     }
 }

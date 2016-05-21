@@ -47,9 +47,9 @@ Description
     \heading Patch usage
 
     \table
-        Property     | Description             | Required    | Default value
-        pName        | Pressure field name     | no          | p
-        psiName      | Compressibility field name | no       | thermo:psi
+        Property     | Description                | Required    | Default value
+        p            | Pressure field name        | no          | p
+        psi          | Compressibility field name | no          | thermo:psi
     \endtable
 
     Example of the boundary condition specification:

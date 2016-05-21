@@ -1107,7 +1107,7 @@ Foam::InteractionLists<ParticleType>::InteractionLists(const polyMesh& mesh)
     cellIndexAndTransformToDistribute_(),
     wallFaceIndexAndTransformToDistribute_(),
     referredWallFaces_(),
-    UName_("unknown_UName"),
+    UName_("unknown_U"),
     referredWallData_(),
     referredParticles_()
 {}

@@ -26,8 +26,8 @@ porousToair
         nbrRegionName   air;
         master          true;
 
-        nbrModelName    airToporous;
-        fieldNames      (h);
+        nbrModel        airToporous;
+        fields          (h);
         semiImplicit    no;
     }
 }

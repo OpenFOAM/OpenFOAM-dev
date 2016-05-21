@@ -38,7 +38,7 @@ boundaryField
         sampleMode      nearestPatchFace;
         samplePatch     region0_to_pyrolysisRegion_coupledWall;
         offset          (0 0 0);
-        fieldName       Qr; // this is the name of Qr field in region0
+        field       Qr; // this is the name of Qr field in region0
         setAverage      no;
         average         0;
         value           uniform 0;

@@ -29,8 +29,6 @@ boundaryField
             (1 40)
         );
         p0              40; // only used for restarts
-        U               U;
-        phi             phi;
         rho             none;
         psi             none;
         gamma           1;

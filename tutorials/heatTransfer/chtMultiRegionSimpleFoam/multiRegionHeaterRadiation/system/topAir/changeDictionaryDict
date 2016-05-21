@@ -66,10 +66,9 @@ dictionaryReplacement
             {
                 type            compressible::turbulentTemperatureRadCoupledMixed;
                 Tnbr            T;
-                kappa           fluidThermo;
+                kappaMethod     fluidThermo;
                 QrNbr           none;
                 Qr              Qr;
-                kappaName       none;
                 value           uniform 300;
             }
         }
@@ -195,7 +194,6 @@ dictionaryReplacement
             ".*"
             {
                 type            MarshakRadiation;
-                T               T;
                 emissivityMode  lookup;
                 emissivity      uniform 1.0;
                 value           uniform 0;
@@ -204,7 +202,6 @@ dictionaryReplacement
             "topAir_to_.*"
             {
                 type            MarshakRadiation;
-                T               T;
                 emissivityMode  solidRadiation;
                 value           uniform 0;
             }
@@ -219,7 +216,6 @@ dictionaryReplacement
             ".*"
             {
                 type            greyDiffusiveRadiation;
-                T               T;
                 emissivityMode  lookup;
                 emissivity      uniform 1.0;
                 value           uniform 0;
@@ -228,7 +224,6 @@ dictionaryReplacement
             "topAir_to_.*"
             {
                 type            greyDiffusiveRadiation;
-                T               T;
                 emissivityMode  solidRadiation;
                 value           uniform 0;
             }

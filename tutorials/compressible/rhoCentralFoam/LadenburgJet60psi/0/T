@@ -1241,8 +1241,6 @@ boundaryField
     freestream
     {
         type            totalTemperature;
-        U               U;
-        phi             phi;
         psi             thermo:psi;
         gamma           1.4;
         T0              uniform 297;

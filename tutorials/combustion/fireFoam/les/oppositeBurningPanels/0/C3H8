@@ -40,15 +40,11 @@ boundaryField
     burner
     {
         type            totalFlowRateAdvectiveDiffusive;
-        phi             phi;
-        rho             rho;
         value           uniform 1.0;
     }
     "(region0_to.*)"
     {
         type            totalFlowRateAdvectiveDiffusive;
-        phi             phi;
-        rho             rho;
         value           $internalField;
     }
 }

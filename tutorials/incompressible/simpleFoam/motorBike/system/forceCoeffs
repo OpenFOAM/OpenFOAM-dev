@@ -17,8 +17,8 @@ forceCoeffs1
 
     log         yes;
 
-    patches     ( motorBikeGroup );
-    rhoName     rhoInf;      // Indicates incompressible
+    patches     (motorBikeGroup);
+    rho         rhoInf;      // Indicates incompressible
     rhoInf      1;           // Redundant for incompressible
     liftDir     (0 0 1);
     dragDir     (1 0 0);
@@ -27,14 +27,14 @@ forceCoeffs1
     magUInf     20;
     lRef        1.42;        // Wheelbase length
     Aref        0.75;        // Estimated
-/*
+    /*
     binData
     {
         nBin        20;          // output data into 20 bins
         direction   (1 0 0);     // bin direction
         cumulative  yes;
     }
-*/
+    */
 }
 
 

@@ -22,7 +22,7 @@ disk1
 
     actuationDiskSourceCoeffs
     {
-        fieldNames      (U);
+        fields      (U);
 
         selectionMode   cellSet;
         cellSet         actuationDisk1;
@@ -41,7 +41,7 @@ disk2
 
     actuationDiskSourceCoeffs
     {
-        fieldNames      (U);
+        fields      (U);
 
         selectionMode   cellSet;
         cellSet         actuationDisk2;

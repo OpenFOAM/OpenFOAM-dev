@@ -75,11 +75,11 @@ Description
         relax        | Relaxation coefficient [0-1] | no     | 0.9
         thermoMode   | Thermo mode [thermo|lookup] | yes     |
         rhoRef       | Reference (solid) density | yes       |
-        rhoName      | Name of density field   | no          | rho
-        TName        | Name of temperature field | no        | T
-        CpName       | Name of specific heat capacity field | no | Cp
-        UName        | Name of velocity field  | no          | U
-        phiName      | Name of flux field      | no          | phi
+        rho          | Name of density field   | no          | rho
+        T            | Name of temperature field | no        | T
+        Cp           | Name of specific heat capacity field | no | Cp
+        U            | Name of velocity field  | no          | U
+        phi          | Name of flux field      | no          | phi
         Cu           | Model coefficient       | no          | 100000
         q            | Model coefficient       | no          | 0.001
         beta         | Thermal expansion coefficient [1/K] | yes |

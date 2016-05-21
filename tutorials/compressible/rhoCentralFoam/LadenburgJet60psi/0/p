@@ -1233,8 +1233,6 @@ boundaryField
     {
         type            waveTransmissive;
         field           p;
-        phi             phi;
-        rho             rho;
         psi             thermo:psi;
         gamma           1.4;
         fieldInf        101325;
@@ -1272,8 +1270,6 @@ boundaryField
     freestream
     {
         type            totalPressure;
-        U               U;
-        phi             phi;
         rho             none;
         psi             thermo:psi;
         gamma           1.4;

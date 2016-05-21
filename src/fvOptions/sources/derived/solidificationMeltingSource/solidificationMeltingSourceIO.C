@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,8 @@ bool Foam::fv::solidificationMeltingSource::read(const dictionary& dict)
         mode_ = thermoModeTypeNames_.read(coeffs_.lookup("thermoMode"));
 
         coeffs_.lookup("rhoRef") >> rhoRef_;
-        coeffs_.readIfPresent("TName", TName_);
-        coeffs_.readIfPresent("UName", UName_);
+        coeffs_.readIfPresent("T", TName_);
+        coeffs_.readIfPresent("U", UName_);
 
         coeffs_.readIfPresent("Cu", Cu_);
         coeffs_.readIfPresent("q", q_);

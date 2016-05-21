@@ -58,7 +58,7 @@ Foam::fv::tabulatedAccelerationSource::tabulatedAccelerationSource
 :
     option(name, modelType, dict, mesh),
     motion_(coeffs_, mesh.time()),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
+    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     g0_("g0", dimAcceleration, Zero)
 {
     fieldNames_.setSize(1, UName_);

@@ -118,8 +118,8 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
     interRegionOption(name, modelType, dict, mesh),
     porosityPtr_(NULL),
     firstIter_(true),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
-    muName_(coeffs_.lookupOrDefault<word>("muName", "thermo:mu"))
+    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
+    muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu"))
 {
     if (active_)
     {
@@ -289,8 +289,8 @@ bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
     if (interRegionOption::read(dict))
     {
-        coeffs_.readIfPresent("UName", UName_);
-        coeffs_.readIfPresent("muName", muName_);
+        coeffs_.readIfPresent("U", UName_);
+        coeffs_.readIfPresent("mu", muName_);
 
         // Reset the porosity model?
 

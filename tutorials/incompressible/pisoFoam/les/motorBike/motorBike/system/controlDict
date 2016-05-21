@@ -54,7 +54,6 @@ functions
         type            streamLine;
         writeControl   writeTime;
         setFormat       vtk;
-        UName           U;
         trackForward    true;
         fields          (p U);
         lifeTime        10000;
@@ -100,9 +99,7 @@ functions
         writeControl   timeStep;
         writeInterval  1;
         patches         ( "motorBike.*" );
-        pName           p;
-        UName           U;
-        rhoName         rhoInf;
+        rho             rhoInf;
         log             true;
         rhoInf          1;
         liftDir         (0 0 1);

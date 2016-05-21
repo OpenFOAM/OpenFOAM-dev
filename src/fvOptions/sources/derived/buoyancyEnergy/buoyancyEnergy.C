@@ -56,9 +56,9 @@ Foam::fv::buoyancyEnergy::buoyancyEnergy
 )
 :
     option(sourceName, modelType, dict, mesh),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U"))
+    UName_(coeffs_.lookupOrDefault<word>("U", "U"))
 {
-    coeffs_.lookup("fieldNames") >> fieldNames_;
+    coeffs_.lookup("fields") >> fieldNames_;
 
     if (fieldNames_.size() != 1)
     {

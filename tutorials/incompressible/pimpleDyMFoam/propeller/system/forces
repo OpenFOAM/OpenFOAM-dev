@@ -18,9 +18,7 @@ forces
     log         yes;
 
     patches     ( "propeller.*" );
-    pName       p;
-    UName       U;
-    rhoName     rhoInf;     // Indicates incompressible
+    rho         rhoInf;     // Indicates incompressible
     log         true;
     rhoInf      1;          // Redundant for incompressible
 

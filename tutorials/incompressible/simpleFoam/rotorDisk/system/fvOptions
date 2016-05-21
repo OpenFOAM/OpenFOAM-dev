@@ -24,7 +24,7 @@ disk
         selectionMode   cellZone;
         cellZone        rotatingZone;
 
-        fieldNames      (U);    // Names of fields on which to apply source
+        fields      (U);    // Names of fields on which to apply source
         nBlades         3;      // Number of blades
         tipEffect       0.96;   // Normalised radius above which lift = 0
 

@@ -586,7 +586,7 @@ bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        coeffs_.lookup("fieldNames") >> fieldNames_;
+        coeffs_.lookup("fields") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);
 
         // Read co-ordinate system/geometry invariant properties

@@ -52,24 +52,21 @@ boundaryField
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           uniform 300;
         Tnbr            T;
-        kappa           fluidThermo;
-        kappaName       none;
+        kappaMethod     fluidthermo;
     }
     bottomWater_to_leftSolid
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           uniform 300;
         Tnbr            T;
-        kappa           fluidThermo;
-        kappaName       none;
+        kappaMethod     fluidthermo;
     }
     bottomWater_to_heater
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           uniform 300;
         Tnbr            T;
-        kappa           fluidThermo;
-        kappaName       none;
+        kappaMethod     fluidthermo;
     }
 }
 

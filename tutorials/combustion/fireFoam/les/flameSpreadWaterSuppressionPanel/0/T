@@ -52,10 +52,9 @@ boundaryField
         pyrolysisRegion pyrolysisRegion;
         filmRegion      filmRegion;
         Tnbr            T;
-        kappa           fluidThermo;
+        kappaMethod     fluidThermo;
         QrNbr           none;
         Qr              Qr;
-        kappaName       none;
         filmDeltaDry    0.0;
         filmDeltaWet    2e-4;
         value           $internalField;

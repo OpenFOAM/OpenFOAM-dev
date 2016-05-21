@@ -44,8 +44,6 @@ outlet
         type            totalPressure;
         value           uniform 1e5;
         p0              uniform 1e5;
-        U               U;
-        phi             phi;
         rho             rho;
         psi             none;
         gamma           1.4;

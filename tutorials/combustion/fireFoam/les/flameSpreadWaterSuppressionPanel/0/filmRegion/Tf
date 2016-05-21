@@ -29,7 +29,7 @@ boundaryField
         sampleMode      nearestPatchFace;
         samplePatch     region0_to_pyrolysisRegion_coupledWall;
         offset          (0 0 0);
-        fieldName       T;
+        field       T;
         setAverage      no;
         average         0;
         value           uniform 298;

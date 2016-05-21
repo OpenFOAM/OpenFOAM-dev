@@ -30,7 +30,6 @@ boundaryField
     outlet
     {
         type            pressureInletOutletVelocity;
-        phi             phi;
         value           $internalField;
     }
 

@@ -119,7 +119,7 @@ Foam::fv::interRegionHeatTransferModel::interRegionHeatTransferModel
         dict,
         mesh
     ),
-    nbrModelName_(coeffs_.lookup("nbrModelName")),
+    nbrModelName_(coeffs_.lookup("nbrModel")),
     nbrModel_(NULL),
     firstIter_(true),
     timeIndex_(-1),
@@ -143,12 +143,12 @@ Foam::fv::interRegionHeatTransferModel::interRegionHeatTransferModel
         zeroGradientFvPatchScalarField::typeName
     ),
     semiImplicit_(false),
-    TName_(coeffs_.lookupOrDefault<word>("TName", "T")),
-    TNbrName_(coeffs_.lookupOrDefault<word>("TNbrName", "T"))
+    TName_(coeffs_.lookupOrDefault<word>("T", "T")),
+    TNbrName_(coeffs_.lookupOrDefault<word>("TNbr", "T"))
 {
     if (active())
     {
-        coeffs_.lookup("fieldNames") >> fieldNames_;
+        coeffs_.lookup("fields") >> fieldNames_;
         applied_.setSize(fieldNames_.size(), false);
 
         coeffs_.lookup("semiImplicit") >> semiImplicit_;

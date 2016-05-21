@@ -53,8 +53,6 @@ functions
         libs ( "libforces.so" );
         patches (hull);
         rhoInf  998.8;
-        rhoName rho;
-        UName   U;
         log     on;
         writeControl   timeStep;
         writeInterval  1;

@@ -172,7 +172,7 @@ subModels
             cohesionEnergyDensity 0;
         };
 
-        UName U.air;
+        U     U.air;
     }
 
     stochasticCollisionModel none;

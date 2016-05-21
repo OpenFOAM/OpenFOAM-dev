@@ -47,8 +47,7 @@ dictionaryReplacement
             {
                 type            compressible::turbulentTemperatureCoupledBaffleMixed;
                 Tnbr            T;
-                kappa           solidThermo;
-                kappaName       none;
+                kappaMethod     solidThermo;
                 value           uniform 300;
             }
 
@@ -56,8 +55,7 @@ dictionaryReplacement
             {
                 type            compressible::turbulentTemperatureCoupledBaffleMixed;
                 Tnbr            T;
-                kappa           solidThermo;
-                kappaName       none;
+                kappaMethod     solidThermo;
                 thicknessLayers (1e-3);
                 kappaLayers     (5e-4);
                 value           uniform 300;

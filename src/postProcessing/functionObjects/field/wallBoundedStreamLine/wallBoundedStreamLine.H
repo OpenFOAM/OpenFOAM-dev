@@ -40,7 +40,7 @@ Description
         libs ("libfieldFunctionObjects.so");
         ...
         setFormat       vtk;
-        UName           UNear;
+        U               UNear;
         trackForward    yes;
         fields
         (
@@ -65,15 +65,15 @@ Description
     \heading Function object usage
     \table
         Property     | Description             | Required    | Default value
-        type         | type name: wallBoundedStreamLine| yes |
-        setFormat    | output data type        | yes         |
-        UName        | tracking velocity field name | yes    |
-        fields       | fields to sample        | yes         |
-        lifetime     | maximum number of particle tracking steps | yes |
-        trackLength  | tracking segment length | no          |
-        nSubCycle    | number of tracking steps per cell | no|
-        cloudName    | cloud name to use       | yes         |
-        seedSampleSet| seeding method (see below)| yes       |
+        type         | Type name: wallBoundedStreamLine| yes |
+        setFormat    | Output data type        | yes         |
+        U            | Tracking velocity field name | yes    |
+        fields       | Fields to sample        | yes         |
+        lifetime     | Maximum number of particle tracking steps | yes |
+        trackLength  | Tracking segment length | no          |
+        nSubCycle    | Number of tracking steps per cell | no|
+        cloudName    | Cloud name to use       | yes         |
+        seedSampleSet| Seeding method (see below)| yes       |
     \endtable
 
     \linebreak

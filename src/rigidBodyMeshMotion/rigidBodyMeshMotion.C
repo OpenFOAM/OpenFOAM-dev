@@ -114,7 +114,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
     ),
     test_(coeffDict().lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
-    rhoName_(coeffDict().lookupOrDefault<word>("rhoName", "rho")),
+    rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
     curTimeIndex_(-1)
 {
     if (rhoName_ == "rhoInf")
@@ -253,7 +253,7 @@ void Foam::rigidBodyMeshMotion::solve()
             forcesDict.add("type", functionObjects::forces::typeName);
             forcesDict.add("patches", bodyMeshes_[bi].patches_);
             forcesDict.add("rhoInf", rhoInf_);
-            forcesDict.add("rhoName", rhoName_);
+            forcesDict.add("rho", rhoName_);
             forcesDict.add("CofR", vector::zero);
 
             functionObjects::forces f("forces", db(), forcesDict);

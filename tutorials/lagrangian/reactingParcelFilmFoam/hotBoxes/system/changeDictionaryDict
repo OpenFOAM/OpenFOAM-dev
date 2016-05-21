@@ -23,7 +23,7 @@ dictionaryReplacement
             wallFilm
             {
                 type            mapped;
-                fieldName       Tsf;
+                field       Tsf;
                 average         300;
                 setAverage      no;
                 value           uniform 300;
@@ -38,7 +38,7 @@ dictionaryReplacement
             wallFilm
             {
                 type            mapped;
-                fieldName       Usf;
+                field       Usf;
                 average         (0 0 0);
                 setAverage      no;
                 value           uniform (0 0 0);

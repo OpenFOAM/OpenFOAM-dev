@@ -66,7 +66,7 @@ constantFilmThermo::constantFilmThermo
 )
 :
     filmThermoModel(typeName, owner, dict),
-    name_(coeffDict_.lookup("specieName")),
+    name_(coeffDict_.lookup("specie")),
     rho0_("rho0"),
     mu0_("mu0"),
     sigma0_("sigma0"),

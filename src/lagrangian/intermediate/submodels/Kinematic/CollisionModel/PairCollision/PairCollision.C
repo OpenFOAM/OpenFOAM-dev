@@ -591,7 +591,7 @@ Foam::PairCollision<CloudType>::PairCollision
                 false
             )
         ),
-        this->coeffDict().lookupOrDefault("UName", word("U"))
+        this->coeffDict().lookupOrDefault("U", word("U"))
     )
 {}
 

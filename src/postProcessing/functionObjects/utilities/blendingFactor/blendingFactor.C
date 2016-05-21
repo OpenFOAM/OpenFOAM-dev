@@ -64,8 +64,8 @@ Foam::functionObjects::blendingFactor::~blendingFactor()
 
 bool Foam::functionObjects::blendingFactor::read(const dictionary& dict)
 {
-    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-    dict.lookup("fieldName") >> fieldName_;
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+    dict.lookup("field") >> fieldName_;
 
     return true;
 }

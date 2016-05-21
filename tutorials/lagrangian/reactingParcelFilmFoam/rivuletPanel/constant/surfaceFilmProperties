@@ -26,7 +26,7 @@ kinematicSingleLayerCoeffs
     filmThermoModel constant;
     constantCoeffs
     {
-        specieName  water;
+        specie      water;
         rho0        1000;
         mu0         1e-3;
         sigma0      0.07;

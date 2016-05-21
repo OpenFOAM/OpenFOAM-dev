@@ -624,14 +624,14 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
     if (directForceDensity_)
     {
         // Optional entry for fDName
-        fDName_ = dict.lookupOrDefault<word>("fDName", "fD");
+        fDName_ = dict.lookupOrDefault<word>("fD", "fD");
     }
     else
     {
         // Optional entries U and p
-        pName_ = dict.lookupOrDefault<word>("pName", "p");
-        UName_ = dict.lookupOrDefault<word>("UName", "U");
-        rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+        pName_ = dict.lookupOrDefault<word>("p", "p");
+        UName_ = dict.lookupOrDefault<word>("U", "U");
+        rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
 
         // Reference density needed for incompressible calculations
         rhoRef_ = readScalar(dict.lookup("rhoInf"));

@@ -51,11 +51,11 @@ Description
     \heading Patch usage
 
     \table
-        Property     | Description             | Required    | Default value
-        phaseName    | phase field name        | no          | alpha
-        rho          | density field name      | no          | rho
-        pRefValue    | reference pressure [Pa] | yes         |
-        pRefPoint    | reference pressure location | yes     |
+        Property      | Description                 | Required | Default value
+        phaseFraction | phase-fraction field name   | no       | alpha
+        rho           | density field name          | no       | rho
+        pRefValue     | reference pressure [Pa]     | yes      |
+        pRefPoint     | reference pressure location | yes      |
     \endtable
 
     Example of the boundary condition specification:
@@ -63,7 +63,7 @@ Description
     myPatch
     {
         type            phaseHydrostaticPressure;
-        phaseName       alpha1;
+        phaseFraction   alpha1;
         rho             rho;
         pRefValue       1e5;
         pRefPoint       (0 0 0);
@@ -103,7 +103,7 @@ protected:
     // Protected data
 
         //- Name of phase-fraction field
-        word phaseName_;
+        word phaseFraction_;
 
         //- Constant density in the far-field
         scalar rho_;
@@ -196,16 +196,16 @@ public:
 
         // Access
 
-            //- Return the phaseName
-            const word& phaseName() const
+            //- Return the phaseFraction
+            const word& phaseFraction() const
             {
-                return phaseName_;
+                return phaseFraction_;
             }
 
-            //- Return reference to the phaseName to allow adjustment
-            word& phaseName()
+            //- Return reference to the phaseFraction to allow adjustment
+            word& phaseFraction()
             {
-                return phaseName_;
+                return phaseFraction_;
             }
 
             //- Return the constant density in the far-field

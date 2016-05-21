@@ -31,7 +31,7 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        TName        | Temperature field name  | no          | T
+        T            | Temperature field name  | no          | T
         theta0       | Contact angle data      | yes         |
     \endtable
 

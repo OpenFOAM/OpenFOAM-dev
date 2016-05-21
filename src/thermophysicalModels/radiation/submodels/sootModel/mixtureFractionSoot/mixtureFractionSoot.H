@@ -47,7 +47,7 @@ Description
     {
         nuSoot              0.015;
         Wsoot               12;
-        mappingFieldName    P;
+        mappingField        P;
     }
 
 SourceFiles

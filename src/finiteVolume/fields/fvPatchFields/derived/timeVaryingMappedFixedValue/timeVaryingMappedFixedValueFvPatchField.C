@@ -98,7 +98,7 @@ timeVaryingMappedFixedValueFvPatchField
     }
 
 
-    dict.readIfPresent("fieldTableName", fieldTableName_);
+    dict.readIfPresent("fieldTable", fieldTableName_);
 
     if (dict.found("value"))
     {
@@ -565,7 +565,7 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::write
 
     if (fieldTableName_ != this->internalField().name())
     {
-        os.writeKeyword("fieldTableName") << fieldTableName_
+        os.writeKeyword("fieldTable") << fieldTableName_
             << token::END_STATEMENT << nl;
     }
 

@@ -59,7 +59,7 @@ uniformInterpolatedDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchField<vector>(p, iF, dict),
-    fieldName_(dict.lookup("fieldName")),
+    fieldName_(dict.lookup("field")),
     interpolationScheme_(dict.lookup("interpolationScheme"))
 {
     const pointMesh& pMesh = this->internalField().mesh();
@@ -260,7 +260,7 @@ void uniformInterpolatedDisplacementPointPatchVectorField::write(Ostream& os)
 const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("fieldName")
+    os.writeKeyword("field")
         << fieldName_ << token::END_STATEMENT << nl;
     os.writeKeyword("interpolationScheme")
         << interpolationScheme_ << token::END_STATEMENT << nl;

@@ -24,7 +24,7 @@ momentumSource
     {
         selectionMode   all;
 
-        fieldNames      (U);
+        fields      (U);
         Ubar            (0.1335 0 0);
     }
 }

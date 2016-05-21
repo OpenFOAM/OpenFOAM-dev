@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,27 +59,23 @@ public:
 
     struct thermoData
     {
-//    private:
         word name_;
         scalar value_;
         bool set_;
 
-//    public:
         thermoData()
         :
             name_("unknown"),
             value_(0.0),
             set_(false)
         {}
+
         thermoData(const word& n)
         :
             name_(n),
             value_(0.0),
             set_(false)
         {}
-
-//        virtual ~thermoData()
-//        {}
     };
 
 

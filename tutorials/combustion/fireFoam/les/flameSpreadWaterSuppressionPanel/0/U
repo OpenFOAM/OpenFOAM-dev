@@ -38,7 +38,6 @@ boundaryField
     side
     {
         type            pressureInletOutletVelocity;
-        phi             phi;
         value           $internalField;
     }
 
@@ -52,9 +51,7 @@ boundaryField
     region0_to_pyrolysisRegion_coupledWall
     {
         type            mappedFlowRate;
-        phi             phi;
         nbrPhi          phiGas;
-        rho             rho;
         value           uniform (0 0 0);
     }
 }

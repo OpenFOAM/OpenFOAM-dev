@@ -23,7 +23,6 @@ boundaryField
     floor
     {
         type            MarshakRadiation;
-        T               T;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;
@@ -32,7 +31,6 @@ boundaryField
     fixedWalls
     {
         type            MarshakRadiation;
-        T               T;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;
@@ -41,7 +39,6 @@ boundaryField
     ceiling
     {
         type            MarshakRadiation;
-        T               T;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;
@@ -50,7 +47,6 @@ boundaryField
     box
     {
         type            MarshakRadiation;
-        T               T;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;

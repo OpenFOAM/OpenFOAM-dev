@@ -84,7 +84,7 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
         }
         case tmLookup:
         {
-            TName_ = coeffs_.lookupOrDefault<word>("TName", "T");
+            TName_ = coeffs_.lookupOrDefault<word>("T", "T");
             break;
         }
         default:
@@ -157,7 +157,7 @@ bool Foam::fv::fixedTemperatureConstraint::read(const dictionary& dict)
             );
         }
 
-        coeffs_.readIfPresent("TName", TName_);
+        coeffs_.readIfPresent("T", TName_);
 
         return true;
     }

@@ -108,7 +108,7 @@ class rigidBodyMeshMotion
         Switch test_;
 
         //- Reference density required by the forces object for
-        //  incompressible calculations, required if rhoName == rhoInf
+        //  incompressible calculations, required if rho == rhoInf
         scalar rhoInf_;
 
         //- Name of density field, optional unless used for an

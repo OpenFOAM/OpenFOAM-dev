@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ class sixDoFRigidBodyMotionSolver
         Switch test_;
 
         //- Reference density required by the forces object for
-        //  incompressible calculations, required if rhoName == rhoInf
+        //  incompressible calculations, required if rho == rhoInf
         scalar rhoInf_;
 
         //- Name of density field, optional unless used for an

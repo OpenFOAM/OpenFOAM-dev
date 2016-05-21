@@ -88,7 +88,7 @@ Foam::radiation::mixtureFractionSoot<ThermoType>::mixtureFractionSoot
     sootMax_(-1),
     mappingFieldName_
     (
-        coeffsDict_.lookupOrDefault<word>("mappingFieldName", "none")
+        coeffsDict_.lookupOrDefault<word>("mappingField", "none")
     ),
     mapFieldMax_(1),
     thermo_(mesh.lookupObject<fluidThermo>(basicThermo::dictName)),

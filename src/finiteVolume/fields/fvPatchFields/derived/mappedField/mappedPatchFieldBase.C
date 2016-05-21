@@ -68,7 +68,7 @@ mappedPatchFieldBase<Type>::mappedPatchFieldBase
     (
         dict.template lookupOrDefault<word>
         (
-            "fieldName",
+            "field",
             patchField_.internalField().name()
         )
     ),
@@ -314,7 +314,7 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
 template<class Type>
 void mappedPatchFieldBase<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("fieldName") << fieldName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("field") << fieldName_ << token::END_STATEMENT << nl;
     os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
     os.writeKeyword("average") << average_ << token::END_STATEMENT << nl;
     os.writeKeyword("interpolationScheme") << interpolationScheme_

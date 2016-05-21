@@ -93,8 +93,8 @@ Foam::fv::tabulatedHeatTransfer::tabulatedHeatTransfer
 )
 :
     interRegionHeatTransferModel(name, modelType, dict, mesh),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
-    UNbrName_(coeffs_.lookupOrDefault<word>("UNbrName", "U")),
+    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
+    UNbrName_(coeffs_.lookupOrDefault<word>("UNbr", "U")),
     hTable_(),
     AoV_(),
     startTimeName_(mesh.time().timeName())

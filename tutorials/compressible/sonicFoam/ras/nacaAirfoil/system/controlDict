@@ -59,8 +59,6 @@ functions
             WALL10
         );
 
-        pName       p;
-        UName       U;
         log         true;
         rhoInf      1;
         CofR        (0 0 0);

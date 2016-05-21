@@ -56,7 +56,6 @@ dictionaryReplacement
                 openingTime         0.01;
                 maxOpenFractionDelta 0.1;
                 openFraction        0;
-                p                   p;
                 minThresholdValue   8000;
                 forceBased          0;
                 value               uniform (0 0 0);

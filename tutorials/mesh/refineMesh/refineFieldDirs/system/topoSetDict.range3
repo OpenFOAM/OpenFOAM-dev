@@ -24,7 +24,7 @@ actions
         source fieldToCell;
         sourceInfo
         {
-          fieldName   radiusFieldXY;
+          field   radiusFieldXY;
           min         3.67;
           max         18.47;
         }

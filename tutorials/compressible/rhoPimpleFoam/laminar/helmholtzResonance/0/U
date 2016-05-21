@@ -24,8 +24,6 @@ boundaryField
     inlet
     {
         type            flowRateInletVelocity;
-        phi             phi;
-        rho             rho;
         massFlowRate    0.0001;
         value           uniform (0 0 0);
     }
@@ -51,8 +49,6 @@ boundaryField
     plenum
     {
         type            pressureInletVelocity;
-        phi             phi;
-        rho             rho;
         value           uniform (0 0 0);
     }
 }

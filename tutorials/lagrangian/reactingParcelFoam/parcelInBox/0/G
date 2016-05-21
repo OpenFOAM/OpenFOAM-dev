@@ -32,7 +32,6 @@ boundaryField
     walls
     {
         type            MarshakRadiation;
-        T               T;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;
@@ -44,7 +43,6 @@ boundaryField
     inlet
     {
         type            MarshakRadiation;
-        T               T;
         emissivityMode  lookup;
         emissivity      uniform 1.0;
         value           uniform 0;

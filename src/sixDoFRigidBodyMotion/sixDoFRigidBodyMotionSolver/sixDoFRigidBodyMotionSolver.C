@@ -87,7 +87,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
     do_(readScalar(coeffDict().lookup("outerDistance"))),
     test_(coeffDict().lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
-    rhoName_(coeffDict().lookupOrDefault<word>("rhoName", "rho")),
+    rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
     scale_
     (
         IOobject
@@ -219,7 +219,7 @@ void Foam::sixDoFRigidBodyMotionSolver::solve()
         forcesDict.add("type", functionObjects::forces::typeName);
         forcesDict.add("patches", patches_);
         forcesDict.add("rhoInf", rhoInf_);
-        forcesDict.add("rhoName", rhoName_);
+        forcesDict.add("rho", rhoName_);
         forcesDict.add("CofR", motion_.centreOfRotation());
 
         functionObjects::forces f("forces", db(), forcesDict);

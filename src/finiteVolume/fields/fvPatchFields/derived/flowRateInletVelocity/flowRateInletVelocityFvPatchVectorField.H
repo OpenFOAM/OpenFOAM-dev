@@ -34,8 +34,8 @@ Description
 
     For a mass-based flux:
     - the flow rate should be provided in kg/s
-    - if \c rhoName is "none" the flow rate is in m3/s
-    - otherwise \c rhoName should correspond to the name of the density field
+    - if \c rho is "none" the flow rate is in m3/s
+    - otherwise \c rho should correspond to the name of the density field
     - if the density field cannot be found in the database, the user must
       specify the inlet density using the \c rhoInlet entry
 

@@ -240,9 +240,9 @@ Foam::functionObjects::pressureTools::~pressureTools()
 
 bool Foam::functionObjects::pressureTools::read(const dictionary& dict)
 {
-    dict.readIfPresent("pName", pName_);
-    dict.readIfPresent("UName", UName_);
-    dict.readIfPresent("rhoName", rhoName_);
+    dict.readIfPresent("p", pName_);
+    dict.readIfPresent("U", UName_);
+    dict.readIfPresent("rho", rhoName_);
 
     if (rhoName_ == "rhoInf")
     {

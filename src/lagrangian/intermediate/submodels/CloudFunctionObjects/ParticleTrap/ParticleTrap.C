@@ -39,7 +39,7 @@ Foam::ParticleTrap<CloudType>::ParticleTrap
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
     alphaName_
     (
-        this->coeffDict().template lookupOrDefault<word>("alphaName", "alpha")
+        this->coeffDict().template lookupOrDefault<word>("alpha", "alpha")
     ),
     alphaPtr_(NULL),
     gradAlphaPtr_(NULL),

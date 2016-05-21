@@ -51,12 +51,10 @@ functions
     {
         type                forces;
         libs  ( "libforces.so" );
-        writeControl       timeStep;
-        writeInterval      10;
+        writeControl        timeStep;
+        writeInterval       10;
         patches             (wing);
-        pName               p;
-        UName               U;
-        rhoName             rhoInf;
+        rho                 rhoInf;
         log                 true;
         rhoInf              1;
         CofR                (0.4974612746 -0.01671895744 0.125);

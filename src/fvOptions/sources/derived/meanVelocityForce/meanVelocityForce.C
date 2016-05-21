@@ -93,7 +93,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
     relaxation_(coeffs_.lookupOrDefault<scalar>("relaxation", 1.0)),
     rAPtr_(NULL)
 {
-    coeffs_.lookup("fieldNames") >> fieldNames_;
+    coeffs_.lookup("fields") >> fieldNames_;
 
     if (fieldNames_.size() != 1)
     {
