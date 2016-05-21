@@ -57,7 +57,7 @@ Foam::calcTypes::magGrad::~magGrad()
 void Foam::calcTypes::magGrad::init()
 {
     argList::validArgs.append("magGrad");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 
@@ -112,4 +112,3 @@ void Foam::calcTypes::magGrad::calc
 
 
 // ************************************************************************* //
-

@@ -68,7 +68,7 @@ Foam::functionObjects::writeVTK::~writeVTK()
 
 bool Foam::functionObjects::writeVTK::read(const dictionary& dict)
 {
-    dict.lookup("objectNames") >> objectNames_;
+    dict.lookup("objects") >> objectNames_;
 
     return true;
 }

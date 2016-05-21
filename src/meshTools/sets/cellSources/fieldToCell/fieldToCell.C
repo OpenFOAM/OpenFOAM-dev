@@ -36,13 +36,9 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(fieldToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, fieldToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, fieldToCell, istream);
-
+    defineTypeNameAndDebug(fieldToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, fieldToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, fieldToCell, istream);
 }
 
 
@@ -121,7 +117,7 @@ Foam::fieldToCell::fieldToCell
 )
 :
     topoSetSource(mesh),
-    fieldName_(dict.lookup("fieldName")),
+    fieldName_(dict.lookup("field")),
     min_(readScalar(dict.lookup("min"))),
     max_(readScalar(dict.lookup("max")))
 {}

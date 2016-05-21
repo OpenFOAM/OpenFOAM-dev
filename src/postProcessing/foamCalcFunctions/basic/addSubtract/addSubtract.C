@@ -199,9 +199,9 @@ void Foam::calcTypes::addSubtract::init()
     argList::validArgs.append("add");
     argList::validArgs.append("baseField");
     argList::validArgs.append("calcMode");
-    argList::validOptions.insert("field", "fieldName");
+    argList::validOptions.insert("field", "field");
     argList::validOptions.insert("value", "valueString");
-    argList::validOptions.insert("resultName", "fieldName");
+    argList::validOptions.insert("result", "field");
 }
 
 

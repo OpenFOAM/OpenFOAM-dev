@@ -57,7 +57,7 @@ Foam::calcTypes::magSqr::~magSqr()
 void Foam::calcTypes::magSqr::init()
 {
     argList::validArgs.append("magSqr");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 
@@ -116,4 +116,3 @@ void Foam::calcTypes::magSqr::calc
 
 
 // ************************************************************************* //
-

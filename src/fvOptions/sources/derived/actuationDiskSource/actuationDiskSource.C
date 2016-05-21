@@ -95,7 +95,7 @@ Foam::fv::actuationDiskSource::actuationDiskSource
     upstreamPoint_(coeffs_.lookup("upstreamPoint")),
     upstreamCellId_(-1)
 {
-    coeffs_.lookup("fieldNames") >> fieldNames_;
+    coeffs_.lookup("fields") >> fieldNames_;
     applied_.setSize(fieldNames_.size(), false);
 
     Info<< "    - creating actuation disk zone: "

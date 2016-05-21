@@ -57,7 +57,7 @@ Foam::calcTypes::components::~components()
 void Foam::calcTypes::components::init()
 {
     argList::validArgs.append("components");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 

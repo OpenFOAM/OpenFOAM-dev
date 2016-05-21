@@ -120,7 +120,7 @@ protected:
         virtual dlLibraryTable& libs() const;
 
         //- Adapt the context for the current object
-        virtual void prepare(dynamicCode &,const dynamicCodeContext&) const;
+        virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
         // Return a description (type + name) for the output
         virtual string description() const;

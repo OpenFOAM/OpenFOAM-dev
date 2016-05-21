@@ -57,7 +57,7 @@ Foam::calcTypes::mag::~mag()
 void Foam::calcTypes::mag::init()
 {
     argList::validArgs.append("mag");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 
@@ -115,4 +115,3 @@ void Foam::calcTypes::mag::calc
 
 
 // ************************************************************************* //
-

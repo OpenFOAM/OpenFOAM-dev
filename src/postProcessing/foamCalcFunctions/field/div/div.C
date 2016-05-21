@@ -57,7 +57,7 @@ Foam::calcTypes::div::~div()
 void Foam::calcTypes::div::init()
 {
     argList::validArgs.append("div");
-    argList::validArgs.append("fieldName");
+    argList::validArgs.append("field");
 }
 
 
@@ -112,4 +112,3 @@ void Foam::calcTypes::div::calc
 
 
 // ************************************************************************* //
-
