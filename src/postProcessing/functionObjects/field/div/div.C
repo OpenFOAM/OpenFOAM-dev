@@ -25,6 +25,7 @@ License
 
 #include "div.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -39,42 +40,6 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::volScalarField& Foam::functionObjects::div::divField
-(
-    const word& divName,
-    const dimensionSet& dims
-)
-{
-    if (!mesh_.foundObject<volScalarField>(divName))
-    {
-        volScalarField* divFieldPtr
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    divName,
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh_,
-                dimensionedScalar("zero", dims/dimLength, 0.0)
-            )
-        );
-
-        mesh_.objectRegistry::store(divFieldPtr);
-    }
-
-    const volScalarField& field = mesh_.lookupObject<volScalarField>(divName);
-
-    return const_cast<volScalarField&>(field);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::div::div
@@ -84,10 +49,8 @@ Foam::functionObjects::div::div
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
-{
-    read(dict);
-}
+    fieldExpression(name, runTime, dict)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -98,26 +61,12 @@ Foam::functionObjects::div::~div()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::div::read(const dictionary& dict)
-{
-    dict.lookup("fieldName") >> fieldName_;
-    dict.lookup("resultName") >> resultName_;
-
-    if (resultName_ == "none")
-    {
-        resultName_ = "fvc::div(" + fieldName_ + ")";
-    }
-
-    return true;
-}
-
-
 bool Foam::functionObjects::div::execute(const bool postProcess)
 {
     bool processed = false;
 
-    calcDiv<surfaceScalarField>(fieldName_, resultName_, processed);
-    calcDiv<volVectorField>(fieldName_, resultName_, processed);
+    processed = processed || calc<surfaceScalarField>();
+    processed = processed || calc<volVectorField>();
 
     if (!processed)
     {
@@ -125,24 +74,7 @@ bool Foam::functionObjects::div::execute(const bool postProcess)
             << "Unprocessed field " << fieldName_ << endl;
     }
 
-    return true;
-}
-
-
-bool Foam::functionObjects::div::write(const bool postProcess)
-{
-    if (mesh_.foundObject<regIOobject>(resultName_))
-    {
-        const regIOobject& field =
-            mesh_.lookupObject<regIOobject>(resultName_);
-
-        Info<< type() << " " << name() << " output:" << nl
-            << "    writing field " << field.name() << nl << endl;
-
-        field.write();
-    }
-
-    return true;
+    return processed;
 }
 
 

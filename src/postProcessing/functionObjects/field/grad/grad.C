@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "grad.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,7 +47,7 @@ Foam::functionObjects::grad::grad
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fieldExpression(name, runTime, dict)
 {
     read(dict);
 }
@@ -62,48 +61,17 @@ Foam::functionObjects::grad::~grad()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::grad::read(const dictionary& dict)
-{
-    dict.lookup("fieldName") >> fieldName_;
-    dict.lookup("resultName") >> resultName_;
-
-    if (resultName_ == "none")
-    {
-        resultName_ = "fvc::grad(" + fieldName_ + ")";
-    }
-
-    return true;
-}
-
-
 bool Foam::functionObjects::grad::execute(const bool postProcess)
 {
     bool processed = false;
 
-    calcGrad<scalar>(fieldName_, resultName_, processed);
-    calcGrad<vector>(fieldName_, resultName_, processed);
+    processed = processed || calc<scalar>();
+    processed = processed || calc<vector>();
 
     if (!processed)
     {
         WarningInFunction
             << "Unprocessed field " << fieldName_ << endl;
-    }
-
-    return true;
-}
-
-
-bool Foam::functionObjects::grad::write(const bool postProcess)
-{
-    if (obr_.foundObject<regIOobject>(resultName_))
-    {
-        const regIOobject& field =
-            obr_.lookupObject<regIOobject>(resultName_);
-
-        Info<< type() << " " << name() << " output:" << nl
-            << "    writing field " << field.name() << nl << endl;
-
-        field.write();
     }
 
     return true;

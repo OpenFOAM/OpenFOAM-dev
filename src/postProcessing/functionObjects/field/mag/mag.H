@@ -43,17 +43,12 @@ SourceFiles
 #ifndef functionObjects_mag_H
 #define functionObjects_mag_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "fieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class dimensionSet;
-
 namespace functionObjects
 {
 
@@ -63,37 +58,13 @@ namespace functionObjects
 
 class mag
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
-    // Private data
-
-        //- Name of field to process
-        word fieldName_;
-
-        //- Name of result field
-        word resultName_;
-
-
     // Private Member Functions
 
-        //- Helper function to create/store/return the mag field
-        template<class FieldType>
-        FieldType& magField(const word& magName, const dimensionSet& dims);
-
-        //- Helper function to calculate the magnitude of different field types
+        //- Calculate the magnitude of the field and register the result
         template<class Type>
-        void calc
-        (
-            const word& fieldName,
-            const word& resultName,
-            bool& processed
-        );
-
-        //- Disallow default bitwise copy construct
-        mag(const mag&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const mag&);
+        bool calc();
 
 
 public:
@@ -119,14 +90,8 @@ public:
 
     // Member Functions
 
-        //- Read the mag data
-        virtual bool read(const dictionary&);
-
         //- Calculate the magnitude field
         virtual bool execute(const bool postProcess = false);
-
-        //- Write the magnitude field
-        virtual bool write(const bool postProcess = false);
 };
 
 

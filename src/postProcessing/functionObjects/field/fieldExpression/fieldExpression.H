@@ -22,28 +22,26 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::grad
+    Foam::functionObjects::fieldExpression
 
 Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates the gradient of a field.  The operation is
-    limited to scalar and vector volume or surface fields, and the output is a
-    volume vector or tensor field.
 
 SeeAlso
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    grad.C
+    fieldExpression.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_grad_H
-#define functionObjects_grad_H
+#ifndef functionObjects_fieldExpression_H
+#define functionObjects_fieldExpression_H
 
-#include "fieldExpression.H"
+#include "fvMeshFunctionObject.H"
+#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,30 +51,45 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class grad Declaration
+                         Class fieldExpression Declaration
 \*---------------------------------------------------------------------------*/
 
-class grad
+class fieldExpression
 :
-    public fieldExpression
+    public fvMeshFunctionObject
 {
+protected:
+
+    // Protected member data
+
+        //- Name of field to process
+        word fieldName_;
+
+        //- Name of result field
+        word resultName_;
+
+
+private:
+
     // Private Member Functions
 
-        //- Calculate the magnitude of the field and register the result
-        template<class Type>
-        bool calc();
+        //- Disallow default bitwise copy construct
+        fieldExpression(const fieldExpression&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldExpression&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("grad");
+    TypeName("fieldExpression");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        grad
+        fieldExpression
         (
             const word& name,
             const Time& runTime,
@@ -85,13 +98,19 @@ public:
 
 
     //- Destructor
-    virtual ~grad();
+    virtual ~fieldExpression();
 
 
     // Member Functions
 
-        //- Calculate the gradient field
-        virtual bool execute(const bool postProcess = false);
+        //- Read the fieldExpression data
+        virtual bool read(const dictionary&);
+
+        //- Calculate the fieldExpressionergence field
+        virtual bool execute(const bool postProcess = false) = 0;
+
+        //- Write the fieldExpressionergence field
+        virtual bool write(const bool postProcess = false);
 };
 
 
@@ -99,12 +118,6 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "gradTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,38 +23,58 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvcGrad.H"
+#include "fieldExpression.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type>
-bool Foam::functionObjects::grad::calc()
+namespace Foam
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
+namespace functionObjects
+{
+    defineTypeNameAndDebug(fieldExpression, 0);
+}
+}
 
-    if (foundField<VolFieldType>(fieldName_))
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::fieldExpression::fieldExpression
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fvMeshFunctionObject(name, runTime, dict)
+{
+    read(dict);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::fieldExpression::~fieldExpression()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
+{
+    dict.lookup("field") >> fieldName_;
+
+    if (dict.found("result"))
     {
-        return store
-        (
-            resultName_,
-            fvc::grad(lookupField<VolFieldType>(fieldName_)),
-            true
-        );
+        dict.lookup("result") >> resultName_;
     }
-    else if (foundField<SurfaceFieldType>(fieldName_))
-    {
-        return store
-        (
-            resultName_,
-            fvc::grad(lookupField<SurfaceFieldType>(fieldName_)),
-            true
-        );
-    }
-    else
-    {
-        return false;
-    }
+
+    return true;
+}
+
+
+bool Foam::functionObjects::fieldExpression::write(const bool postProcess)
+{
+    return fvMeshFunctionObject::write(resultName_);
 }
 
 

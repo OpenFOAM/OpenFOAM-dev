@@ -23,80 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMesh.H"
-#include "Time.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-
-template<class FieldType>
-FieldType& Foam::functionObjects::mag::magField
-(
-    const word& magName,
-    const dimensionSet& dims
-)
-{
-    if (!mesh_.foundObject<FieldType>(magName))
-    {
-        FieldType* magFieldPtr
-        (
-            new FieldType
-            (
-                IOobject
-                (
-                    magName,
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh_,
-                dimensionedScalar("zero", dims, 0.0)
-            )
-        );
-
-        mesh_.objectRegistry::store(magFieldPtr);
-    }
-
-    const FieldType& f = mesh_.lookupObject<FieldType>(magName);
-
-    return const_cast<FieldType&>(f);
-}
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::functionObjects::mag::calc
-(
-    const word& fieldName,
-    const word& resultName,
-    bool& processed
-)
+bool Foam::functionObjects::mag::calc()
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vfType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> sfType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
-    if (mesh_.foundObject<vfType>(fieldName))
+    if (foundField<VolFieldType>(fieldName_))
     {
-        const vfType& vf = mesh_.lookupObject<vfType>(fieldName);
-
-        volScalarField& field =
-            magField<volScalarField>(resultName_, vf.dimensions());
-
-        field = Foam::mag(vf);
-
-        processed = true;
+        return store
+        (
+            resultName_,
+            Foam::mag(lookupField<VolFieldType>(fieldName_))
+        );
     }
-    else if (mesh_.foundObject<sfType>(fieldName))
+    else if (foundField<SurfaceFieldType>(fieldName_))
     {
-        const sfType& sf = mesh_.lookupObject<sfType>(fieldName);
-
-        surfaceScalarField& field =
-            magField<surfaceScalarField>(resultName_, sf.dimensions());
-
-        field = Foam::mag(sf);
-
-        processed = true;
+        return store
+        (
+            resultName_,
+            Foam::mag(lookupField<SurfaceFieldType>(fieldName_))
+        );
+    }
+    else
+    {
+        return false;
     }
 }
 

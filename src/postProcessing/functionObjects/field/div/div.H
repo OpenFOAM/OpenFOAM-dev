@@ -43,17 +43,12 @@ SourceFiles
 #ifndef functionObjects_div_H
 #define functionObjects_div_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "fieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class dimensionSet;
-
 namespace functionObjects
 {
 
@@ -63,40 +58,14 @@ namespace functionObjects
 
 class div
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
-    // Private member data
-
-        //- Name of field to process
-        word fieldName_;
-
-        //- Name of result field
-        word resultName_;
-
-
     // Private Member Functions
 
-        //- Helper function to create/store/return the divergence field
-        volScalarField& divField
-        (
-            const word& gradName,
-            const dimensionSet& dims
-        );
-
-        //- Helper function to calculate the divergence of different field types
+        //- Calculate the divergence of either a
+        //  volScalarField or a surfaceScalarField and register the result
         template<class FieldType>
-        void calcDiv
-        (
-            const word& fieldName,
-            const word& resultName,
-            bool& processed
-        );
-
-        //- Disallow default bitwise copy construct
-        div(const div&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const div&);
+        bool calc();
 
 
 public:
@@ -122,14 +91,8 @@ public:
 
     // Member Functions
 
-        //- Read the div data
-        virtual bool read(const dictionary&);
-
         //- Calculate the divergence field
         virtual bool execute(const bool postProcess = false);
-
-        //- Write the divergence field
-        virtual bool write(const bool postProcess = false);
 };
 
 

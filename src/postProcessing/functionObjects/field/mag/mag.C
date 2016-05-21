@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mag.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,7 +47,7 @@ Foam::functionObjects::mag::mag
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fieldExpression(name, runTime, dict)
 {
     read(dict);
 }
@@ -62,29 +61,15 @@ Foam::functionObjects::mag::~mag()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::mag::read(const dictionary& dict)
-{
-    dict.lookup("fieldName") >> fieldName_;
-    dict.lookup("resultName") >> resultName_;
-
-    if (resultName_ == "none")
-    {
-        resultName_ = "mag(" + fieldName_ + ")";
-    }
-
-    return true;
-}
-
-
 bool Foam::functionObjects::mag::execute(const bool postProcess)
 {
     bool processed = false;
 
-    calc<scalar>(fieldName_, resultName_, processed);
-    calc<vector>(fieldName_, resultName_, processed);
-    calc<sphericalTensor>(fieldName_, resultName_, processed);
-    calc<symmTensor>(fieldName_, resultName_, processed);
-    calc<tensor>(fieldName_, resultName_, processed);
+    processed = processed || calc<scalar>();
+    processed = processed || calc<vector>();
+    processed = processed || calc<sphericalTensor>();
+    processed = processed || calc<symmTensor>();
+    processed = processed || calc<tensor>();
 
     if (!processed)
     {
@@ -92,24 +77,7 @@ bool Foam::functionObjects::mag::execute(const bool postProcess)
             << "Unprocessed field " << fieldName_ << endl;
     }
 
-    return true;
-}
-
-
-bool Foam::functionObjects::mag::write(const bool postProcess)
-{
-    if (obr_.foundObject<regIOobject>(resultName_))
-    {
-        const regIOobject& field =
-            obr_.lookupObject<regIOobject>(resultName_);
-
-        Info<< type() << " " << name() << " output:" << nl
-            << "    writing field " << field.name() << nl << endl;
-
-        field.write();
-    }
-
-    return true;
+    return processed;
 }
 
 

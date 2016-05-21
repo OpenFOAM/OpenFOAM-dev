@@ -32,6 +32,7 @@ surfaceInterpolateFields/surfaceInterpolateFields.C
 regionSizeDistribution/regionSizeDistribution.C
 histogram/histogram.C
 
+fieldExpression/fieldExpression.C
 div/div.C
 grad/grad.C
 mag/mag.C

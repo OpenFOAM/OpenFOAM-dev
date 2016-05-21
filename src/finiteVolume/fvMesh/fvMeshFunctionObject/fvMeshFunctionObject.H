@@ -73,6 +73,29 @@ protected:
         const fvMesh& mesh_;
 
 
+    // Protected member functions
+
+        //- Find field in the objectRegistry
+        template<class FieldType>
+        bool foundField(const word& fieldName) const;
+
+        //- Lookup field from the objectRegistry
+        template<class FieldType>
+        const FieldType& lookupField(const word& fieldName) const;
+
+        //- Store the given field in the objectRegistry under the given name
+        template<class FieldType>
+        bool store
+        (
+            word& fieldName,
+            tmp<FieldType> tfield,
+            bool cacheable = false
+        );
+
+        //- Write field if present in objectRegistry
+        virtual bool write(const word& fieldName);
+
+
 private:
 
     // Private Member Functions
@@ -110,6 +133,12 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "fvMeshFunctionObjectTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
