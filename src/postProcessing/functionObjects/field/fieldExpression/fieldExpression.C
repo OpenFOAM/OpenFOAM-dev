@@ -42,10 +42,14 @@ Foam::functionObjects::fieldExpression::fieldExpression
 (
     const word& name,
     const Time& runTime,
-    const dictionary& dict
+    const dictionary& dict,
+    const word& fieldName,
+    const word& resultName
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fvMeshFunctionObject(name, runTime, dict),
+    fieldName_(fieldName),
+    resultName_(resultName)
 {
     read(dict);
 }
@@ -61,7 +65,10 @@ Foam::functionObjects::fieldExpression::~fieldExpression()
 
 bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 {
-    dict.lookup("field") >> fieldName_;
+    if (fieldName_ == word::null || dict.found("field"))
+    {
+        dict.lookup("field") >> fieldName_;
+    }
 
     if (dict.found("result"))
     {

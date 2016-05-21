@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "vorticity.H"
+#include "Lambda2.H"
 #include "volFields.H"
-#include "fvcCurl.H"
+#include "zeroGradientFvPatchFields.H"
+#include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,12 +35,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(vorticity, 0);
+    defineTypeNameAndDebug(Lambda2, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        vorticity,
+        Lambda2,
         dictionary
     );
 }
@@ -48,84 +49,89 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::vorticity::vorticity
+Foam::functionObjects::Lambda2::Lambda2
 (
     const word& name,
     const Time& runTime,
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict),
-    outputName_(typeName)
+    fvMeshFunctionObject(name, runTime, dict)
 {
     read(dict);
 
-    volVectorField* vorticityPtr
+    volScalarField* Lambda2Ptr
     (
-        new volVectorField
+        new volScalarField
         (
             IOobject
             (
-                outputName_,
+                type(),
                 mesh_.time().timeName(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedVector("0", dimless/dimTime, Zero)
+            dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
         )
     );
 
-    mesh_.objectRegistry::store(vorticityPtr);
+    mesh_.objectRegistry::store(Lambda2Ptr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::vorticity::~vorticity()
+Foam::functionObjects::Lambda2::~Lambda2()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::vorticity::read(const dictionary& dict)
+bool Foam::functionObjects::Lambda2::read(const dictionary& dict)
 {
-    UName_ = dict.lookupOrDefault<word>("UName", "U");
-    if (UName_ != "U")
-    {
-        outputName_ = typeName + "(" + UName_ + ")";
-    }
+    UName_ = dict.lookupOrDefault<word>("U", "U");
 
     return true;
 }
 
 
-bool Foam::functionObjects::vorticity::execute(const bool postProcess)
+bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
 {
-    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
+    const volVectorField& U =
+        mesh_.lookupObject<volVectorField>(UName_);
 
-    volVectorField& vorticity = const_cast<volVectorField&>
+    const volTensorField gradU(fvc::grad(U));
+
+    const volTensorField SSplusWW
     (
-        mesh_.lookupObject<volVectorField>(outputName_)
+        (symm(gradU) & symm(gradU))
+      + (skew(gradU) & skew(gradU))
     );
 
-    vorticity = fvc::curl(U);
+    volScalarField& Lambda2 =
+        const_cast<volScalarField&>
+        (
+            mesh_.lookupObject<volScalarField>(type())
+        );
+
+    Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);
 
     return true;
 }
 
 
-bool Foam::functionObjects::vorticity::write(const bool postProcess)
+bool Foam::functionObjects::Lambda2::write(const bool postProcess)
 {
-    const volVectorField& vorticity =
-        mesh_.lookupObject<volVectorField>(outputName_);
+    const volScalarField& Lambda2 =
+        obr_.lookupObject<volScalarField>(type());
 
     Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << vorticity.name() << nl
+        << "    writing field " << Lambda2.name() << nl
         << endl;
 
-    vorticity.write();
+    Lambda2.write();
 
     return true;
 }

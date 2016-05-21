@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CourantNo.H"
-#include "surfaceFields.H"
-#include "fvcSurfaceIntegrate.H"
-#include "zeroGradientFvPatchFields.H"
+#include "vorticity.H"
+#include "volFields.H"
+#include "fvcCurl.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -35,121 +34,98 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(CourantNo, 0);
+    defineTypeNameAndDebug(vorticity, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        CourantNo,
+        vorticity,
         dictionary
     );
 }
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField::Internal>
-Foam::functionObjects::CourantNo::byRho
-(
-    const tmp<volScalarField::Internal>& Co
-) const
-{
-    if (Co().dimensions() == dimDensity)
-    {
-        return Co/obr_.lookupObject<volScalarField>(rhoName_);
-    }
-    else
-    {
-        return Co;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::CourantNo::CourantNo
+Foam::functionObjects::vorticity::vorticity
 (
     const word& name,
     const Time& runTime,
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fvMeshFunctionObject(name, runTime, dict),
+    outputName_(typeName)
 {
     read(dict);
 
-    volScalarField* CourantNoPtr
+    volVectorField* vorticityPtr
     (
-        new volScalarField
+        new volVectorField
         (
             IOobject
             (
-                type(),
+                outputName_,
                 mesh_.time().timeName(),
                 mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("0", dimless, 0.0),
-            zeroGradientFvPatchScalarField::typeName
+            dimensionedVector("0", dimless/dimTime, Zero)
         )
     );
 
-    mesh_.objectRegistry::store(CourantNoPtr);
+    mesh_.objectRegistry::store(vorticityPtr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::CourantNo::~CourantNo()
+Foam::functionObjects::vorticity::~vorticity()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
+bool Foam::functionObjects::vorticity::read(const dictionary& dict)
 {
-    phiName_ = dict.lookupOrDefault<word>("phiName", "phi");
-    rhoName_ = dict.lookupOrDefault<word>("rhoName", "rho");
+    UName_ = dict.lookupOrDefault<word>("U", "U");
+    if (UName_ != "U")
+    {
+        outputName_ = typeName + "(" + UName_ + ")";
+    }
 
     return true;
 }
 
 
-bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
+bool Foam::functionObjects::vorticity::execute(const bool postProcess)
 {
-    const surfaceScalarField& phi =
-        mesh_.lookupObject<surfaceScalarField>(phiName_);
+    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
-    volScalarField& Co = const_cast<volScalarField&>
+    volVectorField& vorticity = const_cast<volVectorField&>
     (
-        mesh_.lookupObject<volScalarField>(type())
+        mesh_.lookupObject<volVectorField>(outputName_)
     );
 
-    Co.ref() = byRho
-    (
-        (0.5*mesh_.time().deltaT())
-       *fvc::surfaceSum(mag(phi))()()
-       /mesh_.V()
-    );
-    Co.correctBoundaryConditions();
+    vorticity = fvc::curl(U);
 
     return true;
 }
 
 
-bool Foam::functionObjects::CourantNo::write(const bool postProcess)
+bool Foam::functionObjects::vorticity::write(const bool postProcess)
 {
-    const volScalarField& CourantNo =
-        obr_.lookupObject<volScalarField>(type());
+    const volVectorField& vorticity =
+        mesh_.lookupObject<volVectorField>(outputName_);
 
     Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << CourantNo.name() << nl
+        << "    writing field " << vorticity.name() << nl
         << endl;
 
-    CourantNo.write();
+    vorticity.write();
 
     return true;
 }

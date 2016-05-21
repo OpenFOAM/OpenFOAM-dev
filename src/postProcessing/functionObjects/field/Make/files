@@ -36,5 +36,9 @@ fieldExpression/fieldExpression.C
 div/div.C
 grad/grad.C
 mag/mag.C
+vorticity/vorticity.C
+Q/Q.C
+Lambda2/Lambda2.C
+CourantNo/CourantNo.C
 
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

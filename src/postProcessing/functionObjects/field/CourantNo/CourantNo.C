@@ -23,10 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Lambda2.H"
-#include "volFields.H"
+#include "CourantNo.H"
+#include "surfaceFields.H"
+#include "fvcSurfaceIntegrate.H"
 #include "zeroGradientFvPatchFields.H"
-#include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -35,21 +35,40 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(Lambda2, 0);
+    defineTypeNameAndDebug(CourantNo, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        Lambda2,
+        CourantNo,
         dictionary
     );
 }
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField::Internal>
+Foam::functionObjects::CourantNo::byRho
+(
+    const tmp<volScalarField::Internal>& Co
+) const
+{
+    if (Co().dimensions() == dimDensity)
+    {
+        return Co/obr_.lookupObject<volScalarField>(rhoName_);
+    }
+    else
+    {
+        return Co;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::Lambda2::Lambda2
+Foam::functionObjects::CourantNo::CourantNo
 (
     const word& name,
     const Time& runTime,
@@ -60,7 +79,7 @@ Foam::functionObjects::Lambda2::Lambda2
 {
     read(dict);
 
-    volScalarField* Lambda2Ptr
+    volScalarField* CourantNoPtr
     (
         new volScalarField
         (
@@ -73,65 +92,64 @@ Foam::functionObjects::Lambda2::Lambda2
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
+            dimensionedScalar("0", dimless, 0.0),
+            zeroGradientFvPatchScalarField::typeName
         )
     );
 
-    mesh_.objectRegistry::store(Lambda2Ptr);
+    mesh_.objectRegistry::store(CourantNoPtr);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::Lambda2::~Lambda2()
+Foam::functionObjects::CourantNo::~CourantNo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::Lambda2::read(const dictionary& dict)
+bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
 {
-    UName_ = dict.lookupOrDefault<word>("UName", "U");
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+    rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
 
     return true;
 }
 
 
-bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
+bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
 {
-    const volVectorField& U =
-        mesh_.lookupObject<volVectorField>(UName_);
+    const surfaceScalarField& phi =
+        mesh_.lookupObject<surfaceScalarField>(phiName_);
 
-    const volTensorField gradU(fvc::grad(U));
-
-    const volTensorField SSplusWW
+    volScalarField& Co = const_cast<volScalarField&>
     (
-        (symm(gradU) & symm(gradU))
-      + (skew(gradU) & skew(gradU))
+        mesh_.lookupObject<volScalarField>(type())
     );
 
-    volScalarField& Lambda2 =
-        const_cast<volScalarField&>
-        (
-            mesh_.lookupObject<volScalarField>(type())
-        );
-
-    Lambda2 = -eigenValues(SSplusWW)().component(vector::Y);
+    Co.ref() = byRho
+    (
+        (0.5*mesh_.time().deltaT())
+       *fvc::surfaceSum(mag(phi))()()
+       /mesh_.V()
+    );
+    Co.correctBoundaryConditions();
 
     return true;
 }
 
 
-bool Foam::functionObjects::Lambda2::write(const bool postProcess)
+bool Foam::functionObjects::CourantNo::write(const bool postProcess)
 {
-    const volScalarField& Lambda2 =
+    const volScalarField& CourantNo =
         obr_.lookupObject<volScalarField>(type());
 
     Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << Lambda2.name() << nl
+        << "    writing field " << CourantNo.name() << nl
         << endl;
 
-    Lambda2.write();
+    CourantNo.write();
 
     return true;
 }

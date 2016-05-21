@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Q.H"
-#include "volFields.H"
 #include "fvcGrad.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -55,29 +54,8 @@ Foam::functionObjects::Q::Q
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
-{
-    read(dict);
-
-    volScalarField* QPtr
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                type(),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("0", dimless/sqr(dimTime), 0.0)
-        )
-    );
-
-    mesh_.objectRegistry::store(QPtr);
-}
+    fieldExpression(name, runTime, dict, "U", "Q")
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -88,45 +66,24 @@ Foam::functionObjects::Q::~Q()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::Q::read(const dictionary& dict)
-{
-    UName_ = dict.lookupOrDefault<word>("UName", "U");
-
-    return true;
-}
-
-
 bool Foam::functionObjects::Q::execute(const bool postProcess)
 {
-    const volVectorField& U =
-        mesh_.lookupObject<volVectorField>(UName_);
+    if (foundField<volVectorField>(fieldName_))
+    {
+        const volVectorField& U = lookupField<volVectorField>(fieldName_);
+        const tmp<volTensorField> tgradU(fvc::grad(U));
+        const volTensorField& gradU = tgradU();
 
-    const volTensorField gradU(fvc::grad(U));
-
-    volScalarField& Q =
-        const_cast<volScalarField&>
+        return store
         (
-            mesh_.lookupObject<volScalarField>(type())
+            resultName_,
+            0.5*(sqr(tr(gradU)) - tr(((gradU) & (gradU))))
         );
-
-    Q = 0.5*(sqr(tr(gradU)) - tr(((gradU) & (gradU))));
-
-    return true;
-}
-
-
-bool Foam::functionObjects::Q::write(const bool postProcess)
-{
-    const volScalarField& Q =
-        mesh_.lookupObject<volScalarField>(type());
-
-    Info<< type() << " " << name() << " output:" << nl
-        << "    writing field " << Q.name() << nl
-        << endl;
-
-    Q.write();
-
-    return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

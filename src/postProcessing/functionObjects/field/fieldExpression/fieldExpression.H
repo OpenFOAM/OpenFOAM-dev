@@ -93,7 +93,9 @@ public:
         (
             const word& name,
             const Time& runTime,
-            const dictionary& dict
+            const dictionary& dict,
+            const word& fieldName = word::null,
+            const word& resultName = word::null
         );
 
 

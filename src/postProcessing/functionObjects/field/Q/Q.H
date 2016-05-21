@@ -36,6 +36,7 @@ Description
     \f]
 
 SeeAlso
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
@@ -46,8 +47,7 @@ SourceFiles
 #ifndef functionObjects_Q_H
 #define functionObjects_Q_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "fieldExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,22 +62,8 @@ namespace functionObjects
 
 class Q
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
-    // Private data
-
-        //- Name of velocity field, default is "U"
-        word UName_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        Q(const Q&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Q&);
-
 
 public:
 
@@ -102,14 +88,8 @@ public:
 
     // Member Functions
 
-        //- Read the Q data
-        virtual bool read(const dictionary&);
-
         //- Calculate the Q-field
         virtual bool execute(const bool postProcess = false);
-
-        //- Write the Q-field
-        virtual bool write(const bool postProcess = false);
 };
 
 

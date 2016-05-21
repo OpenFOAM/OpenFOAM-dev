@@ -33,6 +33,7 @@ Description
     volScalarField.
 
 SeeAlso
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
