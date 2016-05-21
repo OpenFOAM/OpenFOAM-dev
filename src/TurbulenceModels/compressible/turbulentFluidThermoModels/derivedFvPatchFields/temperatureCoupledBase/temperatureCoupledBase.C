@@ -1,4 +1,4 @@
- /*---------------------------------------------------------------------------*\
+/*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -76,9 +76,9 @@ Foam::temperatureCoupledBase::temperatureCoupledBase
 )
 :
     patch_(patch),
-    method_(KMethodTypeNames_.read(dict.lookup("kappa"))),
-    kappaName_(dict.lookup("kappaName")),
-    alphaAniName_(dict.lookupOrDefault<word>("alphaAniName","Anialpha"))
+    method_(KMethodTypeNames_.read(dict.lookup("kappaMethod"))),
+    kappaName_(dict.lookupOrDefault<word>("kappa", "none")),
+    alphaAniName_(dict.lookupOrDefault<word>("alphaAni","Anialpha"))
 {}
 
 
@@ -224,9 +224,10 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
 void Foam::temperatureCoupledBase::write(Ostream& os) const
 {
-    os.writeKeyword("kappa") << KMethodTypeNames_[method_]
+    os.writeKeyword("kappaMethod") << KMethodTypeNames_[method_]
         << token::END_STATEMENT << nl;
-    os.writeKeyword("kappaName") << kappaName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("kappa") << kappaName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("alphaAni") << alphaAniName_ << token::END_STATEMENT << nl;
 }
 
 
