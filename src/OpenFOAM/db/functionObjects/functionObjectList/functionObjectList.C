@@ -302,8 +302,12 @@ bool Foam::functionObjectList::read()
 
             if (!iter().isDict())
             {
-                IOWarningInFunction(parentDict_)
-                    << "Entry " << key << " is not a dictionary" << endl;
+                if (key != "libs")
+                {
+                    IOWarningInFunction(parentDict_)
+                        << "Entry " << key << " is not a dictionary" << endl;
+                }
+
                 continue;
             }
 
