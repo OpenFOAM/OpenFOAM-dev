@@ -131,7 +131,6 @@ public:
 
     //- Destructor
     virtual ~codedBase();
-
 };
 
 
