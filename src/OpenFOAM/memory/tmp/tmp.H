@@ -77,6 +77,7 @@ class tmp
 
 public:
 
+    typedef T Type;
     typedef Foam::refCount refCount;
 
 

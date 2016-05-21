@@ -58,6 +58,9 @@ class autoPtr
 
 public:
 
+    typedef T Type;
+
+
     // Constructors
 
         //- Store object pointer
