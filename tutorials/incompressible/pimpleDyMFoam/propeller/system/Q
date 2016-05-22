@@ -10,7 +10,7 @@
 Q
 {
     // Where to load it from
-    libs ("libutilityFunctionObjects.so");
+    libs ("libfieldFunctionObjects.so");
 
     type Q;
 
