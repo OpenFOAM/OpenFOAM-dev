@@ -108,7 +108,6 @@ void Foam::functionObjects::residuals::writeFileHeader(const label i)
 
 bool Foam::functionObjects::residuals::execute(const bool postProcess)
 {
-
     return true;
 }
 
