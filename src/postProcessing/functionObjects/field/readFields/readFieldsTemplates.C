@@ -38,10 +38,10 @@ void Foam::functionObjects::readFields::loadField
     PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vfType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> sfType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
-    if (obr_.foundObject<vfType>(fieldName))
+    if (obr_.foundObject<VolFieldType>(fieldName))
     {
         if (debug)
         {
@@ -49,7 +49,7 @@ void Foam::functionObjects::readFields::loadField
                 << endl;
         }
     }
-    else if (obr_.foundObject<sfType>(fieldName))
+    else if (obr_.foundObject<SurfaceFieldType>(fieldName))
     {
         if (debug)
         {
@@ -71,26 +71,26 @@ void Foam::functionObjects::readFields::loadField
         if
         (
             fieldHeader.headerOk()
-         && fieldHeader.headerClassName() == vfType::typeName
+         && fieldHeader.headerClassName() == VolFieldType::typeName
         )
         {
             // store field locally
             Info<< "    Reading " << fieldName << endl;
             label sz = vflds.size();
             vflds.setSize(sz+1);
-            vflds.set(sz, new vfType(fieldHeader, mesh_));
+            vflds.set(sz, new VolFieldType(fieldHeader, mesh_));
         }
         else if
         (
             fieldHeader.headerOk()
-         && fieldHeader.headerClassName() == sfType::typeName
+         && fieldHeader.headerClassName() == SurfaceFieldType::typeName
         )
         {
             // store field locally
             Info<< "    Reading " << fieldName << endl;
             label sz = sflds.size();
             sflds.setSize(sz+1);
-            sflds.set(sz, new sfType(fieldHeader, mesh_));
+            sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
         }
     }
 }

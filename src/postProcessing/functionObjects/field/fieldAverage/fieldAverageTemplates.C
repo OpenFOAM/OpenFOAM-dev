@@ -81,18 +81,21 @@ void Foam::functionObjects::fieldAverage::addMeanField(const label fieldi)
 {
     if (faItems_[fieldi].mean())
     {
-        typedef GeometricField<Type, fvPatchField, volMesh> volFieldType;
-        typedef GeometricField<Type, fvsPatchField, surfaceMesh> surfFieldType;
+        typedef GeometricField<Type, fvPatchField, volMesh>
+            VolFieldType;
+
+        typedef GeometricField<Type, fvsPatchField, surfaceMesh>
+            SurfaceFieldType;
 
         const word& fieldName = faItems_[fieldi].fieldName();
 
-        if (obr_.foundObject<volFieldType>(fieldName))
+        if (obr_.foundObject<VolFieldType>(fieldName))
         {
-            addMeanFieldType<volFieldType>(fieldi);
+            addMeanFieldType<VolFieldType>(fieldi);
         }
-        else if (obr_.foundObject<surfFieldType>(fieldName))
+        else if (obr_.foundObject<SurfaceFieldType>(fieldName))
         {
-            addMeanFieldType<surfFieldType>(fieldi);
+            addMeanFieldType<SurfaceFieldType>(fieldi);
         }
     }
 }
@@ -152,11 +155,11 @@ void Foam::functionObjects::fieldAverage::addPrime2MeanFieldType
 template<class Type1, class Type2>
 void Foam::functionObjects::fieldAverage::addPrime2MeanField(const label fieldi)
 {
-    typedef GeometricField<Type1, fvPatchField, volMesh> volFieldType1;
-    typedef GeometricField<Type1, fvsPatchField, surfaceMesh> surfFieldType1;
+    typedef GeometricField<Type1, fvPatchField, volMesh> VolFieldType1;
+    typedef GeometricField<Type1, fvsPatchField, surfaceMesh> SurfaceFieldType1;
 
-    typedef GeometricField<Type2, fvPatchField, volMesh> volFieldType2;
-    typedef GeometricField<Type2, fvsPatchField, surfaceMesh> surfFieldType2;
+    typedef GeometricField<Type2, fvPatchField, volMesh> VolFieldType2;
+    typedef GeometricField<Type2, fvsPatchField, surfaceMesh> SurfaceFieldType2;
 
     if (faItems_[fieldi].prime2Mean())
     {
@@ -170,13 +173,16 @@ void Foam::functionObjects::fieldAverage::addPrime2MeanField(const label fieldi)
                 << fieldName << nl << exit(FatalError);
         }
 
-        if (obr_.foundObject<volFieldType1>(fieldName))
+        if (obr_.foundObject<VolFieldType1>(fieldName))
         {
-            addPrime2MeanFieldType<volFieldType1, volFieldType2>(fieldi);
+            addPrime2MeanFieldType<VolFieldType1, VolFieldType2>(fieldi);
         }
-        else if (obr_.foundObject<surfFieldType1>(fieldName))
+        else if (obr_.foundObject<SurfaceFieldType1>(fieldName))
         {
-            addPrime2MeanFieldType<surfFieldType1, surfFieldType2>(fieldi);
+            addPrime2MeanFieldType<SurfaceFieldType1, SurfaceFieldType2>
+            (
+                fieldi
+            );
         }
     }
 }
@@ -230,15 +236,15 @@ void Foam::functionObjects::fieldAverage::calculateMeanFieldType
 template<class Type>
 void Foam::functionObjects::fieldAverage::calculateMeanFields() const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> volFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> surfFieldType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
     forAll(faItems_, i)
     {
         if (faItems_[i].mean())
         {
-            calculateMeanFieldType<volFieldType>(i);
-            calculateMeanFieldType<surfFieldType>(i);
+            calculateMeanFieldType<VolFieldType>(i);
+            calculateMeanFieldType<SurfaceFieldType>(i);
         }
     }
 }
@@ -297,18 +303,25 @@ void Foam::functionObjects::fieldAverage::calculatePrime2MeanFieldType
 template<class Type1, class Type2>
 void Foam::functionObjects::fieldAverage::calculatePrime2MeanFields() const
 {
-    typedef GeometricField<Type1, fvPatchField, volMesh> volFieldType1;
-    typedef GeometricField<Type1, fvsPatchField, surfaceMesh> surfFieldType1;
+    typedef GeometricField<Type1, fvPatchField, volMesh> VolFieldType1;
+    typedef GeometricField<Type1, fvsPatchField, surfaceMesh> SurfaceFieldType1;
 
-    typedef GeometricField<Type2, fvPatchField, volMesh> volFieldType2;
-    typedef GeometricField<Type2, fvsPatchField, surfaceMesh> surfFieldType2;
+    typedef GeometricField<Type2, fvPatchField, volMesh> VolFieldType2;
+    typedef GeometricField<Type2, fvsPatchField, surfaceMesh> SurfaceFieldType2;
 
     forAll(faItems_, i)
     {
         if (faItems_[i].prime2Mean())
         {
-            calculatePrime2MeanFieldType<volFieldType1, volFieldType2>(i);
-            calculatePrime2MeanFieldType<surfFieldType1, surfFieldType2>(i);
+            calculatePrime2MeanFieldType<VolFieldType1, VolFieldType2>
+            (
+                i
+            );
+
+            calculatePrime2MeanFieldType<SurfaceFieldType1, SurfaceFieldType2>
+            (
+                i
+            );
         }
     }
 }
@@ -340,18 +353,18 @@ void Foam::functionObjects::fieldAverage::addMeanSqrToPrime2MeanType
 template<class Type1, class Type2>
 void Foam::functionObjects::fieldAverage::addMeanSqrToPrime2Mean() const
 {
-    typedef GeometricField<Type1, fvPatchField, volMesh> volFieldType1;
-    typedef GeometricField<Type1, fvsPatchField, surfaceMesh> surfFieldType1;
+    typedef GeometricField<Type1, fvPatchField, volMesh> VolFieldType1;
+    typedef GeometricField<Type1, fvsPatchField, surfaceMesh> SurfaceFieldType1;
 
-    typedef GeometricField<Type2, fvPatchField, volMesh> volFieldType2;
-    typedef GeometricField<Type2, fvsPatchField, surfaceMesh> surfFieldType2;
+    typedef GeometricField<Type2, fvPatchField, volMesh> VolFieldType2;
+    typedef GeometricField<Type2, fvsPatchField, surfaceMesh> SurfaceFieldType2;
 
     forAll(faItems_, i)
     {
         if (faItems_[i].prime2Mean())
         {
-            addMeanSqrToPrime2MeanType<volFieldType1, volFieldType2>(i);
-            addMeanSqrToPrime2MeanType<surfFieldType1, surfFieldType2>(i);
+            addMeanSqrToPrime2MeanType<VolFieldType1, VolFieldType2>(i);
+            addMeanSqrToPrime2MeanType<SurfaceFieldType1, SurfaceFieldType2>(i);
         }
     }
 }
@@ -374,22 +387,22 @@ void Foam::functionObjects::fieldAverage::writeFieldType
 template<class Type>
 void Foam::functionObjects::fieldAverage::writeFields() const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> volFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> surfFieldType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
     forAll(faItems_, i)
     {
         if (faItems_[i].mean())
         {
             const word& fieldName = faItems_[i].meanFieldName();
-            writeFieldType<volFieldType>(fieldName);
-            writeFieldType<surfFieldType>(fieldName);
+            writeFieldType<VolFieldType>(fieldName);
+            writeFieldType<SurfaceFieldType>(fieldName);
         }
         if (faItems_[i].prime2Mean())
         {
             const word& fieldName = faItems_[i].prime2MeanFieldName();
-            writeFieldType<volFieldType>(fieldName);
-            writeFieldType<surfFieldType>(fieldName);
+            writeFieldType<VolFieldType>(fieldName);
+            writeFieldType<SurfaceFieldType>(fieldName);
         }
     }
 }

@@ -35,8 +35,8 @@ void Foam::functionObjects::surfaceInterpolateFields::interpolateFields
     PtrList<GeometricField<Type, fvsPatchField, surfaceMesh>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vfType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> sfType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
     // Convert field to map
     HashTable<word> fieldMap(2*fieldSet_.size());
@@ -46,11 +46,11 @@ void Foam::functionObjects::surfaceInterpolateFields::interpolateFields
     }
 
 
-    HashTable<const vfType*> flds(obr_.lookupClass<vfType>());
+    HashTable<const VolFieldType*> flds(obr_.lookupClass<VolFieldType>());
 
-    forAllConstIter(typename HashTable<const vfType*>, flds, iter)
+    forAllConstIter(typename HashTable<const VolFieldType*>, flds, iter)
     {
-        const vfType& fld = *iter();
+        const VolFieldType& fld = *iter();
 
         if (fieldMap.found(fld.name()))
         {
@@ -66,7 +66,11 @@ void Foam::functionObjects::surfaceInterpolateFields::interpolateFields
             {
                 label sz = sflds.size();
                 sflds.setSize(sz+1);
-                sflds.set(sz, new sfType(sName, linearInterpolate(fld)));
+                sflds.set
+                (
+                    sz,
+                    new SurfaceFieldType(sName, linearInterpolate(fld))
+                );
 
                 Info<< "        interpolated " << fld.name() << " to create "
                     << sflds[sz].name() << endl;

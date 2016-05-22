@@ -33,13 +33,13 @@ void Foam::functionObjects::nearWallFields::createFields
     PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vfType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
 
-    HashTable<const vfType*> flds(obr_.lookupClass<vfType>());
+    HashTable<const VolFieldType*> flds(obr_.lookupClass<VolFieldType>());
 
-    forAllConstIter(typename HashTable<const vfType*>, flds, iter)
+    forAllConstIter(typename HashTable<const VolFieldType*>, flds, iter)
     {
-        const vfType& fld = *iter();
+        const VolFieldType& fld = *iter();
 
         if (fieldMap_.found(fld.name()))
         {
@@ -61,7 +61,7 @@ void Foam::functionObjects::nearWallFields::createFields
                 io.writeOpt() = IOobject::NO_WRITE;
                 io.rename(sampleFldName);
 
-                sflds.set(sz, new vfType(io, fld));
+                sflds.set(sz, new VolFieldType(io, fld));
 
                 Info<< "    created " << sflds[sz].name() << " to sample "
                     << fld.name() << endl;
@@ -127,12 +127,12 @@ void Foam::functionObjects::nearWallFields::sampleFields
     PtrList<GeometricField<Type, fvPatchField, volMesh>>& sflds
 ) const
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vfType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
 
     forAll(sflds, i)
     {
         const word& fldName = reverseFieldMap_[sflds[i].name()];
-        const vfType& fld = obr_.lookupObject<vfType>(fldName);
+        const VolFieldType& fld = obr_.lookupObject<VolFieldType>(fldName);
 
         // Take over internal and boundary values
         sflds[i] == fld;
