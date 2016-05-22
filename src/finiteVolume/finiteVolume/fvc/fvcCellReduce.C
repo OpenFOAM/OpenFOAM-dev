@@ -31,18 +31,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace fvc
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type, class CombineOp>
-tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::fvc::cellReduce
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf,
     const CombineOp& cop
@@ -93,27 +84,19 @@ tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
 
 
 template<class Type, class CombineOp>
-tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::fvc::cellReduce
 (
-    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>&> tssf,
+    const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf,
     const CombineOp& cop
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>>
-        tvf(cellReduce(cop, tssf));
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tvf(cellReduce(tssf, cop));
 
     tssf.clear();
 
     return tvf;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace fvc
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //
