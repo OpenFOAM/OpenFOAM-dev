@@ -124,7 +124,7 @@ public:
         //- Execute, currently does nothing
         virtual bool execute(const bool postProcess = false);
 
-        //- Write the writeDictionary
+        //- Write the selected dictionaries
         virtual bool write(const bool postProcess = false);
 };
 
