@@ -84,7 +84,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> transform
         )
     );
 
-    transform(tranf(), trf, tf);
+    transform(tranf.ref(), trf, tf);
 
     return tranf;
 }
@@ -155,7 +155,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> transform
 {
     tmp<GeometricField<Type, PatchField, GeoMesh>> tranf
     (
-        new GeometricField<vector, PatchField, GeoMesh>
+        new GeometricField<Type, PatchField, GeoMesh>
         (
             IOobject
             (
@@ -170,7 +170,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> transform
         )
     );
 
-    transform(tranf(), t, tf);
+    transform(tranf.ref(), t, tf);
 
     return tranf;
 }
