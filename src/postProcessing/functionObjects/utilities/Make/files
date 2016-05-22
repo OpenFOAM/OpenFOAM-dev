@@ -9,7 +9,6 @@ writeDictionary/writeDictionary.C
 writeRegisteredObject/writeRegisteredObject.C
 
 scalarTransport/scalarTransport.C
-blendingFactor/blendingFactor.C
 dsmcFields/dsmcFields.C
 
 turbulenceFields/turbulenceFields.C

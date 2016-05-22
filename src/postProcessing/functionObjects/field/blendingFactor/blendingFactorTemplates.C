@@ -26,64 +26,25 @@ License
 #include "gaussConvectionScheme.H"
 #include "blendedSchemeBase.H"
 #include "fvcCellReduce.H"
-#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::volScalarField& Foam::functionObjects::blendingFactor::factor
-(
-    const GeometricField<Type, fvPatchField, volMesh>& field
-)
+bool Foam::functionObjects::blendingFactor::calc()
 {
-    const word fieldName = "blendingFactor:" + field.name();
+    typedef GeometricField<Type, fvPatchField, volMesh> FieldType;
 
-    if (!mesh_.foundObject<volScalarField>(fieldName))
+    if (!foundField<FieldType>(fieldName_))
     {
-        volScalarField* factorPtr =
-            new volScalarField
-            (
-                IOobject
-                (
-                    fieldName,
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::NO_READ,
-                    IOobject::NO_WRITE
-                ),
-                mesh_,
-                dimensionedScalar("0", dimless, 0.0),
-                zeroGradientFvPatchScalarField::typeName
-            );
-
-        obr_.store(factorPtr);
+        return false;
     }
 
-    return
-        const_cast<volScalarField&>
-        (
-            mesh_.lookupObject<volScalarField>(fieldName)
-        );
-}
-
-
-template<class Type>
-void Foam::functionObjects::blendingFactor::calc()
-{
-    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
-
-    if (!mesh_.foundObject<fieldType>(fieldName_))
-    {
-        return;
-    }
-
-    const fieldType& field = mesh_.lookupObject<fieldType>(fieldName_);
+    const FieldType& field = lookupField<FieldType>(fieldName_);
 
     const word divScheme("div(" + phiName_ + ',' + fieldName_ + ')');
     ITstream& its = mesh_.divScheme(divScheme);
 
-    const surfaceScalarField& phi =
-        mesh_.lookupObject<surfaceScalarField>(phiName_);
+    const surfaceScalarField& phi = lookupField<surfaceScalarField>(phiName_);
 
     tmp<fv::convectionScheme<Type>> cs =
         fv::convectionScheme<Type>::New(mesh_, phi, its);
@@ -101,15 +62,17 @@ void Foam::functionObjects::blendingFactor::calc()
             << exit(FatalError);
     }
 
-    // retrieve the face-based blending factor
+    // Retrieve the face-based blending factor
     const blendedSchemeBase<Type>& blendedScheme =
         refCast<const blendedSchemeBase<Type>>(interpScheme);
-    const surfaceScalarField factorf(blendedScheme.blendingFactor(field));
+    tmp<surfaceScalarField> factorf(blendedScheme.blendingFactor(field));
 
-    // convert into vol field whose values represent the local face maxima
-    volScalarField& factor = this->factor(field);
-    factor = fvc::cellReduce(factorf, maxEqOp<scalar>());
-    factor.correctBoundaryConditions();
+    // Convert into vol field whose values represent the local face maxima
+    return store
+    (
+        resultName_,
+        fvc::cellReduce(factorf, maxEqOp<scalar>())
+    );
 }
 
 
