@@ -9,6 +9,7 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lfiniteVolume \
+    -lturbulenceModels \
     -lmeshTools \
     -lsurfMesh \
     -llagrangian \
