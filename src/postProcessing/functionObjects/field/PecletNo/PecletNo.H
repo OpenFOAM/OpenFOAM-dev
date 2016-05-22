@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::Peclet
+    Foam::functionObjects::PecletNo
 
 Group
     grpUtilitiesFunctionObjects
@@ -36,12 +36,12 @@ SeeAlso
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    Peclet.C
+    PecletNo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_Peclet_H
-#define functionObjects_Peclet_H
+#ifndef functionObjects_PecletNo_H
+#define functionObjects_PecletNo_H
 
 #include "fieldExpression.H"
 
@@ -53,10 +53,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class Peclet Declaration
+                          Class PecletNo Declaration
 \*---------------------------------------------------------------------------*/
 
-class Peclet
+class PecletNo
 :
     public fieldExpression
 {
@@ -69,14 +69,14 @@ class Peclet
 public:
 
     //- Runtime type information
-    TypeName("Peclet");
+    TypeName("PecletNo");
 
 
     // Constructors
 
         //- Construct for given objectRegistry and dictionary.
         //  Allow the possibility to load fields from files
-        Peclet
+        PecletNo
         (
             const word& name,
             const Time& runTime,
@@ -85,12 +85,12 @@ public:
 
 
     //- Destructor
-    virtual ~Peclet();
+    virtual ~PecletNo();
 
 
     // Member Functions
 
-        //- Read the Peclet data
+        //- Read the PecletNo data
         virtual bool read(const dictionary&);
 
         //- Calculate the Peclet number field

@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Peclet.H"
+#include "PecletNo.H"
 #include "turbulenceModel.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,12 +34,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(Peclet, 0);
+    defineTypeNameAndDebug(PecletNo, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        Peclet,
+        PecletNo,
         dictionary
     );
 }
@@ -48,7 +48,7 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::Peclet::Peclet
+Foam::functionObjects::PecletNo::PecletNo
 (
     const word& name,
     const Time& runTime,
@@ -63,13 +63,13 @@ Foam::functionObjects::Peclet::Peclet
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::Peclet::~Peclet()
+Foam::functionObjects::PecletNo::~PecletNo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::Peclet::read(const dictionary& dict)
+bool Foam::functionObjects::PecletNo::read(const dictionary& dict)
 {
     fieldExpression::read(dict);
 
@@ -79,7 +79,7 @@ bool Foam::functionObjects::Peclet::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::Peclet::execute(const bool postProcess)
+bool Foam::functionObjects::PecletNo::execute(const bool postProcess)
 {
     if (foundField<surfaceScalarField>(phiName_))
     {
