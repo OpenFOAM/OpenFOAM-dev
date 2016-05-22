@@ -42,5 +42,6 @@ Lambda2/Lambda2.C
 CourantNo/CourantNo.C
 PecletNo/PecletNo.C
 blendingFactor/blendingFactor.C
+pressure/pressure.C
 
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

@@ -1,4 +1,3 @@
-pressureTools/pressureTools.C
 wallShearStress/wallShearStress.C
 forces/forces.C
 forceCoeffs/forceCoeffs.C

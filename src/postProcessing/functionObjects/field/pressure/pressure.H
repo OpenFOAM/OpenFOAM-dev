@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::pressureTools
+    Foam::functionObjects::pressure
 
 Group
     grpForcesFunctionObjects
@@ -33,54 +33,54 @@ Description
 
     - static pressure
         \f[
-            p_s = \rho p_k
+            p = \rho p_k
         \f]
     - total pressure
         \f[
-            p_T = p_{ref} + p_s + 0.5 \rho |U|^2
+            p_0 = p_{ref} + p + 0.5 \rho |U|^2
         \f]
     - static pressure coefficient
         \f[
-            Cp_s = \frac{p_s - p_{\inf}}{0.5 \rho_{\inf} |U_{\inf}|^2}
+            Cp = \frac{p - p_{\inf}}{0.5 \rho_{\inf} |U_{\inf}|^2}
         \f]
     - total pressure coefficient
         \f[
-            Cp_T = \frac{p_T - p_{\inf}}{0.5 \rho_{\inf} |U_{\inf}|^2}
+            Cp_0 = \frac{p_0 - p_{\inf}}{0.5 \rho_{\inf} |U_{\inf}|^2}
         \f]
 
     where
     \vartable
-        \rho        | density [kg/m3]
-        U           | velocity [m/s]
-        \rho_{\inf} | freestream density [kg/m3]
-        p_{\inf}    | freestream pressure [Pa]
-        U_{\inf}    | freestream velocity [m/s]
-        p_k         | kinematic pressure (p/rho)[m2/s2]
-        p_s         | pressure [Pa]
-        p_T         | total pressure [Pa]
-        p_{ref}     | reference pressure level [Pa]
-        Cp_{s}      | pressure coefficient
-        Cp_{T}      | total pressure coefficient
+        \rho        | Density [kg/m3]
+        U           | Velocity [m/s]
+        \rho_{\inf} | Freestream density [kg/m3]
+        p_{\inf}    | Freestream pressure [Pa]
+        U_{\inf}    | Freestream velocity [m/s]
+        p_k         | Kinematic pressure (p/rho)[m2/s2]
+        p           | Pressure [Pa]
+        p_0         | Total pressure [Pa]
+        p_{ref}     | Reference pressure level [Pa]
+        Cp          | Pressure coefficient
+        Cp_0        | Total pressure coefficient
     \endvartable
 
     The function object will operate on both kinematic (\f$ p_k \f$) and static
-    pressure (\f$ p_s \f$) fields, and the result is written as a
+    pressure (\f$ p \f$) fields, and the result is written as a
     volScalarField.
 
     The modes of operation are:
     \table
         Mode                        | calcTotal | calcCoeff
-        static pressure             | no        | no
-        total pressure              | yes       | no
-        pressure coefficient        | no        | yes
-        total pressure coefficient  | yes       | yes
+        Static pressure             | no        | no
+        Total pressure              | yes       | no
+        Pressure coefficient        | no        | yes
+        Total pressure coefficient  | yes       | yes
     \endtable
 
     Example of function object specification to calculate pressure coefficient:
     \verbatim
-    pressureTools1
+    pressure1
     {
-        type        pressureTools;
+        type        pressure;
         libs ("libutilityFunctionObjects.so");
         ...
         calcTotal   no;
@@ -90,28 +90,33 @@ Description
 
     \heading Function object usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | type name: pressureTools| yes         |
-        calcTotal    | Calculate total coefficient | yes     |
-        pRef         | Reference pressure for total pressure | no | 0.0
+        Property     | Description                 | Required   | Default value
+        type         | type name: pressure    | yes        |
+        field        | Name of the pressure field  | no         | p
+        U            | Name of the velocity field  | no         | U
+        rho          | Name of the density field   | no         | rho
+        result       | Name of the resulting field | no         | derived from p
+        calcTotal    | Calculate total coefficient | yes        |
+        pRef         | Reference pressure for total pressure | no | 0
         calcCoeff    | Calculate pressure coefficient | yes  |
         pInf         | Freestream pressure for coefficient calculation | no |
         UInf         | Freestream velocity for coefficient calculation | no |
-        rhoInf       | Freestream density for coefficient calculation | no |
+        rhoInf       | Freestream density for coefficient calculation  | no |
     \endtable
 
 SeeAlso
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    pressureTools.C
+    pressure.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_pressureTools_H
-#define functionObjects_pressureTools_H
+#ifndef functionObjects_pressure_H
+#define functionObjects_pressure_H
 
-#include "fvMeshFunctionObject.H"
+#include "fieldExpression.H"
 #include "volFieldsFwd.H"
 #include "dimensionedScalar.H"
 
@@ -123,17 +128,14 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class pressureTools Declaration
+                        Class pressure Declaration
 \*---------------------------------------------------------------------------*/
 
-class pressureTools
+class pressure
 :
-    public fvMeshFunctionObject
+    public fieldExpression
 {
     // Private data
-
-        //- Name of pressure field, default is "p"
-        word pName_;
 
         //- Name of velocity field, default is "U"
         word UName_;
@@ -169,40 +171,42 @@ class pressureTools
     // Private Member Functions
 
         //- Return the name of the derived pressure field
-        word pName() const;
+        word resultName() const;
 
-        //- Return the density scaling if supplied with kinematic pressure
-        dimensionedScalar rhoScale(const volScalarField& p) const;
+        //- Multiply the static pressure p by rhoInf if necessary and return
+        tmp<volScalarField> rhoScale(const volScalarField& p) const;
 
-        //- Return the density field
-        tmp<volScalarField> rho(const volScalarField& p) const;
+        //- Multiply the given field by rho or rhoInf as appropriate and return
+        tmp<volScalarField> rhoScale
+        (
+            const volScalarField& p,
+            const tmp<volScalarField>& tsf
+        ) const;
 
         //- Return the reference pressure
-        dimensionedScalar pRef() const;
+        tmp<volScalarField> pRef(const tmp<volScalarField>& tp) const;
 
         //- Calculate and return the dynamic pressure
-        tmp<volScalarField> pDyn(const volScalarField& p) const;
+        tmp<volScalarField> pDyn
+        (
+            const volScalarField& p,
+            const tmp<volScalarField>& tp
+        ) const;
 
         //- Convert to coeff by applying the freestream dynamic pressure scaling
-        tmp<volScalarField> convertToCoeff(const volScalarField& p) const;
-
-        //- Disallow default bitwise copy construct
-        pressureTools(const pressureTools&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pressureTools&);
+        tmp<volScalarField> coeff(const tmp<volScalarField>& tp) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("pressureTools");
+    TypeName("pressure");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        pressureTools
+        pressure
         (
             const word& name,
             const Time& runTime,
@@ -211,19 +215,16 @@ public:
 
 
     //- Destructor
-    virtual ~pressureTools();
+    virtual ~pressure();
 
 
     // Member Functions
 
-        //- Read the pressureTools data
+        //- Read the pressure data
         virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
+        //- Calculate the selected pressure form
         virtual bool execute(const bool postProcess = false);
-
-        //- Calculate the pressureTools and write
-        virtual bool write(const bool postProcess = false);
 };
 
 
