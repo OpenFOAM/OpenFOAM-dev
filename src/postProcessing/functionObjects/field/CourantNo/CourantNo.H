@@ -106,7 +106,7 @@ public:
         //- Read the CourantNo data
         virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
+        //- Calculate the Courant number
         virtual bool execute(const bool postProcess = false);
 };
 

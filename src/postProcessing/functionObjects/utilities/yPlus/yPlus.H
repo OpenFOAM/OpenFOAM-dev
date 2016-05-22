@@ -120,10 +120,10 @@ public:
         //- Read the yPlus data
         virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
+        //- Calculate the yPlus field
         virtual bool execute(const bool postProcess = false);
 
-        //- Calculate the yPlus and write
+        //- Write the yPlus field
         virtual bool write(const bool postProcess = false);
 };
 

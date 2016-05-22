@@ -83,7 +83,7 @@ public:
 
     // Member Functions
 
-        //- Execute, currently does nothing
+        //- Calculate the vorticity field
         virtual bool execute(const bool postProcess = false);
 };
 

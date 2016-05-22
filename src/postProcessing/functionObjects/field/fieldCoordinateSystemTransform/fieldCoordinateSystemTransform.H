@@ -148,10 +148,10 @@ public:
         //- Read the input data
         virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
+        //- Calculate the transformed fields
         virtual bool execute(const bool postProcess = false);
 
-        //- Write
+        //- Write the transformed fields
         virtual bool write(const bool postProcess = false);
 };
 
