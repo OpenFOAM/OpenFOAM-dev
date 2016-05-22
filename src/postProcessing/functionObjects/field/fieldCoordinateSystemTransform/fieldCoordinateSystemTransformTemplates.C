@@ -26,50 +26,23 @@ License
 #include "fieldCoordinateSystemTransform.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "Time.H"
 #include "transformGeometricField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
+template<class FieldType>
 void Foam::functionObjects::fieldCoordinateSystemTransform::transformField
 (
-    const Type& field
-) const
+    const FieldType& field
+)
 {
-    const word& fieldName = field.name() + ":Transformed";
+    word transFieldName(transformFieldName(field.name()));
 
-    if (!obr_.foundObject<Type>(fieldName))
-    {
-        obr_.store
-        (
-            new Type
-            (
-                IOobject
-                (
-                    fieldName,
-                    obr_.time().timeName(),
-                    obr_,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::NO_WRITE
-                ),
-                field
-            )
-        );
-    }
-
-    Type& transField =
-        const_cast<Type&>(obr_.lookupObject<Type>(fieldName));
-
-    transField == field;
-
-    dimensionedTensor R("R", field.dimensions(), coordSys_.R().R());
-
-    Foam::transform(transField, R, transField);
-
-    Info<< "    writing field " << transField.name() << nl << endl;
-
-    transField.write();
+    store
+    (
+        transFieldName,
+        Foam::transform(dimensionedTensor(coordSys_.R().R()), field)
+    );
 }
 
 
@@ -77,12 +50,12 @@ template<class Type>
 void Foam::functionObjects::fieldCoordinateSystemTransform::transform
 (
     const word& fieldName
-) const
+)
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> vfType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> sfType;
+    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
-    if (obr_.foundObject<vfType>(fieldName))
+    if (mesh_.foundObject<VolFieldType>(fieldName))
     {
         if (debug)
         {
@@ -90,9 +63,12 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
                 << endl;
         }
 
-        transformField<vfType>(obr_.lookupObject<vfType>(fieldName));
+        transformField<VolFieldType>
+        (
+            mesh_.lookupObject<VolFieldType>(fieldName)
+        );
     }
-    else if (obr_.foundObject<sfType>(fieldName))
+    else if (mesh_.foundObject<SurfaceFieldType>(fieldName))
     {
         if (debug)
         {
@@ -100,15 +76,18 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
                 << endl;
         }
 
-        transformField<sfType>(obr_.lookupObject<sfType>(fieldName));
+        transformField<SurfaceFieldType>
+        (
+            mesh_.lookupObject<SurfaceFieldType>(fieldName)
+        );
     }
     else
     {
         IOobject fieldHeader
         (
             fieldName,
-            obr_.time().timeName(),
-            obr_,
+            mesh_.time().timeName(),
+            mesh_,
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         );
@@ -116,7 +95,7 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
         if
         (
             fieldHeader.headerOk()
-         && fieldHeader.headerClassName() == vfType::typeName
+         && fieldHeader.headerClassName() == VolFieldType::typeName
         )
         {
             if (debug)
@@ -125,12 +104,15 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
                     << endl;
             }
 
-            transformField<vfType>(obr_.lookupObject<vfType>(fieldName));
+            transformField<VolFieldType>
+            (
+                mesh_.lookupObject<VolFieldType>(fieldName)
+            );
         }
         else if
         (
             fieldHeader.headerOk()
-         && fieldHeader.headerClassName() == sfType::typeName
+         && fieldHeader.headerClassName() == SurfaceFieldType::typeName
         )
         {
             if (debug)
@@ -139,7 +121,10 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
                     << endl;
             }
 
-            transformField<sfType>(obr_.lookupObject<sfType>(fieldName));
+            transformField<SurfaceFieldType>
+            (
+                mesh_.lookupObject<SurfaceFieldType>(fieldName)
+            );
         }
     }
 }

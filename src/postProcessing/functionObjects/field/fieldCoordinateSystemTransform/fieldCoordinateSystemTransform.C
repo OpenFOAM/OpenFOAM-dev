@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldCoordinateSystemTransform.H"
-#include "dictionary.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -55,23 +54,10 @@ fieldCoordinateSystemTransform
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    fvMeshFunctionObject(name, runTime, dict),
     fieldSet_(),
-    coordSys_(obr_, dict)
+    coordSys_(mesh_, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 
     Info<< type() << " " << name << ":" << nl
@@ -89,6 +75,16 @@ Foam::functionObjects::fieldCoordinateSystemTransform::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::word
+Foam::functionObjects::fieldCoordinateSystemTransform::transformFieldName
+(
+    const word& fieldName
+) const
+{
+    return fieldName + ":Transformed";
+}
+
+
 bool Foam::functionObjects::fieldCoordinateSystemTransform::read
 (
     const dictionary& dict
@@ -105,11 +101,8 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::execute
     const bool postProcess
 )
 {
-    Info<< type() << " " << name() << " output:" << nl;
-
     forAll(fieldSet_, fieldi)
     {
-        // If necessary load field
         transform<scalar>(fieldSet_[fieldi]);
         transform<vector>(fieldSet_[fieldi]);
         transform<sphericalTensor>(fieldSet_[fieldi]);
@@ -126,21 +119,10 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::write
     const bool postProcess
 )
 {
-    Info<< type() << " " << name() << " output:" << nl;
-
     forAll(fieldSet_, fieldi)
     {
-        const word fieldName = fieldSet_[fieldi] + ":Transformed";
-
-        const regIOobject& field =
-            obr_.lookupObject<regIOobject>(fieldName);
-
-        Info<< "    writing field " << field.name() << nl;
-
-        field.write();
+        fvMeshFunctionObject::write(transformFieldName(fieldSet_[fieldi]));
     }
-
-    Info<< endl;
 
     return true;
 }
