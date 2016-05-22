@@ -93,7 +93,7 @@ protected:
         );
 
         //- Write field if present in objectRegistry
-        virtual bool write(const word& fieldName);
+        bool writeField(const word& fieldName);
 
 
 private:

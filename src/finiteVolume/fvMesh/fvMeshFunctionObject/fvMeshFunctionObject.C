@@ -40,7 +40,10 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-bool Foam::functionObjects::fvMeshFunctionObject::write(const word& fieldName)
+bool Foam::functionObjects::fvMeshFunctionObject::writeField
+(
+    const word& fieldName
+)
 {
     if (mesh_.foundObject<regIOobject>(fieldName))
     {

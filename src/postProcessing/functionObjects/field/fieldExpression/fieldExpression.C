@@ -81,7 +81,7 @@ bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 
 bool Foam::functionObjects::fieldExpression::write(const bool postProcess)
 {
-    return fvMeshFunctionObject::write(resultName_);
+    return fvMeshFunctionObject::writeField(resultName_);
 }
 
 
