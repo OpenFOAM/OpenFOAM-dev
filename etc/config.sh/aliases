@@ -32,23 +32,23 @@
 
 # Change compiled version aliases
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-alias wmSET='. $WM_PROJECT_DIR/etc/bashrc'
+alias wmSet='. $WM_PROJECT_DIR/etc/bashrc'
 alias wm64='wmSET WM_ARCH_OPTION=64'
 alias wm32='wmSET WM_ARCH_OPTION=32'
 alias wmSP='wmSET WM_PRECISION_OPTION=SP'
 alias wmDP='wmSET WM_PRECISION_OPTION=DP'
 
 # Refresh the environment
-alias wmREFRESH='wmSET $FOAM_SETTINGS'
+alias wmRefresh='wmSET $FOAM_SETTINGS'
 
 # Clear env
-alias wmUNSET='. $WM_PROJECT_DIR/etc/config.sh/unset'
+alias wmUnset='. $WM_PROJECT_DIR/etc/config.sh/unset'
 
 # Toggle wmakeScheduler on/off
 #  - also need to set WM_HOSTS
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-alias wmSchedON='export WM_SCHEDULER=$WM_PROJECT_DIR/wmake/wmakeScheduler'
-alias wmSchedOFF='unset WM_SCHEDULER'
+alias wmSchedOn='export WM_SCHEDULER=$WM_PROJECT_DIR/wmake/wmakeScheduler'
+alias wmSchedOff='unset WM_SCHEDULER'
 
 # Change ParaView version
 # ~~~~~~~~~~~~~~~~~~~~~~~
