@@ -39,6 +39,7 @@ mag/mag.C
 vorticity/vorticity.C
 Q/Q.C
 Lambda2/Lambda2.C
+flowType/flowType.C
 CourantNo/CourantNo.C
 PecletNo/PecletNo.C
 blendingFactor/blendingFactor.C
