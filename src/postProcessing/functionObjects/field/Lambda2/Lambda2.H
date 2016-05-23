@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::Lambda2
 
 Group
-    grpUtilitiesFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates and outputs the second largest eigenvalue

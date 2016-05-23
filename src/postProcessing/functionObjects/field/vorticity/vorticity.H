@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::vorticity
 
 Group
-    grpUtilitiesFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates the vorticity, the curl of the velocity.

@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::CourantNo
 
 Group
-    grpUtilitiesFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates and outputs the Courant number as a

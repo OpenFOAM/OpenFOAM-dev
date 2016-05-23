@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::PecletNo
 
 Group
-    grpUtilitiesFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates and outputs the Peclet number as a

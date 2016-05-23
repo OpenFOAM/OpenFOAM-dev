@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::Q
 
 Group
-    grpUtilitiesFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates and outputs the second invariant of the

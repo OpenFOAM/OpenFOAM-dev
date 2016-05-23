@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::blendingFactor
 
 Group
-    grpUtilitiesFunctionObjects
+    grpFieldFunctionObjects
 
 Description
     This function object calculates and outputs the blendingFactor as used by
