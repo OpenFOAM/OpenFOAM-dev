@@ -107,7 +107,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pRef
     }
     else
     {
-        return tmp<volScalarField>(tp.ptr());
+        return std::move(tp);
     }
 }
 
@@ -126,7 +126,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pDyn
     }
     else
     {
-        return tmp<volScalarField>(tp.ptr());
+        return std::move(tp);
     }
 }
 
@@ -154,7 +154,7 @@ Foam::functionObjects::pressure::coeff
     }
     else
     {
-        return tmp<volScalarField>(tp.ptr());
+        return std::move(tp);
     }
 }
 
