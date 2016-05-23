@@ -106,6 +106,20 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     const DimensionedField<scalar, GeoMesh>& dsf2
 )
 {
+    if (!dsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << dsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!dsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << dsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow
     (
         new DimensionedField<scalar, GeoMesh>
@@ -117,11 +131,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
                 dsf1.db()
             ),
             dsf1.mesh(),
-            pow
-            (
-                dsf1.dimensions(),
-                dimensionedScalar("1", 1.0, dsf2.dimensions())
-            )
+            dimless
         )
     );
 
@@ -140,15 +150,25 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 {
     const DimensionedField<scalar, GeoMesh>& dsf1 = tdsf1();
 
+    if (!dsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << dsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!dsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << dsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow = New
     (
         tdsf1,
         "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
-        pow
-        (
-            dsf1.dimensions(),
-            dimensionedScalar("1", 1.0, dsf2.dimensions())
-        )
+        dimless
     );
 
     pow(tPow.ref().field(), dsf1.field(), dsf2.field());
@@ -168,15 +188,25 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 {
     const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
 
+    if (!dsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << dsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!dsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << dsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow = New
     (
         tdsf2,
         "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
-        pow
-        (
-            dsf1.dimensions(),
-            dimensionedScalar("1", 1.0, dsf2.dimensions())
-        )
+        dimless
     );
 
     pow(tPow.ref().field(), dsf1.field(), dsf2.field());
@@ -185,6 +215,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 
     return tPow;
 }
+
 
 template<class GeoMesh>
 tmp<DimensionedField<scalar, GeoMesh>> pow
@@ -196,6 +227,20 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     const DimensionedField<scalar, GeoMesh>& dsf1 = tdsf1();
     const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
 
+    if (!dsf1.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base field is not dimensionless: " << dsf1.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!dsf2.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << dsf2.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow =
         reuseTmpTmpDimensionedField<scalar, scalar, scalar, scalar, GeoMesh>::
         New
@@ -203,11 +248,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
             tdsf1,
             tdsf2,
             "pow(" + dsf1.name() + ',' + dsf2.name() + ')',
-            pow
-            (
-                dsf1.dimensions(),
-                dimensionedScalar("1", 1.0, dsf2.dimensions())
-            )
+            dimless
         );
 
     pow(tPow.ref().field(), dsf1.field(), dsf2.field());
@@ -226,6 +267,13 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     const dimensionedScalar& ds
 )
 {
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow
     (
         new DimensionedField<scalar, GeoMesh>
@@ -246,6 +294,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     return tPow;
 }
 
+
 template<class GeoMesh>
 tmp<DimensionedField<scalar, GeoMesh>> pow
 (
@@ -253,6 +302,13 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     const dimensionedScalar& ds
 )
 {
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
     const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
 
     tmp<DimensionedField<scalar, GeoMesh>> tPow = New
@@ -269,6 +325,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     return tPow;
 }
 
+
 template<class GeoMesh>
 tmp<DimensionedField<scalar, GeoMesh>> pow
 (
@@ -278,6 +335,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 {
     return pow(dsf, dimensionedScalar(s));
 }
+
 
 template<class GeoMesh>
 tmp<DimensionedField<scalar, GeoMesh>> pow
@@ -297,6 +355,20 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     const DimensionedField<scalar, GeoMesh>& dsf
 )
 {
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base scalar is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!dsf.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << dsf.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow
     (
         new DimensionedField<scalar, GeoMesh>
@@ -308,7 +380,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
                 dsf.db()
             ),
             dsf.mesh(),
-            pow(ds, dsf.dimensions())
+            dimless
         )
     );
 
@@ -327,11 +399,25 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
 {
     const DimensionedField<scalar, GeoMesh>& dsf = tdsf();
 
+    if (!ds.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Base scalar is not dimensionless: " << ds.dimensions()
+            << exit(FatalError);
+    }
+
+    if (!dsf.dimensions().dimensionless())
+    {
+        FatalErrorInFunction
+            << "Exponent field is not dimensionless: " << dsf.dimensions()
+            << exit(FatalError);
+    }
+
     tmp<DimensionedField<scalar, GeoMesh>> tPow = New
     (
         tdsf,
         "pow(" + ds.name() + ',' + dsf.name() + ')',
-        pow(ds, dsf.dimensions())
+        dimless
     );
 
     pow(tPow.ref().field(), ds.value(), dsf.field());
