@@ -224,10 +224,10 @@ Foam::functionObjects::forces::devRhoReff() const
 
         return rho()*turb.devReff();
     }
-    else if (obr_.foundObject<fluidThermo>(fluidThermo::typeName))
+    else if (obr_.foundObject<fluidThermo>(fluidThermo::dictName))
     {
         const fluidThermo& thermo =
-            obr_.lookupObject<fluidThermo>(fluidThermo::typeName);
+            obr_.lookupObject<fluidThermo>(fluidThermo::dictName);
 
         const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
 
