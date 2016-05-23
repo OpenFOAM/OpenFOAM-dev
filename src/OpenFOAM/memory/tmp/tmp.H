@@ -92,6 +92,9 @@ public:
         //- Construct copy and increment reference count
         inline tmp(const tmp<T>&);
 
+        //- Construct copy moving content, does not increment reference count
+        inline tmp(const tmp<T>&&);
+
         //- Construct copy transferring content of temporary if required
         inline tmp(const tmp<T>&, bool allowTransfer);
 
