@@ -58,7 +58,7 @@ Description
 
 
 SeeAlso
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::timeControl
 
 SourceFiles
@@ -69,7 +69,7 @@ SourceFiles
 #ifndef functionObjects_surfaceInterpolateFields_H
 #define functionObjects_surfaceInterpolateFields_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "surfaceFieldsFwd.H"
 #include "Tuple2.H"
 
@@ -92,14 +92,11 @@ namespace functionObjects
 
 class surfaceInterpolateFields
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
 protected:
 
     // Protected data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Fields to process
         List<Tuple2<word, word>> fieldSet_;
