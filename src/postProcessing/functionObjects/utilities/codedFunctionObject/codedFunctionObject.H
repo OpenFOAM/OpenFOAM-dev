@@ -32,16 +32,15 @@ Description
     compilation.
 
     The entries are
-        code        : c++; upon functionObject::write()
         codeInclude : include files
         codeOptions : include paths; inserted into EXE_INC in Make/options
         codeLibs    : link line; inserted into LIB_LIBS in Make/options
-
-        codeExecute : c++;upon functionObject::execute();
-        codeRead    : c++; upon functionObject::read();
-        codeEnd     : c++; upon functionObject::end();
         codeData    : c++; local member data (null constructed);
         localCode   : c++; local static functions
+        codeRead    : c++; upon functionObject::read();
+        codeExecute : c++;upon functionObject::execute();
+        codeWrite   : c++; upon functionObject::write()
+        codeEnd     : c++; upon functionObject::end();
 
     Example of function object specification:
     \verbatim
@@ -52,7 +51,7 @@ Description
         type coded;
         // Name of on-the-fly generated functionObject
         name writeMagU;
-        code
+        codeWrite
         #{
             // Lookup U
             const volVectorField& U = mesh().lookupObject<volVectorField>("U");
