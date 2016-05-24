@@ -76,7 +76,7 @@ Description
     \endplaintable
 
 SeeAlso
-    Foam::functionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::timeControl
 
 SourceFiles
@@ -87,7 +87,7 @@ SourceFiles
 #ifndef functionObjects_turbulenceFields_H
 #define functionObjects_turbulenceFields_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "HashSet.H"
 #include "NamedEnum.H"
 #include "volFieldsFwd.H"
@@ -96,10 +96,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -109,7 +105,7 @@ namespace functionObjects
 
 class turbulenceFields
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
 public:
 
@@ -143,9 +139,6 @@ public:
 protected:
 
     // Protected data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Fields to load
         wordHashSet fieldSet_;

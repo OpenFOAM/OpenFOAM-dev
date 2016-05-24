@@ -109,6 +109,7 @@ Note
     To employ the \c prime2Mean option, the \c mean option must be selecetd.
 
 SeeAlso
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObject
 
 SourceFiles
@@ -121,17 +122,12 @@ SourceFiles
 #ifndef functionObjects_fieldAverage_H
 #define functionObjects_fieldAverage_H
 
-#include "functionObject.H"
-#include "Switch.H"
+#include "fvMeshFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -144,14 +140,11 @@ class fieldAverageItem;
 
 class fieldAverage
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
 protected:
 
     // Protected data
-
-        //- Reference to the objectRegistry
-        const objectRegistry& obr_;
 
         //- Time at last call, prevents repeated averaging
         label prevTimeIndex_;
@@ -288,7 +281,7 @@ public:
         fieldAverage
         (
             const word& name,
-            const Time& t,
+            const Time& runTime,
             const dictionary&
         );
 
