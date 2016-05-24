@@ -83,6 +83,8 @@ Foam::functionObjects::processorField::~processorField()
 
 bool Foam::functionObjects::processorField::read(const dictionary& dict)
 {
+    fvMeshFunctionObject::read(dict);
+
     return true;
 }
 

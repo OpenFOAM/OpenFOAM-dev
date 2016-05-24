@@ -195,7 +195,7 @@ Foam::functionObjects::scalarTransport::~scalarTransport()
 
 bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 {
-    Info<< type() << ":" << nl;
+    fvMeshFunctionObject::read(dict);
 
     phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     UName_ = dict.lookupOrDefault<word>("U", "U");

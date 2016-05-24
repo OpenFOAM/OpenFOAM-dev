@@ -66,9 +66,6 @@ protected:
         //- Prefix
         const word prefix_;
 
-        //- Switch to send output to Info as well as to file
-        Switch log_;
-
 
     // Protected Member Functions
 
@@ -129,9 +126,6 @@ public:
 
 
     // Member Functions
-
-        //- Read optional controls
-        virtual bool read(const dictionary&);
 
         //- Write a commented string to stream
         void writeCommented(Ostream& os, const string& str) const;

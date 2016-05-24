@@ -55,7 +55,8 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
         (
             dict.lookupOrDefault("region", polyMesh::defaultRegion)
         )
-    )
+    ),
+    log_(true)
 {}
 
 
@@ -68,7 +69,8 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
 :
     functionObject(name),
     time_(obr.time()),
-    obr_(obr)
+    obr_(obr),
+    log_(true)
 {}
 
 
@@ -76,6 +78,16 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
 
 Foam::functionObjects::regionFunctionObject::~regionFunctionObject()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::regionFunctionObject::read(const dictionary& dict)
+{
+    log_ = dict.lookupOrDefault<Switch>("log", true);
+
+    return true;
+}
 
 
 // ************************************************************************* //

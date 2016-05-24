@@ -40,6 +40,7 @@ SourceFiles
 #define functionObjects_regionFunctionObject_H
 
 #include "functionObject.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,6 +71,9 @@ protected:
 
         //- Reference to the region objectRegistry
         const objectRegistry& obr_;
+
+        //- Switch to send output to Info as well as to file
+        Switch log_;
 
 
 private:
@@ -112,6 +116,12 @@ public:
 
     //- Destructor
     virtual ~regionFunctionObject();
+
+
+    // Member Functions
+
+        //- Read optional controls
+        virtual bool read(const dictionary&);
 };
 
 

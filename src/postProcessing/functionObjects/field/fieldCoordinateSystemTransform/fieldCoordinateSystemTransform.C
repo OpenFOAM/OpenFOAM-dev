@@ -90,6 +90,8 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::read
     const dictionary& dict
 )
 {
+    fvMeshFunctionObject::read(dict);
+
     dict.lookup("fields") >> fieldSet_;
 
     return true;

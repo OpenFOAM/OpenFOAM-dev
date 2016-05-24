@@ -106,8 +106,7 @@ Foam::functionObjects::writeFile::writeFile
 )
 :
     regionFunctionObject(name, runTime, dict),
-    prefix_(prefix),
-    log_(true)
+    prefix_(prefix)
 {}
 
 
@@ -120,8 +119,7 @@ Foam::functionObjects::writeFile::writeFile
 )
 :
     regionFunctionObject(name, obr, dict),
-    prefix_(prefix),
-    log_(true)
+    prefix_(prefix)
 {}
 
 
@@ -132,14 +130,6 @@ Foam::functionObjects::writeFile::~writeFile()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::writeFile::read(const dictionary& dict)
-{
-    log_ = dict.lookupOrDefault<Switch>("log", true);
-
-    return true;
-}
-
 
 Foam::label Foam::functionObjects::writeFile::charWidth() const
 {

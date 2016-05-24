@@ -65,6 +65,8 @@ Foam::functionObjects::fieldExpression::~fieldExpression()
 
 bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 {
+    fvMeshFunctionObject::read(dict);
+
     if (fieldName_ == word::null || dict.found("field"))
     {
         dict.lookup("field") >> fieldName_;

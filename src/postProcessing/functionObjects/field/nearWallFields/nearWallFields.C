@@ -250,10 +250,7 @@ Foam::functionObjects::nearWallFields::~nearWallFields()
 
 bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    fvMeshFunctionObject::read(dict);
 
     dict.lookup("fields") >> fieldSet_;
     patchSet_ =
