@@ -47,7 +47,7 @@ void Foam::functionObjects::nearWallFields::createFields
 
             if (obr_.found(sampleFldName))
             {
-                Info<< "    a field " << sampleFldName
+                if (log_) Info<< "    a field " << sampleFldName
                     << " already exists on the mesh."
                     << endl;
             }
@@ -63,8 +63,8 @@ void Foam::functionObjects::nearWallFields::createFields
 
                 sflds.set(sz, new VolFieldType(io, fld));
 
-                Info<< "    created " << sflds[sz].name() << " to sample "
-                    << fld.name() << endl;
+                if (log_) Info<< "    created " << sflds[sz].name()
+                    << " to sample " << fld.name() << endl;
             }
         }
     }

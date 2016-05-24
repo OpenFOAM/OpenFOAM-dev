@@ -119,7 +119,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class objectRegistry;
 class regionSplit;
 
 namespace functionObjects

@@ -57,7 +57,8 @@ void Foam::functionObjects::histogram::writeGraph
         outputPath/formatterPtr_().getFileName(coords, fieldNames)
     );
 
-    Info<< "    Writing histogram of " << fieldName
+    if (log_) Info
+        << "    Writing histogram of " << fieldName
         << " to " << graphFile.name() << endl;
 
     List<const scalarField*> yPtrs(1);
@@ -117,18 +118,18 @@ bool Foam::functionObjects::histogram::execute(const bool postProcess)
 
 bool Foam::functionObjects::histogram::write(const bool postProcess)
 {
-    Info<< type() << " " << name() << " output:" << nl;
+    if (log_) Info<< type() << " " << name() << " output:" << nl;
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     autoPtr<volScalarField> fieldPtr;
     if (obr_.foundObject<volScalarField>(fieldName_))
     {
-        Info<< "    Looking up field " << fieldName_ << endl;
+        if (log_) Info<< "    Looking up field " << fieldName_ << endl;
     }
     else
     {
-        Info<< "    Reading field " << fieldName_ << endl;
+        if (log_) Info<< "    Reading field " << fieldName_ << endl;
         fieldPtr.reset
         (
             new volScalarField

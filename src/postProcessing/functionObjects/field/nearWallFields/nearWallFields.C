@@ -57,10 +57,7 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
     // Global indexing
     globalIndex globalWalls(nPatchFaces);
 
-    if (debug)
-    {
-        InfoInFunction << "nPatchFaces: " << globalWalls.size() << endl;
-    }
+    DebugInFunction << "nPatchFaces: " << globalWalls.size() << endl;
 
     // Construct cloud
     Cloud<findCellParticle> cloud(mesh_, IDLList<findCellParticle>());
@@ -239,10 +236,7 @@ Foam::functionObjects::nearWallFields::nearWallFields
 
 Foam::functionObjects::nearWallFields::~nearWallFields()
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    DebugInFunction << endl;
 }
 
 
@@ -282,8 +276,8 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
         reverseFieldMap_.insert(sampleFldName, fldName);
     }
 
-    Info<< type() << " " << name() << ": Sampling " << fieldMap_.size()
-        << " fields" << endl;
+    if (log_) Info << type() << " " << name()
+        << ": Sampling " << fieldMap_.size() << " fields" << endl;
 
     // Do analysis
     calcAddressing();
@@ -294,10 +288,7 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
 
 bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    DebugInFunction << endl;
 
     if
     (
@@ -309,8 +300,8 @@ bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
      && vtf_.empty()
     )
     {
-        Info<< type() << " " << name() << ": Creating " << fieldMap_.size()
-            << " fields" << endl;
+        if (log_) Info<< type() << " " << name()
+            << ": Creating " << fieldMap_.size() << " fields" << endl;
 
         createFields(vsf_);
         createFields(vvf_);
@@ -318,12 +309,12 @@ bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
         createFields(vSymmtf_);
         createFields(vtf_);
 
-        Info<< endl;
+        if (log_) Info<< endl;
     }
 
-    Info<< type() << " " << name() << " output:" << nl;
-
-    Info<< "    Sampling fields to " << time_.timeName()
+    if (log_) Info<< type() << " " << name()
+        << " output:" << nl
+        << "    Sampling fields to " << time_.timeName()
         << endl;
 
     sampleFields(vsf_);
@@ -338,12 +329,9 @@ bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
 
 bool Foam::functionObjects::nearWallFields::write(const bool postProcess)
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    DebugInFunction << endl;
 
-    Info<< "    Writing sampled fields to " << time_.timeName()
+    if (log_) Info<< "    Writing sampled fields to " << time_.timeName()
         << endl;
 
     forAll(vsf_, i)
@@ -367,7 +355,7 @@ bool Foam::functionObjects::nearWallFields::write(const bool postProcess)
         vtf_[i].write();
     }
 
-    Info<< endl;
+    if (log_) Info<< endl;
 
     return true;
 }

@@ -57,11 +57,9 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
 
     if (mesh_.foundObject<VolFieldType>(fieldName))
     {
-        if (debug)
-        {
-            Info<< type() << ": Field " << fieldName << " already in database"
-                << endl;
-        }
+        DebugInfo
+            << type() << ": Field " << fieldName << " already in database"
+            << endl;
 
         transformField<VolFieldType>
         (
@@ -70,11 +68,9 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
     }
     else if (mesh_.foundObject<SurfaceFieldType>(fieldName))
     {
-        if (debug)
-        {
-            Info<< type() << ": Field " << fieldName << " already in database"
-                << endl;
-        }
+        DebugInfo
+            << type() << ": Field " << fieldName << " already in database"
+            << endl;
 
         transformField<SurfaceFieldType>
         (
@@ -98,11 +94,9 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
          && fieldHeader.headerClassName() == VolFieldType::typeName
         )
         {
-            if (debug)
-            {
-                Info<< type() << ": Field " << fieldName << " read from file"
-                    << endl;
-            }
+            DebugInfo
+                << type() << ": Field " << fieldName << " read from file"
+                << endl;
 
             transformField<VolFieldType>
             (
@@ -115,11 +109,9 @@ void Foam::functionObjects::fieldCoordinateSystemTransform::transform
          && fieldHeader.headerClassName() == SurfaceFieldType::typeName
         )
         {
-            if (debug)
-            {
-                Info<< type() << ": Field " << fieldName << " read from file"
-                    << endl;
-            }
+            DebugInfo
+                << type() << ": Field " << fieldName << " read from file"
+                << endl;
 
             transformField<SurfaceFieldType>
             (

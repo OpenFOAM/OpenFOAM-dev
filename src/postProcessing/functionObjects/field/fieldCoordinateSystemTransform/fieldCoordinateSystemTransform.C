@@ -60,7 +60,8 @@ fieldCoordinateSystemTransform
 {
     read(dict);
 
-    Info<< type() << " " << name << ":" << nl
+    if (log_) Info
+        << type() << " " << name << ":" << nl
         << "   Applying transformation from global Cartesian to local "
         << coordSys_ << nl << endl;
 }

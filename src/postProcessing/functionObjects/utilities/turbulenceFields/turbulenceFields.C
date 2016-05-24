@@ -127,22 +127,9 @@ Foam::functionObjects::turbulenceFields::turbulenceFields
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    fvMeshFunctionObject(name, runTime, dict),
     fieldSet_()
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     if
     (
        !obr_.foundObject<compressible::turbulenceModel>(modelName)

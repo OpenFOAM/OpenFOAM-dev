@@ -43,19 +43,15 @@ void Foam::functionObjects::readFields::loadField
 
     if (obr_.foundObject<VolFieldType>(fieldName))
     {
-        if (debug)
-        {
-            Info<< "readFields : Field " << fieldName << " already in database"
-                << endl;
-        }
+        DebugInfo
+            << "readFields : Field " << fieldName << " already in database"
+            << endl;
     }
     else if (obr_.foundObject<SurfaceFieldType>(fieldName))
     {
-        if (debug)
-        {
-            Info<< "readFields : Field " << fieldName << " already in database"
-                << endl;
-        }
+        DebugInfo
+            << "readFields : Field " << fieldName
+            << " already in database" << endl;
     }
     else
     {
@@ -74,8 +70,9 @@ void Foam::functionObjects::readFields::loadField
          && fieldHeader.headerClassName() == VolFieldType::typeName
         )
         {
-            // store field locally
-            Info<< "    Reading " << fieldName << endl;
+            // Store field locally
+            if (log_) Info<< "    Reading " << fieldName << endl;
+
             label sz = vflds.size();
             vflds.setSize(sz+1);
             vflds.set(sz, new VolFieldType(fieldHeader, mesh_));
@@ -86,8 +83,9 @@ void Foam::functionObjects::readFields::loadField
          && fieldHeader.headerClassName() == SurfaceFieldType::typeName
         )
         {
-            // store field locally
-            Info<< "    Reading " << fieldName << endl;
+            // Store field locally
+            if (log_) Info<< "    Reading " << fieldName << endl;
+
             label sz = sflds.size();
             sflds.setSize(sz+1);
             sflds.set(sz, new SurfaceFieldType(fieldHeader, mesh_));
