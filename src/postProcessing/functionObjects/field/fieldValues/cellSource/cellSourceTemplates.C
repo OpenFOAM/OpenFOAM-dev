@@ -205,7 +205,7 @@ bool Foam::functionObjects::fieldValues::cellSource::writeValues
 
             file()<< tab << result;
 
-            if (log_) Info<< "    " << operationTypeNames_[operation_]
+            Log << "    " << operationTypeNames_[operation_]
                 << "(" << sourceName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }

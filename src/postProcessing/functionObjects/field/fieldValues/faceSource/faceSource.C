@@ -744,7 +744,7 @@ bool Foam::functionObjects::fieldValues::faceSource::write
         {
             file() << tab << totalArea_;
         }
-        if (log_) Info<< "    total area = " << totalArea_ << endl;
+        Log << "    total area = " << totalArea_ << endl;
     }
 
     // construct weight field. Note: zero size means weight = 1
@@ -791,7 +791,7 @@ bool Foam::functionObjects::fieldValues::faceSource::write
         file()<< endl;
     }
 
-    if (log_) Info<< endl;
+    Log << endl;
 
     return true;
 }

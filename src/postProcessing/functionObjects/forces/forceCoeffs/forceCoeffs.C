@@ -208,7 +208,7 @@ bool Foam::functionObjects::forceCoeffs::write(const bool postProcess)
             << tab << Cm << tab  << Cd
             << tab << Cl << tab << Clf << tab << Clr << endl;
 
-        if (log_) Info<< type() << " " << name() << " output:" << nl
+        Log << type() << " " << name() << " output:" << nl
             << "    Cm    = " << Cm << nl
             << "    Cd    = " << Cd << nl
             << "    Cl    = " << Cl << nl
@@ -240,7 +240,7 @@ bool Foam::functionObjects::forceCoeffs::write(const bool postProcess)
             file(1) << endl;
         }
 
-        if (log_) Info<< endl;
+        Log << endl;
     }
 
     return true;

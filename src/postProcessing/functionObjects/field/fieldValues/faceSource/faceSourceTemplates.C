@@ -344,7 +344,7 @@ bool Foam::functionObjects::fieldValues::faceSource::writeValues
 
             file()<< tab << result;
 
-            if (log_) Info<< "    " << operationTypeNames_[operation_]
+            Log << "    " << operationTypeNames_[operation_]
                 << "(" << sourceName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }

@@ -313,6 +313,11 @@ extern messageStream Info;
     << #var " " << var << ::Foam::endl
 
 
+//- Report write to Foam::Info if the local log switch is true
+#define Log                                                                    \
+    if (log) Info
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif

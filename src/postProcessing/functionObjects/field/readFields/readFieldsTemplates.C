@@ -71,7 +71,7 @@ void Foam::functionObjects::readFields::loadField
         )
         {
             // Store field locally
-            if (log_) Info<< "    Reading " << fieldName << endl;
+            Log << "    Reading " << fieldName << endl;
 
             label sz = vflds.size();
             vflds.setSize(sz+1);
@@ -84,7 +84,7 @@ void Foam::functionObjects::readFields::loadField
         )
         {
             // Store field locally
-            if (log_) Info<< "    Reading " << fieldName << endl;
+            Log << "    Reading " << fieldName << endl;
 
             label sz = sflds.size();
             sflds.setSize(sz+1);

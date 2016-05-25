@@ -72,9 +72,6 @@ protected:
         //- Reference to the region objectRegistry
         const objectRegistry& obr_;
 
-        //- Switch to send output to Info as well as to file
-        Switch log_;
-
 
     // Protected member functions
 
@@ -117,6 +114,9 @@ public:
 
     //- Runtime type information
     TypeName("regionFunctionObject");
+
+    //- Switch write log to Info
+    Switch log;
 
 
     // Constructors

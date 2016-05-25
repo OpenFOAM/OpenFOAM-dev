@@ -49,7 +49,7 @@ bool Foam::functionObjects::regionFunctionObject::writeObject
     {
         const regIOobject& field = obr_.lookupObject<regIOobject>(fieldName);
 
-        if (log_)
+        if (log)
         {
             Info<< "functionObjects::" << type() << " " << name()
                 << " writing field: " << field.name() << endl;
@@ -109,7 +109,7 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
             dict.lookupOrDefault("region", polyMesh::defaultRegion)
         )
     ),
-    log_(true)
+    log(true)
 {}
 
 
@@ -123,7 +123,7 @@ Foam::functionObjects::regionFunctionObject::regionFunctionObject
     functionObject(name),
     time_(obr.time()),
     obr_(obr),
-    log_(true)
+    log(true)
 {}
 
 
@@ -137,7 +137,7 @@ Foam::functionObjects::regionFunctionObject::~regionFunctionObject()
 
 bool Foam::functionObjects::regionFunctionObject::read(const dictionary& dict)
 {
-    log_ = dict.lookupOrDefault<Switch>("log", true);
+    log = dict.lookupOrDefault<Switch>("log", true);
 
     return true;
 }
