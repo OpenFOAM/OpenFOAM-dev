@@ -265,12 +265,12 @@ tmp<fvScalarMatrix> thermoSingleLayer::q(volScalarField& hs) const
     return
     (
         // Heat-transfer to the primary region
-      - fvm::Sp(alpha_*htcs_->h()/Cp_, hs)
-      + alpha_*htcs_->h()*(hs/Cp_ - T_ + TPrimary_)
+      - fvm::Sp(htcs_->h()/Cp_, hs)
+      + htcs_->h()*(hs/Cp_ + alpha_*(TPrimary_ - T_))
 
         // Heat-transfer to the wall
-      - fvm::Sp(alpha_*htcw_->h()/Cp_, hs)
-      + alpha_*htcw_->h()*(hs/Cp_ - T_ + Tw_)
+      - fvm::Sp(htcw_->h()/Cp_, hs)
+      + htcw_->h()*(hs/Cp_ + alpha_*(Tw_- T_))
     );
 }
 
