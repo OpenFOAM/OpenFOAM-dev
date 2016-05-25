@@ -97,7 +97,8 @@ Foam::simpleControl::simpleControl(fvMesh& mesh)
     if (residualControl_.empty())
     {
         Info<< algorithmName_ << ": no convergence criteria found. "
-            << "Calculations will run for " << mesh_.time().endTime().value()
+            << "Calculations will run for "
+            << mesh_.time().endTime().value() - mesh_.time().startTime().value()
             << " steps." << nl << endl;
     }
     else
