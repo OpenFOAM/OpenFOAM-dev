@@ -105,20 +105,20 @@ if (argList::postProcess(argc, argv))
                 functionObjectList::New(args, runTime, functionObjectsDict);
         }
 
-        #include INCLUDE_FILE(CREATE_FIELDS)
-
-        #ifdef CREATE_FIELDS_2
-        #include INCLUDE_FILE(CREATE_FIELDS_2)
-        #endif
-
-        #ifdef CREATE_FIELDS_3
-        #include INCLUDE_FILE(CREATE_FIELDS_3)
-        #endif
-
         FatalIOError.throwExceptions();
 
         try
         {
+            #include INCLUDE_FILE(CREATE_FIELDS)
+
+            #ifdef CREATE_FIELDS_2
+            #include INCLUDE_FILE(CREATE_FIELDS_2)
+            #endif
+
+            #ifdef CREATE_FIELDS_3
+            #include INCLUDE_FILE(CREATE_FIELDS_3)
+            #endif
+
             functionObjectsPtr->execute(true);
         }
         catch (IOerror& err)
