@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::grad::calc()
+bool Foam::functionObjects::grad::calcGrad()
 {
     typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;

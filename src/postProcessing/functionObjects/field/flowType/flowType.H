@@ -70,6 +70,11 @@ class flowType
 :
     public fieldExpression
 {
+    // Private Member Functions
+
+        //- Calculate the flowType field and return true if successful
+        virtual bool calc();
+
 
 public:
 
@@ -90,12 +95,6 @@ public:
 
     //- Destructor
     virtual ~flowType();
-
-
-    // Member Functions
-
-        //- Calculate the flowType field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

@@ -45,28 +45,9 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::functionObjects::Lambda2::Lambda2
-(
-    const word& name,
-    const Time& runTime,
-    const dictionary& dict
-)
-:
-    fieldExpression(name, runTime, dict, "U", "Lambda2")
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::Lambda2::~Lambda2()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
+bool Foam::functionObjects::Lambda2::calc()
 {
     if (foundField<volVectorField>(fieldName_))
     {
@@ -91,6 +72,25 @@ bool Foam::functionObjects::Lambda2::execute(const bool postProcess)
         return false;
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::Lambda2::Lambda2
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fieldExpression(name, runTime, dict, "U", "Lambda2")
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::Lambda2::~Lambda2()
+{}
 
 
 // ************************************************************************* //

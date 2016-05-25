@@ -66,6 +66,31 @@ bool Foam::functionObjects::fvMeshFunctionObject::writeField
 }
 
 
+bool Foam::functionObjects::fvMeshFunctionObject::clearField
+(
+    const word& fieldName
+)
+{
+    if (foundField<regIOobject>(fieldName))
+    {
+        const regIOobject& resultField = lookupField<regIOobject>(fieldName);
+
+        if (resultField.ownedByRegistry())
+        {
+            return const_cast<regIOobject&>(resultField).checkOut();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return true;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fvMeshFunctionObject::fvMeshFunctionObject

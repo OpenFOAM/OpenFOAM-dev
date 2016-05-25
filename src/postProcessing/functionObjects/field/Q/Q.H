@@ -64,6 +64,11 @@ class Q
 :
     public fieldExpression
 {
+    // Private Member Functions
+
+        //- Calculate the Q field and return true if successful
+        virtual bool calc();
+
 
 public:
 
@@ -84,12 +89,6 @@ public:
 
     //- Destructor
     virtual ~Q();
-
-
-    // Member Functions
-
-        //- Calculate the Q field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

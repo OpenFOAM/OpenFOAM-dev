@@ -38,6 +38,28 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::mag::calc()
+{
+    bool processed = false;
+
+    processed = processed || calcMag<scalar>();
+    processed = processed || calcMag<vector>();
+    processed = processed || calcMag<sphericalTensor>();
+    processed = processed || calcMag<symmTensor>();
+    processed = processed || calcMag<tensor>();
+
+    if (!processed)
+    {
+        WarningInFunction
+            << "Unprocessed field " << fieldName_ << endl;
+    }
+
+    return processed;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::mag::mag
@@ -57,28 +79,6 @@ Foam::functionObjects::mag::mag
 
 Foam::functionObjects::mag::~mag()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::mag::execute(const bool postProcess)
-{
-    bool processed = false;
-
-    processed = processed || calc<scalar>();
-    processed = processed || calc<vector>();
-    processed = processed || calc<sphericalTensor>();
-    processed = processed || calc<symmTensor>();
-    processed = processed || calc<tensor>();
-
-    if (!processed)
-    {
-        WarningInFunction
-            << "Unprocessed field " << fieldName_ << endl;
-    }
-
-    return processed;
-}
 
 
 // ************************************************************************* //

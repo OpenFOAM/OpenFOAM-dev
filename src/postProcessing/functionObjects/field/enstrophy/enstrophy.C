@@ -45,6 +45,27 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::enstrophy::calc()
+{
+    if (foundField<volVectorField>(fieldName_))
+    {
+        return store
+        (
+            resultName_,
+            0.5*magSqr(fvc::curl(lookupField<volVectorField>(fieldName_)))
+        );
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::enstrophy::enstrophy
@@ -62,27 +83,6 @@ Foam::functionObjects::enstrophy::enstrophy
 
 Foam::functionObjects::enstrophy::~enstrophy()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::enstrophy::execute(const bool postProcess)
-{
-    if (foundField<volVectorField>(fieldName_))
-    {
-        return store
-        (
-            resultName_,
-            0.5*magSqr(fvc::curl(lookupField<volVectorField>(fieldName_)))
-        );
-    }
-    else
-    {
-        return false;
-    }
-
-    return true;
-}
 
 
 // ************************************************************************* //

@@ -74,10 +74,22 @@ bool Foam::functionObjects::fvMeshFunctionObject::store
      && mesh_.foundObject<FieldType>(fieldName)
     )
     {
-        const_cast<FieldType&>
+        const FieldType& field =
         (
             mesh_.lookupObject<FieldType>(fieldName)
-        ) = tfield;
+        );
+
+        // If there is a result field already registered assign to the new
+        // result field otherwise transfer ownership of the new result field to
+        // the object registry
+        if (&field != &tfield())
+        {
+            const_cast<FieldType&>(field) = tfield;
+        }
+        else
+        {
+            mesh_.objectRegistry::store(tfield.ptr());
+        }
     }
     else
     {

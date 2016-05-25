@@ -73,11 +73,14 @@ class CourantNo
 
     // Private Member Functions
 
-        //- Divide Co by rho if required
+        //- Divide the Courant number by rho if required
         tmp<volScalarField::Internal> byRho
         (
             const tmp<volScalarField::Internal>& Co
         ) const;
+
+        //- Calculate the Courant number field and return true if successful
+        virtual bool calc();
 
 
 public:
@@ -105,9 +108,6 @@ public:
 
         //- Read the CourantNo data
         virtual bool read(const dictionary&);
-
-        //- Calculate the Courant number
-        virtual bool execute(const bool postProcess = false);
 };
 
 

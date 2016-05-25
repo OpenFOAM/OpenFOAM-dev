@@ -69,9 +69,12 @@ class blendingFactor
 
     // Private Member Functions
 
-        //- Calculate the blending factor
+        //- Calculate the blending factor field
         template<class Type>
-        bool calc();
+        bool calcBF();
+
+        //- Calculate the blending factor field and return true if successful
+        virtual bool calc();
 
 
 public:
@@ -99,9 +102,6 @@ public:
 
         //- Read the blendingFactor data
         virtual bool read(const dictionary&);
-
-        //- Calculate the blending-factor
-        virtual bool execute(const bool postProcess = false);
 };
 
 

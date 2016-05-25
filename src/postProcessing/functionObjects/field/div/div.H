@@ -66,7 +66,10 @@ class div
         //- Calculate the divergence of either a
         //  volScalarField or a surfaceScalarField and register the result
         template<class FieldType>
-        bool calc();
+        bool calcDiv();
+
+        //- Calculate the divergence field and return true if successful
+        virtual bool calc();
 
 
 public:
@@ -88,12 +91,6 @@ public:
 
     //- Destructor
     virtual ~div();
-
-
-    // Member Functions
-
-        //- Calculate the divergence field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

@@ -69,6 +69,11 @@ protected:
         word resultName_;
 
 
+    // Protected member functions
+
+        virtual bool calc();
+
+
 private:
 
     // Private Member Functions
@@ -109,10 +114,13 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the fieldExpressionergence field
-        virtual bool execute(const bool postProcess = false) = 0;
+        virtual bool execute(const bool postProcess = false);
 
         //- Write the fieldExpressionergence field
         virtual bool write(const bool postProcess = false);
+
+        //- Clear the result field from the objectRegistry
+        virtual bool clear();
 };
 
 

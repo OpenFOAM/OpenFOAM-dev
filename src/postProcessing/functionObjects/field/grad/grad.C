@@ -38,6 +38,19 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::grad::calc()
+{
+    bool processed = false;
+
+    processed = processed || calcGrad<scalar>();
+    processed = processed || calcGrad<vector>();
+
+    return processed;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::grad::grad
@@ -57,25 +70,6 @@ Foam::functionObjects::grad::grad
 
 Foam::functionObjects::grad::~grad()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::grad::execute(const bool postProcess)
-{
-    bool processed = false;
-
-    processed = processed || calc<scalar>();
-    processed = processed || calc<vector>();
-
-    if (!processed)
-    {
-        WarningInFunction
-            << "Unprocessed field " << fieldName_ << endl;
-    }
-
-    return true;
-}
 
 
 // ************************************************************************* //

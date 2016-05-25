@@ -66,6 +66,12 @@ class PecletNo
         word phiName_;
 
 
+    // Private Member Functions
+
+        //- Calculate the Peclet number field and return true if successful
+        virtual bool calc();
+
+
 public:
 
     //- Runtime type information
@@ -92,9 +98,6 @@ public:
 
         //- Read the PecletNo data
         virtual bool read(const dictionary&);
-
-        //- Calculate the Peclet number field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

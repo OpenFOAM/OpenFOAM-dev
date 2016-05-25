@@ -64,7 +64,10 @@ class mag
 
         //- Calculate the magnitude of the field and register the result
         template<class Type>
-        bool calc();
+        bool calcMag();
+
+        //- Calculate the magnitude of the field and return true if successful
+        virtual bool calc();
 
 
 public:
@@ -86,12 +89,6 @@ public:
 
     //- Destructor
     virtual ~mag();
-
-
-    // Member Functions
-
-        //- Calculate the magnitude field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

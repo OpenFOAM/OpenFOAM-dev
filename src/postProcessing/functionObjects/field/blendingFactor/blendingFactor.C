@@ -38,6 +38,25 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::blendingFactor::calc()
+{
+    bool processed = false;
+
+    processed = processed || calcBF<scalar>();
+    processed = processed || calcBF<vector>();
+
+    if (!processed)
+    {
+        WarningInFunction
+            << "Unprocessed field " << fieldName_ << endl;
+    }
+
+    return processed;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::blendingFactor::blendingFactor
@@ -70,23 +89,6 @@ bool Foam::functionObjects::blendingFactor::read(const dictionary& dict)
     resultName_ = "blendingFactor:" + fieldName_;
 
     return true;
-}
-
-
-bool Foam::functionObjects::blendingFactor::execute(const bool postProcess)
-{
-    bool processed = false;
-
-    processed = processed || calc<scalar>();
-    processed = processed || calc<vector>();
-
-    if (!processed)
-    {
-        WarningInFunction
-            << "Unprocessed field " << fieldName_ << endl;
-    }
-
-    return processed;
 }
 
 

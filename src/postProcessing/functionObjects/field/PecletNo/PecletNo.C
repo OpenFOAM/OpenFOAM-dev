@@ -46,6 +46,41 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::PecletNo::calc()
+{
+    if (foundField<surfaceScalarField>(phiName_))
+    {
+        tmp<volScalarField> nuEff
+        (
+            mesh_.lookupObject<turbulenceModel>
+            (
+                turbulenceModel::propertiesName
+            ).nuEff()
+        );
+
+        const surfaceScalarField& phi =
+            mesh_.lookupObject<surfaceScalarField>(phiName_);
+
+        return store
+        (
+            resultName_,
+            mag(phi)
+           /(
+                mesh_.magSf()
+               *mesh_.surfaceInterpolation::deltaCoeffs()
+               *fvc::interpolate(nuEff)
+            )
+        );
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::PecletNo::PecletNo
@@ -76,39 +111,6 @@ bool Foam::functionObjects::PecletNo::read(const dictionary& dict)
     phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
     return true;
-}
-
-
-bool Foam::functionObjects::PecletNo::execute(const bool postProcess)
-{
-    if (foundField<surfaceScalarField>(phiName_))
-    {
-        tmp<volScalarField> nuEff
-        (
-            mesh_.lookupObject<turbulenceModel>
-            (
-                turbulenceModel::propertiesName
-            ).nuEff()
-        );
-
-        const surfaceScalarField& phi =
-            mesh_.lookupObject<surfaceScalarField>(phiName_);
-
-        return store
-        (
-            resultName_,
-            mag(phi)
-           /(
-                mesh_.magSf()
-               *mesh_.surfaceInterpolation::deltaCoeffs()
-               *fvc::interpolate(nuEff)
-            )
-        );
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

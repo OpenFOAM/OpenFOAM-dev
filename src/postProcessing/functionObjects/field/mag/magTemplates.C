@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::mag::calc()
+bool Foam::functionObjects::mag::calcMag()
 {
     typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;

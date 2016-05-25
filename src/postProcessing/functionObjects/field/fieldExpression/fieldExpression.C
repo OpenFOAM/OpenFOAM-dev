@@ -36,6 +36,15 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::functionObjects::fieldExpression::calc()
+{
+    NotImplemented;
+    return false;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fieldExpression::fieldExpression
@@ -81,9 +90,35 @@ bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 }
 
 
+bool Foam::functionObjects::fieldExpression::execute(const bool postProcess)
+{
+    if (!calc())
+    {
+        Warning
+            << "functionObject " << type() << ": Cannot find required field "
+            << fieldName_ << endl;
+
+        // Clear the result field from the objectRegistry if present
+        clear();
+
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+
 bool Foam::functionObjects::fieldExpression::write(const bool postProcess)
 {
-    return fvMeshFunctionObject::writeField(resultName_);
+    return writeField(resultName_);
+}
+
+
+bool Foam::functionObjects::fieldExpression::clear()
+{
+    return clearField(resultName_);
 }
 
 

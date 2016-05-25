@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::blendingFactor::calc()
+bool Foam::functionObjects::blendingFactor::calcBF()
 {
     typedef GeometricField<Type, fvPatchField, volMesh> FieldType;
 

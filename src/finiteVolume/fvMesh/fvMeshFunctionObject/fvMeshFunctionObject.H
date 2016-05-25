@@ -95,6 +95,9 @@ protected:
         //- Write field if present in objectRegistry
         bool writeField(const word& fieldName);
 
+        //- Clear field from the objectRegistry if present
+        bool clearField(const word& fieldName);
+
 
 private:
 

@@ -61,6 +61,11 @@ class Lambda2
 :
     public fieldExpression
 {
+    // Private Member Functions
+
+        //- Calculate the Lambda2 field and return true if successful
+        virtual bool calc();
+
 
 public:
 
@@ -81,12 +86,6 @@ public:
 
     //- Destructor
     virtual ~Lambda2();
-
-
-    // Member Functions
-
-        //- Calculate the Lambda2 field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

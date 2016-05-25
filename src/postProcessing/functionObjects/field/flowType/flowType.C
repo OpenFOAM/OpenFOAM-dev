@@ -45,28 +45,9 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::functionObjects::flowType::flowType
-(
-    const word& name,
-    const Time& runTime,
-    const dictionary& dict
-)
-:
-    fieldExpression(name, runTime, dict, "U", "flowType")
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::flowType::~flowType()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::flowType::execute(const bool postProcess)
+bool Foam::functionObjects::flowType::calc()
 {
     if (foundField<volVectorField>(fieldName_))
     {
@@ -95,6 +76,25 @@ bool Foam::functionObjects::flowType::execute(const bool postProcess)
         return false;
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::flowType::flowType
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fieldExpression(name, runTime, dict, "U", "flowType")
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::flowType::~flowType()
+{}
 
 
 // ************************************************************************* //

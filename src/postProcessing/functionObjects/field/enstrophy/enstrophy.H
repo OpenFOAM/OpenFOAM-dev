@@ -59,6 +59,11 @@ class enstrophy
 :
     public fieldExpression
 {
+    // Private Member Functions
+
+        //- Calculate the enstrophy field and return true if successful
+        virtual bool calc();
+
 
 public:
 
@@ -79,12 +84,6 @@ public:
 
     //- Destructor
     virtual ~enstrophy();
-
-
-    // Member Functions
-
-        //- Calculate the enstrophy field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

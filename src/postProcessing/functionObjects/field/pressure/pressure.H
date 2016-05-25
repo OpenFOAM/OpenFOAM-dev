@@ -196,6 +196,9 @@ class pressure
         //- Convert to coeff by applying the freestream dynamic pressure scaling
         tmp<volScalarField> coeff(const tmp<volScalarField>& tp) const;
 
+        //- Calculate the derived pressure field and return true if successful
+        virtual bool calc();
+
 
 public:
 
@@ -222,9 +225,6 @@ public:
 
         //- Read the pressure data
         virtual bool read(const dictionary&);
-
-        //- Calculate the selected pressure form
-        virtual bool execute(const bool postProcess = false);
 };
 
 

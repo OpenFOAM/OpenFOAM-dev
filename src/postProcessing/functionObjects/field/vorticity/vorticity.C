@@ -45,6 +45,27 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::vorticity::calc()
+{
+    if (foundField<volVectorField>(fieldName_))
+    {
+        return store
+        (
+            resultName_,
+            fvc::curl(lookupField<volVectorField>(fieldName_))
+        );
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::vorticity::vorticity
@@ -62,27 +83,6 @@ Foam::functionObjects::vorticity::vorticity
 
 Foam::functionObjects::vorticity::~vorticity()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::vorticity::execute(const bool postProcess)
-{
-    if (foundField<volVectorField>(fieldName_))
-    {
-        return store
-        (
-            resultName_,
-            fvc::curl(lookupField<volVectorField>(fieldName_))
-        );
-    }
-    else
-    {
-        return false;
-    }
-
-    return true;
-}
 
 
 // ************************************************************************* //

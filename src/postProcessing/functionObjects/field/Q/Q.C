@@ -45,28 +45,9 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::functionObjects::Q::Q
-(
-    const word& name,
-    const Time& runTime,
-    const dictionary& dict
-)
-:
-    fieldExpression(name, runTime, dict, "U", "Q")
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::Q::~Q()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::Q::execute(const bool postProcess)
+bool Foam::functionObjects::Q::calc()
 {
     if (foundField<volVectorField>(fieldName_))
     {
@@ -85,6 +66,25 @@ bool Foam::functionObjects::Q::execute(const bool postProcess)
         return false;
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::Q::Q
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fieldExpression(name, runTime, dict, "U", "Q")
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::Q::~Q()
+{}
 
 
 // ************************************************************************* //

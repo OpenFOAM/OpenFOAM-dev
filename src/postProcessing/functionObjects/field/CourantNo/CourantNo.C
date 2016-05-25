@@ -66,41 +66,7 @@ Foam::functionObjects::CourantNo::byRho
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::functionObjects::CourantNo::CourantNo
-(
-    const word& name,
-    const Time& runTime,
-    const dictionary& dict
-)
-:
-    fieldExpression(name, runTime, dict, "phi", "Co")
-{
-    read(dict);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::CourantNo::~CourantNo()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
-{
-    fieldExpression::read(dict);
-
-    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
-    rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
-
-    return true;
-}
-
-
-bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
+bool Foam::functionObjects::CourantNo::calc()
 {
     if (foundField<surfaceScalarField>(phiName_))
     {
@@ -160,6 +126,40 @@ bool Foam::functionObjects::CourantNo::execute(const bool postProcess)
     {
         return false;
     }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::CourantNo::CourantNo
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fieldExpression(name, runTime, dict, "phi", "Co")
+{
+    read(dict);
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::CourantNo::~CourantNo()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionObjects::CourantNo::read(const dictionary& dict)
+{
+    fieldExpression::read(dict);
+
+    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
+    rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
+
+    return true;
 }
 
 

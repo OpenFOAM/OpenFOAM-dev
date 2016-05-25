@@ -40,6 +40,19 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::div::calc()
+{
+    bool processed = false;
+
+    processed = processed || calcDiv<surfaceScalarField>();
+    processed = processed || calcDiv<volVectorField>();
+
+    return processed;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::div::div
@@ -57,25 +70,6 @@ Foam::functionObjects::div::div
 
 Foam::functionObjects::div::~div()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::div::execute(const bool postProcess)
-{
-    bool processed = false;
-
-    processed = processed || calc<surfaceScalarField>();
-    processed = processed || calc<volVectorField>();
-
-    if (!processed)
-    {
-        WarningInFunction
-            << "Unprocessed field " << fieldName_ << endl;
-    }
-
-    return processed;
-}
 
 
 // ************************************************************************* //

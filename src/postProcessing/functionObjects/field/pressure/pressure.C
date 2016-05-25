@@ -159,6 +159,27 @@ Foam::functionObjects::pressure::coeff
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+bool Foam::functionObjects::pressure::calc()
+{
+    if (foundField<volScalarField>(fieldName_))
+    {
+        const volScalarField& p = lookupField<volScalarField>(fieldName_);
+
+        return store
+        (
+            resultName_,
+            coeff(pRef(pDyn(p, rhoScale(p))))
+        );
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::pressure::pressure
@@ -235,25 +256,6 @@ bool Foam::functionObjects::pressure::read(const dictionary& dict)
     resultName_ = dict.lookupOrDefault<word>("result", resultName());
 
     return true;
-}
-
-
-bool Foam::functionObjects::pressure::execute(const bool postProcess)
-{
-    if (foundField<volScalarField>(fieldName_))
-    {
-        const volScalarField& p = lookupField<volScalarField>(fieldName_);
-
-        return store
-        (
-            resultName_,
-            coeff(pRef(pDyn(p, rhoScale(p))))
-        );
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

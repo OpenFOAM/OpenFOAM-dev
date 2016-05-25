@@ -64,7 +64,10 @@ class grad
 
         //- Calculate the magnitude of the field and register the result
         template<class Type>
-        bool calc();
+        bool calcGrad();
+
+        //- Calculate the gradient field and return true if successful
+        virtual bool calc();
 
 
 public:
@@ -86,12 +89,6 @@ public:
 
     //- Destructor
     virtual ~grad();
-
-
-    // Member Functions
-
-        //- Calculate the gradient field
-        virtual bool execute(const bool postProcess = false);
 };
 
 

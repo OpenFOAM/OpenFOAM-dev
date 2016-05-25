@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class FieldType>
-bool Foam::functionObjects::div::calc()
+bool Foam::functionObjects::div::calcDiv()
 {
     if (foundField<FieldType>(fieldName_))
     {

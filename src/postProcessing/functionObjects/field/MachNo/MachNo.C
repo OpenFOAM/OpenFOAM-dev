@@ -45,28 +45,9 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::functionObjects::MachNo::MachNo
-(
-    const word& name,
-    const Time& runTime,
-    const dictionary& dict
-)
-:
-    fieldExpression(name, runTime, dict, "U", "Ma")
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::functionObjects::MachNo::~MachNo()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::functionObjects::MachNo::execute(const bool postProcess)
+bool Foam::functionObjects::MachNo::calc()
 {
     if
     (
@@ -90,6 +71,25 @@ bool Foam::functionObjects::MachNo::execute(const bool postProcess)
         return false;
     }
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::MachNo::MachNo
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fieldExpression(name, runTime, dict, "U", "Ma")
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::MachNo::~MachNo()
+{}
 
 
 // ************************************************************************* //
