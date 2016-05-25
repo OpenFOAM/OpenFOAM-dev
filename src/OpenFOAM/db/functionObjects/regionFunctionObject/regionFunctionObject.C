@@ -38,6 +38,59 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::functionObjects::regionFunctionObject::writeObject
+(
+    const word& fieldName
+)
+{
+    if (obr_.foundObject<regIOobject>(fieldName))
+    {
+        const regIOobject& field = obr_.lookupObject<regIOobject>(fieldName);
+
+        if (log_)
+        {
+            Info<< "functionObjects::" << type() << " " << name()
+                << " writing field: " << field.name() << endl;
+        }
+
+        field.write();
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+bool Foam::functionObjects::regionFunctionObject::clearObject
+(
+    const word& fieldName
+)
+{
+    if (foundObject<regIOobject>(fieldName))
+    {
+        const regIOobject& resultObject = lookupObject<regIOobject>(fieldName);
+
+        if (resultObject.ownedByRegistry())
+        {
+            return const_cast<regIOobject&>(resultObject).checkOut();
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return true;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::regionFunctionObject::regionFunctionObject

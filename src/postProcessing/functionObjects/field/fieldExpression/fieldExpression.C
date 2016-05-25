@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldExpression.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -112,13 +113,13 @@ bool Foam::functionObjects::fieldExpression::execute(const bool postProcess)
 
 bool Foam::functionObjects::fieldExpression::write(const bool postProcess)
 {
-    return writeField(resultName_);
+    return writeObject(resultName_);
 }
 
 
 bool Foam::functionObjects::fieldExpression::clear()
 {
-    return clearField(resultName_);
+    return clearObject(resultName_);
 }
 
 

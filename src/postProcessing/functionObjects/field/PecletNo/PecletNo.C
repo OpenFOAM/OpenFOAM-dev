@@ -50,7 +50,7 @@ namespace functionObjects
 
 bool Foam::functionObjects::PecletNo::calc()
 {
-    if (foundField<surfaceScalarField>(phiName_))
+    if (foundObject<surfaceScalarField>(phiName_))
     {
         tmp<volScalarField> nuEff
         (

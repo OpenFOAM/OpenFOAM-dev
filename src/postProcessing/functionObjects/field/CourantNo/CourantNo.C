@@ -68,10 +68,10 @@ Foam::functionObjects::CourantNo::byRho
 
 bool Foam::functionObjects::CourantNo::calc()
 {
-    if (foundField<surfaceScalarField>(phiName_))
+    if (foundObject<surfaceScalarField>(phiName_))
     {
         const surfaceScalarField& phi =
-            lookupField<surfaceScalarField>(phiName_);
+            lookupObject<surfaceScalarField>(phiName_);
 
         tmp<volScalarField::Internal> Coi
         (
@@ -83,13 +83,13 @@ bool Foam::functionObjects::CourantNo::calc()
             )
         );
 
-        if (foundField<volScalarField>(resultName_))
+        if (foundObject<volScalarField>(resultName_))
         {
             volScalarField& Co
             (
                 const_cast<volScalarField&>
                 (
-                    lookupField<volScalarField>(resultName_)
+                    lookupObject<volScalarField>(resultName_)
                 )
             );
 

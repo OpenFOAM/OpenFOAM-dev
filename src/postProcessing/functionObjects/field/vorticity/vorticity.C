@@ -49,12 +49,12 @@ namespace functionObjects
 
 bool Foam::functionObjects::vorticity::calc()
 {
-    if (foundField<volVectorField>(fieldName_))
+    if (foundObject<volVectorField>(fieldName_))
     {
         return store
         (
             resultName_,
-            fvc::curl(lookupField<volVectorField>(fieldName_))
+            fvc::curl(lookupObject<volVectorField>(fieldName_))
         );
     }
     else

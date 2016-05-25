@@ -49,9 +49,9 @@ namespace functionObjects
 
 bool Foam::functionObjects::Lambda2::calc()
 {
-    if (foundField<volVectorField>(fieldName_))
+    if (foundObject<volVectorField>(fieldName_))
     {
-        const volVectorField& U = lookupField<volVectorField>(fieldName_);
+        const volVectorField& U = lookupObject<volVectorField>(fieldName_);
         const tmp<volTensorField> tgradU(fvc::grad(U));
         const volTensorField& gradU = tgradU();
 

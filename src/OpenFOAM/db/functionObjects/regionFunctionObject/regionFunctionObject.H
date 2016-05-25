@@ -76,6 +76,32 @@ protected:
         Switch log_;
 
 
+    // Protected member functions
+
+        //- Find field in the objectRegistry
+        template<class ObjectType>
+        bool foundObject(const word& fieldName) const;
+
+        //- Lookup field from the objectRegistry
+        template<class ObjectType>
+        const ObjectType& lookupObject(const word& fieldName) const;
+
+        //- Store the given field in the objectRegistry under the given name
+        template<class ObjectType>
+        bool store
+        (
+            word& fieldName,
+            const tmp<ObjectType>& tfield,
+            bool cacheable = false
+        );
+
+        //- Write field if present in objectRegistry
+        bool writeObject(const word& fieldName);
+
+        //- Clear field from the objectRegistry if present
+        bool clearObject(const word& fieldName);
+
+
 private:
 
     // Private Member Functions
@@ -129,6 +155,12 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "regionFunctionObjectTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

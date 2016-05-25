@@ -23,36 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvMeshFunctionObject.H"
-#include "volFields.H"
+#include "regionFunctionObject.H"
+#include "objectRegistry.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-template<class FieldType>
-bool Foam::functionObjects::fvMeshFunctionObject::foundField
+template<class ObjectType>
+bool Foam::functionObjects::regionFunctionObject::foundObject
 (
     const word& fieldName
 ) const
 {
-    return mesh_.foundObject<FieldType>(fieldName);
+    return obr_.foundObject<ObjectType>(fieldName);
 }
 
 
-template<class FieldType>
-const FieldType& Foam::functionObjects::fvMeshFunctionObject::lookupField
+template<class ObjectType>
+const ObjectType& Foam::functionObjects::regionFunctionObject::lookupObject
 (
     const word& fieldName
 ) const
 {
-    return mesh_.lookupObject<FieldType>(fieldName);
+    return obr_.lookupObject<ObjectType>(fieldName);
 }
 
 
-template<class FieldType>
-bool Foam::functionObjects::fvMeshFunctionObject::store
+template<class ObjectType>
+bool Foam::functionObjects::regionFunctionObject::store
 (
     word& fieldName,
-    const tmp<FieldType>& tfield,
+    const tmp<ObjectType>& tfield,
     bool cacheable
 )
 {
@@ -71,12 +71,12 @@ bool Foam::functionObjects::fvMeshFunctionObject::store
     if
     (
         fieldName.size()
-     && mesh_.foundObject<FieldType>(fieldName)
+     && obr_.foundObject<ObjectType>(fieldName)
     )
     {
-        const FieldType& field =
+        const ObjectType& field =
         (
-            mesh_.lookupObject<FieldType>(fieldName)
+            obr_.lookupObject<ObjectType>(fieldName)
         );
 
         // If there is a result field already registered assign to the new
@@ -84,11 +84,11 @@ bool Foam::functionObjects::fvMeshFunctionObject::store
         // the object registry
         if (&field != &tfield())
         {
-            const_cast<FieldType&>(field) = tfield;
+            const_cast<ObjectType&>(field) = tfield;
         }
         else
         {
-            mesh_.objectRegistry::store(tfield.ptr());
+            obr_.objectRegistry::store(tfield.ptr());
         }
     }
     else
@@ -102,7 +102,7 @@ bool Foam::functionObjects::fvMeshFunctionObject::store
             fieldName = tfield().name();
         }
 
-        mesh_.objectRegistry::store(tfield.ptr());
+        obr_.objectRegistry::store(tfield.ptr());
     }
 
     return true;

@@ -38,59 +38,6 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-bool Foam::functionObjects::fvMeshFunctionObject::writeField
-(
-    const word& fieldName
-)
-{
-    if (mesh_.foundObject<regIOobject>(fieldName))
-    {
-        const regIOobject& field = mesh_.lookupObject<regIOobject>(fieldName);
-
-        if (log_)
-        {
-            Info<< "functionObjects::" << type() << " " << name()
-                << " writing field: " << field.name() << endl;
-        }
-
-        field.write();
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-bool Foam::functionObjects::fvMeshFunctionObject::clearField
-(
-    const word& fieldName
-)
-{
-    if (foundField<regIOobject>(fieldName))
-    {
-        const regIOobject& resultField = lookupField<regIOobject>(fieldName);
-
-        if (resultField.ownedByRegistry())
-        {
-            return const_cast<regIOobject&>(resultField).checkOut();
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return true;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fvMeshFunctionObject::fvMeshFunctionObject

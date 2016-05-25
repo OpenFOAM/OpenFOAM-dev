@@ -37,6 +37,7 @@ SourceFiles
 #ifndef fvcSurfaceIntegrate_H
 #define fvcSurfaceIntegrate_H
 
+#include "primitiveFieldsFwd.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 

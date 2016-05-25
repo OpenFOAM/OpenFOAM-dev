@@ -124,7 +124,7 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::write
 {
     forAll(fieldSet_, fieldi)
     {
-        fvMeshFunctionObject::writeField(transformFieldName(fieldSet_[fieldi]));
+        writeObject(transformFieldName(fieldSet_[fieldi]));
     }
 
     return true;

@@ -87,7 +87,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::rhoScale
 {
     if (p.dimensions() == dimPressure)
     {
-        return lookupField<volScalarField>(rhoName_)*tsf;
+        return lookupObject<volScalarField>(rhoName_)*tsf;
     }
     else
     {
@@ -122,7 +122,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pDyn
     {
         return
             tp
-          + rhoScale(p, 0.5*magSqr(lookupField<volVectorField>(UName_)));
+          + rhoScale(p, 0.5*magSqr(lookupObject<volVectorField>(UName_)));
     }
     else
     {
@@ -163,9 +163,9 @@ Foam::functionObjects::pressure::coeff
 
 bool Foam::functionObjects::pressure::calc()
 {
-    if (foundField<volScalarField>(fieldName_))
+    if (foundObject<volScalarField>(fieldName_))
     {
-        const volScalarField& p = lookupField<volScalarField>(fieldName_);
+        const volScalarField& p = lookupObject<volScalarField>(fieldName_);
 
         return store
         (

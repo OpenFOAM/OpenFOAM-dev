@@ -49,12 +49,12 @@ namespace functionObjects
 
 bool Foam::functionObjects::enstrophy::calc()
 {
-    if (foundField<volVectorField>(fieldName_))
+    if (foundObject<volVectorField>(fieldName_))
     {
         return store
         (
             resultName_,
-            0.5*magSqr(fvc::curl(lookupField<volVectorField>(fieldName_)))
+            0.5*magSqr(fvc::curl(lookupObject<volVectorField>(fieldName_)))
         );
     }
     else

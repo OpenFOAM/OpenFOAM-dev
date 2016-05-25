@@ -34,20 +34,20 @@ bool Foam::functionObjects::mag::calcMag()
     typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
-    if (foundField<VolFieldType>(fieldName_))
+    if (foundObject<VolFieldType>(fieldName_))
     {
         return store
         (
             resultName_,
-            Foam::mag(lookupField<VolFieldType>(fieldName_))
+            Foam::mag(lookupObject<VolFieldType>(fieldName_))
         );
     }
-    else if (foundField<SurfaceFieldType>(fieldName_))
+    else if (foundObject<SurfaceFieldType>(fieldName_))
     {
         return store
         (
             resultName_,
-            Foam::mag(lookupField<SurfaceFieldType>(fieldName_))
+            Foam::mag(lookupObject<SurfaceFieldType>(fieldName_))
         );
     }
     else

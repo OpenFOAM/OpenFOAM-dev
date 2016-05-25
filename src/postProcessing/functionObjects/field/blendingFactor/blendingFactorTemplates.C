@@ -34,17 +34,17 @@ bool Foam::functionObjects::blendingFactor::calcBF()
 {
     typedef GeometricField<Type, fvPatchField, volMesh> FieldType;
 
-    if (!foundField<FieldType>(fieldName_))
+    if (!foundObject<FieldType>(fieldName_))
     {
         return false;
     }
 
-    const FieldType& field = lookupField<FieldType>(fieldName_);
+    const FieldType& field = lookupObject<FieldType>(fieldName_);
 
     const word divScheme("div(" + phiName_ + ',' + fieldName_ + ')');
     ITstream& its = mesh_.divScheme(divScheme);
 
-    const surfaceScalarField& phi = lookupField<surfaceScalarField>(phiName_);
+    const surfaceScalarField& phi = lookupObject<surfaceScalarField>(phiName_);
 
     tmp<fv::convectionScheme<Type>> cs =
         fv::convectionScheme<Type>::New(mesh_, phi, its);
