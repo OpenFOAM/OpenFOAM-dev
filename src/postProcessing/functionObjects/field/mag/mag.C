@@ -50,12 +50,6 @@ bool Foam::functionObjects::mag::calc()
     processed = processed || calcMag<symmTensor>();
     processed = processed || calcMag<tensor>();
 
-    if (!processed)
-    {
-        WarningInFunction
-            << "Unprocessed field " << fieldName_ << endl;
-    }
-
     return processed;
 }
 
