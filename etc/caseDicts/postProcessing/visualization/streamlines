@@ -1,25 +1,17 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  dev                                   |  
+|  \\    /   O peration     | Version:  dev                                   |
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      streamlines.cfg;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 streamlines
 {
     nLines  20;
     start   (0 -4 1e-06); // Ensure that points do not coincide with
     end     (0  4 1e-06); // mesh faces, but instead lie inside cells
-    fields  ( U p );
+    fields  (U p);
 
     // Must be last entry
     #includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"

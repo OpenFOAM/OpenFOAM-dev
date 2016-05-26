@@ -5,19 +5,11 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    object      patchAverage;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 patchAverage
 {
     patch  <patchName>;
-    fields ( p );
+    fields (p);
 
     operation average;
     #includeEtc "caseDicts/postProcessing/faceSource/patchSource.cfg";

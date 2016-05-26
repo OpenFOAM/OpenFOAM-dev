@@ -8,10 +8,10 @@
 
 randomise
 {
+    #includeEtc "caseDicts/postProcessing/fields/randomise.cfg"
+
     // Set the magnitude of the perturbation
     magPerturbation <scalar>;
-
-    #includeEtc "caseDicts/postProcessing/fields/randomise.cfg"
 }
 
 // ************************************************************************* //
