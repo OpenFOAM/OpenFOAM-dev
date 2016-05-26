@@ -47,12 +47,6 @@ bool Foam::functionObjects::blendingFactor::calc()
     processed = processed || calcBF<scalar>();
     processed = processed || calcBF<vector>();
 
-    if (!processed)
-    {
-        WarningInFunction
-            << "Unprocessed field " << fieldName_ << endl;
-    }
-
     return processed;
 }
 
