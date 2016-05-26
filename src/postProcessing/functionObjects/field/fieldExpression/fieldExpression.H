@@ -113,10 +113,10 @@ public:
         //- Read the fieldExpression data
         virtual bool read(const dictionary&);
 
-        //- Calculate the fieldExpressionergence field
+        //- Calculate the result field
         virtual bool execute(const bool postProcess = false);
 
-        //- Write the fieldExpressionergence field
+        //- Write the result field
         virtual bool write(const bool postProcess = false);
 
         //- Clear the result field from the objectRegistry
