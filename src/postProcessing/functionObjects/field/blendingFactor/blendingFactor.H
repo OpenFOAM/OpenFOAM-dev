@@ -61,7 +61,7 @@ class blendingFactor
 :
     public fieldExpression
 {
-    // Private data
+    // Private member data
 
         //- Name of flux field, default is "phi"
         word phiName_;
