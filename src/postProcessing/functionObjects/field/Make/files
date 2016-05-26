@@ -34,6 +34,7 @@ histogram/histogram.C
 
 fieldExpression/fieldExpression.C
 components/components.C
+randomise/randomise.C
 div/div.C
 grad/grad.C
 mag/mag.C

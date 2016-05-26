@@ -77,8 +77,20 @@ Foam::functionObjects::Q::Q
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, "U", "Q")
-{}
+    fieldExpression(name, runTime, dict, "U")
+{
+    if (resultName_.empty())
+    {
+        if (fieldName_ != "U")
+        {
+            resultName_ = "Q(" + fieldName_ + ')';
+        }
+        else
+        {
+            resultName_ = 'Q';
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
