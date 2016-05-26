@@ -49,11 +49,8 @@ bool Foam::functionObjects::regionFunctionObject::writeObject
     {
         const regIOobject& field = obr_.lookupObject<regIOobject>(fieldName);
 
-        if (log)
-        {
-            Info<< "functionObjects::" << type() << " " << name()
-                << " writing field: " << field.name() << endl;
-        }
+        Log << "    functionObjects::" << type() << " " << name()
+            << " writing field: " << field.name() << endl;
 
         field.write();
 
