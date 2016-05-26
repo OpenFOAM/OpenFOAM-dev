@@ -281,6 +281,10 @@ extern messageStream Info;
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
 #define InfoInFunction InfoIn(FUNCTION_NAME)
 
+//- Report write to Foam::Info if the local log switch is true
+#define Log                                                                    \
+    if (log) Info
+
 
 //- Report an IO information message using Foam::Info
 //  for functionName in file __FILE__ at line __LINE__
@@ -305,17 +309,16 @@ extern messageStream Info;
 #define DebugInFunction                                                        \
     if (debug) InfoInFunction
 
-
 //- Report a variable name and value
 //  using Foam::Pout in file __FILE__ at line __LINE__
 #define DebugVar(var)                                                          \
-    ::Foam::Pout<< "["<< __FILE__ << ":" << __LINE__ << "] "                   \
-    << #var " " << var << ::Foam::endl
-
-
-//- Report write to Foam::Info if the local log switch is true
-#define Log                                                                    \
-    if (log) Info
+{                                                                              \
+    ::Foam::string oldPrefix(::Foam::Pout.prefix());                           \
+    ::Foam::Pout<< "["<< __FILE__ << ":" << __LINE__ << "] ";                  \
+    ::Foam::Pout.prefix() = oldPrefix + #var " ";                              \
+    ::Foam::Pout<< var << ::Foam::endl;                                        \
+    ::Foam::Pout.prefix() = oldPrefix;                                         \
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
