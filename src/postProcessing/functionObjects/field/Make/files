@@ -33,9 +33,11 @@ regionSizeDistribution/regionSizeDistribution.C
 histogram/histogram.C
 
 fieldExpression/fieldExpression.C
+components/components.C
 div/div.C
 grad/grad.C
 mag/mag.C
+magSqr/magSqr.C
 vorticity/vorticity.C
 enstrophy/enstrophy.C
 Q/Q.C
