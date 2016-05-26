@@ -242,6 +242,12 @@ public:
 fileName operator/(const string&, const string&);
 
 
+//- Recursively search the given directory for the file
+//  returning the path relative to the directory or
+//  fileName::null if not found
+fileName search(const word& file, const fileName& directory);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
