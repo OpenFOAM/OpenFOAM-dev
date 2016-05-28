@@ -92,38 +92,6 @@ fileName cwd();
 //  else return false
 bool chDir(const fileName& dir);
 
-//- Search for files from user/group/shipped directories.
-//  The search scheme allows for version-specific and
-//  version-independent files using the following hierarchy:
-//  - \b user settings:
-//    - ~/.OpenFOAM/\<VERSION\>
-//    - ~/.OpenFOAM/
-//  - \b group (site) settings (when $WM_PROJECT_SITE is set):
-//    - $WM_PROJECT_SITE/\<VERSION\>
-//    - $WM_PROJECT_SITE
-//  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-//    - $WM_PROJECT_INST_DIR/site/\<VERSION\>
-//    - $WM_PROJECT_INST_DIR/site/
-//  - \b other (shipped) settings:
-//    - $WM_PROJECT_DIR/etc/
-//
-//  \return The list of full paths of all the matching files or
-//  an empty list if the name cannot be found.
-//  Optionally abort if the file cannot be found.
-//  Optionally stop search after the first file has been found.
-fileNameList findEtcFiles
-(
-    const fileName&,
-    bool mandatory=false,
-    bool findFirst=false
-);
-
-//- Search for a file using findEtcFiles.
-//  \return The full path name of the first file found in the
-//  search hierarchy or an empty fileName if the name cannot be found.
-//  Optionally abort if the file cannot be found.
-fileName findEtcFile(const fileName&, bool mandatory=false);
-
 //- Make a directory and return an error if it could not be created
 //  and does not already exist
 bool mkDir(const fileName&, mode_t=0777);
