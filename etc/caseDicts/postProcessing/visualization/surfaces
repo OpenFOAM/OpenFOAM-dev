@@ -8,7 +8,7 @@
 
 surfaces
 {
-    #includeEtc "caseDicts/postProcessing/visualization/surfaces.cfg"
+    #includeFunc surfaces.cfg
 
     fields       (p U);
 

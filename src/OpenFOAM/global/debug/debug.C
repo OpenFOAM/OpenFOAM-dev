@@ -29,7 +29,7 @@ Description
 #include "debug.H"
 #include "dictionary.H"
 #include "IFstream.H"
-#include "OSspecific.H"
+#include "etcFiles.H"
 #include "Ostream.H"
 #include "demandDrivenData.H"
 #include "simpleObjectRegistry.H"

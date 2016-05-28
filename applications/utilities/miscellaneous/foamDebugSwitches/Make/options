@@ -20,7 +20,6 @@ EXE_LIBS = \
     -lfieldFunctionObjects \
     -lfileFormats \
     -lfiniteVolume \
-    -lfoamCalcFunctions \
     -lforces \
     -lfvMotionSolvers \
     -lgenericPatchFields \

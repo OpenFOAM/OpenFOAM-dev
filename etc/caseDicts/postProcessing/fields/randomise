@@ -8,7 +8,9 @@
 
 randomise
 {
-    #includeEtc "caseDicts/postProcessing/fields/randomise.cfg"
+    #includeFunc "randomise.cfg"
+
+    field           <fieldName>;
 
     // Set the magnitude of the perturbation
     magPerturbation <scalar>;

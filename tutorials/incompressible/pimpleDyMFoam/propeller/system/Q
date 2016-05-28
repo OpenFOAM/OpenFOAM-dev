@@ -6,16 +6,15 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-// Calculate Q (from U)
+// Calculate Q(U)
 Q
 {
-    // Where to load it from
-    libs ("libfieldFunctionObjects.so");
-
     type Q;
 
-    // Output every
-    writeControl writeTime;
+    libs ("libfieldFunctionObjects.so");
+
+    executeControl  writeTime;
+    writeControl    writeTime;
 }
 
 

@@ -44,6 +44,7 @@ SourceFiles
 #include "functionObject.H"
 #include "SHA1Digest.H"
 #include "HashTable.H"
+#include "HashSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -90,6 +91,13 @@ class functionObjectList
         //  Returns a NULL pointer (and index -1) if it didn't exist.
         functionObject* remove(const word&, label& oldIndex);
 
+        static void readFunctionObject
+        (
+            const word& funcNameArgs0,
+            dictionary& functionsDict,
+            HashSet<word>& selectedFields
+        );
+
         //- Disallow default bitwise copy construct
         functionObjectList(const functionObjectList&);
 
@@ -99,13 +107,20 @@ class functionObjectList
 
 public:
 
+    // Static data members
+
+        //- Default relative path to the directory structure
+        //  containing the functionObject dictionary files
+        static fileName functionObjectDictPath;
+
+
     // Constructors
 
-        //- Construct from Time and the execution setting
+        //- Construct from Time and the execution setting.
         //  The functionObject specifications are read from the controlDict
         functionObjectList
         (
-            const Time&,
+            const Time& runTime,
             const bool execution=true
         );
 
@@ -119,13 +134,12 @@ public:
         //    or not. Default: true.
         functionObjectList
         (
-            const Time& t,
+            const Time& runTime,
             const dictionary& parentDict,
             const bool execution=true
         );
 
         //- Construct and return a functionObjectList for an application.
-        //
         //  If the "dict" argument is specified the functionObjectList is
         //  constructed from that dictionary which is returned as
         //  functionObjectsDict otherwise the functionObjectList is constructed
@@ -134,7 +148,8 @@ public:
         (
             const argList& args,
             const Time& runTime,
-            dictionary& functionObjectsDict
+            dictionary& functionObjectsDict,
+            HashSet<word>& selectedFields
         );
 
 
@@ -158,6 +173,26 @@ public:
 
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
+
+        //- Search for functionObject dictionary file in
+        //  user/group/shipped directories.
+        //  The search scheme allows for version-specific and
+        //  version-independent files using the following hierarchy:
+        //  - \b user settings:
+        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
+        //    - ~/.OpenFOAM/caseDicts/postProcessing
+        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
+        //    - $WM_PROJECT_SITE/\<VERSION\>/caseDicts/postProcessing
+        //    - $WM_PROJECT_SITE/caseDicts/postProcessing
+        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
+        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/caseDicts/postProcessing
+        //    - $WM_PROJECT_INST_DIR/site/caseDicts/postProcessing
+        //  - \b other (shipped) settings:
+        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
+        //
+        //  \return The path of the functionObject dictionary file if found
+        //  otherwise null
+        static fileName findDict(const word& funcName);
 
         //- Read and set the function objects if their data have changed
         bool read();

@@ -55,7 +55,7 @@ functions
         libs ("libfieldFunctionObjects.so");
 
         // Output every
-        writeControl   writeTime;
+        writeControl    writeTime;
         // writeInterval 10;
 
         setFormat       vtk; //gnuplot;//xmgr;//raw;//jplot;//csv;//ensight;

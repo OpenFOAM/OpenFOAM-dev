@@ -1,0 +1,3 @@
+postProcess.C
+
+EXE = $(FOAM_APPBIN)/postProcess

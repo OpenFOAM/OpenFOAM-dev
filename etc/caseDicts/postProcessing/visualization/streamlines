@@ -14,7 +14,7 @@ streamlines
     fields  (U p);
 
     // Must be last entry
-    #includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
+    #includeFunc streamlines.cfg
 }
 
 // ************************************************************************* //

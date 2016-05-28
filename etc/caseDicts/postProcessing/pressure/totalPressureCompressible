@@ -8,8 +8,7 @@
 
 totalPressure
 {
-    #includeEtc
-        "caseDicts/postProcessing/pressure/totalPressureCompressible.cfg"
+    #includeFunc totalPressureCompressible.cfg
 
     pRef    0;
 }

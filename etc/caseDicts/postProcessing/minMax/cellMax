@@ -8,7 +8,7 @@
 
 cellMax
 {
-    #includeEtc "caseDicts/postProcessing/minMax/cellMinMax.cfg"
+    #includeFunc cellMinMax.cfg
 
     fields (U p);
 }

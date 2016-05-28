@@ -9,7 +9,9 @@
 Lambda2
 {
     type            Lambda2;
-    libs            ("libutilityFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
+
+    field           U;
 
     executeControl  writeTime;
     writeControl    writeTime;

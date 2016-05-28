@@ -4,7 +4,7 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
-    -I$(LIB_SRC)/postProcessing/functionObjects/forces/lnInclude \
+    -I$(LIB_SRC)/functionObjects/forces/lnInclude \
 
 LIB_LIBS = \
     -ltriSurface \

@@ -12,7 +12,7 @@ patchAverage
     fields (p);
 
     operation average;
-    #includeEtc "caseDicts/postProcessing/faceSource/patchSource.cfg";
+    #includeFunc patchSource.cfg;
 }
 
 

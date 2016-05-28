@@ -20,6 +20,6 @@ writeInterval   1e-2;
 // transportProperties settings
 DT      DT [ 0 2 -1 0 0 0 0 ] 1e-9;
 
-#includeEtc "caseDicts/postProcessing/scalarTransport/scalarTransportDict.cfg"
+#includeFunc scalarTransportDict.cfg
 
 // ************************************************************************* //

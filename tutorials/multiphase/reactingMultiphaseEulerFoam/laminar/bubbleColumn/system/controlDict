@@ -57,7 +57,7 @@ functions0
     {
         type            fieldAverage;
         libs ( "libfieldFunctionObjects.so" );
-        writeControl   writeTime;
+        writeControl    writeTime;
         fields
         (
             U.air

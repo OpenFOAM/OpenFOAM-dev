@@ -53,7 +53,7 @@ functions
         type            faceSource;
         libs ("libfieldFunctionObjects.so");
         enabled         yes;
-        writeControl   writeTime;
+        writeControl    writeTime;
         log             yes;
         valueOutput     no;
         source          patch;

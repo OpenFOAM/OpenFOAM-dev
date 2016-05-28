@@ -47,6 +47,7 @@ namespace Foam
 
 class regIOobject;
 class IOobjectList;
+class objectRegistry;
 
 //- Read all fields of the specified type.
 //  Returns names of fields read.

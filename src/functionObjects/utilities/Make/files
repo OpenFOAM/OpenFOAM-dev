@@ -1,0 +1,11 @@
+codedFunctionObject/codedFunctionObject.C
+residuals/residuals.C
+timeActivatedFileUpdate/timeActivatedFileUpdate.C
+setTimeStep/setTimeStepFunctionObject.C
+systemCall/systemCall.C
+abort/abort.C
+removeRegisteredObject/removeRegisteredObject.C
+writeDictionary/writeDictionary.C
+writeRegisteredObject/writeRegisteredObject.C
+
+LIB = $(FOAM_LIBBIN)/libutilityFunctionObjects

@@ -9,7 +9,9 @@
 div
 {
     type            div;
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
+
+    field           <fieldName>;
 
     executeControl  writeTime;
     writeControl    writeTime;

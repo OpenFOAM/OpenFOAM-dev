@@ -32,7 +32,7 @@ Solution:
   sub-dictionary in the case controlDict file, e.g.
   functions
   {
-      #include "flowRatePatch"
+      #includeFunc flowRatePatch
       ... other function objects here ...
   }
 

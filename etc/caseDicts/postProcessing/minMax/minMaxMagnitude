@@ -8,7 +8,7 @@
 
 minMaxMagnitude
 {
-    #includeEtc "caseDicts/postProcessing/minMax/fieldMinMax.cfg"
+    #includeFunc fieldMinMax.cfg
 
     fields (U p);
 }

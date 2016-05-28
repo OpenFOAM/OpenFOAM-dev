@@ -36,6 +36,7 @@ Description
 #include "dictionary.H"
 #include "IFstream.H"
 #include "OSspecific.H"
+#include "etcFiles.H"
 #include "IOmanip.H"
 
 #include "specie.H"

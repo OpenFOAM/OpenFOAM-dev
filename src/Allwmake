@@ -76,7 +76,7 @@ wmake $targetType engine
 wmake $targetType fvOptions
 wmake $targetType regionCoupled
 
-postProcessing/Allwmake $targetType $*
+functionObjects/Allwmake $targetType $*
 
 wmake $targetType sixDoFRigidBodyMotion
 wmake $targetType rigidBodyDynamics

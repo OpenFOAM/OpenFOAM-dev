@@ -8,7 +8,7 @@
 
 faceMin
 {
-    #includeEtc "caseDicts/postProcessing/minMax/faceMin.cfg"
+    #includeFunc faceMin.cfg
 
     fields (U p);
 }

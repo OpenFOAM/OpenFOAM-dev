@@ -3,6 +3,7 @@ global/global.Cver
 /* global/constants/dimensionedConstants.C in global.Cver */
 global/argList/argList.C
 global/clock/clock.C
+global/etcFiles/etcFiles.C
 
 bools = primitives/bools
 $(bools)/bool/bool.C
@@ -186,6 +187,7 @@ $(functionEntries)/codeStream/codeStream.C
 $(functionEntries)/functionEntry/functionEntry.C
 $(functionEntries)/includeEntry/includeEntry.C
 $(functionEntries)/includeEtcEntry/includeEtcEntry.C
+$(functionEntries)/includeFuncEntry/includeFuncEntry.C
 $(functionEntries)/includeIfPresentEntry/includeIfPresentEntry.C
 $(functionEntries)/inputModeEntry/inputModeEntry.C
 $(functionEntries)/removeEntry/removeEntry.C

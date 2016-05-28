@@ -29,6 +29,7 @@ License
 #include "IFstream.H"
 #include "OFstream.H"
 #include "OSspecific.H"
+#include "etcFiles.H"
 #include "dictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

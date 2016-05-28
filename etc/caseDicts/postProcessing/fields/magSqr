@@ -1,0 +1,20 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+
+magSqr
+{
+    type            magSqr;
+    libs            ("libfieldFunctionObjects.so");
+
+    field           <fieldName>;
+
+    executeControl  writeTime;
+    writeControl    writeTime;
+}
+
+// ************************************************************************* //

@@ -21,7 +21,7 @@ forceCoeffs
     CofR        (0 0 0);
     pitchAxis   (0 1 0);
 
-    #includeEtc "caseDicts/postProcessing/forces/forceCoeffsCompressible.cfg"
+    #includeFunc forceCoeffsCompressible.cfg
 }
 
 // ************************************************************************* //

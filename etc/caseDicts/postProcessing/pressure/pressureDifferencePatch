@@ -11,7 +11,7 @@ pressureDifferencePatch
     patch1 <patch1>;
     patch2 <patch2>;
 
-    #includeEtc "caseDicts/postProcessing/pressure/pressureDifferencePatch.cfg"
+    #includeFunc pressureDifferencePatch.cfg
 }
 
 // ************************************************************************* //

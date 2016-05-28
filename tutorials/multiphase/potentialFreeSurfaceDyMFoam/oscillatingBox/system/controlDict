@@ -57,7 +57,7 @@ functions
     {
         type            forces;
         libs ("libforces.so");
-        writeControl   writeTime;
+        writeControl    writeTime;
         patches         (floatingObject);
         rho             rhoInf;
         log             yes;
@@ -69,7 +69,6 @@ functions
     {
         type            faceSource;
         libs ("libfieldFunctionObjects.so");
-        enabled         yes;
         writeControl   timeStep;
         writeInterval  1;
         log             yes;

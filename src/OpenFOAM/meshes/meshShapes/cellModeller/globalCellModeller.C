@@ -27,7 +27,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "cellModeller.H"
-#include "OSspecific.H"
+#include "etcFiles.H"
 #include "IFstream.H"
 
 // * * * * * * * * * * * * * * * Static data * * * * * * * * * * * * * * * * //

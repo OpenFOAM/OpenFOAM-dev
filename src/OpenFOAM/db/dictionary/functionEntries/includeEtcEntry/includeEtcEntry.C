@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "includeEtcEntry.H"
-#include "dictionary.H"
+#include "etcFiles.H"
 #include "IFstream.H"
-#include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
-#include "OSspecific.H"
+#include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

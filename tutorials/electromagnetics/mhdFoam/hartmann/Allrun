@@ -9,7 +9,7 @@ application=`getApplication`
 
 runApplication blockMesh
 runApplication $application
-runApplication foamCalc components U
+runApplication postProcess -func 'components(U)'
 runApplication sample
 
 #------------------------------------------------------------------------------

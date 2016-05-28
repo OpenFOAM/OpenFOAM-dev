@@ -28,6 +28,18 @@ License
 #include "mapPolyMesh.H"
 #include "argList.H"
 #include "timeControlFunctionObject.H"
+#include "IFstream.H"
+#include "dictionaryEntry.H"
+#include "stringOps.H"
+#include "etcFiles.H"
+
+/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
+
+Foam::fileName Foam::functionObjectList::functionObjectDictPath
+(
+    "caseDicts/postProcessing"
+);
+
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -56,6 +68,125 @@ Foam::functionObject* Foam::functionObjectList::remove
     }
 
     return ptr;
+}
+
+
+Foam::fileName Foam::functionObjectList::findDict(const word& funcName)
+{
+    // First check if there is a functionObject dictionary file in the
+    // case system directory
+    fileName dictFile = stringOps::expand("$FOAM_CASE")/"system"/funcName;
+
+    if (isFile(dictFile))
+    {
+        return dictFile;
+    }
+    else
+    {
+        fileNameList etcDirs(findEtcDirs(functionObjectDictPath));
+
+        forAll(etcDirs, i)
+        {
+            dictFile = search(funcName, etcDirs[i]);
+            if (!dictFile.empty())
+            {
+                return dictFile;
+            }
+        }
+    }
+
+    return fileName::null;
+}
+
+
+void Foam::functionObjectList::readFunctionObject
+(
+    const word& funcNameArgs0,
+    dictionary& functionsDict,
+    HashSet<word>& selectedFields
+)
+{
+    // Parse the optional functionObject arguments
+    // e.g. 'Q(U)' -> funcName = Q; args = (U);
+
+    word funcNameArgs(funcNameArgs0);
+    string::stripInvalid<word>(funcNameArgs);
+
+    word funcName(funcNameArgs);
+    wordList args;
+
+    word::size_type start = 0;
+    word::size_type i = 0;
+
+    for
+    (
+        word::const_iterator iter = funcNameArgs.begin();
+        iter != funcNameArgs.end();
+        ++iter
+    )
+    {
+        char c = *iter;
+
+        if (c == '(')
+        {
+            funcName.resize(i);
+            start = i+1;
+        }
+        else if (c == ',')
+        {
+            args.append(funcNameArgs(start, i - start));
+            start = i+1;
+        }
+        else if (c == ')')
+        {
+            args.append(funcNameArgs(start, i - start));
+            break;
+        }
+
+        ++i;
+    }
+
+    // Search for the functionObject dictionary
+    fileName path = findDict(funcName);
+
+    if (path == fileName::null)
+    {
+        WarningInFunction
+            << "Cannot find functionObject file " << funcName << endl;
+        return;
+    }
+
+    // Read the functionObject dictionary
+    IFstream fileStream(path);
+    dictionary funcsDict(fileStream);
+    dictionary& funcDict = funcsDict.subDict(funcName);
+
+    // Insert the 'field' or 'fields' entry corresponding to the optional
+    // arguments or read the 'field' or 'fields' entry and add the required
+    // fields to selectedFields
+    if (args.size() == 1)
+    {
+        funcDict.set("field", args[0]);
+        selectedFields.insert(args[0]);
+    }
+    else if (args.size() > 1)
+    {
+        funcDict.set("fields", args);
+        selectedFields.insert(args);
+    }
+    else if (funcDict.found("field"))
+    {
+        selectedFields.insert(word(funcDict.lookup("field")));
+    }
+    else if (funcDict.found("fields"))
+    {
+        selectedFields.insert(wordList(funcDict.lookup("fields")));
+    }
+
+    // Merge this functionObject dictionary into functionsDict
+    dictionary funcArgsDict;
+    funcArgsDict.add(funcNameArgs, funcDict);
+    functionsDict.subDict("functions").merge(funcArgsDict);
 }
 
 
@@ -98,35 +229,65 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 (
     const argList& args,
     const Time& runTime,
-    dictionary& functionObjectsDict
+    dictionary& functionsDict,
+    HashSet<word>& selectedFields
 )
 {
-    autoPtr<functionObjectList> functionObjectsPtr;
+    autoPtr<functionObjectList> functionsPtr;
 
-    if (args.optionFound("dict"))
+    functionsDict.add
+    (
+        dictionaryEntry("functions", functionsDict, dictionary::null)
+    );
+
+    if
+    (
+        args.optionFound("dict")
+     || args.optionFound("func")
+     || args.optionFound("funcs")
+    )
     {
-        functionObjectsDict = IOdictionary
-        (
-            IOobject
+        if (args.optionFound("dict"))
+        {
+            functionsDict.merge
             (
-                args["dict"],
-                runTime,
-                IOobject::MUST_READ_IF_MODIFIED
-            )
-        );
+                IOdictionary
+                (
+                    IOobject
+                    (
+                        args["dict"],
+                        runTime,
+                        IOobject::MUST_READ_IF_MODIFIED
+                    )
+                )
+            );
+        }
 
-        functionObjectsPtr.reset
-        (
-            new functionObjectList(runTime, functionObjectsDict)
-        );
+        if (args.optionFound("func"))
+        {
+            readFunctionObject(args["func"], functionsDict, selectedFields);
+        }
+
+        if (args.optionFound("funcs"))
+        {
+            wordList funcs(args.optionLookup("funcs")());
+
+            forAll(funcs, i)
+            {
+                readFunctionObject(funcs[i], functionsDict, selectedFields);
+            }
+        }
+
+        functionsPtr.reset(new functionObjectList(runTime, functionsDict));
     }
     else
     {
-        functionObjectsPtr.reset(new functionObjectList(runTime));
+        functionsPtr.reset(new functionObjectList(runTime));
     }
-    functionObjectsPtr->start();
 
-    return functionObjectsPtr;
+    functionsPtr->start();
+
+    return functionsPtr;
 }
 
 

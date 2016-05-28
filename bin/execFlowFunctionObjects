@@ -31,7 +31,7 @@
 #
 #------------------------------------------------------------------------------
 
-echo "execFlowFunctionObjects has been replaced by the \
+echo "execFlowFunctionObjects has been superceded by the \
 '-postProcess' solver command-line option, e.g."
 
 echo "simpleFoam -help -postProcess"

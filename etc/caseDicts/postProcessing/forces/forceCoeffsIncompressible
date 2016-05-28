@@ -20,7 +20,7 @@ forceCoeffs
     CofR        (0 0 0);
     pitchAxis   (0 1 0);
 
-    #includeEtc "caseDicts/postProcessing/forces/forceCoeffs.cfg"
+    #includeFunc forceCoeffs.cfg
 }
 
 // ************************************************************************* //

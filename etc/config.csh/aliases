@@ -33,13 +33,13 @@
 # Change compiled version aliases
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 alias wmSet 'source $WM_PROJECT_DIR/etc/cshrc'
-alias wm64 'wmSET WM_ARCH_OPTION=64'
-alias wm32 'wmSET WM_ARCH_OPTION=32'
-alias wmSP 'wmSET WM_PRECISION_OPTION=SP'
-alias wmDP 'wmSET WM_PRECISION_OPTION=DP'
+alias wm64 'wmSet WM_ARCH_OPTION=64'
+alias wm32 'wmSet WM_ARCH_OPTION=32'
+alias wmSP 'wmSet WM_PRECISION_OPTION=SP'
+alias wmDP 'wmSet WM_PRECISION_OPTION=DP'
 
 # Refresh the environment
-alias wmRefresh 'wmSET $FOAM_SETTINGS'
+alias wmRefresh 'wmSet $FOAM_SETTINGS'
 
 # Clear env
 alias wmUnset 'source $WM_PROJECT_DIR/etc/config.csh/unset'

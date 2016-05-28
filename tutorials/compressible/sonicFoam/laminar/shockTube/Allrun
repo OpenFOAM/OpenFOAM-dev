@@ -9,7 +9,7 @@ application=`getApplication`
 runApplication blockMesh
 runApplication setFields
 runApplication $application
-runApplication foamCalc mag U
+runApplication postProcess -func 'mag(U)'
 runApplication sample
 
 #------------------------------------------------------------------------------

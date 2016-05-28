@@ -71,7 +71,7 @@ if (argList::postProcess(argc, argv))
 {
     Foam::timeSelector::addOptions();
     #include "addRegionOption.H"
-    #include "addDictOption.H"
+    #include "addFunctionObjectOptions.H"
 
     #include "setRootCase.H"
     #include INCLUDE_FILE(CREATE_TIME)
@@ -84,12 +84,14 @@ if (argList::postProcess(argc, argv))
 
     // Externally stored dictionary for functionObjectList
     // if not constructed from runTime
-    dictionary functionObjectsDict;
+    dictionary functionsDict;
+
+    HashSet<word> selectedFields;
 
     // Construct functionObjectList
-    autoPtr<functionObjectList> functionObjectsPtr
+    autoPtr<functionObjectList> functionsPtr
     (
-        functionObjectList::New(args, runTime, functionObjectsDict)
+        functionObjectList::New(args, runTime, functionsDict, selectedFields)
     );
 
     forAll(timeDirs, timeI)
@@ -101,8 +103,13 @@ if (argList::postProcess(argc, argv))
         if (mesh.readUpdate() != polyMesh::UNCHANGED)
         {
             // Update functionObjects if mesh changes
-            functionObjectsPtr =
-                functionObjectList::New(args, runTime, functionObjectsDict);
+            functionsPtr = functionObjectList::New
+            (
+                args,
+                runTime,
+                functionsDict,
+                selectedFields
+            );
         }
 
         FatalIOError.throwExceptions();
@@ -119,7 +126,7 @@ if (argList::postProcess(argc, argv))
             #include INCLUDE_FILE(CREATE_FIELDS_3)
             #endif
 
-            functionObjectsPtr->execute(true);
+            functionsPtr->execute(true);
         }
         catch (IOerror& err)
         {

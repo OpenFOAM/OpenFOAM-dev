@@ -50,10 +50,9 @@ functions
     probes
     {
         type            probes;
-        libs ("libsampling.so");
-        enabled         true;
-        writeControl   timeStep;
-        writeInterval  1;
+        libs            ("libsampling.so");
+        writeControl    timeStep;
+        writeInterval   1;
 
         fields
         (
@@ -76,9 +75,8 @@ functions
     fieldAverage1
     {
         type            fieldAverage;
-        libs ("libfieldFunctionObjects.so");
-        enabled         true;
-        writeControl   writeTime;
+        libs            ("libfieldFunctionObjects.so");
+        writeControl    writeTime;
 
         fields
         (
@@ -105,9 +103,8 @@ functions
         type surfaces;
 
         // Where to load it from (if not already in solver)
-        libs ("libsampling.so");
-        enabled         true;
-        writeControl   writeTime;
+        libs            ("libsampling.so");
+        writeControl    writeTime;
 
         interpolationScheme cellPoint;
 

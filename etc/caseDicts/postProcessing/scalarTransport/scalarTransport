@@ -8,7 +8,7 @@
 
 T
 {
-    #includeEtc "caseDicts/postProcessing/scalarTransport/scalarTransport.cfg"
+    #includeFunc scalarTransport.cfg
 
     userDT true;
     DT     1e-09;

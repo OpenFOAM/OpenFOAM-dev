@@ -15,7 +15,7 @@ near
     type nearWallFields;
 
     // Output every
-    writeControl   writeTime;
+    writeControl    writeTime;
 
     // Calculate every
     executeControl   writeTime;
@@ -43,7 +43,7 @@ wallBoundedStreamLines
     type            wallBoundedStreamLine;
 
     // Output every
-    writeControl   writeTime;
+    writeControl    writeTime;
 
     setFormat       vtk; //gnuplot; //xmgr; //raw; //jplot;
 

@@ -14,7 +14,7 @@ flowRatePatch
 {
     patch <patchName>;
 
-    #includeEtc "caseDicts/postProcessing/flowRate/flowRatePatch.cfg"
+    #includeFunc flowRatePatch.cfg
 }
 
 // ************************************************************************* //

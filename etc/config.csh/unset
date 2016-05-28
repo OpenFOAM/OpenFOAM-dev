@@ -152,16 +152,16 @@ unset cleaned foamClean foamOldDirs
 #------------------------------------------------------------------------------
 # Cleanup aliases
 
-unalias wmSET
+unalias wmSet
 unalias wm64
 unalias wm32
 unalias wmSP
 unalias wmDP
 
-unalias wmUNSET
+unalias wmUnset
 
-unalias wmSchedON
-unalias wmSchedOFF
+unalias wmSchedOn
+unalias wmSchedOff
 unalias foamPV
 
 unalias src

@@ -9,7 +9,9 @@
 Q
 {
     type            Q;
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
+
+    field           U;
 
     executeControl  writeTime;
     writeControl    writeTime;
