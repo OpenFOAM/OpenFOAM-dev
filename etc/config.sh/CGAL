@@ -41,7 +41,7 @@
 #------------------------------------------------------------------------------
 
 boost_version=boost-system
-cgal_version=CGAL-4.7
+cgal_version=CGAL-4.8
 
 if [ -z "$SOURCE_CGAL_VERSIONS_ONLY" ]
 then
