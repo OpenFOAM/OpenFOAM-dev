@@ -34,6 +34,7 @@ Description
     - if the patch already exists will not override it nor its fields
     - if the patch does not exist it will be created together with 'calculated'
       patchfields unless the field is mentioned in the patchFields section.
+    - any 0-sized patches (since faces have been moved out) will get removed
 
 \*---------------------------------------------------------------------------*/
 
@@ -103,6 +104,75 @@ label addPatch
     }
 
     return pbm.findPatchID(patchName);
+}
+
+
+// Filter out the empty patches.
+void filterPatches(fvMesh& mesh, const HashSet<word>& addedPatchNames)
+{
+    // Remove any zero-sized ones. Assumes
+    // - processor patches are already only there if needed
+    // - all other patches are available on all processors
+    // - but coupled ones might still be needed, even if zero-size
+    //   (e.g. processorCyclic)
+    // See also logic in createPatch.
+    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+    labelList oldToNew(pbm.size(), -1);
+    label newPatchi = 0;
+    forAll(pbm, patchi)
+    {
+        const polyPatch& pp = pbm[patchi];
+
+        if (!isA<processorPolyPatch>(pp))
+        {
+            if
+            (
+                isA<coupledPolyPatch>(pp)
+             || returnReduce(pp.size(), sumOp<label>())
+             || addedPatchNames.found(pp.name())
+            )
+            {
+                // Coupled (and unknown size) or uncoupled and used
+                oldToNew[patchi] = newPatchi++;
+            }
+        }
+    }
+
+    forAll(pbm, patchi)
+    {
+        const polyPatch& pp = pbm[patchi];
+
+        if (isA<processorPolyPatch>(pp))
+        {
+            oldToNew[patchi] = newPatchi++;
+        }
+    }
+
+
+    const label nKeepPatches = newPatchi;
+
+    // Shuffle unused ones to end
+    if (nKeepPatches != pbm.size())
+    {
+        Info<< endl
+            << "Removing zero-sized patches:" << endl << incrIndent;
+
+        forAll(oldToNew, patchi)
+        {
+            if (oldToNew[patchi] == -1)
+            {
+                Info<< indent << pbm[patchi].name()
+                    << " type " << pbm[patchi].type()
+                    << " at position " << patchi << endl;
+                oldToNew[patchi] = newPatchi++;
+            }
+        }
+        Info<< decrIndent;
+
+        fvMeshTools::reorderPatches(mesh, oldToNew, nKeepPatches, true);
+        Info<< endl;
+    }
 }
 
 
@@ -891,6 +961,11 @@ int main(int argc, char *argv[])
     {
         mesh.movePoints(map().preMotionPoints());
     }
+
+
+    // Remove any now zero-sized patches
+    filterPatches(mesh, bafflePatches);
+
 
     if (overwrite)
     {
