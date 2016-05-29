@@ -241,13 +241,13 @@ OpenFOAM | ThirdParty)
         _foamAddLib     $gccDir/lib$WM_COMPILER_LIB_ARCH
 
         # Add gmp/mpfr libraries to run-time environment
-        _foamAddLib     $gmpDir/lib
-        _foamAddLib     $mpfrDir/lib
+        _foamAddLib     $gmpDir/lib$WM_COMPILER_LIB_ARCH
+        _foamAddLib     $mpfrDir/lib$WM_COMPILER_LIB_ARCH
 
         # Add mpc libraries (not need for older gcc) to run-time environment
         if [ -n "$mpc_version" ]
         then
-            _foamAddLib     $mpcDir/lib
+            _foamAddLib     $mpcDir/lib$WM_COMPILER_LIB_ARCH
         fi
 
         # Used by boost/CGAL:

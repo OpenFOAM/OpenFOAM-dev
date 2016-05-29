@@ -246,6 +246,9 @@ case ThirdParty:
     case Gcc53:
         set gcc_version=gcc-5.3.0
         breaksw
+    case Gcc61:
+        set gcc_version=gcc-6.1.0
+        breaksw
     case Clang:
         # Using clang - not gcc
         setenv WM_CC 'clang'
@@ -290,12 +293,12 @@ case ThirdParty:
         _foamAddLib     $gccDir/lib$WM_COMPILER_LIB_ARCH
 
         # Add gmp/mpfr libraries to run-time environment
-        _foamAddLib     $gmpDir/lib
-        _foamAddLib     $mpfrDir/lib
+        _foamAddLib     $gmpDir/lib$WM_COMPILER_LIB_ARCH
+        _foamAddLib     $mpfrDir/lib$WM_COMPILER_LIB_ARCH
 
         # Add mpc libraries (not need for older gcc) to run-time environment
         if ( $?mpc_version ) then
-            _foamAddLib     $mpcDir/lib
+            _foamAddLib     $mpcDir/lib$WM_COMPILER_LIB_ARCH
         endif
 
         # Used by boost/CGAL:
