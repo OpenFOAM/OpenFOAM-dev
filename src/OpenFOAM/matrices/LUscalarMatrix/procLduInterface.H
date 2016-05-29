@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,14 @@ namespace Foam
 {
 
 class lduInterfaceField;
+
+
+// Forward declaration of friend functions and operators
+
+class procLduInterface;
+
+Ostream& operator<<(Ostream&, const procLduInterface&);
+
 
 /*---------------------------------------------------------------------------*\
                            Class procLduInterface Declaration

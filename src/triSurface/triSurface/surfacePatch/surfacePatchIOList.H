@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,12 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
+// Forward declaration of friend functions and operators
+
+class surfacePatchIOList;
+
+Ostream& operator<<(Ostream&, const surfacePatchIOList&);
+
 
 /*---------------------------------------------------------------------------*\
                            Class surfacePatchIOList Declaration
@@ -95,12 +100,6 @@ public:
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
 
-
-    // Member Operators
-
-    // Friend Functions
-
-    // Friend Operators
 
     // IOstream Operators
 

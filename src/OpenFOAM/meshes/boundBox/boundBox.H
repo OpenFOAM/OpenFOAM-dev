@@ -45,6 +45,9 @@ namespace Foam
 class boundBox;
 template<class T> class tmp;
 
+bool operator==(const boundBox&, const boundBox&);
+bool operator!=(const boundBox&, const boundBox&);
+
 Istream& operator>>(Istream&, boundBox&);
 Ostream& operator<<(Ostream&, const boundBox&);
 

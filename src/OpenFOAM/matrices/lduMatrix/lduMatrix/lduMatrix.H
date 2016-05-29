@@ -68,7 +68,9 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class lduMatrix;
+
 Ostream& operator<<(Ostream&, const lduMatrix&);
+Ostream& operator<<(Ostream&, const InfoProxy<lduMatrix>&);
 
 
 /*---------------------------------------------------------------------------*\

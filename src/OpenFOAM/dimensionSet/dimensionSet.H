@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,6 +89,8 @@ dimensionSet inv(const dimensionSet&);
 // Function to check the argument is dimensionless
 //  for transcendental functions
 dimensionSet trans(const dimensionSet&);
+
+dimensionSet atan2(const dimensionSet&, const dimensionSet&);
 
 // Return the argument; transformations do not change the dimensions
 dimensionSet transform(const dimensionSet&);

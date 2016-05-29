@@ -45,6 +45,14 @@ namespace Foam
 
 class objectRegistry;
 
+
+// Forward declaration of friend functions and operators
+
+class lduMesh;
+
+Ostream& operator<<(Ostream&, const InfoProxy<lduMesh>&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class lduMesh Declaration
 \*---------------------------------------------------------------------------*/
@@ -90,6 +98,7 @@ public:
                 const BinaryOp& bop
             ) const;
 
+
         // Info
 
             //- Return info proxy.
@@ -98,6 +107,7 @@ public:
             {
                 return *this;
             }
+
 
     // Ostream operator
 
