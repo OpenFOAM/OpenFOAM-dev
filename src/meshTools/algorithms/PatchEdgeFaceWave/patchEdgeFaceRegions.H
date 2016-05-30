@@ -51,6 +51,15 @@ namespace Foam
 // Forward declaration of classes
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class patchEdgeFaceRegions;
+
+Istream& operator>>(Istream&, patchEdgeFaceRegions&);
+Ostream& operator<<(Ostream&, const patchEdgeFaceRegions&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class patchEdgeFaceRegions Declaration
 \*---------------------------------------------------------------------------*/

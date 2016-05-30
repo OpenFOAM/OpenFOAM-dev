@@ -48,6 +48,15 @@ namespace Foam
 class polyPatch;
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class cellInfo;
+
+Istream& operator>>(Istream&, cellInfo&);
+Ostream& operator<<(Ostream&, const cellInfo&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class cellInfo Declaration
 \*---------------------------------------------------------------------------*/

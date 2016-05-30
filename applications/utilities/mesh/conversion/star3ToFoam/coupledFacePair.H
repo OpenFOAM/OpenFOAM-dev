@@ -42,6 +42,13 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class coupledFacePair;
+
+Ostream& operator<<(Ostream&, const coupledFacePair&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class coupledFacePair Declaration
 \*---------------------------------------------------------------------------*/

@@ -44,6 +44,13 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class pointFeatureEdgesTypes;
+
+Ostream& operator<<(Ostream&, const pointFeatureEdgesTypes&);
+
+
 /*---------------------------------------------------------------------------*\
                    Class pointFeatureEdgesTypes Declaration
 \*---------------------------------------------------------------------------*/

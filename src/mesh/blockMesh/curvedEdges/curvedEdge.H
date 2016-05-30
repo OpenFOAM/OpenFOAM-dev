@@ -47,6 +47,13 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class curvedEdge;
+
+Ostream& operator<<(Ostream&, const curvedEdge&);
+
+
 /*---------------------------------------------------------------------------*\
                          Class curvedEdge Declaration
 \*---------------------------------------------------------------------------*/

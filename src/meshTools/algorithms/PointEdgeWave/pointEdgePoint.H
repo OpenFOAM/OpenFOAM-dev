@@ -53,6 +53,15 @@ namespace Foam
 class polyPatch;
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class pointEdgePoint;
+
+Istream& operator>>(Istream&, pointEdgePoint&);
+Ostream& operator<<(Ostream&, const pointEdgePoint&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class pointEdgePoint Declaration
 \*---------------------------------------------------------------------------*/

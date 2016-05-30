@@ -41,6 +41,14 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class indexedVertexEnum;
+
+Istream& operator>>(Istream&, indexedVertexEnum&);
+Ostream& operator<<(Ostream&, const indexedVertexEnum&);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 class indexedVertexEnum

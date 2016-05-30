@@ -45,6 +45,13 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class cv2DControls;
+
+Ostream& operator<<(Ostream&, const cv2DControls&);
+
+
 /*---------------------------------------------------------------------------*\
                         Class cv2DControls Declaration
 \*---------------------------------------------------------------------------*/
