@@ -71,9 +71,12 @@ class surfaceFeatures;
 class objectRegistry;
 
 // Forward declaration of friend functions and operators
+
 class extendedEdgeMesh;
+
 Istream& operator>>(Istream&, extendedEdgeMesh&);
 Ostream& operator<<(Ostream&, const extendedEdgeMesh&);
+
 
 /*---------------------------------------------------------------------------*\
                        Class extendedEdgeMesh Declaration
@@ -538,6 +541,10 @@ public:
             friend Ostream& operator<<(Ostream&, const extendedEdgeMesh&);
             friend Istream& operator>>(Istream&, extendedEdgeMesh&);
 };
+
+
+Istream& operator>>(Istream& is, extendedEdgeMesh::sideVolumeType& vt);
+Ostream& operator<<(Ostream& os, const extendedEdgeMesh::sideVolumeType& vt);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

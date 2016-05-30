@@ -67,6 +67,14 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class tetIndices;
+
+Istream& operator>>(Istream&, tetIndices&);
+Ostream& operator<<(Ostream&, const tetIndices&);
+
+
 /*---------------------------------------------------------------------------*\
                          Class tetIndices Declaration
 \*---------------------------------------------------------------------------*/

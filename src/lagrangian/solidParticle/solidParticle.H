@@ -51,6 +51,14 @@ namespace Foam
 
 class solidParticleCloud;
 
+
+// Forward declaration of friend functions and operators
+
+class solidParticle;
+
+Ostream& operator<<(Ostream&, const solidParticle&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class solidParticle Declaration
 \*---------------------------------------------------------------------------*/

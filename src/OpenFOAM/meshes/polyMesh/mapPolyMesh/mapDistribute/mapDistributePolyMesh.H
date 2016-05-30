@@ -51,6 +51,15 @@ namespace Foam
 class mapPolyMesh;
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class mapDistributePolyMesh;
+
+Istream& operator>>(Istream&, mapDistributePolyMesh&);
+Ostream& operator<<(Ostream&, const mapDistributePolyMesh&);
+
+
 /*---------------------------------------------------------------------------*\
                      Class mapDistributePolyMesh Declaration
 \*---------------------------------------------------------------------------*/

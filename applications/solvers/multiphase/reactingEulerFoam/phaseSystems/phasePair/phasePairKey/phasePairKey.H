@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,17 @@ SourceFiles
 
 namespace Foam
 {
+
+// Forward declaration of friend functions and operators
+
+class phasePairKey;
+
+bool operator==(const phasePairKey&, const phasePairKey&);
+bool operator!=(const phasePairKey&, const phasePairKey&);
+
+Istream& operator>>(Istream&, phasePairKey&);
+Ostream& operator<<(Ostream&, const phasePairKey&);
+
 
 /*---------------------------------------------------------------------------*\
                          Class phasePairKey Declaration

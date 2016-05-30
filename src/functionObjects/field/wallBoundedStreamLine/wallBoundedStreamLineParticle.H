@@ -49,6 +49,14 @@ namespace Foam
 
 class wallBoundedStreamLineParticleCloud;
 
+
+// Forward declaration of friend functions and operators
+
+class wallBoundedStreamLineParticle;
+
+Ostream& operator<<(Ostream&, const wallBoundedStreamLineParticle&);
+
+
 /*---------------------------------------------------------------------------*\
                  Class wallBoundedStreamLineParticle Declaration
 \*---------------------------------------------------------------------------*/

@@ -69,6 +69,15 @@ class edge;
 class face;
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class directionInfo;
+
+Istream& operator>>(Istream&, directionInfo&);
+Ostream& operator<<(Ostream&, const directionInfo&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class directionInfo Declaration
 \*---------------------------------------------------------------------------*/

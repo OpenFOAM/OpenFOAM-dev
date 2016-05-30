@@ -41,14 +41,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of friend functions and operators
-
-class indexedVertexEnum;
-
-Istream& operator>>(Istream&, indexedVertexEnum&);
-Ostream& operator<<(Ostream&, const indexedVertexEnum&);
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 class indexedVertexEnum
@@ -89,6 +81,9 @@ public:
     friend Istream& operator>>(Foam::Istream&, vertexType&);
 };
 
+
+Istream& operator>>(Istream&, indexedVertexEnum::vertexType&);
+Ostream& operator<<(Ostream&, const indexedVertexEnum::vertexType&);
 
 template<>
 inline bool contiguous<indexedVertexEnum>()

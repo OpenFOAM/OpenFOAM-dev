@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,14 @@ namespace Foam
 class polyTopoChanger;
 class polyTopoChange;
 class mapPolyMesh;
+
+
+// Forward declaration of friend functions and operators
+
+class polyMeshModifier;
+
+Ostream& operator<<(Ostream&, const polyMeshModifier&);
+
 
 /*---------------------------------------------------------------------------*\
                        Class polyMeshModifier Declaration

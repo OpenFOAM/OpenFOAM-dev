@@ -133,7 +133,8 @@ inline bool isType(const Type& t)
 template<class TestType, class Type>
 inline bool isA(const Type& t)
 {
-    return dynamic_cast<const TestType*>(&t);
+    const Type* tPtr = &t;
+    return dynamic_cast<const TestType*>(tPtr);
 }
 
 

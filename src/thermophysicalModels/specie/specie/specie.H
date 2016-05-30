@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,17 @@ using namespace Foam::constant::thermodynamic;
 namespace Foam
 {
 
-class Istream;
-class Ostream;
+// Forward declaration of friend functions and operators
+
+class specie;
+
+inline specie operator+(const specie&, const specie&);
+inline specie operator-(const specie&, const specie&);
+inline specie operator*(const scalar, const specie&);
+inline specie operator==(const specie&, const specie&);
+
+Ostream& operator<<(Ostream&, const specie&);
+
 
 /*---------------------------------------------------------------------------*\
                            Class specie Declaration

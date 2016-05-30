@@ -45,6 +45,14 @@ namespace Foam
 
 class findCellParticleCloud;
 
+
+// Forward declaration of friend functions and operators
+
+class findCellParticle;
+
+Ostream& operator<<(Ostream&, const findCellParticle&);
+
+
 /*---------------------------------------------------------------------------*\
                      Class findCellParticle Declaration
 \*---------------------------------------------------------------------------*/

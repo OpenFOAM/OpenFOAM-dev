@@ -46,6 +46,14 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class wallBoundedParticle;
+
+Ostream& operator<<(Ostream&, const wallBoundedParticle&);
+Ostream& operator<<(Ostream&, const InfoProxy<wallBoundedParticle>&);
+
+
 /*---------------------------------------------------------------------------*\
                      Class wallBoundedParticle Declaration
 \*---------------------------------------------------------------------------*/

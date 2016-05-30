@@ -45,6 +45,13 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class distribution;
+
+Ostream& operator<<(Ostream&, const distribution&);
+
+
 /*---------------------------------------------------------------------------*\
                         Class distribution Declaration
 \*---------------------------------------------------------------------------*/

@@ -88,6 +88,15 @@ namespace Foam
 class mapPolyMesh;
 class mapDistributePolyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class refinementHistory;
+
+Istream& operator>>(Istream&, refinementHistory&);
+Ostream& operator<<(Ostream&, const refinementHistory&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class refinementHistory Declaration
 \*---------------------------------------------------------------------------*/
@@ -400,6 +409,10 @@ public:
 
         friend Ostream& operator<<(Ostream&, const refinementHistory&);
 };
+
+
+Istream& operator>>(Istream&, refinementHistory::splitCell8&);
+Ostream& operator<<(Ostream&, const refinementHistory::splitCell8&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

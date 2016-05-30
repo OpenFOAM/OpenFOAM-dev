@@ -145,6 +145,15 @@ namespace Foam
 
 class globalIndexAndTransform;
 
+
+// Forward declaration of friend functions and operators
+
+class mapDistribute;
+
+Istream& operator>>(Istream&, mapDistribute&);
+Ostream& operator<<(Ostream&, const mapDistribute&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class mapDistribute Declaration
 \*---------------------------------------------------------------------------*/

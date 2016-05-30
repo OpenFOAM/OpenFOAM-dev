@@ -47,6 +47,14 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+
+class pointData;
+
+Istream& operator>>(Istream&, pointData&);
+Ostream& operator<<(Ostream&, const pointData&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class pointData Declaration
 \*---------------------------------------------------------------------------*/

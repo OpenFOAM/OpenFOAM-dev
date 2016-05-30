@@ -48,6 +48,14 @@ namespace Foam
 
 class streamLineParticleCloud;
 
+
+// Forward declaration of friend functions and operators
+
+class streamLineParticle;
+
+Ostream& operator<<(Ostream&, const streamLineParticle&);
+
+
 /*---------------------------------------------------------------------------*\
                      Class streamLineParticle Declaration
 \*---------------------------------------------------------------------------*/

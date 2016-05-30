@@ -46,6 +46,15 @@ namespace Foam
 class polyPatch;
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class minData;
+
+Istream& operator>>(Istream&, minData&);
+Ostream& operator<<(Ostream&, const minData&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class minData Declaration
 \*---------------------------------------------------------------------------*/

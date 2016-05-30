@@ -47,6 +47,15 @@ namespace Foam
 class polyPatch;
 class polyMesh;
 
+
+// Forward declaration of friend functions and operators
+
+class topoDistanceData;
+
+Istream& operator>>(Istream&, topoDistanceData&);
+Ostream& operator<<(Ostream&, const topoDistanceData&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class topoDistanceData Declaration
 \*---------------------------------------------------------------------------*/

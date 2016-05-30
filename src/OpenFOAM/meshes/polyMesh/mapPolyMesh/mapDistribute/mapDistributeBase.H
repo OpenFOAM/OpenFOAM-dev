@@ -85,6 +85,15 @@ class mapPolyMesh;
 class globalIndex;
 class PstreamBuffers;
 
+
+// Forward declaration of friend functions and operators
+
+class mapDistributeBase;
+
+Istream& operator>>(Istream&, mapDistributeBase&);
+Ostream& operator<<(Ostream&, const mapDistributeBase&);
+
+
 /*---------------------------------------------------------------------------*\
                            Class mapDistributeBase Declaration
 \*---------------------------------------------------------------------------*/
