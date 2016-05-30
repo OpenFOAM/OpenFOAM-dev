@@ -997,7 +997,7 @@ bool Foam::polyMesh::upToDatePoints(const regIOobject& io) const
 
 void Foam::polyMesh::setUpToDatePoints(regIOobject& io) const
 {
-    io.eventNo() = points_.eventNo();
+    io.eventNo() = points_.eventNo()+1;
 }
 
 

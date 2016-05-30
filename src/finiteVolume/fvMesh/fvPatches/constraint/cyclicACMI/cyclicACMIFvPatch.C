@@ -43,7 +43,12 @@ void Foam::cyclicACMIFvPatch::updateAreas() const
 {
     if (cyclicACMIPolyPatch_.updated())
     {
-        // Set Sf and magSf for both sides' coupled and non-overlapping patches
+        if (debug)
+        {
+            Pout<< "cyclicACMIFvPatch::updateAreas() : updating fv areas for "
+                << name() << " and " << this->nonOverlapPatch().name()
+                << endl;
+        }
 
         // owner couple
         const_cast<vectorField&>(Sf()) = patch().faceAreas();
@@ -81,25 +86,37 @@ void Foam::cyclicACMIFvPatch::makeWeights(scalarField& w) const
     if (coupled())
     {
         const cyclicACMIFvPatch& nbrPatch = neighbFvPatch();
-        const fvPatch& nbrPatchNonOverlap = nonOverlapPatch();
-
         const scalarField deltas(nf() & coupledFvPatch::delta());
 
-        const scalarField nbrDeltas
+        // These deltas are of the cyclic part alone - they are
+        // not affected by the amount of overlap with the nonOverlapPatch
+        scalarField nbrDeltas
         (
             interpolate
             (
-                nbrPatch.nf() & nbrPatch.coupledFvPatch::delta(),
-                nbrPatchNonOverlap.nf() & nbrPatchNonOverlap.delta()
+                nbrPatch.nf() & nbrPatch.coupledFvPatch::delta()
             )
         );
+
+        scalar tol = cyclicACMIPolyPatch::tolerance();
+
 
         forAll(deltas, facei)
         {
             scalar di = deltas[facei];
             scalar dni = nbrDeltas[facei];
 
-            w[facei] = dni/(di + dni);
+            if (dni < tol)
+            {
+                // Avoid zero weights on disconnected faces. This value
+                // will be weighted with the (zero) face area so will not
+                // influence calculations.
+                w[facei] = 1.0;
+            }
+            else
+            {
+                w[facei] = dni/(di + dni);
+            }
         }
     }
     else
@@ -122,30 +139,12 @@ Foam::tmp<Foam::vectorField> Foam::cyclicACMIFvPatch::delta() const
 {
     if (coupled())
     {
-        const cyclicACMIFvPatch& nbrPatchCoupled = neighbFvPatch();
-        const fvPatch& nbrPatchNonOverlap = nonOverlapPatch();
+        const cyclicACMIFvPatch& nbrPatch = neighbFvPatch();
 
         const vectorField patchD(coupledFvPatch::delta());
 
-        vectorField nbrPatchD
-        (
-            interpolate
-            (
-                nbrPatchCoupled.coupledFvPatch::delta(),
-                nbrPatchNonOverlap.delta()
-            )
-        );
+        vectorField nbrPatchD(interpolate(nbrPatch.coupledFvPatch::delta()));
 
-        const vectorField nbrPatchD0
-        (
-            interpolate
-            (
-                vectorField(nbrPatchCoupled.size(), Zero),
-                nbrPatchNonOverlap.delta()()
-            )
-        );
-
-        nbrPatchD -= nbrPatchD0;
 
         tmp<vectorField> tpdv(new vectorField(patchD.size()));
         vectorField& pdv = tpdv.ref();

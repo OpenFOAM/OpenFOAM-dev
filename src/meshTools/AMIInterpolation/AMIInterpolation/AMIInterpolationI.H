@@ -73,8 +73,24 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::srcWeights() const
 
 
 template<class SourcePatch, class TargetPatch>
+inline Foam::scalarListList&
+Foam::AMIInterpolation<SourcePatch, TargetPatch>::srcWeights()
+{
+    return srcWeights_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
 inline const Foam::scalarField&
 Foam::AMIInterpolation<SourcePatch, TargetPatch>::srcWeightsSum() const
+{
+    return srcWeightsSum_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
+inline Foam::scalarField&
+Foam::AMIInterpolation<SourcePatch, TargetPatch>::srcWeightsSum()
 {
     return srcWeightsSum_;
 }
@@ -113,8 +129,24 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeights() const
 
 
 template<class SourcePatch, class TargetPatch>
+inline Foam::scalarListList&
+Foam::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeights()
+{
+    return tgtWeights_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
 inline const Foam::scalarField&
 Foam::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeightsSum() const
+{
+    return tgtWeightsSum_;
+}
+
+
+template<class SourcePatch, class TargetPatch>
+inline Foam::scalarField&
+Foam::AMIInterpolation<SourcePatch, TargetPatch>::tgtWeightsSum()
 {
     return tgtWeightsSum_;
 }

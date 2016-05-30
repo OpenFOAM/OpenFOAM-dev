@@ -13,7 +13,6 @@ if [ -d 0 ] ; then
    rm -rf 0
 fi
 
-runApplication createPatch -overwrite
 runApplication createBaffles -overwrite
 runApplication mergeOrSplitBaffles -split -overwrite
 

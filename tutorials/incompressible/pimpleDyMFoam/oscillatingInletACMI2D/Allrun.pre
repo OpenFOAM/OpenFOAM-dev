@@ -11,7 +11,4 @@ runApplication topoSet -constant
 # split the mesh to generate the ACMI coupled patches
 runApplication createBaffles -overwrite
 
-# remove zero-sized patches
-runApplication createPatch -overwrite
-
 cp -rf 0.orig 0

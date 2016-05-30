@@ -57,8 +57,8 @@ private:
 
     // Private data
 
-        //- Copy of the original patch face areas
-        mutable vectorField faceAreas0_;
+        //- Fraction of face area below which face is considered disconnected
+        static const scalar tolerance_;
 
         //- Name of non-overlapping patch
         const word nonOverlapPatchName_;
@@ -78,13 +78,7 @@ private:
 
 protected:
 
-        static const scalar tolerance_;
-
-
     // Protected Member Functions
-
-        //- Initialise patch face areas
-        virtual void initPatchFaceAreas() const;
 
         //- Reset the AMI interpolator
         virtual void resetAMI
@@ -92,9 +86,6 @@ protected:
             const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod =
                 AMIPatchToPatchInterpolation::imFaceAreaWeight
         ) const;
-
-        //- Set neighbour ACMI patch areas
-        virtual void setNeighbourFaceAreas() const;
 
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&);
@@ -254,9 +245,6 @@ public:
             //- Return access to the updated flag
             inline bool updated() const;
 
-            //- Return access to the original patch face areas
-            inline const vectorField& faceAreas0() const;
-
             //- Return a reference to the neighbour patch
             virtual const cyclicACMIPolyPatch& neighbPatch() const;
 
@@ -275,34 +263,8 @@ public:
             //- Mask field where 1 = overlap, 0 = no-overlap
             inline const scalarField& mask() const;
 
-
-            // Interpolations
-
-                //- Interpolate field
-                template<class Type>
-                tmp<Field<Type>> interpolate
-                (
-                    const Field<Type>& fldCouple,
-                    const Field<Type>& fldNonOverlap
-                ) const;
-
-                //- Interpolate tmp field
-                template<class Type>
-                tmp<Field<Type>> interpolate
-                (
-                    const tmp<Field<Type>>& tFldCouple,
-                    const tmp<Field<Type>>& tFldNonOverlap
-                ) const;
-
-                //- Low-level interpolate List
-                template<class Type, class CombineOp>
-                void interpolate
-                (
-                    const UList<Type>& fldCouple,
-                    const UList<Type>& fldNonOverlap,
-                    const CombineOp& cop,
-                    List<Type>& result
-                ) const;
+            //- Overlap tolerance
+            inline static scalar tolerance();
 
 
         //- Calculate the patch geometry
@@ -350,12 +312,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "cyclicACMIPolyPatchI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "cyclicACMIPolyPatchTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

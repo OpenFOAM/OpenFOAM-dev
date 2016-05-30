@@ -174,10 +174,11 @@ public:
             //- Return delta (P to N) vectors across coupled patch
             virtual tmp<vectorField> delta() const;
 
+            //- Interpolate (make sure to have uptodate areas)
             template<class Type>
             tmp<Field<Type>> interpolate
             (
-                const Field<Type>& fldCoupled
+                const Field<Type>& fld
             ) const
             {
                 updateAreas();
@@ -185,57 +186,18 @@ public:
                 return
                     cyclicACMIPolyPatch_.cyclicAMIPolyPatch::interpolate
                     (
-                        fldCoupled
+                        fld
                     );
             }
 
+            //- Interpolate (make sure to have uptodate areas)
             template<class Type>
             tmp<Field<Type>> interpolate
             (
-                const tmp<Field<Type>>& tfldCoupled
+                const tmp<Field<Type>>& tfld
             ) const
             {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.cyclicAMIPolyPatch::interpolate
-                    (
-                        tfldCoupled
-                    );
-            }
-
-            template<class Type>
-            tmp<Field<Type>> interpolate
-            (
-                const Field<Type>& fldCoupled,
-                const Field<Type>& fldNonOverlap
-            ) const
-            {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.interpolate
-                    (
-                        fldCoupled,
-                        fldNonOverlap
-                    );
-            }
-
-            template<class Type>
-            tmp<Field<Type>> interpolate
-            (
-                const tmp<Field<Type>>& tFldCoupled,
-                const tmp<Field<Type>>& tFldNonOverlap
-            ) const
-            {
-                updateAreas();
-
-                return
-                    cyclicACMIPolyPatch_.interpolate
-                    (
-                        tFldCoupled,
-                        tFldNonOverlap
-                    );
+                return interpolate(tfld());
             }
 
 
