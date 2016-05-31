@@ -74,7 +74,7 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
 
     if (ifs)
     {
-        if (Foam::functionEntries::includeEntry::report)
+        if (Foam::functionEntries::includeEntry::log)
         {
             Info<< fName << endl;
         }
@@ -97,7 +97,7 @@ bool Foam::functionEntries::includeIfPresentEntry::execute
 
     if (ifs)
     {
-        if (Foam::functionEntries::includeEntry::report)
+        if (Foam::functionEntries::includeEntry::log)
         {
             Info<< fName << endl;
         }

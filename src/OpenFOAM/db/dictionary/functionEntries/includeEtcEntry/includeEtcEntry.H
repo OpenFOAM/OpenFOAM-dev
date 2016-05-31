@@ -100,7 +100,7 @@ public:
     // Static data members
 
         //- Report which file is included to stdout
-        static bool report;
+        static bool log;
 
 
     //- Runtime type information
