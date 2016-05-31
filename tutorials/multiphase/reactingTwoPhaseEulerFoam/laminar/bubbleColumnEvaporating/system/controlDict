@@ -51,9 +51,5 @@ maxCo           0.5;
 
 maxDeltaT       1;
 
-functions
-{
-    //#include "continuityFunctions"
-}
 
 // ************************************************************************* //
