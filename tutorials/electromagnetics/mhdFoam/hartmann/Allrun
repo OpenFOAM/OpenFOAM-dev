@@ -9,7 +9,6 @@ application=`getApplication`
 
 runApplication blockMesh
 runApplication $application
-runApplication postProcess -func 'components(U)'
 runApplication sample
 
 #------------------------------------------------------------------------------
