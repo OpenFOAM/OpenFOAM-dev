@@ -54,7 +54,7 @@ maxCo           2;
 
 functions
 {
-    #include "Q"
+    #includeFunc Q
     #include "surfaces"
     #include "forces"
 }
