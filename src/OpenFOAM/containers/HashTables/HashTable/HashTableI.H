@@ -115,6 +115,7 @@ inline T& Foam::HashTable<T, Key, Hash>::operator[](const Key& key)
     if (iter == this->end())
     {
         FatalErrorInFunction
+            << key << " not found in table.  Valid entries: "
             << toc()
             << exit(FatalError);
     }
@@ -131,6 +132,7 @@ inline const T& Foam::HashTable<T, Key, Hash>::operator[](const Key& key) const
     if (iter == this->cend())
     {
         FatalErrorInFunction
+            << key << " not found in table.  Valid entries: "
             << toc()
             << exit(FatalError);
     }
