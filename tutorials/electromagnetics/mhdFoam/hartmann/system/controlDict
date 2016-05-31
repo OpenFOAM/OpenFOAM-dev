@@ -47,8 +47,7 @@ runTimeModifiable true;
 
 functions
 {
-    #includeFunc components
-    components{field U;}
+    #includeFunc components(U)
 }
 
 // ************************************************************************* //

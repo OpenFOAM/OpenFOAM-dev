@@ -25,28 +25,16 @@ License
 
 #include "includeFuncEntry.H"
 #include "functionObjectList.H"
-#include "dictionary.H"
-#include "IFstream.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-const Foam::word Foam::functionEntries::includeFuncEntry::typeName
-(
-    Foam::functionEntries::includeFuncEntry::typeName_()
-);
-
-// Don't lookup the debug switch here as the debug switch dictionary
-// might include includeFuncEntry
-int Foam::functionEntries::includeFuncEntry::debug(0);
-
-bool Foam::functionEntries::includeFuncEntry::report(false);
-
 
 namespace Foam
 {
 namespace functionEntries
 {
+    defineTypeNameAndDebug(includeFuncEntry, 0);
+
     addToMemberFunctionSelectionTable
     (
         functionEntry,
@@ -54,27 +42,7 @@ namespace functionEntries
         execute,
         dictionaryIstream
     );
-
-    addToMemberFunctionSelectionTable
-    (
-        functionEntry,
-        includeFuncEntry,
-        execute,
-        primitiveEntryIstream
-    );
 }
-}
-
-// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
-
-Foam::fileName Foam::functionEntries::includeFuncEntry::funcPath
-(
-    const word& fName,
-    const dictionary& dict
-)
-{
-    // Search the system and etc directories for the file and return the path
-    return functionObjectList::findDict(fName);
 }
 
 
@@ -86,66 +54,15 @@ bool Foam::functionEntries::includeFuncEntry::execute
     Istream& is
 )
 {
-    const word fName(is);
-    const fileName fPath(funcPath(fName, parentDict));
-    IFstream ifs(fPath);
+    const word fNameArgs(is);
+    HashSet<word> selectedFields;
 
-    if (ifs)
-    {
-        if (Foam::functionEntries::includeFuncEntry::report)
-        {
-            Info<< fPath << endl;
-        }
-        parentDict.read(ifs);
-        return true;
-    }
-    else
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "Cannot open functionObject file "
-            << (ifs.name().size() ? ifs.name() : fileName(fName))
-            << " while reading dictionary " << parentDict.name()
-            << exit(FatalIOError);
-
-        return false;
-    }
-}
-
-
-bool Foam::functionEntries::includeFuncEntry::execute
-(
-    const dictionary& parentDict,
-    primitiveEntry& entry,
-    Istream& is
-)
-{
-    const word fName(is);
-    const fileName fPath(funcPath(fName, parentDict));
-    IFstream ifs(fPath);
-
-    if (ifs)
-    {
-        if (Foam::functionEntries::includeFuncEntry::report)
-        {
-            Info<< fPath << endl;
-        }
-        entry.read(parentDict, ifs);
-        return true;
-    }
-    else
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "Cannot open functionObject file "
-            << (ifs.name().size() ? ifs.name() : fileName(fName))
-            << " while reading dictionary " << parentDict.name()
-            << exit(FatalIOError);
-
-        return false;
-    }
+    return functionObjectList::readFunctionObject
+    (
+        fNameArgs,
+        parentDict,
+        selectedFields
+    );
 }
 
 

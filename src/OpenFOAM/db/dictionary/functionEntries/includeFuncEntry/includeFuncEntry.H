@@ -50,7 +50,7 @@ Description
     \endverbatim
 
 See Also
-    functionObjectList::findDict
+    Foam::functionObjectList
 
 SourceFiles
     includeFuncEntry.C
@@ -77,29 +77,8 @@ class includeFuncEntry
 :
     public functionEntry
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        includeFuncEntry(const includeFuncEntry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const includeFuncEntry&);
-
-        //- Return the path to the functionObject dictionary path
-        static fileName funcPath
-        (
-            const word& fName,
-            const dictionary& dict
-        );
-
 
 public:
-
-    // Static data members
-
-        //- Report which file is included to stdout
-        static bool report;
-
 
     //- Runtime type information
     ClassName("includeFunc");
@@ -109,14 +88,6 @@ public:
 
         //- Execute the functionEntry in a sub-dict context
         static bool execute(dictionary& parentDict, Istream&);
-
-        //- Execute the functionEntry in a primitiveEntry context
-        static bool execute
-        (
-            const dictionary& parentDict,
-            primitiveEntry&,
-            Istream&
-        );
 };
 
 

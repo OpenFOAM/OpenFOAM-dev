@@ -91,13 +91,6 @@ class functionObjectList
         //  Returns a NULL pointer (and index -1) if it didn't exist.
         functionObject* remove(const word&, label& oldIndex);
 
-        static void readFunctionObject
-        (
-            const word& funcNameArgs0,
-            dictionary& functionsDict,
-            HashSet<word>& selectedFields
-        );
-
         //- Disallow default bitwise copy construct
         functionObjectList(const functionObjectList&);
 
@@ -142,14 +135,14 @@ public:
         //- Construct and return a functionObjectList for an application.
         //  If the "dict" argument is specified the functionObjectList is
         //  constructed from that dictionary which is returned as
-        //  functionObjectsDict otherwise the functionObjectList is constructed
+        //  controlDict otherwise the functionObjectList is constructed
         //  from the "functions" sub-dictionary of "system/controlDict"
         static autoPtr<functionObjectList> New
         (
             const argList& args,
             const Time& runTime,
-            dictionary& functionObjectsDict,
-            HashSet<word>& selectedFields
+            dictionary& controlDict,
+            HashSet<word>& requiredFields
         );
 
 
@@ -193,6 +186,19 @@ public:
         //  \return The path of the functionObject dictionary file if found
         //  otherwise null
         static fileName findDict(const word& funcName);
+
+        //- Read the specified functionObject configuration dictionary parsing
+        //  the optional arguments included in the name 'funcNameArgs0',
+        //  inserting 'field' or 'fields' entries as required and merging the
+        //  resulting functionObject dictionary into 'functionsDict'.  Any
+        //  fields required to execute the functionObject are added to
+        //  'requiredFields'
+        static bool readFunctionObject
+        (
+            const word& funcNameArgs0,
+            dictionary& functionsDict,
+            HashSet<word>& requiredFields
+        );
 
         //- Read and set the function objects if their data have changed
         bool read();

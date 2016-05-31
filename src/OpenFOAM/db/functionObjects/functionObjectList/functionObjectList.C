@@ -99,11 +99,11 @@ Foam::fileName Foam::functionObjectList::findDict(const word& funcName)
 }
 
 
-void Foam::functionObjectList::readFunctionObject
+bool Foam::functionObjectList::readFunctionObject
 (
     const word& funcNameArgs0,
     dictionary& functionsDict,
-    HashSet<word>& selectedFields
+    HashSet<word>& requiredFields
 )
 {
     // Parse the optional functionObject arguments
@@ -153,7 +153,7 @@ void Foam::functionObjectList::readFunctionObject
     {
         WarningInFunction
             << "Cannot find functionObject file " << funcName << endl;
-        return;
+        return false;
     }
 
     // Read the functionObject dictionary
@@ -163,30 +163,32 @@ void Foam::functionObjectList::readFunctionObject
 
     // Insert the 'field' or 'fields' entry corresponding to the optional
     // arguments or read the 'field' or 'fields' entry and add the required
-    // fields to selectedFields
+    // fields to requiredFields
     if (args.size() == 1)
     {
         funcDict.set("field", args[0]);
-        selectedFields.insert(args[0]);
+        requiredFields.insert(args[0]);
     }
     else if (args.size() > 1)
     {
         funcDict.set("fields", args);
-        selectedFields.insert(args);
+        requiredFields.insert(args);
     }
     else if (funcDict.found("field"))
     {
-        selectedFields.insert(word(funcDict.lookup("field")));
+        requiredFields.insert(word(funcDict.lookup("field")));
     }
     else if (funcDict.found("fields"))
     {
-        selectedFields.insert(wordList(funcDict.lookup("fields")));
+        requiredFields.insert(wordList(funcDict.lookup("fields")));
     }
 
     // Merge this functionObject dictionary into functionsDict
     dictionary funcArgsDict;
     funcArgsDict.add(funcNameArgs, funcDict);
-    functionsDict.subDict("functions").merge(funcArgsDict);
+    functionsDict.merge(funcArgsDict);
+
+    return true;
 }
 
 
@@ -229,16 +231,18 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 (
     const argList& args,
     const Time& runTime,
-    dictionary& functionsDict,
-    HashSet<word>& selectedFields
+    dictionary& controlDict,
+    HashSet<word>& requiredFields
 )
 {
     autoPtr<functionObjectList> functionsPtr;
 
-    functionsDict.add
+    controlDict.add
     (
-        dictionaryEntry("functions", functionsDict, dictionary::null)
+        dictionaryEntry("functions", controlDict, dictionary::null)
     );
+
+    dictionary& functionsDict = controlDict.subDict("functions");
 
     if
     (
@@ -249,7 +253,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
     {
         if (args.optionFound("dict"))
         {
-            functionsDict.merge
+            controlDict.merge
             (
                 IOdictionary
                 (
@@ -265,7 +269,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 
         if (args.optionFound("func"))
         {
-            readFunctionObject(args["func"], functionsDict, selectedFields);
+            readFunctionObject(args["func"], functionsDict, requiredFields);
         }
 
         if (args.optionFound("funcs"))
@@ -274,11 +278,11 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
 
             forAll(funcs, i)
             {
-                readFunctionObject(funcs[i], functionsDict, selectedFields);
+                readFunctionObject(funcs[i], functionsDict, requiredFields);
             }
         }
 
-        functionsPtr.reset(new functionObjectList(runTime, functionsDict));
+        functionsPtr.reset(new functionObjectList(runTime, controlDict));
     }
     else
     {
