@@ -26,12 +26,11 @@ Class
 
 Description
     Specify a functionObject dictionary file to include, expects the
-    functionObject name to follow (without quotes).
+    functionObject name to follow with option arguments (without quotes).
 
-    Search for functionObject dictionary file in
-    user/group/shipped directories.
-    The search scheme allows for version-specific and
-    version-independent files using the following hierarchy:
+    Searches for functionObject dictionary file in user/group/shipped
+    directories allowing for version-specific and version-independent files
+    using the following hierarchy:
     - \b user settings:
       - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
       - ~/.OpenFOAM/caseDicts/postProcessing
@@ -44,9 +43,16 @@ Description
     - \b other (shipped) settings:
       - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
 
-    An example of the \c \#includeFunc directive:
+    The optional field arguments included in the name are inserted in 'field' or
+    'fields' entries in the functionObject dictionary and included in the name
+    of the functionObject entry to avoid conflict.
+
+    Examples:
     \verbatim
-        #includeFunc <funcName>
+        #includeFunc Q
+        #includeFunc components(U)
+        #includeFunc mag(Ux)
+        #includeFunc mag(p)
     \endverbatim
 
 See Also

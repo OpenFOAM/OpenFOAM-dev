@@ -113,6 +113,7 @@ bool Foam::functionObjectList::readFunctionObject
     string::stripInvalid<word>(funcNameArgs);
 
     word funcName(funcNameArgs);
+    int argLevel = 0;
     wordList args;
 
     word::size_type start = 0;
@@ -129,18 +130,29 @@ bool Foam::functionObjectList::readFunctionObject
 
         if (c == '(')
         {
-            funcName.resize(i);
-            start = i+1;
+            if (argLevel == 0)
+            {
+                funcName.resize(i);
+                start = i+1;
+            }
+            ++argLevel;
         }
         else if (c == ',')
         {
-            args.append(funcNameArgs(start, i - start));
-            start = i+1;
+            if (argLevel == 1)
+            {
+                args.append(funcNameArgs(start, i - start));
+                start = i+1;
+            }
         }
         else if (c == ')')
         {
-            args.append(funcNameArgs(start, i - start));
-            break;
+            if (argLevel == 1)
+            {
+                args.append(funcNameArgs(start, i - start));
+                break;
+            }
+            --argLevel;
         }
 
         ++i;
