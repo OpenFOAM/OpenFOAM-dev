@@ -129,6 +129,13 @@ int main(int argc, char *argv[])
     #include "addFunctionObjectOptions.H"
 
     #include "setRootCase.H"
+
+    if (args.optionFound("list"))
+    {
+        functionObjectList::list();
+        return 0;
+    }
+
     #include "createTime.H"
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include "createNamedMesh.H"

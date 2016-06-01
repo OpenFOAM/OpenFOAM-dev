@@ -74,6 +74,13 @@ if (argList::postProcess(argc, argv))
     #include "addFunctionObjectOptions.H"
 
     #include "setRootCase.H"
+
+    if (args.optionFound("list"))
+    {
+        functionObjectList::list();
+        return 0;
+    }
+
     #include INCLUDE_FILE(CREATE_TIME)
     Foam::instantList timeDirs = Foam::timeSelector::select0(runTime, args);
     #include INCLUDE_FILE(CREATE_MESH)

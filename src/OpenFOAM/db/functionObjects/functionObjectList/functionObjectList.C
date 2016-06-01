@@ -71,6 +71,37 @@ Foam::functionObject* Foam::functionObjectList::remove
 }
 
 
+void Foam::functionObjectList::list()
+{
+    HashSet<word> foMap;
+
+    fileNameList etcDirs(findEtcDirs(functionObjectDictPath));
+
+    forAll(etcDirs, ed)
+    {
+        fileNameList foDirs(readDir(etcDirs[ed], fileName::DIRECTORY));
+        forAll(foDirs, fd)
+        {
+            fileNameList foFiles(readDir(etcDirs[ed]/foDirs[fd]));
+            {
+                forAll(foFiles, f)
+                {
+                    if (foFiles[f].ext().empty())
+                    {
+                        foMap.insert(foFiles[f]);
+                    }
+                }
+            }
+        }
+    }
+
+    Info<< nl
+        << "Available configured functionObjects:"
+        << foMap.sortedToc()
+        << nl;
+}
+
+
 Foam::fileName Foam::functionObjectList::findDict(const word& funcName)
 {
     // First check if there is a functionObject dictionary file in the

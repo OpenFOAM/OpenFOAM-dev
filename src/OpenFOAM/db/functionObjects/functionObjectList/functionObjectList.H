@@ -167,6 +167,23 @@ public:
         //- Find the ID of a given function object by name
         label findObjectID(const word& name) const;
 
+        //- Print a list of functionObject configuration files in
+        //  user/group/shipped directories.
+        //  The search scheme allows for version-specific and
+        //  version-independent files using the following hierarchy:
+        //  - \b user settings:
+        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
+        //    - ~/.OpenFOAM/caseDicts/postProcessing
+        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
+        //    - $WM_PROJECT_SITE/\<VERSION\>/caseDicts/postProcessing
+        //    - $WM_PROJECT_SITE/caseDicts/postProcessing
+        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
+        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/caseDicts/postProcessing
+        //    - $WM_PROJECT_INST_DIR/site/caseDicts/postProcessing
+        //  - \b other (shipped) settings:
+        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
+        static void list();
+
         //- Search for functionObject dictionary file in
         //  user/group/shipped directories.
         //  The search scheme allows for version-specific and
