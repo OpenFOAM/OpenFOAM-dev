@@ -8,7 +8,7 @@
 
 randomise
 {
-    #includeFunc "randomise.cfg"
+    #includeEtc "caseDicts/postProcessing/fields/randomise.cfg"
 
     field           <fieldName>;
 

@@ -8,7 +8,7 @@
 
 totalPressure
 {
-    #includeFunc totalPressureIncompressible.cfg
+    #includeEtc "caseDicts/postProcessing/pressure/totalPressureIncompressible.cfg"
 
     pRef    0.0;
     rhoInf  1.2;

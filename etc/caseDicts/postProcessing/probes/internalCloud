@@ -14,7 +14,7 @@ internalCloud
         (0 0 0)
     );
 
-    #includeFunc internalCloud.cfg
+    #includeEtc "caseDicts/postProcessing/probes/internalCloud.cfg"
 }
 
 // ************************************************************************* //

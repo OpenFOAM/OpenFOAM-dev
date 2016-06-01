@@ -8,7 +8,7 @@
 
 staticPressure
 {
-    #includeFunc staticPressure.cfg
+    #includeEtc "caseDicts/postProcessing/pressure/staticPressure.cfg"
 
     rhoInf 1.2; // Density to scale
 }

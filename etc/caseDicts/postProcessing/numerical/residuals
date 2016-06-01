@@ -8,7 +8,7 @@
 
 residuals
 {
-    #includeFunc residuals.cfg
+    #includeEtc "caseDicts/postProcessing/numerical/residuals.cfg"
 
     fields (p U);
 }

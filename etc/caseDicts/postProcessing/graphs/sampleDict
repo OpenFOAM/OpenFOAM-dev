@@ -6,7 +6,7 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-#includeFunc sampleDict.cfg
+#includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
 
 sets
 (

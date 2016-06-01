@@ -13,7 +13,7 @@ forces
     CofR        (0 0 0);
     pitchAxis   (0 1 0);
 
-    #includeFunc forcesCompressible.cfg
+    #includeEtc "caseDicts/postProcessing/forces/forcesCompressible.cfg"
 }
 
 // ************************************************************************* //

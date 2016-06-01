@@ -19,7 +19,7 @@ boundaryCloud
 
     patches     (".*");
 
-    #includeFunc boundaryCloud.cfg
+    #includeEtc "caseDicts/postProcessing/probes/boundaryCloud.cfg"
 }
 
 // ************************************************************************* //

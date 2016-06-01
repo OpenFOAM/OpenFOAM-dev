@@ -8,7 +8,7 @@
 
 minMaxComponents
 {
-    #includeFunc minMaxComponents.cfg
+    #includeEtc "caseDicts/postProcessing/minMax/minMaxComponents.cfg"
 
     mode components;
 }

@@ -12,10 +12,10 @@ graph
     end     (1 1e-06 0);
     fields  (U p);
 
-    #includeFunc sampleDict.cfg
+    #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
 
     // Must be last entry
-    #includeFunc graph.cfg
+    #includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
 }
 
 // ************************************************************************* //

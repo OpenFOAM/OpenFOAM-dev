@@ -14,7 +14,7 @@ volFlowRateSurface
 {
     triSurface <triSurfaceFile>;
 
-    #includeFunc volFlowRateSurface.cfg
+    #includeEtc "caseDicts/postProcessing/flowRate/volFlowRateSurface.cfg"
 }
 
 // ************************************************************************* //

@@ -8,7 +8,7 @@
 
 probes
 {
-    #includeFunc probes.cfg
+    #includeEtc "caseDicts/postProcessing/probes/probes.cfg"
 
     fields (p U);
     probeLocations
