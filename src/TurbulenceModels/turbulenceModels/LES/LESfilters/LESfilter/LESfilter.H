@@ -65,6 +65,7 @@ class LESfilter
         LESfilter(const LESfilter&);
         void operator=(const LESfilter&);
 
+
 protected:
 
     //- Temporary function to ensure the coupled boundary conditions of the
