@@ -97,6 +97,8 @@ Foam::tmp<Foam::volScalarField> Foam::laplaceFilter::operator()
     const tmp<volScalarField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volScalarField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
@@ -111,6 +113,8 @@ Foam::tmp<Foam::volVectorField> Foam::laplaceFilter::operator()
     const tmp<volVectorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volVectorField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
@@ -125,6 +129,8 @@ Foam::tmp<Foam::volSymmTensorField> Foam::laplaceFilter::operator()
     const tmp<volSymmTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volSymmTensorField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
@@ -139,6 +145,8 @@ Foam::tmp<Foam::volTensorField> Foam::laplaceFilter::operator()
     const tmp<volTensorField>& unFilteredField
 ) const
 {
+    correctBoundaryConditions(unFilteredField);
+
     tmp<volTensorField> filteredField =
         unFilteredField() + fvc::laplacian(coeff_, unFilteredField());
 
