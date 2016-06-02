@@ -180,23 +180,23 @@ void Foam::functionObjects::forces::initialise()
         (
             !obr_.foundObject<volVectorField>(UName_)
          || !obr_.foundObject<volScalarField>(pName_)
-         || (
-                rhoName_ != "rhoInf"
-             && !obr_.foundObject<volScalarField>(rhoName_)
-            )
+
         )
         {
             FatalErrorInFunction
                 << "Could not find " << UName_ << ", " << pName_
                 << exit(FatalError);
+        }
 
-            if (rhoName_ != "rhoInf")
-            {
-                Info<< " or " << rhoName_;
-            }
-
-            Info<< " in database." << nl
-                << "    De-activating forces." << endl;
+        if
+        (
+            rhoName_ != "rhoInf"
+         && !obr_.foundObject<volScalarField>(rhoName_)
+        )
+        {
+            FatalErrorInFunction
+                << "Could not find " << rhoName_
+                << exit(FatalError);
         }
     }
 
@@ -633,7 +633,10 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
         rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
 
         // Reference density needed for incompressible calculations
-        rhoRef_ = readScalar(dict.lookup("rhoInf"));
+        if (rhoName_ == "rhoInf")
+        {
+            rhoRef_ = readScalar(dict.lookup("rhoInf"));
+        }
 
         // Reference pressure, 0 by default
         pRef_ = dict.lookupOrDefault<scalar>("pRef", 0.0);
