@@ -18,7 +18,7 @@ runApplication -s collapseFaces \
 
 runApplication checkMesh -allTopology -allGeometry -latestTime
 
-latestTime=`foamInfoExec -latestTime`
+latestTime=`foamListTimes -latestTime`
 
 # Move the mesh into polyMesh
 rm -rf constant/polyMesh

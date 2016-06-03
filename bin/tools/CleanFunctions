@@ -26,21 +26,8 @@
 #
 # Description
 #     Miscellaneous cleanup functions for tutorial cases
+#
 #------------------------------------------------------------------------------
-
-#cleanTimeDirectories()
-#{
-#    echo "Cleaning $PWD case"
-#    for time in $(foamInfoExec -times)
-#    do
-#        # keep 0 and constant directories
-#        [ "$time" = "0" -o "$time" = constant ] || {
-#            echo "Deleting directory $time"
-#            rm -rf $time > /dev/null 2>&1
-#        }
-#    done
-#    rm -rf {log,log.*,log-*,logSummary.*,.fxLock,*.xml,ParaView*,paraFoam*,*.OpenFOAM} > /dev/null 2>&1
-#}
 
 cleanTimeDirectories()
 {
@@ -52,13 +39,9 @@ cleanTimeDirectories()
         rm -rf ./${timeDir} ./-${timeDir} > /dev/null 2>&1
         zeros="0$zeros"
     done
-    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./log-* ./logSummary.* ./.fxLock ./*.xml ./ParaView* ./paraFoam* ./*.OpenFOAM ./*.blockMesh ./.setSet > /dev/null 2>&1
+    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./log-* ./logSummary.* ./*.xml ./ParaView* ./paraFoam* ./*.OpenFOAM ./*.blockMesh ./.setSet > /dev/null 2>&1
 }
 
-
-#
-# Remove dynamicCode subdirectory if it looks appropriate
-#
 cleanDynamicCode()
 {
     if [ -d system -a -d dynamicCode ]
@@ -66,7 +49,6 @@ cleanDynamicCode()
         rm -rf dynamicCode > /dev/null 2>&1
     fi
 }
-
 
 cleanCase()
 {
