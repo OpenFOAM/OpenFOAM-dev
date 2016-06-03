@@ -159,8 +159,6 @@ int main(int argc, char *argv[])
         Info<< "OptimisationSwitches: " << currOpt << endl;
     }
 
-
-
     Info<< "done" << endl;
 
     return 0;
