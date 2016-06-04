@@ -24,8 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ORourkeCollision.H"
-#include "mathematicalConstants.H"
 #include "SLGThermo.H"
+#include "CompactListList.H"
+#include "mathematicalConstants.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -34,12 +35,23 @@ using namespace Foam::constant::mathematical;
 template<class CloudType>
 void Foam::ORourkeCollision<CloudType>::collide(const scalar dt)
 {
-    // Create a list of parcels in each cell
-    List<DynamicList<parcelType*>> pInCell(this->owner().mesh().nCells());
-
+    // Create the occupancy list for the cells
+    labelList occupancy(this->owner().mesh().nCells(), 0);
     forAllIter(typename CloudType, this->owner(), iter)
     {
-        pInCell[iter().cell()].append(&iter());
+        occupancy[iter().cell()]++;
+    }
+
+    // Initialize the sizes of the lists of parcels in each cell
+    CompactListList<parcelType*> pInCell(occupancy);
+
+    // Reset the occupancy to use as a counter
+    occupancy = 0;
+
+    // Set the parcel pointer lists for each cell
+    forAllIter(typename CloudType, this->owner(), iter)
+    {
+        pInCell(iter().cell(), occupancy[iter().cell()]++) = &iter();
     }
 
     for (label celli=0; celli<this->owner().mesh().nCells(); celli++)
