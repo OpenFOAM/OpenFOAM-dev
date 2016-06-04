@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,51 +34,58 @@ using namespace Foam::constant::mathematical;
 template<class CloudType>
 void Foam::ORourkeCollision<CloudType>::collide(const scalar dt)
 {
-    label i = 0;
-    forAllIter(typename CloudType, this->owner(), iter1)
+    // Create a list of parcels in each cell
+    List<DynamicList<parcelType*>> pInCell(this->owner().mesh().nCells());
+
+    forAllIter(typename CloudType, this->owner(), iter)
     {
-        label j = 0;
-        forAllIter(typename CloudType, this->owner(), iter2)
+        pInCell[iter().cell()].append(&iter());
+    }
+
+    for (label celli=0; celli<this->owner().mesh().nCells(); celli++)
+    {
+        if (pInCell[celli].size() >= 2)
         {
-            if (j > i)
+            forAll(pInCell[celli], i)
             {
-                parcelType& p1 = iter1();
-                parcelType& p2 = iter2();
-
-                scalar m1 = p1.nParticle()*p1.mass();
-                scalar m2 = p2.nParticle()*p2.mass();
-
-                bool massChanged = collideParcels(dt, p1, p2, m1, m2);
-
-                if (massChanged)
+                for (label j=i+1; j<pInCell[celli].size(); j++)
                 {
-                    if (m1 > ROOTVSMALL)
-                    {
-                        const scalarField X(liquids_.X(p1.Y()));
-                        p1.rho() = liquids_.rho(p1.pc(), p1.T(), X);
-                        p1.Cp() = liquids_.Cp(p1.pc(), p1.T(), X);
-                        p1.sigma() = liquids_.sigma(p1.pc(), p1.T(), X);
-                        p1.mu() = liquids_.mu(p1.pc(), p1.T(), X);
-                        p1.d() = cbrt(6.0*m1/(p1.nParticle()*p1.rho()*pi));
-                    }
+                    parcelType& p1 = *pInCell[celli][i];
+                    parcelType& p2 = *pInCell[celli][j];
 
-                    if (m2 > ROOTVSMALL)
+                    scalar m1 = p1.nParticle()*p1.mass();
+                    scalar m2 = p2.nParticle()*p2.mass();
+
+                    bool massChanged = collideParcels(dt, p1, p2, m1, m2);
+
+                    if (massChanged)
                     {
-                        const scalarField X(liquids_.X(p2.Y()));
-                        p2.rho() = liquids_.rho(p2.pc(), p2.T(), X);
-                        p2.Cp() = liquids_.Cp(p2.pc(), p2.T(), X);
-                        p2.sigma() = liquids_.sigma(p2.pc(), p2.T(), X);
-                        p2.mu() = liquids_.mu(p2.pc(), p2.T(), X);
-                        p2.d() = cbrt(6.0*m2/(p2.nParticle()*p2.rho()*pi));
+                        if (m1 > ROOTVSMALL)
+                        {
+                            const scalarField X(liquids_.X(p1.Y()));
+                            p1.rho() = liquids_.rho(p1.pc(), p1.T(), X);
+                            p1.Cp() = liquids_.Cp(p1.pc(), p1.T(), X);
+                            p1.sigma() = liquids_.sigma(p1.pc(), p1.T(), X);
+                            p1.mu() = liquids_.mu(p1.pc(), p1.T(), X);
+                            p1.d() = cbrt(6.0*m1/(p1.nParticle()*p1.rho()*pi));
+                        }
+
+                        if (m2 > ROOTVSMALL)
+                        {
+                            const scalarField X(liquids_.X(p2.Y()));
+                            p2.rho() = liquids_.rho(p2.pc(), p2.T(), X);
+                            p2.Cp() = liquids_.Cp(p2.pc(), p2.T(), X);
+                            p2.sigma() = liquids_.sigma(p2.pc(), p2.T(), X);
+                            p2.mu() = liquids_.mu(p2.pc(), p2.T(), X);
+                            p2.d() = cbrt(6.0*m2/(p2.nParticle()*p2.rho()*pi));
+                        }
                     }
                 }
             }
-            j++;
         }
-        i++;
     }
 
-    // remove coalesced parcels that fall below minimum mass threshold
+    // Remove coalesced parcels that fall below minimum mass threshold
     forAllIter(typename CloudType, this->owner(), iter)
     {
         parcelType& p = iter();
@@ -102,18 +109,13 @@ bool Foam::ORourkeCollision<CloudType>::collideParcels
     scalar& m2
 )
 {
-    const label cell1 = p1.cell();
-    const label cell2 = p2.cell();
-
-    // check if parcels belong to same cell
-    if ((cell1 != cell2) || (m1 < ROOTVSMALL) || (m2 < ROOTVSMALL))
+    // Return if parcel masses are ~0
+    if ((m1 < ROOTVSMALL) || (m2 < ROOTVSMALL))
     {
         return false;
     }
 
-    bool coalescence = false;
-
-    const scalar Vc = this->owner().mesh().V()[cell1];
+    const scalar Vc = this->owner().mesh().V()[p1.cell()];
     const scalar d1 = p1.d();
     const scalar d2 = p2.d();
 
@@ -125,20 +127,22 @@ bool Foam::ORourkeCollision<CloudType>::collideParcels
     scalar collProb = exp(-nu);
     scalar xx = this->owner().rndGen().template sample01<scalar>();
 
-    // collision occurs
-    if (xx > collProb)
+    // Collision occurs
+    if (xx < collProb)
     {
         if (d1 > d2)
         {
-            coalescence = collideSorted(dt, p1, p2, m1, m2);
+            return collideSorted(dt, p1, p2, m1, m2);
         }
         else
         {
-            coalescence = collideSorted(dt, p2, p1, m2, m1);
+            return collideSorted(dt, p2, p1, m2, m1);
         }
     }
-
-    return coalescence;
+    else
+    {
+        return false;
+    }
 }
 
 
@@ -152,7 +156,8 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
     scalar& m2
 )
 {
-    bool coalescence = false;
+    const scalar nP1 = p1.nParticle();
+    const scalar nP2 = p2.nParticle();
 
     const scalar sigma1 = p1.sigma();
     const scalar sigma2 = p2.sigma();
@@ -169,9 +174,6 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
     const vector& U1 = p1.U();
     const vector& U2 = p2.U();
 
-    const label& nP1 = p1.nParticle();
-    const label& nP2 = p2.nParticle();
-
 
     vector URel = U1 - U2;
     scalar magURel = mag(URel);
@@ -181,11 +183,15 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
     scalar gamma = d1/max(ROOTVSMALL, d2);
     scalar f = pow3(gamma) + 2.7*gamma - 2.4*sqr(gamma);
 
-    // mass-averaged temperature
+    // Mass-averaged temperature
     scalar Tave = (T1*m1 + T2*m2)/mTot;
 
-    // interpolate to find average surface tension
-    scalar sigmaAve = sigma1 + (sigma2 - sigma1)*(Tave - T1)/(T2 - T1);
+    // Interpolate to find average surface tension
+    scalar sigmaAve = sigma1;
+    if (mag(T2 - T1) > SMALL)
+    {
+        sigmaAve += (sigma2 - sigma1)*(Tave - T1)/(T2 - T1);
+    }
 
     scalar Vtot = m1/rho1 + m2/rho2;
     scalar rhoAve = mTot/Vtot;
@@ -198,14 +204,12 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
     scalar prob = this->owner().rndGen().template sample01<scalar>();
 
     // Coalescence
-    if (prob < coalesceProb && coalescence_)
+    if (coalescence_ && prob < coalesceProb)
     {
-        coalescence = true;
-
-        // number of the droplets that coalesce
+        // Number of the droplets that coalesce
         scalar nProb = prob*nP2/nP1;
 
-        // conservation of mass, momentum and energy
+        // Conservation of mass, momentum and energy
         scalar m1Org = m1;
         scalar m2Org = m2;
 
@@ -221,6 +225,8 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
         p1.Y() = (m1Org*p1.Y() + dm*p2.Y())/m1;
 
         p2.nParticle() = m2/(rho2*p2.volume());
+
+        return true;
     }
     // Grazing collision (no coalescence)
     else
@@ -233,7 +239,7 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
         }
         gf /= denom;
 
-        // if gf negative, this means that coalescence is turned off
+        // If gf negative, this means that coalescence is turned off
         // and these parcels should have coalesced
         gf = max(0.0, gf);
 
@@ -254,9 +260,9 @@ bool Foam::ORourkeCollision<CloudType>::collideSorted
             p1.U() = (nP2*v1p + (nP1 - nP2)*U1)/nP1;
             p2.U() = v2p;
         }
-    }
 
-    return coalescence;
+        return false;
+    }
 }
 
 
