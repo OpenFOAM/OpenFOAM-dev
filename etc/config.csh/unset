@@ -109,6 +109,7 @@ unsetenv MPI_ARCH_PATH
 unsetenv MPI_BUFFER_SIZE
 unsetenv OPAL_PREFIX
 
+
 #------------------------------------------------------------------------------
 # Unset Ensight/ParaView-related environment variables
 
@@ -119,6 +120,12 @@ unsetenv ParaView_INCLUDE_DIR
 unsetenv ParaView_MAJOR
 unsetenv ParaView_VERSION
 unsetenv PV_PLUGIN_PATH
+
+
+#------------------------------------------------------------------------------
+# Unset CGAL-related environment variables
+
+unsetenv CGAL_ARCH_PATH
 
 
 #------------------------------------------------------------------------------
