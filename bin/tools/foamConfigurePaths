@@ -79,10 +79,10 @@ _inlineSed()
 
 [ -f etc/bashrc ] || usage "Please run from top-level directory of installation"
 
-unset foamInstall projectName projectVersion archOption
+unset foamInstDir projectName projectVersion archOption
 unset paraviewInstall scotchArchPath
 
-# parse options
+# Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -91,13 +91,18 @@ do
         ;;
     -foamInstall | --foamInstall)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        foamInstall="$2"
-        # replace foamInstall=...
+        foamInstDir="$2"
+        # Replace FOAM_INST_DIR=...
         _inlineSed \
             etc/bashrc \
-            'foamInstall=.*' \
-            'foamInstall='"$foamInstall" \
-            "Replacing foamInstall setting by '$foamInstall'"
+            '\(.*BASH_SOURCE.*\)' \
+            '#\1' \
+            "Removing default FOAM_INST_DIR setting"
+        _inlineSed \
+            etc/bashrc \
+            '^export FOAM_INST_DIR=.*' \
+            'export FOAM_INST_DIR='"$foamInstDir" \
+            "Setting FOAM_INST_DIR to '$foamInstDir'"
         shift 2
         ;;
    -projectName | --projectName)
@@ -189,7 +194,7 @@ do
     esac
 done
 
-[ -n "$foamInstall" -o -n "$projectName" -o -n "$projectVersion" -o -n "$archOption" \
+[ -n "$foamInstDir" -o -n "$projectName" -o -n "$projectVersion" -o -n "$archOption" \
 -o -n "$paraviewInstall" -o -n "$paraviewVersion" \
 -o -n "$scotchVersion" -o -n "$scotchArchPath" \
 ] || usage "Please specify at least one configure option"
