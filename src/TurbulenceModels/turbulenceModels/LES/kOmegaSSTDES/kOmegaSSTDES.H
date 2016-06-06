@@ -22,10 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RASModels::kOmegaSST
+    Foam::LESModels::kOmegaSST
+
+Description
+    Implementation of the k-omega-SST-DES turbulence model for
+    incompressible and compressible flows.
+
+    DES model described in:
+    \verbatim
+        Menter, F. R., Kuntz, M., and Langtry, R. (2003).
+        Ten Years of Industrial Experience with the SST Turbulence Model.
+        Turbulence, Heat and Mass Transfer 4, ed: K. Hanjalic, Y. Nagano,
+        & M. Tummers, Begell House, Inc., 625 - 632.
+    \endverbatim
+
+    Optional support for zonal filtering based on F1 or F2 is provided as
+    described in the paper.
+
+    For further details of the implementation of the base k-omega-SST model
+    see Foam::kOmegaSST.
 
 Group
-    grpRASTurbulence
+    grpLESTurbulence
 
 SeeAlso
     Foam::kOmegaSST
@@ -35,18 +53,18 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef kOmegaSST_H
-#define kOmegaSST_H
+#ifndef kOmegaSSTDES_H
+#define kOmegaSSTDES_H
 
 #include "kOmegaSSTBase.H"
-#include "RASModel.H"
-#include "eddyViscosity.H"
+#include "LESModel.H"
+#include "LESeddyViscosity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace RASModels
+namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
@@ -54,14 +72,52 @@ namespace RASModels
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class kOmegaSST
+class kOmegaSSTDES
 :
     public Foam::kOmegaSST
     <
-        eddyViscosity<RASModel<BasicTurbulenceModel>>,
+        LESeddyViscosity<BasicTurbulenceModel>,
         BasicTurbulenceModel
     >
 {
+
+protected:
+
+    // Protected data
+
+        // Model constants
+
+            //- DES coefficient
+            dimensionedScalar CDES_;
+
+            //- Zonal filter choice
+            //
+            //  - 0: no filtering
+            //  - 1: (1 - F1)
+            //  - 2: (1 - F2)
+            direction FSST_;
+
+
+    // Protected Member Functions
+
+        //- Return the turbulent length-scale
+        tmp<volScalarField> Lt() const;
+
+        //- The DES dissipation-rate multiplier with options zonal filtering
+        //  based on either F1 or F2
+        virtual tmp<volScalarField> FDES
+        (
+            const volScalarField& F1,
+            const volScalarField& F2
+        ) const;
+
+        //- Return epsilon/k which for standard RAS is betaStar*omega
+        virtual tmp<volScalarField> epsilonByk
+        (
+            const volScalarField& F1,
+            const volScalarField& F2
+        ) const;
+
 
 public:
 
@@ -71,13 +127,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("kOmegaSST");
+    TypeName("kOmegaSSTDES");
 
 
     // Constructors
 
         //- Construct from components
-        kOmegaSST
+        kOmegaSSTDES
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -91,19 +147,25 @@ public:
 
 
     //- Destructor
-    virtual ~kOmegaSST()
+    virtual ~kOmegaSSTDES()
     {}
+
+
+    // Member Functions
+
+        //- Read model coefficients if they have changed
+        virtual bool read();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace RASModels
+} // End namespace LESModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 #ifdef NoRepository
-    #include "kOmegaSST.C"
+    #include "kOmegaSSTDES.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

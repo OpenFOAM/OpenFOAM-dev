@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,14 +108,17 @@ makeLESModel(Smagorinsky);
 #include "WALE.H"
 makeLESModel(WALE);
 
-#include "dynamicLagrangian.H"
-makeLESModel(dynamicLagrangian);
-
 #include "kEqn.H"
 makeLESModel(kEqn);
 
 #include "dynamicKEqn.H"
 makeLESModel(dynamicKEqn);
+
+#include "dynamicLagrangian.H"
+makeLESModel(dynamicLagrangian);
+
+#include "kOmegaSSTDES.H"
+makeLESModel(kOmegaSSTDES);
 
 #include "SpalartAllmarasDES.H"
 makeLESModel(SpalartAllmarasDES);
