@@ -38,8 +38,8 @@
 #     \endcode
 #
 # Note
-#     This script must exist in <foamInstall>/OpenFOAM-<VERSION>/bin/
-#     or <foamInstall>/openfoam<VERSION>/bin/ (for the debian version)
+#     This script must exist in $FOAM_INST_DIR/OpenFOAM-<VERSION>/bin/
+#     or $FOAM_INST_DIR/openfoam<VERSION>/bin/ (for the debian version)
 #
 #     foamEtcFile must be found in the same directory as this script
 #
@@ -75,7 +75,7 @@ binDir="${0%/*}"
 # the project dir:
 projectDir="${binDir%/bin}"
 
-# the prefix dir (same as foamInstall):
+# the prefix dir (same as $FOAM_INST_DIR):
 prefixDir="${projectDir%/*}"
 
 # # the name used for the project directory

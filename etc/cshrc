@@ -36,25 +36,25 @@ setenv WM_PROJECT_VERSION dev
 ################################################################################
 # USER EDITABLE PART: Changes made here may be lost with the next upgrade
 #
-# either setenv FOAM_INST_DIR before sourcing this file or set
-# 'foamInstall' below to where OpenFOAM is installed
+# FOAM_INST_DIR is the location of the OpenFOAM installation which defaults to
+# the directory containing this file.
 #
-# Location of the OpenFOAM installation
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-set foamInstall = $HOME/$WM_PROJECT
-# set foamInstall = ~$WM_PROJECT
-# set foamInstall = /opt/$WM_PROJECT
-# set foamInstall = /usr/local/$WM_PROJECT
+# Please set to the appropriate path if the default is not correct.
+#
+setenv FOAM_INST_DIR `lsof +p $$ |& grep -oE '/.*OpenFOAM[^/]*/etc/cshrc' | \
+    sed 's%/OpenFOAM[^/]*/etc/cshrc%%'`
+echo $FOAM_INST_DIR
+# setenv FOAM_INST_DIR  $HOME/$WM_PROJECT
+# setenv FOAM_INST_DIR  ~$WM_PROJECT
+# setenv FOAM_INST_DIR  /opt/$WM_PROJECT
+# setenv FOAM_INST_DIR  /usr/local/$WM_PROJECT
 #
 # END OF (NORMAL) USER EDITABLE PART
 ################################################################################
 
-#
-# These are the defaults for this version which should generally be
-# overridden from the prefs.csh file or from command-line specification
-#
-#- note the location for later use (eg, in job scripts)
-if ( ! $?FOAM_INST_DIR ) setenv FOAM_INST_DIR $foamInstall
+# The default environment variables below can be overridden in a prefs.sh file
+# located in ~/.OpenFOAM/$WM_PROJECT_VERSION, ~/.OpenFOAM,
+# $FOAM_INST_DIR/site/$WM_PROJECT_VERSION or $FOAM_INST_DIR/site
 
 #- Compiler location:
 #    WM_COMPILER_TYPE = system | ThirdParty (OpenFOAM)
@@ -231,7 +231,7 @@ endif
 
 # cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
-unset cleaned foamClean foamInstall foamOldDirs
+unset cleaned foamClean foamOldDirs
 unalias _foamSource
 
 #------------------------------------------------------------------------------

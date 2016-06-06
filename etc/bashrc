@@ -37,25 +37,24 @@ export WM_PROJECT_VERSION=dev
 ################################################################################
 # USER EDITABLE PART: Changes made here may be lost with the next upgrade
 #
-# either set $FOAM_INST_DIR before sourcing this file or set
-# 'foamInstall' below to where OpenFOAM is installed
+# FOAM_INST_DIR is the location of the OpenFOAM installation which defaults to
+# the directory containing this file if sourced by a bash shell.
 #
-# Location of the OpenFOAM installation
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-foamInstall=$HOME/$WM_PROJECT
-# foamInstall=~$WM_PROJECT
-# foamInstall=/opt/$WM_PROJECT
-# foamInstall=/usr/local/$WM_PROJECT
+# Please set to the appropriate path if the default is not correct.
+#
+[ $BASH_SOURCE ] && \
+export FOAM_INST_DIR=${BASH_SOURCE%/*/*/*} || \
+export FOAM_INST_DIR=$HOME/OpenFOAM
+# export FOAM_INST_DIR=~$WM_PROJECT
+# export FOAM_INST_DIR=/opt/$WM_PROJECT
+# export FOAM_INST_DIR=/usr/local/$WM_PROJECT
 #
 # END OF (NORMAL) USER EDITABLE PART
 ################################################################################
 
-#
-# These are the defaults for this version which should generally be
-# overridden from the prefs.sh file or from command-line specification
-#
-#- note the location for later use (eg, in job scripts)
-: ${FOAM_INST_DIR:=$foamInstall}; export FOAM_INST_DIR
+# The default environment variables below can be overridden in a prefs.sh file
+# located in ~/.OpenFOAM/$WM_PROJECT_VERSION, ~/.OpenFOAM,
+# $FOAM_INST_DIR/site/$WM_PROJECT_VERSION or $FOAM_INST_DIR/site
 
 #- Compiler location:
 #    WM_COMPILER_TYPE= system | ThirdParty (OpenFOAM)
@@ -202,7 +201,7 @@ fi
 
 # Cleanup environment:
 # ~~~~~~~~~~~~~~~~~~~~
-unset cleaned foamClean foamInstall foamOldDirs
+unset cleaned foamClean foamOldDirs
 
 
 # Unload initialization functions:
