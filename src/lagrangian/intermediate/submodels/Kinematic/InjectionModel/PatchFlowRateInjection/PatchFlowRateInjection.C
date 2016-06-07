@@ -161,6 +161,9 @@ Foam::label Foam::PatchFlowRateInjection<CloudType>::parcelsToInject
         scalar c = concentration_.value(0.5*(time0 + time1));
 
         scalar nParcels = parcelConcentration_*c*flowRate()*dt;
+
+        cachedRandom& rnd = this->owner().rndGen();
+
         label nParcelsToInject = floor(nParcels);
 
         // Inject an additional parcel with a probability based on the
@@ -170,7 +173,7 @@ Foam::label Foam::PatchFlowRateInjection<CloudType>::parcelsToInject
             nParcelsToInject > 0
          && (
                nParcels - scalar(nParcelsToInject)
-             > this->owner().rndGen().position(scalar(0), scalar(1))
+             > rnd.globalPosition(scalar(0), scalar(1))
             )
         )
         {
@@ -242,10 +245,10 @@ void Foam::PatchFlowRateInjection<CloudType>::setProperties
     typename CloudType::parcelType& parcel
 )
 {
-    // set particle velocity to carrier velocity
+    // Set particle velocity to carrier velocity
     parcel.U() = this->owner().U()[parcel.cell()];
 
-    // set particle diameter
+    // Set particle diameter
     parcel.d() = sizeDistribution_->sample();
 }
 

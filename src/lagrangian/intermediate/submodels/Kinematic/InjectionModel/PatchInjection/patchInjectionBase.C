@@ -156,14 +156,7 @@ void Foam::patchInjectionBase::setPositionAndCell
     label& tetPtI
 )
 {
-    scalar areaFraction = 0;
-
-    if (Pstream::master())
-    {
-        areaFraction = rnd.position<scalar>(0, patchArea_);
-    }
-
-    Pstream::scatter(areaFraction);
+    scalar areaFraction = rnd.globalPosition(scalar(0), patchArea_);
 
     if (cellOwners_.size() > 0)
     {
