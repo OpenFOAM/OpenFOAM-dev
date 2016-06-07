@@ -1,4 +1,4 @@
-EXE_INC = -ggdb3 -DFULLDEBUG \
+EXE_INC = \
     -I$(LIB_SRC)/rigidBodyDynamics/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
