@@ -169,25 +169,20 @@ unalias wmUnset
 
 unalias wmSchedOn
 unalias wmSchedOff
-unalias foamPV
+
+unalias foam
+unalias foamSite
 
 unalias src
 unalias lib
-unalias run
-unalias foam
-unalias foamsrc
-unalias foamfv
 unalias app
-unalias util
 unalias sol
+unalias util
 unalias tut
+unalias run
 
-unalias foamApps
-unalias foamSol
-unalias foamTuts
-unalias foamUtils
-unalias foam3rdParty
-unalias foamSite
+unalias foamVersion
+unalias foamPV
 
 
 #------------------------------------------------------------------------------

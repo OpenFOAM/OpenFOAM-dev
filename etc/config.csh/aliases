@@ -50,34 +50,36 @@ alias wmUnset 'source $WM_PROJECT_DIR/etc/config.csh/unset'
 alias wmSchedOn 'setenv WM_SCHEDULER $WM_PROJECT_DIR/wmake/wmakeScheduler'
 alias wmSchedOff 'unsetenv WM_SCHEDULER'
 
-# Change ParaView version
-# ~~~~~~~~~~~~~~~~~~~~~~~
-alias foamPV 'source `$WM_PROJECT_DIR/etc/config.csh/paraview` ParaView_VERSION=\!*; echo paraview-$ParaView_VERSION'
-
 
 # Change directory aliases
 # ~~~~~~~~~~~~~~~~~~~~~~~~
-alias src 'cd $FOAM_SRC'
-alias lib 'cd $FOAM_LIBBIN'
-alias run 'cd $FOAM_RUN'
 alias foam 'cd $WM_PROJECT_DIR'
-alias foamsrc 'cd $FOAM_SRC/$WM_PROJECT'
-alias foamfv 'cd $FOAM_SRC/finiteVolume'
-alias app 'cd $FOAM_APP'
-alias util 'cd $FOAM_UTILITIES'
-alias sol 'cd $FOAM_SOLVERS'
-alias tut 'cd $FOAM_TUTORIALS'
-
-alias foamApps 'cd $FOAM_APP'
-alias foamSol 'cd $FOAM_SOLVERS'
-alias foamTuts 'cd $FOAM_TUTORIALS'
-alias foamUtils 'cd $FOAM_UTILITIES'
-alias foam3rdParty 'cd $WM_THIRD_PARTY_DIR'
 
 if ( $?WM_PROJECT_SITE ) then
     alias foamSite 'cd $WM_PROJECT_SITE'
 else
     alias foamSite 'cd $WM_PROJECT_INST_DIR/site'
 endif
+
+alias src 'cd $FOAM_SRC'
+alias lib 'cd $FOAM_LIBBIN'
+alias app 'cd $FOAM_APP'
+alias sol 'cd $FOAM_SOLVERS'
+alias util 'cd $FOAM_UTILITIES'
+alias tut 'cd $FOAM_TUTORIALS'
+alias run 'cd $FOAM_RUN'
+
+
+# Change OpenFOAM version
+# ~~~~~~~~~~~~~~~~~~~~~~~
+alias foamVersion \
+    'if ( "\!*" != "" ) source $FOAM_INST_DIR/OpenFOAM-\!*/etc/cshrc; foam; echo OpenFOAM-$WM_PROJECT_VERSION'
+
+
+# Change ParaView version
+# ~~~~~~~~~~~~~~~~~~~~~~~
+alias foamPV \
+    'source $WM_PROJECT_DIR/etc/config.csh/paraview ParaView_VERSION=\!*; echo paraview-$ParaView_VERSION'
+
 
 #------------------------------------------------------------------------------
