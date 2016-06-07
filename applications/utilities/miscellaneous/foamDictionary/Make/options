@@ -1,4 +1,1 @@
-EXE_INC = \
-    -DFULLDEBUG -g -O0
-
-/* EXE_LIBS = */
+EXE_INC =
