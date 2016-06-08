@@ -6,17 +6,20 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-type            scalarTransport;
-libs            ("libutilityFunctionObjects.so");
+// controlDict settings
+startTime       0;
 
-writeControl    timeStep;
-writeInterval   1;
+stopAt          endTime;
+endTime         1;
 
-write           true;
-log             false;
+deltaT          1e-4;
 
-resetOnStartUp  false;
-autoSchemes     true;
-fvOptions       {};
+writeControl    runTime;
+writeInterval   1e-2;
+
+// transportProperties settings
+DT      DT [ 0 2 -1 0 0 0 0 ] 1e-9;
+
+#includeEtc "caseDicts/solvers/scalarTransport/scalarTransportDict.cfg"
 
 // ************************************************************************* //

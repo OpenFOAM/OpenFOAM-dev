@@ -30,6 +30,7 @@ divSchemes
     default         none;
     div(phi,U)      Gauss LUST grad(U);
     div(phi,k)      Gauss limitedLinear 1;
+    div(phi,s)      bounded Gauss limitedLinear 1;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
 }
 

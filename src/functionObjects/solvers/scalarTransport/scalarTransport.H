@@ -28,16 +28,13 @@ Group
     grpSolversFunctionObjects
 
 Description
-    This function object evolves a passive scalar transport equation.  The
-    field in ininitially zero, to which sources are added.  The field name
-    is assigned the name of the function object.  Boundary conditions are
-    automatically applied, based on the velocity boundary conditions.
+    This function object evolves a passive scalar transport equation.
 
-    - the field can be zeroed on start-up using the resetOnStartUp flag
-    - to employ the same numerical schemes as the flow velocity, use the
-      autoSchemes flag
-    - the diffusivity can be set manually using the DT entry, or retrieved
-      from the turbulence model (if applicable)
+    - To specify the field name set the 'field' entry
+    - To employ the same numerical schemes as another field set
+      the 'schemesField' entry,
+    - The diffusivity can be set manually using the 'D' entry, or retrieved
+      from the turbulence model (if applicable).
 
 SeeAlso
     Foam::functionObjects::fvMeshFunctionObject
@@ -52,7 +49,6 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volFields.H"
-#include "surfaceFieldsFwd.H"
 #include "fvOptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -72,44 +68,38 @@ class scalarTransport
 {
     // Private data
 
+        //- Name of field to process
+        word fieldName_;
+
         //- Name of flux field (optional)
         word phiName_;
-
-        //- Name of velocity field (optional)
-        word UName_;
 
         //- Name of density field (optional)
         word rhoName_;
 
         //- Diffusion coefficient (optional)
-        scalar DT_;
+        scalar D_;
 
-        //- Flag to indicate whether user DT_ is used
-        bool userDT_;
-
-        //- Flag to reset scalar field on start-up
-        bool resetOnStartUp_;
+        //- Flag to indicate whether a constant, uniform D_ is specified
+        bool constantD_;
 
         //- Number of corrector iterations (optional)
         label nCorr_;
 
-        //- Flag to employ schemes for velocity for scalar transport
-        bool autoSchemes_;
+        //- Name of field whose schemes are used (optional)
+        word schemesField_;
 
         //- Run-time selectable finite volume options, e.g. sources, constraints
         fv::optionList fvOptions_;
 
         //- The scalar field
-        volScalarField T_;
+        volScalarField s_;
 
 
     // Private Member Functions
 
-        //- Return the boundary types for the scalar field
-        wordList boundaryTypes() const;
-
         //- Return the diffusivity field
-        tmp<volScalarField> DT(const surfaceScalarField& phi) const;
+        tmp<volScalarField> D(const surfaceScalarField& phi) const;
 
         //- Disallow default bitwise copy construct
         scalarTransport(const scalarTransport&);
