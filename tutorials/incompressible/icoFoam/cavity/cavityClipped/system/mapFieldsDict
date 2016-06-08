@@ -15,9 +15,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-patchMap        ( lid movingWall );
+patchMap        (lid movingWall);
 
-cuttingPatches  ( fixedWalls );
+cuttingPatches  ();
 
 
 // ************************************************************************* //
