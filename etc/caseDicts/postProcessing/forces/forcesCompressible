@@ -6,7 +6,7 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-forces
+forcesCompressible
 {
     patches     (patch1 patch2);
 

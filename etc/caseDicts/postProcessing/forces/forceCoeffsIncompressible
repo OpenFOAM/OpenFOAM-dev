@@ -6,7 +6,7 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-forceCoeffs
+forceCoeffsIncompressible
 {
     patches     (patch1 patch2);
 

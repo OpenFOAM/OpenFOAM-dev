@@ -6,7 +6,7 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-forces
+forcesIncompressible
 {
     #includeEtc "caseDicts/postProcessing/forces/forces.cfg"
 

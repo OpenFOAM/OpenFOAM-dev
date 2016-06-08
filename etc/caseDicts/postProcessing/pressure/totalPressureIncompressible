@@ -6,7 +6,7 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-totalPressure
+totalPressureIncompressible
 {
     #includeEtc "caseDicts/postProcessing/pressure/totalPressureIncompressible.cfg"
 
