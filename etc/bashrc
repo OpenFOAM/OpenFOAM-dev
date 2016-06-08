@@ -44,7 +44,7 @@ export WM_PROJECT_VERSION=dev
 #
 [ $BASH_SOURCE ] && \
 export FOAM_INST_DIR=${BASH_SOURCE%/*/*/*} || \
-export FOAM_INST_DIR=$HOME/OpenFOAM
+export FOAM_INST_DIR=$HOME/$WM_PROJECT
 # export FOAM_INST_DIR=~$WM_PROJECT
 # export FOAM_INST_DIR=/opt/$WM_PROJECT
 # export FOAM_INST_DIR=/usr/local/$WM_PROJECT
