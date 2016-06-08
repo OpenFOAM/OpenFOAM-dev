@@ -17,19 +17,19 @@ FoamFile
 
 dimensions      [0 2 -3 0 0 0 0];
 
-internalField   uniform 0.000765;
+internalField   uniform 0.00754;
 
 boundaryField
 {
     movingWall
     {
         type            epsilonWallFunction;
-        value           uniform 0.000765;
+        value           uniform 0.00754;
     }
     fixedWalls
     {
         type            epsilonWallFunction;
-        value           uniform 0.000765;
+        value           uniform 0.00754;
     }
     frontAndBack
     {
