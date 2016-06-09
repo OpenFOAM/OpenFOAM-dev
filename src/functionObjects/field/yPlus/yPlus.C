@@ -82,8 +82,7 @@ void Foam::functionObjects::yPlus::calcYPlus
 
     const fvPatchList& patches = mesh.boundary();
 
-    volScalarField::Boundary& yPlusBf =
-        yPlus.boundaryFieldRef();
+    volScalarField::Boundary& yPlusBf = yPlus.boundaryFieldRef();
 
     forAll(patches, patchi)
     {
@@ -98,26 +97,6 @@ void Foam::functionObjects::yPlus::calcYPlus
                 );
 
             yPlusBf[patchi] = nutPf.yPlus();
-            const scalarField& yPlusp = yPlusBf[patchi];
-
-            const scalar minYplus = gMin(yPlusp);
-            const scalar maxYplus = gMax(yPlusp);
-            const scalar avgYplus = gAverage(yPlusp);
-
-            if (Pstream::master())
-            {
-                Log << "    patch " << patch.name()
-                    << " y+ : min = " << minYplus << ", max = " << maxYplus
-                    << ", average = " << avgYplus << nl;
-
-                writeTime(file());
-                file()
-                    << token::TAB << patch.name()
-                    << token::TAB << minYplus
-                    << token::TAB << maxYplus
-                    << token::TAB << avgYplus
-                    << endl;
-            }
         }
         else if (isA<wallFvPatch>(patch))
         {
@@ -128,26 +107,6 @@ void Foam::functionObjects::yPlus::calcYPlus
                     nuEffBf[patchi]
                    *mag(turbModel.U().boundaryField()[patchi].snGrad())
                 )/nuBf[patchi];
-            const scalarField& yPlusp = yPlusBf[patchi];
-
-            const scalar minYplus = gMin(yPlusp);
-            const scalar maxYplus = gMax(yPlusp);
-            const scalar avgYplus = gAverage(yPlusp);
-
-            if (Pstream::master())
-            {
-                Log << "    patch " << patch.name()
-                    << " y+ : min = " << minYplus << ", max = " << maxYplus
-                    << ", average = " << avgYplus << nl;
-
-                writeTime(file());
-                file()
-                    << token::TAB << patch.name()
-                    << token::TAB << minYplus
-                    << token::TAB << maxYplus
-                    << token::TAB << avgYplus
-                    << endl;
-            }
         }
     }
 }
@@ -182,7 +141,7 @@ Foam::functionObjects::yPlus::yPlus
                 mesh.time().timeName(),
                 mesh,
                 IOobject::NO_READ,
-                IOobject::NO_WRITE
+                IOobject::AUTO_WRITE
             ),
             mesh,
             dimensionedScalar("0", dimless, 0.0)
@@ -213,8 +172,6 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 
 bool Foam::functionObjects::yPlus::execute(const bool postProcess)
 {
-    writeFiles::write();
-
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volScalarField& yPlus =
@@ -222,8 +179,6 @@ bool Foam::functionObjects::yPlus::execute(const bool postProcess)
         (
             mesh.lookupObject<volScalarField>(type())
         );
-
-    Log << type() << " " << name() << " output:" << nl;
 
     if (mesh.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
     {
@@ -245,14 +200,49 @@ bool Foam::functionObjects::yPlus::execute(const bool postProcess)
 
 bool Foam::functionObjects::yPlus::write(const bool postProcess)
 {
-    writeFiles::write();
-
     const volScalarField& yPlus =
         obr_.lookupObject<volScalarField>(type());
 
-    Log << "    writing field " << yPlus.name() << endl;
+    Log << type() << " " << name() << " write:" << nl
+        << "    writing field " << yPlus.name() << endl;
 
     yPlus.write();
+
+    writeFiles::write();
+
+    const volScalarField::Boundary& yPlusBf = yPlus.boundaryField();
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvPatchList& patches = mesh.boundary();
+
+    forAll(patches, patchi)
+    {
+        const fvPatch& patch = patches[patchi];
+
+        if (isA<wallFvPatch>(patch))
+        {
+            const scalarField& yPlusp = yPlusBf[patchi];
+
+            const scalar minYplus = gMin(yPlusp);
+            const scalar maxYplus = gMax(yPlusp);
+            const scalar avgYplus = gAverage(yPlusp);
+
+            if (Pstream::master())
+            {
+                Log << "    patch " << patch.name()
+                    << " y+ : min = " << minYplus << ", max = " << maxYplus
+                    << ", average = " << avgYplus << nl;
+
+                writeTime(file());
+                file()
+                << token::TAB << patch.name()
+                    << token::TAB << minYplus
+                    << token::TAB << maxYplus
+                    << token::TAB << avgYplus
+                    << endl;
+            }
+        }
+    }
 
     return true;
 }
