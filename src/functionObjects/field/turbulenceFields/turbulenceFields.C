@@ -49,11 +49,12 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
-    8
+    9
 >::names[] =
 {
     "k",
     "epsilon",
+    "omega",
     "mut",
     "muEff",
     "alphat",
@@ -65,18 +66,19 @@ const char* Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
-    8
+    9
 > Foam::functionObjects::turbulenceFields::compressibleFieldNames_;
 
 template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::incompressibleField,
-    6
+    7
 >::names[] =
 {
     "k",
     "epsilon",
+    "omega",
     "nut",
     "nuEff",
     "R",
@@ -86,7 +88,7 @@ const char* Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::incompressibleField,
-    6
+    7
 > Foam::functionObjects::turbulenceFields::incompressibleFieldNames_;
 
 const Foam::word Foam::functionObjects::turbulenceFields::modelName
@@ -144,7 +146,14 @@ Foam::functionObjects::turbulenceFields::~turbulenceFields()
 
 bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 {
-    fieldSet_.insert(wordList(dict.lookup("fields")));
+    if (dict.found("field"))
+    {
+        fieldSet_.insert(word(dict.lookup("field")));
+    }
+    else
+    {
+        fieldSet_.insert(wordList(dict.lookup("fields")));
+    }
 
     Info<< type() << " " << name() << ": ";
     if (fieldSet_.size())
@@ -187,6 +196,11 @@ bool Foam::functionObjects::turbulenceFields::execute(const bool postProcess)
                 case cfEpsilon:
                 {
                     processField<scalar>(f, model.epsilon());
+                    break;
+                }
+                case cfOmega:
+                {
+                    processField<scalar>(f, omega(model));
                     break;
                 }
                 case cfMut:
@@ -245,6 +259,11 @@ bool Foam::functionObjects::turbulenceFields::execute(const bool postProcess)
                 case ifEpsilon:
                 {
                     processField<scalar>(f, model.epsilon());
+                    break;
+                }
+                case ifOmega:
+                {
+                    processField<scalar>(f, omega(model));
                     break;
                 }
                 case ifNut:

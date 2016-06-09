@@ -64,6 +64,7 @@ Description
     \plaintable
         k           | turbulence kinetic energy
         epsilon     | turbulence kinetic energy dissipation rate
+        omega       | turbulence specific dissipation rate
         nut         | turbulence viscosity (incompressible)
         nuEff       | effective turbulence viscosity (incompressible)
         mut         | turbulence viscosity (compressible)
@@ -113,6 +114,7 @@ public:
     {
         cfK,
         cfEpsilon,
+        cfOmega,
         cfMut,
         cfMuEff,
         cfAlphat,
@@ -120,18 +122,19 @@ public:
         cfR,
         cfDevRhoReff
     };
-    static const NamedEnum<compressibleField, 8> compressibleFieldNames_;
+    static const NamedEnum<compressibleField, 9> compressibleFieldNames_;
 
     enum incompressibleField
     {
         ifK,
         ifEpsilon,
+        ifOmega,
         ifNut,
         ifNuEff,
         ifR,
         ifDevReff
     };
-    static const NamedEnum<incompressibleField, 6> incompressibleFieldNames_;
+    static const NamedEnum<incompressibleField, 7> incompressibleFieldNames_;
 
     static const word modelName;
 
@@ -156,6 +159,10 @@ protected:
             const word& fieldName,
             const tmp<GeometricField<Type, fvPatchField, volMesh>>& tvalue
         );
+
+        //- Return omega calculated from k and epsilon
+        template<class Model>
+        tmp<volScalarField> omega(const Model& model) const;
 
 
 private:

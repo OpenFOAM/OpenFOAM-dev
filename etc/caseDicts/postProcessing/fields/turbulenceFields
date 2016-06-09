@@ -6,12 +6,12 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-R
+turbulenceFields
 {
     type            turbulenceFields;
     libs            ("libfieldFunctionObjects.so");
 
-    field           R;
+    fields          (<list of field names>);
 
     executeControl  writeTime;
     writeControl    writeTime;

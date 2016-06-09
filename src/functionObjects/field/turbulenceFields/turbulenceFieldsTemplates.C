@@ -72,4 +72,34 @@ void Foam::functionObjects::turbulenceFields::processField
 }
 
 
+template<class Model>
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::turbulenceFields::omega
+(
+    const Model& model
+) const
+{
+    const scalar Cmu = 0.09;
+
+    // Assume k and epsilon are available
+    const volScalarField k(model.k());
+    const volScalarField epsilon(model.epsilon());
+
+    return tmp<volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "omega",
+                k.mesh().time().timeName(),
+                k.mesh()
+            ),
+            epsilon/(Cmu*k),
+            epsilon.boundaryField().types()
+        )
+    );
+}
+
+
 // ************************************************************************* //
