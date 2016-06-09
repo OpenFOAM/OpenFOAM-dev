@@ -81,7 +81,7 @@ Description
     pressure1
     {
         type        pressure;
-        libs ("libutilityFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         calcTotal   no;
         calcCoeff   yes;

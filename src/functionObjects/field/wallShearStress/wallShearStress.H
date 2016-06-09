@@ -51,7 +51,7 @@ Description
     wallShearStress1
     {
         type        wallShearStress;
-        libs ("libutilityFunctionObjects.so");
+        libs ("libfieldFunctionObjects.so");
         ...
         patches     (".*Wall");
     }
