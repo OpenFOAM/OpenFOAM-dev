@@ -393,7 +393,7 @@ void Foam::functionObjects::forces::applyBins
 
 void Foam::functionObjects::forces::writeForces()
 {
-    Log << type() << " " << name() << " output:" << nl
+    Log << type() << " " << name() << " write:" << nl
         << "    sum of forces:" << nl
         << "        pressure : " << sum(force_[0]) << nl
         << "        viscous  : " << sum(force_[1]) << nl

@@ -110,7 +110,7 @@ bool Foam::functionObjects::fieldValue::write(const bool postProcess)
 {
     writeFiles::write();
 
-    Log << type() << " " << name() << " output:" << nl;
+    Log << type() << " " << name() << " write:" << nl;
 
     return true;
 }

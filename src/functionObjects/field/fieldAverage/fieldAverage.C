@@ -135,7 +135,7 @@ void Foam::functionObjects::fieldAverage::calcAverages()
     }
 
     Log
-        << type() << " " << name() << " output:" << nl
+        << type() << " " << name() << " write:" << nl
         << "    Calculating averages" << nl;
 
     addMeanSqrToPrime2Mean<scalar, scalar>();

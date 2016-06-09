@@ -85,7 +85,7 @@ bool Foam::functionObjects::surfaceInterpolate::execute
     const bool postProcess
 )
 {
-    Info<< type() << " " << name() << " output:" << nl;
+    Info<< type() << " " << name() << " write:" << nl;
 
     // Clear out any previously loaded fields
     ssf_.clear();
@@ -111,7 +111,7 @@ bool Foam::functionObjects::surfaceInterpolate::write
     const bool postProcess
 )
 {
-    Info<< type() << " " << name() << " output:" << nl;
+    Info<< type() << " " << name() << " write:" << nl;
 
     Info<< "    Writing interpolated surface fields to "
         << obr_.time().timeName() << endl;

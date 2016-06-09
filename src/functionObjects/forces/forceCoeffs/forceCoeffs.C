@@ -208,7 +208,7 @@ bool Foam::functionObjects::forceCoeffs::write(const bool postProcess)
             << tab << Cm << tab  << Cd
             << tab << Cl << tab << Clf << tab << Clr << endl;
 
-        Log << type() << " " << name() << " output:" << nl
+        Log << type() << " " << name() << " write:" << nl
             << "    Cm    = " << Cm << nl
             << "    Cd    = " << Cd << nl
             << "    Cl    = " << Cl << nl

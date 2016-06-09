@@ -313,7 +313,7 @@ bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
     }
 
     Log << type() << " " << name()
-        << " output:" << nl
+        << " write:" << nl
         << "    Sampling fields to " << time_.timeName()
         << endl;
 

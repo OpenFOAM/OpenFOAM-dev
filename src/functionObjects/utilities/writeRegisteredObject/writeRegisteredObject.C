@@ -101,7 +101,7 @@ bool Foam::functionObjects::writeRegisteredObject::write
     const bool postProcess
 )
 {
-    Info<< type() << " " << name() << " output:" << nl;
+    Info<< type() << " " << name() << " write:" << nl;
 
     if (!obr_.time().writeTime())
     {

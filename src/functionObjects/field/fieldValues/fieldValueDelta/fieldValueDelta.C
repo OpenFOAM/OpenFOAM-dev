@@ -179,7 +179,7 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::write
         writeTime(file());
     }
 
-    Log << type() << " " << name() << " output:" << endl;
+    Log << type() << " " << name() << " write:" << endl;
 
     bool found = false;
     processFields<scalar>(found);

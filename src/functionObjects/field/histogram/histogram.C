@@ -117,7 +117,7 @@ bool Foam::functionObjects::histogram::execute(const bool postProcess)
 
 bool Foam::functionObjects::histogram::write(const bool postProcess)
 {
-    Log << type() << " " << name() << " output:" << nl;
+    Log << type() << " " << name() << " write:" << nl;
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 

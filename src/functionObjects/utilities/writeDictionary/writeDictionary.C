@@ -73,7 +73,7 @@ bool Foam::functionObjects::writeDictionary::tryDirectory
         {
             if (firstDict)
             {
-                Info<< type() << " " << name() << " output:" << nl << endl;
+                Info<< type() << " " << name() << " write:" << nl << endl;
 
                 IOobject::writeDivider(Info);
                 Info<< endl;
@@ -173,7 +173,7 @@ bool Foam::functionObjects::writeDictionary::write(const bool postProcess)
             {
                 if (firstDict)
                 {
-                    Info<< type() << " " << name() << " output:" << nl << endl;
+                    Info<< type() << " " << name() << " write:" << nl << endl;
 
                     IOobject::writeDivider(Info);
                     Info<< endl;

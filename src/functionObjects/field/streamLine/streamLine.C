@@ -431,7 +431,7 @@ bool Foam::functionObjects::streamLine::execute(const bool postProcess)
 
 bool Foam::functionObjects::streamLine::write(const bool postProcess)
 {
-    Info<< type() << " " << name() << " output:" << nl;
+    Info<< type() << " " << name() << " write:" << nl;
 
     const Time& runTime = obr_.time();
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);

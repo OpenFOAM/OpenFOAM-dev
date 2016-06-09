@@ -188,7 +188,7 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 
 bool Foam::functionObjects::scalarTransport::execute(const bool postProcess)
 {
-    Info<< type() << " output:" << endl;
+    Info<< type() << " write:" << endl;
 
     const surfaceScalarField& phi =
         mesh_.lookupObject<surfaceScalarField>(phiName_);

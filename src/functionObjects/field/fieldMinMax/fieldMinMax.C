@@ -151,7 +151,7 @@ bool Foam::functionObjects::fieldMinMax::write(const bool postProcess)
     writeFiles::write();
 
     if (!location_) writeTime(file());
-    Log << type() << " " << name() <<  " output:" << nl;
+    Log << type() << " " << name() <<  " write:" << nl;
 
     forAll(fieldSet_, fieldi)
     {

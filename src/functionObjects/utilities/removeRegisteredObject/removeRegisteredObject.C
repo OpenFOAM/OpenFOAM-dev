@@ -99,7 +99,7 @@ bool Foam::functionObjects::removeRegisteredObject::execute
 
             if (obj.ownedByRegistry())
             {
-                Info<< type() << " " << name() << " output:" << nl
+                Info<< type() << " " << name() << " write:" << nl
                     << "    removing object " << obj.name() << nl
                     << endl;
 

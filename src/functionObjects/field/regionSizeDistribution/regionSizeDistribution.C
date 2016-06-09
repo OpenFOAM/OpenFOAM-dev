@@ -392,7 +392,7 @@ bool Foam::functionObjects::regionSizeDistribution::write
     const bool postProcess
 )
 {
-    Info<< type() << " " << name() << " output:" << nl;
+    Info<< type() << " " << name() << " write:" << nl;
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
