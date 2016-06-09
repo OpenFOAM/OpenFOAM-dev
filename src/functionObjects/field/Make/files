@@ -52,5 +52,6 @@ MachNo/MachNo.C
 
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C
+wallShearStress/wallShearStress.C
 
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

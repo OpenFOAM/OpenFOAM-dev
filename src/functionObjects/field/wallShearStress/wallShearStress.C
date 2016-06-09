@@ -67,7 +67,6 @@ void Foam::functionObjects::wallShearStress::calcShearStress
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
-        const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
         vectorField& ssp = shearStress.boundaryFieldRef()[patchi];
         const vectorField& Sfp = mesh.Sf().boundaryField()[patchi];
@@ -75,21 +74,6 @@ void Foam::functionObjects::wallShearStress::calcShearStress
         const symmTensorField& Reffp = Reff.boundaryField()[patchi];
 
         ssp = (-Sfp/magSfp) & Reffp;
-
-        vector minSsp = gMin(ssp);
-        vector maxSsp = gMax(ssp);
-
-        if (Pstream::master())
-        {
-            file() << mesh.time().value()
-                << token::TAB << pp.name()
-                << token::TAB << minSsp
-                << token::TAB << maxSsp
-                << endl;
-        }
-
-        Log << "    min/max(" << pp.name() << ") = "
-            << minSsp << ", " << maxSsp << endl;
     }
 }
 
@@ -212,8 +196,6 @@ bool Foam::functionObjects::wallShearStress::execute(const bool postProcess)
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
 
-    writeFiles::write();
-
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
     volVectorField& wallShearStress =
@@ -221,9 +203,6 @@ bool Foam::functionObjects::wallShearStress::execute(const bool postProcess)
         (
             mesh.lookupObject<volVectorField>(type())
         );
-
-    Log << type() << " " << name() << " output:" << nl;
-
 
     tmp<volSymmTensorField> Reff;
     if (mesh.foundObject<cmpModel>(turbulenceModel::propertiesName))
@@ -260,11 +239,36 @@ bool Foam::functionObjects::wallShearStress::write(const bool postProcess)
     const volVectorField& wallShearStress =
         obr_.lookupObject<volVectorField>(type());
 
-    Log << type() << " " << name() << " output:" << nl
-        << "    writing field " << wallShearStress.name() << nl
-        << endl;
+    Log << type() << " " << name() << " write:" << nl
+        << "    writing field " << wallShearStress.name() << endl;
 
     wallShearStress.write();
+
+    const fvMesh& mesh = refCast<const fvMesh>(obr_);
+    const fvPatchList& patches = mesh.boundary();
+
+    forAllConstIter(labelHashSet, patchSet_, iter)
+    {
+        label patchi = iter.key();
+        const fvPatch& pp = patches[patchi];
+
+        const vectorField& ssp = wallShearStress.boundaryField()[patchi];
+
+        vector minSsp = gMin(ssp);
+        vector maxSsp = gMax(ssp);
+
+        if (Pstream::master())
+        {
+            file() << mesh.time().value()
+                << token::TAB << pp.name()
+                << token::TAB << minSsp
+                << token::TAB << maxSsp
+                << endl;
+        }
+
+        Log << "    min/max(" << pp.name() << ") = "
+            << minSsp << ", " << maxSsp << endl;
+    }
 
     return true;
 }
