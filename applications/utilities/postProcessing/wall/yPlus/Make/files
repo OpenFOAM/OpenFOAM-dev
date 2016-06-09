@@ -1,3 +1,0 @@
-yPlus.C
-
-EXE = $(FOAM_APPBIN)/yPlus

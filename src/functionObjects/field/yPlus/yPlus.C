@@ -162,8 +162,7 @@ Foam::functionObjects::yPlus::yPlus
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
-    phiName_("phi")
+    writeFiles(name, runTime, dict, name)
 {
     if (!isA<fvMesh>(obr_))
     {
@@ -207,7 +206,6 @@ Foam::functionObjects::yPlus::~yPlus()
 bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 {
     writeFiles::read(dict);
-    phiName_ = dict.lookupOrDefault<word>("phi", "phi");
 
     return true;
 }

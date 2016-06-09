@@ -67,12 +67,6 @@ class yPlus
 :
     public writeFiles
 {
-    // Private data
-
-        //- Name of mass/volume flux field (optional, default = phi)
-        word phiName_;
-
-
     // Private Member Functions
 
         //- File header information
