@@ -28,8 +28,8 @@ Group
     grpCompressibleSolvers grpMovingMeshSolvers
 
 Description
-    Transient solver for laminar or turbulent flow of compressible fluids
-    for HVAC and similar applications.
+    Transient solver for turbulent flow of compressible fluids for HVAC and
+    similar applications, with optional mesh motion and mesh topology changes.
 
     Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
     pseudo-transient simulations.

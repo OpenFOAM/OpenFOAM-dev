@@ -25,7 +25,7 @@ Application
     dnsFoam
 
 Description
-    Direct numerical simulation solver for boxes of isotropic turbulence
+    Direct numerical simulation solver for boxes of isotropic turbulence.
 
 \*---------------------------------------------------------------------------*/
 

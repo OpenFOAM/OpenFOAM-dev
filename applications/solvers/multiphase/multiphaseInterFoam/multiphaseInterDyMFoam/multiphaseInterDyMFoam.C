@@ -26,7 +26,8 @@ Application
 
 Description
     Solver for n incompressible fluids which captures the interfaces and
-    includes surface-tension and contact-angle effects for each phase.
+    includes surface-tension and contact-angle effects for each phase, with
+    optional mesh motion and mesh topology changes.
 
     Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 

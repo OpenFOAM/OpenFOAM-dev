@@ -25,8 +25,7 @@ Application
     uncoupledKinematicParcelFoam
 
 Description
-    Transient solver for the passive transport of a single kinematic
-    particle cloud.
+    Transient solver for the passive transport of a particle cloud.
 
     Uses a pre- calculated velocity field to evolve the cloud.
 

@@ -27,7 +27,7 @@ Application
 Description
     Steady-state solver for incompressible, turbulent flow with
     implicit or explicit porosity treatment and support for multiple reference
-    frames (MRF)
+    frames (MRF).
 
 \*---------------------------------------------------------------------------*/
 

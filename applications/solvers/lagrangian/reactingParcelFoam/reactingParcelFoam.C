@@ -25,9 +25,8 @@ Application
     reactingParcelFoam
 
 Description
-    Transient PIMPLE solver for compressible, laminar or turbulent flow with
-    reacting multiphase Lagrangian parcels, including run-time selectable
-    finite volume options, e.g. sources, constraints
+    Transient solver for compressible, turbulent flow with a reacting,
+    multiphase particle cloud, and optional sources/constraints.
 
 \*---------------------------------------------------------------------------*/
 

@@ -25,9 +25,8 @@ Application
     rhoPorousSimpleFoam
 
 Description
-    Steady-state solver for turbulent flow of compressible fluids with
-    RANS turbulence modelling, implicit or explicit porosity treatment
-    and run-time selectable finite volume sources.
+    Steady-state solver for turbulent flow of compressible fluids, with
+    implicit or explicit porosity treatment and optional sources.
 
 \*---------------------------------------------------------------------------*/
 

@@ -25,8 +25,8 @@ Application
     fireFoam
 
 Description
-    Transient PIMPLE solver for Fires and turbulent diffusion flames with
-    reacting Lagrangian parcels, surface film and pyrolysis modelling.
+    Transient solver for fires and turbulent diffusion flames with reacting
+    particle clouds, surface film and pyrolysis modelling.
 
 \*---------------------------------------------------------------------------*/
 

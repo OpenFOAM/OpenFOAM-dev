@@ -25,7 +25,8 @@ Application
     simpleFoam
 
 Description
-    Steady-state solver for incompressible, turbulent flow
+    Steady-state solver for incompressible, turbulent flow, using the SIMPLE
+    algorithm.
 
 \*---------------------------------------------------------------------------*/
 

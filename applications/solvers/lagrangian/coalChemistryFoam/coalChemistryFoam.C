@@ -25,13 +25,8 @@ Application
     coalChemistryFoam
 
 Description
-    Transient solver for:
-    - compressible,
-    - turbulent flow,
-    with
-    - coal and limestone parcel injections,
-    - energy source, and
-    - combustion.
+    Transient solver for compressible, turbulent flow, with coal and limestone
+    particle clouds, an energy source, and combustion.
 
 \*---------------------------------------------------------------------------*/
 

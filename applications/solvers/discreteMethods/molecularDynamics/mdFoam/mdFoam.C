@@ -25,7 +25,7 @@ Application
     mdFoam
 
 Description
-    Molecular dynamics solver for fluid dynamics
+    Molecular dynamics solver for fluid dynamics.
 
 \*---------------------------------------------------------------------------*/
 

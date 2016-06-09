@@ -25,8 +25,8 @@ Application
     reactingParcelFilmFoam
 
 Description
-    Transient PIMPLE solver for compressible, laminar or turbulent flow with
-    reacting Lagrangian parcels, and surface film modelling.
+    Transient solver for compressible, turbulent flow with a reacting,
+    multiphase particle cloud, and surface film modelling.
 
 \*---------------------------------------------------------------------------*/
 

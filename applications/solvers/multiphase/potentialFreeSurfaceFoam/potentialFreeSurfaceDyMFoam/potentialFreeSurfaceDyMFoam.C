@@ -26,7 +26,8 @@ Application
 
 Description
     Incompressible Navier-Stokes solver with inclusion of a wave height field
-    to enable single-phase free-surface approximations.
+    to enable single-phase free-surface approximations, with optional mesh
+    motion and mesh topology changes.
 
     Wave height field, zeta, used by pressure boundary conditions.
 

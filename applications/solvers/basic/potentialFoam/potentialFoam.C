@@ -25,9 +25,9 @@ Application
     potentialFoam
 
 Description
-    Potential flow solver which solves for the velocity potential
-    from which the flux-field is obtained and velocity field by reconstructing
-    the flux.
+    Potential flow solver which solves for the velocity potential, to
+    calculate the flux-field, from which the velocity field is obtained by
+    reconstructing the flux.
 
     This application is particularly useful to generate starting fields for
     Navier-Stokes codes.

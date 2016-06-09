@@ -25,8 +25,8 @@ Application
     sprayFoam
 
 Description
-    Transient PIMPLE solver for compressible, laminar or turbulent flow with
-    spray parcels.
+    Transient solver for compressible, turbulent flow with a spray particle
+    cloud.
 
 \*---------------------------------------------------------------------------*/
 
