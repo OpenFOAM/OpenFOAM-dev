@@ -130,17 +130,6 @@ Foam::functionObjects::turbulenceFields::turbulenceFields
     fvMeshFunctionObject(name, runTime, dict),
     fieldSet_()
 {
-    if
-    (
-       !obr_.foundObject<compressible::turbulenceModel>(modelName)
-    && !obr_.foundObject<incompressible::turbulenceModel>(modelName)
-    )
-    {
-        FatalErrorInFunction
-            << "Cannot find turbulenceModel in objectRegistry"
-            << exit(FatalError);
-    }
-
     read(dict);
 }
 
@@ -293,6 +282,12 @@ bool Foam::functionObjects::turbulenceFields::execute(const bool postProcess)
 
 bool Foam::functionObjects::turbulenceFields::write(const bool postProcess)
 {
+    forAllConstIter(wordHashSet, fieldSet_, iter)
+    {
+        const word fieldName = modelName + ':' + iter.key();
+        writeObject(fieldName);
+    }
+
     return true;
 }
 
