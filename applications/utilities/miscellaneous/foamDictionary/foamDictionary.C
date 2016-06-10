@@ -43,6 +43,13 @@ Usage
     \param -set \<value\> \n
     Adds or replaces the entry
 
+    \param -expand \n
+    Read the specified dictionary file, expand the macros etc. and write
+    the resulting dictionary to standard output.
+
+    \param -includes \n
+    List the #include/#includeIfPresent files to standard output.
+
     Typical usage:
     - change simulation to run for one timestep only:
     foamDictionary system/controlDict -entry stopAt -set writeNow;
@@ -67,6 +74,7 @@ Usage
 #include "Time.H"
 #include "IFstream.H"
 #include "OFstream.H"
+#include "includeEntry.H"
 
 using namespace Foam;
 
@@ -248,10 +256,28 @@ int main(int argc, char *argv[])
         "value",
         "adds a new entry"
     );
+    argList::addBoolOption
+    (
+        "includes",
+        "List the #include/#includeIfPresent files to standard output."
+    );
+    argList::addBoolOption
+    (
+        "expand",
+        "Read the specified dictionary file, expand the macros etc. and write "
+        "the resulting dictionary to standard output."
+    );
 
-    #include "setRootCase.H"
+    argList args(argc, argv);
 
-    fileName dictFileName(args.rootPath()/args.caseName()/args[1]);
+    const bool listIncludes = args.optionFound("includes");
+
+    if (listIncludes)
+    {
+        Foam::functionEntries::includeEntry::log = true;
+    }
+
+    fileName dictFileName(args[1]);
 
     autoPtr<IFstream> dictFile(new IFstream(dictFileName));
 
@@ -262,6 +288,20 @@ int main(int argc, char *argv[])
         // Read but preserve headers
         dictionary dict;
         dict.read(dictFile(), true);
+
+        if (listIncludes)
+        {
+            return 0;
+        }
+        else if (args.optionFound("expand"))
+        {
+            IOobject::writeBanner(Info)
+                <<"//\n// " << dictFileName << "\n//\n";
+            dict.write(Info, false);
+            IOobject::writeDivider(Info);
+
+            return 0;
+        }
 
         word entryName;
         if (args.optionReadIfPresent("entry", entryName))
