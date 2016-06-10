@@ -25,8 +25,8 @@ Application
     pimpleDyMFoam.C
 
 Description
-    Transient solver for incompressible, flow of Newtonian fluids
-    on a moving mesh using the PIMPLE (merged PISO-SIMPLE) algorithm.
+    Transient solver for incompressible, turbulent flow of Newtonian fluids
+    on a moving mesh.
 
     Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 

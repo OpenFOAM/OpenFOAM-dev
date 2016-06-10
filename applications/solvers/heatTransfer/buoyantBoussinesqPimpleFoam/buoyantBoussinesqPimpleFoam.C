@@ -25,7 +25,7 @@ Application
     buoyantBoussinesqPimpleFoam
 
 Description
-    Transient solver for buoyant, turbulent flow of incompressible fluids
+    Transient solver for buoyant, turbulent flow of incompressible fluids.
 
     Uses the Boussinesq approximation:
     \f[

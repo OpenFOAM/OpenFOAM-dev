@@ -26,7 +26,7 @@ Application
 
 Description
     Transient solver for the passive transport of a single kinematic
-    particle cloud.
+    particle cloud, with optional mesh motion and mesh topology changes.
 
     Uses a pre-calculated velocity field to evolve the cloud.
 

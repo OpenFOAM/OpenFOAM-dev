@@ -28,8 +28,8 @@ Group
     grpCompressibleSolvers grpMovingMeshSolvers
 
 Description
-    Transient solver for trans-sonic/supersonic, laminar or turbulent flow
-    of a compressible gas with mesh motion..
+    Transient solver for trans-sonic/supersonic, turbulent flow of a
+    compressible gas, with optional mesh motion and mesh topology changes.
 
 \*---------------------------------------------------------------------------*/
 

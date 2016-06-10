@@ -25,7 +25,7 @@ Application
     mdEquilibrationFoam
 
 Description
-    Equilibrates and/or preconditions molecular dynamics systems
+    Solver to equilibrate and/or precondition molecular dynamics systems.
 
 \*---------------------------------------------------------------------------*/
 

@@ -25,9 +25,8 @@ Application
     chtMultiRegionFoam
 
 Description
-    Combination of heatConductionFoam and buoyantFoam for conjugate heat
-    transfer between solid regions and fluid regions. Both regions include
-    the fvOptions framework.
+    Transient solver for buoyant, turbulent fluid flow and solid heat
+    conduction with conjugate heat transfer between solid and fluid regions.
 
     It handles secondary fluid or solid circuits which can be coupled
     thermally with the main fluid region. i.e radiators, etc.

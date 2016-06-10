@@ -25,7 +25,8 @@ Application
     pisoFoam
 
 Description
-    Transient solver for incompressible flow.
+    Transient solver for incompressible, turbulent flow, using the PISO
+    algorithm.
 
     Sub-models include:
     - turbulence modelling, i.e. laminar, RAS or LES

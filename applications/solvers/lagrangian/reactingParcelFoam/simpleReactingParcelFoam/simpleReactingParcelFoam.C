@@ -25,9 +25,8 @@ Application
     simpleReactingParcelFoam
 
 Description
-    Steady state SIMPLE solver for compressible, laminar or turbulent flow with
-    reacting multiphase Lagrangian parcels, including run-time selectable
-    finite volume options, e.g. sources, constraints
+    Steady state solver for compressible, turbulent flow with reacting,
+    multiphase particle clouds and optional sources/constraints.
 
 \*---------------------------------------------------------------------------*/
 

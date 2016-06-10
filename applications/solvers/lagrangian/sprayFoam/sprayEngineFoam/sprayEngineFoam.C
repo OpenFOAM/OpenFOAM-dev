@@ -25,8 +25,8 @@ Application
     sprayEngineFoam
 
 Description
-    Transient PIMPLE solver for compressible, laminar or turbulent engine
-    flow swith spray parcels.
+    Transient solver for compressible, turbulent engine flow with a spray
+    particle cloud.
 
 \*---------------------------------------------------------------------------*/
 

@@ -25,8 +25,8 @@ Application
     rhoReactingBuoyantFoam
 
 Description
-    Solver for combustion with chemical reactions using density based
-    thermodynamics package, using enahanced buoyancy treatment.
+    Solver for combustion with chemical reactions using a density based
+    thermodynamics package with enhanced buoyancy treatment.
 
 \*---------------------------------------------------------------------------*/
 

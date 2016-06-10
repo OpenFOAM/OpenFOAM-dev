@@ -28,8 +28,8 @@ Group
     grpCompressibleSolvers
 
 Description
-    Transient solver for trans-sonic/supersonic, laminar or turbulent flow
-    of a compressible gas.
+    Transient solver for trans-sonic/supersonic, turbulent flow of a
+    compressible gas.
 
 \*---------------------------------------------------------------------------*/
 

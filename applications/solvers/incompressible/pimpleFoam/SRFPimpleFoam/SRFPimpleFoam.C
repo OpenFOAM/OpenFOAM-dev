@@ -25,8 +25,8 @@ Application
     SRFPimpleFoam
 
 Description
-    Large time-step transient solver for incompressible, flow in a single
-    rotating frame using the PIMPLE (merged PISO-SIMPLE) algorithm.
+    Large time-step transient solver for incompressible, turbulent flow in a
+    single rotating frame.
 
     Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 

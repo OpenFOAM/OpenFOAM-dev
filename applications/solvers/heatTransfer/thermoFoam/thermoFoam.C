@@ -25,7 +25,7 @@ Application
     thermoFoam
 
 Description
-    Evolves the thermodynamics on a frozen flow field
+    Solver for energy transport and thermodynamics on a frozen flow field.
 
 \*---------------------------------------------------------------------------*/
 

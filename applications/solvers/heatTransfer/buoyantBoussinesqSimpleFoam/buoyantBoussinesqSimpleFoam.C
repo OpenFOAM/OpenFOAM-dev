@@ -25,7 +25,7 @@ Application
     buoyantBoussinesqSimpleFoam
 
 Description
-    Steady-state solver for buoyant, turbulent flow of incompressible fluids
+    Steady-state solver for buoyant, turbulent flow of incompressible fluids.
 
     Uses the Boussinesq approximation:
     \f[

@@ -25,11 +25,9 @@ Application
     chemFoam
 
 Description
-    Solver for chemistry problems
-    - designed for use on single cell cases to provide comparison against
-      other chemistry solvers
-    - single cell mesh created on-the-fly
-    - fields created on the fly from the initial conditions
+    Solver for chemistry problems, designed for use on single cell cases to
+    provide comparison against other chemistry solvers, that uses a single cell
+    mesh, and fields created from the initial conditions.
 
 \*---------------------------------------------------------------------------*/
 

@@ -26,7 +26,7 @@ Application
 
 Description
     Density-based compressible flow solver based on central-upwind schemes of
-    Kurganov and Tadmor
+    Kurganov and Tadmor.
 
 \*---------------------------------------------------------------------------*/
 

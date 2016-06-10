@@ -25,8 +25,8 @@ Application
     sprayDyMFoam
 
 Description
-    Transient PIMPLE solver for compressible, laminar or turbulent flow with
-    spray parcels and support for moving meshes.
+    Transient solver for compressible, turbulent flow with a spray particle
+    cloud, with optional mesh motion and mesh topology changes.
 
 \*---------------------------------------------------------------------------*/
 

@@ -26,7 +26,8 @@ Application
 
 Description
     Transient cavitation code based on the homogeneous equilibrium model
-    from which the compressibility of the liquid/vapour "mixture" is obtained.
+    from which the compressibility of the liquid/vapour "mixture" is obtained,
+    with optional mesh motion and mesh topology changes.
 
     Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 
