@@ -6,14 +6,13 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-turbulenceFields
+writeObjects
 {
-    type            turbulenceFields;
-    libs            ("libfieldFunctionObjects.so");
+    type            writeObjects;
+    libs            ("libutilityFunctionObjects.so");
 
-    fields          (<field names>);
+    objects         (<object names>);
 
-    executeControl  writeTime;
     writeControl    writeTime;
 }
 

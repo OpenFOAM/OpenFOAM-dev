@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::writeRegisteredObject
+    Foam::functionObjects::writeObjects
 
 Group
     grpUtilitiesFunctionObjects
@@ -41,9 +41,9 @@ Description
 
     Example of function object specification:
     \verbatim
-    writeRegisteredObject1
+    writeObjects1
     {
-        type        writeRegisteredObject;
+        type        writeObjects;
         libs ("libutilityFunctionObjects.so");
         exclusiveWriting     true;
         ...
@@ -54,7 +54,7 @@ Description
     \heading Function object usage
     \table
         Property     | Description             | Required    | Default value
-        type         | type name: writeRegisteredObject | yes |
+        type         | type name: writeObjects | yes |
         objectNames  | objects to write        | yes         |
         exclusiveWriting    | Takes over object writing | no | yes
     \endtable
@@ -67,12 +67,12 @@ SeeAlso
     Foam::functionObjects::timeControl
 
 SourceFiles
-    writeRegisteredObject.C
+    writeObjects.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_writeRegisteredObject_H
-#define functionObjects_writeRegisteredObject_H
+#ifndef functionObjects_writeObjects_H
+#define functionObjects_writeObjects_H
 
 #include "functionObject.H"
 #include "wordReList.H"
@@ -89,10 +89,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class writeRegisteredObject Declaration
+                   Class writeObjects Declaration
 \*---------------------------------------------------------------------------*/
 
-class writeRegisteredObject
+class writeObjects
 :
     public functionObject
 {
@@ -111,22 +111,22 @@ class writeRegisteredObject
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        writeRegisteredObject(const writeRegisteredObject&);
+        writeObjects(const writeObjects&);
 
         //- Disallow default bitwise assignment
-        void operator=(const writeRegisteredObject&);
+        void operator=(const writeObjects&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("writeRegisteredObject");
+    TypeName("writeObjects");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        writeRegisteredObject
+        writeObjects
         (
             const word& name,
             const Time& runTime,
@@ -135,12 +135,12 @@ public:
 
 
     //- Destructor
-    virtual ~writeRegisteredObject();
+    virtual ~writeObjects();
 
 
     // Member Functions
 
-        //- Read the writeRegisteredObject data
+        //- Read the writeObjects data
         virtual bool read(const dictionary&);
 
         //- Do nothing

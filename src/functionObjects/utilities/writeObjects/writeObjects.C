@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "writeRegisteredObject.H"
+#include "writeObjects.H"
 #include "Time.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
@@ -34,12 +34,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(writeRegisteredObject, 0);
+    defineTypeNameAndDebug(writeObjects, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        writeRegisteredObject,
+        writeObjects,
         dictionary
     );
 }
@@ -48,7 +48,7 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::writeRegisteredObject::writeRegisteredObject
+Foam::functionObjects::writeObjects::writeObjects
 (
     const word& name,
     const Time& runTime,
@@ -72,22 +72,35 @@ Foam::functionObjects::writeRegisteredObject::writeRegisteredObject
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::writeRegisteredObject::~writeRegisteredObject()
+Foam::functionObjects::writeObjects::~writeObjects()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::writeRegisteredObject::read(const dictionary& dict)
+bool Foam::functionObjects::writeObjects::read(const dictionary& dict)
 {
-    dict.lookup("objects") >> objectNames_;
+    if (dict.found("field"))
+    {
+        objectNames_.setSize(1);
+        dict.lookup("field") >> objectNames_[0];
+    }
+    else if (dict.found("fields"))
+    {
+        dict.lookup("fields") >> objectNames_;
+    }
+    else
+    {
+        dict.lookup("objects") >> objectNames_;
+    }
+
     dict.readIfPresent("exclusiveWriting", exclusiveWriting_);
 
     return true;
 }
 
 
-bool Foam::functionObjects::writeRegisteredObject::execute
+bool Foam::functionObjects::writeObjects::execute
 (
     const bool postProcess
 )
@@ -96,7 +109,7 @@ bool Foam::functionObjects::writeRegisteredObject::execute
 }
 
 
-bool Foam::functionObjects::writeRegisteredObject::write
+bool Foam::functionObjects::writeObjects::write
 (
     const bool postProcess
 )
@@ -128,11 +141,10 @@ bool Foam::functionObjects::writeRegisteredObject::write
 
     forAll(allNames, i)
     {
-        regIOobject& obj =
-            const_cast<regIOobject&>
-            (
-                obr_.lookupObject<regIOobject>(allNames[i])
-            );
+        regIOobject& obj = const_cast<regIOobject&>
+        (
+            obr_.lookupObject<regIOobject>(allNames[i])
+        );
 
         if (exclusiveWriting_)
         {
@@ -140,7 +152,7 @@ bool Foam::functionObjects::writeRegisteredObject::write
             obj.writeOpt() = IOobject::NO_WRITE;
         }
 
-        Info<< "    writing object " << obj.name() << nl << endl;
+        Info<< "    writing object " << obj.name() << endl;
 
         obj.write();
     }

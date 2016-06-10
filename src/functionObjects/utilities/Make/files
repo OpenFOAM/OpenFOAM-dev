@@ -6,6 +6,6 @@ systemCall/systemCall.C
 abort/abort.C
 removeRegisteredObject/removeRegisteredObject.C
 writeDictionary/writeDictionary.C
-writeRegisteredObject/writeRegisteredObject.C
+writeObjects/writeObjects.C
 
 LIB = $(FOAM_LIBBIN)/libutilityFunctionObjects

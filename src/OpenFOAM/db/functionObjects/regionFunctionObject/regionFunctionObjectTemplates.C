@@ -62,7 +62,7 @@ bool Foam::functionObjects::regionFunctionObject::store
             << "Cannot store cache-able field with the named used in the cache."
             << nl
             << "    Either choose a different name or cache the field"
-            << "    and use the 'writeRegisteredObject' functionObject."
+            << "    and use the 'writeObjects' functionObject."
             << endl;
 
         return false;
