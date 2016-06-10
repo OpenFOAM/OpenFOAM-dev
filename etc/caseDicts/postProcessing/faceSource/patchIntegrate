@@ -6,12 +6,12 @@
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 
-patchAverage
+patchIntegrate
 {
     patch  <patchName>;
     fields (<field names>);
 
-    operation average;
+    operation areaIntegrate;
     #includeEtc "caseDicts/postProcessing/faceSource/patchSource.cfg"
 
     log    true;

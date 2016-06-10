@@ -52,8 +52,6 @@ Foam::functionObjects::fieldValue::fieldValue
     writeFiles(name, runTime, dict, name),
     dict_(dict),
     sourceName_(word::null),
-    fields_(dict.lookup("fields")),
-    valueOutput_(dict.lookup("valueOutput")),
     resultDict_(fileName("name"), dictionary::null)
 {
     read(dict);
@@ -72,8 +70,6 @@ Foam::functionObjects::fieldValue::fieldValue
     writeFiles(name, obr, dict, name),
     dict_(dict),
     sourceName_(word::null),
-    fields_(dict.lookup("fields")),
-    valueOutput_(dict.lookup("valueOutput")),
     resultDict_(fileName("name"), dictionary::null)
 {
     read(dict);
@@ -93,7 +89,17 @@ bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
 {
     dict_ = dict;
     writeFiles::read(dict);
-    dict.lookup("fields") >> fields_;
+
+    if (dict.found("field"))
+    {
+        fields_.setSize(1);
+        dict.lookup("field") >> fields_[0];
+    }
+    else if (dict.found("fields"))
+    {
+        dict.lookup("fields") >> fields_;
+    }
+
     dict.lookup("valueOutput") >> valueOutput_;
 
     return true;
