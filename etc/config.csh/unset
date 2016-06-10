@@ -165,6 +165,7 @@ unalias wm32
 unalias wmSP
 unalias wmDP
 
+unalias wmRefresh
 unalias wmUnset
 
 unalias wmSchedOn
