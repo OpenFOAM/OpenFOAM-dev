@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,12 +21,7 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Write primitive and binary block from UOPstream
-
 \*---------------------------------------------------------------------------*/
-
-#include "error.H"
 
 #include "UOPstream.H"
 #include "int.H"
@@ -194,7 +189,7 @@ Foam::Ostream& Foam::UOPstream::write(const char* str)
 
     if (nonWhiteChars.size() == 1)
     {
-        return write(nonWhiteChars.c_str()[1]);
+        return write(nonWhiteChars[0]);
     }
     else if (nonWhiteChars.size())
     {
