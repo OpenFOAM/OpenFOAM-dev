@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    snappyRefineMesh
+    autoRefineMesh
 
 Description
     Utility to refine cells near to a surface.
@@ -670,7 +670,7 @@ int main(int argc, char *argv[])
     (
         IOobject
         (
-            "snappyRefineMeshDict",
+            "autoRefineMeshDict",
             runTime.system(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,

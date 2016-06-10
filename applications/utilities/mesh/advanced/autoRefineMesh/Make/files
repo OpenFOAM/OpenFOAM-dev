@@ -1,4 +1,4 @@
-snappyRefineMesh.C
+autoRefineMesh.C
 
-EXE = $(FOAM_APPBIN)/snappyRefineMesh
+EXE = $(FOAM_APPBIN)/autoRefineMesh
 
