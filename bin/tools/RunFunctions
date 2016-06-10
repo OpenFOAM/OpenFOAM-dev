@@ -41,7 +41,7 @@ isTest()
 
 getNumberOfProcessors()
 {
-    expandDictionary system/decomposeParDict \
+    foamDictionary -expand system/decomposeParDict \
         | sed -ne 's/^numberOfSubdomains\s*\(.*\);/\1/p'
 }
 
