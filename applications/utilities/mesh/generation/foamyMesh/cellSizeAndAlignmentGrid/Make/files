@@ -1,2 +1,2 @@
 cellSizeAndAlignmentGrid.C
-EXE = $(FOAM_USER_APPBIN)/cellSizeAndAlignmentGrid
+EXE = $(FOAM_APPBIN)/cellSizeAndAlignmentGrid
