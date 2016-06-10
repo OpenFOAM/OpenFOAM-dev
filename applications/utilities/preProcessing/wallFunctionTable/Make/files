@@ -1,3 +1,3 @@
-wallFunctionTableApp.C
+wallFunctionTable.C
 
 EXE = $(FOAM_APPBIN)/wallFunctionTable
