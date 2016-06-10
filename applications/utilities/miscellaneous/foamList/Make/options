@@ -54,4 +54,7 @@ EXE_LIBS = \
     -ltriSurface \
     -lturbulenceModels \
     -ltwoPhaseProperties \
-    -lutilityFunctionObjects
+    -lutilityFunctionObjects \
+    -lphaseCompressibleTurbulenceModels \
+    -lcompressibleTwoPhaseSystem \
+    -lcompressibleEulerianInterfacialModels

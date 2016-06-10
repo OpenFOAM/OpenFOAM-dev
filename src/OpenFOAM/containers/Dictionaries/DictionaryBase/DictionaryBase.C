@@ -183,6 +183,13 @@ Foam::wordList Foam::DictionaryBase<IDLListType, T>::toc() const
 
 
 template<class IDLListType, class T>
+Foam::wordList Foam::DictionaryBase<IDLListType, T>::sortedToc() const
+{
+    return hashedTs_.sortedToc();
+}
+
+
+template<class IDLListType, class T>
 void Foam::DictionaryBase<IDLListType, T>::insert(const word& keyword, T* tPtr)
 {
     // NOTE: we should probably check that HashTable::insert actually worked

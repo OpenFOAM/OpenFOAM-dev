@@ -128,6 +128,9 @@ public:
             //- Return the table of contents
             wordList toc() const;
 
+            //- Return the table of contents as a sorted list
+            wordList sortedToc() const;
+
 
         // Editing
 
