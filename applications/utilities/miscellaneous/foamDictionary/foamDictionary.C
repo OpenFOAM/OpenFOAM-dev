@@ -242,19 +242,24 @@ int main(int argc, char *argv[])
 
     argList::noBanner();
     argList::validArgs.append("dictionary");
-    argList::addBoolOption("keywords", "report keywords");
+    argList::addBoolOption("keywords", "list keywords");
     argList::addOption("entry", "name", "report/select the named entry");
+    argList::addBoolOption
+    (
+        "value",
+        "print entry value"
+    );
     argList::addOption
     (
         "set",
         "value",
-        "changes existing entry or adds new entry"
+        "set entry value or add new entry"
     );
     argList::addOption
     (
         "add",
         "value",
-        "adds a new entry"
+        "add a new entry"
     );
     argList::addBoolOption
     (
@@ -356,7 +361,26 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
-                        Info<< *entPtr << endl;
+                        if (args.optionFound("value"))
+                        {
+                            if (entPtr->isStream())
+                            {
+                                const tokenList& tokens = entPtr->stream();
+                                forAll(tokens, i)
+                                {
+                                    Info<< tokens[i] << token::SPACE;
+                                }
+                                Info<< endl;
+                            }
+                            else if (entPtr->isDict())
+                            {
+                                Info<< entPtr->dict();
+                            }
+                        }
+                        else
+                        {
+                            Info<< *entPtr << endl;
+                        }
                     }
                 }
                 else
