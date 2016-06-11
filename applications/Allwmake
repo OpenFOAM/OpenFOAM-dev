@@ -20,8 +20,8 @@ wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
 
 set -x
 
-wmake -all utilities $*
 wmake -all solvers $*
+wmake -all utilities $*
 
 
 #------------------------------------------------------------------------------
