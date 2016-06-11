@@ -185,7 +185,7 @@ bool Foam::functionObjects::fieldValues::cellSource::writeValues
             // Add to result dictionary, over-writing any previous entry
             resultDict_.add(fieldName, result, true);
 
-            if (valueOutput_)
+            if (writeFields_)
             {
                 IOField<Type>
                 (

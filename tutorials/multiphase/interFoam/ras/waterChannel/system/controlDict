@@ -60,7 +60,7 @@ functions
         writeControl   timeStep;
         log             true;
         // Output field values as well
-        valueOutput     false;
+        writeFields     false;
         source          patch;
         sourceName      inlet;
         operation       sum;

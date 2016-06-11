@@ -212,7 +212,7 @@ public:
         //  'requiredFields'
         static bool readFunctionObject
         (
-            const word& funcNameArgs0,
+            const string& funcNameArgs0,
             dictionary& functionsDict,
             HashSet<word>& requiredFields
         );

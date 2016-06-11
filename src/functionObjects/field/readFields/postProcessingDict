@@ -38,7 +38,7 @@ functions
         writeControl   timeStep;
         writeInterval  1;
         log             true;
-        valueOutput     true;
+        writeFields     true;
         source          faceZone;
         sourceName      f0;
         operation       areaAverage;

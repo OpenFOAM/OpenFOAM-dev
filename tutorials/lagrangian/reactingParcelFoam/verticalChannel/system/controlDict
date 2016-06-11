@@ -59,7 +59,7 @@ functions
         libs            ("libfieldFunctionObjects.so");
         writeControl    writeTime;
         log             yes;
-        valueOutput     no;
+        writeFields     no;
         source          patch;
         sourceName      outlet;
         operation       weightedAverage;

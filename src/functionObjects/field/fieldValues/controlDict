@@ -58,7 +58,7 @@ functions
         log             true;
 
         // Output field values as well
-        valueOutput     true;
+        writeFields     true;
 
         // Type of source: patch/faceZone/sampledSurface
         source          patch;
@@ -95,7 +95,7 @@ functions
         enabled         true;
         writeControl   writeTime;
         log             true;
-        valueOutput     true;
+        writeFields     true;
         source          faceZone;
         sourceName      f0;
         operation       sum;
@@ -113,7 +113,7 @@ functions
         enabled         true;
         writeControl   writeTime;
         log             true;
-        valueOutput     true;
+        writeFields     true;
         source          cellZone;
         sourceName      c0;
         operation       volAverage;

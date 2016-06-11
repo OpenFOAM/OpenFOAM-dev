@@ -515,7 +515,7 @@ void Foam::functionObjects::fieldValues::faceSource::initialise
 
     Info<< nl << endl;
 
-    if (valueOutput_)
+    if (writeFields_)
     {
         const word surfaceFormat(dict.lookup("surfaceFormat"));
 

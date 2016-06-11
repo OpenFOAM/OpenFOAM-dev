@@ -55,7 +55,7 @@ functions
         enabled         yes;
         writeControl    writeTime;
         log             yes;
-        valueOutput     no;
+        writeFields     no;
         source          patch;
         sourceName      outlet;
         operation       weightedAverage;

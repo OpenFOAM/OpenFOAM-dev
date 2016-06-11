@@ -42,7 +42,7 @@ Description
         libs ("libfieldFunctionObjects.so");
         ...
         log             true;
-        valueOutput     true;
+        writeFields     true;
         source          cellZone;
         sourceName      c0;
         operation       volAverage;
@@ -60,7 +60,7 @@ Description
         Property     | Description             | Required    | Default value
         type         | Type name: cellSource   | yes         |
         log          | Write data to standard output | no    | no
-        valueOutput  | Write the raw output values | yes     |
+        writeFields  | Write the raw output values | yes     |
         writeVolume  | Write the volume of the cellSource | no |
         source       | cell source: see below  | yes         |
         sourceName   | name of cell source if required  | no |

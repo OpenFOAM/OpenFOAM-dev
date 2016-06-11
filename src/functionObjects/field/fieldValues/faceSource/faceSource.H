@@ -45,7 +45,7 @@ Description
         libs ("libfieldFunctionObjects.so");
         ...
         log             yes;
-        valueOutput     true;
+        writeFields     true;
         surfaceFormat   none;
         source          faceZone;
         sourceName      f0;
@@ -65,7 +65,7 @@ Description
         Property     | Description             | Required    | Default value
         type         | type name: faceSource   | yes         |
         log          | write data to standard output | no    | no
-        valueOutput  | write the output values | yes         |
+        writeFields  | write the output values | yes         |
         writeArea    | Write the area of the faceSource | no |
         surfaceFormat | output value format    | no          |
         source       | face source: see below  | yes         |

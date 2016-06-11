@@ -31,6 +31,7 @@ License
 #include "IFstream.H"
 #include "dictionaryEntry.H"
 #include "stringOps.H"
+#include "Tuple2.H"
 #include "etcFiles.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
@@ -132,20 +133,26 @@ Foam::fileName Foam::functionObjectList::findDict(const word& funcName)
 
 bool Foam::functionObjectList::readFunctionObject
 (
-    const word& funcNameArgs0,
+    const string& funcNameArgs,
     dictionary& functionsDict,
     HashSet<word>& requiredFields
 )
 {
-    // Parse the optional functionObject arguments
-    // e.g. 'Q(U)' -> funcName = Q; args = (U);
+    // Parse the optional functionObject arguments:
+    //     'Q(U)' -> funcName = Q; args = (U); field = U
+    //
+    // Supports named arguments:
+    //     'patchAverage(patch=inlet, p)' -> funcName = patchAverage;
+    //         args = (patch=inlet, p); field = p
 
-    word funcNameArgs(funcNameArgs0);
-    string::stripInvalid<word>(funcNameArgs);
+    word funcName;
 
-    word funcName(funcNameArgs);
     int argLevel = 0;
     wordList args;
+
+    List<Tuple2<word, string>> namedArgs;
+    bool namedArg = false;
+    word argName;
 
     word::size_type start = 0;
     word::size_type i = 0;
@@ -163,27 +170,51 @@ bool Foam::functionObjectList::readFunctionObject
         {
             if (argLevel == 0)
             {
-                funcName.resize(i);
+                funcName = funcNameArgs(start, i - start);
                 start = i+1;
             }
             ++argLevel;
         }
-        else if (c == ',')
+        else if (c == ',' || c == ')')
         {
             if (argLevel == 1)
             {
-                args.append(funcNameArgs(start, i - start));
+                if (namedArg)
+                {
+                    namedArgs.append
+                    (
+                        Tuple2<word, string>
+                        (
+                            argName,
+                            funcNameArgs(start, i - start)
+                        )
+                    );
+                    namedArg = false;
+                }
+                else
+                {
+                    args.append
+                    (
+                        string::validate<word>(funcNameArgs(start, i - start))
+                    );
+                }
                 start = i+1;
             }
-        }
-        else if (c == ')')
-        {
-            if (argLevel == 1)
+
+            if (c == ')')
             {
-                args.append(funcNameArgs(start, i - start));
-                break;
+                if (argLevel == 1)
+                {
+                    break;
+                }
+                --argLevel;
             }
-            --argLevel;
+        }
+        else if (c == '=')
+        {
+            argName = string::validate<word>(funcNameArgs(start, i - start));
+            start = i+1;
+            namedArg = true;
         }
 
         ++i;
@@ -204,12 +235,13 @@ bool Foam::functionObjectList::readFunctionObject
     dictionary funcsDict(fileStream);
     dictionary& funcDict = funcsDict.subDict(funcName);
 
-    // Insert the 'field' or 'fields' entry corresponding to the optional
+    // Insert the 'field' and/or 'fields' entry corresponding to the optional
     // arguments or read the 'field' or 'fields' entry and add the required
     // fields to requiredFields
     if (args.size() == 1)
     {
         funcDict.set("field", args[0]);
+        funcDict.set("fields", args);
         requiredFields.insert(args[0]);
     }
     else if (args.size() > 1)
@@ -226,9 +258,19 @@ bool Foam::functionObjectList::readFunctionObject
         requiredFields.insert(wordList(funcDict.lookup("fields")));
     }
 
+    // Insert named arguments
+    forAll(namedArgs, i)
+    {
+        IStringStream entryStream
+        (
+            namedArgs[i].first() + ' ' + namedArgs[i].second() + ';'
+        );
+        funcDict.set(entry::New(entryStream).ptr());
+    }
+
     // Merge this functionObject dictionary into functionsDict
     dictionary funcArgsDict;
-    funcArgsDict.add(funcNameArgs, funcDict);
+    funcArgsDict.add(string::validate<word>(funcNameArgs), funcDict);
     functionsDict.merge(funcArgsDict);
 
     return true;

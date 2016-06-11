@@ -17,7 +17,7 @@ inletMassFlowRate
         alphaRhoPhi.liquid
     );
 
-    valueOutput     false;
+    writeFields     false;
     log             true;
     surfaceFormat   null;
 
@@ -40,7 +40,7 @@ outletMassFlowRate
         alphaRhoPhi.liquid
     );
 
-    valueOutput     false;
+    writeFields     false;
     log             true;
     surfaceFormat   null;
 

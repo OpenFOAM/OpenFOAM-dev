@@ -76,7 +76,7 @@ protected:
         wordList fields_;
 
         //- Output field values flag
-        Switch valueOutput_;
+        Switch writeFields_;
 
         //- Results dictionary for external access of results
         dictionary resultDict_;
@@ -160,7 +160,7 @@ public:
         inline const wordList& fields() const;
 
         //- Return the output field values flag
-        inline const Switch& valueOutput() const;
+        inline const Switch& writeFields() const;
 
         //- Helper function to return the reference to the mesh
         inline const fvMesh& mesh() const;

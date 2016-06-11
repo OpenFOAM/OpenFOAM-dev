@@ -47,9 +47,9 @@ inline const Foam::wordList& Foam::functionObjects::fieldValue::fields() const
 
 
 inline const Foam::Switch&
-Foam::functionObjects::fieldValue::valueOutput() const
+Foam::functionObjects::fieldValue::writeFields() const
 {
-    return valueOutput_;
+    return writeFields_;
 }
 
 

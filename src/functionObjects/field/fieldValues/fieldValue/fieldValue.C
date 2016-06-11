@@ -90,17 +90,8 @@ bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
     dict_ = dict;
     writeFiles::read(dict);
 
-    if (dict.found("field"))
-    {
-        fields_.setSize(1);
-        dict.lookup("field") >> fields_[0];
-    }
-    else if (dict.found("fields"))
-    {
-        dict.lookup("fields") >> fields_;
-    }
-
-    dict.lookup("valueOutput") >> valueOutput_;
+    dict.lookup("fields") >> fields_;
+    dict.lookup("writeFields") >> writeFields_;
 
     return true;
 }

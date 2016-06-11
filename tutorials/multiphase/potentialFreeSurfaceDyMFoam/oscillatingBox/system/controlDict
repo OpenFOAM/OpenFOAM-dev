@@ -73,7 +73,7 @@ functions
         writeInterval  1;
         log             yes;
         writeTotalArea  no;
-        valueOutput     no;
+        writeFields     no;
         source          faceZone;
         sourceName      f0;
         operation       areaAverage;
