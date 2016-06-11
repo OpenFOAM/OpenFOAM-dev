@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -36,6 +36,9 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
+# Source the wmake functions
+. ${0%/*}/scripts/wmakeFunctions
+
 usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
@@ -55,7 +58,10 @@ The targets correspond to a subset of the 'wmake' special targets:
                     files if they exist
   exe | lib | libo | libso
                     Clean Make, any *.dep files and lnInclude directories
-  empty             Remove empty sub-directories for the requested dir
+  empty             Remove empty sub-directories for the requested dir.
+                    If executed in the main project directory, it will also
+                    remove deprecated object directories and respective binaries
+                    that refer to no-longer-existing source code.
 
 USAGE
     exit 1
@@ -127,13 +133,74 @@ fi
 
 if [ "$targetType" = empty ]
 then
+    # First pass: clean up empty source code directories
+
+    echo "Searching for empty directories..."
+
     # Get sub-directories avoiding particular directories
     for dir in $(find . -mindepth 1 -maxdepth 1 \
-                           -type d \( -name .git -prune -o -print \) )
+                        -type d \( -name .git -prune -o -print \) )
     do
         echo "check dir: $dir"
         find $dir -depth -type d -empty -exec rmdir {} \; -print
     done
+
+    echo "Search for empty directories complete."
+
+    # Second pass: clean up object directories with WM_PROJECT_DIR that don't
+    # have respective source code folders, along with the respective binaries
+
+    expandPath $PWD
+    if [ "$exPath" = "$WM_PROJECT_DIR" ]
+    then
+        findObjectDir $PWD
+
+        if [ -d $objectsDir ]
+        then
+            echo "Searching for deprecated object directories at: $objectsDir"
+
+            find $objectsDir -name 'variables' -print | \
+            while read variablesFile
+            do
+                # Hack'ish way of getting the original source code path
+                depFile=$(dirname $variablesFile)
+                depToSource $depFile
+
+                # Check if the original source code directory exists
+                if [ ! -r "$sourceFile" ]
+                then
+                    # Delete the respective binary first
+                    binaryFile=$(cat $variablesFile |
+                                grep -e '^ *\(EXE\|LIB\) *= *' )
+
+                    # Catch all file extension (o,a,so,?+) for libraries
+                    if echo $binaryFile | grep -qe '^ *LIB *= *'
+                    then
+                        binaryFile="${binaryFile}.*"
+                    fi
+
+                    # Isolate path and translate environment variables
+                    binaryFile=$(echo $binaryFile | \
+                                 sed -e 's/^ *\(EXE\|LIB\) *= *//' \
+                                     -e 's/(/{/g' -e 's/)/}/g' )
+
+                    # Expand environment variables for path
+                    binaryFile=$(eval echo $binaryFile)
+
+                    # Verbosely remove binary file
+                    if [ -n "$binaryFile" -a -e "$binaryFile" ]
+                    then
+                        rm -vf $binaryFile 2>/dev/null
+                    fi
+
+                    # Remove the deprecated object directory
+                    rm -rvf $depFile 2>/dev/null
+                fi
+            done
+
+            echo "Search for deprecated object directories complete."
+        fi
+    fi
 
     exit 0
 fi

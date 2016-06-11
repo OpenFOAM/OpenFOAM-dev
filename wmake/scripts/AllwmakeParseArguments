@@ -55,7 +55,8 @@ options:
   -j                Compile using all local cores/hyperthreads
   -jN or -j N       Compile using N cores/hyperthreads
   -no-scheduler     Compile without wmakeScheduler
-  -update           Update lnInclude directories and dep files
+  -update           Update lnInclude directories, dep files, remove deprecated
+                    files and directories
 USAGE
 
     # Print options for building code documentation
@@ -123,10 +124,17 @@ do
         -no-scheduler)
             unset WM_SCHEDULER
             ;;
-        # Update lnInclude directories and dep files following a pull
+        # Meant to be used following a pull, this will:
+        # - remove dep files that depend on deleted files;
+        # - remove stale dep files;
+        # - update lnInclude directories;
+        # - remove empty directories, along with deprecated object directories
+        #   and respective binaries.
         -update)
             wrmdep -update
+            wrmdep -old
             wmakeLnIncludeAll
+            wclean empty
 
             # Set WM_UPDATE_DEPENDENCIES, so that wmake will pick up on it
             export WM_UPDATE_DEPENDENCIES=yes

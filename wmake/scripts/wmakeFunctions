@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -101,7 +101,9 @@ findObjectDir()
 depToSource()
 {
     sourceFile=$(echo ${depFile%.dep} | \
-        sed -e s%platforms/${WM_OPTIONS}/%% -e s%Make/${WM_OPTIONS}/%% )
+        sed -e s%platforms/${WM_OPTIONS}/%% -e s%Make/${WM_OPTIONS}/%% \
+            -e s%platforms/${WM_OPTIONS}${WM_MPLIB}/%% \
+            -e s%Make/${WM_OPTIONS}${WM_MPLIB}/%% )
 }
 
 #------------------------------------------------------------------------------
