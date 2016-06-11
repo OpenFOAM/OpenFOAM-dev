@@ -1,16 +1,21 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  dev                                   |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
-|    \\/     M anipulation  |                                                 |
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes out the minimum and maximum values, by component for non-scalar
+    fields, and the locations where they occur.
+
 \*---------------------------------------------------------------------------*/
 
 minMaxComponents
 {
     #includeEtc "caseDicts/postProcessing/minMax/minMaxComponents.cfg"
 
-    mode components;
+    fields (U p);
 }
 
 // ************************************************************************* //
