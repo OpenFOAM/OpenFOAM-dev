@@ -396,6 +396,9 @@ public:
             //- Return the table of contents
             wordList toc() const;
 
+            //- Return the sorted table of contents
+            wordList sortedToc() const;
+
             //- Return the list of available keys or patterns
             List<keyType> keys(bool patterns=false) const;
 

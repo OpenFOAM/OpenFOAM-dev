@@ -710,6 +710,12 @@ Foam::wordList Foam::dictionary::toc() const
 }
 
 
+Foam::wordList Foam::dictionary::sortedToc() const
+{
+    return hashedEntries_.sortedToc();
+}
+
+
 Foam::List<Foam::keyType> Foam::dictionary::keys(bool patterns) const
 {
     List<keyType> keys(size());

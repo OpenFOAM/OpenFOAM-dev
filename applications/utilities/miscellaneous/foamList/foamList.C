@@ -29,12 +29,13 @@ Description
     OpenFOAM libraries
 
     \par Command-line options
-    \param -debug \n
+    \param -switches \n
         Print the DebugSwitches, InfoSwitches and OptimisationSwitches
-        \param -unset \n
-            print switches declared in libraries but not set in etc/controlDict
-        \param -redundant \n
-            print switches not declared in libraries but set in etc/controlDict
+    \param -registeredSwitches \n
+        Print the registered DebugSwitches, InfoSwitches and
+        OptimisationSwitches supporting run-time modification
+    \param -unset \n
+        print switches declared in libraries but not set in etc/controlDict
 
 \*---------------------------------------------------------------------------*/
 
@@ -48,14 +49,15 @@ Description
 
 using namespace Foam;
 
-void listDebug(const argList& args)
+void listSwitches
+(
+    const wordList& debugSwitches,
+    const wordList& infoSwitches,
+    const wordList& optSwitches,
+    const bool unset
+)
 {
-    // Switches declared in libraries
-    wordList libDebug(debug::debugObjects().sortedToc());
-    wordList libInfo(debug::infoObjects().sortedToc());
-    wordList libOpt(debug::optimisationObjects().sortedToc());
-
-    if (args.optionFound("redundant") || args.optionFound("unset"))
+    if (unset)
     {
         fileNameList controlDictFiles = findEtcFiles("controlDict", true);
         dictionary controlDict;
@@ -66,85 +68,66 @@ void listDebug(const argList& args)
 
         wordHashSet controlDictDebug
         (
-            controlDict.subDict("DebugSwitches").toc()
+            controlDict.subDict("DebugSwitches").sortedToc()
         );
 
         wordHashSet controlDictInfo
         (
-            controlDict.subDict("InfoSwitches").toc()
+            controlDict.subDict("InfoSwitches").sortedToc()
         );
 
         wordHashSet controlDictOpt
         (
-            controlDict.subDict("OptimisationSwitches").toc()
+            controlDict.subDict("OptimisationSwitches").sortedToc()
         );
 
 
+        IOobject::writeDivider(Info);
+
         wordHashSet hashset;
-        wordList listing;
+        hashset = debugSwitches;
+        hashset -= controlDictDebug;
+        Info<< "Unset DebugSwitches: " << hashset.sortedToc() << endl;
 
+        hashset = infoSwitches;
+        hashset -= controlDictInfo;
+        Info<< "Unset InfoSwitches: " << hashset.sortedToc() << endl;
 
-        // List redundant switches
-        if (args.optionFound("redundant"))
-        {
-            IOobject::writeDivider(Info);
-
-            hashset = controlDictDebug;
-            hashset -= libDebug;
-            listing = hashset.toc();
-            sort(listing);
-            Info<< "Redundant DebugSwitches: " << listing << endl;
-
-            hashset = controlDictInfo;
-            hashset -= libInfo;
-            listing = hashset.toc();
-            sort(listing);
-            Info<< "Redundant InfoSwitches: " << listing << endl;
-
-            hashset = controlDictOpt;
-            hashset -= libOpt;
-            listing = hashset.toc();
-            sort(listing);
-            Info<< "Redundant OptimisationSwitches: " << listing << endl;
-        }
-
-        // List unset switches
-        if (args.optionFound("unset"))
-        {
-            IOobject::writeDivider(Info);
-
-            hashset = libDebug;
-            hashset -= controlDictDebug;
-
-            listing = hashset.toc();
-            sort(listing);
-            Info<< "Unset DebugSwitches: " << listing << endl;
-
-            hashset = libInfo;
-            hashset -= controlDictInfo;
-            listing = hashset.toc();
-            sort(listing);
-            Info<< "Unset InfoSwitches: " << listing << endl;
-
-            hashset = libOpt;
-            hashset -= controlDictOpt;
-            listing = hashset.toc();
-            sort(listing);
-            Info<< "Unset OptimisationSwitches: " << listing << endl;
-        }
+        hashset = optSwitches;
+        hashset -= controlDictOpt;
+        Info<< "Unset OptimisationSwitches: " << hashset.sortedToc() << endl;
     }
     else
     {
         IOobject::writeDivider(Info);
+        Info<< "DebugSwitches: " << debugSwitches << endl;
+        Info<< "InfoSwitches: " << infoSwitches << endl;
+        Info<< "OptimisationSwitches: " << optSwitches << endl;
+    }
+}
 
-        sort(libDebug);
-        Info<< "DebugSwitches: " << libDebug << endl;
 
-        sort(libInfo);
-        Info<< "InfoSwitches: " << libInfo << endl;
-
-        sort(libOpt);
-        Info<< "OptimisationSwitches: " << libOpt << endl;
+void listSwitches(const argList& args)
+{
+    if (args.optionFound("registeredSwitches"))
+    {
+        listSwitches
+        (
+            debug::debugObjects().sortedToc(),
+            debug::infoObjects().sortedToc(),
+            debug::optimisationObjects().sortedToc(),
+            args.optionFound("unset")
+        );
+    }
+    else
+    {
+        listSwitches
+        (
+            debug::debugSwitches().sortedToc(),
+            debug::infoSwitches().sortedToc(),
+            debug::optimisationSwitches().sortedToc(),
+            args.optionFound("unset")
+        );
     }
 }
 
@@ -156,18 +139,18 @@ int main(int argc, char *argv[])
     argList::noParallel();
     argList::addBoolOption
     (
-        "debug",
-        "switches declared in libraries but not set in etc/controlDict"
+        "switches",
+        "Switches declared in libraries but not set in etc/controlDict"
+    );
+    argList::addBoolOption
+    (
+        "registeredSwitches",
+        "Switches registered for run-time modification"
     );
     argList::addBoolOption
     (
         "unset",
-        "switches declared in libraries but not set in etc/controlDict"
-    );
-    argList::addBoolOption
-    (
-        "redundant",
-        "switches not declared in libraries but set in etc/controlDict"
+        "Switches declared in libraries but not set in etc/controlDict"
     );
 
     argList args(argc, argv);
@@ -176,9 +159,13 @@ int main(int argc, char *argv[])
     {
         args.printUsage();
     }
-    else if (args.optionFound("debug"))
+    else if
+    (
+        args.optionFound("switches")
+     || args.optionFound("registeredSwitches")
+    )
     {
-        listDebug(args);
+        listSwitches(args);
     }
 
     Info<< "done" << endl;
