@@ -17,8 +17,6 @@ patchIntegrate
 
     operation areaIntegrate;
     #includeEtc "caseDicts/postProcessing/surfaceRegion/patch.cfg"
-
-    log    true;
 }
 
 

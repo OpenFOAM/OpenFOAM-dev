@@ -36,12 +36,15 @@ namespace Foam
     defineRunTimeSelectionTable(functionObject, dictionary);
 }
 
+bool Foam::functionObject::postProcess(false);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObject::functionObject(const word& name)
 :
-    name_(name)
+    name_(name),
+    log(postProcess)
 {}
 
 
@@ -117,6 +120,17 @@ Foam::functionObject::~functionObject()
 const Foam::word& Foam::functionObject::name() const
 {
     return name_;
+}
+
+
+bool Foam::functionObject::read(const dictionary& dict)
+{
+    if (!postProcess)
+    {
+        log = dict.lookupOrDefault<Switch>("log", true);
+    }
+
+    return true;
 }
 
 

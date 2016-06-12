@@ -73,6 +73,9 @@ if (argList::postProcess(argc, argv))
     #include "addRegionOption.H"
     #include "addFunctionObjectOptions.H"
 
+    // Set functionObject post-processing mode
+    functionObject::postProcess = true;
+
     #include "setRootCase.H"
 
     if (args.optionFound("list"))

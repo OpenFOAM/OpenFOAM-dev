@@ -17,8 +17,6 @@ patchAverage
 
     operation average;
     #includeEtc "caseDicts/postProcessing/surfaceRegion/patch.cfg"
-
-    log    true;
 }
 
 

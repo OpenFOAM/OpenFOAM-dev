@@ -40,7 +40,6 @@ SourceFiles
 #define functionObjects_regionFunctionObject_H
 
 #include "functionObject.H"
-#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -114,9 +113,6 @@ public:
 
     //- Runtime type information
     TypeName("regionFunctionObject");
-
-    //- Switch write log to Info
-    Switch log;
 
 
     // Constructors

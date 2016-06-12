@@ -112,6 +112,7 @@ SourceFiles
 
 #include "typeInfo.H"
 #include "autoPtr.H"
+#include "Switch.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -151,6 +152,12 @@ public:
     virtual const word& type() const = 0;
 
     static int debug;
+
+    //- Global post-processing mode switch
+    static bool postProcess;
+
+    //- Switch write log to Info
+    Switch log;
 
 
     // Declare run-time constructor selection tables
@@ -199,7 +206,7 @@ public:
         const word& name() const;
 
         //- Read and set the function object if its data have changed
-        virtual bool read(const dictionary&) = 0;
+        virtual bool read(const dictionary&);
 
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and
