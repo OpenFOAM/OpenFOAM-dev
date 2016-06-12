@@ -43,10 +43,8 @@ License
 #include "fvmDdt.H"
 #include "fvmLaplacian.H"
 #include "fixedValueFvsPatchFields.H"
-
 #include "blendingMethod.H"
 #include "HashPtrTable.H"
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
