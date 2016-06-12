@@ -42,16 +42,20 @@ Usage
     \param -region \<name\> \n
     Specify an alternative mesh region.
 
+    \param -writeSets \<surfaceFormat\> \n
+    Reconstruct all cellSets and faceSets geometry and write to postProcessing/
+    directory according to surfaceFormat (e.g. vtk or ensight)
+
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "timeSelector.H"
 #include "Time.H"
-
 #include "polyMesh.H"
 #include "globalMeshData.H"
+#include "vtkSurfaceWriter.H"
 
-#include "printMeshStats.H"
+#include "checkTools.H"
 #include "checkTopology.H"
 #include "checkGeometry.H"
 #include "checkMeshQuality.H"
@@ -84,6 +88,12 @@ int main(int argc, char *argv[])
         "meshQuality",
         "read user-defined mesh quality criterions from system/meshQualityDict"
     );
+    argList::addOption
+    (
+        "writeSets",
+        "<surfaceFormat>"
+        "reconstruct and write all faceSets and cellSets in selected format"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -94,6 +104,9 @@ int main(int argc, char *argv[])
     const bool allGeometry = args.optionFound("allGeometry");
     const bool allTopology = args.optionFound("allTopology");
     const bool meshQuality = args.optionFound("meshQuality");
+
+    word surfaceFormat;
+    const bool writeSets = args.optionReadIfPresent("writeSets", surfaceFormat);
 
     if (noTopology)
     {
@@ -111,6 +124,12 @@ int main(int argc, char *argv[])
     if (meshQuality)
     {
         Info<< "Enabling user-defined geometry checks." << nl << endl;
+    }
+    if (writeSets)
+    {
+        Info<< "Reconstructing and writing " << surfaceFormat
+            << " representation"
+            << " of all faceSets and cellSets." << nl << endl;
     }
 
 
@@ -131,6 +150,13 @@ int main(int argc, char *argv[])
                 )
            )
         );
+    }
+
+
+    autoPtr<surfaceWriter> writer;
+    if (writeSets)
+    {
+        writer = surfaceWriter::New(surfaceFormat);
     }
 
 
@@ -158,14 +184,20 @@ int main(int argc, char *argv[])
 
             if (!noTopology)
             {
-                nFailedChecks += checkTopology(mesh, allTopology, allGeometry);
+                nFailedChecks += checkTopology
+                (
+                    mesh,
+                    allTopology,
+                    allGeometry,
+                    writer
+                );
             }
 
-            nFailedChecks += checkGeometry(mesh, allGeometry);
+            nFailedChecks += checkGeometry(mesh, allGeometry, writer);
 
             if (meshQuality)
             {
-                nFailedChecks += checkMeshQuality(mesh, qualDict());
+                nFailedChecks += checkMeshQuality(mesh, qualDict(), writer);
             }
 
 
@@ -186,11 +218,11 @@ int main(int argc, char *argv[])
         {
             Info<< "Time = " << runTime.timeName() << nl << endl;
 
-            label nFailedChecks = checkGeometry(mesh, allGeometry);
+            label nFailedChecks = checkGeometry(mesh, allGeometry, writer);
 
             if (meshQuality)
             {
-                nFailedChecks += checkMeshQuality(mesh, qualDict());
+                nFailedChecks += checkMeshQuality(mesh, qualDict(), writer);
             }
 
 

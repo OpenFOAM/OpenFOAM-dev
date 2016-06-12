@@ -1,4 +1,4 @@
-printMeshStats.C
+checkTools.C
 checkTopology.C
 checkGeometry.C
 checkMeshQuality.C

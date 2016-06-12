@@ -2,5 +2,12 @@
 
 namespace Foam
 {
-    label checkMeshQuality(const polyMesh& mesh, const dictionary&);
+    class surfaceWriter;
+
+    label checkMeshQuality
+    (
+        const polyMesh&,
+        const dictionary&,
+        const autoPtr<surfaceWriter>&
+    );
 }

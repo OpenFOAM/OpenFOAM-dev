@@ -33,6 +33,8 @@ License
 #include "IOmanip.H"
 #include "emptyPolyPatch.H"
 #include "processorPolyPatch.H"
+#include "surfaceWriter.H"
+#include "checkTools.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +42,8 @@ Foam::label Foam::checkTopology
 (
     const polyMesh& mesh,
     const bool allTopology,
-    const bool allGeometry
+    const bool allGeometry,
+    const autoPtr<surfaceWriter>& writer
 )
 {
     label noFailedChecks = 0;
@@ -126,6 +129,11 @@ Foam::label Foam::checkTopology
                 << " illegal cells to set " << cells.name() << endl;
             cells.instance() = mesh.pointsInstance();
             cells.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), cells);
+            }
+
         }
         else
         {
@@ -164,6 +172,10 @@ Foam::label Foam::checkTopology
                 << " unordered faces to set " << faces.name() << endl;
             faces.instance() = mesh.pointsInstance();
             faces.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), faces);
+            }
         }
     }
 
@@ -180,6 +192,10 @@ Foam::label Foam::checkTopology
                 << faces.name() << endl;
             faces.instance() = mesh.pointsInstance();
             faces.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), faces);
+            }
         }
     }
 
@@ -197,6 +213,11 @@ Foam::label Foam::checkTopology
                 << endl;
             cells.instance() = mesh.pointsInstance();
             cells.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), cells);
+            }
+
         }
     }
 
@@ -216,6 +237,10 @@ Foam::label Foam::checkTopology
                 << faces.name() << endl;
             faces.instance() = mesh.pointsInstance();
             faces.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), faces);
+            }
         }
     }
 
@@ -267,6 +292,10 @@ Foam::label Foam::checkTopology
                 << endl;
             oneCells.instance() = mesh.pointsInstance();
             oneCells.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), oneCells);
+            }
         }
 
         label nTwoCells = returnReduce(twoCells.size(), sumOp<label>());
@@ -279,6 +308,10 @@ Foam::label Foam::checkTopology
                 << endl;
             twoCells.instance() = mesh.pointsInstance();
             twoCells.write();
+            if (writer.valid())
+            {
+                mergeAndWrite(writer(), twoCells);
+            }
         }
     }
 
@@ -316,6 +349,53 @@ Foam::label Foam::checkTopology
             ctr.write();
 
 
+
+            // Is region disconnected
+            boolList regionDisconnected(rs.nRegions(), true);
+            if (allTopology)
+            {
+                // -1   : not assigned
+                // -2   : multiple regions
+                // >= 0 : single region
+                labelList pointToRegion(mesh.nPoints(), -1);
+
+                for
+                (
+                    label faceI = mesh.nInternalFaces();
+                    faceI < mesh.nFaces();
+                    faceI++
+                )
+                {
+                    label regionI = rs[mesh.faceOwner()[faceI]];
+                    const face& f = mesh.faces()[faceI];
+                    forAll(f, fp)
+                    {
+                        label& pRegion = pointToRegion[f[fp]];
+                        if (pRegion == -1)
+                        {
+                            pRegion = regionI;
+                        }
+                        else if (pRegion == -2)
+                        {
+                            // Already marked
+                            regionDisconnected[regionI] = false;
+                        }
+                        else if (pRegion != regionI)
+                        {
+                            // Multiple regions
+                            regionDisconnected[regionI] = false;
+                            regionDisconnected[pRegion] = false;
+                            pRegion = -2;
+                        }
+                    }
+                }
+
+                Pstream::listCombineGather(regionDisconnected, andEqOp<bool>());
+                Pstream::listCombineScatter(regionDisconnected);
+            }
+
+
+
             // write cellSet for each region
             PtrList<cellSet> cellRegions(rs.nRegions());
             for (label i = 0; i < rs.nRegions(); i++)
@@ -339,7 +419,19 @@ Foam::label Foam::checkTopology
 
             for (label i = 0; i < rs.nRegions(); i++)
             {
-                Info<< "  <<Writing region " << i << " with "
+                Info<< "  <<Writing region " << i;
+                if (allTopology)
+                {
+                    if (regionDisconnected[i])
+                    {
+                        Info<< " (fully disconnected)";
+                    }
+                    else
+                    {
+                        Info<< " (point connected)";
+                    }
+                }
+                Info<< " with "
                     << returnReduce(cellRegions[i].size(), sumOp<scalar>())
                     << " cells to cellSet " << cellRegions[i].name() << endl;
 
