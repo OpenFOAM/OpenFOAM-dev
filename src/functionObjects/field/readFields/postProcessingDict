@@ -32,7 +32,7 @@ functions
 
     faceObj2
     {
-        type            faceSource;
+        type            surfaceRegion;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
         writeControl   timeStep;
@@ -40,7 +40,7 @@ functions
         log             true;
         writeFields     true;
         source          faceZone;
-        sourceName      f0;
+        name      f0;
         operation       areaAverage;
 
         fields

@@ -67,15 +67,15 @@ functions
 
     poolHeight
     {
-        type            faceSource;
+        type            surfaceRegion;
         libs            ("libfieldFunctionObjects.so");
         writeControl    timeStep;
         writeInterval   1;
         log             yes;
         writeTotalArea  no;
         writeFields     no;
-        source          faceZone;
-        sourceName      f0;
+        regionType      faceZone;
+        name            f0;
         operation       areaAverage;
         fields
         (

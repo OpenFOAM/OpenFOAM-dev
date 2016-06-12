@@ -8,7 +8,7 @@
 
 inletMassFlowRate
 {
-    type            faceSource;
+    type            surfaceRegion;
     libs ("libfieldFunctionObjects.so");
 
     fields
@@ -21,8 +21,8 @@ inletMassFlowRate
     log             true;
     surfaceFormat   null;
 
-    source          patch;
-    sourceName      inlet;
+    regionType      patch;
+    name            inlet;
 
     operation       sum;
 
@@ -31,7 +31,7 @@ inletMassFlowRate
 
 outletMassFlowRate
 {
-    type            faceSource;
+    type            surfaceRegion;
     libs ("libfieldFunctionObjects.so");
 
     fields
@@ -44,8 +44,8 @@ outletMassFlowRate
     log             true;
     surfaceFormat   null;
 
-    source          patch;
-    sourceName      outlet;
+    regionType      patch;
+    name            outlet;
 
     operation       sum;
 

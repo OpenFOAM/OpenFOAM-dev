@@ -1,2 +1,2 @@
 #!/bin/sh
-awk '{print $1 " " $3}' postProcessing/poolHeight/0/faceSource.dat > poolHeight_vs_time
+awk '{print $1 " " $3}' postProcessing/poolHeight/0/surfaceRegion.dat > poolHeight_vs_time

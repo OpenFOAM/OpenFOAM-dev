@@ -51,7 +51,7 @@ Foam::functionObjects::fieldValue::fieldValue
 :
     writeFiles(name, runTime, dict, name),
     dict_(dict),
-    sourceName_(word::null),
+    name_(word::null),
     resultDict_(fileName("name"), dictionary::null)
 {
     read(dict);
@@ -69,7 +69,7 @@ Foam::functionObjects::fieldValue::fieldValue
 :
     writeFiles(name, obr, dict, name),
     dict_(dict),
-    sourceName_(word::null),
+    name_(word::null),
     resultDict_(fileName("name"), dictionary::null)
 {
     read(dict);

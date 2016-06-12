@@ -70,7 +70,7 @@ protected:
         dictionary dict_;
 
         //- Name of source object
-        word sourceName_;
+        word name_;
 
         //- List of field names to operate on
         wordList fields_;
@@ -154,7 +154,7 @@ public:
         inline const dictionary& dict() const;
 
         //- Return the source name
-        inline const word& sourceName() const;
+        inline const word& name() const;
 
         //- Return the list of field names
         inline const wordList& fields() const;

@@ -49,4 +49,4 @@ Current tools
 - scalarTransport for plugin scalar transport calculations
 - visualization   post-processing VTK files for cutting planes, streamlines,...
 
-- faceSource      configuration for some of the tools above
+- surfaceRegion      configuration for some of the tools above

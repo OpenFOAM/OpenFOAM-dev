@@ -10,6 +10,5 @@ flowVelocity         (20 0 0);
 pressure             0;
 turbulentKE          0.24;
 turbulentOmega       1.78;
-#inputMode           merge
 
 // ************************************************************************* //

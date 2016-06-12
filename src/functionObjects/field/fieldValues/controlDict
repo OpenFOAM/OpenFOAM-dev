@@ -48,7 +48,7 @@ functions
 {
     faceObj1
     {
-        type            faceSource;
+        type            surfaceRegion;
         libs ("libfieldFunctionObjects.so");
 
         enabled         true;
@@ -64,7 +64,7 @@ functions
         source          patch;
 
         // if patch or faceZone: name of patch or faceZone
-        sourceName      movingWall;
+        name      movingWall;
 
         //// if sampledSurface: dictionary with a sampledSurface
         //// Note: will not sample surface fields.
@@ -90,14 +90,14 @@ functions
 
     faceObj2
     {
-        type            faceSource;
+        type            surfaceRegion;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
         writeControl   writeTime;
         log             true;
         writeFields     true;
         source          faceZone;
-        sourceName      f0;
+        name      f0;
         operation       sum;
 
         fields
@@ -108,14 +108,14 @@ functions
 
     cellObj1
     {
-        type            cellSource;
+        type            volRegion;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
         writeControl   writeTime;
         log             true;
         writeFields     true;
         source          cellZone;
-        sourceName      c0;
+        name      c0;
         operation       volAverage;
 
         fields

@@ -55,14 +55,14 @@ functions
 {
     inletFlux
     {
-        type            faceSource;
+        type            surfaceRegion;
         libs ("libfieldFunctionObjects.so");
         writeControl   timeStep;
         log             true;
         // Output field values as well
         writeFields     false;
-        source          patch;
-        sourceName      inlet;
+        regionType      patch;
+        name            inlet;
         operation       sum;
 
         fields
@@ -74,13 +74,13 @@ functions
     outletFlux
     {
         $inletFlux;
-        sourceName      outlet;
+        name            outlet;
     }
 
     atmosphereFlux
     {
         $inletFlux;
-        sourceName      atmosphere;
+        name            atmosphere;
     }
 }
 
