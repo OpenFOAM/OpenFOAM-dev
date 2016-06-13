@@ -68,8 +68,8 @@ void Foam::functionObjects::fieldValues::fieldValueDelta::writeFileHeader
     const label i
 )
 {
-    const wordList& fields1 = source1Ptr_->fields();
-    const wordList& fields2 = source2Ptr_->fields();
+    const wordList& fields1 = region1Ptr_->fields();
+    const wordList& fields2 = region2Ptr_->fields();
 
     DynamicList<word> commonFields(fields1.size());
     forAll(fields1, i)
@@ -83,8 +83,8 @@ void Foam::functionObjects::fieldValues::fieldValueDelta::writeFileHeader
 
     Ostream& os = file();
 
-    writeHeaderValue(os, "Source1", source1Ptr_->name());
-    writeHeaderValue(os, "Source2", source2Ptr_->name());
+    writeHeaderValue(os, "Source1", region1Ptr_->name());
+    writeHeaderValue(os, "Source2", region2Ptr_->name());
     writeHeaderValue(os, "Operation", operationTypeNames_[operation_]);
     writeCommented(os, "Time");
 
@@ -108,8 +108,8 @@ Foam::functionObjects::fieldValues::fieldValueDelta::fieldValueDelta
 :
     writeFiles(name, runTime, dict, name),
     operation_(opSubtract),
-    source1Ptr_(NULL),
-    source2Ptr_(NULL)
+    region1Ptr_(NULL),
+    region2Ptr_(NULL)
 {
     if (!isA<fvMesh>(obr_))
     {
@@ -137,23 +137,23 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::read
 {
     writeFiles::read(dict);
 
-    source1Ptr_.reset
+    region1Ptr_.reset
     (
         fieldValue::New
         (
-            name() + ".source1",
+            name() + ".region1",
             obr_,
-            dict.subDict("source1"),
+            dict.subDict("region1"),
             false
         ).ptr()
     );
-    source2Ptr_.reset
+    region2Ptr_.reset
     (
         fieldValue::New
         (
-            name() + ".source2",
+            name() + ".region2",
             obr_,
-            dict.subDict("source2"),
+            dict.subDict("region2"),
             false
         ).ptr()
     );
@@ -168,8 +168,8 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::write()
 {
     writeFiles::write();
 
-    source1Ptr_->write();
-    source2Ptr_->write();
+    region1Ptr_->write();
+    region2Ptr_->write();
 
     if (Pstream::master())
     {

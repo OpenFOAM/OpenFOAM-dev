@@ -21,8 +21,8 @@ functions
         type            readFields;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
-        writeControl   timeStep;
-        writeInterval  1;
+        writeControl    timeStep;
+        writeInterval   1;
 
         fields
         (
@@ -35,12 +35,12 @@ functions
         type            surfaceRegion;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
-        writeControl   timeStep;
-        writeInterval  1;
+        writeControl    timeStep;
+        writeInterval   1;
         log             true;
         writeFields     true;
-        source          faceZone;
-        name      f0;
+        regionType      faceZone;
+        name            f0;
         operation       areaAverage;
 
         fields

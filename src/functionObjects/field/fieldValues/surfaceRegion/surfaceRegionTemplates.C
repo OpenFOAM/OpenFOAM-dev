@@ -321,7 +321,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
                 surfaceWriterPtr_->write
                 (
                     outputDir,
-                    word(regionTypeNames_[regionType_]) + "_" + name_,
+                    word(regionTypeNames_[regionType_]) + "_" + regionName_,
                     points,
                     faces,
                     fieldName,
@@ -345,7 +345,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
             file()<< tab << result;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << name_ << ") of " << fieldName
+                << "(" << regionName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }
     }
@@ -377,7 +377,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::filterField
         {
             FatalErrorInFunction
                 << type() << " " << name() << ": "
-                << regionTypeNames_[regionType_] << "(" << name_ << "):"
+                << regionTypeNames_[regionType_] << "(" << regionName_ << "):"
                 << nl
                 << "    Unable to process internal faces for volume field "
                 << field.name() << nl << abort(FatalError);

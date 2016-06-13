@@ -34,9 +34,9 @@ inline const Foam::dictionary& Foam::functionObjects::fieldValue::dict() const
 }
 
 
-inline const Foam::word& Foam::functionObjects::fieldValue::name() const
+inline const Foam::word& Foam::functionObjects::fieldValue::regionName() const
 {
-    return name_;
+    return regionName_;
 }
 
 

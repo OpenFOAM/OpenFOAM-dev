@@ -118,11 +118,11 @@ private:
         //- Operation to apply to values
         operationType operation_;
 
-        //- Field value source object 1
-        autoPtr<fieldValue> source1Ptr_;
+        //- Field value region object 1
+        autoPtr<fieldValue> region1Ptr_;
 
-        //- Field value source object 2
-        autoPtr<fieldValue> source2Ptr_;
+        //- Field value region object 2
+        autoPtr<fieldValue> region2Ptr_;
 
 
     // Private Member Functions

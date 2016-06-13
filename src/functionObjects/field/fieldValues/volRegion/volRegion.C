@@ -93,14 +93,14 @@ void Foam::functionObjects::fieldValues::volRegion::setCellZoneCells()
     {
         case stCellZone:
         {
-            dict().lookup("name") >> name_;
+            dict().lookup("name") >> regionName_;
 
-            label zoneId = mesh().cellZones().findZoneID(name_);
+            label zoneId = mesh().cellZones().findZoneID(regionName_);
 
             if (zoneId < 0)
             {
                 FatalErrorInFunction
-                    << "Unknown cell zone name: " << name_
+                    << "Unknown cell zone name: " << regionName_
                     << ". Valid cell zones are: " << mesh().cellZones().names()
                     << nl << exit(FatalError);
             }
@@ -151,14 +151,14 @@ void Foam::functionObjects::fieldValues::volRegion::initialise
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << name_ << "):" << nl
+            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
             << "    Region has no cells" << exit(FatalError);
     }
 
     volume_ = volume();
 
     Info<< type() << " " << name() << ":"
-        << regionTypeNames_[regionType_] << "(" << name_ << "):" << nl
+        << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
         << "    total cells  = " << nCells_ << nl
         << "    total volume = " << volume_
         << nl << endl;
@@ -178,7 +178,7 @@ void Foam::functionObjects::fieldValues::volRegion::writeFileHeader
 )
 {
     writeCommented(file(), "Region type : ");
-    file() << regionTypeNames_[regionType_] << " " << name_ << endl;
+    file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
     writeCommented(file(), "Cells  : ");
     file() << nCells_ << endl;
     writeCommented(file(), "Volume : ");

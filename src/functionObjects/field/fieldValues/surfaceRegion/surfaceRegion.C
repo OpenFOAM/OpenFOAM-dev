@@ -102,14 +102,14 @@ const Foam::NamedEnum
 
 void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
 {
-    label zoneId = mesh().faceZones().findZoneID(name_);
+    label zoneId = mesh().faceZones().findZoneID(regionName_);
 
     if (zoneId < 0)
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << name_ << "):" << nl
-            << "    Unknown face zone name: " << name_
+            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
+            << "    Unknown face zone name: " << regionName_
             << ". Valid face zones are: " << mesh().faceZones().names()
             << nl << exit(FatalError);
     }
@@ -187,14 +187,14 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
 
 void Foam::functionObjects::fieldValues::surfaceRegion::setPatchFaces()
 {
-    const label patchid = mesh().boundaryMesh().findPatchID(name_);
+    const label patchid = mesh().boundaryMesh().findPatchID(regionName_);
 
     if (patchid < 0)
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << name_ << "):" << nl
-            << "    Unknown patch name: " << name_
+            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
+            << "    Unknown patch name: " << regionName_
             << ". Valid patch names are: "
             << mesh().boundaryMesh().names() << nl
             << exit(FatalError);
@@ -423,7 +423,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::initialise
     const dictionary& dict
 )
 {
-    dict.lookup("name") >> name_;
+    dict.lookup("name") >> regionName_;
 
     switch (regionType_)
     {
@@ -446,7 +446,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::initialise
         {
             FatalErrorInFunction
                 << type() << " " << name() << ": "
-                << regionTypeNames_[regionType_] << "(" << name_ << "):"
+                << regionTypeNames_[regionType_] << "(" << regionName_ << "):"
                 << nl << "    Unknown region type. Valid region types are:"
                 << regionTypeNames_.sortedToc() << nl << exit(FatalError);
         }
@@ -456,7 +456,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::initialise
     {
         FatalErrorInFunction
             << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << name_ << "):" << nl
+            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
             << "    Region has no faces" << exit(FatalError);
     }
 
@@ -539,7 +539,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::writeFileHeader
 )
 {
     writeCommented(file(), "Region type : ");
-    file() << regionTypeNames_[regionType_] << " " << name_ << endl;
+    file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
     writeCommented(file(), "Faces  : ");
     file() << nFaces_ << endl;
     writeCommented(file(), "Area   : ");

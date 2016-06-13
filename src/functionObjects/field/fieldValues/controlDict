@@ -52,7 +52,7 @@ functions
         libs ("libfieldFunctionObjects.so");
 
         enabled         true;
-        writeControl   writeTime;
+        writeControl    writeTime;
 
         // Output to log&file (true) or to file only
         log             true;
@@ -60,8 +60,8 @@ functions
         // Output field values as well
         writeFields     true;
 
-        // Type of source: patch/faceZone/sampledSurface
-        source          patch;
+        // Type of region: patch/faceZone/sampledSurface
+        regionType      patch;
 
         // if patch or faceZone: name of patch or faceZone
         name      movingWall;
@@ -73,7 +73,7 @@ functions
         //    // Sampling on triSurface
         //    type        sampledTriSurfaceMesh;
         //    surface     integrationPlane.stl;
-        //    source      cells;  // sample cells or boundaryFaces
+        //    regionType  cells;  // sample cells or boundaryFaces
         //    interpolate true;
         //}
 
@@ -93,10 +93,10 @@ functions
         type            surfaceRegion;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
-        writeControl   writeTime;
+        writeControl    writeTime;
         log             true;
         writeFields     true;
-        source          faceZone;
+        regionType      faceZone;
         name      f0;
         operation       sum;
 
@@ -111,10 +111,10 @@ functions
         type            volRegion;
         libs ("libfieldFunctionObjects.so");
         enabled         true;
-        writeControl   writeTime;
+        writeControl    writeTime;
         log             true;
         writeFields     true;
-        source          cellZone;
+        regionType      cellZone;
         name      c0;
         operation       volAverage;
 

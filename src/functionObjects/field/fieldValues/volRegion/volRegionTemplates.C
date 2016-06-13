@@ -192,7 +192,7 @@ bool Foam::functionObjects::fieldValues::volRegion::writeValues
                     IOobject
                     (
                         fieldName + "_" + regionTypeNames_[regionType_] + "-"
-                            + name_,
+                            + regionName_,
                         obr_.time().timeName(),
                         obr_,
                         IOobject::NO_READ,
@@ -206,7 +206,7 @@ bool Foam::functionObjects::fieldValues::volRegion::writeValues
             file()<< tab << result;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << name_ << ") of " << fieldName
+                << "(" << regionName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }
     }

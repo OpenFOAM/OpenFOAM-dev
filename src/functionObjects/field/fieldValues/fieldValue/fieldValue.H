@@ -69,8 +69,8 @@ protected:
         //- Construction dictionary
         dictionary dict_;
 
-        //- Name of source object
-        word name_;
+        //- Name of region (patch, zone, etc.)
+        word regionName_;
 
         //- List of field names to operate on
         wordList fields_;
@@ -153,8 +153,8 @@ public:
         //- Return the reference to the construction dictionary
         inline const dictionary& dict() const;
 
-        //- Return the source name
-        inline const word& name() const;
+        //- Return the region name
+        inline const word& regionName() const;
 
         //- Return the list of field names
         inline const wordList& fields() const;

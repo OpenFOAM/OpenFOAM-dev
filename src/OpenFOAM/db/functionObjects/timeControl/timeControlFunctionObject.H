@@ -133,9 +133,6 @@ public:
             //- Return the input dictionary
             inline const dictionary& dict() const;
 
-            //- Return the region name
-            inline const word& regionName() const;
-
             //- Return the execute control object
             inline const Foam::timeControl& executeControl() const;
 
