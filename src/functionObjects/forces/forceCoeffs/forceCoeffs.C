@@ -167,13 +167,13 @@ bool Foam::functionObjects::forceCoeffs::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::forceCoeffs::execute(const bool postProcess)
+bool Foam::functionObjects::forceCoeffs::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::forceCoeffs::write(const bool postProcess)
+bool Foam::functionObjects::forceCoeffs::write()
 {
     forces::calcForcesMoment();
 

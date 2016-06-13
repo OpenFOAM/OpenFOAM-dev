@@ -26,8 +26,8 @@ Solution:
 - copy the flowRatePatch file into the case system directory (not
   flowRatePatch.cfg)
 - edit system/flowRatePatch to set the patch name
-  replace "patch <patchName>;"
-  with    "patch outlet;"
+  replace "name <patchName>;"
+  with    "name outlet;"
 - activate the function object by including the flowRatePatch file in functions
   sub-dictionary in the case controlDict file, e.g.
   functions

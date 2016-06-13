@@ -100,19 +100,13 @@ bool Foam::functionObjects::writeObjects::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::writeObjects::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::writeObjects::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::writeObjects::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::writeObjects::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 

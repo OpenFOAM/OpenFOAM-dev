@@ -203,11 +203,11 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate turbulence fields
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Do nothing.
         //  The turbulence fields are registered and written automatically
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

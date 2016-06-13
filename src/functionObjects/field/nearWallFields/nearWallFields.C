@@ -286,7 +286,7 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
+bool Foam::functionObjects::nearWallFields::execute()
 {
     DebugInFunction << endl;
 
@@ -327,7 +327,7 @@ bool Foam::functionObjects::nearWallFields::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::nearWallFields::write(const bool postProcess)
+bool Foam::functionObjects::nearWallFields::write()
 {
     DebugInFunction << endl;
 

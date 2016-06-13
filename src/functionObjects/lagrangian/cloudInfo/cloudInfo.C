@@ -103,13 +103,13 @@ bool Foam::functionObjects::cloudInfo::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::cloudInfo::execute(const bool postProcess)
+bool Foam::functionObjects::cloudInfo::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::cloudInfo::write(const bool postProcess)
+bool Foam::functionObjects::cloudInfo::write()
 {
     writeFiles::write();
 

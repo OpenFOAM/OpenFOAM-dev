@@ -153,13 +153,13 @@ bool Foam::functionObjects::writeDictionary::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::writeDictionary::execute(const bool postProcess)
+bool Foam::functionObjects::writeDictionary::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::writeDictionary::write(const bool postProcess)
+bool Foam::functionObjects::writeDictionary::write()
 {
     bool firstDict = true;
     forAll(dictNames_, i)

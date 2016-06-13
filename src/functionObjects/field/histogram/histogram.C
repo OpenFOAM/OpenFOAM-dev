@@ -109,13 +109,13 @@ bool Foam::functionObjects::histogram::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::histogram::execute(const bool postProcess)
+bool Foam::functionObjects::histogram::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::histogram::write(const bool postProcess)
+bool Foam::functionObjects::histogram::write()
 {
     Log << type() << " " << name() << " write:" << nl;
 

@@ -111,10 +111,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the processorID field
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the processorID field
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

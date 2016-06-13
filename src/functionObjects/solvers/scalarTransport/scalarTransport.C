@@ -186,7 +186,7 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::scalarTransport::execute(const bool postProcess)
+bool Foam::functionObjects::scalarTransport::execute()
 {
     Info<< type() << " write:" << endl;
 
@@ -263,7 +263,7 @@ bool Foam::functionObjects::scalarTransport::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::scalarTransport::write(const bool postProcess)
+bool Foam::functionObjects::scalarTransport::write()
 {
     return true;
 }

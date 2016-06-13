@@ -249,10 +249,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Do nothing
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Calculate and write the wall-bounded streamlines
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 
         //- Update for changes of mesh
         virtual void updateMesh(const mapPolyMesh&);

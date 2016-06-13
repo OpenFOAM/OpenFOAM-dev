@@ -721,10 +721,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::read
 }
 
 
-bool Foam::functionObjects::fieldValues::surfaceRegion::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::fieldValues::surfaceRegion::write()
 {
     fieldValue::write();
 

@@ -80,10 +80,7 @@ bool Foam::functionObjects::surfaceInterpolate::read
 }
 
 
-bool Foam::functionObjects::surfaceInterpolate::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::surfaceInterpolate::execute()
 {
     Info<< type() << " " << name() << " write:" << nl;
 
@@ -106,10 +103,7 @@ bool Foam::functionObjects::surfaceInterpolate::execute
 }
 
 
-bool Foam::functionObjects::surfaceInterpolate::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::surfaceInterpolate::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 

@@ -322,7 +322,7 @@ bool Foam::functionObjects::fieldAverage::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::fieldAverage::execute(const bool postProcess)
+bool Foam::functionObjects::fieldAverage::execute()
 {
     calcAverages();
 
@@ -330,7 +330,7 @@ bool Foam::functionObjects::fieldAverage::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::fieldAverage::write(const bool postProcess)
+bool Foam::functionObjects::fieldAverage::write()
 {
     writeAverages();
     writeAveragingProperties();

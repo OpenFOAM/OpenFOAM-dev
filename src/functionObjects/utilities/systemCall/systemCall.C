@@ -105,7 +105,7 @@ bool Foam::functionObjects::systemCall::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::systemCall::execute(const bool postProcess)
+bool Foam::functionObjects::systemCall::execute()
 {
     forAll(executeCalls_, callI)
     {
@@ -127,7 +127,7 @@ bool Foam::functionObjects::systemCall::end()
 }
 
 
-bool Foam::functionObjects::systemCall::write(const bool postProcess)
+bool Foam::functionObjects::systemCall::write()
 {
     forAll(writeCalls_, callI)
     {

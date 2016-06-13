@@ -121,10 +121,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the mole-fraction fields
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- The mole-fraction fields auto-write
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

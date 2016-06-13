@@ -125,13 +125,13 @@ public:
         virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Execute at the final time-loop, currently does nothing
         virtual bool end();
 
         //- Write the FUNCTIONOBJECT
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

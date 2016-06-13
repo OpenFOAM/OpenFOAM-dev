@@ -157,10 +157,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the interpolated fields
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the interpolated fields
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

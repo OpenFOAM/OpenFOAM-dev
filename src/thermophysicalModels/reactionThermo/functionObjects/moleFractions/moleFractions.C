@@ -119,7 +119,7 @@ bool Foam::moleFractions<ThermoType>::read
 
 
 template<class ThermoType>
-bool Foam::moleFractions<ThermoType>::execute(const bool postProcess)
+bool Foam::moleFractions<ThermoType>::execute()
 {
     calculateMoleFractions();
     return true;
@@ -127,7 +127,7 @@ bool Foam::moleFractions<ThermoType>::execute(const bool postProcess)
 
 
 template<class ThermoType>
-bool Foam::moleFractions<ThermoType>::write(const bool postProcess)
+bool Foam::moleFractions<ThermoType>::write()
 {
     return true;
 }

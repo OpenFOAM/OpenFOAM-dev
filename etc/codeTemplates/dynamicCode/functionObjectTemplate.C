@@ -121,7 +121,7 @@ bool ${typeName}FunctionObject::read(const dictionary& dict)
 }
 
 
-bool ${typeName}FunctionObject::execute(const bool postProcess)
+bool ${typeName}FunctionObject::execute()
 {
     if (${verbose:-false})
     {
@@ -136,7 +136,7 @@ bool ${typeName}FunctionObject::execute(const bool postProcess)
 }
 
 
-bool ${typeName}FunctionObject::write(const bool postProcess)
+bool ${typeName}FunctionObject::write()
 {
     if (${verbose:-false})
     {

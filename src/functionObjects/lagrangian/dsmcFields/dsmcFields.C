@@ -92,13 +92,13 @@ bool Foam::functionObjects::dsmcFields::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::dsmcFields::execute(const bool postProcess)
+bool Foam::functionObjects::dsmcFields::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::dsmcFields::write(const bool postProcess)
+bool Foam::functionObjects::dsmcFields::write()
 {
     word rhoNMeanName = "rhoNMean";
     word rhoMMeanName = "rhoMMean";

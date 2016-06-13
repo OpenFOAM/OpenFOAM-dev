@@ -89,7 +89,7 @@ bool Foam::functionObjects::processorField::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::processorField::execute(const bool postProcess)
+bool Foam::functionObjects::processorField::execute()
 {
     const volScalarField& procField =
         mesh_.lookupObject<volScalarField>("processorID");
@@ -101,7 +101,7 @@ bool Foam::functionObjects::processorField::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::processorField::write(const bool postProcess)
+bool Foam::functionObjects::processorField::write()
 {
     const volScalarField& procField =
         mesh_.lookupObject<volScalarField>("processorID");

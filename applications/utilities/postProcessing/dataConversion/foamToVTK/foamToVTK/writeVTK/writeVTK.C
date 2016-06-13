@@ -74,13 +74,13 @@ bool Foam::functionObjects::writeVTK::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::writeVTK::execute(const bool postProcess)
+bool Foam::functionObjects::writeVTK::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::writeVTK::write(const bool postProcess)
+bool Foam::functionObjects::writeVTK::write()
 {
     Info<< type() << " " << name() << " output:" << nl;
 

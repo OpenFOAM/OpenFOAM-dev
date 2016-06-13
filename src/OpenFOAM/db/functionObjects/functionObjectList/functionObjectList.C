@@ -145,7 +145,7 @@ bool Foam::functionObjectList::readFunctionObject
     //     'patchAverage(patch=inlet, p)' -> funcName = patchAverage;
     //         args = (patch=inlet, p); field = p
 
-    word funcName;
+    word funcName(funcNameArgs);
 
     int argLevel = 0;
     wordList args;
@@ -436,7 +436,7 @@ bool Foam::functionObjectList::start()
 }
 
 
-bool Foam::functionObjectList::execute(const bool postProcess)
+bool Foam::functionObjectList::execute()
 {
     bool ok = true;
 
@@ -449,8 +449,8 @@ bool Foam::functionObjectList::execute(const bool postProcess)
 
         forAll(*this, objectI)
         {
-            ok = operator[](objectI).execute(postProcess) && ok;
-            ok = operator[](objectI).write(postProcess) && ok;
+            ok = operator[](objectI).execute() && ok;
+            ok = operator[](objectI).write() && ok;
         }
     }
 

@@ -126,7 +126,7 @@ public:
         using regIOobject::write;
 
         //- Sample and write
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 
         //- Update for changes of mesh
         virtual void updateMesh(const mapPolyMesh& mpm);

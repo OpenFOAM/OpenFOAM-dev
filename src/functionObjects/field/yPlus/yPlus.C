@@ -170,7 +170,7 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::yPlus::execute(const bool postProcess)
+bool Foam::functionObjects::yPlus::execute()
 {
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
 
@@ -198,7 +198,7 @@ bool Foam::functionObjects::yPlus::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::yPlus::write(const bool postProcess)
+bool Foam::functionObjects::yPlus::write()
 {
     const volScalarField& yPlus =
         obr_.lookupObject<volScalarField>(type());

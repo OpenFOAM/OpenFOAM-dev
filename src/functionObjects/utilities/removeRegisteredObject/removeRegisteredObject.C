@@ -85,10 +85,7 @@ bool Foam::functionObjects::removeRegisteredObject::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::removeRegisteredObject::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::removeRegisteredObject::execute()
 {
     forAll(objectNames_, i)
     {
@@ -113,10 +110,7 @@ bool Foam::functionObjects::removeRegisteredObject::execute
 }
 
 
-bool Foam::functionObjects::removeRegisteredObject::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::removeRegisteredObject::write()
 {
     return true;
 }

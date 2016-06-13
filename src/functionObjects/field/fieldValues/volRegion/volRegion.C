@@ -275,10 +275,7 @@ bool Foam::functionObjects::fieldValues::volRegion::read
 }
 
 
-bool Foam::functionObjects::fieldValues::volRegion::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::fieldValues::volRegion::write()
 {
     fieldValue::write();
 

@@ -171,10 +171,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Do nothing
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Calculate and write
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

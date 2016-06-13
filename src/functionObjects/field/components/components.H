@@ -107,7 +107,7 @@ public:
     // Member Functions
 
         //- Write the component fields
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 
         //- Clear the component fields from the objectRegistry
         virtual bool clear();

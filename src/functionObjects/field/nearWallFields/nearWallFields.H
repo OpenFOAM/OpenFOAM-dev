@@ -196,10 +196,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the near-wall fields
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the near-wall fields
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

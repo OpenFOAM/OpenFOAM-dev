@@ -177,13 +177,13 @@ void Foam::sampledSurfaces::verbose(const bool verbosity)
 }
 
 
-bool Foam::sampledSurfaces::execute(const bool postProcess)
+bool Foam::sampledSurfaces::execute()
 {
     return true;
 }
 
 
-bool Foam::sampledSurfaces::write(const bool postProcess)
+bool Foam::sampledSurfaces::write()
 {
     if (size())
     {

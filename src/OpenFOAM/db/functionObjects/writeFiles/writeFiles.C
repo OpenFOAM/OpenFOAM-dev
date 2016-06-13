@@ -194,7 +194,7 @@ Foam::OFstream& Foam::functionObjects::writeFiles::file(const label i)
 }
 
 
-bool Foam::functionObjects::writeFiles::write(const bool postProcess)
+bool Foam::functionObjects::writeFiles::write()
 {
     createFiles();
 

@@ -116,10 +116,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the result field
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the result field
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 
         //- Clear the result field from the objectRegistry
         virtual bool clear();

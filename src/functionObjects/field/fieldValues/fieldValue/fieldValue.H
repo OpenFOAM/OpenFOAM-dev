@@ -172,10 +172,10 @@ public:
         virtual bool read(const dictionary& dict);
 
         //- Execute
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write to screen/file
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

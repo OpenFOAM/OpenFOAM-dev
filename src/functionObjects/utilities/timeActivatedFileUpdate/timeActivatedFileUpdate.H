@@ -135,10 +135,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Execute file updates
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Do nothing
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

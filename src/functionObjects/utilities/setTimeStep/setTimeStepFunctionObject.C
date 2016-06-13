@@ -113,19 +113,13 @@ bool Foam::functionObjects::setTimeStepFunctionObject::read
 }
 
 
-bool Foam::functionObjects::setTimeStepFunctionObject::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::setTimeStepFunctionObject::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::setTimeStepFunctionObject::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::setTimeStepFunctionObject::write()
 {
     return true;
 }

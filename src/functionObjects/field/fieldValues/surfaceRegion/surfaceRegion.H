@@ -402,7 +402,7 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate and write
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

@@ -135,11 +135,11 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the scalarTransport
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Do nothing.
         //  The volScalarField is registered and written automatically
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

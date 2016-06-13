@@ -131,10 +131,7 @@ bool Foam::functionObjects::timeActivatedFileUpdate::read
 }
 
 
-bool Foam::functionObjects::timeActivatedFileUpdate::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::timeActivatedFileUpdate::execute()
 {
     updateFile();
 
@@ -142,10 +139,7 @@ bool Foam::functionObjects::timeActivatedFileUpdate::execute
 }
 
 
-bool Foam::functionObjects::timeActivatedFileUpdate::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::timeActivatedFileUpdate::write()
 {
     return true;
 }

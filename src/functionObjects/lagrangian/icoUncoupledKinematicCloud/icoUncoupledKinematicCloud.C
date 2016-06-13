@@ -126,10 +126,7 @@ bool Foam::functionObjects::icoUncoupledKinematicCloud::read
 }
 
 
-bool Foam::functionObjects::icoUncoupledKinematicCloud::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::icoUncoupledKinematicCloud::execute()
 {
     mu_ = rhoValue_*laminarTransport_.nu();
     kinematicCloud_.evolve();
@@ -138,10 +135,7 @@ bool Foam::functionObjects::icoUncoupledKinematicCloud::execute
 }
 
 
-bool Foam::functionObjects::icoUncoupledKinematicCloud::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::icoUncoupledKinematicCloud::write()
 {
     return true;
 }

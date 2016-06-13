@@ -76,7 +76,7 @@ bool Foam::functionObjects::FUNCTIONOBJECT::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::FUNCTIONOBJECT::execute(const bool postProcess)
+bool Foam::functionObjects::FUNCTIONOBJECT::execute()
 {
     return true;
 }
@@ -88,7 +88,7 @@ bool Foam::functionObjects::FUNCTIONOBJECT::end()
 }
 
 
-bool Foam::functionObjects::FUNCTIONOBJECT::write(const bool postProcess)
+bool Foam::functionObjects::FUNCTIONOBJECT::write()
 {
     return true;
 }

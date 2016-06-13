@@ -130,10 +130,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Execute, check existence of abort file and take action
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Execute, check existence of abort file and take action
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 
         //- Execute at the final time-loop, used for cleanup
         virtual bool end();

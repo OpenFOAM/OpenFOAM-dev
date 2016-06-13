@@ -74,7 +74,7 @@ bool Foam::functionObjects::readFields::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::readFields::execute(const bool postProcess)
+bool Foam::functionObjects::readFields::execute()
 {
     // Clear out any previously loaded fields
     vsf_.clear();
@@ -105,7 +105,7 @@ bool Foam::functionObjects::readFields::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::readFields::write(const bool postProcess)
+bool Foam::functionObjects::readFields::write()
 {
     return true;
 }

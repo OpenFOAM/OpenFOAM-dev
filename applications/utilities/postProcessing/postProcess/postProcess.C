@@ -113,7 +113,7 @@ void executeFunctionObjects
     Info<< nl << "Executing functionObjects" << endl;
 
     // Execute the functionObjects in post-processing mode
-    functions.execute(true);
+    functions.execute();
 
     while (!storedObjects.empty())
     {

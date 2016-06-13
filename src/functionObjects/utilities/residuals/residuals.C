@@ -106,13 +106,13 @@ void Foam::functionObjects::residuals::writeFileHeader(const label i)
 }
 
 
-bool Foam::functionObjects::residuals::execute(const bool postProcess)
+bool Foam::functionObjects::residuals::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::residuals::write(const bool postProcess)
+bool Foam::functionObjects::residuals::write()
 {
     writeFiles::write();
 

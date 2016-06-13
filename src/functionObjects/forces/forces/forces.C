@@ -892,13 +892,13 @@ Foam::vector Foam::functionObjects::forces::momentEff() const
 }
 
 
-bool Foam::functionObjects::forces::execute(const bool postProcess)
+bool Foam::functionObjects::forces::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::forces::write(const bool postProcess)
+bool Foam::functionObjects::forces::write()
 {
     calcForcesMoment();
 

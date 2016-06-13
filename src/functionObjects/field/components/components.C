@@ -76,7 +76,7 @@ Foam::functionObjects::components::~components()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::components::write(const bool postProcess)
+bool Foam::functionObjects::components::write()
 {
     bool written = true;
 

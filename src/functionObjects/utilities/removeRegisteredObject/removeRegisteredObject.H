@@ -126,10 +126,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Remove the registered objects
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Do nothing
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

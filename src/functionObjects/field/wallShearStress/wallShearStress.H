@@ -161,10 +161,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the wall shear-stress
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the wall shear-stress
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

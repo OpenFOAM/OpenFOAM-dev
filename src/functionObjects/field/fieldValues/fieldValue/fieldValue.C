@@ -97,13 +97,13 @@ bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::fieldValue::execute(const bool postProcess)
+bool Foam::functionObjects::fieldValue::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::fieldValue::write(const bool postProcess)
+bool Foam::functionObjects::fieldValue::write()
 {
     writeFiles::write();
 

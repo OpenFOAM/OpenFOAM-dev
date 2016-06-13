@@ -174,7 +174,7 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::turbulenceFields::execute(const bool postProcess)
+bool Foam::functionObjects::turbulenceFields::execute()
 {
     bool comp = compressible();
 
@@ -299,7 +299,7 @@ bool Foam::functionObjects::turbulenceFields::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::turbulenceFields::write(const bool postProcess)
+bool Foam::functionObjects::turbulenceFields::write()
 {
     forAllConstIter(wordHashSet, fieldSet_, iter)
     {

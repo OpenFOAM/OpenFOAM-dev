@@ -588,16 +588,13 @@ bool Foam::functionObjects::wallBoundedStreamLine::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::wallBoundedStreamLine::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::wallBoundedStreamLine::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::wallBoundedStreamLine::write(const bool postProcess)
+bool Foam::functionObjects::wallBoundedStreamLine::write()
 {
     const Time& runTime = obr_.time();
     const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);

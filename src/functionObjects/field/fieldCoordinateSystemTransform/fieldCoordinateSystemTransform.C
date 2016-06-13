@@ -98,10 +98,7 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::read
 }
 
 
-bool Foam::functionObjects::fieldCoordinateSystemTransform::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::fieldCoordinateSystemTransform::execute()
 {
     forAll(fieldSet_, fieldi)
     {
@@ -116,10 +113,7 @@ bool Foam::functionObjects::fieldCoordinateSystemTransform::execute
 }
 
 
-bool Foam::functionObjects::fieldCoordinateSystemTransform::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::fieldCoordinateSystemTransform::write()
 {
     forAll(fieldSet_, fieldi)
     {

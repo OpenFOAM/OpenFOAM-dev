@@ -12,8 +12,8 @@ Description
 
 patchAverage
 {
-    patch  <patchName>;
-    fields (<field names>);
+    name    <patchName>;
+    fields  (<field names>);
 
     operation average;
     #includeEtc "caseDicts/postProcessing/surfaceRegion/patch.cfg"

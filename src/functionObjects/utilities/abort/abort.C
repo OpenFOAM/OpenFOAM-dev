@@ -132,7 +132,7 @@ bool Foam::functionObjects::abort::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::abort::execute(const bool postProcess)
+bool Foam::functionObjects::abort::execute()
 {
     bool hasAbort = isFile(abortFile_);
     reduce(hasAbort, orOp<bool>());
@@ -183,7 +183,7 @@ bool Foam::functionObjects::abort::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::abort::write(const bool postProcess)
+bool Foam::functionObjects::abort::write()
 {
     return true;
 }

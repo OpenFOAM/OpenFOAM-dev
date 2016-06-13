@@ -12,7 +12,7 @@ Description
 
 patchIntegrate
 {
-    patch  <patchName>;
+    name   <patchName>;
     fields (<field names>);
 
     operation areaIntegrate;

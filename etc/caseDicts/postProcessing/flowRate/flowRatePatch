@@ -14,7 +14,7 @@ Description
 
 flowRatePatch
 {
-    patch <patchName>;
+    name    <patchName>;
 
     #includeEtc "caseDicts/postProcessing/flowRate/flowRatePatch.cfg"
 }

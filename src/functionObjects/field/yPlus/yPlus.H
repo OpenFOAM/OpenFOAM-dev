@@ -114,10 +114,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Calculate the yPlus field
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the yPlus field
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

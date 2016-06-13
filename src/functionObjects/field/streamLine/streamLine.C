@@ -423,13 +423,13 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::streamLine::execute(const bool postProcess)
+bool Foam::functionObjects::streamLine::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::streamLine::write(const bool postProcess)
+bool Foam::functionObjects::streamLine::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 

@@ -228,13 +228,13 @@ void Foam::sampledSets::verbose(const bool verbosity)
 }
 
 
-bool Foam::sampledSets::execute(const bool postProcess)
+bool Foam::sampledSets::execute()
 {
     return true;
 }
 
 
-bool Foam::sampledSets::write(const bool postProcess)
+bool Foam::sampledSets::write()
 {
     if (size())
     {

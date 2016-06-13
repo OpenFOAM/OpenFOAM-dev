@@ -100,13 +100,13 @@ public:
         virtual bool read(const dictionary&);
 
         //- Execute the "executeCalls" at each time-step
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Execute the "endCalls" at the final time-loop
         virtual bool end();
 
         //- Write, execute the "writeCalls"
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

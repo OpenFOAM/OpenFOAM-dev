@@ -296,10 +296,10 @@ public:
         virtual vector momentEff() const;
 
         //- Execute, currently does nothing
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the forces
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

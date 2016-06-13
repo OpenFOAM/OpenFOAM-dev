@@ -134,10 +134,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

@@ -191,7 +191,7 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::wallShearStress::execute(const bool postProcess)
+bool Foam::functionObjects::wallShearStress::execute()
 {
     typedef compressible::turbulenceModel cmpModel;
     typedef incompressible::turbulenceModel icoModel;
@@ -232,7 +232,7 @@ bool Foam::functionObjects::wallShearStress::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::wallShearStress::write(const bool postProcess)
+bool Foam::functionObjects::wallShearStress::write()
 {
     writeFiles::write();
 

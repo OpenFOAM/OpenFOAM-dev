@@ -148,12 +148,12 @@ public:
         virtual bool read(const dictionary&);
 
         //- Execute, currently does nothing
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Calculate the histogram and write.
         //  postProcess overrides the usual writeControl behaviour and
         //  forces writing always (used in post-processing mode)
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

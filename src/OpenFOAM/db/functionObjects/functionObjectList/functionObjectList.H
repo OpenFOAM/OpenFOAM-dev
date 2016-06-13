@@ -235,7 +235,7 @@ public:
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and
         //  forces execution (used in post-processing mode)
-        bool execute(const bool postProcess = false);
+        bool execute();
 
         //- Called when Time::run() determines that the time-loop exits
         bool end();

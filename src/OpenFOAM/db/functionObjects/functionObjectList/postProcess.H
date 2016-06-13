@@ -136,7 +136,7 @@ if (argList::postProcess(argc, argv))
             #include INCLUDE_FILE(CREATE_FIELDS_3)
             #endif
 
-            functionsPtr->execute(true);
+            functionsPtr->execute();
         }
         catch (IOerror& err)
         {

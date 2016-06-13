@@ -164,10 +164,7 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::read
 }
 
 
-bool Foam::functionObjects::fieldValues::fieldValueDelta::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::fieldValues::fieldValueDelta::write()
 {
     writeFiles::write();
 
@@ -206,10 +203,7 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::write
 }
 
 
-bool Foam::functionObjects::fieldValues::fieldValueDelta::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::fieldValues::fieldValueDelta::execute()
 {
     return true;
 }

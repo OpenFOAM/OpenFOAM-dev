@@ -85,7 +85,7 @@ Foam::functionObjects::timeControl::timeControl
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::timeControl::execute(const bool postProcess)
+bool Foam::functionObjects::timeControl::execute()
 {
     if (active() && (postProcess || executeControl_.execute()))
     {
@@ -96,7 +96,7 @@ bool Foam::functionObjects::timeControl::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::timeControl::write(const bool postProcess)
+bool Foam::functionObjects::timeControl::write()
 {
     if (active() && (postProcess || writeControl_.execute()))
     {

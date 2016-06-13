@@ -158,10 +158,10 @@ public:
         virtual bool read(const dictionary&);
 
         //- Track the cloud
-        virtual bool execute(const bool postProcess = false);
+        virtual bool execute();
 
         //- Write the cloud
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 

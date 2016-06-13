@@ -116,7 +116,7 @@ bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::fieldExpression::execute(const bool postProcess)
+bool Foam::functionObjects::fieldExpression::execute()
 {
     if (!calc())
     {
@@ -136,7 +136,7 @@ bool Foam::functionObjects::fieldExpression::execute(const bool postProcess)
 }
 
 
-bool Foam::functionObjects::fieldExpression::write(const bool postProcess)
+bool Foam::functionObjects::fieldExpression::write()
 {
     return writeObject(resultName_);
 }

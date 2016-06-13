@@ -357,13 +357,13 @@ bool Foam::probes::read(const dictionary& dict)
 }
 
 
-bool Foam::probes::execute(const bool postProcess)
+bool Foam::probes::execute()
 {
     return true;
 }
 
 
-bool Foam::probes::write(const bool postProcess)
+bool Foam::probes::write()
 {
     if (size() && prepare())
     {

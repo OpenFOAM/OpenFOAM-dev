@@ -122,9 +122,9 @@ bool Foam::IOOutputFilter<OutputFilter>::read()
 
 
 template<class OutputFilter>
-bool Foam::IOOutputFilter<OutputFilter>::write(const bool postProcess)
+bool Foam::IOOutputFilter<OutputFilter>::write()
 {
-    return OutputFilter::write(postProcess);
+    return OutputFilter::write();
 }
 
 

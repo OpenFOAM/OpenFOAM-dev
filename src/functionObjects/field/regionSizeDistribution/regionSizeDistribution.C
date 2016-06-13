@@ -378,19 +378,13 @@ bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::regionSizeDistribution::execute
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::regionSizeDistribution::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::regionSizeDistribution::write
-(
-    const bool postProcess
-)
+bool Foam::functionObjects::regionSizeDistribution::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 

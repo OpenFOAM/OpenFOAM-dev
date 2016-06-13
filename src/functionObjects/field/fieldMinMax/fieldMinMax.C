@@ -140,13 +140,13 @@ bool Foam::functionObjects::fieldMinMax::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::fieldMinMax::execute(const bool postProcess)
+bool Foam::functionObjects::fieldMinMax::execute()
 {
     return true;
 }
 
 
-bool Foam::functionObjects::fieldMinMax::write(const bool postProcess)
+bool Foam::functionObjects::fieldMinMax::write()
 {
     writeFiles::write();
 

@@ -129,7 +129,7 @@ public:
         OFstream& file(const label i);
 
         //- Write function
-        virtual bool write(const bool postProcess = false);
+        virtual bool write();
 };
 
 
