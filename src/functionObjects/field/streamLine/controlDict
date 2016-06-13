@@ -57,10 +57,10 @@ functions
         writeControl   writeTime;
         // writeInterval 10;
 
-        setFormat       vtk; //gnuplot, raw etc. See sampleDict.
+        setFormat       vtk; // gnuplot, raw etc.
 
-        // Interpolation method. Default is cellPoint. See sampleDict.
-        //interpolationScheme pointMVC;
+        // Interpolation method. Default is cellPoint.
+        // interpolationScheme pointMVC;
 
         // Tracked forwards (+U) or backwards (-U)
         trackForward    true;
@@ -84,8 +84,8 @@ functions
         // Cloud name to use
         cloudName       particleTracks;
 
-        // Seeding method. See the sampleSets in sampleDict.
-        seedSampleSet   uniform;  //cloud;//triSurfaceMeshPointSet;
+        // Seeding method.
+        seedSampleSet   uniform;  // cloud; //triSurfaceMeshPointSet;
 
         uniformCoeffs
         {

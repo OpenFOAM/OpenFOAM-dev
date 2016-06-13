@@ -20,6 +20,6 @@ sampleFrequency 1;
 
 maxPositions    1000000;
 
-setFormat       vtk;    // see sampleDict for set formats
+setFormat       vtk;
 
 // ************************************************************************* //

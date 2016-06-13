@@ -94,8 +94,8 @@ functions
         // Velocity field to use for tracking.
         U UNear;
 
-        // Interpolation method. Default is cellPoint. See sampleDict.
-        //interpolationScheme pointMVC;
+        // Interpolation method. Default is cellPoint.
+        // interpolationScheme pointMVC;
 
         // Tracked forwards (+U) or backwards (-U)
         trackForward    true;
@@ -115,8 +115,8 @@ functions
         // Cloud name to use
         cloudName       particleTracks;
 
-        // Seeding method. See the sampleSets in sampleDict.
-        seedSampleSet   patchSeed;    //cloud;//triSurfaceMeshPointSet;
+        // Seeding method.
+        seedSampleSet   patchSeed;    //cloud; //triSurfaceMeshPointSet;
 
         uniformCoeffs
         {

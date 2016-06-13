@@ -75,8 +75,8 @@ functions
         // Cloud name to use
         cloudName       particleTracks;
 
-        // Seeding method. See the sampleSets in sampleDict.
-        seedSampleSet   uniform;  //cloud;//triSurfaceMeshPointSet;
+        // Seeding method.
+        seedSampleSet   uniform;  //cloud; //triSurfaceMeshPointSet;
 
         uniformCoeffs
         {
