@@ -11,9 +11,12 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      sampleDict;
+    object      sample;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type sets;
+libs ("libsampling.so");
 
 interpolationScheme cellPoint;
 
@@ -21,17 +24,16 @@ setFormat       raw;
 
 sets
 (
-    line_centreProfile
+    data
     {
         type    uniform;
-        axis    distance;
-        start   (10.001 -1 0.01);
-        end     (10.001 1 0.01);
-        nPoints 100;
+        axis    x;
+        start   (-4.995 0 0);
+        end     (4.995 0 0);
+        nPoints 1000;
     }
 );
 
-fields          ( Ux );
-
+fields          (T mag(U) p);
 
 // ************************************************************************* //

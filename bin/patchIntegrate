@@ -32,6 +32,6 @@
 Script=${0##*/}
 
 echo $Script "has been superceded by the postProcess utility:"
-echo "postProcess -func '"$Script"(name=inlet,p)'"
+echo "    postProcess -func '"$Script"(name=inlet,p)'"
 
 #------------------------------------------------------------------------------

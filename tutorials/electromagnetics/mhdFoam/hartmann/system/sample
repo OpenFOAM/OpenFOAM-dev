@@ -15,23 +15,26 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+type sets;
+libs ("libsampling.so");
+
 interpolationScheme cellPoint;
 
 setFormat       raw;
 
 sets
 (
-    line
+    line_centreProfile
     {
-        type    face;
-        axis    x;
-        start   (-5 0 0);
-        end     (5 0 0);
+        type    uniform;
+        axis    distance;
+        start   (10.001 -1 0.01);
+        end     (10.001 1 0.01);
         nPoints 100;
     }
 );
 
-fields          ( p U.component(0) T rho );
+fields          ( Ux );
 
 
 // ************************************************************************* //

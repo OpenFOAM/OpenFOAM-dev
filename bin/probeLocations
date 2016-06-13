@@ -23,7 +23,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     supercededByPostProcess
+#     probeLocations
 #
 # Description
 #     Script to suggest using the new "postProcess" utility.
@@ -32,6 +32,8 @@
 Script=${0##*/}
 
 echo $Script "has been superceded by the postProcess utility:"
-echo "    postProcess -func" $Script
+echo "    postProcess -func probes"
+echo "or"
+echo "    postProcess -func 'probes(p, U)'"
 
 #------------------------------------------------------------------------------

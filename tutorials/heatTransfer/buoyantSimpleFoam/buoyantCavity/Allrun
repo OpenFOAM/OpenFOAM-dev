@@ -9,7 +9,7 @@ application=`getApplication`
 
 runApplication blockMesh
 runApplication $application
-runApplication sample -latestTime
+runApplication postProcess -latestTime -func sample
 
 ( cd validation && ./createGraphs )
 

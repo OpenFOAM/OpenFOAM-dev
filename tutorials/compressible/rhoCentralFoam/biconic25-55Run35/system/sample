@@ -11,35 +11,38 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      sampleDict;
+    object      sample;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+type sets;
+libs ("libsampling.so");
+
 interpolationScheme cellPointFace;
 
-writeFormat     raw;
+setFormat       raw;
 
-sampleSets
+sets
 (
-    face
+    cone25
     {
-        name    cone25;
+        type    face;
         axis    x;
         start   (0 0 0);
         end     (0.09208087 0.042939 0);
         nPoints 92;
     }
-    face
+    cone55
     {
-        name    cone55;
+        type    face;
         axis    x;
         start   (0.09208087 0.042939 0);
         end     (0.153683 0.13092 0);
         nPoints 61;
     }
-    face
+    base
     {
-        name    base;
+        type    face;
         axis    x;
         start   (0.153683 0.13092 0);
         end     (0.193675 0.13092 0);

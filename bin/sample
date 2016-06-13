@@ -23,7 +23,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     supercededByPostProcess
+#     probeLocations
 #
 # Description
 #     Script to suggest using the new "postProcess" utility.
@@ -32,6 +32,12 @@
 Script=${0##*/}
 
 echo $Script "has been superceded by the postProcess utility:"
-echo "    postProcess -func" $Script
+echo "    postProcess -func $Script"
+echo
+echo "To re-use existing 'sampleDict' files simply add the following entries:"
+echo "    type sets;"
+echo "    libs (\"libsampling.so\");"
+echo "and run"
+echo "    postProcess -func sampleDict"
 
 #------------------------------------------------------------------------------

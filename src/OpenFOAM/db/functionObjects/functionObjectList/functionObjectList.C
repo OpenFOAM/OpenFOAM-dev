@@ -233,7 +233,14 @@ bool Foam::functionObjectList::readFunctionObject
     // Read the functionObject dictionary
     IFstream fileStream(path);
     dictionary funcsDict(fileStream);
-    dictionary& funcDict = funcsDict.subDict(funcName);
+    dictionary* funcDictPtr = &funcsDict;
+
+    if (funcsDict.found(funcName) && funcsDict.isDict(funcName))
+    {
+        funcDictPtr = &funcsDict.subDict(funcName);
+    }
+
+    dictionary& funcDict = *funcDictPtr;
 
     // Insert the 'field' and/or 'fields' entry corresponding to the optional
     // arguments or read the 'field' or 'fields' entry and add the required

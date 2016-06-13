@@ -11,10 +11,13 @@ FoamFile
     format          ascii;
     class           dictionary;
     location        "system";
-    object          sampleDict;
+    object          sample;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type sets;
+libs ("libsampling.so");
 
 interpolationScheme cellPointFace;
 
