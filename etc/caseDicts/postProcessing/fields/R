@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-R
-{
-    type            turbulenceFields;
-    libs            ("libfieldFunctionObjects.so");
+type            turbulenceFields;
+libs            ("libfieldFunctionObjects.so");
 
-    field           R;
+field           R;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

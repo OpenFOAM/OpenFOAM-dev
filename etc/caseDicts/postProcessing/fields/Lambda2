@@ -12,15 +12,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-Lambda2
-{
-    type            Lambda2;
-    libs            ("libfieldFunctionObjects.so");
+type            Lambda2;
+libs            ("libfieldFunctionObjects.so");
 
-    field           U;
+field           U;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

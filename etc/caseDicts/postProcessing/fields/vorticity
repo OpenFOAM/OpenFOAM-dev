@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-vorticity
-{
-    type            vorticity;
-    libs            ("libfieldFunctionObjects.so");
+type            vorticity;
+libs            ("libfieldFunctionObjects.so");
 
-    field           U;
+field           U;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

@@ -10,11 +10,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-faceMin
-{
-    #includeEtc "caseDicts/postProcessing/minMax/faceMin.cfg"
+#includeEtc "caseDicts/postProcessing/minMax/faceMin.cfg"
 
-    fields (U p);
-}
+fields (U p);
 
 // ************************************************************************* //

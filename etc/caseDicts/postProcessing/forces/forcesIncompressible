@@ -11,15 +11,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-forcesIncompressible
-{
-    #includeEtc "caseDicts/postProcessing/forces/forces.cfg"
+#includeEtc "caseDicts/postProcessing/forces/forces.cfg"
 
-    rhoInf      1.225;    // Fluid density
-    patches     (patch1 patch2);
+rhoInf      1.225;    // Fluid density
+patches     (patch1 patch2);
 
-    CofR        (0 0 0);
-    pitchAxis   (0 1 0);
-}
+CofR        (0 0 0);
+pitchAxis   (0 1 0);
 
 // ************************************************************************* //

@@ -11,16 +11,13 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-singleGraph
-{
-    start   (0 1e-06 0);
-    end     (1 1e-06 0);
-    fields  (U p);
+start   (0 1e-06 0);
+end     (1 1e-06 0);
+fields  (U p);
 
-    #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
+#includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
 
-    // Must be last entry
-    #includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
-}
+// Must be last entry
+#includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
 
 // ************************************************************************* //

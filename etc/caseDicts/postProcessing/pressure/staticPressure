@@ -11,11 +11,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-staticPressure
-{
-    #includeEtc "caseDicts/postProcessing/pressure/staticPressure.cfg"
+#includeEtc "caseDicts/postProcessing/pressure/staticPressure.cfg"
 
-    rhoInf 1.2; // Density to scale
-}
+rhoInf 1.2; // Density to scale
 
 // ************************************************************************* //

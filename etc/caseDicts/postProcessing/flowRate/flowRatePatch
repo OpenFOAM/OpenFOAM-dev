@@ -12,11 +12,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-flowRatePatch
-{
-    name    <patchName>;
+name    <patchName>;
 
-    #includeEtc "caseDicts/postProcessing/flowRate/flowRatePatch.cfg"
-}
+#includeEtc "caseDicts/postProcessing/flowRate/flowRatePatch.cfg"
 
 // ************************************************************************* //

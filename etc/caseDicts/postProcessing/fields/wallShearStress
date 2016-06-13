@@ -11,13 +11,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-wallShearStress
-{
-    type            wallShearStress;
-    libs            ("libfieldFunctionObjects.so");
+type            wallShearStress;
+libs            ("libfieldFunctionObjects.so");
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

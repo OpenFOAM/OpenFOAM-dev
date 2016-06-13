@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-streamlines
-{
-    nLines  20;
-    start   (0 -4 1e-06); // Ensure that points do not coincide with
-    end     (0  4 1e-06); // mesh faces, but instead lie inside cells
-    fields  (U p);
+nLines  20;
+start   (0 -4 1e-06); // Ensure that points do not coincide with
+end     (0  4 1e-06); // mesh faces, but instead lie inside cells
+fields  (U p);
 
-    // Must be last entry
-    #includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
-}
+// Must be last entry
+#includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
 
 // ************************************************************************* //

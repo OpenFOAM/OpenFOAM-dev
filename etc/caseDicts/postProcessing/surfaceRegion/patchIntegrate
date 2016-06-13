@@ -10,14 +10,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-patchIntegrate
-{
-    name   <patchName>;
-    fields (<field names>);
+name   <patchName>;
+fields (<field names>);
 
-    operation areaIntegrate;
-    #includeEtc "caseDicts/postProcessing/surfaceRegion/patch.cfg"
-}
-
+operation areaIntegrate;
+#includeEtc "caseDicts/postProcessing/surfaceRegion/patch.cfg"
 
 // ************************************************************************* //

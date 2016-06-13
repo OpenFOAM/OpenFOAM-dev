@@ -11,14 +11,11 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-randomise
-{
-    #includeEtc "caseDicts/postProcessing/fields/randomise.cfg"
+#includeEtc "caseDicts/postProcessing/fields/randomise.cfg"
 
-    field           <fieldName>;
+field           <fieldName>;
 
-    // Set the magnitude of the perturbation
-    magPerturbation <scalar>;
-}
+// Set the magnitude of the perturbation
+magPerturbation <scalar>;
 
 // ************************************************************************* //

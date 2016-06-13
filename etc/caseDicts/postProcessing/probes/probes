@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-probes
-{
-    #includeEtc "caseDicts/postProcessing/probes/probes.cfg"
+#includeEtc "caseDicts/postProcessing/probes/probes.cfg"
 
-    fields (p U);
-    probeLocations
-    (
-        (0 0 0)
-    );
-}
+fields (p U);
+probeLocations
+(
+    (0 0 0)
+);
 
 // ************************************************************************* //

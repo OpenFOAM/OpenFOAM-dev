@@ -11,12 +11,9 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-pressureDifferenceSurface
-{
-    triSurface1 <triSurface1>;
-    triSurface2 <triSurface2>;
+triSurface1 <triSurface1>;
+triSurface2 <triSurface2>;
 
-    #includeEtc "caseDicts/postProcessing/pressure/pressureDifferenceSurface.cfg"
-}
+#includeEtc "caseDicts/postProcessing/pressure/pressureDifferenceSurface.cfg"
 
 // ************************************************************************* //

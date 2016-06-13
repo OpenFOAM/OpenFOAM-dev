@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-CourantNo
-{
-    type            CourantNo;
-    libs            ("libfieldFunctionObjects.so");
+type            CourantNo;
+libs            ("libfieldFunctionObjects.so");
 
-    field           phi;
+field           phi;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

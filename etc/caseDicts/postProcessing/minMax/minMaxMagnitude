@@ -11,11 +11,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-minMaxMagnitude
-{
-    #includeEtc "caseDicts/postProcessing/minMax/fieldMinMax.cfg"
+#includeEtc "caseDicts/postProcessing/minMax/fieldMinMax.cfg"
 
-    fields (U p);
-}
+fields (U p);
 
 // ************************************************************************* //

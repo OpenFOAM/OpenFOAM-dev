@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-mag
-{
-    type            mag;
-    libs            ("libfieldFunctionObjects.so");
+type            mag;
+libs            ("libfieldFunctionObjects.so");
 
-    field           <fieldName>;
+field           <fieldName>;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

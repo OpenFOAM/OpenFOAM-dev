@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-internalCloud
-{
-    fields (p U);
-    points
-    (
-        (0 0 0)
-    );
+fields (p U);
+points
+(
+    (0 0 0)
+);
 
-    #includeEtc "caseDicts/postProcessing/probes/internalCloud.cfg"
-}
+#includeEtc "caseDicts/postProcessing/probes/internalCloud.cfg"
 
 // ************************************************************************* //

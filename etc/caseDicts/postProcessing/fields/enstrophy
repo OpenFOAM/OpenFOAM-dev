@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-enstrophy
-{
-    type            enstrophy;
-    libs            ("libfieldFunctionObjects.so");
+type            enstrophy;
+libs            ("libfieldFunctionObjects.so");
 
-    field           U;
+field           U;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

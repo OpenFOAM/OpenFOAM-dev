@@ -11,11 +11,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-minMaxComponents
-{
-    #includeEtc "caseDicts/postProcessing/minMax/minMaxComponents.cfg"
+#includeEtc "caseDicts/postProcessing/minMax/minMaxComponents.cfg"
 
-    fields (U p);
-}
+fields (U p);
 
 // ************************************************************************* //

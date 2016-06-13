@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-MachNo
-{
-    type            MachNo;
-    libs            ("libfieldFunctionObjects.so");
+type            MachNo;
+libs            ("libfieldFunctionObjects.so");
 
-    field           U;
+field           U;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

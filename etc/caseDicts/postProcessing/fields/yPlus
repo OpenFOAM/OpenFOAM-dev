@@ -10,13 +10,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-yPlus
-{
-    type            yPlus;
-    libs            ("libfieldFunctionObjects.so");
+type            yPlus;
+libs            ("libfieldFunctionObjects.so");
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

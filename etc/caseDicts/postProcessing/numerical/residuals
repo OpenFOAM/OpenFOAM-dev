@@ -12,11 +12,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-residuals
-{
-    #includeEtc "caseDicts/postProcessing/numerical/residuals.cfg"
+#includeEtc "caseDicts/postProcessing/numerical/residuals.cfg"
 
-    fields (p U);
-}
+fields (p U);
 
 // ************************************************************************* //

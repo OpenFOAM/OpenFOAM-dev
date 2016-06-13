@@ -10,14 +10,11 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-writeObjects
-{
-    type            writeObjects;
-    libs            ("libutilityFunctionObjects.so");
+type            writeObjects;
+libs            ("libutilityFunctionObjects.so");
 
-    objects         (<object names>);
+objects         (<object names>);
 
-    writeControl    writeTime;
-}
+writeControl    writeTime;
 
 // ************************************************************************* //

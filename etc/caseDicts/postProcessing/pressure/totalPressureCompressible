@@ -11,11 +11,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-totalPressureCompressible
-{
-    #includeEtc "caseDicts/postProcessing/pressure/totalPressureCompressible.cfg"
+#includeEtc "caseDicts/postProcessing/pressure/totalPressureCompressible.cfg"
 
-    pRef    0;
-}
+pRef    0;
 
 // ************************************************************************* //

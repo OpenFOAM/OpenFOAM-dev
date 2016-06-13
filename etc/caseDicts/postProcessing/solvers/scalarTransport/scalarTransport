@@ -14,14 +14,11 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-scalarTransport
-{
-    type            scalarTransport;
-    libs            ("libsolverFunctionObjects.so");
+type            scalarTransport;
+libs            ("libsolverFunctionObjects.so");
 
-    field           s;
-    schemesField    s;
-    D               1e-09;
-}
+field           s;
+schemesField    s;
+D               1e-09;
 
 // ************************************************************************* //

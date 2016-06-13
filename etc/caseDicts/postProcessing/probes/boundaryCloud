@@ -11,20 +11,17 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-boundaryCloud
-{
-    fields (p U);
+fields (p U);
 
-    points
-    (
-        (0 0 0)
-    );
+points
+(
+    (0 0 0)
+);
 
-    maxDistance 0.1;
+maxDistance 0.1;
 
-    patches     (".*");
+patches     (".*");
 
-    #includeEtc "caseDicts/postProcessing/probes/boundaryCloud.cfg"
-}
+#includeEtc "caseDicts/postProcessing/probes/boundaryCloud.cfg"
 
 // ************************************************************************* //

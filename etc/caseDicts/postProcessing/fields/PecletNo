@@ -10,15 +10,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-PecletNo
-{
-    type            PecletNo;
-    libs            ("libfieldFunctionObjects.so");
+type            PecletNo;
+libs            ("libfieldFunctionObjects.so");
 
-    field           phi;
+field           phi;
 
-    executeControl  writeTime;
-    writeControl    writeTime;
-}
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //
