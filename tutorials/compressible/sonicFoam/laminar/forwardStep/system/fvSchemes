@@ -44,7 +44,6 @@ laplacianSchemes
 interpolationSchemes
 {
     default         linear;
-    hmm             limitedLinear phi 1;
 }
 
 snGradSchemes
