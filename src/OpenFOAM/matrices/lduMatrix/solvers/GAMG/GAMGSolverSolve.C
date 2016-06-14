@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "GAMGSolver.H"
-#include "ICCG.H"
-#include "BICCG.H"
+#include "PCG.H"
+#include "PBiCG.H"
 #include "SubField.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -519,6 +519,34 @@ void Foam::GAMGSolver::initVcycle
 }
 
 
+Foam::dictionary Foam::GAMGSolver::PCGsolverDict
+(
+    const scalar tol,
+    const scalar relTol
+) const
+{
+    dictionary dict(IStringStream("solver PCG; preconditioner DIC;")());
+    dict.add("tolerance", tol);
+    dict.add("relTol", relTol);
+
+    return dict;
+}
+
+
+Foam::dictionary Foam::GAMGSolver::PBiCGsolverDict
+(
+    const scalar tol,
+    const scalar relTol
+) const
+{
+    dictionary dict(IStringStream("solver PBiCG; preconditioner DILU;")());
+    dict.add("tolerance", tol);
+    dict.add("relTol", relTol);
+
+    return dict;
+}
+
+
 void Foam::GAMGSolver::solveCoarsestLevel
 (
     scalarField& coarsestCorrField,
@@ -584,15 +612,14 @@ void Foam::GAMGSolver::solveCoarsestLevel
     //
     //            if (allMatrix.asymmetric())
     //            {
-    //                coarseSolverPerf = BICCG
+    //                coarseSolverPerf = PBiCG
     //                (
     //                    "coarsestLevelCorr",
     //                    allMatrix,
     //                    procInterfaceLevelsBouCoeffs_[coarsestLevel],
     //                    procInterfaceLevelsIntCoeffs_[coarsestLevel],
     //                    procInterfaceLevels_[coarsestLevel],
-    //                    tolerance_,
-    //                    relTol_
+    //                    PBiCGsolverDict(tolerance_, relTol_)
     //                ).solve
     //                (
     //                    coarsestCorrField,
@@ -601,15 +628,14 @@ void Foam::GAMGSolver::solveCoarsestLevel
     //            }
     //            else
     //            {
-    //                coarseSolverPerf = ICCG
+    //                coarseSolverPerf = PCG
     //                (
     //                    "coarsestLevelCorr",
     //                    allMatrix,
     //                    procInterfaceLevelsBouCoeffs_[coarsestLevel],
     //                    procInterfaceLevelsIntCoeffs_[coarsestLevel],
     //                    procInterfaceLevels_[coarsestLevel],
-    //                    tolerance_,
-    //                    relTol_
+    //                    PCGsolverDict(tolerance_, relTol_)
     //                ).solve
     //                (
     //                    coarsestCorrField,
@@ -647,15 +673,14 @@ void Foam::GAMGSolver::solveCoarsestLevel
 
         if (matrixLevels_[coarsestLevel].asymmetric())
         {
-            coarseSolverPerf = BICCG
+            coarseSolverPerf = PBiCG
             (
                 "coarsestLevelCorr",
                 matrixLevels_[coarsestLevel],
                 interfaceLevelsBouCoeffs_[coarsestLevel],
                 interfaceLevelsIntCoeffs_[coarsestLevel],
                 interfaceLevels_[coarsestLevel],
-                tolerance_,
-                relTol_
+                PBiCGsolverDict(tolerance_, relTol_)
             ).solve
             (
                 coarsestCorrField,
@@ -664,15 +689,14 @@ void Foam::GAMGSolver::solveCoarsestLevel
         }
         else
         {
-            coarseSolverPerf = ICCG
+            coarseSolverPerf = PCG
             (
                 "coarsestLevelCorr",
                 matrixLevels_[coarsestLevel],
                 interfaceLevelsBouCoeffs_[coarsestLevel],
                 interfaceLevelsIntCoeffs_[coarsestLevel],
                 interfaceLevels_[coarsestLevel],
-                tolerance_,
-                relTol_
+                PCGsolverDict(tolerance_, relTol_)
             ).solve
             (
                 coarsestCorrField,

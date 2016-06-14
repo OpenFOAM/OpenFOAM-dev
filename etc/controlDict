@@ -75,7 +75,6 @@ DebugSwitches
     Analytical          0;
     APIdiffCoefFunc     0;
     Ar                  0;
-    BICCG               0;
     BirdCarreau         0;
     C10H22              0;
     C12H26              0;
@@ -158,7 +157,6 @@ DebugSwitches
     HerschelBulkley     0;
     HrenyaSinclair      0;
     IC8H18              0;
-    ICCG                0;
     IDDESDelta          0;
     IDEA                0;
     IFstream            0;
