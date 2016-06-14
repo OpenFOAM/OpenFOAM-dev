@@ -11,3 +11,12 @@ EXE_INC = \
     -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lreactingPhaseSystem \
+    -lreactingTwoPhaseSystem \
+    -lreactingEulerianInterfacialModels \
+    -lreactingEulerianInterfacialCompositionModels \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lmeshTools
