@@ -46,6 +46,7 @@ Description
 #include "IOobject.H"
 #include "HashSet.H"
 #include "etcFiles.H"
+#include "fvPatchField.H"
 #include "functionObject.H"
 #include "fvOption.H"
 #include "turbulentTransportModel.H"
@@ -158,6 +159,16 @@ int main(int argc, char *argv[])
     );
     argList::addBoolOption
     (
+        "scalarBCs",
+        "List scalar field boundary conditions (fvPatchField<scalar>)"
+    );
+    argList::addBoolOption
+    (
+        "vectorBCs",
+        "List vector field boundary conditions (fvPatchField<vector>)"
+    );
+    argList::addBoolOption
+    (
         "functionObjects",
         "List functionObjects"
     );
@@ -192,6 +203,20 @@ int main(int argc, char *argv[])
     )
     {
         listSwitches(args);
+    }
+
+    if (args.optionFound("scalarBCs"))
+    {
+        Info<< "scalarBCs"
+            << fvPatchField<scalar>::dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+    }
+
+    if (args.optionFound("vectorBCs"))
+    {
+        Info<< "vectorBCs"
+            << fvPatchField<vector>::dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
     }
 
     if (args.optionFound("functionObjects"))
@@ -243,6 +268,7 @@ int main(int argc, char *argv[])
                dictionaryConstructorTablePtr_->sortedToc()
             << endl;
     }
+
 
     return 0;
 }
