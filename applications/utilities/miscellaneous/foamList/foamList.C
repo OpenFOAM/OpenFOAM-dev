@@ -46,6 +46,10 @@ Description
 #include "IOobject.H"
 #include "HashSet.H"
 #include "etcFiles.H"
+#include "functionObject.H"
+#include "fvOption.H"
+#include "turbulentTransportModel.H"
+#include "turbulentFluidThermoModel.H"
 
 using namespace Foam;
 
@@ -87,22 +91,22 @@ void listSwitches
         wordHashSet hashset;
         hashset = debugSwitches;
         hashset -= controlDictDebug;
-        Info<< "Unset DebugSwitches: " << hashset.sortedToc() << endl;
+        Info<< "Unset DebugSwitches" << hashset.sortedToc() << endl;
 
         hashset = infoSwitches;
         hashset -= controlDictInfo;
-        Info<< "Unset InfoSwitches: " << hashset.sortedToc() << endl;
+        Info<< "Unset InfoSwitches" << hashset.sortedToc() << endl;
 
         hashset = optSwitches;
         hashset -= controlDictOpt;
-        Info<< "Unset OptimisationSwitches: " << hashset.sortedToc() << endl;
+        Info<< "Unset OptimisationSwitches" << hashset.sortedToc() << endl;
     }
     else
     {
         IOobject::writeDivider(Info);
-        Info<< "DebugSwitches: " << debugSwitches << endl;
-        Info<< "InfoSwitches: " << infoSwitches << endl;
-        Info<< "OptimisationSwitches: " << optSwitches << endl;
+        Info<< "DebugSwitches" << debugSwitches << endl;
+        Info<< "InfoSwitches" << infoSwitches << endl;
+        Info<< "OptimisationSwitches" << optSwitches << endl;
     }
 }
 
@@ -140,17 +144,37 @@ int main(int argc, char *argv[])
     argList::addBoolOption
     (
         "switches",
-        "Switches declared in libraries but not set in etc/controlDict"
+        "List switches declared in libraries but not set in etc/controlDict"
     );
     argList::addBoolOption
     (
         "registeredSwitches",
-        "Switches registered for run-time modification"
+        "List switches registered for run-time modification"
     );
     argList::addBoolOption
     (
         "unset",
-        "Switches declared in libraries but not set in etc/controlDict"
+        "List switches declared in libraries but not set in etc/controlDict"
+    );
+    argList::addBoolOption
+    (
+        "functionObjects",
+        "List functionObjects"
+    );
+    argList::addBoolOption
+    (
+        "fvOptions",
+        "List fvOptions"
+    );
+    argList::addBoolOption
+    (
+        "incompressibleTurbulenceModels",
+        "List incompressible turbulenceModels"
+    );
+    argList::addBoolOption
+    (
+        "compressibleTurbulenceModels",
+        "List compressible turbulenceModels"
     );
 
     argList args(argc, argv);
@@ -158,8 +182,10 @@ int main(int argc, char *argv[])
     if (!args.options().size())
     {
         args.printUsage();
+        return 0;
     }
-    else if
+
+    if
     (
         args.optionFound("switches")
      || args.optionFound("registeredSwitches")
@@ -168,7 +194,55 @@ int main(int argc, char *argv[])
         listSwitches(args);
     }
 
-    Info<< "done" << endl;
+    if (args.optionFound("functionObjects"))
+    {
+        Info<< "functionObjects"
+            << functionObject::dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+    }
+
+    if (args.optionFound("fvOptions"))
+    {
+        Info<< "fvOptions"
+            << fv::option::dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+    }
+
+    if (args.optionFound("incompressibleTurbulenceModels"))
+    {
+        Info<< "Turbulence models"
+            << incompressible::turbulenceModel::
+               dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+
+        Info<< "RAS models"
+            << incompressible::RASModel::
+               dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+
+        Info<< "LES models"
+            << incompressible::LESModel::
+               dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+    }
+
+    if (args.optionFound("compressibleTurbulenceModels"))
+    {
+        Info<< "Turbulence models"
+            << compressible::turbulenceModel::
+               dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+
+        Info<< "RAS models"
+            << compressible::RASModel::
+               dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+
+        Info<< "LES models"
+            << compressible::LESModel::
+               dictionaryConstructorTablePtr_->sortedToc()
+            << endl;
+    }
 
     return 0;
 }
