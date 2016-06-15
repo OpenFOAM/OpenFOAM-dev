@@ -9,62 +9,104 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
 EXE_LIBS = \
-    -lsnappyHexMesh \
     -lbarotropicCompressibilityModel \
-    -lsolidThermo \
-    -lcompressibleTransportModels \
-    -lfluidThermophysicalModels \
     -lblockMesh \
     -lchemistryModel \
     -lcoalCombustion \
+    -lcombustionModels \
+    -lcompressibleTransportModels \
     -lcompressibleTurbulenceModels \
+    -lconformalVoronoiMesh \
     -lconversion \
+    -lcv2DMesh \
+    -ldecompose \
     -ldecompositionMethods \
     -ldistributed \
     -ldistributionModels \
+    -lDPMTurbulenceModels \
+    -ldriftFluxRelativeVelocityModels \
+    -ldriftFluxTransportModels \
     -lDSMC \
     -ldynamicFvMesh \
     -ldynamicMesh \
     -ledgeMesh \
     -lengine \
+    -lextrude2DMesh \
+    -lextrudeModel \
     -lfieldFunctionObjects \
     -lfileFormats \
     -lfiniteVolume \
+    -lfluidThermophysicalModels \
+    -lfoamToVTK \
     -lforces \
     -lfvMotionSolvers \
+    -lfvOptions \
     -lgenericPatchFields \
+    -lhelpTypes \
+    -limmiscibleIncompressibleTwoPhaseMixture \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModels \
     -linterfaceProperties \
-    -llagrangian \
+    -llagrangianFunctionObjects \
     -llagrangianIntermediate \
+    -llagrangian \
+    -llagrangianSpray \
+    -llagrangianTurbulence \
     -llaminarFlameSpeedModels \
     -lliquidMixtureProperties \
     -lliquidProperties \
     -lmeshTools \
+    -lmetisDecomp \
     -lmolecularMeasurements \
     -lmolecule \
     -lODE \
     -lOpenFOAM \
+    -lpairPatchAgglomeration \
+    -lphaseChangeTwoPhaseMixtures \
     -lpotential \
+    -lpyrolysisModels \
     -lradiationModels \
     -lrandomProcesses \
+    -lreactingEulerianInterfacialCompositionModels \
+    -lreactingEulerianInterfacialModels \
+    -lreactingMultiphaseSystem \
+    -lreactingPhaseSystem \
+    -lreactingTwoPhaseSystem \
     -lreactionThermophysicalModels \
     -lreconstruct \
+    -lregionCoupled \
+    -lregionCoupling \
+    -lregionModels \
+    -lrenumberMethods \
+    -lrhoCentralFoam \
+    -lrigidBodyDynamics \
+    -lrigidBodyMeshMotion \
     -lsampling \
+    -lscotchDecomp \
+    -lsixDoFRigidBodyMotion \
     -lSLGThermo \
+    -lSloanRenumber \
+    -lsnappyHexMesh \
+    -lsolidChemistryModel \
     -lsolidMixtureProperties \
     -lsolidParticle \
     -lsolidProperties \
+    -lsolidSpecie \
+    -lsolidThermo \
+    -lsolverFunctionObjects \
     -lspecie \
+    -lsurfaceFilmDerivedFvPatchFields \
     -lsurfaceFilmModels \
     -lsurfMesh \
+    -ltabulatedWallFunctions \
+    -lthermalBaffleModels \
     -lthermophysicalFunctions \
     -ltopoChangerFvMesh \
     -ltriSurface \
     -lturbulenceModels \
+    -ltwoPhaseMixture \
+    -ltwoPhaseMixtureThermo \
     -ltwoPhaseProperties \
-    -lutilityFunctionObjects \
-    -lphaseCompressibleTurbulenceModels \
-    -lcompressibleTwoPhaseSystem \
-    -lcompressibleEulerianInterfacialModels
+    -ltwoPhaseReactingTurbulenceModels \
+    -luserd-foam \
+    -lutilityFunctionObjects
