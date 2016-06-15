@@ -23,7 +23,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     wdepFunctions
+#     wmakeFunctions
 #
 # Description
 #     Functions to check wmake environment and find .dep and .o files
@@ -61,9 +61,11 @@ expandPath()
 
 findTarget()
 {
+    expandPath $WM_PROJECT_DIR
+    wmpdir=$exPath
     expandPath $1
 
-    if [ "$exPath" = "$WM_PROJECT_DIR" \
+    if [ "$exPath" = "$wmpdir" \
                    -o "$exPath" = "$HOME" \
                    -o "$exPath" = "/" \
        ]
@@ -79,12 +81,14 @@ findTarget()
 
 findObjectDir()
 {
+    expandPath $WM_PROJECT_DIR
+    wmpdir=$exPath
     expandPath $1
 
-    if echo $exPath | grep "$WM_PROJECT_DIR" > /dev/null
+    if echo $exPath | grep "$wmpdir" > /dev/null
     then
         platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
-        objectsDir=$platformPath$(echo $exPath | sed s%$WM_PROJECT_DIR%% )
+        objectsDir=$platformPath$(echo $exPath | sed s%$wmpdir%% )
     else
         path=$exPath
         dir=.
