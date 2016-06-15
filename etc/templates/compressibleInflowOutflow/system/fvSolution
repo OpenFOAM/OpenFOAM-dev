@@ -20,10 +20,6 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-        cacheAgglomeration on;          // Need to make this default?
-        agglomerator    faceAreaPair;   // Need to make this default?
-        nCellsInCoarsestLevel 10;       // Need to make this default?
-        mergeLevels     1;              // Need to make this default
         tolerance       1e-6;
         relTol          0.1;
     }
