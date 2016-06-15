@@ -39,10 +39,6 @@ solvers
         tolerance       1e-08;
         relTol          0;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     "(cellMotionU|cellMotionUz)"

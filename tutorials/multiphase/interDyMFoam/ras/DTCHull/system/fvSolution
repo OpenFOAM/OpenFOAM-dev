@@ -40,10 +40,6 @@ solvers
         solver          GAMG;
 
         smoother        DIC;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
-        nCellsInCoarsestLevel 10;
-        cacheAgglomeration true;
 
         tolerance       0.1;
         relTol          0;
@@ -54,10 +50,6 @@ solvers
         solver          GAMG;
 
         smoother        DIC;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
-        nCellsInCoarsestLevel 10;
-        cacheAgglomeration true;
 
         tolerance       5e-8;
         relTol          0;

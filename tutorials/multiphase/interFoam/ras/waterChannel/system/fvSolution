@@ -41,13 +41,6 @@ solvers
             tolerance       1e-5;
             relTol          0;
             smoother        GaussSeidel;
-            nPreSweeps      0;
-            nPostSweeps     2;
-            nFinestSweeps   2;
-            cacheAgglomeration true;
-            nCellsInCoarsestLevel 10;
-            agglomerator    faceAreaPair;
-            mergeLevels     1;
         }
         tolerance       1e-5;
         relTol          0;
@@ -61,14 +54,8 @@ solvers
         relTol           0.01;
 
         smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
 
-        cacheAgglomeration true;
 
-        nCellsInCoarsestLevel 10;
-        agglomerator     faceAreaPair;
-        mergeLevels      1;
 
         maxIter          50;
     };

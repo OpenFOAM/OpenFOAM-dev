@@ -32,13 +32,6 @@ solvers
             tolerance       1e-05;
             relTol          0;
             smoother        GaussSeidel;
-            nPreSweeps      0;
-            nPostSweeps     2;
-            nFinestSweeps   2;
-            cacheAgglomeration on;
-            nCellsInCoarsestLevel 10;
-            agglomerator    faceAreaPair;
-            mergeLevels     1;
         }
         tolerance       1e-05;
         relTol          0;
@@ -56,13 +49,6 @@ solvers
         tolerance       1e-07;
         relTol          0.05;
         smoother        GaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        nFinestSweeps   2;
-        cacheAgglomeration on;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     p_rghFinal
@@ -75,13 +61,6 @@ solvers
             relTol          0;
             nVcycles        2;
             smoother        GaussSeidel;
-            nPreSweeps      0;
-            nPostSweeps     2;
-            nFinestSweeps   2;
-            cacheAgglomeration on;
-            nCellsInCoarsestLevel 10;
-            agglomerator    faceAreaPair;
-            mergeLevels     1;
         }
         tolerance       1e-07;
         relTol          0;

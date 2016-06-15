@@ -21,12 +21,7 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        cacheAgglomeration off;
-        agglomerator    faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
+        cacheAgglomeration no;
 
         tolerance        0.02;
         relTol           0;

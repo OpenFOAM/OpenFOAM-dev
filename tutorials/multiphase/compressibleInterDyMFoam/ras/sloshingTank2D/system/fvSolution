@@ -38,13 +38,7 @@ solvers
             tolerance       1e-05;
             relTol          0;
             smoother        DICGaussSeidel;
-            nPreSweeps      0;
-            nPostSweeps     2;
-            nFinestSweeps   2;
-            cacheAgglomeration false;
-            nCellsInCoarsestLevel 10;
-            agglomerator    faceAreaPair;
-            mergeLevels     1;
+            cacheAgglomeration no;
         }
 
         tolerance       1e-05;
@@ -58,13 +52,6 @@ solvers
         tolerance       1e-08;
         relTol          0.01;
         smoother        DIC;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        nFinestSweeps   2;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     p_rghFinal
@@ -78,12 +65,6 @@ solvers
             nVcycles        2;
             smoother        DICGaussSeidel;
             nPreSweeps      2;
-            nPostSweeps     2;
-            nFinestSweeps   2;
-            cacheAgglomeration true;
-            nCellsInCoarsestLevel 10;
-            agglomerator    faceAreaPair;
-            mergeLevels     1;
         }
 
         tolerance       2e-09;

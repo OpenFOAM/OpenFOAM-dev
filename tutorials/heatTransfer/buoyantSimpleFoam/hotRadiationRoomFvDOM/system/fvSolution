@@ -31,12 +31,7 @@ solvers
         tolerance           1e-4;
         relTol              0;
         smoother            symGaussSeidel;
-        cacheAgglomeration  true;
-        nCellsInCoarsestLevel   10;
-        agglomerator        faceAreaPair;
-        mergeLevels         1;
         maxIter             5;
-        nPreSweeps          0;
         nPostSweeps         1;
     }
 

@@ -23,13 +23,7 @@ solvers
         tolerance       1e-08;
         relTol          0.1;
         smoother        GaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        nFinestSweeps   2;
-        cacheAgglomeration true;
         nCellsInCoarsestLevel 20;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     "(U|e|k|epsilon)"
@@ -38,13 +32,7 @@ solvers
         tolerance       1e-08;
         relTol          0.1;
         smoother        GaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        nFinestSweeps   2;
-        cacheAgglomeration true;
         nCellsInCoarsestLevel 20;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 }
 

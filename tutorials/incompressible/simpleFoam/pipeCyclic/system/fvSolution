@@ -21,10 +21,6 @@ solvers
     {
         solver          GAMG;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
 
         tolerance       1e-06;
         relTol          0.05;

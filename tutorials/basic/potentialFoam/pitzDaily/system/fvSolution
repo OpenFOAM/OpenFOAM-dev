@@ -21,10 +21,6 @@ solvers
     {
         solver          GAMG;
         smoother        DIC;
-        cacheAgglomeration on;
-        agglomerator    faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels     1;
 
         tolerance       1e-06;
         relTol          0.01;

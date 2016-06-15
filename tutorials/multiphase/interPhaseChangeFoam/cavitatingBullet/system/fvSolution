@@ -47,14 +47,8 @@ solvers
         relTol          0.1;
 
         smoother        DICGaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
 
-        cacheAgglomeration true;
 
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
 
         maxIter         50;
     };
@@ -72,14 +66,7 @@ solvers
             nVcycles        2;
 
             smoother        DICGaussSeidel;
-            nPreSweeps      0;
-            nPostSweeps     2;
-            nFinestSweeps   2;
 
-            cacheAgglomeration true;
-            nCellsInCoarsestLevel 10;
-            agglomerator    faceAreaPair;
-            mergeLevels     1;
         };
         tolerance       1e-7;
         relTol          0;

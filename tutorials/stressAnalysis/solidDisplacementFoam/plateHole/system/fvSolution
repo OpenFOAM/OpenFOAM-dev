@@ -23,10 +23,7 @@ solvers
         tolerance       1e-06;
         relTol          0.9;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
         nCellsInCoarsestLevel 20;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 }
 

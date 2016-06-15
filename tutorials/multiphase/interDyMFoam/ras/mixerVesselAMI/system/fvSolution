@@ -30,12 +30,6 @@ solvers
         tolerance       1e-6;
         relTol          0.02;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        mergeLevels     1;
     }
 
     "pcorr.*"
@@ -70,7 +64,6 @@ PIMPLE
 {
     momentumPredictor   yes;
     correctPhi          yes;
-    transSonic          no;
     nOuterCorrectors    2;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;

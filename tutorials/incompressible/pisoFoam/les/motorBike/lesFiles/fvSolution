@@ -24,14 +24,9 @@ solvers
         relTol          0.05;
 
         smoother        GaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
 
-        cacheAgglomeration true;
 
         nCellsInCoarsestLevel 50;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     pFinal

@@ -39,10 +39,6 @@ solvers
 
         smoother         GaussSeidel;
 
-        cacheAgglomeration  true;
-        nCellsInCoarsestLevel 10;
-        agglomerator     faceAreaPair;
-        mergeLevels      1;
     }
 
     p_rghFinal
@@ -70,7 +66,7 @@ solvers
 
 PIMPLE
 {
-    momentumPredictor   on;
+    momentumPredictor   yes;
     nCorrectors         2;
     nNonOrthogonalCorrectors 0;
 }

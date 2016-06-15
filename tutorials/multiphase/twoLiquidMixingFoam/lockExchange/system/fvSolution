@@ -35,10 +35,6 @@ solvers
         tolerance       1e-7;
         relTol          0.01;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     p_rghFinal

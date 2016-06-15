@@ -23,9 +23,6 @@ solvers
         relTol          0;
         smoother        GaussSeidel;
         cacheAgglomeration no;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
         maxIter         50;
     }
 

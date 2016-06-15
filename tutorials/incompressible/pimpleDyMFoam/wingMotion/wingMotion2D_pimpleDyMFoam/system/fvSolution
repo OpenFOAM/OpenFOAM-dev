@@ -22,12 +22,6 @@ solvers
         tolerance        0.02;
         relTol           0;
         smoother         GaussSeidel;
-        nPreSweeps       0;
-        nPostSweeps      2;
-        cacheAgglomeration true;
-        agglomerator     faceAreaPair;
-        nCellsInCoarsestLevel 10;
-        mergeLevels      1;
     }
 
     p
@@ -65,10 +59,6 @@ solvers
         tolerance       1e-5;
         relTol          0;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 }
 

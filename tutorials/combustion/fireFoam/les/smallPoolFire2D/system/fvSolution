@@ -39,10 +39,6 @@ solvers
         tolerance           1e-6;
         relTol              0.05;
         smoother            GaussSeidel;
-        cacheAgglomeration  true;
-        nCellsInCoarsestLevel   10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     };
 
     p_rghFinal
@@ -81,12 +77,7 @@ solvers
         tolerance               1e-4;
         relTol                  0.1;
         smoother                symGaussSeidel;
-        cacheAgglomeration      true;
-        nCellsInCoarsestLevel   10;
-        agglomerator            faceAreaPair;
-        mergeLevels             1;
         maxIter                 3;
-        nPreSweeps              0;
         nPostSweeps             1;
     }
 

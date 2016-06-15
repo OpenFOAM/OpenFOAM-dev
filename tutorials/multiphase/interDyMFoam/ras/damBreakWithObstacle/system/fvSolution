@@ -30,13 +30,7 @@ solvers
         tolerance       1e-08;
         relTol          0.01;
         smoother        DIC;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        nFinestSweeps   2;
-        cacheAgglomeration false;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
+        cacheAgglomeration no;
     }
 
     p_rghFinal

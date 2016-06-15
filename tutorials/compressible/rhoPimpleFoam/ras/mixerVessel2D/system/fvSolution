@@ -54,10 +54,7 @@ solvers
         tolerance       1e-6;
         relTol          0.05;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
         nCellsInCoarsestLevel 20;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     pFinal
@@ -66,10 +63,7 @@ solvers
         tolerance       1e-6;
         relTol          0;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
         nCellsInCoarsestLevel 20;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     "(U|h|k|epsilon)"

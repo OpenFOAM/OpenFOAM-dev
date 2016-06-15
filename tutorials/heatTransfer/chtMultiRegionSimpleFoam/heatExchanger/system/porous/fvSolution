@@ -24,10 +24,6 @@ solvers
 
         smoother         DIC;
 
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator     faceAreaPair;
-        mergeLevels      1;
 
         maxIter          10;
     }

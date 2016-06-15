@@ -23,10 +23,6 @@ solvers
         tolerance       1e-5;
         relTol          0;
         smoother        GaussSeidel;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
     }
 
     "pcorr.*"
@@ -35,12 +31,6 @@ solvers
         tolerance       1e-2;
         relTol          0;
         smoother        GaussSeidel;
-        nPreSweeps      0;
-        nPostSweeps     2;
-        cacheAgglomeration true;
-        nCellsInCoarsestLevel 10;
-        agglomerator    faceAreaPair;
-        mergeLevels     1;
         maxIter         100;
     }
 
