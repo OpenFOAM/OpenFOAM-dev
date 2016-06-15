@@ -455,7 +455,7 @@ void omegaWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void omegaWallFunctionFvPatchScalarField::updateCoeffs
+void omegaWallFunctionFvPatchScalarField::updateWeightedCoeffs
 (
     const scalarField& weights
 )

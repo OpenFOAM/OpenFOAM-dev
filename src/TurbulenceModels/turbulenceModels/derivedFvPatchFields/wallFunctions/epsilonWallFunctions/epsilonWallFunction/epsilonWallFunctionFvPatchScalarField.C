@@ -445,7 +445,7 @@ void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void Foam::epsilonWallFunctionFvPatchScalarField::updateCoeffs
+void Foam::epsilonWallFunctionFvPatchScalarField::updateWeightedCoeffs
 (
     const scalarField& weights
 )

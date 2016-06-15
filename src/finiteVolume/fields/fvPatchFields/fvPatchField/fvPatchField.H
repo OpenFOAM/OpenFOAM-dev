@@ -417,9 +417,10 @@ public:
             virtual void updateCoeffs();
 
             //- Update the coefficients associated with the patch field
-            //  and apply weight field
-            //  Sets Updated to true
-            virtual void updateCoeffs(const scalarField& weights);
+            //  with a weight field (0..1). This weight field is ususally
+            //  provided as the amount of geometric overlap for 'duplicate'
+            //  patches. Sets Updated to true
+            virtual void updateWeightedCoeffs(const scalarField& weights);
 
             //- Return internal field next to patch as patch field
             virtual tmp<Field<Type>> patchInternalField() const;

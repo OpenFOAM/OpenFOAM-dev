@@ -271,6 +271,21 @@ void Foam::cyclicACMIFvPatchField<Type>::manipulateMatrix
 
 
 template<class Type>
+void Foam::cyclicACMIFvPatchField<Type>::updateCoeffs()
+{
+    // Update non-overlap patch - some will implement updateCoeffs, and
+    // others will implement evaluate
+
+    // Pass in (1 - mask) to give non-overlap patch the chance to do
+    // manipulation of non-face based data
+
+    const scalarField& mask = cyclicACMIPatch_.cyclicACMIPatch().mask();
+    const fvPatchField<Type>& npf = nonOverlapPatchField();
+    const_cast<fvPatchField<Type>&>(npf).updateWeightedCoeffs(1.0 - mask);
+}
+
+
+template<class Type>
 void Foam::cyclicACMIFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);

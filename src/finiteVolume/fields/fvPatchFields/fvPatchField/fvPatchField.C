@@ -315,14 +315,12 @@ void Foam::fvPatchField<Type>::updateCoeffs()
 
 
 template<class Type>
-void Foam::fvPatchField<Type>::updateCoeffs(const scalarField& weights)
+void Foam::fvPatchField<Type>::updateWeightedCoeffs(const scalarField& weights)
 {
+    // Default behaviour ignores the weights
     if (!updated_)
     {
         updateCoeffs();
-
-        Field<Type>& fld = *this;
-        fld *= weights;
 
         updated_ = true;
     }
