@@ -60,7 +60,7 @@ Description
         Property     | Description             | Required    | Default value
         type         | Type name: volRegion   | yes         |
         log          | Write data to standard output | no    | no
-        writeFields  | Write the raw output values | yes     |
+        writeFields  | Write the region field values  | yes     |
         writeVolume  | Write the volume of the volRegion | no |
         regionType   | cell regionType: see below  | yes         |
         name         | name of cell regionType if required  | no |

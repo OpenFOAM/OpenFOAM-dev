@@ -65,7 +65,7 @@ Description
         Property     | Description             | Required    | Default value
         type         | type name: surfaceRegion   | yes         |
         log          | write data to standard output | no    | no
-        writeFields  | write the output values | yes         |
+        writeFields  | Write the region field values  | yes     |
         writeArea    | Write the area of the surfaceRegion | no |
         surfaceFormat | output value format    | no          |
         regionType   | face regionType: see below  | yes         |
