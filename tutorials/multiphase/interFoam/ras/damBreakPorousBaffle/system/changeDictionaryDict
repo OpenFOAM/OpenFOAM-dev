@@ -14,32 +14,29 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+p_rgh
 {
-    p_rgh
+    boundaryField
     {
-        boundaryField
+        porous_half0
         {
-            porous_half0
-            {
-                type            porousBafflePressure;
-                patchType       cyclic;
-                D               700;
-                I               500;
-                length          1.05;
-                jump            uniform 0;
-                value           uniform 0;
-            }
-            porous_half1
-            {
-                type            porousBafflePressure;
-                patchType       cyclic;
-                D               700;
-                I               500;
-                length          1.05;
-                jump            uniform 0;
-                value           uniform 0;
-            }
+            type            porousBafflePressure;
+            patchType       cyclic;
+            D               700;
+            I               500;
+            length          1.05;
+            jump            uniform 0;
+            value           uniform 0;
+        }
+        porous_half1
+        {
+            type            porousBafflePressure;
+            patchType       cyclic;
+            D               700;
+            I               500;
+            length          1.05;
+            jump            uniform 0;
+            value           uniform 0;
         }
     }
 }

@@ -14,57 +14,54 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+T
 {
-    T
+    boundaryField
     {
-        boundaryField
+        wallFilm
         {
-            wallFilm
-            {
-                type            mapped;
-                field       Tsf;
-                average         300;
-                setAverage      no;
-                value           uniform 300;
-            }
+            type            mapped;
+            field       Tsf;
+            average         300;
+            setAverage      no;
+            value           uniform 300;
         }
     }
+}
 
-    U
+U
+{
+    boundaryField
     {
-        boundaryField
+        wallFilm
         {
-            wallFilm
-            {
-                type            mapped;
-                field       Usf;
-                average         (0 0 0);
-                setAverage      no;
-                value           uniform (0 0 0);
-            }
+            type            mapped;
+            field       Usf;
+            average         (0 0 0);
+            setAverage      no;
+            value           uniform (0 0 0);
         }
     }
+}
 
-    "nut"
+"nut"
+{
+    boundaryField
     {
-        boundaryField
+        wallFilm
         {
-            wallFilm
-            {
-                value           uniform 0;
-            }
+            value           uniform 0;
         }
     }
+}
 
-    "alphat"
+"alphat"
+{
+    boundaryField
     {
-        boundaryField
+        wallFilm
         {
-            wallFilm
-            {
-                value           uniform 0;
-            }
+            value           uniform 0;
         }
     }
 }

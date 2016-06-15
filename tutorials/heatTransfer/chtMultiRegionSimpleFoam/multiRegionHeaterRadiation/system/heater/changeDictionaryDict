@@ -14,68 +14,65 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+boundary
 {
-    boundary
+    minY
     {
+        type            patch;
+    }
+    minZ
+    {
+        type            patch;
+    }
+    maxZ
+    {
+        type            patch;
+    }
+}
+
+T
+{
+    internalField   uniform 300;
+
+    boundaryField
+    {
+        ".*"
+        {
+            type            zeroGradient;
+            value           uniform 300;
+        }
+
+        heater_to_topAir
+        {
+            type            compressible::turbulentTemperatureRadCoupledMixed;
+            Tnbr            T;
+            kappaMethod     solidThermo;
+            QrNbr           Qr;
+            Qr              none;
+            value           uniform 300;
+        }
+
+        heater_to_bottomAir
+        {
+            type            compressible::turbulentTemperatureRadCoupledMixed;
+            Tnbr            T;
+            kappaMethod     solidThermo;
+            QrNbr           Qr;
+            Qr              none;
+            value           uniform 300;
+        }
+
+        "heater_to_.*"
+        {
+            type            compressible::turbulentTemperatureCoupledBaffleMixed;
+            Tnbr            T;
+            kappaMethod     solidThermo;
+            value           uniform 300;
+        }
         minY
         {
-            type            patch;
-        }
-        minZ
-        {
-            type            patch;
-        }
-        maxZ
-        {
-            type            patch;
-        }
-    }
-
-    T
-    {
-        internalField   uniform 300;
-
-        boundaryField
-        {
-            ".*"
-            {
-                type            zeroGradient;
-                value           uniform 300;
-            }
-
-            heater_to_topAir
-            {
-                type            compressible::turbulentTemperatureRadCoupledMixed;
-                Tnbr            T;
-                kappaMethod     solidThermo;
-                QrNbr           Qr;
-                Qr              none;
-                value           uniform 300;
-            }
-
-            heater_to_bottomAir
-            {
-                type            compressible::turbulentTemperatureRadCoupledMixed;
-                Tnbr            T;
-                kappaMethod     solidThermo;
-                QrNbr           Qr;
-                Qr              none;
-                value           uniform 300;
-            }
-
-            "heater_to_.*"
-            {
-                type            compressible::turbulentTemperatureCoupledBaffleMixed;
-                Tnbr            T;
-                kappaMethod     solidThermo;
-                value           uniform 300;
-            }
-            minY
-            {
-                type            fixedValue;
-                value           uniform 500;
-            }
+            type            fixedValue;
+            value           uniform 500;
         }
     }
 }

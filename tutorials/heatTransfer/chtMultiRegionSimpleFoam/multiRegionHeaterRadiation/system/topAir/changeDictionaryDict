@@ -14,219 +14,216 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+U
 {
-    U
+    internalField   uniform (0.1 0 0);
+    boundaryField
     {
-        internalField   uniform (0.1 0 0);
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            fixedValue;
-                value           uniform (0 0 0);
-            }
-            minX
-            {
-                type            fixedValue;
-                value           uniform (0.1 0 0);
-            }
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform (0 0 0);
-                value           uniform (0.1 0 0);
-            }
+            type            fixedValue;
+            value           uniform (0 0 0);
+        }
+        minX
+        {
+            type            fixedValue;
+            value           uniform (0.1 0 0);
+        }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform (0 0 0);
+            value           uniform (0.1 0 0);
         }
     }
+}
 
-    T
+T
+{
+    internalField   uniform 300;
+    boundaryField
     {
-        internalField   uniform 300;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-            }
+            type            zeroGradient;
+        }
 
-            minX
-            {
-                type            fixedValue;
-                value           uniform 300;
-            }
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform 300;
-                value           uniform 300;
-            }
+        minX
+        {
+            type            fixedValue;
+            value           uniform 300;
+        }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform 300;
+            value           uniform 300;
+        }
 
-            "topAir_to_.*"
-            {
-                type            compressible::turbulentTemperatureRadCoupledMixed;
-                Tnbr            T;
-                kappaMethod     fluidThermo;
-                QrNbr           none;
-                Qr              Qr;
-                value           uniform 300;
-            }
+        "topAir_to_.*"
+        {
+            type            compressible::turbulentTemperatureRadCoupledMixed;
+            Tnbr            T;
+            kappaMethod     fluidThermo;
+            QrNbr           none;
+            Qr              Qr;
+            value           uniform 300;
         }
     }
+}
 
-    epsilon
+epsilon
+{
+    internalField   uniform 0.01;
+    boundaryField
     {
-        internalField   uniform 0.01;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            epsilonWallFunction;
-                value           uniform 0.01;
-            }
+            type            epsilonWallFunction;
+            value           uniform 0.01;
+        }
 
-            minX
-            {
-                type            fixedValue;
-                value           uniform 0.01;
-            }
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform 0.01;
-                value           uniform 0.01;
-            }
+        minX
+        {
+            type            fixedValue;
+            value           uniform 0.01;
+        }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform 0.01;
+            value           uniform 0.01;
         }
     }
+}
 
-    k
+k
+{
+    internalField   uniform 0.1;
+    boundaryField
     {
-        internalField   uniform 0.1;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            kqRWallFunction;
-                value           uniform 0.1;
-            }
+            type            kqRWallFunction;
+            value           uniform 0.1;
+        }
 
-            minX
-            {
-                type            fixedValue;
-                value           uniform 0.1;
-            }
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform 0.1;
-                value           uniform 0.1;
-            }
+        minX
+        {
+            type            fixedValue;
+            value           uniform 0.1;
+        }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform 0.1;
+            value           uniform 0.1;
         }
     }
+}
 
-    p_rgh
+p_rgh
+{
+    internalField   uniform 1e5;
+    boundaryField
     {
-        internalField   uniform 1e5;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            fixedFluxPressure;
-                value           uniform 1e5;
-            }
+            type            fixedFluxPressure;
+            value           uniform 1e5;
+        }
 
-            maxX
-            {
-                type            fixedValue;
-                value           uniform 1e5;
-            }
+        maxX
+        {
+            type            fixedValue;
+            value           uniform 1e5;
         }
     }
+}
 
-    p
+p
+{
+    internalField   uniform 1e5;
+    boundaryField
     {
-        internalField   uniform 1e5;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            calculated;
-                value           uniform 1e5;
-            }
+            type            calculated;
+            value           uniform 1e5;
+        }
 
-            maxX
-            {
-                type            calculated;
-                value           uniform 1e5;
-            }
+        maxX
+        {
+            type            calculated;
+            value           uniform 1e5;
         }
     }
+}
 
-    Qr
+Qr
+{
+    internalField   uniform 0;
+    boundaryField
     {
-        internalField   uniform 0;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            greyDiffusiveRadiationViewFactor;
-                emissivityMode  lookup;
-                Qro             uniform 0;
-                emissivity      uniform 1.0;
-                value           uniform 0;
-            }
+            type            greyDiffusiveRadiationViewFactor;
+            emissivityMode  lookup;
+            Qro             uniform 0;
+            emissivity      uniform 1.0;
+            value           uniform 0;
+        }
 
-            "topAir_to_.*"
-            {
-                type            greyDiffusiveRadiationViewFactor;
-                emissivityMode  solidRadiation;
-                Qro             uniform 0;
-                value           uniform 0;
-            }
+        "topAir_to_.*"
+        {
+            type            greyDiffusiveRadiationViewFactor;
+            emissivityMode  solidRadiation;
+            Qro             uniform 0;
+            value           uniform 0;
         }
     }
+}
 
-    G
+G
+{
+    internalField   uniform 0;
+    boundaryField
     {
-        internalField   uniform 0;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            MarshakRadiation;
-                emissivityMode  lookup;
-                emissivity      uniform 1.0;
-                value           uniform 0;
-            }
+            type            MarshakRadiation;
+            emissivityMode  lookup;
+            emissivity      uniform 1.0;
+            value           uniform 0;
+        }
 
-            "topAir_to_.*"
-            {
-                type            MarshakRadiation;
-                emissivityMode  solidRadiation;
-                value           uniform 0;
-            }
+        "topAir_to_.*"
+        {
+            type            MarshakRadiation;
+            emissivityMode  solidRadiation;
+            value           uniform 0;
         }
     }
+}
 
-    IDefault
+IDefault
+{
+    internalField   uniform 0;
+    boundaryField
     {
-        internalField   uniform 0;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            greyDiffusiveRadiation;
-                emissivityMode  lookup;
-                emissivity      uniform 1.0;
-                value           uniform 0;
-            }
+            type            greyDiffusiveRadiation;
+            emissivityMode  lookup;
+            emissivity      uniform 1.0;
+            value           uniform 0;
+        }
 
-            "topAir_to_.*"
-            {
-                type            greyDiffusiveRadiation;
-                emissivityMode  solidRadiation;
-                value           uniform 0;
-            }
+        "topAir_to_.*"
+        {
+            type            greyDiffusiveRadiation;
+            emissivityMode  solidRadiation;
+            value           uniform 0;
         }
     }
 }

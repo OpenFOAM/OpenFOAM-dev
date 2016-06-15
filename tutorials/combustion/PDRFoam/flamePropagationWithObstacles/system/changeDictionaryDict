@@ -14,450 +14,447 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+p
 {
-    p
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    U
+U
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type            fixedValue;
-                value           uniform (0 0 0);
-            }
-            baffleWall
-            {
-                type                activePressureForceBaffleVelocity;
-                cyclicPatch         baffleCyclic_half0;
-                orientation         1;
-                openingTime         0.01;
-                maxOpenFractionDelta 0.1;
-                openFraction        0;
-                minThresholdValue   8000;
-                forceBased          0;
-                value               uniform (0 0 0);
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type            fixedValue;
+            value           uniform (0 0 0);
+        }
+        baffleWall
+        {
+            type                activePressureForceBaffleVelocity;
+            cyclicPatch         baffleCyclic_half0;
+            orientation         1;
+            openingTime         0.01;
+            maxOpenFractionDelta 0.1;
+            openFraction        0;
+            minThresholdValue   8000;
+            forceBased          0;
+            value               uniform (0 0 0);
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    epsilon
+epsilon
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type            epsilonWallFunction;
-                value           uniform 0.1;
-            }
-            baffleWall
-            {
-                type            epsilonWallFunction;
-                value           uniform 1e-5;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type            epsilonWallFunction;
+            value           uniform 0.1;
+        }
+        baffleWall
+        {
+            type            epsilonWallFunction;
+            value           uniform 1e-5;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    k
+k
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        kqRWallFunction;
-                value       uniform 1.5;
-         }
-            baffleWall
-            {
-                type        kqRWallFunction;
-                value       uniform 1.5;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        kqRWallFunction;
+            value       uniform 1.5;
+     }
+        baffleWall
+        {
+            type        kqRWallFunction;
+            value       uniform 1.5;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    Su
+Su
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    Xi
+Xi
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 1;
-            }
-             baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 1;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 1;
+        }
+         baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 1;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    T
+T
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 300;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 300;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 300;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 300;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    Tu
+Tu
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 300;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 300;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 300;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 300;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    b
+b
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 1;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 1;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 1;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 1;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    ft
+ft
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 0.06024096;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 0.06024096;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
+}
 
-    Aw
+Aw
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 0.0;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 0.0;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 0.0;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 0.0;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    B
+}
+B
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    betav
+}
+betav
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 0;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 0;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 0;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 0;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    CR
+}
+CR
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    CT
+}
+CT
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    Nv
+}
+Nv
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 0;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 0;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 0;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 0;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    nsv
+}
+nsv
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform (0 0 0 0 0 0);
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform (0 0 0 0 0 0);
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
-    Lobs
+}
+Lobs
+{
+    boundaryField
     {
-        boundaryField
+        blockedFaces
         {
-            blockedFaces
-            {
-                type        zeroGradient;
-                value       uniform 0;
-            }
-            baffleWall
-            {
-                type        zeroGradient;
-                value       uniform 0;
-            }
-            baffleCyclic_half0
-            {
-                type        cyclic;
-            }
-            baffleCyclic_half1
-            {
-                type        cyclic;
-            }
+            type        zeroGradient;
+            value       uniform 0;
+        }
+        baffleWall
+        {
+            type        zeroGradient;
+            value       uniform 0;
+        }
+        baffleCyclic_half0
+        {
+            type        cyclic;
+        }
+        baffleCyclic_half1
+        {
+            type        cyclic;
         }
     }
 }

@@ -14,176 +14,171 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+boundary
 {
-    boundary
+    minX
     {
-        minX
+        type            wall;
+    }
+    maxX
+    {
+        type            wall;
+    }
+}
+
+U
+{
+    internalField   uniform (0.01 0 0);
+    boundaryField
+    {
+        ".*"
         {
-            type            wall;
-        }
-        maxX
-        {
-            type            wall;
+            type            fixedValue;
+            value           uniform (0 0 0);
         }
     }
+}
 
-    U
+T
+{
+    internalField   uniform 300;
+    boundaryField
     {
-        internalField   uniform (0.01 0 0);
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            fixedValue;
-                value           uniform (0 0 0);
-            }
+            type            zeroGradient;
+        }
+
+        "bottomAir_to_.*"
+        {
+            type            compressible::turbulentTemperatureRadCoupledMixed;
+            Tnbr            T;
+            kappaMethod     fluidThermo;
+            QrNbr           none;
+            Qr              Qr;
+            value           uniform 300;
         }
     }
+}
 
-    T
+epsilon
+{
+    internalField   uniform 0.01;
+    boundaryField
     {
-        internalField   uniform 300;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-            }
-
-            "bottomAir_to_.*"
-            {
-                type            compressible::turbulentTemperatureRadCoupledMixed;
-                Tnbr            T;
-                kappaMethod     fluidThermo;
-                QrNbr           none;
-                Qr              Qr;
-                value           uniform 300;
-            }
+            type            epsilonWallFunction;
+            value           uniform 0.01;
         }
     }
+}
 
-    epsilon
+k
+{
+    internalField   uniform 0.1;
+    boundaryField
     {
-        internalField   uniform 0.01;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            epsilonWallFunction;
-                value           uniform 0.01;
-            }
+            type            kqRWallFunction;
+            value           uniform 0.1;
         }
     }
+}
 
-    k
+p_rgh
+{
+    internalField   uniform 1e5;
+    boundaryField
     {
-        internalField   uniform 0.1;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            kqRWallFunction;
-                value           uniform 0.1;
-            }
+            type            fixedFluxPressure;
+            value           uniform 1e5;
         }
     }
+}
 
-    p_rgh
+p
+{
+    internalField   uniform 1e5;
+    boundaryField
     {
-        internalField   uniform 1e5;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            fixedFluxPressure;
-                value           uniform 1e5;
-            }
+            type            calculated;
+            value           uniform 1e5;
         }
     }
+}
 
-    p
+Qr
+{
+    internalField   uniform 0;
+    boundaryField
     {
-        internalField   uniform 1e5;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            calculated;
-                value           uniform 1e5;
-            }
+            type            greyDiffusiveRadiationViewFactor;
+            emissivityMode  lookup;
+            Qro             uniform 0;
+            emissivity      uniform 1.0;
+            value           uniform 0;
+        }
+
+        "bottomAir_to_.*"
+        {
+            type            greyDiffusiveRadiationViewFactor;
+            emissivityMode  solidRadiation;
+            Qro             uniform 0;
+            value           uniform 0;
         }
     }
+}
 
-    Qr
+G
+{
+    internalField   uniform 0;
+    boundaryField
     {
-        internalField   uniform 0;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            greyDiffusiveRadiationViewFactor;
-                emissivityMode  lookup;
-                Qro             uniform 0;
-                emissivity      uniform 1.0;
-                value           uniform 0;
-            }
+            type            MarshakRadiation;
+            emissivityMode  lookup;
+            emissivity      uniform 1.0;
+            value           uniform 0;
+        }
 
-            "bottomAir_to_.*"
-            {
-                type            greyDiffusiveRadiationViewFactor;
-                emissivityMode  solidRadiation;
-                Qro             uniform 0;
-                value           uniform 0;
-            }
+        "bottomAir_to_.*"
+        {
+            type            MarshakRadiation;
+            emissivityMode  solidRadiation;
+            value           uniform 0;
         }
     }
+}
 
-    G
+IDefault
+{
+    internalField   uniform 0;
+    boundaryField
     {
-        internalField   uniform 0;
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            MarshakRadiation;
-                emissivityMode  lookup;
-                emissivity      uniform 1.0;
-                value           uniform 0;
-            }
+            type            greyDiffusiveRadiation;
+            emissivityMode  lookup;
+            emissivity      uniform 1.0;
+            value           uniform 0;
+        }
 
-            "bottomAir_to_.*"
-            {
-                type            MarshakRadiation;
-                emissivityMode  solidRadiation;
-                value           uniform 0;
-            }
+        "bottomAir_to_.*"
+        {
+            type            greyDiffusiveRadiation;
+            emissivityMode  solidRadiation;
+            value           uniform 0;
         }
     }
-
-    IDefault
-    {
-        internalField   uniform 0;
-        boundaryField
-        {
-            ".*"
-            {
-                type            greyDiffusiveRadiation;
-                emissivityMode  lookup;
-                emissivity      uniform 1.0;
-                value           uniform 0;
-            }
-
-            "bottomAir_to_.*"
-            {
-                type            greyDiffusiveRadiation;
-                emissivityMode  solidRadiation;
-                value           uniform 0;
-            }
-        }
-    }
-
-
 }
 
 // ************************************************************************* //

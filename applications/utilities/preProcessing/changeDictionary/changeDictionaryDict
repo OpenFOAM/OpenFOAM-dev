@@ -14,75 +14,72 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+boundary
 {
-    boundary
+    ".*"
+    {
+        type            mappedPatch;
+    }
+}
+
+T
+{
+    internalField   uniform 300;
+
+    boundaryField
     {
         ".*"
         {
-            type            mappedPatch;
+            type            zeroGradient;
+        }
+
+        minY
+        {
+            type            fixedValue;
+            value           uniform 500;
         }
     }
+}
 
-    T
+rho
+{
+    internalField   uniform 8000;
+
+    boundaryField
     {
-        internalField   uniform 300;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-            }
-
-            minY
-            {
-                type            fixedValue;
-                value           uniform 500;
-            }
+            type            zeroGradient;
         }
+
     }
+}
 
-    rho
+K
+{
+    internalField   uniform 80;
+
+    boundaryField
     {
-        internalField   uniform 8000;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-            }
-
+            type            zeroGradient;
         }
+
     }
+}
 
-    K
+cp
+{
+    internalField   uniform 450;
+
+    boundaryField
     {
-        internalField   uniform 80;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-            }
-
+            type            zeroGradient;
         }
-    }
 
-    cp
-    {
-        internalField   uniform 450;
-
-        boundaryField
-        {
-            ".*"
-            {
-                type            zeroGradient;
-            }
-
-        }
     }
 }
 

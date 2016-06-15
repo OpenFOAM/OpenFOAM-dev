@@ -14,15 +14,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+mirrorMeshDict
 {
-    mirrorMeshDict
+    pointAndNormalDict
     {
-        pointAndNormalDict
-        {
-            basePoint       (0 0 0);
-            normalVector    (0 -1 0);
-        }
+        basePoint       (0 0 0);
+        normalVector    (0 -1 0);
     }
 }
+
 // ************************************************************************* //

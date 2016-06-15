@@ -14,110 +14,107 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+boundary
 {
-    boundary
+    minX
     {
-        minX
+        type            wall;
+    }
+    maxX
+    {
+        type            wall;
+    }
+}
+
+U
+{
+    internalField   uniform (0.01 0 0);
+
+    boundaryField
+    {
+        ".*"
         {
-            type            wall;
-        }
-        maxX
-        {
-            type            wall;
+            type            fixedValue;
+            value           uniform (0 0 0);
         }
     }
+}
 
-    U
+T
+{
+    internalField   uniform 300;
+
+    boundaryField
     {
-        internalField   uniform (0.01 0 0);
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            fixedValue;
-                value           uniform (0 0 0);
-            }
+            type            zeroGradient;
+        }
+
+        "bottomAir_to_.*"
+        {
+            type            compressible::turbulentTemperatureCoupledBaffleMixed;
+            Tnbr            T;
+            kappaMethod     fluidThermo;
+            value           uniform 300;
         }
     }
+}
 
-    T
+epsilon
+{
+    // Set the value on all bc to non-zero. Not used in simulation
+    // since zeroGradient; only used in initialisation.
+    internalField   uniform 0.01;
+
+    boundaryField
     {
-        internalField   uniform 300;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-            }
-
-            "bottomAir_to_.*"
-            {
-                type            compressible::turbulentTemperatureCoupledBaffleMixed;
-                Tnbr            T;
-                kappaMethod     fluidThermo;
-                value           uniform 300;
-            }
+            type            epsilonWallFunction;
+            value           uniform 0.01;
         }
     }
+}
 
-    epsilon
+k
+{
+    internalField   uniform 0.1;
+
+    boundaryField
     {
-        // Set the value on all bc to non-zero. Not used in simulation
-        // since zeroGradient; only used in initialisation.
-        internalField   uniform 0.01;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            epsilonWallFunction;
-                value           uniform 0.01;
-            }
+            type            kqRWallFunction;
+            value           uniform 0.1;
         }
     }
+}
 
-    k
+p_rgh
+{
+    internalField   uniform 1e5;
+
+    boundaryField
     {
-        internalField   uniform 0.1;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            kqRWallFunction;
-                value           uniform 0.1;
-            }
+            type            fixedFluxPressure;
+            value           uniform 1e5;
         }
     }
+}
 
-    p_rgh
+p
+{
+    internalField   uniform 1e5;
+
+    boundaryField
     {
-        internalField   uniform 1e5;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            fixedFluxPressure;
-                value           uniform 1e5;
-            }
-        }
-    }
-
-    p
-    {
-        internalField   uniform 1e5;
-
-        boundaryField
-        {
-            ".*"
-            {
-                type            calculated;
-                value           uniform 1e5;
-            }
+            type            calculated;
+            value           uniform 1e5;
         }
     }
 }

@@ -14,59 +14,56 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+boundary
 {
-    boundary
+    minZ
     {
-        minZ
-        {
-            type            patch;
-        }
-        maxZ
-        {
-            type            patch;
-        }
+        type            patch;
     }
-
-    T
+    maxZ
     {
-        internalField   uniform 300;
+        type            patch;
+    }
+}
 
-        boundaryField
+T
+{
+    internalField   uniform 300;
+
+    boundaryField
+    {
+        ".*"
         {
-            ".*"
-            {
-                type            zeroGradient;
-                value           uniform 300;
-            }
+            type            zeroGradient;
+            value           uniform 300;
+        }
 
-            leftSolid_to_topAir
-            {
-                type            compressible::turbulentTemperatureRadCoupledMixed;
-                Tnbr            T;
-                kappaMethod     solidThermo;
-                QrNbr           Qr;
-                Qr              none;
-                value           uniform 300;
-            }
+        leftSolid_to_topAir
+        {
+            type            compressible::turbulentTemperatureRadCoupledMixed;
+            Tnbr            T;
+            kappaMethod     solidThermo;
+            QrNbr           Qr;
+            Qr              none;
+            value           uniform 300;
+        }
 
-            leftSolid_to_bottomAir
-            {
-                type            compressible::turbulentTemperatureRadCoupledMixed;
-                Tnbr            T;
-                kappaMethod     solidThermo;
-                QrNbr           Qr;
-                Qr              none;
-                value           uniform 300;
-            }
+        leftSolid_to_bottomAir
+        {
+            type            compressible::turbulentTemperatureRadCoupledMixed;
+            Tnbr            T;
+            kappaMethod     solidThermo;
+            QrNbr           Qr;
+            Qr              none;
+            value           uniform 300;
+        }
 
-            "leftSolid_to_.*"
-            {
-                type            compressible::turbulentTemperatureCoupledBaffleMixed;
-                Tnbr            T;
-                kappaMethod     solidThermo;
-                value           uniform 300;
-            }
+        "leftSolid_to_.*"
+        {
+            type            compressible::turbulentTemperatureCoupledBaffleMixed;
+            Tnbr            T;
+            kappaMethod     solidThermo;
+            value           uniform 300;
         }
     }
 }

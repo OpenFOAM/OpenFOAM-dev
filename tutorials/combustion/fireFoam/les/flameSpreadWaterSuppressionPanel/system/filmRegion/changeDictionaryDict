@@ -14,16 +14,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+boundary
 {
-    boundary
+    region0_to_filmRegion_coupledWall
     {
-        region0_to_filmRegion_coupledWall
-        {
-            samplePatch    region0_to_pyrolysisRegion_coupledWall;
-        }
+        samplePatch    region0_to_pyrolysisRegion_coupledWall;
     }
 }
-
 
 // ************************************************************************* //

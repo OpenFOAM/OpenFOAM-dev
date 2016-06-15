@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,21 +33,18 @@ Description
     \em Walls a zeroGradient boundary condition, the
     \c system/changeDictionaryDict would contain the following:
     \verbatim
-    dictionaryReplacement
+    p                           // field to change
     {
-        p                           // field to change
+        boundaryField
         {
-            boundaryField
+            ".*Wall"            // entry to change
             {
-                ".*Wall"            // entry to change
-                {
-                    type            zeroGradient;
-                }
-                movingWall          // entry to change
-                {
-                    type            fixedValue;
-                    value           uniform 123.45;
-                }
+                type            zeroGradient;
+            }
+            movingWall          // entry to change
+            {
+                type            fixedValue;
+                value           uniform 123.45;
             }
         }
     }
@@ -56,17 +53,20 @@ Description
 
 Usage
 
-    - changeDictionary [OPTION]
+    changeDictionary [OPTION]
+
+    \param -subDict \n
+    Specify the subDict name of the replacements dictionary.
 
     \param -literalRE \n
-    Do not interpret regular expressions or patchGroups;
-    treat them as any other keyword.
+    Do not interpret regular expressions or patchGroups; treat them as any
+    other keyword.
 
     \param -enableFunctionEntries \n
-    By default all dictionary preprocessing of fields is disabled
+    Enable function entries (default: disabled)
 
     \param -disablePatchGroups \n
-    By default all keys are also checked for being patchGroups
+    Disable the default checking for keys being patchGroups
 
 \*---------------------------------------------------------------------------*/
 
@@ -89,7 +89,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Extract groupPatch (= shortcut) info from boundary file info
+// Extract groupPatch info from boundary file info
 HashTable<wordList, word> extractPatchGroups(const dictionary& boundaryDict)
 {
     HashTable<wordList, word> groupToPatch;
@@ -268,7 +268,6 @@ bool merge
 
             if (entryPtr)
             {
-
                 // Mark thisDict entry as having been match for wildcard
                 // handling later on.
                 thisKeysSet.erase(entryPtr->keyword());
@@ -387,6 +386,12 @@ int main(int argc, char *argv[])
     #include "addDictOption.H"
     argList::addOption
     (
+        "subDict",
+        "name",
+        "specify the subDict name of the replacements dictionary"
+    );
+    argList::addOption
+    (
         "instance",
         "name",
         "override instance setting (default is the time name)"
@@ -479,7 +484,16 @@ int main(int argc, char *argv[])
     #include "setSystemMeshDictionaryIO.H"
     IOdictionary dict(dictIO);
 
-    const dictionary& replaceDicts = dict.subDict("dictionaryReplacement");
+    const dictionary* replaceDictsPtr = &dict;
+
+    if (args.optionFound("subDict"))
+    {
+        word subDictName(args.optionLookup("subDict")());
+        replaceDictsPtr = &dict.subDict(subDictName);
+    }
+
+    const dictionary& replaceDicts = *replaceDictsPtr;
+
     Info<< "Read dictionary " << dict.name()
         << " with replacements for dictionaries "
         << replaceDicts.toc() << endl;
@@ -514,6 +528,7 @@ int main(int argc, char *argv[])
         )
     );
     const_cast<word&>(IOPtrList<entry>::typeName) = oldTypeName;
+
     // Fake type back to what was in field
     const_cast<word&>(dictList.type()) = dictList.headerClassName();
 
@@ -632,6 +647,7 @@ int main(int argc, char *argv[])
             );
 
             const_cast<word&>(IOdictionary::typeName) = oldTypeName;
+
             // Fake type back to what was in field
             const_cast<word&>(fieldDict.type()) = fieldDict.headerClassName();
 
@@ -652,9 +668,7 @@ int main(int argc, char *argv[])
 
     entry::disableFunctionEntries = oldFlag;
 
-    Info<< endl;
-
-    Info<< "End\n" << endl;
+    Info<< "\nEnd\n" << endl;
 
     return 0;
 }

@@ -14,157 +14,154 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dictionaryReplacement
+U
 {
-    U
+    internalField   uniform (0.001 0 0);
+
+    boundaryField
     {
-        internalField   uniform (0.001 0 0);
-
-        boundaryField
+        minX
         {
-            minX
-            {
-                type            fixedValue;
-                value           uniform (0.001 0 0);
-            }
+            type            fixedValue;
+            value           uniform (0.001 0 0);
+        }
 
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform (0 0 0);
-            }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform (0 0 0);
+        }
 
-            ".*"
-            {
-                type            fixedValue;
-                value           uniform (0 0 0);
-            }
+        ".*"
+        {
+            type            fixedValue;
+            value           uniform (0 0 0);
         }
     }
+}
 
-    T
+T
+{
+    internalField   uniform 300;
+
+    boundaryField
     {
-        internalField   uniform 300;
-
-        boundaryField
+        minX
         {
-            minX
-            {
-                type            fixedValue;
-                value           uniform 300;
-            }
+            type            fixedValue;
+            value           uniform 300;
+        }
 
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform 300;
-            }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform 300;
+        }
 
-            ".*"
-            {
-                type            zeroGradient;
-                value           uniform 300;
-            }
+        ".*"
+        {
+            type            zeroGradient;
+            value           uniform 300;
+        }
 
-            "bottomWater_to_.*"
-            {
-                type            compressible::turbulentTemperatureCoupledBaffleMixed;
-                Tnbr            T;
-                kappaMethod     fluidThermo;
-                value           uniform 300;
-            }
+        "bottomWater_to_.*"
+        {
+            type            compressible::turbulentTemperatureCoupledBaffleMixed;
+            Tnbr            T;
+            kappaMethod     fluidThermo;
+            value           uniform 300;
         }
     }
+}
 
-    epsilon
+epsilon
+{
+    internalField   uniform 0.01;
+
+    boundaryField
     {
-        internalField   uniform 0.01;
-
-        boundaryField
+        minX
         {
-            minX
-            {
-                type            fixedValue;
-                value           uniform 0.01;
-            }
+            type            fixedValue;
+            value           uniform 0.01;
+        }
 
-            maxX
-            {
-                type            inletOutlet;
-                inletValue      uniform 0.01;
-            }
+        maxX
+        {
+            type            inletOutlet;
+            inletValue      uniform 0.01;
+        }
 
-            ".*"
-            {
-                type            epsilonWallFunction;
-                value           uniform 0.01;
-            }
+        ".*"
+        {
+            type            epsilonWallFunction;
+            value           uniform 0.01;
         }
     }
+}
 
-    k
+k
+{
+    internalField   uniform 0.1;
+
+    boundaryField
     {
-        internalField   uniform 0.1;
-
-        boundaryField
+        minX
         {
-            minX
-            {
-                type            inletOutlet;
-                inletValue      uniform 0.1;
-            }
+            type            inletOutlet;
+            inletValue      uniform 0.1;
+        }
 
-            maxX
-            {
-                type            zeroGradient;
-                value           uniform 0.1;
-            }
+        maxX
+        {
+            type            zeroGradient;
+            value           uniform 0.1;
+        }
 
-            ".*"
-            {
-                type            kqRWallFunction;
-                value           uniform 0.1;
-            }
+        ".*"
+        {
+            type            kqRWallFunction;
+            value           uniform 0.1;
         }
     }
+}
 
-    p_rgh
+p_rgh
+{
+    internalField   uniform 0;
+
+    boundaryField
     {
-        internalField   uniform 0;
-
-        boundaryField
+        minX
         {
-            minX
-            {
-                type            zeroGradient;
-                value           uniform 0;
-            }
+            type            zeroGradient;
+            value           uniform 0;
+        }
 
-            maxX
-            {
-                type            fixedValue;
-                value           uniform 0;
-            }
+        maxX
+        {
+            type            fixedValue;
+            value           uniform 0;
+        }
 
-            ".*"
-            {
-                type            fixedFluxPressure;
-                value           uniform 0;
-            }
+        ".*"
+        {
+            type            fixedFluxPressure;
+            value           uniform 0;
         }
     }
+}
 
-    p
+p
+{
+    internalField   uniform 0;
+
+    boundaryField
     {
-        internalField   uniform 0;
-
-        boundaryField
+        ".*"
         {
-            ".*"
-            {
-                type            calculated;
-                value           uniform 0;
-            }
+            type            calculated;
+            value           uniform 0;
         }
     }
 }
