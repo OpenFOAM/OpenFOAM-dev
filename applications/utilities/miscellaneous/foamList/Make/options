@@ -16,9 +16,7 @@ EXE_LIBS = \
     -lcombustionModels \
     -lcompressibleTransportModels \
     -lcompressibleTurbulenceModels \
-    -lconformalVoronoiMesh \
     -lconversion \
-    -lcv2DMesh \
     -ldecompose \
     -ldecompositionMethods \
     -ldistributed \
@@ -56,7 +54,6 @@ EXE_LIBS = \
     -lliquidMixtureProperties \
     -lliquidProperties \
     -lmeshTools \
-    -lmetisDecomp \
     -lmolecularMeasurements \
     -lmolecule \
     -lODE \
@@ -85,7 +82,6 @@ EXE_LIBS = \
     -lscotchDecomp \
     -lsixDoFRigidBodyMotion \
     -lSLGThermo \
-    -lSloanRenumber \
     -lsnappyHexMesh \
     -lsolidChemistryModel \
     -lsolidMixtureProperties \
