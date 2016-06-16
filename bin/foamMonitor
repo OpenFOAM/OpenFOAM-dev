@@ -155,7 +155,7 @@ for field in $KEYS
 do
     i=$(expr $i + 1)
     PLOTLINE="\"$FILE\" using 1:${i} with lines title \"$field\""
-    if [[ $i -lt $NCOLS ]]
+    if [ $i -lt $NCOLS ]
     then
        PLOTLINE="$PLOTLINE, \\"
     fi
