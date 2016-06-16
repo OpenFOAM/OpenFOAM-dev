@@ -7,7 +7,7 @@
 -------------------------------------------------------------------------------
 Description
     Calculates pressure and viscous forces over specified patches for a case
-    where the solver is compressible (pressure is in units ML^-1T^-2, e.g. Pa).
+    where the solver is compressible (pressure is in units M/(LT^2), e.g. Pa).
 
 \*---------------------------------------------------------------------------*/
 

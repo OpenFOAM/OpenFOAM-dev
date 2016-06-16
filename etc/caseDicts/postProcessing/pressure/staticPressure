@@ -6,7 +6,7 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculates the pressure field in units ML^-1T^-2 (e.g. Pa) from kinematic
+    Calculates the pressure field in units M/(LT^2) (e.g. Pa) from kinematic
     pressure by scaling by a specified density.
 
 \*---------------------------------------------------------------------------*/

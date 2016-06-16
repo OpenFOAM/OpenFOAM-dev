@@ -7,7 +7,7 @@
 -------------------------------------------------------------------------------
 Description
     Calculates the total pressure field for a case where the solver is
-    compressible (pressure is in units ML^-1T^-2, e.g. Pa).
+    compressible (pressure is in units M/(LT^2), e.g. Pa).
 
 \*---------------------------------------------------------------------------*/
 
