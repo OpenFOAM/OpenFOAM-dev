@@ -15,22 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fixedTemperaure1
-{
-    type            fixedTemperatureConstraint;
-    active          yes;
-
-    fixedTemperatureConstraintCoeffs
-    {
-        selectionMode   cellZone;
-        cellZone        porosity;
-        mode            uniform;
-        temperature     350;
-    }
-}
-
-
-porosity1
+porosity
 {
     type            explicitPorositySource;
     active          yes;
@@ -60,6 +45,39 @@ porosity1
                     e2      (0 0 1);
                 }
             }
+        }
+    }
+}
+
+
+fixedTemperature
+{
+    type            fixedTemperatureConstraint;
+    active          yes;
+
+    fixedTemperatureConstraintCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        porosity;
+        mode            uniform;
+        temperature     350;
+    }
+}
+
+
+porosityTurbulence
+{
+    type            scalarFixedValueConstraint;
+    active          yes;
+
+    scalarFixedValueConstraintCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        porosity;
+        fieldValues
+        {
+            k           1;
+            epsilon     150;
         }
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::explicitSetValue
+    Foam::fv::FixedValueConstraint
 
 Description
-    Set values field values explicity.
+    Constrain the field values within a specified region.
 
-    Sources described by:
-
+    For example to set the turbulence properties within a porous region:
     \verbatim
-    <Type>ExplicitSetValueCoeffs
+    porosityTurbulence
     {
-        injectionRate
+        type            scalarFixedValueConstraint;
+        active          yes;
+
+        scalarFixedValueConstraintCoeffs
         {
-            k           30.7;
-            epsilon     1.5;
+            selectionMode   cellZone;
+            cellZone        porosity;
+            fieldValues
+            {
+                k           1;
+                epsilon     150;
+            }
         }
     }
     \endverbatim
@@ -44,15 +51,15 @@ SeeAlso
     Foam::fvOption
 
 SourceFiles
-    explicitSetValue.C
+    FixedValueConstraint.C
+    fixedValueConstraints.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ExplicitSetValue_H
-#define ExplicitSetValue_H
+#ifndef FixedValueConstraint_H
+#define FixedValueConstraint_H
 
 #include "cellSetOption.H"
-#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,39 +69,30 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class explicitSetValue Declaration
+                       Class FixedValueConstraint Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class ExplicitSetValue
+class FixedValueConstraint
 :
     public cellSetOption
 {
+    // Private member data
 
-protected:
-
-    // Protected data
-
-        //- Source value per field
-        List<Type> injectionRate_;
-
-
-    // Protected functions
-
-        //- Set the local field data
-        void setFieldData(const dictionary& dict);
+        //- Field values
+        List<Type> fieldValues_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("explicitSetValue");
+    TypeName("FixedValueConstraint");
 
 
     // Constructors
 
         //- Construct from components
-        ExplicitSetValue
+        FixedValueConstraint
         (
             const word& name,
             const word& modelType,
@@ -105,16 +103,11 @@ public:
 
     // Member Functions
 
-        // Evaluation
+        //- Read source dictionary
+        virtual bool read(const dictionary& dict);
 
-            //- Set value on field
-            virtual void constrain(fvMatrix<Type>& eqn, const label fieldi);
-
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+        //- Set value on field
+        virtual void constrain(fvMatrix<Type>& eqn, const label fieldi);
 };
 
 
@@ -126,8 +119,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "ExplicitSetValue.C"
-    #include "ExplicitSetValueIO.C"
+    #include "FixedValueConstraint.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

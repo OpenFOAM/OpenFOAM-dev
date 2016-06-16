@@ -49,11 +49,8 @@ $(interRegion)/interRegionExplicitPorositySource/interRegionExplicitPorositySour
 
 /* Constraints */
 
-generalConstraints=constraints/general
-$(generalConstraints)/explicitSetValue/explicitSetValue.C
-
-derivedConstraints=constraints/derived
-$(derivedConstraints)/fixedTemperatureConstraint/fixedTemperatureConstraint.C
+constraints/fixedValueConstraint/fixedValueConstraints.C
+constraints/fixedTemperatureConstraint/fixedTemperatureConstraint.C
 
 
 /* Corrections */

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,35 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ExplicitSetValue.H"
+#include "FixedValueConstraint.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
 #include "DimensionedField.H"
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::fv::ExplicitSetValue<Type>::setFieldData(const dictionary& dict)
-{
-    fieldNames_.setSize(dict.toc().size());
-    injectionRate_.setSize(fieldNames_.size());
-
-    applied_.setSize(fieldNames_.size(), false);
-
-    label i = 0;
-    forAllConstIter(dictionary, dict, iter)
-    {
-        fieldNames_[i] = iter().keyword();
-        dict.lookup(iter().keyword()) >> injectionRate_[i];
-        i++;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::fv::ExplicitSetValue<Type>::ExplicitSetValue
+Foam::fv::FixedValueConstraint<Type>::FixedValueConstraint
 (
     const word& name,
     const word& modelType,
@@ -59,8 +39,7 @@ Foam::fv::ExplicitSetValue<Type>::ExplicitSetValue
     const fvMesh& mesh
 )
 :
-    cellSetOption(name, modelType, dict, mesh),
-    injectionRate_()
+    cellSetOption(name, modelType, dict, mesh)
 {
     read(dict);
 }
@@ -69,21 +48,47 @@ Foam::fv::ExplicitSetValue<Type>::ExplicitSetValue
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fv::ExplicitSetValue<Type>::constrain
+bool Foam::fv::FixedValueConstraint<Type>::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        const dictionary& fieldValuesDict = coeffs_.subDict("fieldValues");
+
+        fieldNames_.setSize(fieldValuesDict.size());
+        fieldValues_.setSize(fieldNames_.size());
+
+        label i = 0;
+        forAllConstIter(dictionary, fieldValuesDict, iter)
+        {
+            fieldNames_[i] = iter().keyword();
+            fieldValuesDict.lookup(iter().keyword()) >> fieldValues_[i];
+            i++;
+        }
+
+        applied_.setSize(fieldNames_.size(), false);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+template<class Type>
+void Foam::fv::FixedValueConstraint<Type>::constrain
 (
     fvMatrix<Type>& eqn,
     const label fieldi
 )
 {
-    if (debug)
-    {
-        Info<< "ExplicitSetValue<"<< pTraits<Type>::typeName
-            << ">::constrain for source " << name_ << endl;
-    }
+    DebugInfo
+        << "FixedValueConstraint<"
+        << pTraits<Type>::typeName
+        << ">::constrain for source " << name_ << endl;
 
-    List<Type> values(cells_.size(), injectionRate_[fieldi]);
-
-    eqn.setValues(cells_, values);
+    eqn.setValues(cells_, List<Type>(cells_.size(), fieldValues_[fieldi]));
 }
 
 

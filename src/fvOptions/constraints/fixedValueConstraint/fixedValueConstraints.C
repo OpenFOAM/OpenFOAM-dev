@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,23 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "ExplicitSetValue.H"
+#include "makeFvOption.H"
+#include "FixedValueConstraint.H"
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-bool Foam::fv::ExplicitSetValue<Type>::read(const dictionary& dict)
-{
-    if (cellSetOption::read(dict))
-    {
-        setFieldData(coeffs_.subDict("injectionRate"));
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
+makeFvOption(FixedValueConstraint, scalar);
+makeFvOption(FixedValueConstraint, vector);
+makeFvOption(FixedValueConstraint, sphericalTensor);
+makeFvOption(FixedValueConstraint, symmTensor);
+makeFvOption(FixedValueConstraint, tensor);
 
 // ************************************************************************* //
