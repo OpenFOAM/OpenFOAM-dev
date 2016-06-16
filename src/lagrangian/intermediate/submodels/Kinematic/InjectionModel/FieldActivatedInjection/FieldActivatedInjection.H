@@ -27,16 +27,16 @@ Class
 Description
     Injection at specified positions, with the conditions:
 
-    \li for injection to be allowed
-        \verbatim
-        factor*referenceField[celli] >= thresholdField[celli]
-        \endverbatim
-        where:
+    For injection to be allowed
+      \verbatim
+      factor*referenceField[celli] >= thresholdField[celli]
+      \endverbatim
+      where:
         - \c referenceField is the field used to supply the look-up values
         - \c thresholdField supplies the values beyond which the injection is
             permitted.
 
-    \li limited to a user-supllied number of injections per injector location
+    Limited to a user-supplied number of injections per injector location
 
 SourceFiles
     FieldActivatedInjection.C

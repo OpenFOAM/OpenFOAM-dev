@@ -26,21 +26,21 @@ Class
 
 Description
     A local coordinate rotation.
+
     The cell based rotational field can be created in two ways:
+      -# Each rotational tensor is defined with two vectors (\c dir and \c e3)
+         where <tt>dir =  cellC - origin</tt> and \c e3 is the rotation axis.
+          Per each cell an axesRotation type of rotation is created
+          (cylindrical coordinates). For example:
+          \verbatim
+          cylindrical
+          {
+              type        localAxes;
+              e3          (0 0 1);
+          }
+          \endverbatim
 
-    \li 1. Each rotational tensor is defined with two vectors (\c dir and \c e3)
-        where <tt>dir =  cellC - origin</tt> and \c e3 is the rotation axis.
-        Per each cell an axesRotation type of rotation is created
-        (cylindrical coordinates). For example:
-        \verbatim
-        cylindrical
-        {
-            type        localAxes;
-            e3          (0 0 1);
-        }
-        \endverbatim
-
-    \li 2. The rotational tensor field is provided at construction.
+      -# The rotational tensor field is provided at construction.
 
 SourceFiles
     cylindrical.C

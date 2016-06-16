@@ -30,8 +30,8 @@ Description
     for patches on the primary region based on whether the patch is seen to
     be 'wet', retrieved from the film alpha field.
 
-    \li if the patch is wet, the temperature is set using the film temperature
-    \li otherwise, it is set using pyrolysis temperature
+    - if the patch is wet, the temperature is set using the film temperature
+    - otherwise, it is set using pyrolysis temperature
 
     Example of the boundary condition specification:
     \verbatim

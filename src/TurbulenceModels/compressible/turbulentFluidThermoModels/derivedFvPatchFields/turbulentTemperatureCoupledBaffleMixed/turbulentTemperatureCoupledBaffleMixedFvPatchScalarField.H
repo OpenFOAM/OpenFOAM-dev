@@ -36,9 +36,9 @@ Description
 
     Specifies gradient and temperature such that the equations are the same
     on both sides:
-    - refGradient = zero gradient
-    - refValue = neighbour value
-    - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
+      - refGradient = zero gradient
+      - refValue = neighbour value
+      - mixFraction = nbrKDelta / (nbrKDelta + myKDelta())
 
     where KDelta is heat-transfer coefficient K * deltaCoeffs
 
@@ -70,8 +70,7 @@ Description
     Needs to be on underlying mapped(Wall)FvPatch.
 
     Note:
-
-    \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.
+      - \c kappa and \c kappaName are inherited from temperatureCoupledBase.
 
 
 SeeAlso

@@ -37,9 +37,8 @@ Description
     \endverbatim
 
     where:
-
-    \li \c %r gets replaced by current processor rank
-    \li it will decompose into 2 domains
+      - %r gets replaced by current processor rank
+      - it will decompose into 2 domains
 
 SeeAlso
     Foam::scotchDecomp

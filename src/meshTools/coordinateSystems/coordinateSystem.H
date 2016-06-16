@@ -43,15 +43,13 @@ Description
     \endverbatim
 
     Types of coordinateRotation:
-
-    \li 1. axesRotation
-    \li 2. STARCDRotation
-    \li 3. cylindrical
-    \li 4. EulerCoordinateRotation
+      -# axesRotation
+      -# \link STARCDCoordinateRotation STARCDRotation \endlink
+      -# cylindricalCS cylindrical
+      -# EulerCoordinateRotation
 
     Type of co-ordinates:
-
-    \li 1. cartesian
+      -# \link cartesianCS cartesian \endlink
 
 
 SourceFiles

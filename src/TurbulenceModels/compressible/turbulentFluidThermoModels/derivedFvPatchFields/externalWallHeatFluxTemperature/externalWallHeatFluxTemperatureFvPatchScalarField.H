@@ -34,8 +34,8 @@ Description
     fixed heat transfer coefficient mode.
 
     The condition can operate in two modes:
-    - fixed heat transfer coefficient: supply h and Ta
-    - fixed heat flux: supply q
+      - fixed heat transfer coefficient: supply h and Ta
+      - fixed heat flux: supply q
 
     where:
     \vartable
@@ -47,7 +47,6 @@ Description
     The thermal conductivity, \c kappa, can either be retrieved from the
     mesh database using the \c lookup option, or from a \c solidThermo
     thermophysical package.
-
 
     \heading Patch usage
 
@@ -83,9 +82,8 @@ Description
     \endverbatim
 
     Note:
-
-    \li Only supply \c h and \c Ta, or \c q in the dictionary (see above)
-    \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.
+      - Only supply \c h and \c Ta, or \c q in the dictionary (see above)
+      - \c kappa and \c kappaName are inherited from temperatureCoupledBase.
 
 SeeAlso
     Foam::temperatureCoupledBase

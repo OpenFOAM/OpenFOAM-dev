@@ -27,14 +27,14 @@ Class
 Description
     Manual injection.
 
-    \li User specifies:
-        - Total mass to inject
-        - Parcel positions in file \c positionsFile
-        - Initial parcel velocity
+    User specifies:
+      - Total mass to inject
+      - Parcel positions in file \c positionsFile
+      - Initial parcel velocity
 
-    \li Parcel diameters obtained by distribution model
-
-    \li All parcels introduced at SOI
+    Properties:
+      - Parcel diameters obtained by distribution model
+      - All parcels introduced at SOI
 
 SourceFiles
     ManualInjection.C

@@ -29,22 +29,23 @@ Group
 
 Description
     This function object allows specification of different writing frequency
-    of objects registered to the database. It has similar functionality
-    as the main time database through the writeControl setting:
+    of objects registered to the database.
 
-    \li \c timeStep
-    \li \c writeTime
-    \li \c adjustableRunTime
-    \li \c runTime
-    \li \c clockTime
-    \li \c cpuTime
+    It has similar functionality as the main time database through the
+    writeControl setting:
+      - timeStep
+      - writeTime
+      - adjustableRunTime
+      - runTime
+      - clockTime
+      - cpuTime
 
     Example of function object specification:
     \verbatim
     writeObjects1
     {
         type        writeObjects;
-        libs ("libutilityFunctionObjects.so");
+        libs        ("libutilityFunctionObjects.so");
         exclusiveWriting     true;
         ...
         objectNames (obj1 obj2);

@@ -25,19 +25,17 @@ Class
     Foam::surfaceLocation
 
 Description
-    Contains information about location on a triSurface:
+    Contains information about location on a triSurface
 
-    \li pointIndexHit:
+    Access to data:
+      - pointIndexHit provides
         - location
         - bool: hit/miss
         - index (of triangle/point/edge)
-
-    \li elementType():
+      - elementType() provides
         - what index above relates to. In triangle::proxType
-
-    \li triangle():
+      - triangle() provides
         - last known triangle
-
 
 SourceFiles
     surfaceLocation.C

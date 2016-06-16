@@ -29,16 +29,16 @@ Group
 
 Description
     This boundary condition provides a coupled temperature condition between
-    multiple mesh regions.  The regions are generally referred to as the:
+    multiple mesh regions.
 
-    \li primary region,
-    \li and baffle region.
+    The regions are generally referred to as the:
+      - primary region,
+      - and baffle region.
 
     The primary region creates the baffle region and evolves its energy
     equation either:
-
-    - 1-D, normal to each patch face
-    - 2-D, normal and tangential components
+      - 1-D, normal to each patch face
+      - 2-D, normal and tangential components
 
     The thermodynamic properties of the baffle material are specified via
     dictionary entries on the master patch.
@@ -118,7 +118,7 @@ Description
     }
     \endverbatim
 
-    \li Slave patch on primary region
+    Slave patch on primary region:
     \verbatim
     myPatch_slave
     {
@@ -129,7 +129,7 @@ Description
     \endverbatim
 
 
-    \li Patches on baffle region
+    Patches on baffle region:
     \verbatim
     bottom
     {

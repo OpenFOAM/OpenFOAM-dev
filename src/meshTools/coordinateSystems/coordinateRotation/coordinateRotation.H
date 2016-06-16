@@ -37,11 +37,10 @@ Description
     \endverbatim
 
     Types of coordinateRotation:
-
-    \li 1. axesRotation
-    \li 2. STARCDRotation
-    \li 3. cylindrical
-    \li 4. EulerCoordinateRotation
+      -# axesRotation
+      -# STARCDRotation
+      -# cylindrical
+      -# EulerCoordinateRotation
 
 SourceFiles
     coordinateRotation.C

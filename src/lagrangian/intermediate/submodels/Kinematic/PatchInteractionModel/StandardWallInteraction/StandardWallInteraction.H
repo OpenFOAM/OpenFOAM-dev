@@ -25,11 +25,12 @@ Class
     Foam::StandardWallInteraction
 
 Description
-    Wall interaction model. Three choices:
+    Wall interaction model.
 
-    \li \c rebound - optionally specify elasticity and restitution coefficients
-    \li \c stick   - particles assigned zero velocity
-    \li \c escape  - remove particle from the domain
+    Three choices:
+      - rebound - optionally specify elasticity and restitution coefficients
+      - stick   - particles assigned zero velocity
+      - escape  - remove particle from the domain
 
     Example usage:
     \verbatim

@@ -27,30 +27,31 @@ Class
 Description
     Cone injection.
 
-    \li User specifies:
-        - time of start of injection
-        - injector position
-        - direction (along injection axis)
-        - parcel flow rate
-        - inner and outer half-cone angles
+    User specifies:
+      - time of start of injection
+      - injector position
+      - direction (along injection axis)
+      - parcel flow rate
+      - inner and outer half-cone angles
 
-    \li Parcel diameters obtained by size distribution model
+    Properties:
+      - Parcel diameters obtained by size distribution model.
 
-    \li Parcel velocity is calculated as:
+      - Parcel velocity is calculated as:
         - Constant velocity:
-        \verbatim
-        U = \<specified by user\>
-        \endverbatim
+          \verbatim
+          U = \<specified by user\>
+          \endverbatim
 
         - Pressure driven velocity:
-        \verbatim
-        U = sqrt(2*(Pinj - Pamb)/rho)
-        \endverbatim
+          \verbatim
+          U = sqrt(2*(Pinj - Pamb)/rho)
+          \endverbatim
 
         - Flow rate and discharge:
-        \verbatim
-        U = V_dot/(A*Cd)
-        \endverbatim
+          \verbatim
+          U = V_dot/(A*Cd)
+          \endverbatim
 
 SourceFiles
     ConeNozzleInjection.C

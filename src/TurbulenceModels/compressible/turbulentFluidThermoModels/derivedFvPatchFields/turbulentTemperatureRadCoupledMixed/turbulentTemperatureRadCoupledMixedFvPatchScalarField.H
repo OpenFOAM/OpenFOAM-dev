@@ -67,8 +67,7 @@ Description
     Needs to be on underlying mapped(Wall)FvPatch.
 
     Note:
-
-    \li \c kappa and \c kappaName are inherited from temperatureCoupledBase.
+      - \c kappa and \c kappaName are inherited from temperatureCoupledBase.
 
 
 SeeAlso
