@@ -74,7 +74,7 @@ class functionObjectList
 
         //- The parent dictionary containing a "functions" entry
         //  This entry can either be a list or a dictionary of
-        //  functionObject specifications.
+        //  functionObject specifications
         const dictionary& parentDict_;
 
         //- Switch for the execution of the functionObjects
@@ -88,8 +88,12 @@ class functionObjectList
 
         //- Remove and return the function object pointer by name,
         //  and returns the old index via the parameter.
-        //  Returns a NULL pointer (and index -1) if it didn't exist.
+        //  Returns a NULL pointer (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
+
+        //- Search the specified directory for functionObject
+        //  configuration files, add to the given map and recurse
+        static void listDir(const fileName& dir, HashSet<word>& foMap);
 
         //- Disallow default bitwise copy construct
         functionObjectList(const functionObjectList&);

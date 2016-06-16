@@ -72,6 +72,35 @@ Foam::functionObject* Foam::functionObjectList::remove
 }
 
 
+void Foam::functionObjectList::listDir
+(
+    const fileName& dir,
+    HashSet<word>& foMap
+)
+{
+    // Search specified directory for functionObject configuration files
+    {
+        fileNameList foFiles(readDir(dir));
+        forAll(foFiles, f)
+        {
+            if (foFiles[f].ext().empty())
+            {
+                foMap.insert(foFiles[f]);
+            }
+        }
+    }
+
+    // Recurse into sub-directories
+    {
+        fileNameList foDirs(readDir(dir, fileName::DIRECTORY));
+        forAll(foDirs, fd)
+        {
+            listDir(dir/foDirs[fd], foMap);
+        }
+    }
+}
+
+
 void Foam::functionObjectList::list()
 {
     HashSet<word> foMap;
@@ -80,20 +109,7 @@ void Foam::functionObjectList::list()
 
     forAll(etcDirs, ed)
     {
-        fileNameList foDirs(readDir(etcDirs[ed], fileName::DIRECTORY));
-        forAll(foDirs, fd)
-        {
-            fileNameList foFiles(readDir(etcDirs[ed]/foDirs[fd]));
-            {
-                forAll(foFiles, f)
-                {
-                    if (foFiles[f].ext().empty())
-                    {
-                        foMap.insert(foFiles[f]);
-                    }
-                }
-            }
-        }
+        listDir(etcDirs[ed], foMap);
     }
 
     Info<< nl
