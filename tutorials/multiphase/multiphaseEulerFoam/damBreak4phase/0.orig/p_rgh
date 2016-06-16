@@ -44,10 +44,6 @@ boundaryField
         p0              uniform 0;
         U               U.air;
         phi             phi.air;
-        rho             rho;
-        psi             none;
-        gamma           1;
-        value           uniform 0;
     }
 
     defaultFaces

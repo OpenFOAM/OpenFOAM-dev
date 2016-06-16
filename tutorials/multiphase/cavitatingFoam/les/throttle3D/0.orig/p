@@ -23,9 +23,6 @@ boundaryField
     inlet
     {
         type            totalPressure;
-        rho             rho;
-        psi             none;
-        gamma           1;
         p0              uniform 300e5;
     }
 

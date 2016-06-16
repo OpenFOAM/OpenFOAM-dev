@@ -42,10 +42,6 @@ boundaryField
     {
         type            totalPressure;
         p0              uniform 0;
-        rho             rho;
-        psi             none;
-        gamma           1;
-        value           uniform 0;
     }
 
     defaultFaces

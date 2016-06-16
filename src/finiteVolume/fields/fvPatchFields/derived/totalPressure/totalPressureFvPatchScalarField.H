@@ -54,7 +54,7 @@ Description
             U       | velocity
         \endvartable
 
-    3. compressible transonic (\f$\gamma <= 1\f$):
+    3. compressible transonic (\f$\gamma = 1\f$):
         \f[
             p_p = \frac{p_0}{1 + 0.5 \psi |U|^2}
         \f]
@@ -78,27 +78,28 @@ Description
             G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$
         \endvartable
 
-    The modes of operation are set via the combination of \c phi, \c rho, and
-    \c psi entries:
+    The modes of operation are set by the dimensions of the pressure field
+    to which this boundary condition is applied, the \c psi entry and the value
+    of \c gamma:
     \table
-        Mode                    | phi   | rho   | psi
-        incompressible subsonic | phi   | none  | none
-        compressible subsonic   | phi   | rho   | none
-        compressible transonic  | phi   | none  | psi
-        compressible supersonic | phi   | none  | psi
+        Mode                    | dimensions | psi   | gamma
+        incompressible subsonic | p/rho      |       |
+        compressible subsonic   | p          | none  |
+        compressible transonic  | p          | psi   | 1
+        compressible supersonic | p          | psi   | > 1
     \endtable
 
 
     \heading Patch usage
 
     \table
-        Property     | Description             | Required    | Default value
-        U            | velocity field name     | no          | U
-        phi          | flux field name         | no          | phi
-        rho          | density field name      | no          | none
-        psi          | compressibility field name | no       | none
-        gamma        | ratio of specific heats (Cp/Cv) | yes |
-        p0           | total pressure          | yes       |
+        Property     | Description                | Required | Default value
+        U            | Velocity field name        | no       | U
+        phi          | Flux field name            | no       | phi
+        rho          | Density field name         | no       | rho
+        psi          | Compressibility field name | no       | none
+        gamma        | (Cp/Cv)                    | no       | 1
+        p0           | Total pressure             | yes      |
     \endtable
 
     Example of the boundary condition specification:
@@ -106,17 +107,9 @@ Description
     myPatch
     {
         type            totalPressure;
-        U               U;
-        phi             phi;
-        rho             none;
-        psi             none;
-        gamma           1.4;
         p0              uniform 1e5;
     }
     \endverbatim
-
-Note
-    The default boundary behaviour is for subsonic, incompressible flow.
 
 SeeAlso
     Foam::fixedValueFvPatchField

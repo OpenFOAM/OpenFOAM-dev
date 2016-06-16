@@ -39,10 +39,6 @@ boundaryField
     {
         type            totalPressure;
         p0              $internalField;
-        rho             none;
-        psi             none;
-        gamma           1;
-        value           uniform 0;
     }
 
     farField

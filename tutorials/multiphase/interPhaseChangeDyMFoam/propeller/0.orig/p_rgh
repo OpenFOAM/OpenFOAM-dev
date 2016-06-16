@@ -33,10 +33,6 @@ boundaryField
     {
         type            totalPressure;
         p0              $internalField;
-        rho             rho;
-        psi             none;
-        gamma           1;
-        value           $internalField;
     }
 
     wall

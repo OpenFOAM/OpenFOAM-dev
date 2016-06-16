@@ -42,10 +42,6 @@ boundaryField
     {
         type            totalPressure;
         p0              uniform 1e5;
-        rho             rho;
-        psi             none;
-        gamma           1;
-        value           $internalField;
     }
 
     defaultFaces

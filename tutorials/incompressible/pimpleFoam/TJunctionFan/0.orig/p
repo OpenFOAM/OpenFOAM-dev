@@ -24,17 +24,11 @@ boundaryField
     inlet
     {
         type            uniformTotalPressure;
-        rho             none;
-        psi             none;
-        gamma           1;
-        pressure        table
-        2
+        p0              table
         (
             (0 10)
             (1 40)
-        )
-        ;
-        value           uniform 40;
+        );
     }
     outlet1
     {

@@ -42,11 +42,7 @@ outlet
     p
     {
         type            totalPressure;
-        value           uniform 1e5;
         p0              uniform 1e5;
-        rho             rho;
-        psi             none;
-        gamma           1.4;
     }
 
     U

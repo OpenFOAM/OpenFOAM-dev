@@ -23,16 +23,11 @@ boundaryField
     inlet
     {
         type            uniformTotalPressure;
-        pressure        table
+        p0              table
         (
             (0 10)
             (1 40)
         );
-        p0              40; // only used for restarts
-        rho             none;
-        psi             none;
-        gamma           1;
-        value           uniform 40;
     }
 
     outlet1
