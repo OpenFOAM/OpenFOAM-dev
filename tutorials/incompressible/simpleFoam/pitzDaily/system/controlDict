@@ -47,47 +47,7 @@ runTimeModifiable true;
 
 functions
 {
-    streamLines
-    {
-        type            streamLine;
-
-        // Where to load it from (if not already in solver)
-        libs ("libfieldFunctionObjects.so");
-
-        // Output every
-        writeControl    writeTime;
-        // writeInterval 10;
-
-        setFormat       vtk; //gnuplot;//xmgr;//raw;//jplot;//csv;//ensight;
-
-        // Tracked forwards (+U) or backwards (-U)
-        trackForward    true;
-
-        // Names of fields to sample. Should contain above velocity field!
-        fields (p k U);
-
-        // Steps particles can travel before being removed
-        lifeTime        10000;
-
-        // Number of steps per cell (estimate). Set to 1 to disable subcycling.
-        nSubCycle 5;
-
-        // Cloud name to use
-        cloudName       particleTracks;
-
-        // Seeding method.
-        seedSampleSet   uniform;  //cloud; //triSurfaceMeshPointSet;
-
-        uniformCoeffs
-        {
-            type        uniform;
-            axis        x;  //distance;
-
-            start       (-0.0205 0.001  0.00001);
-            end         (-0.0205 0.0251 0.00001);
-            nPoints     10;
-        }
-    }
+    #includeFunc streamlines
 }
 
 // ************************************************************************* //
