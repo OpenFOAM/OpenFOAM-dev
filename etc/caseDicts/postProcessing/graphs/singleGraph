@@ -15,7 +15,11 @@ start   (0 1e-06 0);
 end     (1 1e-06 0);
 fields  (U p);
 
+// Sampling and I/O settings
 #includeEtc "caseDicts/postProcessing/graphs/sampleDict.cfg"
+
+// Override settings here, e.g.
+// setConfig { type midPoint; }
 
 // Must be last entry
 #includeEtc "caseDicts/postProcessing/graphs/graph.cfg"
