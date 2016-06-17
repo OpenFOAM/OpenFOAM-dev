@@ -43,7 +43,6 @@ Description
     - the flow rate is in m3/s
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |

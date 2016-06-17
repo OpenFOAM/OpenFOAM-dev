@@ -234,6 +234,8 @@ void Foam::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
         writeEntryIfDifferent<scalar>(os, "rhoInlet", -VGREAT, rhoInlet_);
     }
+    os.writeKeyword("extrapolateProfile")
+        << extrapolateProfile_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }
 
