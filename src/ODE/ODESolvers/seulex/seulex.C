@@ -38,7 +38,7 @@ namespace Foam
         seulex::stepFactor1_ = 0.6,
         seulex::stepFactor2_ = 0.93,
         seulex::stepFactor3_ = 0.1,
-        seulex::stepFactor4_ = 4.0,
+        seulex::stepFactor4_ = 4,
         seulex::stepFactor5_ = 0.5,
         seulex::kFactor1_ = 0.7,
         seulex::kFactor2_ = 0.9;
@@ -50,11 +50,11 @@ namespace Foam
 Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
 :
     ODESolver(ode, dict),
-    jacRedo_(min(1.0e-4, min(relTol_))),
+    jacRedo_(min(1e-4, min(relTol_))),
     nSeq_(iMaxx_),
     cpu_(iMaxx_),
     coeff_(iMaxx_, iMaxx_),
-    theta_(2.0*jacRedo_),
+    theta_(2*jacRedo_),
     table_(kMaxx_, n_),
     dfdx_(n_),
     dfdy_(n_),
@@ -70,7 +70,7 @@ Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
     dydx_(n_)
 {
     // The CPU time factors for the major parts of the algorithm
-    const scalar cpuFunc = 1.0, cpuJac = 5.0, cpuLU = 1.0, cpuSolve = 1.0;
+    const scalar cpuFunc = 1, cpuJac = 5, cpuLU = 1, cpuSolve = 1;
 
     nSeq_[0] = 2;
     nSeq_[1] = 3;
@@ -92,7 +92,7 @@ Foam::seulex::seulex(const ODESystem& ode, const dictionary& dict)
         for (int l=0; l<k; l++)
         {
             scalar ratio = scalar(nSeq_[k])/nSeq_[l];
-            coeff_(k, l) = 1.0/(ratio - 1.0);
+            coeff_(k, l) = 1/(ratio - 1);
         }
     }
 }
@@ -120,7 +120,7 @@ bool Foam::seulex::seul
             a_(i, j) = -dfdy_(i, j);
         }
 
-        a_(i, i) += 1.0/dx;
+        a_(i, i) += 1/dx;
     }
 
     LUDecompose(a_, pivotIndices_);
@@ -138,7 +138,7 @@ bool Foam::seulex::seul
 
         if (nn == 1 && k<=1)
         {
-            scalar dy1 = 0.0;
+            scalar dy1 = 0;
             for (label i=0; i<n_; i++)
             {
                 dy1 += sqr(dy_[i]/scale[i]);
@@ -153,15 +153,23 @@ bool Foam::seulex::seul
 
             LUBacksubstitute(a_, pivotIndices_, dy_);
 
-            scalar dy2 = 0.0;
+            const scalar denom = min(1, dy1 + SMALL);
+            scalar dy2 = 0;
             for (label i=0; i<n_; i++)
             {
+                // Test of dy_[i] to avoid overflow
+                if (mag(dy_[i]) > scale[i]*denom)
+                {
+                    theta_ = 1;
+                    return false;
+                }
+
                 dy2 += sqr(dy_[i]/scale[i]);
             }
             dy2 = sqrt(dy2);
-            theta_ = dy2/min(1.0, dy1 + SMALL);
+            theta_ = dy2/denom;
 
-            if (theta_ > 1.0)
+            if (theta_ > 1)
             {
                 return false;
             }
@@ -217,7 +225,7 @@ void Foam::seulex::solve
 
     if (step.first || step.prevReject)
     {
-        theta_ = 2.0*jacRedo_;
+        theta_ = 2*jacRedo_;
     }
 
     if (step.first)
@@ -284,36 +292,36 @@ void Foam::seulex::solve
             if (k != 0)
             {
                 extrapolate(k, table_, y);
-                scalar err = 0.0;
+                scalar err = 0;
                 forAll(scale_, i)
                 {
                     scale_[i] = absTol_[i] + relTol_[i]*mag(y0_[i]);
                     err += sqr((y[i] - table_(0, i))/scale_[i]);
                 }
                 err = sqrt(err/n_);
-                if (err > 1.0/SMALL || (k > 1 && err >= errOld))
+                if (err > 1/SMALL || (k > 1 && err >= errOld))
                 {
                     step.reject = true;
                     dxNew = mag(dx)*stepFactor5_;
                     break;
                 }
                 errOld = min(4*err, 1);
-                scalar expo = 1.0/(k + 1);
+                scalar expo = 1/(k + 1);
                 scalar facmin = pow(stepFactor3_, expo);
                 scalar fac;
-                if (err == 0.0)
+                if (err == 0)
                 {
-                    fac = 1.0/facmin;
+                    fac = 1/facmin;
                 }
                 else
                 {
                     fac = stepFactor2_/pow(err/stepFactor1_, expo);
-                    fac = max(facmin/stepFactor4_, min(1.0/facmin, fac));
+                    fac = max(facmin/stepFactor4_, min(1/facmin, fac));
                 }
                 dxOpt_[k] = mag(dx*fac);
                 temp_[k] = cpu_[k]/dxOpt_[k];
 
-                if ((step.first || step.last) && err <= 1.0)
+                if ((step.first || step.last) && err <= 1)
                 {
                     break;
                 }
@@ -325,11 +333,11 @@ void Foam::seulex::solve
                  && !step.first && !step.last
                 )
                 {
-                    if (err <= 1.0)
+                    if (err <= 1)
                     {
                         break;
                     }
-                    else if (err > nSeq_[kTarg_]*nSeq_[kTarg_ + 1]*4.0)
+                    else if (err > nSeq_[kTarg_]*nSeq_[kTarg_ + 1]*4)
                     {
                         step.reject = true;
                         kTarg_ = k;
@@ -344,11 +352,11 @@ void Foam::seulex::solve
 
                 if (k == kTarg_)
                 {
-                    if (err <= 1.0)
+                    if (err <= 1)
                     {
                         break;
                     }
-                    else if (err > nSeq_[k + 1]*2.0)
+                    else if (err > nSeq_[k + 1]*2)
                     {
                         step.reject = true;
                         if (kTarg_>1 && temp_[k-1] < kFactor1_*temp_[k])
@@ -362,7 +370,7 @@ void Foam::seulex::solve
 
                 if (k == kTarg_+1)
                 {
-                    if (err > 1.0)
+                    if (err > 1)
                     {
                         step.reject = true;
                         if
@@ -384,7 +392,7 @@ void Foam::seulex::solve
             step.prevReject = true;
             if (!jacUpdated)
             {
-                theta_ = 2.0*jacRedo_;
+                theta_ = 2*jacRedo_;
 
                 if (theta_ > jacRedo_ && !jacUpdated)
                 {
