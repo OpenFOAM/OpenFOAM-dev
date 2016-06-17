@@ -33,7 +33,6 @@ Description
     of mesh (or general surface) faces, a number of operations can be
     performed, such as sums, averages and integrations.
 
-    \linebreak
     For example, to calculate the volumetric or mass flux across a patch,
     apply the 'sum' operator to the flux field (typically \c phi)
 
@@ -78,7 +77,6 @@ Description
         orientedFields | list of oriented fields to operate on | no |
     \endtable
 
-    \linebreak
     Where \c regionType is defined by
     \plaintable
         faceZone     | requires a 'name' entry to specify the faceZone
@@ -86,7 +84,6 @@ Description
         sampledSurface | requires a 'sampledSurfaceDict' sub-dictionary
     \endplaintable
 
-    \linebreak
     The \c operation is one of:
     \plaintable
        none          | no operation

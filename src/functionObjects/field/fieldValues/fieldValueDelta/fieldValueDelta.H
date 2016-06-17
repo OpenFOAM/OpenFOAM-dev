@@ -56,7 +56,6 @@ Description
         type         | type name: fieldValueDelta   | yes    |
     \endtable
 
-    \linebreak
     The \c operation is one of:
     \plaintable
        add           | add
@@ -65,6 +64,7 @@ Description
        max           | maximum
        average       | average
     \endplaintable
+
 SeeAlso
     Foam::fieldValue
 

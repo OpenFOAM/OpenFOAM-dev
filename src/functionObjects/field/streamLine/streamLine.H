@@ -76,7 +76,6 @@ Description
         seedSampleSet| Seeding method (see below)| yes       |
     \endtable
 
-    \linebreak
     Where \c seedSampleSet is typically one of
     \plaintable
         uniform | uniform particle seeding

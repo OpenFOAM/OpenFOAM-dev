@@ -177,9 +177,6 @@ s/.*\*\//\*\//
 # Convert /heading in source files to bold font and add some space
 s#\\heading \(.*\)#<br><b>\1</b>#g
 
-# Add a linebreak
-s#\\linebreak#<br>#g
-
 }
 
 #------------------------------------------------------------------------------

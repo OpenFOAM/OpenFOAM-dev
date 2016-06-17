@@ -69,14 +69,12 @@ Description
         fields       | list of fields to operate on | yes    |
     \endtable
 
-    \linebreak
     Where \c regionType is defined by
     \plaintable
         cellZone     | requires a 'name' entry to specify the cellZone
         all          | all cells
     \endplaintable
 
-    \linebreak
     The \c operation is one of:
     \plaintable
        none          | no operation

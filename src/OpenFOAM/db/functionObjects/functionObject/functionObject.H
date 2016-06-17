@@ -32,7 +32,6 @@ Description
     field and derived quantities.  Alternatively, the same actions can be
     executed after the simulation using the \c -postProcess command-line option.
 
-    \linebreak
     \subsection secFunctionObjects Using function objects
 
     FunctionObjects are selected by additional entries in the
