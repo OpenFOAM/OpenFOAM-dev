@@ -60,16 +60,25 @@ void Foam::cyclicACMIPolyPatch::resetAMI
 
         if (boundaryMesh().mesh().hasCellCentres())
         {
-            WarningInFunction
-                << "The mesh already has cellCentres calculated when"
-                << " resetting ACMI " << name() << "." << endl
-                << "This is a problem since ACMI adapts the face areas"
-                << " (to close cells) so this has" << endl
-                << "to be done before cell centre calculation." << endl
-                << "This can happen if e.g. the cyclicACMI is after"
-                << " any processor patches in the boundary." << endl
-                << "Continuing with potential for incorrect geometry"
-                << " calculation and mass loss" << endl;
+            if (debug)
+            {
+                Pout<< "cyclicACMIPolyPatch::resetAMI : clearing cellCentres"
+                    << " for " << name() << " and " << nonOverlapPatch.name()
+                    << endl;
+            }
+
+            //WarningInFunction
+            //    << "The mesh already has cellCentres calculated when"
+            //    << " resetting ACMI " << name() << "." << endl
+            //    << "This is a problem since ACMI adapts the face areas"
+            //    << " (to close cells) so this has" << endl
+            //    << "to be done before cell centre calculation." << endl
+            //    << "This can happen if e.g. the cyclicACMI is after"
+            //    << " any processor patches in the boundary." << endl;
+            const_cast<polyMesh&>
+            (
+                boundaryMesh().mesh()
+            ).primitiveMesh::clearGeom();
         }
 
 
