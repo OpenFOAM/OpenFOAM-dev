@@ -1,0 +1,90 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamSearch
+#
+# Description
+#     Searches a directory for dictionary files of a particular name and
+#     extracts entries of a particular keyword, sorting into a unique list.
+#
+#     Requires foamDictionary.
+#
+#------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+Usage: $Script [OPTIONS] <directory> <keyword> <file>
+
+Options:
+-c | -count       prefix lines by the number of occurrences
+-h | -help        help
+
+* Searches the <directory> for files named <file> and extracts entries with
+  <keyword>.  Sorts result into a list of unique entries (removing repeats).
+
+  Examples:
+  * Default ddtSchemes entries in the fvSchemes files in all tutorials:
+      foamSearch $FOAM_TUTORIALS ddtSchemes.default fvSchemes
+  * Relaxations factors for U in fvSolutions files in all tutorials:
+      foamSearch -c $FOAM_TUTORIALS relaxationFactors.equations.U fvSolution
+
+USAGE
+    exit 1
+}
+
+case "$1" in
+(-c | -count)
+    COUNT="-c"
+    shift
+    ;;
+(-h | -help)
+    usage
+    ;;
+-*)
+    usage "$1 is not a valid option/filename"
+    ;;
+esac
+
+[ "$#" -eq 3 ] || usage "Wrong number of arguments: expected 3, found $#"
+[ -d "$1" ] || usage "$1 is not a directory"
+
+TEMP=temp.$$
+FILES=$(find $1 -name $3)
+[ -n "$FILES" ] || usage "No file $3 found in $1"
+
+for F in $FILES
+do
+    foamDictionary -entry $2 $F 2>/dev/null >> $TEMP
+done
+
+[ -s "$TEMP" ] && \
+    sort $TEMP | uniq $COUNT | sed '/^[\t 1-9]*$/d' || \
+    echo "No keyword $2 found in $3 files"
+
+rm $TEMP 2>/dev/null
+
+#------------------------------------------------------------------------------
