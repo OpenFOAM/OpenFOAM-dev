@@ -222,7 +222,7 @@ public:
             virtual void manipulateMatrix(fvMatrix<Type>& matrix);
 
             //- Update the coefficients associated with the patch field
-            void updateCoeffs();
+            virtual void updateCoeffs();
 
 
         // Cyclic AMI coupled interface functions
