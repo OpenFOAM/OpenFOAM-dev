@@ -30,24 +30,24 @@ Description
     An Ensight part is created for the internalMesh and for each patch.
 
 Usage
-    - foamToEnsight [OPTION] \n
-    Translates OpenFOAM data to Ensight format
+    \b foamToEnsight [OPTION]
 
-    \param -ascii \n
-    Write Ensight data in ASCII format instead of "C Binary"
+    Options:
+      - \par -ascii
+        Write Ensight data in ASCII format instead of "C Binary"
 
-    \param -patches patchList \n
-    Specify particular patches to write.
-    Specifying an empty list suppresses writing the internalMesh.
+      - \par -patches patchList
+        Specify particular patches to write.
+        Specifying an empty list suppresses writing the internalMesh.
 
-    \param -noPatches \n
-    Suppress writing any patches.
+      - \par -noPatches
+        Suppress writing any patches.
 
-    \param -faceZones zoneList \n
-    Specify faceZones to write, with wildcards
+      - \par -faceZones zoneList
+        Specify faceZones to write, with wildcards
 
-    \param -cellZone zoneName \n
-    Specify single cellZone to write (not lagrangian)
+      - \par -cellZone zoneName
+        Specify single cellZone to write (not lagrangian)
 
 Note
     Parallel support for cloud data is not supported

@@ -28,23 +28,23 @@ Description
     A multi-block mesh generator.
 
     Uses the block mesh description found in
-    \a system/blockMeshDict
-    or \a system/\<region\>/blockMeshDict
-    or \a constant/polyMesh/blockMeshDict
-    or \a constant/\<region\>/polyMesh/blockMeshDict
+      - \c system/blockMeshDict
+      - \c system/\<region\>/blockMeshDict
+      - \c constant/polyMesh/blockMeshDict
+      - \c constant/\<region\>/polyMesh/blockMeshDict
 
 Usage
+    \b blockMesh [OPTION]
 
-    - blockMesh [OPTION]
+    Options:
+      - \par -blockTopology
+        Write the topology as a set of edges in OBJ format.
 
-    \param -blockTopology \n
-    Write the topology as a set of edges in OBJ format.
+      - \par -region \<name\>
+        Specify an alternative mesh region.
 
-    \param -region \<name\> \n
-    Specify an alternative mesh region.
-
-    \param -dict \<filename\> \n
-    Specify alternative dictionary for the block mesh description.
+      - \par -dict \<filename\>
+        Specify alternative dictionary for the block mesh description.
 
 \*---------------------------------------------------------------------------*/
 

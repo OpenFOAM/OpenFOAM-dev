@@ -39,17 +39,17 @@ Description
     \endverbatim
     The backslash-escaping is required to avoid interpretation by the shell.
 
-    \par Default command-line options
-    \param -case \<dir\> \n
-        select a case directory instead of the current working directory
-    \param -parallel \n
-        specify case as a parallel job
-    \param -doc \n
-        display the documentation in browser
-    \param -srcDoc \n
-        display the source documentation in browser
-    \param -help \n
-       print the usage
+    Default command-line options:
+      - \par -case \<dir\>
+        Select a case directory instead of the current working directory
+      - \par -parallel
+        Specify case as a parallel job
+      - \par -doc
+        Display the documentation in browser
+      - \par -srcDoc
+        Display the source documentation in browser
+      - \par -help
+        Print the usage
 
     The environment variable \b FOAM_CASE is set to the path of the
     global case (same for serial and parallel jobs).

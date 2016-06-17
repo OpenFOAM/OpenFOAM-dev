@@ -28,23 +28,26 @@ Description
     Checks validity of a mesh.
 
 Usage
-    - checkMesh [OPTION]
+    \b checkMesh [OPTION]
 
-    \param -allGeometry \n
-    Checks all (including non finite-volume specific) geometry
+    Options:
+      - \par -allGeometry
+        Checks all (including non finite-volume specific) geometry
 
-    \param -allTopology \n
-    Checks all (including non finite-volume specific) addressing
+      - \par -allTopology
+        Checks all (including non finite-volume specific) addressing
 
-    \param -meshQuality \n
-    Checks against user defined (in \a system/meshQualityDict) quality settings
+      - \par -meshQuality
+        Checks against user defined (in \a system/meshQualityDict) quality
+        settings
 
-    \param -region \<name\> \n
-    Specify an alternative mesh region.
+      - \par -region \<name\>
+        Specify an alternative mesh region.
 
-    \param -writeSets \<surfaceFormat\> \n
-    Reconstruct all cellSets and faceSets geometry and write to postProcessing/
-    directory according to surfaceFormat (e.g. vtk or ensight)
+      - \par -writeSets \<surfaceFormat\>
+        Reconstruct all cellSets and faceSets geometry and write to
+        postProcessing directory according to surfaceFormat
+        (e.g. vtk or ensight)
 
 \*---------------------------------------------------------------------------*/
 

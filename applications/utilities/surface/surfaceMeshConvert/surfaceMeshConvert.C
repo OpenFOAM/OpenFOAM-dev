@@ -29,28 +29,29 @@ Description
     transformations (rotate/translate) on a coordinateSystem.
 
 Usage
-    - surfaceMeshConvert inputFile outputFile [OPTION]
+    \b surfaceMeshConvert inputFile outputFile [OPTION]
 
-    \param -clean \n
-    Perform some surface checking/cleanup on the input surface.
+    Options:
+      - \par -clean
+        Perform some surface checking/cleanup on the input surface.
 
-    \param -scaleIn \<scale\> \n
-    Specify a scaling factor when reading files.
+      - \par -scaleIn \<scale\>
+        Specify a scaling factor when reading files.
 
-    \param -scaleOut \<scale\> \n
-    Specify a scaling factor when writing files.
+      - \par -scaleOut \<scale\>
+        Specify a scaling factor when writing files.
 
-    \param -dict \<dictionary\> \n
-    Specify an alternative dictionary for constant/coordinateSystems.
+      - \par -dict \<dictionary\>
+        Specify an alternative dictionary for constant/coordinateSystems.
 
-    \param -from \<coordinateSystem\> \n
-    Specify a coordinate System when reading files.
+      - \par -from \<coordinateSystem\>
+        Specify a coordinate System when reading files.
 
-    \param -to \<coordinateSystem\> \n
-    Specify a coordinate System when writing files.
+      - \par -to \<coordinateSystem\>
+        Specify a coordinate System when writing files.
 
-    \param -tri \n
-    Triangulate surface.
+      - \par -tri
+        Triangulate surface.
 
 Note
     The filename extensions are used to determine the file format type.

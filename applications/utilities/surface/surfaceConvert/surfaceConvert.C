@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,16 +28,17 @@ Description
     Converts from one surface mesh format to another.
 
 Usage
-    - surfaceConvert inputFile outputFile [OPTION]
+    \b surfaceConvert inputFile outputFile [OPTION]
 
-    \param -clean \n
-    Perform some surface checking/cleanup on the input surface
+    Options:
+      - \par -clean
+        Perform some surface checking/cleanup on the input surface
 
-    \param -scale \<scale\> \n
-    Specify a scaling factor for writing the files
+      - \par -scale \<scale\>
+        Specify a scaling factor for writing the files
 
-    \param -group \n
-    Orders faces by region
+      - \par -group
+        Orders faces by region
 
 Note
     The filename extensions are used to determine the file format type.

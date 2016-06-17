@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,10 +28,10 @@ Description
     Set up trapping for floating point exceptions (signal FPE).
 
     Controlled by two env vars:
-    \param FOAM_SIGFPE \n
-        exception trapping
-    \param FOAM_SETNAN \n
-        initialization of all malloced memory to NaN. If FOAM_SIGFPE
+      - \par FOAM_SIGFPE
+        Exception trapping
+      - \par FOAM_SETNAN
+        Initialization of all malloced memory to NaN. If FOAM_SIGFPE
         also set, this will cause usage of uninitialized scalars to trigger
         an abort.
 

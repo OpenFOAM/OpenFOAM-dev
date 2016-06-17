@@ -28,16 +28,17 @@ Description
     Miscellaneous information about surface meshes.
 
 Usage
-    - surfaceMeshInfo surfaceFile [OPTION]
+    \b surfaceMeshInfo surfaceFile [OPTION]
 
-    \param -areas \n
-    Report area for each face.
+    Options:
+      - \par -areas
+        Report area for each face.
 
-    \param -scale \<scale\> \n
-    Specify a scaling factor when reading files.
+      - \par -scale \<scale\>
+        Specify a scaling factor when reading files.
 
-    \param -xml \n
-    Write output in XML format.
+      - \par -xml
+        Write output in XML format.
 
 Note
     The filename extensions are used to determine the file format type.

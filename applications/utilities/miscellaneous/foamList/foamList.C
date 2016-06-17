@@ -28,13 +28,18 @@ Description
     Print the table of contents of selectable switches, classes etc. in the
     OpenFOAM libraries
 
-    \par Command-line options
-    \param -switches \n
+Usage
+    \b foamList [OPTION]
+
+    Options:
+      - \par -switches
         Print the DebugSwitches, InfoSwitches and OptimisationSwitches
-    \param -registeredSwitches \n
+
+      - \par -registeredSwitches
         Print the registered DebugSwitches, InfoSwitches and
         OptimisationSwitches supporting run-time modification
-    \param -unset \n
+
+      - \par -unset
         print switches declared in libraries but not set in etc/controlDict
 
 \*---------------------------------------------------------------------------*/

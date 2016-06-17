@@ -286,7 +286,7 @@ public:
             }
 
             //- Return as dictionary of entries
-            //  \param [in] ignoreType drop type (cartesian, cylindrical, etc)
+            //  \param[in] ignoreType drop type (cartesian, cylindrical, etc)
             //  when generating the dictionary
             virtual dictionary dict(bool ignoreType=false) const;
 

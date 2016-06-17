@@ -28,44 +28,45 @@ Description
     Tecplot binary file format writer.
 
 Usage
+    \b foamToTecplot360 [OPTION]
 
-    - foamToTecplot360 [OPTION]
+    Options:
+      - \par -fields \<names\>
+        Convert selected fields only. For example,
+        \verbatim
+          -fields '( p T U )'
+        \endverbatim
+        The quoting is required to avoid shell expansions and to pass the
+        information as a single argument.
 
-    \param -fields \<names\>\n
-    Convert selected fields only. For example,
-    \verbatim
-         -fields '( p T U )'
-    \endverbatim
-    The quoting is required to avoid shell expansions and to pass the
-    information as a single argument.
+      - \par -cellSet \<name\>
 
-    \param -cellSet \<name\>\n
-    \param -faceSet \<name\>\n
-    Restrict conversion to the cellSet, faceSet.
+      - \par -faceSet \<name\>
+        Restrict conversion to the cellSet, faceSet.
 
-    \param -nearCellValue \n
-    Output cell value on patches instead of patch value itself
+      - \par -nearCellValue
+        Output cell value on patches instead of patch value itself
 
-    \param -noInternal \n
-    Do not generate file for mesh, only for patches
+      - \par -noInternal
+        Do not generate file for mesh, only for patches
 
-    \param -noPointValues \n
-    No pointFields
+      - \par -noPointValues
+        No pointFields
 
-    \param -noFaceZones \n
-    No faceZones
+      - \par -noFaceZones
+        No faceZones
 
-    \param -excludePatches \<patchNames\>\n
-    Specify patches (wildcards) to exclude. For example,
-    \verbatim
-         -excludePatches '( inlet_1 inlet_2 "proc.*")'
-    \endverbatim
-    The quoting is required to avoid shell expansions and to pass the
-    information as a single argument. The double quotes denote a regular
-    expression.
+      - \par -excludePatches \<patchNames\>
+        Specify patches (wildcards) to exclude. For example,
+        \verbatim
+          -excludePatches '( inlet_1 inlet_2 "proc.*")'
+        \endverbatim
+        The quoting is required to avoid shell expansions and to pass the
+        information as a single argument. The double quotes denote a regular
+        expression.
 
-    \param -useTimeName \n
-    use the time index in the VTK file name instead of the time index
+      - \par -useTimeName
+        use the time index in the VTK file name instead of the time index
 
 \*---------------------------------------------------------------------------*/
 

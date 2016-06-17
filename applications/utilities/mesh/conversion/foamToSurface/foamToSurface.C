@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,15 +28,15 @@ Description
     Reads an OpenFOAM mesh and writes the boundaries in a surface format.
 
 Usage
-    - foamToSurface [OPTION] \n
-    Reads an OpenFOAM mesh and writes the boundaries in a surface format.
+    \b foamToSurface [OPTION]
 
-    \param -scale \<factor\>\n
-    Specify an alternative geometry scaling factor.
-    Eg, use \b 1000 to scale \em [m] to \em [mm].
+    Options:
+      - \par -scale \<factor\>
+        Specify an alternative geometry scaling factor.
+        E.g. use \b 1000 to scale \em [m] to \em [mm].
 
-    \param -tri \n
-    Triangulate surface.
+      - \par -tri
+        Triangulate surface.
 
 \*---------------------------------------------------------------------------*/
 

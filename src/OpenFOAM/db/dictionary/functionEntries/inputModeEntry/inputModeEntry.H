@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,12 +34,12 @@ Description
     \endverbatim
 
     The possible input modes:
-    \param merge      merge sub-dictionaries when possible
-    \param overwrite  keep last entry and silently remove previous ones
-    \param protect    keep initial entry and silently ignore subsequent ones
-    \param warn       keep initial entry and warn about subsequent ones
-    \param error      issue a FatalError for duplicate entries
-    \param default    currently identical to merge
+      - \par merge      merge sub-dictionaries when possible
+      - \par overwrite  keep last entry and silently remove previous ones
+      - \par protect    keep initial entry and silently ignore subsequent ones
+      - \par warn       keep initial entry and warn about subsequent ones
+      - \par error      issue a FatalError for duplicate entries
+      - \par default    currently identical to merge
 
 SourceFiles
     inputModeEntry.C

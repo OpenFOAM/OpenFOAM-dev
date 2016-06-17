@@ -28,45 +28,55 @@ Description
     Interrogates and manipulates dictionaries.
 
 Usage
-    - foamDictionary [OPTION] dictionary
+    \b foamDictionary [OPTION] dictionary
 
-    \param -entry \<name\> \n
-    Selects an entry
+      - \par -entry \<name\>
+        Selects an entry
 
-    \param -keywords \<name\> \n
-    Prints the keywords (of the selected entry or of the top level if
-    no entry was selected
+      - \par -keywords \<name\>
+        Prints the keywords (of the selected entry or of the top level if
+        no entry was selected
 
-    \param -add \<value\> \n
-    Adds the entry (should not exist yet)
+      - \par -add \<value\>
+        Adds the entry (should not exist yet)
 
-    \param -set \<value\> \n
-    Adds or replaces the entry
+      - \par -set \<value\>
+        Adds or replaces the entry
 
-    \param -expand \n
-    Read the specified dictionary file, expand the macros etc. and write
-    the resulting dictionary to standard output.
+      - \par -expand
+        Read the specified dictionary file, expand the macros etc. and write
+        the resulting dictionary to standard output.
 
-    \param -includes \n
-    List the #include/#includeIfPresent files to standard output.
+      - \par -includes
+        List the \c #include and \c #includeIfPresent files to standard output.
 
     Typical usage:
-    - change simulation to run for one timestep only:
-    foamDictionary system/controlDict -entry stopAt -set writeNow;
+      - Change simulation to run for one timestep only:
+        \verbatim
+          foamDictionary system/controlDict -entry stopAt -set writeNow
+        \endverbatim
 
-    - change solver
-    foamDictionary system/fvSolution -entry solvers.p.solver -set PCG
+      - Change solver:
+        \verbatim
+           foamDictionary system/fvSolution -entry solvers.p.solver -set PCG
+        \endverbatim
 
-    - print bc type
-    foamDictionary 0/U -entry boundaryField.movingWall.type
+      - Print bc type:
+        \verbatim
+           foamDictionary 0/U -entry boundaryField.movingWall.type
+        \endverbatim
 
-    - change bc parameter
-    foamDictionary 0/U -entry boundaryField.movingWall.value \
-        -set "uniform (2 0 0)"
+      - Change bc parameter:
+        \verbatim
+           foamDictionary 0/U -entry boundaryField.movingWall.value \
+             -set "uniform (2 0 0)"
+        \endverbatim
 
-    - change whole bc type
-    foamDictionary 0/U -entry boundaryField.movingWall \
-        -set "{type uniformFixedValue; uniformValue (2 0 0);}"
+      - Change whole bc type:
+        \verbatim
+          foamDictionary 0/U -entry boundaryField.movingWall \
+            -set "{type uniformFixedValue; uniformValue (2 0 0);}"
+        \endverbatim
 
 \*---------------------------------------------------------------------------*/
 

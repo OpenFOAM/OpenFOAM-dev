@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,22 +29,23 @@ Description
     used for testing functionality.
 
 Usage
-    - surfaceMeshConvertTesting inputFile outputFile [OPTION]
+    \b surfaceMeshConvertTesting inputFile outputFile [OPTION]
 
-    \param -clean \n
-    Perform some surface checking/cleanup on the input surface
+    Options:
+      - \par -clean
+        Perform some surface checking/cleanup on the input surface
 
-    \param -orient \n
-    Check face orientation on the input surface
+      - \par -orient
+        Check face orientation on the input surface
 
-    \param -scale \<scale\> \n
-    Specify a scaling factor for writing the files
+      - \par -scale \<scale\>
+        Specify a scaling factor for writing the files
 
-    \param -triSurface \n
-    Use triSurface library for input/output
+      - \par -triSurface
+        Use triSurface library for input/output
 
-    \param -keyed \n
-    Use keyedSurface for input/output
+      - \par -keyed
+        Use keyedSurface for input/output
 
 Note
     The filename extensions are used to determine the file format type.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,28 +30,29 @@ Description
     on a coordinateSystem.
 
 Usage
-    - surfaceMeshImport inputFile [OPTION]
+    \b surfaceMeshImport inputFile [OPTION]
 
-    \param -clean \n
-    Perform some surface checking/cleanup on the input surface.
+    Options:
+      - \par -clean \n
+        Perform some surface checking/cleanup on the input surface.
 
-    \param -name \<name\> \n
-    Specify an alternative surface name when writing.
+      - \par -name \<name\> \n
+        Specify an alternative surface name when writing.
 
-    \param -scaleIn \<scale\> \n
-    Specify a scaling factor when reading files.
+      - \par -scaleIn \<scale\> \n
+        Specify a scaling factor when reading files.
 
-    \param -scaleOut \<scale\> \n
-    Specify a scaling factor when writing files.
+      - \par -scaleOut \<scale\> \n
+        Specify a scaling factor when writing files.
 
-    \param -dict \<dictionary\> \n
-    Specify an alternative dictionary for constant/coordinateSystems.
+      - \par -dict \<dictionary\> \n
+        Specify an alternative dictionary for constant/coordinateSystems.
 
-    \param -from \<coordinateSystem\> \n
-    Specify a coordinate system when reading files.
+      - \par -from \<coordinateSystem\> \n
+        Specify a coordinate system when reading files.
 
-    \param -to \<coordinateSystem\> \n
-    Specify a coordinate system when writing files.
+      - \par -to \<coordinateSystem\> \n
+        Specify a coordinate system when writing files.
 
 Note
     The filename extensions are used to determine the file format type.

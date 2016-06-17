@@ -52,21 +52,21 @@ Description
     Replacement entries starting with '~' will remove the entry.
 
 Usage
+    \b changeDictionary [OPTION]
 
-    changeDictionary [OPTION]
+    Options:
+      - \par -subDict
+        Specify the subDict name of the replacements dictionary.
 
-    \param -subDict \n
-    Specify the subDict name of the replacements dictionary.
+      - \par -literalRE
+        Do not interpret regular expressions or patchGroups; treat them as any
+        other keyword.
 
-    \param -literalRE \n
-    Do not interpret regular expressions or patchGroups; treat them as any
-    other keyword.
+      - \par -enableFunctionEntries
+        Enable function entries (default: disabled)
 
-    \param -enableFunctionEntries \n
-    Enable function entries (default: disabled)
-
-    \param -disablePatchGroups \n
-    Disable the default checking for keys being patchGroups
+      - \par -disablePatchGroups
+        Disable the default checking for keys being patchGroups
 
 \*---------------------------------------------------------------------------*/
 

@@ -28,14 +28,14 @@ Description
     Tool to upgrade mesh and fields for split cyclics.
 
 Usage
+    \b foamUpgradeCyclics [OPTION]
 
-    - foamUpgradeCyclics [OPTION]
+    Options:
+      - \par -test
+        Suppress writing the updated files with split cyclics
 
-    \param -test \n
-    Suppress writing the updated files with split cyclics
-
-    \param -enableFunctionEntries \n
-    By default all dictionary preprocessing of fields is disabled
+      - \par -enableFunctionEntries
+        By default all dictionary preprocessing of fields is disabled
 
 \*---------------------------------------------------------------------------*/
 

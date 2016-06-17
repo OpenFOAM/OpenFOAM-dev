@@ -28,13 +28,14 @@ Description
     List times using timeSelector.
 
 Usage
+    \b foamListTimes [OPTION]
 
-    - foamListTimes [OPTION]
+    Options:
+      - \par -rm
+        Remove selected time directories
 
-    \param -rm \n
-    Remove selected time directories
-    \param -processor \n
-    List times from processor0/ directory
+      - \par -processor
+        List times from processor0/ directory
 
 \*---------------------------------------------------------------------------*/
 

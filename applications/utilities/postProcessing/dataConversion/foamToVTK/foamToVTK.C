@@ -37,63 +37,64 @@ Description
       handled by vtk.
 
 Usage
+    \b foamToVTK [OPTION]
 
-    - foamToVTK [OPTION]
+    Options:
+      - \par -ascii
+        Write VTK data in ASCII format instead of binary.
 
-    \param -ascii \n
-    Write VTK data in ASCII format instead of binary.
+      - \par -mesh \<name\>
+        Use a different mesh name (instead of -region)
 
-    \param -mesh \<name\>\n
-    Use a different mesh name (instead of -region)
+      - \par -fields \<fields\>
+        Convert selected fields only. For example,
+        \verbatim
+          -fields "( p T U )"
+        \endverbatim
+        The quoting is required to avoid shell expansions and to pass the
+        information as a single argument.
 
-    \param -fields \<fields\>\n
-    Convert selected fields only. For example,
-    \verbatim
-         -fields "( p T U )"
-    \endverbatim
-    The quoting is required to avoid shell expansions and to pass the
-    information as a single argument.
+      - \par -surfaceFields
+        Write surfaceScalarFields (e.g., phi)
 
-    \param -surfaceFields \n
-    Write surfaceScalarFields (e.g., phi)
+      - \par -cellSet \<name\>
+      - \par -faceSet \<name\>
 
-    \param -cellSet \<name\>\n
-    \param -faceSet \<name\>\n
-    \param -pointSet \<name\>\n
-    Restrict conversion to the cellSet, faceSet or pointSet.
+      - \par -pointSet \<name\>
+        Restrict conversion to the cellSet, faceSet or pointSet.
 
-    \param -nearCellValue \n
-    Output cell value on patches instead of patch value itself
+      - \par -nearCellValue
+        Output cell value on patches instead of patch value itself
 
-    \param -noInternal \n
-    Do not generate file for mesh, only for patches
+      - \par -noInternal
+        Do not generate file for mesh, only for patches
 
-    \param -noPointValues \n
-    No pointFields
+      - \par -noPointValues
+        No pointFields
 
-    \param -noFaceZones \n
-    No faceZones
+      - \par -noFaceZones
+        No faceZones
 
-    \param -noLinks \n
-    (in parallel) do not link processor files to master
+      - \par -noLinks
+        (in parallel) do not link processor files to master
 
-    \param poly \n
-    write polyhedral cells without tet/pyramid decomposition
+      - \par poly
+        write polyhedral cells without tet/pyramid decomposition
 
-    \param -allPatches \n
-    Combine all patches into a single file
+      - \par -allPatches
+        Combine all patches into a single file
 
-    \param -excludePatches \<patchNames\>\n
-    Specify patches (wildcards) to exclude. For example,
-    \verbatim
-         -excludePatches '( inlet_1 inlet_2 "proc.*")'
-    \endverbatim
-    The quoting is required to avoid shell expansions and to pass the
-    information as a single argument. The double quotes denote a regular
-    expression.
+      - \par -excludePatches \<patchNames\>
+        Specify patches (wildcards) to exclude. For example,
+        \verbatim
+          -excludePatches '( inlet_1 inlet_2 "proc.*")'
+        \endverbatim
+        The quoting is required to avoid shell expansions and to pass the
+        information as a single argument. The double quotes denote a regular
+        expression.
 
-    \param -useTimeName \n
-    use the time index in the VTK file name instead of the time index
+      - \par -useTimeName
+        use the time index in the VTK file name instead of the time index
 
 Note
     mesh subset is handled by vtkMesh. Slight inconsistency in
@@ -105,7 +106,7 @@ Note
     whole-mesh values onto the subset patch.
 
 Note
-    new file format: \n
+    \par new file format:
     no automatic timestep recognition.
     However can have .pvd file format which refers to time simulation
     if XML *.vtu files are available:

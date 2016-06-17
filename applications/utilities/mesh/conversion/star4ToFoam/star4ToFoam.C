@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,22 +28,22 @@ Description
     Converts a Star-CD (v4) pro-STAR mesh into OpenFOAM format.
 
 Usage
-    - star4ToFoam [OPTION] ccmMesh\n
-      convert pro-STAR mesh to OpenFOAM
+    \b star4ToFoam [OPTION] ccmMesh
 
-    \param -ascii \n
-    Write in ASCII format instead of binary
+    Options:
+      - \par -ascii
+        Write in ASCII format instead of binary
 
-    \param -scale \<factor\>\n
-    Specify an alternative geometry scaling factor.
-    The default is \b 0.001 (scale \em [mm] to \em [m]).
+      - \par -scale \<factor\>
+        Specify an alternative geometry scaling factor.
+        The default is \b 0.001 (scale \em [mm] to \em [m]).
 
-    \param -solids \n
-    Treat any solid cells present just like fluid cells.
-    The default is to discard them.
+      - \par -solids
+        Treat any solid cells present just like fluid cells.
+        The default is to discard them.
 
 Note
-    - baffles are written as interfaces for later use
+    Baffles are written as interfaces for later use
 
 \*---------------------------------------------------------------------------*/
 
