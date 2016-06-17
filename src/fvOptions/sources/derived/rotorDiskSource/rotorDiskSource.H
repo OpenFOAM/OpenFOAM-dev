@@ -30,7 +30,7 @@ Description
     Cell based momemtum source which approximates the mean effects of
     rotor forces on a cylindrical region within the domain.
 
-    \heading Source usage
+Usage
 
     Example usage:
     \verbatim

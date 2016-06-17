@@ -31,7 +31,7 @@ Description
     Constructs on-the-fly a new boundary condition (derived from
     mixedFvPatchField) which is then used to evaluate.
 
-    \heading Patch usage
+Usage
 
     Example:
     \verbatim

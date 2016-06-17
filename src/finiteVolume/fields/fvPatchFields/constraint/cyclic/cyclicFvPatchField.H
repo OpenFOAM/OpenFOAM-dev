@@ -31,7 +31,7 @@ Description
     This boundary condition enforces a cyclic condition between a pair of
     boundaries.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

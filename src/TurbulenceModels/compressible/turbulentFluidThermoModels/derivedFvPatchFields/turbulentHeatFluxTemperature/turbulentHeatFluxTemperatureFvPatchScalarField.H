@@ -29,7 +29,7 @@ Description
     heat source either specified in terms of an absolute power [W], or as a
     flux [W/m^2].
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

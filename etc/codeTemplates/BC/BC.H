@@ -43,7 +43,7 @@ Description
         Q_{t}  | TYPE function of time [units]
     \endtable
 
-    \heading Patch usage
+Usage
 
     \table
         Property   | Description                  | Req'd? | Default

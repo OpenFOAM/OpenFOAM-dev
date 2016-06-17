@@ -35,7 +35,7 @@ Description
 
     A slip condition is applied tangential to the patch.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

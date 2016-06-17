@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Description
     The variables \c rholSat, \c pSat and \c psil are retrieved from the
     \c thermodynamicProperties dictionary.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

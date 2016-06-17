@@ -34,7 +34,7 @@ Description
     The flow rate is made proportional to the phase fraction alpha at each
     face of the patch and alpha is ensured to be bound between 0 and 1.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

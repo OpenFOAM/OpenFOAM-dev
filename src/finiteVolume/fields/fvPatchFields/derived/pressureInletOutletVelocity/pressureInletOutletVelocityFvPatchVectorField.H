@@ -35,7 +35,7 @@ Description
 
     The tangential patch velocity can be optionally specified.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

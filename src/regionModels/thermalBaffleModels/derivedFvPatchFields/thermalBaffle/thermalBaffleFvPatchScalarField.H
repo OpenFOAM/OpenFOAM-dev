@@ -43,7 +43,7 @@ Description
     The thermodynamic properties of the baffle material are specified via
     dictionary entries on the master patch.
 
-    \heading Patch usage
+Usage
     Example of the boundary condition specification:
     \verbatim
     myPatch_master

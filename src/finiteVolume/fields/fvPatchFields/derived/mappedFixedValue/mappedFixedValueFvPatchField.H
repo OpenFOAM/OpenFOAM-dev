@@ -34,7 +34,7 @@ Description
     The sample mode is set by the underlying mapping engine, provided by the
     mappedPatchBase class.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

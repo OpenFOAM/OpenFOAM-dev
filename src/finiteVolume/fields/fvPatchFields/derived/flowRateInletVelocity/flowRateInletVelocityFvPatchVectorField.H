@@ -42,7 +42,7 @@ Description
     For a volumetric-based flux:
     - the flow rate is in m3/s
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

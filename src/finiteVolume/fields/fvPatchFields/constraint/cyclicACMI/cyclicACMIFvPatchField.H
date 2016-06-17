@@ -32,7 +32,7 @@ Description
     boundaries, whereby communication between the patches is performed using
     an arbitrarily coupled mesh interface (ACMI) interpolation.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

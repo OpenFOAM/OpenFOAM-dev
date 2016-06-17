@@ -31,7 +31,7 @@ Description
     This boundary condition provides a velocity condition for translational
     motion on walls.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -32,7 +32,7 @@ Description
     condition.  It does not use information on the patch; instead it holds
     thr data locally.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

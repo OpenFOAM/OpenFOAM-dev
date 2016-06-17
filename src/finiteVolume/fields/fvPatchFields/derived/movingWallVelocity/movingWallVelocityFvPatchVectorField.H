@@ -32,7 +32,7 @@ Description
     moving walls.  In addition, it should also be applied to 'moving' walls
     for moving reference frame (MRF) calculations.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

@@ -30,7 +30,7 @@ Group
 Description
     This boundary condition sets the patch-normal component to a fixed value.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

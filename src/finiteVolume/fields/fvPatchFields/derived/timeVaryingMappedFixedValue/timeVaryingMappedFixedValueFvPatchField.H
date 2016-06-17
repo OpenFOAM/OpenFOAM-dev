@@ -43,7 +43,7 @@ Description
 
     Values are interpolated linearly between times.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

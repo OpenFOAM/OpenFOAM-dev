@@ -32,7 +32,7 @@ Description
     condition as a base.  The jump is specified as a time-varying uniform
     value across the patch.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

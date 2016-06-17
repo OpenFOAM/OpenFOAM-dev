@@ -35,7 +35,7 @@ Description
     mesh database using the \c lookup option, or from a \c solidThermo
     or \c fluidThermo thermophysical package.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

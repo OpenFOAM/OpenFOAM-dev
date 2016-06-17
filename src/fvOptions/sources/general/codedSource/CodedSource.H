@@ -50,7 +50,7 @@ Description
         field is the field in fieldNames
         eqn is the fvMatrix
 
-    \heading Source usage
+Usage
 
     Example usage in controlDict:
     \verbatim

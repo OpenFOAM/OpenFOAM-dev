@@ -48,7 +48,7 @@ Description
     - 1: apply \$fp_{hyd}\$f
     - 0: apply a zero-gradient condition
 
-    \heading Patch usage
+Usage
 
     \table
         Property      | Description                 | Required | Default value

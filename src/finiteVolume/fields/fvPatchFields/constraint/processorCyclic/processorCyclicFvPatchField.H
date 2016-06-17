@@ -31,7 +31,7 @@ Description
     This boundary condition enables processor communication across cyclic
     patches.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

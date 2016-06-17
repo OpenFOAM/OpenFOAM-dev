@@ -32,7 +32,7 @@ Description
     by name "outletPatchName" and applies this as the uniform value of the
     field over this patch.
 
-    \heading Patch usage
+Usage
 
     \table
         Property        | Description             | Required    | Default value

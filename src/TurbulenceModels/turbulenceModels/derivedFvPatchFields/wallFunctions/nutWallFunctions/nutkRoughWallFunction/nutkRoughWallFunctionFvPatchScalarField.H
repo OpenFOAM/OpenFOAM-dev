@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
     - roughness height = sand-grain roughness (0 for smooth walls)
     - roughness constant = 0.5-1.0
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

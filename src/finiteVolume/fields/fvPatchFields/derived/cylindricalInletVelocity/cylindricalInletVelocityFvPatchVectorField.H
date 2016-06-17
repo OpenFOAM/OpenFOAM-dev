@@ -32,7 +32,7 @@ Description
     cylindrical co-ordinates given a central axis, central point, rpm, axial
     and radial velocity.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -32,7 +32,7 @@ Description
     boundaries, whereby communication between the patches is performed using
     an arbitrary mesh interface (AMI) interpolation.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

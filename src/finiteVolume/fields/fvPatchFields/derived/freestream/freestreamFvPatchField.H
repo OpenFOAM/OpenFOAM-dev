@@ -33,7 +33,7 @@ Description
     operation switches between fixed (free stream) value and zero gradient
     based on the sign of the flux.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

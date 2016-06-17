@@ -41,7 +41,7 @@ Description
     if alpha < lowerBound:
     - apply a fixed value condition, with a uniform level of the lower bound
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -30,7 +30,7 @@ Group
 Description
     This boundary condition provides a uniform fixed value condition.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

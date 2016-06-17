@@ -50,7 +50,7 @@ Description
         Nov. 2001
     \endverbatim
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

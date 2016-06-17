@@ -32,7 +32,7 @@ Description
     values and adjusts the distribution to match the specified, optionally
     time-varying, mean value.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

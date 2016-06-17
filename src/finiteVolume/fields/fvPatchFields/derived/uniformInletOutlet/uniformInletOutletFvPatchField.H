@@ -30,7 +30,7 @@ Group
 Description
     Variant of inletOutlet boundary condition with uniform inletValue.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

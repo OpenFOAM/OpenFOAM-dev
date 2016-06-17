@@ -31,7 +31,7 @@ Description
     This boundary condition maps the boundary values of a neighbour patch
     field to the boundary and internal cell values of *this.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -43,7 +43,7 @@ Description
         \Delta   | inverse distance from patch face centre to cell centre
     \endvartable
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
     The model operates in two modes, based on the computed laminar-to-turbulent
     switch-over y+ value derived from kappa and E.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

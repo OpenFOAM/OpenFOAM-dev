@@ -31,7 +31,7 @@ Description
     This boundary condition supplies a fixed value constraint, and is the base
     class for a number of other boundary conditions.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

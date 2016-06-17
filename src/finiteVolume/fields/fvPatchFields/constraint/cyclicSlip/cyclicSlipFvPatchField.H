@@ -31,7 +31,7 @@ Description
     This boundary condition is a light wrapper around the cyclicFvPatchField
     condition, providing no new functionality.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

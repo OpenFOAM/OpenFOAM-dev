@@ -32,8 +32,7 @@ Description
     or user-specified dictionary using the -dict option.  Pressure data is
     read using a CSV reader:
 
-    \heading Usage
-
+Usage
     \verbatim
     pRef        101325;
     N           65536;

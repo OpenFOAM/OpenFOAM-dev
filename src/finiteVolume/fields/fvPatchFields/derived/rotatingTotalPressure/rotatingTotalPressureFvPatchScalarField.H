@@ -31,7 +31,7 @@ Description
     This boundary condition provides a total pressure condition for patches
     in a rotating frame.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

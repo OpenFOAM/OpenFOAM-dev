@@ -27,7 +27,7 @@ Class
 Description
     Temperature-dependent constant alphaContactAngle scalar boundary condition.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

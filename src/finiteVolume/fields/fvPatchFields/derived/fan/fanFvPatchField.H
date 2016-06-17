@@ -34,7 +34,7 @@ Description
     The jump is specified as a \c Function1 type, to enable the use of, e.g.
     contant, polynomial, table values.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

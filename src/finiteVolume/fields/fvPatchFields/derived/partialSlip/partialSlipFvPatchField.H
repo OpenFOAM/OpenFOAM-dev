@@ -31,7 +31,7 @@ Description
     This boundary condition provides a partial slip condition.  The amount of
     slip is controlled by a user-supplied field.
 
-    \heading Patch usage
+Usage
 
     \table
         Property      | Description             | Required    | Default value

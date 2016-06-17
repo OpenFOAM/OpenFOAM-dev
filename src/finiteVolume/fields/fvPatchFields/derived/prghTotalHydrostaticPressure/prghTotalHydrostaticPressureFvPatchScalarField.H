@@ -45,7 +45,7 @@ Description
         g       | Acceleration due to gravity [m/s^2]
     \endtable
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

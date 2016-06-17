@@ -41,7 +41,7 @@ Description
       - fixTangentialInflow is false
         apply zero-gradient condition to tangential components.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

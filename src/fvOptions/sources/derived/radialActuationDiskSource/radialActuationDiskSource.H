@@ -50,7 +50,7 @@ Description
         thrust(r) = T (C_0 + C_1 r^2 + C_2 r^4)
     \f]
 
-    \heading Source usage
+Usage
 
     Example usage:
     \verbatim

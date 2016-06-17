@@ -33,7 +33,7 @@ Description
     applied for outflow (as defined by the flux); for inflow, the velocity
     is obtained from the flux with the specified inlet direction.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

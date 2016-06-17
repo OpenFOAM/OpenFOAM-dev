@@ -47,7 +47,7 @@ Description
     The normal component of \f$ U_p \f$ is removed to ensure 0 wall-flux even
     if the wall patch faces are irregular.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

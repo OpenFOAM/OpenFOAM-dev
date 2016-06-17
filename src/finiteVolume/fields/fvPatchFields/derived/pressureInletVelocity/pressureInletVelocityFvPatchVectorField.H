@@ -32,7 +32,7 @@ Description
     pressure is specified.  The inflow velocity is obtained from the flux with
     a direction normal to the patch faces.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

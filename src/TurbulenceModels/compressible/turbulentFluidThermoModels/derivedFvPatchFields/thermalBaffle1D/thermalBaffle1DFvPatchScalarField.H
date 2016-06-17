@@ -36,7 +36,7 @@ Description
     Baffle and solid properties need to be specified on the master side
     of the baffle.
 
-    \heading Patch usage
+Usage
     Example of the boundary condition specification using constant
     solid thermo :
 

@@ -54,7 +54,7 @@ Description
     }
     \endverbatim
 
-    \heading Function object usage
+Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: fieldCoordinateSystemTransform | yes |

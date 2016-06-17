@@ -30,7 +30,7 @@ Group
 Description
     This boundary condition enforces a symmetry constraint
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

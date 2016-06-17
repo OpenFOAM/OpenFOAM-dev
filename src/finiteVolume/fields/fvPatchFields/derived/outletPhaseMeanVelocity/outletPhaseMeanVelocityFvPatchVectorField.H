@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
     Typical usage is as the outlet condition for a towing-tank ship simulation
     to maintain the outlet water level at the level as the inlet.
 
-    \heading Patch usage
+Usage
     \table
         Property     | Description             | Required    | Default value
         Umean        | mean velocity normal to the boundary [m/s] | yes |

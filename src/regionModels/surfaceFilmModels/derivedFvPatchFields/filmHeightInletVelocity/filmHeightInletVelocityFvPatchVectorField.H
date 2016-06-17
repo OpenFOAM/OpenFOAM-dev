@@ -47,7 +47,7 @@ Description
         \delta | film height [m]
     \endvartable
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

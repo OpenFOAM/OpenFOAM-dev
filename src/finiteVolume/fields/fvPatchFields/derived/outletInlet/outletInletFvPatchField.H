@@ -31,7 +31,7 @@ Description
     This boundary condition provides a generic inflow condition, with
     specified outflow for the case of reverse flow.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

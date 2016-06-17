@@ -34,7 +34,7 @@ Description
 
     It is a simple wrapper around the zero-gradient condition.
 
-    \heading Patch usage
+Usage
 
     Example of the boundary condition specification:
     \verbatim

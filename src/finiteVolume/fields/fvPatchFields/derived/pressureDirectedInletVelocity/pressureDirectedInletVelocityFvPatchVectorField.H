@@ -32,7 +32,7 @@ Description
     pressure is specified.  The inflow velocity is obtained from the flux with
     the specified inlet direction" direction.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

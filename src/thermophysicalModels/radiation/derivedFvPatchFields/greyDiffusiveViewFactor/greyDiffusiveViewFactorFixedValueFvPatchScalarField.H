@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     This boundary condition provides a grey-diffuse condition for radiative
     heat flux, \c Qr, for use with the view factor model
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

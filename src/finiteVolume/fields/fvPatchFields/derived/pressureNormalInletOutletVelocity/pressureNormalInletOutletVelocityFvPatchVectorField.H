@@ -33,7 +33,7 @@ Description
     outflow (as defined by the flux); for inflow, the velocity is obtained from
     the flux with a direction normal to the patch faces.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -63,7 +63,7 @@ Description
         Chapter 4, Section 4.3.1.2, 77-80.
     \endverbatim
 
-    \heading Patch usage
+Usage
 
     \table
         Property        | Description                 | Required | Default value

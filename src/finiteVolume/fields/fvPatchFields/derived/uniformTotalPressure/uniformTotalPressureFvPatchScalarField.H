@@ -31,7 +31,7 @@ Description
     This boundary condition provides a time-varying form of the uniform total
     pressure boundary condition Foam::totalPressureFvPatchField.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description                | Required    | Default value

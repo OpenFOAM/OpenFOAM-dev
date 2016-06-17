@@ -30,7 +30,7 @@ Description
 
     Note: Currently only handles kinematic pressure (incompressible solvers).
 
-    \heading Source usage
+Usage
     Example usage:
     \verbatim
     meanVelocityForceCoeffs

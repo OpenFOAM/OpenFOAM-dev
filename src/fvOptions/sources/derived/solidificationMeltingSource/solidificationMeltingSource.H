@@ -45,7 +45,7 @@ Description
     The model generates a field \c \<name\>:alpha1 which can be visualised to
     to show the melt distribution as a fraction [0-1]
 
-    \heading Source usage
+Usage
     Example usage:
     \verbatim
     solidificationMeltingSource1

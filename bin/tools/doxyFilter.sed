@@ -164,6 +164,7 @@ s? *\([a-zA-Z0-9]*\.[a-zA-Z]*\)?  <li><a href="%dirName%/\1">\1</a></li>?
 s?^$?</ul>?
 }
 
+
 /fileName%<\/a><\/li>$/{
 N
 s?\n$?</ul>?g
@@ -171,12 +172,8 @@ s/<\/li>\n/<\/li> /
 s? *\([a-zA-Z0-9]*\.[a-zA-Z]*\)?  <li><a href="%dirName%/\1">\1</a></li>?
 }
 
+
 s/.*\*\//\*\//
 
-
-# Convert /heading in source files to bold font and add some space
-s#\\heading \(.*\)#<br><b>\1</b>#g
-
-}
 
 #------------------------------------------------------------------------------

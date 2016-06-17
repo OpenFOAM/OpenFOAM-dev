@@ -37,15 +37,15 @@ Description
         transformed kappa vector. Field name definable in 'alphaAni',
         named 'Anialpha' in solid solver by default
 
-    \heading Keywords provided by this class
-    \table
+    \par Keywords provided by this class:
+      \table
         Property     | Description                | Required    | Default value
         kappaMethod  | Thermal conductivity method        | yes |
         kappa        | Name of thermal conductivity field | no  | none
         alphaAni     | Name of the non-isotropic alpha    | no  | Anialpha
-    \endtable
+      \endtable
 
-    Usage examples:
+Usage
     \verbatim
     nonIsotropicWall
     {

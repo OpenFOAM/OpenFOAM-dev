@@ -31,7 +31,7 @@ Description
     This boundary condition provides a surface-normal vector boundary condition
     by its magnitude.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

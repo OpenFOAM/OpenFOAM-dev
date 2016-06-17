@@ -42,7 +42,7 @@ Description
 
     where KDelta is heat-transfer coefficient K * deltaCoeffs
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

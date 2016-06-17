@@ -34,7 +34,7 @@ Description
     The jump is specified as a fixed value field, applied as an offset to the
     'owner' patch.
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

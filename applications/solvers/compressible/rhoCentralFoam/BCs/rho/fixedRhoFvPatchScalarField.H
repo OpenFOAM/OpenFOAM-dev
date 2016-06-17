@@ -44,7 +44,7 @@ Description
     \endvartable
 
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description                | Required    | Default value

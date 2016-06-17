@@ -83,7 +83,7 @@ Description
     read the return values, and pass program execution back to OpenFOAM.
 
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

@@ -44,7 +44,7 @@ Description
         U_1 | velocity at the disk
     \endvartable
 
-    \heading Source usage
+Usage
 
     Example usage:
     \verbatim

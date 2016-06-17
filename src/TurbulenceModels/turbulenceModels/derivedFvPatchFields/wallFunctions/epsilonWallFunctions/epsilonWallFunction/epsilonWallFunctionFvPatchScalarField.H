@@ -43,7 +43,7 @@ Description
         G       | turblence generation field
     \endvartable
 
-    \heading Patch usage
+Usage
 
     \table
         Property     | Description             | Required    | Default value

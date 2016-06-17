@@ -27,7 +27,7 @@ Class
 Description
     Explicit porosity source
 
-    \heading Source usage
+Usage
 
     Example usage, here employing the Darcy-Forchheimer model:
     \verbatim
