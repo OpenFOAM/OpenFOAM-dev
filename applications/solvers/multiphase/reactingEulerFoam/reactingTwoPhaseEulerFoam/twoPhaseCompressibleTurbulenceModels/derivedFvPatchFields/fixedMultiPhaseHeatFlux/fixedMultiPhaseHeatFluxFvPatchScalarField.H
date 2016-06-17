@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
         - Set 'fixedMultiPhaseHeatFlux' boundary for one of the phases
         - Use 'copiedFixedValue' for all the other phases.
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
 
 SourceFiles

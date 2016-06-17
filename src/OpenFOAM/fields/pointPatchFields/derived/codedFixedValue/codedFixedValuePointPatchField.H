@@ -71,7 +71,7 @@ Description
     }
     \endverbatim
 
-SeeAlso
+See also
     codedFixedValueFvPatchField
 
 SourceFiles

@@ -28,7 +28,7 @@ Description
     A triangular face using a FixedList of labels corresponding to mesh
     vertices.
 
-SeeAlso
+See also
     Foam::face, Foam::triangle
 
 SourceFiles

@@ -27,7 +27,7 @@ Class
 Description
     A time-varying form of a mapped fixed value boundary condition.
 
-See Also
+See also
     Foam::timeVaryingMappedFixedValueFvPatchField
 
 SourceFiles

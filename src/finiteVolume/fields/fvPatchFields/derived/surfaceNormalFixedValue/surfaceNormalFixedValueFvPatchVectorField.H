@@ -51,7 +51,7 @@ Note
     Sign conventions:
     - the value is positive for outward-pointing vectors
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
 
 SourceFiles

@@ -65,7 +65,7 @@ Usage
        average       | average
     \endplaintable
 
-SeeAlso
+See also
     Foam::fieldValue
 
 SourceFiles

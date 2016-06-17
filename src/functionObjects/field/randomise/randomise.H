@@ -33,7 +33,7 @@ Description
 
     The operation can be applied to any volume field.
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

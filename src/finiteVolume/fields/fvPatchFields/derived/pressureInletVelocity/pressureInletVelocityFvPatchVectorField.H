@@ -49,7 +49,7 @@ Note
     If reverse flow is possible or expected use
     the pressureInletOutletVelocityFvPatchVectorField condition instead.
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::pressureInletOutletVelocityFvPatchVectorField
 

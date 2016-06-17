@@ -87,7 +87,7 @@ Usage
     - local         : use local flow conditions
     - surfaceNormal : specified normal velocity (positive towards rotor)
 
-See Also
+See also
     Foam::bladeModel
     Foam::lookupProfile
     Foam::seriesProfile

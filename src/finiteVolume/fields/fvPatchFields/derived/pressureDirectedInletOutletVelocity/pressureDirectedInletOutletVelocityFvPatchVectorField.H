@@ -60,7 +60,7 @@ Note
     - negative flux (into of domain): derive from the flux with specified
       direction
 
-SeeAlso
+See also
     Foam::mixedFvPatchVectorField
 
 SourceFiles

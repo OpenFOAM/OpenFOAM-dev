@@ -27,7 +27,7 @@ Class
 Description
     A face is a list of labels corresponding to mesh vertices.
 
-SeeAlso
+See also
     Foam::triFace
 
 SourceFiles

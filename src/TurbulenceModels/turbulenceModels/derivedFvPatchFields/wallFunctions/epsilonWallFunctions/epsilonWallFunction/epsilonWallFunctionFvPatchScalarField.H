@@ -60,7 +60,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedInternalValueFvPatchField
 
 SourceFiles

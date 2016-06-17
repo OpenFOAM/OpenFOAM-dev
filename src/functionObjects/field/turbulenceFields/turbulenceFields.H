@@ -76,7 +76,7 @@ Usage
         devRhoReff  | Divergence of the Reynolds stress
     \endplaintable
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::timeControl
 

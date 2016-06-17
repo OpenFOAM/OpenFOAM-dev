@@ -63,7 +63,7 @@ Note
       constant values.
     - the value is positive into the domain
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
 

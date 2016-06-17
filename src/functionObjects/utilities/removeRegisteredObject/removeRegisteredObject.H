@@ -48,7 +48,7 @@ Usage
         objectNames  | objects to remove       | yes         |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObject
 
 SourceFiles

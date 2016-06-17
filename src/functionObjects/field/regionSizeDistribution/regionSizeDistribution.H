@@ -94,7 +94,7 @@ Usage
         coordinateSystem | transformation for vector fields | no         |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFile
 

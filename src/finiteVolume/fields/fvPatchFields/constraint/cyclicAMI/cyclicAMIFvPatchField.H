@@ -47,7 +47,7 @@ Note
     patch is transformed to the neighbour patch, the outer perimiter of each
     patch should be identical (or very similar).
 
-SeeAlso
+See also
     Foam::AMIInterpolation
 
 SourceFiles

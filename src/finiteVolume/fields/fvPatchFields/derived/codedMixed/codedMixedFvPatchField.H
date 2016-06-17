@@ -82,7 +82,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::dynamicCode
     Foam::functionEntries::codeStream
 

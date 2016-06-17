@@ -40,7 +40,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchVectorField
 
 SourceFiles

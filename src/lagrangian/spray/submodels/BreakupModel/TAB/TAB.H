@@ -38,7 +38,7 @@ Description
 
     This implementation follows the kiva version.
 
-See Also
+See also
     The Enhanced %TAB model - ETAB
 
 \*---------------------------------------------------------------------------*/

@@ -33,7 +33,7 @@ Description
 SourceFiles
     MatrixSpaceI.H
 
-SeeAlso
+See also
     Foam::VectorSpace
 
 \*---------------------------------------------------------------------------*/

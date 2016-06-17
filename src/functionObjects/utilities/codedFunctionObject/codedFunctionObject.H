@@ -62,7 +62,7 @@ Description
     \endverbatim
 
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::codedBase
 

@@ -36,7 +36,7 @@ Description
 
     Should only used as a template argument for SlicedGeometricField.
 
-SeeAlso
+See also
     Foam::fvPatchField
 
 SourceFiles

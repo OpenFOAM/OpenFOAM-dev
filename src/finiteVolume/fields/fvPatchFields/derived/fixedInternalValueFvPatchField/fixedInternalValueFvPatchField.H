@@ -48,7 +48,7 @@ Note
     wall function, which applies a near-wall constraint for high Reynolds
     number flows.
 
-SeeAlso
+See also
     Foam::epsilonWallFunctionFvPatchScalarField
 
 SourceFiles

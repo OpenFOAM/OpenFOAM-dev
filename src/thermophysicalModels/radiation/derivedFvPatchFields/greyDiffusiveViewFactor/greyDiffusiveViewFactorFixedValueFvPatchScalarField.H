@@ -50,7 +50,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::radiationCoupledBase
     Foam::radiation::radiationModel
     Foam::radiation::viewFactor

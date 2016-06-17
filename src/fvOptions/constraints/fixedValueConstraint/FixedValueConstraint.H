@@ -47,7 +47,7 @@ Description
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fvOption
 
 SourceFiles

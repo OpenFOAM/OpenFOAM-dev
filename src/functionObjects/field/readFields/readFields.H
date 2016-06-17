@@ -53,7 +53,7 @@ Usage
         fields       | list of fields to read  |  no         |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

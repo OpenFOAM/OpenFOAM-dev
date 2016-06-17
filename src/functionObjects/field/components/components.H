@@ -33,7 +33,7 @@ Description
     The operation can be applied to any volume or surface fields generating a
     volume or surface scalar fields for each component.
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

@@ -30,7 +30,7 @@ Description
 SourceFiles
     tmpNrcI.H
 
-SeeAlso
+See also
     Foam::autoPtr
 
 \*---------------------------------------------------------------------------*/

@@ -39,7 +39,7 @@ Description
 SourceFiles
     SpatialTensorI.H
 
-SeeAlso
+See also
     Foam::MatrixSpace
     Foam::Tensor
     Foam::SpatialVector

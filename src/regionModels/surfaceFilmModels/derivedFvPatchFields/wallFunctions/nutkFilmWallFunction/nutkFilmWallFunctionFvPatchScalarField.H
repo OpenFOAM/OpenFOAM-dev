@@ -43,7 +43,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::nutkWallFunctionFvPatchScalarField
 
 SourceFiles

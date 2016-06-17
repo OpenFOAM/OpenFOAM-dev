@@ -85,7 +85,7 @@ Note
     - May not work correctly for transonic inlets
     - Strange behaviour with potentialFoam since the U equation is not solved
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
 

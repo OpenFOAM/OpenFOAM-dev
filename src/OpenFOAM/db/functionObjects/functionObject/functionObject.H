@@ -97,7 +97,7 @@ Class
 Description
     Abstract base-class for Time/database function objects.
 
-See Also
+See also
     Foam::functionObjectList
     Foam::functionObjects::timeControl
 

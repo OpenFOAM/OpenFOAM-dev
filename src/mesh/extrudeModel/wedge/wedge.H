@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Extrudes by rotating a surface symmetrically around axis by 1 layer.
 
-SeeAlso
+See also
     Foam::extrudeModels::sector
 
 \*---------------------------------------------------------------------------*/

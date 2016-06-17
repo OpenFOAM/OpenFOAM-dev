@@ -63,7 +63,7 @@ Note
         cnCoeff = 1.0/(1.0 + ocCoeff);
     \endverbatim
 
-See Also
+See also
     Foam::Euler
     Foam::backward
 

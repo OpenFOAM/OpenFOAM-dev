@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Note:
     The addressing is patch-local, i.e. point indices for each patch point
     used for face addressing starts at index 0.
 
-SeeAlso
+See also
     externalCoupledMixedFvPatchField
 
 \*---------------------------------------------------------------------------*/

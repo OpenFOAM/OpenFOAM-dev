@@ -69,7 +69,7 @@ Note
     It is not possible to sample internal faces since volume fields are not
     defined on faces.
 
-SeeAlso
+See also
     Foam::mappedPatchBase
     Foam::interpolation
     Foam::fixedValueFvPatchField

@@ -44,7 +44,7 @@ Note
     will be used if available. Otherwise the cellZones are used when
     creating the cellTable information.
 
-See Also
+See also
     Foam::cellTable, Foam::meshWriter and Foam::meshWriters::STARCD
 
 \*---------------------------------------------------------------------------*/

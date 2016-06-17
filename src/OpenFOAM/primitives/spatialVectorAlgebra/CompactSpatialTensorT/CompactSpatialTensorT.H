@@ -38,7 +38,7 @@ Description
 SourceFiles
     CompactSpatialTensorTI.H
 
-SeeAlso
+See also
     Foam::MatrixSpace
     Foam::CompactSpatialTensor
 

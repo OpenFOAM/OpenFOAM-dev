@@ -27,7 +27,7 @@ Class
 Description
     Reference counter for various OpenFOAM components.
 
-SeeAlso
+See also
     Foam::tmp
     Foam::token::compound
 

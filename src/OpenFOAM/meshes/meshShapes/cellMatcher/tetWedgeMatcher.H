@@ -27,7 +27,7 @@ Class
 Description
     A cellMatcher for tetWedge cells
 
-See Also
+See also
     cellMatcher
 
 SourceFiles

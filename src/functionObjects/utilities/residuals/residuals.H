@@ -49,7 +49,7 @@ Description
     For vector/tensor fields, e.g. U, where an equation is solved for each
     component, the largest residual of each component is written out.
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFiles
     Foam::functionObjects::timeControl

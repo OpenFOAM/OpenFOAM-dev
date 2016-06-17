@@ -58,7 +58,7 @@ Note
     - negative flux (into of domain): derive from the flux and patch-normal
       direction
 
-SeeAlso
+See also
     Foam::mixedFvPatchVectorField
 
 SourceFiles

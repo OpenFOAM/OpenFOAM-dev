@@ -48,7 +48,7 @@ Usage
     }
     \endverbatim
 
-See Also
+See also
     Foam::fv::LeastSquaresVectors
     Foam::fv::leastSquaresGrad
 

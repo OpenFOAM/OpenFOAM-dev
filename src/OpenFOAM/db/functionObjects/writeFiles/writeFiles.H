@@ -27,7 +27,7 @@ Class
 Description
     functionObject base class for writing files
 
-See Also
+See also
     Foam::functionObject
     Foam::OutputFilterFunctionObject
 

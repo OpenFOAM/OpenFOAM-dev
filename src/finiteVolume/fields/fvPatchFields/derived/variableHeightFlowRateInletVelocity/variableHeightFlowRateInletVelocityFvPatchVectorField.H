@@ -61,7 +61,7 @@ Note
     - strange behaviour with potentialFoam since the momentum equation is
       not solved
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
 

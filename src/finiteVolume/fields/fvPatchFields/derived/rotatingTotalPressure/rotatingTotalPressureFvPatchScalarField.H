@@ -62,7 +62,7 @@ Usage
     The \c omega entry is a Function1 type, able to describe time varying
     functions.
 
-SeeAlso
+See also
     Foam::totalPressureFvPatchScalarField
     Foam::Function1Types
 

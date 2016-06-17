@@ -106,7 +106,7 @@ Usage
         }
     \endverbatim
 
-SeeAlso
+See also
     mixedFvPatchField
     externalCoupledMixedFvPatchField
 

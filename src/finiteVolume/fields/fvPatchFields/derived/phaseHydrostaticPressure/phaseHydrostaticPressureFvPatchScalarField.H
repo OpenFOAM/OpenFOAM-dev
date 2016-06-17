@@ -71,7 +71,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::mixedFvPatchScalarField
 
 SourceFiles

@@ -36,7 +36,7 @@ Description
     The usual expansion of environment variables and other constructs
     (eg, the \c ~OpenFOAM/ expansion) is retained.
 
-See Also
+See also
     fileName, string::expand()
 
 SourceFiles

@@ -27,7 +27,7 @@ Application
 Description
     Simple tests and examples of use of List
 
-See Also
+See also
     Foam::List
 
 \*---------------------------------------------------------------------------*/

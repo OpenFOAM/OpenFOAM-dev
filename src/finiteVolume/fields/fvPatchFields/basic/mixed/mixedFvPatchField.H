@@ -61,7 +61,7 @@ Note
     This condition is not usually applied directly; instead, use a derived
     mixed condition such as \c inletOutlet
 
-SeeAlso
+See also
     Foam::inletOutletFvPatchField
 
 SourceFiles

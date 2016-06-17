@@ -82,7 +82,7 @@ Note
     The profile entry is a Function1 type.  The example above gives the
     usage for supplying csv file.
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
     Foam::timeVaryingMappedFixedValueFvPatchField

@@ -33,7 +33,7 @@ Description
 SourceFiles
     TensorI.H
 
-SeeAlso
+See also
     Foam::MatrixSpace
     Foam::Vector
 

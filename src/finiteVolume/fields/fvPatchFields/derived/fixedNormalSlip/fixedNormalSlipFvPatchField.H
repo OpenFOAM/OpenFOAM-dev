@@ -46,7 +46,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::transformFvPatchField
 
 SourceFiles

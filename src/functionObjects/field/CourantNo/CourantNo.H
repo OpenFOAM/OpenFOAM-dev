@@ -32,7 +32,7 @@ Description
     volScalarField.  The field is stored on the mesh database so that it can
     be retrieved and used for other applications.
 
-SeeAlso
+See also
     Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 

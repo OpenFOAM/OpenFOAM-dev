@@ -51,7 +51,7 @@ Description
     The usual expansion of environment variables and other constructs is
     retained.
 
-See Also
+See also
     findEtcFile, fileName, string::expand()
 
 SourceFiles

@@ -58,7 +58,7 @@ Note
     pressureDirectedInletOutletVelocityFvPatchVectorField condition instead.
 
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::pressureDirectedInletOutletVelocityFvPatchVectorField
 

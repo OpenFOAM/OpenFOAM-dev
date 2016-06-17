@@ -71,7 +71,7 @@ Usage
     - one-third-octave-band PFL spectrum
     - one-third-octave-band pressure spectrum
 
-SeeAlso
+See also
     CSV.H
     noiseFFT.H
 

@@ -55,7 +55,7 @@ Usage
     The \c p0 entry is specified as a Function1 type, able to describe
     time varying functions.
 
-SeeAlso
+See also
     Foam::Function1Types
     Foam::uniformFixedValueFvPatchField
     Foam::totalPressureFvPatchField

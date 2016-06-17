@@ -34,7 +34,7 @@ Description
     many be adjusted in an arbitrary manner without worrying about needed
     to adjust the zone information (eg, surface refinement).
 
-See Also
+See also
     The Foam::MeshedSurface - which is organized as a surface mesh, but
     with independent zone information.
 

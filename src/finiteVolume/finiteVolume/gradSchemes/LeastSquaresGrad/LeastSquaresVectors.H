@@ -27,7 +27,7 @@ Class
 Description
     Least-squares gradient scheme vectors
 
-See Also
+See also
     Foam::fv::LeastSquaresGrad
 
 SourceFiles

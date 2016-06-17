@@ -58,7 +58,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::SRFModel
     Foam::SRFVelocityFvPatchVectorField
     Foam::fixedValueFvPatchField

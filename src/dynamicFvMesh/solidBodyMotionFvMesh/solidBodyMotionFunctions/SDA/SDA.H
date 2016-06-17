@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     Comprising sinusoidal roll (rotation about x), heave (z-translation)
     and sway (y-translation) motions with changing amplitude and phase.
 
-See Also
+See also
     Foam::solidBodyMotionFunctions::tabulated6DoFMotion
 
 SourceFiles

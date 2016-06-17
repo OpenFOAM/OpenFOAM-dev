@@ -57,7 +57,7 @@ Usage
         Method, subsection "3.5.2 k-epsilon model"
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
 
 SourceFiles

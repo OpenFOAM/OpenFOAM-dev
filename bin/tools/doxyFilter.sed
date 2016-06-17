@@ -123,8 +123,8 @@ s/^    //
 }
 
 
-/^See *Also *$/,/^[^ ]/{
-/^See *Also/c\
+/^See *[Aa]lso *$/,/^[^ ]/{
+/^See *[Aa]lso/c\
 \\see
 s/^    //
 }

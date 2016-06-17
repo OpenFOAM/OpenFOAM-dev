@@ -30,7 +30,7 @@ Description
 Note
     Uses the extension \a .inp (input) to denote the format.
 
-See Also
+See also
     Foam::meshReaders::STARCD
 
 SourceFiles

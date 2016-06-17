@@ -45,7 +45,7 @@ Description
 Group
     grpLESTurbulence
 
-SeeAlso
+See also
     Foam::kOmegaSST
 
 SourceFiles

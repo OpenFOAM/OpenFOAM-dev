@@ -55,7 +55,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::epsilonWallFunctionFvPatchScalarField
 
 SourceFiles

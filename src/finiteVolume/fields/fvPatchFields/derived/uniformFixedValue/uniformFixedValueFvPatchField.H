@@ -51,7 +51,7 @@ Note
     varying functions.  The example above gives the usage for supplying a
     constant value.
 
-SeeAlso
+See also
     Foam::Function1Types
     Foam::fixedValueFvPatchField
 

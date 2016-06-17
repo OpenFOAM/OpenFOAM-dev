@@ -52,7 +52,7 @@ Usage
 Note
     The units of kinematic turbulent thermal conductivity are [m2/s]
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
 
 SourceFiles

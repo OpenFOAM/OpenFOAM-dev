@@ -27,7 +27,7 @@ Class
 Group
     grpRASTurbulence
 
-SeeAlso
+See also
     Foam::kOmegaSST
 
 SourceFiles

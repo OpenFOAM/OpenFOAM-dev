@@ -39,7 +39,7 @@ Description
 SourceFiles
     SpatialVectorI.H
 
-SeeAlso
+See also
     Foam::VectorSpace
     Foam::Vector
 

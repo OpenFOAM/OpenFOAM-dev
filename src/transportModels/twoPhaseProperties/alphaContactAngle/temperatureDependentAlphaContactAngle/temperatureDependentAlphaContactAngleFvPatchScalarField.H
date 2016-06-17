@@ -44,7 +44,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::alphaContactAngleFvPatchScalarField
     Foam::constantAlphaContactAngleFvPatchScalarField
 

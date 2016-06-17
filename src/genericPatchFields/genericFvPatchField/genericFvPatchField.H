@@ -29,7 +29,7 @@ Description
     condition, useful as a fallback for handling unknown patch types.  Not
     generally applicable as a user-specified condition.
 
-SeeAlso
+See also
     Foam::calculatedFvPatchField
 
 SourceFiles

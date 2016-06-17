@@ -43,7 +43,7 @@ Description
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::RBD::rigidBodySolvers::Newmark
 
 SourceFiles

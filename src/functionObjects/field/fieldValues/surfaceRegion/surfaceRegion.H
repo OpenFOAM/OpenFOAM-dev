@@ -122,7 +122,7 @@ Note
         - take care when using isoSurfaces - these might have duplicate
           triangles and so integration might be wrong
 
-SeeAlso
+See also
     Foam::fieldValues
     Foam::functionObject
 

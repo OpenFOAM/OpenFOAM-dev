@@ -70,7 +70,7 @@ Description
     - Qr is the radiative flux defined in the radiation model.
 
 
-SeeAlso
+See also
     Foam::temperatureCoupledBase
 
 SourceFiles

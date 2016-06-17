@@ -61,7 +61,7 @@ Note
     types, able to describe time varying functions.  The example above gives
     the usage for supplying constant values.
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
 

@@ -27,7 +27,7 @@ Class
 Description
     functionObject base class for writing single files
 
-See Also
+See also
     Foam::regionFunctionObject
     Foam::functionObject
 

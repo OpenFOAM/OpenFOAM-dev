@@ -60,7 +60,7 @@ Usage
         distance | distance from patch to sample | yes     |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

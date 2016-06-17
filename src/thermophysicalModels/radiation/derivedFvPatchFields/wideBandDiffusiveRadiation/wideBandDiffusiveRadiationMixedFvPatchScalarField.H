@@ -47,7 +47,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::mixedFvPatchScalarField
     Foam::radiationCoupledBase
 

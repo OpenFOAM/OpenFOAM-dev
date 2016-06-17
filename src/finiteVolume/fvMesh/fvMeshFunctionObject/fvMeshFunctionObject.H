@@ -31,7 +31,7 @@ Description
     If the selected region is not an Foam::fvMesh a Foam::FatalError will be
     generated.
 
-SeeAlso
+See also
     Foam::regionFunctionObject
     Foam::functionObject
 

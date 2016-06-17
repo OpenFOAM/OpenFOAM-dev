@@ -67,7 +67,7 @@ Usage
 Note
     In the event of reverse flow, a zero-gradient condition is applied
 
-SeeAlso
+See also
     Foam::inletOutletFvPatchField
 
 SourceFiles

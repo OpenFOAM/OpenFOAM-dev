@@ -48,7 +48,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
 

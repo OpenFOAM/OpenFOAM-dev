@@ -57,7 +57,7 @@ Usage
 Note
      The underlying \c patchType should be set to \c cyclicAMI
 
-SeeAlso
+See also
     Foam::jumpCyclicAMIFvPatchField
 
 SourceFiles

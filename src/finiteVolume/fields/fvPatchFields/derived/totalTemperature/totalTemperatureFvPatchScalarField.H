@@ -53,7 +53,7 @@ Usage
 SourceFiles
     totalTemperatureFvPatchScalarField.C
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
 
 \*---------------------------------------------------------------------------*/

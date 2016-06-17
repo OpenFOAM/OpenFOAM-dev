@@ -53,7 +53,7 @@ Description
         }
     \endverbatim
 
-SeeAlso
+See also
     Foam::RASModels::kEpsilon
 
 SourceFiles

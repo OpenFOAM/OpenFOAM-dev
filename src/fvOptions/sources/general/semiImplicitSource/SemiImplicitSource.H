@@ -57,7 +57,7 @@ Description
     - absolute: values are given as \<quantity\>
     - specific: values are given as \<quantity\>/m3
 
-SeeAlso
+See also
     Foam::fvOption
 
 SourceFiles

@@ -28,7 +28,7 @@ Description
     Provide a means of reading/writing Geomview OFF polyList format.
 
 
-See Also
+See also
     The <a href="http://www.geoview.org">Geoview</a>
     file format information:
     http://www.geomview.org/docs/html/OFF.html#OFF

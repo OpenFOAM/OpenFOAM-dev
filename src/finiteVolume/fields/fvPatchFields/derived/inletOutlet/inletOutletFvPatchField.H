@@ -58,7 +58,7 @@ Note
     - Positive flux (out of domain): apply zero-gradient condition
     - Negative flux (into of domain): apply the "inletValue" fixed-value
 
-SeeAlso
+See also
     Foam::mixedFvPatchField
     Foam::zeroGradientFvPatchField
     Foam::outletInletFvPatchField

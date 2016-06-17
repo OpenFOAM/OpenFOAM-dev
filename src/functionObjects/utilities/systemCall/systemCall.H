@@ -74,7 +74,7 @@ Note
     \c allowSystemOperations must be set to '1'; otherwise, system calls will
     not be allowed.
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::timeControl
 

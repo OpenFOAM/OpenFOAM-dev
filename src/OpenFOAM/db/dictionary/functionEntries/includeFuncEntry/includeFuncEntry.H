@@ -55,7 +55,7 @@ Description
         #includeFunc mag(p)
     \endverbatim
 
-See Also
+See also
     Foam::functionObjectList
 
 SourceFiles

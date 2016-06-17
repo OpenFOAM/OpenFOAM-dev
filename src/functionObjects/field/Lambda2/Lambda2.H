@@ -32,7 +32,7 @@ Description
     of the sum of the square of the symmetrical and anti-symmetrical parts of
     the velocity gradient tensor.
 
-SeeAlso
+See also
     Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 

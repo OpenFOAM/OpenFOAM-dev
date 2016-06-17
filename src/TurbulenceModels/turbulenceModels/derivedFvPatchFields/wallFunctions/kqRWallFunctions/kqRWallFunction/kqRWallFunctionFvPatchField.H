@@ -44,7 +44,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::zeroGradientFvPatchField
 
 SourceFiles

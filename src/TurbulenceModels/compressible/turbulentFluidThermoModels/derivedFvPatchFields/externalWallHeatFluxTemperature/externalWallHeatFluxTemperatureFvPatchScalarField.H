@@ -85,7 +85,7 @@ Usage
       - Only supply \c h and \c Ta, or \c q in the dictionary (see above)
       - \c kappa and \c kappaName are inherited from temperatureCoupledBase.
 
-SeeAlso
+See also
     Foam::temperatureCoupledBase
 
 SourceFiles

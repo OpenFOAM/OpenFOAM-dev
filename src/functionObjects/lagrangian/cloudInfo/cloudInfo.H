@@ -59,7 +59,7 @@ Usage
 
     The output data of each cloud is written to a file named \<cloudName\>.dat
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFiles
 

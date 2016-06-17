@@ -51,7 +51,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::nutWallFunctionFvPatchScalarField
 
 SourceFiles

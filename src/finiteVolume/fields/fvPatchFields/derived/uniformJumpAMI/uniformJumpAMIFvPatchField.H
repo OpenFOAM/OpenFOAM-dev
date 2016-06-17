@@ -59,7 +59,7 @@ Note
 
     The underlying \c patchType should be set to \c cyclic
 
-SeeAlso
+See also
     Foam::jumpCyclicAMIFvPatchField
     Foam::Function1Types
 

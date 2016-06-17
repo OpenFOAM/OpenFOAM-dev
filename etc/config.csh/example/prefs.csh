@@ -30,7 +30,7 @@
 #     The prefs.csh file will be sourced by the OpenFOAM etc/cshrc when it is
 #     found by foamEtcFile.
 #
-# See Also
+# See also
 #     'foamEtcFile -help' or 'foamEtcFile -list' for information about the
 #     paths searched
 #

@@ -89,7 +89,7 @@ Note
     \endverbatim
     In both cases, the supplied indices can be randomly ordered.
 
-SeeAlso
+See also
     Foam::DynamicList
 
 SourceFiles

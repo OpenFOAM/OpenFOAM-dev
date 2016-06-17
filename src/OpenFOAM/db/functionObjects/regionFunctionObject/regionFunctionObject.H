@@ -28,7 +28,7 @@ Description
     Specialization of Foam::functionObject for a region and providing a
     reference to the region Foam::objectRegistry.
 
-SeeAlso
+See also
     Foam::functionObject
 
 SourceFiles

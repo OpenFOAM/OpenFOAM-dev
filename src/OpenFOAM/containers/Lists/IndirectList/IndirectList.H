@@ -27,7 +27,7 @@ Class
 Description
     A List with indirect addressing.
 
-SeeAlso
+See also
     Foam::UIndirectList for a version without any allocation for the
     addressing.
 

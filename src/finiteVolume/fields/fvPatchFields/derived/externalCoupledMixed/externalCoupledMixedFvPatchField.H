@@ -108,7 +108,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     mixedFvPatchField
 
 SourceFiles

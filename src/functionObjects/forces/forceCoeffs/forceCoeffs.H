@@ -79,7 +79,7 @@ Usage
         cumulative   | bin data accumulated with incresing distance | yes |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::timeControl
     Foam::functionObjects::forces

@@ -29,7 +29,7 @@ Group
 
 Description
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

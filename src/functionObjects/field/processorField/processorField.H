@@ -47,7 +47,7 @@ Usage
         type         | type name: processorField | yes       |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

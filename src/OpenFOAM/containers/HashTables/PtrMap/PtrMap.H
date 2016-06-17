@@ -27,7 +27,7 @@ Class
 Description
     A HashTable of pointers to objects of type \<T\> with a label key.
 
-See Also
+See also
     Map, HashPtrTable
 
 \*---------------------------------------------------------------------------*/

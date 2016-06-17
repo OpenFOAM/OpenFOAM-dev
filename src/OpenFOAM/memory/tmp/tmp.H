@@ -30,7 +30,7 @@ Description
 SourceFiles
     tmpI.H
 
-SeeAlso
+See also
     Foam::refCount
     Foam::autoPtr
 

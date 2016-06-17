@@ -40,7 +40,7 @@ Description
       - %r gets replaced by current processor rank
       - it will decompose into 2 domains
 
-SeeAlso
+See also
     Foam::scotchDecomp
 
 SourceFiles

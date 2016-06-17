@@ -64,7 +64,7 @@ Usage
     }
     \endverbatim
 
-See Also
+See also
     Foam::fanFvPatchField
     Foam::totalPressureFvPatchScalarField
     Foam::interpolationTable

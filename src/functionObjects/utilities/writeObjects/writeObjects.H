@@ -63,7 +63,7 @@ Usage
     \c exclusiveWriting disables automatic writing (i.e through database) of the
     objects to avoid duplicate writing.
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::timeControl
 

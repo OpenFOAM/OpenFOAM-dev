@@ -64,7 +64,7 @@ Usage
         patches  | list of patches to process | no         | all wall patches
     \endtable
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFiles
     Foam::functionObjects::pressureTools

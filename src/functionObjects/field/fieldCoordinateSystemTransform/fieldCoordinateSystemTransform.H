@@ -62,7 +62,7 @@ Usage
         coordinateSystem | local co-ordinate system | yes    |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
     Foam::coordinateSystem
 

@@ -36,7 +36,7 @@ Description
     - The diffusivity can be set manually using the 'D' entry, or retrieved
       from the turbulence model (if applicable).
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

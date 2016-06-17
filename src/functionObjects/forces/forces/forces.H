@@ -99,7 +99,7 @@ Note
         }
     \endverbatim
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFiles
     Foam::functionObjects::timeControl

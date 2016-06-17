@@ -31,7 +31,7 @@ Description
     (like patchWave), but also additional transported data.
     It is used, for example, in the y+ calculation.
 
-See Also
+See also
    The patchWave class.
 
 SourceFiles

@@ -104,7 +104,7 @@ Usage
         rhoInf       | Freestream density for coefficient calculation  | no |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 

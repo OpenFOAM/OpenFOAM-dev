@@ -57,7 +57,7 @@ Usage
     \endtable
 
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::timeControl
 

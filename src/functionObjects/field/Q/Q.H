@@ -35,7 +35,7 @@ Description
         Q = 0.5(sqr(tr(\nabla U)) - tr(((\nabla U) \cdot (\nabla U))))
     \f]
 
-SeeAlso
+See also
     Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 

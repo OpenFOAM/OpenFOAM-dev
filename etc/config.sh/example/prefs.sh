@@ -30,7 +30,7 @@
 #     The prefs.sh file will be sourced by the OpenFOAM etc/bashrc when it is
 #     found by foamEtcFile.
 #
-# See Also
+# See also
 #     'foamEtcFile -help' or 'foamEtcFile -list' for information about the
 #     paths searched
 #

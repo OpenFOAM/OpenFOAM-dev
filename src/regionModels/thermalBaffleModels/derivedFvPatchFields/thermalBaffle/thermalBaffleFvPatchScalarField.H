@@ -149,7 +149,7 @@ Usage
     \endverbatim
 
 
-SeeAlso
+See also
     Foam::compressible::turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     Foam::regionModels::thermalBaffleModels::thermalBaffleModel
 

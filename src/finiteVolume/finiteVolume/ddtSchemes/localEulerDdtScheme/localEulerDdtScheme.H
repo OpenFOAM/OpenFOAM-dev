@@ -33,7 +33,7 @@ Description
     transient codes where local time-stepping is preferably to under-relaxation
     for transport consistency reasons.
 
-See Also
+See also
     Foam::fv::CoEulerDdtScheme
 
 SourceFiles

@@ -41,7 +41,7 @@ Description
          1 = planar extensional flow
     \endverbatim
 
-SeeAlso
+See also
     Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 

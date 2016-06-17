@@ -48,7 +48,7 @@ Description
         }
     \endverbatim
 
-SeeAlso
+See also
     Foam::LESModels::Smagorinsky
 
 SourceFiles

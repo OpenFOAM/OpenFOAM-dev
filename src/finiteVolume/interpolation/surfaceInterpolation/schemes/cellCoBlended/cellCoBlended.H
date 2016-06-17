@@ -58,7 +58,7 @@ Description
     }
     \endverbatim
 
-See Also
+See also
     Foam::CoBlended
     Foam::localBlended
 

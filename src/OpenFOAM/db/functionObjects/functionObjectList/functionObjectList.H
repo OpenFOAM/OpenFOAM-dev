@@ -28,7 +28,7 @@ Description
     List of function objects with start(), execute() and end() functions
     that is called for each object.
 
-See Also
+See also
     Foam::functionObject
     Foam::functionObjects::timeControl
 

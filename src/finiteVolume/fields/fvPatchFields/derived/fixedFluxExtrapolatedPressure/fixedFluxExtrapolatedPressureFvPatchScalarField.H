@@ -40,7 +40,7 @@ Description
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedGradientFvPatchField
 
 SourceFiles

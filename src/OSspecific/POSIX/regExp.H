@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     The PCRE '(?i)' extension is provided to compile the regular expression
     as being case-insensitive.
 
-SeeAlso
+See also
     The manpage regex(7) for more information about POSIX regular expressions.
     These differ somewhat from \c Perl and \c sed regular expressions.
 

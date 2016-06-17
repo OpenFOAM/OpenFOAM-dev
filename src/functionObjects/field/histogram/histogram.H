@@ -57,7 +57,7 @@ Usage
         setFormat    | Output format           | yes         |
     \endtable
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFile
 

@@ -68,7 +68,7 @@ Usage
     The density field is only required if the flux is mass-based as opposed to
     volumetric-based.
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
 
 SourceFiles

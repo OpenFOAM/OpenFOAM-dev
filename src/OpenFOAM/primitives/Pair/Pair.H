@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     An ordered pair of two objects of type \<T\> with first() and second()
     elements.
 
-SeeAlso
+See also
     Foam::Tuple2 for storing two objects of dissimilar types.
 
 \*---------------------------------------------------------------------------*/

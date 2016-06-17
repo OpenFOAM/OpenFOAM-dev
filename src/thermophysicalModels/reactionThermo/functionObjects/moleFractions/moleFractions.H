@@ -48,7 +48,7 @@ Description
     \endverbatim
     depending on the thermodynamics package used in the solver.
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

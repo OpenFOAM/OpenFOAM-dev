@@ -60,7 +60,7 @@ Usage
         kinematicCloud | Name of the kinematicCloud | no        | kinematicCloud
     \endtable
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles

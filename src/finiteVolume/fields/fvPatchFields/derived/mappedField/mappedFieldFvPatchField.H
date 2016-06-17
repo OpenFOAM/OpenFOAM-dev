@@ -60,7 +60,7 @@ Note
     employ this condition if it is not possible to change the underlying
     geometric (poly) patch type to \c mapped.
 
-SeeAlso
+See also
     Foam::mappedPatchBase
     Foam::mappedPolyPatch
     Foam::mappedFvPatch

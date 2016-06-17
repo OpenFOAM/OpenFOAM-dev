@@ -35,7 +35,7 @@ SourceFiles
     PackedBoolListI.H
     PackedBoolList.C
 
-SeeAlso
+See also
     Foam::PackedList
 
 \*---------------------------------------------------------------------------*/

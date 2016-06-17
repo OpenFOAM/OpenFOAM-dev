@@ -90,7 +90,7 @@ Usage
        CoV           | coefficient of variation: standard deviation/mean
     \endplaintable
 
-SeeAlso
+See also
     Foam::fieldValues
     Foam::functionObject
 

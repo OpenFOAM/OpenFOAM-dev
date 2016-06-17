@@ -86,7 +86,7 @@ Note
     viscosity wall function should be used, e.g. nutUWallFunction.  Turbulence
     k variants (nutk...) for this case will not behave correctly.
 
-SeeAlso
+See also
     Foam::RASModels::v2fBase
     Foam::RASModels::kEpsilon
     Foam::kLowReWallFunctionFvPatchScalarField

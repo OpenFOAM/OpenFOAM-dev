@@ -27,7 +27,7 @@ Class
 Description
     Representation of a 3D Cartesian coordinate system as a Vector of vectors.
 
-See Also
+See also
     Foam::quaternion
 
 SourceFiles

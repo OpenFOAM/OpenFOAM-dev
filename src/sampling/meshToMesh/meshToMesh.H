@@ -29,7 +29,7 @@ Description
 
     Mapping is performed using a run-time selectable interpolation mothod
 
-SeeAlso
+See also
     meshToMeshMethod
 
 SourceFiles

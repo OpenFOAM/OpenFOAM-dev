@@ -108,7 +108,7 @@ Usage
 Note
     To employ the \c prime2Mean option, the \c mean option must be selecetd.
 
-SeeAlso
+See also
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObject
 

@@ -73,7 +73,7 @@ Usage
       - \c kappa and \c kappaName are inherited from temperatureCoupledBase.
 
 
-SeeAlso
+See also
     Foam::temperatureCoupledBase
 
 SourceFiles

@@ -53,7 +53,7 @@ Note
     The tables are not registered since the same table object may be used for
     more than one patch.
 
-SeeAlso
+See also
     Foam::nutWallFunctionFvPatchScalarField
 
 SourceFiles

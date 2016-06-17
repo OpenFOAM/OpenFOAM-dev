@@ -66,7 +66,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchScalarField
 
 SourceFiles

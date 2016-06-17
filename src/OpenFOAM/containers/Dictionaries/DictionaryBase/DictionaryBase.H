@@ -36,7 +36,7 @@ Note
     gcc 2.95.2 so it has to be instantiated for T when an instantiation of
     DictionaryBase is requested
 
-See Also
+See also
     Dictionary and UDictionary
 
 SourceFiles

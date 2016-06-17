@@ -29,7 +29,7 @@ Description
 
     Tetgen http://tetgen.berlios.de
 
-See Also
+See also
     File format information:
     http://tetgen.berlios.de/fformats.smesh.html
 

@@ -88,7 +88,7 @@ Note
     When specifying the track resolution, the \c trackLength OR \c nSubCycle
     option should be used
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::timeControl
     Foam::sampledSet

@@ -31,7 +31,7 @@ Description
     Evaluates and outputs turbulence y+ for  models.  Values written to
     time directories as field 'yPlus'
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFiles
     Foam::functionObjects::timeControl

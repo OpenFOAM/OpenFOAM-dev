@@ -62,7 +62,7 @@ Note
     - negative flux (into of domain): derive from the flux in the patch-normal
       direction
 
-SeeAlso
+See also
     Foam::pressureInletOutletVelocityFvPatchVectorField
     Foam::Function1Types
 

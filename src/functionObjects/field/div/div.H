@@ -32,7 +32,7 @@ Description
     limited to surfaceScalarFields and volVectorFields, and the output is a
     volScalarField.
 
-SeeAlso
+See also
     Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 

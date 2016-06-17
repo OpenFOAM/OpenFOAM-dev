@@ -50,7 +50,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::mixedFvPatchField
     Foam::inletOutletFvPatchField
 

@@ -80,7 +80,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::cyclicFvPatchField
 

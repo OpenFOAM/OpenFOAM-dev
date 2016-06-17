@@ -65,7 +65,7 @@ Usage
 
     Output data is written to the file \<timeDir\>/fieldMinMax.dat
 
-SeeAlso
+See also
     Foam::functionObject
     Foam::functionObjects::writeFiles
 

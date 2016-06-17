@@ -33,7 +33,7 @@ Description
     whereby communication between the patches is performed using an arbitrary
     mesh interface (AMI) interpolation.
 
-SeeAlso
+See also
     Foam::cyclicAMIFvPatchField
 
 SourceFiles

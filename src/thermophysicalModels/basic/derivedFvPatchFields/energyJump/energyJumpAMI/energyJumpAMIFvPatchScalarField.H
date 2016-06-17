@@ -33,7 +33,7 @@ Description
     applied directly, but is employed on-the-fly when converting temperature
     boundary conditions into energy.
 
-SeeAlso
+See also
     Foam::fixedJumpAMIFvPatchField
 
 SourceFiles

@@ -68,7 +68,7 @@ Usage
     }
     \endverbatim
 
-SeeAlso
+See also
     Foam::advectiveFvPatchField
 
 SourceFiles

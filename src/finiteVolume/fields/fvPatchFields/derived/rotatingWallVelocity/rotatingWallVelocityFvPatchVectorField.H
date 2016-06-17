@@ -52,7 +52,7 @@ Usage
 
     The \c omega entry is a Function1 of time, see Foam::Function1Types.
 
-SeeAlso
+See also
     Foam::fixedValueFvPatchField
     Foam::Function1Types
 
