@@ -60,7 +60,6 @@ Description
     \endvartable
 
 Usage
-
     Example usage:
     \verbatim
     effectivenessHeatExchangerSource1

@@ -35,10 +35,9 @@ Description
     It is a simple wrapper around the zero-gradient condition.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            kqRWallFunction;
     }

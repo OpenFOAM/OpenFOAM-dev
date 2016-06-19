@@ -49,7 +49,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         valueFraction | weight field           | yes         |

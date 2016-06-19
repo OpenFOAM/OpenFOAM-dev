@@ -32,7 +32,6 @@ Description
     for using wall functions, using the Jayatilleke 'P' function.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Prt          | turbulent Prandtl number | no         | 0.85
@@ -43,7 +42,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            alphatJayatillekeWallFunction;
     }

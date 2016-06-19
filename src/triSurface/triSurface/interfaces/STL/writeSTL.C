@@ -35,15 +35,15 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
 {
     labelList faceMap;
 
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
     if (writeSorted)
     {
         label faceIndex = 0;
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             // Print all faces belonging to this region
-            const surfacePatch& patch = myPatches[patchi];
+            const surfacePatch& patch = patches[patchi];
 
             os  << "solid " << patch.name() << endl;
 
@@ -84,11 +84,11 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
     {
         // Get patch (=compact region) per face
         labelList patchIDs(size());
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
-            label facei = myPatches[patchi].start();
+            label facei = patches[patchi].start();
 
-            forAll(myPatches[patchi], i)
+            forAll(patches[patchi], i)
             {
                 patchIDs[faceMap[facei++]] = patchi;
             }
@@ -103,11 +103,11 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
                 if (currentPatchi != -1)
                 {
                     // Have already valid patch. Close it.
-                    os  << "endsolid " << myPatches[currentPatchi].name()
+                    os  << "endsolid " << patches[currentPatchi].name()
                         << nl;
                 }
                 currentPatchi = patchIDs[facei];
-                os  << "solid " << myPatches[currentPatchi].name() << nl;
+                os  << "solid " << patches[currentPatchi].name() << nl;
             }
 
             const vector& n = faceNormals()[facei];
@@ -133,7 +133,7 @@ void Foam::triSurface::writeSTLASCII(const bool writeSorted, Ostream& os) const
 
         if (currentPatchi != -1)
         {
-            os  << "endsolid " << myPatches[currentPatchi].name()
+            os  << "endsolid " << patches[currentPatchi].name()
                 << nl;
         }
     }

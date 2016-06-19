@@ -47,7 +47,6 @@ Description
     \endvartable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         z0           | surface roughness length| yes         |
@@ -55,7 +54,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutkAtmRoughWallFunction;
         z0              uniform 0;

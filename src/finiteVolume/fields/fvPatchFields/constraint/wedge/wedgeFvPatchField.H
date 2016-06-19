@@ -32,10 +32,9 @@ Description
     it is applied to 2-D geometries.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            wedge;
     }

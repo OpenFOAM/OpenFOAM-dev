@@ -84,7 +84,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         commsDir     | communications directory   | yes         |
@@ -98,7 +97,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            externalCoupled;
         commsDir        "$FOAM_CASE/comms";

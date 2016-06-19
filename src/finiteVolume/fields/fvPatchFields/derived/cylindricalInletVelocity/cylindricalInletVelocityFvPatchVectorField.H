@@ -33,7 +33,6 @@ Description
     and radial velocity.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         axis         | axis of rotation        | yes         |
@@ -45,7 +44,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cylindricalInletVelocity;
         axis            (0 0 1);

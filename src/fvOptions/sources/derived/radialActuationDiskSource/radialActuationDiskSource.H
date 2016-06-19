@@ -51,7 +51,6 @@ Description
     \f]
 
 Usage
-
     Example usage:
     \verbatim
     actuationDiskSourceCoeffs

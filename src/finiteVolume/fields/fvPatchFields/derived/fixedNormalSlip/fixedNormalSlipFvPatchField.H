@@ -31,7 +31,6 @@ Description
     This boundary condition sets the patch-normal component to a fixed value.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         fixedValue   | fixed value             | yes         |
@@ -39,7 +38,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedNormalSlip;
         fixedValue      uniform 0;     // example entry for a scalar field

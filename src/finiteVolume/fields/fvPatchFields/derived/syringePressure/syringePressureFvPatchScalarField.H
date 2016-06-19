@@ -38,7 +38,6 @@ Description
     expansion/compression.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Ap           | syringe piston area [m2] | yes        |
@@ -55,7 +54,7 @@ Usage
 
     Example of the BC specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            syringePressure;
         Ap              1.388e-6;

@@ -34,7 +34,6 @@ Description
     mass released from the film model.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         B            | model coefficient       | no          | 5.5
@@ -46,7 +45,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            alphatFilmWallFunction;
         B               5.5;

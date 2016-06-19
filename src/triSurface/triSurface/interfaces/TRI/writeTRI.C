@@ -41,18 +41,18 @@ void triSurface::writeTRI(const bool writeSorted, Ostream& os) const
 
     labelList faceMap;
 
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
     if (writeSorted)
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             for
             (
                 label patchFacei = 0;
-                patchFacei < myPatches[patchi].size();
+                patchFacei < patches[patchi].size();
                 patchFacei++
             )
             {

@@ -32,7 +32,6 @@ Description
     transfer
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Tinf         | wall temperature        | yes         |
@@ -41,7 +40,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            wallHeatTransfer;
         Tinf            uniform 500;

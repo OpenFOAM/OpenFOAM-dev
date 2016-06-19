@@ -34,7 +34,6 @@ Description
     based on the sign of the flux.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         freestreamValue   | freestream velocity          | yes         |
@@ -43,7 +42,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            freestream;
         phi             phi;

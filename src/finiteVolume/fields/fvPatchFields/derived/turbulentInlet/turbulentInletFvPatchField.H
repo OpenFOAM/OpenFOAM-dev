@@ -47,7 +47,6 @@ Description
     \endvartable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         fluctuationScale | RMS fluctuation scale (fraction of mean) | yes |
@@ -57,7 +56,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            turbulentInlet;
         fluctuationScale 0.1;

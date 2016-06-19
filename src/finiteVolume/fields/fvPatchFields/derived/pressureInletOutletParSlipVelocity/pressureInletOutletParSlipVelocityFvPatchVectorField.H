@@ -36,7 +36,6 @@ Description
     A slip condition is applied tangential to the patch.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -45,7 +44,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureInletOutletParSlipVelocity;
         value           uniform 0;

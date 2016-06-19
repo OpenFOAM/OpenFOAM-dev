@@ -46,10 +46,9 @@ Description
     \endvartable
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            gradientEnergy;
         gradient        uniform 10;

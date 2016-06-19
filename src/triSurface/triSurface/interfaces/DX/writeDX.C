@@ -44,14 +44,14 @@ void triSurface::writeDXGeometry
 ) const
 {
     labelList faceMap;
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
     // Print patch names as comment
     os  << "# Patches:" << endl;
-    forAll(myPatches, patchi)
+    forAll(patches, patchi)
     {
         os  << "#     " << patchi << "    "
-            << myPatches[patchi].name() << endl;
+            << patches[patchi].name() << endl;
     }
     os  << nl << endl;
 
@@ -75,14 +75,14 @@ void triSurface::writeDXGeometry
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             // Print all faces belonging to this patch
 
             for
             (
                 label patchFacei = 0;
-                patchFacei < myPatches[patchi].size();
+                patchFacei < patches[patchi].size();
                 patchFacei++
             )
             {
@@ -132,11 +132,11 @@ void triSurface::writeDX(const bool writeSorted, Ostream& os) const
         // Write patch number as data
 
         labelList faceMap;
-        surfacePatchList myPatches(calcPatches(faceMap));
+        surfacePatchList patches(calcPatches(faceMap));
 
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
-            forAll(myPatches[patchi], patchFacei)
+            forAll(patches[patchi], patchFacei)
             {
                 os  << patchi << endl;
             }

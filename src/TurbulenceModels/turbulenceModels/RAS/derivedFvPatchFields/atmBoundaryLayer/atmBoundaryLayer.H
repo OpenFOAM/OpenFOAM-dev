@@ -75,7 +75,6 @@ Description
         95(2007), pp 355-369.
 
 Usage
-
     \table
         Property     | Description                      | Required  | Default
         flowDir      | Flow direction                   | yes       |

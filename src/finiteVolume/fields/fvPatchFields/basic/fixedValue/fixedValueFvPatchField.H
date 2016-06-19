@@ -32,7 +32,6 @@ Description
     class for a number of other boundary conditions.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         value        | Patch face values       | yes         |
@@ -40,7 +39,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedValue;
         value           uniform 0;  // Example for scalar field usage

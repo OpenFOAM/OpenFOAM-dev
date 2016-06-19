@@ -31,10 +31,9 @@ Description
     This boundary condition provides a fixed condition for internal energy
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedEnergy;
         value           uniform 100;

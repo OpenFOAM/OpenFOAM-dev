@@ -33,7 +33,6 @@ Description
     value is applied in the case of reverse flow.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         U            | velocity field name     | no          | U
@@ -46,7 +45,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            inletOutletTotalTemperature;
         U               U;

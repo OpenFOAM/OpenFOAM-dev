@@ -49,7 +49,6 @@ Description
     - 0: apply a zero-gradient condition
 
 Usage
-
     \table
         Property      | Description                 | Required | Default value
         phaseFraction | phase-fraction field name   | no       | alpha
@@ -60,7 +59,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            phaseHydrostaticPressure;
         phaseFraction   alpha1;

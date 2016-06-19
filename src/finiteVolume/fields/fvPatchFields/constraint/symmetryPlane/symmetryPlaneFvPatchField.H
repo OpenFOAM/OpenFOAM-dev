@@ -31,10 +31,9 @@ Description
     This boundary condition enforces a symmetryPlane constraint
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            symmetryPlane;
     }

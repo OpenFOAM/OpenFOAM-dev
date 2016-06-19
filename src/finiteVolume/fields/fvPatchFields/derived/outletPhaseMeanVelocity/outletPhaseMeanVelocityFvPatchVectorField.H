@@ -44,7 +44,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            outletPhaseMeanVelocity;
         Umean           1.2;

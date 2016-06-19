@@ -33,10 +33,9 @@ Description
     a direction normal to the patch faces.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureInletVelocity;
         phi             phi;

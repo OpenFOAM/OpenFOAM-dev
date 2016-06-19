@@ -28,7 +28,6 @@ Description
     Temperature-dependent constant alphaContactAngle scalar boundary condition.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         T            | Temperature field name  | no          | T
@@ -37,7 +36,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            temperatureDependentAlphaContactAngle;
         theta0          constant 60;

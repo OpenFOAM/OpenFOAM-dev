@@ -31,7 +31,6 @@ Description
     This boundary condition provides a total temperature condition.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         U            | Velocity field name     | no          | U
@@ -43,7 +42,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            totalTemperature;
         T0              uniform 300;

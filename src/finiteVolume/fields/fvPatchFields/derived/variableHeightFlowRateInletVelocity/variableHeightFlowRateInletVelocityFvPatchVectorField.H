@@ -35,7 +35,6 @@ Description
     face of the patch and alpha is ensured to be bound between 0 and 1.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         flowRate     | volumetric flow rate [m3/s] | yes |
@@ -44,7 +43,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            variableHeightFlowRateInletVelocity;
         flowRate        0.2;

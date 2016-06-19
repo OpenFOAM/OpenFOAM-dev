@@ -33,7 +33,6 @@ Description
     the specified inlet direction" direction.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -43,7 +42,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureDirectedInletVelocity;
         phi             phi;

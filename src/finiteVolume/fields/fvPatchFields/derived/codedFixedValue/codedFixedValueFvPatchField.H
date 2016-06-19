@@ -32,10 +32,9 @@ Description
     fixedValueFvPatchField) which is then used to evaluate.
 
 Usage
-
     Example:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            codedFixedValue;
         value           uniform 0;
@@ -63,7 +62,7 @@ Usage
     which would have a corresponding entry:
 
     \verbatim
-    myPatch
+    <patchName>
     {
         code
         #{

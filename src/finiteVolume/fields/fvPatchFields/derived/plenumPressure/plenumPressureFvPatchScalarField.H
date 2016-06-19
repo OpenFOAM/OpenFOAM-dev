@@ -64,7 +64,6 @@ Description
     \endverbatim
 
 Usage
-
     \table
         Property        | Description                 | Required | Default value
         gamma           | ratio of specific heats     | yes      | none
@@ -84,7 +83,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            plenumPressure;
         gamma           1.4;

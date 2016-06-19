@@ -32,7 +32,6 @@ Description
     field to the boundary and internal cell values of *this.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         fieldName    | name of field to be mapped | no       | this field name
@@ -42,7 +41,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            mappedFixedPushedInternalValue;
         fieldName       T;

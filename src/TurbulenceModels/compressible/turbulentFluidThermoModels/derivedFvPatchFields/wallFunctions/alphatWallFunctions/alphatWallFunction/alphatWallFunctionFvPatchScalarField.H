@@ -47,7 +47,6 @@ Description
     \endvartable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         nut          | turbulence viscosity field name | no  | nut
@@ -56,7 +55,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            alphatWallFunction;
         nut             nut;

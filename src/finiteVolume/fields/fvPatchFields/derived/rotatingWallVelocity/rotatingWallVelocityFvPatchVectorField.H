@@ -31,7 +31,6 @@ Description
     This boundary condition provides a rotational velocity condition.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         origin       | origin of rotation in Cartesian co-ordinates | yes|
@@ -41,7 +40,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            rotatingWallVelocity;
         origin          (0 0 0);

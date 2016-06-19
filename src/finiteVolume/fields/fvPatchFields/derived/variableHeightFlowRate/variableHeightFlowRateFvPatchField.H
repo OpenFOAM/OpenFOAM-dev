@@ -42,7 +42,6 @@ Description
     - apply a fixed value condition, with a uniform level of the lower bound
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -52,7 +51,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            variableHeightFlowRate;
         lowerBound      0.0;

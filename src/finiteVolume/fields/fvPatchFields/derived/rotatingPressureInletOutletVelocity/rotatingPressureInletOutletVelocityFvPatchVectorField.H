@@ -34,7 +34,6 @@ Description
     from the flux with a direction normal to the patch faces.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -44,7 +43,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            rotatingPressureInletOutletVelocity;
         phi             phi;

@@ -47,7 +47,6 @@ Description
 
 
 Usage
-
     \table
         Property        | Description               | Required | Default value
         UInf            | freestream velocity       | yes      |
@@ -56,7 +55,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            SRFFreestreamVelocity;
         UInf            uniform (0 0 0);

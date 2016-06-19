@@ -31,10 +31,9 @@ Description
     This boundary condition provides a slip constraint.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            slip;
     }

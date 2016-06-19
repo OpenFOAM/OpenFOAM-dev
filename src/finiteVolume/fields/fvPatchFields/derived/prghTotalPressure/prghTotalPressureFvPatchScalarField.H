@@ -48,7 +48,6 @@ Description
     \endtable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         U            | Velocity field name     | no          | U
@@ -59,7 +58,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            prghTotalPressure;
         p0              uniform 0;

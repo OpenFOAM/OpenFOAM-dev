@@ -46,7 +46,7 @@ Description
     the wall e.g.:
 
     \verbatim
-    myPatch
+    <patchName>
     {
         type            alphaContactAngle;
         limit           none;

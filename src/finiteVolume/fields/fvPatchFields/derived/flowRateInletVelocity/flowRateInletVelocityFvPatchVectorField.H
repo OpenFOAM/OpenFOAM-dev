@@ -53,7 +53,7 @@ Usage
 
     Example of the boundary condition specification for a volumetric flow rate:
     \verbatim
-    myPatch
+    <patchName>
     {
         type                flowRateInletVelocity;
         volumetricFlowRate  0.2;
@@ -64,7 +64,7 @@ Usage
 
     Example of the boundary condition specification for a mass flow rate:
     \verbatim
-    myPatch
+    <patchName>
     {
         type                flowRateInletVelocity;
         massFlowRate        0.2;

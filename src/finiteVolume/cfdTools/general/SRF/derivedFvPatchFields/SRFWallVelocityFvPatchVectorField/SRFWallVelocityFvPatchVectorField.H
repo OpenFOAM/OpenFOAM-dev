@@ -48,10 +48,9 @@ Description
     if the wall patch faces are irregular.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            SRFWallVelocity;
         value           uniform (0 0 0);    // Initial value

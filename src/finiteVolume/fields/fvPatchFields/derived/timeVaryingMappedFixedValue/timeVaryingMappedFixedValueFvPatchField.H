@@ -44,7 +44,6 @@ Description
     Values are interpolated linearly between times.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         setAverage   | flag to activate setting of average value | yes |
@@ -55,7 +54,7 @@ Usage
     \endtable
 
     \verbatim
-    myPatch
+    <patchName>
     {
         type            timeVaryingMappedFixedValue;
         setAverage      false;

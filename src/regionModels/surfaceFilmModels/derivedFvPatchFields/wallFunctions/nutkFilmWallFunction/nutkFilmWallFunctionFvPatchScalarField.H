@@ -33,10 +33,9 @@ Description
     surface film models.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutkFilmWallFunction;
         value           uniform 0;

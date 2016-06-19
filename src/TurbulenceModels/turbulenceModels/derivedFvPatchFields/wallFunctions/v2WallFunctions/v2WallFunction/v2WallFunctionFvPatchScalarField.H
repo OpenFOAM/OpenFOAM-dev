@@ -37,7 +37,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Cmu          | model coefficient       | no          | 0.09
@@ -47,7 +46,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            v2WallFunction;
     }

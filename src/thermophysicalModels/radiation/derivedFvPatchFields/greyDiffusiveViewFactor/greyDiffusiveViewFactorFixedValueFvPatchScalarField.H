@@ -32,7 +32,6 @@ Description
     heat flux, \c Qr, for use with the view factor model
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Qro          | external radiative heat flux | yes    |
@@ -41,7 +40,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            greyDiffusiveRadiationViewFactor;
         Qro             uniform 0;

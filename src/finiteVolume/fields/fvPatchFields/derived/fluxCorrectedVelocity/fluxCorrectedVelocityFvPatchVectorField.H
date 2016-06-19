@@ -56,7 +56,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fluxCorrectedVelocity;
         phi             phi;

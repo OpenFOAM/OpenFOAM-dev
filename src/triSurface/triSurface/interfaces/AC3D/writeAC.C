@@ -52,16 +52,16 @@ void Foam::triSurface::writeAC(Ostream& os) const
 
     labelList faceMap;
 
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
 
     // Write header. Define materials.
 
     os  << "AC3Db" << endl;
 
-    forAll(myPatches, patchi)
+    forAll(patches, patchi)
     {
-        const word& pName = myPatches[patchi].name();
+        const word& pName = patches[patchi].name();
 
         label colourI = patchi % 8;
         label colourCompI = 3 * colourI;
@@ -75,16 +75,16 @@ void Foam::triSurface::writeAC(Ostream& os) const
     }
 
     os  << "OBJECT world" << endl
-        << "kids " << myPatches.size() << endl;
+        << "kids " << patches.size() << endl;
 
 
     // Write patch points & faces.
 
     label faceIndex = 0;
 
-    forAll(myPatches, patchi)
+    forAll(patches, patchi)
     {
-        const surfacePatch& sp = myPatches[patchi];
+        const surfacePatch& sp = patches[patchi];
 
         os  << "OBJECT poly" << endl
             << "name \"" << sp.name() << '"' << endl;

@@ -38,7 +38,6 @@ Description
     - roughness constant = 0.5-1.0
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Ks           | sand-grain roughness height | yes     |
@@ -47,7 +46,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutkRoughWallFunction;
         Ks              uniform 0;

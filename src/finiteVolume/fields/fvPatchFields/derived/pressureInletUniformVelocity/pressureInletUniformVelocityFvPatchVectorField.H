@@ -34,10 +34,9 @@ Description
     normal to the patch faces.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            pressureInletUniformVelocity;
         value           uniform 0;

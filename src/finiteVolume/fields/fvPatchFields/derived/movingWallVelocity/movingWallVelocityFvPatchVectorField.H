@@ -33,10 +33,9 @@ Description
     for moving reference frame (MRF) calculations.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            movingWallVelocity;
         value           uniform (0 0 0);    // Initial value

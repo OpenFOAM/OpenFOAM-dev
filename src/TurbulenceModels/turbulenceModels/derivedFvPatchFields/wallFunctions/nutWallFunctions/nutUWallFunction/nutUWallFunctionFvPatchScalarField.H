@@ -32,10 +32,9 @@ Description
     when using wall functions, based on velocity.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutUWallFunction;
     }

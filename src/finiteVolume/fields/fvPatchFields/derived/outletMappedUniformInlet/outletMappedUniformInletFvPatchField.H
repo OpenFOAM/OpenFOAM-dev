@@ -33,7 +33,6 @@ Description
     field over this patch.
 
 Usage
-
     \table
         Property        | Description             | Required    | Default value
         outletPatchName | name of outlet patch    | yes         |
@@ -42,7 +41,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            outletMappedUniformInlet;
         outletPatchName aPatch;

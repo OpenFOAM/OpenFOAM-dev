@@ -45,7 +45,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description                | Required    | Default value
         p            | Pressure field name        | no          | p
@@ -54,7 +53,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedRho;
     }

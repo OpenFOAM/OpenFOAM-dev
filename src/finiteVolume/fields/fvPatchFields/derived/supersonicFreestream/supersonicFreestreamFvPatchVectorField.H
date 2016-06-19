@@ -37,7 +37,6 @@ Description
       the domain.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         T            | Temperature field name  | no          | T
@@ -51,7 +50,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            supersonicFreestream;
         UInf            500;

@@ -31,7 +31,6 @@ Description
     This boundary condition provides a uniform fixed gradient condition.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         uniformGradient | uniform gradient     | yes         |
@@ -39,7 +38,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            uniformFixedGradient;
         uniformGradient constant 0.2;

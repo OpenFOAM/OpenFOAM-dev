@@ -33,10 +33,9 @@ Description
     an arbitrarily coupled mesh interface (ACMI) interpolation.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cyclicACMI;
     }

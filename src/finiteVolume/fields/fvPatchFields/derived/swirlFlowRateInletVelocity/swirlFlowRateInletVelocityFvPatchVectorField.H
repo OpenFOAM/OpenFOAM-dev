@@ -38,7 +38,6 @@ Description
     velocity when applying the mass basis.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -49,7 +48,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            swirlFlowRateInletVelocity;
         flowRate        constant 0.2;

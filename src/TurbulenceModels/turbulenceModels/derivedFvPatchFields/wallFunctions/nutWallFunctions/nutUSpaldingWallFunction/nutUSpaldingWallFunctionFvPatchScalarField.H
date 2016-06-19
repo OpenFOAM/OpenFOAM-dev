@@ -46,10 +46,9 @@ Description
 
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutUSpaldingWallFunction;
     }

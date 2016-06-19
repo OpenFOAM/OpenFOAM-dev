@@ -31,7 +31,6 @@ Description
     Variant of inletOutlet boundary condition with uniform inletValue.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -40,7 +39,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type                uniformInletOutlet;
         phi                 phi;

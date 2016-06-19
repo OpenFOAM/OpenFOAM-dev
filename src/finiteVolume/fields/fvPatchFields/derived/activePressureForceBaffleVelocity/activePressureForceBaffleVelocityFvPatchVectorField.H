@@ -58,7 +58,6 @@ Description
     The open fraction is then applied to scale the patch areas.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         p            | pressure field name     | no          | p
@@ -74,7 +73,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            activePressureForceBaffleVelocity;
         p               p;

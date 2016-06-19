@@ -49,7 +49,6 @@ Description
     \c thermodynamicProperties dictionary.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         p            | pressure field name     | no          | p
@@ -57,7 +56,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type        fixedPressureCompressibleDensity;
         p           p;

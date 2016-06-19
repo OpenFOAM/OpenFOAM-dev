@@ -45,15 +45,15 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
 
     labelList faceMap;
 
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
     const pointField& ps = points();
 
     // Print patch names as comment
-    forAll(myPatches, patchi)
+    forAll(patches, patchi)
     {
         os  << "#     " << patchi << "    "
-            << myPatches[patchi].name() << nl;
+            << patches[patchi].name() << nl;
     }
     os  << "#" << nl;
 
@@ -75,16 +75,16 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             // Print all faces belonging to this patch
 
-            os  << "g " << myPatches[patchi].name() << nl;
+            os  << "g " << patches[patchi].name() << nl;
 
             for
             (
                 label patchFacei = 0;
-                patchFacei < myPatches[patchi].size();
+                patchFacei < patches[patchi].size();
                 patchFacei++
             )
             {
@@ -103,11 +103,11 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
     {
         // Get patch (=compact region) per face
         labelList patchIDs(size());
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
-            label facei = myPatches[patchi].start();
+            label facei = patches[patchi].start();
 
-            forAll(myPatches[patchi], i)
+            forAll(patches[patchi], i)
             {
                 patchIDs[faceMap[facei++]] = patchi;
             }
@@ -121,7 +121,7 @@ void triSurface::writeOBJ(const bool writeSorted, Ostream& os) const
             if (prevPatchi != patchIDs[facei])
             {
                 prevPatchi = patchIDs[facei];
-                os  << "g " << myPatches[patchIDs[facei]].name() << nl;
+                os  << "g " << patches[patchIDs[facei]].name() << nl;
             }
             os  << "f "
                 << operator[](facei)[0] + 1 << ' '

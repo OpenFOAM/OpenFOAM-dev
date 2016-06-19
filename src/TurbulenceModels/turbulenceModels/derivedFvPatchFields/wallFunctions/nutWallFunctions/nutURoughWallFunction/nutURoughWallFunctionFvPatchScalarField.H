@@ -32,7 +32,6 @@ Description
     when using wall functions for rough walls, based on velocity.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         roughnessHeight | roughness height     | yes         |
@@ -42,7 +41,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutURoughWallFunction;
         roughnessHeight 1e-5;

@@ -31,10 +31,9 @@ Description
     This boundary condition fixes the velocity to zero at walls.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            noSlip;
     }

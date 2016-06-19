@@ -65,20 +65,20 @@ void triSurface::writeVTK(const bool writeSorted, Ostream& os) const
     os  << "POLYGONS " << size() << ' ' << 4*size() << nl;
 
     labelList faceMap;
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
     if (writeSorted)
     {
         label faceIndex = 0;
 
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             // Print all faces belonging to this patch
 
             for
             (
                 label patchFacei = 0;
-                patchFacei < myPatches[patchi].size();
+                patchFacei < patches[patchi].size();
                 patchFacei++
             )
             {
@@ -110,12 +110,12 @@ void triSurface::writeVTK(const bool writeSorted, Ostream& os) const
 
         faceIndex = 0;
 
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             for
             (
                 label patchFacei = 0;
-                patchFacei < myPatches[patchi].size();
+                patchFacei < patches[patchi].size();
                 patchFacei++
             )
             {

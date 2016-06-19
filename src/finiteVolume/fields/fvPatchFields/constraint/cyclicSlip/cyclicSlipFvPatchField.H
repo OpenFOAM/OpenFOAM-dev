@@ -32,10 +32,9 @@ Description
     condition, providing no new functionality.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cyclicSlip;
     }

@@ -28,23 +28,22 @@ Group
     grpThermoBoundaryConditions
 
 Description
+    This BC solves a steady 1D thermal baffle.
 
-    This BC solves a steady 1D thermal baffle. The solid properties are
-    specify as dictionary. Optionaly radiative heat flux (Qr) can be
-    incorporated into the balance. Some under-relaxation might be needed on
-    Qr.
-    Baffle and solid properties need to be specified on the master side
-    of the baffle.
+    The solid properties are specify as dictionary. Optionaly radiative heat
+    flux (Qr) can be incorporated into the balance. Some under-relaxation might
+    be needed on Qr.  Baffle and solid properties need to be specified on the
+    master side of the baffle.
 
 Usage
     Example of the boundary condition specification using constant
     solid thermo :
 
     \verbatim
-    myPatch_master
+    <masterPatchName>
     {
         type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
-        samplePatch     myPatch_slave;
+        samplePatch     <slavePatchName>;
 
         thickness       uniform 0.005;  // thickness [m]
         Qs              uniform 100;    // heat flux [W/m2]
@@ -75,17 +74,15 @@ Usage
         value               uniform 300;
     }
 
-    myPatch_slave
+    <slavePatchName>
     {
         type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
-        samplePatch     myPatch_master_master;
+        samplePatch     <masterPatchName>;
 
         Qr              none;
         relaxation      1;
     }
     \endverbatim
-
-
 
 SourceFiles
     thermalBaffle1DFvPatchScalarField.C
@@ -131,7 +128,7 @@ class thermalBaffle1DFvPatchScalarField
         mutable scalarField Qs_;
 
         //- Solid dictionary
-        dictionary  solidDict_;
+        dictionary solidDict_;
 
         //- Solid thermo
         mutable autoPtr<solidType> solidPtr_;

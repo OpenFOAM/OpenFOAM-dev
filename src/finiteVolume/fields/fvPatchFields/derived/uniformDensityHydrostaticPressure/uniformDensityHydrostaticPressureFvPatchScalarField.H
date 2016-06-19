@@ -45,7 +45,6 @@ Description
     \endtable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         rho          | uniform density [kg/m3] | yes         |
@@ -55,7 +54,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            uniformDensityHydrostaticPressure;
         rho             rho;

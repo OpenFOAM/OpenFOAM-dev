@@ -28,7 +28,6 @@ Description
     Explicit porosity source
 
 Usage
-
     Example usage, here employing the Darcy-Forchheimer model:
     \verbatim
     explicitPorositySourceCoeffs

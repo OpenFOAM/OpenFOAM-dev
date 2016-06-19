@@ -31,7 +31,6 @@ Description
     rotor forces on a cylindrical region within the domain.
 
 Usage
-
     Example usage:
     \verbatim
     rotorDiskSourceCoeffs

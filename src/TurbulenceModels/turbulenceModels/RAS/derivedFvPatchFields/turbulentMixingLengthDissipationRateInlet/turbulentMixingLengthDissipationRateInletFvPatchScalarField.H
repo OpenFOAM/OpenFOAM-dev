@@ -46,7 +46,6 @@ Description
     \endvartable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         mixingLength | Length scale [m]        | yes         |
@@ -56,7 +55,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            turbulentMixingLengthDissipationRateInlet;
         mixingLength    0.005;

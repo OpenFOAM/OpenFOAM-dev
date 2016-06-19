@@ -30,7 +30,6 @@ Description
     Motion specified as pointVectorFields.
 
 Usage
-
     Example:
     \verbatim
     walls

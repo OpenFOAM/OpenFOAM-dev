@@ -51,7 +51,6 @@ Description
     \endvartable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         L            | Length scale [m]        | yes |
@@ -59,7 +58,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            convectiveHeatTransfer;
         L               0.1;

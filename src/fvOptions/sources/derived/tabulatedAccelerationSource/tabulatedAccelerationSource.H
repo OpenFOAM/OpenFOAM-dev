@@ -28,7 +28,6 @@ Description
     Solid-body 6-DoF acceleration source
 
 Usage
-
     Example usage:
     \verbatim
     SBM

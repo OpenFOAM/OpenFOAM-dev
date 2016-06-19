@@ -34,10 +34,9 @@ Description
     constitue solution directions.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            empty;
     }

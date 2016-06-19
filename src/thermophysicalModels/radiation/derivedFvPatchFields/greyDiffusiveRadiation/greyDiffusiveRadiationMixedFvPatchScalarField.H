@@ -34,7 +34,6 @@ Description
     temperature field boundary condition.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         T            | temperature field name  | no          | T
@@ -43,7 +42,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            greyDiffusiveRadiation;
         T               T;

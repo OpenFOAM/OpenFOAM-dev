@@ -34,7 +34,6 @@ Description
     located in the $FOAM_CASE/constant directory.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         uPlusTable   | U+ as a function of Re table name | yes |
@@ -42,7 +41,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutTabulatedWallFunction;
         uPlusTable      myUPlusTable;

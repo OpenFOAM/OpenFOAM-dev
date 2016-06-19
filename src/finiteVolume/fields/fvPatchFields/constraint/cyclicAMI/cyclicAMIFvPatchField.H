@@ -33,10 +33,9 @@ Description
     an arbitrary mesh interface (AMI) interpolation.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            cyclicAMI;
     }

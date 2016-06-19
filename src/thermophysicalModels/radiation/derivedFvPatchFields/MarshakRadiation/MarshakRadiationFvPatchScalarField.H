@@ -35,7 +35,6 @@ Description
     user specified temperature field name.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         T            | temperature field name  | no          | T
@@ -43,7 +42,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            MarshakRadiation;
         T               T;

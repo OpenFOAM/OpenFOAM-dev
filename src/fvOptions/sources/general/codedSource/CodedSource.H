@@ -51,7 +51,6 @@ Description
         eqn is the fvMatrix
 
 Usage
-
     Example usage in controlDict:
     \verbatim
     energySource

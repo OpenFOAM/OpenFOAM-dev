@@ -32,7 +32,6 @@ Description
     condition, where the patch temperature is specified.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         T            | temperature field name  | no          | T
@@ -40,7 +39,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            wideBandDiffusiveRadiation;
         value           uniform 0;

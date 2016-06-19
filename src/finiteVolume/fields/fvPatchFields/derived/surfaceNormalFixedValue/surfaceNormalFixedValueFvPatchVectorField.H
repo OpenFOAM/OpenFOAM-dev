@@ -32,7 +32,6 @@ Description
     by its magnitude.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         refValue     | reference value         | yes         |
@@ -40,7 +39,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            surfaceNormalFixedValue;
         refValue        uniform -10;           // 10 INTO the domain

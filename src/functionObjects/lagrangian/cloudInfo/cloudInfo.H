@@ -50,7 +50,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         type         | type name: cloudInfo    | yes         |

@@ -32,7 +32,6 @@ Description
     or outlet total pressure condition for a fan.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         fileName     | fan curve file name     | yes         |

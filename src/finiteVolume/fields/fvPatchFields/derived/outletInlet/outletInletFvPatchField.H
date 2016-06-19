@@ -32,7 +32,6 @@ Description
     specified outflow for the case of reverse flow.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | Flux field name         | no          | phi
@@ -41,7 +40,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            outletInlet;
         phi             phi;

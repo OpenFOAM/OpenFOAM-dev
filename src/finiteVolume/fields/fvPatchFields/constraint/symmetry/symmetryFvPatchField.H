@@ -31,10 +31,9 @@ Description
     This boundary condition enforces a symmetry constraint
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            symmetry;
     }

@@ -43,7 +43,6 @@ Description
     where KDelta is heat-transfer coefficient K * deltaCoeffs
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         kappa        | thermal conductivity option | yes     |
@@ -55,7 +54,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         Tnbr            T;

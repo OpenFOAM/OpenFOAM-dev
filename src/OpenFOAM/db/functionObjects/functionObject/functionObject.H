@@ -42,10 +42,10 @@ Description
     \verbatim
         functions
         {
-            myFunctionObject    // Name of functionObject entry
+            <functionObjectName>
             {
                 type                functionObjectType;
-                libs  ("libMyFunctionObjectlib.so");
+                libs                ("libMyFunctionObjectlib.so");
                 region              defaultRegion;
                 enabled             yes;
                 timeStart           0;
@@ -84,12 +84,12 @@ Description
         none              | Execute/write every time-step
     \endtable
 
-    The sub-dictionary name \c myFunctionObject is chosen by the user, and is
-    typically used as the name of the output directory for any data written by
-    the functionObject.  The \c type entry defines the type of function object
-    properties that follow.  FunctionObjects are packaged into separate
-    libraries and the \c libs entry is used to specify which library
-    should be loaded.
+    The sub-dictionary name \c <functionObjectName> is chosen by the user, and
+    is typically used as the name of the output directory for any data written
+    by the functionObject.  The \c type entry defines the type of function
+    object properties that follow.  FunctionObjects are packaged into separate
+    libraries and the \c libs entry is used to specify which library should be
+    loaded.
 
 Class
     Foam::functionObject

@@ -33,7 +33,6 @@ Description
     time-varying, mean value.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         meanValue    | mean value Function1    | yes         |
@@ -41,7 +40,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedMean;
         meanValue       1.0;

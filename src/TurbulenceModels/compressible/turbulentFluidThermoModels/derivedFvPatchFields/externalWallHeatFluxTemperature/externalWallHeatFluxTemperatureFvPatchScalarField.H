@@ -49,7 +49,6 @@ Description
     thermophysical package.
 
 Usage
-
     \table
         Property     | Description                 | Required | Default value
         kappa        | thermal conductivity option | yes      |
@@ -65,7 +64,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            externalWallHeatFluxTemperature;
         kappa           fluidThermo;

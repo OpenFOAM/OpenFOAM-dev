@@ -30,7 +30,6 @@ Description
     flux [W/m^2].
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         heatSource   | 'power' [W] or 'flux' [W/m^2] | yes |

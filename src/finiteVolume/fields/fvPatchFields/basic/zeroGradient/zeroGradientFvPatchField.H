@@ -32,10 +32,9 @@ Description
     internal field onto the patch faces.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            zeroGradient;
     }

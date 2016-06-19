@@ -40,13 +40,13 @@ void triSurface::writeGTS(const bool writeSorted, Ostream& os) const
 
     labelList faceMap;
 
-    surfacePatchList myPatches(calcPatches(faceMap));
+    surfacePatchList patches(calcPatches(faceMap));
 
     // Print patch names as comment
-    forAll(myPatches, patchi)
+    forAll(patches, patchi)
     {
         os  << "#     " << patchi << "    "
-            << myPatches[patchi].name() << endl;
+            << patches[patchi].name() << endl;
     }
     os  << "#" << endl;
 
@@ -82,12 +82,12 @@ void triSurface::writeGTS(const bool writeSorted, Ostream& os) const
     if (writeSorted)
     {
         label faceIndex = 0;
-        forAll(myPatches, patchi)
+        forAll(patches, patchi)
         {
             for
             (
                 label patchFacei = 0;
-                patchFacei < myPatches[patchi].size();
+                patchFacei < patches[patchi].size();
                 patchFacei++
             )
             {

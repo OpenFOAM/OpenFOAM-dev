@@ -46,7 +46,7 @@ Description
 Usage
     Example of the boundary condition specification:
     \verbatim
-    myPatch_master
+    <masterPatchName>
     {
         type                compressible::thermalBaffle;
 
@@ -103,7 +103,6 @@ Usage
             scatterModel    none;
         }
 
-
         // Extrude model for new region
 
         extrudeModel        linearNormal;
@@ -120,14 +119,13 @@ Usage
 
     Slave patch on primary region:
     \verbatim
-    myPatch_slave
+    <slavePatchName>
     {
         type                compressible::thermalBaffle;
         kappa               fluidThermo;
         kappaName           none;
         value               uniform 300;
     \endverbatim
-
 
     Patches on baffle region:
     \verbatim
@@ -147,7 +145,6 @@ Usage
         value               uniform 300;
     }
     \endverbatim
-
 
 See also
     Foam::compressible::turbulentTemperatureCoupledBaffleMixedFvPatchScalarField

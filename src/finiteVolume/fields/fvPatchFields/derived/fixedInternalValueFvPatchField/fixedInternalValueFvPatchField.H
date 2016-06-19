@@ -33,10 +33,9 @@ Description
     behaviour is to act as a zero gradient condition.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedInternalValue;
         value           uniform 0;              // place holder

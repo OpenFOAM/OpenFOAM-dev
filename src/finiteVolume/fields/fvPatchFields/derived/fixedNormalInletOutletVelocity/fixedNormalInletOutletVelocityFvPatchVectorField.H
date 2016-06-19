@@ -42,7 +42,6 @@ Description
         apply zero-gradient condition to tangential components.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
@@ -52,7 +51,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedNormalInletOutletVelocity;
 

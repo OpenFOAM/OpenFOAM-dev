@@ -33,10 +33,9 @@ Description
     provides an access function to calculate y+.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutLowReWallFunction;
     }

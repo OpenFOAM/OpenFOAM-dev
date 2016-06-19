@@ -44,7 +44,6 @@ Description
     \endvartable
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         gradient     | gradient                | yes         |
@@ -52,7 +51,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedGradient;
         gradient        uniform 0;

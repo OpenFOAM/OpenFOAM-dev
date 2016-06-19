@@ -91,7 +91,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description                | Required | Default value
         U            | Velocity field name        | no       | U
@@ -104,7 +103,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            totalPressure;
         p0              uniform 1e5;

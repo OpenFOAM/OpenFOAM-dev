@@ -34,10 +34,9 @@ Description
     internal and patch field values rather than returning zero.
 
 Usage
-
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            extrapolatedCalculated;
     }

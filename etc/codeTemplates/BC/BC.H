@@ -44,7 +44,6 @@ Description
     \endtable
 
 Usage
-
     \table
         Property   | Description                  | Req'd? | Default
         scalarData | single scalar value          | yes    |
@@ -56,7 +55,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type       NAME;
         scalarData -1;

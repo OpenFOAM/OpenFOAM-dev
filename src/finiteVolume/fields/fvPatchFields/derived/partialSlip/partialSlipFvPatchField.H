@@ -32,7 +32,6 @@ Description
     slip is controlled by a user-supplied field.
 
 Usage
-
     \table
         Property      | Description             | Required    | Default value
         valueFraction | fraction od value used for boundary [0-1] | yes |
@@ -40,7 +39,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            partialSlip;
         valueFraction   uniform 0.1;

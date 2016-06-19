@@ -59,7 +59,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         inletValue   | inlet velocity          | yes         |
@@ -68,7 +67,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            SRFVelocity;
         inletValue      uniform (0 0 0);

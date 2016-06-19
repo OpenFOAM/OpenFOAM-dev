@@ -31,7 +31,6 @@ Description
     This boundary condition provides a uniform fixed value condition.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         uniformValue | uniform value           |         yes |
@@ -39,7 +38,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            uniformFixedValue;
         uniformValue    constant 0.2;

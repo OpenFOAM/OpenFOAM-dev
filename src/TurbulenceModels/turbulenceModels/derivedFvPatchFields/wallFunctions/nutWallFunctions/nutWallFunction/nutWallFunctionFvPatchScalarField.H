@@ -33,7 +33,6 @@ Description
     - replicates OpenFOAM v1.5 (and earlier) behaviour
 
 Usage
-
     \table
         Property  | Description         | Required   | Default value
         Cmu       | Cmu coefficient     | no         | 0.09
@@ -43,7 +42,7 @@ Usage
 
     Examples of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            nutWallFunction;
         value           uniform 0.0;

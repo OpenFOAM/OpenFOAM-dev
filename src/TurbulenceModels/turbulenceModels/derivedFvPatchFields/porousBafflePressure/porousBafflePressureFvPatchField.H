@@ -50,7 +50,6 @@ Description
 
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         patchType    | underlying patch type should be \c cyclic| yes |
@@ -63,7 +62,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            porousBafflePressure;
         patchType       cyclic;

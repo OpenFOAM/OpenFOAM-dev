@@ -45,7 +45,6 @@ Description
     \endvartable
 
 Usage
-
     Example usage:
     \verbatim
     actuationDiskSourceCoeffs

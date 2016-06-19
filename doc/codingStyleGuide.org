@@ -427,7 +427,7 @@
         \verbatim
             patchName
             {
-                type        myPatchType;
+                type        patchType;
                 refValue    100;
                 value       uniform 1;
             }

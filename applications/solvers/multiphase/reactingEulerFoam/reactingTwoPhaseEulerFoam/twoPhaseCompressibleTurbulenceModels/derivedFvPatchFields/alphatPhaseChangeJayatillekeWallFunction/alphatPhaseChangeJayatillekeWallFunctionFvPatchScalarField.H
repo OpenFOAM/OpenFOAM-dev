@@ -34,7 +34,6 @@ Description
     the Eulerian multiphase solvers.
 
 Usage
-
     \table
         Property     | Description             | Required    | Default value
         Prt          | Turbulent Prandtl number | no         | 0.85
@@ -45,7 +44,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            alphatPhaseChangeJayatillekeWallFunction;
         Prt             0.85;

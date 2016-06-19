@@ -31,7 +31,6 @@ Description
     This boundary condition provides a fixed value profile condition.
 
 Usage
-
     \table
         Property     | Description              | Required | Default value
         profile      | Profile Function1        | yes |
@@ -41,7 +40,7 @@ Usage
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            fixedProfile;
         profile    csvFile;

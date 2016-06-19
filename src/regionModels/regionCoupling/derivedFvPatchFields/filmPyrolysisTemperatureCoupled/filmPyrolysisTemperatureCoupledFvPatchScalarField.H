@@ -35,7 +35,7 @@ Description
 
     Example of the boundary condition specification:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            filmPyrolysisTemperatureCoupled;
         phi             phi;      // name of flux field (default = phi)

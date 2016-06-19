@@ -32,10 +32,9 @@ Description
     mixedFvPatchField) which is then used to evaluate.
 
 Usage
-
     Example:
     \verbatim
-    myPatch
+    <patchName>
     {
         type            codedMixed;
 
@@ -71,7 +70,7 @@ Usage
     which would have a corresponding entry
 
     \verbatim
-    myPatch
+    <patchName>
     {
         code
         #{
