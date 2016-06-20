@@ -224,8 +224,15 @@ then
         # For all the sub-directories containing a 'Make' directory
         for dir in `find . \( -type d -a -name Make \)`
         do
+            dir=${dir%/Make} # Parent directory - trim /Make from the end
             echo $dir
-            $0 ${dir%/Make}   # Parent directory - trim /Make from the end
+            # If Allwclean exists execute otherwise wclean
+            if [ -e "$dir/Allwclean" ]
+            then
+                $dir/Allwclean
+            else
+                $0 $dir
+            fi
         done
     fi
 fi
