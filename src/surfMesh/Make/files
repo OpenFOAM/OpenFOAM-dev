@@ -22,7 +22,6 @@ $(surfaceFormats)/surfaceFormatsCore.C
 
 $(surfaceFormats)/ac3d/AC3DsurfaceFormatCore.C
 $(surfaceFormats)/ac3d/AC3DsurfaceFormatRunTime.C
-$(surfaceFormats)/ftr/FTRsurfaceFormatRunTime.C
 $(surfaceFormats)/gts/GTSsurfaceFormatRunTime.C
 $(surfaceFormats)/nas/NASsurfaceFormatRunTime.C
 $(surfaceFormats)/obj/OBJsurfaceFormatRunTime.C
@@ -46,4 +45,3 @@ $(surfaceFormats)/x3d/X3DsurfaceFormatCore.C
 $(surfaceFormats)/x3d/X3DsurfaceFormatRunTime.C
 
 LIB = $(FOAM_LIBBIN)/libsurfMesh
-

@@ -98,12 +98,6 @@ const Foam::coordinateSystems& Foam::coordinateSystems::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::coordinateSystems::find(const keyType& key) const
-{
-    return findIndex(key);
-}
-
-
 Foam::labelList Foam::coordinateSystems::findIndices(const keyType& key) const
 {
     labelList indices;

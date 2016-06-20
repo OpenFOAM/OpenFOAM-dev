@@ -315,7 +315,7 @@ int main(int argc, char *argv[])
 
     #include "createTime.H"
 
-    fileName ansysFile(args.additionalArgs()[0]);
+    fileName ansysFile(args[1]);
     ifstream ansysStream(ansysFile.c_str());
 
     if (!ansysStream)

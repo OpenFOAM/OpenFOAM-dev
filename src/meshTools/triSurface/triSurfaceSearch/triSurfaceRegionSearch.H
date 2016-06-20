@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,10 +113,9 @@ public:
         // Access
 
             //- Demand driven construction of octree for each region.
-            //  @todo Currently creates a tree for each region; could optimise
-            //        by only constructing trees when they are in regionIndices
+            //  Currently creates a tree for each region; could optimise
+            //  by only constructing trees when they are in regionIndices
             const PtrList<treeType>& treeByRegion() const;
-
 
         // Query
 

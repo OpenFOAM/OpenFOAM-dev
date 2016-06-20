@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
     argList::validArgs.append("output surface file");
     argList args(argc, argv);
 
-    fileName surfFileName(args.additionalArgs()[0]);
+    fileName surfFileName(args[1]);
     Info<< "Reading surface from " << surfFileName << endl;
 
-    fileName outFileName(args.additionalArgs()[1]);
+    fileName outFileName(args[2]);
     fileName outFileBaseName = outFileName.lessExt();
     word outExtension = outFileName.ext();
 
