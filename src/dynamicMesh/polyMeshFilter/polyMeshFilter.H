@@ -145,7 +145,7 @@ class polyMeshFilter
         // + -1 : point not on boundary
         // +  0 : point on a real boundary
         // + >0 : point on a processor patch with that ID
-        // @todo Need to mark boundaryEdges as well, as an edge may have two
+        // TODO: Need to mark boundaryEdges as well, as an edge may have two
         //       boundary points but not itself lie on a boundary
         void updatePointPriorities
         (

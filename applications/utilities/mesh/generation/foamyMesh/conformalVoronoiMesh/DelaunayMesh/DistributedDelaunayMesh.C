@@ -957,7 +957,7 @@ Foam::DistributedDelaunayMesh<Triangulation>::rangeInsertReferredWithInfo
         }
         else if (lt == Triangulation::OUTSIDE_CONVEX_HULL)
         {
-            // @todo Can this be optimised?
+            // TODO: Can this be optimised?
             //
             // Only want to insert if a connection is formed between
             // pointToInsert and an internal or internal boundary point.

@@ -375,7 +375,7 @@ triSurfacePointScalarField calcCurvature
             );
 
             // Calculate weight
-            // @todo Voronoi area weighting
+            // TODO: Voronoi area weighting
             scalar weight = calcVertexNormalWeight
             (
                 f,

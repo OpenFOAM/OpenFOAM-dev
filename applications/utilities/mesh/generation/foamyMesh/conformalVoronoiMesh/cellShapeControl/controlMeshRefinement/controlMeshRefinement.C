@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(controlMeshRefinement, 0);
+    defineTypeNameAndDebug(controlMeshRefinement, 0);
 }
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -396,7 +396,7 @@ void Foam::controlMeshRefinement::initialMeshPopulation
                     << ", alignment difference = " << alignmentDiff << endl;
             }
 
-            // @todo Also need to base it on the alignments
+            // TODO: Also need to base it on the alignments
             if
             (
                 sizeDiff/interpolatedCellSize > 0.1
@@ -561,7 +561,7 @@ void Foam::controlMeshRefinement::initialMeshPopulation
                 Info<< "    size difference = " << sizeDiff << endl;
             }
 
-            // @todo Also need to base it on the alignments
+            // TODO: Also need to base it on the alignments
             if (sizeDiff/interpolatedCellSize > 0.1)
             {
                 insertPoint = true;

@@ -1434,7 +1434,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 ////    map().distribute(testCentres);
 ////    map().distribute(testRadiusSqrs);
 //
-//    // @todo This is faster, but results in more vertices being referred
+//    // TODO: This is faster, but results in more vertices being referred
 //    boolList sphereOverlapsCandidate(testCentres.size(), true);
 ////    boolList sphereOverlapsCandidate(testCentres.size(), false);
 ////
@@ -1551,7 +1551,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
 //    map().distribute(testCentres);
 //    map().distribute(testRadiusSqrs);
 //
-//    // @todo This is faster, but results in more vertices being referred
+//    // TODO: This is faster, but results in more vertices being referred
 ////    boolList sphereOverlapsCandidate(testCentres.size(), true);
 //    boolList sphereOverlapsCandidate(testCentres.size(), false);
 //

@@ -168,7 +168,7 @@ Foam::pointField Foam::coupledPolyPatch::getAnchorPoints
 
                     const point& p2 = points[f[fp2]];
 
-                    // @todo Change to a tolerance and possibly select closest
+                    // TODO: Change to a tolerance and possibly select closest
                     // point to the origin
                     if (p1 == p2)
                     {

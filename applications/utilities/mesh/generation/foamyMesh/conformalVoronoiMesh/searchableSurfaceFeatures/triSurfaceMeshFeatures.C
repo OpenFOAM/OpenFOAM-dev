@@ -91,7 +91,7 @@ Foam::triSurfaceMeshFeatures::features() const
 
     surfaceFeatures sFeat(surfMesh, includedAngle_);
 
-    // @todo Need to read on a per region basis
+    // TODO: Need to read on a per region basis
     boolList surfBaffleRegions
     (
         surfMesh.patches().size(),

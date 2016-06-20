@@ -136,23 +136,9 @@ s/^    //
 }
 
 
-# Remove ToDo paragraph to avoid them showing on related pages
-/^To[Dd]o *$/,/^[^ ]/{
-s/^To[Dd]o *$//
-s/^    .*//
-}
-
-
 /^Warning *$/,/^[^ ]/{
 /^Warning/c\
 \\warning
-s/^    //
-}
-
-
-/^Deprecated *$/,/^[^ ]/{
-/^Deprecated/c\
-\\deprecated
 s/^    //
 }
 

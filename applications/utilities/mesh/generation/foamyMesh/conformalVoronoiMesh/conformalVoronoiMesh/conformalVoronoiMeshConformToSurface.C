@@ -104,7 +104,7 @@ bool Foam::conformalVoronoiMesh::reconformToSurface() const
 }
 
 
-// @todo Investigate topological tests
+// TODO: Investigate topological tests
 Foam::label Foam::conformalVoronoiMesh::findVerticesNearBoundaries()
 {
     label countNearBoundaryVertices = 0;
@@ -1732,7 +1732,7 @@ bool Foam::conformalVoronoiMesh::nearSurfacePoint
         const scalar cosAngle =
             angleBetweenSurfacePoints(pt, closePoint.hitPoint());
 
-        // @todo make this tolerance run-time selectable?
+        // TODO: make this tolerance run-time selectable?
         if (cosAngle < searchAngleOppositeSurface)
         {
             pointIndexHit pCloseHit;

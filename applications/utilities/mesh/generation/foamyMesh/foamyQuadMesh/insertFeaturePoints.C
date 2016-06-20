@@ -97,7 +97,7 @@ void Foam::CV2D::insertFeaturePoints()
         }
 
         // Args: (base point, normal)
-        // @todo allow user to input this
+        // TODO: allow user to input this
         plane zPlane(vector(0, 0, z_), vector(0, 0, 1));
 
         if (debug)
