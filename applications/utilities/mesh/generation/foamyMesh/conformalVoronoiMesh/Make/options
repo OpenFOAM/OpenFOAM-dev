@@ -23,8 +23,7 @@ EXE_INC = \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
-    -IPrintTable \
-    -I/usr/include
+    -IPrintTable
 
 LIB_LIBS = \
     ${CGAL_LIBS} \
