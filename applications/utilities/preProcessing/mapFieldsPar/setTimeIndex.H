@@ -1,5 +1,13 @@
 {
     instantList sourceTimes = runTimeSource.times();
+
+    if (sourceTimes.empty())
+    {
+        FatalErrorInFunction << "No result times in source "
+            << runTimeSource.caseName()
+            << exit(FatalError);
+    }
+
     label sourceTimeIndex = runTimeSource.timeIndex();
     if (args.optionFound("sourceTime"))
     {

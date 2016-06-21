@@ -263,11 +263,11 @@ int main(int argc, char *argv[])
 
     if (!consistent)
     {
-        IOdictionary mapFieldsParDict
+        IOdictionary mapFieldsDict
         (
             IOobject
             (
-                "mapFieldsParDict",
+                "mapFieldsDict",
                 runTimeTarget.system(),
                 runTimeTarget,
                 IOobject::MUST_READ_IF_MODIFIED,
@@ -276,8 +276,8 @@ int main(int argc, char *argv[])
             )
         );
 
-        mapFieldsParDict.lookup("patchMap") >> patchMap;
-        mapFieldsParDict.lookup("cuttingPatches") >>  cuttingPatches;
+        mapFieldsDict.lookup("patchMap") >> patchMap;
+        mapFieldsDict.lookup("cuttingPatches") >>  cuttingPatches;
     }
 
     #include "setTimeIndex.H"
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
             meshSource,
             meshTarget,
             patchMap,
-            addProcessorPatches(meshTarget, cuttingPatches),
+            cuttingPatches,
             mapMethod,
             subtract,
             selectedFields,

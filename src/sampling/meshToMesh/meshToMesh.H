@@ -129,6 +129,28 @@ private:
         template<class Type>
         void add(UList<Type>& fld, const label offset) const;
 
+        //- Helper function to interpolate patch field. Template
+        //  specialisations  below
+        template<class Type, class CombineOp>
+        void mapAndOpSrcToTgt
+        (
+            const AMIPatchToPatchInterpolation& AMI,
+            const Field<Type>& srcField,
+            Field<Type>& tgtField,
+            const CombineOp& cop
+        ) const;
+
+        //- Helper function to interpolate patch field. Template
+        //  specialisations  below
+        template<class Type, class CombineOp>
+        void mapAndOpTgtToSrc
+        (
+            const AMIPatchToPatchInterpolation& AMI,
+            Field<Type>& srcField,
+            const Field<Type>& tgtField,
+            const CombineOp& cop
+        ) const;
+
         //- Return src cell IDs for the overlap region
         labelList maskCells(const polyMesh& src, const polyMesh& tgt) const;
 
@@ -523,6 +545,91 @@ public:
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Disable fvPatchField value override after rmap
+
+template<>
+void meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<scalar>& srcField,
+    Field<scalar>& tgtField,
+    const plusEqOp<scalar>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<vector>& srcField,
+    Field<vector>& tgtField,
+    const plusEqOp<vector>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<sphericalTensor>& srcField,
+    Field<sphericalTensor>& tgtField,
+    const plusEqOp<sphericalTensor>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<symmTensor>& srcField,
+    Field<symmTensor>& tgtField,
+    const plusEqOp<symmTensor>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<tensor>& srcField,
+    Field<tensor>& tgtField,
+    const plusEqOp<tensor>& cop
+) const;
+
+
+template<>
+void meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<scalar>& srcField,
+    const Field<scalar>& tgtField,
+    const plusEqOp<scalar>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<vector>& srcField,
+    const Field<vector>& tgtField,
+    const plusEqOp<vector>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<sphericalTensor>& srcField,
+    const Field<sphericalTensor>& tgtField,
+    const plusEqOp<sphericalTensor>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<symmTensor>& srcField,
+    const Field<symmTensor>& tgtField,
+    const plusEqOp<symmTensor>& cop
+) const;
+template<>
+void meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<tensor>& srcField,
+    const Field<tensor>& tgtField,
+    const plusEqOp<tensor>& cop
+) const;
 
 } // End namespace Foam
 

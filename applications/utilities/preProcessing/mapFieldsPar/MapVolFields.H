@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,88 @@ License
 namespace Foam
 {
 
+template<class Type>
+void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
+{
+    typename GeometricField<Type, fvPatchField, volMesh>::
+        Boundary& fldBf = fld.boundaryFieldRef();
+
+    if
+    (
+        Pstream::defaultCommsType == Pstream::blocking
+     || Pstream::defaultCommsType == Pstream::nonBlocking
+    )
+    {
+        label nReq = Pstream::nRequests();
+
+        forAll(fldBf, patchi)
+        {
+            fvPatchField<Type>& tgtField = fldBf[patchi];
+
+            if
+            (
+                tgtField.type() == tgtField.patch().patch().type()
+             && polyPatch::constraintType(tgtField.patch().patch().type())
+            )
+            {
+                tgtField.initEvaluate(Pstream::defaultCommsType);
+            }
+        }
+
+        // Block for any outstanding requests
+        if
+        (
+            Pstream::parRun()
+         && Pstream::defaultCommsType == Pstream::nonBlocking
+        )
+        {
+            Pstream::waitRequests(nReq);
+        }
+
+        forAll(fldBf, patchi)
+        {
+            fvPatchField<Type>& tgtField = fldBf[patchi];
+
+            if
+            (
+                tgtField.type() == tgtField.patch().patch().type()
+             && polyPatch::constraintType(tgtField.patch().patch().type())
+            )
+            {
+                tgtField.evaluate(Pstream::defaultCommsType);
+            }
+        }
+    }
+    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    {
+        const lduSchedule& patchSchedule =
+            fld.mesh().globalData().patchSchedule();
+
+        forAll(patchSchedule, patchEvali)
+        {
+            label patchi = patchSchedule[patchEvali].patch;
+            fvPatchField<Type>& tgtField = fldBf[patchi];
+
+            if
+            (
+                tgtField.type() == tgtField.patch().patch().type()
+             && polyPatch::constraintType(tgtField.patch().patch().type())
+            )
+            {
+                if (patchSchedule[patchEvali].init)
+                {
+                    tgtField.initEvaluate(Pstream::scheduled);
+                }
+                else
+                {
+                    tgtField.evaluate(Pstream::scheduled);
+                }
+            }
+        }
+    }
+}
+
+
 template<class Type, class CombineOp>
 void MapVolFields
 (
@@ -57,8 +139,6 @@ void MapVolFields
 
         if (selectedFields.empty() || selectedFields.found(fieldName))
         {
-            Info<< "    interpolating " << fieldName << endl;
-
             const fieldType fieldSource(*fieldIter(), meshSource);
 
             IOobject targetIO
@@ -71,20 +151,29 @@ void MapVolFields
 
             if (targetIO.headerOk())
             {
+                Info<< "    interpolating onto existing field "
+                    << fieldName << endl;
                 fieldType fieldTarget(targetIO, meshTarget);
 
                 interp.mapSrcToTgt(fieldSource, cop, fieldTarget);
+
+                evaluateConstraintTypes(fieldTarget);
 
                 fieldTarget.write();
             }
             else
             {
+                Info<< "    creating new field "
+                    << fieldName << endl;
+
                 targetIO.readOpt() = IOobject::NO_READ;
 
                 tmp<fieldType>
                     tfieldTarget(interp.mapSrcToTgt(fieldSource, cop));
 
                 fieldType fieldTarget(targetIO, tfieldTarget);
+
+                evaluateConstraintTypes(fieldTarget);
 
                 fieldTarget.write();
             }

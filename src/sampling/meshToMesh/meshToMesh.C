@@ -53,6 +53,116 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+template<>
+void Foam::meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<scalar>& srcField,
+    Field<scalar>& tgtField,
+    const plusEqOp<scalar>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<vector>& srcField,
+    Field<vector>& tgtField,
+    const plusEqOp<vector>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<sphericalTensor>& srcField,
+    Field<sphericalTensor>& tgtField,
+    const plusEqOp<sphericalTensor>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<symmTensor>& srcField,
+    Field<symmTensor>& tgtField,
+    const plusEqOp<symmTensor>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpSrcToTgt
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    const Field<tensor>& srcField,
+    Field<tensor>& tgtField,
+    const plusEqOp<tensor>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<scalar>& srcField,
+    const Field<scalar>& tgtField,
+    const plusEqOp<scalar>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<vector>& srcField,
+    const Field<vector>& tgtField,
+    const plusEqOp<vector>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<sphericalTensor>& srcField,
+    const Field<sphericalTensor>& tgtField,
+    const plusEqOp<sphericalTensor>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<symmTensor>& srcField,
+    const Field<symmTensor>& tgtField,
+    const plusEqOp<symmTensor>& cop
+) const
+{}
+
+
+template<>
+void Foam::meshToMesh::mapAndOpTgtToSrc
+(
+    const AMIPatchToPatchInterpolation& AMI,
+    Field<tensor>& srcField,
+    const Field<tensor>& tgtField,
+    const plusEqOp<tensor>& cop
+) const
+{}
+
+
 Foam::labelList Foam::meshToMesh::maskCells
 (
     const polyMesh& src,
@@ -443,7 +553,11 @@ void Foam::meshToMesh::constructNoCuttingPatches
         forAll(srcBM, patchi)
         {
             const polyPatch& pp = srcBM[patchi];
-            if (!polyPatch::constraintType(pp.type()))
+
+            // We want to map all the global patches, including constraint
+            // patches (since they might have mappable properties, e.g.
+            // jumpCyclic). We'll fix the value afterwards.
+            if (!isA<processorPolyPatch>(pp))
             {
                 srcPatchID.append(pp.index());
 
