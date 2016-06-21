@@ -27,18 +27,25 @@ Class
 Description
     Fixed temperature equation constraint
 
-    Sources described by:
+Usage
+    \verbatim
+    fixedTemperature
+    {
+        type            fixedTemperatureConstraint;
+        active          yes;
 
         fixedTemperatureConstraintCoeffs
         {
-            mode            uniform;    // uniform or lookup
+            mode            uniform;      // uniform or lookup
 
             // For uniform option
             temperature     constant 500; // fixed temperature with time [K]
 
             // For lookup option
-            // T            <Tname>;     // optional temperature field name
+            // T            <Tname>;      // optional temperature field name
         }
+    }
+    \endverbatim
 
 Note:
     The 'uniform' option allows the use of a time-varying uniform temperature

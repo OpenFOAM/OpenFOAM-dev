@@ -40,51 +40,51 @@ Description
     functionObject the following entry would be specified:
 
     \verbatim
-        functions
+    functions
+    {
+        <functionObjectName>
         {
-            <functionObjectName>
-            {
-                type                functionObjectType;
-                libs                ("libMyFunctionObjectlib.so");
-                region              defaultRegion;
-                enabled             yes;
-                timeStart           0;
-                timeEnd             10;
-                writeControl        writeTime;
-                writeInterval       1;
-                ...
-            }
+            type                functionObjectType;
+            libs                ("libMyFunctionObjectlib.so");
+            region              defaultRegion;
+            enabled             yes;
+            timeStart           0;
+            timeEnd             10;
+            writeControl        writeTime;
+            writeInterval       1;
+            ...
         }
+    }
     \endverbatim
 
     Where:
     \table
         Property | Description                       | Required | Default value
         type     | Type of function object               | yes      |
-        libs | Libraries containing implementation | yes |
+        libs     | Libraries containing implementation   | yes      |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
         timeStart| Start time                            | no       |
         timeEnd  | End time                              | no       |
-        evaluateControl | See time controls below        | no       | timeStep
-        evaluateInterval   | Steps between output           | no       |
-        writeControl   | See time controls below        | no       | timeStep
-        writeInterval   | Steps between output           | no       |
+        evaluateControl  | See time controls below       | no       | timeStep
+        evaluateInterval | Steps between output          | no       |
+        writeControl     | See time controls below       | no       | timeStep
+        writeInterval    | Steps between output          | no       |
     \endtable
 
     Time controls:
     \table
         Option            | Description
         timeStep          | Execute/write every 'writeInterval' time-steps
-        writeTime        | Execute/write every 'writeInterval' output times
+        writeTime         | Execute/write every 'writeInterval' output times
         adjustableRunTime | Execute/write every 'writeInterval' run time period
         runTime           | Execute/write every 'writeInterval' run time period
-        clockTime       | Execute/write every 'writeInterval' clock time period
+        clockTime        | Execute/write every 'writeInterval' clock time period
         cpuTime           | Execute/write every 'writeInterval' CPU time period
         none              | Execute/write every time-step
     \endtable
 
-    The sub-dictionary name \c <functionObjectName> is chosen by the user, and
+    The sub-dictionary name \c \<functionObjectName\> is chosen by the user, and
     is typically used as the name of the output directory for any data written
     by the functionObject.  The \c type entry defines the type of function
     object properties that follow.  FunctionObjects are packaged into separate

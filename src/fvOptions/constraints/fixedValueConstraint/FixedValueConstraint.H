@@ -27,6 +27,7 @@ Class
 Description
     Constrain the field values within a specified region.
 
+Usage
     For example to set the turbulence properties within a porous region:
     \verbatim
     porosityTurbulence
