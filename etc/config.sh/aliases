@@ -38,9 +38,6 @@ alias wm32='wmSet WM_ARCH_OPTION=32'
 alias wmSP='wmSet WM_PRECISION_OPTION=SP'
 alias wmDP='wmSet WM_PRECISION_OPTION=DP'
 
-# Refresh the environment
-alias wmRefresh='wmSet $FOAM_SETTINGS'
-
 # Clear env
 alias wmUnset='. $WM_PROJECT_DIR/etc/config.sh/unset'
 
@@ -68,6 +65,18 @@ alias sol='cd $FOAM_SOLVERS'
 alias util='cd $FOAM_UTILITIES'
 alias tut='cd $FOAM_TUTORIALS'
 alias run='cd $FOAM_RUN'
+
+
+# Refresh the environment
+# ~~~~~~~~~~~~~~~~~~~~~~~
+unset wmRefresh
+wmRefresh()
+{
+    wmProjectDir=$WM_PROJECT_DIR
+    foamSettings=$FOAM_SETTINGS
+    wmUnset
+    . $wmProjectDir/etc/bashrc $foamSettings
+}
 
 
 # Change OpenFOAM version

@@ -105,7 +105,22 @@ setenv FOAM_SIGFPE
 ################################################################################
 
 # The old dirs to be cleaned from the environment variables
-set foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR $HOME/$WM_PROJECT/$LOGNAME $FOAM_SITE_APPBIN $FOAM_SITE_LIBBIN"
+set foamOldDirs=
+if ( $?WM_PROJECT_DIR ) then
+   set foamOldDirs="$foamOldDirs $WM_PROJECT_DIR"
+endif
+if ( $?WM_THIRD_PARTY_DIR ) then
+   set foamOldDirs="$foamOldDirs $WM_THIRD_PARTY_DIR"
+endif
+if ( $?WM_PROJECT ) then
+   set foamOldDirs="$foamOldDirs $HOME/$WM_PROJECT/$LOGNAME"
+endif
+if ( $?FOAM_SITE_APPBIN ) then
+   set foamOldDirs="$foamOldDirs $FOAM_SITE_APPBIN"
+endif
+if ( $?FOAM_SITE_LIBBIN ) then
+   set foamOldDirs="$foamOldDirs $FOAM_SITE_LIBBIN"
+endif
 
 # Location of installation
 # ~~~~~~~~~~~~~~~~~~~~~~~~

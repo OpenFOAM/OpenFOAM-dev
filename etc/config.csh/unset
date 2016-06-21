@@ -38,9 +38,13 @@ if ( $?WM_PROJECT_DIR ) then
 endif
 
 # The old dirs to be cleaned from the environment variables
-set foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR \
-    $HOME/$WM_PROJECT/$LOGNAME $WM_PROJECT_SITE \
-    $FOAM_SITE_APPBIN $FOAM_SITE_LIBBIN $ParaView_DIR"
+set foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR $HOME/$WM_PROJECT/$LOGNAME $FOAM_SITE_APPBIN $FOAM_SITE_LIBBIN"
+if ( $?WM_PROJECT_SITE ) then
+   set foamOldDirs="$foamOldDirs $WM_PROJECT_SITE"
+endif
+if ( $?ParaView_DIR ) then
+   set foamOldDirs="$foamOldDirs $ParaView_DIR"
+endif
 
 
 #------------------------------------------------------------------------------
@@ -125,6 +129,7 @@ unsetenv PV_PLUGIN_PATH
 #------------------------------------------------------------------------------
 # Unset CGAL-related environment variables
 
+unsetenv BOOST_ARCH_PATH
 unsetenv CGAL_ARCH_PATH
 
 

@@ -38,11 +38,9 @@ alias wm32 'wmSet WM_ARCH_OPTION=32'
 alias wmSP 'wmSet WM_PRECISION_OPTION=SP'
 alias wmDP 'wmSet WM_PRECISION_OPTION=DP'
 
-# Refresh the environment
-alias wmRefresh 'wmSet $FOAM_SETTINGS'
-
 # Clear env
 alias wmUnset 'source $WM_PROJECT_DIR/etc/config.csh/unset'
+
 
 # Toggle wmakeScheduler on/off
 #  - also need to set WM_HOSTS
@@ -68,6 +66,11 @@ alias sol 'cd $FOAM_SOLVERS'
 alias util 'cd $FOAM_UTILITIES'
 alias tut 'cd $FOAM_TUTORIALS'
 alias run 'cd $FOAM_RUN'
+
+
+# Refresh the environment
+# ~~~~~~~~~~~~~~~~~~~~~~~
+alias wmRefresh 'set wmProjectDir=$WM_PROJECT_DIR; set foamSettings=$FOAM_SETTINGS; wmUnset; source $wmProjectDir/etc/cshrc $foamSettings'
 
 
 # Change OpenFOAM version

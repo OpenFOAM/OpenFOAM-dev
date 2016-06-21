@@ -119,6 +119,7 @@ unset PV_PLUGIN_PATH
 #------------------------------------------------------------------------------
 # Unset CGAL-related environment variables
 
+unset BOOST_ARCH_PATH
 unset CGAL_ARCH_PATH
 
 
@@ -151,7 +152,6 @@ unalias wm32
 unalias wmSP
 unalias wmDP
 
-unalias wmRefresh
 unalias wmUnset
 
 unalias wmSchedOn
@@ -168,6 +168,7 @@ unalias util
 unalias tut
 unalias run
 
+unset wmRefresh
 unset foamVersion
 unset foamPV
 
