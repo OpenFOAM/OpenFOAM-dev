@@ -117,10 +117,11 @@ unset PV_PLUGIN_PATH
 
 
 #------------------------------------------------------------------------------
-# Unset CGAL-related environment variables
+# Unset foamyHexMesh-related environment variables
 
 unset BOOST_ARCH_PATH
 unset CGAL_ARCH_PATH
+unset FOAMY_HEX_MESH
 
 
 #------------------------------------------------------------------------------
