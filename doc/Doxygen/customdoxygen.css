@@ -1,10 +1,68 @@
 #titlearea
 {
-    height: 80px;
-    padding-left: 13px;
+    background-color: rgb(243, 243, 243);
+    height: 84px;
+    padding-top: 8px;
+    padding-left: 15px;
 }
 
 #projectlogo
 {
-    padding-bottom: 3px;
+    padding-right: 10px;
+}
+
+#titlearea, #projectname, #projectbrief, #projectnumber
+{
+    font-family: Lato, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#projectname
+{
+    font-size: 220%;
+}
+
+#projectname a
+{
+    color: rgba(0, 0, 0, 0.75);
+}
+
+#projectname a:hover, #projectbrief a:hover
+{
+    text-decoration: none;
+    color: rgba(0, 0, 0, 1);
+}
+
+#projectbrief
+{
+    font-size: 130%;
+}
+
+#projectbrief a
+{
+    color: rgba(0, 0, 0, 0.65);
+}
+
+#projectnumber a
+{
+    font-size: 160%;
+}
+
+/*
+#projectnumber a::before
+{
+    content: "v";
+}
+*/
+
+#titlearea::before
+{
+    padding-left: 300px;
+    position: absolute;
+    left: 18%;
+    top: 40px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    content: "C++ Source Code Guide";
+    font-size: 180%;
 }
