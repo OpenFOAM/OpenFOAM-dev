@@ -2387,4 +2387,4 @@ GENERATE_LEGEND        = YES
 # The default value is: YES.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_CLEANUP            = NO
+DOT_CLEANUP            = YES
