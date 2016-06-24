@@ -28,9 +28,6 @@
 #     Allwmake argument parser
 #
 # Usage
-#     # Declare the targetType and set to default for library building
-#     targetType=libso      # lib, libo or libso
-#
 #     # Declare genDoc and set to default if documentation building is supported
 #     genDoc=0              # 0 or 1
 #
@@ -65,11 +62,12 @@ USAGE
 USAGE_DOC
 
     # Print options for building libraries
-    test -n "$targetType" && cat<<USAGE_LIB
+cat<<USAGE_LIB
   lib               Compile statically linked archive lib (.a)
   libo              Compile statically linked lib (.o)
   libso             Compile dynamically linked lib (.so)
   dep               Compile dependency files
+  objects           Compile only
 USAGE_LIB
 
     exit 1
@@ -145,8 +143,7 @@ do
             genDoc=1
             ;;
         # Specify target type
-        lib | libo | libso | dep)
-            test -n "$targetType" || usage "invalid option '$1'"
+        lib | libo | libso | dep | objects)
             targetType=$1
             ;;
         --)

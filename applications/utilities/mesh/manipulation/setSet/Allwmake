@@ -16,6 +16,6 @@ then
     export LINK_FLAGS="-lreadline"
 fi
 
-wmake
+wmake $targetType
 
 #------------------------------------------------------------------------------

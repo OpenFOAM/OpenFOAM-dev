@@ -8,7 +8,7 @@ if [ ! -d ${WM_THIRD_PARTY_DIR}/tecio ]
 then
     echo "Did not find tecio in ${WM_THIRD_PARTY_DIR}. Not building foamToTecplot360."
 else
-    wmake
+    wmake $targetType
 fi
 
 #------------------------------------------------------------------------------

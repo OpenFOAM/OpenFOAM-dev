@@ -14,7 +14,7 @@ $WM_THIRD_PARTY_DIR/AllwmakeLibccmio
 # if the library built properly, the headers should exist too
 if [ -e $FOAM_EXT_LIBBIN/libccmio.so ]
 then
-    wmake ccm26ToFoam
+    wmake $targetType ccm26ToFoam
 fi
 
 #------------------------------------------------------------------------------

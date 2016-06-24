@@ -2,7 +2,6 @@
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Parse arguments for library compilation
-targetType=libso
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
@@ -27,7 +26,7 @@ wmakeLnInclude OpenFOAM
 wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
 Pstream/Allwmake $targetType $*
 
-OSspecific/${WM_OSTYPE:-POSIX}/Allwmake $*
+OSspecific/${WM_OSTYPE:-POSIX}/Allwmake $targetType $*
 wmake $targetType OpenFOAM
 
 wmake $targetType fileFormats

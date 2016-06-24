@@ -11,14 +11,14 @@ _foamEval SOURCE_CGAL_VERSIONS_ONLY=yes \
 
 set -x
 
-wmake -all blockMesh
-wmake -all extrude
-wmake -all extrude2DMesh
-wmake -all snappyHexMesh
+wmake -all $targetType blockMesh
+wmake -all $targetType extrude
+wmake -all $targetType extrude2DMesh
+wmake -all $targetType snappyHexMesh
 
 if [ -n "$FOAMY_HEX_MESH" ]
 then
-    foamyMesh/Allwmake $*
+    foamyMesh/Allwmake $targetType $*
 fi
 
 

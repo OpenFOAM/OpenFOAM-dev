@@ -2,10 +2,9 @@
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Parse arguments for library compilation
-targetType=libso
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 set -x
 
-(wmake $targetType BCs && wmake && wmake rhoCentralDyMFoam)
+(wmake $targetType BCs && wmake $targetType && wmake $targetType rhoCentralDyMFoam)
 
 #------------------------------------------------------------------------------

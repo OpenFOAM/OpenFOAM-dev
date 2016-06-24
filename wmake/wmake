@@ -83,6 +83,7 @@ or a special target:
   libso             Compile dynamically linked lib (.so)
   dep               Compile lnInclude and dependencies only
   updatedep         Compile dependencies only (in case of broken dependencies)
+  objects           Compile but not link
 
 USAGE
     exit 1
@@ -217,7 +218,7 @@ if [ "$all" = "all" ]
 then
     if [ -e Allwmake ]
     then
-        ./Allwmake
+        ./Allwmake $targetType
         exit $?
     else
         # Have to keep track of the main exit code for the call to "make"
@@ -322,6 +323,15 @@ then
     then
         targetType=libso
     fi
+elif grep -e '^ *EXE *=' "$MakeDir/files" >/dev/null 2>&1
+then
+    # Application. Remove any nonsense targetType
+    case "$targetType" in
+      lib*)
+        unset targetType
+        break
+        ;;
+    esac
 fi
 
 

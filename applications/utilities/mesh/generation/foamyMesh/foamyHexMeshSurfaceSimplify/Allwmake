@@ -7,7 +7,7 @@ set -x
 
 if [ -d "${FASTDUALOCTREE_SRC_PATH}" ]
 then
-    wmake
+    wmake $targetType
 fi
 
 #------------------------------------------------------------------------------
