@@ -39,8 +39,8 @@ boundaryField
     }
     outlet
     {
-        type            fixedValue;
-        value           uniform 100000;
+        type            totalPressure;
+        p0              $internalField;
     }
     walls
     {
