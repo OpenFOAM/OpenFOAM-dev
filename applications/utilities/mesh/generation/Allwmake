@@ -16,7 +16,7 @@ wmake -all extrude
 wmake -all extrude2DMesh
 wmake -all snappyHexMesh
 
-if [ -n "$CGAL_ARCH_PATH" -o "$cgal_version" = "cgal-system" ]
+if [ -n "$FOAMY_HEX_MESH" ]
 then
     foamyMesh/Allwmake $*
 fi
