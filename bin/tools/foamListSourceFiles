@@ -63,7 +63,6 @@ find -H $packDir                                                               \
    \( -type f -o -type l \)                                                    \
     ! -name "*~"                                                               \
  -a ! -name ".*~"                                                              \
- -a ! -name "*.orig"                                                           \
  -a ! -name "*.dep"                                                            \
  -a ! -name "*.o"                                                              \
  -a ! -name "*.so"                                                             \
