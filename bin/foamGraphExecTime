@@ -1,9 +1,9 @@
-#!/bin/csh -f
+#!/bin/sh
 #------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -28,17 +28,19 @@
 # Description
 #
 #------------------------------------------------------------------------------
-if (! -f "$1" ) then
-    echo "No file: '$1'"
-    exit 1
-endif
+Script=${0##*/}
 
-set tmpTime = newTime$$.dat
+if [ ! -f "$1" ]; then
+    echo "$Script: $1 is not a valid filename"
+    exit 1
+fi
+
+tmpTime=newTime$$.dat
 cat $1 | grep "ExecutionTime = " | awk 'BEGIN { NENTRIES = 0 ; TPREV = 0.0 }{NENTRIES++; printf("%f %e\n", NENTRIES, $3 - TPREV); TPREV = $3}' - > $tmpTime
 
-set linesExec = `cat $tmpTime | wc -l`
+linesExec=$(cat $tmpTime | wc -l)
 
-set ngraphs = 0
+ngraphs=0
 
 cat << EOF > executionTime.dat
 Solver Performance
@@ -49,14 +51,14 @@ time/iteration
 1
 EOF
 
-if ($linesExec > 1) then
+if [ "$linesExec" -gt 1 ]; then
 cat << EOF >> executionTime.dat
 time
 0
 $linesExec
 EOF
 cat $tmpTime >> executionTime.dat
-endif
+fi
 
 rm $tmpTime
 

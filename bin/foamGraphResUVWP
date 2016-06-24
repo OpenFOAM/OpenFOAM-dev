@@ -1,9 +1,9 @@
-#!/bin/csh -f
+#!/bin/sh
 #------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -28,45 +28,47 @@
 # Description
 #
 #------------------------------------------------------------------------------
-if (! -f "$1" ) then
-    echo "No file: '$1'"
-    exit 1
-endif
+Script=${0##*/}
 
-set tmpU = newU$$.dat
+if [ ! -f "$1" ]; then
+    echo "$Script: $1 is not a valid filename"
+    exit 1
+fi
+
+tmpU=newU$$.dat
 cat $1 | grep "Solving for Ux" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpU
 
-set tmpV = newV$$.dat
+tmpV=newV$$.dat
 cat $1 | grep "Solving for Uy" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpV
 
-set tmpW = newW$$.dat
+tmpW=newW$$.dat
 cat $1 | grep "Solving for Uz" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpW
 
-set tmpP = newP$$.dat
+tmpP=newP$$.dat
 cat $1 | grep "Solving for p" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpP
 
-set linesU = `cat $tmpU | wc -l`
-set linesV = `cat $tmpV | wc -l`
-set linesW = `cat $tmpW | wc -l`
-set linesP = `cat $tmpP | wc -l`
+linesU=$(cat $tmpU | wc -l)
+linesV=$(cat $tmpV | wc -l)
+linesW=$(cat $tmpW | wc -l)
+linesP=$(cat $tmpP | wc -l)
 
-set ngraphs = 0
+ngraphs=0
 
-if ($linesU > 1) then
-@ ngraphs = $ngraphs + 1
-endif
+if [ "$linesU" -gt 1 ]; then
+  ngraphs=$(($ngraphs+1))
+fi
 
-if ($linesV > 1) then
-@ ngraphs = $ngraphs + 1
-endif
+if [ "$linesV" -gt 1 ]; then
+  ngraphs=$(($ngraphs+1))
+fi
 
-if ($linesW > 1) then
-@ ngraphs = $ngraphs + 1
-endif
+if [ "$linesW" -gt 1 ]; then
+  ngraphs=$(($ngraphs+1))
+fi
 
-if ($linesP > 1) then
-@ ngraphs = $ngraphs + 1
-endif
+if [ "$linesP" -gt 1 ]; then
+  ngraphs=$(($ngraphs+1))
+fi
 
 cat << EOF > residualUVWP.dat
 EOF
@@ -78,7 +80,7 @@ EOF
 #$ngraphs
 #EOF
 
-if ($linesU > 1) then
+if [ "$linesU" -gt 1 ]; then
 cat << EOF >> residualUVWP.dat
 
 EOF
@@ -87,9 +89,9 @@ EOF
 #$linesU
 #EOF
 cat $tmpU >> residualUVWP.dat
-endif
+fi
 
-if ($linesV > 1) then
+if [ "$linesV" -gt 1 ]; then
 cat << EOF >> residualUVWP.dat
 
 EOF
@@ -98,9 +100,9 @@ EOF
 #$linesV
 #EOF
 cat $tmpV >> residualUVWP.dat
-endif
+fi
 
-if ($linesW > 1) then
+if [ "$linesW" -gt 1 ]; then
 cat << EOF >> residualUVWP.dat
 
 EOF
@@ -109,9 +111,9 @@ EOF
 #$linesW
 #EOF
 cat $tmpW >> residualUVWP.dat
-endif
+fi
 
-if ($linesP > 1) then
+if [ "$linesP" -gt 1 ]; then
 cat << EOF >> residualUVWP.dat
 
 EOF
@@ -120,7 +122,7 @@ EOF
 #$linesP
 #EOF
 cat $tmpP >> residualUVWP.dat
-endif
+fi
 
 rm $tmpU
 rm $tmpV
