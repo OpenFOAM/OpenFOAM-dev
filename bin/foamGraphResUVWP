@@ -26,7 +26,10 @@
 #     foamGraphResUVWP
 #
 # Description
+#     Deprecated script extract initial velocity and pressure residuals for each
+#     time-step from a log file for graphing.
 #
+#     Superceded by the more general foamLog script.
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
@@ -35,98 +38,27 @@ if [ ! -f "$1" ]; then
     exit 1
 fi
 
-tmpU=newU$$.dat
-cat $1 | grep "Solving for Ux" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpU
+scan()
+{
+    tmpFile=new$1$$.dat
+    cat $2 | \
+        grep "Solving for $1" | \
+        grep -v "solution singularity" | \
+        sed s/,//g | \
+        awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpFile
 
-tmpV=newV$$.dat
-cat $1 | grep "Solving for Uy" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpV
+    if [ "$(cat $tmpFile | wc -l)" -gt 1 ]; then
+        echo >> residualUVWP.dat
+        cat $tmpFile >> residualUVWP.dat
+    fi
 
-tmpW=newW$$.dat
-cat $1 | grep "Solving for Uz" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpW
+    rm $tmpFile
+}
 
-tmpP=newP$$.dat
-cat $1 | grep "Solving for p" | grep -v "solution singularity" | sed s/,//g | awk 'BEGIN { NENTRIES = 0 }{NENTRIES++; printf("%d %e\n", NENTRIES, $8)}' - > $tmpP
-
-linesU=$(cat $tmpU | wc -l)
-linesV=$(cat $tmpV | wc -l)
-linesW=$(cat $tmpW | wc -l)
-linesP=$(cat $tmpP | wc -l)
-
-ngraphs=0
-
-if [ "$linesU" -gt 1 ]; then
-  ngraphs=$(($ngraphs+1))
-fi
-
-if [ "$linesV" -gt 1 ]; then
-  ngraphs=$(($ngraphs+1))
-fi
-
-if [ "$linesW" -gt 1 ]; then
-  ngraphs=$(($ngraphs+1))
-fi
-
-if [ "$linesP" -gt 1 ]; then
-  ngraphs=$(($ngraphs+1))
-fi
-
-cat << EOF > residualUVWP.dat
-EOF
-#Solver Performance
-#number of iterations
-#residual
-#0 0
-#0 0
-#$ngraphs
-#EOF
-
-if [ "$linesU" -gt 1 ]; then
-cat << EOF >> residualUVWP.dat
-
-EOF
-#U
-#0
-#$linesU
-#EOF
-cat $tmpU >> residualUVWP.dat
-fi
-
-if [ "$linesV" -gt 1 ]; then
-cat << EOF >> residualUVWP.dat
-
-EOF
-#V
-#0
-#$linesV
-#EOF
-cat $tmpV >> residualUVWP.dat
-fi
-
-if [ "$linesW" -gt 1 ]; then
-cat << EOF >> residualUVWP.dat
-
-EOF
-#W
-#0
-#$linesW
-#EOF
-cat $tmpW >> residualUVWP.dat
-fi
-
-if [ "$linesP" -gt 1 ]; then
-cat << EOF >> residualUVWP.dat
-
-EOF
-#P
-#0
-#$linesP
-#EOF
-cat $tmpP >> residualUVWP.dat
-fi
-
-rm $tmpU
-rm $tmpV
-rm $tmpW
-rm $tmpP
+rm -f residualUVWP.dat
+scan "Ux" $1
+scan "Uy" $1
+scan "Uz" $1
+scan "p" $1
 
 #------------------------------------------------------------------------------

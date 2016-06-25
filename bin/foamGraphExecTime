@@ -26,7 +26,10 @@
 #     foamGraphExecTime
 #
 # Description
+#     Deprecated script extract the 'ExecutionTime' for each time-step from a
+#     log file for graphing.
 #
+#     Superceded by the more general foamLog script.
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
@@ -36,30 +39,14 @@ if [ ! -f "$1" ]; then
 fi
 
 tmpTime=newTime$$.dat
-cat $1 | grep "ExecutionTime = " | awk 'BEGIN { NENTRIES = 0 ; TPREV = 0.0 }{NENTRIES++; printf("%f %e\n", NENTRIES, $3 - TPREV); TPREV = $3}' - > $tmpTime
+cat $1 | \
+    grep "ExecutionTime = " | \
+    awk 'BEGIN { NENTRIES = 0 ; TPREV = 0.0 }{NENTRIES++; printf("%f %e\n", NENTRIES, $3 - TPREV); TPREV = $3}' - > $tmpTime
 
-linesExec=$(cat $tmpTime | wc -l)
-
-ngraphs=0
-
-cat << EOF > executionTime.dat
-Solver Performance
-iterations
-time/iteration
-0 0
-0 0
-1
-EOF
-
-if [ "$linesExec" -gt 1 ]; then
-cat << EOF >> executionTime.dat
-time
-0
-$linesExec
-EOF
-cat $tmpTime >> executionTime.dat
+if [ "$(cat $tmpTime | wc -l)" -gt 1 ]; then
+    mv $tmpTime executionTime.dat
 fi
 
-rm $tmpTime
+rm -f $tmpTime
 
 #------------------------------------------------------------------------------

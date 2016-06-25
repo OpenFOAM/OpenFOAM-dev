@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -26,10 +26,8 @@
 #     foamLog
 #
 # Description
-#     extracts info from log file
+#     Script extract data for each time-step from a log file for graphing.
 #
-# Bugs
-#     -solution singularity not handled
 #------------------------------------------------------------------------------
 Script=${0##*/}
 toolsDir=${0%/*}/tools
@@ -106,7 +104,7 @@ usage
 timeName=Time
 unset listOpt quietOpt localDB
 
-# parse options
+# Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
@@ -139,17 +137,17 @@ do
     esac
 done
 
-# find the database file
+# Find the database file
 DBFILE=$Script.db
 [ -f $DBFILE ] || DBFILE=`foamEtcFile $Script.db` || DBFILE=$toolsDir/$Script.db
 
-# need the database file
+# Heed the database file
 [ -f $DBFILE ] || {
     echo "$Script: Cannot read database $DBFILE"
     exit 1
 }
 
-# single logFile
+# Single logFile
 if [ $# -eq 1 ]
 then
     LOG=$1
