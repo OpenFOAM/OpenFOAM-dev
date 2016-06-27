@@ -130,13 +130,24 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 
         if (bodyDict.found("patches"))
         {
+            const label bodyID = model_.bodyID(iter().keyword());
+
+            if (bodyID == -1)
+            {
+                FatalErrorInFunction
+                    << "Body " << iter().keyword()
+                    << " has been merged with another body"
+                       " and cannot be assigned a set of patches"
+                    << exit(FatalError);
+            }
+
             bodyMeshes_.append
             (
                 new bodyMesh
                 (
                     mesh,
                     iter().keyword(),
-                    model_.bodyID(iter().keyword()),
+                    bodyID,
                     bodyDict
                 )
             );
