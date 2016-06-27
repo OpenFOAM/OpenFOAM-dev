@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes the cell-centres volVectorField and the three component fields as
+    volScalarFields useful for post-processing
+    thresholding.
+
+\*---------------------------------------------------------------------------*/
+
+type            writeCellCentres;
+libs            ("libfieldFunctionObjects.so");
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

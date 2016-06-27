@@ -54,4 +54,7 @@ turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C
 wallShearStress/wallShearStress.C
 
+writeCellCentres/writeCellCentres.C
+writeCellVolumes/writeCellVolumes.C
+
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects
