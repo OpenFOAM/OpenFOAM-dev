@@ -27,13 +27,8 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 template<class Type>
-bool fieldOk(const IOobjectList& cloudObjs, const word& name)
+bool Foam::fieldOk(const IOobjectList& cloudObjs, const word& name)
 {
     IOobjectList objects(cloudObjs.lookupClass(IOField<Type>::typeName));
 
@@ -42,7 +37,7 @@ bool fieldOk(const IOobjectList& cloudObjs, const word& name)
 
 
 template<class Type>
-tmp<Field<Type>> readParticleField
+Foam::tmp<Foam::Field<Type>> Foam::readParticleField
 (
     const word& name,
     const IOobjectList cloudObjs
@@ -66,7 +61,7 @@ tmp<Field<Type>> readParticleField
 
 
 template<class Type>
-void readFields
+void Foam::readFields
 (
     PtrList<List<Type>>& values,
     const List<word>& fieldNames,
@@ -95,7 +90,7 @@ void readFields
 
 
 template<class Type>
-void writeVTK(OFstream& os, const Type& value)
+void Foam::writeVTK(OFstream& os, const Type& value)
 {
     os  << value.component(0);
     for (label i=1; i<pTraits<Type>::nComponents; i++)
@@ -106,7 +101,7 @@ void writeVTK(OFstream& os, const Type& value)
 
 
 template<class Type>
-void writeVTKFields
+void Foam::writeVTKFields
 (
     OFstream& os,
     const PtrList<List<Type>>& values,
@@ -147,7 +142,7 @@ void writeVTKFields
 
 
 template<class Type>
-void processFields
+void Foam::processFields
 (
     OFstream& os,
     const List<List<label>>& addr,
@@ -183,8 +178,5 @@ void processFields
     }
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

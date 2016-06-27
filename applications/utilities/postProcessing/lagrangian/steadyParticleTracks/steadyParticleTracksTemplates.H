@@ -39,42 +39,44 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    bool fieldOk(const IOobjectList& cloudObjs, const word& name);
+template<class Type>
+bool fieldOk(const IOobjectList& cloudObjs, const word& name);
 
-    template<class Type>
-    tmp<Field<Type>> readParticleField
-    (
-        const word& name,
-        const IOobjectList cloudObjs
-    );
+template<class Type>
+tmp<Field<Type>> readParticleField
+(
+    const word& name,
+    const IOobjectList cloudObjs
+);
 
-    template<class Type>
-    void readFields
-    (
-        PtrList<List<Type>>& values,
-        const List<word>& fields,
-        const IOobjectList& cloudObjs
-    );
+template<class Type>
+void readFields
+(
+    PtrList<List<Type>>& values,
+    const List<word>& fields,
+    const IOobjectList& cloudObjs
+);
 
-    template<class Type>
-    void writeVTK(OFstream& os, const Type& value);
+template<class Type>
+void writeVTK(OFstream& os, const Type& value);
 
-    template<class Type>
-    void writeVTKFields
-    (
-        OFstream& os,
-        const PtrList<List<Type>>& values,
-        const List<SortableList<scalar>>& agePerTrack,
-        const List<word>& fieldNames
-    );
+template<class Type>
+void writeVTKFields
+(
+    OFstream& os,
+    const PtrList<List<Type>>& values,
+    const List<List<label>>& addr,
+    const List<word>& fieldNames
+);
 
-    void processFields
-    (
-        OFstream& os,
-        const List<SortableList<scalar>>& agePerTrack,
-        const List<word>& userFieldNames,
-        const IOobjectList& cloudObjs
-    );
+template<class Type>
+void processFields
+(
+    OFstream& os,
+    const List<SortableList<scalar>>& agePerTrack,
+    const List<word>& userFieldNames,
+    const IOobjectList& cloudObjs
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
