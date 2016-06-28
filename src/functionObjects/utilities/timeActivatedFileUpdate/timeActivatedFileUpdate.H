@@ -37,9 +37,9 @@ Description
     fileUpdate1
     {
         type              timeActivatedFileUpdate;
-        libs ("libutilityFunctionObjects.so");
-        writeControl     timeStep;
-        writeInterval    1;
+        libs              ("libutilityFunctionObjects.so");
+        writeControl      timeStep;
+        writeInterval     1;
         fileToUpdate      "$FOAM_CASE/system/fvSolution";
         timeVsFile
         (

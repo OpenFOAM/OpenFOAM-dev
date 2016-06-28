@@ -27,8 +27,7 @@ Class
 Group grpFieldFunctionObjects
 
 Description
-    This function object linearly interpolates volume fields to generate
-    surface fields
+    Linearly interpolates volume fields to generate surface fields.
 
     Fields are stored
     - every time step the field is updated with new values
@@ -43,7 +42,7 @@ Description
     surfaceInterpolate1
     {
         type        surfaceInterpolate;
-        libs ("libfieldFunctionObjects.so");
+        libs        ("libfieldFunctionObjects.so");
         ...
         fields      ((p pNear)(U UNear));
     }

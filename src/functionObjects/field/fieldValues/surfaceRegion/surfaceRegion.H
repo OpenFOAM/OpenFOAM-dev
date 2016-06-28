@@ -28,10 +28,11 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object provides a 'face regionType' variant of the fieldValues
-    function object.  Given a list of user-specified fields and a selection
-    of mesh (or general surface) faces, a number of operations can be
-    performed, such as sums, averages and integrations.
+    Provides a 'face regionType' variant of the fieldValues function object.
+
+    Given a list of user-specified fields and a selection of mesh (or general
+    surface) faces, a number of operations can be performed, such as sums,
+    averages and integrations.
 
     For example, to calculate the volumetric or mass flux across a patch,
     apply the 'sum' operator to the flux field (typically \c phi)
@@ -41,7 +42,7 @@ Description
     surfaceRegion1
     {
         type            surfaceRegion;
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
         ...
         log             yes;
         writeFields     true;

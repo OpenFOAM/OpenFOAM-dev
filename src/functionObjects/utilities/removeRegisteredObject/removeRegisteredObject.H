@@ -28,14 +28,14 @@ Group
     grpUtilitiesFunctionObjects
 
 Description
-    This function object removes registered objects if present in the database
+    Removes registered objects if present in the database.
 
     Example of function object specification:
     \verbatim
     removeRegisteredObject1
     {
         type        removeRegisteredObject;
-        libs ("libutilityFunctionObjects.so");
+        libs        ("libutilityFunctionObjects.so");
         ...
         objectNames (obj1 obj2);
     }

@@ -28,7 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object writes the cell-volumes volScalarField.
+    Writes the cell-volumes volScalarField.
 
     Example of function object specification:
     \verbatim

@@ -28,8 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates and outputs the Peclet number as a
-    surfaceScalarField.
+    Calculates and outputs the Peclet number as a surfaceScalarField.
 
 See also
     Foam::functionObjects::fieldExpression

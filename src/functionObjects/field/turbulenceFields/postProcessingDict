@@ -19,10 +19,10 @@ functions
     turbulenceFields1
     {
         type            turbulenceFields;
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
         enabled         true;
-        writeControl   timeStep;
-        writeInterval  1;
+        writeControl    timeStep;
+        writeInterval   1;
 
         fields
         (

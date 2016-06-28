@@ -28,8 +28,8 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object writes the turbulent flame-speed and reaction-rate
-    volScalarFields for the Xi-based combustion models.
+    Writes the turbulent flame-speed and reaction-rate volScalarFields for the
+    Xi-based combustion models.
 
     Example of function object specification:
     \verbatim

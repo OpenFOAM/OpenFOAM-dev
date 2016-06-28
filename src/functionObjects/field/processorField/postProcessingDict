@@ -22,13 +22,13 @@ functions
         type            processorField;
 
         // Where to load it from (if not already in solver)
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
 
         // Function object enabled flag
         enabled         true;
 
         // When to output the average fields
-        writeControl   writeTime;
+        writeControl    writeTime;
     }
 }
 

@@ -28,8 +28,8 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates and outputs the second invariant of the
-    velocity gradient tensor [1/s^2].
+    Calculates and outputs the second invariant of the velocity gradient tensor
+    [1/s^2].
 
     \f[
         Q = 0.5(sqr(tr(\nabla U)) - tr(((\nabla U) \cdot (\nabla U))))

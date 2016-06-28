@@ -19,10 +19,10 @@ functions
     cloudInfo1
     {
         type            cloudInfo;
-        libs ("libcloudFunctionObjects.so");
+        libs            ("libcloudFunctionObjects.so");
         enabled         true;
-        writeControl   timeStep;
-        writeInterval  1;
+        writeControl    timeStep;
+        writeInterval   1;
 
         clouds          (myCloud1);
     }

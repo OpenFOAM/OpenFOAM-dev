@@ -28,18 +28,19 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates the value and location of scalar minimim
-    and maximum for a list of user-specified fields.  For variables with a rank
-    greater than zero, either the min/max of a component value or the magnitude
-    is reported.  When operating in parallel, the processor owning the value
-    is also given.
+    Calculates the value and location of scalar minimim and maximum for a list
+    of user-specified fields.
+
+    For variables with a rank greater than zero, either the min/max of a
+    component value or the magnitude is reported.  When operating in parallel,
+    the processor owning the value is also given.
 
     Example of function object specification:
     \verbatim
     fieldMinMax1
     {
         type        fieldMinMax;
-        libs ("libfieldFunctionObjects.so");
+        libs        ("libfieldFunctionObjects.so");
         ...
         write       yes;
         log         yes;

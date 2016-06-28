@@ -28,8 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object stores turbulence fields on the mesh database for
-    further manipulation.
+    Stores turbulence fields on the mesh database for further manipulation.
 
     Fields are stored as copies of the original, with the prefix
     "tubulenceModel:", e.g.:
@@ -43,7 +42,7 @@ Description
     turbulenceFields1
     {
         type        turbulenceFields;
-        libs ("libfieldFunctionObjects.so");
+        libs        ("libfieldFunctionObjects.so");
         ...
         fields
         (

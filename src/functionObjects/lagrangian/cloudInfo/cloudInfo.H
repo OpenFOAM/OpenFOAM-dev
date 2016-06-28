@@ -28,8 +28,9 @@ Group
     grpLagrangianFunctionObjects
 
 Description
-    This function object outputs Lagrangian cloud information to a file.  The
-    current outputs include:
+    Outputs Lagrangian cloud information to a file.
+
+    The current outputs include:
     - total current number of parcels
     - total current mass of parcels
 
@@ -38,7 +39,7 @@ Description
     cloudInfo1
     {
         type        cloudInfo;
-        libs ("libcloudFunctionObjects.so");
+        libs        ("libcloudFunctionObjects.so");
         ...
         clouds
         (

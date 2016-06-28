@@ -28,9 +28,9 @@ Group
     grpUtilitiesFunctionObjects
 
 Description
-    This function object executes system calls, entered in the form of a
-    string lists.  Calls can be made at the following points in the
-    calculation:
+    Executes system calls, entered in the form of a string lists.
+
+    Calls can be made at the following points in the calculation:
     - every time step
     - every output time
     - end of the calculation
@@ -40,7 +40,7 @@ Description
     systemCall1
     {
         type        systemCall;
-        libs ("libsystemCall.so");
+        libs        ("libsystemCall.so");
         ...
         executeCalls
         (

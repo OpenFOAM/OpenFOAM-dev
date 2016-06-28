@@ -28,7 +28,7 @@ Group
     grpUtilitiesFunctionObjects
 
 Description
-    This function object writes out the initial residual for specified fields.
+    Writes out the initial residual for specified fields.
 
     Example of function object specification:
     \verbatim

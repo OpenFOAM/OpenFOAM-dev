@@ -49,7 +49,7 @@ functions
     near
     {
         // Where to load it from
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
 
         type nearWallFields;
 

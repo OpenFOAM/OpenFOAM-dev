@@ -28,9 +28,9 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object includes tools to manipulate the pressure into
-    different forms.  These currently include:
+    Includes tools to manipulate the pressure into different forms.
 
+    These currently include:
     - static pressure
         \f[
             p = \rho p_k
@@ -81,7 +81,7 @@ Description
     pressure1
     {
         type        pressure;
-        libs ("libfieldFunctionObjects.so");
+        libs        ("libfieldFunctionObjects.so");
         ...
         calcTotal   no;
         calcCoeff   yes;

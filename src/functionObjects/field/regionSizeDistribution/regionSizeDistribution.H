@@ -28,8 +28,8 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object creates a size distribution via interrogating a
-    continuous phase fraction field.
+    Creates a size distribution via interrogating a continuous phase fraction
+    field.
 
     Looks up a phase-fraction (alpha) field and splits the mesh into regions
     based on where the field is below the threshold value.  These
@@ -59,7 +59,7 @@ Description
     regionSizeDistribution1
     {
         type            regionSizeDistribution;
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
         ...
         field           alpha;
         patches         (inlet);

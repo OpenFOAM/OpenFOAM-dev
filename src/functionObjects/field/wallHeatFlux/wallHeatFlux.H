@@ -22,137 +22,137 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::histogram
+    Foam::functionObjects::wallHeatFlux
 
 Group
-    grpFieldFunctionObjects
+    grpForcesFunctionObjects
 
 Description
-    Write the volume-weighted histogram of a volScalarField.
+    Calculates and write the heat-flux at wall patches as the
+    volScalarField field 'wallHeatFlux'.
 
-    Example:
+    All wall patches are included by default; to restrict the calculation to
+    certain patches, use the optional 'patches' entry.
+
+    Example of function object specification:
     \verbatim
-    histogram1
+    wallHeatFlux1
     {
-        type            histogram;
-
-        libs            ("libfieldFunctionObjects.so");
-
-        field           p;
-        nBins           100;
-        min             -5;
-        max             5;
-        setFormat       gnuplot;
+        type        wallHeatFlux;
+        libs        ("libfieldFunctionObjects.so");
+        ...
+        patches     (".*Wall");
     }
     \endverbatim
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | type name: histogram    | yes         |
-        field        | Field to analyse        | yes         |
-        nBins        | Number of bins for the histogram | yes|
-        max          | Maximum value sampled   | yes         |
-        min          | minimum value sampled   | no          | 0
-        setFormat    | Output format           | yes         |
+        Property | Description                | Required   | Default value
+        type     | type name: wallHeatFlux    | yes        |
+        patches  | list of patches to process | no         | all wall patches
     \endtable
 
 See also
     Foam::functionObject
-    Foam::functionObjects::writeFile
+    Foam::functionObjects::writeFiles
+    Foam::functionObjects::pressureTools
+    Foam::functionObjects::timeControl
 
 SourceFiles
-    histogram.C
+    wallHeatFlux.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_histogram_H
-#define functionObjects_histogram_H
+#ifndef functionObjects_wallHeatFlux_H
+#define functionObjects_wallHeatFlux_H
 
-#include "writer.H"
-#include "writeFile.H"
+#include "writeFiles.H"
+#include "volFieldsFwd.H"
+#include "surfaceFieldsFwd.H"
+#include "HashSet.H"
+#include "turbulentFluidThermoModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of classes
+class fvMesh;
+
 namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class histogram Declaration
+                       Class wallHeatFlux Declaration
 \*---------------------------------------------------------------------------*/
 
-class histogram
+class wallHeatFlux
 :
-    public writeFile
+    public writeFiles
 {
-    // Private data
+protected:
 
-        //- Name of field
-        word fieldName_;
+    // Protected data
 
-        //- Maximum value
-        scalar max_;
-
-        //- Minimum value
-        scalar min_;
-
-        //- Mumber of bins
-        label nBins_;
-
-        //- Output formatter to write
-        autoPtr<writer<scalar>> formatterPtr_;
+        //- Optional list of patches to process
+        labelHashSet patchSet_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
-        void writeGraph
+        //- File header information
+        virtual void writeFileHeader(const label i);
+
+        //- Calculate the heat-flux
+        void calcHeatFlux
         (
-            const coordSet& coords,
-            const word& valueName,
-            const scalarField& values
-        ) const;
+            const compressible::turbulenceModel& turbModel,
+            volScalarField& wallHeatFlux
+        );
+
+
+private:
+
+    // Private member functions
 
         //- Disallow default bitwise copy construct
-        histogram(const histogram&);
+        wallHeatFlux(const wallHeatFlux&);
 
         //- Disallow default bitwise assignment
-        void operator=(const histogram&);
+        void operator=(const wallHeatFlux&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("histogram");
+    TypeName("wallHeatFlux");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        histogram
+        wallHeatFlux
         (
             const word& name,
             const Time& runTime,
-            const dictionary& dict
+            const dictionary&
         );
 
 
-    // Destructor
-    virtual ~histogram();
+    //- Destructor
+    virtual ~wallHeatFlux();
 
 
     // Member Functions
 
-        //- Read the histogram data
+        //- Read the wallHeatFlux data
         virtual bool read(const dictionary&);
 
-        //- Execute, currently does nothing
+        //- Calculate the wall heat-flux
         virtual bool execute();
 
-        //- Calculate the histogram and write.
-        //  postProcess overrides the usual writeControl behaviour and
-        //  forces writing always (used in post-processing mode)
+        //- Write the wall heat-flux
         virtual bool write();
 };
 

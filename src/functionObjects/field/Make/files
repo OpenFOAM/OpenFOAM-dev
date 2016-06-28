@@ -53,10 +53,12 @@ MachNo/MachNo.C
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C
 wallShearStress/wallShearStress.C
+wallHeatFlux/wallHeatFlux.C
 
 writeCellCentres/writeCellCentres.C
 writeCellVolumes/writeCellVolumes.C
 
 XiReactionRate/XiReactionRate.C
+streamFunction/streamFunction.C
 
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects

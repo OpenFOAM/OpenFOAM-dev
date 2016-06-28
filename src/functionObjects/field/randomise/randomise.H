@@ -28,8 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object adds a random component to a field,
-    with a specified perturbation magnitude.
+    Adds a random component to a field, with a specified perturbation magnitude.
 
     The operation can be applied to any volume field.
 

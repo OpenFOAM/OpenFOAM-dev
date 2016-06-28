@@ -28,8 +28,8 @@ Group
     grpUtilitiesFunctionObjects
 
 Description
-    This function object allows specification of different writing frequency
-    of objects registered to the database.
+    Allows specification of different writing frequency of objects registered to
+    the database.
 
     It has similar functionality as the main time database through the
     writeControl setting:

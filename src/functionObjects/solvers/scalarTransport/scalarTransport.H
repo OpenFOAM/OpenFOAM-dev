@@ -28,7 +28,7 @@ Group
     grpSolversFunctionObjects
 
 Description
-    This function object evolves a passive scalar transport equation.
+    Evolves a passive scalar transport equation.
 
     - To specify the field name set the 'field' entry
     - To employ the same numerical schemes as another field set

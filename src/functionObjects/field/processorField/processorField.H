@@ -28,15 +28,15 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object writes a scalar field whose value is the local
-    processor ID.  The output field name is 'processorID'.
+    Writes a scalar field whose value is the local processor ID.  The output
+    field name is 'processorID'.
 
     Example of function object specification:
     \verbatim
     processorField1
     {
         type        processorField;
-        libs ("libfieldFunctionObjects.so");
+        libs        ("libfieldFunctionObjects.so");
         ...
     }
     \endverbatim

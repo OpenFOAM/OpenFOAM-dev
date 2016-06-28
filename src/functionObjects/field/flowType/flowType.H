@@ -28,7 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates and writes the flowType of a velocity field.
+    Calculates and writes the flowType of a velocity field.
 
     The flow type parameter is obtained according to the following equation:
     \verbatim

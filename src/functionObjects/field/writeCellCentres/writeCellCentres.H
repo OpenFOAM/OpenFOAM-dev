@@ -28,8 +28,8 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object writes the cell-centres volVectorField and the
-    three component fields as volScalarFields.
+    Writes the cell-centres volVectorField and the three component fields as
+    volScalarFields.
 
     Example of function object specification:
     \verbatim

@@ -52,7 +52,7 @@ functions
         type            fieldMinMax;
 
         // Where to load it from (if not already in solver)
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
 
         // Function object enabled flag
         enabled         true;

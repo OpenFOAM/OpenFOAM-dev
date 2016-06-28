@@ -28,7 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    This function object calculates the enstrophy of the velocity.
+    Calculates the enstrophy of the velocity.
 
 See also
     Foam::functionObjects::fieldExpression

@@ -28,9 +28,8 @@ Group
     grpForcesFunctionObjects
 
 Description
-    This function object evaluates and outputs the shear stress at wall
-    patches.  The result is written as a volVectorField to time directories as
-    field 'wallShearStress'
+    Calculates and write the shear-stress at wall patches as
+    the volVectorField field 'wallShearStress'.
 
         \f[
             Stress = R \dot n
@@ -42,16 +41,16 @@ Description
         n       | patch normal vector (into the domain)
     \endvartable
 
-    The shear stress (symmetrical) tensor field is retrieved from the
-    turbulence model.  All wall patches are included by default; to restrict
-    the calculation to certain patches, use the optional 'patches' entry.
+    The shear-stress symmetric tensor field is retrieved from the turbulence
+    model.  All wall patches are included by default; to restrict the
+    calculation to certain patches, use the optional 'patches' entry.
 
     Example of function object specification:
     \verbatim
     wallShearStress1
     {
         type        wallShearStress;
-        libs ("libfieldFunctionObjects.so");
+        libs        ("libfieldFunctionObjects.so");
         ...
         patches     (".*Wall");
     }
@@ -114,7 +113,7 @@ protected:
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Calculate the shear stress
+        //- Calculate the shear-stress
         void calcShearStress
         (
             const fvMesh& mesh,
