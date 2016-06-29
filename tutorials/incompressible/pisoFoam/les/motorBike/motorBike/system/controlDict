@@ -72,10 +72,10 @@ functions
     cuttingPlane
     {
         type            surfaces;
-        libs ( "libsampling.so" );
+        libs            ("libsampling.so");
         writeControl    writeTime;
         surfaceFormat   vtk;
-        fields          ( p U );
+        fields          (p U);
         interpolationScheme cellPoint;
         surfaces
         (
@@ -85,8 +85,8 @@ functions
                 planeType pointAndNormal;
                 pointAndNormalDict
                 {
-                    basePoint (0 0 0);
-                    normalVector (0 1 0);
+                    point   (0 0 0);
+                    normal  (0 1 0);
                 }
                 interpolate true;
             }
@@ -95,10 +95,10 @@ functions
     forces
     {
         type            forceCoeffs;
-        libs ( "libforces.so" );
-        writeControl   timeStep;
-        writeInterval  1;
-        patches         ( "motorBike.*" );
+        libs            ("libforces.so");
+        writeControl    timeStep;
+        writeInterval   1;
+        patches         ("motorBike.*");
         rho             rhoInf;
         log             true;
         rhoInf          1;

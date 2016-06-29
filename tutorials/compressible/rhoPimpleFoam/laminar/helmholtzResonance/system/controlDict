@@ -53,12 +53,12 @@ functions
 {
     probes
     {
-        libs ( "libsampling.so" );
-        type probes;
-        name probes;
-        writeControl timeStep;
-        writeInterval 1;
-        fields ( p );
+        libs            ("libsampling.so");
+        type            probes;
+        name            probes;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields          (p);
         probeLocations
         (
             ( -0.045  0     0     )

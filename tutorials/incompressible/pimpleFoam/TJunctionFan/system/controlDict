@@ -54,7 +54,7 @@ functions
     probes
     {
         // Where to load it from
-        libs ( "libsampling.so" );
+        libs            ("libsampling.so");
 
         type            probes;
 
@@ -63,13 +63,10 @@ functions
 
         // Write at same frequency as fields
         writeControl    writeTime;
-        writeInterval  1;
+        writeInterval   1;
 
         // Fields to be probed
-        fields
-        (
-            p U
-        );
+        fields          (p U);
 
         probeLocations
         (

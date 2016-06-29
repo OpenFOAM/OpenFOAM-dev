@@ -56,7 +56,7 @@ functions
     probes
     {
         type            probes;
-        libs ("libsampling.so");
+        libs            ("libsampling.so");
         writeControl    writeTime;
         probeLocations
         (
@@ -73,7 +73,7 @@ functions
     wallPressure
     {
         type            surfaces;
-        libs ("libsampling.so");
+        libs            ("libsampling.so");
         writeControl    writeTime;
         surfaceFormat   raw;
         fields

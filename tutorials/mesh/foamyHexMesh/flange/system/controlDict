@@ -52,7 +52,7 @@ timePrecision   6;
 
 runTimeModifiable yes;
 
-libs ("libdistributed.so");
+libs            ("libdistributed.so");
 
 
 // ************************************************************************* //

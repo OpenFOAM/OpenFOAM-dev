@@ -9,7 +9,7 @@
 surfaces
 {
     type            surfaces;
-    libs ("libsampling.so");
+    libs            ("libsampling.so");
     writeControl    writeTime;
 
     surfaceFormat   vtk;
@@ -25,8 +25,8 @@ surfaces
             planeType       pointAndNormal;
             pointAndNormalDict
             {
-                basePoint       (0 0 0);
-                normalVector    (0 0 1);
+                point   (0 0 0);
+                normal  (0 0 1);
             }
             interpolate     true;
         }

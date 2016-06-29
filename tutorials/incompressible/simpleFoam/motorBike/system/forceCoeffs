@@ -8,25 +8,25 @@
 
 forceCoeffs1
 {
-    type        forceCoeffs;
+    type            forceCoeffs;
 
-    libs ( "libforces.so" );
+    libs            ("libforces.so");
 
-    writeControl   timeStep;
+    writeControl    timeStep;
     timeInterval    1;
 
-    log         yes;
+    log             yes;
 
-    patches     (motorBikeGroup);
-    rho         rhoInf;      // Indicates incompressible
-    rhoInf      1;           // Redundant for incompressible
-    liftDir     (0 0 1);
-    dragDir     (1 0 0);
-    CofR        (0.72 0 0);  // Axle midpoint on ground
-    pitchAxis   (0 1 0);
-    magUInf     20;
-    lRef        1.42;        // Wheelbase length
-    Aref        0.75;        // Estimated
+    patches         (motorBikeGroup);
+    rho             rhoInf;      // Indicates incompressible
+    rhoInf          1;           // Redundant for incompressible
+    liftDir         (0 0 1);
+    dragDir         (1 0 0);
+    CofR            (0.72 0 0);  // Axle midpoint on ground
+    pitchAxis       (0 1 0);
+    magUInf         20;
+    lRef            1.42;        // Wheelbase length
+    Aref            0.75;        // Estimated
     /*
     binData
     {

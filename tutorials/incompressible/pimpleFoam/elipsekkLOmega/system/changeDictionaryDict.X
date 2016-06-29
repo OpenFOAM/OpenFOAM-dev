@@ -18,8 +18,8 @@ mirrorMeshDict
 {
     pointAndNormalDict
     {
-        basePoint       (0 0 0);
-        normalVector    (-1 0 0);
+        point   (0 0 0);
+        normal  (-1 0 0);
     }
 }
 

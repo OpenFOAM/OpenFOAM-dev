@@ -51,7 +51,7 @@ functions
     surfaceRegion1
     {
         type            surfaceRegion;
-        libs ("libfieldFunctionObjects.so");
+        libs            ("libfieldFunctionObjects.so");
         enabled         yes;
         writeControl    writeTime;
         log             yes;

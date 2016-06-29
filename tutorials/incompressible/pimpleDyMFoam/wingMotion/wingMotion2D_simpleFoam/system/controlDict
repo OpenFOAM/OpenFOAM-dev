@@ -50,7 +50,7 @@ functions
     forces
     {
         type                forces;
-        libs  ( "libforces.so" );
+        libs                ("libforces.so");
         writeControl        timeStep;
         writeInterval       10;
         patches             (wing);

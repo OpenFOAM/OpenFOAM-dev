@@ -47,7 +47,7 @@ runTimeModifiable true;
 
 functions
 {
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
 
     Ma
     {

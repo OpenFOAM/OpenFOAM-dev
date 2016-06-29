@@ -9,7 +9,7 @@
 inletMassFlowRate
 {
     type            surfaceRegion;
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
 
     fields
     (
@@ -32,7 +32,7 @@ inletMassFlowRate
 outletMassFlowRate
 {
     type            surfaceRegion;
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
 
     fields
     (
@@ -55,7 +55,7 @@ outletMassFlowRate
 totalMass
 {
     type            coded;
-    libs ("libutilityFunctionObjects.so");
+    libs            ("libutilityFunctionObjects.so");
     name    error;
 
     code

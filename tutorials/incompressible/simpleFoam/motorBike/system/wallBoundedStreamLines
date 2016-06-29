@@ -10,7 +10,7 @@
 near
 {
     // Where to load it from
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
 
     type nearWallFields;
 
@@ -39,7 +39,7 @@ near
 wallBoundedStreamLines
 {
     // Where to load it from (if not already in solver)
-    libs ("libfieldFunctionObjects.so");
+    libs            ("libfieldFunctionObjects.so");
     type            wallBoundedStreamLine;
 
     // Output every

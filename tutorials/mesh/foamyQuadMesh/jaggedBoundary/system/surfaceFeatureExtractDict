@@ -30,7 +30,7 @@ jaggedBoundary.stl
     subsetFeatures
     {
         // Use a plane to select feature edges
-        // (normal)(basePoint)
+        // (normal)(point)
         // Keep only edges that intersect the plane will be included
         plane               (0 0 1)(-0.6 0.3 0.0);
 
