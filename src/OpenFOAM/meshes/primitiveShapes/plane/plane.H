@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,43 +69,41 @@ public:
         FLIP
     };
 
+    //- A direction and a reference point
+    class ray
+    {
+        point refPoint_;
+        vector dir_;
 
-        //- A direction and a reference point
-        class ray
+    public:
+
+        ray(const point& refPoint, const vector& dir)
+        :
+            refPoint_(refPoint),
+            dir_(dir)
+        {}
+
+        const point& refPoint() const
         {
-            point refPoint_;
+            return refPoint_;
+        }
 
-            vector dir_;
-
-        public:
-
-            ray(const point& refPoint, const vector& dir)
-            :
-                refPoint_(refPoint),
-                dir_(dir)
-            {}
-
-            const point& refPoint() const
-            {
-                return refPoint_;
-            }
-
-            const vector& dir() const
-            {
-                return dir_;
-            }
-        };
+        const vector& dir() const
+        {
+            return dir_;
+        }
+    };
 
 
 private:
 
     // Private data
 
-        //- Plane normal
-        vector unitVector_;
+        //- Normal
+        vector normal_;
 
-        //- Base point
-        point basePoint_;
+        //- Reference point
+        point point_;
 
 
     // Private Member Functions

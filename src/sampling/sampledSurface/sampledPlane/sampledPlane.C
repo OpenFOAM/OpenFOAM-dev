@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,19 @@ Foam::sampledPlane::sampledPlane
 )
 :
     sampledSurface(name, mesh, dict),
-    cuttingPlane(plane(dict.lookup("basePoint"), dict.lookup("normalVector"))),
+    cuttingPlane
+    (
+        plane
+        (
+            dict.found("point")
+          ? dict.lookup("point")
+          : dict.lookup("basePoint"),
+
+            dict.found("normal")
+          ? dict.lookup("normal")
+          : dict.lookup("normalVector")
+        )
+    ),
     zoneKey_(keyType::null),
     triangulate_(dict.lookupOrDefault("triangulate", true)),
     needsUpdate_(true)

@@ -32,19 +32,19 @@ void Foam::plane::calcPntAndVec(const scalarList& C)
 {
     if (mag(C[0]) > VSMALL)
     {
-        basePoint_ = vector((-C[3]/C[0]), 0, 0);
+        point_ = vector((-C[3]/C[0]), 0, 0);
     }
     else
     {
         if (mag(C[1]) > VSMALL)
         {
-            basePoint_ = vector(0, (-C[3]/C[1]), 0);
+            point_ = vector(0, (-C[3]/C[1]), 0);
         }
         else
         {
             if (mag(C[2]) > VSMALL)
             {
-                basePoint_ = vector(0, 0, (-C[3]/C[2]));
+                point_ = vector(0, 0, (-C[3]/C[2]));
             }
             else
             {
@@ -55,8 +55,8 @@ void Foam::plane::calcPntAndVec(const scalarList& C)
         }
     }
 
-    unitVector_ = vector(C[0], C[1], C[2]);
-    scalar magUnitVector(mag(unitVector_));
+    normal_ = vector(C[0], C[1], C[2]);
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector < VSMALL)
     {
@@ -65,7 +65,7 @@ void Foam::plane::calcPntAndVec(const scalarList& C)
             << abort(FatalError);
     }
 
-    unitVector_ /= magUnitVector;
+    normal_ /= magUnitVector;
 }
 
 
@@ -76,7 +76,7 @@ void Foam::plane::calcPntAndVec
     const point& point3
 )
 {
-    basePoint_ = (point1 + point2 + point3)/3;
+    point_ = (point1 + point2 + point3)/3;
     vector line12 = point1 - point2;
     vector line23 = point2 - point3;
 
@@ -92,8 +92,8 @@ void Foam::plane::calcPntAndVec
             << abort(FatalError);
     }
 
-    unitVector_ = line12 ^ line23;
-    scalar magUnitVector(mag(unitVector_));
+    normal_ = line12 ^ line23;
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector < VSMALL)
     {
@@ -103,7 +103,7 @@ void Foam::plane::calcPntAndVec
             << abort(FatalError);
     }
 
-    unitVector_ /= magUnitVector;
+    normal_ /= magUnitVector;
 }
 
 
@@ -111,19 +111,19 @@ void Foam::plane::calcPntAndVec
 
 Foam::plane::plane(const vector& normalVector)
 :
-    unitVector_(normalVector),
-    basePoint_(Zero)
+    normal_(normalVector),
+    point_(Zero)
 {
-    scalar magUnitVector(mag(unitVector_));
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector > VSMALL)
     {
-        unitVector_ /= magUnitVector;
+        normal_ /= magUnitVector;
     }
     else
     {
         FatalErrorInFunction
-            << "plane normal has zero length. basePoint:" << basePoint_
+            << "plane normal has zero length. basePoint:" << point_
             << abort(FatalError);
     }
 }
@@ -131,19 +131,19 @@ Foam::plane::plane(const vector& normalVector)
 
 Foam::plane::plane(const point& basePoint, const vector& normalVector)
 :
-    unitVector_(normalVector),
-    basePoint_(basePoint)
+    normal_(normalVector),
+    point_(basePoint)
 {
-    scalar magUnitVector(mag(unitVector_));
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector > VSMALL)
     {
-        unitVector_ /= magUnitVector;
+        normal_ /= magUnitVector;
     }
     else
     {
         FatalErrorInFunction
-            << "plane normal has zero length. basePoint:" << basePoint_
+            << "plane normal has zero length. basePoint:" << point_
             << abort(FatalError);
     }
 }
@@ -168,8 +168,8 @@ Foam::plane::plane
 
 Foam::plane::plane(const dictionary& dict)
 :
-    unitVector_(Zero),
-    basePoint_(Zero)
+    normal_(Zero),
+    point_(Zero)
 {
     const word planeType(dict.lookup("planeType"));
 
@@ -200,9 +200,17 @@ Foam::plane::plane(const dictionary& dict)
     {
         const dictionary& subDict = dict.subDict("pointAndNormalDict");
 
-        basePoint_ = subDict.lookup("basePoint");
-        unitVector_ = subDict.lookup("normalVector");
-        unitVector_ /= mag(unitVector_);
+        point_ =
+            subDict.found("point")
+          ? subDict.lookup("point")
+          : subDict.lookup("basePoint");
+
+        normal_ =
+            subDict.found("normal")
+          ? subDict.lookup("normal")
+          : subDict.lookup("normalVector");
+
+        normal_ /= mag(normal_);
     }
     else
     {
@@ -217,19 +225,19 @@ Foam::plane::plane(const dictionary& dict)
 
 Foam::plane::plane(Istream& is)
 :
-    unitVector_(is),
-    basePoint_(is)
+    normal_(is),
+    point_(is)
 {
-    scalar magUnitVector(mag(unitVector_));
+    scalar magUnitVector(mag(normal_));
 
     if (magUnitVector > VSMALL)
     {
-        unitVector_ /= magUnitVector;
+        normal_ /= magUnitVector;
     }
     else
     {
         FatalErrorInFunction
-            << "plane normal has zero length. basePoint:" << basePoint_
+            << "plane normal has zero length. basePoint:" << point_
             << abort(FatalError);
     }
 }
@@ -239,13 +247,13 @@ Foam::plane::plane(Istream& is)
 
 const Foam::vector& Foam::plane::normal() const
 {
-    return unitVector_;
+    return normal_;
 }
 
 
 const Foam::point& Foam::plane::refPoint() const
 {
-    return basePoint_;
+    return point_;
 }
 
 
@@ -253,22 +261,22 @@ Foam::FixedList<Foam::scalar, 4> Foam::plane::planeCoeffs() const
 {
     FixedList<scalar, 4> C(4);
 
-    scalar magX = mag(unitVector_.x());
-    scalar magY = mag(unitVector_.y());
-    scalar magZ = mag(unitVector_.z());
+    scalar magX = mag(normal_.x());
+    scalar magY = mag(normal_.y());
+    scalar magZ = mag(normal_.z());
 
     if (magX > magY)
     {
         if (magX > magZ)
         {
             C[0] = 1;
-            C[1] = unitVector_.y()/unitVector_.x();
-            C[2] = unitVector_.z()/unitVector_.x();
+            C[1] = normal_.y()/normal_.x();
+            C[2] = normal_.z()/normal_.x();
         }
         else
         {
-            C[0] = unitVector_.x()/unitVector_.z();
-            C[1] = unitVector_.y()/unitVector_.z();
+            C[0] = normal_.x()/normal_.z();
+            C[1] = normal_.y()/normal_.z();
             C[2] = 1;
         }
     }
@@ -276,21 +284,21 @@ Foam::FixedList<Foam::scalar, 4> Foam::plane::planeCoeffs() const
     {
         if (magY > magZ)
         {
-            C[0] = unitVector_.x()/unitVector_.y();
+            C[0] = normal_.x()/normal_.y();
             C[1] = 1;
-            C[2] = unitVector_.z()/unitVector_.y();
+            C[2] = normal_.z()/normal_.y();
         }
         else
         {
-            C[0] = unitVector_.x()/unitVector_.z();
-            C[1] = unitVector_.y()/unitVector_.z();
+            C[0] = normal_.x()/normal_.z();
+            C[1] = normal_.y()/normal_.z();
             C[2] = 1;
         }
     }
 
-    C[3] = - C[0] * basePoint_.x()
-           - C[1] * basePoint_.y()
-           - C[2] * basePoint_.z();
+    C[3] = - C[0] * point_.x()
+           - C[1] * point_.y()
+           - C[2] * point_.z();
 
     return C;
 }
@@ -298,13 +306,13 @@ Foam::FixedList<Foam::scalar, 4> Foam::plane::planeCoeffs() const
 
 Foam::point Foam::plane::nearestPoint(const point& p) const
 {
-    return p - unitVector_*((p - basePoint_) & unitVector_);
+    return p - normal_*((p - point_) & normal_);
 }
 
 
 Foam::scalar Foam::plane::distance(const point& p) const
 {
-    return mag((p - basePoint_) & unitVector_);
+    return mag((p - point_) & normal_);
 }
 
 
@@ -314,9 +322,9 @@ Foam::scalar Foam::plane::normalIntersect
     const vector& dir
 ) const
 {
-    scalar denom = stabilise((dir & unitVector_), VSMALL);
+    scalar denom = stabilise((dir & normal_), VSMALL);
 
-    return ((basePoint_ - pnt0) & unitVector_)/denom;
+    return ((point_ - pnt0) & normal_)/denom;
 }
 
 
@@ -412,7 +420,7 @@ Foam::point Foam::plane::planePlaneIntersect
 
 Foam::plane::side Foam::plane::sideOfPlane(const point& p) const
 {
-    const scalar angle((p - basePoint_) & unitVector_);
+    const scalar angle((p - point_) & normal_);
 
     return (angle < 0 ? FLIP : NORMAL);
 }
@@ -439,8 +447,8 @@ void Foam::plane::writeDict(Ostream& os) const
         << token::END_STATEMENT << nl;
     os  << indent << "pointAndNormalDict" << nl
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("basePoint") << basePoint_ << token::END_STATEMENT << nl;
-    os.writeKeyword("normalVector") << unitVector_ << token::END_STATEMENT
+    os.writeKeyword("point") << point_ << token::END_STATEMENT << nl;
+    os.writeKeyword("normal") << normal_ << token::END_STATEMENT
         << nl;
     os << decrIndent << indent << token::END_BLOCK << endl;
 }
@@ -450,7 +458,7 @@ void Foam::plane::writeDict(Ostream& os) const
 
 bool Foam::operator==(const plane& a, const plane& b)
 {
-    if (a.basePoint_ == b.basePoint_ && a.unitVector_ == b.unitVector_)
+    if (a.point_ == b.point_ && a.normal_ == b.normal_)
     {
         return true;
     }
@@ -470,7 +478,7 @@ bool Foam::operator!=(const plane& a, const plane& b)
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const plane& a)
 {
-    os  << a.unitVector_ << token::SPACE << a.basePoint_;
+    os  << a.normal_ << token::SPACE << a.point_;
 
     return os;
 }
