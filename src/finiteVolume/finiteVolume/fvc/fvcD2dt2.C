@@ -50,7 +50,7 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().ddtScheme("d2dt2(" + vf.name() + ')')
-    )().fvcD2dt2(vf);
+    ).ref().fvcD2dt2(vf);
 }
 
 
@@ -66,7 +66,7 @@ d2dt2
     (
         vf.mesh(),
         vf.mesh().ddtScheme("d2dt2(" + rho.name() + ',' + vf.name() + ')')
-    )().fvcD2dt2(rho, vf);
+    ).ref().fvcD2dt2(rho, vf);
 }
 
 
