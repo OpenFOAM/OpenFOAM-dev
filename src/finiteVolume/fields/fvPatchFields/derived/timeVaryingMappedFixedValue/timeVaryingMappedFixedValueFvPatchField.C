@@ -25,7 +25,7 @@ License
 
 #include "timeVaryingMappedFixedValueFvPatchField.H"
 #include "Time.H"
-#include "AverageIOField.H"
+#include "IFstream.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -240,21 +240,30 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
     // Initialise
     if (mapperPtr_.empty())
     {
-        pointIOField samplePoints
+        // Reread values and interpolate
+        fileName samplePointsFile
         (
-            IOobject
-            (
-                "points",
-                this->db().time().constant(),
-                "boundaryData"/this->patch().name(),
-                this->db(),
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE,
-                false
-            )
+            this->db().time().constant()
+           /"boundaryData"
+           /this->patch().name()
+           /"points"
         );
 
-        const fileName samplePointsFile = samplePoints.filePath();
+        pointField samplePoints((IFstream(samplePointsFile)()));
+
+        // pointIOField samplePoints
+        // (
+        //     IOobject
+        //     (
+        //         "points",
+        //         this->db().time().constant(),
+        //         "boundaryData"/this->patch().name(),
+        //         this->db(),
+        //         IOobject::MUST_READ,
+        //         IOobject::AUTO_WRITE,
+        //         false
+        //     )
+        // );
 
         if (debug)
         {
@@ -358,21 +367,31 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
 
 
             // Reread values and interpolate
-            AverageIOField<Type> vals
+            fileName valsFile
             (
-                IOobject
-                (
-                    fieldTableName_,
-                    this->db().time().constant(),
-                    "boundaryData"
-                   /this->patch().name()
-                   /sampleTimes_[startSampleTime_].name(),
-                    this->db(),
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE,
-                    false
-                )
+                this->db().time().constant()
+               /"boundaryData"
+               /this->patch().name()
+               /sampleTimes_[startSampleTime_].name()
+               /fieldTableName_
             );
+
+            Field<Type> vals((IFstream(valsFile)()));
+            // IOField<Type> vals
+            // (
+            //     IOobject
+            //     (
+            //         fieldTableName_,
+            //         this->db().time().constant(),
+            //         "boundaryData"
+            //        /this->patch().name()
+            //        /sampleTimes_[startSampleTime_].name(),
+            //         this->db(),
+            //         IOobject::MUST_READ,
+            //         IOobject::AUTO_WRITE,
+            //         false
+            //     )
+            // );
 
             if (vals.size() != mapperPtr_().sourceSize())
             {
@@ -380,10 +399,10 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
                     << "Number of values (" << vals.size()
                     << ") differs from the number of points ("
                     <<  mapperPtr_().sourceSize()
-                    << ") in file " << vals.objectPath() << exit(FatalError);
+                    << ") in file " << valsFile << exit(FatalError);
             }
 
-            startAverage_ = vals.average();
+            //startAverage_ = vals.average();
             startSampledValues_ = mapperPtr_().interpolate(vals);
         }
     }
@@ -413,7 +432,7 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
             }
 
             // Reread values and interpolate
-            AverageIOField<Type> vals
+            IOField<Type> vals
             (
                 IOobject
                 (
@@ -438,7 +457,7 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
                     << ") in file " << vals.objectPath() << exit(FatalError);
             }
 
-            endAverage_ = vals.average();
+            //endAverage_ = vals.average();
             endSampledValues_ = mapperPtr_().interpolate(vals);
         }
     }
