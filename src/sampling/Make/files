@@ -41,7 +41,7 @@ $(surfWriters)/surfaceWriter.C
 $(surfWriters)/dx/dxSurfaceWriter.C
 $(surfWriters)/ensight/ensightSurfaceWriter.C
 $(surfWriters)/ensight/ensightPTraits.C
-$(surfWriters)/foamFile/foamFileSurfaceWriter.C
+$(surfWriters)/foam/foamSurfaceWriter.C
 $(surfWriters)/nastran/nastranSurfaceWriter.C
 $(surfWriters)/proxy/proxySurfaceWriter.C
 $(surfWriters)/raw/rawSurfaceWriter.C
