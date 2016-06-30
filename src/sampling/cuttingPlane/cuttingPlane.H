@@ -118,6 +118,7 @@ protected:
         //- Construct plane description without cutting
         cuttingPlane(const plane&);
 
+
     // Protected Member Functions
 
         //- Recut mesh with existing planeDesc, restricted to a list of cells

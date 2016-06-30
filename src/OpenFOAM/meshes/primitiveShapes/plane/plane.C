@@ -201,14 +201,14 @@ Foam::plane::plane(const dictionary& dict)
         const dictionary& subDict = dict.subDict("pointAndNormalDict");
 
         point_ =
-            subDict.found("point")
-          ? subDict.lookup("point")
-          : subDict.lookup("basePoint");
+            subDict.found("basePoint")
+          ? subDict.lookup("basePoint")
+          : subDict.lookup("point");
 
         normal_ =
-            subDict.found("normal")
-          ? subDict.lookup("normal")
-          : subDict.lookup("normalVector");
+            subDict.found("normalVector")
+          ? subDict.lookup("normalVector")
+          : subDict.lookup("normal");
 
         normal_ /= mag(normal_);
     }
