@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::foamFileSurfaceWriter
+    Foam::foamSurfaceWriter
 
 Description
-    A surfaceWriter for foamFiles
+    A surfaceWriter for foams
 
 SourceFiles
-    foamFileSurfaceWriter.C
+    foamSurfaceWriter.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef foamFileSurfaceWriter_H
-#define foamFileSurfaceWriter_H
+#ifndef foamSurfaceWriter_H
+#define foamSurfaceWriter_H
 
 #include "surfaceWriter.H"
 
@@ -43,10 +43,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class foamFileSurfaceWriter Declaration
+                    Class foamSurfaceWriter Declaration
 \*---------------------------------------------------------------------------*/
 
-class foamFileSurfaceWriter
+class foamSurfaceWriter
 :
     public surfaceWriter
 {
@@ -70,17 +70,17 @@ class foamFileSurfaceWriter
 public:
 
     //- Runtime type information
-    TypeName("foamFile");
+    TypeName("foam");
 
 
     // Constructors
 
         //- Construct null
-        foamFileSurfaceWriter();
+        foamSurfaceWriter();
 
 
     //- Destructor
-    virtual ~foamFileSurfaceWriter();
+    virtual ~foamSurfaceWriter();
 
 
     // Member Functions
@@ -172,7 +172,6 @@ public:
             const bool isNodeValues,
             const bool verbose = false
         ) const;
-
 };
 
 

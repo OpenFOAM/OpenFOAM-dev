@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "foamFileSurfaceWriter.H"
+#include "foamSurfaceWriter.H"
 
 #include "OFstream.H"
 #include "OSspecific.H"
@@ -34,14 +34,14 @@ License
 
 namespace Foam
 {
-    makeSurfaceWriterType(foamFileSurfaceWriter);
+    makeSurfaceWriterType(foamSurfaceWriter);
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::foamFileSurfaceWriter::writeTemplate
+void Foam::foamSurfaceWriter::writeTemplate
 (
     const fileName& outputDir,
     const fileName& surfaceName,
@@ -83,7 +83,7 @@ void Foam::foamFileSurfaceWriter::writeTemplate
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::foamFileSurfaceWriter::foamFileSurfaceWriter()
+Foam::foamSurfaceWriter::foamSurfaceWriter()
 :
     surfaceWriter()
 {}
@@ -91,13 +91,13 @@ Foam::foamFileSurfaceWriter::foamFileSurfaceWriter()
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::foamFileSurfaceWriter::~foamFileSurfaceWriter()
+Foam::foamSurfaceWriter::~foamSurfaceWriter()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::foamFileSurfaceWriter::write
+void Foam::foamSurfaceWriter::write
 (
     const fileName& outputDir,
     const fileName& surfaceName,
@@ -138,8 +138,8 @@ void Foam::foamFileSurfaceWriter::write
 }
 
 
-// create write methods
-defineSurfaceWriterWriteFields(Foam::foamFileSurfaceWriter);
+// Create write methods
+defineSurfaceWriterWriteFields(Foam::foamSurfaceWriter);
 
 
 // ************************************************************************* //
