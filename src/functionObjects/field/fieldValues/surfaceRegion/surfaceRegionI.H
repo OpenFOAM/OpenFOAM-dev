@@ -55,4 +55,11 @@ Foam::functionObjects::fieldValues::surfaceRegion::faceSign() const
 }
 
 
+inline Foam::fileName
+Foam::functionObjects::fieldValues::surfaceRegion::outputDir() const
+{
+    return baseFileDir()/name()/"surface"/obr_.time().timeName();
+}
+
+
 // ************************************************************************* //

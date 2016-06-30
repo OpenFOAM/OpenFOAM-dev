@@ -315,13 +315,10 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
 
             if (Pstream::master())
             {
-                fileName outputDir =
-                    baseFileDir()/name()/"surface"/obr_.time().timeName();
-
                 surfaceWriterPtr_->write
                 (
-                    outputDir,
-                    word(regionTypeNames_[regionType_]) + "_" + regionName_,
+                    outputDir(),
+                    regionTypeNames_[regionType_] + ("_" + regionName_),
                     points,
                     faces,
                     fieldName,
@@ -331,22 +328,24 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
             }
         }
 
-
-        // Apply scale factor
-        values *= scaleFactor_;
-
-        if (Pstream::master())
+        if (operation_ != opNone)
         {
-            Type result = processValues(values, Sf, weightField);
+            // Apply scale factor
+            values *= scaleFactor_;
 
-            // Add to result dictionary, over-writing any previous entry
-            resultDict_.add(fieldName, result, true);
+            if (Pstream::master())
+            {
+                Type result = processValues(values, Sf, weightField);
 
-            file()<< tab << result;
+                // Add to result dictionary, over-writing any previous entry
+                resultDict_.add(fieldName, result, true);
 
-            Log << "    " << operationTypeNames_[operation_]
-                << "(" << regionName_ << ") of " << fieldName
-                <<  " = " << result << endl;
+                file() << tab << result;
+
+                Log << "    " << operationTypeNames_[operation_]
+                    << "(" << regionName_ << ") of " << fieldName
+                    <<  " = " << result << endl;
+            }
         }
     }
 

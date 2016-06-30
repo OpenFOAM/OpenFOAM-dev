@@ -113,7 +113,7 @@ Note
       faces
     - the `oriented' entries relate to mesh-oriented fields, such as the
       flux, phi.  These fields will be oriented according to the face normals.
-    - using \c sampledSurfaces:
+    - using \c sampledSurface:
         - not available for surface fields
         - if interpolate=true they use \c interpolationCellPoint
           otherwise they use cell values
@@ -370,6 +370,9 @@ public:
 
         //- Return the list of +1/-1 representing face flip map
         inline const labelList& faceSign() const;
+
+        //- Return the output directory
+        inline fileName outputDir() const;
 
         //- Templated helper function to output field values
         template<class Type>

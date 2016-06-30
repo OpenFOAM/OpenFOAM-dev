@@ -371,7 +371,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::combineSurfaceGeometry
 
         if (Pstream::parRun())
         {
-            // dimension as fraction of mesh bounding box
+            // Dimension as fraction of mesh bounding box
             scalar mergeDim = 1e-10*mesh().bounds().mag();
 
             labelList pointsMap;
@@ -538,27 +538,30 @@ void Foam::functionObjects::fieldValues::surfaceRegion::writeFileHeader
     const label i
 )
 {
-    writeCommented(file(), "Region type : ");
-    file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
-    writeCommented(file(), "Faces  : ");
-    file() << nFaces_ << endl;
-    writeCommented(file(), "Area   : ");
-    file() << totalArea_ << endl;
-
-    writeCommented(file(), "Time");
-    if (writeArea_)
+    if (operation_ != opNone)
     {
-        file() << tab << "Area";
-    }
+        writeCommented(file(), "Region type : ");
+        file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
+        writeCommented(file(), "Faces  : ");
+        file() << nFaces_ << endl;
+        writeCommented(file(), "Area   : ");
+        file() << totalArea_ << endl;
 
-    forAll(fields_, i)
-    {
-        file()
+        writeCommented(file(), "Time");
+        if (writeArea_)
+        {
+            file() << tab << "Area";
+        }
+
+        forAll(fields_, i)
+        {
+            file()
             << tab << operationTypeNames_[operation_]
-            << "(" << fields_[i] << ")";
-    }
+                << "(" << fields_[i] << ")";
+        }
 
-    file() << endl;
+        file() << endl;
+    }
 }
 
 
@@ -723,14 +726,17 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::read
 
 bool Foam::functionObjects::fieldValues::surfaceRegion::write()
 {
-    fieldValue::write();
+    if (operation_ != opNone)
+    {
+        fieldValue::write();
+    }
 
     if (surfacePtr_.valid())
     {
         surfacePtr_().update();
     }
 
-    if (Pstream::master())
+    if (operation_ != opNone && Pstream::master())
     {
         writeTime(file());
     }
@@ -738,14 +744,42 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::write()
     if (writeArea_)
     {
         totalArea_ = totalArea();
-        if (Pstream::master())
+        if (operation_ != opNone && Pstream::master())
         {
             file() << tab << totalArea_;
         }
         Log << "    total area = " << totalArea_ << endl;
     }
 
-    // construct weight field. Note: zero size means weight = 1
+    // Write the surface geometry
+    if (surfaceWriterPtr_.valid())
+    {
+        faceList faces;
+        pointField points;
+
+        if (surfacePtr_.valid())
+        {
+            combineSurfaceGeometry(faces, points);
+        }
+        else
+        {
+            combineMeshGeometry(faces, points);
+        }
+
+        if (Pstream::master())
+        {
+            surfaceWriterPtr_->write
+            (
+                outputDir(),
+                regionTypeNames_[regionType_] + ("_" + regionName_),
+                points,
+                faces,
+                false
+            );
+        }
+    }
+
+    // Construct weight field. Note: zero size means weight = 1
     scalarField weightField;
     if (weightFieldName_ != "none")
     {
@@ -761,7 +795,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::write()
     // Combine onto master
     combineFields(weightField);
 
-    // process the fields
+    // Process the fields
     forAll(fields_, i)
     {
         const word& fieldName = fields_[i];
@@ -784,9 +818,9 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::write()
         }
     }
 
-    if (Pstream::master())
+    if (operation_ != opNone && Pstream::master())
     {
-        file()<< endl;
+        file() << endl;
     }
 
     Log << endl;
