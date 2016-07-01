@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,58 +21,65 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-
 \*---------------------------------------------------------------------------*/
 
-#include "AverageIOField.H"
-#include "fieldTypes.H"
+#include "AverageField.H"
 
-namespace Foam
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::AverageField<Type>::AverageField(const label size)
+:
+    Field<Type>(size),
+    average_(Zero)
+{}
+
+
+template<class Type>
+Foam::AverageField<Type>::AverageField
+(
+    const Field<Type>& f,
+    const Type& average
+)
+:
+    Field<Type>(f),
+    average_(average)
+{}
+
+
+template<class Type>
+Foam::AverageField<Type>::AverageField(Istream& is)
+:
+    Field<Type>(is),
+    average_(pTraits<Type>(is))
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+const Type& Foam::AverageField<Type>::average() const
 {
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-typedef AverageIOField<scalar> scalarAverageIOField;
-typedef AverageIOField<vector> vectorAverageIOField;
-typedef AverageIOField<sphericalTensor> sphericalTensorAverageIOField;
-typedef AverageIOField<symmTensor> symmTensorAverageIOField;
-typedef AverageIOField<tensor> tensorAverageIOField;
-
-defineTemplateTypeNameAndDebugWithName
-(
-    scalarAverageIOField,
-    "scalarAverageField",
-    0
-);
-defineTemplateTypeNameAndDebugWithName
-(
-    vectorAverageIOField,
-    "vectorAverageField",
-    0
-);
-defineTemplateTypeNameAndDebugWithName
-(
-    sphericalTensorAverageIOField,
-    "sphericalTensorAverageField",
-    0
-);
-defineTemplateTypeNameAndDebugWithName
-(
-    symmTensorAverageIOField,
-    "symmTensorAverageField",
-    0
-);
-defineTemplateTypeNameAndDebugWithName
-(
-    tensorAverageIOField,
-    "tensorAverageField",
-    0
-);
+    return average_;
+}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+template<class Type>
+Type&Foam::AverageField<Type>::average()
+{
+    return average_;
+}
 
-} // End namespace Foam
+
+template<class Type>
+bool Foam::AverageField<Type>::writeData(Ostream& os) const
+{
+    os  << static_cast<const Field<Type>&>(*this)
+        << token::NL
+        << average_;
+
+    return os.good();
+}
+
 
 // ************************************************************************* //

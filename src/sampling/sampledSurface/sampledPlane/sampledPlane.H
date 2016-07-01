@@ -25,7 +25,8 @@ Class
     Foam::sampledPlane
 
 Description
-    A sampledSurface defined by a cuttingPlane. Triangulated by default.
+    A sampledSurface defined by a plane which 'cuts' the mesh using the
+    cuttingPlane alorithm.  The plane is triangulated by default.
 
 Note
     Does not actually cut until update() called.

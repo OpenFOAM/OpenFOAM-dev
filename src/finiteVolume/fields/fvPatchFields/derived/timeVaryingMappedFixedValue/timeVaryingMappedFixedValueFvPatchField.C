@@ -25,6 +25,7 @@ License
 
 #include "timeVaryingMappedFixedValueFvPatchField.H"
 #include "Time.H"
+#include "AverageField.H"
 #include "IFstream.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -64,7 +65,7 @@ timeVaryingMappedFixedValueFvPatchField
 :
     fixedValueFvPatchField<Type>(p, iF),
     fieldTableName_(iF.name()),
-    setAverage_(readBool(dict.lookup("setAverage"))),
+    setAverage_(dict.lookupOrDefault("setAverage", false)),
     perturb_(dict.lookupOrDefault("perturb", 1e-5)),
     mapMethod_
     (
@@ -82,8 +83,13 @@ timeVaryingMappedFixedValueFvPatchField
     endSampleTime_(-1),
     endSampledValues_(0),
     endAverage_(Zero),
-    offset_(Function1<Type>::New("offset", dict))
+    offset_()
 {
+    if (dict.found("offset"))
+    {
+        offset_ = Function1<Type>::New("offset", dict);
+    }
+
     if
     (
         mapMethod_ != "planarInterpolation"
@@ -96,7 +102,6 @@ timeVaryingMappedFixedValueFvPatchField
         )   << "mapMethod should be one of 'planarInterpolation'"
             << ", 'nearest'" << exit(FatalIOError);
     }
-
 
     dict.readIfPresent("fieldTable", fieldTableName_);
 
@@ -251,20 +256,6 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
 
         pointField samplePoints((IFstream(samplePointsFile)()));
 
-        // pointIOField samplePoints
-        // (
-        //     IOobject
-        //     (
-        //         "points",
-        //         this->db().time().constant(),
-        //         "boundaryData"/this->patch().name(),
-        //         this->db(),
-        //         IOobject::MUST_READ,
-        //         IOobject::AUTO_WRITE,
-        //         false
-        //     )
-        // );
-
         if (debug)
         {
             Info<< "timeVaryingMappedFixedValueFvPatchField :"
@@ -376,22 +367,18 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
                /fieldTableName_
             );
 
-            Field<Type> vals((IFstream(valsFile)()));
-            // IOField<Type> vals
-            // (
-            //     IOobject
-            //     (
-            //         fieldTableName_,
-            //         this->db().time().constant(),
-            //         "boundaryData"
-            //        /this->patch().name()
-            //        /sampleTimes_[startSampleTime_].name(),
-            //         this->db(),
-            //         IOobject::MUST_READ,
-            //         IOobject::AUTO_WRITE,
-            //         false
-            //     )
-            // );
+            Field<Type> vals;
+
+            if (setAverage_)
+            {
+                AverageField<Type> avals((IFstream(valsFile)()));
+                vals = avals;
+                startAverage_ = avals.average();
+            }
+            else
+            {
+                IFstream(valsFile)() >> vals;
+            }
 
             if (vals.size() != mapperPtr_().sourceSize())
             {
@@ -402,7 +389,6 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
                     << ") in file " << valsFile << exit(FatalError);
             }
 
-            //startAverage_ = vals.average();
             startSampledValues_ = mapperPtr_().interpolate(vals);
         }
     }
@@ -432,21 +418,27 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
             }
 
             // Reread values and interpolate
-            IOField<Type> vals
+            fileName valsFile
             (
-                IOobject
-                (
-                    fieldTableName_,
-                    this->db().time().constant(),
-                    "boundaryData"
-                   /this->patch().name()
-                   /sampleTimes_[endSampleTime_].name(),
-                    this->db(),
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE,
-                    false
-                )
+                this->db().time().constant()
+               /"boundaryData"
+               /this->patch().name()
+               /sampleTimes_[endSampleTime_].name()
+               /fieldTableName_
             );
+
+            Field<Type> vals;
+
+            if (setAverage_)
+            {
+                AverageField<Type> avals((IFstream(valsFile)()));
+                vals = avals;
+                endAverage_ = avals.average();
+            }
+            else
+            {
+                IFstream(valsFile)() >> vals;
+            }
 
             if (vals.size() != mapperPtr_().sourceSize())
             {
@@ -454,10 +446,9 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::checkTable()
                     << "Number of values (" << vals.size()
                     << ") differs from the number of points ("
                     <<  mapperPtr_().sourceSize()
-                    << ") in file " << vals.objectPath() << exit(FatalError);
+                    << ") in file " << valsFile << exit(FatalError);
             }
 
-            //endAverage_ = vals.average();
             endSampledValues_ = mapperPtr_().interpolate(vals);
         }
     }
@@ -481,7 +472,7 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::updateCoeffs()
 
     if (endSampleTime_ == -1)
     {
-        // only start value
+        // Only start value
         if (debug)
         {
             Pout<< "updateCoeffs : Sampled, non-interpolated values"
@@ -554,9 +545,12 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::updateCoeffs()
         }
     }
 
-    // apply offset to mapped values
-    const scalar t = this->db().time().timeOutputValue();
-    this->operator==(*this + offset_->value(t));
+    // Apply offset to mapped values
+    if (offset_.valid())
+    {
+        const scalar t = this->db().time().timeOutputValue();
+        this->operator==(*this + offset_->value(t));
+    }
 
     if (debug)
     {
@@ -576,31 +570,31 @@ void Foam::timeVaryingMappedFixedValueFvPatchField<Type>::write
 ) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
-    if (perturb_ != 1e-5)
-    {
-        os.writeKeyword("perturb") << perturb_ << token::END_STATEMENT << nl;
-    }
 
-    if (fieldTableName_ != this->internalField().name())
-    {
-        os.writeKeyword("fieldTable") << fieldTableName_
-            << token::END_STATEMENT << nl;
-    }
+    this->writeEntryIfDifferent(os, "setAverage", Switch(false), setAverage_);
 
-    if
+    this->writeEntryIfDifferent(os, "perturb", 1e-5, perturb_);
+
+    this->writeEntryIfDifferent
     (
-        (
-           !mapMethod_.empty()
-         && mapMethod_ != "planarInterpolation"
-        )
-    )
-    {
-        os.writeKeyword("mapMethod") << mapMethod_
-            << token::END_STATEMENT << nl;
-    }
+        os,
+        "fieldTable",
+        this->internalField().name(),
+        fieldTableName_
+    );
 
-    offset_->writeData(os);
+    this->writeEntryIfDifferent
+    (
+        os,
+        "mapMethod",
+        word("planarInterpolation"),
+        mapMethod_
+    );
+
+    if (offset_.valid())
+    {
+        offset_->writeData(os);
+    }
 
     this->writeEntry("value", os);
 }

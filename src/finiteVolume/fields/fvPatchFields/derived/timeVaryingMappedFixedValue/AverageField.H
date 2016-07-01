@@ -22,20 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::AverageIOField
+    Foam::AverageField
 
 Description
-    A primitive field + average with IO.
+    A primitive field with a separate average value.
 
 SourceFiles
-    AverageIOField.C
+    AverageField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef AverageIOField_H
-#define AverageIOField_H
+#ifndef AverageField_H
+#define AverageField_H
 
-#include "regIOobject.H"
 #include "Field.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -44,13 +43,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class AverageIOField Declaration
+                        Class AverageField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class AverageIOField
+class AverageField
 :
-    public regIOobject,
     public Field<Type>
 {
     // Private data
@@ -61,44 +59,23 @@ class AverageIOField
 
 public:
 
-    TypeName("AverageField");
-
-
     // Constructors
 
-        //- Construct from IOobject
-        AverageIOField
-        (
-            const IOobject&
-        );
-
-        //- Construct from IOobject and size (does not set values)
-        AverageIOField
-        (
-            const IOobject&,
-            const label size
-        );
+        //- Construct from size (does not set values)
+        AverageField(const label size);
 
         //- Construct from components
-        AverageIOField
-        (
-            const IOobject&,
-            const Type& average,
-            const Field<Type>&
-        );
+        AverageField(const Field<Type>&, const Type& average);
+
+        //- Construct from Istream
+        AverageField(Istream&);
 
 
     // Member functions
 
-        const Type& average() const
-        {
-            return average_;
-        }
+        const Type& average() const;
 
-        Type& average()
-        {
-            return average_;
-        }
+        Type& average();
 
         bool writeData(Ostream& os) const;
 };
@@ -111,7 +88,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "AverageIOField.C"
+    #include "AverageField.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

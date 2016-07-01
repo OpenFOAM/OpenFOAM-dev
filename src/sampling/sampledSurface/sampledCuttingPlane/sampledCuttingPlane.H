@@ -25,7 +25,8 @@ Class
     Foam::sampledCuttingPlane
 
 Description
-    A sampledSurface defined by a plane
+    A sampledSurface defined by a plane using the iso-surface algorithm
+    to 'cut' the mesh.
 
 SourceFiles
     sampledCuttingPlane.C

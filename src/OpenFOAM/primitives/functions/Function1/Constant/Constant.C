@@ -31,6 +31,18 @@ template<class Type>
 Foam::Function1Types::Constant<Type>::Constant
 (
     const word& entryName,
+    const Type& val
+)
+:
+    Function1<Type>(entryName),
+    value_(val)
+{}
+
+
+template<class Type>
+Foam::Function1Types::Constant<Type>::Constant
+(
+    const word& entryName,
     const dictionary& dict
 )
 :

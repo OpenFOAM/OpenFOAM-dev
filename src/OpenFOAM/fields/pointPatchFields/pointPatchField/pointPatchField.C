@@ -124,6 +124,23 @@ void Foam::pointPatchField<Type>::write(Ostream& os) const
 
 
 template<class Type>
+template<class EntryType>
+void Foam::pointPatchField<Type>::writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+) const
+{
+    if (value1 != value2)
+    {
+        os.writeKeyword(entryName) << value2 << token::END_STATEMENT << nl;
+    }
+}
+
+
+template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::pointPatchField<Type>::patchInternalField() const
 {
