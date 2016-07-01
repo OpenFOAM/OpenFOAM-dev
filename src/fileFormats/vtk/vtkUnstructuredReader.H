@@ -196,6 +196,7 @@ private:
             labelHashSet& warningGiven
         ) const;
 
+        //- Split cellTypes into cells, faces and lines
         void extractCells
         (
             Istream& inFile,
@@ -203,6 +204,7 @@ private:
             const labelList& cellVertData
         );
 
+        //- Read single field and stores it on the objectRegistry.
         void readField
         (
             ISstream& inFile,
@@ -212,6 +214,8 @@ private:
             const label size
         ) const;
 
+        //- Reads fields, stores them on the objectRegistry. Returns a list of
+        //  read fields
         wordList readFieldArray
         (
             ISstream& inFile,

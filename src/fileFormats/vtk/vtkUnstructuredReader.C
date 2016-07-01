@@ -34,7 +34,7 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(vtkUnstructuredReader, 1);   //0);
+    defineTypeNameAndDebug(vtkUnstructuredReader, 1);
 
     template<>
     const char*
@@ -97,7 +97,6 @@ void Foam::vtkUnstructuredReader::warnUnhandledType
 }
 
 
-// Split cellTypes into cells, faces and lines
 void Foam::vtkUnstructuredReader::extractCells
 (
     Istream& inFile,
@@ -302,11 +301,11 @@ void Foam::vtkUnstructuredReader::extractCells
                         << nRead << exit(FatalIOError);
                 }
                 prismPoints[0] = cellVertData[dataIndex++];
-                prismPoints[1] = cellVertData[dataIndex++];
                 prismPoints[2] = cellVertData[dataIndex++];
+                prismPoints[1] = cellVertData[dataIndex++];
                 prismPoints[3] = cellVertData[dataIndex++];
-                prismPoints[4] = cellVertData[dataIndex++];
                 prismPoints[5] = cellVertData[dataIndex++];
+                prismPoints[4] = cellVertData[dataIndex++];
                 cellMap_[celli] = i;
                 cells_[celli++] = cellShape(prism, prismPoints, true);
             }
@@ -356,7 +355,6 @@ void Foam::vtkUnstructuredReader::extractCells
 }
 
 
-// Read single field and stores it on the objectRegistry.
 void Foam::vtkUnstructuredReader::readField
 (
     ISstream& inFile,
@@ -434,6 +432,7 @@ void Foam::vtkUnstructuredReader::readField
             );
             // Consume current line.
             inFile.getLine(fieldVals()[0]);
+
             // Read without parsing
             forAll(fieldVals(), i)
             {
@@ -457,8 +456,6 @@ void Foam::vtkUnstructuredReader::readField
 }
 
 
-// Reads fields, stores them on the objectRegistry. Returns a list of
-// read fields
 Foam::wordList Foam::vtkUnstructuredReader::readFieldArray
 (
     ISstream& inFile,
