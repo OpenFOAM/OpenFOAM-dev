@@ -218,10 +218,6 @@ _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/mpi`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/paraview`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/ensight`
 
-if ( ($?FOAMY_HEX_MESH) ) then
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/CGAL`
-endif
-
 
 # Clean environment paths again. Only remove duplicates
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

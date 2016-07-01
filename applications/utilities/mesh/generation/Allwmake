@@ -4,13 +4,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for compilation (at least for error catching)
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-# Get CGAL and boost versions
-. $WM_PROJECT_DIR/etc/config.sh/functions
-_foamEval SOURCE_CGAL_VERSIONS_ONLY=yes \
-          $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/CGAL)
-
-set -x
-
 wmake -all $targetType blockMesh
 wmake -all $targetType extrude
 wmake -all $targetType extrude2DMesh
@@ -18,6 +11,10 @@ wmake -all $targetType snappyHexMesh
 
 if [ -n "$FOAMY_HEX_MESH" ]
 then
+    # Get CGAL and boost versions
+    . $WM_PROJECT_DIR/etc/config.sh/functions
+    _foamEval $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/CGAL)
+
     foamyMesh/Allwmake $targetType $*
 fi
 

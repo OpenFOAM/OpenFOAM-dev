@@ -4,36 +4,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-# Get CGAL and scotch versions
-. $WM_PROJECT_DIR/etc/config.sh/functions
-_foamEval SOURCE_CGAL_VERSIONS_ONLY=yes \
-          $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/CGAL)
-
-## Get ZOLTAN_ARCH_PATH
-#if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/zoltan`
-#then
-#    . $settings
-#    echo "using ZOLTAN_ARCH_PATH=$ZOLTAN_ARCH_PATH"
-#else
-#    echo
-#    echo "Error: no config.sh/zoltan settings"
-#    echo
-#fi
-
-
-set -x
-
 wmake $targetType renumberMethods
 
-if [ -n "$BOOST_ARCH_PATH" -o "$boost_version" = "boost-system" ]
-then
-    wmake $targetType SloanRenumber
-else
-    echo
-    echo "Skipping SloanRenumber"
-    echo
-fi
-
+# Deprecate SloanRenumber due to dependency on BOOST causing build and
+# installation problems on a range of legacy systems.
+# wmake $targetType SloanRenumber
 
 if [ -n "$ZOLTAN_ARCH_PATH" ]
 then
