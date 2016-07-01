@@ -45,10 +45,6 @@ SourceFiles
 #include "pTraits.H"
 #include "direction.H"
 
-#ifndef UINT32_MIN
-#define UINT32_MIN 0
-#endif
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

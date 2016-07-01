@@ -58,7 +58,6 @@ namespace Foam
 
 typedef UINT_SIZE(uint, _t) uLabel;
 
-static const uLabel uLabelMin = UINT_SIZE(UINT, _MIN);
 static const uLabel uLabelMax = UINT_SIZE(UINT, _MAX);
 
 inline uLabel readULabel(Istream& is)

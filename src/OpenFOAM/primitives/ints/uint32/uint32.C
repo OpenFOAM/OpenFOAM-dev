@@ -31,7 +31,7 @@ const uint32_t Foam::pTraits<uint32_t>::zero = 0;
 const uint32_t Foam::pTraits<uint32_t>::one = 1;
 const uint32_t Foam::pTraits<uint32_t>::min = 0;
 const uint32_t Foam::pTraits<uint32_t>::max = UINT32_MAX;
-const uint32_t Foam::pTraits<uint32_t>::rootMin = pTraits<uint32_t>::min;
+const uint32_t Foam::pTraits<uint32_t>::rootMin = 0;
 const uint32_t Foam::pTraits<uint32_t>::rootMax = pTraits<uint32_t>::max;
 
 const char* const Foam::pTraits<uint32_t>::componentNames[] = { "" };
