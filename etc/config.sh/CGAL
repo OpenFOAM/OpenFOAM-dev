@@ -25,11 +25,10 @@
 #     etc/config.sh/CGAL
 #
 # Description
-#     Setup file for CGAL (& boost) include/libraries.
+#     Configuration file for BOOST and CGAL include/libraries.
 #     Sourced from OpenFOAM-<VERSION>/etc/bashrc
 #
-#     If using system-wide installations for either one, use the following
-#     version settings:
+#     If using system-wide installations use the following version settings:
 #
 #         boost_version=boost-system
 #         cgal_version=cgal-system
@@ -42,16 +41,26 @@ cgal_version=cgal-system
 
 thirdPartyPath=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
 
-if [ "$boost_version" != "boost-system" -a -d "$thirdPartyPath/$boost_version" ]
+if [ "$boost_version" != "boost-system"  ]
 then
     export BOOST_ARCH_PATH=$thirdPartyPath/$boost_version
-    _foamAddLib $BOOST_ARCH_PATH/lib
+    if [ -d "$BOOST_ARCH_PATH" ]
+    then
+        _foamAddLib $BOOST_ARCH_PATH/lib
+    fi
+else
+    unset BOOST_ARCH_PATH
 fi
 
-if [ "$cgal_version" != "cgal-system" -a -d "$thirdPartyPath/$cgal_version" ]
+if [ "$cgal_version" != "cgal-system" ]
 then
     export CGAL_ARCH_PATH=$thirdPartyPath/$cgal_version
-    _foamAddLib $CGAL_ARCH_PATH/lib
+    if [ -d "$CGAL_ARCH_PATH" ]
+    then
+        _foamAddLib $CGAL_ARCH_PATH/lib
+    fi
+else
+    unset CGAL_ARCH_PATH
 fi
 
 if [ "$FOAM_VERBOSE" -a "$PS1" ]
