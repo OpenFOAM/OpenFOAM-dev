@@ -92,8 +92,6 @@ inline uLabel component(const uLabel l, const direction)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "uLabelSpecific.H"
-
 #undef UINT_ADD_SIZE
 #undef UINT_ADD_DEF_SIZE
 #undef UINT_SIZE
