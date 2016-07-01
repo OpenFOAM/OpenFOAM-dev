@@ -38,7 +38,7 @@
 
 boost_version=boost-system
 cgal_version=cgal-system
-#cgal_version=CGAL-4.8
+#cgal_version=CGAL-4.8.1
 
 thirdPartyPath=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER
 
@@ -61,6 +61,6 @@ then
     echo "    $cgal_version at $CGAL_ARCH_PATH" 1>&2
 fi
 
-unset boost_version cgal_version thirdPartyPath
+unset thirdPartyPath
 
 #------------------------------------------------------------------------------

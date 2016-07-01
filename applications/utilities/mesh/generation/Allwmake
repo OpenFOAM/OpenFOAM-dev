@@ -11,10 +11,6 @@ wmake -all $targetType snappyHexMesh
 
 if [ -n "$FOAMY_HEX_MESH" ]
 then
-    # Get CGAL and boost versions
-    . $WM_PROJECT_DIR/etc/config.sh/functions
-    _foamEval $($WM_PROJECT_DIR/bin/foamEtcFile config.sh/CGAL)
-
     foamyMesh/Allwmake $targetType $*
 fi
 
