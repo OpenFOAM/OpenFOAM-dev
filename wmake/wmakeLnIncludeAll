@@ -39,10 +39,15 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-Usage: $Script [dir1 .. dirN]
+Usage: $Script [OPTION] [dir1 .. dirN]
 
-    Find directories with a 'Make/files' that contains a 'LIB =' directive
-    and execute 'wmakeLnInclude -update' for each one
+options:
+  -j                Compile using all local cores/hyperthreads
+  -jN or -j N       Compile using N cores/hyperthreads
+  -h | -help        Print the usage
+
+Find directories with a 'Make/files' that contains a 'LIB =' directive
+and execute 'wmakeLnInclude -update' for each one
 
 USAGE
     exit 1
@@ -54,22 +59,39 @@ USAGE
 #------------------------------------------------------------------------------
 
 findName=lnInclude
+nCores=0
 
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    -h | -help)   # Provide immediate help
-        usage
-        ;;
-    -*)
-        usage "unknown option: '$*'"
-        ;;
-    *)
-        break
-        ;;
+        -h | -help)   # Provide immediate help
+            usage
+            ;;
+        # Parallel execution on WM_NCOMPPROCS cores
+        -j)
+            nCores=$WM_NCOMPPROCS
+            test $# -ge 2 && expr $2 + 1 > /dev/null 2>&1 \
+                && shift && nCores=$1
+            echo "$Script: enabled on $nCores cores"
+            ;;
+        # Parallel compilation on specified number of cores
+        -j*)
+            nCores=${1#-j}
+            echo "$Script: enabled on $nCores cores"
+            ;;
+        -*)
+            usage "unknown option: '$*'"
+            ;;
+        *)
+            break
+            ;;
     esac
+    shift
 done
 
+
+FAIL=0
+echo "$Script: starting wmakeLnInclude processes"
 
 # Default to searching from CWD
 [ "$#" -gt 0 ] || set -- .
@@ -93,7 +115,20 @@ do
         then
             if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
             then
-                wmakeLnInclude -update $topDir
+                # If running in parallel start wmakeLnInclude on nCores
+                # and more as the cores become free
+                if [ "$nCores" -gt 0 ]
+                then
+                    joblist=($(jobs -p))
+                    while (( ${#joblist[*]} > $nCores ))
+                    do
+                        sleep 0.01
+                        joblist=($(jobs -p))
+                    done
+                    wmakeLnInclude -update $topDir &
+                else
+                    wmakeLnInclude -update $topDir
+                fi
             elif [ -d "$topDir/lnInclude" ]
             then
                 echo "removing spurious $topDir/lnInclude"
@@ -103,6 +138,22 @@ do
     done
 done
 
+# If running in parallel wait until all wmakeLnInclude jobs are complete
+if [ "$nCores" -gt 0 ]
+then
+    for job in $(jobs -p)
+    do
+        echo $job
+        wait $job || let "FAIL+=1"
+    done
+
+    if [ "$FAIL" == "0" ];
+    then
+        echo "$Script: completed wmakeLnInclude processes"
+    else
+        echo "$Script: failed ($FAIL)"
+    fi
+fi
 
 #------------------------------------------------------------------------------
 # Cleanup local variables and functions
