@@ -154,7 +154,12 @@ do
         -update)
             wrmdep -update
             wrmdep -old
-            wmakeLnIncludeAll
+            if [ -n "$WM_NCOMPPROCS" ]
+            then
+                wmakeLnIncludeAll -j$WM_NCOMPPROCS
+            else
+                wmakeLnIncludeAll
+            fi
             wclean empty
             export WM_UPDATE_DEPENDENCIES=yes
             [ -z "$all" ] && all="all"
