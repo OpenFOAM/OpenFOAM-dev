@@ -1,0 +1,160 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     wmakeCollect
+#
+# Usage
+#     wmakeCollect [OPTION] <command>
+#
+# Description
+#     wmake scheduler for efficient parallel compilations.
+#
+#-------------------------------------------------------------------------------
+Script=${0##*/}
+
+usage() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+Usage: $Script [OPTION] <command>
+
+options:
+  -kill             Removes temporary makefiles
+  -h | -help        Print the usage
+
+Collecting scheduler for fast parallel compilation of large numbers of object
+files.  Can be used in compiling OpenFOAM by setting the WM_SCHEDULER variable.
+
+When called with a compilation command it is written into a file in the
+directory ~.\$WM_PROJECT/.collect/$WM_ID.
+
+When called without a command the files in the ~.\$WM_PROJECT/.collect/$WM_ID
+are combined into a single Makefile which is passed to make to compile all of
+the object files in parallel.
+
+Typical usage for compiling OpenFOAM:
+
+  - Ensure all lnInclude directories are up-to-date:
+    wmakeLnIncludeAll
+
+  - Compile all with this scheduler:
+    wmake -queue or wmake -q
+
+USAGE
+    exit 1
+}
+
+# Set true to clean-up file if interupted
+cleanup=
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage
+        ;;
+    -kill)
+        cleanup="true"
+        shift
+        ;;
+    -*)
+        usage "unknown option: '$*'"
+        break
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+
+if [ -z "$WM_ID" ]
+then
+    echo "$Script error: build ID variable WM_ID not set"
+    exit 1
+fi
+
+# Location of the wmakeCollect makefiles
+wmakeCollectDir=$HOME/.$WM_PROJECT/.collect
+
+# Make sure directories exist
+mkdir -p $wmakeCollectDir
+
+# Location of the wmakeCollect makefiles for this build
+collectDir=$wmakeCollectDir/$WM_ID
+
+# Collected makefile for this build
+makefile="$wmakeCollectDir/Makefile.$WM_ID"
+
+
+# Clean-up files and exit
+if [ -n "$cleanup" ]
+then
+    rm -rf $collectDir
+    rm -f $makefile
+    exit 0
+fi
+
+
+if [ "$#" -gt 0 ]
+then
+    # Make sure directories exist
+    mkdir -p $collectDir
+
+    # Unique file name for makefile for the current target
+    file="$collectDir/$$_${RANDOM}"
+
+    # The current target
+    object="${@: -1:1}"
+
+    # Add the current target to the list of objects
+    echo "OBJECTS += $object" >> $file
+
+    # Add the build rule for the current target
+    echo "$object: $makefile" >> $file
+    echo -e "\t cd $PWD && \\" >> $file
+    echo -e "\t${@:1:($#-1)} $object" >> $file
+    echo >> $file
+else
+    if [ -d $collectDir ]
+    then
+        # Collect all the makefiles into a single makefiles for this build
+        cat $collectDir/* > $makefile
+
+        # Add a build rule for all of the targets
+        echo 'all: $(OBJECTS)' >> $makefile
+
+        # Clear out all of the target makefiles
+        rm -rf $collectDir
+
+        # Run make on the collected makefile
+        make -j $WM_NCOMPPROCS -f $makefile all
+
+        rm -f $makefile
+    fi
+fi
+
+#------------------------------------------------------------------------------
