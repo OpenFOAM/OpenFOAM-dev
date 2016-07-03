@@ -37,7 +37,7 @@ Description
         type        removeRegisteredObject;
         libs        ("libutilityFunctionObjects.so");
         ...
-        objectNames (obj1 obj2);
+        objects     (obj1 obj2);
     }
     \endverbatim
 
@@ -45,7 +45,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: removeRegisteredObject | yes |
-        objectNames  | objects to remove       | yes         |
+        objects      | objects to remove       | yes         |
     \endtable
 
 See also

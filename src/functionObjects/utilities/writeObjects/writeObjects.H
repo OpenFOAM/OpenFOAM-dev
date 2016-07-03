@@ -48,7 +48,7 @@ Description
         libs        ("libutilityFunctionObjects.so");
         exclusiveWriting     true;
         ...
-        objectNames (obj1 obj2);
+        objects     (obj1 obj2);
     }
     \endverbatim
 
@@ -56,7 +56,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: writeObjects | yes |
-        objectNames  | objects to write        | yes         |
+        objects      | objects to write        | yes         |
         exclusiveWriting    | Takes over object writing | no | yes
     \endtable
 
