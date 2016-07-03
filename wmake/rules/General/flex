@@ -1,3 +1,4 @@
 SUFFIXES += .l
 
-ltoo = flex -o $(@D)/$(<F).c $< ; $(cc) $(cFLAGS) -c  $(@D)/$(<F).c -o $@
+ltoo = $(WM_SCHEDULER) flex -o $(@D)/$(<F).c $< $(AND) \
+    $(cc) $(cFLAGS) -c  $(@D)/$(<F).c -o $@

@@ -1,4 +1,6 @@
 SUFFIXES += .Y
 
-Ytoo = btyacc++ -v -d $(SKELETON) $< ; mv y_tab.c $(@D)/$(<F).C ; mv y_tab.h $(@D)/$(<F).H ; \
-     $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@
+Ytoo = $(WM_SCHEDULER) btyacc++ -v -d $(SKELETON) $< $(AND) \
+    mv y_tab.c $(@D)/$(<F).C $(AND) \
+    mv y_tab.h $(@D)/$(<F).H $(AND) \
+    $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@

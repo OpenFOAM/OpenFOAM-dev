@@ -1,4 +1,6 @@
 SUFFIXES += .y
 
-ytoo = byacc -v $(YYPREFIX) -d $< ; mv y.tab.c $(@D)/$(<F).C ; mv y.tab.h $(@D)/$(<F).H ; \
-     $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@
+ytoo = $(WM_SCHEDULER) byacc -v $(YYPREFIX) -d $< $(AND) \
+    mv y.tab.c $(@D)/$(<F).C $(AND) \
+    mv y.tab.h $(@D)/$(<F).H $(AND) \
+    $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@

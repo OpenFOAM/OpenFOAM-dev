@@ -1,7 +1,11 @@
 SUFFIXES += .y .Y
 
-ytoo = bison -v -d -y $< ; mv y.tab.c $(@D)/$(<F).c ; mv y.tab.h $(@D)/$(<F).h ; \
-     $(cc) $(cFLAGS) -c  $(@D)/$(<F).c -o $@
+ytoo = $(WM_SCHEDULER) bison -v -d -y $< $(AND) \
+    mv y.tab.c $(@D)/$(<F).c $(AND) \
+    mv y.tab.h $(@D)/$(<F).h $(AND) \
+    $(cc) $(cFLAGS) -c  $(@D)/$(<F).c -o $@
 
-Ytoo = bison -v -d -y $< ; mv y.tab.c $(@D)/$(<F).C ; mv y.tab.h $(@D)/$(<F).H ; \
-     $(CC) $(c++FLAGS) -c  $(@D)/$(<F).C -o $@
+Ytoo = $(WM_SCHEDULER) bison -v -d -y $< $(AND) \
+    mv y.tab.c $(@D)/$(<F).C $(AND) \
+    mv y.tab.h $(@D)/$(<F).H $(AND) \
+    $(CC) $(c++FLAGS) -c  $(@D)/$(<F).C -o $@
