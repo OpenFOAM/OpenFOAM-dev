@@ -117,7 +117,7 @@ do
             then
                 # If running in parallel start wmakeLnInclude on nCores
                 # and more as the cores become free
-                if [ "$nCores" > 0 ]
+                if [ "$nCores" -gt 0 ]
                 then
                     joblist=($(jobs -p))
                     while (( ${#joblist[*]} > $nCores ))
