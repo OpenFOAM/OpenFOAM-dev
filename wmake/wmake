@@ -103,11 +103,29 @@ make="make"
 
 
 #------------------------------------------------------------------------------
+# Set WM_NCOMPPROCS to number of cores on local machine
+#------------------------------------------------------------------------------
+
+useAllCores()
+{
+    if [ -r /proc/cpuinfo ]
+    then
+        WM_NCOMPPROCS=$(egrep "^processor" /proc/cpuinfo | wc -l)
+    else
+        WM_NCOMPPROCS=1
+    fi
+
+    export WM_NCOMPPROCS
+}
+
+
+#------------------------------------------------------------------------------
 # Parse arguments and options
 #------------------------------------------------------------------------------
 
 # Default to compiling the local target only
 all=
+update=
 
 while [ "$#" -gt 0 ]
 do
@@ -127,7 +145,7 @@ do
             ;;
         # Parallel compilation on all cores of local machine
         -j)
-            setWM_NCOMPPROCS
+            useAllCores
             test $# -ge 2 && expr $2 + 1 > /dev/null 2>&1 \
                 && shift && export WM_NCOMPPROCS=$1
             echo "Compiling enabled on $WM_NCOMPPROCS cores"
@@ -152,16 +170,7 @@ do
         # - remove empty directories, along with deprecated object directories
         #   and respective binaries.
         -update)
-            wrmdep -update
-            wrmdep -old
-            if [ -n "$WM_NCOMPPROCS" ]
-            then
-                wmakeLnIncludeAll -j$WM_NCOMPPROCS
-            else
-                wmakeLnIncludeAll
-            fi
-            wclean empty
-            export WM_UPDATE_DEPENDENCIES=yes
+            update="true"
             [ -z "$all" ] && all="all"
             ;;
         --)
@@ -268,11 +277,32 @@ fi
 # Recurse the source tree to compile "all" targets
 #------------------------------------------------------------------------------
 
+if [ -n "$update" ]
+then
+    wrmdep -update
+    wrmdep -old
+    if [ -n "$WM_NCOMPPROCS" ]
+    then
+        wmakeLnIncludeAll -j$WM_NCOMPPROCS
+    else
+        wmakeLnIncludeAll
+    fi
+    wclean empty
+    export WM_UPDATE_DEPENDENCIES=yes
+fi
+
+unset update
+
+
+#------------------------------------------------------------------------------
+# Recurse the source tree to compile "all" targets
+#------------------------------------------------------------------------------
+
 if [ "$all" = "all" ]
 then
     if [ -e Allwmake ]
     then
-        ./Allwmake $targetType
+        ./Allwmake -fromWmake $targetType
         exit $?
     else
         # Have to keep track of the main exit code for the call to "make"
@@ -310,7 +340,6 @@ fi
 # Recurse the source tree to compile "all" targets using wmakeQueue
 #------------------------------------------------------------------------------
 
-#scheduler="wmakeQueue"
 scheduler="wmakeCollect"
 
 if [ "$all" = "queue" ]
@@ -325,6 +354,8 @@ then
     ) && wmake -all
     exit $?
 fi
+
+unset scheduler
 
 
 #------------------------------------------------------------------------------
@@ -496,7 +527,7 @@ exec $make -f $WM_DIR/makefiles/general MAKE_DIR=$MakeDir \
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage expandPath findTarget
+unset Script usage useAllCores update expandPath findTarget
 
 
 #------------------------------------------------------------------------------
