@@ -117,12 +117,13 @@ do
             then
                 # If running in parallel start wmakeLnInclude on nCores
                 # and more as the cores become free
-                if [ "$nCores" -gt 0 ]
+                if [ "$nCores" > 0 ]
                 then
                     joblist=($(jobs -p))
                     while (( ${#joblist[*]} > $nCores ))
                     do
-                        sleep 0.01
+                        # When the job limit is reached wait for a job to finish
+                        wait -n
                         joblist=($(jobs -p))
                     done
                     wmakeLnInclude -update $topDir &
@@ -138,22 +139,6 @@ do
     done
 done
 
-# If running in parallel wait until all wmakeLnInclude jobs are complete
-if [ "$nCores" -gt 0 ]
-then
-    for job in $(jobs -p)
-    do
-        echo $job
-        wait $job || let "FAIL+=1"
-    done
-
-    if [ "$FAIL" == "0" ];
-    then
-        echo "$Script: completed wmakeLnInclude processes"
-    else
-        echo "$Script: failed ($FAIL)"
-    fi
-fi
 
 #------------------------------------------------------------------------------
 # Cleanup local variables and functions
