@@ -56,8 +56,6 @@ class Frossling
 :
     public massTransferModel
 {
-private:
-
     // Private data
 
         //- Lewis number

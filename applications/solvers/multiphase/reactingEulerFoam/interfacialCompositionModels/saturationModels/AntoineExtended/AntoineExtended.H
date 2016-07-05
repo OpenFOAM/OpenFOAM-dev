@@ -60,8 +60,6 @@ class AntoineExtended
 :
     public Antoine
 {
-private:
-
     // Private data
 
         //- Constant D

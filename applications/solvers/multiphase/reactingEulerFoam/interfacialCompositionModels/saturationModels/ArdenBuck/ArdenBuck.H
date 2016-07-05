@@ -52,8 +52,6 @@ class ArdenBuck
 :
     public saturationModel
 {
-private:
-
     // Private Member Functions
 
         //- Exponent divided by the temperature

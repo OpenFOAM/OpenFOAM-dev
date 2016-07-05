@@ -56,8 +56,6 @@ class sphericalMassTransfer
 :
     public massTransferModel
 {
-private:
-
     // Private data
 
         //- Lewis number

@@ -60,8 +60,6 @@ class Henry
 :
     public InterfaceCompositionModel<Thermo, OtherThermo>
 {
-private:
-
     // Private data
 
         //- Solubility coefficients

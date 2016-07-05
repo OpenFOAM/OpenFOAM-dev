@@ -62,8 +62,6 @@ class NonRandomTwoLiquid
 :
     public InterfaceCompositionModel<Thermo, OtherThermo>
 {
-private:
-
     // Private data
 
         //- Activity coefficient for species 1

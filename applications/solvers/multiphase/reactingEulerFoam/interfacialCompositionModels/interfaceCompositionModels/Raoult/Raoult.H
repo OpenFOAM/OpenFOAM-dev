@@ -58,8 +58,6 @@ class Raoult
 :
     public InterfaceCompositionModel<Thermo, OtherThermo>
 {
-private:
-
     // Private data
 
         //- Non-vapour species fraction
