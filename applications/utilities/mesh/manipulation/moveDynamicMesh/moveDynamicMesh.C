@@ -35,6 +35,7 @@ Description
 #include "pimpleControl.H"
 #include "vtkSurfaceWriter.H"
 #include "cyclicAMIPolyPatch.H"
+#include "PatchTools.H"
 
 using namespace Foam;
 
@@ -43,6 +44,7 @@ using namespace Foam;
 // Dump patch + weights to vtk file
 void writeWeights
 (
+    const polyMesh& mesh,
     const scalarField& wghtSum,
     const primitivePatch& patch,
     const fileName& directory,
@@ -52,16 +54,51 @@ void writeWeights
 {
     vtkSurfaceWriter writer;
 
-    writer.write
+    // Collect geometry
+    labelList pointToGlobal;
+    labelList uniqueMeshPointLabels;
+    autoPtr<globalIndex> globalPoints;
+    autoPtr<globalIndex> globalFaces;
+    faceList mergedFaces;
+    pointField mergedPoints;
+    Foam::PatchTools::gatherAndMerge
     (
-        directory,
-        prefix + "_proc" + Foam::name(Pstream::myProcNo()) + "_" + timeName,
-        patch.localPoints(),
+        mesh,
         patch.localFaces(),
-        "weightsSum",
-        wghtSum,
-        false
+        patch.meshPoints(),
+        patch.meshPointMap(),
+
+        pointToGlobal,
+        uniqueMeshPointLabels,
+        globalPoints,
+        globalFaces,
+
+        mergedFaces,
+        mergedPoints
     );
+    // Collect field
+    scalarField mergedWeights;
+    globalFaces().gather
+    (
+        UPstream::worldComm,
+        UPstream::procID(UPstream::worldComm),
+        wghtSum,
+        mergedWeights
+    );
+
+    if (Pstream::master())
+    {
+        writer.write
+        (
+            directory,
+            prefix + "_" + timeName,
+            mergedPoints,
+            mergedFaces,
+            "weightsSum",
+            mergedWeights,
+            false
+        );
+    }
 }
 
 
@@ -89,6 +126,7 @@ void writeWeights(const polyMesh& mesh)
 
                 writeWeights
                 (
+                    mesh,
                     ami.tgtWeightsSum(),
                     cpp.neighbPatch(),
                     "postProcessing",
@@ -97,6 +135,7 @@ void writeWeights(const polyMesh& mesh)
                 );
                 writeWeights
                 (
+                    mesh,
                     ami.srcWeightsSum(),
                     cpp,
                     "postProcessing",

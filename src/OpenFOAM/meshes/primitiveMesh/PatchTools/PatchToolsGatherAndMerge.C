@@ -219,6 +219,12 @@ void Foam::PatchTools::gatherAndMerge
     }
     else
     {
+        pointToGlobal = identity(meshPoints.size());
+        uniqueMeshPointLabels = pointToGlobal;
+
+        globalPointsPtr.reset(new globalIndex(meshPoints.size()));
+        globalFacesPtr.reset(new globalIndex(localFaces.size()));
+
         mergedFaces = localFaces;
         mergedPoints = pointField(mesh.points(), meshPoints);
     }

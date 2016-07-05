@@ -1,3 +1,4 @@
+#include "PatchTools.H"
 #include "checkGeometry.H"
 #include "polyMesh.H"
 #include "cellSet.H"
@@ -9,7 +10,9 @@
 #include "polyMeshTetDecomposition.H"
 #include "surfaceWriter.H"
 #include "checkTools.H"
-
+#include "vtkSurfaceWriter.H"
+#include "cyclicAMIPolyPatch.H"
+#include "Time.H"
 
 // Find wedge with opposite orientation. Note: does not actually check that
 // it is opposite, only that it has opposite normal and same axis
@@ -921,6 +924,135 @@ Foam::label Foam::checkGeometry
             if (writer.valid())
             {
                 mergeAndWrite(writer(), faces);
+            }
+        }
+    }
+
+    if (allGeometry)
+    {
+        const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+
+        const word tmName(mesh.time().timeName());
+        const word procAndTime(Foam::name(Pstream::myProcNo()) + "_" + tmName);
+
+        autoPtr<surfaceWriter> patchWriter;
+        if (!writer.valid())
+        {
+            patchWriter.reset(new vtkSurfaceWriter());
+        }
+        const surfaceWriter& wr = (writer.valid() ? writer() : patchWriter());
+
+        forAll(pbm, patchi)
+        {
+            if (isA<cyclicAMIPolyPatch>(pbm[patchi]))
+            {
+                const cyclicAMIPolyPatch& cpp =
+                    refCast<const cyclicAMIPolyPatch>(pbm[patchi]);
+
+                if (cpp.owner())
+                {
+                    Info<< "Calculating AMI weights between owner patch: "
+                        << cpp.name() << " and neighbour patch: "
+                        << cpp.neighbPatch().name() << endl;
+
+                    const AMIPatchToPatchInterpolation& ami =
+                        cpp.AMI();
+
+                    {
+                        // Collect geometry
+                        labelList pointToGlobal;
+                        labelList uniqueMeshPointLabels;
+                        autoPtr<globalIndex> globalPoints;
+                        autoPtr<globalIndex> globalFaces;
+                        faceList mergedFaces;
+                        pointField mergedPoints;
+                        Foam::PatchTools::gatherAndMerge
+                        (
+                            mesh,
+                            cpp.localFaces(),
+                            cpp.meshPoints(),
+                            cpp.meshPointMap(),
+
+                            pointToGlobal,
+                            uniqueMeshPointLabels,
+                            globalPoints,
+                            globalFaces,
+
+                            mergedFaces,
+                            mergedPoints
+                        );
+                        // Collect field
+                        scalarField mergedWeights;
+                        globalFaces().gather
+                        (
+                            UPstream::worldComm,
+                            UPstream::procID(UPstream::worldComm),
+                            ami.srcWeightsSum(),
+                            mergedWeights
+                        );
+
+                        if (Pstream::master())
+                        {
+                            wr.write
+                            (
+                                "postProcessing",
+                                "src_" + tmName,
+                                mergedPoints,
+                                mergedFaces,
+                                "weightsSum",
+                                mergedWeights,
+                                false
+                            );
+                        }
+                    }
+                    {
+                        // Collect geometry
+                        labelList pointToGlobal;
+                        labelList uniqueMeshPointLabels;
+                        autoPtr<globalIndex> globalPoints;
+                        autoPtr<globalIndex> globalFaces;
+                        faceList mergedFaces;
+                        pointField mergedPoints;
+                        Foam::PatchTools::gatherAndMerge
+                        (
+                            mesh,
+                            cpp.neighbPatch().localFaces(),
+                            cpp.neighbPatch().meshPoints(),
+                            cpp.neighbPatch().meshPointMap(),
+
+                            pointToGlobal,
+                            uniqueMeshPointLabels,
+                            globalPoints,
+                            globalFaces,
+
+                            mergedFaces,
+                            mergedPoints
+                        );
+                        // Collect field
+                        scalarField mergedWeights;
+                        globalFaces().gather
+                        (
+                            UPstream::worldComm,
+                            UPstream::procID(UPstream::worldComm),
+                            ami.tgtWeightsSum(),
+                            mergedWeights
+                        );
+
+                        if (Pstream::master())
+                        {
+                            wr.write
+                            (
+                                "postProcessing",
+                                "tgt_" + tmName,
+                                mergedPoints,
+                                mergedFaces,
+                                "weightsSum",
+                                mergedWeights,
+                                false
+                            );
+                        }
+                    }
+                }
             }
         }
     }
