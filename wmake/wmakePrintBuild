@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -205,10 +205,11 @@ then
         else
             echo "version changed from previous build" 1>&2
         fi
+        exit $rc
     else
         echo "no git description found" 1>&2
+        exit 0
     fi
-    exit $rc
 fi
 
 
