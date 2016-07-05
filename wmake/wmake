@@ -281,11 +281,14 @@ if [ -n "$update" ]
 then
     wrmdep -update
     wrmdep -old
-    if [ -n "$WM_NCOMPPROCS" ]
+    if [ "$all" != "queue" ]
     then
-        wmakeLnIncludeAll -j$WM_NCOMPPROCS
-    else
-        wmakeLnIncludeAll
+        if [ -n "$WM_NCOMPPROCS" ]
+        then
+            wmakeLnIncludeAll -j$WM_NCOMPPROCS
+        else
+            wmakeLnIncludeAll
+        fi
     fi
     wclean empty
     export WM_UPDATE_DEPENDENCIES=yes
