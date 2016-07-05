@@ -125,11 +125,11 @@ then
     # Make sure directories exist
     mkdir -p $collectDir
 
-    # Unique file name for makefile for the current target
-    file="$collectDir/$$_${RANDOM}"
-
     # The current target
     object="${@: -1:1}"
+
+    # Create a unique name for the makefile from the object path
+    file=$collectDir/${object////_}
 
     # Add the current target to the list of objects
     echo "OBJECTS += $object" >> $file
