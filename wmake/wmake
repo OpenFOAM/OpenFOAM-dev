@@ -347,13 +347,14 @@ scheduler="wmakeCollect"
 
 if [ "$all" = "queue" ]
 then
-    (                                             \
-        wmakeLnIncludeAll -j$WM_NCOMPPROCS        \
-     && WM_ID=$(stat --format=%d.%i $PWD)         \
-        WM_SCHEDULER=$scheduler                   \
-        trap '$scheduler -kill' TERM INT;         \
-        wmake -all objects                        \
-     && $scheduler                                \
+    (                                                 \
+        wmakeLnIncludeAll -j$WM_NCOMPPROCS            \
+     && WM_ID=${PWD////_}.$WM_OPTIONS                 \
+        WM_SCHEDULER=$scheduler                       \
+        trap '$scheduler -kill' TERM INT;             \
+        $scheduler -clean                             \
+     && wmake -all objects                            \
+     && $scheduler                                    \
     ) && wmake -all
     exit $?
 fi

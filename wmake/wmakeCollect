@@ -42,7 +42,8 @@ usage() {
 Usage: $Script [OPTION] <command>
 
 options:
-  -kill             Removes temporary makefiles
+  -clean            Clean-up before compilation (removes old makefiles)
+  -kill             Clean-up after termination (removes makefiles)
   -h | -help        Print the usage
 
 Collecting scheduler for fast parallel compilation of large numbers of object
@@ -76,7 +77,7 @@ do
     -h | -help)
         usage
         ;;
-    -kill)
+    -kill | -clean)
         cleanup="true"
         shift
         ;;
@@ -135,7 +136,7 @@ then
 
     # Add the build rule for the current target
     echo "$object: $makefile" >> $file
-    echo -e "\t cd $PWD && \\" >> $file
+    echo -e "\tcd $PWD && \\" >> $file
     echo -e "\t${@:1:($#-1)} $object" >> $file
     echo >> $file
 else
