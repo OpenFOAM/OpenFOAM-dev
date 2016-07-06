@@ -104,6 +104,9 @@ public:
         void append(const word&);
 
         //- Does the list contain the specified name
+        inline bool found(const word&) const;
+
+        //- Does the list contain the specified name
         inline bool contains(const word&) const;
 
         //- Transfer the contents of the argument List into this list

@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
     #include "createControl.H"
     #include "createTimeControls.H"
     #include "createFields.H"
+    #include "createFieldRefs.H"
     #include "createFvOptions.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
