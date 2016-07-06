@@ -56,8 +56,8 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    Tmin_(readScalar(coeffs_.lookup("Tmin"))),
-    Tmax_(readScalar(coeffs_.lookup("Tmax")))
+    Tmin_(readScalar(coeffs_.lookup("min"))),
+    Tmax_(readScalar(coeffs_.lookup("max")))
 {
     // Set the field name to that of the energy field from which the temperature
     // is obtained
@@ -72,6 +72,22 @@ Foam::fv::limitTemperature::limitTemperature
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fv::limitTemperature::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        coeffs_.lookup("min") >> Tmin_;
+        coeffs_.lookup("max") >> Tmax_;
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 void Foam::fv::limitTemperature::correct(volScalarField& he)
 {
@@ -118,22 +134,6 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
                 }
             }
         }
-    }
-}
-
-
-bool Foam::fv::limitTemperature::read(const dictionary& dict)
-{
-    if (cellSetOption::read(dict))
-    {
-        coeffs_.readIfPresent("Tmin", Tmin_);
-        coeffs_.readIfPresent("Tmax", Tmax_);
-
-        return true;
-    }
-    else
-    {
-        return false;
     }
 }
 
