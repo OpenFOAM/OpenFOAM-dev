@@ -42,7 +42,6 @@ Usage
     }
     \endverbatim
 
-
 SourceFiles
     tabulatedAccelerationSource.C
 
