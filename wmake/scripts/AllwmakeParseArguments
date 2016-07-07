@@ -58,9 +58,13 @@ USAGE
 #------------------------------------------------------------------------------
 
 fromWmake=
+qOpt=
 
 for arg in "$@"
 do
+    # Remove arg
+    shift
+
     case "$arg" in
         -h | -help)
             usage
@@ -70,11 +74,19 @@ do
         -fromWmake)
             fromWmake="fromWmake"
             ;;
+        -q)
+            qOpt="-q"
+            # Permanently remove arg
+            continue
+            ;;
         # Target type
         lib | libo | libso | dep | objects)
             targetType=$arg
             ;;
     esac
+
+    # Re-insert arg
+    set -- "$@" "$arg"
 done
 
 
@@ -84,7 +96,7 @@ done
 
 if [ -z "$fromWmake" ]
 then
-    wmake -all $*
+    wmake -all $qOpt $*
 fi
 
 
