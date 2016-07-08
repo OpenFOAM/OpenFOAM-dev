@@ -98,7 +98,7 @@ else
 fi
 
 
-# Default to searching from CWD
+# Defaults to searching from CWD
 [ "$#" -gt 0 ] || set -- .
 
 for checkDir
@@ -149,7 +149,8 @@ then
 
     # Synchronize the file system to ensure that all of the links exist
     # before compilation
-    sync
+    # sync
+    sleep 2
 fi
 
 
