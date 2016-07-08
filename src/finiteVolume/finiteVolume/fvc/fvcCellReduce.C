@@ -36,7 +36,8 @@ Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvc::cellReduce
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf,
-    const CombineOp& cop
+    const CombineOp& cop,
+    const Type& nullValue
 )
 {
     typedef GeometricField<Type, fvPatchField, volMesh> volFieldType;
@@ -56,7 +57,7 @@ Foam::fvc::cellReduce
                 IOobject::NO_WRITE
             ),
             mesh,
-            dimensioned<Type>("0", ssf.dimensions(), Zero),
+            dimensioned<Type>("initialValue", ssf.dimensions(), nullValue),
             extrapolatedCalculatedFvPatchField<Type>::typeName
         )
     );
@@ -88,10 +89,19 @@ Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
 Foam::fvc::cellReduce
 (
     const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>& tssf,
-    const CombineOp& cop
+    const CombineOp& cop,
+    const Type& nullValue
 )
 {
-    tmp<GeometricField<Type, fvPatchField, volMesh>> tvf(cellReduce(tssf, cop));
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tvf
+    (
+        cellReduce
+        (
+            tssf,
+            cop,
+            nullValue
+        )
+    );
 
     tssf.clear();
 

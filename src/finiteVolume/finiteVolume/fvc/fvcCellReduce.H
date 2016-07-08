@@ -53,14 +53,16 @@ namespace fvc
     tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
     (
         const GeometricField<Type, fvsPatchField, surfaceMesh>&,
-        const CombineOp& cop
+        const CombineOp& cop,
+        const Type& nullValue = pTraits<Type>::zero
     );
 
     template<class Type, class CombineOp>
     tmp<GeometricField<Type, fvPatchField, volMesh>> cellReduce
     (
         const tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>&,
-        const CombineOp& cop
+        const CombineOp& cop,
+        const Type& nullValue = pTraits<Type>::zero
     );
 }
 
