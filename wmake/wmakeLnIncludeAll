@@ -72,12 +72,10 @@ do
             nCores=$WM_NCOMPPROCS
             test $# -ge 2 && expr $2 + 1 > /dev/null 2>&1 \
                 && shift && nCores=$1
-            echo "$Script: enabled on $nCores cores"
             ;;
         # Parallel compilation on specified number of cores
         -j*)
             nCores=${1#-j}
-            echo "$Script: enabled on $nCores cores"
             ;;
         -*)
             usage "unknown option: '$*'"
@@ -91,7 +89,14 @@ done
 
 
 FAIL=0
-echo "$Script: starting wmakeLnInclude processes"
+
+if [ "$nCores" -gt 0 ]
+then
+    echo "$Script: starting wmakeLnInclude processes on $nCores cores"
+else
+    echo "$Script: running wmakeLnInclude"
+fi
+
 
 # Default to searching from CWD
 [ "$#" -gt 0 ] || set -- .
@@ -100,11 +105,9 @@ for checkDir
 do
     if [ -d $checkDir ]
     then
-        echo "Searching: $checkDir for 'Make' directories"
-        echo "---------"
+        echo "    searching $checkDir for 'Make' directories"
     else
-        echo "Skipping non-dir: $checkDir"
-        echo "----------------"
+        echo "    skipping non-dir $checkDir"
         continue
     fi
 
@@ -132,7 +135,7 @@ do
                 fi
             elif [ -d "$topDir/lnInclude" ]
             then
-                echo "removing spurious $topDir/lnInclude"
+                echo "    removing spurious $topDir/lnInclude"
                 rm -rf "$topDir/lnInclude"
             fi
         fi
@@ -146,7 +149,6 @@ then
 
     # Synchronize the file system to ensure that all of the links exist
     # before compilation
-    echo "    synchronizing file system to ensure that all of the links exist"
     sync
 fi
 
