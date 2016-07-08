@@ -146,6 +146,7 @@ then
 
     # Synchronize the file system to ensure that all of the links exist
     # before compilation
+    echo "    synchronizing file system to ensure that all of the links exist"
     sync
 fi
 

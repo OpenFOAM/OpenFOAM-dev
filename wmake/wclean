@@ -123,7 +123,7 @@ then
     fi
 
     # Provide some feedback
-    echo "$Script ${dir:-./}"
+    echo "$Script $targetType ${dir:-.}"
 fi
 
 
@@ -135,17 +135,15 @@ if [ "$targetType" = empty ]
 then
     # First pass: clean up empty source code directories
 
-    echo "Searching for empty directories..."
+    echo "Removing empty directories..."
 
     # Get sub-directories avoiding particular directories
     for dir in $(find . -mindepth 1 -maxdepth 1 \
                         -type d \( -name .git -prune -o -print \) )
     do
-        echo "check dir: $dir"
+        echo "    searching: $dir"
         find $dir -depth -type d -empty -exec rmdir {} \; -print
     done
-
-    echo "Search for empty directories complete."
 
     # Second pass: clean up object directories with WM_PROJECT_DIR that don't
     # have respective source code folders, along with the respective binaries
@@ -157,7 +155,7 @@ then
 
         if [ -d $objectsDir ]
         then
-            echo "Searching for deprecated object directories at: $objectsDir"
+            echo "Removing redundant object directories in $objectsDir"
 
             find $objectsDir -name 'variables' -print | \
             while read variablesFile
@@ -197,8 +195,6 @@ then
                     rm -rvf $depFile 2>/dev/null
                 fi
             done
-
-            echo "Search for deprecated object directories complete."
         fi
     fi
 
