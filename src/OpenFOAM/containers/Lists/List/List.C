@@ -130,6 +130,25 @@ Foam::List<T>::List(const List<T>& a)
 
 
 template<class T>
+template<class T2>
+Foam::List<T>::List(const List<T2>& a)
+:
+    UList<T>(NULL, a.size())
+{
+    if (this->size_)
+    {
+        this->v_ = new T[this->size_];
+
+        List_ACCESS(T, (*this), vp);
+        List_CONST_ACCESS(T2, a, ap);
+        List_FOR_ALL((*this), i)
+            List_ELEM((*this), vp, i) = T(List_ELEM(a, ap, i));
+        List_END_FOR_ALL
+    }
+}
+
+
+template<class T>
 Foam::List<T>::List(const Xfer<List<T>>& lst)
 {
     transfer(lst());

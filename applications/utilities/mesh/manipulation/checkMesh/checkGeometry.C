@@ -986,7 +986,7 @@ Foam::label Foam::checkGeometry
                         globalFaces().gather
                         (
                             UPstream::worldComm,
-                            UPstream::procID(UPstream::worldComm),
+                            labelList(UPstream::procID(UPstream::worldComm)),
                             ami.srcWeightsSum(),
                             mergedWeights
                         );
@@ -1033,7 +1033,7 @@ Foam::label Foam::checkGeometry
                         globalFaces().gather
                         (
                             UPstream::worldComm,
-                            UPstream::procID(UPstream::worldComm),
+                            labelList(UPstream::procID(UPstream::worldComm)),
                             ami.tgtWeightsSum(),
                             mergedWeights
                         );

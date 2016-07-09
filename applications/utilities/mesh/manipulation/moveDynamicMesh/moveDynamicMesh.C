@@ -81,7 +81,7 @@ void writeWeights
     globalFaces().gather
     (
         UPstream::worldComm,
-        UPstream::procID(UPstream::worldComm),
+        labelList(UPstream::procID(UPstream::worldComm)),
         wghtSum,
         mergedWeights
     );

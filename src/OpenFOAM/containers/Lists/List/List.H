@@ -114,6 +114,10 @@ public:
         //- Copy constructor
         List(const List<T>&);
 
+        //- Copy constructor from list of another type
+        template<class T2>
+        explicit List(const List<T2>&);
+
         //- Construct by transferring the parameter contents
         List(const Xfer<List<T>>&);
 
