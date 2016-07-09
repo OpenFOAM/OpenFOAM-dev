@@ -102,12 +102,25 @@ findObjectDir()
     fi
 }
 
-depToSource()
-{
-    sourceFile=$(echo ${depFile%.dep} | \
-        sed -e s%platforms/${WM_OPTIONS}/%% -e s%Make/${WM_OPTIONS}/%% \
-            -e s%platforms/${WM_OPTIONS}${WM_MPLIB}/%% \
-            -e s%Make/${WM_OPTIONS}${WM_MPLIB}/%% )
-}
+if [ -n "$BASH_VERSION" ]; then
+    depToSource()
+    {
+        sourceFile=${depFile%.dep}
+        sourceFile="${sourceFile/platforms\/${WM_OPTIONS}\//}"
+        sourceFile="${sourceFile/Make\/${WM_OPTIONS}\//}"
+        sourceFile="${sourceFile/platforms\/${WM_OPTIONS}${WM_MPLIB}\//}"
+        sourceFile="${sourceFile/Make\/${WM_OPTIONS}${WM_MPLIB}\//}"
+    }
+else
+    depToSource
+    {
+        sourceFile=$(echo ${depFile%.dep} |                 \
+            sed -e s%platforms/${WM_OPTIONS}/%%             \
+                -e s%Make/${WM_OPTIONS}/%%                  \
+                -e s%platforms/${WM_OPTIONS}${WM_MPLIB}/%%  \
+                -e s%Make/${WM_OPTIONS}${WM_MPLIB}/%% )
+    }
+fi
+
 
 #------------------------------------------------------------------------------
