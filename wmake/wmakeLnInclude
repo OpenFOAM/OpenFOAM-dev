@@ -78,24 +78,24 @@ unset update silentOpt
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    -h | -help)   # Provide immediate help
-        usage
-        ;;
-    -u | -update)
-        update=true
-        lnOpt="-sf"
-        shift
-        ;;
-    -s | -silent)
-        silentOpt=true
-        shift
-        ;;
-    -*)
-        usage "unknown option: '$*'"
-        ;;
-    *)
-        break
-        ;;
+        -h | -help)   # Provide immediate help
+            usage
+            ;;
+        -u | -update)
+            update=true
+            lnOpt="-sf"
+            shift
+            ;;
+        -s | -silent)
+            silentOpt=true
+            shift
+            ;;
+        -*)
+            usage "unknown option: '$*'"
+            ;;
+        *)
+            break
+            ;;
     esac
 done
 
@@ -126,10 +126,7 @@ incDir=$baseDir/lnInclude
 
 if [ -d $incDir ]
 then
-    [ "$update" = true ] || {
-        # echo "$Script error: include directory $incDir already exists" 1>&2
-        exit 0
-    }
+    [ "$update" = true ] || exit 0
 else
     mkdir $incDir
 fi
@@ -141,10 +138,9 @@ fi
 
 cd $incDir || exit 1
 
-if [ "$silentOpt" != true ]
-then
+[ "$silentOpt" = true ] || {
     echo "$Script: linking include files to $incDir" 1>&2
-fi
+}
 
 
 #------------------------------------------------------------------------------
