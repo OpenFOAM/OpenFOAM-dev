@@ -41,13 +41,17 @@ Description
     {
         type            volRegion;
         libs            ("libfieldFunctionObjects.so");
-        ...
+
         log             true;
+        writeControl    writeTime;
         writeFields     true;
+
         regionType      cellZone;
         name            c0;
         operation       volAverage;
+
         weightField     alpha1;
+
         fields
         (
             p

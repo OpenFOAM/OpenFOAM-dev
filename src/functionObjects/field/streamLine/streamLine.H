@@ -37,7 +37,9 @@ Description
     {
         type            streamLine;
         libs            ("libfieldFunctionObjects.so");
-        ...
+
+        writeControl    writeTime;
+
         setFormat       vtk;
         trackForward    yes;
         fields

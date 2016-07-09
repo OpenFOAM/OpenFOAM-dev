@@ -44,9 +44,17 @@ Description
     {
         type        nearWallFields;
         libs        ("libfieldFunctionObjects.so");
-        ...
-        fields      ((p pNear)(U UNear));
+
+        writeControl writeTime;
+
+        fields
+        (
+            (p pNear)
+            (U UNear)
+        );
+
         patches     (movingWall);
+
         distance    0.13;
     }
     \endverbatim

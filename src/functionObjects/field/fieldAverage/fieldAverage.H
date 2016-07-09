@@ -70,11 +70,14 @@ Description
     {
         type                fieldAverage;
         libs                ("libfieldFunctionObjects.so");
-        ...
+
+        writeControl    writeTime;
+
         restartOnRestart    false;
         restartOnOutput     false;
         periodicRestart     false;
         restartPeriod       0.002;
+
         fields
         (
             U
@@ -97,13 +100,13 @@ Description
 
 Usage
     \table
-        Property        | Description           | Required    | Default value
-        type            | type name: fieldAverage | yes |
+        Property          | Description           | Required    | Default value
+        type              | type name: fieldAverage | yes |
         restartOnRestart  | Restart the averaging on restart | no | no
         restartOnOutput   | Restart the averaging on output | no | no
-        periodicRestart | Periodically restart the averaging | no | no
-        restartPeriod   | Periodic restart period | conditional |
-        fields          | list of fields and averaging options | yes |
+        periodicRestart   | Periodically restart the averaging | no | no
+        restartPeriod     | Periodic restart period | conditional |
+        fields            | list of fields and averaging options | yes |
     \endtable
 
 

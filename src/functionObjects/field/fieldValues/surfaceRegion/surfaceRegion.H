@@ -37,20 +37,47 @@ Description
     For example, to calculate the volumetric or mass flux across a patch,
     apply the 'sum' operator to the flux field (typically \c phi)
 
-    Example of function object specification:
+    Examples of function object specification:
     \verbatim
+    movingWallPatch
+    {
+        type            surfaceRegion;
+        libs            ("libfieldFunctionObjects.so");
+
+        log             true;
+        writeControl    writeTime;
+        writeFields     true;
+
+        regionType      patch;
+        name            movingWall;
+
+        operation       areaAverage;
+
+        fields
+        (
+            p
+            phi
+            U
+        );
+    }
+
     surfaceRegion1
     {
         type            surfaceRegion;
         libs            ("libfieldFunctionObjects.so");
-        ...
-        log             yes;
+
+        log             true;
+        writeControl    writeTime;
         writeFields     true;
+
         surfaceFormat   none;
         regionType      faceZone;
         name            f0;
+
         operation       sum;
+
         weightField     alpha1;
+
         fields
         (
             p

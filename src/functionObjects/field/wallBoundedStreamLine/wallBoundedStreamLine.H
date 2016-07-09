@@ -38,19 +38,24 @@ Description
     {
         type            wallBoundedStreamLine;
         libs            ("libfieldFunctionObjects.so");
-        ...
+
+        writeControl    writeTime;
+
         setFormat       vtk;
         U               UNear;
         trackForward    yes;
+
         fields
         (
             UNear
             p
         );
+
         lifeTime        10000;
         trackLength     1e-3;
         nSubCycle       5;
         cloudName       particleTracks;
+
         seedSampleSet   patchSeed;
         patchSeedCoeffs
         {
