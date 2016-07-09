@@ -121,7 +121,7 @@ then
     object="${@: -1:1}"
 
     # Create a unique name for the makefile from the object path
-    file=$WM_COLLECT_DIR/${object////_}
+    file=$(mktemp $WM_COLLECT_DIR/XXXXXX)
 
     # Add the current target to the list of objects
     echo "OBJECTS += $object" >> $file
@@ -135,7 +135,7 @@ else
     if [ -d $WM_COLLECT_DIR ]
     then
         # Collect all the makefiles into a single makefiles for this build
-        cat $WM_COLLECT_DIR/* > $makefile
+        (cd $WM_COLLECT_DIR && ls -1rt | xargs cat > $makefile)
 
         # Add a build rule for all of the targets
         echo 'all: $(OBJECTS)' >> $makefile
