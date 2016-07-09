@@ -40,7 +40,7 @@ Description
     systemCall1
     {
         type        systemCall;
-        libs        ("libsystemCall.so");
+        libs        ("libutilityFunctionObjects.so");
         ...
         executeCalls
         (
@@ -61,11 +61,11 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | type name: systemCall   | yes         |
-        executeCalls | list of calls on execute | yes        |
-        writeCalls   | list of calls on write  | yes         |
-        endCalls     | list of calls on end    | yes         |
+        Property     | Description              | Required    | Default value
+        type         | type name: systemCall    | yes         |
+        executeCalls | list of calls on execute | yes         |
+        writeCalls   | list of calls on write   | yes         |
+        endCalls     | list of calls on end     | yes         |
     \endtable
 
 Note
