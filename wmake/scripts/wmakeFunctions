@@ -112,7 +112,7 @@ if [ -n "$BASH_VERSION" ]; then
         sourceFile="${sourceFile/Make\/${WM_OPTIONS}${WM_MPLIB}\//}"
     }
 else
-    depToSource
+    depToSource()
     {
         sourceFile=$(echo ${depFile%.dep} |                 \
             sed -e s%platforms/${WM_OPTIONS}/%%             \
