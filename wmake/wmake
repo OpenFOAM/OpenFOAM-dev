@@ -225,6 +225,8 @@ fi
 
 if [ "$WM_NCOMPPROCS" ]
 then
+    parOpt="-j $WM_NCOMPPROCS"
+
     if [ "$WM_NCOMPPROCS" -gt 1 -a ! "$MAKEFLAGS" ]
     then
         lockDir=$HOME/.$WM_PROJECT/.wmake
@@ -236,7 +238,7 @@ then
             mkdir -p $lockDir
         fi
 
-        make="$make --no-print-directory -j "$WM_NCOMPPROCS
+        make="$make --no-print-directory $parOpt"
     fi
 fi
 
@@ -281,20 +283,10 @@ if [ -n "$update" ]
 then
     wrmdep -update
     wrmdep -old
-    if [ "$all" != "queue" ]
-    then
-        if [ -n "$WM_NCOMPPROCS" ]
-        then
-            wmakeLnIncludeAll -j$WM_NCOMPPROCS
-        else
-            wmakeLnIncludeAll
-        fi
-    fi
+    wmakeLnIncludeAll -update $parOpt
     wclean empty
     export WM_UPDATE_DEPENDENCIES=yes
 fi
-
-unset update
 
 
 #------------------------------------------------------------------------------
@@ -343,23 +335,20 @@ fi
 # Recurse the source tree to compile "all" targets using wmakeQueue
 #------------------------------------------------------------------------------
 
-scheduler="wmakeCollect"
-
 if [ "$all" = "queue" ]
 then
+    [ -n "$update" ] || wmakeLnIncludeAll $parOpt
+
     (                                                                          \
-        wmakeLnIncludeAll -j$WM_NCOMPPROCS                                     \
-     && WM_COLLECT_DIR=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}/${PWD////_}     \
-        WM_SCHEDULER=$scheduler                                                \
-        trap '$scheduler -kill' TERM INT;                                      \
-        $scheduler -clean                                                      \
+        WM_COLLECT_DIR=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}/${PWD////_}     \
+        WM_SCHEDULER=wmakeCollect                                              \
+        trap '$WM_SCHEDULER -kill' TERM INT;                                   \
+        $WM_SCHEDULER -clean                                                   \
      && wmake -all objects                                                     \
-     && $scheduler                                                             \
+     && $WM_SCHEDULER                                                          \
     ) && wmake -all
     exit $?
 fi
-
-unset scheduler
 
 
 #------------------------------------------------------------------------------
