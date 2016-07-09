@@ -30,7 +30,7 @@
 #
 # Description
 #     Find directories with a 'Make/files' that contains a 'LIB =' directive
-#     and execute 'wmakeLnInclude -update' for each one
+#     and execute 'wmakeLnInclude' for each one
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
@@ -61,11 +61,17 @@ USAGE
 findName=lnInclude
 nCores=0
 
+# Default 'wmakeLnInclude' option
+wmLnOpt=
+
 while [ "$#" -gt 0 ]
 do
     case "$1" in
         -h | -help)   # Provide immediate help
             usage
+            ;;
+        -u | -update)
+            wmLnOpt="-update"
             ;;
         # Parallel execution on WM_NCOMPPROCS cores
         -j)
@@ -129,9 +135,9 @@ do
                         wait -n
                         joblist=($(jobs -p))
                     done
-                    wmakeLnInclude -update $topDir &
+                    wmakeLnInclude $wmLnOpt $topDir &
                 else
-                    wmakeLnInclude -update $topDir
+                    wmakeLnInclude $wmLnOpt $topDir
                 fi
             elif [ -d "$topDir/lnInclude" ]
             then
