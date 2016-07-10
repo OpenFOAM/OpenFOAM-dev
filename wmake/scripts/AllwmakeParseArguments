@@ -96,7 +96,7 @@ done
 
 if [ -z "$fromWmake" ]
 then
-    wmake -all $qOpt $*
+    exec wmake -all $qOpt $*
 fi
 
 
