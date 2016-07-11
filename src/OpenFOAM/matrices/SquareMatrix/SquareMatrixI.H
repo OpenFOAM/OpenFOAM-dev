@@ -161,6 +161,13 @@ inline void Foam::SquareMatrix<Type>::setSize(const label m)
 }
 
 
+template<class Type>
+inline void Foam::SquareMatrix<Type>::shallowResize(const label m)
+{
+    Matrix<SquareMatrix<Type>, Type>::shallowResize(m, m);
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Type>

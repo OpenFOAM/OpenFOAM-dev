@@ -93,6 +93,34 @@ Foam::rodas34::rodas34(const ODESystem& ode, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::rodas34::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(k1_);
+        resizeField(k2_);
+        resizeField(k3_);
+        resizeField(k4_);
+        resizeField(k5_);
+        resizeField(dy_);
+        resizeField(err_);
+        resizeField(dydx_);
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+        resizeMatrix(a_);
+        resizeField(pivotIndices_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 Foam::scalar Foam::rodas34::solve
 (
     const scalar x0,

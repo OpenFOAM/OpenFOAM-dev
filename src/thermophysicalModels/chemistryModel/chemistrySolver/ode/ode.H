@@ -55,7 +55,8 @@ class ode
     // Private data
 
         dictionary coeffsDict_;
-        autoPtr<ODESolver> odeSolver_;
+
+        mutable autoPtr<ODESolver> odeSolver_;
 
         // Solver data
         mutable scalarField cTp_;

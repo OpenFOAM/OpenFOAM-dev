@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,8 +92,13 @@ public:
 
     // Constructors
 
-        //- Construct from ODE
+        //- Construct from ODESystem
         Rosenbrock12(const ODESystem& ode, const dictionary& dict);
+
+
+    //- Destructor
+    virtual ~Rosenbrock12()
+    {}
 
 
     // Member Functions
@@ -101,8 +106,11 @@ public:
         //- Inherit solve from ODESolver
         using ODESolver::solve;
 
+        //- Resize the ODE solver
+        virtual bool resize();
+
         //- Solve a single step dx and return the error
-        scalar solve
+        virtual scalar solve
         (
             const scalar x0,
             const scalarField& y0,
@@ -112,7 +120,7 @@ public:
         ) const;
 
         //- Solve the ODE system and the update the state
-        void solve
+        virtual void solve
         (
             scalar& x,
             scalarField& y,

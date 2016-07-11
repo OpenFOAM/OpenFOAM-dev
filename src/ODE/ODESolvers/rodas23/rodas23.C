@@ -70,6 +70,32 @@ Foam::rodas23::rodas23(const ODESystem& ode, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::rodas23::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(k1_);
+        resizeField(k2_);
+        resizeField(k3_);
+        resizeField(dy_);
+        resizeField(err_);
+        resizeField(dydx_);
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+        resizeMatrix(a_);
+        resizeField(pivotIndices_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 Foam::scalar Foam::rodas23::solve
 (
     const scalar x0,

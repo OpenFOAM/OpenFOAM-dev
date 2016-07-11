@@ -79,6 +79,31 @@ Foam::Rosenbrock23::Rosenbrock23(const ODESystem& ode, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::Rosenbrock23::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(k1_);
+        resizeField(k2_);
+        resizeField(k3_);
+        resizeField(err_);
+        resizeField(dydx_);
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+        resizeMatrix(a_);
+        resizeField(pivotIndices_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 Foam::scalar Foam::Rosenbrock23::solve
 (
     const scalar x0,

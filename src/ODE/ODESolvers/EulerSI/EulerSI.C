@@ -52,6 +52,28 @@ Foam::EulerSI::EulerSI(const ODESystem& ode, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::EulerSI::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(err_);
+        resizeField(dydx_);
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+        resizeMatrix(a_);
+        resizeField(pivotIndices_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 Foam::scalar Foam::EulerSI::solve
 (
     const scalar x0,

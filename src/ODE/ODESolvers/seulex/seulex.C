@@ -211,6 +211,30 @@ void Foam::seulex::extrapolate
 }
 
 
+bool Foam::seulex::resize()
+{
+    if (ODESolver::resize())
+    {
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+        resizeMatrix(a_);
+        resizeField(pivotIndices_);
+        resizeField(y0_);
+        resizeField(ySequence_);
+        resizeField(scale_);
+        resizeField(dy_);
+        resizeField(yTemp_);
+        resizeField(dydx_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 void Foam::seulex::solve
 (
     scalar& x,

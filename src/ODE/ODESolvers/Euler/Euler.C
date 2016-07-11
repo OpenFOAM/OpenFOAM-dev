@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,23 @@ Foam::Euler::Euler(const ODESystem& ode, const dictionary& dict)
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::Euler::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(err_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 Foam::scalar Foam::Euler::solve
 (

@@ -113,6 +113,9 @@ public:
             //- Resize the matrix preserving the elements
             inline void setSize(const label m);
 
+            //- Resize the matrix without reallocating storage (unsafe)
+            inline void shallowResize(const label m);
+
 
     // Member operators
 

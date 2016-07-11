@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,34 +34,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::ODESolver::ODESolver(const ODESystem& ode, const dictionary& dict)
-:
-    odes_(ode),
-    n_(ode.nEqns()),
-    absTol_(n_, dict.lookupOrDefault<scalar>("absTol", SMALL)),
-    relTol_(n_, dict.lookupOrDefault<scalar>("relTol", 1e-4)),
-    maxSteps_(10000)
-{}
-
-
-Foam::ODESolver::ODESolver
-(
-    const ODESystem& ode,
-    const scalarField& absTol,
-    const scalarField& relTol
-)
-:
-    odes_(ode),
-    n_(ode.nEqns()),
-    absTol_(absTol),
-    relTol_(relTol),
-    maxSteps_(10000)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::scalar Foam::ODESolver::normalizeError
 (
@@ -79,6 +52,76 @@ Foam::scalar Foam::ODESolver::normalizeError
     }
 
     return maxErr;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::ODESolver::ODESolver(const ODESystem& ode, const dictionary& dict)
+:
+    odes_(ode),
+    maxN_(ode.nEqns()),
+    n_(ode.nEqns()),
+    absTol_(n_, dict.lookupOrDefault<scalar>("absTol", SMALL)),
+    relTol_(n_, dict.lookupOrDefault<scalar>("relTol", 1e-4)),
+    maxSteps_(10000)
+{}
+
+
+Foam::ODESolver::ODESolver
+(
+    const ODESystem& ode,
+    const scalarField& absTol,
+    const scalarField& relTol
+)
+:
+    odes_(ode),
+    maxN_(ode.nEqns()),
+    n_(ode.nEqns()),
+    absTol_(absTol),
+    relTol_(relTol),
+    maxSteps_(10000)
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::ODESolver::resize()
+{
+    if (odes_.nEqns() != n_)
+    {
+        if (odes_.nEqns() > maxN_)
+        {
+            FatalErrorInFunction
+                << "Specified number of equations " << odes_.nEqns()
+                << " greater than maximum " << maxN_
+                << abort(FatalError);
+        }
+
+        n_ = odes_.nEqns();
+
+        resizeField(absTol_);
+        resizeField(relTol_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+void Foam::ODESolver::solve
+(
+    scalar& x,
+    scalarField& y,
+    scalar& dxTry
+) const
+{
+    stepState step(dxTry);
+    solve(x, y, step);
+    dxTry = step.dxTry;
 }
 
 

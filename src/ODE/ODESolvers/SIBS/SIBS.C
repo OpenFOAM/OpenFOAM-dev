@@ -68,6 +68,26 @@ Foam::SIBS::SIBS(const ODESystem& ode, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+bool Foam::SIBS::resize()
+{
+    if (ODESolver::resize())
+    {
+        resizeField(yTemp_);
+        resizeField(ySeq_);
+        resizeField(yErr_);
+        resizeField(dydx0_);
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 void Foam::SIBS::solve
 (
     scalar& x,

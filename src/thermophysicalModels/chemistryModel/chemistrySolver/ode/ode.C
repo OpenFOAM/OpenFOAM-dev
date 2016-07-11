@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,14 @@ void Foam::ode<ChemistryModel>::solve
     scalar& subDeltaT
 ) const
 {
-    label nSpecie = this->nSpecie();
+    // Reset the size of the ODE system to the simplified size when mechanism
+    // reduction is active
+    if (odeSolver_->resize())
+    {
+        odeSolver_->resizeField(cTp_);
+    }
+
+    const label nSpecie = this->nSpecie();
 
     // Copy the concentration, T and P to the total solve-vector
     for (int i=0; i<nSpecie; i++)

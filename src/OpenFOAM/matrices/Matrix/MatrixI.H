@@ -280,6 +280,14 @@ Foam::Matrix<Form, Type>::col
 }
 
 
+template<class Form, class Type>
+void Foam::Matrix<Form, Type>::shallowResize(const label m, const label n)
+{
+    mRows_ = m;
+    nCols_ = n;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Form, class Type>

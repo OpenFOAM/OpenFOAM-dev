@@ -249,6 +249,9 @@ public:
             //- Resize the matrix preserving the elements
             void setSize(const label m, const label n);
 
+            //- Resize the matrix without reallocating storage (unsafe)
+            inline void shallowResize(const label m, const label n);
+
 
         //- Return the transpose of the matrix
         Form T() const;

@@ -66,6 +66,30 @@ Foam::Rosenbrock12::Rosenbrock12(const ODESystem& ode, const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::Rosenbrock12::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(k1_);
+        resizeField(k2_);
+        resizeField(err_);
+        resizeField(dydx_);
+        resizeField(dfdx_);
+        resizeMatrix(dfdy_);
+        resizeMatrix(a_);
+        resizeField(pivotIndices_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 Foam::scalar Foam::Rosenbrock12::solve
 (
     const scalar x0,

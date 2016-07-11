@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,29 @@ Foam::RKF45::RKF45(const ODESystem& ode, const dictionary& dict)
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::RKF45::resize()
+{
+    if (ODESolver::resize())
+    {
+        adaptiveSolver::resize(n_);
+
+        resizeField(yTemp_);
+        resizeField(k2_);
+        resizeField(k3_);
+        resizeField(k4_);
+        resizeField(k5_);
+        resizeField(k6_);
+        resizeField(err_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 
 Foam::scalar Foam::RKF45::solve
 (
