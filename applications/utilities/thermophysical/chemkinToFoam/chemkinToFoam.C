@@ -88,8 +88,8 @@ int main(int argc, char *argv[])
         {
             elementsDict.add
             (
-                cr.specieComposition()[speciesList[si]][ei].elementName,
-                cr.specieComposition()[speciesList[si]][ei].nAtoms
+                cr.specieComposition()[speciesList[si]][ei].name(),
+                cr.specieComposition()[speciesList[si]][ei].nAtoms()
             );
         }
 

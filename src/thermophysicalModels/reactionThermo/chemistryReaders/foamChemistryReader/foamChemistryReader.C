@@ -42,6 +42,85 @@ Foam::speciesTable& Foam::foamChemistryReader<ThermoType>::setSpecies
 }
 
 
+template<class ThermoType>
+void Foam::foamChemistryReader<ThermoType>::readSpeciesComposition()
+{
+    if (!chemDict_.found("elements"))
+    {
+        Info<< "    elements not defined in " << chemDict_.name() << endl;
+        return;
+    }
+
+    wordList e(chemDict_.lookup("elements"));
+    label currentElementIndex(0);
+
+    DynamicList<word> elementNames_;
+    HashTable<label> elementIndices_;
+
+    forAll(e, ei)
+    {
+        if (!elementIndices_.found(e[ei]))
+        {
+            elementIndices_.insert(e[ei], currentElementIndex++);
+            elementNames_.append(e[ei]);
+        }
+        else
+        {
+            IOWarningInFunction(chemDict_)
+                << "element " << e[ei] << " already in table." << endl;
+        }
+    }
+
+    // Loop through all species in thermoDict to retrieve
+    // the species composition
+    forAll(speciesTable_, si)
+    {
+        if (thermoDict_.subDict(speciesTable_[si]).isDict("elements"))
+        {
+            dictionary currentElements
+            (
+                thermoDict_.subDict(speciesTable_[si]).subDict("elements")
+            );
+
+            wordList currentElementsName(currentElements.toc());
+            List<specieElement> currentComposition(currentElementsName.size());
+
+            forAll(currentElementsName, eni)
+            {
+                currentComposition[eni].name() = currentElementsName[eni];
+
+                currentComposition[eni].nAtoms() =
+                    currentElements.lookupOrDefault
+                    (
+                        currentElementsName[eni],
+                        0
+                    );
+            }
+
+            // Add current specie composition to the hash table
+            speciesCompositionTable::iterator specieCompositionIter
+            (
+                speciesComposition_.find(speciesTable_[si])
+            );
+
+            if (specieCompositionIter != speciesComposition_.end())
+            {
+                speciesComposition_.erase(specieCompositionIter);
+            }
+
+            speciesComposition_.insert(speciesTable_[si], currentComposition);
+        }
+        else
+        {
+            FatalIOErrorInFunction(thermoDict_)
+                << "Specie " << speciesTable_[si]
+                << " does not contain element description."
+                << exit(FatalIOError);
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class ThermoType>
@@ -70,7 +149,9 @@ Foam::foamChemistryReader<ThermoType>::foamChemistryReader
     speciesTable_(setSpecies(chemDict_, species)),
     speciesThermo_(thermoDict_),
     reactions_(speciesTable_, speciesThermo_, chemDict_)
-{}
+{
+    readSpeciesComposition();
+}
 
 
 template<class ThermoType>
@@ -95,10 +176,12 @@ Foam::foamChemistryReader<ThermoType>::foamChemistryReader
             fileName(thermoDict.lookup("foamChemistryThermoFile")).expand()
         )()
     ),
-    speciesThermo_(thermoDict_),
     speciesTable_(setSpecies(chemDict_, species)),
+    speciesThermo_(thermoDict_),
     reactions_(speciesTable_, speciesThermo_, chemDict_)
-{}
+{
+    readSpeciesComposition();
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

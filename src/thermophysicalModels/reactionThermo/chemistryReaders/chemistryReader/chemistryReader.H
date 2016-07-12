@@ -36,14 +36,18 @@ SourceFiles
 #define chemistryReader_H
 
 #include "typeInfo.H"
-#include "runTimeSelectionTables.H"
+#include "specieElement.H"
 #include "Reaction.H"
 #include "ReactionList.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+typedef HashTable<List<specieElement>> speciesCompositionTable;
+
 
 /*---------------------------------------------------------------------------*\
                       Class chemistryReader Declaration
@@ -111,6 +115,9 @@ public:
 
         //- Return access to the list of species
         virtual const speciesTable& species() const = 0;
+
+        //- Table of species composition
+        virtual const speciesCompositionTable& specieComposition() const = 0;
 
         //- Return access to the thermo packages
         virtual const HashPtrTable<ThermoType>& speciesThermo() const = 0;

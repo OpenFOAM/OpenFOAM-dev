@@ -63,11 +63,20 @@ class foamChemistryReader
         //- Thermo properties dictionary
         dictionary thermoDict_;
 
-        //- Table of the thermodynamic data given in the foamChemistry file
-        HashPtrTable<ThermoType> speciesThermo_;
+        //- List of elements
+        DynamicList<word> elementNames_;
+
+        //- Element indices
+        HashTable<label> elementIndices_;
 
         //- Table of species
         speciesTable& speciesTable_;
+
+        //- Table of species composition
+        speciesCompositionTable speciesComposition_;
+
+        //- Table of the thermodynamic data given in the foamChemistry file
+        HashPtrTable<ThermoType> speciesThermo_;
 
         //- List of the reactions
         ReactionList<ThermoType> reactions_;
@@ -77,6 +86,9 @@ class foamChemistryReader
 
         //- Set the species list
         speciesTable& setSpecies(const dictionary& dict, speciesTable& species);
+
+        //- Read the species composition
+        void readSpeciesComposition();
 
         //- Disallow default bitwise copy construct
         foamChemistryReader(const foamChemistryReader&);
@@ -117,10 +129,28 @@ public:
 
     // Member functions
 
+        //- List of elements
+        const wordList& elementNames() const
+        {
+            return elementNames_;
+        }
+
+        //- Element indices
+        const HashTable<label>& elementIndices() const
+        {
+            return elementIndices_;
+        }
+
         //- Table of species
         const speciesTable& species() const
         {
             return speciesTable_;
+        }
+
+        //- Table of species composition
+        const speciesCompositionTable& specieComposition() const
+        {
+            return speciesComposition_;
         }
 
         //- Table of the thermodynamic data given in the foamChemistry file
