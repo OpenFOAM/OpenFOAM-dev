@@ -215,6 +215,7 @@ bool Foam::seulex::resize()
 {
     if (ODESolver::resize())
     {
+        table_.shallowResize(kMaxx_, n_);
         resizeField(dfdx_);
         resizeMatrix(dfdy_);
         resizeMatrix(a_);
@@ -330,7 +331,7 @@ void Foam::seulex::solve
                     break;
                 }
                 errOld = min(4*err, 1);
-                scalar expo = 1/(k + 1);
+                scalar expo = 1.0/(k + 1);
                 scalar facmin = pow(stepFactor3_, expo);
                 scalar fac;
                 if (err == 0)
