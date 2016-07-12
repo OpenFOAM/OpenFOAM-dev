@@ -523,7 +523,7 @@ void Foam::isoSurfaceCell::generateTriPoints
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::isoSurfaceCell::interpolate
 (
     const Field<Type>& cCoords,

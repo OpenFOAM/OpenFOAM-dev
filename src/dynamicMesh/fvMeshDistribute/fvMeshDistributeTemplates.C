@@ -150,7 +150,7 @@ void Foam::fvMeshDistribute::mapBoundaryFields
 template<class T>
 void Foam::fvMeshDistribute::saveInternalFields
 (
-    PtrList<Field<T> >& iflds
+    PtrList<Field<T>>& iflds
 ) const
 {
     typedef GeometricField<T, fvsPatchField, surfaceMesh> fldType;
@@ -179,7 +179,7 @@ template<class T>
 void Foam::fvMeshDistribute::mapExposedFaces
 (
     const mapPolyMesh& map,
-    const PtrList<Field<T> >& oldFlds
+    const PtrList<Field<T>>& oldFlds
 )
 {
     // Set boundary values of exposed internal faces

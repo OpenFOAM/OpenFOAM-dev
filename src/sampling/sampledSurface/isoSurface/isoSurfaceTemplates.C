@@ -742,7 +742,7 @@ Foam::isoSurface::interpolate
 )
 {
     // One value per point
-    tmp<Field<Type> > tvalues(new Field<Type>(nPoints, Type(Zero)));
+    tmp<Field<Type>> tvalues(new Field<Type>(nPoints, Type(Zero)));
     Field<Type>& values = tvalues.ref();
     labelList nValues(values.size(), 0);
 
@@ -770,7 +770,7 @@ Foam::isoSurface::interpolate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type> >
+Foam::tmp<Foam::Field<Type>>
 Foam::isoSurface::interpolate
 (
     const GeometricField<Type, fvPatchField, volMesh>& cCoords,

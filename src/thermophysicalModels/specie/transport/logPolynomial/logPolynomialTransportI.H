@@ -67,10 +67,10 @@ inline Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 
 
 template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize> >
+inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize>>
 Foam::logPolynomialTransport<Thermo, PolySize>::clone() const
 {
-    return autoPtr<logPolynomialTransport<Thermo, PolySize> >
+    return autoPtr<logPolynomialTransport<Thermo, PolySize>>
     (
         new logPolynomialTransport<Thermo, PolySize>(*this)
     );
@@ -78,10 +78,10 @@ Foam::logPolynomialTransport<Thermo, PolySize>::clone() const
 
 
 template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize> >
+inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize>>
 Foam::logPolynomialTransport<Thermo, PolySize>::New(Istream& is)
 {
-    return autoPtr<logPolynomialTransport<Thermo, PolySize> >
+    return autoPtr<logPolynomialTransport<Thermo, PolySize>>
     (
         new logPolynomialTransport<Thermo, PolySize>(is)
     );
@@ -89,10 +89,10 @@ Foam::logPolynomialTransport<Thermo, PolySize>::New(Istream& is)
 
 
 template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize> >
+inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize>>
 Foam::logPolynomialTransport<Thermo, PolySize>::New(const dictionary& dict)
 {
-    return autoPtr<logPolynomialTransport<Thermo, PolySize> >
+    return autoPtr<logPolynomialTransport<Thermo, PolySize>>
     (
         new logPolynomialTransport<Thermo, PolySize>(dict)
     );

@@ -47,7 +47,7 @@ namespace Foam
     (
         const typename GeoMesh::Mesh& mesh,
         const IOobjectList& objects,
-        PtrList<GeometricField<Type, PatchField, GeoMesh> >& fields,
+        PtrList<GeometricField<Type, PatchField, GeoMesh>>& fields,
         const bool readOldTime
     );
 

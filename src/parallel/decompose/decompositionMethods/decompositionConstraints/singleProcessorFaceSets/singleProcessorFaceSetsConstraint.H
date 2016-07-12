@@ -58,7 +58,7 @@ class singleProcessorFaceSetsConstraint
     // Private data
 
         //- List of faceSet+processor
-        List<Tuple2<word, label> > setNameAndProcs_;
+        List<Tuple2<word, label>> setNameAndProcs_;
 
 public:
 
@@ -78,7 +78,7 @@ public:
         //- Construct from components
         singleProcessorFaceSetsConstraint
         (
-            const List<Tuple2<word, label> >& setNameAndProcs
+            const List<Tuple2<word, label>>& setNameAndProcs
         );
 
 

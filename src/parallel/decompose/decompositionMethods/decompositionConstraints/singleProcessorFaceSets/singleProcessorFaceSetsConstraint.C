@@ -76,7 +76,7 @@ singleProcessorFaceSetsConstraint
 Foam::decompositionConstraints::singleProcessorFaceSetsConstraint::
 singleProcessorFaceSetsConstraint
 (
-    const List<Tuple2<word, label> >& setNameAndProcs
+    const List<Tuple2<word, label>>& setNameAndProcs
 )
 :
     decompositionConstraint(dictionary(), typeName),

@@ -116,7 +116,7 @@ void Foam::PackingModels::Implicit<CloudType>::cacheFields(const bool store)
                 cloudName + ":rhoAverage"
             );
         const AveragingMethod<vector>& uAverage =
-            mesh.lookupObject<AveragingMethod<vector> >
+            mesh.lookupObject<AveragingMethod<vector>>
             (
                 cloudName + ":uAverage"
             );
