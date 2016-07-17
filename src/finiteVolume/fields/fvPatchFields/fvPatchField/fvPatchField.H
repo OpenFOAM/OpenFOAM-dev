@@ -700,7 +700,7 @@ defineTemplateRunTimeSelectionTable(fvPatchTypeField, dictionary);
 #define makePatchFieldsTypeName(type)                                          \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchScalarField, 0);          \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchVectorField, 0);          \
-    defineNamedTemplateTypeNameAndDebug(type##FvPatchSphericalTensorField, 0);\
+    defineNamedTemplateTypeNameAndDebug(type##FvPatchSphericalTensorField, 0); \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchSymmTensorField, 0);      \
     defineNamedTemplateTypeNameAndDebug(type##FvPatchTensorField, 0)
 
