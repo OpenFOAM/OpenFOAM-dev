@@ -55,6 +55,9 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
+# Source the wmake functions
+. ${0%/*}/scripts/wmakeFunctions
+
 usage() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
@@ -192,14 +195,7 @@ done
 # Check environment variables
 #------------------------------------------------------------------------------
 
-for envar in WM_OPTIONS WM_LINK_LANGUAGE WM_DIR
-do
-    eval test "\$$envar" || {
-        echo "$Script error: environment variable \$$envar not set" 1>&2
-        exit 1
-    }
-done
-
+checkEnv
 
 # When compiling anything but a standalone exe WM_PROJECT and WM_PROJECT_DIR
 # must be set
@@ -356,57 +352,7 @@ fi
 # check the existance of the 'files' file and build there if present
 #------------------------------------------------------------------------------
 
-unset dir
-
-expandPath()
-{
-    dir=$(dirname $1)
-    cwd=$PWD
-    cd $dir
-    exPath=$PWD
-    cd $cwd
-}
-
-findTarget()
-{
-    expandPath $1
-
-    if [ "$exPath" = "$WM_PROJECT_DIR" \
-                   -o "$exPath" = "$HOME" \
-                   -o "$exPath" = "/" \
-       ]
-    then
-        echo "$Script error: could not find Make directory" 1>&2
-    elif [ -d "$1/Make" ]; then
-        echo "    Found target directory " $1
-        dir=$1
-    else
-        findTarget "$1/.."
-    fi
-}
-
-if [ ! -d $MakeDir ]
-then
-    echo "$Script: '$MakeDir' directory does not exist in $PWD" 1>&2
-    echo "    Searching up directories tree for Make directory"
-
-    findTarget .
-    targetType=
-
-    if [ "$dir" ]
-    then
-        cd $dir 2>/dev/null || {
-            echo "$Script error: could not change to directory '$dir'" 1>&2
-            exit 1
-        }
-    fi
-fi
-
-
-[ -r $MakeDir/files ] || {
-    echo "$Script error: file '$MakeDir/files' does not exist in $PWD" 1>&2
-    exit 1
-}
+cdSource
 
 
 #------------------------------------------------------------------------------

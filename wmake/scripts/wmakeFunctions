@@ -35,7 +35,7 @@
 
 checkEnv()
 {
-    for envar in WM_OPTIONS WM_DIR WM_PROJECT_DIR
+    for envar in WM_OPTIONS WM_LINK_LANGUAGE WM_DIR WM_PROJECT_DIR
     do
         eval test "\$$envar" || {
             echo "$Script error: environment variable \$$envar not set" 1>&2
@@ -77,6 +77,32 @@ findTarget()
     else
         findTarget "$1/.."
     fi
+}
+
+cdSource()
+{
+    if [ ! -d $MakeDir ]
+    then
+        echo "$Script: '$MakeDir' directory does not exist in $PWD" 1>&2
+        echo "    Searching up directories tree for Make directory"
+
+        findTarget .
+        targetType=
+
+        if [ "$dir" ]
+        then
+            cd $dir 2>/dev/null || {
+                echo "$Script error: could not change to directory '$dir'" 1>&2
+                exit 1
+            }
+        fi
+    fi
+
+
+    [ -r $MakeDir/files ] || {
+        echo "$Script error: file '$MakeDir/files' does not exist in $PWD" 1>&2
+        exit 1
+    }
 }
 
 findObjectDir()

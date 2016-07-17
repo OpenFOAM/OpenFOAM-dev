@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -34,9 +34,17 @@
 ##------------------------------------------------------------------------------
 Script=${0##*/}
 
+# Source the wmake functions
+. ${0%/*}/scripts/wmakeFunctions
+
+#------------------------------------------------------------------------------
+# Parse arguments and options
+#------------------------------------------------------------------------------
+
 # Default to the CWD
 if [ "$#" -eq 0 ]
 then
+    # Add the CWD to the arguments
     set -- .
 elif [ "$1" = "-h" -o "$1" = "-help" ]
 then
@@ -47,6 +55,20 @@ then
     exit 1
 fi
 
+
+#------------------------------------------------------------------------------
+# Search up the directory tree for the Make sub-directory,
+# check the existance of the 'files' file and clean there if present
+#------------------------------------------------------------------------------
+
+# Need to add an option or special logic to control cdSource
+# MakeDir=Make
+# cdSource
+
+
+#------------------------------------------------------------------------------
+# Search for all lnInclude directories and delete them
+#------------------------------------------------------------------------------
 
 for dir
 do
@@ -64,7 +86,7 @@ done
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script
+unset Script MakeDir
 
 
 #------------------------------------------------------------------------------

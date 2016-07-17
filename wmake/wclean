@@ -128,6 +128,15 @@ fi
 
 
 #------------------------------------------------------------------------------
+# If target not specified search up the directory tree for the Make
+# sub-directory, check the existance of the 'files' file and clean there if
+# present
+# ------------------------------------------------------------------------------
+
+[ -n "$targetType" ] || cdSource
+
+
+#------------------------------------------------------------------------------
 # Remove empty sub-directories and exit
 #------------------------------------------------------------------------------
 
@@ -267,7 +276,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage
+unset Script usage MakeDir
 
 
 #------------------------------------------------------------------------------
