@@ -145,6 +145,14 @@ void multiply
     const scalarRectangularMatrix& C
 );
 
+void multiply
+(
+    scalarSquareMatrix& answer,         // value changed in return
+    const scalarSquareMatrix& A,
+    const DiagonalMatrix<scalar>& B,
+    const scalarSquareMatrix& C
+);
+
 //- Return the inverse of matrix A using SVD
 scalarRectangularMatrix SVDinv
 (

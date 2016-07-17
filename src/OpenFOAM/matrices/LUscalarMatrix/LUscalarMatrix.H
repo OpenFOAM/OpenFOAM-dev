@@ -126,6 +126,9 @@ public:
         //  returning the solution
         template<class Type>
         tmp<Field<Type>> solve(const Field<Type>& source) const;
+
+        //- Set M to the inverse of this square matrix
+        void inv(scalarSquareMatrix& M) const;
 };
 
 

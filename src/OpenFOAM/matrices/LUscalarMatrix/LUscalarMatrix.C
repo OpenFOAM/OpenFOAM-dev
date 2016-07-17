@@ -412,4 +412,21 @@ void Foam::LUscalarMatrix::decompose(const scalarSquareMatrix& M)
 }
 
 
+void Foam::LUscalarMatrix::inv(scalarSquareMatrix& M) const
+{
+    scalarField source(m());
+
+    for (label j=0; j<m(); j++)
+    {
+        source = Zero;
+        source[j] = 1;
+        LUBacksubstitute(*this, pivotIndices_, source);
+        for (label i=0; i<m(); i++)
+        {
+            M(i, j) = source[i];
+        }
+    }
+}
+
+
 // ************************************************************************* //

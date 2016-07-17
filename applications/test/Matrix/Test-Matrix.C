@@ -152,6 +152,11 @@ int main(int argc, char *argv[])
         LUscalarMatrix LU(squareMatrix);
         scalarField x(LU.solve(source));
         Info<< "LU solve residual " << (squareMatrix*x - source) << endl;
+
+        scalarSquareMatrix inv(3);
+        LU.inv(inv);
+        Info<< "LU inv " << inv << endl;
+        Info<< "LU inv*squareMatrix " << (inv*squareMatrix) << endl;
     }
 
     {
@@ -169,6 +174,8 @@ int main(int argc, char *argv[])
 
         Info<< "QR inverse solve residual "
             << (x - QR.inv()*source) << endl;
+
+        Info<< "QR inv *squareMatrix " << (QR.inv()*squareMatrix) << endl;
     }
 
     Info<< "\nEnd\n" << endl;
