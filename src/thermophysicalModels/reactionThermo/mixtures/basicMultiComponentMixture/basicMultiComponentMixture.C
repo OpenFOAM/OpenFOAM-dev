@@ -46,48 +46,90 @@ Foam::basicMultiComponentMixture::basicMultiComponentMixture
     active_(species_.size(), true),
     Y_(species_.size())
 {
+    tmp<volScalarField> tYdefault;
+
     forAll(species_, i)
     {
-        word YdefaultName(IOobject::groupName("Ydefault", phaseName));
-
-        volScalarField Ydefault
+        IOobject header
         (
-            IOobject
-            (
-                YdefaultName,
-                exists(mesh.time().path()/mesh.time().timeName()/YdefaultName)
-              ? mesh.time().timeName()
-              : (
-                    exists
-                    (
-                        mesh.time().path()/mesh.time().constant()/YdefaultName
-                    )
-                  ? mesh.time().constant()
-                  : Time::timeName(0)
-                ),
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh
+            IOobject::groupName(species_[i], phaseName),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ
         );
 
-        Y_.set
-        (
-            i,
-            new volScalarField
+        // Check if field exists and can be read
+        if (header.headerOk())
+        {
+            Y_.set
             (
-                IOobject
+                i,
+                new volScalarField
                 (
-                    IOobject::groupName(species_[i], phaseName),
-                    mesh.time().timeName(),
-                    mesh,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
-                ),
-                Ydefault
-            )
-        );
+                    IOobject
+                    (
+                        IOobject::groupName(species_[i], phaseName),
+                        mesh.time().timeName(),
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::AUTO_WRITE
+                    ),
+                    mesh
+                )
+            );
+        }
+        else
+        {
+            // Read Ydefault if not already read
+            if (!tYdefault.valid())
+            {
+                word YdefaultName(IOobject::groupName("Ydefault", phaseName));
+
+                tYdefault = new volScalarField
+                (
+                    IOobject
+                    (
+                        YdefaultName,
+                        exists
+                        (
+                            mesh.time().path()/mesh.time().timeName()
+                           /YdefaultName
+                        )
+                      ? mesh.time().timeName()
+                      : (
+                            exists
+                            (
+                                mesh.time().path()/mesh.time().constant()
+                               /YdefaultName
+                            )
+                          ? mesh.time().constant()
+                          : Time::timeName(0)
+                        ),
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    mesh
+                );
+            }
+
+            Y_.set
+            (
+                i,
+                new volScalarField
+                (
+                    IOobject
+                    (
+                        IOobject::groupName(species_[i], phaseName),
+                        mesh.time().timeName(),
+                        mesh,
+                        IOobject::NO_READ,
+                        IOobject::AUTO_WRITE
+                    ),
+                    tYdefault()
+                )
+            );
+        }
     }
 
     // Do not enforce constraint of sum of mass fractions to equal 1 here
