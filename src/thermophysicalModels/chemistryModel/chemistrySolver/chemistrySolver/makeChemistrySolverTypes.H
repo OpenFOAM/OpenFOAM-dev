@@ -29,6 +29,7 @@ License
 #include "chemistrySolver.H"
 
 #include "chemistryModel.H"
+#include "TDACChemistryModel.H"
 
 #include "noChemistrySolver.H"
 #include "EulerImplicit.H"
@@ -38,13 +39,14 @@ License
 
 #define makeChemistrySolverType(SS, Comp, Thermo)                              \
                                                                                \
-    typedef SS<chemistryModel<Comp, Thermo>> SS##Comp##Thermo;                 \
+    typedef SS<chemistryModel<Comp, Thermo> > SS##Comp##Thermo;                \
+    typedef SS<TDACChemistryModel<Comp, Thermo> > TDAC##SS##Comp##Thermo;      \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         SS##Comp##Thermo,                                                      \
-        (#SS"<" + word(Comp::typeName_())                                      \
-      + "," + Thermo::typeName() + ">").c_str(),                               \
+        (#SS"<chemistryModel<" + word(Comp::typeName_())                       \
+      + "," + Thermo::typeName() + ">>").c_str(),                              \
         0                                                                      \
     );                                                                         \
                                                                                \
@@ -52,6 +54,21 @@ License
     (                                                                          \
         Comp,                                                                  \
         SS##Comp##Thermo,                                                      \
+        fvMesh                                                                 \
+    );                                                                         \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        TDAC##SS##Comp##Thermo,                                                \
+        (#SS"<TDACChemistryModel<" + word(Comp::typeName_())                   \
+      + "," + Thermo::typeName() + ">>").c_str(),                              \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        Comp,                                                                  \
+        TDAC##SS##Comp##Thermo,                                                \
         fvMesh                                                                 \
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Description
 
 #include "rhoChemistryModel.H"
 #include "chemistryModel.H"
+#include "TDACChemistryModel.H"
 #include "thermoPhysicsTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -76,6 +77,42 @@ namespace Foam
     );
 
 
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        constGasHThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        gasHThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        constIncompressibleGasHThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        incompressibleGasHThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        icoPoly8HThermoPhysics
+    );
+
+
     // Chemistry moldels based on sensibleInternalEnergy
     makeChemistryModel
     (
@@ -108,6 +145,42 @@ namespace Foam
     makeChemistryModel
     (
         chemistryModel,
+        rhoChemistryModel,
+        icoPoly8EThermoPhysics
+    );
+
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        constGasEThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        gasEThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        constIncompressibleGasEThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
+        rhoChemistryModel,
+        incompressibleGasEThermoPhysics
+    );
+
+    makeChemistryModel
+    (
+        TDACChemistryModel,
         rhoChemistryModel,
         icoPoly8EThermoPhysics
     );

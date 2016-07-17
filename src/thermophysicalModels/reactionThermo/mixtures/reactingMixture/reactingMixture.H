@@ -56,6 +56,12 @@ class reactingMixture
     public multiComponentMixture<ThermoType>,
     public PtrList<Reaction<ThermoType>>
 {
+    // Private member data
+
+        //- Table of species composition
+        speciesCompositionTable speciesComposition_;
+
+
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -92,14 +98,20 @@ public:
             return PtrList<Reaction<ThermoType>>::size();
         }
 
-        Reaction<ThermoType>& operator [] (const label i)
+        Reaction<ThermoType>& operator[](const label i)
         {
             return PtrList<Reaction<ThermoType>>::operator[](i);
         }
 
-        const Reaction<ThermoType>& operator [] (const label i) const
+        const Reaction<ThermoType>& operator[](const label i) const
         {
             return PtrList<Reaction<ThermoType>>::operator[](i);
+        }
+
+        //- Table of species composition
+        const speciesCompositionTable& specieComposition() const
+        {
+            return speciesComposition_;
         }
 };
 

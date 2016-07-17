@@ -16,7 +16,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 
     forAll(Y, i)
     {
-        if (i != inertIndex)
+        if (i != inertIndex && composition.active(i))
         {
             volScalarField& Yi = Y[i];
 

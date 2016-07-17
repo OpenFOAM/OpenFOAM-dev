@@ -57,6 +57,7 @@ cleanCase()
 
     rm -rf processor* > /dev/null 2>&1
     rm -rf postProcessing > /dev/null 2>&1
+    rm -rf TDAC > /dev/null 2>&1
     rm -rf probes* > /dev/null 2>&1
     rm -rf forces* > /dev/null 2>&1
     rm -rf graphs* > /dev/null 2>&1

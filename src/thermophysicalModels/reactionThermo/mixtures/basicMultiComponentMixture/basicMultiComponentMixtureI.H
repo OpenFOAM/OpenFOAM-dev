@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,39 @@ inline const Foam::speciesTable&
 Foam::basicMultiComponentMixture::species() const
 {
     return species_;
+}
+
+
+inline bool Foam::basicMultiComponentMixture::contains
+(
+    const word& specieName
+) const
+{
+    return species_.contains(specieName);
+}
+
+
+inline bool Foam::basicMultiComponentMixture::active(label speciei) const
+{
+    return active_[speciei];
+}
+
+
+inline const Foam::List<bool>& Foam::basicMultiComponentMixture::active() const
+{
+    return active_;
+}
+
+
+inline void Foam::basicMultiComponentMixture::setActive(label speciei)
+{
+    active_[speciei] = true;
+}
+
+
+inline void Foam::basicMultiComponentMixture::setInactive(label speciei)
+{
+    active_[speciei] = false;
 }
 
 
@@ -74,15 +107,6 @@ inline const Foam::volScalarField& Foam::basicMultiComponentMixture::Y
 ) const
 {
     return Y_[species_[specieName]];
-}
-
-
-inline bool Foam::basicMultiComponentMixture::contains
-(
-    const word& specieName
-) const
-{
-    return species_.contains(specieName);
 }
 
 

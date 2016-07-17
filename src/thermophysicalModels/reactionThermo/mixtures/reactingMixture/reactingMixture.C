@@ -52,6 +52,10 @@ Foam::reactingMixture<ThermoType>::reactingMixture
     PtrList<Reaction<ThermoType>>
     (
         autoPtr<chemistryReader<ThermoType>>::operator()().reactions()
+    ),
+    speciesComposition_
+    (
+        autoPtr<chemistryReader<ThermoType>>::operator()().specieComposition()
     )
 {
     autoPtr<chemistryReader<ThermoType>>::clear();

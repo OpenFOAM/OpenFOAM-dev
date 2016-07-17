@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,9 @@ protected:
         //- Table of specie names
         speciesTable species_;
 
+        //- List of specie active flags
+        List<bool> active_;
+
         //- Species mass fractions
         PtrList<volScalarField> Y_;
 
@@ -98,6 +101,21 @@ public:
         //- Return the table of species
         inline const speciesTable& species() const;
 
+        //- Does the mixture include this specie?
+        inline bool contains(const word& specieName) const;
+
+        //- Return true for active species
+        inline bool active(label speciei) const;
+
+        //- Return the bool list of active species
+        inline const List<bool>& active() const;
+
+        //- Set speciei active
+        inline void setActive(label speciei);
+
+        //- Set speciei inactive
+        inline void setInactive(label speciei);
+
         //- Return the mass-fraction fields
         inline PtrList<volScalarField>& Y();
 
@@ -115,9 +133,6 @@ public:
 
         //- Return the const mass-fraction field for a specie given by name
         inline const volScalarField& Y(const word& specieName) const;
-
-        //- Does the mixture include this specie?
-        inline bool contains(const word& specieName) const;
 };
 
 

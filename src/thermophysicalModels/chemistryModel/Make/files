@@ -6,6 +6,9 @@ chemistryModel/psiChemistryModel/psiChemistryModels.C
 chemistryModel/rhoChemistryModel/rhoChemistryModel.C
 chemistryModel/rhoChemistryModel/rhoChemistryModels.C
 
+chemistryModel/TDACChemistryModel/reduction/makeChemistryReductionMethods.C
+chemistryModel/TDACChemistryModel/tabulation/makeChemistryTabulationMethods.C
+
 chemistrySolver/chemistrySolver/makeChemistrySolvers.C
 
 LIB = $(FOAM_LIBBIN)/libchemistryModel

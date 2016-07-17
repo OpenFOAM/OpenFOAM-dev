@@ -64,23 +64,23 @@ class chemistryModel
 {
     // Private Member Functions
 
+        //- Solve the reaction system for the given time step
+        //  of given type and return the characteristic time
+        template<class DeltaTType>
+        scalar solve(const DeltaTType& deltaT);
+
         //- Disallow copy constructor
         chemistryModel(const chemistryModel&);
 
         //- Disallow default bitwise assignment
         void operator=(const chemistryModel&);
 
-        //- Solve the reaction system for the given time step
-        //  of given type and return the characteristic time
-        template<class DeltaTType>
-        scalar solve(const DeltaTType& deltaT);
-
 
 protected:
 
     typedef ThermoType thermoType;
 
-    // Private data
+    // Protected data
 
         //- Reference to the field of specie mass fractions
         PtrList<volScalarField>& Y_;
@@ -102,6 +102,12 @@ protected:
 
         //- List of reaction rate per specie [kg/m3/s]
         PtrList<DimensionedField<scalar, volMesh>> RR_;
+
+        //- Temporary concentration field
+        mutable scalarField c_;
+
+        //- Temporary rate-of-change of concentration field
+        mutable scalarField dcdt_;
 
 
     // Protected Member Functions
@@ -148,11 +154,12 @@ public:
         inline scalar& Treact();
 
         //- dc/dt = omega, rate of change in concentration, for each species
-        virtual tmp<scalarField> omega
+        virtual void omega
         (
             const scalarField& c,
             const scalar T,
-            const scalar p
+            const scalar p,
+            scalarField& dcdt
         ) const;
 
         //- Return the reaction rate for reaction r and the reference
@@ -259,7 +266,7 @@ public:
                 scalar& p,
                 scalar& deltaT,
                 scalar& subDeltaT
-            ) const;
+            ) const = 0;
 };
 
 
