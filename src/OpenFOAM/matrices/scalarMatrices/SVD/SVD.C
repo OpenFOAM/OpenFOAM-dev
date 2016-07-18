@@ -48,11 +48,11 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     scalar scale = 0;
     scalar s = 0;
     scalar anorm = 0;
-    label l=0;
+    label l = 0;
 
     for (label i=0; i<Un; i++)
     {
-        l = i+2;
+        l = i + 2;
         rv1[i] = scale*g;
         g = s = scale = 0;
 
@@ -72,7 +72,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 }
 
                 scalar f = U_(i, i);
-                g = -sign(Foam::sqrt(s), f);
+                g = -sign(sqrt(s), f);
                 scalar h = f*g - s;
                 U_(i, i) = f - g;
 
@@ -118,7 +118,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 }
 
                 scalar f = U_[i][l-1];
-                g = -sign(Foam::sqrt(s),f);
+                g = -sign(sqrt(s), f);
                 scalar h = f*g - s;
                 U_[i][l-1] = f - g;
 
@@ -150,6 +150,8 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         anorm = max(anorm, mag(S_[i]) + mag(rv1[i]));
     }
 
+    anorm *= SMALL;
+
     for (label i=Un-1; i >= 0; i--)
     {
         if (i < Un-1)
@@ -178,7 +180,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
             for (label j=l; j<Un;j++)
             {
-                V_(i, j) = V_(j, i) = 0.0;
+                V_(i, j) = V_(j, i) = 0;
             }
         }
 
@@ -194,7 +196,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
         for (label j=l; j<Un; j++)
         {
-            U_(i, j) = 0.0;
+            U_(i, j) = 0;
         }
 
         if (g != 0)
@@ -226,7 +228,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
         {
             for (label j=i; j<Um; j++)
             {
-                U_(j, i) = 0.0;
+                U_(j, i) = 0;
             }
         }
 
@@ -235,32 +237,40 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
     for (label k=Un-1; k >= 0; k--)
     {
-        for (label its = 0; its < 35; its++)
+        for (label its = 0; its < 30; its++)
         {
             bool flag = true;
 
             label mn;
             for (l = k; l >= 0; l--)
             {
-                mn = l-1;
-                if (mag(rv1[l]) + anorm == anorm)
+                mn = l - 1;
+
+                if (l == 0 || mag(rv1[l]) <= anorm)
                 {
                     flag = false;
                     break;
                 }
-                if (mag(S_[mn]) + anorm == anorm) break;
+
+                if (mag(S_[mn]) <= anorm)
+                {
+                    break;
+                }
             }
 
             if (flag)
             {
-                scalar c = 0.0;
-                s = 1.0;
+                scalar c = 0;
+                s = 1;
                 for (label i=l; i<k+1; i++)
                 {
                     scalar f = s*rv1[i];
                     rv1[i] = c*rv1[i];
 
-                    if (mag(f) + anorm == anorm) break;
+                    if (mag(f) <= anorm)
+                    {
+                        break;
+                    }
 
                     g = S_[i];
                     scalar h = sqrtSumSqr(f, g);
@@ -283,18 +293,20 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
             if (l == k)
             {
-                if (z < 0.0)
+                if (z < 0)
                 {
                     S_[k] = -z;
-
-                    for (label j=0; j<Un; j++) V_(j, k) = -V_(j, k);
+                    for (label j=0; j<Un; j++)
+                    {
+                        V_(j, k) = -V_(j, k);
+                    }
                 }
                 break;
             }
-            if (its == 34)
+            if (its == 29)
             {
                 WarningInFunction
-                    << "No convergence in 35 SVD iterations"
+                    << "No convergence in 30 SVD iterations"
                     << endl;
             }
 
@@ -303,15 +315,15 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             scalar y = S_[mn];
             g = rv1[mn];
             scalar h = rv1[k];
-            scalar f = ((y - z)*(y + z) + (g - h)*(g + h))/(2.0*h*y);
+            scalar f = ((y - z)*(y + z) + (g - h)*(g + h))/(2*h*y);
             g = sqrtSumSqr(f, scalar(1));
             f = ((x - z)*(x + z) + h*((y/(f + sign(g, f))) - h))/x;
-            scalar c = 1.0;
-            s = 1.0;
+            scalar c = 1;
+            s = 1;
 
             for (label j=l; j <= mn; j++)
             {
-                label i=j + 1;
+                label i = j + 1;
                 g = rv1[i];
                 y = S_[i];
                 h = s*g;
@@ -352,7 +364,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                     U_[jj][i] = z*c - y*s;
                 }
             }
-            rv1[l] = 0.0;
+            rv1[l] = 0;
             rv1[k] = f;
             S_[k] = x;
         }
@@ -364,7 +376,6 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     {
         if (S_[i] <= minS)
         {
-            //Info<< "Removing " << S_[i] << " < " << minS << endl;
             S_[i] = 0;
             nZeros_++;
         }
@@ -372,28 +383,6 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
     // Now multiply out to find the pseudo inverse of A, VSinvUt_
     multiply(VSinvUt_, V_, inv(S_), U_.T());
-
-    // test SVD
-    /*
-    scalarRectangularMatrix SVDA(A.m(), A.n());
-    multiply(SVDA, U_, S_, transpose(V_));
-    scalar maxDiff = 0;
-    scalar diff = 0;
-    for (label i=0; i<A.m(); i++)
-    {
-        for (label j=0; j<A.n(); j++)
-        {
-            diff = mag(A(i, j) - SVDA(i, j));
-            if (diff > maxDiff) maxDiff = diff;
-        }
-    }
-    Info<< "Maximum discrepancy between A and svd(A) = " << maxDiff << endl;
-
-    if (maxDiff > 4)
-    {
-        Info<< "singular values " << S_ << endl;
-    }
-    */
 }
 
 

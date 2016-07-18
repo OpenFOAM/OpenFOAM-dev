@@ -208,8 +208,8 @@ class chemPointISAT
         (
             scalarSquareMatrix& R,
             const label n,
-            const scalarField &u,
-            const scalarField &v
+            const scalarField& u,
+            const scalarField& v
         );
 
         void rotate
@@ -220,29 +220,6 @@ class chemPointISAT
             const scalar b,
             label n
         );
-
-        //- Singular Value Decomposition (SVD) for a square matrix
-        //  needed to compute the the length of the hyperellipsoid semi-axes
-        //  SVD decompose a matrix A into:
-        //  A = U * D * V^T ,
-        //  with the singular value in the diagonal matrix D and U and V
-        //  orthogonal A (scalarMatrix) the square matrix to apply the
-        //  decomposition on m (label) the number of line of the matrix A
-        //  n (label) the size of the matrix A
-        //  Output:  U (scalarMatrix) replace A
-        //  V (scalarMatrix) not the transpose V^T
-        //  d (scalarField) the diagonal element of matrix D
-        void svd
-        (
-            scalarSquareMatrix& A,
-            label m,
-            label n,
-            scalarDiagonalMatrix& d,
-            scalarSquareMatrix& V
-        );
-
-        //- Function used in svd function
-        scalar pythag(scalar a, scalar b);
 
 
 public:
