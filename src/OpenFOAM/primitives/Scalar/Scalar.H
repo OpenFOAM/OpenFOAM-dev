@@ -109,6 +109,39 @@ public:
 word name(const Scalar);
 
 
+// Standard C++ transcendental functions
+transFunc(sqrt)
+
+transFunc(cbrt)
+transFunc(exp)
+transFunc(log)
+transFunc(log10)
+transFunc(sin)
+transFunc(cos)
+transFunc(tan)
+transFunc(asin)
+transFunc(acos)
+transFunc(atan)
+transFunc(sinh)
+transFunc(cosh)
+transFunc(tanh)
+transFunc(asinh)
+transFunc(acosh)
+transFunc(atanh)
+
+// Standard ANSI-C (but not in <cmath>) transcendental functions
+
+transFunc(erf)
+transFunc(erfc)
+transFunc(lgamma)
+
+transFunc(j0)
+transFunc(j1)
+
+transFunc(y0)
+transFunc(y1)
+
+
 inline Scalar& setComponent(Scalar& s, const direction)
 {
     return s;
@@ -188,22 +221,6 @@ inline Scalar magSqr(const Scalar s)
 inline Scalar sqr(const Scalar s)
 {
     return s*s;
-}
-
-
-inline Scalar sqrtSumSqr(const Scalar a, const Scalar b)
-{
-    Scalar maga = mag(a);
-    Scalar magb = mag(b);
-
-    if (maga > magb)
-    {
-        return maga*sqrt(1.0 + sqr(magb/maga));
-    }
-    else
-    {
-        return magb < ScalarVSMALL ? 0.0 : magb*sqrt(1.0 + sqr(maga/magb));
-    }
 }
 
 
@@ -290,37 +307,20 @@ inline Scalar cmptMag(const Scalar s)
     return mag(s);
 }
 
+inline Scalar sqrtSumSqr(const Scalar a, const Scalar b)
+{
+    Scalar maga = mag(a);
+    Scalar magb = mag(b);
 
-// Standard C++ transcendental functions
-transFunc(sqrt)
-transFunc(cbrt)
-transFunc(exp)
-transFunc(log)
-transFunc(log10)
-transFunc(sin)
-transFunc(cos)
-transFunc(tan)
-transFunc(asin)
-transFunc(acos)
-transFunc(atan)
-transFunc(sinh)
-transFunc(cosh)
-transFunc(tanh)
-transFunc(asinh)
-transFunc(acosh)
-transFunc(atanh)
-
-// Standard ANSI-C (but not in <cmath>) transcendental functions
-
-transFunc(erf)
-transFunc(erfc)
-transFunc(lgamma)
-
-transFunc(j0)
-transFunc(j1)
-
-transFunc(y0)
-transFunc(y1)
+    if (maga > magb)
+    {
+        return maga*sqrt(1.0 + sqr(magb/maga));
+    }
+    else
+    {
+        return magb < ScalarVSMALL ? 0.0 : magb*sqrt(1.0 + sqr(maga/magb));
+    }
+}
 
 
 // Stabilisation around zero for division
