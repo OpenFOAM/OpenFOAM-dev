@@ -42,7 +42,7 @@ void Foam::solve
     for (label i=0; i<m; i++)
     {
         label iMax = i;
-        scalar largestCoeff = mag(tmpMatrix[iMax][i]);
+        scalar largestCoeff = mag(tmpMatrix(iMax, i));
 
         // Swap elements around to find a good pivot
         for (label j=i+1; j<m; j++)
@@ -50,7 +50,7 @@ void Foam::solve
             if (mag(tmpMatrix(j, i)) > largestCoeff)
             {
                 iMax = j;
-                largestCoeff = mag(tmpMatrix[iMax][i]);
+                largestCoeff = mag(tmpMatrix(iMax, i));
             }
         }
 
@@ -58,7 +58,7 @@ void Foam::solve
         {
             for (label k=i; k<m; k++)
             {
-                Swap(tmpMatrix(i, k), tmpMatrix[iMax][k]);
+                Swap(tmpMatrix(i, k), tmpMatrix(iMax, k));
             }
             Swap(sourceSol[i], sourceSol[iMax]);
         }
