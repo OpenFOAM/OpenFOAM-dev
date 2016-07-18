@@ -208,13 +208,14 @@ void Foam::FitData<FitDataType, ExtendedStencil, Polynomial>::calcFit
     for (int iIt = 0; iIt < 8 && !goodFit; iIt++)
     {
         SVD svd(B, SMALL);
+        scalarRectangularMatrix invB(svd.VSinvUt());
 
         scalar maxCoeff = 0;
         label maxCoeffi = 0;
 
         for (label i=0; i<stencilSize; i++)
         {
-            coeffsi[i] = wts[0]*wts[i]*svd.VSinvUt()(0, i);
+            coeffsi[i] = wts[0]*wts[i]*invB(0, i);
             if (mag(coeffsi[i]) > maxCoeff)
             {
                 maxCoeff = mag(coeffsi[i]);

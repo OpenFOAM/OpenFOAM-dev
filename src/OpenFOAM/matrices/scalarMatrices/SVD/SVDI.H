@@ -40,25 +40,30 @@ inline const Foam::scalarRectangularMatrix& Foam::SVD::U() const
     return U_;
 }
 
+
 inline const Foam::scalarRectangularMatrix& Foam::SVD::V() const
 {
     return V_;
 }
+
 
 inline const Foam::scalarDiagonalMatrix& Foam::SVD::S() const
 {
     return S_;
 }
 
-inline const Foam::scalarRectangularMatrix& Foam::SVD::VSinvUt() const
+
+inline bool Foam::SVD::converged() const
 {
-    return VSinvUt_;
+    return converged_;
 }
+
 
 inline Foam::label Foam::SVD::nZeros() const
 {
     return nZeros_;
 }
+
 
 inline Foam::scalar Foam::SVD::minNonZeroS() const
 {

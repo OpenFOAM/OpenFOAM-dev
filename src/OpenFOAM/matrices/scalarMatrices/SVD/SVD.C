@@ -35,7 +35,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     U_(A),
     V_(A.n(), A.n()),
     S_(A.n()),
-    VSinvUt_(A.n(), A.m()),
+    converged_(true),
     nZeros_(0)
 {
     // SVDcomp to find U_, V_ and S_ - the singular values
@@ -117,10 +117,10 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                     s += U_(i, k)*U_(i, k);
                 }
 
-                scalar f = U_[i][l-1];
+                scalar f = U_(i, l-1);
                 g = -sign(sqrt(s), f);
                 scalar h = f*g - s;
-                U_[i][l-1] = f - g;
+                U_(i, l-1) = f - g;
 
                 for (label k=l-1; k<Un; k++)
                 {
@@ -281,9 +281,9 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
                     for (label j=0; j<Um; j++)
                     {
-                        scalar y = U_[j][mn];
+                        scalar y = U_(j, mn);
                         scalar z = U_(j, i);
-                        U_[j][mn] = y*c + z*s;
+                        U_(j, mn) = y*c + z*s;
                         U_(j, i) = z*c - y*s;
                     }
                 }
@@ -303,11 +303,10 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
                 }
                 break;
             }
+
             if (its == 29)
             {
-                WarningInFunction
-                    << "No convergence in 30 SVD iterations"
-                    << endl;
+                converged_ = false;
             }
 
             scalar x = S_[l];
@@ -339,10 +338,10 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
                 for (label jj = 0; jj < Un; jj++)
                 {
-                    x = V_[jj][j];
-                    z = V_[jj][i];
-                    V_[jj][j] = x*c + z*s;
-                    V_[jj][i] = z*c - x*s;
+                    x = V_(jj, j);
+                    z = V_(jj, i);
+                    V_(jj, j) = x*c + z*s;
+                    V_(jj, i) = z*c - x*s;
                 }
 
                 z = sqrtSumSqr(f, h);
@@ -358,10 +357,10 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
 
                 for (label jj=0; jj < Um; jj++)
                 {
-                    y = U_[jj][j];
-                    z = U_[jj][i];
-                    U_[jj][j] = y*c + z*s;
-                    U_[jj][i] = z*c - y*s;
+                    y = U_(jj, j);
+                    z = U_(jj, i);
+                    U_(jj, j) = y*c + z*s;
+                    U_(jj, i) = z*c - y*s;
                 }
             }
             rv1[l] = 0;
@@ -380,9 +379,14 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             nZeros_++;
         }
     }
+}
 
-    // Now multiply out to find the pseudo inverse of A, VSinvUt_
-    multiply(VSinvUt_, V_, inv(S_), U_.T());
+
+Foam::scalarRectangularMatrix Foam::SVD::VSinvUt() const
+{
+    scalarRectangularMatrix VSinvUt;
+    multiply(VSinvUt, V_, inv(S_), U_.T());
+    return VSinvUt;
 }
 
 

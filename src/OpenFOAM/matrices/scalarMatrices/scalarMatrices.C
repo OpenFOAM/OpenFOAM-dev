@@ -321,7 +321,7 @@ void Foam::multiply
 }
 
 
-Foam::RectangularMatrix<Foam::scalar> Foam::SVDinv
+Foam::scalarRectangularMatrix Foam::SVDinv
 (
     const scalarRectangularMatrix& A,
     scalar minCondition
