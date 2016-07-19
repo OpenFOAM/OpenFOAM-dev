@@ -29,6 +29,7 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVol/dimTime);
           + MRF.DDt(alpha1*rho1, U1)
           + phase1.turbulence().divDevRhoReff(U1)
           + Vm*(UgradU1 - (UgradU2 & U2))
+          - fvOptions(alpha1, rho1, U1)
         );
         U1Eqn.relax();
         fvOptions.constrain(U1Eqn);
@@ -44,6 +45,7 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVol/dimTime);
           + MRF.DDt(alpha2*rho2, U2)
           + phase2.turbulence().divDevRhoReff(U2)
           + Vm*(UgradU2 - (UgradU1 & U1))
+          - fvOptions(alpha2, rho2, U2)
         );
         U2Eqn.relax();
         fvOptions.constrain(U2Eqn);
