@@ -104,9 +104,9 @@ if (argList::postProcess(argc, argv))
         functionObjectList::New(args, runTime, functionsDict, selectedFields)
     );
 
-    forAll(timeDirs, timeI)
+    forAll(timeDirs, timei)
     {
-        runTime.setTime(timeDirs[timeI], timeI);
+        runTime.setTime(timeDirs[timei], timei);
 
         Info<< "Time = " << runTime.timeName() << endl;
 
@@ -137,6 +137,12 @@ if (argList::postProcess(argc, argv))
             #endif
 
             functionsPtr->execute();
+
+            // Execute the functionObject 'end()' function for the last time
+            if (timei == timeDirs.size()-1)
+            {
+                functionsPtr->end();
+            }
         }
         catch (IOerror& err)
         {

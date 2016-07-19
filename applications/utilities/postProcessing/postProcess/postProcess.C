@@ -59,7 +59,8 @@ void executeFunctionObjects
     const Time& runTime,
     fvMesh& mesh,
     const HashSet<word>& selectedFields,
-    functionObjectList& functions
+    functionObjectList& functions,
+    bool lastTime
 )
 {
     Info<< nl << "Reading fields:" << endl;
@@ -115,6 +116,12 @@ void executeFunctionObjects
     // Execute the functionObjects in post-processing mode
     functions.execute();
 
+    // Execute the functionObject 'end()' function for the last time
+    if (lastTime)
+    {
+        functions.end();
+    }
+
     while (!storedObjects.empty())
     {
         storedObjects.pop()->checkOut();
@@ -164,9 +171,9 @@ int main(int argc, char *argv[])
         functionObjectList::New(args, runTime, functionsDict, selectedFields)
     );
 
-    forAll(timeDirs, timeI)
+    forAll(timeDirs, timei)
     {
-        runTime.setTime(timeDirs[timeI], timeI);
+        runTime.setTime(timeDirs[timei], timei);
 
         Info<< "Time = " << runTime.timeName() << endl;
 
@@ -192,7 +199,8 @@ int main(int argc, char *argv[])
                 runTime,
                 mesh,
                 selectedFields,
-                functionsPtr()
+                functionsPtr(),
+                timei == timeDirs.size()-1
             );
         }
         catch (IOerror& err)
