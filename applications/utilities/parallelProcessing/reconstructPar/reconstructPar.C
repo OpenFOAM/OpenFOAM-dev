@@ -56,9 +56,9 @@ bool haveAllTimes
 )
 {
     // Loop over all times
-    forAll(timeDirs, timeI)
+    forAll(timeDirs, timei)
     {
-        if (!masterTimeDirSet.found(timeDirs[timeI].name()))
+        if (!masterTimeDirSet.found(timeDirs[timei].name()))
         {
             return false;
         }
@@ -284,10 +284,10 @@ int main(int argc, char *argv[])
     }
 
 
-    forAll(regionNames, regionI)
+    forAll(regionNames, regioni)
     {
-        const word& regionName = regionNames[regionI];
-        const word& regionDir = regionDirs[regionI];
+        const word& regionName = regionNames[regioni];
+        const word& regionDir = regionDirs[regioni];
 
         Info<< "\n\nReconstructing fields for mesh " << regionName << nl
             << endl;
@@ -328,25 +328,25 @@ int main(int argc, char *argv[])
         #include "checkFaceAddressingComp.H"
 
         // Loop over all times
-        forAll(timeDirs, timeI)
+        forAll(timeDirs, timei)
         {
-            if (newTimes && masterTimeDirSet.found(timeDirs[timeI].name()))
+            if (newTimes && masterTimeDirSet.found(timeDirs[timei].name()))
             {
-                Info<< "Skipping time " << timeDirs[timeI].name()
+                Info<< "Skipping time " << timeDirs[timei].name()
                     << endl << endl;
                 continue;
             }
 
 
             // Set time for global database
-            runTime.setTime(timeDirs[timeI], timeI);
+            runTime.setTime(timeDirs[timei], timei);
 
             Info<< "Time = " << runTime.timeName() << endl << endl;
 
             // Set time for all databases
             forAll(databases, proci)
             {
-                databases[proci].setTime(timeDirs[timeI], timeI);
+                databases[proci].setTime(timeDirs[timei], timei);
             }
 
             // Check if any new meshes need to be read.
@@ -989,20 +989,35 @@ int main(int argc, char *argv[])
                     procRefs
                 ).write();
             }
-        }
-    }
 
-    // If there are any "uniform" directories copy them from
-    // the master processor
-    forAll(timeDirs, timeI)
-    {
-        runTime.setTime(timeDirs[timeI], timeI);
-        databases[0].setTime(timeDirs[timeI], timeI);
+            // If there is a "uniform" directory in the time region
+            // directory copy from the master processor
+            {
+                fileName uniformDir0
+                (
+                    databases[0].timePath()/regionDir/"uniform"
+                );
 
-        fileName uniformDir0 = databases[0].timePath()/"uniform";
-        if (isDir(uniformDir0))
-        {
-            cp(uniformDir0, runTime.timePath());
+                if (isDir(uniformDir0))
+                {
+                    cp(uniformDir0, runTime.timePath()/regionDir);
+                }
+            }
+
+            // For the first region of a multi-region case additionally
+            // copy the "uniform" directory in the time directory
+            if (regionNames.size() > 1 && regioni == 0)
+            {
+                fileName uniformDir0
+                (
+                    databases[0].timePath()/"uniform"
+                );
+
+                if (isDir(uniformDir0))
+                {
+                    cp(uniformDir0, runTime.timePath());
+                }
+            }
         }
     }
 
