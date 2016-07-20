@@ -101,6 +101,9 @@ Usage
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
 const labelIOList& procAddressing
 (
     const PtrList<fvMesh>& procMeshList,
@@ -135,6 +138,61 @@ const labelIOList& procAddressing
 }
 
 
+void decomposeUniform
+(
+    const bool copyUniform,
+    const domainDecomposition& mesh,
+    const Time& processorDb,
+    const word& regionDir = word::null
+)
+{
+    const Time& runTime = mesh.time();
+
+    // Any uniform data to copy/link?
+    const fileName uniformDir(regionDir/"uniform");
+
+    if (isDir(runTime.timePath()/uniformDir))
+    {
+        Info<< "Detected additional non-decomposed files in "
+            << runTime.timePath()/uniformDir
+            << endl;
+
+        const fileName timePath = processorDb.timePath();
+
+        if (copyUniform || mesh.distributed())
+        {
+            cp
+            (
+                runTime.timePath()/uniformDir,
+                timePath/uniformDir
+            );
+        }
+        else
+        {
+            // link with relative paths
+            string parentPath = string("..")/"..";
+
+            if (regionDir != word::null)
+            {
+                parentPath = parentPath/"..";
+            }
+
+            fileName currentDir(cwd());
+            chDir(timePath);
+            ln
+            (
+                parentPath/runTime.timeName()/uniformDir,
+                uniformDir
+            );
+            chDir(currentDir);
+        }
+    }
+}
+
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
@@ -237,10 +295,10 @@ int main(int argc, char *argv[])
 
 
 
-    forAll(regionNames, regionI)
+    forAll(regionNames, regioni)
     {
-        const word& regionName = regionNames[regionI];
-        const word& regionDir = regionDirs[regionI];
+        const word& regionName = regionNames[regioni];
+        const word& regionDir = regionDirs[regioni];
 
         Info<< "\n\nDecomposing mesh " << regionName << nl << endl;
 
@@ -779,21 +837,6 @@ int main(int argc, char *argv[])
             lagrangianTensorFields.setSize(cloudI);
             lagrangianTensorFieldFields.setSize(cloudI);
 
-
-            // Any uniform data to copy/link?
-            fileName uniformDir("uniform");
-
-            if (isDir(runTime.timePath()/uniformDir))
-            {
-                Info<< "Detected additional non-decomposed files in "
-                    << runTime.timePath()/uniformDir
-                    << endl;
-            }
-            else
-            {
-                uniformDir.clear();
-            }
-
             Info<< endl;
 
             // split the fields over processors
@@ -1074,37 +1117,16 @@ int main(int argc, char *argv[])
                     }
                 }
 
+                // Decompose the "uniform" directory in the time region
+                // directory
+                decomposeUniform(copyUniform, mesh, processorDb, regionDir);
 
-                // Any non-decomposed data to copy?
-                if (uniformDir.size())
+                // For the first region of a multi-region case additionally
+                // decompose the "uniform" directory in the time directory
+                if (regionNames.size() > 1 && regioni == 0)
                 {
-                    const fileName timePath = processorDb.timePath();
-
-                    if (copyUniform || mesh.distributed())
-                    {
-                        cp
-                        (
-                            runTime.timePath()/uniformDir,
-                            timePath/uniformDir
-                        );
-                    }
-                    else
-                    {
-                        // link with relative paths
-                        const string parentPath = string("..")/"..";
-
-                        fileName currentDir(cwd());
-                        chDir(timePath);
-                        ln
-                        (
-                            parentPath/runTime.timeName()/uniformDir,
-                            uniformDir
-                        );
-                        chDir(currentDir);
-                    }
+                    decomposeUniform(copyUniform, mesh, processorDb);
                 }
-
-
 
                 // We have cached all the constant mesh data for the current
                 // processor. This is only important if running with multiple
