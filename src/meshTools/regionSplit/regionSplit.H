@@ -89,6 +89,9 @@ Description
 
     Can optionally keep all regions local to the processor.
 
+    Note: does not walk across cyclicAMI/cyclicACMI - since not 'coupled()'
+          at the patch level.
+
 
 SourceFiles
     regionSplit.C
@@ -126,30 +129,10 @@ class regionSplit
 
     // Private Member Functions
 
-        //- Transfer faceRegion data from one face to the other (or vice versa)
-        void transferCoupledFaceRegion
+        //- Calculate region split in non-compact (global) numbering.
+        void calcNonCompactRegionSplit
         (
-            const label facei,
-            const label otherFacei,
-
-            labelList& faceRegion,
-            DynamicList<label>& newChangedFaces
-        ) const;
-
-        //- Given a seed cell label, fill cellRegion/faceRegion with markValue
-        //  for contiguous region around it
-        void fillSeedMask
-        (
-            const List<labelPair>& explicitConnections,
-            labelList& cellRegion,
-            labelList& faceRegion,
-            const label seedCellID,
-            const label markValue
-        ) const;
-
-        //- Calculate local region split. Return number of regions.
-        label calcLocalRegionSplit
-        (
+            const globalIndex& globalFaces,
             const boolList& blockedFace,
             const List<labelPair>& explicitConnections,
             labelList& cellRegion

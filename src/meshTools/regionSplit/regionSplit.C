@@ -24,10 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "regionSplit.H"
+#include "FaceCellWave.H"
 #include "cyclicPolyPatch.H"
 #include "processorPolyPatch.H"
 #include "globalIndex.H"
 #include "syncTools.H"
+#include "minData.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -40,335 +42,93 @@ defineTypeNameAndDebug(regionSplit, 0);
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Handle (non-processor) coupled faces.
-void Foam::regionSplit::transferCoupledFaceRegion
+void Foam::regionSplit::calcNonCompactRegionSplit
 (
-    const label facei,
-    const label otherFacei,
-
-    labelList& faceRegion,
-    DynamicList<label>& newChangedFaces
-) const
-{
-    if (faceRegion[facei] >= 0)
-    {
-        if (faceRegion[otherFacei] == -1)
-        {
-            faceRegion[otherFacei] = faceRegion[facei];
-            newChangedFaces.append(otherFacei);
-        }
-        else if (faceRegion[otherFacei] == -2)
-        {
-            // otherFacei blocked but facei is not. Is illegal for coupled
-            // faces, not for explicit connections.
-        }
-        else if (faceRegion[otherFacei] != faceRegion[facei])
-        {
-            FatalErrorInFunction
-                  << "Problem : coupled face " << facei
-                  << " on patch " << mesh().boundaryMesh().whichPatch(facei)
-                  << " has region " << faceRegion[facei]
-                  << " but coupled face " << otherFacei
-                  << " has region " << faceRegion[otherFacei]
-                  << endl
-                  << "Is your blocked faces specification"
-                  << " synchronized across coupled boundaries?"
-                  << abort(FatalError);
-        }
-    }
-    else if (faceRegion[facei] == -1)
-    {
-        if (faceRegion[otherFacei] >= 0)
-        {
-            faceRegion[facei] = faceRegion[otherFacei];
-            newChangedFaces.append(facei);
-        }
-        else if (faceRegion[otherFacei] == -2)
-        {
-            // otherFacei blocked but facei is not. Is illegal for coupled
-            // faces, not for explicit connections.
-        }
-    }
-}
-
-
-void Foam::regionSplit::fillSeedMask
-(
-    const List<labelPair>& explicitConnections,
-    labelList& cellRegion,
-    labelList& faceRegion,
-    const label seedCellID,
-    const label markValue
-) const
-{
-    // Do seed cell
-    cellRegion[seedCellID] = markValue;
-
-
-    // Collect faces on seed cell
-    const cell& cFaces = mesh().cells()[seedCellID];
-
-    label nFaces = 0;
-
-    labelList changedFaces(cFaces.size());
-
-    forAll(cFaces, i)
-    {
-        label facei = cFaces[i];
-
-        if (faceRegion[facei] == -1)
-        {
-            faceRegion[facei] = markValue;
-            changedFaces[nFaces++] = facei;
-        }
-    }
-    changedFaces.setSize(nFaces);
-
-
-    // Loop over changed faces. FaceCellWave in small.
-
-    while (changedFaces.size())
-    {
-        //if (debug)
-        //{
-        //    Pout<< "regionSplit::fillSeedMask : changedFaces:"
-        //        << changedFaces.size() << endl;
-        //}
-
-        DynamicList<label> changedCells(changedFaces.size());
-
-        forAll(changedFaces, i)
-        {
-            label facei = changedFaces[i];
-
-            label own = mesh().faceOwner()[facei];
-
-            if (cellRegion[own] == -1)
-            {
-                cellRegion[own] = markValue;
-                changedCells.append(own);
-            }
-
-            if (mesh().isInternalFace(facei))
-            {
-                label nei = mesh().faceNeighbour()[facei];
-
-                if (cellRegion[nei] == -1)
-                {
-                    cellRegion[nei] = markValue;
-                    changedCells.append(nei);
-                }
-            }
-        }
-
-
-        //if (debug)
-        //{
-        //    Pout<< "regionSplit::fillSeedMask : changedCells:"
-        //        << changedCells.size() << endl;
-        //}
-
-        // Loop over changedCells and collect faces
-        DynamicList<label> newChangedFaces(changedCells.size());
-
-        forAll(changedCells, i)
-        {
-            label celli = changedCells[i];
-
-            const cell& cFaces = mesh().cells()[celli];
-
-            forAll(cFaces, cFacei)
-            {
-                label facei = cFaces[cFacei];
-
-                if (faceRegion[facei] == -1)
-                {
-                    faceRegion[facei] = markValue;
-                    newChangedFaces.append(facei);
-                }
-            }
-        }
-
-
-        //if (debug)
-        //{
-        //    Pout<< "regionSplit::fillSeedMask : changedFaces before sync:"
-        //        << changedFaces.size() << endl;
-        //}
-
-
-        // Check for changes to any locally coupled face.
-        // Global connections are done later.
-
-        const polyBoundaryMesh& patches = mesh().boundaryMesh();
-
-        forAll(patches, patchi)
-        {
-            const polyPatch& pp = patches[patchi];
-
-            if
-            (
-                isA<cyclicPolyPatch>(pp)
-             && refCast<const cyclicPolyPatch>(pp).owner()
-            )
-            {
-                // Transfer from neighbourPatch to here or vice versa.
-
-                const cyclicPolyPatch& cycPatch =
-                    refCast<const cyclicPolyPatch>(pp);
-
-                label facei = cycPatch.start();
-
-                forAll(cycPatch, i)
-                {
-                    label otherFacei = cycPatch.transformGlobalFace(facei);
-
-                    transferCoupledFaceRegion
-                    (
-                        facei,
-                        otherFacei,
-                        faceRegion,
-                        newChangedFaces
-                    );
-
-                    facei++;
-                }
-            }
-        }
-        forAll(explicitConnections, i)
-        {
-            transferCoupledFaceRegion
-            (
-                explicitConnections[i][0],
-                explicitConnections[i][1],
-                faceRegion,
-                newChangedFaces
-            );
-        }
-
-        //if (debug)
-        //{
-        //    Pout<< "regionSplit::fillSeedMask : changedFaces after sync:"
-        //        << newChangedFaces.size() << endl;
-        //}
-
-        changedFaces.transfer(newChangedFaces);
-    }
-}
-
-
-Foam::label Foam::regionSplit::calcLocalRegionSplit
-(
+    const globalIndex& globalFaces,
     const boolList& blockedFace,
     const List<labelPair>& explicitConnections,
 
     labelList& cellRegion
 ) const
 {
-    if (debug)
-    {
-        if (blockedFace.size())
-        {
-            // Check that blockedFace is synced.
-            boolList syncBlockedFace(blockedFace);
-            syncTools::swapFaceList(mesh(), syncBlockedFace);
+    // Field on cells and faces.
+    List<minData> cellData(mesh().nCells());
+    List<minData> faceData(mesh().nFaces());
 
-            forAll(syncBlockedFace, facei)
-            {
-                if (syncBlockedFace[facei] != blockedFace[facei])
-                {
-                    FatalErrorInFunction
-                        << "Face " << facei << " not synchronised. My value:"
-                        << blockedFace[facei] << "  coupled value:"
-                        << syncBlockedFace[facei]
-                        << abort(FatalError);
-                }
-            }
+    // Take over blockedFaces by seeding a negative number
+    // (so is always less than the decomposition)
+    label nUnblocked = 0;
+    forAll(faceData, facei)
+    {
+        if (blockedFace.size() && blockedFace[facei])
+        {
+            faceData[facei] = minData(-2);
+        }
+        else
+        {
+            nUnblocked++;
         }
     }
 
-    // Region per face.
-    // -1 unassigned
-    // -2 blocked
-    labelList faceRegion(mesh().nFaces(), -1);
+    // Seed unblocked faces
+    labelList seedFaces(nUnblocked);
+    List<minData> seedData(nUnblocked);
+    nUnblocked = 0;
 
-    if (blockedFace.size())
+
+    forAll(faceData, facei)
     {
-        forAll(blockedFace, facei)
+        if (blockedFace.empty() || !blockedFace[facei])
         {
-            if (blockedFace[facei])
-            {
-                faceRegion[facei] = -2;
-            }
+            seedFaces[nUnblocked] = facei;
+            // Seed face with globally unique number
+            seedData[nUnblocked] = minData(globalFaces.toGlobal(facei));
+            nUnblocked++;
         }
     }
 
 
-    // Assign local regions
-    // ~~~~~~~~~~~~~~~~~~~~
+    // Propagate information inwards
+    FaceCellWave<minData> deltaCalc
+    (
+        mesh(),
+        explicitConnections,
+        false,  // disable walking through cyclicAMI for backwards compatibility
+        seedFaces,
+        seedData,
+        faceData,
+        cellData,
+        mesh().globalData().nTotalCells()+1
+    );
 
-    // Start with region 0
-    label nLocalRegions = 0;
 
-    label unsetCelli = 0;
-
-    do
+    // And extract
+    cellRegion.setSize(mesh().nCells());
+    forAll(cellRegion, celli)
     {
-        // Find first unset cell
-
-        for (; unsetCelli < mesh().nCells(); unsetCelli++)
+        if (cellData[celli].valid(deltaCalc.data()))
         {
-            if (cellRegion[unsetCelli] == -1)
-            {
-                break;
-            }
+            cellRegion[celli] = cellData[celli].data();
         }
-
-        if (unsetCelli >= mesh().nCells())
+        else
         {
-            break;
-        }
+            // Unvisited cell -> only possible if surrounded by blocked faces.
+            // If so make up region from any of the faces
+            const cell& cFaces = mesh().cells()[celli];
+            label facei = cFaces[0];
 
-        fillSeedMask
-        (
-            explicitConnections,
-            cellRegion,
-            faceRegion,
-            unsetCelli,
-            nLocalRegions
-        );
-
-        // Current unsetCell has now been handled. Go to next region.
-        nLocalRegions++;
-        unsetCelli++;
-    }
-    while (true);
-
-
-    if (debug)
-    {
-        forAll(cellRegion, celli)
-        {
-            if (cellRegion[celli] < 0)
+            if (blockedFace.size() && !blockedFace[facei])
             {
-                FatalErrorInFunction
-                    << "cell:" << celli << " region:" << cellRegion[celli]
-                    << abort(FatalError);
+                FatalErrorIn("regionSplit::calcNonCompactRegionSplit(..)")
+                    << "Problem: unblocked face " << facei
+                    << " at " << mesh().faceCentres()[facei]
+                    << " on unassigned cell " << celli
+                    << mesh().cellCentres()[celli]
+                    << exit(FatalError);
             }
-        }
-
-        forAll(faceRegion, facei)
-        {
-            if (faceRegion[facei] == -1)
-            {
-                FatalErrorInFunction
-                    << "face:" << facei << " region:" << faceRegion[facei]
-                    << abort(FatalError);
-            }
+            cellRegion[celli] = globalFaces.toGlobal(facei);
         }
     }
-
-    return nLocalRegions;
 }
 
 
@@ -383,176 +143,142 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
 {
     // See header in regionSplit.H
 
-    // 1. Do local analysis
-    label nLocalRegions = calcLocalRegionSplit
+
+    if (!doGlobalRegions)
+    {
+        // Block all parallel faces to avoid comms across
+        boolList coupledOrBlockedFace(blockedFace);
+        const polyBoundaryMesh& pbm = mesh().boundaryMesh();
+
+        if (coupledOrBlockedFace.size())
+        {
+            forAll(pbm, patchi)
+            {
+                const polyPatch& pp = pbm[patchi];
+                if (isA<processorPolyPatch>(pp))
+                {
+                    label facei = pp.start();
+                    forAll(pp, i)
+                    {
+                        coupledOrBlockedFace[facei++] = true;
+                    }
+                }
+            }
+        }
+
+        // Create dummy (local only) globalIndex
+        labelList offsets(Pstream::nProcs()+1, 0);
+        for (label i = Pstream::myProcNo()+1; i < offsets.size(); i++)
+        {
+            offsets[i] = mesh().nFaces();
+        }
+        const globalIndex globalRegions(offsets.xfer());
+
+        // Minimise regions across connected cells
+        // Note: still uses global decisions so all processors are running
+        //       in lock-step, i.e. slowest determines overall time.
+        //       To avoid this we could switch off Pstream::parRun.
+        calcNonCompactRegionSplit
+        (
+            globalRegions,
+            coupledOrBlockedFace,
+            explicitConnections,
+            cellRegion
+        );
+
+        // Compact
+        Map<label> globalToCompact(mesh().nCells()/8);
+        forAll(cellRegion, celli)
+        {
+            label region = cellRegion[celli];
+
+            label globalRegion;
+
+            Map<label>::const_iterator fnd = globalToCompact.find(region);
+            if (fnd == globalToCompact.end())
+            {
+                globalRegion = globalRegions.toGlobal(globalToCompact.size());
+                globalToCompact.insert(region, globalRegion);
+            }
+            else
+            {
+                globalRegion = fnd();
+            }
+            cellRegion[celli] = globalRegion;
+        }
+
+
+        // Return globalIndex with size = localSize and all regions local
+        labelList compactOffsets(Pstream::nProcs()+1, 0);
+        for (label i = Pstream::myProcNo()+1; i < compactOffsets.size(); i++)
+        {
+            compactOffsets[i] = globalToCompact.size();
+        }
+
+        return autoPtr<globalIndex>(new globalIndex(compactOffsets.xfer()));
+    }
+
+
+
+    // Initial global region numbers
+    const globalIndex globalRegions(mesh().nFaces());
+
+    // Minimise regions across connected cells (including parallel)
+    calcNonCompactRegionSplit
     (
+        globalRegions,
         blockedFace,
         explicitConnections,
         cellRegion
     );
 
-    if (!doGlobalRegions)
+
+    // Now our cellRegion will have
+    // - non-local regions (i.e. originating from other processors)
+    // - non-compact locally originating regions
+    // so we'll need to compact
+
+    // 4a: count per originating processor the number of regions
+    labelList nOriginating(Pstream::nProcs(), 0);
     {
-        return autoPtr<globalIndex>(new globalIndex(nLocalRegions));
-    }
+        labelHashSet haveRegion(mesh().nCells()/8);
 
-
-    // 2. Assign global regions
-    // ~~~~~~~~~~~~~~~~~~~~~~~~
-    // Offset local regions to create unique global regions.
-
-    globalIndex globalRegions(nLocalRegions);
-
-
-    // Convert regions to global ones
-    forAll(cellRegion, celli)
-    {
-        cellRegion[celli] = globalRegions.toGlobal(cellRegion[celli]);
-    }
-
-
-    // 3. Merge global regions
-    // ~~~~~~~~~~~~~~~~~~~~~~~
-    // Regions across non-blocked proc patches get merged.
-    // This will set merged global regions to be the min of both.
-    // (this will create gaps in the global region list so they will get
-    // merged later on)
-
-    while (true)
-    {
-        if (debug)
-        {
-            Pout<< nl << "-- Starting Iteration --" << endl;
-        }
-
-
-        const polyBoundaryMesh& patches = mesh().boundaryMesh();
-
-        labelList nbrRegion(mesh().nFaces()-mesh().nInternalFaces(), -1);
-        forAll(patches, patchi)
-        {
-            const polyPatch& pp = patches[patchi];
-
-            if (pp.coupled())
-            {
-                const labelList& patchCells = pp.faceCells();
-                SubList<label> patchNbrRegion
-                (
-                    nbrRegion,
-                    pp.size(),
-                    pp.start()-mesh().nInternalFaces()
-                );
-
-                forAll(patchCells, i)
-                {
-                    label facei = pp.start()+i;
-                    if (!blockedFace.size() || !blockedFace[facei])
-                    {
-                        patchNbrRegion[i] = cellRegion[patchCells[i]];
-                    }
-                }
-            }
-        }
-        syncTools::swapBoundaryFaceList(mesh(), nbrRegion);
-
-        Map<label> globalToMerged(mesh().nFaces()-mesh().nInternalFaces());
-
-        forAll(patches, patchi)
-        {
-            const polyPatch& pp = patches[patchi];
-
-            if (pp.coupled())
-            {
-                const labelList& patchCells = pp.faceCells();
-                SubList<label> patchNbrRegion
-                (
-                    nbrRegion,
-                    pp.size(),
-                    pp.start()-mesh().nInternalFaces()
-                );
-
-                forAll(patchCells, i)
-                {
-                    label facei = pp.start()+i;
-
-                    if (!blockedFace.size() || !blockedFace[facei])
-                    {
-                        if (patchNbrRegion[i] < cellRegion[patchCells[i]])
-                        {
-                            //Pout<< "on patch:" << pp.name()
-                            //    << " cell:" << patchCells[i]
-                            //    << " at:"
-                            // << mesh().cellCentres()[patchCells[i]]
-                            //    << " was:" << cellRegion[patchCells[i]]
-                            //    << " nbr:" << patchNbrRegion[i]
-                            //    << endl;
-
-                            globalToMerged.insert
-                            (
-                                cellRegion[patchCells[i]],
-                                patchNbrRegion[i]
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-
-        label nMerged = returnReduce(globalToMerged.size(), sumOp<label>());
-
-        if (debug)
-        {
-            Pout<< "nMerged:" << nMerged << endl;
-        }
-
-        if (nMerged == 0)
-        {
-            break;
-        }
-
-        // Renumber the regions according to the globalToMerged
         forAll(cellRegion, celli)
         {
-            label regionI = cellRegion[celli];
-            Map<label>::const_iterator iter = globalToMerged.find(regionI);
-            if (iter != globalToMerged.end())
+            label region = cellRegion[celli];
+
+            // Count originating processor. Use isLocal as efficiency since
+            // most cells are locally originating.
+            if (globalRegions.isLocal(region))
             {
-                 cellRegion[celli] = iter();
+                if (haveRegion.insert(region))
+                {
+                    nOriginating[Pstream::myProcNo()]++;
+                }
             }
-        }
-    }
-
-
-    // Now our cellRegion will have non-local elements in it. So compact
-    // it.
-
-    // 4a: count. Use a labelHashSet to count regions only once.
-    label nCompact = 0;
-    {
-        labelHashSet localRegion(mesh().nFaces()-mesh().nInternalFaces());
-        forAll(cellRegion, celli)
-        {
-            if
-            (
-                globalRegions.isLocal(cellRegion[celli])
-             && localRegion.insert(cellRegion[celli])
-            )
+            else
             {
-                nCompact++;
+                label proci = globalRegions.whichProcID(region);
+                if (haveRegion.insert(region))
+                {
+                    nOriginating[proci]++;
+                }
             }
         }
     }
 
     if (debug)
     {
-        Pout<< "Compacted from " << nLocalRegions
-            << " down to " << nCompact << " local regions." << endl;
+        Pout<< "Counted " << nOriginating[Pstream::myProcNo()]
+            << " local regions." << endl;
     }
 
 
     // Global numbering for compacted local regions
-    autoPtr<globalIndex> globalCompactPtr(new globalIndex(nCompact));
+    autoPtr<globalIndex> globalCompactPtr
+    (
+        new globalIndex(nOriginating[Pstream::myProcNo()])
+    );
     const globalIndex& globalCompact = globalCompactPtr();
 
 
@@ -563,12 +289,15 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
     // labelList.
 
     // Local compaction map
-    Map<label> globalToCompact(2*nCompact);
+    Map<label> globalToCompact(2*nOriginating[Pstream::myProcNo()]);
     // Remote regions we want the compact number for
     List<labelHashSet> nonLocal(Pstream::nProcs());
     forAll(nonLocal, proci)
     {
-        nonLocal[proci].resize((nLocalRegions-nCompact)/Pstream::nProcs());
+        if (proci != Pstream::myProcNo())
+        {
+            nonLocal[proci].resize(2*nOriginating[proci]);
+        }
     }
 
     forAll(cellRegion, celli)
@@ -576,15 +305,12 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
         label region = cellRegion[celli];
         if (globalRegions.isLocal(region))
         {
-            Map<label>::const_iterator iter = globalToCompact.find(region);
-            if (iter == globalToCompact.end())
-            {
-                label compactRegion = globalCompact.toGlobal
-                (
-                    globalToCompact.size()
-                );
-                globalToCompact.insert(region, compactRegion);
-            }
+            // Insert new compact region (if not yet present)
+            globalToCompact.insert
+            (
+                region,
+                globalCompact.toGlobal(globalToCompact.size())
+            );
         }
         else
         {
@@ -598,22 +324,17 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
     // Convert the nonLocal (labelHashSets) to labelLists.
 
     labelListList sendNonLocal(Pstream::nProcs());
-    labelList nNonLocal(Pstream::nProcs(), 0);
     forAll(sendNonLocal, proci)
     {
-        sendNonLocal[proci].setSize(nonLocal[proci].size());
-        forAllConstIter(labelHashSet, nonLocal[proci], iter)
-        {
-            sendNonLocal[proci][nNonLocal[proci]++] = iter.key();
-        }
+        sendNonLocal[proci] = nonLocal[proci].toc();
     }
 
     if (debug)
     {
-        forAll(nNonLocal, proci)
+        forAll(sendNonLocal, proci)
         {
             Pout<< "    from processor " << proci
-                << " want " << nNonLocal[proci]
+                << " want " << sendNonLocal[proci].size()
                 << " region numbers."
                 << endl;
         }

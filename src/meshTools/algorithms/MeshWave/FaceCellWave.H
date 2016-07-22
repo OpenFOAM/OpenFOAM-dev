@@ -47,9 +47,10 @@ SourceFiles
 #ifndef FaceCellWave_H
 #define FaceCellWave_H
 
-#include "boolList.H"
-#include "labelList.H"
+#include "PackedBoolList.H"
+#include "DynamicList.H"
 #include "primitiveFieldsFwd.H"
+#include "labelPair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,10 +77,26 @@ class FaceCellWave
 :
     public FaceCellWaveName
 {
+private:
+
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        FaceCellWave(const FaceCellWave&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const FaceCellWave&);
+
+
+protected:
+
     // Private data
 
         //- Reference to mesh
         const polyMesh& mesh_;
+
+        //- Optional boundary faces that information should travel through
+        const labelPairList explicitConnections_;
 
         //- Information for all faces
         UList<Type>& allFaceInfo_;
@@ -91,18 +108,17 @@ class FaceCellWave
         TrackingData& td_;
 
         //- Has face changed
-        boolList changedFace_;
+        PackedBoolList changedFace_;
 
         //- List of changed faces
-        labelList changedFaces_;
+        DynamicList<label> changedFaces_;
 
-        //- Number of changed faces
-        label nChangedFaces_;
+        //- Has cell changed
+        PackedBoolList changedCell_;
 
         // Cells that have changed
-        boolList changedCell_;
-        labelList changedCells_;
-        label nChangedCells_;
+        DynamicList<label> changedCells_;
+
 
         //- Contains cyclics
         const bool hasCyclicPatches_;
@@ -116,15 +132,6 @@ class FaceCellWave
         //- Number of unvisited cells/faces
         label nUnvisitedCells_;
         label nUnvisitedFaces_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        FaceCellWave(const FaceCellWave&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const FaceCellWave&);
 
 
         //- Updates cellInfo with information from neighbour. Updates all
@@ -232,6 +239,10 @@ class FaceCellWave
             //- Merge data from across AMI cyclics
             void handleAMICyclicPatches();
 
+            //- Merge data across explicitly provided local connections (usually
+            //  baffles)
+            void handleExplicitConnections();
+
 
       // Private static data
 
@@ -286,6 +297,28 @@ public:
             TrackingData& td = dummyTrackData_
         );
 
+        //- Construct from mesh and explicitly connected boundary faces
+        //  and list of changed faces with the Type
+        //  for these faces. Iterates until nothing changes or maxIter reached.
+        //  (maxIter can be 0)
+        FaceCellWave
+        (
+            const polyMesh&,
+            const labelPairList& explicitConnections,
+            const bool handleCyclicAMI,
+            const labelList& initialChangedFaces,
+            const List<Type>& changedFacesInfo,
+            UList<Type>& allFaceInfo,
+            UList<Type>& allCellInfo,
+            const label maxIter,
+            TrackingData& td = dummyTrackData_
+        );
+
+
+    //- Destructor
+    virtual ~FaceCellWave()
+    {}
+
 
     // Member Functions
 
@@ -337,17 +370,16 @@ public:
 
             //- Propagate from face to cell. Returns total number of cells
             //  (over all processors) changed.
-            label faceToCell();
+           virtual label faceToCell();
 
             //- Propagate from cell to face. Returns total number of faces
             //  (over all processors) changed. (Faces on processorpatches are
             //  counted double)
-            label cellToFace();
+            virtual label cellToFace();
 
             //- Iterate until no changes or maxIter reached.  Returns actual
             //  number of iterations.
-            label iterate(const label maxIter);
-
+            virtual label iterate(const label maxIter);
 };
 
 
