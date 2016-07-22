@@ -72,6 +72,7 @@ class snappySnapDriver
         // Snapping
 
             //- Calculates (geometric) shared points
+            //  Requires PackedList to be sized and initalised
             static label getCollocatedPoints
             (
                 const scalar tol,
@@ -601,6 +602,9 @@ public:
             );
 
             //- Repatch faces according to surface nearest the face centre
+            //  - calculate face-wise snap distance as max of point-wise
+            //  - calculate face-wise nearest surface point
+            //  - repatch face according to patch for surface point.
             autoPtr<mapPolyMesh> repatchToSurface
             (
                 const snapParameters& snapParams,
