@@ -25,6 +25,7 @@ License
 
 #include "BrownianMotionForce.H"
 #include "mathematicalConstants.H"
+#include "fundamentalConstants.H"
 #include "demandDrivenData.H"
 #include "turbulenceModel.H"
 
@@ -174,30 +175,31 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     const scalar alpha = 2.0*lambda_/dp;
     const scalar cc = 1.0 + alpha*(1.257 + 0.4*exp(-1.1/alpha));
 
-    const scalar sigma = physicoChemical::sigma.value();
+    // Boltzmann constant
+    const scalar kb = physicoChemical::k.value();
 
-    scalar f = 0.0;
+    scalar f = 0;
     if (turbulence_)
     {
         const label celli = p.cell();
         const volScalarField& k = *kPtr_;
         const scalar kc = k[celli];
-        const scalar Dp = sigma*Tc*cc/(3*mathematical::pi*muc*dp);
+        const scalar Dp = kb*Tc*cc/(3*mathematical::pi*muc*dp);
         f = eta/mass*sqrt(2.0*sqr(kc)*sqr(Tc)/(Dp*dt));
     }
     else
     {
         const scalar s0 =
-            216*muc*sigma*Tc/(sqr(mathematical::pi)*pow5(dp)*sqr(p.rho())*cc);
+            216*muc*kb*Tc/(sqr(mathematical::pi)*pow5(dp)*sqr(p.rho())*cc);
         f = eta*sqrt(mathematical::pi*s0/dt);
     }
 
     const scalar sqrt2 = sqrt(2.0);
-    for (label i = 0; i < 3; i++)
+    for (direction dir = 0; dir < vector::nComponents; dir++)
     {
         const scalar x = rndGen_.sample01<scalar>();
         const scalar eta = sqrt2*erfInv(2*x - 1.0);
-        value.Su()[i] = mass*f*eta;
+        value.Su()[dir] = mass*f*eta;
     }
 
     return value;
