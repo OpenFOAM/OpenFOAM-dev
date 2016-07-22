@@ -33,6 +33,7 @@ License
 #include "tetWedgeMatcher.H"
 #include "tetMatcher.H"
 #include "IOmanip.H"
+#include "pointSet.H"
 #include "faceSet.H"
 #include "cellSet.H"
 #include "Time.H"
@@ -369,6 +370,118 @@ void Foam::mergeAndWrite
       / set.name()
     );
 
-
     mergeAndWrite(mesh, writer, set.name(), setPatch, outputDir);
 }
+
+
+void Foam::mergeAndWrite
+(
+    const writer<scalar>& writer,
+    const pointSet& set
+)
+{
+    const polyMesh& mesh = refCast<const polyMesh>(set.db());
+
+    pointField mergedPts;
+    labelList mergedIDs;
+
+    if (Pstream::parRun())
+    {
+        // Note: we explicitly do not merge the points
+        // (mesh.globalData().mergePoints etc) since this might
+        // hide any synchronisation problem
+
+        globalIndex globalNumbering(mesh.nPoints());
+
+        mergedPts.setSize(returnReduce(set.size(), sumOp<label>()));
+        mergedIDs.setSize(mergedPts.size());
+
+        labelList setPointIDs(set.sortedToc());
+
+        // Get renumbered local data
+        pointField myPoints(mesh.points(), setPointIDs);
+        labelList myIDs(setPointIDs.size());
+        forAll(setPointIDs, i)
+        {
+            myIDs[i] = globalNumbering.toGlobal(setPointIDs[i]);
+        }
+
+        if (Pstream::master())
+        {
+            // Insert master data first
+            label pOffset = 0;
+            SubList<point>(mergedPts, myPoints.size(), pOffset) = myPoints;
+            SubList<label>(mergedIDs, myIDs.size(), pOffset) = myIDs;
+            pOffset += myPoints.size();
+
+            // Receive slave ones
+            for (int slave=1; slave<Pstream::nProcs(); slave++)
+            {
+                IPstream fromSlave(Pstream::scheduled, slave);
+
+                pointField slavePts(fromSlave);
+                labelList slaveIDs(fromSlave);
+
+                SubList<point>(mergedPts, slavePts.size(), pOffset) = slavePts;
+                SubList<label>(mergedIDs, slaveIDs.size(), pOffset) = slaveIDs;
+                pOffset += slaveIDs.size();
+            }
+        }
+        else
+        {
+            // Construct processor stream with estimate of size. Could
+            // be improved.
+            OPstream toMaster
+            (
+                Pstream::scheduled,
+                Pstream::masterNo(),
+                myPoints.byteSize() + myIDs.byteSize()
+            );
+            toMaster << myPoints << myIDs;
+        }
+    }
+    else
+    {
+        mergedIDs = set.sortedToc();
+        mergedPts = pointField(mesh.points(), mergedIDs);
+    }
+
+
+    // Write with scalar pointID
+    if (Pstream::master())
+    {
+        scalarField scalarPointIDs(mergedIDs.size());
+        forAll(mergedIDs, i)
+        {
+            scalarPointIDs[i] = 1.0*mergedIDs[i];
+        }
+
+        coordSet points(set.name(), "distance", mergedPts, mag(mergedPts));
+
+        List<const scalarField*> flds(1, &scalarPointIDs);
+
+        wordList fldNames(1, "pointID");
+
+        // Output e.g. pointSet p0 to
+        // postProcessing/<time>/p0.vtk
+        const fileName outputDir
+        (
+            set.time().path()
+          / (Pstream::parRun() ? ".." : "")
+          / "postProcessing"
+          / mesh.pointsInstance()
+          // set.name()
+        );
+        mkDir(outputDir);
+
+        fileName outputFile(outputDir/writer.getFileName(points, wordList()));
+        //fileName outputFile(outputDir/set.name());
+
+        OFstream os(outputFile);
+
+        writer.write(points, fldNames, flds, os);
+    }
+}
+
+
+// ************************************************************************* //
