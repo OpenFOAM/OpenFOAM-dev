@@ -1,10 +1,12 @@
 #include "scalar.H"
 #include "indirectPrimitivePatch.H"
+#include "writer.H"
 
 namespace Foam
 {
     class polyMesh;
     class surfaceWriter;
+    class pointSet;
     class faceSet;
     class cellSet;
     class fileName;
@@ -23,11 +25,18 @@ namespace Foam
         const fileName& outputDir
     );
 
-    //- Write vtk representation of (assembled) faceSet to vtk file in
+    //- Write vtk representation of (assembled) faceSet to surface file in
     //  postProcessing/ directory
     void mergeAndWrite(const surfaceWriter&, const faceSet&);
 
-    //- Write vtk representation of (assembled) cellSet to vtk file in
+    //- Write vtk representation of (assembled) cellSet to surface file in
     //  postProcessing/ directory
     void mergeAndWrite(const surfaceWriter&, const cellSet&);
+
+    //- Write vtk representation of (assembled) pointSet to 'set' file in
+    //  postProcessing/ directory
+    void mergeAndWrite(const writer<scalar>&, const pointSet&);
 }
+
+
+// ************************************************************************* //

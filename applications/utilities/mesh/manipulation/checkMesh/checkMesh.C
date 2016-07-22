@@ -47,7 +47,8 @@ Usage
       - \par -writeSets \<surfaceFormat\>
         Reconstruct all cellSets and faceSets geometry and write to
         postProcessing directory according to surfaceFormat
-        (e.g. vtk or ensight)
+        (e.g. vtk or ensight). Additionally reconstructs all pointSets and
+        writes as vtk format.
 
 \*---------------------------------------------------------------------------*/
 
@@ -56,7 +57,8 @@ Usage
 #include "Time.H"
 #include "polyMesh.H"
 #include "globalMeshData.H"
-#include "vtkSurfaceWriter.H"
+#include "surfaceWriter.H"
+#include "vtkSetWriter.H"
 
 #include "checkTools.H"
 #include "checkTopology.H"
@@ -94,7 +96,7 @@ int main(int argc, char *argv[])
     argList::addOption
     (
         "writeSets",
-        "<surfaceFormat>"
+        "surfaceFormat",
         "reconstruct and write all faceSets and cellSets in selected format"
     );
 
@@ -156,10 +158,12 @@ int main(int argc, char *argv[])
     }
 
 
-    autoPtr<surfaceWriter> writer;
+    autoPtr<surfaceWriter> surfWriter;
+    autoPtr<writer<scalar>> setWriter;
     if (writeSets)
     {
-        writer = surfaceWriter::New(surfaceFormat);
+        surfWriter = surfaceWriter::New(surfaceFormat);
+        setWriter = writer<scalar>::New(vtkSetWriter<scalar>::typeName);
     }
 
 
@@ -192,15 +196,22 @@ int main(int argc, char *argv[])
                     mesh,
                     allTopology,
                     allGeometry,
-                    writer
+                    surfWriter,
+                    setWriter
                 );
             }
 
-            nFailedChecks += checkGeometry(mesh, allGeometry, writer);
+            nFailedChecks += checkGeometry
+            (
+                mesh,
+                allGeometry,
+                surfWriter,
+                setWriter
+            );
 
             if (meshQuality)
             {
-                nFailedChecks += checkMeshQuality(mesh, qualDict(), writer);
+                nFailedChecks += checkMeshQuality(mesh, qualDict(), surfWriter);
             }
 
 
@@ -221,11 +232,17 @@ int main(int argc, char *argv[])
         {
             Info<< "Time = " << runTime.timeName() << nl << endl;
 
-            label nFailedChecks = checkGeometry(mesh, allGeometry, writer);
+            label nFailedChecks = checkGeometry
+            (
+                mesh,
+                allGeometry,
+                surfWriter,
+                setWriter
+            );
 
             if (meshQuality)
             {
-                nFailedChecks += checkMeshQuality(mesh, qualDict(), writer);
+                nFailedChecks += checkMeshQuality(mesh, qualDict(), surfWriter);
             }
 
 

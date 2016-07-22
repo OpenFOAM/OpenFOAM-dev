@@ -1,5 +1,6 @@
 #include "label.H"
 #include "autoPtr.H"
+#include "writer.H"
 
 namespace Foam
 {
@@ -11,6 +12,7 @@ namespace Foam
         const polyMesh&,
         const bool,
         const bool,
-        const autoPtr<surfaceWriter>&
+        const autoPtr<surfaceWriter>&,
+        const autoPtr<writer<scalar>>&
     );
 }
