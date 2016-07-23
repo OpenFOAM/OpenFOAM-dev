@@ -356,7 +356,7 @@ inline Foam::scalar Foam::KinematicCloud<CloudType>::Dmax() const
 
 
 template<class CloudType>
-inline Foam::cachedRandom& Foam::KinematicCloud<CloudType>::rndGen()
+inline Foam::cachedRandom& Foam::KinematicCloud<CloudType>::rndGen() const
 {
     return rndGen_;
 }

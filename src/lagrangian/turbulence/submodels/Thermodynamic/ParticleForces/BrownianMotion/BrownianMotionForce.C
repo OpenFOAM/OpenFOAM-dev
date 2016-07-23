@@ -193,13 +193,28 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
         f = mass*sqrt(mathematical::pi*s0/dt);
     }
 
-    const scalar sqrt2 = sqrt(2.0);
-    for (direction dir = 0; dir < vector::nComponents; dir++)
-    {
-        const scalar x = rndGen_.sample01<scalar>();
-        const scalar eta = sqrt2*erfInv(2*x - 1.0);
-        value.Su()[dir] = f*eta;
-    }
+
+    // To generate a cubic distribution (3 independent directions) :
+    // const scalar sqrt2 = sqrt(2.0);
+    // for (direction dir = 0; dir < vector::nComponents; dir++)
+    // {
+    //     const scalar x = rndGen_.sample01<scalar>();
+    //     const scalar eta = sqrt2*erfInv(2*x - 1.0);
+    //     value.Su()[dir] = f*eta;
+    // }
+
+
+    // To generate a spherical distribution:
+
+    cachedRandom& rnd = this->owner().rndGen();
+
+    const scalar theta = rnd.sample01<scalar>()*twoPi;
+    const scalar u = 2*rnd.sample01<scalar>() - 1;
+
+    const scalar a = sqrt(1 - sqr(u));
+    const vector dir(a*cos(theta), a*sin(theta), u);
+
+    value.Su() = f*mag(rnd.GaussNormal<scalar>())*dir;
 
     return value;
 }

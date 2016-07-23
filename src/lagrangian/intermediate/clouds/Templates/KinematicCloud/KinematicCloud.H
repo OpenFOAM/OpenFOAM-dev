@@ -160,7 +160,7 @@ protected:
         const dictionary subModelProperties_;
 
         //- Random number generator - used by some injection routines
-        cachedRandom rndGen_;
+        mutable cachedRandom rndGen_;
 
         //- Cell occupancy information for each parcel, (demand driven)
         autoPtr<List<DynamicList<parcelType*>>> cellOccupancyPtr_;
@@ -363,7 +363,7 @@ public:
             // Cloud data
 
                 //- Return reference to the random object
-                inline cachedRandom& rndGen();
+                inline cachedRandom& rndGen() const;
 
                 //- Return the cell occupancy information for each
                 //  parcel, non-const access, the caller is
