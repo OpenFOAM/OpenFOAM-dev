@@ -330,7 +330,7 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::fvMatrix<Type>::residual() const
 {
     tmp<Field<Type>> tres(new Field<Type>(source_));
-    Field<Type>& res = tres();
+    Field<Type>& res = tres.ref();
 
     addBoundarySource(res);
 
