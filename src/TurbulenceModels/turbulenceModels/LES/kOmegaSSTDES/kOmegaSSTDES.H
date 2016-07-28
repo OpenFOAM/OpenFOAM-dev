@@ -101,21 +101,21 @@ protected:
     // Protected Member Functions
 
         //- Return the turbulent length-scale
-        tmp<volScalarField> Lt() const;
+        tmp<volScalarField::Internal> Lt() const;
 
         //- The DES dissipation-rate multiplier with options zonal filtering
         //  based on either F1 or F2
-        virtual tmp<volScalarField> FDES
+        virtual tmp<volScalarField::Internal> FDES
         (
-            const volScalarField& F1,
-            const volScalarField& F2
+            const volScalarField::Internal& F1,
+            const volScalarField::Internal& F2
         ) const;
 
         //- Return epsilon/k which for standard RAS is betaStar*omega
-        virtual tmp<volScalarField> epsilonByk
+        virtual tmp<volScalarField::Internal> epsilonByk
         (
-            const volScalarField& F1,
-            const volScalarField& F2
+            const volScalarField::Internal& F1,
+            const volScalarField::Internal& F2
         ) const;
 
 

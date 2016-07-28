@@ -35,27 +35,27 @@ namespace LESModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> kOmegaSSTDES<BasicTurbulenceModel>::Lt() const
+tmp<volScalarField::Internal> kOmegaSSTDES<BasicTurbulenceModel>::Lt() const
 {
-    return sqrt(this->k_)/(this->betaStar_*this->omega_);
+    return sqrt(this->k_())/(this->betaStar_*this->omega_());
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> kOmegaSSTDES<BasicTurbulenceModel>::FDES
+tmp<volScalarField::Internal> kOmegaSSTDES<BasicTurbulenceModel>::FDES
 (
-    const volScalarField& F1,
-    const volScalarField& F2
+    const volScalarField::Internal& F1,
+    const volScalarField::Internal& F2
 ) const
 {
     switch (FSST_)
     {
         case 0:
-            return max(Lt()/(CDES_*this->delta()), scalar(1));
+            return max(Lt()/(CDES_*this->delta()()), scalar(1));
         case 1:
-            return max(Lt()*(1 - F1)/(CDES_*this->delta()), scalar(1));
+            return max(Lt()*(1 - F1)/(CDES_*this->delta()()), scalar(1));
         case 2:
-            return max(Lt()*(1 - F2)/(CDES_*this->delta()), scalar(1));
+            return max(Lt()*(1 - F2)/(CDES_*this->delta()()), scalar(1));
         default:
             FatalErrorInFunction
                 << "Incorrect FSST = " << FSST_ << ", should be 0, 1 or 2"
@@ -66,13 +66,13 @@ tmp<volScalarField> kOmegaSSTDES<BasicTurbulenceModel>::FDES
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> kOmegaSSTDES<BasicTurbulenceModel>::epsilonByk
+tmp<volScalarField::Internal> kOmegaSSTDES<BasicTurbulenceModel>::epsilonByk
 (
-    const volScalarField& F1,
-    const volScalarField& F2
+    const volScalarField::Internal& F1,
+    const volScalarField::Internal& F2
 ) const
 {
-    return this->betaStar_*this->omega_*FDES(F1, F2);
+    return this->betaStar_*this->omega_()*FDES(F1, F2);
 }
 
 

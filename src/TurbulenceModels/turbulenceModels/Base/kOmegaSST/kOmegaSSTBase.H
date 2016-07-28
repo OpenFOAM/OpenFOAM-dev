@@ -162,16 +162,26 @@ protected:
             volScalarField omega_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
-        tmp<volScalarField> F1(const volScalarField& CDkOmega) const;
-        tmp<volScalarField> F2() const;
-        tmp<volScalarField> F3() const;
-        tmp<volScalarField> F23() const;
+        virtual tmp<volScalarField> F1(const volScalarField& CDkOmega) const;
+        virtual tmp<volScalarField> F2() const;
+        virtual tmp<volScalarField> F3() const;
+        virtual tmp<volScalarField> F23() const;
 
         tmp<volScalarField> blend
         (
             const volScalarField& F1,
+            const dimensionedScalar& psi1,
+            const dimensionedScalar& psi2
+        ) const
+        {
+            return F1*(psi1 - psi2) + psi2;
+        }
+
+        tmp<volScalarField::Internal> blend
+        (
+            const volScalarField::Internal& F1,
             const dimensionedScalar& psi1,
             const dimensionedScalar& psi2
         ) const
@@ -189,28 +199,37 @@ protected:
             return blend(F1, alphaOmega1_, alphaOmega2_);
         }
 
-        tmp<volScalarField> beta(const volScalarField& F1) const
+        tmp<volScalarField::Internal> beta
+        (
+            const volScalarField::Internal& F1
+        ) const
         {
             return blend(F1, beta1_, beta2_);
         }
 
-        tmp<volScalarField> gamma(const volScalarField& F1) const
+        tmp<volScalarField::Internal> gamma
+        (
+            const volScalarField::Internal& F1
+        ) const
         {
             return blend(F1, gamma1_, gamma2_);
         }
 
         void correctNut(const volScalarField& S2, const volScalarField& F2);
 
-
-    // Protected Member Functions
-
         virtual void correctNut();
 
-        //- Return epsilon/k which for standard RAS is betaStar*omega
-        virtual tmp<volScalarField> epsilonByk
+        //- Return k production rate
+        virtual tmp<volScalarField::Internal> Pk
         (
-            const volScalarField& F1,
-            const volScalarField& F2
+            const volScalarField::Internal& G
+        ) const;
+
+        //- Return epsilon/k which for standard RAS is betaStar*omega
+        virtual tmp<volScalarField::Internal> epsilonByk
+        (
+            const volScalarField::Internal& F1,
+            const volScalarField::Internal& F2
         ) const;
 
         virtual tmp<fvScalarMatrix> kSource() const;
@@ -219,9 +238,9 @@ protected:
 
         virtual tmp<fvScalarMatrix> Qsas
         (
-            const volScalarField& S2,
-            const volScalarField& gamma,
-            const volScalarField& beta
+            const volScalarField::Internal& S2,
+            const volScalarField::Internal& gamma,
+            const volScalarField::Internal& beta
         ) const;
 
 

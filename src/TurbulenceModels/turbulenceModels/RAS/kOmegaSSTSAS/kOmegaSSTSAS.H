@@ -131,9 +131,9 @@ protected:
         //- SAS omega source
         virtual tmp<fvScalarMatrix> Qsas
         (
-            const volScalarField& S2,
-            const volScalarField& gamma,
-            const volScalarField& beta
+            const volScalarField::Internal& S2,
+            const volScalarField::Internal& gamma,
+            const volScalarField::Internal& beta
         ) const;
 
 

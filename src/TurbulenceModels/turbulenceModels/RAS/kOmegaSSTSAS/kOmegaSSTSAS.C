@@ -37,23 +37,23 @@ namespace RASModels
 template<class BasicTurbulenceModel>
 tmp<fvScalarMatrix> kOmegaSSTSAS<BasicTurbulenceModel>::Qsas
 (
-    const volScalarField& S2,
-    const volScalarField& gamma,
-    const volScalarField& beta
+    const volScalarField::Internal& S2,
+    const volScalarField::Internal& gamma,
+    const volScalarField::Internal& beta
 ) const
 {
-    volScalarField L
+    volScalarField::Internal L
     (
-        sqrt(this->k_)/(pow025(this->betaStar_)*this->omega_)
+        sqrt(this->k_())/(pow025(this->betaStar_)*this->omega_())
     );
 
-    volScalarField Lvk
+    volScalarField::Internal Lvk
     (
         max
         (
             kappa_*sqrt(S2)
            /(
-                mag(fvc::laplacian(this->U_))
+                mag(fvc::laplacian(this->U_))()()
               + dimensionedScalar
                 (
                     "ROOTVSMALL",
@@ -61,29 +61,29 @@ tmp<fvScalarMatrix> kOmegaSSTSAS<BasicTurbulenceModel>::Qsas
                     ROOTVSMALL
                 )
             ),
-            Cs_*sqrt(kappa_*zeta2_/(beta/this->betaStar_ - gamma))*delta()
+            Cs_*sqrt(kappa_*zeta2_/(beta/this->betaStar_ - gamma))*delta()()
         )
     );
 
     return fvm::Su
     (
-        this->alpha_*this->rho_
+        this->alpha_()*this->rho_()
        *min
         (
             max
             (
                 zeta2_*kappa_*S2*sqr(L/Lvk)
-              - (2*C_/sigmaPhi_)*this->k_
+              - (2*C_/sigmaPhi_)*this->k_()
                *max
                 (
-                    magSqr(fvc::grad(this->omega_))/sqr(this->omega_),
-                    magSqr(fvc::grad(this->k_))/sqr(this->k_)
+                    magSqr(fvc::grad(this->omega_)()())/sqr(this->omega_()),
+                    magSqr(fvc::grad(this->k_)()())/sqr(this->k_())
                 ),
                 dimensionedScalar("0", dimensionSet(0, 0, -2, 0, 0), 0)
             ),
             // Limit SAS production of omega for numerical stability,
             // particularly during start-up
-            this->omega_/(0.1*this->omega_.time().deltaT())
+            this->omega_()/(0.1*this->omega_.time().deltaT())
         ),
         this->omega_
     );

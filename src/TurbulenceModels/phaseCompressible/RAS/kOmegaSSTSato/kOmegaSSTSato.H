@@ -150,6 +150,7 @@ protected:
     // Protected data
 
         // Model coefficients
+
             dimensionedScalar Cmub_;
 
 
