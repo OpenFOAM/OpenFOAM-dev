@@ -64,6 +64,8 @@ void Foam::functionObjects::wallShearStress::calcShearStress
     volVectorField& shearStress
 )
 {
+    shearStress.dimensions().reset(Reff.dimensions());
+
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
