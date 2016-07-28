@@ -175,7 +175,7 @@ do
                 -e '/refValue/d' \
                 -e '/refGrad/d' \
                 -e '/valueFraction/d' \
-                -e '/phip/,/lookupPatchField/d' \
+                -e '/const scalarField\& phip/,/);/d' \
                 ${NAME}/${NEWFILE}
             ;;
         mixed)
