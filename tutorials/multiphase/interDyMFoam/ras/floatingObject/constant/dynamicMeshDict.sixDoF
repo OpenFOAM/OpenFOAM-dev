@@ -34,10 +34,10 @@ sixDoFRigidBodyMotionCoeffs
     Lz              0.5;
 
     // Density of the solid
-    rho             500;
+    rhoSolid        500;
 
     // Cuboid mass
-    mass            #calc "$rho*$Lx*$Ly*$Lz";
+    mass            #calc "$rhoSolid*$Lx*$Ly*$Lz";
 
     // Cuboid moment of inertia about the centre of mass
     momentOfInertia #codeStream
