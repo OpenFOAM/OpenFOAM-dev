@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,17 @@ License
 #include "laminar.H"
 #include "RASModel.H"
 #include "LESModel.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+makeTurbulenceModelTypes
+(
+    geometricOneField,
+    volScalarField,
+    compressibleTurbulenceModel,
+    CompressibleTurbulenceModel,
+    incompressibleTwoPhaseInteractingMixture
+);
 
 makeBaseTurbulenceModel
 (

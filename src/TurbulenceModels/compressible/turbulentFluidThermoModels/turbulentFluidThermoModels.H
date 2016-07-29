@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseCompressibleTurbulenceModel.H"
+#include "CompressibleTurbulenceModel.H"
+#include "compressibleTransportModel.H"
+#include "fluidThermo.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
+
+#include "ThermalDiffusivity.H"
+#include "EddyDiffusivity.H"
 
 #include "laminar.H"
 #include "RASModel.H"
@@ -35,43 +40,21 @@ License
 
 makeTurbulenceModelTypes
 (
-    volScalarField,
-    volScalarField,
-    compressibleTurbulenceModel,
-    PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
-    phaseModel
-);
-
-makeBaseTurbulenceModel
-(
-    volScalarField,
+    geometricOneField,
     volScalarField,
     compressibleTurbulenceModel,
-    PhaseCompressibleTurbulenceModel,
+    CompressibleTurbulenceModel,
     ThermalDiffusivity,
-    phaseModel
+    fluidThermo
 );
 
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
-    (phaseModelPhaseCompressibleTurbulenceModel, RAS, Type)
+    (fluidThermoCompressibleTurbulenceModel, RAS, Type)
 
 #define makeLESModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
-    (phaseModelPhaseCompressibleTurbulenceModel, LES, Type)
-
-#include "kEpsilon.H"
-makeRASModel(kEpsilon);
-
-#include "kOmegaSST.H"
-makeRASModel(kOmegaSST);
-
-#include "Smagorinsky.H"
-makeLESModel(Smagorinsky);
-
-#include "kEqn.H"
-makeLESModel(kEqn);
+    (fluidThermoCompressibleTurbulenceModel, LES, Type)
 
 
 // ************************************************************************* //

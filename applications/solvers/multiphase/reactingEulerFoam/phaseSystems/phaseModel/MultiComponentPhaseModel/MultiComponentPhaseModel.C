@@ -135,17 +135,19 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn
     (
         (inertIndex_ != -1)
      && (
-            Yi.name()
-         == IOobject::groupName
             (
-                this->thermo_->composition().species()[inertIndex_],
-                this->name()
+                Yi.name()
+             == IOobject::groupName
+                (
+                    this->thermo_->composition().species()[inertIndex_],
+                    this->name()
+                )
             )
-        )
-     || (
-           !this->thermo_->composition().active
-            (
-                this->thermo_->composition().species()[Yi.member()]
+         || (
+               !this->thermo_->composition().active
+                (
+                    this->thermo_->composition().species()[Yi.member()]
+                )
             )
         )
     )

@@ -25,6 +25,23 @@ License
 
 #include "EddyDiffusivity.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makeTurbulenceModelTypes(                                              \
+    Alpha, Rho, baseModel, BaseModel, TDModel, Transport)                      \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        typedef TDModel<BaseModel<Transport>>                                  \
+            Transport##BaseModel;                                              \
+        typedef laminar<Transport##BaseModel> Laminar##Transport##BaseModel;   \
+        typedef RASModel<EddyDiffusivity<Transport##BaseModel>>                \
+            RAS##Transport##BaseModel;                                         \
+        typedef LESModel<EddyDiffusivity<Transport##BaseModel>>                \
+            LES##Transport##BaseModel;                                         \
+    }
+
+
 #define makeBaseTurbulenceModel(                                               \
     Alpha, Rho, baseModel, BaseModel, TDModel, Transport)                      \
                                                                                \

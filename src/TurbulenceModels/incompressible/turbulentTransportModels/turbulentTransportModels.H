@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseCompressibleTurbulenceModel.H"
+#include "IncompressibleTurbulenceModel.H"
+#include "incompressible/transportModel/transportModel.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
@@ -35,43 +36,20 @@ License
 
 makeTurbulenceModelTypes
 (
-    volScalarField,
-    volScalarField,
-    compressibleTurbulenceModel,
-    PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
-    phaseModel
-);
-
-makeBaseTurbulenceModel
-(
-    volScalarField,
-    volScalarField,
-    compressibleTurbulenceModel,
-    PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
-    phaseModel
+    geometricOneField,
+    geometricOneField,
+    incompressibleTurbulenceModel,
+    IncompressibleTurbulenceModel,
+    transportModel
 );
 
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
-    (phaseModelPhaseCompressibleTurbulenceModel, RAS, Type)
+    (transportModelIncompressibleTurbulenceModel, RAS, Type)
 
 #define makeLESModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
-    (phaseModelPhaseCompressibleTurbulenceModel, LES, Type)
-
-#include "kEpsilon.H"
-makeRASModel(kEpsilon);
-
-#include "kOmegaSST.H"
-makeRASModel(kOmegaSST);
-
-#include "Smagorinsky.H"
-makeLESModel(Smagorinsky);
-
-#include "kEqn.H"
-makeLESModel(kEqn);
+    (transportModelIncompressibleTurbulenceModel, LES, Type)
 
 
 // ************************************************************************* //
