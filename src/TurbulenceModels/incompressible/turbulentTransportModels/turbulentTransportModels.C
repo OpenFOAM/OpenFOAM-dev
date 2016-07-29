@@ -80,6 +80,9 @@ makeRASModel(kOmegaSST);
 #include "kOmegaSSTSAS.H"
 makeRASModel(kOmegaSSTSAS);
 
+#include "kOmegaSSTLM.H"
+makeRASModel(kOmegaSSTLM);
+
 #include "v2f.H"
 makeRASModel(v2f);
 
