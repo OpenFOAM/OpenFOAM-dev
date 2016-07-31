@@ -5,10 +5,18 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      s;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Tinlet          1;
+sInlet          1;
 
-dimensions      [0 0 0 0 0 0 0];  // T can represent any scalar
+dimensions      [0 0 0 0 0 0 0];  // s can represent any scalar
                                   // with any dimensional units
 internalField   uniform 0;
 
@@ -17,7 +25,7 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           uniform $Tinlet;
+        value           uniform $sInlet;
     }
 
     ".*"
