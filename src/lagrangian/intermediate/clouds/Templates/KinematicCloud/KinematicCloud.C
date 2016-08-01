@@ -356,7 +356,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     UIntegrator_(NULL),
     UTrans_
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -372,7 +372,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     ),
     UCoeff_
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -438,7 +438,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     UIntegrator_(c.UIntegrator_->clone()),
     UTrans_
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -454,7 +454,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     ),
     UCoeff_
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

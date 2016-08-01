@@ -471,8 +471,8 @@ public:
         void operator+=(const zero&);
         void operator-=(const zero&);
 
-        void operator*=(const DimensionedField<scalar, volMesh>&);
-        void operator*=(const tmp<DimensionedField<scalar, volMesh>>&);
+        void operator*=(const volScalarField::Internal&);
+        void operator*=(const tmp<volScalarField::Internal>&);
         void operator*=(const tmp<volScalarField>&);
 
         void operator*=(const dimensioned<scalar>&);
@@ -993,14 +993,14 @@ tmp<fvMatrix<Type>> operator-
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const DimensionedField<scalar, volMesh>&,
+    const volScalarField::Internal&,
     const fvMatrix<Type>&
 );
 
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const tmp<DimensionedField<scalar, volMesh>>&,
+    const tmp<volScalarField::Internal>&,
     const fvMatrix<Type>&
 );
 
@@ -1014,14 +1014,14 @@ tmp<fvMatrix<Type>> operator*
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const DimensionedField<scalar, volMesh>&,
+    const volScalarField::Internal&,
     const tmp<fvMatrix<Type>>&
 );
 
 template<class Type>
 tmp<fvMatrix<Type>> operator*
 (
-    const tmp<DimensionedField<scalar, volMesh>>&,
+    const tmp<volScalarField::Internal>&,
     const tmp<fvMatrix<Type>>&
 );
 

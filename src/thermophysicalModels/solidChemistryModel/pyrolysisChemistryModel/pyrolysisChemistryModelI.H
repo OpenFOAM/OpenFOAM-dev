@@ -79,9 +79,9 @@ inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::
 RRg() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tRRg
+    tmp<volScalarField::Internal> tRRg
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -98,7 +98,7 @@ RRg() const
 
     if (this->chemistry_)
     {
-        DimensionedField<scalar, volMesh>& RRg = tRRg.ref();
+        volScalarField::Internal& RRg = tRRg.ref();
         for (label i=0; i < nGases_; i++)
         {
             RRg += RRg_[i];

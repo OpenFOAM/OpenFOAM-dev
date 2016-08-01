@@ -79,13 +79,13 @@ protected:
         label nSpecie_;
 
         //- List of reaction rate per gas [kg/m3/s]
-        PtrList<DimensionedField<scalar, volMesh>> RRg_;
+        PtrList<volScalarField::Internal> RRg_;
 
 
     // Protected Member Functions
 
         //- Write access to source terms for gases
-        inline PtrList<DimensionedField<scalar, volMesh>>& RRg();
+        inline PtrList<volScalarField::Internal>& RRg();
 
 
 private:
@@ -180,13 +180,13 @@ public:
         // Chemistry model functions
 
             //- Return const access to the chemical source terms for gases
-            inline const DimensionedField<scalar, volMesh>& RRg
+            inline const volScalarField::Internal& RRg
             (
                 const label i
             ) const;
 
             //- Return total gas source term
-            inline tmp<DimensionedField<scalar, volMesh>> RRg() const;
+            inline tmp<volScalarField::Internal> RRg() const;
 
             //- Return sensible enthalpy for gas i [J/Kg]
             virtual tmp<volScalarField> gasHs

@@ -161,7 +161,7 @@ void reactingOneDim::updatePhiGas()
 
         const volScalarField& HsiGas = tHsiGas();
 
-        const DimensionedField<scalar, volMesh>& RRiGas =
+        const volScalarField::Internal& RRiGas =
             solidChemistry_->RRg(gasI);
 
         surfaceScalarField::Boundary& phiGasBf =

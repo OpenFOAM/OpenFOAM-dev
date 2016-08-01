@@ -66,9 +66,9 @@ template<class CompType, class SolidThermo>
 inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::solidChemistryModel<CompType, SolidThermo>::RRs() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tRRs
+    tmp<volScalarField::Internal> tRRs
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -85,7 +85,7 @@ Foam::solidChemistryModel<CompType, SolidThermo>::RRs() const
 
     if (this->chemistry_)
     {
-        DimensionedField<scalar, volMesh>& RRs = tRRs.ref();
+        volScalarField::Internal& RRs = tRRs.ref();
         for (label i=0; i < nSolids_; i++)
         {
             RRs += RRs_[i];

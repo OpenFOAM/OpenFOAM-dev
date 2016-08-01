@@ -121,9 +121,9 @@ const Foam::dimensionedVector& Foam::SRF::SRFModel::omega() const
 Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Fcoriolis() const
 {
-    return tmp<DimensionedField<vector, volMesh>>
+    return tmp<volVectorField::Internal>
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -142,9 +142,9 @@ Foam::SRF::SRFModel::Fcoriolis() const
 Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::SRF::SRFModel::Fcentrifugal() const
 {
-    return tmp<DimensionedField<vector, volMesh>>
+    return tmp<volVectorField::Internal>
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (

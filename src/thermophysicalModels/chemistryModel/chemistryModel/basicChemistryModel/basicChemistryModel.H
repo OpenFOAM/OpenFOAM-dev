@@ -39,9 +39,7 @@ SourceFiles
 #include "IOdictionary.H"
 #include "Switch.H"
 #include "scalarField.H"
-#include "volFieldsFwd.H"
-#include "volMesh.H"
-#include "DimensionedField.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,14 +80,14 @@ protected:
         const scalar deltaTChemIni_;
 
         //- Latest estimation of integration step
-        DimensionedField<scalar, volMesh> deltaTChem_;
+        volScalarField::Internal deltaTChem_;
 
 
     // Protected Member Functions
 
         //- Return non-const access to the latest estimation of integration
         //  step, e.g. for multi-chemistry model
-        inline DimensionedField<scalar, volMesh>& deltaTChem();
+        inline volScalarField::Internal& deltaTChem();
 
         //- Correct function - updates due to mesh changes
         void correct();
@@ -127,7 +125,7 @@ public:
         inline Switch chemistry() const;
 
         //- Return the latest estimation of integration step
-        inline const DimensionedField<scalar, volMesh>& deltaTChem() const;
+        inline const volScalarField::Internal& deltaTChem() const;
 
 
         // Functions to be derived in derived classes
@@ -135,19 +133,19 @@ public:
             // Fields
 
                 //- Return const access to chemical source terms [kg/m3/s]
-                virtual const DimensionedField<scalar, volMesh>& RR
+                virtual const volScalarField::Internal& RR
                 (
                     const label i
                 ) const = 0;
 
                 //- Return access to chemical source terms [kg/m3/s]
-                virtual DimensionedField<scalar, volMesh>& RR
+                virtual volScalarField::Internal& RR
                 (
                     const label i
                 ) = 0;
 
                 //- Return reaction rate of the speciei in reactioni
-                virtual tmp<DimensionedField<scalar, volMesh>> calculateRR
+                virtual tmp<volScalarField::Internal> calculateRR
                 (
                     const label reactioni,
                     const label speciei

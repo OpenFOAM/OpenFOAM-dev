@@ -133,22 +133,22 @@ protected:
             Switch radiation_;
 
             //- Radiation sum of parcel projected areas
-            autoPtr<DimensionedField<scalar, volMesh>> radAreaP_;
+            autoPtr<volScalarField::Internal> radAreaP_;
 
             //- Radiation sum of parcel temperature^4
-            autoPtr<DimensionedField<scalar, volMesh>> radT4_;
+            autoPtr<volScalarField::Internal> radT4_;
 
             //- Radiation sum of parcel projected areas * temperature^4
-            autoPtr<DimensionedField<scalar, volMesh>> radAreaPT4_;
+            autoPtr<volScalarField::Internal> radAreaPT4_;
 
 
         // Sources
 
             //- Sensible enthalpy transfer [J/kg]
-            autoPtr<DimensionedField<scalar, volMesh>> hsTrans_;
+            autoPtr<volScalarField::Internal> hsTrans_;
 
             //- Coefficient for carrier phase hs equation [W/K]
-            autoPtr<DimensionedField<scalar, volMesh>> hsCoeff_;
+            autoPtr<volScalarField::Internal> hsCoeff_;
 
 
     // Protected Member Functions
@@ -257,23 +257,23 @@ public:
                 inline bool radiation() const;
 
                 //- Radiation sum of parcel projected areas [m2]
-                inline DimensionedField<scalar, volMesh>& radAreaP();
+                inline volScalarField::Internal& radAreaP();
 
                 //- Radiation sum of parcel projected areas [m2]
-                inline const DimensionedField<scalar, volMesh>&
+                inline const volScalarField::Internal&
                     radAreaP() const;
 
                 //- Radiation sum of parcel temperature^4 [K4]
-                inline DimensionedField<scalar, volMesh>& radT4();
+                inline volScalarField::Internal& radT4();
 
                 //- Radiation sum of parcel temperature^4 [K4]
-                inline const DimensionedField<scalar, volMesh>& radT4() const;
+                inline const volScalarField::Internal& radT4() const;
 
                 //- Radiation sum of parcel projected area*temperature^4 [m2K4]
-                inline DimensionedField<scalar, volMesh>& radAreaPT4();
+                inline volScalarField::Internal& radAreaPT4();
 
                 //- Radiation sum of parcel temperature^4 [m2K4]
-                inline const DimensionedField<scalar, volMesh>&
+                inline const volScalarField::Internal&
                     radAreaPT4() const;
 
 
@@ -282,17 +282,17 @@ public:
                 // Enthalpy
 
                     //- Sensible enthalpy transfer [J/kg]
-                    inline DimensionedField<scalar, volMesh>& hsTrans();
+                    inline volScalarField::Internal& hsTrans();
 
                     //- Sensible enthalpy transfer [J/kg]
-                    inline const DimensionedField<scalar, volMesh>&
+                    inline const volScalarField::Internal&
                         hsTrans() const;
 
                     //- Return coefficient for carrier phase hs equation
-                    inline DimensionedField<scalar, volMesh>& hsCoeff();
+                    inline volScalarField::Internal& hsCoeff();
 
                     //- Return const coefficient for carrier phase hs equation
-                    inline const DimensionedField<scalar, volMesh>&
+                    inline const volScalarField::Internal&
                         hsCoeff() const;
 
                     //- Return sensible enthalpy source term [J/kg/m3/s]

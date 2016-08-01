@@ -45,8 +45,7 @@ SourceFiles
 #include "IOdictionary.H"
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
-#include "volFieldsFwd.H"
-#include "DimensionedField.H"
+#include "volFields.H"
 #include "fvMatricesFwd.H"
 #include "Switch.H"
 
@@ -222,7 +221,7 @@ public:
             virtual tmp<volScalarField> Rp() const = 0;
 
             //- Source term component (constant)
-            virtual tmp<DimensionedField<scalar, volMesh>> Ru() const = 0;
+            virtual tmp<volScalarField::Internal> Ru() const = 0;
 
             //- Energy source term
             virtual tmp<fvScalarMatrix> Sh(fluidThermo& thermo) const;

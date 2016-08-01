@@ -99,7 +99,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Sp
 (
-    const DimensionedField<scalar, volMesh>& sp,
+    const volScalarField::Internal& sp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -125,7 +125,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::Sp
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tsp,
+    const tmp<volScalarField::Internal>& tsp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -191,7 +191,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::SuSp
 (
-    const DimensionedField<scalar, volMesh>& susp,
+    const volScalarField::Internal& susp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
@@ -220,7 +220,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>>
 Foam::fvm::SuSp
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tsusp,
+    const tmp<volScalarField::Internal>& tsusp,
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {

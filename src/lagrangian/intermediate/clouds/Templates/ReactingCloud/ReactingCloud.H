@@ -118,7 +118,7 @@ protected:
         // Sources
 
             //- Mass transfer fields - one per carrier phase specie
-            PtrList<DimensionedField<scalar, volMesh>> rhoTrans_;
+            PtrList<volScalarField::Internal> rhoTrans_;
 
 
     // Protected Member Functions
@@ -230,15 +230,15 @@ public:
                 //- Mass
 
                     //- Return reference to mass source for field i
-                    inline DimensionedField<scalar, volMesh>&
+                    inline volScalarField::Internal&
                         rhoTrans(const label i);
 
                     //- Return const access to mass source fields
-                    inline const PtrList<DimensionedField<scalar, volMesh>>&
+                    inline const PtrList<volScalarField::Internal>&
                         rhoTrans() const;
 
                     //- Return reference to mass source fields
-                    inline PtrList<DimensionedField<scalar, volMesh>>&
+                    inline PtrList<volScalarField::Internal>&
                         rhoTrans();
 
                     //- Return mass source term for specie i - specie eqn
@@ -249,12 +249,12 @@ public:
                     ) const;
 
                     //- Return tmp mass source for field i - fully explicit
-                    inline tmp<DimensionedField<scalar, volMesh>>
+                    inline tmp<volScalarField::Internal>
                         Srho(const label i) const;
 
                     //- Return tmp total mass source for carrier phase
                     //  - fully explicit
-                    inline tmp<DimensionedField<scalar, volMesh>> Srho() const;
+                    inline tmp<volScalarField::Internal> Srho() const;
 
                     //- Return total mass source term [kg/m3/s]
                     inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;

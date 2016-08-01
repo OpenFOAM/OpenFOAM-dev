@@ -107,9 +107,9 @@ Foam::tmp<Foam::volScalarField> Foam::radiation::noRadiation::Rp() const
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::radiation::noRadiation::Ru() const
 {
-    return tmp<DimensionedField<scalar, volMesh>>
+    return tmp<volScalarField::Internal>
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

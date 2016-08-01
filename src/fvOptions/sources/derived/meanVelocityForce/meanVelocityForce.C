@@ -193,7 +193,7 @@ void Foam::fv::meanVelocityForce::addSup
     const label fieldi
 )
 {
-    DimensionedField<vector, volMesh> Su
+    volVectorField::Internal Su
     (
         IOobject
         (

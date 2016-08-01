@@ -121,7 +121,7 @@ pyrolysisChemistryModel
         RRg_.set
         (
             fieldi,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (

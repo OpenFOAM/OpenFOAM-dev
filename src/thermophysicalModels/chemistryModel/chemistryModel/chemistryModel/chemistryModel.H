@@ -40,9 +40,8 @@ SourceFiles
 
 #include "Reaction.H"
 #include "ODESystem.H"
-#include "volFieldsFwd.H"
+#include "volFields.H"
 #include "simpleMatrix.H"
-#include "DimensionedField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,7 +100,7 @@ protected:
         scalar Treact_;
 
         //- List of reaction rate per specie [kg/m3/s]
-        PtrList<DimensionedField<scalar, volMesh>> RR_;
+        PtrList<volScalarField::Internal> RR_;
 
         //- Temporary concentration field
         mutable scalarField c_;
@@ -114,7 +113,7 @@ protected:
 
         //- Write access to chemical source terms
         //  (e.g. for multi-chemistry model)
-        inline PtrList<DimensionedField<scalar, volMesh>>& RR();
+        inline PtrList<volScalarField::Internal>& RR();
 
 
 public:
@@ -203,19 +202,19 @@ public:
         // basicChemistryModel.H)
 
             //- Return const access to the chemical source terms for specie, i
-            inline const DimensionedField<scalar, volMesh>& RR
+            inline const volScalarField::Internal& RR
             (
                 const label i
             ) const;
 
             //- Return non const access to chemical source terms [kg/m3/s]
-            virtual DimensionedField<scalar, volMesh>& RR
+            virtual volScalarField::Internal& RR
             (
                 const label i
             );
 
             //- Return reaction rate of the speciei in reactionI
-            virtual tmp<DimensionedField<scalar, volMesh>> calculateRR
+            virtual tmp<volScalarField::Internal> calculateRR
             (
                 const label reactionI,
                 const label speciei

@@ -26,7 +26,6 @@ License
 #include "SemiImplicitSource.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
-#include "DimensionedField.H"
 #include "fvmSup.H"
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
@@ -142,7 +141,7 @@ void Foam::fv::SemiImplicitSource<Type>::addSup
 
     const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
 
-    DimensionedField<Type, volMesh> Su
+    typename GeometricField<Type, fvPatchField, volMesh>::Internal Su
     (
         IOobject
         (
@@ -164,7 +163,7 @@ void Foam::fv::SemiImplicitSource<Type>::addSup
 
     UIndirectList<Type>(Su, cells_) = injectionRate_[fieldi].first()/VDash_;
 
-    DimensionedField<scalar, volMesh> Sp
+    volScalarField::Internal Sp
     (
         IOobject
         (

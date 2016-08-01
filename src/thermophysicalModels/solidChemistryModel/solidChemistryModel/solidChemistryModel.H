@@ -41,8 +41,7 @@ SourceFiles
 
 #include "Reaction.H"
 #include "ODESystem.H"
-#include "volFieldsFwd.H"
-#include "DimensionedField.H"
+#include "volFields.H"
 #include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -90,7 +89,7 @@ protected:
         label nReaction_;
 
         //- List of reaction rate per solid [kg/m3/s]
-        PtrList<DimensionedField<scalar, volMesh>> RRs_;
+        PtrList<volScalarField::Internal> RRs_;
 
         //- List of active reacting cells
         List<bool> reactingCells_;
@@ -99,7 +98,7 @@ protected:
     // Protected Member Functions
 
         //- Write access to source terms for solids
-        inline PtrList<DimensionedField<scalar, volMesh>>& RRs();
+        inline PtrList<volScalarField::Internal>& RRs();
 
         //- Set reacting status of cell, celli
         void setCellReacting(const label celli, const bool active);
@@ -179,13 +178,13 @@ public:
         // Solid Chemistry model functions
 
             //- Return const access to the chemical source terms for solids
-            inline const DimensionedField<scalar, volMesh>& RRs
+            inline const volScalarField::Internal& RRs
             (
                 const label i
             ) const;
 
             //- Return total solid source term
-            inline tmp<DimensionedField<scalar, volMesh>> RRs() const;
+            inline tmp<volScalarField::Internal> RRs() const;
 
             //- Solve the reaction system for the given time step
             //  and return the characteristic time

@@ -431,7 +431,7 @@ Foam::KinematicCloud<CloudType>::SU(volVectorField& U) const
     {
         if (solution_.semiImplicit("U"))
         {
-            const DimensionedField<scalar, volMesh>
+            const volScalarField::Internal
                 Vdt(mesh_.V()*this->db().time().deltaT());
 
             return UTrans()/Vdt - fvm::Sp(UCoeff()/Vdt, U) + UCoeff()/Vdt*U;

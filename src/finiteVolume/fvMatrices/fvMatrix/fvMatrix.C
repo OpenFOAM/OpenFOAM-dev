@@ -1177,7 +1177,7 @@ void Foam::fvMatrix<Type>::operator-=
 template<class Type>
 void Foam::fvMatrix<Type>::operator*=
 (
-    const DimensionedField<scalar, volMesh>& dsf
+    const volScalarField::Internal& dsf
 )
 {
     dimensions_ *= dsf.dimensions();
@@ -1207,7 +1207,7 @@ void Foam::fvMatrix<Type>::operator*=
 template<class Type>
 void Foam::fvMatrix<Type>::operator*=
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tdsf
+    const tmp<volScalarField::Internal>& tdsf
 )
 {
     operator*=(tdsf());
@@ -2160,7 +2160,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::operator-
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 (
-    const DimensionedField<scalar, volMesh>& dsf,
+    const volScalarField::Internal& dsf,
     const fvMatrix<Type>& A
 )
 {
@@ -2172,7 +2172,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tdsf,
+    const tmp<volScalarField::Internal>& tdsf,
     const fvMatrix<Type>& A
 )
 {
@@ -2196,7 +2196,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 (
-    const DimensionedField<scalar, volMesh>& dsf,
+    const volScalarField::Internal& dsf,
     const tmp<fvMatrix<Type>>& tA
 )
 {
@@ -2208,7 +2208,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 (
-    const tmp<DimensionedField<scalar, volMesh>>& tdsf,
+    const tmp<volScalarField::Internal>& tdsf,
     const tmp<fvMatrix<Type>>& tA
 )
 {

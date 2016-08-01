@@ -64,7 +64,7 @@ solidChemistryModel
         RRs_.set
         (
             fieldi,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (

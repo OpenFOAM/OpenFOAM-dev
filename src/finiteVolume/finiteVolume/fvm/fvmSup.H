@@ -86,14 +86,14 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> Sp
         (
-            const DimensionedField<scalar, volMesh>&,
+            const volScalarField::Internal&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> Sp
         (
-            const tmp<DimensionedField<scalar, volMesh>>&,
+            const tmp<volScalarField::Internal>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
@@ -126,14 +126,14 @@ namespace fvm
         template<class Type>
         tmp<fvMatrix<Type>> SuSp
         (
-            const DimensionedField<scalar, volMesh>&,
+            const volScalarField::Internal&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
         template<class Type>
         tmp<fvMatrix<Type>> SuSp
         (
-            const tmp<DimensionedField<scalar, volMesh>>&,
+            const tmp<volScalarField::Internal>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 

@@ -89,28 +89,28 @@ Foam::scalar surfaceFilmModel::CourantNumber() const
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> surfaceFilmModel::Srho() const
+tmp<volScalarField::Internal> surfaceFilmModel::Srho() const
 {
     NotImplemented;
 
-    return tmp<DimensionedField<scalar, volMesh>>(NULL);
+    return tmp<volScalarField::Internal>(NULL);
 }
 
 
-tmp<DimensionedField<scalar, volMesh>>
+tmp<volScalarField::Internal>
 surfaceFilmModel::Srho(const label) const
 {
     NotImplemented;
 
-    return tmp<DimensionedField<scalar, volMesh>>(NULL);
+    return tmp<volScalarField::Internal>(NULL);
 }
 
 
-tmp<DimensionedField<scalar, volMesh>> surfaceFilmModel::Sh() const
+tmp<volScalarField::Internal> surfaceFilmModel::Sh() const
 {
     NotImplemented;
 
-    return tmp<DimensionedField<scalar, volMesh>>(NULL);
+    return tmp<volScalarField::Internal>(NULL);
 }
 
 

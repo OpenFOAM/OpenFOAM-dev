@@ -63,7 +63,7 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
         RR_.set
         (
             fieldi,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -649,9 +649,9 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
         this->thermo().rho()
     );
 
-    tmp<DimensionedField<scalar, volMesh>> tRR
+    tmp<volScalarField::Internal> tRR
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -666,7 +666,7 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
         )
     );
 
-    DimensionedField<scalar, volMesh>& RR = tRR.ref();
+    volScalarField::Internal& RR = tRR.ref();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();

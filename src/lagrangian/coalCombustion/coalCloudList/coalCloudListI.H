@@ -30,9 +30,9 @@ License
 Foam::tmp<Foam::DimensionedField<Foam::vector, Foam::volMesh>>
 Foam::coalCloudList::UTrans() const
 {
-    tmp<DimensionedField<vector, volMesh>> tfld
+    tmp<volVectorField::Internal> tfld
     (
-        new DimensionedField<vector, volMesh>
+        new volVectorField::Internal
         (
             IOobject
             (
@@ -47,7 +47,7 @@ Foam::coalCloudList::UTrans() const
         )
     );
 
-    DimensionedField<vector, volMesh>& fld = tfld.ref();
+    volVectorField::Internal& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -78,9 +78,9 @@ Foam::tmp<Foam::fvVectorMatrix> Foam::coalCloudList::SU
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::hsTrans() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tfld
+    tmp<volScalarField::Internal> tfld
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -95,7 +95,7 @@ Foam::coalCloudList::hsTrans() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld.ref();
+    volScalarField::Internal& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -144,9 +144,9 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::coalCloudList::SYi
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::rhoTrans() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tfld
+    tmp<volScalarField::Internal> tfld
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -161,7 +161,7 @@ Foam::coalCloudList::rhoTrans() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld.ref();
+    volScalarField::Internal& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -180,9 +180,9 @@ Foam::coalCloudList::rhoTrans() const
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::coalCloudList::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh>> tfld
+    tmp<volScalarField::Internal> tfld
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -197,7 +197,7 @@ Foam::coalCloudList::Srho() const
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld.ref();
+    volScalarField::Internal& fld = tfld.ref();
 
     forAll(*this, i)
     {
@@ -214,9 +214,9 @@ Foam::coalCloudList::Srho
     const label i
 ) const
 {
-    tmp<DimensionedField<scalar, volMesh>> tfld
+    tmp<volScalarField::Internal> tfld
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -231,7 +231,7 @@ Foam::coalCloudList::Srho
         )
     );
 
-    DimensionedField<scalar, volMesh>& fld = tfld.ref();
+    volScalarField::Internal& fld = tfld.ref();
 
     forAll(*this, j)
     {

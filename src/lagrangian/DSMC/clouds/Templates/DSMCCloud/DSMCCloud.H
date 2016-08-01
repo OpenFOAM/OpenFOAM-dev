@@ -101,7 +101,7 @@ class DSMCCloud
         volScalarField sigmaTcRMax_;
 
         //- A field holding the remainder from the previous collision selections
-        DimensionedField<scalar, volMesh> collisionSelectionRemainder_;
+        volScalarField::Internal collisionSelectionRemainder_;
 
         //- Heat flux at surface field
         volScalarField q_;

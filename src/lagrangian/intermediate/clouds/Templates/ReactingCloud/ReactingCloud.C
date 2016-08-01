@@ -121,7 +121,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
         rhoTrans_.set
         (
             i,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -165,7 +165,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
         rhoTrans_.set
         (
             i,
-            new DimensionedField<scalar, volMesh>
+            new volScalarField::Internal
             (
                 IOobject
                 (
@@ -290,7 +290,7 @@ void Foam::ReactingCloud<CloudType>::relaxSources
 {
     CloudType::relaxSources(cloudOldTime);
 
-    typedef DimensionedField<scalar, volMesh> dsfType;
+    typedef volScalarField::Internal dsfType;
 
     forAll(rhoTrans_, fieldi)
     {
@@ -306,7 +306,7 @@ void Foam::ReactingCloud<CloudType>::scaleSources()
 {
     CloudType::scaleSources();
 
-    typedef DimensionedField<scalar, volMesh> dsfType;
+    typedef volScalarField::Internal dsfType;
 
     forAll(rhoTrans_, fieldi)
     {

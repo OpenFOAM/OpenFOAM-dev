@@ -157,9 +157,9 @@ template<class CloudType>
 inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::ReactingCloud<CloudType>::Srho(const label i) const
 {
-    tmp<DimensionedField<scalar, volMesh>> tRhoi
+    tmp<volScalarField::Internal> tRhoi
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (
@@ -194,9 +194,9 @@ template<class CloudType>
 inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::ReactingCloud<CloudType>::Srho() const
 {
-    tmp<DimensionedField<scalar, volMesh>> trhoTrans
+    tmp<volScalarField::Internal> trhoTrans
     (
-        new DimensionedField<scalar, volMesh>
+        new volScalarField::Internal
         (
             IOobject
             (

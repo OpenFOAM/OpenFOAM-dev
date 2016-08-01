@@ -228,10 +228,10 @@ protected:
         // Sources
 
             //- Momentum
-            autoPtr<DimensionedField<vector, volMesh>> UTrans_;
+            autoPtr<volVectorField::Internal> UTrans_;
 
             //- Coefficient for carrier phase U equation
-            autoPtr<DimensionedField<scalar, volMesh>> UCoeff_;
+            autoPtr<volScalarField::Internal> UCoeff_;
 
 
         // Initialisation
@@ -464,17 +464,17 @@ public:
                 // Momentum
 
                     //- Return reference to momentum source
-                    inline DimensionedField<vector, volMesh>& UTrans();
+                    inline volVectorField::Internal& UTrans();
 
                     //- Return const reference to momentum source
-                    inline const DimensionedField<vector, volMesh>&
+                    inline const volVectorField::Internal&
                         UTrans() const;
 
                      //- Return coefficient for carrier phase U equation
-                    inline DimensionedField<scalar, volMesh>& UCoeff();
+                    inline volScalarField::Internal& UCoeff();
 
                     //- Return const coefficient for carrier phase U equation
-                    inline const DimensionedField<scalar, volMesh>&
+                    inline const volScalarField::Internal&
                         UCoeff() const;
 
                     //- Return tmp momentum source term
