@@ -9,8 +9,7 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
-    -I$(LIB_SRC)/dynamicMesh/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude
 
 EXE_LIBS = \
     -lcompressibleTransportModels \
@@ -24,5 +23,4 @@ EXE_LIBS = \
     -lfvOptions \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \
-    -ldynamicMesh \
-    -lmeshTools
+    -ldynamicMesh
