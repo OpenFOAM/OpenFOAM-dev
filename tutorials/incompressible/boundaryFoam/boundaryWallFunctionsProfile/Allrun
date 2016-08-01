@@ -43,7 +43,7 @@ then
     exit 1
 fi
 
-graphName="OF_vs_ANAYTICAL.eps"
+graphName="OF_vs_ANALYTICAL.eps"
 
 echo "Creating graph of u+ vs y+ to $graphName"
 gnuplot<<EOF
