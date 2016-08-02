@@ -43,6 +43,7 @@ SourceFiles
 #include "UList.H"
 #include "autoPtr.H"
 #include "Xfer.H"
+#include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,6 +83,16 @@ class List
 :
     public UList<T>
 {
+    // Private member functions
+
+        //- Copy list of given type
+        template<class List2>
+        void CopyList(const List2&);
+
+        //- Construct given start and end iterators and number of elements
+        template<class InputIterator>
+        List(InputIterator first, InputIterator last, const label s);
+
 
 protected:
 
@@ -96,6 +107,7 @@ public:
 
         //- Return a null List
         inline static const List<T>& null();
+
 
     // Constructors
 
@@ -114,7 +126,7 @@ public:
         //- Copy constructor
         List(const List<T>&);
 
-        //- Copy constructor from list of another type
+        //- Copy constructor from list containing another type
         template<class T2>
         explicit List(const List<T2>&);
 
@@ -126,6 +138,10 @@ public:
 
         //- Construct as subset
         List(const UList<T>&, const labelUList& mapAddressing);
+
+        //- Construct given start and end iterators
+        template<class InputIterator>
+        List(InputIterator first, InputIterator last);
 
         //- Construct as copy of FixedList<T, Size>
         template<unsigned Size>
@@ -142,6 +158,9 @@ public:
 
         //- Construct as copy of BiIndirectList<T>
         explicit List(const BiIndirectList<T>&);
+
+        //- Construct from an initializer list
+        List(std::initializer_list<T> lst);
 
         //- Construct from Istream
         List(Istream&);

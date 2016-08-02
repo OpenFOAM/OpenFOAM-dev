@@ -33,6 +33,43 @@ License
 #include "BiIndirectList.H"
 #include "contiguous.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class T>
+template<class List2>
+void Foam::List<T>::CopyList(const List2& lst)
+{
+    if (this->size_)
+    {
+        this->v_ = new T[this->size_];
+
+        forAll(*this, i)
+        {
+            this->operator[](i) = lst[i];
+        }
+    }
+}
+
+
+template<class T>
+template<class InputIterator>
+Foam::List<T>::List(InputIterator first, InputIterator last, const label s)
+:
+    UList<T>(NULL, s)
+{
+    if (this->size_)
+    {
+        this->v_ = new T[this->size_];
+
+        InputIterator iter = first;
+        forAll(*this, i)
+        {
+            this->operator[](i) = *iter++;
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
 template<class T>
@@ -201,10 +238,18 @@ Foam::List<T>::List(const UList<T>& a, const labelUList& map)
 
         forAll(*this, i)
         {
-            this->v_[i] = a[map[i]];
+            this->operator[](i) = a[map[i]];
         }
     }
 }
+
+
+template<class T>
+template<class InputIterator>
+Foam::List<T>::List(InputIterator first, InputIterator last)
+:
+    List<T>(first, last, std::distance(first, last))
+{}
 
 
 template<class T>
@@ -213,15 +258,7 @@ Foam::List<T>::List(const FixedList<T, Size>& lst)
 :
     UList<T>(NULL, Size)
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    CopyList(lst);
 }
 
 
@@ -230,39 +267,15 @@ Foam::List<T>::List(const PtrList<T>& lst)
 :
     UList<T>(NULL, lst.size())
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    CopyList(lst);
 }
 
 
 template<class T>
 Foam::List<T>::List(const SLList<T>& lst)
 :
-    UList<T>(NULL, lst.size())
-{
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        label i = 0;
-        for
-        (
-            typename SLList<T>::const_iterator iter = lst.begin();
-            iter != lst.end();
-            ++iter
-        )
-        {
-            this->operator[](i++) = iter();
-        }
-    }
-}
+    List<T>(lst.first(), lst.last(), lst.size())
+{}
 
 
 template<class T>
@@ -270,15 +283,7 @@ Foam::List<T>::List(const UIndirectList<T>& lst)
 :
     UList<T>(NULL, lst.size())
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    CopyList(lst);
 }
 
 
@@ -287,16 +292,15 @@ Foam::List<T>::List(const BiIndirectList<T>& lst)
 :
     UList<T>(NULL, lst.size())
 {
-    if (this->size_)
-    {
-        this->v_ = new T[this->size_];
-
-        forAll(*this, i)
-        {
-            this->operator[](i) = lst[i];
-        }
-    }
+    CopyList(lst);
 }
+
+
+template<class T>
+Foam::List<T>::List(std::initializer_list<T> lst)
+:
+    List<T>(lst.begin(), lst.end())
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //

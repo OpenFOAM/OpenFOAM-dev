@@ -333,7 +333,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
     bool isMechRedActive = chemistry_.mechRed()->active();
     label dim = (isMechRedActive) ? nActiveSpecies_ : completeSpaceSize()-2;
     scalar epsTemp=0;
-    List<scalar> propEps(completeSpaceSize(),0);
+    List<scalar> propEps(completeSpaceSize(), scalar(0));
 
     for (label i=0; i<completeSpaceSize()-2; i++)
     {
