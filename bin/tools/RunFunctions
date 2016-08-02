@@ -132,7 +132,7 @@ runParallel()
         shift
     done
 
-    if [ -f log.$SUFFIX ] && [ "$LOG_IGNORE" = "false" ]
+    if [ -f log.$LOG_SUFFIX ] && [ "$LOG_IGNORE" = "false" ]
     then
         echo "$APP_NAME already run on $PWD:" \
              "remove log file 'log.$LOG_SUFFIX' to re-run"
