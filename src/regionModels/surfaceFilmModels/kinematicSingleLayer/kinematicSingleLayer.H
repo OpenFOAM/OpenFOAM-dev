@@ -340,7 +340,7 @@ public:
             //- Return const access to the dynamic viscosity / [Pa.s]
             inline const volScalarField& mu() const;
 
-            //- Return const access to the surface tension / [m/s2]
+            //- Return const access to the surface tension / [kg/s2]
             inline const volScalarField& sigma() const;
 
 

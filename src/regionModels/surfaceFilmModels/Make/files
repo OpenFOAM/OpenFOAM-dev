@@ -20,6 +20,7 @@ $(KINEMATICMODELS)/injectionModel/injectionModel/injectionModel.C
 $(KINEMATICMODELS)/injectionModel/injectionModel/injectionModelNew.C
 $(KINEMATICMODELS)/injectionModel/injectionModelList/injectionModelList.C
 $(KINEMATICMODELS)/injectionModel/drippingInjection/drippingInjection.C
+$(KINEMATICMODELS)/injectionModel/BrunDrippingInjection/BrunDrippingInjection.C
 $(KINEMATICMODELS)/injectionModel/patchInjection/patchInjection.C
 $(KINEMATICMODELS)/injectionModel/curvatureSeparation/curvatureSeparation.C
 
