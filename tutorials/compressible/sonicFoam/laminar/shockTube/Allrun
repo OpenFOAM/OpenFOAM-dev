@@ -9,6 +9,6 @@ application=`getApplication`
 runApplication blockMesh
 runApplication setFields
 runApplication $application
-runApplication postProcess -func sample
+runApplication -s sample  postProcess -func sample
 
 #------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ application=`getApplication`
 
 runApplication blockMesh
 runApplication $application
-runApplication -s sigma postProcess -func "components(sigma)"
-runApplication postProcess -func singleGraph
+runApplication -s sigma        postProcess -func "components(sigma)"
+runApplication -s singleGraph  postProcess -func singleGraph
 
 #------------------------------------------------------------------------------

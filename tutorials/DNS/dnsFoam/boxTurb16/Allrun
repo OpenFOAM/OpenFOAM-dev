@@ -10,6 +10,6 @@ application=`getApplication`
 runApplication blockMesh
 runApplication boxTurb
 runApplication $application
-runApplication enstrophy
+runApplication -s enstrophy  postProcess -func enstrophy
 
 #------------------------------------------------------------------------------

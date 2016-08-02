@@ -31,7 +31,13 @@ cloneCase moriyoshiHomogeneous moriyoshiHomogeneousPart2
 (
     cd moriyoshiHomogeneousPart2 || exit
 
-    cp -r ../moriyoshiHomogeneous/0.005 .
+    # The following 2 command lines are a generic implementation of the
+    # following command:
+    #     cp -r ../moriyoshiHomogeneous/0.005 .
+
+    lastTimeStep=$(foamListTimes -case ../moriyoshiHomogeneous -latestTime)
+    cp -r ../moriyoshiHomogeneous/$lastTimeStep .
+
     setControlDict
     runApplication `getApplication`
 )
