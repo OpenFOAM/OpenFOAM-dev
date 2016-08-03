@@ -140,10 +140,10 @@ inline void Foam::FixedList<T, Size>::checkStart(const label start) const
 template<class T, unsigned Size>
 inline void Foam::FixedList<T, Size>::checkSize(const label size) const
 {
-    if (size < 0 || unsigned(size) > Size)
+    if (unsigned(size) != Size)
     {
         FatalErrorInFunction
-            << "size " << size << " out of range 0 ... " << (Size)
+            << "size " << size << " != " << Size
             << abort(FatalError);
     }
 }

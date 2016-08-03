@@ -138,11 +138,7 @@ void Foam::FixedList<T, Size>::writeEntry(Ostream& os) const
 {
     if
     (
-        size()
-     && token::compound::isCompound
-        (
-            "List<" + word(pTraits<T>::typeName) + '>'
-        )
+        token::compound::isCompound("List<" + word(pTraits<T>::typeName) + '>')
     )
     {
         os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
