@@ -27,10 +27,10 @@ Class
 Description
     Film Dripping mass transfer model.
 
-    If the film thickness exceeds the critical value needed to generate a valid
-    parcel, the equivalent mass is removed from the film.  The critical film
-    thickness is calculated from the Rayleigh-Taylor stability analysis
-    of film flow on an inclined plane by Brun et.al.
+    If the film thickness exceeds the critical value needed to generate one or
+    more drops, the equivalent mass is removed from the film.  The critical film
+    thickness is calculated from the Rayleigh-Taylor stability analysis of film
+    flow on an inclined plane by Brun et.al.
 
     Reference:
     \verbatim
@@ -39,7 +39,15 @@ Description
         Physics of Fluids (1994-present), 27(8), 084107.
     \endverbatim
 
-    New parcel diameters are sampled from a PDF.
+    The diameter of the drops formed are obtained from the local capillary
+    length multiplied by the \c dCoeff coefficient which defaults to 3.3.
+
+    Reference:
+    \verbatim
+        Lefebvre, A. (1988).
+        Atomization and sprays
+        (Vol. 1040, No. 2756). CRC press.
+    \endverbatim
 
 SourceFiles
     BrunDrippingInjection.C
@@ -50,8 +58,6 @@ SourceFiles
 #define BrunDrippingInjection_H
 
 #include "injectionModel.H"
-#include "distributionModel.H"
-#include "cachedRandom.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,23 +90,18 @@ protected:
     // Protected data
 
         //- Critical non-dimensional interface velocity
-        //  Coefficient in the film angle stability function
-        // defaults to 1.62208
+        //  Coefficient in the film angle stability function.
+        //  Defaults to 1.62208
         scalar ubarStar_;
+
+        //- Coefficient relating the diameter of the drops formed to
+        //  the capillary length.
+        //  Defaults to 3.3
+        scalar dCoeff_;
 
         //- Stable film thickness - drips only formed if thickness
         //  execeeds this threhold value
         scalar deltaStable_;
-
-        //- Number of particles per parcel
-        scalar particlesPerParcel_;
-
-        //- Random number generator
-        cachedRandom rndGen_;
-
-        //- Parcel size PDF model
-        const autoPtr<distributionModels::distributionModel>
-            parcelDistribution_;
 
         //- Diameters of particles to inject into the dripping
         scalarList diameter_;

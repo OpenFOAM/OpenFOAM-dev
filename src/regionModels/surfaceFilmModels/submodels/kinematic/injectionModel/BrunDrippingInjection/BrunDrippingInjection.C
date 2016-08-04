@@ -25,11 +25,6 @@ License
 
 #include "BrunDrippingInjection.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvMesh.H"
-#include "Time.H"
-#include "mathematicalConstants.H"
-#include "Random.H"
-#include "volFields.H"
 #include "kinematicSingleLayer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,17 +51,8 @@ BrunDrippingInjection::BrunDrippingInjection
 :
     injectionModel(type(), owner, dict),
     ubarStar_(coeffDict_.lookupOrDefault("ubarStar", 1.62208)),
-    deltaStable_(readScalar(coeffDict_.lookup("deltaStable"))),
-    particlesPerParcel_(readScalar(coeffDict_.lookup("particlesPerParcel"))),
-    rndGen_(label(0), -1),
-    parcelDistribution_
-    (
-        distributionModels::distributionModel::New
-        (
-            coeffDict_.subDict("parcelDistribution"),
-            rndGen_
-        )
-    ),
+    dCoeff_(coeffDict_.lookupOrDefault("dCoeff", 3.3)),
+    deltaStable_(coeffDict_.lookupOrDefault("deltaStable", 0)),
     diameter_(owner.regionMesh().nCells(), -1.0)
 {}
 
@@ -89,8 +75,6 @@ void BrunDrippingInjection::correct
     const kinematicSingleLayer& film =
         refCast<const kinematicSingleLayer>(this->owner());
 
-    const scalar pi = constant::mathematical::pi;
-
     // Calculate available dripping mass
     tmp<volScalarField> tsinAlpha(film.gNorm()/mag(film.g()));
     const scalarField& sinAlpha = tsinAlpha();
@@ -101,66 +85,47 @@ void BrunDrippingInjection::correct
     const scalarField& sigma = film.sigma();
     const scalar magg = mag(film.g().value());
 
-    scalarField massDrip(film.regionMesh().nCells(), 0.0);
+    scalarField massDrip(film.regionMesh().nCells(), scalar(0));
 
-    forAll(delta, i)
+    forAll(delta, celli)
     {
-        if (sinAlpha[i] > SMALL && delta[i] > deltaStable_)
+        if (sinAlpha[celli] > SMALL && delta[celli] > deltaStable_)
         {
-            scalar lc = sqrt(sigma[i]/(rho[i]*magg));
-            scalar deltaStable = max
+            const scalar lc = sqrt(sigma[celli]/(rho[celli]*magg));
+            const scalar deltaStable = max
             (
-                3*lc*sqrt(1 - sqr(sinAlpha[i]))
-               /(ubarStar_*sqrt(sinAlpha[i])*sinAlpha[i]),
+                3*lc*sqrt(1 - sqr(sinAlpha[celli]))
+               /(ubarStar_*sqrt(sinAlpha[celli])*sinAlpha[celli]),
                 deltaStable_
             );
 
-            Info<< delta[i] << " " << deltaStable << endl;
-            if (delta[i] > deltaStable)
+            if (delta[celli] > deltaStable)
             {
-                const scalar ddelta = max(0.0, delta[i] - deltaStable);
-                massDrip[i] +=
-                    min(availableMass[i], max(0.0, ddelta*rho[i]*magSf[i]));
+                const scalar ddelta = max(delta[celli] - deltaStable, 0);
+                massDrip[celli] +=
+                    min
+                    (
+                        availableMass[celli],
+                        max(ddelta*rho[celli]*magSf[celli], 0)
+                    );
             }
         }
     }
-
 
     // Collect the data to be transferred
     forAll(massDrip, celli)
     {
         if (massDrip[celli] > 0)
         {
-            // Set new particle diameter if not already set
-            if (diameter_[celli] < 0)
-            {
-                diameter_[celli] = parcelDistribution_->sample();
-            }
+            const scalar rhoc = rho[celli];
+            const scalar diam = dCoeff_*sqrt(sigma[celli]/(rhoc*magg));
+            diameter_[celli] = diam;
 
-            scalar& diam = diameter_[celli];
-            scalar rhoc = rho[celli];
-            scalar minMass = particlesPerParcel_*rhoc*pi/6*pow3(diam);
+            massToInject[celli] += massDrip[celli];
+            availableMass[celli] -= massDrip[celli];
 
-            if (massDrip[celli] > minMass)
-            {
-                // All drip mass can be injected
-                massToInject[celli] += massDrip[celli];
-                availableMass[celli] -= massDrip[celli];
-
-                // Set particle diameter
-                diameterToInject[celli] = diam;
-
-                // Retrieve new particle diameter sample
-                diam = parcelDistribution_->sample();
-
-                addToInjectedMass(massDrip[celli]);
-            }
-            else
-            {
-                // Particle mass below minimum threshold - cannot be injected
-                massToInject[celli] = 0;
-                diameterToInject[celli] = 0;
-            }
+            diameterToInject[celli] = diam;
+            addToInjectedMass(massDrip[celli]);
         }
         else
         {
