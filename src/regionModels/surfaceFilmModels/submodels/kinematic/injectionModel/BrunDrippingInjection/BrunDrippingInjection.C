@@ -85,13 +85,14 @@ void BrunDrippingInjection::correct
     const scalarField& sigma = film.sigma();
     const scalar magg = mag(film.g().value());
 
-    scalarField massDrip(film.regionMesh().nCells(), scalar(0));
-
     forAll(delta, celli)
     {
+        bool dripping = false;
+
         if (sinAlpha[celli] > SMALL && delta[celli] > deltaStable_)
         {
-            const scalar lc = sqrt(sigma[celli]/(rho[celli]*magg));
+            const scalar rhoc = rho[celli];
+            const scalar lc = sqrt(sigma[celli]/(rhoc*magg));
             const scalar deltaStable = max
             (
                 3*lc*sqrt(1 - sqr(sinAlpha[celli]))
@@ -102,35 +103,30 @@ void BrunDrippingInjection::correct
             if (delta[celli] > deltaStable)
             {
                 const scalar ddelta = max(delta[celli] - deltaStable, 0);
-                massDrip[celli] +=
-                    min
-                    (
-                        availableMass[celli],
-                        max(ddelta*rho[celli]*magSf[celli], 0)
-                    );
+
+                const scalar massDrip =
+                    min(availableMass[celli], max(ddelta*rhoc*magSf[celli], 0));
+
+                if (massDrip > 0)
+                {
+                    const scalar diam = dCoeff_*lc;
+                    diameter_[celli] = diam;
+
+                    massToInject[celli] += massDrip;
+                    availableMass[celli] -= massDrip;
+
+                    diameterToInject[celli] = diam;
+                    addToInjectedMass(massDrip);
+
+                    dripping = true;
+                }
             }
         }
-    }
 
-    // Collect the data to be transferred
-    forAll(massDrip, celli)
-    {
-        if (massDrip[celli] > 0)
+        if (!dripping)
         {
-            const scalar rhoc = rho[celli];
-            const scalar diam = dCoeff_*sqrt(sigma[celli]/(rhoc*magg));
-            diameter_[celli] = diam;
-
-            massToInject[celli] += massDrip[celli];
-            availableMass[celli] -= massDrip[celli];
-
-            diameterToInject[celli] = diam;
-            addToInjectedMass(massDrip[celli]);
-        }
-        else
-        {
-            massToInject[celli] = 0;
             diameterToInject[celli] = 0;
+            massToInject[celli] = 0;
         }
     }
 
