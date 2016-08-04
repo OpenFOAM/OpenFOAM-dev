@@ -255,8 +255,6 @@ void Foam::epsilonWallFunctionFvPatchScalarField::calculate
         else
         {
             epsilon0[celli] += w*2.0*k[celli]*nuw[facei]/sqr(y[facei]);
-
-            G0[celli] += w*G[celli];
         }
     }
 }

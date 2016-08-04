@@ -280,8 +280,6 @@ void omegaWallFunctionFvPatchScalarField::calculate
             {
                 omega0[celli] += w*omegaVis;
             }
-
-            G0[celli] += w*G[celli];
         }
     }
 }
