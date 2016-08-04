@@ -138,9 +138,9 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
     scalarField& htc = *this;
     forAll(htc, facei)
     {
-        label faceCelli = patch().faceCells()[facei];
+        label celli = patch().faceCells()[facei];
 
-        scalar Re = rhow[facei]*mag(Uc[faceCelli] - Uw[facei])*L_/muw[facei];
+        scalar Re = rhow[facei]*mag(Uc[celli] - Uw[facei])*L_/muw[facei];
 
         if (Re < 5.0E+05)
         {

@@ -239,9 +239,9 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     // Populate boundary values
     forAll(alphatw, facei)
     {
-        label faceCelli = patch().faceCells()[facei];
+        label celli = patch().faceCells()[facei];
 
-        scalar uTau = Cmu25*sqrt(k[faceCelli]);
+        scalar uTau = Cmu25*sqrt(k[celli]);
 
         scalar yPlus = uTau*y[facei]/(muw[facei]/rhow[facei]);
 

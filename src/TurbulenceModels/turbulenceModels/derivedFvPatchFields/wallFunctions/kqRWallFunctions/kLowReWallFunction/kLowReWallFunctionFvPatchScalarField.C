@@ -193,9 +193,9 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
     // Set k wall values
     forAll(kw, facei)
     {
-        label faceCelli = patch().faceCells()[facei];
+        label celli = patch().faceCells()[facei];
 
-        scalar uTau = Cmu25*sqrt(k[faceCelli]);
+        scalar uTau = Cmu25*sqrt(k[celli]);
 
         scalar yPlus = uTau*y[facei]/nuw[facei];
 

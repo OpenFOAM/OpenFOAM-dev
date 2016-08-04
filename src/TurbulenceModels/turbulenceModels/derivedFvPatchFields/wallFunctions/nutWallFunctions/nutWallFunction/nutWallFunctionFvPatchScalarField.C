@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,15 +33,12 @@ License
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-defineTypeNameAndDebug(nutWallFunctionFvPatchScalarField, 0);
-
+    defineTypeNameAndDebug(nutWallFunctionFvPatchScalarField, 0);
+}
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void nutWallFunctionFvPatchScalarField::checkType()
+void Foam::nutWallFunctionFvPatchScalarField::checkType()
 {
     if (!isA<wallFvPatch>(patch()))
     {
@@ -55,7 +52,10 @@ void nutWallFunctionFvPatchScalarField::checkType()
 }
 
 
-void nutWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
+void Foam::nutWallFunctionFvPatchScalarField::writeLocalEntries
+(
+    Ostream& os
+) const
 {
     os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
@@ -65,7 +65,7 @@ void nutWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
+Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -81,7 +81,7 @@ nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 }
 
 
-nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
+Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
     const nutWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -99,7 +99,7 @@ nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 }
 
 
-nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
+Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -116,7 +116,7 @@ nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 }
 
 
-nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
+Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
     const nutWallFunctionFvPatchScalarField& wfpsf
 )
@@ -131,7 +131,7 @@ nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 }
 
 
-nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
+Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
     const nutWallFunctionFvPatchScalarField& wfpsf,
     const DimensionedField<scalar, volMesh>& iF
@@ -149,7 +149,7 @@ nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-scalar nutWallFunctionFvPatchScalarField::yPlusLam
+Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam
 (
     const scalar kappa,
     const scalar E
@@ -166,7 +166,13 @@ scalar nutWallFunctionFvPatchScalarField::yPlusLam
 }
 
 
-void nutWallFunctionFvPatchScalarField::updateCoeffs()
+Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam() const
+{
+    return yPlusLam_;
+}
+
+
+void Foam::nutWallFunctionFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
@@ -179,16 +185,12 @@ void nutWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void nutWallFunctionFvPatchScalarField::write(Ostream& os) const
+void Foam::nutWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
     writeEntry("value", os);
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

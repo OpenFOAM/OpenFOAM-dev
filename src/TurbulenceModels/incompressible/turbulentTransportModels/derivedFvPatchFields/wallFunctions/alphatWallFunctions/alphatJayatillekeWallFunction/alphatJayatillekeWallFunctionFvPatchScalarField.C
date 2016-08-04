@@ -236,10 +236,10 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
     scalarField& alphatw = *this;
     forAll(alphatw, facei)
     {
-        label faceCelli = patch().faceCells()[facei];
+        label celli = patch().faceCells()[facei];
 
         // y+
-        scalar yPlus = Cmu25*sqrt(k[faceCelli])*y[facei]/nuw[facei];
+        scalar yPlus = Cmu25*sqrt(k[celli])*y[facei]/nuw[facei];
 
         // Molecular-to-turbulent Prandtl number ratio
         scalar Prat = Pr/Prt_;

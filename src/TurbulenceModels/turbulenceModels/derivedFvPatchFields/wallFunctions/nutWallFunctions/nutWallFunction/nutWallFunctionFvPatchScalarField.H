@@ -164,6 +164,9 @@ public:
         //- Calculate the Y+ at the edge of the laminar sublayer
         static scalar yPlusLam(const scalar kappa, const scalar E);
 
+        //- Return the Y+ at the edge of the laminar sublayer
+        scalar yPlusLam() const;
+
         //- Calculate and return the yPlus at the boundary
         virtual tmp<scalarField> yPlus() const = 0;
 

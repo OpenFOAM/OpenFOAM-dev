@@ -204,18 +204,18 @@ void fWallFunctionFvPatchScalarField::updateCoeffs()
     // Set f wall values
     forAll(f, facei)
     {
-        label faceCelli = patch().faceCells()[facei];
+        label celli = patch().faceCells()[facei];
 
-        scalar uTau = Cmu25*sqrt(k[faceCelli]);
+        scalar uTau = Cmu25*sqrt(k[celli]);
 
         scalar yPlus = uTau*y[facei]/nuw[facei];
 
         if (yPlus > yPlusLam_)
         {
             scalar N = 6.0;
-            scalar v2c = v2[faceCelli];
-            scalar epsc = epsilon[faceCelli];
-            scalar kc = k[faceCelli];
+            scalar v2c = v2[celli];
+            scalar epsc = epsilon[celli];
+            scalar kc = k[celli];
 
             f[facei] = N*v2c*epsc/(sqr(kc) + ROOTVSMALL);
             f[facei] /= sqr(uTau) + ROOTVSMALL;

@@ -337,10 +337,10 @@ void SSG<BasicTurbulenceModel>::correct()
         {
             forAll(curPatch, facei)
             {
-                label faceCelli = curPatch.faceCells()[facei];
-                P[faceCelli] *= min
+                label celli = curPatch.faceCells()[facei];
+                P[celli] *= min
                 (
-                    G[faceCelli]/(0.5*mag(tr(P[faceCelli])) + SMALL),
+                    G[celli]/(0.5*mag(tr(P[celli])) + SMALL),
                     1.0
                 );
             }
