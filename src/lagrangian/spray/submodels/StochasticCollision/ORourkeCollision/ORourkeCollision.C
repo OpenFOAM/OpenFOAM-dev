@@ -142,7 +142,7 @@ bool Foam::ORourkeCollision<CloudType>::collideParcels
     scalar xx = this->owner().rndGen().template sample01<scalar>();
 
     // Collision occurs
-    if (xx < collProb)
+    if (xx > collProb)
     {
         if (d1 > d2)
         {
