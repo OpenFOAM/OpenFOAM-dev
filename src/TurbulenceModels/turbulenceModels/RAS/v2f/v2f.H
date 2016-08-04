@@ -41,7 +41,7 @@ Description
     Wall boundary conditions are:
 
         k       = kLowReWallFunction
-        epsilon = epsilonLowReWallFunction
+        epsilon = epsilonWallFunction
         v2      = v2WallFunction
         f       = fWallFunction
 
@@ -90,7 +90,7 @@ See also
     Foam::RASModels::v2fBase
     Foam::RASModels::kEpsilon
     Foam::kLowReWallFunctionFvPatchScalarField
-    Foam::epsilonLowReWallFunctionFvPatchScalarField
+    Foam::epsilonWallFunctionFvPatchScalarField
     Foam::v2WallFunctionFvPatchScalarField
     Foam::fWallFunctionFvPatchScalarField
 

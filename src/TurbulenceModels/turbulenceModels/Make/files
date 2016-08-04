@@ -43,7 +43,6 @@ $(nutWallFunctions)/nutURoughWallFunction/nutURoughWallFunctionFvPatchScalarFiel
 
 epsilonWallFunctions = $(wallFunctions)/epsilonWallFunctions
 $(epsilonWallFunctions)/epsilonWallFunction/epsilonWallFunctionFvPatchScalarField.C
-$(epsilonWallFunctions)/epsilonLowReWallFunction/epsilonLowReWallFunctionFvPatchScalarField.C
 
 omegaWallFunctions = $(wallFunctions)/omegaWallFunctions
 $(omegaWallFunctions)/omegaWallFunction/omegaWallFunctionFvPatchScalarField.C
