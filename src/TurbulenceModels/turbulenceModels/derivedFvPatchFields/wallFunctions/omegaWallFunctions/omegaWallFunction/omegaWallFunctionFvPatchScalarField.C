@@ -24,12 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "omegaWallFunctionFvPatchScalarField.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 #include "turbulenceModel.H"
 #include "fvPatchFieldMapper.H"
 #include "fvMatrix.H"
 #include "volFields.H"
 #include "wallFvPatch.H"
-#include "nutkWallFunctionFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,6 +63,7 @@ void omegaWallFunctionFvPatchScalarField::writeLocalEntries(Ostream& os) const
     os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
     os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
     os.writeKeyword("beta1") << beta1_ << token::END_STATEMENT << nl;
+    os.writeKeyword("blended") << blended_ << token::END_STATEMENT << nl;
 }
 
 
@@ -209,8 +210,8 @@ void omegaWallFunctionFvPatchScalarField::calculate
     const turbulenceModel& turbModel,
     const List<scalar>& cornerWeights,
     const fvPatch& patch,
-    scalarField& G,
-    scalarField& omega
+    scalarField& G0,
+    scalarField& omega0
 )
 {
     const label patchi = patch.index();
@@ -232,25 +233,56 @@ void omegaWallFunctionFvPatchScalarField::calculate
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
+    typedef DimensionedField<scalar, volMesh> FieldType;
+    const FieldType& G = db().lookupObject<FieldType>(turbModel.GName());
+
     // Set omega and G
     forAll(nutw, facei)
     {
-        label celli = patch.faceCells()[facei];
+        const label celli = patch.faceCells()[facei];
 
-        scalar w = cornerWeights[facei];
+        const scalar yPlus = Cmu25*y[facei]*sqrt(k[celli])/nuw[facei];
 
-        scalar omegaVis = 6.0*nuw[facei]/(beta1_*sqr(y[facei]));
+        const scalar w = cornerWeights[facei];
 
-        scalar omegaLog = sqrt(k[celli])/(Cmu25*kappa_*y[facei]);
+        const scalar omegaVis = 6*nuw[facei]/(beta1_*sqr(y[facei]));
+        const scalar omegaLog = sqrt(k[celli])/(Cmu25*kappa_*y[facei]);
 
-        omega[celli] += w*sqrt(sqr(omegaVis) + sqr(omegaLog));
+        // Switching between the laminar sub-layer and the log-region rather
+        // than blending has been found to provide more accurate results over a
+        // range of near-wall y+.
+        //
+        // For backward-compatibility the blending method is provided as an
+        // option
 
-        G[celli] +=
-            w
-           *(nutw[facei] + nuw[facei])
-           *magGradUw[facei]
-           *Cmu25*sqrt(k[celli])
-           /(kappa_*y[facei]);
+        if (blended_)
+        {
+            omega0[celli] += w*sqrt(sqr(omegaVis) + sqr(omegaLog));
+        }
+
+        if (yPlus > yPlusLam_)
+        {
+            if (!blended_)
+            {
+                omega0[celli] += w*omegaLog;
+            }
+
+            G0[celli] +=
+                w
+               *(nutw[facei] + nuw[facei])
+               *magGradUw[facei]
+               *Cmu25*sqrt(k[celli])
+               /(kappa_*y[facei]);
+        }
+        else
+        {
+            if (!blended_)
+            {
+                omega0[celli] += w*omegaVis;
+            }
+
+            G0[celli] += w*G[celli];
+        }
     }
 }
 
@@ -268,7 +300,8 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     kappa_(0.41),
     E_(9.8),
     beta1_(0.075),
-    yPlusLam_(nutkWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
+    blended_(false),
+    yPlusLam_(nutWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
     G_(),
     omega_(),
     initialised_(false),
@@ -292,6 +325,7 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     kappa_(ptf.kappa_),
     E_(ptf.E_),
     beta1_(ptf.beta1_),
+    blended_(ptf.blended_),
     yPlusLam_(ptf.yPlusLam_),
     G_(),
     omega_(),
@@ -315,7 +349,8 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     E_(dict.lookupOrDefault<scalar>("E", 9.8)),
     beta1_(dict.lookupOrDefault<scalar>("beta1", 0.075)),
-    yPlusLam_(nutkWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
+    blended_(dict.lookupOrDefault<Switch>("blended", false)),
+    yPlusLam_(nutWallFunctionFvPatchScalarField::yPlusLam(kappa_, E_)),
     G_(),
     omega_(),
     initialised_(false),
@@ -339,6 +374,7 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     kappa_(owfpsf.kappa_),
     E_(owfpsf.E_),
     beta1_(owfpsf.beta1_),
+    blended_(owfpsf.blended_),
     yPlusLam_(owfpsf.yPlusLam_),
     G_(),
     omega_(),
@@ -361,6 +397,7 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
     kappa_(owfpsf.kappa_),
     E_(owfpsf.E_),
     beta1_(owfpsf.beta1_),
+    blended_(owfpsf.blended_),
     yPlusLam_(owfpsf.yPlusLam_),
     G_(),
     omega_(),

@@ -28,8 +28,11 @@ Group
     grpWallFunctions
 
 Description
-    This boundary condition provides a wall function constraint on turbulnce
-    specific dissipation, omega.  The values are computed using:
+    This boundary condition provides a wall constraint on turbulnce specific
+    dissipation, omega for both low and high Reynolds number turbulence models.
+
+    The near-wall omega may be either blended between the viscous region and
+    logarithmic region values using:
 
         \f[
             \omega = sqrt(\omega_{vis}^2 + \omega_{log}^2)
@@ -42,7 +45,7 @@ Description
         \omega_{log} | omega in logarithmic region
     \endvartable
 
-    Model described by Eq.(15) of:
+    see eq.(15) of:
     \verbatim
         Menter, F., Esch, T.
         "Elements of Industrial Heat Transfer Prediction"
@@ -50,13 +53,21 @@ Description
         Nov. 2001
     \endverbatim
 
+    or switched between these values based on the laminar-to-turbulent y+ value
+    derived from kappa and E.  Recent tests have shown that the standard
+    switching method provides more accurate results for 10 < y+ < 30 when used
+    with high Reynolds number wall-functions and both methods provide accurate
+    results when used with continuous wall-functions.  Based on this the
+    standard switching method is used by default.
+
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Cmu          | model coefficient       | no          | 0.09
-        kappa        | Von Karman constant     | no          | 0.41
-        E            | model coefficient       | no          | 9.8
-        beta1        | model coefficient       | no          | 0.075
+        Cmu          | Model coefficient       | no          | 0.09
+        kappa        | von Karman constant     | no          | 0.41
+        E            | Model coefficient       | no          | 9.8
+        beta1        | Model coefficient       | no          | 0.075
+        blended      | Blending switch         | no          | false
     \endtable
 
     Example of the boundary condition specification:
@@ -66,6 +77,10 @@ Usage
         type            omegaWallFunction;
     }
     \endverbatim
+
+See also
+    Foam::fixedInternalValueFvPatchField
+    Foam::epsilonWallFunctionFvPatchScalarField
 
 SourceFiles
     omegaWallFunctionFvPatchScalarField.C
@@ -111,7 +126,10 @@ protected:
         //- beta1 coefficient
         scalar beta1_;
 
-        //- Y+ at the edge of the laminar sublayer
+        //- beta1 coefficient
+        Switch blended_;
+
+        //- y+ at the edge of the laminar sublayer
         scalar yPlusLam_;
 
         //- Local copy of turbulence G field
