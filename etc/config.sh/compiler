@@ -42,12 +42,6 @@ OpenFOAM | ThirdParty)
     Gcc | Gcc48)
         gcc_version=gcc-4.8.5
         ;;
-    Gcc45)
-        gcc_version=gcc-4.5.4
-        ;;
-    Gcc46)
-        gcc_version=gcc-4.6.4
-        ;;
     Gcc47)
         gcc_version=gcc-4.7.4
         ;;
