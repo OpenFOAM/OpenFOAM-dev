@@ -43,6 +43,7 @@ SourceFiles
 #include "Hash.H"
 #include "autoPtr.H"
 #include <type_traits>
+#include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -100,6 +101,7 @@ public:
         ) const;
     };
 
+
     // Static Member Functions
 
         //- Return a null FixedList
@@ -111,11 +113,18 @@ public:
         //- Null constructor.
         inline FixedList();
 
+        //- Construct from value
+        explicit inline FixedList(const T&);
+
         //- Construct from C-array.
         explicit inline FixedList(const T v[Size]);
 
-        //- Construct from value
-        explicit inline FixedList(const T&);
+        //- Construct given start and end iterators
+        template<class InputIterator>
+        inline FixedList(InputIterator first, InputIterator last);
+
+        //- Construct from brace-enclosed values
+        inline FixedList(std::initializer_list<T>);
 
         //- Construct from UList.
         explicit inline FixedList(const UList<T>&);

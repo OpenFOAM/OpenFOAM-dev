@@ -71,6 +71,17 @@ int main(int argc, char *argv[])
     Info<< "list: " << list << nl
         << "list2: " << list2 << endl;
 
+    List<label> list3{0, 1, 2, 3};
+    FixedList<label, 4> list4(list3.begin(), list3.end());
+    Info<< "list3: " << list3 << nl
+        << "list4: " << list4 << endl;
+
+    FixedList<label, 5> list5{0, 1, 2, 3, 4};
+    Info<< "list5: " << list5 << endl;
+
+    List<FixedList<label, 2>> list6{{0, 1}, {2, 3}};
+    Info<< "list6: " << list6 << endl;
+
     if (Pstream::parRun())
     {
         if (Pstream::myProcNo() != Pstream::masterNo())
