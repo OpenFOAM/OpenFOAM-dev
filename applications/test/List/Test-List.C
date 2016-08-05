@@ -95,9 +95,9 @@ int main(int argc, char *argv[])
 
     List<vector> list5
     {
-        vector(5, 3, 1),
-        vector(10, 2, 2),
-        vector(8, 1, 0)
+        {5, 3, 1},
+        {10, 2, 2},
+        {8, 1, 0}
     };
     Info<< "list5: " << list5 << endl;
 
