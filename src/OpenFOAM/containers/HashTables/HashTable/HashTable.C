@@ -28,6 +28,7 @@ License
 
 #include "HashTable.H"
 #include "List.H"
+#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -54,26 +55,14 @@ Foam::HashTable<T, Key, Hash>::HashTable(const label size)
 template<class T, class Key, class Hash>
 Foam::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
 :
-    HashTableCore(),
-    nElmts_(0),
-    tableSize_(ht.tableSize_),
-    table_(nullptr)
+    HashTable<T, Key, Hash>(ht.tableSize_)
 {
-    if (tableSize_)
+    for (const_iterator iter = ht.cbegin(); iter != ht.cend(); ++iter)
     {
-        table_ = new hashedEntry*[tableSize_];
-
-        for (label hashIdx = 0; hashIdx < tableSize_; hashIdx++)
-        {
-            table_[hashIdx] = 0;
-        }
-
-        for (const_iterator iter = ht.cbegin(); iter != ht.cend(); ++iter)
-        {
-            insert(iter.key(), *iter);
-        }
+        insert(iter.key(), *iter);
     }
 }
+
 
 template<class T, class Key, class Hash>
 Foam::HashTable<T, Key, Hash>::HashTable
@@ -87,6 +76,21 @@ Foam::HashTable<T, Key, Hash>::HashTable
     table_(nullptr)
 {
     transfer(ht());
+}
+
+
+template<class T, class Key, class Hash>
+Foam::HashTable<T, Key, Hash>::HashTable
+(
+    std::initializer_list<Tuple2<Key, T>> lst
+)
+:
+    HashTable<T, Key, Hash>(lst.size())
+{
+    for (const Tuple2<Key, T>& pair : lst)
+    {
+        insert(pair.first(), pair.second());
+    }
 }
 
 

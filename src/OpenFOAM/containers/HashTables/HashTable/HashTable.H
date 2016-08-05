@@ -49,6 +49,7 @@ SourceFiles
 #include "word.H"
 #include "Xfer.H"
 #include "className.H"
+#include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,6 +62,9 @@ template<class T> class List;
 template<class T> class UList;
 template<class T, class Key, class Hash> class HashTable;
 template<class T, class Key, class Hash> class HashPtrTable;
+
+template<class Type1, class Type2>
+class Tuple2;
 
 template<class T, class Key, class Hash>
 Istream& operator>>(Istream&, HashTable<T, Key, Hash>&);
@@ -171,6 +175,7 @@ class HashTable
         //- Assign a new hashedEntry to a possibly already existing key
         bool set(const Key&, const T& newElmt, bool protect);
 
+
 public:
 
     // Forward declaration of iterators
@@ -206,6 +211,9 @@ public:
 
         //- Construct by transferring the parameter contents
         HashTable(const Xfer<HashTable<T, Key, Hash>>&);
+
+        //- Construct from an initializer list
+        HashTable(std::initializer_list<Tuple2<Key, T>> lst);
 
 
     //- Destructor

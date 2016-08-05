@@ -37,19 +37,21 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    HashTable<label, Foam::string> table1(0);
-
-    table1.insert("kjhk", 10);
-    table1.insert("kjhk2", 12);
+    HashTable<label, Foam::string> table1
+    {
+        {"kjhk", 10},
+        {"kjhk2", 12}
+    };
 
     Info<< "table1: " << table1 << nl
         << "toc: " << table1.toc() << endl;
 
-    HashTable<label, label, Hash<label>> table2(10);
-
-    table2.insert(3, 10);
-    table2.insert(5, 12);
-    table2.insert(7, 16);
+    HashTable<label, label, Hash<label>> table2
+    {
+        {3, 10},
+        {5, 12},
+        {7, 16}
+    };
 
     Info<< "table2: " << table2 << nl
         << "toc: " << table2.toc() << endl;

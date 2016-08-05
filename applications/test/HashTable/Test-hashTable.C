@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,40 +30,37 @@ License
 
 using namespace Foam;
 
-// use define so we can easily test other implementations
-#define HASHTABLE_CLASS HashTable
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 //  Main program:
 
 int main()
 {
-    HASHTABLE_CLASS<double> table1(13);
-    HASHTABLE_CLASS<double>::iterator iter;
+    HashTable<scalar> table1
+    {
+        {"aaa", 1.0},
+        {"aba", 2.0},
+        {"aca", 3.0},
+        {"ada", 4.0},
+        {"aeq", 5.0},
+        {"aaw", 6.0},
+        {"abs", 7.0},
+        {"acr", 8.0},
+        {"adx", 9.0},
+        {"aec", 10.0}
+    };
 
-    table1.insert("aaa", 1.0);
-    table1.insert("aba", 2.0);
-    table1.insert("aca", 3.0);
-    table1.insert("ada", 4.0);
-    table1.insert("aeq", 5.0);
-    table1.insert("aaw", 6.0);
-    table1.insert("abs", 7.0);
-    table1.insert("acr", 8.0);
-    table1.insert("adx", 9.0);
-    table1.insert("aec", 10.0);
-
-    // erase by key
+    // Erase by key
     table1.erase("aaw");
 
-    // erase by iterator
-    iter = table1.find("abs");
+    // Erase by iterator
+    HashTable<scalar>::iterator iter = table1.find("abs");
     table1.erase(iter);
 
     Info<< "\ntable1 toc: " << table1.toc() << endl;
     Info<< "\ntable1 sortedToc: " << table1.sortedToc() << endl;
     table1.printInfo(Info)
         << "table1 [" << table1.size() << "] " << endl;
-    forAllIter(HASHTABLE_CLASS<double>, table1, iter)
+    forAllIter(HashTable<scalar>, table1, iter)
     {
         Info<< iter.key() << " => " << iter() << nl;
     }
@@ -90,14 +87,14 @@ int main()
     {
         OStringStream os;
         os  << table1;
-        HASHTABLE_CLASS<double> readTable(IStringStream(os.str())(), 100);
+        HashTable<scalar> readTable(IStringStream(os.str())(), 100);
 
         Info<< "Istream constructor:" << readTable << endl;
     }
 
 
-    HASHTABLE_CLASS<double> table2(table1);
-    HASHTABLE_CLASS<double> table3(table1.xfer());
+    HashTable<scalar> table2(table1);
+    HashTable<scalar> table3(table1.xfer());
 
     Info<< "\ncopy table1 -> table2" << nl
         << "transfer table1 -> table3 via the xfer() method" << nl;
@@ -107,7 +104,7 @@ int main()
         << "\ntable3" << table3 << nl;
 
     Info<< "\nerase table2 by iterator" << nl;
-    forAllIter(HASHTABLE_CLASS<double>, table2, iter)
+    forAllIter(HashTable<scalar>, table2, iter)
     {
         Info<< "erasing " << iter.key() << " => " << iter() << " ... ";
         table2.erase(iter);
@@ -128,7 +125,7 @@ int main()
     table3.printInfo(Info)
         << table3 << nl;
 
-    HASHTABLE_CLASS<double> table4;
+    HashTable<scalar> table4;
 
     table4 = table3;
     Info<< "\ncopy table3 -> table4 " << table4 << nl;
@@ -145,7 +142,7 @@ int main()
     Info<< "removed an element - test table1 != table3 : "
         << (table1 != table3) << nl;
 
-    // insert a few things into table2
+    // Insert a few things into table2
     table2.set("ada", 14.0);
     table2.set("aeq", 15.0);
     table2.set("aaw", 16.0);
