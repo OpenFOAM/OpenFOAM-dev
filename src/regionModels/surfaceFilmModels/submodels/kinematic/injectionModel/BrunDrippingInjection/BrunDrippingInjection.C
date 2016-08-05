@@ -52,7 +52,7 @@ BrunDrippingInjection::BrunDrippingInjection
     injectionModel(type(), owner, dict),
     ubarStar_(coeffDict_.lookupOrDefault("ubarStar", 1.62208)),
     dCoeff_(coeffDict_.lookupOrDefault("dCoeff", 3.3)),
-    deltaStable_(coeffDict_.lookupOrDefault("deltaStable", 0)),
+    deltaStable_(coeffDict_.lookupOrDefault("deltaStable", scalar(0))),
     diameter_(owner.regionMesh().nCells(), -1.0)
 {}
 
