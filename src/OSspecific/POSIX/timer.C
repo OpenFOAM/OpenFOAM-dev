@@ -118,7 +118,7 @@ Foam::timer::~timer()
         oldTimeOut_ = 0;
 
         // Restore signal handler
-        if (sigaction(SIGALRM, &oldAction_, NULL) < 0)
+        if (sigaction(SIGALRM, &oldAction_, nullptr) < 0)
         {
             FatalErrorInFunction
                 << "sigaction(SIGALRM) error"

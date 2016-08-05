@@ -44,17 +44,17 @@ namespace debug
 //! \cond ignoreDocumentation
 //- Skip documentation : local scope only
 
-dictionary* controlDictPtr_(NULL);
-dictionary* debugSwitchesPtr_(NULL);
-dictionary* infoSwitchesPtr_(NULL);
-dictionary* optimisationSwitchesPtr_(NULL);
+dictionary* controlDictPtr_(nullptr);
+dictionary* debugSwitchesPtr_(nullptr);
+dictionary* infoSwitchesPtr_(nullptr);
+dictionary* optimisationSwitchesPtr_(nullptr);
 
 // Debug switch read and write callback tables.
-simpleObjectRegistry* debugObjectsPtr_(NULL);
-simpleObjectRegistry* infoObjectsPtr_(NULL);
-simpleObjectRegistry* optimisationObjectsPtr_(NULL);
-simpleObjectRegistry* dimensionSetObjectsPtr_(NULL);
-simpleObjectRegistry* dimensionedConstantObjectsPtr_(NULL);
+simpleObjectRegistry* debugObjectsPtr_(nullptr);
+simpleObjectRegistry* infoObjectsPtr_(nullptr);
+simpleObjectRegistry* optimisationObjectsPtr_(nullptr);
+simpleObjectRegistry* dimensionSetObjectsPtr_(nullptr);
+simpleObjectRegistry* dimensionedConstantObjectsPtr_(nullptr);
 
 
 // To ensure controlDictPtr_ is deleted at the end of the run
@@ -73,9 +73,9 @@ public:
         deleteDemandDrivenData(dimensionSetObjectsPtr_);
         deleteDemandDrivenData(dimensionedConstantObjectsPtr_);
 
-        debugSwitchesPtr_ = NULL;
-        infoSwitchesPtr_ = NULL;
-        optimisationSwitchesPtr_ = NULL;
+        debugSwitchesPtr_ = nullptr;
+        infoSwitchesPtr_ = nullptr;
+        optimisationSwitchesPtr_ = nullptr;
         deleteDemandDrivenData(controlDictPtr_);
     }
 };

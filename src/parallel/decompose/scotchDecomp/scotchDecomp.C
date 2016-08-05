@@ -338,10 +338,10 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
             xadj.begin(),           // verttab, start index per cell into adjncy
             &xadj[1],               // vendtab, end index  ,,
             velotab.begin(),        // velotab, vertex weights
-            NULL,                   // vlbltab
+            nullptr,                   // vlbltab
             adjncy.size(),          // edgenbr, number of arcs
             adjncy.begin(),         // edgetab
-            NULL                    // edlotab, edge weights
+            nullptr                    // edlotab, edge weights
         ),
         "SCOTCH_graphBuild"
     );
@@ -421,7 +421,7 @@ Foam::label Foam::scotchDecomp::decomposeOneProc
 
 
     //SCOTCH_Mapping mapdat;
-    //SCOTCH_graphMapInit(&grafdat, &mapdat, &archdat, NULL);
+    //SCOTCH_graphMapInit(&grafdat, &mapdat, &archdat, nullptr);
     //SCOTCH_graphMapCompute(&grafdat, &mapdat, &stradat); /* Perform mapping */
     //SCOTCH_graphMapExit(&grafdat, &mapdat);
 

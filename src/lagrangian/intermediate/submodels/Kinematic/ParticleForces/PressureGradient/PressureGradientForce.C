@@ -40,7 +40,7 @@ Foam::PressureGradientForce<CloudType>::PressureGradientForce
 :
     ParticleForce<CloudType>(owner, mesh, dict, forceType, true),
     UName_(this->coeffs().template lookupOrDefault<word>("U", "U")),
-    DUcDtInterpPtr_(NULL)
+    DUcDtInterpPtr_(nullptr)
 {}
 
 
@@ -52,7 +52,7 @@ Foam::PressureGradientForce<CloudType>::PressureGradientForce
 :
     ParticleForce<CloudType>(pgf),
     UName_(pgf.UName_),
-    DUcDtInterpPtr_(NULL)
+    DUcDtInterpPtr_(nullptr)
 {}
 
 

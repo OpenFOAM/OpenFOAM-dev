@@ -40,7 +40,7 @@ defineTypeNameAndDebug(lduMesh, 0);
 const Foam::objectRegistry& Foam::lduMesh::thisDb() const
 {
     NotImplemented;
-    const objectRegistry* orPtr_ = NULL;
+    const objectRegistry* orPtr_ = nullptr;
     return *orPtr_;
 }
 

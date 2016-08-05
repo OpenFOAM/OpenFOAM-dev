@@ -598,7 +598,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
 
     if (returnReduce(pointToMaster.size(), sumOp<label>()) == 0)
     {
-        return autoPtr<mapPolyMesh>(NULL);
+        return autoPtr<mapPolyMesh>(nullptr);
     }
 
     polyTopoChange meshMod(mesh_);

@@ -98,10 +98,10 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
 :
     CloudType(cloudName, rho, U, g, thermo, false),
     reactingCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     constProps_(this->particleProperties()),
-    compositionModel_(NULL),
-    phaseChangeModel_(NULL),
+    compositionModel_(nullptr),
+    phaseChangeModel_(nullptr),
     rhoTrans_(thermo.carrier().species().size())
 {
     if (this->solution().active())
@@ -153,7 +153,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
 :
     CloudType(c, name),
     reactingCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     constProps_(c.constProps_),
     compositionModel_(c.compositionModel_->clone()),
     phaseChangeModel_(c.phaseChangeModel_->clone()),
@@ -193,11 +193,11 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
 :
     CloudType(mesh, name, c),
     reactingCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     constProps_(),
     compositionModel_(c.compositionModel_->clone()),
-//    compositionModel_(NULL),
-    phaseChangeModel_(NULL),
+//    compositionModel_(nullptr),
+    phaseChangeModel_(nullptr),
     rhoTrans_(0)
 {}
 

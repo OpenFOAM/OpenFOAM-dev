@@ -69,7 +69,7 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
 :
     cellSetOption(name, modelType, dict, mesh),
     mode_(temperatureModeNames_.read(coeffs_.lookup("mode"))),
-    Tuniform_(NULL),
+    Tuniform_(nullptr),
     TName_("T")
 {
     switch (mode_)

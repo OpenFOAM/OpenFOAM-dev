@@ -178,19 +178,19 @@ Foam::slidingInterface::slidingInterface
     edgeMasterCatchFraction_(edgeMasterCatchFractionDefault_),
     edgeCoPlanarTol_(edgeCoPlanarTolDefault_),
     edgeEndCutoffTol_(edgeEndCutoffTolDefault_),
-    cutFaceMasterPtr_(NULL),
-    cutFaceSlavePtr_(NULL),
-    masterFaceCellsPtr_(NULL),
-    slaveFaceCellsPtr_(NULL),
-    masterStickOutFacesPtr_(NULL),
-    slaveStickOutFacesPtr_(NULL),
-    retiredPointMapPtr_(NULL),
-    cutPointEdgePairMapPtr_(NULL),
-    slavePointPointHitsPtr_(NULL),
-    slavePointEdgeHitsPtr_(NULL),
-    slavePointFaceHitsPtr_(NULL),
-    masterPointEdgeHitsPtr_(NULL),
-    projectedSlavePointsPtr_(NULL)
+    cutFaceMasterPtr_(nullptr),
+    cutFaceSlavePtr_(nullptr),
+    masterFaceCellsPtr_(nullptr),
+    slaveFaceCellsPtr_(nullptr),
+    masterStickOutFacesPtr_(nullptr),
+    slaveStickOutFacesPtr_(nullptr),
+    retiredPointMapPtr_(nullptr),
+    cutPointEdgePairMapPtr_(nullptr),
+    slavePointPointHitsPtr_(nullptr),
+    slavePointEdgeHitsPtr_(nullptr),
+    slavePointFaceHitsPtr_(nullptr),
+    masterPointEdgeHitsPtr_(nullptr),
+    projectedSlavePointsPtr_(nullptr)
 {
     checkDefinition();
 
@@ -256,19 +256,19 @@ Foam::slidingInterface::slidingInterface
         intersection::algorithmNames_.read(dict.lookup("projection"))
     ),
     trigger_(false),
-    cutFaceMasterPtr_(NULL),
-    cutFaceSlavePtr_(NULL),
-    masterFaceCellsPtr_(NULL),
-    slaveFaceCellsPtr_(NULL),
-    masterStickOutFacesPtr_(NULL),
-    slaveStickOutFacesPtr_(NULL),
-    retiredPointMapPtr_(NULL),
-    cutPointEdgePairMapPtr_(NULL),
-    slavePointPointHitsPtr_(NULL),
-    slavePointEdgeHitsPtr_(NULL),
-    slavePointFaceHitsPtr_(NULL),
-    masterPointEdgeHitsPtr_(NULL),
-    projectedSlavePointsPtr_(NULL)
+    cutFaceMasterPtr_(nullptr),
+    cutFaceSlavePtr_(nullptr),
+    masterFaceCellsPtr_(nullptr),
+    slaveFaceCellsPtr_(nullptr),
+    masterStickOutFacesPtr_(nullptr),
+    slaveStickOutFacesPtr_(nullptr),
+    retiredPointMapPtr_(nullptr),
+    cutPointEdgePairMapPtr_(nullptr),
+    slavePointPointHitsPtr_(nullptr),
+    slavePointEdgeHitsPtr_(nullptr),
+    slavePointFaceHitsPtr_(nullptr),
+    masterPointEdgeHitsPtr_(nullptr),
+    projectedSlavePointsPtr_(nullptr)
 {
     // Optionally default tolerances from dictionary
     setTolerances(dict);

@@ -85,7 +85,7 @@ public:
                 }
             }
 
-            if ((singlePatchProc_ == -1) != (distMapPtr_ != NULL))
+            if ((singlePatchProc_ == -1) != (distMapPtr_ != nullptr))
             {
                 FatalErrorIn
                 (
@@ -94,7 +94,7 @@ public:
                 )   << "Supply a mapDistributeBase if and only if "
                     << "singlePatchProc is -1"
                     << " singlePatchProc_:" << singlePatchProc_
-                    << " distMapPtr_:" << (distMapPtr_ != NULL)
+                    << " distMapPtr_:" << (distMapPtr_ != nullptr)
                     << exit(FatalError);
             }
         }

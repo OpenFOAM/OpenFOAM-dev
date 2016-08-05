@@ -149,8 +149,8 @@ Foam::layerAdditionRemoval::layerAdditionRemoval
     maxLayerThickness_(maxThickness),
     thicknessFromVolume_(thicknessFromVolume),
     oldLayerThickness_(-1.0),
-    pointsPairingPtr_(NULL),
-    facesPairingPtr_(NULL),
+    pointsPairingPtr_(nullptr),
+    facesPairingPtr_(nullptr),
     triggerRemoval_(-1),
     triggerAddition_(-1)
 {
@@ -175,8 +175,8 @@ Foam::layerAdditionRemoval::layerAdditionRemoval
         dict.lookupOrDefault<Switch>("thicknessFromVolume", true)
     ),
     oldLayerThickness_(readOldThickness(dict)),
-    pointsPairingPtr_(NULL),
-    facesPairingPtr_(NULL),
+    pointsPairingPtr_(nullptr),
+    facesPairingPtr_(nullptr),
     triggerRemoval_(-1),
     triggerAddition_(-1)
 {

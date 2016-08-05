@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
 
     const word prepend = args.globalCaseName() + '.';
 
-    OFstream *ensightCaseFilePtr = NULL;
+    OFstream *ensightCaseFilePtr = nullptr;
     if (Pstream::master())
     {
         fileName caseFileName = prepend + "case";

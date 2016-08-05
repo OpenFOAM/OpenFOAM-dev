@@ -56,8 +56,8 @@ vtkPVblockMeshReader::vtkPVblockMeshReader()
 
     SetNumberOfInputPorts(0);
 
-    FileName  = NULL;
-    foamData_ = NULL;
+    FileName  = nullptr;
+    foamData_ = nullptr;
 
     ShowPointNumbers = 1;
     UpdateGUI = 0;
@@ -165,7 +165,7 @@ int vtkPVblockMeshReader::RequestInformation
 //
 //        // delete foamData and flag it as fatal error
 //        delete foamData_;
-//        foamData_ = NULL;
+//        foamData_ = nullptr;
 //        return 0;
 //    }
 

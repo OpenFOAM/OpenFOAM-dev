@@ -157,7 +157,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New(Istream& is)
             << ", should be coeffs or defaultCoeffs"
             << abort(FatalError);
 
-        return autoPtr<liquidProperties>(NULL);
+        return autoPtr<liquidProperties>(nullptr);
     }
 }
 

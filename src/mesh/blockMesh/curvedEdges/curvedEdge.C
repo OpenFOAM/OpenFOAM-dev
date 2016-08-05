@@ -69,7 +69,7 @@ Foam::curvedEdge::curvedEdge(const curvedEdge& c)
 Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::clone() const
 {
     NotImplemented;
-    return autoPtr<curvedEdge>(NULL);
+    return autoPtr<curvedEdge>(nullptr);
 }
 
 

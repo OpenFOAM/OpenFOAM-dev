@@ -276,7 +276,7 @@ Foam::fvMatrix<Type>::fvMatrix
     source_(psi.size(), Zero),
     internalCoeffs_(psi.mesh().boundary().size()),
     boundaryCoeffs_(psi.mesh().boundary().size()),
-    faceFluxCorrectionPtr_(NULL)
+    faceFluxCorrectionPtr_(nullptr)
 {
     if (debug)
     {
@@ -328,7 +328,7 @@ Foam::fvMatrix<Type>::fvMatrix(const fvMatrix<Type>& fvm)
     source_(fvm.source_),
     internalCoeffs_(fvm.internalCoeffs_),
     boundaryCoeffs_(fvm.boundaryCoeffs_),
-    faceFluxCorrectionPtr_(NULL)
+    faceFluxCorrectionPtr_(nullptr)
 {
     if (debug)
     {
@@ -373,7 +373,7 @@ Foam::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
         const_cast<fvMatrix<Type>&>(tfvm()).boundaryCoeffs_,
         tfvm.isTmp()
     ),
-    faceFluxCorrectionPtr_(NULL)
+    faceFluxCorrectionPtr_(nullptr)
 {
     if (debug)
     {
@@ -386,7 +386,7 @@ Foam::fvMatrix<Type>::fvMatrix(const tmp<fvMatrix<Type>>& tfvm)
         if (tfvm.isTmp())
         {
             faceFluxCorrectionPtr_ = tfvm().faceFluxCorrectionPtr_;
-            tfvm().faceFluxCorrectionPtr_ = NULL;
+            tfvm().faceFluxCorrectionPtr_ = nullptr;
         }
         else
         {
@@ -416,7 +416,7 @@ Foam::fvMatrix<Type>::fvMatrix
     source_(is),
     internalCoeffs_(psi.mesh().boundary().size()),
     boundaryCoeffs_(psi.mesh().boundary().size()),
-    faceFluxCorrectionPtr_(NULL)
+    faceFluxCorrectionPtr_(nullptr)
 {
     if (debug)
     {

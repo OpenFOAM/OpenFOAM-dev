@@ -292,10 +292,10 @@ Foam::cellMapper::cellMapper(const mapPolyMesh& mpm)
     mpm_(mpm),
     insertedCells_(true),
     direct_(false),
-    directAddrPtr_(NULL),
-    interpolationAddrPtr_(NULL),
-    weightsPtr_(NULL),
-    insertedCellLabelsPtr_(NULL)
+    directAddrPtr_(nullptr),
+    interpolationAddrPtr_(nullptr),
+    weightsPtr_(nullptr),
+    insertedCellLabelsPtr_(nullptr)
 {
     // Check for possibility of direct mapping
     if

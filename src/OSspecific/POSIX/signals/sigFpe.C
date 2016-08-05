@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ void* Foam::sigFpe::mallocNan(size_t size)
 void Foam::sigFpe::sigHandler(int)
 {
     // Reset old handling
-    if (sigaction(SIGFPE, &oldAction_, NULL) < 0)
+    if (sigaction(SIGFPE, &oldAction_, nullptr) < 0)
     {
         FatalErrorInFunction
             << "Cannot reset SIGFPE trapping"
@@ -112,7 +112,7 @@ void Foam::sigFpe::sigHandler(int)
 
 Foam::sigFpe::sigFpe()
 {
-    oldAction_.sa_handler = NULL;
+    oldAction_.sa_handler = nullptr;
 }
 
 
@@ -124,7 +124,11 @@ Foam::sigFpe::~sigFpe()
     {
         #ifdef LINUX_GNUC
         // Reset signal
-        if (oldAction_.sa_handler && sigaction(SIGFPE, &oldAction_, NULL) < 0)
+        if
+        (
+            oldAction_.sa_handler
+         && sigaction(SIGFPE, &oldAction_, nullptr) < 0
+        )
         {
             FatalErrorInFunction
                 << "Cannot reset SIGFPE trapping"
@@ -199,7 +203,7 @@ void Foam::sigFpe::set(const bool verbose)
           | _EN_OVERFL,
             0,
             _ABORT_ON_ERROR,
-            NULL
+            nullptr
         );
         #endif
 

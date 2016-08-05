@@ -152,8 +152,8 @@ template<class Patch>
 PrimitivePatchInterpolation<Patch>::PrimitivePatchInterpolation(const Patch& p)
 :
     patch_(p),
-    faceToPointWeightsPtr_(NULL),
-    faceToEdgeWeightsPtr_(NULL)
+    faceToPointWeightsPtr_(nullptr),
+    faceToEdgeWeightsPtr_(nullptr)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,10 +77,11 @@ public:
 
     // Member functions
 
-        //- Look up a model by name and return a pointer to the model or NULL
+        //- Look up a model by name and return a pointer to the model or nullptr
         static const cellModel* lookup(const word&);
 
-        //- Look up a model by index and return a pointer to the model or NULL
+        //- Look up a model by index and return a pointer to the model or
+        //  nullptr
         static const cellModel* lookup(const label i)
         {
             return modelPtrs_[i];

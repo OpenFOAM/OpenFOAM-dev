@@ -37,7 +37,7 @@ Foam::HashTable<T, Key, Hash>::HashTable(const label size)
     HashTableCore(),
     nElmts_(0),
     tableSize_(HashTableCore::canonicalSize(size)),
-    table_(NULL)
+    table_(nullptr)
 {
     if (tableSize_)
     {
@@ -57,7 +57,7 @@ Foam::HashTable<T, Key, Hash>::HashTable(const HashTable<T, Key, Hash>& ht)
     HashTableCore(),
     nElmts_(0),
     tableSize_(ht.tableSize_),
-    table_(NULL)
+    table_(nullptr)
 {
     if (tableSize_)
     {
@@ -84,7 +84,7 @@ Foam::HashTable<T, Key, Hash>::HashTable
     HashTableCore(),
     nElmts_(0),
     tableSize_(0),
-    table_(NULL)
+    table_(nullptr)
 {
     transfer(ht());
 }
@@ -304,7 +304,7 @@ bool Foam::HashTable<T, Key, Hash>::set
 template<class T, class Key, class Hash>
 bool Foam::HashTable<T, Key, Hash>::iteratorBase::erase()
 {
-    // Note: entryPtr_ is NULL for end(), so this catches that too
+    // Note: entryPtr_ is nullptr for end(), so this catches that too
     if (entryPtr_)
     {
         // Search element before entryPtr_
@@ -337,7 +337,7 @@ bool Foam::HashTable<T, Key, Hash>::iteratorBase::erase()
             hashTable_->table_[hashIndex_] = entryPtr_->next_;
             delete entryPtr_;
 
-            // Assign any non-NULL pointer value so it doesn't look
+            // Assign any non-nullptr pointer value so it doesn't look
             // like end()/cend()
             entryPtr_ = reinterpret_cast<hashedEntry*>(this);
 
@@ -519,7 +519,7 @@ void Foam::HashTable<T, Key, Hash>::transfer(HashTable<T, Key, Hash>& ht)
     ht.tableSize_ = 0;
 
     table_ = ht.table_;
-    ht.table_ = NULL;
+    ht.table_ = nullptr;
 
     nElmts_ = ht.nElmts_;
     ht.nElmts_ = 0;

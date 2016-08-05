@@ -35,11 +35,11 @@ void Foam::processorMeshes::read()
     // and fields
     forAll(databases_, proci)
     {
-        meshes_.set(proci, NULL);
-        pointProcAddressing_.set(proci, NULL);
-        faceProcAddressing_.set(proci, NULL);
-        cellProcAddressing_.set(proci, NULL);
-        boundaryProcAddressing_.set(proci, NULL);
+        meshes_.set(proci, nullptr);
+        pointProcAddressing_.set(proci, nullptr);
+        faceProcAddressing_.set(proci, nullptr);
+        cellProcAddressing_.set(proci, nullptr);
+        boundaryProcAddressing_.set(proci, nullptr);
     }
 
     forAll(databases_, proci)

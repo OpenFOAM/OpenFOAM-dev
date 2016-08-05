@@ -39,8 +39,8 @@ Foam::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 :
     coupledPointPatchField<Type>(p, iF),
     cyclicAMIPatch_(refCast<const cyclicAMIPointPatch>(p)),
-    ppiPtr_(NULL),
-    nbrPpiPtr_(NULL)
+    ppiPtr_(nullptr),
+    nbrPpiPtr_(nullptr)
 {}
 
 
@@ -54,8 +54,8 @@ Foam::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 :
     coupledPointPatchField<Type>(p, iF, dict),
     cyclicAMIPatch_(refCast<const cyclicAMIPointPatch>(p)),
-    ppiPtr_(NULL),
-    nbrPpiPtr_(NULL)
+    ppiPtr_(nullptr),
+    nbrPpiPtr_(nullptr)
 {
     if (!isType<cyclicAMIPointPatch>(p))
     {
@@ -80,8 +80,8 @@ Foam::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 :
     coupledPointPatchField<Type>(ptf, p, iF, mapper),
     cyclicAMIPatch_(refCast<const cyclicAMIPointPatch>(p)),
-    ppiPtr_(NULL),
-    nbrPpiPtr_(NULL)
+    ppiPtr_(nullptr),
+    nbrPpiPtr_(nullptr)
 {
     if (!isType<cyclicAMIPointPatch>(this->patch()))
     {
@@ -104,8 +104,8 @@ Foam::cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField
 :
     coupledPointPatchField<Type>(ptf, iF),
     cyclicAMIPatch_(ptf.cyclicAMIPatch_),
-    ppiPtr_(NULL),
-    nbrPpiPtr_(NULL)
+    ppiPtr_(nullptr),
+    nbrPpiPtr_(nullptr)
 {}
 
 

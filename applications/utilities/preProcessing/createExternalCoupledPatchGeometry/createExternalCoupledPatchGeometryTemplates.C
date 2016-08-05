@@ -49,7 +49,7 @@ void processField
 
     IOobjectList fieldObjbjects(objects.lookupClass(fieldType::typeName));
 
-    if (fieldObjbjects.lookup(fieldName) != NULL)
+    if (fieldObjbjects.lookup(fieldName) != nullptr)
     {
         fieldType vtf(*fieldObjbjects.lookup(fieldName), mesh);
         const typename fieldType::Boundary& bf =

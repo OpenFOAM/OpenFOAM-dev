@@ -34,7 +34,7 @@
     const scalar xMin = p->minValue();
     const scalar xMax = p->maxValue();
 
-    autoPtr<OFstream> filePtr(NULL);
+    autoPtr<OFstream> filePtr(nullptr);
     if (writeData)
     {
         fileName fName = pdfPath/(p->type() + ".data");

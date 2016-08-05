@@ -138,7 +138,7 @@ public:
         virtual autoPtr<searchableSurface> clone() const
         {
             NotImplemented;
-            return autoPtr<searchableSurface>(NULL);
+            return autoPtr<searchableSurface>(nullptr);
         }
 
 

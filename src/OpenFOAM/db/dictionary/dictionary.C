@@ -372,7 +372,7 @@ const Foam::entry* Foam::dictionary::lookupEntryPtr
         }
         else
         {
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -416,7 +416,7 @@ Foam::entry* Foam::dictionary::lookupEntryPtr
         }
         else
         {
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -433,7 +433,7 @@ const Foam::entry& Foam::dictionary::lookupEntry
 {
     const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
 
-    if (entryPtr == NULL)
+    if (entryPtr == nullptr)
     {
         FatalIOErrorInFunction
         (
@@ -567,7 +567,7 @@ const Foam::entry* Foam::dictionary::lookupScopedEntryPtr
                 }
                 else
                 {
-                    return NULL;
+                    return nullptr;
                 }
             }
         }
@@ -583,7 +583,7 @@ bool Foam::dictionary::substituteScopedKeyword(const word& keyword)
     const entry* ePtr = lookupScopedEntryPtr(varName, true, true);
 
     // If defined insert its entries into this dictionary
-    if (ePtr != NULL)
+    if (ePtr != nullptr)
     {
         const dictionary& addDict = ePtr->dict();
 
@@ -625,7 +625,7 @@ const Foam::dictionary* Foam::dictionary::subDictPtr(const word& keyword) const
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -634,7 +634,7 @@ const Foam::dictionary& Foam::dictionary::subDict(const word& keyword) const
 {
     const entry* entryPtr = lookupEntryPtr(keyword, false, true);
 
-    if (entryPtr == NULL)
+    if (entryPtr == nullptr)
     {
         FatalIOErrorInFunction
         (
@@ -651,7 +651,7 @@ Foam::dictionary& Foam::dictionary::subDict(const word& keyword)
 {
     entry* entryPtr = lookupEntryPtr(keyword, false, true);
 
-    if (entryPtr == NULL)
+    if (entryPtr == nullptr)
     {
         FatalIOErrorInFunction
         (
@@ -672,7 +672,7 @@ Foam::dictionary Foam::dictionary::subOrEmptyDict
 {
     const entry* entryPtr = lookupEntryPtr(keyword, false, true);
 
-    if (entryPtr == NULL)
+    if (entryPtr == nullptr)
     {
         if (mustRead)
         {

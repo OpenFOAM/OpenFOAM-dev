@@ -133,7 +133,7 @@ void rewriteBoundary
 
             if (patchDict.found("neighbourPatch"))
             {
-                patches.set(patchi, oldPatches.set(patchi, NULL));
+                patches.set(patchi, oldPatches.set(patchi, nullptr));
                 oldToNew[patchi] = newPatchi++;
 
                 // Check if patches come from automatic conversion
@@ -181,7 +181,7 @@ void rewriteBoundary
                 const dictionary patchDict(patches[patchi].dict());
 
                 // Change entry on this side
-                patches.set(patchi, oldPatches.set(patchi, NULL));
+                patches.set(patchi, oldPatches.set(patchi, nullptr));
                 oldToNew[patchi] = newPatchi++;
                 dictionary& thisPatchDict = patches[patchi].dict();
                 thisPatchDict.add("neighbourPatch", nbrName);
@@ -226,7 +226,7 @@ void rewriteBoundary
         }
         else
         {
-            patches.set(patchi, oldPatches.set(patchi, NULL));
+            patches.set(patchi, oldPatches.set(patchi, nullptr));
             oldToNew[patchi] = newPatchi++;
         }
     }

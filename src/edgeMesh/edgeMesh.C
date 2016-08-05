@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ Foam::edgeMesh::edgeMesh()
     fileFormats::edgeMeshFormatsCore(),
     points_(0),
     edges_(0),
-    pointEdgesPtr_(NULL)
+    pointEdgesPtr_(nullptr)
 {}
 
 
@@ -138,7 +138,7 @@ Foam::edgeMesh::edgeMesh
     fileFormats::edgeMeshFormatsCore(),
     points_(points),
     edges_(edges),
-    pointEdgesPtr_(NULL)
+    pointEdgesPtr_(nullptr)
 {}
 
 
@@ -151,7 +151,7 @@ Foam::edgeMesh::edgeMesh
     fileFormats::edgeMeshFormatsCore(),
     points_(0),
     edges_(0),
-    pointEdgesPtr_(NULL)
+    pointEdgesPtr_(nullptr)
 {
     points_.transfer(pointLst());
     edges_.transfer(edgeLst());

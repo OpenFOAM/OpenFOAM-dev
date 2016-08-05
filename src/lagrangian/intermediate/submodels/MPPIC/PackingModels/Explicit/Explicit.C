@@ -35,7 +35,7 @@ Foam::PackingModels::Explicit<CloudType>::Explicit
 )
 :
     PackingModel<CloudType>(dict, owner, typeName),
-    stressAverage_(NULL),
+    stressAverage_(nullptr),
     correctionLimiting_
     (
         CorrectionLimitingMethod::New
@@ -129,8 +129,8 @@ void Foam::PackingModels::Explicit<CloudType>::cacheFields(const bool store)
     }
     else
     {
-        volumeAverage_ = NULL;
-        uAverage_ = NULL;
+        volumeAverage_ = nullptr;
+        uAverage_ = nullptr;
         stressAverage_.clear();
     }
 }

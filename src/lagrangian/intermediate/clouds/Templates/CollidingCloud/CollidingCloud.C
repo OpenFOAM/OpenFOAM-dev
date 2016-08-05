@@ -93,7 +93,7 @@ Foam::CollidingCloud<CloudType>::CollidingCloud
 :
     CloudType(cloudName, rho, U, mu, g, false),
     constProps_(this->particleProperties()),
-    collisionModel_(NULL)
+    collisionModel_(nullptr)
 {
     if (this->solution().steadyState())
     {
@@ -135,7 +135,7 @@ Foam::CollidingCloud<CloudType>::CollidingCloud
 )
 :
     CloudType(mesh, name, c),
-    collisionModel_(NULL)
+    collisionModel_(nullptr)
 {}
 
 

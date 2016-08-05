@@ -429,7 +429,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     }
 
 
-    polyMesh* blockMeshPtr = NULL;
+    polyMesh* blockMeshPtr = nullptr;
 
     //
     // Create the patches

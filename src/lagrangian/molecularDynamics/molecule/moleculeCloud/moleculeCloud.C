@@ -133,8 +133,8 @@ void Foam::moleculeCloud::calculatePairForce()
     label startOfRequests = Pstream::nRequests();
     il_.sendReferredData(cellOccupancy(), pBufs);
 
-    molecule* molI = NULL;
-    molecule* molJ = NULL;
+    molecule* molI = nullptr;
+    molecule* molJ = nullptr;
 
     {
         // Real-Real interactions
@@ -268,8 +268,8 @@ void Foam::moleculeCloud::removeHighEnergyOverlaps()
 
     // Real-Real interaction
 
-    molecule* molI = NULL;
-    molecule* molJ = NULL;
+    molecule* molI = nullptr;
+    molecule* molJ = nullptr;
 
     {
         DynamicList<molecule*> molsToDelete;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,9 +132,9 @@ Foam::regionCoupledBase::regionCoupledBase
     nbrPatchID_(-1),
     nbrRegionName_(word::null),
     sameRegion_(false),
-    AMIPtr_(NULL),
+    AMIPtr_(nullptr),
     AMIReverse_(false),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {}
 
@@ -150,9 +150,9 @@ Foam::regionCoupledBase::regionCoupledBase
     nbrPatchID_(-1),
     nbrRegionName_(dict.lookup("neighbourRegion")),
     sameRegion_(nbrRegionName_ == patch_.boundaryMesh().mesh().name()),
-    AMIPtr_(NULL),
+    AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(dict.subOrEmptyDict("surface"))
 {}
 
@@ -168,7 +168,7 @@ Foam::regionCoupledBase::regionCoupledBase
     nbrPatchID_(mpb.nbrPatchID_),
     nbrRegionName_(mpb.nbrRegionName_),
     sameRegion_(mpb.sameRegion_),
-    AMIPtr_(NULL),
+    AMIPtr_(nullptr),
     AMIReverse_(mpb.AMIReverse_),
     surfPtr_(mpb.surfPtr_),
     surfDict_(mpb.surfDict_)

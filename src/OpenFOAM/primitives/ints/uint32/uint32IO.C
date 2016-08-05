@@ -82,7 +82,7 @@ uint32_t Foam::readUint32(Istream& is)
 
 bool Foam::read(const char* buf, uint32_t& s)
 {
-    char *endptr = NULL;
+    char *endptr = nullptr;
     long l = strtol(buf, &endptr, 10);
     s = uint32_t(l);
     return (*endptr == 0);

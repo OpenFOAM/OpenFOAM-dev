@@ -350,9 +350,9 @@ template
 Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 ~SlicedGeometricField()
 {
-    // Set the internalField storage pointer to NULL before its destruction
+    // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::shallowCopy(UList<Type>(NULL, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 
@@ -366,9 +366,9 @@ template
 Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
 Internal::~Internal()
 {
-    // Set the internalField storage pointer to NULL before its destruction
+    // Set the internalField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::shallowCopy(UList<Type>(NULL, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 

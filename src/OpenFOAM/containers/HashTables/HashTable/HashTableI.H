@@ -181,7 +181,7 @@ inline Foam::HashTable<T, Key, Hash>::iteratorBase::iteratorBase
 {
     if (hashTable_->nElmts_)
     {
-        // find first non-NULL table entry
+        // find first non-nullptr table entry
         while
         (
             !(entryPtr_ = hashTable_->table_[hashIndex_])
@@ -235,7 +235,7 @@ Foam::HashTable<T, Key, Hash>::iteratorBase::increment()
     }
     // else
     // {
-    //     // if we reach here (entryPtr_ is NULL) it is already at the end()
+    //     // if we reach here (entryPtr_ is nullptr) it is already at the end()
     //     // we should probably stop
     // }
 

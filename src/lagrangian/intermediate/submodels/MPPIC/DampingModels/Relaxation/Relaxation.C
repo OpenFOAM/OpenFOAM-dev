@@ -35,8 +35,8 @@ Foam::DampingModels::Relaxation<CloudType>::Relaxation
 )
 :
     DampingModel<CloudType>(dict, owner, typeName),
-    uAverage_(NULL),
-    oneByTimeScaleAverage_(NULL)
+    uAverage_(nullptr),
+    oneByTimeScaleAverage_(nullptr)
 {}
 
 
@@ -47,7 +47,7 @@ Foam::DampingModels::Relaxation<CloudType>::Relaxation
 )
 :
     DampingModel<CloudType>(cm),
-    uAverage_(NULL),
+    uAverage_(nullptr),
     oneByTimeScaleAverage_(cm.oneByTimeScaleAverage_->clone())
 {}
 
@@ -126,7 +126,7 @@ void Foam::DampingModels::Relaxation<CloudType>::cacheFields(const bool store)
     }
     else
     {
-        uAverage_ = NULL;
+        uAverage_ = nullptr;
         oneByTimeScaleAverage_.clear();
     }
 }

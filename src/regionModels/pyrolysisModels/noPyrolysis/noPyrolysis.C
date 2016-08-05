@@ -95,9 +95,9 @@ noPyrolysis::noPyrolysis
 )
 :
     pyrolysisModel(mesh, regionType),
-    solidChemistry_(NULL),
-    solidThermo_(NULL),
-    radiation_(NULL)
+    solidChemistry_(nullptr),
+    solidThermo_(nullptr),
+    radiation_(nullptr)
 {
     if (active())
     {
@@ -115,9 +115,9 @@ noPyrolysis::noPyrolysis
 )
 :
     pyrolysisModel(mesh, regionType),
-    solidChemistry_(NULL),
-    solidThermo_(NULL),
-    radiation_(NULL)
+    solidChemistry_(nullptr),
+    solidThermo_(nullptr),
+    radiation_(nullptr)
 {
     if (active())
     {

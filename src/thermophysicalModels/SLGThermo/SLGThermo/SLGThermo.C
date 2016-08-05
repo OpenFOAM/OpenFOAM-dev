@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,9 +47,9 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, fluidThermo& thermo)
         )
     ),
     thermo_(thermo),
-    carrier_(NULL),
-    liquids_(NULL),
-    solids_(NULL)
+    carrier_(nullptr),
+    liquids_(nullptr),
+    solids_(nullptr)
 {
     Info<< "Creating component thermo properties:" << endl;
 
@@ -107,7 +107,7 @@ const Foam::fluidThermo& Foam::SLGThermo::thermo() const
 
 const Foam::basicSpecieMixture& Foam::SLGThermo::carrier() const
 {
-    if (carrier_ == NULL)
+    if (carrier_ == nullptr)
     {
         FatalErrorInFunction
             << "carrier requested, but object is not allocated"
@@ -222,7 +222,7 @@ Foam::label Foam::SLGThermo::solidId
 
 bool Foam::SLGThermo::hasMultiComponentCarrier() const
 {
-    return (carrier_ != NULL);
+    return (carrier_ != nullptr);
 }
 
 

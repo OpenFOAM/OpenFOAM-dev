@@ -335,9 +335,9 @@ Foam::distanceSurface::distanceSurface
     average_(dict.lookupOrDefault("average", false)),
     zoneKey_(keyType::null),
     needsUpdate_(true),
-    isoSurfCellPtr_(NULL),
-    isoSurfPtr_(NULL),
-    facesPtr_(NULL)
+    isoSurfCellPtr_(nullptr),
+    isoSurfPtr_(nullptr),
+    facesPtr_(nullptr)
 {
 //    dict.readIfPresent("zone", zoneKey_);
 //
@@ -389,9 +389,9 @@ Foam::distanceSurface::distanceSurface
     average_(average),
     zoneKey_(keyType::null),
     needsUpdate_(true),
-    isoSurfCellPtr_(NULL),
-    isoSurfPtr_(NULL),
-    facesPtr_(NULL)
+    isoSurfCellPtr_(nullptr),
+    isoSurfPtr_(nullptr),
+    facesPtr_(nullptr)
 {}
 
 

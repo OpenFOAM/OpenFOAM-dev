@@ -42,7 +42,7 @@ Foam::ParamagneticForce<CloudType>::ParamagneticForce
     (
         this->coeffs().template lookupOrDefault<word>("HdotGradH", "HdotGradH")
     ),
-    HdotGradHInterpPtr_(NULL),
+    HdotGradHInterpPtr_(nullptr),
     magneticSusceptibility_
     (
         readScalar(this->coeffs().lookup("magneticSusceptibility"))

@@ -32,7 +32,7 @@ template<class CloudType>
 Foam::DampingModel<CloudType>::DampingModel(CloudType& owner)
 :
     CloudSubModelBase<CloudType>(owner),
-    timeScaleModel_(NULL)
+    timeScaleModel_(nullptr)
 {}
 
 

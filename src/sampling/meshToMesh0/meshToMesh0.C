@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,9 @@ Foam::meshToMesh0::meshToMesh0
     patchMap_(patchMap),
     cellAddressing_(toMesh_.nCells()),
     boundaryAddressing_(toMesh_.boundaryMesh().size()),
-    inverseDistanceWeightsPtr_(NULL),
-    inverseVolumeWeightsPtr_(NULL),
-    cellToCellAddressingPtr_(NULL),
+    inverseDistanceWeightsPtr_(nullptr),
+    inverseVolumeWeightsPtr_(nullptr),
+    cellToCellAddressingPtr_(nullptr),
     V_(0.0)
 {
     forAll(fromMesh_.boundaryMesh(), patchi)
@@ -120,9 +120,9 @@ Foam::meshToMesh0::meshToMesh0
     toMesh_(meshTo),
     cellAddressing_(toMesh_.nCells()),
     boundaryAddressing_(toMesh_.boundaryMesh().size()),
-    inverseDistanceWeightsPtr_(NULL),
-    inverseVolumeWeightsPtr_(NULL),
-    cellToCellAddressingPtr_(NULL),
+    inverseDistanceWeightsPtr_(nullptr),
+    inverseVolumeWeightsPtr_(nullptr),
+    cellToCellAddressingPtr_(nullptr),
     V_(0.0)
 {
     // check whether both meshes have got the same number

@@ -48,28 +48,28 @@ Foam::primitiveMesh::primitiveMesh()
     nFaces_(0),
     nCells_(0),
 
-    cellShapesPtr_(NULL),
-    edgesPtr_(NULL),
-    ccPtr_(NULL),
-    ecPtr_(NULL),
-    pcPtr_(NULL),
+    cellShapesPtr_(nullptr),
+    edgesPtr_(nullptr),
+    ccPtr_(nullptr),
+    ecPtr_(nullptr),
+    pcPtr_(nullptr),
 
-    cfPtr_(NULL),
-    efPtr_(NULL),
-    pfPtr_(NULL),
+    cfPtr_(nullptr),
+    efPtr_(nullptr),
+    pfPtr_(nullptr),
 
-    cePtr_(NULL),
-    fePtr_(NULL),
-    pePtr_(NULL),
-    ppPtr_(NULL),
-    cpPtr_(NULL),
+    cePtr_(nullptr),
+    fePtr_(nullptr),
+    pePtr_(nullptr),
+    ppPtr_(nullptr),
+    cpPtr_(nullptr),
 
     labels_(0),
 
-    cellCentresPtr_(NULL),
-    faceCentresPtr_(NULL),
-    cellVolumesPtr_(NULL),
-    faceAreasPtr_(NULL)
+    cellCentresPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    cellVolumesPtr_(nullptr),
+    faceAreasPtr_(nullptr)
 {}
 
 
@@ -88,28 +88,28 @@ Foam::primitiveMesh::primitiveMesh
     nFaces_(nFaces),
     nCells_(nCells),
 
-    cellShapesPtr_(NULL),
-    edgesPtr_(NULL),
-    ccPtr_(NULL),
-    ecPtr_(NULL),
-    pcPtr_(NULL),
+    cellShapesPtr_(nullptr),
+    edgesPtr_(nullptr),
+    ccPtr_(nullptr),
+    ecPtr_(nullptr),
+    pcPtr_(nullptr),
 
-    cfPtr_(NULL),
-    efPtr_(NULL),
-    pfPtr_(NULL),
+    cfPtr_(nullptr),
+    efPtr_(nullptr),
+    pfPtr_(nullptr),
 
-    cePtr_(NULL),
-    fePtr_(NULL),
-    pePtr_(NULL),
-    ppPtr_(NULL),
-    cpPtr_(NULL),
+    cePtr_(nullptr),
+    fePtr_(nullptr),
+    pePtr_(nullptr),
+    ppPtr_(nullptr),
+    cpPtr_(nullptr),
 
     labels_(0),
 
-    cellCentresPtr_(NULL),
-    faceCentresPtr_(NULL),
-    cellVolumesPtr_(NULL),
-    faceAreasPtr_(NULL)
+    cellCentresPtr_(nullptr),
+    faceCentresPtr_(nullptr),
+    cellVolumesPtr_(nullptr),
+    faceAreasPtr_(nullptr)
 {}
 
 

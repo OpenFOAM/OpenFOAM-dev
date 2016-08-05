@@ -225,7 +225,7 @@ public:
         autoPtr<sampledSurface> clone() const
         {
             NotImplemented;
-            return autoPtr<sampledSurface>(NULL);
+            return autoPtr<sampledSurface>(nullptr);
         }
 
 

@@ -253,7 +253,7 @@ Description
         if (baseType::argNames##ConstructorTablePtr_)                          \
         {                                                                      \
             delete baseType::argNames##ConstructorTablePtr_;                   \
-            baseType::argNames##ConstructorTablePtr_ = NULL;                   \
+            baseType::argNames##ConstructorTablePtr_ = nullptr;                \
         }                                                                      \
     }
 
@@ -263,7 +263,7 @@ Description
                                                                                \
     /* Define the constructor function table */                                \
     baseType::argNames##ConstructorTable*                                      \
-        baseType::argNames##ConstructorTablePtr_ = NULL
+        baseType::argNames##ConstructorTablePtr_ = nullptr
 
 
 
@@ -316,7 +316,7 @@ Description
         if (baseType<Targ>::argNames##ConstructorTablePtr_)                    \
         {                                                                      \
             delete baseType<Targ>::argNames##ConstructorTablePtr_;             \
-            baseType<Targ>::argNames##ConstructorTablePtr_ = NULL;             \
+            baseType<Targ>::argNames##ConstructorTablePtr_ = nullptr;          \
         }                                                                      \
     }
 
@@ -327,7 +327,7 @@ Description
                                                                                \
     /* Define the constructor function table */                                \
     baseType<Targ>::argNames##ConstructorTable*                                \
-        baseType<Targ>::argNames##ConstructorTablePtr_ = NULL
+        baseType<Targ>::argNames##ConstructorTablePtr_ = nullptr
 
 
 //- Define run-time selection table for template classes

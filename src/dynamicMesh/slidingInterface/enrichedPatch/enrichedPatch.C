@@ -153,15 +153,15 @@ Foam::enrichedPatch::enrichedPatch
     slavePointPointHits_(slavePointPointHits),
     slavePointEdgeHits_(slavePointEdgeHits),
     slavePointFaceHits_(slavePointFaceHits),
-    enrichedFacesPtr_(NULL),
-    meshPointsPtr_(NULL),
-    localFacesPtr_(NULL),
-    localPointsPtr_(NULL),
-    pointPointsPtr_(NULL),
-    masterPointFacesPtr_(NULL),
-    cutFacesPtr_(NULL),
-    cutFaceMasterPtr_(NULL),
-    cutFaceSlavePtr_(NULL)
+    enrichedFacesPtr_(nullptr),
+    meshPointsPtr_(nullptr),
+    localFacesPtr_(nullptr),
+    localPointsPtr_(nullptr),
+    pointPointsPtr_(nullptr),
+    masterPointFacesPtr_(nullptr),
+    cutFacesPtr_(nullptr),
+    cutFaceMasterPtr_(nullptr),
+    cutFaceSlavePtr_(nullptr)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,10 +58,10 @@ vtkPV3FoamReader::vtkPV3FoamReader()
 
     SetNumberOfInputPorts(0);
 
-    FileName  = NULL;
-    foamData_ = NULL;
+    FileName  = nullptr;
+    foamData_ = nullptr;
 
-    output0_  = NULL;
+    output0_  = nullptr;
 
 #ifdef VTKPV3FOAM_DUALPORT
     // Add second output for the Lagrangian
@@ -217,7 +217,7 @@ int vtkPV3FoamReader::RequestInformation
 
         // delete foamData and flag it as fatal error
         delete foamData_;
-        foamData_ = NULL;
+        foamData_ = nullptr;
         return 0;
     }
 

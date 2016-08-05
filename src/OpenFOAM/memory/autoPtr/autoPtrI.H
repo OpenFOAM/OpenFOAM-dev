@@ -58,7 +58,7 @@ inline Foam::autoPtr<T>::autoPtr(const autoPtr<T>& ap, const bool reuse)
     }
     else
     {
-        ptr_ = NULL;
+        ptr_ = nullptr;
     }
 }
 

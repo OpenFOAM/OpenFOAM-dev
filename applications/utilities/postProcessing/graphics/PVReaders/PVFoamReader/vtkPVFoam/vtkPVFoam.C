@@ -86,7 +86,7 @@ void Foam::vtkPVFoam::reduceMemory()
     if (!reader_->GetCacheMesh())
     {
         delete meshPtr_;
-        meshPtr_ = NULL;
+        meshPtr_ = nullptr;
     }
 }
 
@@ -226,8 +226,8 @@ Foam::vtkPVFoam::vtkPVFoam
 )
 :
     reader_(reader),
-    dbPtr_(NULL),
-    meshPtr_(NULL),
+    dbPtr_(nullptr),
+    meshPtr_(nullptr),
     meshRegion_(polyMesh::defaultRegion),
     meshDir_(polyMesh::meshSubDir),
     timeIndex_(-1),
@@ -347,7 +347,7 @@ void Foam::vtkPVFoam::updateInfo()
     if (debug)
     {
         Info<< "<beg> Foam::vtkPVFoam::updateInfo"
-            << " [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "] timeIndex="
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "] timeIndex="
             << timeIndex_ << endl;
     }
 
@@ -426,7 +426,7 @@ void Foam::vtkPVFoam::updateFoamMesh()
     if (!reader_->GetCacheMesh())
     {
         delete meshPtr_;
-        meshPtr_ = NULL;
+        meshPtr_ = nullptr;
     }
 
     // Check to see if the OpenFOAM mesh has been created
@@ -551,7 +551,7 @@ void Foam::vtkPVFoam::CleanUp()
 double* Foam::vtkPVFoam::findTimes(int& nTimeSteps)
 {
     int nTimes = 0;
-    double* tsteps = NULL;
+    double* tsteps = nullptr;
 
     if (dbPtr_.valid())
     {

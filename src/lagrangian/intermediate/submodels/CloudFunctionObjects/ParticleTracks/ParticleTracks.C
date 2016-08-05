@@ -67,7 +67,7 @@ Foam::ParticleTracks<CloudType>::ParticleTracks
     maxSamples_(readLabel(this->coeffDict().lookup("maxSamples"))),
     resetOnWrite_(this->coeffDict().lookup("resetOnWrite")),
     faceHitCounter_(),
-    cloudPtr_(NULL)
+    cloudPtr_(nullptr)
 {}
 
 

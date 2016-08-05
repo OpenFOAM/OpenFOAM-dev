@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -255,7 +255,7 @@ Foam::starMesh::starMesh
     cellPolys_(0),
     nInternalFaces_(0),
     polyBoundaryPatchStartIndices_(0),
-    pointCellsPtr_(NULL),
+    pointCellsPtr_(nullptr),
     couples_(0),
     isShapeMesh_(true)
 {

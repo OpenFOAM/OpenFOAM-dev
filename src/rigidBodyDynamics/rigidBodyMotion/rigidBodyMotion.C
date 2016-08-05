@@ -50,7 +50,7 @@ Foam::RBD::rigidBodyMotion::rigidBodyMotion()
     aRelax_(1.0),
     aDamp_(1.0),
     report_(false),
-    solver_(NULL)
+    solver_(nullptr)
 {}
 
 Foam::RBD::rigidBodyMotion::rigidBodyMotion

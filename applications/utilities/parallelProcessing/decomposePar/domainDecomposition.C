@@ -88,7 +88,7 @@ Foam::domainDecomposition::domainDecomposition(const IOobject& io)
                 false
             )
         )
-      : NULL
+      : nullptr
     ),
     nProcs_
     (

@@ -57,7 +57,7 @@ Foam::interpolation2DTable<Type>::interpolation2DTable()
     List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(),
     boundsHandling_(interpolation2DTable::WARN),
     fileName_("fileNameIsUndefined"),
-    reader_(NULL)
+    reader_(nullptr)
 {}
 
 
@@ -72,7 +72,7 @@ Foam::interpolation2DTable<Type>::interpolation2DTable
     List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>(values),
     boundsHandling_(bounds),
     fileName_(fName),
-    reader_(NULL)
+    reader_(nullptr)
 {}
 
 

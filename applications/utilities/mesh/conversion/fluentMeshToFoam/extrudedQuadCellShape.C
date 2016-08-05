@@ -47,7 +47,7 @@ cellShape extrudedQuadCellShape
     faceList& frontAndBackFaces
 )
 {
-    static const cellModel* hexModelPtr_ = NULL;
+    static const cellModel* hexModelPtr_ = nullptr;
 
     if (!hexModelPtr_)
     {

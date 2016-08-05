@@ -206,7 +206,7 @@ inline Foam::token::punctuationToken  Foam::token::pToken() const
     else
     {
         parseError("punctuation character");
-        return NULL_TOKEN;
+        return nullptr_TOKEN;
     }
 }
 

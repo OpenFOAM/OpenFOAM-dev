@@ -189,7 +189,7 @@ Foam::label Foam::InflationInjection<CloudType>::parcelsToInject
     {
         label cI = inflationCells_[iCI];
 
-        typename CloudType::parcelType* pPtr = NULL;
+        typename CloudType::parcelType* pPtr = nullptr;
 
         forAll(cellOccupancy[cI], cPI)
         {
@@ -281,10 +281,10 @@ Foam::label Foam::InflationInjection<CloudType>::parcelsToInject
             label cPI = rnd.position(label(0), cellOccupancy[cI].size() - 1);
 
             // This has to be a reference to the pointer so that it
-            // can be set to NULL when the particle is deleted.
+            // can be set to nullptr when the particle is deleted.
             typename CloudType::parcelType*& pPtr = cellOccupancy[cI][cPI];
 
-            if (pPtr != NULL)
+            if (pPtr != nullptr)
             {
                 scalar pD = pPtr->d();
 
@@ -378,7 +378,7 @@ Foam::label Foam::InflationInjection<CloudType>::parcelsToInject
 
                 this->owner().deleteParticle(*pPtr);
 
-                pPtr = NULL;
+                pPtr = nullptr;
             }
         }
 

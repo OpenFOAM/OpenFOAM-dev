@@ -55,7 +55,7 @@ Foam::LiftForce<CloudType>::LiftForce
 :
     ParticleForce<CloudType>(owner, mesh, dict, forceType, true),
     UName_(this->coeffs().template lookupOrDefault<word>("U", "U")),
-    curlUcInterpPtr_(NULL)
+    curlUcInterpPtr_(nullptr)
 {}
 
 
@@ -64,7 +64,7 @@ Foam::LiftForce<CloudType>::LiftForce(const LiftForce& lf)
 :
     ParticleForce<CloudType>(lf),
     UName_(lf.UName_),
-    curlUcInterpPtr_(NULL)
+    curlUcInterpPtr_(nullptr)
 {}
 
 

@@ -108,14 +108,14 @@ void Foam::refinementHistory::writeDebug
 Foam::refinementHistory::splitCell8::splitCell8()
 :
     parent_(-1),
-    addedCellsPtr_(NULL)
+    addedCellsPtr_(nullptr)
 {}
 
 
 Foam::refinementHistory::splitCell8::splitCell8(const label parent)
 :
     parent_(parent),
-    addedCellsPtr_(NULL)
+    addedCellsPtr_(nullptr)
 {}
 
 
@@ -132,7 +132,7 @@ Foam::refinementHistory::splitCell8::splitCell8(const splitCell8& sc)
     (
         sc.addedCellsPtr_.valid()
       ? new FixedList<label, 8>(sc.addedCellsPtr_())
-      : NULL
+      : nullptr
     )
 {}
 
@@ -157,7 +157,7 @@ void Foam::refinementHistory::splitCell8::operator=(const splitCell8& s)
     (
         s.addedCellsPtr_.valid()
       ? new FixedList<label, 8>(s.addedCellsPtr_())
-      : NULL
+      : nullptr
     );
 }
 
@@ -203,7 +203,7 @@ Foam::Istream& Foam::operator>>(Istream& is, refinementHistory::splitCell8& sc)
     }
     else
     {
-        sc.addedCellsPtr_.reset(NULL);
+        sc.addedCellsPtr_.reset(nullptr);
     }
 
     return is;
@@ -1732,7 +1732,7 @@ void Foam::refinementHistory::combineCells
     }
 
     splitCell8& parentSplit = splitCells_[parentIndex];
-    parentSplit.addedCellsPtr_.reset(NULL);
+    parentSplit.addedCellsPtr_.reset(nullptr);
     visibleCells_[masterCelli] = parentIndex;
 }
 

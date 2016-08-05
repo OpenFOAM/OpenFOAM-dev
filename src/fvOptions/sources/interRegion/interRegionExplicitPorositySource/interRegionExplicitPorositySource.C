@@ -116,7 +116,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 )
 :
     interRegionOption(name, modelType, dict, mesh),
-    porosityPtr_(NULL),
+    porosityPtr_(nullptr),
     firstIter_(true),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu"))

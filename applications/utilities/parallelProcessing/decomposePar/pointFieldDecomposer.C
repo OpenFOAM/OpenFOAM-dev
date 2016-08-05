@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ Foam::pointFieldDecomposer::pointFieldDecomposer
     patchFieldDecomposerPtrs_
     (
         procMesh_.boundary().size(),
-        static_cast<patchFieldDecomposer*>(NULL)
+        static_cast<patchFieldDecomposer*>(nullptr)
     )
 {
     forAll(boundaryAddressing_, patchi)

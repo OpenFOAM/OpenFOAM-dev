@@ -34,7 +34,7 @@ License
 template<class T>
 Foam::List<T>::List(Istream& is)
 :
-    UList<T>(NULL, 0)
+    UList<T>(nullptr, 0)
 {
     operator>>(is, *this);
 }

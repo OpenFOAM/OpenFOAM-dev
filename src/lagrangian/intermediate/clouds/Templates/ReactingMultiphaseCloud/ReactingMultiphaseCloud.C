@@ -84,10 +84,10 @@ Foam::ReactingMultiphaseCloud<CloudType>::ReactingMultiphaseCloud
 :
     CloudType(cloudName, rho, U, g, thermo, false),
     reactingMultiphaseCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     constProps_(this->particleProperties()),
-    devolatilisationModel_(NULL),
-    surfaceReactionModel_(NULL),
+    devolatilisationModel_(nullptr),
+    surfaceReactionModel_(nullptr),
     dMassDevolatilisation_(0.0),
     dMassSurfaceReaction_(0.0)
 {
@@ -117,7 +117,7 @@ Foam::ReactingMultiphaseCloud<CloudType>::ReactingMultiphaseCloud
 :
     CloudType(c, name),
     reactingMultiphaseCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     constProps_(c.constProps_),
     devolatilisationModel_(c.devolatilisationModel_->clone()),
     surfaceReactionModel_(c.surfaceReactionModel_->clone()),
@@ -136,10 +136,10 @@ Foam::ReactingMultiphaseCloud<CloudType>::ReactingMultiphaseCloud
 :
     CloudType(mesh, name, c),
     reactingMultiphaseCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     constProps_(),
-    devolatilisationModel_(NULL),
-    surfaceReactionModel_(NULL),
+    devolatilisationModel_(nullptr),
+    surfaceReactionModel_(nullptr),
     dMassDevolatilisation_(0.0),
     dMassSurfaceReaction_(0.0)
 {}

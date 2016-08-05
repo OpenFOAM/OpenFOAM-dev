@@ -152,10 +152,10 @@ Foam::fvSurfaceMapper::fvSurfaceMapper
 :
     mesh_(mesh),
     faceMap_(fMapper),
-    directAddrPtr_(NULL),
-    interpolationAddrPtr_(NULL),
-    weightsPtr_(NULL),
-    insertedObjectLabelsPtr_(NULL)
+    directAddrPtr_(nullptr),
+    interpolationAddrPtr_(nullptr),
+    weightsPtr_(nullptr),
+    insertedObjectLabelsPtr_(nullptr)
 {}
 
 

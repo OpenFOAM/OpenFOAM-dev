@@ -80,10 +80,10 @@ Foam::SprayCloud<CloudType>::SprayCloud
 :
     CloudType(cloudName, rho, U, g, thermo, false),
     sprayCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     averageParcelMass_(0.0),
-    atomizationModel_(NULL),
-    breakupModel_(NULL)
+    atomizationModel_(nullptr),
+    breakupModel_(nullptr)
 {
     if (this->solution().active())
     {
@@ -115,7 +115,7 @@ Foam::SprayCloud<CloudType>::SprayCloud
 :
     CloudType(c, name),
     sprayCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     averageParcelMass_(c.averageParcelMass_),
     atomizationModel_(c.atomizationModel_->clone()),
     breakupModel_(c.breakupModel_->clone())
@@ -132,10 +132,10 @@ Foam::SprayCloud<CloudType>::SprayCloud
 :
     CloudType(mesh, name, c),
     sprayCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     averageParcelMass_(0.0),
-    atomizationModel_(NULL),
-    breakupModel_(NULL)
+    atomizationModel_(nullptr),
+    breakupModel_(nullptr)
 {}
 
 

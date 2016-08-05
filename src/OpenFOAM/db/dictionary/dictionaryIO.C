@@ -137,7 +137,7 @@ bool Foam::dictionary::substituteKeyword(const word& keyword)
     const entry* ePtr = lookupEntryPtr(varName, true, true);
 
     // if defined insert its entries into this dictionary
-    if (ePtr != NULL)
+    if (ePtr != nullptr)
     {
         const dictionary& addDict = ePtr->dict();
 

@@ -866,7 +866,7 @@ Foam::conformalVoronoiMesh::conformalVoronoiMesh
                 "backgroundMeshDecomposition"
             )
         )
-      : NULL
+      : nullptr
     ),
     cellShapeControl_
     (

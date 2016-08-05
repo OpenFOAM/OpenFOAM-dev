@@ -164,10 +164,10 @@ Foam::pointMapper::pointMapper(const pointMesh& pMesh, const mapPolyMesh& mpm)
     mpm_(mpm),
     insertedPoints_(true),
     direct_(false),
-    directAddrPtr_(NULL),
-    interpolationAddrPtr_(NULL),
-    weightsPtr_(NULL),
-    insertedPointLabelsPtr_(NULL)
+    directAddrPtr_(nullptr),
+    interpolationAddrPtr_(nullptr),
+    weightsPtr_(nullptr),
+    insertedPointLabelsPtr_(nullptr)
 {
     // Check for possibility of direct mapping
     if (mpm_.pointsFromPointsMap().empty())

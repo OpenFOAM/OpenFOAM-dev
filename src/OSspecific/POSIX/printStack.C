@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ string pOpen(const string &cmd, label line=0)
 
     if (cmdPipe)
     {
-        char *buf = NULL;
+        char *buf = nullptr;
 
         // Read line number of lines
         for (label cnt = 0; cnt <= line; cnt++)
@@ -69,7 +69,7 @@ string pOpen(const string &cmd, label line=0)
             }
         }
 
-        if (buf != NULL)
+        if (buf != nullptr)
         {
             free(buf);
         }
@@ -163,7 +163,7 @@ word demangleSymbol(const char* sn)
     char* cxx_sname = abi::__cxa_demangle
     (
         sn,
-        NULL,
+        nullptr,
         0,
         &st
     );
@@ -227,13 +227,13 @@ void Foam::error::printStack(Ostream& os)
         int st = dladdr(callstack[i], info);
 
         os << '#' << label(i) << "  ";
-        if (st != 0 && info->dli_fname != NULL && info->dli_fname[0] != '\0')
+        if (st != 0 && info->dli_fname != nullptr && info->dli_fname[0] != '\0')
         {
             fname = absolutePath(info->dli_fname);
 
             os <<
             (
-                (info->dli_sname != NULL)
+                (info->dli_sname != nullptr)
               ? demangleSymbol(info->dli_sname)
               : "?"
             );

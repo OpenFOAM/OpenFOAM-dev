@@ -228,7 +228,7 @@ void Foam::vtkPV3Foam::updateInfoPatches
     if (debug)
     {
         Info<< "<beg> Foam::vtkPV3Foam::updateInfoPatches"
-            << " [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "]" << endl;
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
 
@@ -476,7 +476,7 @@ void Foam::vtkPV3Foam::updateInfoZones
     if (debug)
     {
         Info<< "<beg> Foam::vtkPV3Foam::updateInfoZones"
-            << " [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "]" << endl;
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
     wordList namesLst;

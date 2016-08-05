@@ -30,7 +30,7 @@ License
 
 inline Foam::cellShape::cellShape()
 :
-    m(NULL)
+    m(nullptr)
 {}
 
 

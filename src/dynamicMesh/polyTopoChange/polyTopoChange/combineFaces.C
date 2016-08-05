@@ -112,7 +112,7 @@ bool Foam::combineFaces::validFace
         return false;
     }
 
-    bool isNonManifold = bigFace.checkPointManifold(false, NULL);
+    bool isNonManifold = bigFace.checkPointManifold(false, nullptr);
     if (isNonManifold)
     {
         return false;

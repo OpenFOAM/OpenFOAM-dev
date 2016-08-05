@@ -48,7 +48,7 @@ Foam::TimeFunction1<Type>::TimeFunction1(const Time& t, const word& name)
 :
     time_(t),
     name_(name),
-    entry_(NULL)
+    entry_(nullptr)
 {}
 
 

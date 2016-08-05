@@ -37,7 +37,7 @@ Foam::edgeMesh::edgeMesh
 :
     points_(0),
     edges_(0),
-    pointEdgesPtr_(NULL)
+    pointEdgesPtr_(nullptr)
 {
     read(name, ext);
 }
@@ -47,7 +47,7 @@ Foam::edgeMesh::edgeMesh(const fileName& name)
 :
     points_(0),
     edges_(0),
-    pointEdgesPtr_(NULL)
+    pointEdgesPtr_(nullptr)
 {
     read(name);
 }

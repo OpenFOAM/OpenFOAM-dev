@@ -77,7 +77,7 @@ void Foam::undoableMeshCutter::printRefTree(Ostream& os) const
         {
             if (!splitPtr->isMaster())
             {
-                splitPtr = NULL;
+                splitPtr = nullptr;
 
                 break;
             }
@@ -209,9 +209,9 @@ Foam::undoableMeshCutter::~undoableMeshCutter()
             {
                 splitCell* otherSidePtr = splitPtr->getOther();
 
-                otherSidePtr->parent() = NULL;
+                otherSidePtr->parent() = nullptr;
 
-                splitPtr->parent() = NULL;
+                splitPtr->parent() = nullptr;
             }
 
             // Delete splitCell (updates pointer on parent to itself)
@@ -257,7 +257,7 @@ void Foam::undoableMeshCutter::setRefinement
                 // place.
 
                 // Create 0th level. Null parent to denote this.
-                splitCell* parentPtr = new splitCell(celli, NULL);
+                splitCell* parentPtr = new splitCell(celli, nullptr);
 
                 splitCell* masterPtr = new splitCell(celli, parentPtr);
 

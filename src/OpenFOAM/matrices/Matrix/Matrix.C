@@ -44,7 +44,7 @@ Foam::Matrix<Form, Type>::Matrix(const label m, const label n)
 :
     mRows_(m),
     nCols_(n),
-    v_(NULL)
+    v_(nullptr)
 {
     if (mRows_ < 0 || nCols_ < 0)
     {
@@ -62,7 +62,7 @@ Foam::Matrix<Form, Type>::Matrix(const label m, const label n, const zero)
 :
     mRows_(m),
     nCols_(n),
-    v_(NULL)
+    v_(nullptr)
 {
     if (mRows_ < 0 || nCols_ < 0)
     {
@@ -89,7 +89,7 @@ Foam::Matrix<Form, Type>::Matrix(const label m, const label n, const Type& s)
 :
     mRows_(m),
     nCols_(n),
-    v_(NULL)
+    v_(nullptr)
 {
     if (mRows_ < 0 || nCols_ < 0)
     {
@@ -116,7 +116,7 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form, Type>& M)
 :
     mRows_(M.mRows_),
     nCols_(M.nCols_),
-    v_(NULL)
+    v_(nullptr)
 {
     if (M.v_)
     {
@@ -137,7 +137,7 @@ Foam::Matrix<Form, Type>::Matrix(const Matrix<Form2, Type>& M)
 :
     mRows_(M.m()),
     nCols_(M.n()),
-    v_(NULL)
+    v_(nullptr)
 {
     if (M.v())
     {
@@ -216,7 +216,7 @@ void Foam::Matrix<Form, Type>::clear()
     if (v_)
     {
         delete[] v_;
-        v_ = NULL;
+        v_ = nullptr;
     }
 
     mRows_ = 0;
@@ -236,7 +236,7 @@ void Foam::Matrix<Form, Type>::transfer(Matrix<Form, Type>& M)
     M.nCols_ = 0;
 
     v_ = M.v_;
-    M.v_ = NULL;
+    M.v_ = nullptr;
 }
 
 

@@ -33,7 +33,7 @@ template<class CloudType>
 Foam::IsotropyModel<CloudType>::IsotropyModel(CloudType& owner)
 :
     CloudSubModelBase<CloudType>(owner),
-    timeScaleModel_(NULL)
+    timeScaleModel_(nullptr)
 {}
 
 

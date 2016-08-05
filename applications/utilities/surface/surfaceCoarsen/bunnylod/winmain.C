@@ -271,35 +271,35 @@ HWND CreateOpenGLWindow(char* title)
 
     /* only register the window class once - use hInstance as a flag. */
     if (!hInstance) {
-                hInstance = GetModuleHandle(NULL);
+                hInstance = GetModuleHandle(nullptr);
                 wc.style         = CS_OWNDC;
                 wc.lpfnWndProc   = (WNDPROC)WindowProc;
                 wc.cbClsExtra    = 0;
                 wc.cbWndExtra    = 0;
                 wc.hInstance     = hInstance;
-                wc.hIcon         = LoadIcon(NULL, IDI_WINLOGO);
-                wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-                wc.hbrBackground = NULL;
-                wc.lpszMenuName  = NULL;
+                wc.hIcon         = LoadIcon(nullptr, IDI_WINLOGO);
+                wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
+                wc.hbrBackground = nullptr;
+                wc.lpszMenuName  = nullptr;
                 wc.lpszClassName = "OpenGL";
 
                 if (!RegisterClass(&wc)) {
-                        MessageBox(NULL, "RegisterClass() failed:  "
+                        MessageBox(nullptr, "RegisterClass() failed:  "
                                    "Cannot register window class.",
                                    "Error", MB_OK);
-                        return NULL;
+                        return nullptr;
                 }
     }
 
     hWnd = CreateWindow("OpenGL", title, WS_OVERLAPPEDWINDOW |
                         WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-                        0,0,Width,Height, NULL, NULL, hInstance, NULL);
+                        0,0,Width,Height, nullptr, nullptr, hInstance, nullptr);
 
-    if (hWnd == NULL) {
-                MessageBox(NULL,
+    if (hWnd == nullptr) {
+                MessageBox(nullptr,
                            "CreateWindow() failed:  Cannot create a window.",
                            "Error", MB_OK);
-                return NULL;
+                return nullptr;
     }
 
     hDC = GetDC(hWnd);
@@ -318,14 +318,14 @@ HWND CreateOpenGLWindow(char* title)
 
     pf = ChoosePixelFormat(hDC, &pfd);
     if (pf == 0) {
-                MessageBox(NULL, "ChoosePixelFormat() failed:  "
+                MessageBox(nullptr, "ChoosePixelFormat() failed:  "
                            "Cannot find a suitable pixel format.",
                            "Error", MB_OK);
                 return 0;
     }
 
     if (SetPixelFormat(hDC, pf, &pfd) == FALSE) {
-                MessageBox(NULL, "SetPixelFormat() failed:  "
+                MessageBox(nullptr, "SetPixelFormat() failed:  "
                            "Cannot set format specified.", "Error", MB_OK);
                 return 0;
     }
@@ -414,7 +414,7 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst,
         CalcFPSDeltaT();
 
         hWnd = CreateOpenGLWindow("bunnylod by Stan Melax");
-    if (hWnd == NULL) exit(1);
+    if (hWnd == nullptr) exit(1);
 
     hDC = GetDC(hWnd);
     hRC = wglCreateContext(hDC);
@@ -444,7 +444,7 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst,
     }
 
   quit:
-    wglMakeCurrent(NULL, NULL);
+    wglMakeCurrent(nullptr, nullptr);
     ReleaseDC(hDC, hWnd);
     wglDeleteContext(hRC);
     DestroyWindow(hWnd);

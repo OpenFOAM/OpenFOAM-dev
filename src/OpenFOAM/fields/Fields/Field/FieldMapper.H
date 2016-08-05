@@ -76,7 +76,7 @@ public:
             FatalErrorInFunction
                 << "attempt to access null distributeMap"
                 << abort(FatalError);
-            return *reinterpret_cast<mapDistributeBase*>(NULL);
+            return *static_cast<mapDistributeBase*>(nullptr);
         }
 
         //- Are there unmapped values? I.e. do all size() elements get

@@ -1872,10 +1872,10 @@ Foam::faceCoupleInfo::faceCoupleInfo
     const bool perfectMatch
 )
 :
-    masterPatchPtr_(NULL),
-    slavePatchPtr_(NULL),
+    masterPatchPtr_(nullptr),
+    slavePatchPtr_(nullptr),
     cutPoints_(0),
-    cutFacesPtr_(NULL),
+    cutFacesPtr_(nullptr),
     cutToMasterFaces_(0),
     masterToCutPoints_(0),
     cutToSlaveFaces_(0),
@@ -1981,7 +1981,7 @@ Foam::faceCoupleInfo::faceCoupleInfo
         )
     ),
     cutPoints_(0),
-    cutFacesPtr_(NULL),
+    cutFacesPtr_(nullptr),
     cutToMasterFaces_(0),
     masterToCutPoints_(0),
     cutToSlaveFaces_(0),

@@ -102,7 +102,7 @@ void Foam::phaseSystem::generatePairsAndSubModels
       : blendingMethods_["default"]
     );
 
-    autoPtr<modelType> noModel(NULL);
+    autoPtr<modelType> noModel(nullptr);
 
     forAllConstIter(typename modelTypeTable, tempModels, iter)
     {

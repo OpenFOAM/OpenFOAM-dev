@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ vtkPV3blockMeshReader::vtkPV3blockMeshReader()
 
     SetNumberOfInputPorts(0);
 
-    FileName  = NULL;
-    foamData_ = NULL;
+    FileName  = nullptr;
+    foamData_ = nullptr;
 
     ShowPointNumbers = 1;
     UpdateGUI = 0;
@@ -165,7 +165,7 @@ int vtkPV3blockMeshReader::RequestInformation
 //
 //        // delete foamData and flag it as fatal error
 //        delete foamData_;
-//        foamData_ = NULL;
+//        foamData_ = nullptr;
 //        return 0;
 //    }
 

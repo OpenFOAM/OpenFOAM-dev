@@ -71,7 +71,7 @@ const thermoSingleLayer& liquidFilmThermo::thermoFilm() const
 
 void liquidFilmThermo::initLiquid(const dictionary& dict)
 {
-    if (liquidPtr_ != NULL)
+    if (liquidPtr_ != nullptr)
     {
         return;
     }
@@ -108,7 +108,7 @@ liquidFilmThermo::liquidFilmThermo
 :
     filmThermoModel(typeName, owner, dict),
     name_("unknown_liquid"),
-    liquidPtr_(NULL),
+    liquidPtr_(nullptr),
     ownLiquid_(false),
     useReferenceValues_(readBool(coeffDict_.lookup("useReferenceValues"))),
     pRef_(0.0),

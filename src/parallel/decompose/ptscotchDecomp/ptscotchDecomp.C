@@ -492,13 +492,13 @@ Foam::label Foam::ptscotchDecomp::decompose
             const_cast<SCOTCH_Num*>(xadj+1),// vendloctab, end index  ,,
 
             const_cast<SCOTCH_Num*>(velotab.begin()),// veloloctab, vtx weights
-            NULL,                   // vlblloctab
+            nullptr,                   // vlblloctab
 
             adjncySize,             // edgelocnbr, number of arcs
             adjncySize,             // edgelocsiz
             const_cast<SCOTCH_Num*>(adjncy),         // edgeloctab
-            NULL,                   // edgegsttab
-            NULL                    // edlotab, edge weights
+            nullptr,                   // edgegsttab
+            nullptr                    // edlotab, edge weights
         ),
         "SCOTCH_dgraphBuild"
     );

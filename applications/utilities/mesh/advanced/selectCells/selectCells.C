@@ -414,9 +414,9 @@ int main(int argc, char *argv[])
 
 
     // Surface
-    autoPtr<triSurface> surf(NULL);
+    autoPtr<triSurface> surf(nullptr);
     // Search engine on surface.
-    autoPtr<triSurfaceSearch> querySurf(NULL);
+    autoPtr<triSurfaceSearch> querySurf(nullptr);
 
     if (useSurface)
     {

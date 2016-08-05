@@ -75,7 +75,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
     ),
     MRURetrieve_(this->coeffsDict_.lookupOrDefault("MRURetrieve", false)),
     maxMRUSize_(this->coeffsDict_.lookupOrDefault("maxMRUSize", 0)),
-    lastSearch_(NULL),
+    lastSearch_(nullptr),
     growPoints_(this->coeffsDict_.lookupOrDefault("growPoints", true)),
     nRetrieved_(0),
     nGrowth_(0),
@@ -252,7 +252,7 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::grow
     const scalarField& Rphiq
 )
 {
-    // If the pointer to the chemPoint is NULL, the function stops
+    // If the pointer to the chemPoint is nullptr, the function stops
     if (!phi0)
     {
         return false;
@@ -290,7 +290,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::cleanAndBalance()
     // Check all chemPoints to see if we need to delete some of the chemPoints
     // according to the ellapsed time and number of growths
     chemPointISAT<CompType, ThermoType>* x = chemisTree_.treeMin();
-    while(x != NULL)
+    while(x != nullptr)
     {
         chemPointISAT<CompType, ThermoType>* xtmp =
             chemisTree_.treeSuccessor(x);
@@ -458,7 +458,7 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::retrieve
     else
     {
         // There is no chempoints that we can try to grow
-        lastSearch_ = NULL;
+        lastSearch_ = nullptr;
     }
 
     if (retrieved)
@@ -566,7 +566,7 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
 
         // The structure has been changed, it will force the binary tree to
         // perform a new search and find the most appropriate point still stored
-        lastSearch_ = NULL;
+        lastSearch_ = nullptr;
 
         // Either cleanAndBalance has changed the tree or it has been cleared
         // in any case treeCleanedOrCleared should be set to true
@@ -586,7 +586,7 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
         scaleFactor(),
         this->tolerance(),
         scaleFactor_.size(),
-        lastSearch_ // lastSearch_ may be NULL (handled by binaryTree)
+        lastSearch_ // lastSearch_ may be nullptr (handled by binaryTree)
     );
 
     nAdd_++;

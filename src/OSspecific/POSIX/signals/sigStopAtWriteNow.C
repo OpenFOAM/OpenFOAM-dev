@@ -67,7 +67,7 @@ addstopAtWriteNowSignalToOpt addstopAtWriteNowSignalToOpt_
 }
 
 
-static Foam::Time const* runTimePtr_ = NULL;
+static Foam::Time const* runTimePtr_ = nullptr;
 
 
 struct sigaction Foam::sigStopAtWriteNow::oldAction_;
@@ -78,7 +78,7 @@ struct sigaction Foam::sigStopAtWriteNow::oldAction_;
 void Foam::sigStopAtWriteNow::sigHandler(int)
 {
     // Reset old handling
-    if (sigaction(signal_, &oldAction_, NULL) < 0)
+    if (sigaction(signal_, &oldAction_, nullptr) < 0)
     {
         FatalErrorInFunction
             << "Cannot reset " << signal_ << " trapping"
@@ -123,7 +123,7 @@ Foam::sigStopAtWriteNow::~sigStopAtWriteNow()
     // Reset old handling
     if (signal_ > 0)
     {
-        if (sigaction(signal_, &oldAction_, NULL) < 0)
+        if (sigaction(signal_, &oldAction_, nullptr) < 0)
         {
             FatalErrorInFunction
                 << "Cannot reset " << signal_ << " trapping"

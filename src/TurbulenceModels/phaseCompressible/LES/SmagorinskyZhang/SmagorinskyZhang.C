@@ -60,7 +60,7 @@ SmagorinskyZhang<BasicTurbulenceModel>::SmagorinskyZhang
         type
     ),
 
-    gasTurbulencePtr_(NULL),
+    gasTurbulencePtr_(nullptr),
 
     Cmub_
     (

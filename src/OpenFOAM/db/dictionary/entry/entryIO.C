@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -262,7 +262,7 @@ Foam::autoPtr<Foam::entry> Foam::entry::New(Istream& is)
     // Get the next keyword and if invalid return false
     if (!getKeyword(keyword, is))
     {
-        return autoPtr<entry>(NULL);
+        return autoPtr<entry>(nullptr);
     }
     else // Keyword starts entry ...
     {

@@ -556,9 +556,9 @@ void Foam::pairPatchAgglomeration::combineLevels(const label curLevel)
     }
 
     // Delete the restrictAddressing for the coarser level
-    restrictAddressing_.set(curLevel, NULL);
+    restrictAddressing_.set(curLevel, nullptr);
 
-    patchLevels_.set(prevLevel, patchLevels_.set(curLevel, NULL));
+    patchLevels_.set(prevLevel, patchLevels_.set(curLevel, nullptr));
 }
 
 

@@ -216,7 +216,7 @@ void writePatchField
 
     word timeFile = prepend + itoa(timeIndex);
 
-    ensightStream* ensightFilePtr = NULL;
+    ensightStream* ensightFilePtr = nullptr;
     if (Pstream::master())
     {
         if (timeIndex == 0)
@@ -330,7 +330,7 @@ void ensightField
     const labelList& hexes = meshCellSets.hexes;
     const labelList& polys = meshCellSets.polys;
 
-    ensightStream* ensightFilePtr = NULL;
+    ensightStream* ensightFilePtr = nullptr;
     if (Pstream::master())
     {
         // set the filename of the ensight file
@@ -548,7 +548,7 @@ void ensightPointField
     const wordHashSet& faceZoneNames = eMesh.faceZoneNames();
 
 
-    ensightStream* ensightFilePtr = NULL;
+    ensightStream* ensightFilePtr = nullptr;
     if (Pstream::master())
     {
         // set the filename of the ensight file

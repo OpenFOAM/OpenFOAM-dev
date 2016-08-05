@@ -164,7 +164,7 @@ void Foam::PtrList<T>::setSize(const label newSize)
         label i;
         for (i=oldSize; i<newSize; i++)
         {
-            this->ptrs_[i] = NULL;
+            this->ptrs_[i] = nullptr;
         }
     }
 }

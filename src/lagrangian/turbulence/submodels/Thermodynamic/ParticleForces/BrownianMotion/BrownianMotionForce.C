@@ -77,7 +77,7 @@ Foam::BrownianMotionForce<CloudType>::kModel() const
             << "Database objects include: " << obr.sortedToc()
             << abort(FatalError);
 
-        return tmp<volScalarField>(NULL);
+        return tmp<volScalarField>(nullptr);
     }
 }
 
@@ -96,7 +96,7 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
     rndGen_(owner.rndGen()),
     lambda_(readScalar(this->coeffs().lookup("lambda"))),
     turbulence_(readBool(this->coeffs().lookup("turbulence"))),
-    kPtr_(NULL),
+    kPtr_(nullptr),
     ownK_(false)
 {}
 
@@ -111,7 +111,7 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
     rndGen_(bmf.rndGen_),
     lambda_(bmf.lambda_),
     turbulence_(bmf.turbulence_),
-    kPtr_(NULL),
+    kPtr_(nullptr),
     ownK_(false)
 {}
 

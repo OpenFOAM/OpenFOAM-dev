@@ -680,7 +680,7 @@ int main(int argc, char *argv[])
                         new List<SLList<indexedParticle*>*>
                         (
                             mesh.nCells(),
-                            static_cast<SLList<indexedParticle*>*>(NULL)
+                            static_cast<SLList<indexedParticle*>*>(nullptr)
                         )
                     );
 
@@ -947,7 +947,7 @@ int main(int argc, char *argv[])
                     if (times.size() == 1)
                     {
                         // Clear cached decomposer
-                        fieldDecomposerList.set(proci, NULL);
+                        fieldDecomposerList.set(proci, nullptr);
                     }
                 }
 
@@ -978,7 +978,7 @@ int main(int argc, char *argv[])
 
                     if (times.size() == 1)
                     {
-                        dimFieldDecomposerList.set(proci, NULL);
+                        dimFieldDecomposerList.set(proci, nullptr);
                     }
                 }
 
@@ -1029,8 +1029,8 @@ int main(int argc, char *argv[])
 
                     if (times.size() == 1)
                     {
-                        pointProcAddressingList.set(proci, NULL);
-                        pointFieldDecomposerList.set(proci, NULL);
+                        pointProcAddressingList.set(proci, nullptr);
+                        pointFieldDecomposerList.set(proci, nullptr);
                     }
                 }
 
@@ -1133,11 +1133,11 @@ int main(int argc, char *argv[])
                 // times, otherwise it is just extra storage.
                 if (times.size() == 1)
                 {
-                    boundaryProcAddressingList.set(proci, NULL);
-                    cellProcAddressingList.set(proci, NULL);
-                    faceProcAddressingList.set(proci, NULL);
-                    procMeshList.set(proci, NULL);
-                    processorDbList.set(proci, NULL);
+                    boundaryProcAddressingList.set(proci, nullptr);
+                    cellProcAddressingList.set(proci, nullptr);
+                    faceProcAddressingList.set(proci, nullptr);
+                    procMeshList.set(proci, nullptr);
+                    processorDbList.set(proci, nullptr);
                 }
             }
         }

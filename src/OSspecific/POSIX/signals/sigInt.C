@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ struct sigaction Foam::sigInt::oldAction_;
 void Foam::sigInt::sigHandler(int)
 {
     // Reset old handling
-    if (sigaction(SIGINT, &oldAction_, NULL) < 0)
+    if (sigaction(SIGINT, &oldAction_, nullptr) < 0)
     {
         FatalErrorInFunction
             << "Cannot reset SIGINT trapping"
@@ -57,7 +57,7 @@ void Foam::sigInt::sigHandler(int)
 
 Foam::sigInt::sigInt()
 {
-    oldAction_.sa_handler = NULL;
+    oldAction_.sa_handler = nullptr;
 }
 
 
@@ -66,7 +66,7 @@ Foam::sigInt::sigInt()
 Foam::sigInt::~sigInt()
 {
     // Reset old handling
-    if (sigaction(SIGINT, &oldAction_, NULL) < 0)
+    if (sigaction(SIGINT, &oldAction_, nullptr) < 0)
     {
         FatalErrorInFunction
             << "Cannot reset SIGINT trapping"

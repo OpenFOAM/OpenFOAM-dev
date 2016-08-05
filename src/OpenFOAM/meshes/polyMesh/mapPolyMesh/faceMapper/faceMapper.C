@@ -207,10 +207,10 @@ Foam::faceMapper::faceMapper(const mapPolyMesh& mpm)
     mpm_(mpm),
     insertedFaces_(true),
     direct_(false),
-    directAddrPtr_(NULL),
-    interpolationAddrPtr_(NULL),
-    weightsPtr_(NULL),
-    insertedFaceLabelsPtr_(NULL)
+    directAddrPtr_(nullptr),
+    interpolationAddrPtr_(nullptr),
+    weightsPtr_(nullptr),
+    insertedFaceLabelsPtr_(nullptr)
 {
     // Check for possibility of direct mapping
     if

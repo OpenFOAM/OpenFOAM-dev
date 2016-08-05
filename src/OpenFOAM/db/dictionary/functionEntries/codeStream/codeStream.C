@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ Foam::functionEntries::codeStream::getFunction
     const fileName libPath = dynCode.libPath();
 
     // see if library is loaded
-    void* lib = NULL;
+    void* lib = nullptr;
     if (isA<IOdictionary>(parentDict.topDict()))
     {
         lib = libs(parentDict).findLibrary(libPath);

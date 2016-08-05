@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ void Foam::vtkPV3Foam::convertMeshPatches
                 << patchName  << endl;
         }
 
-        vtkPolyData* vtkmesh = NULL;
+        vtkPolyData* vtkmesh = nullptr;
         if (patchIds.size() == 1)
         {
             vtkmesh = patchVTKMesh(patchName, patches[patchIds.begin().key()]);

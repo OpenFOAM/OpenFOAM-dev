@@ -123,7 +123,7 @@
             ++dmIter, ++dcIter
         )
         {
-            const phaseModel *phase2Ptr = NULL;
+            const phaseModel *phase2Ptr = nullptr;
 
             if (&phase == &dmIter()->phase1())
             {

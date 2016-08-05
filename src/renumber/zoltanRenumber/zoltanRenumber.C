@@ -96,7 +96,7 @@ static void get_vertex_list(void *data, int sizeGID, int sizeLID,
    */
 
     wgt_dim = 0;
-    obj_wgts = NULL;
+    obj_wgts = nullptr;
 
     for (Foam::label i=0; i<mesh.nCells(); i++)
     {

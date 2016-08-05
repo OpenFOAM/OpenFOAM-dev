@@ -198,8 +198,8 @@ Foam::twoDPointCorrector::twoDPointCorrector(const polyMesh& mesh)
 :
     MeshObject<polyMesh, Foam::UpdateableMeshObject, twoDPointCorrector>(mesh),
     required_(mesh_.nGeometricD() == 2),
-    planeNormalPtr_(NULL),
-    normalEdgeIndicesPtr_(NULL),
+    planeNormalPtr_(nullptr),
+    normalEdgeIndicesPtr_(nullptr),
     isWedge_(false),
     wedgeAxis_(Zero),
     wedgeAngle_(0.0)

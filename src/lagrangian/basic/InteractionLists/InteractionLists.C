@@ -1095,7 +1095,7 @@ template<class ParticleType>
 Foam::InteractionLists<ParticleType>::InteractionLists(const polyMesh& mesh)
 :
     mesh_(mesh),
-    cloud_(mesh_, "NULL_Cloud", IDLList<ParticleType>()),
+    cloud_(mesh_, "nullptr_Cloud", IDLList<ParticleType>()),
     writeCloud_(false),
     cellMapPtr_(),
     wallFaceMapPtr_(),

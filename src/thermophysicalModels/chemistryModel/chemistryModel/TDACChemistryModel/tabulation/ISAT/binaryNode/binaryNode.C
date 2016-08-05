@@ -32,11 +32,11 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
 (
 )
 :
-    leafLeft_(NULL),
-    leafRight_(NULL),
-    nodeLeft_(NULL),
-    nodeRight_(NULL),
-    parent_(NULL)
+    leafLeft_(nullptr),
+    leafRight_(nullptr),
+    nodeLeft_(nullptr),
+    nodeRight_(nullptr),
+    parent_(nullptr)
 {}
 
 
@@ -50,8 +50,8 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
 :
     leafLeft_(elementLeft),
     leafRight_(elementRight),
-    nodeLeft_(NULL),
-    nodeRight_(NULL),
+    nodeLeft_(nullptr),
+    nodeRight_(nullptr),
     parent_(parent),
     v_(elementLeft->completeSpaceSize(),0.0)
 {

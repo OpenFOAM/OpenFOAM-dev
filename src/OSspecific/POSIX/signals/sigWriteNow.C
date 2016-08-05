@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ addwriteNowSignalToOpt addwriteNowSignalToOpt_("writeNowSignal");
 }
 
 
-static Foam::Time* runTimePtr_ = NULL;
+static Foam::Time* runTimePtr_ = nullptr;
 
 
 struct sigaction Foam::sigWriteNow::oldAction_;
@@ -106,7 +106,7 @@ Foam::sigWriteNow::~sigWriteNow()
     // Reset old handling
     if (signal_ > 0)
     {
-        if (sigaction(signal_, &oldAction_, NULL) < 0)
+        if (sigaction(signal_, &oldAction_, nullptr) < 0)
         {
             FatalErrorInFunction
                 << "Cannot reset " << signal_ << " trapping"

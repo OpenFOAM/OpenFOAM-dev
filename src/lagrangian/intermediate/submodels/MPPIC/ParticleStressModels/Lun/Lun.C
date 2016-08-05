@@ -110,7 +110,7 @@ Foam::ParticleStressModels::Lun::dTaudTheta
 {
     NotImplemented;
 
-    return tmp<Field<scalar>>(NULL);
+    return tmp<Field<scalar>>(nullptr);
 }
 
 

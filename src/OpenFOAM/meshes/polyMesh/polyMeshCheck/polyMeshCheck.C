@@ -799,7 +799,7 @@ bool Foam::polyMesh::checkMeshMotion
         cellVols,       // vols
         report,         // report
         detailedReport, // detailedReport
-        NULL            // setPtr
+        nullptr            // setPtr
     );
 
 
@@ -809,7 +809,7 @@ bool Foam::polyMesh::checkMeshMotion
         fAreas,
         report,         // report
         detailedReport, // detailedReport,
-        NULL            // setPtr
+        nullptr            // setPtr
     );
     error = error || areaError;
 
@@ -822,7 +822,7 @@ bool Foam::polyMesh::checkMeshMotion
         report,         // report,
         detailedReport, // detailedReport,
         -SMALL,         // minPyrVol
-        NULL            // setPtr
+        nullptr            // setPtr
     );
     error = error || pyrVolError;
 
@@ -834,7 +834,7 @@ bool Foam::polyMesh::checkMeshMotion
         cellCtrs,
         report,         // report
         detailedReport, // detailedReport
-        NULL            // setPtr
+        nullptr            // setPtr
     );
     error = error || nonOrthoError;
 

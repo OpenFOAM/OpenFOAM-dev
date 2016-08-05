@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::HashTable<T, Key, Hash>::HashTable(Istream& is, const label size)
     HashTableCore(),
     nElmts_(0),
     tableSize_(HashTableCore::canonicalSize(size)),
-    table_(NULL)
+    table_(nullptr)
 {
     if (tableSize_)
     {

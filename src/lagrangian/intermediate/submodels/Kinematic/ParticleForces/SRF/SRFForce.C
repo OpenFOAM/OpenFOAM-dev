@@ -36,7 +36,7 @@ Foam::SRFForce<CloudType>::SRFForce
 )
 :
     ParticleForce<CloudType>(owner, mesh, dict, typeName, false),
-    srfPtr_(NULL)
+    srfPtr_(nullptr)
 {}
 
 
@@ -47,7 +47,7 @@ Foam::SRFForce<CloudType>::SRFForce
 )
 :
     ParticleForce<CloudType>(srff),
-    srfPtr_(NULL)
+    srfPtr_(nullptr)
 {}
 
 
@@ -71,7 +71,7 @@ void Foam::SRFForce<CloudType>::cacheFields(const bool store)
     }
     else
     {
-        srfPtr_ = NULL;
+        srfPtr_ = nullptr;
     }
 }
 

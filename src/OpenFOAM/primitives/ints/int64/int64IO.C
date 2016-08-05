@@ -84,7 +84,7 @@ int64_t Foam::readInt64(Istream& is)
 
 bool Foam::read(const char* buf, int64_t& s)
 {
-    char *endptr = NULL;
+    char *endptr = nullptr;
     errno = 0;
     intmax_t l = strtoimax(buf, &endptr, 10);
     s = int64_t(l);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ Description
     - liquids : liquid components - access  to elemental properties
     - solids  : solid components - access  to elemental properties
 
-    If thermo is not a multi-component thermo package, carrier is NULL.
+    If thermo is not a multi-component thermo package, carrier is nullptr.
     Similarly, if no liquids or solids are specified, their respective
-    pointers will also be NULL.
+    pointers will also be nullptr.
 
     Registered to the mesh so that it can be looked-up
 

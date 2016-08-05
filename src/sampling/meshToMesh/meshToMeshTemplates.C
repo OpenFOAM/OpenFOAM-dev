@@ -375,7 +375,7 @@ void Foam::meshToMesh::mapSrcToTgt
                     (
                         AMIList[i].singlePatchProc() == -1
                       ? &AMIList[i].srcMap()
-                      : NULL
+                      : nullptr
                     ),
                     AMIList[i].tgtAddress(),
                     AMIList[i].tgtWeights()
@@ -581,7 +581,7 @@ void Foam::meshToMesh::mapTgtToSrc
                     (
                         AMIList[i].singlePatchProc() == -1
                       ? &AMIList[i].tgtMap()
-                      : NULL
+                      : nullptr
                     ),
                     AMIList[i].srcAddress(),
                     AMIList[i].srcWeights()

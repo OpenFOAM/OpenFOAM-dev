@@ -41,8 +41,8 @@ Foam::LocalInteraction<CloudType>::LocalInteraction
     nStick_(patchData_.size(), 0),
     massStick_(patchData_.size(), 0.0),
     writeFields_(this->coeffDict().lookupOrDefault("writeFields", false)),
-    massEscapePtr_(NULL),
-    massStickPtr_(NULL)
+    massEscapePtr_(nullptr),
+    massStickPtr_(nullptr)
 {
     if (writeFields_)
     {
@@ -94,8 +94,8 @@ Foam::LocalInteraction<CloudType>::LocalInteraction
     nStick_(pim.nStick_),
     massStick_(pim.massStick_),
     writeFields_(pim.writeFields_),
-    massEscapePtr_(NULL),
-    massStickPtr_(NULL)
+    massEscapePtr_(nullptr),
+    massStickPtr_(nullptr)
 {}
 
 

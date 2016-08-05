@@ -70,7 +70,7 @@ bool Foam::sampledIsoSurfaceCell::updateGeometry() const
 
     // 1. see if field in database
     // 2. see if field can be read
-    const volScalarField* cellFldPtr = NULL;
+    const volScalarField* cellFldPtr = nullptr;
     if (fvm.foundObject<volScalarField>(isoField_))
     {
         if (debug)
@@ -209,7 +209,7 @@ Foam::sampledIsoSurfaceCell::sampledIsoSurfaceCell
     regularise_(dict.lookupOrDefault("regularise", true)),
     average_(dict.lookupOrDefault("average", true)),
     zoneKey_(keyType::null),
-    facesPtr_(NULL),
+    facesPtr_(nullptr),
     prevTimeIndex_(-1),
     meshCells_(0)
 {}

@@ -41,7 +41,7 @@ void Foam::vtkPVFoam::updateInfoFields
     {
         Info<< "<beg> Foam::vtkPVFoam::updateInfoFields <"
             << meshType::Mesh::typeName
-            << "> [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "]"
+            << "> [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]"
             << endl;
     }
 

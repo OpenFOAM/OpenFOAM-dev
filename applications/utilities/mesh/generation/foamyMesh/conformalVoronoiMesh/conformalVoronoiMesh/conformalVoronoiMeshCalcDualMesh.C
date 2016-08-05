@@ -1810,7 +1810,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
                 }
 
                 // Error if startCell is null
-                if (startCell == NULL)
+                if (startCell == nullptr)
                 {
                     Pout<< "Start cell is null!" << endl;
                 }

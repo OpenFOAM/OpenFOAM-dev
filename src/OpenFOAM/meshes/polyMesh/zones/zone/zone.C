@@ -92,7 +92,7 @@ Foam::zone::zone
     labelList(addr),
     name_(name),
     index_(index),
-    lookupMapPtr_(NULL)
+    lookupMapPtr_(nullptr)
 {}
 
 
@@ -106,7 +106,7 @@ Foam::zone::zone
     labelList(addr),
     name_(name),
     index_(index),
-    lookupMapPtr_(NULL)
+    lookupMapPtr_(nullptr)
 {}
 
 
@@ -121,7 +121,7 @@ Foam::zone::zone
     labelList(dict.lookup(labelsName)),
     name_(name),
     index_(index),
-    lookupMapPtr_(NULL)
+    lookupMapPtr_(nullptr)
 {}
 
 
@@ -135,7 +135,7 @@ Foam::zone::zone
     labelList(addr),
     name_(z.name()),
     index_(index),
-    lookupMapPtr_(NULL)
+    lookupMapPtr_(nullptr)
 {}
 
 
@@ -149,7 +149,7 @@ Foam::zone::zone
     labelList(addr),
     name_(z.name()),
     index_(index),
-    lookupMapPtr_(NULL)
+    lookupMapPtr_(nullptr)
 {}
 
 

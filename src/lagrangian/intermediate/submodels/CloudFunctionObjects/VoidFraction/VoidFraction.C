@@ -53,7 +53,7 @@ Foam::VoidFraction<CloudType>::VoidFraction
 )
 :
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
-    thetaPtr_(NULL)
+    thetaPtr_(nullptr)
 {}
 
 
@@ -64,7 +64,7 @@ Foam::VoidFraction<CloudType>::VoidFraction
 )
 :
     CloudFunctionObject<CloudType>(vf),
-    thetaPtr_(NULL)
+    thetaPtr_(nullptr)
 {}
 
 

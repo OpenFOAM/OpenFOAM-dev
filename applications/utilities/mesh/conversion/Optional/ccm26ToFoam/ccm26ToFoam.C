@@ -186,7 +186,7 @@ void ReadVertices
     // any chunk.  Normally this would be in a for loop.
 
     CCMIOSize nVertices;
-    CCMIOEntitySize(&err, vertices, &nVertices, NULL);
+    CCMIOEntitySize(&err, vertices, &nVertices, nullptr);
 
     List<int> mapData(nVertices, 0);
     List<float> verts(3*nVertices, 0);
@@ -205,9 +205,9 @@ void ReadVertices
     CCMIOReadMap(&err, mapID, mapData.begin(), offset, offsetPlusSize);
 
     //CCMIOSize size;
-    //CCMIOEntityDescription(&err, vertices, &size, NULL);
+    //CCMIOEntityDescription(&err, vertices, &size, nullptr);
     //char *desc = new char[size + 1];
-    //CCMIOEntityDescription(&err, vertices, NULL, desc);
+    //CCMIOEntityDescription(&err, vertices, nullptr, desc);
     //Pout<< "label: '" << desc << "'" << endl;
     //delete [] desc;
 
@@ -243,7 +243,7 @@ void ReadProblem
     int i = 0;
     while
     (
-        CCMIONextEntity(NULL, problem, kCCMIOCellType, &i, &next)
+        CCMIONextEntity(nullptr, problem, kCCMIOCellType, &i, &next)
      == kCCMIONoErr
     )
     {
@@ -255,10 +255,10 @@ void ReadProblem
         // an array to get the name because we do not know how long the
         // string is yet.  Many parameters to CCMIO functions that
         // return
-        // data can be NULL if that data is not needed.)
+        // data can be nullptr if that data is not needed.)
         if
         (
-            CCMIOReadOptstr(NULL, next, "MaterialType", &size, NULL)
+            CCMIOReadOptstr(nullptr, next, "MaterialType", &size, nullptr)
          == kCCMIONoErr
         )
         {
@@ -280,7 +280,7 @@ void ReadProblem
     int k = 0;
     while
     (
-        CCMIONextEntity(NULL, problem, kCCMIOBoundaryRegion, &k, &boundary)
+        CCMIONextEntity(nullptr, problem, kCCMIOBoundaryRegion, &k, &boundary)
      == kCCMIONoErr
     )
     {
@@ -292,7 +292,7 @@ void ReadProblem
         int prostarI = -1;
         if
         (
-            CCMIOReadOpti(NULL, boundary, "ProstarRegionNumber", &prostarI)
+            CCMIOReadOpti(nullptr, boundary, "ProstarRegionNumber", &prostarI)
          == kCCMIONoErr
         )
         {
@@ -318,12 +318,18 @@ void ReadProblem
             int size;
             if
             (
-                CCMIOReadOptstr(NULL, boundary, "BoundaryType", &size, NULL)
-             == kCCMIONoErr
+                CCMIOReadOptstr
+                (
+                    nullptr,
+                    boundary,
+                    "BoundaryType",
+                    &size,
+                    nullptr
+                ) == kCCMIONoErr
             )
             {
                 char* s = new char[size + 1];
-                CCMIOReadOptstr(NULL, boundary, "BoundaryType", &size, s);
+                CCMIOReadOptstr(nullptr, boundary, "BoundaryType", &size, s);
                 s[size] = '\0';
                 foamPatchTypes[foamPatchi] = string::validate<word>(string(s));
                 delete [] s;
@@ -340,12 +346,18 @@ void ReadProblem
 
             if
             (
-                CCMIOReadOptstr(NULL, boundary, "BoundaryName", &size, NULL)
-             == kCCMIONoErr
+                CCMIOReadOptstr
+                (
+                    nullptr,
+                    boundary,
+                    "BoundaryName",
+                    &size,
+                    nullptr
+                ) == kCCMIONoErr
             )
             {
                 char* name = new char[size + 1];
-                CCMIOReadOptstr(NULL, boundary, "BoundaryName", &size, name);
+                CCMIOReadOptstr(nullptr, boundary, "BoundaryName", &size, name);
                 name[size] = '\0';
                 foamPatchNames[foamPatchi] =
                     string::validate<word>(string(name));
@@ -353,12 +365,12 @@ void ReadProblem
             }
             else if
             (
-                CCMIOReadOptstr(NULL, boundary, "Label", &size, NULL)
+                CCMIOReadOptstr(nullptr, boundary, "Label", &size, nullptr)
              == kCCMIONoErr
             )
             {
                 char* name = new char[size + 1];
-                CCMIOReadOptstr(NULL, boundary, "Label", &size, name);
+                CCMIOReadOptstr(nullptr, boundary, "Label", &size, name);
                 name[size] = '\0';
                 foamPatchNames[foamPatchi] =
                     string::validate<word>(string(name));
@@ -407,7 +419,7 @@ void ReadCells
     CCMIOID id;
     CCMIOGetEntity(&err, topology, kCCMIOCells, 0, &id);
     CCMIOSize nCells;
-    CCMIOEntitySize(&err, id, &nCells, NULL);
+    CCMIOEntitySize(&err, id, &nCells, nullptr);
 
     std::vector<int> mapData(nCells);
     std::vector<int> cellType(nCells);
@@ -431,7 +443,7 @@ void ReadCells
 
     CCMIOGetEntity(&err, topology, kCCMIOInternalFaces, 0, &id);
     CCMIOSize nInternalFaces;
-    CCMIOEntitySize(&err, id, &nInternalFaces, NULL);
+    CCMIOEntitySize(&err, id, &nInternalFaces, nullptr);
     Pout<< "nInternalFaces:" << nInternalFaces << endl;
 
     // Determine patch sizes before reading internal faces
@@ -439,12 +451,12 @@ void ReadCells
     int index = 0;
     while
     (
-        CCMIONextEntity(NULL, topology, kCCMIOBoundaryFaces, &index, &id)
+        CCMIONextEntity(nullptr, topology, kCCMIOBoundaryFaces, &index, &id)
      == kCCMIONoErr
     )
     {
         CCMIOSize size;
-        CCMIOEntitySize(&err, id, &size, NULL);
+        CCMIOEntitySize(&err, id, &size, nullptr);
 
         Pout<< "Read kCCMIOBoundaryFaces entry with " << size
             << " faces." << endl;
@@ -463,10 +475,10 @@ void ReadCells
     mapData.resize(nInternalFaces);
     CCMIOGetEntity(&err, topology, kCCMIOInternalFaces, 0, &id);
     CCMIOSize size;
-    CCMIOReadFaces(&err, id, kCCMIOInternalFaces, NULL, &size, NULL,
+    CCMIOReadFaces(&err, id, kCCMIOInternalFaces, nullptr, &size, nullptr,
                    kCCMIOStart, kCCMIOEnd);
     std::vector<int> faces(size);
-    CCMIOReadFaces(&err, id, kCCMIOInternalFaces, &mapID, NULL, &faces[0],
+    CCMIOReadFaces(&err, id, kCCMIOInternalFaces, &mapID, nullptr, &faces[0],
                    kCCMIOStart, kCCMIOEnd);
     std::vector<int> faceCells(2*nInternalFaces);
     CCMIOReadFaceCells(&err, id, kCCMIOInternalFaces, &faceCells[0],
@@ -503,22 +515,38 @@ void ReadCells
     label regionI = 0;
     while
     (
-        CCMIONextEntity(NULL, topology, kCCMIOBoundaryFaces, &index, &id)
+        CCMIONextEntity(nullptr, topology, kCCMIOBoundaryFaces, &index, &id)
      == kCCMIONoErr
     )
     {
         CCMIOSize nFaces;
-        CCMIOEntitySize(&err, id, &nFaces, NULL);
+        CCMIOEntitySize(&err, id, &nFaces, nullptr);
 
         mapData.resize(nFaces);
         faceCells.resize(nFaces);
-        CCMIOReadFaces(&err, id, kCCMIOBoundaryFaces, NULL, &size, NULL,
+        CCMIOReadFaces(&err, id, kCCMIOBoundaryFaces, nullptr, &size, nullptr,
                        kCCMIOStart, kCCMIOEnd);
         faces.resize(size);
-        CCMIOReadFaces(&err, id, kCCMIOBoundaryFaces, &mapID, NULL, &faces[0],
-                       kCCMIOStart, kCCMIOEnd);
-        CCMIOReadFaceCells(&err, id, kCCMIOBoundaryFaces, &faceCells[0],
-                           kCCMIOStart, kCCMIOEnd);
+        CCMIOReadFaces
+        (
+            &err,
+            id,
+            kCCMIOBoundaryFaces,
+            &mapID,
+            nullptr,
+            &faces[0],
+            kCCMIOStart,
+            kCCMIOEnd
+        );
+        CCMIOReadFaceCells
+        (
+            &err,
+            id,
+            kCCMIOBoundaryFaces,
+            &faceCells[0],
+            kCCMIOStart,
+            kCCMIOEnd
+        );
         CCMIOReadMap(&err, mapID, &mapData[0], kCCMIOStart, kCCMIOEnd);
         CheckError(err, "Error reading boundary faces");
 
@@ -526,7 +554,7 @@ void ReadCells
         int prostarI;
         if
         (
-            CCMIOReadOpti(NULL, id, "ProstarRegionNumber", &prostarI)
+            CCMIOReadOpti(nullptr, id, "ProstarRegionNumber", &prostarI)
          == kCCMIONoErr
         )
         {
@@ -639,12 +667,12 @@ int main(int argc, char *argv[])
         }
 
         // Open the file.  Because we did not initialize 'err' we need to pass
-        // in NULL (which always means kCCMIONoErr) and then assign the return
-        // value to 'err'.).
+        // in nullptr (which always means kCCMIONoErr) and then assign the
+        // return value to 'err'.).
         CCMIOID root;
         CCMIOError err = CCMIOOpenFile
         (
-            NULL,
+            nullptr,
             ccmFile.c_str(),
             kCCMIORead,
             &root
@@ -659,9 +687,9 @@ int main(int argc, char *argv[])
         CheckError(err, "Error opening state");
 
         unsigned int size;
-        CCMIOEntityDescription(&err, state, &size, NULL);
+        CCMIOEntityDescription(&err, state, &size, nullptr);
         char *desc = new char[size + 1];
-        CCMIOEntityDescription(&err, state, NULL, desc);
+        CCMIOEntityDescription(&err, state, nullptr, desc);
         Pout<< "Reading state '" << kDefaultState << "' (" << desc << ")"
             << endl;
         delete [] desc;
@@ -678,7 +706,7 @@ int main(int argc, char *argv[])
             processor,
             &vertices,
             &topology,
-            NULL,
+            nullptr,
             &solution
         );
 
@@ -692,8 +720,8 @@ int main(int argc, char *argv[])
                 processor,
                 &vertices,
                 &topology,
-                NULL,
-                NULL
+                nullptr,
+                nullptr
             );
             if (err != kCCMIONoErr)
             {

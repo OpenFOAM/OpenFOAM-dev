@@ -41,8 +41,8 @@ Foam::ParticleTrap<CloudType>::ParticleTrap
     (
         this->coeffDict().template lookupOrDefault<word>("alpha", "alpha")
     ),
-    alphaPtr_(NULL),
-    gradAlphaPtr_(NULL),
+    alphaPtr_(nullptr),
+    gradAlphaPtr_(nullptr),
     threshold_(readScalar(this->coeffDict().lookup("threshold")))
 {}
 
@@ -56,7 +56,7 @@ Foam::ParticleTrap<CloudType>::ParticleTrap
     CloudFunctionObject<CloudType>(pt),
     alphaName_(pt.alphaName_),
     alphaPtr_(pt.alphaPtr_),
-    gradAlphaPtr_(NULL),
+    gradAlphaPtr_(nullptr),
     threshold_(pt.threshold_)
 {}
 
@@ -73,7 +73,7 @@ Foam::ParticleTrap<CloudType>::~ParticleTrap()
 template<class CloudType>
 void Foam::ParticleTrap<CloudType>::preEvolve()
 {
-    if (alphaPtr_ == NULL)
+    if (alphaPtr_ == nullptr)
     {
         const fvMesh& mesh = this->owner().mesh();
         const volScalarField& alpha =

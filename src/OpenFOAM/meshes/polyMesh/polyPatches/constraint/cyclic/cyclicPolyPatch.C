@@ -608,8 +608,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     rotationAxis_(Zero),
     rotationCentre_(Zero),
     separationVector_(Zero),
-    coupledPointsPtr_(NULL),
-    coupledEdgesPtr_(NULL)
+    coupledPointsPtr_(nullptr),
+    coupledEdgesPtr_(nullptr)
 {
     // Neighbour patch might not be valid yet so no transformation
     // calculation possible.
@@ -636,8 +636,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     rotationAxis_(rotationAxis),
     rotationCentre_(rotationCentre),
     separationVector_(separationVector),
-    coupledPointsPtr_(NULL),
-    coupledEdgesPtr_(NULL)
+    coupledPointsPtr_(nullptr),
+    coupledEdgesPtr_(nullptr)
 {
     // Neighbour patch might not be valid yet so no transformation
     // calculation possible.
@@ -660,8 +660,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     rotationAxis_(Zero),
     rotationCentre_(Zero),
     separationVector_(Zero),
-    coupledPointsPtr_(NULL),
-    coupledEdgesPtr_(NULL)
+    coupledPointsPtr_(nullptr),
+    coupledEdgesPtr_(nullptr)
 {
     if (neighbPatchName_ == word::null && !coupleGroup_.valid())
     {
@@ -730,8 +730,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
     separationVector_(pp.separationVector_),
-    coupledPointsPtr_(NULL),
-    coupledEdgesPtr_(NULL)
+    coupledPointsPtr_(nullptr),
+    coupledEdgesPtr_(nullptr)
 {
     // Neighbour patch might not be valid yet so no transformation
     // calculation possible.
@@ -755,8 +755,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
     separationVector_(pp.separationVector_),
-    coupledPointsPtr_(NULL),
-    coupledEdgesPtr_(NULL)
+    coupledPointsPtr_(nullptr),
+    coupledEdgesPtr_(nullptr)
 {
     if (neighbName == name())
     {
@@ -787,8 +787,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
     separationVector_(pp.separationVector_),
-    coupledPointsPtr_(NULL),
-    coupledEdgesPtr_(NULL)
+    coupledPointsPtr_(nullptr),
+    coupledEdgesPtr_(nullptr)
 {}
 
 

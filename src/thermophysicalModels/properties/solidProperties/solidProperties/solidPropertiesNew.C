@@ -66,7 +66,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New(Istream& is)
             << ", should be coeffs or defaultCoeffs"
             << exit(FatalError);
 
-        return autoPtr<solidProperties>(NULL);
+        return autoPtr<solidProperties>(nullptr);
     }
 }
 

@@ -93,7 +93,7 @@ public:
         autoPtr<procLduInterface> clone()
         {
             NotImplemented;
-            return autoPtr<procLduInterface>(NULL);
+            return autoPtr<procLduInterface>(nullptr);
         }
 
         static autoPtr<procLduInterface> New(Istream& is)

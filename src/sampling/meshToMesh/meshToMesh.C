@@ -653,8 +653,8 @@ Foam::meshToMesh::meshToMesh
     tgtToSrcCellWght_(),
     V_(0.0),
     singleMeshProc_(-1),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     constructNoCuttingPatches
     (
@@ -689,8 +689,8 @@ Foam::meshToMesh::meshToMesh
     tgtToSrcCellWght_(),
     V_(0.0),
     singleMeshProc_(-1),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     constructNoCuttingPatches(methodName, AMIMethodName, interpAllPatches);
 }
@@ -717,8 +717,8 @@ Foam::meshToMesh::meshToMesh
     tgtToSrcCellWght_(),
     V_(0.0),
     singleMeshProc_(-1),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     constructFromCuttingPatches
     (
@@ -755,8 +755,8 @@ Foam::meshToMesh::meshToMesh
     tgtToSrcCellWght_(),
     V_(0.0),
     singleMeshProc_(-1),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     constructFromCuttingPatches
     (

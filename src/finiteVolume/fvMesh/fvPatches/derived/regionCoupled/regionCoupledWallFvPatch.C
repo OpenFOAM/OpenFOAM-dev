@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ internalFieldTransfer
         return tmp<labelField>(new labelField(iF.size(), 0));
 
     }
-    return tmp<labelField>(NULL);
+    return tmp<labelField>(nullptr);
 }
 
 // ************************************************************************* //

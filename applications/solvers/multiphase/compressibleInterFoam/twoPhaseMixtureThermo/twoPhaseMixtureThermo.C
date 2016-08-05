@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,8 +45,8 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
 :
     psiThermo(mesh, word::null),
     twoPhaseMixture(mesh, *this),
-    thermo1_(NULL),
-    thermo2_(NULL)
+    thermo1_(nullptr),
+    thermo2_(nullptr)
 {
     {
         volScalarField T1(IOobject::groupName("T", phase1Name()), T_);

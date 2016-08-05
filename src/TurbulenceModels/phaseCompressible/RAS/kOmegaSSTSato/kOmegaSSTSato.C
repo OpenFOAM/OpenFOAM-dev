@@ -61,7 +61,7 @@ kOmegaSSTSato<BasicTurbulenceModel>::kOmegaSSTSato
         type
     ),
 
-    gasTurbulencePtr_(NULL),
+    gasTurbulencePtr_(nullptr),
 
     Cmub_
     (

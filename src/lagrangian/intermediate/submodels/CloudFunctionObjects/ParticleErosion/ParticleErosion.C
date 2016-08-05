@@ -71,7 +71,7 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
 )
 :
     CloudFunctionObject<CloudType>(dict, owner, modelName, typeName),
-    QPtr_(NULL),
+    QPtr_(nullptr),
     patchIDs_(),
     p_(readScalar(this->coeffDict().lookup("p"))),
     psi_(this->coeffDict().template lookupOrDefault<scalar>("psi", 2.0)),
@@ -109,7 +109,7 @@ Foam::ParticleErosion<CloudType>::ParticleErosion
 )
 :
     CloudFunctionObject<CloudType>(pe),
-    QPtr_(NULL),
+    QPtr_(nullptr),
     patchIDs_(pe.patchIDs_),
     p_(pe.p_),
     psi_(pe.psi_),

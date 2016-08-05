@@ -58,10 +58,10 @@ vtkPVFoamReader::vtkPVFoamReader()
 
     SetNumberOfInputPorts(0);
 
-    FileName  = NULL;
-    foamData_ = NULL;
+    FileName  = nullptr;
+    foamData_ = nullptr;
 
-    output0_  = NULL;
+    output0_  = nullptr;
 
 #ifdef VTKPVFOAM_DUALPORT
     // Add second output for the Lagrangian
@@ -217,7 +217,7 @@ int vtkPVFoamReader::RequestInformation
 
         // delete foamData and flag it as fatal error
         delete foamData_;
-        foamData_ = NULL;
+        foamData_ = nullptr;
         return 0;
     }
 

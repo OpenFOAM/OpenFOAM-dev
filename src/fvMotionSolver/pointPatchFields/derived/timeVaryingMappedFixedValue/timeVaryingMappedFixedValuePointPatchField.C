@@ -42,7 +42,7 @@ timeVaryingMappedFixedValuePointPatchField
     fieldTableName_(iF.name()),
     setAverage_(false),
     perturb_(0),
-    mapperPtr_(NULL),
+    mapperPtr_(nullptr),
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
@@ -75,7 +75,7 @@ timeVaryingMappedFixedValuePointPatchField
             "planarInterpolation"
         )
     ),
-    mapperPtr_(NULL),
+    mapperPtr_(nullptr),
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),
@@ -138,7 +138,7 @@ timeVaryingMappedFixedValuePointPatchField
     setAverage_(ptf.setAverage_),
     perturb_(ptf.perturb_),
     mapMethod_(ptf.mapMethod_),
-    mapperPtr_(NULL),
+    mapperPtr_(nullptr),
     sampleTimes_(0),
     startSampleTime_(-1),
     startSampledValues_(0),

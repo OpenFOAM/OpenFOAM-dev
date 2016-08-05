@@ -43,7 +43,7 @@ Foam::OFstreamAllocator::OFstreamAllocator
     IOstream::compressionType compression
 )
 :
-    ofPtr_(NULL)
+    ofPtr_(nullptr)
 {
     if (pathname.empty())
     {

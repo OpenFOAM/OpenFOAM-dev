@@ -32,7 +32,7 @@ inline Foam::Matrix<Form, Type>::Matrix()
 :
     mRows_(0),
     nCols_(0),
-    v_(NULL)
+    v_(nullptr)
 {}
 
 

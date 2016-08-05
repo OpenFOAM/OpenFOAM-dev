@@ -313,8 +313,8 @@ void Foam::fileMonitor::checkFiles() const
             (
                 watcher_->inotifyFd_+1,     // num filedescriptors in fdSet
                 &fdSet,             // fdSet with only inotifyFd
-                NULL,               // No writefds
-                NULL,               // No errorfds
+                nullptr,               // No writefds
+                nullptr,               // No errorfds
                 &zeroTimeout        // eNo timeout
             );
 

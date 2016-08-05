@@ -108,8 +108,8 @@ Foam::functionObjects::fieldValues::fieldValueDelta::fieldValueDelta
 :
     writeFiles(name, runTime, dict, name),
     operation_(opSubtract),
-    region1Ptr_(NULL),
-    region2Ptr_(NULL)
+    region1Ptr_(nullptr),
+    region2Ptr_(nullptr)
 {
     if (!isA<fvMesh>(obr_))
     {

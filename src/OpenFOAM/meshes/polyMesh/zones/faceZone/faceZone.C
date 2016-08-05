@@ -194,10 +194,10 @@ Foam::faceZone::faceZone
     zone(name, addr, index),
     flipMap_(fm),
     zoneMesh_(zm),
-    patchPtr_(NULL),
-    masterCellsPtr_(NULL),
-    slaveCellsPtr_(NULL),
-    mePtr_(NULL)
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
 {
     checkAddressing();
 }
@@ -215,10 +215,10 @@ Foam::faceZone::faceZone
     zone(name, addr, index),
     flipMap_(fm),
     zoneMesh_(zm),
-    patchPtr_(NULL),
-    masterCellsPtr_(NULL),
-    slaveCellsPtr_(NULL),
-    mePtr_(NULL)
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
 {
     checkAddressing();
 }
@@ -235,10 +235,10 @@ Foam::faceZone::faceZone
     zone(name, dict, this->labelsName, index),
     flipMap_(dict.lookup("flipMap")),
     zoneMesh_(zm),
-    patchPtr_(NULL),
-    masterCellsPtr_(NULL),
-    slaveCellsPtr_(NULL),
-    mePtr_(NULL)
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
 {
     checkAddressing();
 }
@@ -256,10 +256,10 @@ Foam::faceZone::faceZone
     zone(fz, addr, index),
     flipMap_(fm),
     zoneMesh_(zm),
-    patchPtr_(NULL),
-    masterCellsPtr_(NULL),
-    slaveCellsPtr_(NULL),
-    mePtr_(NULL)
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
 {
     checkAddressing();
 }
@@ -277,10 +277,10 @@ Foam::faceZone::faceZone
     zone(fz, addr, index),
     flipMap_(fm),
     zoneMesh_(zm),
-    patchPtr_(NULL),
-    masterCellsPtr_(NULL),
-    slaveCellsPtr_(NULL),
-    mePtr_(NULL)
+    patchPtr_(nullptr),
+    masterCellsPtr_(nullptr),
+    slaveCellsPtr_(nullptr),
+    mePtr_(nullptr)
 {
     checkAddressing();
 }

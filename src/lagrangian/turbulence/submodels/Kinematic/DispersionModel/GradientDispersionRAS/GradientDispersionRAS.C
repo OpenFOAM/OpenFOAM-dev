@@ -37,7 +37,7 @@ Foam::GradientDispersionRAS<CloudType>::GradientDispersionRAS
 )
 :
     DispersionRASModel<CloudType>(dict, owner),
-    gradkPtr_(NULL),
+    gradkPtr_(nullptr),
     ownGradK_(false)
 {}
 
@@ -82,7 +82,7 @@ void Foam::GradientDispersionRAS<CloudType>::cacheFields(const bool store)
         if (ownGradK_)
         {
             deleteDemandDrivenData(gradkPtr_);
-            gradkPtr_ = NULL;
+            gradkPtr_ = nullptr;
             ownGradK_ = false;
         }
     }

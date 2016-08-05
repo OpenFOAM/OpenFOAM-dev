@@ -7,7 +7,7 @@ IOobject phiBHeader
 );
 
 
-surfaceScalarField* phiBPtr = NULL;
+surfaceScalarField* phiBPtr = nullptr;
 
 if (phiBHeader.headerOk())
 {

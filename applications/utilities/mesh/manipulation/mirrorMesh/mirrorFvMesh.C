@@ -43,7 +43,7 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             IOobject::NO_WRITE
         )
     ),
-    mirrorMeshPtr_(NULL)
+    mirrorMeshPtr_(nullptr)
 {
     plane mirrorPlane(mirrorMeshDict_);
 

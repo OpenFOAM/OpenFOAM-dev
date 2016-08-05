@@ -200,7 +200,7 @@ public:
             //- Is element set
             inline bool set(const label) const;
 
-            //- Set element. Return old element (can be NULL).
+            //- Set element. Return old element (can be nullptr).
             //  No checks on new element
             inline T* set(const label, T*);
 

@@ -45,7 +45,7 @@ vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
     const word& cloudName
 )
 {
-    vtkPolyData* vtkmesh = NULL;
+    vtkPolyData* vtkmesh = nullptr;
 
     if (debug)
     {

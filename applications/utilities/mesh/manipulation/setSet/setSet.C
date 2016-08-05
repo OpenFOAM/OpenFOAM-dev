@@ -871,7 +871,7 @@ int main(int argc, char *argv[])
         // Main command read & execute loop
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        autoPtr<IFstream> fileStreamPtr(NULL);
+        autoPtr<IFstream> fileStreamPtr(nullptr);
 
         if (batch)
         {

@@ -164,8 +164,8 @@ Foam::regionModels::singleLayerRegion::singleLayerRegion
 )
 :
     regionModel(mesh, regionType),
-    nHatPtr_(NULL),
-    magSfPtr_(NULL),
+    nHatPtr_(nullptr),
+    magSfPtr_(nullptr),
     passivePatchIDs_()
 {}
 
@@ -179,8 +179,8 @@ Foam::regionModels::singleLayerRegion::singleLayerRegion
 )
 :
     regionModel(mesh, regionType, modelName, false),
-    nHatPtr_(NULL),
-    magSfPtr_(NULL),
+    nHatPtr_(nullptr),
+    magSfPtr_(nullptr),
     passivePatchIDs_()
 {
     if (active_)

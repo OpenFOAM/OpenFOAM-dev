@@ -943,10 +943,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(pp.size(), offset_),
     distance_(0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(false),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {}
 
@@ -970,10 +970,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(offsets),
     distance_(0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(false),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {}
 
@@ -997,10 +997,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(0),
     distance_(0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(false),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {}
 
@@ -1024,10 +1024,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(0),
     distance_(distance),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(false),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {}
 
@@ -1048,10 +1048,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(0),
     distance_(0.0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(dict.subOrEmptyDict("surface"))
 {
     if (!coupleGroup_.valid())
@@ -1130,10 +1130,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(0),
     distance_(0.0),
     sameRegion_(sampleRegion_ == patch_.boundaryMesh().mesh().name()),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(dict.subOrEmptyDict("surface"))
 {
     if (mode != NEARESTPATCHFACE && mode != NEARESTPATCHFACEAMI)
@@ -1177,10 +1177,10 @@ Foam::mappedPatchBase::mappedPatchBase
     offsets_(mpb.offsets_),
     distance_(mpb.distance_),
     sameRegion_(mpb.sameRegion_),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(mpb.AMIReverse_),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(mpb.surfDict_)
 {}
 
@@ -1207,10 +1207,10 @@ Foam::mappedPatchBase::mappedPatchBase
     ),
     distance_(mpb.distance_),
     sameRegion_(mpb.sameRegion_),
-    mapPtr_(NULL),
-    AMIPtr_(NULL),
+    mapPtr_(nullptr),
+    AMIPtr_(nullptr),
     AMIReverse_(mpb.AMIReverse_),
-    surfPtr_(NULL),
+    surfPtr_(nullptr),
     surfDict_(mpb.surfDict_)
 {}
 

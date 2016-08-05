@@ -282,7 +282,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
 :
     CloudType(rho.mesh(), cloudName, false),
     kinematicCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     mesh_(rho.mesh()),
     particleProperties_
     (
@@ -349,11 +349,11 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
         subModelProperties_.subOrEmptyDict("injectionModels"),
         *this
     ),
-    dispersionModel_(NULL),
-    patchInteractionModel_(NULL),
-    stochasticCollisionModel_(NULL),
-    surfaceFilmModel_(NULL),
-    UIntegrator_(NULL),
+    dispersionModel_(nullptr),
+    patchInteractionModel_(nullptr),
+    stochasticCollisionModel_(nullptr),
+    surfaceFilmModel_(nullptr),
+    UIntegrator_(nullptr),
     UTrans_
     (
         new volVectorField::Internal
@@ -413,7 +413,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
 :
     CloudType(c.mesh_, name, c),
     kinematicCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     mesh_(c.mesh_),
     particleProperties_(c.particleProperties_),
     outputProperties_(c.outputProperties_),
@@ -421,7 +421,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     constProps_(c.constProps_),
     subModelProperties_(c.subModelProperties_),
     rndGen_(c.rndGen_, true),
-    cellOccupancyPtr_(NULL),
+    cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
     rho_(c.rho_),
     U_(c.U_),
@@ -481,7 +481,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
 :
     CloudType(mesh, name, IDLList<parcelType>()),
     kinematicCloud(),
-    cloudCopyPtr_(NULL),
+    cloudCopyPtr_(nullptr),
     mesh_(mesh),
     particleProperties_
     (
@@ -512,7 +512,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     constProps_(),
     subModelProperties_(dictionary::null),
     rndGen_(0, 0),
-    cellOccupancyPtr_(NULL),
+    cellOccupancyPtr_(nullptr),
     cellLengthScale_(c.cellLengthScale_),
     rho_(c.rho_),
     U_(c.U_),
@@ -522,13 +522,13 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
     forces_(*this, mesh),
     functions_(*this),
     injectors_(*this),
-    dispersionModel_(NULL),
-    patchInteractionModel_(NULL),
-    stochasticCollisionModel_(NULL),
-    surfaceFilmModel_(NULL),
-    UIntegrator_(NULL),
-    UTrans_(NULL),
-    UCoeff_(NULL)
+    dispersionModel_(nullptr),
+    patchInteractionModel_(nullptr),
+    stochasticCollisionModel_(nullptr),
+    surfaceFilmModel_(nullptr),
+    UIntegrator_(nullptr),
+    UTrans_(nullptr),
+    UCoeff_(nullptr)
 {}
 
 

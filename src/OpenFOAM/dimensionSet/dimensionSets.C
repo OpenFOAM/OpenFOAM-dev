@@ -38,9 +38,9 @@ namespace Foam
 // Since dimensionSystems() can be reread we actually store a copy of
 // the controlDict subDict (v.s. a reference to the subDict for e.g.
 // dimensionedConstants)
-dictionary* dimensionSystemsPtr_(NULL);
-HashTable<dimensionedScalar>* unitSetPtr_(NULL);
-dimensionSets* writeUnitSetPtr_(NULL);
+dictionary* dimensionSystemsPtr_(nullptr);
+HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
+dimensionSets* writeUnitSetPtr_(nullptr);
 
 // Helper class to
 //   register re-reader
@@ -80,7 +80,7 @@ dictionary& dimensionSystems()
 {
     if (!dimensionSystemsPtr_)
     {
-        dictionary* cachedPtr = NULL;
+        dictionary* cachedPtr = nullptr;
         dimensionSystemsPtr_ = new dictionary
         (
             debug::switchSet

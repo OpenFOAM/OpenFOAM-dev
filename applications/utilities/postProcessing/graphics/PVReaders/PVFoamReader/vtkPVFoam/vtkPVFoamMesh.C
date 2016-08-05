@@ -188,7 +188,7 @@ void Foam::vtkPVFoam::convertMeshPatches
                 << patchName << endl;
         }
 
-        vtkPolyData* vtkmesh = NULL;
+        vtkPolyData* vtkmesh = nullptr;
         if (patchIds.size() == 1)
         {
             vtkmesh = patchVTKMesh(patchName, patches[patchIds.begin().key()]);

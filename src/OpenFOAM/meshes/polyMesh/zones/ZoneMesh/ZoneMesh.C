@@ -142,7 +142,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
     PtrList<ZoneType>(),
     regIOobject(io),
     mesh_(mesh),
-    zoneMapPtr_(NULL)
+    zoneMapPtr_(nullptr)
 {
     read();
 }
@@ -159,7 +159,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
     PtrList<ZoneType>(size),
     regIOobject(io),
     mesh_(mesh),
-    zoneMapPtr_(NULL)
+    zoneMapPtr_(nullptr)
 {
     // Optionally read contents, otherwise keep size
     read();
@@ -177,7 +177,7 @@ Foam::ZoneMesh<ZoneType, MeshType>::ZoneMesh
     PtrList<ZoneType>(),
     regIOobject(io),
     mesh_(mesh),
-    zoneMapPtr_(NULL)
+    zoneMapPtr_(nullptr)
 {
     if (!read())
     {

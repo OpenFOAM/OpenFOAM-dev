@@ -32,10 +32,10 @@ template<class Type, class DType, class LUType>
 Foam::LduMatrix<Type, DType, LUType>::LduMatrix(const lduMesh& mesh)
 :
     lduMesh_(mesh),
-    diagPtr_(NULL),
-    upperPtr_(NULL),
-    lowerPtr_(NULL),
-    sourcePtr_(NULL),
+    diagPtr_(nullptr),
+    upperPtr_(nullptr),
+    lowerPtr_(nullptr),
+    sourcePtr_(nullptr),
     interfaces_(0),
     interfacesUpper_(0),
     interfacesLower_(0)
@@ -46,10 +46,10 @@ template<class Type, class DType, class LUType>
 Foam::LduMatrix<Type, DType, LUType>::LduMatrix(const LduMatrix& A)
 :
     lduMesh_(A.lduMesh_),
-    diagPtr_(NULL),
-    upperPtr_(NULL),
-    lowerPtr_(NULL),
-    sourcePtr_(NULL),
+    diagPtr_(nullptr),
+    upperPtr_(nullptr),
+    lowerPtr_(nullptr),
+    sourcePtr_(nullptr),
     interfaces_(0),
     interfacesUpper_(0),
     interfacesLower_(0)
@@ -80,10 +80,10 @@ template<class Type, class DType, class LUType>
 Foam::LduMatrix<Type, DType, LUType>::LduMatrix(LduMatrix& A, bool reuse)
 :
     lduMesh_(A.lduMesh_),
-    diagPtr_(NULL),
-    upperPtr_(NULL),
-    lowerPtr_(NULL),
-    sourcePtr_(NULL),
+    diagPtr_(nullptr),
+    upperPtr_(nullptr),
+    lowerPtr_(nullptr),
+    sourcePtr_(nullptr),
     interfaces_(0),
     interfacesUpper_(0),
     interfacesLower_(0)
@@ -93,25 +93,25 @@ Foam::LduMatrix<Type, DType, LUType>::LduMatrix(LduMatrix& A, bool reuse)
         if (A.diagPtr_)
         {
             diagPtr_ = A.diagPtr_;
-            A.diagPtr_ = NULL;
+            A.diagPtr_ = nullptr;
         }
 
         if (A.upperPtr_)
         {
             upperPtr_ = A.upperPtr_;
-            A.upperPtr_ = NULL;
+            A.upperPtr_ = nullptr;
         }
 
         if (A.lowerPtr_)
         {
             lowerPtr_ = A.lowerPtr_;
-            A.lowerPtr_ = NULL;
+            A.lowerPtr_ = nullptr;
         }
 
         if (A.sourcePtr_)
         {
             sourcePtr_ = A.sourcePtr_;
-            A.sourcePtr_ = NULL;
+            A.sourcePtr_ = nullptr;
         }
     }
     else

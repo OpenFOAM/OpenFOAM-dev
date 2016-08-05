@@ -110,7 +110,7 @@ public:
         {
             NotImplemented;
 
-            return tmp<surfaceScalarField>(NULL);
+            return tmp<surfaceScalarField>(nullptr);
         }
 
         //- Return the face-interpolate of the given cell field

@@ -55,7 +55,7 @@ template<class T>
 template<class InputIterator>
 Foam::List<T>::List(InputIterator first, InputIterator last, const label s)
 :
-    UList<T>(NULL, s)
+    UList<T>(nullptr, s)
 {
     if (this->size_)
     {
@@ -75,7 +75,7 @@ Foam::List<T>::List(InputIterator first, InputIterator last, const label s)
 template<class T>
 Foam::List<T>::List(const label s)
 :
-    UList<T>(NULL, s)
+    UList<T>(nullptr, s)
 {
     if (this->size_ < 0)
     {
@@ -94,7 +94,7 @@ Foam::List<T>::List(const label s)
 template<class T>
 Foam::List<T>::List(const label s, const T& a)
 :
-    UList<T>(NULL, s)
+    UList<T>(nullptr, s)
 {
     if (this->size_ < 0)
     {
@@ -118,7 +118,7 @@ Foam::List<T>::List(const label s, const T& a)
 template<class T>
 Foam::List<T>::List(const label s, const zero)
 :
-    UList<T>(NULL, s)
+    UList<T>(nullptr, s)
 {
     if (this->size_ < 0)
     {
@@ -142,7 +142,7 @@ Foam::List<T>::List(const label s, const zero)
 template<class T>
 Foam::List<T>::List(const List<T>& a)
 :
-    UList<T>(NULL, a.size_)
+    UList<T>(nullptr, a.size_)
 {
     if (this->size_)
     {
@@ -170,7 +170,7 @@ template<class T>
 template<class T2>
 Foam::List<T>::List(const List<T2>& a)
 :
-    UList<T>(NULL, a.size())
+    UList<T>(nullptr, a.size())
 {
     if (this->size_)
     {
@@ -195,7 +195,7 @@ Foam::List<T>::List(const Xfer<List<T>>& lst)
 template<class T>
 Foam::List<T>::List(List<T>& a, bool reuse)
 :
-    UList<T>(NULL, a.size_)
+    UList<T>(nullptr, a.size_)
 {
     if (reuse)
     {
@@ -228,7 +228,7 @@ Foam::List<T>::List(List<T>& a, bool reuse)
 template<class T>
 Foam::List<T>::List(const UList<T>& a, const labelUList& map)
 :
-    UList<T>(NULL, map.size())
+    UList<T>(nullptr, map.size())
 {
     if (this->size_)
     {
@@ -256,7 +256,7 @@ template<class T>
 template<unsigned Size>
 Foam::List<T>::List(const FixedList<T, Size>& lst)
 :
-    UList<T>(NULL, Size)
+    UList<T>(nullptr, Size)
 {
     CopyList(lst);
 }
@@ -265,7 +265,7 @@ Foam::List<T>::List(const FixedList<T, Size>& lst)
 template<class T>
 Foam::List<T>::List(const PtrList<T>& lst)
 :
-    UList<T>(NULL, lst.size())
+    UList<T>(nullptr, lst.size())
 {
     CopyList(lst);
 }
@@ -281,7 +281,7 @@ Foam::List<T>::List(const SLList<T>& lst)
 template<class T>
 Foam::List<T>::List(const UIndirectList<T>& lst)
 :
-    UList<T>(NULL, lst.size())
+    UList<T>(nullptr, lst.size())
 {
     CopyList(lst);
 }
@@ -290,7 +290,7 @@ Foam::List<T>::List(const UIndirectList<T>& lst)
 template<class T>
 Foam::List<T>::List(const BiIndirectList<T>& lst)
 :
-    UList<T>(NULL, lst.size())
+    UList<T>(nullptr, lst.size())
 {
     CopyList(lst);
 }

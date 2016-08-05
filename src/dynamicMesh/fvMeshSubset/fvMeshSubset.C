@@ -395,7 +395,7 @@ Foam::labelList Foam::fvMeshSubset::getCellsToRemove
 Foam::fvMeshSubset::fvMeshSubset(const fvMesh& baseMesh)
 :
     baseMesh_(baseMesh),
-    fvMeshSubsetPtr_(NULL),
+    fvMeshSubsetPtr_(nullptr),
     pointMap_(0),
     faceMap_(0),
     cellMap_(0),

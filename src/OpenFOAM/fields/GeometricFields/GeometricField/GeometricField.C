@@ -183,8 +183,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldType)
 {
     if (debug)
@@ -208,8 +208,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, ds, false),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes)
 {
     if (debug)
@@ -232,8 +232,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldType)
 {
     if (debug)
@@ -259,8 +259,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, dt, false),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, patchFieldTypes, actualPatchTypes)
 {
     if (debug)
@@ -284,8 +284,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, diField),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(this->mesh().boundary(), *this, ptfl)
 {
     if (debug)
@@ -310,8 +310,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, ds, iField),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary(), *this, ptfl)
 {
     if (debug)
@@ -333,8 +333,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, dimless, false),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary())
 {
     readFields();
@@ -369,8 +369,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, mesh, dimless, false),
     timeIndex_(this->time().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(mesh.boundary())
 {
     readFields(dict);
@@ -404,8 +404,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(gf),
     timeIndex_(gf.timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_)
 {
     if (debug)
@@ -439,8 +439,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         tgf.isTmp()
     ),
     timeIndex_(tgf().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, tgf().boundaryField_)
 {
     if (debug)
@@ -465,8 +465,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, gf),
     timeIndex_(gf.timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_)
 {
     if (debug)
@@ -502,8 +502,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         tgf.isTmp()
     ),
     timeIndex_(tgf().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, tgf().boundaryField_)
 {
     if (debug)
@@ -529,8 +529,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(newName, gf),
     timeIndex_(gf.timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, gf.boundaryField_)
 {
     if (debug)
@@ -566,8 +566,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         tgf.isTmp()
     ),
     timeIndex_(tgf().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(*this, tgf().boundaryField_)
 {
     if (debug)
@@ -592,8 +592,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, gf),
     timeIndex_(gf.timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_(this->mesh().boundary(), *this, patchFieldType)
 {
     if (debug)
@@ -628,8 +628,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 :
     Internal(io, gf),
     timeIndex_(gf.timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_
     (
         this->mesh().boundary(),
@@ -675,8 +675,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
         tgf.isTmp()
     ),
     timeIndex_(tgf().timeIndex()),
-    field0Ptr_(NULL),
-    fieldPrevIterPtr_(NULL),
+    field0Ptr_(nullptr),
+    fieldPrevIterPtr_(nullptr),
     boundaryField_
     (
         this->mesh().boundary(),

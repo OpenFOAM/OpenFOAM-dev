@@ -133,7 +133,7 @@ public:
         autoPtr<option> clone() const
         {
             NotImplemented;
-            return autoPtr<option>(NULL);
+            return autoPtr<option>(nullptr);
         }
 
         //- Return pointer to new fvOption object created

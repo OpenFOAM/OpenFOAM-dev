@@ -185,7 +185,7 @@ void Foam::LduMatrix<Type, DType, LUType>::operator=(const LduMatrix& A)
     else if (upperPtr_)
     {
         delete upperPtr_;
-        upperPtr_ = NULL;
+        upperPtr_ = nullptr;
     }
 
     if (A.lowerPtr_)
@@ -195,7 +195,7 @@ void Foam::LduMatrix<Type, DType, LUType>::operator=(const LduMatrix& A)
     else if (lowerPtr_)
     {
         delete lowerPtr_;
-        lowerPtr_ = NULL;
+        lowerPtr_ = nullptr;
     }
 
     if (A.sourcePtr_)

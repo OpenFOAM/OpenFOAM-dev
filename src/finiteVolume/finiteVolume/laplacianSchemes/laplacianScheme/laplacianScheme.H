@@ -120,8 +120,8 @@ public:
         laplacianScheme(const fvMesh& mesh, Istream& is)
         :
             mesh_(mesh),
-            tinterpGammaScheme_(NULL),
-            tsnGradScheme_(NULL)
+            tinterpGammaScheme_(nullptr),
+            tsnGradScheme_(nullptr)
         {
             tinterpGammaScheme_ = tmp<surfaceInterpolationScheme<GType>>
             (

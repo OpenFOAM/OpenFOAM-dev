@@ -187,7 +187,7 @@ void Foam::displacementSBRStressFvMotionSolver::updateMesh
 
     // Update diffusivity. Note two stage to make sure old one is de-registered
     // before creating/registering new one.
-    diffusivityPtr_.reset(NULL);
+    diffusivityPtr_.reset(nullptr);
     diffusivityPtr_ = motionDiffusivity::New
     (
         fvMesh_,

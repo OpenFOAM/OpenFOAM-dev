@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::fv::interRegionHeatTransferModel::htc() const
 inline const Foam::fv::interRegionHeatTransferModel&
 Foam::fv::interRegionHeatTransferModel::nbrModel() const
 {
-    if (nbrModel_ == NULL)
+    if (nbrModel_ == nullptr)
     {
         FatalErrorInFunction
             << "Neighbour model not set"
@@ -70,7 +70,7 @@ Foam::fv::interRegionHeatTransferModel::nbrModel() const
 inline Foam::fv::interRegionHeatTransferModel&
 Foam::fv::interRegionHeatTransferModel::nbrModel()
 {
-    if (nbrModel_ == NULL)
+    if (nbrModel_ == nullptr)
     {
         FatalErrorInFunction
             << "Neighbour model not set"

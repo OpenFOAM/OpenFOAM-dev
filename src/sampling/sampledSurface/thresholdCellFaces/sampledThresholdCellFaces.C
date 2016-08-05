@@ -64,7 +64,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
 
     // 1. see if field in database
     // 2. see if field can be read
-    const volScalarField* cellFldPtr = NULL;
+    const volScalarField* cellFldPtr = nullptr;
     if (fvm.foundObject<volScalarField>(fieldName_))
     {
         if (debug)

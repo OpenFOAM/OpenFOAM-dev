@@ -123,7 +123,7 @@ public:
         // Edit
 
             //- Reset size of PtrList. If extending the PtrList, new entries are
-            //  set to NULL. If truncating the PtrList, removed entries are
+            //  set to nullptr. If truncating the PtrList, removed entries are
             //  deleted
             void setSize(const label);
 
@@ -149,7 +149,7 @@ public:
             //- Is element set
             inline bool set(const label) const;
 
-            //- Set element to given T* and return old element (can be NULL)
+            //- Set element to given T* and return old element (can be nullptr)
             inline autoPtr<T> set(const label, T*);
 
             //- Set element to given autoPtr<T> and return old element

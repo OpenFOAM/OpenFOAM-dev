@@ -61,7 +61,7 @@ LaheyKEpsilon<BasicTurbulenceModel>::LaheyKEpsilon
         type
     ),
 
-    gasTurbulencePtr_(NULL),
+    gasTurbulencePtr_(nullptr),
 
     alphaInversion_
     (

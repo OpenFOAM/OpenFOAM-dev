@@ -93,7 +93,7 @@ tmp<volScalarField::Internal> surfaceFilmModel::Srho() const
 {
     NotImplemented;
 
-    return tmp<volScalarField::Internal>(NULL);
+    return tmp<volScalarField::Internal>(nullptr);
 }
 
 
@@ -102,7 +102,7 @@ surfaceFilmModel::Srho(const label) const
 {
     NotImplemented;
 
-    return tmp<volScalarField::Internal>(NULL);
+    return tmp<volScalarField::Internal>(nullptr);
 }
 
 
@@ -110,7 +110,7 @@ tmp<volScalarField::Internal> surfaceFilmModel::Sh() const
 {
     NotImplemented;
 
-    return tmp<volScalarField::Internal>(NULL);
+    return tmp<volScalarField::Internal>(nullptr);
 }
 
 

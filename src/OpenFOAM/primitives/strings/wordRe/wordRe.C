@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ const Foam::wordRe Foam::wordRe::null;
 Foam::wordRe::wordRe(Istream& is)
 :
     word(),
-    re_(NULL)
+    re_(nullptr)
 {
     is >> *this;
 }

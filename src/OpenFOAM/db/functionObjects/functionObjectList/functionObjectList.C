@@ -606,7 +606,7 @@ bool Foam::functionObjectList::read()
                 {
                     // Delete the disabled functionObject
                     delete objPtr;
-                    objPtr = NULL;
+                    objPtr = nullptr;
                     continue;
                 }
             }

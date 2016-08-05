@@ -109,7 +109,7 @@ const T* Foam::DictionaryBase<IDLListType, T>::lookupPtr
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -125,7 +125,7 @@ T* Foam::DictionaryBase<IDLListType, T>::lookupPtr(const word& keyword)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -220,7 +220,7 @@ T* Foam::DictionaryBase<IDLListType, T>::remove(const word& keyword)
     }
     else
     {
-        return NULL;
+        return nullptr;
     }
 }
 

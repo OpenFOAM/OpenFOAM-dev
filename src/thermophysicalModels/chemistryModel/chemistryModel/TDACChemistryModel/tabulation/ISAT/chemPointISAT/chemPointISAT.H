@@ -237,7 +237,7 @@ public:
             const scalar& tolerance,
             const label& completeSpaceSize,
             const dictionary& coeffsDict,
-            binaryNode<CompType, ThermoType>* node = NULL
+            binaryNode<CompType, ThermoType>* node = nullptr
         );
 
         //- Construct from another chemPoint and reference to a binary node

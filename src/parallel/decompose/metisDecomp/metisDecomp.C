@@ -175,11 +175,11 @@ Foam::label Foam::metisDecomp::decompose
             const_cast<List<label>&>(xadj).begin(),   // indexing into adjncy
             const_cast<List<label>&>(adjncy).begin(), // neighbour info
             cellWeights.begin(),// vertexweights
-            NULL,               // vsize: total communication vol
+            nullptr,               // vsize: total communication vol
             faceWeights.begin(),// edgeweights
             &nProcs,            // nParts
             processorWeights.begin(),   // tpwgts
-            NULL,               // ubvec: processor imbalance (default)
+            nullptr,               // ubvec: processor imbalance (default)
             options.begin(),
             &edgeCut,
             finalDecomp.begin()
@@ -194,11 +194,11 @@ Foam::label Foam::metisDecomp::decompose
             const_cast<List<label>&>(xadj).begin(),   // indexing into adjncy
             const_cast<List<label>&>(adjncy).begin(), // neighbour info
             cellWeights.begin(),// vertexweights
-            NULL,               // vsize: total communication vol
+            nullptr,               // vsize: total communication vol
             faceWeights.begin(),// edgeweights
             &nProcs,            // nParts
             processorWeights.begin(),   // tpwgts
-            NULL,               // ubvec: processor imbalance (default)
+            nullptr,               // ubvec: processor imbalance (default)
             options.begin(),
             &edgeCut,
             finalDecomp.begin()

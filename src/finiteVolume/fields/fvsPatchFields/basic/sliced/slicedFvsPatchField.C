@@ -142,9 +142,9 @@ Foam::slicedFvsPatchField<Type>::clone
 template<class Type>
 Foam::slicedFvsPatchField<Type>::~slicedFvsPatchField()
 {
-    // Set the fvsPatchField storage pointer to NULL before its destruction
+    // Set the fvsPatchField storage pointer to nullptr before its destruction
     // to protect the field it a slice of.
-    UList<Type>::shallowCopy(UList<Type>(NULL, 0));
+    UList<Type>::shallowCopy(UList<Type>(nullptr, 0));
 }
 
 

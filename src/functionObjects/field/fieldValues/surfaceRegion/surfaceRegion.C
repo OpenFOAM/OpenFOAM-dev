@@ -651,7 +651,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
 )
 :
     fieldValue(name, runTime, dict, typeName),
-    surfaceWriterPtr_(NULL),
+    surfaceWriterPtr_(nullptr),
     regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldName_("none"),
@@ -681,7 +681,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
 )
 :
     fieldValue(name, obr, dict, typeName),
-    surfaceWriterPtr_(NULL),
+    surfaceWriterPtr_(nullptr),
     regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
     weightFieldName_("none"),

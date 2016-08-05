@@ -57,7 +57,7 @@ Foam::fv::explicitPorositySource::explicitPorositySource
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    porosityPtr_(NULL)
+    porosityPtr_(nullptr)
 {
     read(dict);
 

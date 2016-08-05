@@ -66,7 +66,7 @@ mixtureKEpsilon<BasicTurbulenceModel>::mixtureKEpsilon
         propertiesName
     ),
 
-    liquidTurbulencePtr_(NULL),
+    liquidTurbulencePtr_(nullptr),
 
     Cmu_
     (

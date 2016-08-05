@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::phaseModel::phaseModel
     name_(phaseName),
     p_(p),
     T_(T),
-    thermo_(NULL),
+    thermo_(nullptr),
     dgdt_
     (
         IOobject
@@ -81,7 +81,7 @@ Foam::phaseModel::phaseModel
 Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::clone() const
 {
     NotImplemented;
-    return autoPtr<phaseModel>(NULL);
+    return autoPtr<phaseModel>(nullptr);
 }
 
 

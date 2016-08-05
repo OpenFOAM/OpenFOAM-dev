@@ -943,7 +943,7 @@ uint32_t SuperFastHash (const char * data, int len)
 {
     uint32_t hash = 0;
 
-    if (len <= 0 || data == NULL) return 0;
+    if (len <= 0 || data == nullptr) return 0;
 
     unsigned rem = len & 3;
     len >>= 2;
@@ -1060,14 +1060,14 @@ struct tagtest {
         { 0.0, "hashLookup3\t", hashLookup3           },
         { 0.0, "hashLookup3Orig\t", hashLookup3Orig   },
         { 0.0, "SuperFastHash\t", SuperFastHash       },
-        { 0.0, NULL, NULL                             }
+        { 0.0, nullptr, nullptr                             }
 };
 
 int main () {
 int i, j;
     GenerateCRC32Table ();
 
-    for (j=0; tests[j].name != NULL; j++) {
+    for (j=0; tests[j].name != nullptr; j++) {
         for (i=0; i < 3; i++) {
             double res = test (tests[j].hash);
             if (tests[j].res == 0.0 || tests[j].res > res) tests[j].res = res;

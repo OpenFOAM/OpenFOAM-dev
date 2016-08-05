@@ -449,12 +449,12 @@ Foam::sampledIsoSurface::sampledIsoSurface
     average_(dict.lookupOrDefault("average", false)),
     zoneID_(dict.lookupOrDefault("zone", word::null), mesh.cellZones()),
     exposedPatchName_(word::null),
-    surfPtr_(NULL),
-    facesPtr_(NULL),
+    surfPtr_(nullptr),
+    facesPtr_(nullptr),
     prevTimeIndex_(-1),
-    storedVolFieldPtr_(NULL),
-    volFieldPtr_(NULL),
-    pointFieldPtr_(NULL)
+    storedVolFieldPtr_(nullptr),
+    volFieldPtr_(nullptr),
+    pointFieldPtr_(nullptr)
 {
     if (!sampledSurface::interpolate())
     {

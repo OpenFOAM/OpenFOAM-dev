@@ -436,7 +436,7 @@ void Foam::boundaryMesh::markZone
 // Null constructor
 Foam::boundaryMesh::boundaryMesh()
 :
-    meshPtr_(NULL),
+    meshPtr_(nullptr),
     patches_(),
     meshFace_(),
     featurePoints_(),
@@ -462,7 +462,7 @@ void Foam::boundaryMesh::clearOut()
     {
         delete meshPtr_;
 
-        meshPtr_ = NULL;
+        meshPtr_ = nullptr;
     }
 }
 

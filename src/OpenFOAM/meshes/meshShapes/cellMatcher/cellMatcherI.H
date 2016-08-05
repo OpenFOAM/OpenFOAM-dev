@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ inline const Foam::labelList& Foam::cellMatcher::faceLabels() const
 
 inline const Foam::cellModel& Foam::cellMatcher::model() const
 {
-    if (cellModelPtr_ == NULL)
+    if (cellModelPtr_ == nullptr)
     {
         cellModelPtr_ = cellModeller::lookup(cellModelName_);
     }

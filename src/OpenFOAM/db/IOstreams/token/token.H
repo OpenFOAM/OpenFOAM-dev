@@ -94,7 +94,7 @@ public:
     //- Standard punctuation tokens
     enum punctuationToken
     {
-        NULL_TOKEN     = '\0',
+        nullptr_TOKEN     = '\0',
         SPACE          = ' ',
         TAB            = '\t',
         NL             = '\n',

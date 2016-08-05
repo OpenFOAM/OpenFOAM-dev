@@ -120,7 +120,7 @@ Foam::fv::interRegionHeatTransferModel::interRegionHeatTransferModel
         mesh
     ),
     nbrModelName_(coeffs_.lookup("nbrModel")),
-    nbrModel_(NULL),
+    nbrModel_(nullptr),
     firstIter_(true),
     timeIndex_(-1),
     htc_

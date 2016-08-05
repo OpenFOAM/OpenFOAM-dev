@@ -91,7 +91,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
     dGradP_(0.0),
     flowDir_(Ubar_/mag(Ubar_)),
     relaxation_(coeffs_.lookupOrDefault<scalar>("relaxation", 1.0)),
-    rAPtr_(NULL)
+    rAPtr_(nullptr)
 {
     coeffs_.lookup("fields") >> fieldNames_;
 

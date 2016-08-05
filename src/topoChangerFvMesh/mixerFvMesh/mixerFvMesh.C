@@ -304,7 +304,7 @@ Foam::mixerFvMesh::mixerFvMesh
         )
     ),
     rpm_(readScalar(motionDict_.lookup("rpm"))),
-    movingPointsMaskPtr_(NULL)
+    movingPointsMaskPtr_(nullptr)
 {
     addZonesAndModifiers();
 

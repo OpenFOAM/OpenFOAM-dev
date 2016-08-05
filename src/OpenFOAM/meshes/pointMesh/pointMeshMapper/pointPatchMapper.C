@@ -127,9 +127,9 @@ Foam::pointPatchMapper::pointPatchMapper
       : 0
     ),
     hasUnmapped_(false),
-    directAddrPtr_(NULL),
-    interpolationAddrPtr_(NULL),
-    weightsPtr_(NULL)
+    directAddrPtr_(nullptr),
+    interpolationAddrPtr_(nullptr),
+    weightsPtr_(nullptr)
 {}
 
 

@@ -34,7 +34,7 @@ template<class Type>
 List<Type>::List(int s){
         num=0;
         array_size = 0;
-        element = NULL;
+        element = nullptr;
         if(s) {
                 allocate(s);
         }

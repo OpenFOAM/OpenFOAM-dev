@@ -64,7 +64,7 @@ inline void Foam::PtrList<T>::append
 template<class T>
 inline bool Foam::PtrList<T>::set(const label i) const
 {
-    return this->ptrs_[i] != NULL;
+    return this->ptrs_[i] != nullptr;
 }
 
 

@@ -381,7 +381,7 @@ int main(int argc, char *argv[])
 
             // check that the positions field is present for this time
             IOobject* positionPtr = cloudObjs.lookup(word("positions"));
-            if (positionPtr != NULL)
+            if (positionPtr != nullptr)
             {
                 ensightParticlePositions
                 (

@@ -66,7 +66,7 @@ void Foam::vtkPV3blockMesh::updateInfoBlocks
     if (debug)
     {
         Info<< "<beg> Foam::vtkPV3blockMesh::updateInfoBlocks"
-            << " [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "]" << endl;
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
     arrayRangeBlocks_.reset( arraySelection->GetNumberOfArrays() );
@@ -109,7 +109,7 @@ void Foam::vtkPV3blockMesh::updateInfoEdges
     if (debug)
     {
         Info<< "<beg> Foam::vtkPV3blockMesh::updateInfoEdges"
-            << " [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "]" << endl;
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
     arrayRangeEdges_.reset( arraySelection->GetNumberOfArrays() );
@@ -150,8 +150,8 @@ Foam::vtkPV3blockMesh::vtkPV3blockMesh
 )
 :
     reader_(reader),
-    dbPtr_(NULL),
-    meshPtr_(NULL),
+    dbPtr_(nullptr),
+    meshPtr_(nullptr),
     meshRegion_(polyMesh::defaultRegion),
     meshDir_(polyMesh::meshSubDir),
     arrayRangeBlocks_("block"),
@@ -269,7 +269,7 @@ void Foam::vtkPV3blockMesh::updateInfo()
     if (debug)
     {
         Info<< "<beg> Foam::vtkPV3blockMesh::updateInfo"
-            << " [meshPtr=" << (meshPtr_ ? "set" : "NULL") << "] " << endl;
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "] " << endl;
     }
 
     resetCounters();

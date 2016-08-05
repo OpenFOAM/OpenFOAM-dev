@@ -216,8 +216,8 @@ energyRegionCoupledFvPatchScalarField
     coupledFvPatchField<scalar>(p, iF),
     regionCoupledPatch_(refCast<const regionCoupledBaseFvPatch>(p)),
     method_(UNDEFINED),
-    nbrThermoPtr_(NULL),
-    thermoPtr_(NULL)
+    nbrThermoPtr_(nullptr),
+    thermoPtr_(nullptr)
 {}
 
 
@@ -233,8 +233,8 @@ energyRegionCoupledFvPatchScalarField
     coupledFvPatchField<scalar>(ptf, p, iF, mapper),
     regionCoupledPatch_(refCast<const regionCoupledBaseFvPatch>(p)),
     method_(ptf.method_),
-    nbrThermoPtr_(NULL),
-    thermoPtr_(NULL)
+    nbrThermoPtr_(nullptr),
+    thermoPtr_(nullptr)
 {}
 
 
@@ -249,8 +249,8 @@ energyRegionCoupledFvPatchScalarField
     coupledFvPatchField<scalar>(p, iF, dict),
     regionCoupledPatch_(refCast<const regionCoupledBaseFvPatch>(p)),
     method_(UNDEFINED),
-    nbrThermoPtr_(NULL),
-    thermoPtr_(NULL)
+    nbrThermoPtr_(nullptr),
+    thermoPtr_(nullptr)
 {
 
     if (!isA<regionCoupledBase>(this->patch().patch()))
@@ -274,8 +274,8 @@ energyRegionCoupledFvPatchScalarField
     coupledFvPatchField<scalar>(ptf),
     regionCoupledPatch_(ptf.regionCoupledPatch_),
     method_(ptf.method_),
-    nbrThermoPtr_(NULL),
-    thermoPtr_(NULL)
+    nbrThermoPtr_(nullptr),
+    thermoPtr_(nullptr)
 {}
 
 
@@ -289,8 +289,8 @@ energyRegionCoupledFvPatchScalarField
     coupledFvPatchField<scalar>(ptf, iF),
     regionCoupledPatch_(ptf.regionCoupledPatch_),
     method_(ptf.method_),
-    nbrThermoPtr_(NULL),
-    thermoPtr_(NULL)
+    nbrThermoPtr_(nullptr),
+    thermoPtr_(nullptr)
 {}
 
 

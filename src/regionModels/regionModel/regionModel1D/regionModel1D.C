@@ -291,7 +291,7 @@ Foam::regionModels::regionModel1D::regionModel1D
     boundaryFaceCells_(),
     boundaryFaceOppositeFace_(),
     nLayers_(0),
-    nMagSfPtr_(NULL),
+    nMagSfPtr_(nullptr),
     moveMesh_(false)
 {}
 
@@ -309,7 +309,7 @@ Foam::regionModels::regionModel1D::regionModel1D
     boundaryFaceCells_(regionMesh().nCells()),
     boundaryFaceOppositeFace_(regionMesh().nCells()),
     nLayers_(0),
-    nMagSfPtr_(NULL),
+    nMagSfPtr_(nullptr),
     moveMesh_(true)
 {
     if (active_)
@@ -339,7 +339,7 @@ Foam::regionModels::regionModel1D::regionModel1D
     boundaryFaceCells_(regionMesh().nCells()),
     boundaryFaceOppositeFace_(regionMesh().nCells()),
     nLayers_(0),
-    nMagSfPtr_(NULL),
+    nMagSfPtr_(nullptr),
     moveMesh_(false)
 {
     if (active_)

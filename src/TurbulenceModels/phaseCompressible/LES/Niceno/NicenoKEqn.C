@@ -61,7 +61,7 @@ NicenoKEqn<BasicTurbulenceModel>::NicenoKEqn
         type
     ),
 
-    gasTurbulencePtr_(NULL),
+    gasTurbulencePtr_(nullptr),
 
     alphaInversion_
     (

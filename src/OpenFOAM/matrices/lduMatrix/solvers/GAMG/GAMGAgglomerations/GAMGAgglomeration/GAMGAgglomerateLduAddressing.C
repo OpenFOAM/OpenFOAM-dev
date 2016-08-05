@@ -561,8 +561,8 @@ void Foam::GAMGAgglomeration::combineLevels(const label curLevel)
     }
 
     // Delete the restrictAddressing for the coarser level
-    faceRestrictAddressing_.set(curLevel, NULL);
-    faceFlipMap_.set(curLevel, NULL);
+    faceRestrictAddressing_.set(curLevel, nullptr);
+    faceFlipMap_.set(curLevel, nullptr);
 
     forAll(prevResAddr, i)
     {
@@ -586,7 +586,7 @@ void Foam::GAMGAgglomeration::combineLevels(const label curLevel)
     }
 
     // Delete the restrictAddressing for the coarser level
-    restrictAddressing_.set(curLevel, NULL);
+    restrictAddressing_.set(curLevel, nullptr);
 
     // Patch faces
     nPatchFaces_[prevLevel] = nPatchFaces_[curLevel];
@@ -620,7 +620,7 @@ void Foam::GAMGAgglomeration::combineLevels(const label curLevel)
 
     // Delete the matrix addressing and coefficients from the previous level
     // and replace with the corresponding entry from the coarser level
-    meshLevels_.set(prevLevel, meshLevels_.set(curLevel, NULL));
+    meshLevels_.set(prevLevel, meshLevels_.set(curLevel, nullptr));
 }
 
 

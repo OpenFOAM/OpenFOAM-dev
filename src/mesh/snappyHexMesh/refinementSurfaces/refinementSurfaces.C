@@ -329,7 +329,7 @@ Foam::refinementSurfaces::refinementSurfaces
     {
         if (patchInfo.set(pI))
         {
-            patchInfo_.set(pI, patchInfo.set(pI, NULL));
+            patchInfo_.set(pI, patchInfo.set(pI, nullptr));
         }
     }
 }

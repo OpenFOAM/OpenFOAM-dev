@@ -146,7 +146,7 @@ public:
         autoPtr<cellLooper> clone() const
         {
             NotImplemented;
-            return autoPtr<cellLooper>(NULL);
+            return autoPtr<cellLooper>(nullptr);
         }
 
 

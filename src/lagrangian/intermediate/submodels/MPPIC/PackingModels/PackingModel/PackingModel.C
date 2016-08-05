@@ -34,7 +34,7 @@ template<class CloudType>
 Foam::PackingModel<CloudType>::PackingModel(CloudType& owner)
 :
     CloudSubModelBase<CloudType>(owner),
-    particleStressModel_(NULL)
+    particleStressModel_(nullptr)
 {}
 
 

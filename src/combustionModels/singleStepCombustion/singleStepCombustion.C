@@ -42,7 +42,7 @@ singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
 )
 :
     CombThermoType(modelType, mesh, phaseName),
-    singleMixturePtr_(NULL),
+    singleMixturePtr_(nullptr),
     wFuel_
     (
         IOobject

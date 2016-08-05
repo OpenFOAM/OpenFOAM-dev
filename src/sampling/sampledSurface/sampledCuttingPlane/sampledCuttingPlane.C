@@ -269,10 +269,10 @@ Foam::sampledCuttingPlane::sampledCuttingPlane
     zoneID_(dict.lookupOrDefault("zone", word::null), mesh.cellZones()),
     exposedPatchName_(word::null),
     needsUpdate_(true),
-    subMeshPtr_(NULL),
-    cellDistancePtr_(NULL),
-    isoSurfPtr_(NULL),
-    facesPtr_(NULL)
+    subMeshPtr_(nullptr),
+    cellDistancePtr_(nullptr),
+    isoSurfPtr_(nullptr),
+    facesPtr_(nullptr)
 {
     if (zoneID_.index() != -1)
     {

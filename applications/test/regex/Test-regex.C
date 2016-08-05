@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     string me("Mark");
 
     // Handling of null strings
-    if (regExp(NULL).match(me))
+    if (regExp(nullptr).match(me))
     {
         Info<< "fail - matched: " << me << endl;
     }

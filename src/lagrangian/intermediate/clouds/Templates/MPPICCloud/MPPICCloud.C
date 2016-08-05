@@ -76,9 +76,9 @@ Foam::MPPICCloud<CloudType>::MPPICCloud
 )
 :
     CloudType(cloudName, rho, U, mu, g, false),
-    packingModel_(NULL),
-    dampingModel_(NULL),
-    isotropyModel_(NULL)
+    packingModel_(nullptr),
+    dampingModel_(nullptr),
+    isotropyModel_(nullptr)
 {
     if (this->solution().steadyState())
     {
@@ -122,9 +122,9 @@ Foam::MPPICCloud<CloudType>::MPPICCloud
 )
 :
     CloudType(mesh, name, c),
-    packingModel_(NULL),
-    dampingModel_(NULL),
-    isotropyModel_(NULL)
+    packingModel_(nullptr),
+    dampingModel_(nullptr),
+    isotropyModel_(nullptr)
 {}
 
 

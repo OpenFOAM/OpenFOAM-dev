@@ -56,8 +56,8 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
         dimensionedScalar("zero", dimless, 0.0),
         zeroGradientFvPatchScalarField::typeName
     ),
-    phiCorrect_(NULL),
-    uCorrect_(NULL),
+    phiCorrect_(nullptr),
+    uCorrect_(nullptr),
     applyLimiting_(this->coeffDict().lookup("applyLimiting")),
     applyGravity_(this->coeffDict().lookup("applyGravity")),
     alphaMin_(readScalar(this->coeffDict().lookup("alphaMin"))),

@@ -607,8 +607,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     tgtWeights_(),
     tgtWeightsSum_(),
     triMode_(triMode),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     update(srcPatch, tgtPatch);
 }
@@ -638,8 +638,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     tgtWeights_(),
     tgtWeightsSum_(),
     triMode_(triMode),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     update(srcPatch, tgtPatch);
 }
@@ -670,8 +670,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     tgtWeights_(),
     tgtWeightsSum_(),
     triMode_(triMode),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     constructFromSurface(srcPatch, tgtPatch, surfPtr);
 }
@@ -702,8 +702,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     tgtWeights_(),
     tgtWeightsSum_(),
     triMode_(triMode),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     constructFromSurface(srcPatch, tgtPatch, surfPtr);
 }
@@ -729,8 +729,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
     tgtWeights_(),
     tgtWeightsSum_(),
     triMode_(fineAMI.triMode_),
-    srcMapPtr_(NULL),
-    tgtMapPtr_(NULL)
+    srcMapPtr_(nullptr),
+    tgtMapPtr_(nullptr)
 {
     label sourceCoarseSize =
     (
