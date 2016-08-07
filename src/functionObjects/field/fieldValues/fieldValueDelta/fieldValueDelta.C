@@ -106,7 +106,8 @@ Foam::functionObjects::fieldValues::fieldValueDelta::fieldValueDelta
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     operation_(opSubtract),
     region1Ptr_(nullptr),
     region2Ptr_(nullptr)
@@ -135,7 +136,7 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::read
     const dictionary& dict
 )
 {
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     region1Ptr_.reset
     (
@@ -166,7 +167,7 @@ bool Foam::functionObjects::fieldValues::fieldValueDelta::read
 
 bool Foam::functionObjects::fieldValues::fieldValueDelta::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     region1Ptr_->write();
     region2Ptr_->write();

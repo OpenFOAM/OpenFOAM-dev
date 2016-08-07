@@ -33,7 +33,8 @@ Description
 
 See also
     Foam::functionObject
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
     Foam::functionObjects::timeControl
 
 SourceFiles
@@ -44,7 +45,8 @@ SourceFiles
 #ifndef functionObjects_yPlus_H
 #define functionObjects_yPlus_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 #include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -65,7 +67,8 @@ namespace functionObjects
 
 class yPlus
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
     // Private Member Functions
 

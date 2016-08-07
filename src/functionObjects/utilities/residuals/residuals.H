@@ -51,7 +51,8 @@ Description
 
 See also
     Foam::functionObject
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
     Foam::functionObjects::timeControl
 
 SourceFiles
@@ -62,7 +63,8 @@ SourceFiles
 #ifndef functionObjects_residuals_H
 #define functionObjects_residuals_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,7 +79,8 @@ namespace functionObjects
 
 class residuals
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
 protected:
 

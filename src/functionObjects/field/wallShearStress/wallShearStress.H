@@ -65,7 +65,8 @@ Usage
 
 See also
     Foam::functionObject
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
     Foam::functionObjects::pressureTools
     Foam::functionObjects::timeControl
 
@@ -77,7 +78,8 @@ SourceFiles
 #ifndef functionObjects_wallShearStress_H
 #define functionObjects_wallShearStress_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 #include "volFieldsFwd.H"
 #include "HashSet.H"
 
@@ -98,8 +100,10 @@ namespace functionObjects
 
 class wallShearStress
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
+
 protected:
 
     // Protected data

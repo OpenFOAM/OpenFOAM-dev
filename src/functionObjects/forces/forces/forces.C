@@ -529,7 +529,8 @@ Foam::functionObjects::forces::forces
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     force_(3),
     moment_(3),
     patchSet_(),
@@ -569,7 +570,8 @@ Foam::functionObjects::forces::forces
     const dictionary& dict
 )
 :
-    writeFiles(name, obr, dict, name),
+    regionFunctionObject(name, obr, dict),
+    logFiles(obr_, name),
     force_(3),
     moment_(3),
     patchSet_(),
@@ -612,7 +614,7 @@ Foam::functionObjects::forces::~forces()
 
 bool Foam::functionObjects::forces::read(const dictionary& dict)
 {
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     initialised_ = false;
 
@@ -909,7 +911,7 @@ bool Foam::functionObjects::forces::write()
 
     if (Pstream::master())
     {
-        writeFiles::write();
+        logFiles::write();
 
         writeForces();
 

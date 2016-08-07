@@ -22,22 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::logFiles
 
 Description
-    functionObject base class for writing files
+    functionObject base class for creating, maintaining and writing log
+    files e.g. integrated of averaged field data vs time.
 
 See also
     Foam::functionObject
-    Foam::OutputFilterFunctionObject
+    Foam::functionObjects::writeFile
 
 SourceFiles
-    functionObjectFiles.C
+    logFiles.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_writeFiles_H
-#define functionObjects_writeFiles_H
+#ifndef functionObjects_logFiles_H
+#define functionObjects_logFiles_H
 
 #include "writeFile.H"
 #include "OFstream.H"
@@ -51,14 +52,17 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class writeFiles Declaration
+                     Class logFiles Declaration
 \*---------------------------------------------------------------------------*/
 
-class writeFiles
+class logFiles
 :
     public writeFile
 {
-    // Private data
+
+protected:
+
+    // Protected data
 
         //- File names
         wordList names_;
@@ -66,8 +70,6 @@ class writeFiles
         //- File pointer
         PtrList<OFstream> filePtrs_;
 
-
-protected:
 
     // Protected Member Functions
 
@@ -80,38 +82,35 @@ protected:
         //- Reset the list of names to a single name entry
         virtual void resetName(const word& name);
 
+        //- File header information
+        virtual void writeFileHeader(const label i = 0) = 0;
+
+
+private:
+
+    // Private Member Functions
+
         //- Disallow default bitwise copy construct
-        writeFiles(const writeFiles&);
+        logFiles(const logFiles&);
 
         //- Disallow default bitwise assignment
-        void operator=(const writeFiles&);
+        void operator=(const logFiles&);
 
 
 public:
 
     // Constructors
 
-        //- Construct from name, Time, dictionary and prefix
-        writeFiles
+        //- Construct from objectRegistry and prefix
+        logFiles
         (
-            const word& name,
-            const Time& time,
-            const dictionary& dict,
-            const word& prefix
-        );
-
-        //- Construct from name, objectRegistry, dictionary and prefix
-        writeFiles
-        (
-            const word& name,
             const objectRegistry& obr,
-            const dictionary& dict,
             const word& prefix
         );
 
 
     //- Destructor
-    virtual ~writeFiles();
+    virtual ~logFiles();
 
 
     // Member Functions
@@ -119,11 +118,11 @@ public:
         //- Return const access to the names
         const wordList& names() const;
 
-        //- Return access to the file (if only 1)
-        OFstream& file();
-
         //- Return access to the files
         PtrList<OFstream>& files();
+
+        //- Return access to the file (if only 1)
+        OFstream& file();
 
         //- Return file 'i'
         OFstream& file(const label i);

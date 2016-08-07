@@ -53,7 +53,8 @@ Foam::functionObjects::residuals::residuals
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     fieldSet_()
 {
     if (!isA<fvMesh>(obr_))
@@ -77,6 +78,8 @@ Foam::functionObjects::residuals::~residuals()
 
 bool Foam::functionObjects::residuals::read(const dictionary& dict)
 {
+    regionFunctionObject::read(dict);
+
     dict.lookup("fields") >> fieldSet_;
 
     return true;
@@ -114,7 +117,7 @@ bool Foam::functionObjects::residuals::execute()
 
 bool Foam::functionObjects::residuals::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     if (Pstream::master())
     {

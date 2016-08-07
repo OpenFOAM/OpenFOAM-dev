@@ -102,7 +102,8 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     patchSet_()
 {
     if (!isA<fvMesh>(obr_))
@@ -147,7 +148,7 @@ Foam::functionObjects::wallHeatFlux::~wallHeatFlux()
 
 bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 {
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
@@ -237,7 +238,7 @@ bool Foam::functionObjects::wallHeatFlux::execute()
 
 bool Foam::functionObjects::wallHeatFlux::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     const volScalarField& wallHeatFlux =
         obr_.lookupObject<volScalarField>(type());

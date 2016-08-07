@@ -67,8 +67,8 @@ Usage
     Output data is written to the file \<timeDir\>/fieldMinMax.dat
 
 See also
-    Foam::functionObject
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
 
 SourceFiles
     fieldMinMax.C
@@ -78,7 +78,8 @@ SourceFiles
 #ifndef functionObjects_fieldMinMax_H
 #define functionObjects_fieldMinMax_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 #include "vector.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -94,7 +95,8 @@ namespace functionObjects
 
 class fieldMinMax
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
 public:
 

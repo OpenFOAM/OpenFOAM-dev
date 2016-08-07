@@ -74,7 +74,7 @@ void Foam::functionObjects::regionSizeDistribution::writeGraph
 {
     const wordList valNames(1, valueName);
 
-    fileName outputPath = baseTimeDir();
+    fileName outputPath = file_.baseTimeDir();
     mkDir(outputPath);
 
     OFstream str(outputPath/formatterPtr_().getFileName(coords, valNames));
@@ -330,7 +330,8 @@ Foam::functionObjects::regionSizeDistribution::regionSizeDistribution
     const dictionary& dict
 )
 :
-    writeFile(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    file_(obr_, name),
     alphaName_(dict.lookup("field")),
     patchNames_(dict.lookup("patches"))
 {

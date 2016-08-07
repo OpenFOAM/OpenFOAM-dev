@@ -179,7 +179,7 @@ bool Foam::functionObjects::forceCoeffs::write()
 
     if (Pstream::master())
     {
-        writeFiles::write();
+        logFiles::write();
 
         scalar pDyn = 0.5*rhoRef_*magUInf_*magUInf_;
 

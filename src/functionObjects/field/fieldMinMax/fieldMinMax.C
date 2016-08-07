@@ -103,7 +103,8 @@ Foam::functionObjects::fieldMinMax::fieldMinMax
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     location_(true),
     mode_(mdMag),
     fieldSet_()
@@ -129,7 +130,7 @@ Foam::functionObjects::fieldMinMax::~fieldMinMax()
 
 bool Foam::functionObjects::fieldMinMax::read(const dictionary& dict)
 {
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     location_ = dict.lookupOrDefault<Switch>("location", true);
 
@@ -148,7 +149,7 @@ bool Foam::functionObjects::fieldMinMax::execute()
 
 bool Foam::functionObjects::fieldMinMax::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     if (!location_) writeTime(file());
     Log << type() << " " << name() <<  " write:" << nl;

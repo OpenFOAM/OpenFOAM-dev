@@ -23,18 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "writeFiles.H"
+#include "logFiles.H"
 #include "Time.H"
 #include "IFstream.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::writeFiles::createFiles()
+void Foam::functionObjects::logFiles::createFiles()
 {
     if (Pstream::master())
     {
         const word startTimeName =
-            obr_.time().timeName(obr_.time().startTime().value());
+            fileObr_.time().timeName(fileObr_.time().startTime().value());
 
         forAll(names_, i)
         {
@@ -49,7 +49,7 @@ void Foam::functionObjects::writeFiles::createFiles()
                 IFstream is(outputDir/(fName + ".dat"));
                 if (is.good())
                 {
-                    fName = fName + "_" + obr_.time().timeName();
+                    fName = fName + "_" + fileObr_.time().timeName();
                 }
 
                 filePtrs_.set(i, new OFstream(outputDir/(fName + ".dat")));
@@ -57,14 +57,13 @@ void Foam::functionObjects::writeFiles::createFiles()
                 initStream(filePtrs_[i]);
 
                 writeFileHeader(i);
-
             }
         }
     }
 }
 
 
-void Foam::functionObjects::writeFiles::resetNames(const wordList& names)
+void Foam::functionObjects::logFiles::resetNames(const wordList& names)
 {
     names_.clear();
     names_.append(names);
@@ -77,7 +76,7 @@ void Foam::functionObjects::writeFiles::resetNames(const wordList& names)
 }
 
 
-void Foam::functionObjects::writeFiles::resetName(const word& name)
+void Foam::functionObjects::logFiles::resetName(const word& name)
 {
     names_.clear();
     names_.append(name);
@@ -92,29 +91,13 @@ void Foam::functionObjects::writeFiles::resetName(const word& name)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::writeFiles::writeFiles
+Foam::functionObjects::logFiles::logFiles
 (
-    const word& name,
-    const Time& time,
-    const dictionary& dict,
-    const word& prefix
-)
-:
-    writeFile(name, time, dict, prefix),
-    names_(),
-    filePtrs_()
-{}
-
-
-Foam::functionObjects::writeFiles::writeFiles
-(
-    const word& name,
     const objectRegistry& obr,
-    const dictionary& dict,
     const word& prefix
 )
 :
-    writeFile(name, obr, dict, prefix),
+    writeFile(obr, prefix),
     names_(),
     filePtrs_()
 {}
@@ -122,19 +105,19 @@ Foam::functionObjects::writeFiles::writeFiles
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::writeFiles::~writeFiles()
+Foam::functionObjects::logFiles::~logFiles()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::functionObjects::writeFiles::names() const
+const Foam::wordList& Foam::functionObjects::logFiles::names() const
 {
     return names_;
 }
 
 
-Foam::OFstream& Foam::functionObjects::writeFiles::file()
+Foam::OFstream& Foam::functionObjects::logFiles::file()
 {
     if (!Pstream::master())
     {
@@ -161,7 +144,7 @@ Foam::OFstream& Foam::functionObjects::writeFiles::file()
 }
 
 
-Foam::PtrList<Foam::OFstream>& Foam::functionObjects::writeFiles::files()
+Foam::PtrList<Foam::OFstream>& Foam::functionObjects::logFiles::files()
 {
     if (!Pstream::master())
     {
@@ -174,7 +157,7 @@ Foam::PtrList<Foam::OFstream>& Foam::functionObjects::writeFiles::files()
 }
 
 
-Foam::OFstream& Foam::functionObjects::writeFiles::file(const label i)
+Foam::OFstream& Foam::functionObjects::logFiles::file(const label i)
 {
     if (!Pstream::master())
     {
@@ -194,7 +177,7 @@ Foam::OFstream& Foam::functionObjects::writeFiles::file(const label i)
 }
 
 
-bool Foam::functionObjects::writeFiles::write()
+bool Foam::functionObjects::logFiles::write()
 {
     createFiles();
 

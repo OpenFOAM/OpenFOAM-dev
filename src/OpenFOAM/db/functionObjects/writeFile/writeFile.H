@@ -28,19 +28,18 @@ Description
     functionObject base class for writing single files
 
 See also
-    Foam::regionFunctionObject
     Foam::functionObject
+    Foam::functionObjects::logFiles
 
 SourceFiles
-    functionObjectFile.C
+    writeFile.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef functionObjects_writeFile_H
 #define functionObjects_writeFile_H
 
-#include "regionFunctionObject.H"
-#include "Time.H"
+#include "objectRegistry.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,34 +54,22 @@ namespace functionObjects
 \*---------------------------------------------------------------------------*/
 
 class writeFile
-:
-    public regionFunctionObject
 {
 
 protected:
 
     // Protected data
 
+        //- Reference to the region objectRegistry
+        const objectRegistry& fileObr_;
+
         //- Prefix
         const word prefix_;
 
 
-    // Protected Member Functions
+private:
 
-        //- Initialise the output stream for writing
-        virtual void initStream(Ostream& os) const;
-
-        //- Return the base directory for output
-        virtual fileName baseFileDir() const;
-
-        //- Return the base directory for the current time value
-        virtual fileName baseTimeDir() const;
-
-        //- File header information
-        virtual void writeFileHeader(const label i = 0);
-
-        //- Return the value width when writing to stream with optional offset
-        virtual Omanip<int> valueWidth(const label offset = 0) const;
+    // Private Member Functions
 
         //- Disallow default bitwise copy construct
         writeFile(const writeFile&);
@@ -102,30 +89,31 @@ public:
 
     // Constructors
 
-        //- Construct from name, Time, dictionary and prefix
+        //- Construct from objectRegistry and prefix
         writeFile
         (
-            const word& name,
-            const Time& t,
-            const dictionary& dict,
-            const word& prefix
-        );
-
-        //- Construct from name, objectRegistry, dictionary and prefix
-        writeFile
-        (
-            const word& name,
             const objectRegistry& obr,
-            const dictionary& dict,
             const word& prefix
         );
 
 
     //- Destructor
-    virtual ~writeFile();
+    ~writeFile();
 
 
     // Member Functions
+
+        //- Initialise the output stream for writing
+        void initStream(Ostream& os) const;
+
+        //- Return the base directory for output
+        fileName baseFileDir() const;
+
+        //- Return the base directory for the current time value
+        fileName baseTimeDir() const;
+
+        //- Return the value width when writing to stream with optional offset
+        Omanip<int> valueWidth(const label offset = 0) const;
 
         //- Write a commented string to stream
         void writeCommented(Ostream& os, const string& str) const;

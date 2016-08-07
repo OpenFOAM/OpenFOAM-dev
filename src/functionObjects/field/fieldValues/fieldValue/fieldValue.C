@@ -49,7 +49,8 @@ Foam::functionObjects::fieldValue::fieldValue
     const word& valueType
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     dict_(dict),
     regionName_(word::null),
     resultDict_(fileName("name"), dictionary::null)
@@ -67,7 +68,8 @@ Foam::functionObjects::fieldValue::fieldValue
     const word& valueType
 )
 :
-    writeFiles(name, obr, dict, name),
+    regionFunctionObject(name, obr, dict),
+    logFiles(obr_, name),
     dict_(dict),
     regionName_(word::null),
     resultDict_(fileName("name"), dictionary::null)
@@ -88,7 +90,7 @@ Foam::functionObjects::fieldValue::~fieldValue()
 bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
 {
     dict_ = dict;
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     dict.lookup("fields") >> fields_;
     dict.lookup("writeFields") >> writeFields_;
@@ -105,7 +107,7 @@ bool Foam::functionObjects::fieldValue::execute()
 
 bool Foam::functionObjects::fieldValue::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     Log << type() << " " << name() << " write:" << nl;
 

@@ -61,7 +61,8 @@ Usage
 
 See also
     Foam::functionObject
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
 
 SourceFiles
     cloudInfo.C
@@ -71,7 +72,8 @@ SourceFiles
 #ifndef functionObjects_cloudInfo_H
 #define functionObjects_cloudInfo_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +88,8 @@ namespace functionObjects
 
 class cloudInfo
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
 protected:
 

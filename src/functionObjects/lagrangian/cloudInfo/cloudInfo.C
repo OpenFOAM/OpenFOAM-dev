@@ -25,6 +25,8 @@ License
 
 #include "cloudInfo.H"
 #include "kinematicCloud.H"
+#include "dictionary.H"
+#include "PstreamReduceOps.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -66,7 +68,8 @@ Foam::functionObjects::cloudInfo::cloudInfo
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name)
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name)
 {
     read(dict);
 }
@@ -82,7 +85,9 @@ Foam::functionObjects::cloudInfo::~cloudInfo()
 
 bool Foam::functionObjects::cloudInfo::read(const dictionary& dict)
 {
-    writeFiles::resetNames(dict.lookup("clouds"));
+    regionFunctionObject::read(dict);
+
+    logFiles::resetNames(dict.lookup("clouds"));
 
     Info<< type() << " " << name() << ": ";
     if (names().size())
@@ -111,7 +116,7 @@ bool Foam::functionObjects::cloudInfo::execute()
 
 bool Foam::functionObjects::cloudInfo::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     forAll(names(), i)
     {

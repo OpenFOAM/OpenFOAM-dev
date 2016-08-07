@@ -121,7 +121,8 @@ Foam::functionObjects::yPlus::yPlus
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name)
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name)
 {
     if (!isA<fvMesh>(obr_))
     {
@@ -164,7 +165,7 @@ Foam::functionObjects::yPlus::~yPlus()
 
 bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 {
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     return true;
 }
@@ -208,7 +209,7 @@ bool Foam::functionObjects::yPlus::write()
 
     yPlus.write();
 
-    writeFiles::write();
+    logFiles::write();
 
     const volScalarField::Boundary& yPlusBf = yPlus.boundaryField();
 

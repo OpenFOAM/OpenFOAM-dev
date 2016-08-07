@@ -30,6 +30,11 @@ Group
 Description
     Base class for field value -based function objects.
 
+See also
+    Foam::functionObject
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
+
 SourceFiles
     fieldValue.C
 
@@ -38,7 +43,8 @@ SourceFiles
 #ifndef functionObjects_fieldValue_H
 #define functionObjects_fieldValue_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 #include "Switch.H"
 #include "Field.H"
 
@@ -59,7 +65,8 @@ namespace functionObjects
 
 class fieldValue
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
 
 protected:

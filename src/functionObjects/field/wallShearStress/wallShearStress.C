@@ -89,7 +89,8 @@ Foam::functionObjects::wallShearStress::wallShearStress
     const dictionary& dict
 )
 :
-    writeFiles(name, runTime, dict, name),
+    regionFunctionObject(name, runTime, dict),
+    logFiles(obr_, name),
     patchSet_()
 {
     if (!isA<fvMesh>(obr_))
@@ -139,7 +140,7 @@ Foam::functionObjects::wallShearStress::~wallShearStress()
 
 bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 {
-    writeFiles::read(dict);
+    regionFunctionObject::read(dict);
 
     const fvMesh& mesh = refCast<const fvMesh>(obr_);
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
@@ -236,7 +237,7 @@ bool Foam::functionObjects::wallShearStress::execute()
 
 bool Foam::functionObjects::wallShearStress::write()
 {
-    writeFiles::write();
+    logFiles::write();
 
     const volVectorField& wallShearStress =
         obr_.lookupObject<volVectorField>(type());

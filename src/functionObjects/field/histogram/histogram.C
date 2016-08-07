@@ -50,7 +50,7 @@ void Foam::functionObjects::histogram::writeGraph
 {
     const wordList fieldNames(1, fieldName);
 
-    fileName outputPath = baseTimeDir();
+    fileName outputPath = file_.baseTimeDir();
     mkDir(outputPath);
     OFstream graphFile
     (
@@ -75,7 +75,8 @@ Foam::functionObjects::histogram::histogram
     const dictionary& dict
 )
 :
-    writeFile(name, runTime, dict, name)
+    regionFunctionObject(name, runTime, dict),
+    file_(obr_, name)
 {
     if (!isA<fvMesh>(obr_))
     {

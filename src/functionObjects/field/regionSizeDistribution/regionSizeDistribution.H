@@ -96,6 +96,7 @@ Usage
 
 See also
     Foam::functionObject
+    Foam::functionObjects::regionFunctionObject
     Foam::functionObjects::writeFile
 
 SourceFiles
@@ -106,6 +107,7 @@ SourceFiles
 #ifndef functionObjects_regionSizeDistribution_H
 #define functionObjects_regionSizeDistribution_H
 
+#include "regionFunctionObject.H"
 #include "writeFile.H"
 #include "writer.H"
 #include "Map.H"
@@ -130,9 +132,11 @@ namespace functionObjects
 
 class regionSizeDistribution
 :
-    public writeFile
+    public regionFunctionObject
 {
     // Private data
+
+        writeFile file_;
 
         //- Name of field
         word alphaName_;

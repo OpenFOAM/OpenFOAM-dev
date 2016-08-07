@@ -101,7 +101,8 @@ Note
 
 See also
     Foam::functionObject
-    Foam::functionObjects::writeFiles
+    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::logFiles
     Foam::functionObjects::timeControl
     Foam::forceCoeffs
 
@@ -113,7 +114,8 @@ SourceFiles
 #ifndef functionObjects_forces_H
 #define functionObjects_forces_H
 
-#include "writeFiles.H"
+#include "regionFunctionObject.H"
+#include "logFiles.H"
 #include "coordinateSystem.H"
 #include "volFieldsFwd.H"
 #include "HashSet.H"
@@ -131,8 +133,10 @@ namespace functionObjects
 
 class forces
 :
-    public writeFiles
+    public regionFunctionObject,
+    public logFiles
 {
+
 protected:
 
     // Protected data

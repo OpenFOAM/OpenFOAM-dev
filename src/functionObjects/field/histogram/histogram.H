@@ -59,6 +59,7 @@ Usage
 
 See also
     Foam::functionObject
+    Foam::functionObjects::regionFunctionObject
     Foam::functionObjects::writeFile
 
 SourceFiles
@@ -69,8 +70,9 @@ SourceFiles
 #ifndef functionObjects_histogram_H
 #define functionObjects_histogram_H
 
-#include "writer.H"
+#include "regionFunctionObject.H"
 #include "writeFile.H"
+#include "writer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -85,9 +87,11 @@ namespace functionObjects
 
 class histogram
 :
-    public writeFile
+    public regionFunctionObject
 {
     // Private data
+
+        writeFile file_;
 
         //- Name of field
         word fieldName_;
