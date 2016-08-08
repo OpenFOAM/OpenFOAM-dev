@@ -258,84 +258,84 @@ YIELD STRESS
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 PRESSURE                                PASCAL                                  
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 CONVECTIVE FILM COEFFICIENT
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 CONVECTION COEFFICIENT                  J/M^2/K/SEC                             
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 THERMAL CAPACITY PER UNIT AREA
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 THERMAL CAPACITY PER UNIT AREA          J/M^2/K                                 
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 SURFACE HEAT FLUX RATE
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 HEAT FLUX PER UNIT AREA                 J/M^2/SEC                               
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 VISCOSITY
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 VISCOSITY                               KG/M/SEC                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 COEFFICIENT OF FRICTION
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 DIMENSIONLESS                           UNITLESS                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 AREA FACTOR
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 DIMENSIONLESS                           UNITLESS                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 EMISSIVITY
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 DIMENSIONLESS                           UNITLESS                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 ABSORPTIVITY
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 DIMENSIONLESS                           UNITLESS                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 HEAT FLUX RATE
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 HEAT FLUX PER UNIT LENGTH               J/M/SEC                                 
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 INTERACTION TERM FOR TSAI-WU
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 DIMENSIONLESS                           UNITLESS                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 SWELLING COEFFICIENT
          1  VERSION NUMBER
          0  LINE(S) OF TEXT
 DIMENSIONS AND UNITS:
 DIMENSIONLESS                           UNITLESS                                
-nullptr_PROPERTY
+NULL_PROPERTY
 --------------------------------------------------------------------------------
 DEFAULT MATERIAL PROPERT(IES):
 MODULUS OF ELASTICITY                   VERSION :          1

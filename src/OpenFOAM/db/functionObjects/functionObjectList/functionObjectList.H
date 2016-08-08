@@ -88,7 +88,7 @@ class functionObjectList
 
         //- Remove and return the function object pointer by name,
         //  and returns the old index via the parameter.
-        //  Returns a nullptr pointer (and index -1) if it didn't exist
+        //  Returns a nullptr (and index -1) if it didn't exist
         functionObject* remove(const word&, label& oldIndex);
 
         //- Search the specified directory for functionObject

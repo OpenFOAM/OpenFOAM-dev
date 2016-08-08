@@ -341,7 +341,7 @@ bool Foam::HashTable<T, Key, Hash>::iteratorBase::erase()
             hashTable_->table_[hashIndex_] = entryPtr_->next_;
             delete entryPtr_;
 
-            // Assign any non-nullptr pointer value so it doesn't look
+            // Assign any non-nullptr value so it doesn't look
             // like end()/cend()
             entryPtr_ = reinterpret_cast<hashedEntry*>(this);
 
