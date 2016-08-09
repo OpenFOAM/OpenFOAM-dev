@@ -85,13 +85,23 @@ class List
 {
     // Private member functions
 
+        //- Allocate list storage
+        inline void alloc();
+
+        //- Reallocate list storage to the given size
+        inline void reAlloc(const label s);
+
         //- Copy list of given type
         template<class List2>
-        void CopyList(const List2&);
+        inline void copyList(const List2&);
+
+        //- Allocate storage and copy list of given type
+        template<class List2>
+        inline void allocCopyList(const List2&);
 
         //- Construct given start and end iterators and number of elements
         template<class InputIterator>
-        List(InputIterator first, InputIterator last, const label s);
+        inline List(InputIterator first, InputIterator last, const label s);
 
 
 protected:
@@ -160,7 +170,7 @@ public:
         explicit List(const BiIndirectList<T>&);
 
         //- Construct from an initializer list
-        List(std::initializer_list<T> lst);
+        List(std::initializer_list<T>);
 
         //- Construct from Istream
         List(Istream&);
@@ -200,7 +210,7 @@ public:
             void setSize(const label, const T&);
 
             //- Clear the list, i.e. set size to zero
-            void clear();
+            inline void clear();
 
             //- Append an element at the end of the list
             inline void append(const T&);
@@ -251,6 +261,9 @@ public:
 
         //- Assignment from BiIndirectList operator. Takes linear time
         void operator=(const BiIndirectList<T>&);
+
+        //- Construct from an initializer list
+        void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value
         inline void operator=(const T&);

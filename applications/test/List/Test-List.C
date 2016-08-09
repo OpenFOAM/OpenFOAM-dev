@@ -100,6 +100,14 @@ int main(int argc, char *argv[])
         {8, 1, 0}
     };
     Info<< "list5: " << list5 << endl;
+    list5 =
+    {
+        {8, 1, 0},
+        {5, 3, 1},
+        {10, 2, 2}
+
+    };
+    Info<< "list5: " << list5 << endl;
 
     list4.swap(list5);
     Info<< "Swapped via the swap() method" << endl;
