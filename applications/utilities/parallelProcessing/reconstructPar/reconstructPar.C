@@ -1006,7 +1006,7 @@ int main(int argc, char *argv[])
 
             // For the first region of a multi-region case additionally
             // copy the "uniform" directory in the time directory
-            if (regionNames.size() > 1 && regioni == 0)
+            if (regioni == 0 && regionDir != word::null)
             {
                 fileName uniformDir0
                 (
