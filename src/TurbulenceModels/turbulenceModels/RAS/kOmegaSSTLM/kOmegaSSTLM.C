@@ -199,7 +199,7 @@ tmp<volScalarField::Internal> kOmegaSSTLM<BasicTurbulenceModel>::Flength
         }
 
         const scalar Fsublayer =
-            exp(-sqr(sqr(y[celli])*omega[celli]/(300*nu[celli])));
+            exp(-sqr(sqr(y[celli])*omega[celli]/(200*nu[celli])));
 
         Flength[celli] = Flength[celli]*(1 - Fsublayer) + 40*Fsublayer;
     }
