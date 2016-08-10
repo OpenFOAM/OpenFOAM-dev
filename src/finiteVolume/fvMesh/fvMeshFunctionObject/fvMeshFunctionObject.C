@@ -52,6 +52,18 @@ Foam::functionObjects::fvMeshFunctionObject::fvMeshFunctionObject
 {}
 
 
+Foam::functionObjects::fvMeshFunctionObject::fvMeshFunctionObject
+(
+    const word& name,
+    const objectRegistry& obr,
+    const dictionary& dict
+)
+:
+    regionFunctionObject(name, obr, dict),
+    mesh_(refCast<const fvMesh>(obr_))
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::functionObjects::fvMeshFunctionObject::~fvMeshFunctionObject()

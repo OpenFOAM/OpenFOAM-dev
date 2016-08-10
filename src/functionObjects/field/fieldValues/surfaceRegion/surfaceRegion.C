@@ -102,7 +102,7 @@ const Foam::NamedEnum
 
 void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
 {
-    label zoneId = mesh().faceZones().findZoneID(regionName_);
+    label zoneId = mesh_.faceZones().findZoneID(regionName_);
 
     if (zoneId < 0)
     {
@@ -110,11 +110,11 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
             << type() << " " << name() << ": "
             << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
             << "    Unknown face zone name: " << regionName_
-            << ". Valid face zones are: " << mesh().faceZones().names()
+            << ". Valid face zones are: " << mesh_.faceZones().names()
             << nl << exit(FatalError);
     }
 
-    const faceZone& fZone = mesh().faceZones()[zoneId];
+    const faceZone& fZone = mesh_.faceZones()[zoneId];
 
     DynamicList<label> faceIds(fZone.size());
     DynamicList<label> facePatchIds(fZone.size());
@@ -126,15 +126,15 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
 
         label faceId = -1;
         label facePatchId = -1;
-        if (mesh().isInternalFace(facei))
+        if (mesh_.isInternalFace(facei))
         {
             faceId = facei;
             facePatchId = -1;
         }
         else
         {
-            facePatchId = mesh().boundaryMesh().whichPatch(facei);
-            const polyPatch& pp = mesh().boundaryMesh()[facePatchId];
+            facePatchId = mesh_.boundaryMesh().whichPatch(facei);
+            const polyPatch& pp = mesh_.boundaryMesh()[facePatchId];
             if (isA<coupledPolyPatch>(pp))
             {
                 if (refCast<const coupledPolyPatch>(pp).owner())
@@ -187,7 +187,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
 
 void Foam::functionObjects::fieldValues::surfaceRegion::setPatchFaces()
 {
-    const label patchid = mesh().boundaryMesh().findPatchID(regionName_);
+    const label patchid = mesh_.boundaryMesh().findPatchID(regionName_);
 
     if (patchid < 0)
     {
@@ -196,11 +196,11 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setPatchFaces()
             << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
             << "    Unknown patch name: " << regionName_
             << ". Valid patch names are: "
-            << mesh().boundaryMesh().names() << nl
+            << mesh_.boundaryMesh().names() << nl
             << exit(FatalError);
     }
 
-    const polyPatch& pp = mesh().boundaryMesh()[patchid];
+    const polyPatch& pp = mesh_.boundaryMesh()[patchid];
 
     label nFaces = pp.size();
     if (isA<emptyPolyPatch>(pp))
@@ -230,7 +230,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::sampledSurfaceFaces
     surfacePtr_ = sampledSurface::New
     (
         name(),
-        mesh(),
+        mesh_,
         dict.subDict("sampledSurfaceDict")
     );
     surfacePtr_().update();
@@ -253,15 +253,15 @@ void Foam::functionObjects::fieldValues::surfaceRegion::combineMeshGeometry
         if (facePatchId_[i] != -1)
         {
             label patchi = facePatchId_[i];
-            globalFacesIs[i] += mesh().boundaryMesh()[patchi].start();
+            globalFacesIs[i] += mesh_.boundaryMesh()[patchi].start();
         }
     }
 
     // Add local faces and points to the all* lists
     indirectPrimitivePatch pp
     (
-        IndirectList<face>(mesh().faces(), globalFacesIs),
-        mesh().points()
+        IndirectList<face>(mesh_.faces(), globalFacesIs),
+        mesh_.points()
     );
     allFaces[Pstream::myProcNo()] = pp.localFaces();
     allPoints[Pstream::myProcNo()] = pp.localPoints();
@@ -372,7 +372,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::combineSurfaceGeometry
         if (Pstream::parRun())
         {
             // Dimension as fraction of mesh bounding box
-            scalar mergeDim = 1e-10*mesh().bounds().mag();
+            scalar mergeDim = 1e-10*mesh_.bounds().mag();
 
             labelList pointsMap;
 
@@ -409,7 +409,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::totalArea() const
     }
     else
     {
-        totalArea = gSum(filterField(mesh().magSf(), false));
+        totalArea = gSum(filterField(mesh_.magSf(), false));
     }
 
     return totalArea;
@@ -664,12 +664,6 @@ Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
     facePatchId_(),
     faceSign_()
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 
@@ -694,12 +688,6 @@ Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
     facePatchId_(),
     faceSign_()
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 

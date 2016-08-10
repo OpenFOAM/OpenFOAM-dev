@@ -51,7 +51,7 @@ Description
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
     Foam::functionObjects::timeControl
 
@@ -63,7 +63,7 @@ SourceFiles
 #ifndef functionObjects_residuals_H
 #define functionObjects_residuals_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,7 +79,7 @@ namespace functionObjects
 
 class residuals
 :
-    public regionFunctionObject,
+    public fvMeshFunctionObject,
     public logFiles
 {
 protected:

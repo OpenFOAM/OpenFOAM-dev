@@ -59,21 +59,8 @@ Foam::functionObjects::dsmcFields::dsmcFields
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    )
+    fvMeshFunctionObject(name, runTime, dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 
@@ -215,13 +202,11 @@ bool Foam::functionObjects::dsmcFields::write()
             physicoChemical::k.value()*rhoNMean*translationalT
         );
 
-        const fvMesh& mesh = fDMean.mesh();
-
         volScalarField::Boundary& pBf = p.boundaryFieldRef();
 
-        forAll(mesh.boundaryMesh(), i)
+        forAll(mesh_.boundaryMesh(), i)
         {
-            const polyPatch& patch = mesh.boundaryMesh()[i];
+            const polyPatch& patch = mesh_.boundaryMesh()[i];
 
             if (isA<wallPolyPatch>(patch))
             {

@@ -109,10 +109,9 @@ void Foam::functionObjects::fieldMinMax::calcMinMaxFields
         const label proci = Pstream::myProcNo();
 
         const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
-        const fvMesh& mesh = field.mesh();
 
         const volVectorField::Boundary& CfBoundary =
-            mesh.C().boundaryField();
+            mesh_.C().boundaryField();
 
         switch (mode)
         {
@@ -126,7 +125,7 @@ void Foam::functionObjects::fieldMinMax::calcMinMaxFields
                 List<vector> minCs(Pstream::nProcs());
                 label minProci = findMin(magField);
                 minVs[proci] = magField[minProci];
-                minCs[proci] = field.mesh().C()[minProci];
+                minCs[proci] = mesh_.C()[minProci];
 
 
                 labelList maxIs(Pstream::nProcs());
@@ -134,7 +133,7 @@ void Foam::functionObjects::fieldMinMax::calcMinMaxFields
                 List<vector> maxCs(Pstream::nProcs());
                 label maxProci = findMax(magField);
                 maxVs[proci] = magField[maxProci];
-                maxCs[proci] = field.mesh().C()[maxProci];
+                maxCs[proci] = mesh_.C()[maxProci];
 
                 forAll(magFieldBoundary, patchi)
                 {
@@ -198,7 +197,7 @@ void Foam::functionObjects::fieldMinMax::calcMinMaxFields
                 List<vector> minCs(Pstream::nProcs());
                 label minProci = findMin(field);
                 minVs[proci] = field[minProci];
-                minCs[proci] = field.mesh().C()[minProci];
+                minCs[proci] = mesh_.C()[minProci];
 
                 Pstream::gatherList(minVs);
                 Pstream::gatherList(minCs);
@@ -207,7 +206,7 @@ void Foam::functionObjects::fieldMinMax::calcMinMaxFields
                 List<vector> maxCs(Pstream::nProcs());
                 label maxProci = findMax(field);
                 maxVs[proci] = field[maxProci];
-                maxCs[proci] = field.mesh().C()[maxProci];
+                maxCs[proci] = mesh_.C()[maxProci];
 
                 forAll(fieldBoundary, patchi)
                 {

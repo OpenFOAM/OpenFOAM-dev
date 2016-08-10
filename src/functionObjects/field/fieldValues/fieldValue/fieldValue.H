@@ -32,7 +32,7 @@ Description
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -43,7 +43,7 @@ SourceFiles
 #ifndef functionObjects_fieldValue_H
 #define functionObjects_fieldValue_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "logFiles.H"
 #include "Switch.H"
 #include "Field.H"
@@ -65,7 +65,7 @@ namespace functionObjects
 
 class fieldValue
 :
-    public regionFunctionObject,
+    public fvMeshFunctionObject,
     public logFiles
 {
 
@@ -168,9 +168,6 @@ public:
 
         //- Return the output field values flag
         inline const Switch& writeFields() const;
-
-        //- Helper function to return the reference to the mesh
-        inline const fvMesh& mesh() const;
 
         //- Return access to the latest set of results
         inline const dictionary& resultDict() const;

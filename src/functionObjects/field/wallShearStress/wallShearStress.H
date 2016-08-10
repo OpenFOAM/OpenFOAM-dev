@@ -65,7 +65,7 @@ Usage
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
     Foam::functionObjects::pressureTools
     Foam::functionObjects::timeControl
@@ -78,7 +78,7 @@ SourceFiles
 #ifndef functionObjects_wallShearStress_H
 #define functionObjects_wallShearStress_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "logFiles.H"
 #include "volFieldsFwd.H"
 #include "HashSet.H"
@@ -87,10 +87,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class fvMesh;
-
 namespace functionObjects
 {
 
@@ -100,7 +96,7 @@ namespace functionObjects
 
 class wallShearStress
 :
-    public regionFunctionObject,
+    public fvMeshFunctionObject,
     public logFiles
 {
 
@@ -120,7 +116,6 @@ protected:
         //- Calculate the shear-stress
         void calcShearStress
         (
-            const fvMesh& mesh,
             const volSymmTensorField& Reff,
             volVectorField& shearStress
         );

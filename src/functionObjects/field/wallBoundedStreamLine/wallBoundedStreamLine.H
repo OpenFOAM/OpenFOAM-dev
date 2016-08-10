@@ -94,7 +94,7 @@ Note
     option should be used
 
 See also
-    Foam::functionObject
+    Foam::fvMeshFunctionObject
     Foam::functionObjects::timeControl
     Foam::sampledSet
     Foam::streamLine
@@ -107,7 +107,7 @@ SourceFiles
 #ifndef functionObjects_wallBoundedStreamLine_H
 #define functionObjects_wallBoundedStreamLine_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
 #include "DynamicList.H"
 #include "scalarList.H"
@@ -122,7 +122,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class objectRegistry;
 class meshSearch;
 class sampledSet;
 
@@ -135,12 +134,9 @@ namespace functionObjects
 
 class wallBoundedStreamLine
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
     // Private data
-
-        //- Database this class is registered to
-        const objectRegistry& obr_;
 
         //- Input dictionary
         dictionary dict_;

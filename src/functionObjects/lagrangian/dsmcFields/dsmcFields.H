@@ -35,6 +35,9 @@ Description
     - overallT
     from averaged extensive fields from a DSMC calculation.
 
+See also
+    Foam::functionObjects::fvMeshFunctionObject
+
 SourceFiles
     dsmcFields.C
 
@@ -43,16 +46,12 @@ SourceFiles
 #ifndef functionObjects_dsmcFields_H
 #define functionObjects_dsmcFields_H
 
-#include "functionObject.H"
+#include "fvMeshFunctionObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
-
 namespace functionObjects
 {
 
@@ -62,13 +61,8 @@ namespace functionObjects
 
 class dsmcFields
 :
-    public functionObject
+    public fvMeshFunctionObject
 {
-    // Private data
-
-        const objectRegistry& obr_;
-
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct

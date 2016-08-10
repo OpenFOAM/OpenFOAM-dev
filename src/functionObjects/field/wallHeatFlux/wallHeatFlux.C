@@ -102,18 +102,10 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
     const dictionary& dict
 )
 :
-    regionFunctionObject(name, runTime, dict),
+    fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     patchSet_()
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     volScalarField* wallHeatFluxPtr
     (
         new volScalarField
@@ -121,17 +113,17 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
             IOobject
             (
                 type(),
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("0", dimMass/pow3(dimTime), 0)
         )
     );
 
-    mesh.objectRegistry::store(wallHeatFluxPtr);
+    mesh_.objectRegistry::store(wallHeatFluxPtr);
 
     read(dict);
     resetName(typeName);
@@ -148,13 +140,12 @@ Foam::functionObjects::wallHeatFlux::~wallHeatFlux()
 
 bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 {
-    regionFunctionObject::read(dict);
+    fvMeshFunctionObject::read(dict);
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+    const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
     patchSet_ =
-        mesh.boundaryMesh().patchSet
+        mesh_.boundaryMesh().patchSet
         (
             wordReList(dict.lookupOrDefault("patches", wordReList()))
         );
@@ -248,11 +239,10 @@ bool Foam::functionObjects::wallHeatFlux::write()
 
     wallHeatFlux.write();
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-    const fvPatchList& patches = mesh.boundary();
+    const fvPatchList& patches = mesh_.boundary();
 
     const surfaceScalarField::Boundary& magSf =
-        mesh.magSf().boundaryField();
+        mesh_.magSf().boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
@@ -268,7 +258,8 @@ bool Foam::functionObjects::wallHeatFlux::write()
 
         if (Pstream::master())
         {
-            file() << mesh.time().value()
+            file()
+                << mesh_.time().value()
                 << token::TAB << pp.name()
                 << token::TAB << minHfp
                 << token::TAB << maxHfp

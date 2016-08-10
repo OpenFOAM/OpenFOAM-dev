@@ -291,7 +291,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
         else
         {
             // Get oriented Sf
-            Sf = filterField(mesh().Sf(), true);
+            Sf = filterField(mesh_.Sf(), true);
         }
 
         // Combine onto master

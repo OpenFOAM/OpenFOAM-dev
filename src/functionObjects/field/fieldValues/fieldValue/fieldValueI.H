@@ -53,12 +53,6 @@ Foam::functionObjects::fieldValue::writeFields() const
 }
 
 
-inline const Foam::fvMesh& Foam::functionObjects::fieldValue::mesh() const
-{
-    return refCast<const fvMesh>(obr_);
-}
-
-
 inline const Foam::dictionary&
 Foam::functionObjects::fieldValue::resultDict() const
 {

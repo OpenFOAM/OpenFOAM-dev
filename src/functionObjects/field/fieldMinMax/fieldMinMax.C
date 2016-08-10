@@ -103,18 +103,12 @@ Foam::functionObjects::fieldMinMax::fieldMinMax
     const dictionary& dict
 )
 :
-    regionFunctionObject(name, runTime, dict),
+    fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     location_(true),
     mode_(mdMag),
     fieldSet_()
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
     resetName(typeName);
 }
@@ -130,7 +124,7 @@ Foam::functionObjects::fieldMinMax::~fieldMinMax()
 
 bool Foam::functionObjects::fieldMinMax::read(const dictionary& dict)
 {
-    regionFunctionObject::read(dict);
+    fvMeshFunctionObject::read(dict);
 
     location_ = dict.lookupOrDefault<Switch>("location", true);
 

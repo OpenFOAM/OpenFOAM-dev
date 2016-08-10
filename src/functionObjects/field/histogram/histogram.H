@@ -59,7 +59,7 @@ Usage
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::writeFile
 
 SourceFiles
@@ -70,7 +70,7 @@ SourceFiles
 #ifndef functionObjects_histogram_H
 #define functionObjects_histogram_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "writeFile.H"
 #include "writer.H"
 
@@ -87,7 +87,7 @@ namespace functionObjects
 
 class histogram
 :
-    public regionFunctionObject
+    public fvMeshFunctionObject
 {
     // Private data
 

@@ -63,9 +63,7 @@ namespace functionObjects
 Foam::autoPtr<Foam::indirectPrimitivePatch>
 Foam::functionObjects::wallBoundedStreamLine::wallPatch() const
 {
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
     label nFaces = 0;
 
@@ -102,10 +100,10 @@ Foam::functionObjects::wallBoundedStreamLine::wallPatch() const
         (
             IndirectList<face>
             (
-                mesh.faces(),
+                mesh_.faces(),
                 addressing
             ),
-            mesh.points()
+            mesh_.points()
         )
     );
 }
@@ -118,9 +116,7 @@ Foam::tetIndices Foam::functionObjects::wallBoundedStreamLine::findNearestTet
     const label celli
 ) const
 {
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-    const cell& cFaces = mesh.cells()[celli];
+    const cell& cFaces = mesh_.cells()[celli];
 
     label minFacei = -1;
     label minTetPtI = -1;
@@ -132,16 +128,16 @@ Foam::tetIndices Foam::functionObjects::wallBoundedStreamLine::findNearestTet
 
         if (isWallPatch[facei])
         {
-            const face& f = mesh.faces()[facei];
-            const label fp0 = mesh.tetBasePtIs()[facei];
-            const point& basePoint = mesh.points()[f[fp0]];
+            const face& f = mesh_.faces()[facei];
+            const label fp0 = mesh_.tetBasePtIs()[facei];
+            const point& basePoint = mesh_.points()[f[fp0]];
 
             label fp = f.fcIndex(fp0);
             for (label i = 2; i < f.size(); i++)
             {
-                const point& thisPoint = mesh.points()[f[fp]];
+                const point& thisPoint = mesh_.points()[f[fp]];
                 label nextFp = f.fcIndex(fp);
-                const point& nextPoint = mesh.points()[f[nextFp]];
+                const point& nextPoint = mesh_.points()[f[nextFp]];
 
                 const triPointRef tri(basePoint, thisPoint, nextPoint);
 
@@ -163,22 +159,19 @@ Foam::tetIndices Foam::functionObjects::wallBoundedStreamLine::findNearestTet
         celli,
         minFacei,
         minTetPtI,
-        mesh
+        mesh_
     );
 }
 
 
 void Foam::functionObjects::wallBoundedStreamLine::track()
 {
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-
     // Determine the 'wall' patches
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     // These are the faces that need to be followed
 
     autoPtr<indirectPrimitivePatch> boundaryPatch(wallPatch());
-    PackedBoolList isWallPatch(mesh.nFaces());
+    PackedBoolList isWallPatch(mesh_.nFaces());
     forAll(boundaryPatch().addressing(), i)
     {
         isWallPatch[boundaryPatch().addressing()[i]] = 1;
@@ -192,7 +185,7 @@ void Foam::functionObjects::wallBoundedStreamLine::track()
     IDLList<wallBoundedStreamLineParticle> initialParticles;
     wallBoundedStreamLineParticleCloud particles
     (
-        mesh,
+        mesh_,
         cloudName_,
         initialParticles
     );
@@ -216,16 +209,16 @@ void Foam::functionObjects::wallBoundedStreamLine::track()
                 //Pout<< "Seeding particle :" << nl
                 //    << "     seedPt:" << seedPt << nl
                 //    << "     face  :" << ids.face() << nl
-                //    << "     at    :" << mesh.faceCentres()[ids.face()] << nl
-                //    << "     cell  :" << mesh.cellCentres()[ids.cell()] << nl
+                //    << "     at    :" << mesh_.faceCentres()[ids.face()] << nl
+                //    << "     cell  :" << mesh_.cellCentres()[ids.cell()] << nl
                 //    << endl;
 
                 particles.addParticle
                 (
                     new wallBoundedStreamLineParticle
                     (
-                        mesh,
-                        ids.faceTri(mesh).centre(),
+                        mesh_,
+                        ids.faceTri(mesh_).centre(),
                         ids.cell(),
                         ids.face(),     // tetFace
                         ids.tetPt(),
@@ -262,11 +255,11 @@ void Foam::functionObjects::wallBoundedStreamLine::track()
 
     forAll(fields_, i)
     {
-        if (mesh.foundObject<volScalarField>(fields_[i]))
+        if (mesh_.foundObject<volScalarField>(fields_[i]))
         {
             nScalar++;
         }
-        else if (mesh.foundObject<volVectorField>(fields_[i]))
+        else if (mesh_.foundObject<volVectorField>(fields_[i]))
         {
             nVector++;
         }
@@ -275,9 +268,9 @@ void Foam::functionObjects::wallBoundedStreamLine::track()
             FatalErrorInFunction
                 << "Cannot find field " << fields_[i] << endl
                 << "Valid scalar fields are:"
-                << mesh.names(volScalarField::typeName) << endl
+                << mesh_.names(volScalarField::typeName) << endl
                 << "Valid vector fields are:"
-                << mesh.names(volVectorField::typeName)
+                << mesh_.names(volVectorField::typeName)
                 << exit(FatalError);
         }
     }
@@ -289,9 +282,9 @@ void Foam::functionObjects::wallBoundedStreamLine::track()
 
     forAll(fields_, i)
     {
-        if (mesh.foundObject<volScalarField>(fields_[i]))
+        if (mesh_.foundObject<volScalarField>(fields_[i]))
         {
-            const volScalarField& f = mesh.lookupObject<volScalarField>
+            const volScalarField& f = mesh_.lookupObject<volScalarField>
             (
                 fields_[i]
             );
@@ -305,9 +298,9 @@ void Foam::functionObjects::wallBoundedStreamLine::track()
                 )
             );
         }
-        else if (mesh.foundObject<volVectorField>(fields_[i]))
+        else if (mesh_.foundObject<volVectorField>(fields_[i]))
         {
-            const volVectorField& f = mesh.lookupObject<volVectorField>
+            const volVectorField& f = mesh_.lookupObject<volVectorField>
             (
                 fields_[i]
             );
@@ -409,22 +402,9 @@ Foam::functionObjects::wallBoundedStreamLine::wallBoundedStreamLine
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    fvMeshFunctionObject(name, runTime, dict),
     dict_(dict)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict_);
 }
 
@@ -439,7 +419,13 @@ Foam::functionObjects::wallBoundedStreamLine::~wallBoundedStreamLine()
 
 bool Foam::functionObjects::wallBoundedStreamLine::read(const dictionary& dict)
 {
-    //dict_ = dict;
+    if (dict != dict_)
+    {
+        dict_ = dict;
+    }
+
+    Info<< type() << " " << name() << ":" << nl;
+
     dict.lookup("fields") >> fields_;
     if (dict.found("U"))
     {
@@ -502,15 +488,13 @@ bool Foam::functionObjects::wallBoundedStreamLine::read(const dictionary& dict)
     );
     dict.lookup("seedSampleSet") >> seedSet_;
 
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
     const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
 
     sampledSetPtr_ = sampledSet::New
     (
         seedSet_,
-        mesh,
-        meshSearchMeshObject::New(mesh),
+        mesh_,
+        meshSearchMeshObject::New(mesh_),
         coeffsDict
     );
     coeffsDict.lookup("axis") >> sampledSetAxis_;
@@ -523,12 +507,12 @@ bool Foam::functionObjects::wallBoundedStreamLine::read(const dictionary& dict)
     if (debug)
     {
         // 1. positive volume decomposition tets
-        faceSet faces(mesh, "lowQualityTetFaces", mesh.nFaces()/100+1);
+        faceSet faces(mesh_, "lowQualityTetFaces", mesh_.nFaces()/100+1);
         if
         (
             polyMeshTetDecomposition::checkFaceTets
             (
-                mesh,
+                mesh_,
                 polyMeshTetDecomposition::minTetQuality,
                 true,
                 &faces
@@ -546,16 +530,16 @@ bool Foam::functionObjects::wallBoundedStreamLine::read(const dictionary& dict)
 
         // 2. all edges on a cell having two faces
         EdgeMap<label> numFacesPerEdge;
-        forAll(mesh.cells(), celli)
+        forAll(mesh_.cells(), celli)
         {
-            const cell& cFaces = mesh.cells()[celli];
+            const cell& cFaces = mesh_.cells()[celli];
 
             numFacesPerEdge.clear();
 
             forAll(cFaces, cFacei)
             {
                 label facei = cFaces[cFacei];
-                const face& f = mesh.faces()[facei];
+                const face& f = mesh_.faces()[facei];
                 forAll(f, fp)
                 {
                     const edge e(f[fp], f.nextLabel(fp));
@@ -597,8 +581,6 @@ bool Foam::functionObjects::wallBoundedStreamLine::execute()
 bool Foam::functionObjects::wallBoundedStreamLine::write()
 {
     const Time& runTime = obr_.time();
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
 
     // Do all injection and tracking
     track();
@@ -724,11 +706,11 @@ bool Foam::functionObjects::wallBoundedStreamLine::write()
           ? runTime.path()/".."/"postProcessing"/"sets"/name()
           : runTime.path()/"postProcessing"/"sets"/name()
         );
-        if (mesh.name() != fvMesh::defaultRegion)
+        if (mesh_.name() != fvMesh::defaultRegion)
         {
-            vtkPath = vtkPath/mesh.name();
+            vtkPath = vtkPath/mesh_.name();
         }
-        vtkPath = vtkPath/mesh.time().timeName();
+        vtkPath = vtkPath/mesh_.time().timeName();
 
         mkDir(vtkPath);
 
@@ -839,8 +821,6 @@ void Foam::functionObjects::wallBoundedStreamLine::updateMesh
     const mapPolyMesh& mpm
 )
 {
-    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
-
     if (&mpm.mesh() == &mesh_)
     {
         read(dict_);
@@ -853,8 +833,6 @@ void Foam::functionObjects::wallBoundedStreamLine::movePoints
     const polyMesh& mesh
 )
 {
-    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
-
     if (&mesh == &mesh_)
     {
         // Moving mesh affects the search tree

@@ -355,8 +355,6 @@ bool Foam::functionObjects::nearWallFields::write()
         vtf_[i].write();
     }
 
-    Log << endl;
-
     return true;
 }
 

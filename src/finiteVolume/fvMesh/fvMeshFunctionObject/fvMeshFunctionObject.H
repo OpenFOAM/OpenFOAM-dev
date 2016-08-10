@@ -100,6 +100,14 @@ public:
             const dictionary& dict
         );
 
+        //- Construct from the region objectRegistry and dictionary
+        fvMeshFunctionObject
+        (
+            const word& name,
+            const objectRegistry& obr,
+            const dictionary& dict
+        );
+
 
     //- Destructor
     virtual ~fvMeshFunctionObject();

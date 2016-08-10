@@ -165,7 +165,7 @@ bool Foam::functionObjects::fieldValues::volRegion::writeValues
     if (ok)
     {
         Field<Type> values(setFieldValues<Type>(fieldName));
-        scalarField V(filterField(mesh().V()));
+        scalarField V(filterField(mesh_.V()));
         scalarField weightField(values.size(), 1.0);
 
         if (weightFieldName_ != "none")

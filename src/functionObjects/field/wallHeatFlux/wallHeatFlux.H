@@ -54,7 +54,7 @@ Usage
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
     Foam::functionObjects::pressureTools
     Foam::functionObjects::timeControl
@@ -67,7 +67,7 @@ SourceFiles
 #ifndef functionObjects_wallHeatFlux_H
 #define functionObjects_wallHeatFlux_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "logFiles.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
@@ -78,10 +78,6 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class fvMesh;
-
 namespace functionObjects
 {
 
@@ -91,7 +87,7 @@ namespace functionObjects
 
 class wallHeatFlux
 :
-    public regionFunctionObject,
+    public fvMeshFunctionObject,
     public logFiles
 {
 

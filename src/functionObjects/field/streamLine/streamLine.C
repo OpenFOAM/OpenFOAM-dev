@@ -26,7 +26,6 @@ License
 #include "Pstream.H"
 #include "functionObjectList.H"
 #include "streamLine.H"
-#include "fvMesh.H"
 #include "streamLineParticleCloud.H"
 #include "ReadFields.H"
 #include "meshSearch.H"
@@ -55,9 +54,7 @@ namespace functionObjects
 Foam::autoPtr<Foam::indirectPrimitivePatch>
 Foam::functionObjects::streamLine::wallPatch() const
 {
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
     label nFaces = 0;
 
@@ -92,10 +89,10 @@ Foam::functionObjects::streamLine::wallPatch() const
         (
             IndirectList<face>
             (
-                mesh.faces(),
+                mesh_.faces(),
                 addressing
             ),
-            mesh.points()
+            mesh_.points()
         )
     );
 }
@@ -103,12 +100,10 @@ Foam::functionObjects::streamLine::wallPatch() const
 
 void Foam::functionObjects::streamLine::track()
 {
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
     IDLList<streamLineParticle> initialParticles;
     streamLineParticleCloud particles
     (
-        mesh,
+        mesh_,
         cloudName_,
         initialParticles
     );
@@ -121,7 +116,7 @@ void Foam::functionObjects::streamLine::track()
         (
             new streamLineParticle
             (
-                mesh,
+                mesh_,
                 seedPoints[i],
                 seedPoints.cells()[i],
                 lifeTime_
@@ -146,11 +141,11 @@ void Foam::functionObjects::streamLine::track()
 
     forAll(fields_, i)
     {
-        if (mesh.foundObject<volScalarField>(fields_[i]))
+        if (mesh_.foundObject<volScalarField>(fields_[i]))
         {
             nScalar++;
         }
-        else if (mesh.foundObject<volVectorField>(fields_[i]))
+        else if (mesh_.foundObject<volVectorField>(fields_[i]))
         {
             nVector++;
         }
@@ -159,9 +154,9 @@ void Foam::functionObjects::streamLine::track()
             FatalErrorInFunction
                 << "Cannot find field " << fields_[i] << nl
                 << "Valid scalar fields are:"
-                << mesh.names(volScalarField::typeName) << nl
+                << mesh_.names(volScalarField::typeName) << nl
                 << "Valid vector fields are:"
-                << mesh.names(volVectorField::typeName)
+                << mesh_.names(volVectorField::typeName)
                 << exit(FatalError);
         }
     }
@@ -172,9 +167,9 @@ void Foam::functionObjects::streamLine::track()
 
     forAll(fields_, i)
     {
-        if (mesh.foundObject<volScalarField>(fields_[i]))
+        if (mesh_.foundObject<volScalarField>(fields_[i]))
         {
-            const volScalarField& f = mesh.lookupObject<volScalarField>
+            const volScalarField& f = mesh_.lookupObject<volScalarField>
             (
                 fields_[i]
             );
@@ -188,9 +183,9 @@ void Foam::functionObjects::streamLine::track()
                 )
             );
         }
-        else if (mesh.foundObject<volVectorField>(fields_[i]))
+        else if (mesh_.foundObject<volVectorField>(fields_[i]))
         {
-            const volVectorField& f = mesh.lookupObject<volVectorField>
+            const volVectorField& f = mesh_.lookupObject<volVectorField>
             (
                 fields_[i]
             );
@@ -290,23 +285,10 @@ Foam::functionObjects::streamLine::streamLine
     const dictionary& dict
 )
 :
-    functionObject(name),
-    obr_
-    (
-        runTime.lookupObject<objectRegistry>
-        (
-            dict.lookupOrDefault("region", polyMesh::defaultRegion)
-        )
-    ),
+    fvMeshFunctionObject(name, runTime, dict),
     dict_(dict),
     nSubCycle_(0)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict_);
 }
 
@@ -321,6 +303,11 @@ Foam::functionObjects::streamLine::~streamLine()
 
 bool Foam::functionObjects::streamLine::read(const dictionary& dict)
 {
+    if (dict != dict_)
+    {
+        dict_ = dict;
+    }
+
     Info<< type() << " " << name() << ":" << nl;
 
     dict.lookup("fields") >> fields_;
@@ -402,15 +389,13 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
     dict.lookup("seedSampleSet") >> seedSet_;
 
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
-    meshSearchPtr_.reset(new meshSearch(mesh));
+    meshSearchPtr_.reset(new meshSearch(mesh_));
 
     const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
     sampledSetPtr_ = sampledSet::New
     (
         seedSet_,
-        mesh,
+        mesh_,
         meshSearchPtr_(),
         coeffsDict
     );
@@ -434,8 +419,6 @@ bool Foam::functionObjects::streamLine::write()
     Info<< type() << " " << name() << " write:" << nl;
 
     const Time& runTime = obr_.time();
-    const fvMesh& mesh = dynamic_cast<const fvMesh&>(obr_);
-
 
     // Do all injection and tracking
     track();
@@ -562,11 +545,11 @@ bool Foam::functionObjects::streamLine::write()
           ? runTime.path()/".."/"postProcessing"/"sets"/name()
           : runTime.path()/"postProcessing"/"sets"/name()
         );
-        if (mesh.name() != fvMesh::defaultRegion)
+        if (mesh_.name() != fvMesh::defaultRegion)
         {
-            vtkPath = vtkPath/mesh.name();
+            vtkPath = vtkPath/mesh_.name();
         }
-        vtkPath = vtkPath/mesh.time().timeName();
+        vtkPath = vtkPath/mesh_.time().timeName();
 
         mkDir(vtkPath);
 
@@ -674,8 +657,6 @@ bool Foam::functionObjects::streamLine::write()
 
 void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh& mpm)
 {
-    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
-
     if (&mpm.mesh() == &mesh_)
     {
         read(dict_);
@@ -685,8 +666,6 @@ void Foam::functionObjects::streamLine::updateMesh(const mapPolyMesh& mpm)
 
 void Foam::functionObjects::streamLine::movePoints(const polyMesh& mesh)
 {
-    const fvMesh& mesh_ = dynamic_cast<const fvMesh&>(obr_);
-
     if (&mesh == &mesh_)
     {
         // Moving mesh affects the search tree

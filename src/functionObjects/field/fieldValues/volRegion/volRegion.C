@@ -95,24 +95,24 @@ void Foam::functionObjects::fieldValues::volRegion::setCellZoneCells()
         {
             dict().lookup("name") >> regionName_;
 
-            label zoneId = mesh().cellZones().findZoneID(regionName_);
+            label zoneId = mesh_.cellZones().findZoneID(regionName_);
 
             if (zoneId < 0)
             {
                 FatalErrorInFunction
                     << "Unknown cell zone name: " << regionName_
-                    << ". Valid cell zones are: " << mesh().cellZones().names()
+                    << ". Valid cell zones are: " << mesh_.cellZones().names()
                     << nl << exit(FatalError);
             }
 
-            cellId_ = mesh().cellZones()[zoneId];
+            cellId_ = mesh_.cellZones()[zoneId];
             nCells_ = returnReduce(cellId_.size(), sumOp<label>());
             break;
         }
 
         case stAll:
         {
-            cellId_ = identity(mesh().nCells());
+            cellId_ = identity(mesh_.nCells());
             nCells_ = returnReduce(cellId_.size(), sumOp<label>());
             break;
         }
@@ -134,7 +134,7 @@ void Foam::functionObjects::fieldValues::volRegion::setCellZoneCells()
 
 Foam::scalar Foam::functionObjects::fieldValues::volRegion::volume() const
 {
-    return gSum(filterField(mesh().V()));
+    return gSum(filterField(mesh_.V()));
 }
 
 
@@ -218,12 +218,6 @@ Foam::functionObjects::fieldValues::volRegion::volRegion
     weightFieldName_("none"),
     writeVolume_(dict.lookupOrDefault("writeVolume", false))
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 
@@ -243,12 +237,6 @@ Foam::functionObjects::fieldValues::volRegion::volRegion
     weightFieldName_("none"),
     writeVolume_(dict.lookupOrDefault("writeVolume", false))
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 

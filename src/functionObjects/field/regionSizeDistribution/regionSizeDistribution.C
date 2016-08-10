@@ -173,7 +173,6 @@ void Foam::functionObjects::regionSizeDistribution::writeAlphaFields
 Foam::Map<Foam::label>
 Foam::functionObjects::regionSizeDistribution::findPatchRegions
 (
-    const polyMesh& mesh,
     const regionSplit& regions
 ) const
 {
@@ -181,19 +180,19 @@ Foam::functionObjects::regionSizeDistribution::findPatchRegions
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     // Count number of patch faces (just for initial sizing)
-    const labelHashSet patchIDs(mesh.boundaryMesh().patchSet(patchNames_));
+    const labelHashSet patchIDs(mesh_.boundaryMesh().patchSet(patchNames_));
 
     label nPatchFaces = 0;
     forAllConstIter(labelHashSet, patchIDs, iter)
     {
-        nPatchFaces += mesh.boundaryMesh()[iter.key()].size();
+        nPatchFaces += mesh_.boundaryMesh()[iter.key()].size();
     }
 
 
     Map<label> patchRegions(nPatchFaces);
     forAllConstIter(labelHashSet, patchIDs, iter)
     {
-        const polyPatch& pp = mesh.boundaryMesh()[iter.key()];
+        const polyPatch& pp = mesh_.boundaryMesh()[iter.key()];
 
         // Collect all regions on the patch
         const labelList& faceCells = pp.faceCells();
@@ -330,17 +329,11 @@ Foam::functionObjects::regionSizeDistribution::regionSizeDistribution
     const dictionary& dict
 )
 :
-    regionFunctionObject(name, runTime, dict),
+    fvMeshFunctionObject(name, runTime, dict),
     file_(obr_, name),
     alphaName_(dict.lookup("field")),
     patchNames_(dict.lookup("patches"))
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
 }
 
@@ -389,8 +382,6 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 {
     Info<< type() << " " << name() << " write:" << nl;
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
     autoPtr<volScalarField> alphaPtr;
     if (obr_.foundObject<volScalarField>(alphaName_))
     {
@@ -406,12 +397,12 @@ bool Foam::functionObjects::regionSizeDistribution::write()
                 IOobject
                 (
                     alphaName_,
-                    mesh.time().timeName(),
-                    mesh,
+                    mesh_.time().timeName(),
+                    mesh_,
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh
+                mesh_
             )
         );
     }
@@ -428,7 +419,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
         << fvc::domainIntegrate(alpha).value()
         << endl;
 
-    const scalar meshVol = gSum(mesh.V());
+    const scalar meshVol = gSum(mesh_.V());
     const scalar maxDropletVol = 1.0/6.0*pow(maxDiam_, 3);
     const scalar delta = (maxDiam_-minDiam_)/nBins_;
 
@@ -438,14 +429,14 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
 
     // Determine blocked faces
-    boolList blockedFace(mesh.nFaces(), false);
+    boolList blockedFace(mesh_.nFaces(), false);
     label nBlocked = 0;
 
     {
-        for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
+        for (label facei = 0; facei < mesh_.nInternalFaces(); facei++)
         {
-            scalar ownVal = alpha[mesh.faceOwner()[facei]];
-            scalar neiVal = alpha[mesh.faceNeighbour()[facei]];
+            scalar ownVal = alpha[mesh_.faceOwner()[facei]];
+            scalar neiVal = alpha[mesh_.faceNeighbour()[facei]];
 
             if
             (
@@ -491,7 +482,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
     }
 
 
-    regionSplit regions(mesh, blockedFace);
+    regionSplit regions(mesh_, blockedFace);
 
     Info<< "    Determined " << regions.nRegions()
         << " disconnected regions" << endl;
@@ -504,12 +495,12 @@ bool Foam::functionObjects::regionSizeDistribution::write()
             IOobject
             (
                 "region",
-                mesh.time().timeName(),
-                mesh,
+                mesh_.time().timeName(),
+                mesh_,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            mesh,
+            mesh_,
             dimensionedScalar("zero", dimless, 0)
         );
         Info<< "    Dumping region as volScalarField to " << region.name()
@@ -525,20 +516,19 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
 
     // Determine regions connected to supplied patches
-    Map<label> patchRegions(findPatchRegions(mesh, regions));
-
+    Map<label> patchRegions(findPatchRegions(regions));
 
 
     // Sum all regions
-    const scalarField alphaVol(alpha.primitiveField()*mesh.V());
-    Map<scalar> allRegionVolume(regionSum(regions, mesh.V()));
+    const scalarField alphaVol(alpha.primitiveField()*mesh_.V());
+    Map<scalar> allRegionVolume(regionSum(regions, mesh_.V()));
     Map<scalar> allRegionAlphaVolume(regionSum(regions, alphaVol));
     Map<label> allRegionNumCells
     (
         regionSum
         (
             regions,
-            labelField(mesh.nCells(), 1.0)
+            labelField(mesh_.nCells(), 1.0)
         )
     );
 

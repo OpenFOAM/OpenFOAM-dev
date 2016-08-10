@@ -36,12 +36,9 @@ void Foam::functionObjects::residuals::writeFileHeader(const word& fieldName)
 
     if (obr_.foundObject<fieldType>(fieldName))
     {
-        const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
-        const fvMesh& mesh = field.mesh();
-
         typename pTraits<Type>::labelType validComponents
         (
-            mesh.validComponents<Type>()
+            mesh_.validComponents<Type>()
         );
 
         for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
@@ -66,9 +63,7 @@ void Foam::functionObjects::residuals::writeResidual(const word& fieldName)
 
     if (obr_.foundObject<fieldType>(fieldName))
     {
-        const fieldType& field = obr_.lookupObject<fieldType>(fieldName);
-        const fvMesh& mesh = field.mesh();
-        const Foam::dictionary& solverDict = mesh.solverPerformanceDict();
+        const Foam::dictionary& solverDict = mesh_.solverPerformanceDict();
 
         if (solverDict.found(fieldName))
         {
@@ -81,7 +76,7 @@ void Foam::functionObjects::residuals::writeResidual(const word& fieldName)
 
             typename pTraits<Type>::labelType validComponents
             (
-                mesh.validComponents<Type>()
+                mesh_.validComponents<Type>()
             );
 
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)

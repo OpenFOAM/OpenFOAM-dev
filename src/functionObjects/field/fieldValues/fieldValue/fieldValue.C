@@ -49,7 +49,7 @@ Foam::functionObjects::fieldValue::fieldValue
     const word& valueType
 )
 :
-    regionFunctionObject(name, runTime, dict),
+    fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     dict_(dict),
     regionName_(word::null),
@@ -68,7 +68,7 @@ Foam::functionObjects::fieldValue::fieldValue
     const word& valueType
 )
 :
-    regionFunctionObject(name, obr, dict),
+    fvMeshFunctionObject(name, obr, dict),
     logFiles(obr_, name),
     dict_(dict),
     regionName_(word::null),
@@ -89,8 +89,12 @@ Foam::functionObjects::fieldValue::~fieldValue()
 
 bool Foam::functionObjects::fieldValue::read(const dictionary& dict)
 {
-    dict_ = dict;
-    regionFunctionObject::read(dict);
+    if (dict != dict_)
+    {
+        dict_ = dict;
+    }
+
+    fvMeshFunctionObject::read(dict);
 
     dict.lookup("fields") >> fields_;
     dict.lookup("writeFields") >> writeFields_;

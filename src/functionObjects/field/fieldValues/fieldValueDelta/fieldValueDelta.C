@@ -112,12 +112,6 @@ Foam::functionObjects::fieldValues::fieldValueDelta::fieldValueDelta
     region1Ptr_(nullptr),
     region2Ptr_(nullptr)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
     resetName(typeName);
 }

@@ -315,8 +315,6 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::rho() const
 {
     if (rhoName_ == "rhoInf")
     {
-        const fvMesh& mesh = refCast<const fvMesh>(obr_);
-
         return tmp<volScalarField>
         (
             new volScalarField
@@ -324,10 +322,10 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::rho() const
                 IOobject
                 (
                     "rho",
-                    mesh.time().timeName(),
-                    mesh
+                    mesh_.time().timeName(),
+                    mesh_
                 ),
-                mesh,
+                mesh_,
                 dimensionedScalar("rho", dimDensity, rhoRef_)
             )
         );
@@ -529,7 +527,7 @@ Foam::functionObjects::forces::forces
     const dictionary& dict
 )
 :
-    regionFunctionObject(name, runTime, dict),
+    fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     force_(3),
     moment_(3),
@@ -552,12 +550,6 @@ Foam::functionObjects::forces::forces
     binCumulative_(true),
     initialised_(false)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
     resetNames(createFileNames(dict));
 }
@@ -570,7 +562,7 @@ Foam::functionObjects::forces::forces
     const dictionary& dict
 )
 :
-    regionFunctionObject(name, obr, dict),
+    fvMeshFunctionObject(name, obr, dict),
     logFiles(obr_, name),
     force_(3),
     moment_(3),
@@ -593,12 +585,6 @@ Foam::functionObjects::forces::forces
     binCumulative_(true),
     initialised_(false)
 {
-    if (!isA<fvMesh>(obr_))
-    {
-        FatalErrorInFunction
-            << "objectRegistry is not an fvMesh" << exit(FatalError);
-    }
-
     read(dict);
     resetNames(createFileNames(dict));
 }
@@ -614,7 +600,7 @@ Foam::functionObjects::forces::~forces()
 
 bool Foam::functionObjects::forces::read(const dictionary& dict)
 {
-    regionFunctionObject::read(dict);
+    fvMeshFunctionObject::read(dict);
 
     initialised_ = false;
 
@@ -622,8 +608,7 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
 
     directForceDensity_ = dict.lookupOrDefault("directForceDensity", false);
 
-    const fvMesh& mesh = refCast<const fvMesh>(obr_);
-    const polyBoundaryMesh& pbm = mesh.boundaryMesh();
+    const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
     patchSet_ = pbm.patchSet(wordReList(dict.lookup("patches")));
 
@@ -763,10 +748,8 @@ void Foam::functionObjects::forces::calcForcesMoment()
     {
         const volVectorField& fD = obr_.lookupObject<volVectorField>(fDName_);
 
-        const fvMesh& mesh = fD.mesh();
-
         const surfaceVectorField::Boundary& Sfb =
-            mesh.Sf().boundaryField();
+            mesh_.Sf().boundaryField();
 
         forAllConstIter(labelHashSet, patchSet_, iter)
         {
@@ -774,7 +757,7 @@ void Foam::functionObjects::forces::calcForcesMoment()
 
             vectorField Md
             (
-                mesh.C().boundaryField()[patchi] - coordSys_.origin()
+                mesh_.C().boundaryField()[patchi] - coordSys_.origin()
             );
 
             scalarField sA(mag(Sfb[patchi]));
@@ -794,18 +777,15 @@ void Foam::functionObjects::forces::calcForcesMoment()
             //- Porous force
             vectorField fP(Md.size(), Zero);
 
-            applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchi]);
+            applyBins(Md, fN, fT, fP, mesh_.C().boundaryField()[patchi]);
         }
     }
     else
     {
-        const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
         const volScalarField& p = obr_.lookupObject<volScalarField>(pName_);
 
-        const fvMesh& mesh = U.mesh();
-
         const surfaceVectorField::Boundary& Sfb =
-            mesh.Sf().boundaryField();
+            mesh_.Sf().boundaryField();
 
         tmp<volSymmTensorField> tdevRhoReff = devRhoReff();
         const volSymmTensorField::Boundary& devRhoReffb
@@ -820,7 +800,7 @@ void Foam::functionObjects::forces::calcForcesMoment()
 
             vectorField Md
             (
-                mesh.C().boundaryField()[patchi] - coordSys_.origin()
+                mesh_.C().boundaryField()[patchi] - coordSys_.origin()
             );
 
             vectorField fN
@@ -832,7 +812,7 @@ void Foam::functionObjects::forces::calcForcesMoment()
 
             vectorField fP(Md.size(), Zero);
 
-            applyBins(Md, fN, fT, fP, mesh.C().boundaryField()[patchi]);
+            applyBins(Md, fN, fT, fP, mesh_.C().boundaryField()[patchi]);
         }
     }
 
@@ -841,8 +821,6 @@ void Foam::functionObjects::forces::calcForcesMoment()
         const volVectorField& U = obr_.lookupObject<volVectorField>(UName_);
         const volScalarField rho(this->rho());
         const volScalarField mu(this->mu());
-
-        const fvMesh& mesh = U.mesh();
 
         const HashTable<const porosityModel*> models =
             obr_.lookupClass<porosityModel>();
@@ -867,9 +845,9 @@ void Foam::functionObjects::forces::calcForcesMoment()
             forAll(cellZoneIDs, i)
             {
                 label zoneI = cellZoneIDs[i];
-                const cellZone& cZone = mesh.cellZones()[zoneI];
+                const cellZone& cZone = mesh_.cellZones()[zoneI];
 
-                const vectorField d(mesh.C(), cZone);
+                const vectorField d(mesh_.C(), cZone);
                 const vectorField fP(fPTot, cZone);
                 const vectorField Md(d - coordSys_.origin());
 

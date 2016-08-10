@@ -96,7 +96,7 @@ Usage
 
 See also
     Foam::functionObject
-    Foam::functionObjects::regionFunctionObject
+    Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::writeFile
 
 SourceFiles
@@ -107,7 +107,7 @@ SourceFiles
 #ifndef functionObjects_regionSizeDistribution_H
 #define functionObjects_regionSizeDistribution_H
 
-#include "regionFunctionObject.H"
+#include "fvMeshFunctionObject.H"
 #include "writeFile.H"
 #include "writer.H"
 #include "Map.H"
@@ -132,7 +132,7 @@ namespace functionObjects
 
 class regionSizeDistribution
 :
-    public regionFunctionObject
+    public fvMeshFunctionObject
 {
     // Private data
 
@@ -194,7 +194,7 @@ class regionSizeDistribution
         ) const;
 
         //- Mark all regions starting at patches
-        Map<label> findPatchRegions(const polyMesh&, const regionSplit&) const;
+        Map<label> findPatchRegions(const regionSplit&) const;
 
         //- Helper: divide if denom != 0
         static tmp<scalarField> divide(const scalarField&, const scalarField&);
