@@ -141,10 +141,10 @@ public:
         inline const PtrList<ThermoType>& specieThermo() const;
 
         //- The number of species
-        inline label nSpecie() const;
+        virtual inline label nSpecie() const;
 
         //- The number of reactions
-        inline label nReaction() const;
+        virtual inline label nReaction() const;
 
         //- Temperature below which the reaction rates are assumed 0
         inline scalar Treact() const;

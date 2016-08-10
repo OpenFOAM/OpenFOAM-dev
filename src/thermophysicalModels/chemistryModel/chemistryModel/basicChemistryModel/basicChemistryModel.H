@@ -124,6 +124,12 @@ public:
         //- Chemistry activation switch
         inline Switch chemistry() const;
 
+        //- The number of species
+        virtual label nSpecie() const = 0;
+
+        //- The number of reactions
+        virtual label nReaction() const = 0;
+
         //- Return the latest estimation of integration step
         inline const volScalarField::Internal& deltaTChem() const;
 

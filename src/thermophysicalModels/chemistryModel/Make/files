@@ -11,4 +11,6 @@ chemistryModel/TDACChemistryModel/tabulation/makeChemistryTabulationMethods.C
 
 chemistrySolver/chemistrySolver/makeChemistrySolvers.C
 
+functionObjects/specieReactionRates/specieReactionRates.C
+
 LIB = $(FOAM_LIBBIN)/libchemistryModel
