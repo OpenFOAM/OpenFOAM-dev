@@ -663,9 +663,9 @@ bool Foam::chemPointISAT<CompType, ThermoType>::grow(const scalarField& phiq)
     scalarField u(gamma*phiTilde);
     scalarField v(dim, 0);
 
-    for ( label i=0; i<dim; i++)
+    for (label i=0; i<dim; i++)
     {
-        for (register label j=0; j<=i;j++)
+        for (label j=0; j<=i;j++)
         {
             v[i] += phiTilde[j]*LT_(j, i);
         }
