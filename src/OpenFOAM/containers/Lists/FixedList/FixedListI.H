@@ -298,15 +298,22 @@ inline void Foam::FixedList<T, Size>::operator=(const SLList<T>& lst)
 {
     checkSize(lst.size());
 
-    label i = 0;
-    for
-    (
-        typename SLList<T>::const_iterator iter = lst.begin();
-        iter != lst.end();
-        ++iter
-    )
+    typename SLList<T>::const_iterator iter = lst.begin();
+    for (unsigned i=0; i<Size; i++)
     {
-        operator[](i++) = iter();
+        v_[i] = *iter++;
+    }
+}
+
+template<class T, unsigned Size>
+inline void Foam::FixedList<T, Size>::operator=(std::initializer_list<T> lst)
+{
+    checkSize(lst.size());
+
+    typename std::initializer_list<T>::iterator iter = lst.begin();
+    for (unsigned i=0; i<Size; i++)
+    {
+        v_[i] = *iter++;
     }
 }
 

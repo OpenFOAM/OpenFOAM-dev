@@ -76,6 +76,9 @@ int main(int argc, char *argv[])
     Info<< "list3: " << list3 << nl
         << "list4: " << list4 << endl;
 
+    list4 = {1, 2, 3, 5};
+    Info<< "list4: " << list4 << nl;
+
     FixedList<label, 5> list5{0, 1, 2, 3, 4};
     Info<< "list5: " << list5 << endl;
 
