@@ -91,7 +91,8 @@ $(faceToCell)/extendedFaceToCellStencil.C
 $(faceToCell)/extendedCentredFaceToCellStencil.C
 $(faceToCell)/MeshObjects/centredCFCFaceToCellStencilObject.C
 
-fvMesh/fvMeshFunctionObject/fvMeshFunctionObject.C
+functionObjects/fvMeshFunctionObject/fvMeshFunctionObject.C
+functionObjects/volRegion/volRegion.C
 
 fvPatchFields = fields/fvPatchFields
 $(fvPatchFields)/fvPatchField/fvPatchFields.C

@@ -23,19 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "volRegion.H"
+#include "volFieldValue.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::functionObjects::fieldValues::volRegion::regionTypes&
-Foam::functionObjects::fieldValues::volRegion::regionType() const
+inline const Foam::functionObjects::fieldValues::volFieldValue::regionTypes&
+Foam::functionObjects::fieldValues::volFieldValue::regionType() const
 {
     return regionType_;
 }
 
 
 inline const Foam::labelList&
-Foam::functionObjects::fieldValues::volRegion::cellId() const
+Foam::functionObjects::fieldValues::volFieldValue::cellId() const
 {
     return cellId_;
 }

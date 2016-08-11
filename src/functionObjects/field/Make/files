@@ -8,8 +8,8 @@ fieldMinMax/fieldMinMax.C
 fieldValues/fieldValue/fieldValue.C
 fieldValues/fieldValue/fieldValueNew.C
 fieldValues/fieldValueDelta/fieldValueDelta.C
-fieldValues/volRegion/volRegion.C
-fieldValues/surfaceRegion/surfaceRegion.C
+fieldValues/volFieldValue/volFieldValue.C
+fieldValues/surfaceFieldValue/surfaceFieldValue.C
 
 nearWallFields/nearWallFields.C
 nearWallFields/findCellParticle.C

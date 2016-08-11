@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "volRegion.H"
+#include "volFieldValue.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -36,9 +36,9 @@ namespace functionObjects
 {
 namespace fieldValues
 {
-    defineTypeNameAndDebug(volRegion, 0);
-    addToRunTimeSelectionTable(fieldValue, volRegion, dictionary);
-    addToRunTimeSelectionTable(functionObject, volRegion, dictionary);
+    defineTypeNameAndDebug(volFieldValue, 0);
+    addToRunTimeSelectionTable(fieldValue, volFieldValue, dictionary);
+    addToRunTimeSelectionTable(functionObject, volFieldValue, dictionary);
 }
 }
 }
@@ -47,7 +47,7 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::volRegion::regionTypes,
+    Foam::functionObjects::fieldValues::volFieldValue::regionTypes,
     2
 >::names[] = {"cellZone", "all"};
 
@@ -55,7 +55,7 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::volRegion::operationType,
+    Foam::functionObjects::fieldValues::volFieldValue::operationType,
     11
 >::names[] =
 {
@@ -74,20 +74,20 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::volRegion::regionTypes,
+    Foam::functionObjects::fieldValues::volFieldValue::regionTypes,
     2
-> Foam::functionObjects::fieldValues::volRegion::regionTypeNames_;
+> Foam::functionObjects::fieldValues::volFieldValue::regionTypeNames_;
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::volRegion::operationType,
+    Foam::functionObjects::fieldValues::volFieldValue::operationType,
     11
-> Foam::functionObjects::fieldValues::volRegion::operationTypeNames_;
+> Foam::functionObjects::fieldValues::volFieldValue::operationTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::volRegion::setCellZoneCells()
+void Foam::functionObjects::fieldValues::volFieldValue::setCellZoneCells()
 {
     switch (regionType_)
     {
@@ -132,7 +132,7 @@ void Foam::functionObjects::fieldValues::volRegion::setCellZoneCells()
 }
 
 
-Foam::scalar Foam::functionObjects::fieldValues::volRegion::volume() const
+Foam::scalar Foam::functionObjects::fieldValues::volFieldValue::volume() const
 {
     return gSum(filterField(mesh_.V()));
 }
@@ -140,7 +140,7 @@ Foam::scalar Foam::functionObjects::fieldValues::volRegion::volume() const
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::volRegion::initialise
+void Foam::functionObjects::fieldValues::volFieldValue::initialise
 (
     const dictionary& dict
 )
@@ -172,7 +172,7 @@ void Foam::functionObjects::fieldValues::volRegion::initialise
 }
 
 
-void Foam::functionObjects::fieldValues::volRegion::writeFileHeader
+void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
 (
     const label i
 )
@@ -203,7 +203,7 @@ void Foam::functionObjects::fieldValues::volRegion::writeFileHeader
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldValues::volRegion::volRegion
+Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 (
     const word& name,
     const Time& runTime,
@@ -222,7 +222,7 @@ Foam::functionObjects::fieldValues::volRegion::volRegion
 }
 
 
-Foam::functionObjects::fieldValues::volRegion::volRegion
+Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 (
     const word& name,
     const objectRegistry& obr,
@@ -243,13 +243,13 @@ Foam::functionObjects::fieldValues::volRegion::volRegion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldValues::volRegion::~volRegion()
+Foam::functionObjects::fieldValues::volFieldValue::~volFieldValue()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::fieldValues::volRegion::read
+bool Foam::functionObjects::fieldValues::volFieldValue::read
 (
     const dictionary& dict
 )
@@ -263,7 +263,7 @@ bool Foam::functionObjects::fieldValues::volRegion::read
 }
 
 
-bool Foam::functionObjects::fieldValues::volRegion::write()
+bool Foam::functionObjects::fieldValues::volFieldValue::write()
 {
     fieldValue::write();
 

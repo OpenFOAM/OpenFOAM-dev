@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::fieldValues::surfaceRegion
+    Foam::functionObjects::fieldValues::surfaceFieldValue
 
 Group
     grpFieldFunctionObjects
@@ -41,7 +41,7 @@ Description
     \verbatim
     movingWallPatch
     {
-        type            surfaceRegion;
+        type            surfaceFieldValue;
         libs            ("libfieldFunctionObjects.so");
 
         log             true;
@@ -61,9 +61,9 @@ Description
         );
     }
 
-    surfaceRegion1
+    surfaceFieldValue1
     {
-        type            surfaceRegion;
+        type            surfaceFieldValue;
         libs            ("libfieldFunctionObjects.so");
 
         log             true;
@@ -90,10 +90,10 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        type         | type name: surfaceRegion   | yes         |
+        type         | type name: surfaceFieldValue   | yes         |
         log          | write data to standard output | no    | no
         writeFields  | Write the region field values  | yes     |
-        writeArea    | Write the area of the surfaceRegion | no |
+        writeArea    | Write the area of the surfaceFieldValue | no |
         surfaceFormat | output value format    | no          |
         regionType   | face regionType: see below  | yes         |
         name         | name of face regionType if required  | no |
@@ -155,13 +155,13 @@ See also
     Foam::functionObject
 
 SourceFiles
-    surfaceRegion.C
-    surfaceRegionTemplates.C
+    surfaceFieldValue.C
+    surfaceFieldValueTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_surfaceRegion_H
-#define functionObjects_surfaceRegion_H
+#ifndef functionObjects_surfaceFieldValue_H
+#define functionObjects_surfaceFieldValue_H
 
 #include "fieldValue.H"
 #include "NamedEnum.H"
@@ -180,10 +180,10 @@ namespace fieldValues
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class surfaceRegion Declaration
+                         Class surfaceFieldValue Declaration
 \*---------------------------------------------------------------------------*/
 
-class surfaceRegion
+class surfaceFieldValue
 :
     public fieldValue
 {
@@ -255,7 +255,7 @@ private:
             pointField& points
         ) const;
 
-        //- Calculate and return total area of the surfaceRegion: sum(magSf)
+        //- Calculate and return total area of the surfaceFieldValue: sum(magSf)
         scalar totalArea() const;
 
 
@@ -284,10 +284,10 @@ protected:
         //- Scale factor - optional
         scalar scaleFactor_;
 
-        //- Total area of the surfaceRegion
+        //- Total area of the surfaceFieldValue
         scalar totalArea_;
 
-        //- Optionally write the area of the surfaceRegion
+        //- Optionally write the area of the surfaceFieldValue
         bool writeArea_;
 
         //- Global number of faces
@@ -358,13 +358,13 @@ protected:
 public:
 
     //- Run-time type information
-    TypeName("surfaceRegion");
+    TypeName("surfaceFieldValue");
 
 
     // Constructors
 
         //- Construct from name, Time and dictionary
-        surfaceRegion
+        surfaceFieldValue
         (
             const word& name,
             const Time& runTime,
@@ -372,7 +372,7 @@ public:
         );
 
         //- Construct from name, objectRegistry and dictionary
-        surfaceRegion
+        surfaceFieldValue
         (
             const word& name,
             const objectRegistry& obr,
@@ -381,7 +381,7 @@ public:
 
 
     //- Destructor
-    virtual ~surfaceRegion();
+    virtual ~surfaceFieldValue();
 
 
     // Public Member Functions
@@ -436,7 +436,7 @@ public:
 
 //- Specialisation for scalar
 template<>
-scalar surfaceRegion::processValues
+scalar surfaceFieldValue::processValues
 (
     const Field<scalar>& values,
     const vectorField& Sf,
@@ -446,7 +446,7 @@ scalar surfaceRegion::processValues
 
 //- Specialisation for vector
 template<>
-vector surfaceRegion::processValues
+vector surfaceFieldValue::processValues
 (
     const Field<vector>& values,
     const vectorField& Sf,
@@ -462,12 +462,12 @@ vector surfaceRegion::processValues
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "surfaceRegionI.H"
+#include "surfaceFieldValueI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "surfaceRegionTemplates.C"
+    #include "surfaceFieldValueTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

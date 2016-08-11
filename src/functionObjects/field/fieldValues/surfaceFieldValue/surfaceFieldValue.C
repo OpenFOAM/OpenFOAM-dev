@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceRegion.H"
+#include "surfaceFieldValue.H"
 #include "fvMesh.H"
 #include "cyclicPolyPatch.H"
 #include "emptyPolyPatch.H"
@@ -42,9 +42,9 @@ namespace functionObjects
 {
 namespace fieldValues
 {
-    defineTypeNameAndDebug(surfaceRegion, 0);
-    addToRunTimeSelectionTable(fieldValue, surfaceRegion, dictionary);
-    addToRunTimeSelectionTable(functionObject, surfaceRegion, dictionary);
+    defineTypeNameAndDebug(surfaceFieldValue, 0);
+    addToRunTimeSelectionTable(fieldValue, surfaceFieldValue, dictionary);
+    addToRunTimeSelectionTable(functionObject, surfaceFieldValue, dictionary);
 }
 }
 }
@@ -52,7 +52,7 @@ namespace fieldValues
 template<>
 const char* Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::surfaceRegion::regionTypes,
+    Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypes,
     3
 >::names[] =
 {
@@ -64,7 +64,7 @@ const char* Foam::NamedEnum
 template<>
 const char* Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::surfaceRegion::operationType,
+    Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
     15
 >::names[] =
 {
@@ -87,20 +87,20 @@ const char* Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::surfaceRegion::regionTypes,
+    Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypes,
     3
-> Foam::functionObjects::fieldValues::surfaceRegion::regionTypeNames_;
+> Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypeNames_;
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::surfaceRegion::operationType,
+    Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
     15
-> Foam::functionObjects::fieldValues::surfaceRegion::operationTypeNames_;
+> Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 {
     label zoneId = mesh_.faceZones().findZoneID(regionName_);
 
@@ -185,7 +185,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setFaceZoneFaces()
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceRegion::setPatchFaces()
+void Foam::functionObjects::fieldValues::surfaceFieldValue::setPatchFaces()
 {
     const label patchid = mesh_.boundaryMesh().findPatchID(regionName_);
 
@@ -222,7 +222,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::setPatchFaces()
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceRegion::sampledSurfaceFaces
+void Foam::functionObjects::fieldValues::surfaceFieldValue::sampledSurfaceFaces
 (
     const dictionary& dict
 )
@@ -238,7 +238,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::sampledSurfaceFaces
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceRegion::combineMeshGeometry
+void Foam::functionObjects::fieldValues::surfaceFieldValue::combineMeshGeometry
 (
     faceList& faces,
     pointField& points
@@ -359,7 +359,8 @@ void Foam::functionObjects::fieldValues::surfaceRegion::combineMeshGeometry
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceRegion::combineSurfaceGeometry
+void Foam::functionObjects::fieldValues::surfaceFieldValue::
+combineSurfaceGeometry
 (
     faceList& faces,
     pointField& points
@@ -399,7 +400,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::combineSurfaceGeometry
 
 
 Foam::scalar
-Foam::functionObjects::fieldValues::surfaceRegion::totalArea() const
+Foam::functionObjects::fieldValues::surfaceFieldValue::totalArea() const
 {
     scalar totalArea;
 
@@ -418,7 +419,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::totalArea() const
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::fieldValues::surfaceRegion::initialise
+void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
 (
     const dictionary& dict
 )
@@ -533,7 +534,7 @@ void Foam::functionObjects::fieldValues::surfaceRegion::initialise
 }
 
 
-void Foam::functionObjects::fieldValues::surfaceRegion::writeFileHeader
+void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 (
     const label i
 )
@@ -566,7 +567,8 @@ void Foam::functionObjects::fieldValues::surfaceRegion::writeFileHeader
 
 
 template<>
-Foam::scalar Foam::functionObjects::fieldValues::surfaceRegion::processValues
+Foam::scalar Foam::functionObjects::fieldValues::surfaceFieldValue::
+processValues
 (
     const Field<scalar>& values,
     const vectorField& Sf,
@@ -597,7 +599,8 @@ Foam::scalar Foam::functionObjects::fieldValues::surfaceRegion::processValues
 
 
 template<>
-Foam::vector Foam::functionObjects::fieldValues::surfaceRegion::processValues
+Foam::vector Foam::functionObjects::fieldValues::surfaceFieldValue::
+processValues
 (
     const Field<vector>& values,
     const vectorField& Sf,
@@ -643,7 +646,7 @@ Foam::vector Foam::functionObjects::fieldValues::surfaceRegion::processValues
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
+Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
 (
     const word& name,
     const Time& runTime,
@@ -667,7 +670,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
     read(dict);
 }
 
-Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
+Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
 (
     const word& name,
     const objectRegistry& obr,
@@ -694,13 +697,13 @@ Foam::functionObjects::fieldValues::surfaceRegion::surfaceRegion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldValues::surfaceRegion::~surfaceRegion()
+Foam::functionObjects::fieldValues::surfaceFieldValue::~surfaceFieldValue()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::fieldValues::surfaceRegion::read
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::read
 (
     const dictionary& dict
 )
@@ -712,7 +715,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::read
 }
 
 
-bool Foam::functionObjects::fieldValues::surfaceRegion::write()
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
 {
     if (operation_ != opNone)
     {

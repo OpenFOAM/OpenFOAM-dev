@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "volRegion.H"
+#include "volFieldValue.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::fieldValues::volRegion::validField
+bool Foam::functionObjects::fieldValues::volFieldValue::validField
 (
     const word& fieldName
 ) const
@@ -47,7 +47,7 @@ bool Foam::functionObjects::fieldValues::volRegion::validField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::fieldValues::volRegion::setFieldValues
+Foam::functionObjects::fieldValues::volFieldValue::setFieldValues
 (
     const word& fieldName,
     const bool mustGet
@@ -72,7 +72,7 @@ Foam::functionObjects::fieldValues::volRegion::setFieldValues
 
 
 template<class Type>
-Type Foam::functionObjects::fieldValues::volRegion::processValues
+Type Foam::functionObjects::fieldValues::volFieldValue::processValues
 (
     const Field<Type>& values,
     const scalarField& V,
@@ -155,7 +155,7 @@ Type Foam::functionObjects::fieldValues::volRegion::processValues
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::fieldValues::volRegion::writeValues
+bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
 (
     const word& fieldName
 )
@@ -217,7 +217,7 @@ bool Foam::functionObjects::fieldValues::volRegion::writeValues
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::fieldValues::volRegion::filterField
+Foam::functionObjects::fieldValues::volFieldValue::filterField
 (
     const Field<Type>& field
 ) const

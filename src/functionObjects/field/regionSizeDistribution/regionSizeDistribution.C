@@ -713,7 +713,7 @@ bool Foam::functionObjects::regionSizeDistribution::write()
             writeGraph(coords, "count", binCount);
         }
 
-        // Write to screen
+        // Write to log
         {
             Info<< "    Bins:" << endl;
             Info<< "    " << token::TAB << "Bin"

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::fieldValues::volRegion
+    Foam::functionObjects::fieldValues::volFieldValue
 
 Group
     grpFieldFunctionObjects
@@ -37,9 +37,9 @@ Description
 
     Example of function object specification:
     \verbatim
-    volRegion1
+    volFieldValue1
     {
-        type            volRegion;
+        type            volFieldValue;
         libs            ("libfieldFunctionObjects.so");
 
         log             true;
@@ -63,10 +63,10 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        type         | Type name: volRegion   | yes         |
+        type         | Type name: volFieldValue   | yes         |
         log          | Write data to standard output | no    | no
         writeFields  | Write the region field values  | yes     |
-        writeVolume  | Write the volume of the volRegion | no |
+        writeVolume  | Write the volume of the volFieldValue | no |
         regionType   | cell regionType: see below  | yes         |
         name         | name of cell regionType if required  | no |
         operation    | operation to perform    | yes         |
@@ -100,12 +100,12 @@ See also
     Foam::functionObject
 
 SourceFiles
-    volRegion.C
+    volFieldValue.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_volRegion_H
-#define functionObjects_volRegion_H
+#ifndef functionObjects_volFieldValue_H
+#define functionObjects_volFieldValue_H
 
 #include "fieldValue.H"
 #include "NamedEnum.H"
@@ -120,10 +120,10 @@ namespace fieldValues
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class volRegion Declaration
+                         Class volFieldValue Declaration
 \*---------------------------------------------------------------------------*/
 
-class volRegion
+class volFieldValue
 :
     public fieldValue
 {
@@ -173,7 +173,7 @@ private:
         //- Set cells to evaluate based on a patch
         void setPatchCells();
 
-        //- Calculate and return volume of the volRegion: sum(V)
+        //- Calculate and return volume of the volFieldValue: sum(V)
         scalar volume() const;
 
 
@@ -196,10 +196,10 @@ protected:
         //- Weight field name - only used for opWeightedAverage mode
         word weightFieldName_;
 
-        //- Volume of the volRegion
+        //- Volume of the volFieldValue
         scalar volume_;
 
-        //- Optionally write the volume of the volRegion
+        //- Optionally write the volume of the volFieldValue
         bool writeVolume_;
 
 
@@ -236,13 +236,13 @@ protected:
 public:
 
     //- Run-time type information
-    TypeName("volRegion");
+    TypeName("volFieldValue");
 
 
     // Constructors
 
         //- Construct from name, Time and dictionary
-        volRegion
+        volFieldValue
         (
             const word& name,
             const Time& runTime,
@@ -250,7 +250,7 @@ public:
         );
 
         //- Construct from name, objectRegistry and dictionary
-        volRegion
+        volFieldValue
         (
             const word& name,
             const objectRegistry& obr,
@@ -259,7 +259,7 @@ public:
 
 
     //- Destructor
-    virtual ~volRegion();
+    virtual ~volFieldValue();
 
 
     // Public Member Functions
@@ -294,12 +294,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "volRegionI.H"
+#include "volFieldValueI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "volRegionTemplates.C"
+    #include "volFieldValueTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

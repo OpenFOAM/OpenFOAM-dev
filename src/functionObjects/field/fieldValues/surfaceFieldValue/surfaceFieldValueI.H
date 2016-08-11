@@ -23,40 +23,40 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceRegion.H"
+#include "surfaceFieldValue.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::functionObjects::fieldValues::surfaceRegion::regionTypes&
-Foam::functionObjects::fieldValues::surfaceRegion::regionType() const
+inline const Foam::functionObjects::fieldValues::surfaceFieldValue::regionTypes&
+Foam::functionObjects::fieldValues::surfaceFieldValue::regionType() const
 {
     return regionType_;
 }
 
 
 inline const Foam::labelList&
-Foam::functionObjects::fieldValues::surfaceRegion::faceId() const
+Foam::functionObjects::fieldValues::surfaceFieldValue::faceId() const
 {
     return faceId_;
 }
 
 
 inline const Foam::labelList&
-Foam::functionObjects::fieldValues::surfaceRegion::facePatch() const
+Foam::functionObjects::fieldValues::surfaceFieldValue::facePatch() const
 {
     return facePatchId_;
 }
 
 
 inline const Foam::labelList&
-Foam::functionObjects::fieldValues::surfaceRegion::faceSign() const
+Foam::functionObjects::fieldValues::surfaceFieldValue::faceSign() const
 {
     return faceSign_;
 }
 
 
 inline Foam::fileName
-Foam::functionObjects::fieldValues::surfaceRegion::outputDir() const
+Foam::functionObjects::fieldValues::surfaceFieldValue::outputDir() const
 {
     return baseFileDir()/name()/"surface"/obr_.time().timeName();
 }

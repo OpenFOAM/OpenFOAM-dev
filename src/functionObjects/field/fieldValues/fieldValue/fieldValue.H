@@ -178,7 +178,7 @@ public:
         //- Execute
         virtual bool execute();
 
-        //- Write to screen/file
+        //- Write
         virtual bool write();
 };
 

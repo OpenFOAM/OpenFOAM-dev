@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceRegion.H"
+#include "surfaceFieldValue.H"
 #include "surfaceFields.H"
 #include "volFields.H"
 #include "sampledSurface.H"
@@ -33,7 +33,7 @@ License
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::fieldValues::surfaceRegion::validField
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::validField
 (
     const word& fieldName
 ) const
@@ -56,7 +56,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::validField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::fieldValues::surfaceRegion::getFieldValues
+Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
 (
     const word& fieldName,
     const bool mustGet,
@@ -125,7 +125,8 @@ Foam::functionObjects::fieldValues::surfaceRegion::getFieldValues
 
 
 template<class Type>
-Type Foam::functionObjects::fieldValues::surfaceRegion::processSameTypeValues
+Type Foam::functionObjects::fieldValues::surfaceFieldValue::
+processSameTypeValues
 (
     const Field<Type>& values,
     const vectorField& Sf,
@@ -254,7 +255,7 @@ Type Foam::functionObjects::fieldValues::surfaceRegion::processSameTypeValues
 
 
 template<class Type>
-Type Foam::functionObjects::fieldValues::surfaceRegion::processValues
+Type Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<Type>& values,
     const vectorField& Sf,
@@ -269,7 +270,7 @@ Type Foam::functionObjects::fieldValues::surfaceRegion::processValues
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
 (
     const word& fieldName,
     const scalarField& weightField,
@@ -355,7 +356,7 @@ bool Foam::functionObjects::fieldValues::surfaceRegion::writeValues
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::fieldValues::surfaceRegion::filterField
+Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
 (
     const GeometricField<Type, fvPatchField, volMesh>& field,
     const bool applyOrientation
@@ -397,7 +398,7 @@ Foam::functionObjects::fieldValues::surfaceRegion::filterField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::functionObjects::fieldValues::surfaceRegion::filterField
+Foam::functionObjects::fieldValues::surfaceFieldValue::filterField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
     const bool applyOrientation
