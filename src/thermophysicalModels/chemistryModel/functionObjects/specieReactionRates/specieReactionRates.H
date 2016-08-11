@@ -33,6 +33,7 @@ Description
 
 See also
     Foam::functionObjects::fvMeshFunctionObject
+    Foam::functionObjects::volRegion
     Foam::functionObjects::logFiles
 
 SourceFiles
@@ -44,6 +45,7 @@ SourceFiles
 #define functionObjects_specieReactionRates_H
 
 #include "fvMeshFunctionObject.H"
+#include "volRegion.H"
 #include "logFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,6 +63,7 @@ template<class ChemistryModelType>
 class specieReactionRates
 :
     public fvMeshFunctionObject,
+    public volRegion,
     public logFiles
 {
     // Private Member Data

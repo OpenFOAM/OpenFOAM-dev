@@ -37,6 +37,7 @@ writeFileHeader
 )
 {
     writeHeader(file(), "Specie reaction rates");
+    volRegion::writeFileHeader(*this, file());
     writeHeaderValue(file(), "nSpecie", chemistryModel_.nSpecie());
     writeHeaderValue(file(), "nReaction", chemistryModel_.nReaction());
 
@@ -67,10 +68,14 @@ specieReactionRates
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
+    volRegion(fvMeshFunctionObject::mesh_, dict),
     logFiles(obr_, name),
     chemistryModel_
     (
-        mesh_.lookupObject<ChemistryModelType>("chemistryProperties")
+        fvMeshFunctionObject::mesh_.lookupObject<ChemistryModelType>
+        (
+            "chemistryProperties"
+        )
     )
 {
     resetName("specieReactionRates");
@@ -114,8 +119,8 @@ bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::write()
     const label nSpecie = chemistryModel_.nSpecie();
     const label nReaction = chemistryModel_.nReaction();
 
-    // Domain volume
-    const scalar V = gSum(mesh_.V());
+    // Region volume
+    const scalar V = this->V();
 
     for (label ri=0; ri<nReaction; ri++)
     {
@@ -132,9 +137,23 @@ bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::write()
                 chemistryModel_.calculateRR(ri, si)
             );
 
+            scalar sumVRRi = 0;
+
+            if (isNull(cellIDs()))
+            {
+                sumVRRi = fvc::domainIntegrate(RR).value();
+            }
+            else
+            {
+                sumVRRi = gSum
+                (
+                    scalarField(fvMeshFunctionObject::mesh_.V()*RR, cellIDs())
+                );
+            }
+
             if (Pstream::master())
             {
-                file() << token::TAB << fvc::domainIntegrate(RR).value()/V;
+                file() << token::TAB << sumVRRi/V;
             }
         }
 
