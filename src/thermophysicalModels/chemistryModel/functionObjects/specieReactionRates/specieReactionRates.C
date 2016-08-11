@@ -180,9 +180,8 @@ bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::write()
 
 namespace Foam
 {
-namespace functionObjects
-{
-    typedef specieReactionRates<psiChemistryModel> psiSpecieReactionRates;
+    typedef functionObjects::specieReactionRates<psiChemistryModel>
+        psiSpecieReactionRates;
 
     defineTemplateTypeNameAndDebugWithName
     (
@@ -199,7 +198,8 @@ namespace functionObjects
     );
 
 
-    typedef specieReactionRates<rhoChemistryModel> rhoSpecieReactionRates;
+    typedef functionObjects::specieReactionRates<rhoChemistryModel>
+        rhoSpecieReactionRates;
 
     defineTemplateTypeNameAndDebugWithName
     (
@@ -214,7 +214,6 @@ namespace functionObjects
         rhoSpecieReactionRates,
         dictionary
     );
-}
 }
 
 
