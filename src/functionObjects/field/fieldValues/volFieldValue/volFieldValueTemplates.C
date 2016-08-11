@@ -165,7 +165,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
     if (ok)
     {
         Field<Type> values(setFieldValues<Type>(fieldName));
-        scalarField V(filterField(mesh_.V()));
+        scalarField V(filterField(fieldValue::mesh_.V()));
         scalarField weightField(values.size(), 1.0);
 
         if (weightFieldName_ != "none")
@@ -191,8 +191,8 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
                 (
                     IOobject
                     (
-                        fieldName + "_" + regionTypeNames_[regionType_] + "-"
-                            + regionName_,
+                        fieldName + '_' + regionTypeNames_[regionType_]
+                      + '-' + volRegion::regionName_,
                         obr_.time().timeName(),
                         obr_,
                         IOobject::NO_READ,
@@ -206,7 +206,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             file()<< tab << result;
 
             Log << "    " << operationTypeNames_[operation_]
-                << "(" << regionName_ << ") of " << fieldName
+                << "(" << volRegion::regionName_ << ") of " << fieldName
                 <<  " = " << result << endl;
         }
     }
@@ -222,7 +222,14 @@ Foam::functionObjects::fieldValues::volFieldValue::filterField
     const Field<Type>& field
 ) const
 {
-    return tmp<Field<Type>>(new Field<Type>(field, cellId_));
+    if (isNull(cellIDs()))
+    {
+        return field;
+    }
+    else
+    {
+        return tmp<Field<Type>>(new Field<Type>(field, cellIDs()));
+    }
 }
 
 

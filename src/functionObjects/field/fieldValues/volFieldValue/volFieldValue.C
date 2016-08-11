@@ -47,14 +47,6 @@ template<>
 const char*
 Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::volFieldValue::regionTypes,
-    2
->::names[] = {"cellZone", "all"};
-
-template<>
-const char*
-Foam::NamedEnum
-<
     Foam::functionObjects::fieldValues::volFieldValue::operationType,
     11
 >::names[] =
@@ -74,68 +66,9 @@ Foam::NamedEnum
 
 const Foam::NamedEnum
 <
-    Foam::functionObjects::fieldValues::volFieldValue::regionTypes,
-    2
-> Foam::functionObjects::fieldValues::volFieldValue::regionTypeNames_;
-
-const Foam::NamedEnum
-<
     Foam::functionObjects::fieldValues::volFieldValue::operationType,
     11
 > Foam::functionObjects::fieldValues::volFieldValue::operationTypeNames_;
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::functionObjects::fieldValues::volFieldValue::setCellZoneCells()
-{
-    switch (regionType_)
-    {
-        case stCellZone:
-        {
-            dict().lookup("name") >> regionName_;
-
-            label zoneId = mesh_.cellZones().findZoneID(regionName_);
-
-            if (zoneId < 0)
-            {
-                FatalErrorInFunction
-                    << "Unknown cell zone name: " << regionName_
-                    << ". Valid cell zones are: " << mesh_.cellZones().names()
-                    << nl << exit(FatalError);
-            }
-
-            cellId_ = mesh_.cellZones()[zoneId];
-            nCells_ = returnReduce(cellId_.size(), sumOp<label>());
-            break;
-        }
-
-        case stAll:
-        {
-            cellId_ = identity(mesh_.nCells());
-            nCells_ = returnReduce(cellId_.size(), sumOp<label>());
-            break;
-        }
-
-        default:
-        {
-            FatalErrorInFunction
-               << "Unknown region type. Valid region types are:"
-                << regionTypeNames_ << nl << exit(FatalError);
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "Selected region size = " << cellId_.size() << endl;
-    }
-}
-
-
-Foam::scalar Foam::functionObjects::fieldValues::volFieldValue::volume() const
-{
-    return gSum(filterField(mesh_.V()));
-}
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -145,24 +78,6 @@ void Foam::functionObjects::fieldValues::volFieldValue::initialise
     const dictionary& dict
 )
 {
-    setCellZoneCells();
-
-    if (nCells_ == 0)
-    {
-        FatalErrorInFunction
-            << type() << " " << name() << ": "
-            << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
-            << "    Region has no cells" << exit(FatalError);
-    }
-
-    volume_ = volume();
-
-    Info<< type() << " " << name() << ":"
-        << regionTypeNames_[regionType_] << "(" << regionName_ << "):" << nl
-        << "    total cells  = " << nCells_ << nl
-        << "    total volume = " << volume_
-        << nl << endl;
-
     if (dict.readIfPresent("weightField", weightFieldName_))
     {
         Info<< "    weight field = " << weightFieldName_;
@@ -177,18 +92,9 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
     const label i
 )
 {
-    writeCommented(file(), "Region type : ");
-    file() << regionTypeNames_[regionType_] << " " << regionName_ << endl;
-    writeCommented(file(), "Cells  : ");
-    file() << nCells_ << endl;
-    writeCommented(file(), "Volume : ");
-    file() << volume_ << endl;
+    volRegion::writeFileHeader(*this, file());
 
     writeCommented(file(), "Time");
-    if (writeVolume_)
-    {
-        file() << tab << "Volume";
-    }
 
     forAll(fields_, i)
     {
@@ -211,12 +117,9 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, runTime, dict, typeName),
-    regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
+    volRegion(fieldValue::mesh_, dict),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    nCells_(0),
-    cellId_(),
-    weightFieldName_("none"),
-    writeVolume_(dict.lookupOrDefault("writeVolume", false))
+    weightFieldName_("none")
 {
     read(dict);
 }
@@ -230,12 +133,9 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 )
 :
     fieldValue(name, obr, dict, typeName),
-    regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
+    volRegion(fieldValue::mesh_, dict),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    nCells_(0),
-    cellId_(),
-    weightFieldName_("none"),
-    writeVolume_(dict.lookupOrDefault("writeVolume", false))
+    weightFieldName_("none")
 {
     read(dict);
 }
@@ -270,16 +170,6 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
     if (Pstream::master())
     {
         writeTime(file());
-    }
-
-    if (writeVolume_)
-    {
-        volume_ = volume();
-        if (Pstream::master())
-        {
-            file() << tab << volume_;
-        }
-        Log << "    total volume = " << volume_ << endl;
     }
 
     forAll(fields_, i)

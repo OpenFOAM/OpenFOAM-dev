@@ -28,12 +28,10 @@ Group
     grpFieldFunctionObjects
 
 Description
-    Provides a 'cell region' variant of the fieldValues function object.
+    Provides a 'volRegion' specialization of the fieldValue function object.
 
-    Given a list of user-specified fields and a selection of mesh cells, a
-    number of operations can be performed, such as sums, averages and
-    integrations.
-
+    Given a list of user-specified fields and a 'volRegion', a number of
+    operations can be performed, such as sums, averages and integrations.
 
     Example of function object specification:
     \verbatim
@@ -62,16 +60,15 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        type         | Type name: volFieldValue   | yes         |
-        log          | Write data to standard output | no    | no
-        writeFields  | Write the region field values  | yes     |
-        writeVolume  | Write the volume of the volFieldValue | no |
-        regionType   | cell regionType: see below  | yes         |
-        name         | name of cell regionType if required  | no |
-        operation    | operation to perform    | yes         |
-        weightField  | name of field to apply weighting | no |
-        fields       | list of fields to operate on | yes    |
+        Property     | Description              | Required    | Default value
+        type         | Type name: volFieldValue            | yes   |
+        log          | Write data to standard output       | no    | no
+        writeFields  | Write the region field values       | yes   |
+        regionType   | volRegion type: see below           | yes   |
+        name         | Name of volRegion if required       | no    |
+        operation    | Operation to perform                | yes   |
+        weightField  | Name of field to apply weighting    | no    |
+        fields       | List of fields to operate on        | yes   |
     \endtable
 
     Where \c regionType is defined by
@@ -82,21 +79,22 @@ Usage
 
     The \c operation is one of:
     \plaintable
-       none          | no operation
-       sum           | sum
-       sumMag        | sum of component magnitudes
-       average       | ensemble average
-       weightedAverage | weighted average
-       volAverage    | volume weighted average
-       weightedVolAverage | weighted volume average
-       volIntegrate  | volume integral
-       min           | minimum
-       max           | maximum
-       CoV           | coefficient of variation: standard deviation/mean
+       none               | No operation
+       sum                | Sum
+       sumMag             | Sum of component magnitudes
+       average            | Ensemble average
+       weightedAverage    | Weighted average
+       volAverage         | Volume weighted average
+       weightedVolAverage | Weighted volume average
+       volIntegrate       | Volume integral
+       min                | Minimum
+       max                | Maximum
+       CoV                | Coefficient of variation: standard deviation/mean
     \endplaintable
 
 See also
-    Foam::fieldValues
+    Foam::functionObjects::fieldValues::fieldValue
+    Foam::functionObjects::volRegion
     Foam::functionObject
 
 SourceFiles
@@ -108,7 +106,7 @@ SourceFiles
 #define functionObjects_volFieldValue_H
 
 #include "fieldValue.H"
-#include "NamedEnum.H"
+#include "volRegion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -125,23 +123,13 @@ namespace fieldValues
 
 class volFieldValue
 :
-    public fieldValue
+    public fieldValue,
+    public volRegion
 {
 
 public:
 
     // Public data types
-
-        //- region type enumeration
-        enum regionTypes
-        {
-            stCellZone,
-            stAll
-        };
-
-        //- region type names
-        static const NamedEnum<regionTypes, 2> regionTypeNames_;
-
 
         //- Operation type enumeration
         enum operationType
@@ -163,44 +151,15 @@ public:
         static const NamedEnum<operationType, 11> operationTypeNames_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Set cells to evaluate based on a cell zone
-        void setCellZoneCells();
-
-        //- Set cells to evaluate based on a patch
-        void setPatchCells();
-
-        //- Calculate and return volume of the volFieldValue: sum(V)
-        scalar volume() const;
-
-
 protected:
 
     // Protected data
 
-        //- region type
-        regionTypes regionType_;
-
         //- Operation to apply to values
         operationType operation_;
 
-        //- Global number of cells
-        label nCells_;
-
-        //- Local list of cell IDs
-        labelList cellId_;
-
         //- Weight field name - only used for opWeightedAverage mode
         word weightFieldName_;
-
-        //- Volume of the volFieldValue
-        scalar volume_;
-
-        //- Optionally write the volume of the volFieldValue
-        bool writeVolume_;
 
 
     // Protected Member Functions
@@ -264,12 +223,6 @@ public:
 
     // Public Member Functions
 
-        //- Return the region type
-        inline const regionTypes& regionType() const;
-
-        //- Return the local list of cell IDs
-        inline const labelList& cellId() const;
-
         //- Templated helper function to output field values
         template<class Type>
         bool writeValues(const word& fieldName);
@@ -291,10 +244,6 @@ public:
 } // End namespace fieldValues
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "volFieldValueI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
