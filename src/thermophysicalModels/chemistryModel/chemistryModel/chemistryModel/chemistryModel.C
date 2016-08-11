@@ -537,7 +537,6 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
         }
     }
 
-
     ttc.ref().correctBoundaryConditions();
 
     return ttc;
@@ -628,8 +627,8 @@ template<class CompType, class ThermoType>
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::chemistryModel<CompType, ThermoType>::calculateRR
 (
-    const label reactionI,
-    const label speciei
+    const label ri,
+    const label si
 ) const
 {
     scalar pf, cf, pr, cr;
@@ -685,7 +684,7 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
 
         const scalar w = omegaI
         (
-            reactionI,
+            ri,
             c_,
             Ti,
             pi,
@@ -697,8 +696,7 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
             rRef
         );
 
-        RR[celli] = w*specieThermo_[speciei].W();
-
+        RR[celli] = w*specieThermo_[si].W();
     }
 
     return tRR;
