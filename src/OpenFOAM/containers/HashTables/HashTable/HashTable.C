@@ -564,6 +564,29 @@ void Foam::HashTable<T, Key, Hash>::operator=
 
 
 template<class T, class Key, class Hash>
+void Foam::HashTable<T, Key, Hash>::operator=
+(
+    std::initializer_list<Tuple2<Key, T>> lst
+)
+{
+    // Could be zero-sized from a previous transfer()
+    if (!tableSize_)
+    {
+        resize(lst.size());
+    }
+    else
+    {
+        clear();
+    }
+
+    for (const Tuple2<Key, T>& pair : lst)
+    {
+        insert(pair.first(), pair.second());
+    }
+}
+
+
+template<class T, class Key, class Hash>
 bool Foam::HashTable<T, Key, Hash>::operator==
 (
     const HashTable<T, Key, Hash>& rhs

@@ -165,6 +165,16 @@ int main()
     table3.clearStorage();
     Info<< table3 << nl;
 
+    table1 =
+    {
+        {"aca", 3.0},
+        {"aaw", 6.0},
+        {"acr", 8.0},
+        {"aec", 10.0}
+    };
+
+    Info<< "\ntable1" << table1 << nl;
+
     Info<< "\nDone\n";
 
     return 0;

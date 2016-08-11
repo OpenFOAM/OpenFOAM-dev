@@ -213,7 +213,7 @@ public:
         HashTable(const Xfer<HashTable<T, Key, Hash>>&);
 
         //- Construct from an initializer list
-        HashTable(std::initializer_list<Tuple2<Key, T>> lst);
+        HashTable(std::initializer_list<Tuple2<Key, T>>);
 
 
     //- Destructor
@@ -314,6 +314,9 @@ public:
 
         //- Assignment
         void operator=(const HashTable<T, Key, Hash>&);
+
+        //- Assignment to an initializer list
+        void operator=(std::initializer_list<Tuple2<Key, T>>);
 
         //- Equality. Hash tables are equal if the keys and values are equal.
         //  Independent of table storage size and table order.
