@@ -6,14 +6,14 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculates the average value of one or more fields on a patch.
+    Calculates the surface integral of one or more fields on a patch.
 
 \*---------------------------------------------------------------------------*/
 
-name    <patchName>;
-fields  (<field names>);
+name   <patchName>;
+fields (<field names>);
 
-operation average;
-#includeEtc "caseDicts/postProcessing/surfaceRegion/patch.cfg"
+operation areaIntegrate;
+#includeEtc "caseDicts/postProcessing/surfaceFieldValue/patch.cfg"
 
 // ************************************************************************* //

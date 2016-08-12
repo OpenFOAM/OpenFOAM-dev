@@ -32,7 +32,7 @@ functions
 
     faceObj2
     {
-        type            surfaceRegion;
+        type            surfaceFieldValue;
         libs            ("libfieldFunctionObjects.so");
         enabled         true;
         writeControl    timeStep;

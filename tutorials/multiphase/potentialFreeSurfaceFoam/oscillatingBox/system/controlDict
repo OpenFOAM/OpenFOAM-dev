@@ -67,7 +67,7 @@ functions
 
     poolHeight
     {
-        type            surfaceRegion;
+        type            surfaceFieldValue;
         libs            ("libfieldFunctionObjects.so");
         writeControl    timeStep;
         writeInterval   1;

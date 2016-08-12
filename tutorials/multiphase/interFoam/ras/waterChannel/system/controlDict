@@ -55,7 +55,7 @@ functions
 {
     inletFlux
     {
-        type            surfaceRegion;
+        type            surfaceFieldValue;
         libs            ("libfieldFunctionObjects.so");
         writeControl   timeStep;
         log             true;

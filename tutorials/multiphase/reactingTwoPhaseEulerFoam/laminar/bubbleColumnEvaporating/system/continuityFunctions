@@ -8,7 +8,7 @@
 
 inletMassFlowRate
 {
-    type            surfaceRegion;
+    type            surfaceFieldValue;
     libs            ("libfieldFunctionObjects.so");
 
     fields
@@ -31,7 +31,7 @@ inletMassFlowRate
 
 outletMassFlowRate
 {
-    type            surfaceRegion;
+    type            surfaceFieldValue;
     libs            ("libfieldFunctionObjects.so");
 
     fields

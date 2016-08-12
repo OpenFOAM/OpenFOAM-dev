@@ -53,9 +53,9 @@ maxDeltaT       1e-03;
 
 functions
 {
-    surfaceRegion1
+    surfaceFieldValue1
     {
-        type            surfaceRegion;
+        type            surfaceFieldValue;
         libs            ("libfieldFunctionObjects.so");
         writeControl    writeTime;
         log             yes;
