@@ -187,13 +187,13 @@ public:
             return (switch_ & 0x1);
         }
 
-        //- Assignment from enumerated value
+        //- Assignment to enumerated value
         void operator=(const switchType sw)
         {
             switch_ = sw;
         }
 
-        //- Assignment from bool
+        //- Assignment to bool
         void operator=(const bool b)
         {
             switch_ = (b ? Switch::TRUE : Switch::FALSE);

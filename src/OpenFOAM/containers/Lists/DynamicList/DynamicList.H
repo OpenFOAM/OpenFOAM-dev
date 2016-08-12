@@ -217,16 +217,16 @@ public:
             //- Assignment of all addressed entries to the given value
             inline void operator=(const T&);
 
-            //- Assignment from DynamicList
+            //- Assignment to DynamicList
             inline void operator=
             (
                 const DynamicList<T, SizeInc, SizeMult, SizeDiv>&
             );
 
-            //- Assignment from UList
+            //- Assignment to UList
             inline void operator=(const UList<T>&);
 
-            //- Assignment from UIndirectList
+            //- Assignment to UIndirectList
             inline void operator=(const UIndirectList<T>&);
 
 

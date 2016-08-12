@@ -121,7 +121,7 @@ public:
         //- Assignment of all entries to the given value
         inline void operator=(const T&);
 
-        //- Assignment from UList operator. Takes linear time.
+        //- Assignment to UList operator. Takes linear time.
         inline void operator=(const UList<T>&);
 
         //- Assignment operator. Takes linear time.
