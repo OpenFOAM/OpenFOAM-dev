@@ -126,6 +126,7 @@ public:
 
     // Member operators
 
+        //- Assignment operator
         void operator=(const ILList<LListBase, T>&);
 
 
