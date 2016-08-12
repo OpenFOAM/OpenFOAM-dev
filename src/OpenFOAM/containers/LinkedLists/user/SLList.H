@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,7 +21,7 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
+Alias
     Foam::SLList
 
 Description
@@ -39,42 +39,9 @@ Description
 
 namespace Foam
 {
-
-/*---------------------------------------------------------------------------*\
-                           Class SLList Declaration
-\*---------------------------------------------------------------------------*/
-
-template<class T>
-class SLList
-:
-    public LList<SLListBase, T>
-{
-
-public:
-
-    // Constructors
-
-        //- Null construct
-        SLList()
-        {}
-
-        //- Construct given initial T
-        explicit SLList(T a)
-        :
-            LList<SLListBase, T>(a)
-        {}
-
-        //- Construct from Istream
-        explicit SLList(Istream& is)
-        :
-            LList<SLListBase, T>(is)
-        {}
-};
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    template<class T>
+    using SLList = LList<SLListBase, T>;
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

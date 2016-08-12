@@ -37,7 +37,7 @@ SourceFiles
 #define LList_H
 
 #include "label.H"
-#include "uLabel.H"
+#include <initializer_list>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -120,6 +120,9 @@ public:
 
         //- Construct as copy
         LList(const LList<LListBase, T>&);
+
+        //- Construct from an initializer list
+        LList(std::initializer_list<T>);
 
 
     //- Destructor
@@ -206,7 +209,11 @@ public:
 
     // Member operators
 
+        //- Assignment operator
         void operator=(const LList<LListBase, T>&);
+
+        //- Assignment to an initializer list
+        void operator=(std::initializer_list<T>);
 
 
     // STL type definitions

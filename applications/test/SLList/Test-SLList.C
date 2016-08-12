@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,8 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    SLList<scalar> myList;
+    SLList<scalar> myList{2.1, 3.4};
+    myList = {2.1, 3.4, 4.3};
 
     for (int i = 0; i<10; i++)
     {

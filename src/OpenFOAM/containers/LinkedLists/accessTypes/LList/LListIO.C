@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,14 +144,9 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const LList<LListBase, T>& lst)
     os << nl << token::BEGIN_LIST << nl;
 
     // Write contents
-    for
-    (
-        typename LList<LListBase, T>::const_iterator iter = lst.begin();
-        iter != lst.end();
-        ++iter
-    )
+    for (const T& val : lst)
     {
-        os << iter() << nl;
+        os << val << nl;
     }
 
     // Write end of contents

@@ -62,7 +62,11 @@ template<class T> Istream& operator>>(Istream&, List<T>&);
 
 template<class T, unsigned Size> class FixedList;
 template<class T> class PtrList;
-template<class T> class SLList;
+
+class SLListBase;
+template<class LListBase, class T> class LList;
+template<class T>
+using SLList = LList<SLListBase, T>;
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 class DynamicList;
@@ -247,22 +251,22 @@ public:
 
     // Member operators
 
-        //- Assignment from UList operator. Takes linear time
+        //- Assignment to UList operator. Takes linear time
         void operator=(const UList<T>&);
 
         //- Assignment operator. Takes linear time
         void operator=(const List<T>&);
 
-        //- Assignment from SLList operator. Takes linear time
+        //- Assignment to SLList operator. Takes linear time
         void operator=(const SLList<T>&);
 
-        //- Assignment from UIndirectList operator. Takes linear time
+        //- Assignment to UIndirectList operator. Takes linear time
         void operator=(const UIndirectList<T>&);
 
-        //- Assignment from BiIndirectList operator. Takes linear time
+        //- Assignment to BiIndirectList operator. Takes linear time
         void operator=(const BiIndirectList<T>&);
 
-        //- Construct from an initializer list
+        //- Assignment to an initializer list
         void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value

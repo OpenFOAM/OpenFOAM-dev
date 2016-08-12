@@ -61,8 +61,11 @@ template<class T, unsigned Size>
 Ostream& operator<<(Ostream&, const FixedList<T, Size>&);
 
 template<class T> class UList;
-template<class T> class SLList;
 
+class SLListBase;
+template<class LListBase, class T> class LList;
+template<class T>
+using SLList = LList<SLListBase, T>;
 
 /*---------------------------------------------------------------------------*\
                            Class FixedList Declaration
@@ -219,16 +222,16 @@ public:
         //- Return element of constant FixedList
         inline const T& operator[](const label) const;
 
-        //- Assignment from array operator. Takes linear time
+        //- Assignment to array operator. Takes linear time
         inline void operator=(const T v[Size]);
 
-        //- Assignment from UList operator. Takes linear time
+        //- Assignment to UList operator. Takes linear time
         inline void operator=(const UList<T>&);
 
-        //- Assignment from SLList operator. Takes linear time
+        //- Assignment to SLList operator. Takes linear time
         inline void operator=(const SLList<T>&);
 
-        //- Assignment from an initializer list. Takes linear time
+        //- Assignment to an initializer list. Takes linear time
         inline void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value
