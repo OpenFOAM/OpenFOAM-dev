@@ -136,7 +136,7 @@ bool Foam::functionObject::read(const dictionary& dict)
 
 bool Foam::functionObject::end()
 {
-    return true;
+    return execute() && write();
 }
 
 
