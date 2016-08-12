@@ -62,6 +62,8 @@ Foam::PBiCCCG<Type, DType, LUType>::solve
         this->fieldName_
     );
 
+    label nIter = 0;
+
     label nCells = psi.size();
 
     Type* __restrict__ psiPtr = psi.begin();
@@ -131,7 +133,7 @@ Foam::PBiCCCG<Type, DType, LUType>::solve
             // --- Update search directions:
             wArT = gSumProd(wA, rT);
 
-            if (solverPerf.nIterations() == 0)
+            if (nIter == 0)
             {
                 for (label cell=0; cell<nCells; cell++)
                 {
@@ -187,12 +189,15 @@ Foam::PBiCCCG<Type, DType, LUType>::solve
         } while
         (
             (
-                solverPerf.nIterations()++ < this->maxIter_
+                nIter++ < this->maxIter_
             && !solverPerf.checkConvergence(this->tolerance_, this->relTol_)
             )
-         || solverPerf.nIterations() < this->minIter_
+         || nIter < this->minIter_
         );
     }
+
+    solverPerf.nIterations() =
+        pTraits<typename pTraits<Type>::labelType>::one*nIter;
 
     return solverPerf;
 }

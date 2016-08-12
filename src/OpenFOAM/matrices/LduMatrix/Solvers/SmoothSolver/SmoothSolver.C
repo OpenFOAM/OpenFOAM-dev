@@ -68,6 +68,8 @@ Foam::SmoothSolver<Type, DType, LUType>::solve(Field<Type>& psi) const
         this->fieldName_
     );
 
+    label nIter = 0;
+
     // If the nSweeps_ is negative do a fixed number of sweeps
     if (nSweeps_ < 0)
     {
@@ -81,7 +83,7 @@ Foam::SmoothSolver<Type, DType, LUType>::solve(Field<Type>& psi) const
 
         smootherPtr->smooth(psi, -nSweeps_);
 
-        solverPerf.nIterations() -= nSweeps_;
+        nIter -= nSweeps_;
     }
     else
     {
@@ -145,13 +147,16 @@ Foam::SmoothSolver<Type, DType, LUType>::solve(Field<Type>& psi) const
             } while
             (
                 (
-                    (solverPerf.nIterations() += nSweeps_) < this->maxIter_
+                    (nIter += nSweeps_) < this->maxIter_
                 && !solverPerf.checkConvergence(this->tolerance_, this->relTol_)
                 )
-             || solverPerf.nIterations() < this->minIter_
+             || nIter < this->minIter_
             );
         }
     }
+
+    solverPerf.nIterations() =
+        pTraits<typename pTraits<Type>::labelType>::one*nIter;
 
     return solverPerf;
 }

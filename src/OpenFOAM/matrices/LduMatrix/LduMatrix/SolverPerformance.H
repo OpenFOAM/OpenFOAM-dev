@@ -78,14 +78,17 @@ Ostream& operator<<
 template<class Type>
 class SolverPerformance
 {
+    // Label type corresponding to Type
+    typedef typename pTraits<Type>::labelType labelType;
+
     // Private data
 
-        word   solverName_;
-        word   fieldName_;
-        Type   initialResidual_;
-        Type   finalResidual_;
-        label  noIterations_;
-        bool   converged_;
+        word        solverName_;
+        word        fieldName_;
+        Type        initialResidual_;
+        Type        finalResidual_;
+        labelType   nIterations_;
+        bool        converged_;
         FixedList<bool, pTraits<Type>::nComponents> singular_;
 
 
@@ -112,7 +115,7 @@ public:
         :
             initialResidual_(Zero),
             finalResidual_(Zero),
-            noIterations_(0),
+            nIterations_(Zero),
             converged_(false),
             singular_(false)
         {}
@@ -120,20 +123,20 @@ public:
 
         SolverPerformance
         (
-            const word&  solverName,
-            const word&  fieldName,
-            const Type&  iRes = pTraits<Type>::zero,
-            const Type&  fRes = pTraits<Type>::zero,
-            const label  nIter = 0,
-            const bool   converged = false,
-            const bool   singular = false
+            const word& solverName,
+            const word& fieldName,
+            const Type& iRes = pTraits<Type>::zero,
+            const Type& fRes = pTraits<Type>::zero,
+            const labelType& nIter = pTraits<labelType>::zero,
+            const bool converged = false,
+            const bool singular = false
         )
         :
             solverName_(solverName),
             fieldName_(fieldName),
             initialResidual_(iRes),
             finalResidual_(fRes),
-            noIterations_(nIter),
+            nIterations_(nIter),
             converged_(converged),
             singular_(singular)
         {}
@@ -188,15 +191,15 @@ public:
 
 
         //- Return number of iterations
-        label nIterations() const
+        const labelType& nIterations() const
         {
-            return noIterations_;
+            return nIterations_;
         }
 
         //- Return number of iterations
-        label& nIterations()
+        labelType& nIterations()
         {
-            return noIterations_;
+            return nIterations_;
         }
 
 

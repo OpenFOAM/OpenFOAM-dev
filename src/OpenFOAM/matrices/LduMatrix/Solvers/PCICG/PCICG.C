@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,8 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
         preconditionerName + typeName,
         this->fieldName_
     );
+
+    label nIter = 0;
 
     label nCells = psi.size();
 
@@ -118,7 +120,7 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
             // --- Update search directions:
             wArA = gSumCmptProd(wA, rA);
 
-            if (solverPerf.nIterations() == 0)
+            if (nIter == 0)
             {
                 for (label cell=0; cell<nCells; cell++)
                 {
@@ -179,12 +181,15 @@ Foam::PCICG<Type, DType, LUType>::solve(Field<Type>& psi) const
         } while
         (
             (
-                solverPerf.nIterations()++ < this->maxIter_
+                nIter++ < this->maxIter_
             && !solverPerf.checkConvergence(this->tolerance_, this->relTol_)
             )
-         || solverPerf.nIterations() < this->minIter_
+         || nIter < this->minIter_
         );
     }
+
+    solverPerf.nIterations() =
+        pTraits<typename pTraits<Type>::labelType>::one*nIter;
 
     return solverPerf;
 }

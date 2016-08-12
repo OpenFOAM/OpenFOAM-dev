@@ -69,7 +69,7 @@ Foam::DiagonalSolver<Type, DType, LUType>::solve
         this->fieldName_,
         Zero,
         Zero,
-        0,
+        Zero,
         true,
         false
     );

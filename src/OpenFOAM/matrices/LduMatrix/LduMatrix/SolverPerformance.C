@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ bool Foam::SolverPerformance<Type>::checkConvergence
     if (debug >= 2)
     {
         Info<< solverName_
-            << ":  Iteration " << noIterations_
+            << ":  Iteration " << nIterations_
             << " residual = " << finalResidual_
             << endl;
     }
@@ -119,7 +119,7 @@ void Foam::SolverPerformance<Type>::print
         {
             os  << ", Initial residual = " << component(initialResidual_, cmpt)
                 << ", Final residual = " << component(finalResidual_, cmpt)
-                << ", No Iterations " << noIterations_
+                << ", No Iterations " << nIterations_
                 << endl;
         }
     }
@@ -135,6 +135,7 @@ void Foam::SolverPerformance<Type>::replace
 {
     initialResidual_.replace(cmpt, sp.initialResidual());
     finalResidual_.replace(cmpt, sp.finalResidual());
+    nIterations_.replace(cmpt, sp.nIterations());
     singular_[cmpt] = sp.singular();
 }
 
@@ -149,7 +150,7 @@ Foam::SolverPerformance<Type>::max()
         fieldName_,
         cmptMax(initialResidual_),
         cmptMax(finalResidual_),
-        noIterations_,
+        cmptMax(nIterations_),
         converged_,
         singular()
     );
@@ -207,7 +208,7 @@ Foam::Istream& Foam::operator>>
         >> sp.fieldName_
         >> sp.initialResidual_
         >> sp.finalResidual_
-        >> sp.noIterations_
+        >> sp.nIterations_
         >> sp.converged_
         >> sp.singular_;
     is.readEndList("SolverPerformance<Type>");
@@ -228,7 +229,7 @@ Foam::Ostream& Foam::operator<<
         << sp.fieldName_ << token::SPACE
         << sp.initialResidual_ << token::SPACE
         << sp.finalResidual_ << token::SPACE
-        << sp.noIterations_ << token::SPACE
+        << sp.nIterations_ << token::SPACE
         << sp.converged_ << token::SPACE
         << sp.singular_ << token::SPACE
         << token::END_LIST;
