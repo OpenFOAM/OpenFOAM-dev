@@ -50,9 +50,13 @@ namespace Foam
 
 // Forward declaration of classes
 
-template<class T> class SLPtrList;
 template<class T> class autoPtr;
 template<class T> class tmp;
+
+class SLListBase;
+template<class LListBase, class T> class LPtrList;
+template<class T>
+using SLPtrList = LPtrList<SLListBase, T>;
 
 // Forward declaration of friend functions and operators
 template<class T> class PtrList;

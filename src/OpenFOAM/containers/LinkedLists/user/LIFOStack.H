@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,21 +58,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        LIFOStack()
-        {}
-
-        //- Construct given initial T
-        LIFOStack(T a)
-        :
-            SLList<T>(a)
-        {}
-
-        //- Construct from Istream
-        LIFOStack(Istream& is)
-        :
-            SLList<T>(is)
-        {}
+        //- Inherit constructors from SLList
+        using SLList<T>::SLList;
 
 
     // Member Functions
