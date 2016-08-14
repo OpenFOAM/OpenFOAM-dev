@@ -201,6 +201,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
         }
 
         solverPerfVec.replace(cmpt, solverPerf);
+        solverPerfVec.solverName() = solverPerf.solverName();
 
         psi.primitiveFieldRef().replace(cmpt, psiCmpt);
         diag() = saveDiag;
