@@ -39,12 +39,14 @@ SourceFiles
 #include "dimensionedScalar.H"
 #include "volFields.H"
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 namespace viscosityModels
 {
+
 
 /*---------------------------------------------------------------------------*\
                            Class Casson Declaration
@@ -65,18 +67,15 @@ class Casson
 
         volScalarField nu_;
 
-
     // Private Member Functions
 
         //- Calculate and return the laminar viscosity
         tmp<volScalarField> calcNu() const;
 
-
 public:
 
     //- Runtime type information
     TypeName("Casson");
-
 
     // Constructors
 

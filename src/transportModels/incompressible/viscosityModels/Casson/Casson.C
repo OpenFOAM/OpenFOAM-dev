@@ -48,25 +48,10 @@ namespace viscosityModels
 
 Foam::tmp<Foam::volScalarField>
 Foam::viscosityModels::Casson::calcNu() const
-{
-	return max
-	(
-		nuMin_,
-		min
-		(
-			nuMax_,
-			pow
-			(
-				pow(
-					tau0_/max
-				(
-					strainRate(),
-					dimensionedScalar("VSMALL", dimless/dimTime, VSMALL)
-					),0.5
-					)
-				+pow(m_,0.5)
-				,
-				scalar(2.0))));
+{  
+    return max(nuMin_, min(nuMax_, pow(pow(tau0_/max(strainRate(),
+        dimensionedScalar("VSMALL", dimless/dimTime, VSMALL)), 0.5)
+        +pow(m_, 0.5), scalar(2.0))));
 }
 
 
