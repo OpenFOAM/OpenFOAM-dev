@@ -326,7 +326,7 @@ public:
 
             //- Switch to specify if particles of the cloud can return
             //  non-zero wall distance values - true for kinematic parcels
-            virtual bool hasWallImpactDistance() const;
+            bool hasWallImpactDistance() const;
 
 
             // References to the mesh and databases

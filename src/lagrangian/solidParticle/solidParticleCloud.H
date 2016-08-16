@@ -94,7 +94,7 @@ public:
 
         // Access
 
-            virtual bool hasWallImpactDistance() const;
+            bool hasWallImpactDistance() const;
 
             inline const fvMesh& mesh() const;
 
