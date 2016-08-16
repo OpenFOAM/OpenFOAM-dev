@@ -111,6 +111,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
         if (readFields)
         {
             parcelType::readFields(*this, this->composition());
+            this->deleteLostParticles();
         }
     }
 

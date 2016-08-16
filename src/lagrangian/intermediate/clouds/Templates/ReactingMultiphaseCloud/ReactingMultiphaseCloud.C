@@ -98,6 +98,7 @@ Foam::ReactingMultiphaseCloud<CloudType>::ReactingMultiphaseCloud
         if (readFields)
         {
             parcelType::readFields(*this, this->composition());
+            this->deleteLostParticles();
         }
     }
 

@@ -94,6 +94,7 @@ Foam::SprayCloud<CloudType>::SprayCloud
         if (readFields)
         {
             parcelType::readFields(*this, this->composition());
+            this->deleteLostParticles();
         }
 
         Info << "Average parcel mass: " << averageParcelMass_ << endl;

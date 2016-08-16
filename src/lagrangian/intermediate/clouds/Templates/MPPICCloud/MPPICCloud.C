@@ -94,6 +94,7 @@ Foam::MPPICCloud<CloudType>::MPPICCloud
         if (readFields)
         {
             parcelType::readFields(*this);
+            this->deleteLostParticles();
         }
     }
 }
