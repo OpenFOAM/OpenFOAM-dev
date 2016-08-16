@@ -241,7 +241,7 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
     vector& position,
     label& cellOwner,
     label& tetFacei,
-    label& tetPtI
+    label& tetPti
 )
 {
     const label i = parcelI % positionAxis_.size();
@@ -249,7 +249,7 @@ void Foam::ConeInjection<CloudType>::setPositionAndCell
     position = positionAxis_[i].first();
     cellOwner = injectorCells_[i];
     tetFacei = injectorTetFaces_[i];
-    tetPtI = injectorTetPts_[i];
+    tetPti = injectorTetPts_[i];
 }
 
 

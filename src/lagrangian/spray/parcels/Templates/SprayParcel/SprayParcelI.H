@@ -110,10 +110,10 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI
+    const label tetPti
 )
 :
-    ParcelType(mesh, position, celli, tetFacei, tetPtI),
+    ParcelType(mesh, position, celli, tetFacei, tetPti),
     d0_(this->d()),
     position0_(position),
     sigma_(0.0),
@@ -137,7 +137,7 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI,
+    const label tetPti,
     const label typeId,
     const scalar nParticle0,
     const scalar d0,
@@ -165,7 +165,7 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
         position,
         celli,
         tetFacei,
-        tetPtI,
+        tetPti,
         typeId,
         nParticle0,
         d0,

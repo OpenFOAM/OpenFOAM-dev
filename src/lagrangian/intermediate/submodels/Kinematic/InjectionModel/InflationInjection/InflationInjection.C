@@ -446,7 +446,7 @@ void Foam::InflationInjection<CloudType>::setPositionAndCell
     vector& position,
     label& cellOwner,
     label& tetFacei,
-    label& tetPtI
+    label& tetPti
 )
 {
     position = newParticles_[parcelI].first().first();
@@ -455,7 +455,7 @@ void Foam::InflationInjection<CloudType>::setPositionAndCell
     (
         cellOwner,
         tetFacei,
-        tetPtI,
+        tetPti,
         position,
         false
     );

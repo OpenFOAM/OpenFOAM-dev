@@ -153,7 +153,7 @@ void Foam::patchInjectionBase::setPositionAndCell
     vector& position,
     label& cellOwner,
     label& tetFacei,
-    label& tetPtI
+    label& tetPti
 )
 {
     scalar areaFraction = rnd.globalPosition(scalar(0), patchArea_);
@@ -209,13 +209,13 @@ void Foam::patchInjectionBase::setPositionAndCell
             // the base point on the face as the tetPt.  The tracking will pick
             // the cell consistent with the motion in the first tracking step
             tetFacei = mesh.cells()[cellOwner][0];
-            tetPtI = 1;
+            tetPti = 1;
         }
         else
         {
             cellOwner = -1;
             tetFacei = -1;
-            tetPtI = -1;
+            tetPti = -1;
 
             // Dummy position
             position = pTraits<vector>::max;
@@ -225,7 +225,7 @@ void Foam::patchInjectionBase::setPositionAndCell
     {
         cellOwner = -1;
         tetFacei = -1;
-        tetPtI = -1;
+        tetPti = -1;
 
         // Dummy position
         position = pTraits<vector>::max;

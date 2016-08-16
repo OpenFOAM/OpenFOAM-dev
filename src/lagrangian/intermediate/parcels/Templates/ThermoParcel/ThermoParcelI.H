@@ -77,10 +77,10 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI
+    const label tetPti
 )
 :
-    ParcelType(mesh, position, celli, tetFacei, tetPtI),
+    ParcelType(mesh, position, celli, tetFacei, tetPti),
     T_(0.0),
     Cp_(0.0),
     Tc_(0.0),
@@ -95,7 +95,7 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI,
+    const label tetPti,
     const label typeId,
     const scalar nParticle0,
     const scalar d0,
@@ -113,7 +113,7 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
         position,
         celli,
         tetFacei,
-        tetPtI,
+        tetPti,
         typeId,
         nParticle0,
         d0,

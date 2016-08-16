@@ -152,7 +152,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
                 // point as the tetPt.  The tracking will pick the cell
                 // consistent with the motion in the first tracking step.
                 const label tetFacei = this->owner().mesh().cells()[celli][0];
-                const label tetPtI = 1;
+                const label tetPti = 1;
 
 //                const point& pos = this->owner().mesh().C()[celli];
 
@@ -172,7 +172,7 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
                         pos,
                         celli,
                         tetFacei,
-                        tetPtI
+                        tetPti
                     );
 
                 // Check/set new parcel thermo properties

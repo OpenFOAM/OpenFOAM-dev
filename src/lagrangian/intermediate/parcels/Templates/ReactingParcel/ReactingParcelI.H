@@ -66,10 +66,10 @@ inline Foam::ReactingParcel<ParcelType>::ReactingParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI
+    const label tetPti
 )
 :
-    ParcelType(mesh, position, celli, tetFacei, tetPtI),
+    ParcelType(mesh, position, celli, tetFacei, tetPti),
     mass0_(0.0),
     Y_(0),
     pc_(0.0)
@@ -83,7 +83,7 @@ inline Foam::ReactingParcel<ParcelType>::ReactingParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI,
+    const label tetPti,
     const label typeId,
     const scalar nParticle0,
     const scalar d0,
@@ -102,7 +102,7 @@ inline Foam::ReactingParcel<ParcelType>::ReactingParcel
         position,
         celli,
         tetFacei,
-        tetPtI,
+        tetPti,
         typeId,
         nParticle0,
         d0,

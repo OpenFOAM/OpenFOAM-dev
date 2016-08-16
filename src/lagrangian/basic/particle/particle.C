@@ -50,7 +50,7 @@ Foam::particle::particle
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI
+    const label tetPti
 )
 :
     mesh_(mesh),
@@ -59,7 +59,7 @@ Foam::particle::particle
     facei_(-1),
     stepFraction_(0.0),
     tetFacei_(tetFacei),
-    tetPtI_(tetPtI),
+    tetPti_(tetPti),
     origProc_(Pstream::myProcNo()),
     origId_(getNewParticleID())
 {}
@@ -79,7 +79,7 @@ Foam::particle::particle
     facei_(-1),
     stepFraction_(0.0),
     tetFacei_(-1),
-    tetPtI_(-1),
+    tetPti_(-1),
     origProc_(Pstream::myProcNo()),
     origId_(getNewParticleID())
 {
@@ -98,7 +98,7 @@ Foam::particle::particle(const particle& p)
     facei_(p.facei_),
     stepFraction_(p.stepFraction_),
     tetFacei_(p.tetFacei_),
-    tetPtI_(p.tetPtI_),
+    tetPti_(p.tetPti_),
     origProc_(p.origProc_),
     origId_(p.origId_)
 {}
@@ -112,7 +112,7 @@ Foam::particle::particle(const particle& p, const polyMesh& mesh)
     facei_(p.facei_),
     stepFraction_(p.stepFraction_),
     tetFacei_(p.tetFacei_),
-    tetPtI_(p.tetPtI_),
+    tetPti_(p.tetPti_),
     origProc_(p.origProc_),
     origId_(p.origId_)
 {}

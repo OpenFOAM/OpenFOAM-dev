@@ -133,7 +133,7 @@ public:
             const vector& position,
             const label celli,
             const label tetFacei,
-            const label tetPtI,
+            const label tetPti,
             const scalar d,
             const vector& U
         );

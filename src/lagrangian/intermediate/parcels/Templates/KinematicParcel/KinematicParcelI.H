@@ -76,10 +76,10 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI
+    const label tetPti
 )
 :
-    ParcelType(owner, position, celli, tetFacei, tetPtI),
+    ParcelType(owner, position, celli, tetFacei, tetPti),
     active_(true),
     typeId_(-1),
     nParticle_(0),
@@ -103,7 +103,7 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     const vector& position,
     const label celli,
     const label tetFacei,
-    const label tetPtI,
+    const label tetPti,
     const label typeId,
     const scalar nParticle0,
     const scalar d0,
@@ -112,7 +112,7 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     const constantProperties& constProps
 )
 :
-    ParcelType(owner, position, celli, tetFacei, tetPtI),
+    ParcelType(owner, position, celli, tetFacei, tetPti),
     active_(true),
     typeId_(typeId),
     nParticle_(nParticle0),

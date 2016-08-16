@@ -34,7 +34,7 @@ Foam::tetIndices::tetIndices()
     faceBasePtI_(-1),
     facePtAI_(-1),
     facePtBI_(-1),
-    tetPtI_(-1)
+    tetPti_(-1)
 {}
 
 
@@ -53,7 +53,7 @@ Foam::tetIndices::tetIndices
     faceBasePtI_(faceBasePtI),
     facePtAI_(facePtAI),
     facePtBI_(facePtBI),
-    tetPtI_(tetPtI)
+    tetPti_(tetPtI)
 {}
 
 
@@ -70,7 +70,7 @@ Foam::tetIndices::tetIndices
     faceBasePtI_(-1),
     facePtAI_(-1),
     facePtBI_(-1),
-    tetPtI_(tetPtI)
+    tetPti_(tetPtI)
 {
     const faceList& pFaces = mesh.faces();
     const labelList& pOwner = mesh.faceOwner();
@@ -81,7 +81,7 @@ Foam::tetIndices::tetIndices
 
     faceBasePtI_ = mesh.tetBasePtIs()[facei_];
 
-    label facePtI = (tetPtI_ + faceBasePtI_) % f.size();
+    label facePtI = (tetPti_ + faceBasePtI_) % f.size();
     label otherFacePtI = f.fcIndex(facePtI);
 
     if (own)

@@ -51,7 +51,7 @@ Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
     facei_(-1),
     stepFraction_(0.0),
     tetFacei_(-1),
-    tetPtI_(-1),
+    tetPti_(-1),
     origProc_(Pstream::myProcNo()),
     origId_(-1)
 {
@@ -64,7 +64,7 @@ Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
             is  >> facei_
                 >> stepFraction_
                 >> tetFacei_
-                >> tetPtI_
+                >> tetPti_
                 >> origProc_
                 >> origId_;
         }
@@ -111,7 +111,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const particle& p)
             << token::SPACE << p.facei_
             << token::SPACE << p.stepFraction_
             << token::SPACE << p.tetFacei_
-            << token::SPACE << p.tetPtI_
+            << token::SPACE << p.tetPti_
             << token::SPACE << p.origProc_
             << token::SPACE << p.origId_;
     }

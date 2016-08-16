@@ -104,7 +104,7 @@ class tetIndices
 
     //- Point on the face, *relative to the base point*, which
     //  characterises this tet on the face.
-    label tetPtI_;
+    label tetPti_;
 
 
 public:
