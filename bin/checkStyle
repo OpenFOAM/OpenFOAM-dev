@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Check code style using vera++
+# https://bitbucket.org/verateam/vera/wiki
+
+echo "Running code style check"
+
+find . -path "*lnInclude*" -prune -o \( -name "*.C" -or -name "*.H" \) -print | vera++ -s -e -P max-line-length=80 --root ./etc/vera++ -S "$@"
