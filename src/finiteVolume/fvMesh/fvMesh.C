@@ -856,18 +856,12 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
 }
 
 
-bool Foam::fvMesh::writeObjects
+bool Foam::fvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp
 ) const
-{
-    return polyMesh::writeObject(fmt, ver, cmp);
-}
-
-
-bool Foam::fvMesh::write() const
 {
     bool ok = true;
     if (phiPtr_)
@@ -875,7 +869,13 @@ bool Foam::fvMesh::write() const
         ok = phiPtr_->write();
     }
 
-    return ok && polyMesh::write();
+    return ok && polyMesh::writeObject(fmt, ver, cmp);
+}
+
+
+bool Foam::fvMesh::write() const
+{
+    return polyMesh::write();
 }
 
 

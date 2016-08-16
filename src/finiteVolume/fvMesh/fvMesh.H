@@ -359,7 +359,7 @@ public:
         // Write
 
             //- Write the underlying polyMesh and other data
-            virtual bool writeObjects
+            virtual bool writeObject
             (
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
