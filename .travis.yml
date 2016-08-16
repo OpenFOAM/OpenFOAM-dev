@@ -1,0 +1,9 @@
+# Travis CI setup for OpenFOAM
+# Code style is checked only, since build times exceed Travis limits
+
+sudo: required
+dist: trusty
+language: cpp
+
+script:
+    - ./bin/checkStyle
