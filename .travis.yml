@@ -5,5 +5,8 @@ sudo: required
 dist: trusty
 language: cpp
 
+before_install:
+    - sudo apt-get install vera++
+
 script:
     - ./bin/checkStyle
