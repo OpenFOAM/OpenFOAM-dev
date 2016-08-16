@@ -81,7 +81,11 @@ bool Foam::dlLibraryTable::open
 {
     if (functionLibName.size())
     {
-        void* functionLibPtr = dlOpen(functionLibName, verbose);
+        void* functionLibPtr = dlOpen
+        (
+            fileName(functionLibName).expand(),
+            verbose
+        );
 
         if (debug)
         {
