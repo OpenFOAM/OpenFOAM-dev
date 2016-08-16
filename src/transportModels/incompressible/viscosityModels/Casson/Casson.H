@@ -27,6 +27,10 @@ Class
 Description
     An incompressible Casson non-Newtonian viscosity model.
 
+Reference
+    Fournier, R.L. (2011). Basic Transport Phenomena In Biomedical Engineering.
+        Boca Ration , FL: CRC Press.
+
 SourceFiles
     Casson.C
 
