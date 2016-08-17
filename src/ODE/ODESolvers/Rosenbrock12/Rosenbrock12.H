@@ -29,13 +29,10 @@ Description
 
     References:
     \verbatim
-        "A second-order Rosenbrock method applied to
-         photochemical dispersion problems",
-        J. G. Verwer,
-        E. J. Spee,
-        J. G. Blom,
-        W. Hundsdorfer,
-        Siam Journal on Scientific Computing 01/1999; 20(4):1456-1480.
+        Verwer, J. G., Spee, E. J., Blom, J. G., & Hundsdorfer, W. (1999).
+        A second-order Rosenbrock method applied to
+        photochemical dispersion problems.
+        SIAM Journal on Scientific Computing, 20(4), 1456-1480.
     \endverbatim
 
 SourceFiles

@@ -27,14 +27,12 @@ Class
 Description
     L-stable, stiffly-accurate embedded Rosenbrock ODE solver of order (3)4.
 
-    References:
+    Reference:
     \verbatim
-        "Solving Ordinary Differential Equations II: Stiff
-         and Differential-Algebraic Problems, second edition",
-        Hairer, E.,
-        Nørsett, S.,
-        Wanner, G.,
-        Springer-Verlag, Berlin. 1996.
+        Hairer, E., Nørsett, S. P., & Wanner, G. (1996).
+        Solving Ordinary Differential Equations II:
+        Stiff and Differential-Algebraic Problems, second edition",
+        Springer-Verlag, Berlin.
     \endverbatim
 
 SourceFiles

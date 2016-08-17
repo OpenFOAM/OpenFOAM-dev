@@ -28,14 +28,12 @@ Description
     An extrapolation-algorithm, based on the linearly implicit Euler method
     with step size control and order selection.
 
-    The implementation is based on the SEULEX algorithm in
+    Reference:
     \verbatim
-        "Solving Ordinary Differential Equations II: Stiff
-         and Differential-Algebraic Problems, second edition",
-        Hairer, E.,
-        Nørsett, S.,
-        Wanner, G.,
-        Springer-Verlag, Berlin. 1996.
+        Hairer, E., Nørsett, S. P., & Wanner, G. (1996).
+        Solving Ordinary Differential Equations II:
+        Stiff and Differential-Algebraic Problems, second edition",
+        Springer-Verlag, Berlin.
     \endverbatim
 
 SourceFiles

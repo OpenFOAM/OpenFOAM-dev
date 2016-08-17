@@ -25,12 +25,16 @@ Class
     Foam::SIBS
 
 Description
-    Foam::SIBS
+    A semi-implicit mid-point solver for stiff systems of ordinary differential
+    equations.
 
-    Bader, G. and Deuflhard, P.
-    "A Semi-Implicit Mid-Point Rule for
-     Stiff Systems of Ordinary Differential Equations."
-     Numer. Math. 41, 373-398, 1983.
+    Reference:
+    \verbatim
+        Bader, G., & Deuflhard, P. (1983).
+        A semi-implicit mid-point rule for stiff systems
+        of ordinary differential equations.
+        Numerische Mathematik, 41(3), 373-398.
+    \endverbatim
 
 SourceFiles
     SIMPR.C
