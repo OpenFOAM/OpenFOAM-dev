@@ -58,7 +58,7 @@ namespace functionObjects
 }
 
 const Foam::NamedEnum<Foam::functionObjects::writeObjects::writeOption, 3>
-    Foam::functionObjects::writeObjects::writeOptionNames;
+    Foam::functionObjects::writeObjects::writeOptionNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -111,7 +111,7 @@ bool Foam::functionObjects::writeObjects::read(const dictionary& dict)
 
     if (dict.found("writeOption"))
     {
-        writeOption_ = writeOptionNames.read(dict.lookup("writeOption"));
+        writeOption_ = writeOptionNames_.read(dict.lookup("writeOption"));
     }
     else
     {
@@ -162,33 +162,38 @@ bool Foam::functionObjects::writeObjects::write()
             obr_.lookupObject<regIOobject>(allNames[i])
         );
 
-        switch(writeOption_)
+        switch (writeOption_)
         {
             case AUTO_WRITE:
-                if (obj.writeOpt() != IOobject::AUTO_WRITE)
+            {
+                if(obj.writeOpt() != IOobject::AUTO_WRITE)
                 {
                     continue;
                 }
-                else
-                {
-                    break;
-                }
 
-            case NO_WRITE:
-                if (obj.writeOpt() != IOobject::NO_WRITE)
-                {
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
-
-            case ANY_WRITE:
                 break;
+            }
+            case NO_WRITE:
+            {
+                if(obj.writeOpt() != IOobject::NO_WRITE)
+                {
+                    continue;
+                }
 
+                break;
+            }
+            case ANY_WRITE:
+            {
+                break;
+            }
             default:
-                continue;
+            {
+                FatalErrorInFunction
+                    << "Unknown writeOption "
+                    << writeOptionNames_[writeOption_]
+                    << ". Valid writeOption types are" << writeOptionNames_
+                    << exit(FatalError);
+            }
         }
 
         if
