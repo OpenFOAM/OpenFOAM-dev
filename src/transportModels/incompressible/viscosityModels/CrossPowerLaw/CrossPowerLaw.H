@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,32 +90,32 @@ public:
 
 
     //- Destructor
-    ~CrossPowerLaw()
+    virtual ~CrossPowerLaw()
     {}
 
 
     // Member Functions
 
         //- Return the laminar viscosity
-        tmp<volScalarField> nu() const
+        virtual tmp<volScalarField> nu() const
         {
             return nu_;
         }
 
         //- Return the laminar viscosity for patch
-        tmp<scalarField> nu(const label patchi) const
+        virtual tmp<scalarField> nu(const label patchi) const
         {
             return nu_.boundaryField()[patchi];
         }
 
         //- Correct the laminar viscosity
-        void correct()
+        virtual void correct()
         {
             nu_ = calcNu();
         }
 
         //- Read transportProperties dictionary
-        bool read(const dictionary& viscosityProperties);
+        virtual bool read(const dictionary& viscosityProperties);
 };
 
 
