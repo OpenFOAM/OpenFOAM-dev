@@ -25,7 +25,6 @@ fvDOMCoeffs
     nTheta      5;          // polar angles in PI (from Z to X-Y plane)
     convergence 1e-3;   // convergence criteria for radiation iteration
     maxIter     10;         // maximum number of iterations
-    cacheDiv    false;
 }
 
 // Number of flow iterations per radiation iteration

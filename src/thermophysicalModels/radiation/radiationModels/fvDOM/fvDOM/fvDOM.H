@@ -44,9 +44,6 @@ Description
             convergence 1e-3;       // convergence criteria for radiation
                                     //iteration
             maxIter     4;          // maximum number of iterations
-            cacheDiv    true;       // cache the div of the RTE equation.
-            //NOTE: Caching div is "only" accurate if the upwind scheme is used
-            //in div(Ji,Ii_h)
         }
 
         solverFreq   1; // Number of flow iterations per radiation iteration
@@ -129,12 +126,6 @@ class fvDOM
 
         //- Maximum number of iterations
         label maxIter_;
-
-        //- List of cached fvMatrices for rays
-        List<PtrList<fvScalarMatrix>>fvRayDiv_;
-
-        //- Cache convection div matrix
-        bool cacheDiv_;
 
         //- Maximum omega weight
         scalar omegaMax_;
@@ -247,16 +238,6 @@ public:
 
             //- Const access to black body
             inline const blackBodyEmission& blackBody() const;
-
-            //- Const access to cached fvMatrix
-            inline const fvScalarMatrix& fvRayDiv
-            (
-                const label lambdaI,
-                const label rayId
-            ) const;
-
-            //- Caching div(Ji, Ilamda)
-            inline bool cacheDiv() const;
 
             //- Return omegaMax
             inline scalar omegaMax() const;
