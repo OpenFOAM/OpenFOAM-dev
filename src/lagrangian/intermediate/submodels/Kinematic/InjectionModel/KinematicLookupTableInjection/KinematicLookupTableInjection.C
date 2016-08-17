@@ -176,7 +176,7 @@ void Foam::KinematicLookupTableInjection<CloudType>::setPositionAndCell
     vector& position,
     label& cellOwner,
     label& tetFacei,
-    label& tetPtI
+    label& tetPti
 )
 {
     label injectorI = 0;
@@ -193,7 +193,7 @@ void Foam::KinematicLookupTableInjection<CloudType>::setPositionAndCell
     position = injectors_[injectorI].x();
     cellOwner = injectorCells_[injectorI];
     tetFacei = injectorTetFaces_[injectorI];
-    tetPtI = injectorTetPts_[injectorI];
+    tetPti = injectorTetPts_[injectorI];
 }
 
 

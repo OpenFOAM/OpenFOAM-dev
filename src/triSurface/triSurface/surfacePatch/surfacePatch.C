@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,11 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(surfacePatch, 0);
+    defineTypeNameAndDebug(surfacePatch, 0);
 }
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct null
 Foam::surfacePatch::surfacePatch()
 :
     geometricSurfacePatch("", "", -1),
@@ -46,8 +44,6 @@ Foam::surfacePatch::surfacePatch()
 {}
 
 
-
-// Construct from components
 Foam::surfacePatch::surfacePatch
 (
     const word& geometricType,
@@ -63,7 +59,6 @@ Foam::surfacePatch::surfacePatch
 {}
 
 
-// Construct from Istream
 Foam::surfacePatch::surfacePatch(Istream& is, const label index)
 :
     geometricSurfacePatch(is, index),
@@ -74,7 +69,7 @@ Foam::surfacePatch::surfacePatch(Istream& is, const label index)
     start_ = readLabel(is);
 }
 
-// Construct from dictionary
+
 Foam::surfacePatch::surfacePatch
 (
     const word& name,
@@ -88,7 +83,6 @@ Foam::surfacePatch::surfacePatch
 {}
 
 
-// Construct as copy
 Foam::surfacePatch::surfacePatch(const Foam::surfacePatch& sp)
 :
     geometricSurfacePatch(sp),

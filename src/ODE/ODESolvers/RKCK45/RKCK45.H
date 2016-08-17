@@ -29,18 +29,15 @@ Description
 
     References:
     \verbatim
-        "A variable order Runge-Kutta method for initial value problems
-         with rapidly varying right-hand sides"
-        Cash, J.R.,
-        Karp, A.H.
-        ACM Transactions on Mathematical Software, vol. 16, 1990, pp. 201–222.
+        Cash, J. R., & Karp, A. H. (1990).
+        A variable order Runge-Kutta method for initial value problems
+        with rapidly varying right-hand sides.
+        ACM Transactions on Mathematical Software (TOMS), 16(3), 201-222.
 
-        "Solving Ordinary Differential Equations I: Nonstiff Problems,
-         second edition",
-        Hairer, E.,
-        Nørsett, S.,
-        Wanner, G.,
-        Springer-Verlag, Berlin. 1993, ISBN 3-540-56670-8.
+        Hairer, E., Nørsett, S. P., & Wanner, G. (1993).
+        Solving Ordinary Differential Equations I: Nonstiff Problems,
+        second edition.
+        Springer-Verlag, Berlin.
     \endverbatim
 
 SourceFiles

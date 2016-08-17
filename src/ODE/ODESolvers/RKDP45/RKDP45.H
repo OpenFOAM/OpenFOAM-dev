@@ -29,18 +29,14 @@ Description
 
     References:
     \verbatim
-        "A family of embedded Runge-Kutta formulae"
-        Dormand, J. R.,
-        Prince, P. J.,
-        Journal of Computational and Applied Mathematics,
-        6 (1), 1980: pp. 19-26.
+        Dormand, J. R., & Prince, P. J. (1980).
+        A family of embedded Runge-Kutta formulae.
+        Journal of computational and applied mathematics, 6(1), 19-26.
 
-        "Solving Ordinary Differential Equations I: Nonstiff Problems,
-         second edition",
-        Hairer, E.,
-        Nørsett, S.,
-        Wanner, G.,
-        Springer-Verlag, Berlin. 1993, ISBN 3-540-56670-8.
+        Hairer, E., Nørsett, S. P., & Wanner, G. (1993).
+        Solving Ordinary Differential Equations I: Nonstiff Problems,
+        second edition.
+        Springer-Verlag, Berlin.
     \endverbatim
 
 See also

@@ -28,19 +28,17 @@ Description
     L-stable embedded Rosenbrock ODE solver of order (3)4.
 
     \verbatim
-        "Solving Ordinary Differential Equations II: Stiff
-         and Differential-Algebraic Problems, second edition",
-        Hairer, E.,
-        Nørsett, S.,
-        Wanner, G.,
-        Springer-Verlag, Berlin. 1996.
+        Hairer, E., Nørsett, S. P., & Wanner, G. (1996).
+        Solving Ordinary Differential Equations II:
+        Stiff and Differential-Algebraic Problems, second edition",
+        Springer-Verlag, Berlin.
     \endverbatim
 
     The default constants are from:
     \verbatim
-        "Implementation of Rosenbrock Methods"
-        Shampine, L. F.,
-        ACM Transactions on Mathematical Software, vol. 8, 1982, pp. 93–113.
+        Shampine, L. F. (1982).
+        Implementation of Rosenbrock Methods.
+        ACM Transactions on Mathematical Software, vol. 8, pp. 93–113.
     \endverbatim
     with which the scheme is more accurate than with the L-Stable coefficients
     for small step-size but less stable for large step-size.

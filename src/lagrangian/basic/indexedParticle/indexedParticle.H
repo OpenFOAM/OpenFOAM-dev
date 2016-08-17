@@ -68,11 +68,11 @@ public:
             const vector& position,
             const label celli,
             const label tetFacei,
-            const label tetPtI,
+            const label tetPti,
             const label index = 0
         )
         :
-            particle(mesh, position, celli, tetFacei, tetPtI),
+            particle(mesh, position, celli, tetFacei, tetPti),
             index_(index)
         {}
 

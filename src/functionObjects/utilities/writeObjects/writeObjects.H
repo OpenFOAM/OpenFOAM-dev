@@ -28,11 +28,11 @@ Group
     grpUtilitiesFunctionObjects
 
 Description
-    Allows specification of different writing frequency of objects registered to
-    the database.
+    Allows specification of different writing frequency of objects registered
+    to the database.
 
     It has similar functionality as the main time database through the
-    writeControl setting:
+    \c writeControl setting:
       - timeStep
       - writeTime
       - adjustableRunTime
@@ -40,28 +40,33 @@ Description
       - clockTime
       - cpuTime
 
+    It also has the ability to write the selected objects that were defined
+    with the respective write mode for the requested \c writeOption, namely:
+      - \c autoWrite - objects set to write at output time
+      - \c noWrite   - objects set to not write by default
+      - \c anyWrite  - any option of the previous two
+
     Example of function object specification:
     \verbatim
     writeObjects1
     {
         type        writeObjects;
         libs        ("libutilityFunctionObjects.so");
-        exclusiveWriting     true;
         ...
         objects     (obj1 obj2);
+        writeOption anyWrite;
     }
     \endverbatim
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        type         | type name: writeObjects | yes |
+        type         | type name: writeObjects | yes         |
         objects      | objects to write        | yes         |
-        exclusiveWriting    | Takes over object writing | no | yes
+        writeOption  | only those with this write option | no   | any
     \endtable
 
-    \c exclusiveWriting disables automatic writing (i.e through database) of the
-    objects to avoid duplicate writing.
+    Note: Regular expressions can also be used in \c objects.
 
 See also
     Foam::functionObject
@@ -77,6 +82,7 @@ SourceFiles
 
 #include "functionObject.H"
 #include "wordReList.H"
+#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,13 +103,30 @@ class writeObjects
 :
     public functionObject
 {
+public:
+
+    // Public data types
+
+        //- Re-enumeration defining the write options, based on the original
+        //  ones at IOobject::writeOption
+        enum writeOption
+        {
+            AUTO_WRITE,
+            NO_WRITE,
+            ANY_WRITE
+        };
+
+        static const NamedEnum<writeOption, 3> writeOptionNames;
+
+private:
+
     // Private data
 
-        //- Refererence to Db
+        //- Reference to Db
         const objectRegistry& obr_;
 
         //- Takes over the writing from Db
-        bool exclusiveWriting_;
+        writeOption writeOption_;
 
         //- Names of objects to control
         wordReList objectNames_;

@@ -109,6 +109,7 @@ Foam::CollidingCloud<CloudType>::CollidingCloud
         if (readFields)
         {
             parcelType::readFields(*this);
+            this->deleteLostParticles();
         }
     }
 }

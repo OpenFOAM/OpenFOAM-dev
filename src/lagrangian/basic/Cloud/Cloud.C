@@ -173,6 +173,25 @@ void Foam::Cloud<ParticleType>::deleteParticle(ParticleType& p)
 
 
 template<class ParticleType>
+void Foam::Cloud<ParticleType>::deleteLostParticles()
+{
+    forAllIter(typename Cloud<ParticleType>, *this, pIter)
+    {
+        ParticleType& p = pIter();
+
+        if (p.cell() == -1)
+        {
+            WarningInFunction
+                << "deleting lost particle at position " << p.position()
+                << endl;
+
+            deleteParticle(p);
+        }
+    }
+}
+
+
+template<class ParticleType>
 void Foam::Cloud<ParticleType>::cloudReset(const Cloud<ParticleType>& c)
 {
     // Reset particle cound and particles only

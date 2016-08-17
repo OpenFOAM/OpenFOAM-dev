@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::label Foam::tetIndices::cell() const
@@ -59,7 +57,7 @@ Foam::label Foam::tetIndices::facePtB() const
 
 Foam::label Foam::tetIndices::tetPt() const
 {
-    return tetPtI_;
+    return tetPti_;
 }
 
 
@@ -185,7 +183,7 @@ Foam::label& Foam::tetIndices::facePtB()
 
 Foam::label& Foam::tetIndices::tetPt()
 {
-    return tetPtI_;
+    return tetPti_;
 }
 
 

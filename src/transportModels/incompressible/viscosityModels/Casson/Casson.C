@@ -2,7 +2,11 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
+<<<<<<< HEAD
     \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+=======
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+>>>>>>> master
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,10 +52,27 @@ namespace viscosityModels
 
 Foam::tmp<Foam::volScalarField>
 Foam::viscosityModels::Casson::calcNu() const
-{  
-    return max(nuMin_, min(nuMax_, pow(sqrt(tau0_/max(strainRate(),
-           dimensionedScalar("VSMALL", dimless/dimTime, VSMALL)))
-           +sqrt(m_), scalar(2))));
+{
+    return max
+    (
+        nuMin_,
+        min
+        (
+            nuMax_,
+            sqr
+            (
+                sqrt
+                (
+                    tau0_
+                   /max
+                    (
+                        strainRate(),
+                        dimensionedScalar("VSMALL", dimless/dimTime, VSMALL)
+                    )
+                ) + sqrt(m_)
+            )
+        )
+    );
 }
 
 
@@ -101,7 +122,7 @@ bool Foam::viscosityModels::Casson::read
     CassonCoeffs_.lookup("tau0") >> tau0_;
     CassonCoeffs_.lookup("nuMin_") >> nuMin_;
     CassonCoeffs_.lookup("nuMax_") >> nuMax_;
-    
+
     return true;
 }
 

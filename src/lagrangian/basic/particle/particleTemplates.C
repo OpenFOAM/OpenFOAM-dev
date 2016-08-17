@@ -88,7 +88,7 @@ void Foam::particle::correctAfterParallelTransfer
     tetFacei_ = facei_ + ppp.start();
 
     // Faces either side of a coupled patch have matched base indices,
-    // tetPtI is specified relative to the base point, already and
+    // tetPti is specified relative to the base point, already and
     // opposite circulation directions by design, so if the vertices
     // are:
     // source:
@@ -108,7 +108,7 @@ void Foam::particle::correctAfterParallelTransfer
     // This relationship can be verified for other points and sizes of
     // face.
 
-    tetPtI_ = mesh_.faces()[tetFacei_].size() - 1 - tetPtI_;
+    tetPti_ = mesh_.faces()[tetFacei_].size() - 1 - tetPti_;
 
     // Reset the face index for the next tracking operation
     if (stepFraction_ > (1.0 - SMALL))
@@ -226,7 +226,7 @@ Foam::scalar Foam::particle::trackToFace
     // Pout<< "stepFraction " << stepFraction_ << nl
     //     << "celli " << celli_ << nl
     //     << "tetFacei " << tetFacei_ << nl
-    //     << "tetPtI " << tetPtI_
+    //     << "tetPti " << tetPti_
     //     << endl;
 
     scalar trackFraction = 0.0;
@@ -245,10 +245,10 @@ Foam::scalar Foam::particle::trackToFace
     //   + pA and pB are the remaining points on the face, such that
     //     the circulation, {basePt, pA, pB} produces a positive
     //     normal by the right-hand rule.  pA and pB are chosen from
-    //     tetPtI_ do accomplish this depending if the cell owns the
-    //     face, tetPtI_ is the vertex that characterises the tet, and
+    //     tetPti_ do accomplish this depending if the cell owns the
+    //     face, tetPti_ is the vertex that characterises the tet, and
     //     is the first vertex on the tet when circulating around the
-    //     face. Therefore, the same tetPtI represents the same face
+    //     face. Therefore, the same tetPti represents the same face
     //     triangle for both the owner and neighbour cell.
     //
     // Each tet has its four triangles represented in the same order:
@@ -309,7 +309,7 @@ Foam::scalar Foam::particle::trackToFace
 
         label basePtI = f[tetBasePtI];
 
-        label facePtI = (tetPtI_ + tetBasePtI) % f.size();
+        label facePtI = (tetPti_ + tetBasePtI) % f.size();
         label otherFacePtI = f.fcIndex(facePtI);
 
         label fPtAI = -1;
@@ -430,7 +430,7 @@ Foam::scalar Foam::particle::trackToFace
                     tetPlaneBasePtIs[tI],
                     celli_,
                     tetFacei_,
-                    tetPtI_,
+                    tetPti_,
                     lambdaDistanceTolerance
                 );
 
@@ -457,7 +457,7 @@ Foam::scalar Foam::particle::trackToFace
                 tetBasePtI,
                 fPtAI,
                 fPtBI,
-                tetPtI_
+                tetPti_
             );
         }
         else if (triI > 0)
@@ -470,7 +470,7 @@ Foam::scalar Foam::particle::trackToFace
         //     << "    " << celli_
         //     << "    " << facei_
         //     << " " << tetFacei_
-        //     << " " << tetPtI_
+        //     << " " << tetPti_
         //     << " " << triI
         //     << " " << lambdaMin
         //     << " " << trackFraction
@@ -479,7 +479,7 @@ Foam::scalar Foam::particle::trackToFace
         // Pout<< "# Tracking loop tet "
         //     << origId_ << " " << origProc_<< nl
         //     << "# face: " << tetFacei_ << nl
-        //     << "# tetPtI: " << tetPtI_ << nl
+        //     << "# tetPti: " << tetPti_ << nl
         //     << "# tetBasePtI: " << mesh_.tetBasePtIs()[tetFacei_] << nl
         //     << "# tet.mag(): " << tet.mag() << nl
         //     << "# tet.quality(): " << tet.quality()
@@ -555,7 +555,7 @@ Foam::scalar Foam::particle::trackToFace
         label origFacei = facei_;
         label patchi = patch(facei_);
 
-        // No action taken for tetPtI_ for tetFacei_ here, handled by
+        // No action taken for tetPti_ for tetFacei_ here, handled by
         // patch interaction call or later during processor transfer.
 
         if
@@ -1000,8 +1000,8 @@ void Foam::particle::hitCyclicPatch
 
     tetFacei_ = facei_;
 
-    // See note in correctAfterParallelTransfer for tetPtI_ addressing.
-    tetPtI_ = mesh_.faces()[tetFacei_].size() - 1 - tetPtI_;
+    // See note in correctAfterParallelTransfer for tetPti_ addressing.
+    tetPti_ = mesh_.faces()[tetFacei_].size() - 1 - tetPti_;
 
     const cyclicPolyPatch& receiveCpp = cpp.neighbPatch();
     label patchFacei = receiveCpp.whichFace(facei_);
@@ -1053,10 +1053,15 @@ void Foam::particle::hitCyclicAMIPatch
 
     if (patchFacei < 0)
     {
-        FatalErrorInFunction
+        // If the patch face of the particle is not known assume that
+        // the particle is lost and to be deleted
+        td.keepParticle = false;
+
+        WarningInFunction
             << "Particle lost across " << cyclicAMIPolyPatch::typeName
             << " patches " << cpp.name() << " and " << receiveCpp.name()
-            << " at position " << position_ << abort(FatalError);
+            << " at position " << position_
+            << endl;
     }
 
     // Convert face index into global numbering
@@ -1066,8 +1071,8 @@ void Foam::particle::hitCyclicAMIPatch
 
     tetFacei_ = facei_;
 
-    // See note in correctAfterParallelTransfer for tetPtI_ addressing.
-    tetPtI_ = mesh_.faces()[tetFacei_].size() - 1 - tetPtI_;
+    // See note in correctAfterParallelTransfer for tetPti_ addressing.
+    tetPti_ = mesh_.faces()[tetFacei_].size() - 1 - tetPti_;
 
     // Now the particle is on the receiving side
 

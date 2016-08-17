@@ -117,11 +117,6 @@ void Foam::Cloud<ParticleType>::initCloud(const bool checkClass)
     {
         ioP.readData(*this, checkClass);
         ioP.close();
-
-        if (this->size())
-        {
-            readFields();
-        }
     }
     else
     {
@@ -245,11 +240,6 @@ void Foam::Cloud<ParticleType>::checkFieldFieldIOobject
             << abort(FatalError);
     }
 }
-
-
-template<class ParticleType>
-void Foam::Cloud<ParticleType>::readFields()
-{}
 
 
 template<class ParticleType>

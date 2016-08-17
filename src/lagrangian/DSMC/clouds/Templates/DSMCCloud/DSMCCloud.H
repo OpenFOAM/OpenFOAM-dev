@@ -455,7 +455,7 @@ public:
                 const scalar Ei,
                 const label celli,
                 const label tetFacei,
-                const label tetPtI,
+                const label tetPti,
                 const label typeId
             );
 

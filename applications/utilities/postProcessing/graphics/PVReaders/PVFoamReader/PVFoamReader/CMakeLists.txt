@@ -51,26 +51,29 @@ ADD_PARAVIEW_OBJECT_PANEL(IFACES IFACE_SRCS
   XML_GROUP sources
 )
 
-IF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
+IF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
+
+    # Special build options, specifically for ParaView 4.0.*
+    # Because as of 4.1.0, GUI_RESOURCE_FILES is no longer used.
     ADD_PARAVIEW_PLUGIN(
         PVFoamReader_SM "1.0"
         SERVER_MANAGER_XML PVFoamReader_SM.xml
         SERVER_MANAGER_SOURCES vtkPVFoamReader.cxx
         GUI_INTERFACES ${IFACES}
         GUI_SOURCES pqPVFoamReaderPanel.cxx
-            ${MOC_SRCS} ${UI_SRCS} ${IFACE_SRCS}
+        ${MOC_SRCS} ${UI_SRCS} ${IFACE_SRCS}
         GUI_RESOURCE_FILES PVFoamReader.xml
     )
-ELSE("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
+ELSE("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
     ADD_PARAVIEW_PLUGIN(
         PVFoamReader_SM "1.0"
         SERVER_MANAGER_XML PVFoamReader_SM.xml
         SERVER_MANAGER_SOURCES vtkPVFoamReader.cxx
         GUI_INTERFACES ${IFACES}
         GUI_SOURCES pqPVFoamReaderPanel.cxx
-            ${MOC_SRCS} ${UI_SRCS} ${IFACE_SRCS}
+        ${MOC_SRCS} ${UI_SRCS} ${IFACE_SRCS}
     )
-ENDIF("${PARAVIEW_VERSION_MINOR}" EQUAL 0)
+ENDIF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
 
 TARGET_LINK_LIBRARIES(
     PVFoamReader_SM

@@ -131,7 +131,7 @@ private:
         label tetFacei_;
 
         //- Index of tet point for injector cell
-        label tetPtI_;
+        label tetPti_;
 
         //- Injector direction []
         vector direction_;
@@ -244,7 +244,7 @@ public:
                 vector& position,
                 label& cellOwner,
                 label& tetFacei,
-                label& tetPtI
+                label& tetPti
             );
 
             //- Set the parcel properties

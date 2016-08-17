@@ -201,13 +201,13 @@ void Foam::FieldActivatedInjection<CloudType>::setPositionAndCell
     vector& position,
     label& cellOwner,
     label& tetFacei,
-    label& tetPtI
+    label& tetPti
 )
 {
     position = positions_[parcelI];
     cellOwner = injectorCells_[parcelI];
     tetFacei = injectorTetFaces_[parcelI];
-    tetPtI = injectorTetPts_[parcelI];
+    tetPti = injectorTetPts_[parcelI];
 }
 
 

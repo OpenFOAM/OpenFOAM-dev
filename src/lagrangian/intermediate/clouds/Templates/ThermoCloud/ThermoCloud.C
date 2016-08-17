@@ -203,6 +203,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
         if (readFields)
         {
             parcelType::readFields(*this);
+            this->deleteLostParticles();
         }
     }
 

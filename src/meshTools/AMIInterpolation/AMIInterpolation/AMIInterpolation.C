@@ -302,8 +302,8 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
 
         // So now we have agglomeration of the target side in
         // allRestrict:
-        //  0..size-1 : local agglomeration (= targetRestrictAddressing)
-        //  size..    : agglomeration data from other processors
+        //   0..size-1 : local agglomeration (= targetRestrictAddressing)
+        //   size..    : agglomeration data from other processors
 
         labelListList tgtSubMap(Pstream::nProcs());
 
@@ -497,7 +497,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::agglomerate
         }
     }
 
-    // weights normalisation
+    // Weights normalisation
     normaliseWeights
     (
         srcMagSf,
@@ -522,7 +522,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::constructFromSurface
 {
     if (surfPtr.valid())
     {
-        // create new patches for source and target
+        // Create new patches for source and target
         pointField srcPoints = srcPatch.points();
         SourcePatch srcPatch0
         (
@@ -566,12 +566,12 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::constructFromSurface
         }
 
 
-        // map source and target patches onto projection surface
+        // Map source and target patches onto projection surface
         projectPointsToSurface(surfPtr(), srcPoints);
         projectPointsToSurface(surfPtr(), tgtPoints);
 
 
-        // calculate AMI interpolation
+        // Calculate AMI interpolation
         update(srcPatch0, tgtPatch0);
     }
     else
@@ -793,15 +793,6 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
         tgtMapPtr_
     );
 
-    //if (tgtMapPtr_.valid())
-    //{
-    //    Pout<< "tgtMap:" << endl;
-    //    string oldPrefix = Pout.prefix();
-    //    Pout.prefix() = oldPrefix + "  ";
-    //    tgtMapPtr_().printLayout(Pout);
-    //    Pout.prefix() = oldPrefix;
-    //}
-
     agglomerate
     (
         fineAMI.srcMapPtr_,
@@ -818,15 +809,6 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::AMIInterpolation
         tgtWeightsSum_,
         srcMapPtr_
     );
-
-    //if (srcMapPtr_.valid())
-    //{
-    //    Pout<< "srcMap:" << endl;
-    //    string oldPrefix = Pout.prefix();
-    //    Pout.prefix() = oldPrefix + "  ";
-    //    srcMapPtr_().printLayout(Pout);
-    //    Pout.prefix() = oldPrefix;
-    //}
 }
 
 
@@ -883,7 +865,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
 
     if (singlePatchProc_ == -1)
     {
-        // convert local addressing to global addressing
+        // Convert local addressing to global addressing
         globalIndex globalSrcFaces(srcPatch.size());
         globalIndex globalTgtFaces(tgtPatch.size());
 
@@ -893,12 +875,13 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
         autoPtr<mapDistribute> mapPtr = calcProcMap(srcPatch, tgtPatch);
         const mapDistribute& map = mapPtr();
 
-        // create new target patch that fully encompasses source patch
+        // Create new target patch that fully encompasses source patch
 
-        // faces and points
+        // Faces and points
         faceList newTgtFaces;
         pointField newTgtPoints;
-        // original faces from tgtPatch (in globalIndexing since might be
+
+        // Original faces from tgtPatch (in globalIndexing since might be
         // remote)
         labelList tgtFaceIDs;
         distributeAndMergePatches
@@ -922,7 +905,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
                 newTgtPoints
             );
 
-        // calculate AMI interpolation
+        // Calculate AMI interpolation
         autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
         (
             AMIMethod<SourcePatch, TargetPatch>::New
@@ -976,7 +959,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
             }
         }
 
-        // send data back to originating procs. Note that contributions
+        // Send data back to originating procs. Note that contributions
         // from different processors get added (ListAppendEqOp)
 
         mapDistributeBase::distribute
@@ -1009,7 +992,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
             scalarList()
         );
 
-        // weights normalisation
+        // Weights normalisation
         normaliseWeights
         (
             srcMagSf_,
@@ -1033,7 +1016,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
             lowWeightCorrection_
         );
 
-        // cache maps and reset addresses
+        // Cache maps and reset addresses
         List<Map<label>> cMap;
         srcMapPtr_.reset(new mapDistribute(globalSrcFaces, tgtAddress_, cMap));
         tgtMapPtr_.reset(new mapDistribute(globalTgtFaces, srcAddress_, cMap));
@@ -1045,7 +1028,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::update
     }
     else
     {
-        // calculate AMI interpolation
+        // Calculate AMI interpolation
         autoPtr<AMIMethod<SourcePatch, TargetPatch>> AMIPtr
         (
             AMIMethod<SourcePatch, TargetPatch>::New
@@ -1431,41 +1414,36 @@ const
 {
     const pointField& srcPoints = srcPatch.points();
 
-    // source face addresses that intersect target face tgtFacei
+    // Source face addresses that intersect target face tgtFacei
     const labelList& addr = tgtAddress_[tgtFacei];
+
+    pointHit nearest;
+    nearest.setDistance(GREAT);
+    label nearestFacei = -1;
 
     forAll(addr, i)
     {
-        label srcFacei = addr[i];
+        const label srcFacei = addr[i];
         const face& f = srcPatch[srcFacei];
 
         pointHit ray = f.ray(tgtPoint, n, srcPoints);
 
         if (ray.hit())
         {
-            tgtPoint = ray.rawPoint();
-
+            // tgtPoint = ray.rawPoint();
             return srcFacei;
+        }
+        else if (ray.distance() < nearest.distance())
+        {
+            nearest = ray;
+            nearestFacei = srcFacei;
         }
     }
 
-    // no hit registered - try with face normal instead of input normal
-    forAll(addr, i)
+    if (nearest.hit() || nearest.eligibleMiss())
     {
-        label srcFacei = addr[i];
-        const face& f = srcPatch[srcFacei];
-
-        vector nFace(-srcPatch.faceNormals()[srcFacei]);
-        nFace += tgtPatch.faceNormals()[tgtFacei];
-
-        pointHit ray = f.ray(tgtPoint, nFace, srcPoints);
-
-        if (ray.hit())
-        {
-            tgtPoint = ray.rawPoint();
-
-            return srcFacei;
-        }
+        // tgtPoint = nearest.rawPoint();
+        return nearestFacei;
     }
 
     return -1;
@@ -1485,41 +1463,36 @@ const
 {
     const pointField& tgtPoints = tgtPatch.points();
 
-    // target face addresses that intersect source face srcFacei
+    pointHit nearest;
+    nearest.setDistance(GREAT);
+    label nearestFacei = -1;
+
+    // Target face addresses that intersect source face srcFacei
     const labelList& addr = srcAddress_[srcFacei];
 
     forAll(addr, i)
     {
-        label tgtFacei = addr[i];
+        const label tgtFacei = addr[i];
         const face& f = tgtPatch[tgtFacei];
 
         pointHit ray = f.ray(srcPoint, n, tgtPoints);
 
-        if (ray.hit())
+        if (ray.hit() || ray.eligibleMiss())
         {
-            srcPoint = ray.rawPoint();
-
+            // srcPoint = ray.rawPoint();
             return tgtFacei;
+        }
+        else if (ray.distance() < nearest.distance())
+        {
+            nearest = ray;
+            nearestFacei = tgtFacei;
         }
     }
 
-    // no hit registered - try with face normal instead of input normal
-    forAll(addr, i)
+    if (nearest.hit() || nearest.eligibleMiss())
     {
-        label tgtFacei = addr[i];
-        const face& f = tgtPatch[tgtFacei];
-
-        vector nFace(-srcPatch.faceNormals()[srcFacei]);
-        nFace += tgtPatch.faceNormals()[tgtFacei];
-
-        pointHit ray = f.ray(srcPoint, n, tgtPoints);
-
-        if (ray.hit())
-        {
-            srcPoint = ray.rawPoint();
-
-            return tgtFacei;
-        }
+        // srcPoint = nearest.rawPoint();
+        return nearestFacei;
     }
 
     return -1;
@@ -1543,6 +1516,7 @@ const
     {
         const labelList& addr = srcAddress[i];
         const point& srcPt = srcPatch.faceCentres()[i];
+
         forAll(addr, j)
         {
             label tgtPtI = addr[j];

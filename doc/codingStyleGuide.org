@@ -138,7 +138,7 @@
       + Use inline functions where appropriate in a separate /classNameI.H/
         file.  Avoid cluttering the header file with function bodies.
 
-*** The /.C/ Sourcs Files
+*** The /.C/ Source Files
     + Do not open/close namespaces in a /.C/ file
       + Fully scope the function name, i.e.
         #+begin_src C++
@@ -415,7 +415,7 @@
     Doxygen has a large number of special commands with a =\= prefix.
 
     Since the filtering removes the leading spaces within the blocks, the
-    Doxygen commmands can be inserted within the block without problems.
+    Doxygen commands can be inserted within the block without problems.
     #+begin_example C++
     InClass
         Foam::myClass
@@ -452,7 +452,7 @@
       unknown html type, but it seems to work okay anyhow.
 
 *** Documenting Namespaces
-    + If namespaces are explictly declared with the =Namespace()= macro,
+    + If namespaces are explicitly declared with the =Namespace()= macro,
       they should be documented there.
     + If the namespaces is used to hold sub-models, the namespace can be
       documented in the same file as the class with the model selector.

@@ -160,7 +160,7 @@ protected:
         (
             label& celli,
             label& tetFacei,
-            label& tetPtI,
+            label& tetPti,
             vector& position,
             bool errorOnNotFound = true
         );
@@ -320,7 +320,7 @@ public:
                 vector& position,
                 label& cellOwner,
                 label& tetFacei,
-                label& tetPtI
+                label& tetPti
             ) = 0;
 
             //- Set the parcel properties

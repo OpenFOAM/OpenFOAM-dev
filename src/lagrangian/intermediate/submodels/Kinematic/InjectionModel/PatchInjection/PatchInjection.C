@@ -176,7 +176,7 @@ void Foam::PatchInjection<CloudType>::setPositionAndCell
     vector& position,
     label& cellOwner,
     label& tetFacei,
-    label& tetPtI
+    label& tetPti
 )
 {
     patchInjectionBase::setPositionAndCell
@@ -186,7 +186,7 @@ void Foam::PatchInjection<CloudType>::setPositionAndCell
         position,
         cellOwner,
         tetFacei,
-        tetPtI
+        tetPti
     );
 }
 

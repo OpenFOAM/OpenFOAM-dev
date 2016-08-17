@@ -162,7 +162,7 @@ public:
                 vector& position,
                 label& cellOwner,
                 label& tetFacei,
-                label& tetPtI
+                label& tetPti
             );
 
             //- Set the parcel properties

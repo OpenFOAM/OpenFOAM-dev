@@ -394,6 +394,7 @@ Foam::KinematicCloud<CloudType>::KinematicCloud
         if (readFields)
         {
             parcelType::readFields(*this);
+            this->deleteLostParticles();
         }
     }
 

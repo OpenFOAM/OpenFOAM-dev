@@ -44,7 +44,7 @@ Foam::dsmcParcel::dsmcParcel
     const scalar Ei,
     const label celli,
     const label tetFacei,
-    const label tetPtI,
+    const label tetPti,
     const label typeId
 )
 :
@@ -56,7 +56,7 @@ Foam::dsmcParcel::dsmcParcel
         Ei,
         celli,
         tetFacei,
-        tetPtI,
+        tetPti,
         typeId
     )
 {}

@@ -29,16 +29,11 @@ Description
 
     References:
     \verbatim
-        Sandu et al,
-        "Benchmarking stiff ODE solvers for atmospheric chemistry problems II
-         Rosenbrock solvers",
-         A. Sandu,
-         J.G. Verwer,
-         J.G. Blom,
-         E.J. Spee,
-         G.R. Carmichael,
-         F.A. Potra,
-         Atmospheric Environment, Volume 31, 1997, Issue 20, Pages 3459-3472
+        Sandu, A., Verwer, J. G., Blom, J. G., Spee, E. J., Carmichael, G. R.,
+        & Potra, F. A. (1997).
+        Benchmarking stiff ODE solvers for atmospheric chemistry problems II:
+        Rosenbrock solvers.
+        Atmospheric environment, 31(20), 3459-3472.
     \endverbatim
 
 SourceFiles

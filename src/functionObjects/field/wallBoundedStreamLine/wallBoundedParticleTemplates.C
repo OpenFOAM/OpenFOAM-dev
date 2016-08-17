@@ -34,7 +34,6 @@ void Foam::wallBoundedParticle::patchInteraction
     const scalar trackFraction
 )
 {
-//    typedef TrackData::CloudType cloudType;
     typedef typename TrackData::cloudType::particleType particleType;
 
     particleType& p = static_cast<particleType&>(*this);
@@ -45,7 +44,7 @@ void Foam::wallBoundedParticle::patchInteraction
         label origFacei = facei_;
         label patchi = patch(facei_);
 
-        // No action taken for tetPtI_ for tetFacei_ here, handled by
+        // No action taken for tetPti_ for tetFacei_ here, handled by
         // patch interaction call or later during processor transfer.
 
 
@@ -175,7 +174,7 @@ Foam::scalar Foam::wallBoundedParticle::trackToEdge
             // Check angle to nbrCell tet. Is it in the direction of the
             // endposition? I.e. since volume of nbr tet is positive the
             // tracking direction should be into the tet.
-            tetIndices nbrTi(nbrCelli, tetFacei_, tetPtI_, mesh_);
+            tetIndices nbrTi(nbrCelli, tetFacei_, tetPti_, mesh_);
             if ((nbrTi.faceTri(mesh_).normal() & (endPosition-position())) < 0)
             {
                 // Change into nbrCell. No need to change tetFace, tetPt.

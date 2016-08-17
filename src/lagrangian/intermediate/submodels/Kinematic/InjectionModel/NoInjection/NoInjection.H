@@ -106,7 +106,7 @@ public:
                 vector& position,
                 label& cellOwner,
                 label& tetFacei,
-                label& tetPtI
+                label& tetPti
             );
 
             virtual void setProperties

@@ -156,7 +156,7 @@ protected:
         //- Index of the point on the face that defines the decomposed
         //  tet that the particle is in.  Relative to the face base
         //  point.
-        label tetPtI_;
+        label tetPti_;
 
         //- Originating processor id
         label origProc_;
@@ -189,7 +189,7 @@ protected:
             const label tetPlaneBasePtI,
             const label celli,
             const label tetFacei,
-            const label tetPtI,
+            const label tetPti,
             const scalar tol
         ) const;
 
@@ -203,7 +203,7 @@ protected:
             const label tetPlaneBasePtI,
             const label celli,
             const label tetFacei,
-            const label tetPtI,
+            const label tetPti,
             const scalar tol
         ) const;
 
@@ -211,12 +211,12 @@ protected:
         inline void tetNeighbour(label triI);
 
         //- Cross the from the given face across the given edge of the
-        //  given cell to find the resulting face and tetPtI
+        //  given cell to find the resulting face and tetPti
         inline void crossEdgeConnectedFace
         (
             const label& celli,
             label& tetFacei,
-            label& tetPtI,
+            label& tetPti,
             const edge& e
         );
 
@@ -316,7 +316,7 @@ public:
         DefinePropertyList
         (
             "(Px Py Pz) celli facei stepFraction "
-            "tetFacei tetPtI origProc origId"
+            "tetFacei tetPti origProc origId"
         );
 
         //- Cumulative particle counter - used to provode unique ID
@@ -343,10 +343,10 @@ public:
             const vector& position,
             const label celli,
             const label tetFacei,
-            const label tetPtI
+            const label tetPti
         );
 
-        //- Construct from components, tetFacei_ and tetPtI_ are not
+        //- Construct from components, tetFacei_ and tetPti_ are not
         //  supplied so they will be deduced by a search
         particle
         (
