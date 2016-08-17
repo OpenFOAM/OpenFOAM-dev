@@ -33,39 +33,47 @@ License
 
 namespace Foam
 {
+
 // Signal number to catch
 int sigWriteNow::signal_
 (
     debug::optimisationSwitch("writeNowSignal", -1)
 );
+
 // Register re-reader
 class addwriteNowSignalToOpt
 :
     public ::Foam::simpleRegIOobject
 {
+
 public:
+
     addwriteNowSignalToOpt(const char* name)
     :
         ::Foam::simpleRegIOobject(Foam::debug::addOptimisationObject, name)
     {}
+
     virtual ~addwriteNowSignalToOpt()
     {}
+
     virtual void readData(Foam::Istream& is)
     {
         sigWriteNow::signal_ = readLabel(is);
         sigWriteNow::set(true);
     }
+
     virtual void writeData(Foam::Ostream& os) const
     {
         os << sigWriteNow::signal_;
     }
 };
+
 addwriteNowSignalToOpt addwriteNowSignalToOpt_("writeNowSignal");
 
 }
 
 
-static Foam::Time* runTimePtr_ = nullptr;
+Foam::Time* Foam::sigWriteNow::runTimePtr_ = nullptr;
 
 
 struct sigaction Foam::sigWriteNow::oldAction_;
