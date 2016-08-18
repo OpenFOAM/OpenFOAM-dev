@@ -42,23 +42,26 @@ namespace functionObjects
         writeObjects,
         dictionary
     );
-
-    template<>
-    const char* Foam::NamedEnum
-    <
-        Foam::functionObjects::writeObjects::writeOption,
-        3
-    >::names[] =
-    {
-        "autoWrite",
-        "noWrite",
-        "anyWrite"
-    };
 }
 }
 
-const Foam::NamedEnum<Foam::functionObjects::writeObjects::writeOption, 3>
-    Foam::functionObjects::writeObjects::writeOptionNames_;
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::writeObjects::writeOption,
+    3
+>::names[] =
+{
+    "autoWrite",
+    "noWrite",
+    "anyWrite"
+};
+
+const Foam::NamedEnum
+<
+    Foam::functionObjects::writeObjects::writeOption,
+    3
+> Foam::functionObjects::writeObjects::writeOptionNames_;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
