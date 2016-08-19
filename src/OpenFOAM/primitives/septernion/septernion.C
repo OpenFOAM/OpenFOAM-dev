@@ -93,7 +93,7 @@ Foam::septernion Foam::average
         }
     }
 
-    normalize(sa.r());
+    sa.r().normalize();
 
     return sa;
 }
