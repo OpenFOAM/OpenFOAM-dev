@@ -332,8 +332,8 @@
       a < b, a > b, a >= b, a <= b
       a || b, a && b
       #+end_src
-    + Splitting formulae over several lines
 
+    + Splitting formulae over several lines:
       Split and indent as per "splitting long lines at an ="
       with the operator on the lower line.  Align operator so that first
       variable, function or bracket on the next line is 4 spaces indented i.e.
@@ -344,7 +344,6 @@
          *(k + t);
       #+end_src
       This is sometimes more legible when surrounded by extra parentheses:
-
       #+begin_src C++
       variableName =
       (
@@ -353,8 +352,8 @@
          *(k + t)
       );
       #+end_src
-    + Splitting logical tests over several lines
 
+    + Splitting logical tests over several lines:
       outdent the operator so that the next variable to test is aligned with
       the four space indentation, i.e.
       #+begin_src C++
