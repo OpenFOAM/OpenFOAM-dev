@@ -60,10 +60,11 @@ void Foam::functionObjects::volRegion::writeFileHeader
     Ostream& file
 )
 {
-    wf.writeCommented(file, "Region     : ");
-    file << regionTypeNames_[regionType_] << " " << regionName_ << endl;
-    wf.writeHeaderValue(file, "Cells", nCells());
-    wf.writeHeaderValue(file, "Volume", V());
+    wf.writeCommented(file, "Region");
+    file<< setw(1) << ':' << setw(1) << ' '
+        << regionTypeNames_[regionType_] << " " << regionName_ << endl;
+    wf.writeHeaderValue(file, "Cells", nCells_);
+    wf.writeHeaderValue(file, "Volume", V_);
 }
 
 
@@ -85,6 +86,10 @@ Foam::functionObjects::volRegion::volRegion
     regionID_(-1)
 {
     read(dict);
+
+    // Cache integral properties of the region for writeFileHeader
+    nCells_ = nCells();
+    V_ = V();
 }
 
 

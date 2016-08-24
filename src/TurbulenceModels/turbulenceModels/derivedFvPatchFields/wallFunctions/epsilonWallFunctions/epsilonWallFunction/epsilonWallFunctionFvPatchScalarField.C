@@ -229,9 +229,6 @@ void Foam::epsilonWallFunctionFvPatchScalarField::calculate
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
-    typedef DimensionedField<scalar, volMesh> FieldType;
-    const FieldType& G = db().lookupObject<FieldType>(turbModel.GName());
-
     // Set epsilon and G
     forAll(nutw, facei)
     {

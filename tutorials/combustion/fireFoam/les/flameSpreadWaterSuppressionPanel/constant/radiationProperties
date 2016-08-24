@@ -26,7 +26,6 @@ fvDOMCoeffs
     nTheta  2;           // polar angles in PI (from Z to X-Y plane)
     convergence 1e-2;   // convergence criteria for radiation iteration
     maxIter 3;          // maximum number of iterations
-    cacheDiv    true;   // cache the div of the RTE equation.
 }
 
 // Number of flow iterations per radiation iteration

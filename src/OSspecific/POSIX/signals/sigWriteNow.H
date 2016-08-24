@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,8 +57,12 @@ class sigWriteNow
         //- Number of signal to use
         static int signal_;
 
+        //- Pointer to Time
+        static Time* runTimePtr_;
+
         //- Saved old signal trapping setting
         static struct sigaction oldAction_;
+
 
     // Private Member Functions
 
@@ -92,7 +96,6 @@ public:
 
         //- Is active?
         bool active() const;
-
 };
 
 

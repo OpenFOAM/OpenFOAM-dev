@@ -190,31 +190,6 @@ void Foam::radiation::fvDOM::initialise()
     Info<< "fvDOM : Allocated " << IRay_.size()
         << " rays with average orientation:" << nl;
 
-    if (cacheDiv_)
-    {
-        Info<< "Caching div fvMatrix..."<< endl;
-        for (label lambdaI = 0; lambdaI < nLambda_; lambdaI++)
-        {
-            fvRayDiv_[lambdaI].setSize(nRay_);
-
-            forAll(IRay_, rayId)
-            {
-                const surfaceScalarField Ji(IRay_[rayId].dAve() & mesh_.Sf());
-                const volScalarField& iRayLambdaI =
-                    IRay_[rayId].ILambda(lambdaI);
-
-                fvRayDiv_[lambdaI].set
-                (
-                    rayId,
-                    new fvScalarMatrix
-                    (
-                        fvm::div(Ji, iRayLambdaI, "div(Ji,Ii_h)")
-                    )
-                );
-            }
-        }
-    }
-
     forAll(IRay_, rayId)
     {
         if (omegaMax_ <  IRay_[rayId].omega())
@@ -308,8 +283,6 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
     IRay_(0),
     convergence_(coeffs_.lookupOrDefault<scalar>("convergence", 0.0)),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
-    fvRayDiv_(nLambda_),
-    cacheDiv_(coeffs_.lookupOrDefault<bool>("cacheDiv", false)),
     omegaMax_(0)
 {
     initialise();
@@ -397,8 +370,6 @@ Foam::radiation::fvDOM::fvDOM
     IRay_(0),
     convergence_(coeffs_.lookupOrDefault<scalar>("convergence", 0.0)),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
-    fvRayDiv_(nLambda_),
-    cacheDiv_(coeffs_.lookupOrDefault<bool>("cacheDiv", false)),
     omegaMax_(0)
 {
     initialise();

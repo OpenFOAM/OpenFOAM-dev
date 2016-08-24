@@ -94,6 +94,10 @@ class volRegion
 
         const fvMesh& mesh_;
 
+        // Cache integral properties of the region for writeFileHeader
+        label nCells_;
+        scalar V_;
+
 
 public:
 

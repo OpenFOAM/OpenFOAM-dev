@@ -554,11 +554,11 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
             file() << tab << "Area";
         }
 
-        forAll(fields_, i)
+        forAll(fields_, fieldi)
         {
             file()
             << tab << operationTypeNames_[operation_]
-                << "(" << fields_[i] << ")";
+                << "(" << fields_[fieldi] << ")";
         }
 
         file() << endl;

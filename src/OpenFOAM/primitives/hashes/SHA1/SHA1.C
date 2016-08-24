@@ -412,4 +412,20 @@ Foam::SHA1Digest Foam::SHA1::digest() const
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#undef K1
+#undef K2
+#undef K3
+#undef K4
+
+#undef F1
+#undef F2
+#undef F3
+#undef F4
+
+#undef rol_uint32
+#undef M
+#undef R
+
 // ************************************************************************* //

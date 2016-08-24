@@ -233,9 +233,6 @@ void omegaWallFunctionFvPatchScalarField::calculate
 
     const scalarField magGradUw(mag(Uw.snGrad()));
 
-    typedef DimensionedField<scalar, volMesh> FieldType;
-    const FieldType& G = db().lookupObject<FieldType>(turbModel.GName());
-
     // Set omega and G
     forAll(nutw, facei)
     {

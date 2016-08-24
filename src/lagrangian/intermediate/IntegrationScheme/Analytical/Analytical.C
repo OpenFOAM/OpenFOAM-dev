@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,10 +76,9 @@ Foam::Analytical<Type>::integrate
     }
     else
     {
-        retValue.average() = phi;
-        retValue.value() =  phi;
+        retValue.value() = phi + alphaBeta*dt;
+        retValue.average() = 0.5*(phi + retValue.value());
     }
-
 
     return retValue;
 }

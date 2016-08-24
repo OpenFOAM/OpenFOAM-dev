@@ -37,6 +37,12 @@ SYSTEMOPENMPI)
     # Use the system installed openmpi, get library directory via mpicc
     export FOAM_MPI=openmpi-system
 
+    # Undefine OPAL_PREFIX if set to one of the paths on foamOldDirs
+    if [ -z "$($foamClean "$OPAL_PREFIX" "$foamOldDirs")" ]
+    then
+        unset OPAL_PREFIX
+    fi
+
     libDir=`mpicc --showme:link | sed -e 's/.*-L\([^ ]*\).*/\1/'`
 
     # Bit of a hack: strip off 'lib' and hope this is the path to openmpi

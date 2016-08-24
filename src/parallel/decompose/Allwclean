@@ -1,9 +1,6 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 
-# Parse arguments for library compilation
-. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
-
 # get SCOTCH_VERSION, SCOTCH_ARCH_PATH
 if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
 then
@@ -28,7 +25,7 @@ wcleanMpiLib()
         WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
         whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$FOAM_MPI"
         whichscotch="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/parallel/decompose/$libName/using:$SCOTCH_VERSION"
-        wclean $targetType $libName
+        wclean $libName
     )
     done
     set -x

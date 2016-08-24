@@ -199,7 +199,7 @@ void Foam::triad::operator+=(const triad& t2)
 
     if (set() && t2.set())
     {
-        direction correspondance[3];
+        direction correspondance[3]{0, 0, 0};
         short signd[3];
 
         for (direction i=0; i<3; i++)

@@ -29,16 +29,19 @@ Description
     heat source either specified in terms of an absolute power [W], or as a
     flux [W/m^2].
 
+    The thermal conductivity \c kappa can either be retrieved from various
+    possible sources, as detailed in the class temperatureCoupledBase.
+
 Usage
     \table
         Property     | Description             | Required    | Default value
         heatSource   | 'power' [W] or 'flux' [W/m^2] | yes |
         q            | heat power or flux field      | yes |
-        kappa        | inherited from temperatureCoupledBase | yes |
-        kappaName    | inherited from temperatureCoupledBase | yes |
         Qr           | name of the radiative flux field | yes |
         value        | initial temperature value | no | calculated
         gradient     | initial gradient value | no | 0.0
+        kappaMethod  | inherited from temperatureCoupledBase | inherited |
+        kappa        | inherited from temperatureCoupledBase | inherited |
     \endtable
 
     Note: If needed, both 'value' and 'gradient' must be defined to be used.
@@ -50,12 +53,11 @@ Usage
         type            compressible::turbulentHeatFluxTemperature;
         heatSource      flux;
         q               uniform 10;
-        kappa           fluidThermo;
-        kappaName       none;
+        kappaMethod     fluidThermo;
+        kappa           none;
         Qr              none;
     }
     \endverbatim
-
 
 See also
     Foam::temperatureCoupledBase

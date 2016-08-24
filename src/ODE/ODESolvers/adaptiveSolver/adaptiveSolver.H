@@ -75,7 +75,7 @@ public:
     // Member Functions
 
         //- Resize the ODE solver
-        virtual bool resize(const label n);
+        bool resize(const label n);
 
         //- Solve a single step dx and return the error
         virtual scalar solve
@@ -88,7 +88,7 @@ public:
         ) const = 0;
 
         //- Solve the ODE system and the update the state
-        virtual void solve
+        void solve
         (
             const ODESystem& ode,
             scalar& x,

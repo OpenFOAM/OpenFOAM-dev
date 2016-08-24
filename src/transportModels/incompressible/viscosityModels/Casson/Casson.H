@@ -40,6 +40,19 @@ Description
         CRC Press.
     \endverbatim
 
+    Example specification for blood:
+    \verbatim
+         transportModel  Casson;
+
+         CassonCoeffs
+         {
+             m       3.934986e-6;
+             tau0    2.9032e-6;
+             nuMax   13.3333e-6;
+             nuMin   3.9047e-6;
+         }
+    \endverbatim
+
 SourceFiles
     Casson.C
 

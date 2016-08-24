@@ -72,12 +72,12 @@ void Foam::functionObjects::fieldValues::fieldValueDelta::writeFileHeader
     const wordList& fields2 = region2Ptr_->fields();
 
     DynamicList<word> commonFields(fields1.size());
-    forAll(fields1, i)
+    forAll(fields1, fieldi)
     {
-        label index = findIndex(fields2, fields1[i]);
+        label index = findIndex(fields2, fields1[fieldi]);
         if (index != -1)
         {
-            commonFields.append(fields1[i]);
+            commonFields.append(fields1[fieldi]);
         }
     }
 

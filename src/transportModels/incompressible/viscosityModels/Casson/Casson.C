@@ -84,10 +84,10 @@ Foam::viscosityModels::Casson::Casson
 :
     viscosityModel(name, viscosityProperties, U, phi),
     CassonCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
-    m_(CassonCoeffs_.lookup("m")),
-    tau0_(CassonCoeffs_.lookup("tau0")),
-    nuMin_(CassonCoeffs_.lookup("nuMin")),
-    nuMax_(CassonCoeffs_.lookup("nuMax")),
+    m_("m", dimViscosity, CassonCoeffs_),
+    tau0_("tau0", dimViscosity/dimTime, CassonCoeffs_),
+    nuMin_("nuMin", dimViscosity, CassonCoeffs_),
+    nuMax_("nuMax", dimViscosity, CassonCoeffs_),
     nu_
     (
         IOobject

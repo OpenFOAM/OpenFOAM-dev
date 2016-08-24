@@ -1,2 +1,2 @@
 c++DBUG     =
-c++OPT      = -O3 -DvectorMachine -xmic-avx512
+c++OPT      = -O3
