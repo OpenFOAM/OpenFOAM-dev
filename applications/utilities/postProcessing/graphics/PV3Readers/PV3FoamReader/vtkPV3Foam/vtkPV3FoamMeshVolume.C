@@ -219,7 +219,7 @@ vtkUnstructuredGrid* Foam::vtkPV3Foam::volumeVTKMesh
                 nodeIds
             );
         }
-        else if (cellModel == tetWedge)
+        else if (cellModel == tetWedge && !reader_->GetUseVTKPolyhedron())
         {
             // Treat as squeezed prism (VTK_WEDGE)
 

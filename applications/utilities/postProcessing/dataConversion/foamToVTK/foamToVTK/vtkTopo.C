@@ -152,7 +152,7 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
 
             cellTypes_[celli] = VTK_WEDGE;
         }
-        else if (cellModel == tetWedge)
+        else if (cellModel == tetWedge && decomposePoly)
         {
             // Treat as squeezed prism (VTK_WEDGE)
             vtkVerts.setSize(6);
