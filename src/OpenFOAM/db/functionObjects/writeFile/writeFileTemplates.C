@@ -34,7 +34,7 @@ void Foam::functionObjects::writeFile::writeHeaderValue
 ) const
 {
     os  << setw(1) << '#' << setw(1) << ' '
-        << setw(charWidth() - 2) << setf(ios_base::left) << property.c_str()
+        << setf(ios_base::left) << setw(charWidth() - 2) << property.c_str()
         << setw(1) << ':' << setw(1) << ' ' << value << nl;
 }
 

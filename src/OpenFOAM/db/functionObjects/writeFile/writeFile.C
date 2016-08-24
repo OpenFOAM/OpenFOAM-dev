@@ -124,7 +124,7 @@ void Foam::functionObjects::writeFile::writeCommented
 ) const
 {
     os  << setw(1) << "#" << setw(1) << ' '
-        << setw(charWidth() - 2) << str.c_str();
+        << setf(ios_base::left) << setw(charWidth() - 2) << str.c_str();
 }
 
 
