@@ -96,11 +96,11 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
 
     writeCommented(file(), "Time");
 
-    forAll(fields_, i)
+    forAll(fields_, fieldi)
     {
         file()
             << tab << operationTypeNames_[operation_]
-            << "(" << fields_[i] << ")";
+            << "(" << fields_[fieldi] << ")";
     }
 
     file() << endl;

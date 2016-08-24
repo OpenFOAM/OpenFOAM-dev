@@ -141,6 +141,13 @@ protected:
 
     // Protected data
 
+        //- Enumeration for ensuring the right file is accessed
+        enum fileID
+        {
+            MAIN_FILE = 0,
+            BINS_FILE = 1
+        };
+
         //- Pressure, viscous and porous force per bin
         List<Field<vector>> force_;
 

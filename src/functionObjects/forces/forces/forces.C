@@ -53,6 +53,8 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
     DynamicList<word> names(1);
 
     const word forceType(dict.lookup("type"));
+
+    // Name for file(MAIN_FILE=0)
     names.append(forceType);
 
     if (dict.found("binData"))
@@ -61,6 +63,7 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
         label nb = readLabel(binDict.lookup("nBin"));
         if (nb > 0)
         {
+            // Name for file(BINS_FILE=1)
             names.append(forceType + "_bins");
         }
     }
@@ -71,86 +74,95 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
 
 void Foam::functionObjects::forces::writeFileHeader(const label i)
 {
-    if (i == 0)
+    switch (fileID(i))
     {
-        // force data
-
-        writeHeader(file(i), "Forces");
-        writeHeaderValue(file(i), "CofR", coordSys_.origin());
-        writeCommented(file(i), "Time");
-
-        file(i)
-            << "forces(pressure viscous porous) "
-            << "moment(pressure viscous porous)";
-
-        if (localSystem_)
+        case MAIN_FILE:
         {
+            // force data
+
+            writeHeader(file(i), "Forces");
+            writeHeaderValue(file(i), "CofR", coordSys_.origin());
+            writeCommented(file(i), "Time");
+
+            const word forceTypes("(pressure viscous porous)");
             file(i)
-                << tab
-                << "localForces(pressure,viscous,porous) "
-                << "localMoments(pressure,viscous,porous)";
+                << "forces" << forceTypes << tab
+                << "moments" << forceTypes;
+
+            if (localSystem_)
+            {
+                file(i)
+                    << tab
+                    << "localForces" << forceTypes << tab
+                    << "localMoments" << forceTypes;
+            }
+
+            break;
         }
-    }
-    else if (i == 1)
-    {
-        // bin data
-
-        writeHeader(file(i), "Force bins");
-        writeHeaderValue(file(i), "bins", nBin_);
-        writeHeaderValue(file(i), "start", binMin_);
-        writeHeaderValue(file(i), "delta", binDx_);
-        writeHeaderValue(file(i), "direction", binDir_);
-
-        vectorField binPoints(nBin_);
-        writeCommented(file(i), "x co-ords  :");
-        forAll(binPoints, pointi)
+        case BINS_FILE:
         {
-            binPoints[pointi] = (binMin_ + (pointi + 1)*binDx_)*binDir_;
-            file(i) << tab << binPoints[pointi].x();
-        }
-        file(i) << nl;
+            // bin data
 
-        writeCommented(file(i), "y co-ords  :");
-        forAll(binPoints, pointi)
-        {
-            file(i) << tab << binPoints[pointi].y();
-        }
-        file(i) << nl;
+            writeHeader(file(i), "Force bins");
+            writeHeaderValue(file(i), "bins", nBin_);
+            writeHeaderValue(file(i), "start", binMin_);
+            writeHeaderValue(file(i), "delta", binDx_);
+            writeHeaderValue(file(i), "direction", binDir_);
 
-        writeCommented(file(i), "z co-ords  :");
-        forAll(binPoints, pointi)
-        {
-            file(i) << tab << binPoints[pointi].z();
-        }
-        file(i) << nl;
+            vectorField binPoints(nBin_);
+            writeCommented(file(i), "x co-ords  :");
+            forAll(binPoints, pointi)
+            {
+                binPoints[pointi] = (binMin_ + (pointi + 1)*binDx_)*binDir_;
+                file(i) << tab << binPoints[pointi].x();
+            }
+            file(i) << nl;
 
-        writeCommented(file(i), "Time");
+            writeCommented(file(i), "y co-ords  :");
+            forAll(binPoints, pointi)
+            {
+                file(i) << tab << binPoints[pointi].y();
+            }
+            file(i) << nl;
 
-        for (label j = 0; j < nBin_; j++)
-        {
-            const word jn('(' + Foam::name(j) + ')');
-            const word f("forces" + jn + "[pressure,viscous,porous]");
-            const word m("moments" + jn + "[pressure,viscous,porous]");
+            writeCommented(file(i), "z co-ords  :");
+            forAll(binPoints, pointi)
+            {
+                file(i) << tab << binPoints[pointi].z();
+            }
+            file(i) << nl;
 
-            file(i)<< tab << f << tab << m;
-        }
-        if (localSystem_)
-        {
+            writeCommented(file(i), "Time");
+
+            const word binForceTypes("[pressure,viscous,porous]");
             for (label j = 0; j < nBin_; j++)
             {
                 const word jn('(' + Foam::name(j) + ')');
-                const word f("localForces" + jn + "[pressure,viscous,porous]");
-                const word m("localMoments" + jn + "[pressure,viscous,porous]");
+                const word f("forces" + jn + binForceTypes);
+                const word m("moments" + jn + binForceTypes);
 
                 file(i)<< tab << f << tab << m;
             }
+            if (localSystem_)
+            {
+                for (label j = 0; j < nBin_; j++)
+                {
+                    const word jn('(' + Foam::name(j) + ')');
+                    const word f("localForces" + jn + binForceTypes);
+                    const word m("localMoments" + jn + binForceTypes);
+
+                    file(i)<< tab << f << tab << m;
+                }
+            }
+
+            break;
         }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unhandled file index: " << i
-            << abort(FatalError);
+        default:
+        {
+            FatalErrorInFunction
+                << "Unhandled file index: " << i
+                << abort(FatalError);
+        }
     }
 
     file(i)<< endl;
@@ -406,8 +418,8 @@ void Foam::functionObjects::forces::writeForces()
         << "        porous   : " << sum(moment_[2])
         << endl;
 
-    writeTime(file(0));
-    file(0) << tab << setw(1) << '('
+    writeTime(file(MAIN_FILE));
+    file(MAIN_FILE) << tab << setw(1) << '('
         << sum(force_[0]) << setw(1) << ' '
         << sum(force_[1]) << setw(1) << ' '
         << sum(force_[2]) << setw(3) << ") ("
@@ -425,8 +437,8 @@ void Foam::functionObjects::forces::writeForces()
         vectorField localMomentT(coordSys_.localVector(moment_[1]));
         vectorField localMomentP(coordSys_.localVector(moment_[2]));
 
-        writeTime(file(0));
-        file(0) << tab << setw(1) << '('
+        writeTime(file(MAIN_FILE));
+        file(MAIN_FILE) << tab << setw(1) << '('
             << sum(localForceN) << setw(1) << ' '
             << sum(localForceT) << setw(1) << ' '
             << sum(localForceP) << setw(3) << ") ("
@@ -462,11 +474,11 @@ void Foam::functionObjects::forces::writeBins()
         }
     }
 
-    writeTime(file(1));
+    writeTime(file(BINS_FILE));
 
     forAll(f[0], i)
     {
-        file(1)
+        file(BINS_FILE)
             << tab << setw(1) << '('
             << f[0][i] << setw(1) << ' '
             << f[1][i] << setw(1) << ' '
@@ -502,7 +514,7 @@ void Foam::functionObjects::forces::writeBins()
 
         forAll(lf[0], i)
         {
-            file(1)
+            file(BINS_FILE)
                 << tab << setw(1) << '('
                 << lf[0][i] << setw(1) << ' '
                 << lf[1][i] << setw(1) << ' '
@@ -513,7 +525,7 @@ void Foam::functionObjects::forces::writeBins()
         }
     }
 
-    file(1) << endl;
+    file(BINS_FILE) << endl;
 }
 
 
