@@ -60,9 +60,6 @@ void Foam::functionObjects::forceCoeffs::writeFileHeader(const label i)
         writeTabbed(file(i), "Cl");
         writeTabbed(file(i), "Cl(f)");
         writeTabbed(file(i), "Cl(r)");
-        file(i)
-            << tab << "Cm" << tab << "Cd" << tab << "Cl" << tab << "Cl(f)"
-            << tab << "Cl(r)";
     }
     else if (i == 1)
     {
