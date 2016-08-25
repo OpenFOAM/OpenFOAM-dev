@@ -100,7 +100,7 @@ include $(GENERAL_RULES)/general
 #------------------------------------------------------------------------------
 # Include PROJECT directory tree file and
 # source, object and dependency list files.
-# These are constructed by MakefileFiles
+# These are constructed by makefiles/files
 #------------------------------------------------------------------------------
 
 include $(OBJECTS_DIR)/options
