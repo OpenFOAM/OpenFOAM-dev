@@ -445,14 +445,13 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
 
                 if (findPatchID(name) != -1)
                 {
-                    FatalErrorInFunction
-                        << "Patch '" << bm[patchi].name() << '\''
-                        << " specifies the group '" << name << '\''
-                        << " which clashes with a patch name." << nl
-                        << "    Please choose patch names"
-                           " which are not patch type/group names."
-                        << exit(FatalError);
+                    WarningInFunction
+                        << "Patch " << bm[patchi].name()
+                        << " specifies a group " << name
+                        << " which is also a patch name."
+                        << " This might give problems later on." << endl;
                 }
+
 
                 HashTable<labelList, word>::iterator iter = groupPatchIDs.find
                 (
