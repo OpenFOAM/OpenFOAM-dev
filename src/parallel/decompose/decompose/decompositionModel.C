@@ -57,7 +57,7 @@ Foam::decompositionModel::decompositionModel
                 "decomposeParDict",
                 mesh.time().system(),
                 mesh.local(),
-                mesh.db(),
+                mesh,
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false   //io.registerObject()
@@ -90,7 +90,7 @@ Foam::decompositionModel::decompositionModel
                 "decomposeParDict",
                 mesh.time().system(),
                 mesh.local(),
-                mesh.db(),
+                mesh,
                 (dict.size() ? IOobject::NO_READ : IOobject::MUST_READ),
                 IOobject::NO_WRITE,
                 false   //io.registerObject()
