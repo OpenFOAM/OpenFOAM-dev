@@ -57,24 +57,26 @@ rigidBodyMotionCoeffs
                 );
             }
 
-            restraints
-            {
-                translationDamper
-                {
-                    type    linearDamper;
-                    coeff   8596;
-                }
-
-                rotationDamper
-                {
-                    type    sphericalAngularDamper;
-                    coeff   11586;
-                }
-            }
-
             patches         (hull);
             innerDistance   0.3;
             outerDistance   1;
+        }
+    }
+
+    restraints
+    {
+        translationDamper
+        {
+            type linearDamper;
+            body hull;
+            coeff 8596;
+        }
+
+        rotationDamper
+        {
+            type sphericalAngularDamper;
+            body hull;
+            coeff 11586;
         }
     }
 }
