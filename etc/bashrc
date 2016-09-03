@@ -43,7 +43,7 @@ export WM_PROJECT_VERSION=dev
 # Please set to the appropriate path if the default is not correct.
 #
 [ $BASH_SOURCE ] && \
-export FOAM_INST_DIR=${BASH_SOURCE%/*/*/*} || \
+export FOAM_INST_DIR=$(cd ${BASH_SOURCE%/*/*/*} && pwd -P) || \
 export FOAM_INST_DIR=$HOME/$WM_PROJECT
 # export FOAM_INST_DIR=~$WM_PROJECT
 # export FOAM_INST_DIR=/opt/$WM_PROJECT
