@@ -31,7 +31,7 @@ Description
     (around Z, around X' and around Y'').
     The order of the parameter arguments matches this rotation order.
 
-    - the rotation angles are in degrees, unless otherwise explictly specified:
+    - the rotation angles are in degrees, unless otherwise explicitly specified:
 
     \verbatim
     coordinateRotation

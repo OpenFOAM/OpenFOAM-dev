@@ -34,7 +34,7 @@ Description
     Note, however, that it is the reverse transformation
     (local->global) that is defined here.
 
-    - the rotation angles are in degrees, unless otherwise explictly specified:
+    - the rotation angles are in degrees, unless otherwise explicitly specified:
 
     \verbatim
     coordinateRotation
