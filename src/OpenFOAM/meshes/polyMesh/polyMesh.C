@@ -1109,6 +1109,9 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
     faceZones_.movePoints(points_);
     cellZones_.movePoints(points_);
 
+    // Cell tree might become invalid
+    cellTreePtr_.clear();
+
     // Reset valid directions (could change with rotation)
     geometricD_ = Zero;
     solutionD_ = Zero;
@@ -1211,60 +1214,13 @@ void Foam::polyMesh::findCellFacePt
 
     const indexedOctree<treeDataCell>& tree = cellTree();
 
-    // Find nearest cell to the point
-    pointIndexHit info = tree.findNearest(p, sqr(GREAT));
+    // Find point inside cell
+    celli = tree.findInside(p);
 
-    if (info.hit())
+    if (celli != -1)
     {
-        label nearestCelli = tree.shapes().cellLabels()[info.index()];
-
         // Check the nearest cell to see if the point is inside.
-        findTetFacePt(nearestCelli, p, tetFacei, tetPti);
-
-        if (tetFacei != -1)
-        {
-            // Point was in the nearest cell
-
-            celli = nearestCelli;
-
-            return;
-        }
-        else
-        {
-            // Check the other possible cells that the point may be in
-
-            labelList testCells = tree.findIndices(p);
-
-            forAll(testCells, pCI)
-            {
-                label testCelli = tree.shapes().cellLabels()[testCells[pCI]];
-
-                if (testCelli == nearestCelli)
-                {
-                    // Don't retest the nearest cell
-
-                    continue;
-                }
-
-                // Check the test cell to see if the point is inside.
-                findTetFacePt(testCelli, p, tetFacei, tetPti);
-
-                if (tetFacei != -1)
-                {
-                    // Point was in the test cell
-
-                    celli = testCelli;
-
-                    return;
-                }
-            }
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Did not find nearest cell in search tree."
-            << abort(FatalError);
+        findTetFacePt(celli, p, tetFacei, tetPti);
     }
 }
 
