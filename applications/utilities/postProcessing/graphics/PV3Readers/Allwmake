@@ -14,7 +14,8 @@ case "$ParaView_VERSION" in
             exit 1
         }
 
-        # ensure CMake gets the correct C++ compiler
+        # ensure CMake gets the correct C/C++ compilers
+        [ -n "$WM_CC" ] && export CC="$WM_CC"
         [ -n "$WM_CXX" ] && export CXX="$WM_CXX"
 
         wmake $targetType vtkPV3Readers
