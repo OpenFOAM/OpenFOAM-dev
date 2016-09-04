@@ -443,16 +443,6 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
             {
                 const word& name = groups[i];
 
-                if (findPatchID(name) != -1)
-                {
-                    WarningInFunction
-                        << "Patch " << bm[patchi].name()
-                        << " specifies a group " << name
-                        << " which is also a patch name."
-                        << " This might give problems later on." << endl;
-                }
-
-
                 HashTable<labelList, word>::iterator iter = groupPatchIDs.find
                 (
                     name
@@ -468,7 +458,21 @@ Foam::polyBoundaryMesh::groupPatchIDs() const
                 }
             }
         }
+
+        // Remove patch names from patchGroups
+        forAll(bm, patchi)
+        {
+            if (groupPatchIDs.erase(bm[patchi].name()))
+            {
+                WarningInFunction
+                    << "Removing patchGroup '" << bm[patchi].name()
+                    << "' which clashes with patch " << patchi
+                    << " of the same name."
+                    << endl;
+            }
+        }
     }
+
     return groupPatchIDsPtr_();
 }
 
