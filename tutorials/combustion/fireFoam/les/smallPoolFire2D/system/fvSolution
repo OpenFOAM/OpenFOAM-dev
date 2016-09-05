@@ -56,7 +56,7 @@ solvers
 
     "(U|Yi|k|h|omega)"
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0.1;

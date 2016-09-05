@@ -24,7 +24,7 @@ solvers
 
     "p.*"
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-12;
         relTol          0;

@@ -19,14 +19,14 @@ solvers
 {
     "(Uf|hf|deltaf\*rhof)"
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-10;
         relTol          0;
     }
     deltaf
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-10;
         relTol          0;

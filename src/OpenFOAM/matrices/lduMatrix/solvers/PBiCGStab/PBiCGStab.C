@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,22 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PBiCG.H"
+#include "PBiCGStab.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(PBiCG, 0);
+    defineTypeNameAndDebug(PBiCGStab, 0);
 
-    lduMatrix::solver::addasymMatrixConstructorToTable<PBiCG>
-        addPBiCGAsymMatrixConstructorToTable_;
+    lduMatrix::solver::addasymMatrixConstructorToTable<PBiCGStab>
+        addPBiCGStabAsymMatrixConstructorToTable_;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::PBiCG::PBiCG
+Foam::PBiCGStab::PBiCGStab
 (
     const word& fieldName,
     const lduMatrix& matrix,
@@ -62,7 +62,7 @@ Foam::PBiCG::PBiCG
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::solverPerformance Foam::PBiCG::solve
+Foam::solverPerformance Foam::PBiCGStab::solve
 (
     scalarField& psi,
     const scalarField& source,
@@ -83,18 +83,18 @@ Foam::solverPerformance Foam::PBiCG::solve
     scalarField pA(nCells);
     scalar* __restrict__ pAPtr = pA.begin();
 
-    scalarField wA(nCells);
-    scalar* __restrict__ wAPtr = wA.begin();
+    scalarField yA(nCells);
+    scalar* __restrict__ yAPtr = yA.begin();
 
     // --- Calculate A.psi
-    matrix_.Amul(wA, psi, interfaceBouCoeffs_, interfaces_, cmpt);
+    matrix_.Amul(yA, psi, interfaceBouCoeffs_, interfaces_, cmpt);
 
     // --- Calculate initial residual field
-    scalarField rA(source - wA);
+    scalarField rA(source - yA);
     scalar* __restrict__ rAPtr = rA.begin();
 
     // --- Calculate normalisation factor
-    const scalar normFactor = this->normFactor(psi, source, wA, pA);
+    const scalar normFactor = this->normFactor(psi, source, yA, pA);
 
     if (lduMatrix::debug >= 2)
     {
@@ -114,21 +114,25 @@ Foam::solverPerformance Foam::PBiCG::solve
      || !solverPerf.checkConvergence(tolerance_, relTol_)
     )
     {
-        scalarField pT(nCells, 0);
-        scalar* __restrict__ pTPtr = pT.begin();
+        scalarField AyA(nCells);
+        scalar* __restrict__ AyAPtr = AyA.begin();
 
-        scalarField wT(nCells);
-        scalar* __restrict__ wTPtr = wT.begin();
+        scalarField sA(nCells);
+        scalar* __restrict__ sAPtr = sA.begin();
 
-        // --- Calculate T.psi
-        matrix_.Tmul(wT, psi, interfaceIntCoeffs_, interfaces_, cmpt);
+        scalarField zA(nCells);
+        scalar* __restrict__ zAPtr = zA.begin();
 
-        // --- Calculate initial transpose residual field
-        scalarField rT(source - wT);
-        scalar* __restrict__ rTPtr = rT.begin();
+        scalarField tA(nCells);
+        scalar* __restrict__ tAPtr = tA.begin();
 
-        // --- Initial value not used
-        scalar wArT = 0;
+        // --- Store initial residual
+        const scalarField rA0(rA);
+
+        // --- Initial values not used
+        scalar rA0rA = 0;
+        scalar alpha = 0;
+        scalar omega = 0;
 
         // --- Select and construct the preconditioner
         autoPtr<lduMatrix::preconditioner> preconPtr =
@@ -141,58 +145,91 @@ Foam::solverPerformance Foam::PBiCG::solve
         // --- Solver iteration
         do
         {
-            // --- Store previous wArT
-            const scalar wArTold = wArT;
+            // --- Store previous rA0rA
+            const scalar rA0rAold = rA0rA;
 
-            // --- Precondition residuals
-            preconPtr->precondition(wA, rA, cmpt);
-            preconPtr->preconditionT(wT, rT, cmpt);
-
-            // --- Update search directions:
-            wArT = gSumProd(wA, rT, matrix().mesh().comm());
-
-            if (solverPerf.nIterations() == 0)
-            {
-                for (label cell=0; cell<nCells; cell++)
-                {
-                    pAPtr[cell] = wAPtr[cell];
-                    pTPtr[cell] = wTPtr[cell];
-                }
-            }
-            else
-            {
-                const scalar beta = wArT/wArTold;
-
-                for (label cell=0; cell<nCells; cell++)
-                {
-                    pAPtr[cell] = wAPtr[cell] + beta*pAPtr[cell];
-                    pTPtr[cell] = wTPtr[cell] + beta*pTPtr[cell];
-                }
-            }
-
-
-            // --- Update preconditioned residuals
-            matrix_.Amul(wA, pA, interfaceBouCoeffs_, interfaces_, cmpt);
-            matrix_.Tmul(wT, pT, interfaceIntCoeffs_, interfaces_, cmpt);
-
-            const scalar wApT = gSumProd(wA, pT, matrix().mesh().comm());
+            rA0rA = gSumProd(rA0, rA, matrix().mesh().comm());
 
             // --- Test for singularity
-            if (solverPerf.checkSingularity(mag(wApT)/normFactor))
+            if (solverPerf.checkSingularity(mag(rA0rA)))
             {
                 break;
             }
 
+            // --- Update pA
+            if (solverPerf.nIterations() == 0)
+            {
+                for (label cell=0; cell<nCells; cell++)
+                {
+                    pAPtr[cell] = rAPtr[cell];
+                }
+            }
+            else
+            {
+                // --- Test for singularity
+                if (solverPerf.checkSingularity(mag(omega)))
+                {
+                    break;
+                }
 
-            // --- Update solution and residual:
+                const scalar beta = (rA0rA/rA0rAold)*(alpha/omega);
 
-            const scalar alpha = wArT/wApT;
+                for (label cell=0; cell<nCells; cell++)
+                {
+                    pAPtr[cell] =
+                        rAPtr[cell] + beta*(pAPtr[cell] - omega*AyAPtr[cell]);
+                }
+            }
 
+            // --- Precondition pA
+            preconPtr->precondition(yA, pA, cmpt);
+
+            // --- Calculate AyA
+            matrix_.Amul(AyA, yA, interfaceBouCoeffs_, interfaces_, cmpt);
+
+            const scalar rA0AyA = gSumProd(rA0, AyA, matrix().mesh().comm());
+
+            alpha = rA0rA/rA0AyA;
+
+            // --- Calculate sA
             for (label cell=0; cell<nCells; cell++)
             {
-                psiPtr[cell] += alpha*pAPtr[cell];
-                rAPtr[cell] -= alpha*wAPtr[cell];
-                rTPtr[cell] -= alpha*wTPtr[cell];
+                sAPtr[cell] = rAPtr[cell] - alpha*AyAPtr[cell];
+            }
+
+            // --- Test sA for convergence
+            solverPerf.finalResidual() =
+                gSumMag(sA, matrix().mesh().comm())/normFactor;
+
+            if (solverPerf.checkConvergence(tolerance_, relTol_))
+            {
+                for (label cell=0; cell<nCells; cell++)
+                {
+                    psiPtr[cell] += alpha*yAPtr[cell];
+                }
+
+                solverPerf.nIterations()++;
+
+                return solverPerf;
+            }
+
+            // --- Precondition sA
+            preconPtr->precondition(zA, sA, cmpt);
+
+            // --- Calculate tA
+            matrix_.Amul(tA, zA, interfaceBouCoeffs_, interfaces_, cmpt);
+
+            const scalar tAtA = gSumSqr(tA, matrix().mesh().comm());
+
+            // --- Calculate omega from tA and sA
+            //     (cheaper than using zA with preconditioned tA)
+            omega = gSumProd(tA, sA)/tAtA;
+
+            // --- Update solution and residual
+            for (label cell=0; cell<nCells; cell++)
+            {
+                psiPtr[cell] += alpha*yAPtr[cell] + omega*zAPtr[cell];
+                rAPtr[cell] = sAPtr[cell] - omega*tAPtr[cell];
             }
 
             solverPerf.finalResidual() =

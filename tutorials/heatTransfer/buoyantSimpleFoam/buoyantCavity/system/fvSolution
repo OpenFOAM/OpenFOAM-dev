@@ -29,7 +29,7 @@ solvers
 
     "(U|h|k|epsilon|omega)"
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-8;
         relTol          0.1;

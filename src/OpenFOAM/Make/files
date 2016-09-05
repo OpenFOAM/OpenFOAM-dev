@@ -271,6 +271,7 @@ $(lduMatrix)/solvers/diagonalSolver/diagonalSolver.C
 $(lduMatrix)/solvers/smoothSolver/smoothSolver.C
 $(lduMatrix)/solvers/PCG/PCG.C
 $(lduMatrix)/solvers/PBiCG/PBiCG.C
+$(lduMatrix)/solvers/PBiCGStab/PBiCGStab.C
 
 $(lduMatrix)/smoothers/GaussSeidel/GaussSeidelSmoother.C
 $(lduMatrix)/smoothers/symGaussSeidel/symGaussSeidelSmoother.C

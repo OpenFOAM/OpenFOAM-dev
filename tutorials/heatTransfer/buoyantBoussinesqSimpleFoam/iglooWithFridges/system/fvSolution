@@ -27,7 +27,7 @@ solvers
 
     "(U|T|k|epsilon)"
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-07;
         relTol          0.1;

@@ -67,8 +67,8 @@ solvers
 
     "(U|k|epsilon)"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-6;
         relTol          0.1;
     }

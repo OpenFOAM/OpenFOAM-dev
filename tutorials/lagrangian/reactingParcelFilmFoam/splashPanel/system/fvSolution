@@ -66,14 +66,14 @@ solvers
 
     "(h|Yi|O2|N2|H2O)"
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0;
     }
     hFinal
     {
-        solver          PBiCG;
+        solver          PBiCGStab;
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0;
