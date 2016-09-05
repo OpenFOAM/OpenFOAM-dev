@@ -26,7 +26,7 @@ Class
 
 Description
     Preconditioned conjugate gradient solver for symmetric lduMatrices
-    using a run-time selectable preconditiioner.
+    using a run-time selectable preconditioner.
 
 SourceFiles
     PCICG.C

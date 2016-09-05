@@ -26,7 +26,7 @@ Class
 
 Description
     Preconditioned bi-conjugate gradient solver for asymmetric lduMatrices
-    using a run-time selectable preconditiioner.
+    using a run-time selectable preconditioner.
 
 SourceFiles
     PBiCCCG.C

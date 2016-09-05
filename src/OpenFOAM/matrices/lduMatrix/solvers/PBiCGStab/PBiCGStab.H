@@ -26,7 +26,7 @@ Class
 
 Description
     Preconditioned bi-conjugate gradient stabilized solver for asymmetric
-    lduMatrices using a run-time selectable preconditiioner.
+    lduMatrices using a run-time selectable preconditioner.
 
     References:
     \verbatim
