@@ -54,7 +54,7 @@ void Foam::pairGAMGAgglomeration::agglomerate
             *faceWeightsPtr
         );
 
-        if (continueAgglomerating(nCoarseCells))
+        if (continueAgglomerating(finalAgglomPtr().size(), nCoarseCells))
         {
             nCells_[nCreatedLevels] = nCoarseCells;
             restrictAddressing_.set(nCreatedLevels, finalAgglomPtr);
