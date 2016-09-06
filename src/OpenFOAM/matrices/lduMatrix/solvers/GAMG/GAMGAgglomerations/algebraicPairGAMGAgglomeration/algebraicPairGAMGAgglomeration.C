@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,16 @@ Foam::algebraicPairGAMGAgglomeration::algebraicPairGAMGAgglomeration
 :
     pairGAMGAgglomeration(matrix.mesh(), controlDict)
 {
-    agglomerate(matrix.mesh(), mag(matrix.upper()));
+    const lduMesh& mesh = matrix.mesh();
+
+    if (matrix.hasLower())
+    {
+        agglomerate(mesh, max(mag(matrix.upper()), mag(matrix.lower())));
+    }
+    else
+    {
+        agglomerate(mesh, mag(matrix.upper()));
+    }
 }
 
 
