@@ -25,8 +25,8 @@ boundaryField
     inlet
     {
         type            variableHeightFlowRate;
-        lowerBound      0.0;
-        upperBound      0.9;
+        lowerBound      0;
+        upperBound      1;
         value           uniform 0;
     }
 

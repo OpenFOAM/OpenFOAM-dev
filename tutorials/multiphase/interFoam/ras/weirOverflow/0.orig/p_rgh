@@ -34,7 +34,7 @@ boundaryField
 
     lowerWall
     {
-        type            zeroGradient;
+        type            fixedFluxPressure;
     }
 
     atmosphere
