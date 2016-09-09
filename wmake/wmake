@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #------------------------------------------------------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
@@ -335,13 +335,13 @@ if [ "$all" = "queue" ]
 then
     [ -n "$update" ] || wmakeLnIncludeAll $parOpt
 
-    (                                                                          \
-        WM_COLLECT_DIR=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}/${PWD////_}     \
-        WM_SCHEDULER=wmakeCollect                                              \
-        trap '$WM_SCHEDULER -kill' TERM INT;                                   \
+    (
+        export WM_COLLECT_DIR=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}/${PWD////_}
+        WM_SCHEDULER=wmakeCollect
+        trap '$WM_SCHEDULER -kill' TERM INT
         $WM_SCHEDULER -clean                                                   \
      && wmake -all objects                                                     \
-     && $WM_SCHEDULER                                                          \
+     && $WM_SCHEDULER
     ) && wmake -all
     exit $?
 fi
