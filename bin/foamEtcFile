@@ -103,7 +103,7 @@ OpenFOAM-*)         # standard naming convention OpenFOAM-<VERSION>
     version="${projectDirName##OpenFOAM-}"
     ;;
 
-openfoam[0-9]* | openfoamdev)     # debian naming convention 'openfoam<VERSION>'
+openfoam[0-9]* | openfoam-dev)     # debian naming convention 'openfoam<VERSION>'
     versionNum="${projectDirName##openfoam}"
     case "$versionNum" in
     ??)         # convert 2 digit version number to decimal delineated
