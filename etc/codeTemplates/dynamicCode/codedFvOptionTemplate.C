@@ -104,7 +104,7 @@ ${typeName}FvOption${SourceType}
     const fvMesh& mesh
 )
 :
-    option(name, modelType, dict, mesh)
+    cellSetOption(name, modelType, dict, mesh)
 {
     if (${verbose:-false})
     {

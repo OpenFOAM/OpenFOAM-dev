@@ -57,14 +57,12 @@ Usage
     {
         type            scalarCodedSource;
 
-        active          yes;
-
         scalarCodedSourceCoeffs
         {
             selectionMode   all;
 
-            fieldNames      (h);
-            name    sourceTime;
+            fields          (h);
+            name            sourceTime;
 
             codeInclude
             #{

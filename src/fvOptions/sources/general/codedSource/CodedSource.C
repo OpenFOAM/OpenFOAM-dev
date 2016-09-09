@@ -68,6 +68,7 @@ void Foam::fv::CodedSource<Type>::prepare
             "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
             "-I$(LIB_SRC)/meshTools/lnInclude \\\n"
             "-I$(LIB_SRC)/sampling/lnInclude \\\n"
+            "-I$(LIB_SRC)/fvOptions/lnInclude \\\n"
             + context.options()
             + "\n\nLIB_LIBS = \\\n"
             + "    -lmeshTools \\\n"

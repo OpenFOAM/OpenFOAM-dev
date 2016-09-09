@@ -105,7 +105,7 @@ SourceFiles
 #ifndef codedFvOptionTemplate_H
 #define codedFvOptionTemplate_H
 
-#include "fvOption.H"
+#include "cellSetOption.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -121,7 +121,7 @@ namespace fv
 
 class ${typeName}FvOption${SourceType}
 :
-    public option
+    public cellSetOption
 {
 public:
 
