@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ SourceFiles
 #define structuredRenumber_H
 
 #include "renumberMethod.H"
+#include "topoDistanceData.H"
 #include "Switch.H"
 
 namespace Foam
@@ -54,11 +55,43 @@ class structuredRenumber
 :
     public renumberMethod
 {
+public:
+
+    // Public classes
+
+        //- Less function class that can be used for sorting according to
+        //  column and layer
+        class layerLess
+        {
+            const Switch depthFirst_;
+            const labelList& order_;
+            const List<topoDistanceData>& distance_;
+
+        public:
+
+            layerLess
+            (
+                const Switch depthFirst,
+                const labelList& order,
+                const List<topoDistanceData>& distance
+            )
+            :
+                depthFirst_(depthFirst),
+                order_(order),
+                distance_(distance)
+            {}
+
+            bool operator()(const label a, const label b);
+        };
+
+
     // Private data
 
         const dictionary methodDict_;
 
         const wordReList patches_;
+
+        const label nLayers_;
 
         const Switch depthFirst_;
 

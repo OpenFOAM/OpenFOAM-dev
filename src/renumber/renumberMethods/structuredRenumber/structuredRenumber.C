@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "topoDistanceData.H"
 #include "fvMeshSubset.H"
-#include "FaceCellWave.H"
+#include "OppositeFaceCellWave.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +54,7 @@ Foam::structuredRenumber::structuredRenumber
     renumberMethod(renumberDict),
     methodDict_(renumberDict.subDict(typeName + "Coeffs")),
     patches_(methodDict_.lookup("patches")),
-    //nLayers_(readLabel(methodDict_.lookup("nLayers"))),
+    nLayers_(methodDict_.lookupOrDefault<label>("nLayers", labelMax)),
     depthFirst_(methodDict_.lookup("depthFirst")),
     method_(renumberMethod::New(methodDict_)),
     reverse_(methodDict_.lookup("reverse"))
@@ -62,6 +62,75 @@ Foam::structuredRenumber::structuredRenumber
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::structuredRenumber::layerLess::operator()
+(
+    const label a,
+    const label b
+)
+{
+    const topoDistanceData& ta = distance_[a];
+    const topoDistanceData& tb = distance_[b];
+
+    int dummy;
+
+    if (ta.valid(dummy))
+    {
+        if (tb.valid(dummy))
+        {
+            if (depthFirst_)
+            {
+                if (ta.data() < tb.data())
+                {
+                    // Sort column first
+                    return true;
+                }
+                else if (ta.data() > tb.data())
+                {
+                    return false;
+                }
+                else
+                {
+                    // Same column. Sort according to layer
+                    return ta.distance() < tb.distance();
+                }
+            }
+            else
+            {
+                if (ta.distance() < tb.distance())
+                {
+                    return true;
+                }
+                else if (ta.distance() > tb.distance())
+                {
+                    return false;
+                }
+                else
+                {
+                    // Same layer; sort according to current values
+                    return ta.data() < tb.data();
+                }
+            }
+        }
+        else
+        {
+            return true;
+        }
+    }
+    else
+    {
+        if (tb.valid(dummy))
+        {
+            return false;
+        }
+        else
+        {
+            // Both not valid; fall back to cell indices for sorting
+            return order_[a] < order_[b];
+        }
+    }
+}
+
 
 Foam::labelList Foam::structuredRenumber::renumber
 (
@@ -104,18 +173,13 @@ Foam::labelList Foam::structuredRenumber::renumber
     const label nLayers = nTotalCells/nTotalSeeds;
 
     Info<< type() << " : seeding " << nTotalSeeds
-        << " cells on " << nLayers << " layers" << nl
+        << " cells on (estimated) " << nLayers << " layers" << nl
         << endl;
-
-
-    // Avoid subsetMesh, FaceCellWave going through proc boundaries
-    bool oldParRun = Pstream::parRun();
-    Pstream::parRun() = false;
 
 
     // Work array. Used here to temporarily store the original-to-ordered
     // index. Later on used to store the ordered-to-original.
-    labelList orderedToOld(points.size(), -1);
+    labelList orderedToOld(mesh.nCells(), -1);
 
     // Subset the layer of cells next to the patch
     {
@@ -125,20 +189,23 @@ Foam::labelList Foam::structuredRenumber::renumber
 
         pointField subPoints(points, subsetter.cellMap());
 
-        // Decompose the layer of cells
+        // Locally renumber the layer of cells
         labelList subOrder(method_().renumber(subMesh, subPoints));
 
         labelList subOrigToOrdered(invert(subOrder.size(), subOrder));
 
-        // Transfer to final decomposition
+        globalIndex globalSubCells(subOrder.size());
+
+        // Transfer to final decomposition and convert into global numbering
         forAll(subOrder, i)
         {
-            orderedToOld[subsetter.cellMap()[i]] = subOrigToOrdered[i];
+            orderedToOld[subsetter.cellMap()[i]] =
+                globalSubCells.toGlobal(subOrigToOrdered[i]);
         }
     }
 
 
-    // Walk out.
+    // Walk sub-ordering (=column index) out.
     labelList patchFaces(nFaces);
     List<topoDistanceData> patchData(nFaces);
     nFaces = 0;
@@ -151,7 +218,7 @@ Foam::labelList Foam::structuredRenumber::renumber
             patchFaces[nFaces] = pp.start()+i;
             patchData[nFaces] = topoDistanceData
             (
-                orderedToOld[fc[i]],// passive data: order of originating face
+                orderedToOld[fc[i]],// passive data: global column
                 0                   // distance: layer
             );
             nFaces++;
@@ -163,50 +230,43 @@ Foam::labelList Foam::structuredRenumber::renumber
     List<topoDistanceData> faceData(mesh.nFaces());
 
     // Propagate information inwards
-    FaceCellWave<topoDistanceData> deltaCalc
+    OppositeFaceCellWave<topoDistanceData> deltaCalc
     (
         mesh,
         patchFaces,
         patchData,
         faceData,
         cellData,
-        nTotalCells+1
+        0
     );
 
+    deltaCalc.iterate(nLayers_);
 
-    Pstream::parRun() = oldParRun;
+    Info<< type() << " : did not visit "
+        << deltaCalc.getUnsetCells()
+        << " cells out of " << nTotalCells
+        << "; using " << method_().type() << " renumbering for these" << endl;
 
+    // Get cell order using the method(). These values will get overwitten
+    // by any visited cell so are used only if the number of nLayers is limited.
+    labelList oldToOrdered
+    (
+        invert
+        (
+            mesh.nCells(),
+            method_().renumber(mesh, points)
+        )
+    );
 
-    // And extract.
-    // Note that distance is distance from face so starts at 1.
-    bool haveWarned = false;
-    forAll(orderedToOld, celli)
-    {
-        if (!cellData[celli].valid(deltaCalc.data()))
-        {
-            if (!haveWarned)
-            {
-                WarningInFunction
-                    << "Did not visit some cells, e.g. cell " << celli
-                    << " at " << mesh.cellCentres()[celli] << endl
-                    << "Assigning these cells to domain 0." << endl;
-                haveWarned = true;
-            }
-            orderedToOld[celli] = 0;
-        }
-        else
-        {
-            label layerI = cellData[celli].distance();
-            if (depthFirst_)
-            {
-                orderedToOld[nLayers*cellData[celli].data()+layerI] = celli;
-            }
-            else
-            {
-                orderedToOld[cellData[celli].data()+nLayers*layerI] = celli;
-            }
-        }
-    }
+    // Use specialised sorting to sorted either layers or columns first
+    // Done so that at no point we need to combine both into a single
+    // index and we might run out of label size.
+    sortedOrder
+    (
+        cellData,
+        orderedToOld,
+        layerLess(depthFirst_, oldToOrdered, cellData)
+    );
 
     // Return furthest away cell first
     if (reverse_)
