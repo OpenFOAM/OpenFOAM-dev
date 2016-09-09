@@ -218,7 +218,8 @@ public:
         (
             const string& funcNameArgs0,
             dictionary& functionsDict,
-            HashSet<word>& requiredFields
+            HashSet<word>& requiredFields,
+            const word& region = word::null
         );
 
         //- Read and set the function objects if their data have changed
