@@ -30,8 +30,10 @@ divSchemes
     default         none;
 
     div(phi,U)      Gauss LUST grad(U);
+    div(U)          Gauss linear;
     div(phi,K)      Gauss linear;
     div(phi,k)      Gauss limitedLinear 1;
+    div(phi,FSDomega) Gauss limitedLinear 1;
     div(phi,Yi_h)   Gauss multivariateSelection
     {
         O2              limitedLinear01 1;

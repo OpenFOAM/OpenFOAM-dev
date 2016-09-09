@@ -54,7 +54,7 @@ solvers
     }
 
 
-    "(U|Yi|k|h|omega)"
+    "(U|Yi|k|h|FSDomega)"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
@@ -63,7 +63,7 @@ solvers
         nSweeps         1;
     };
 
-    "(U|Yi|k|h|omega)Final"
+    "(U|Yi|k|h|FSDomega)Final"
     {
         $U;
         tolerance       1e-6;

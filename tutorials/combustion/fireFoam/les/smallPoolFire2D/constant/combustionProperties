@@ -35,6 +35,8 @@ FSDCoeffs
 
     fuel                Methane;
 
+    semiImplicit        no;
+
     relaxationCoeffs
     {
         C                     2.0;

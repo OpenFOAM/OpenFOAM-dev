@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,14 +111,6 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and psiReactionThermo
-        reactionRateFlameArea
-        (
-            const dictionary& dict,
-            const fvMesh& mesh,
-            const combustionModel& combModel
-        );
-
         //- Construct from components
         reactionRateFlameArea
         (
@@ -160,7 +152,6 @@ public:
 
         //- Update from dictionary
         virtual bool read(const dictionary& dictProperties);
-
 };
 
 

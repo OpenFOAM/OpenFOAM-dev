@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,42 +31,31 @@ inline const Foam::fvMesh& Foam::combustionModel::mesh() const
 }
 
 
-inline const Foam::surfaceScalarField& Foam::combustionModel::phi() const
-{
-    if (turbulencePtr_)
-    {
-        return turbulencePtr_->phi();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "turbulencePtr_ is empty. Please use "
-            << "combustionModel::setTurbulence "
-            << "(compressibleTurbulenceModel& )"
-            << abort(FatalError);
-
-        return turbulencePtr_->phi();
-    }
-}
-
-
 inline const Foam::compressibleTurbulenceModel&
 Foam::combustionModel::turbulence() const
 {
-    if (turbulencePtr_)
-    {
-        return *turbulencePtr_;
-    }
-    else
+    if (!turbulencePtr_)
     {
         FatalErrorInFunction
             << "turbulencePtr_ is empty. Please use "
             << "combustionModel::setTurbulence "
             << "(compressibleTurbulenceModel& )"
             << abort(FatalError);
-
-        return *turbulencePtr_;
     }
+
+    return *turbulencePtr_;
+}
+
+
+inline const Foam::volScalarField& Foam::combustionModel::rho() const
+{
+    return turbulence().rho();
+}
+
+
+inline Foam::tmp<Foam::surfaceScalarField> Foam::combustionModel::phi() const
+{
+    return turbulence().alphaRhoPhi();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,20 +111,17 @@ public:
             //- Return const access to the mesh database
             inline const fvMesh& mesh() const;
 
-            //- Return const access to phi
-            inline const surfaceScalarField& phi() const;
-
-            //- Return const access to rho
-            virtual tmp<volScalarField> rho() const = 0;
+            //- Set turbulence
+            inline void setTurbulence(compressibleTurbulenceModel& turbModel);
 
             //- Return access to turbulence
             inline const compressibleTurbulenceModel& turbulence() const;
 
-            //- Set turbulence
-            inline void setTurbulence
-            (
-                compressibleTurbulenceModel& turbModel
-            );
+            //- Return const access to rho
+            inline const volScalarField& rho() const;
+
+            //- Return const access to phi
+            inline tmp<surfaceScalarField> phi() const;
 
             //- Is combustion active?
             inline const Switch& active() const;

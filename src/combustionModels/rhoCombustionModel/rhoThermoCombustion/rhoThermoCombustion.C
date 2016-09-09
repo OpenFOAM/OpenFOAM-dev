@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,13 +58,6 @@ const Foam::rhoReactionThermo&
 Foam::combustionModels::rhoThermoCombustion::thermo() const
 {
     return thermoPtr_();
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::rhoThermoCombustion::rho() const
-{
-    return thermoPtr_().rho();
 }
 
 

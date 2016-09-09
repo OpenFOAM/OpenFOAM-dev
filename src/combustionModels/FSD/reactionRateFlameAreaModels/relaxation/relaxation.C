@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,13 +123,14 @@ void Foam::reactionRateFlameAreaModels::relaxation::correct
        /(sqr(omega0 - omegaInf) + sqr(omegaMin))
     );
 
-    const volScalarField rho(combModel_.rho());
-    const surfaceScalarField phi(combModel_.phi());
+    const volScalarField& rho = combModel_.rho();
+    const tmp<surfaceScalarField> tphi = combModel_.phi();
+    const surfaceScalarField& phi = tphi();
 
     solve
     (
          fvm::ddt(rho, omega_)
-       + fvm::div(phi, omega_, "div(phi,omega)")
+       + fvm::div(phi, omega_)
       ==
          rho*Rc*omega0
        - fvm::SuSp(rho*(tau + Rc), omega_)
