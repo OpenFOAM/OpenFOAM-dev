@@ -58,6 +58,7 @@ namespace dragModels
 {
 
 class SchillerNaumann;
+
 /*---------------------------------------------------------------------------*\
                            Class Tenneti Declaration
 \*---------------------------------------------------------------------------*/
@@ -68,7 +69,7 @@ class Tenneti
 {
     // Private data
 
-        //- Ergun drag model
+        //- SchillerNaumann drag model
         autoPtr<SchillerNaumann> SchillerNaumann_;
 
         //- Residual Reynolds Number
