@@ -25,7 +25,7 @@ License
 
 #include "GAMGSolver.H"
 #include "PCG.H"
-#include "PBiCG.H"
+#include "PBiCGStab.H"
 #include "SubField.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -533,13 +533,13 @@ Foam::dictionary Foam::GAMGSolver::PCGsolverDict
 }
 
 
-Foam::dictionary Foam::GAMGSolver::PBiCGsolverDict
+Foam::dictionary Foam::GAMGSolver::PBiCGStabSolverDict
 (
     const scalar tol,
     const scalar relTol
 ) const
 {
-    dictionary dict(IStringStream("solver PBiCG; preconditioner DILU;")());
+    dictionary dict(IStringStream("solver PBiCGStab; preconditioner DILU;")());
     dict.add("tolerance", tol);
     dict.add("relTol", relTol);
 
@@ -612,14 +612,14 @@ void Foam::GAMGSolver::solveCoarsestLevel
     //
     //            if (allMatrix.asymmetric())
     //            {
-    //                coarseSolverPerf = PBiCG
+    //                coarseSolverPerf = PBiCGStab
     //                (
     //                    "coarsestLevelCorr",
     //                    allMatrix,
     //                    procInterfaceLevelsBouCoeffs_[coarsestLevel],
     //                    procInterfaceLevelsIntCoeffs_[coarsestLevel],
     //                    procInterfaceLevels_[coarsestLevel],
-    //                    PBiCGsolverDict(tolerance_, relTol_)
+    //                    PBiCGStabSolverDict(tolerance_, relTol_)
     //                ).solve
     //                (
     //                    coarsestCorrField,
@@ -673,14 +673,14 @@ void Foam::GAMGSolver::solveCoarsestLevel
 
         if (matrixLevels_[coarsestLevel].asymmetric())
         {
-            coarseSolverPerf = PBiCG
+            coarseSolverPerf = PBiCGStab
             (
                 "coarsestLevelCorr",
                 matrixLevels_[coarsestLevel],
                 interfaceLevelsBouCoeffs_[coarsestLevel],
                 interfaceLevelsIntCoeffs_[coarsestLevel],
                 interfaceLevels_[coarsestLevel],
-                PBiCGsolverDict(tolerance_, relTol_)
+                PBiCGStabSolverDict(tolerance_, relTol_)
             ).solve
             (
                 coarsestCorrField,
