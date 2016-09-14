@@ -181,6 +181,28 @@ void Foam::RBD::rigidBodyMotion::status(const label bodyID) const
 Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
 (
     const label bodyID,
+    const pointField& initialPoints
+) const
+{
+    // Calculate the transform from the initial state in the global frame
+    // to the current state in the global frame
+    spatialTransform X(X0(bodyID).inv() & X00(bodyID));
+
+    tmp<pointField> tpoints(new pointField(initialPoints.size()));
+    pointField& points = tpoints.ref();
+
+    forAll(points, i)
+    {
+        points[i] = X.transformPoint(initialPoints[i]);
+    }
+
+    return tpoints;
+}
+
+
+Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
+(
+    const label bodyID,
     const scalarField& weight,
     const pointField& initialPoints
 ) const
