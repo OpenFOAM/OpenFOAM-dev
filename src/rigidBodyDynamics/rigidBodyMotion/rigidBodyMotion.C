@@ -271,25 +271,23 @@ Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
 
     forAll(points, i)
     {
-        // Sum (1 - wi) and find the maximum wi
-        scalar sum1mw = 0;
-        scalar maxw = 0;
+        // Initialize to 1 for the far-field weight
+        scalar sum1mw = 1;
 
         forAll(bodyIDs, bi)
         {
             w[bi] = (*(weights[bi]))[i];
-            sum1mw += 1 - w[bi];
-            maxw = max(maxw, w[bi]);
+            sum1mw += w[bi]/(1 + SMALL - w[bi]);
         }
 
-        // Calculate the limiter for (1 - wi) to ensure the sum(wi) = maxw
-        scalar lambda = (w.size() - 1 - maxw)/sum1mw;
+        // Calculate the limiter for wi/(1 - wi) to ensure the sum(wi) = 1
+        scalar lambda = 1/sum1mw;
 
-        // Limit (1 - wi) and sum the resulting wi
+        // Limit wi/(1 - wi) and sum the resulting wi
         scalar sumw = 0;
         forAll(bodyIDs, bi)
         {
-            w[bi] = 1 - lambda*(1 - w[bi]);
+            w[bi] = lambda*w[bi]/(1 + SMALL - w[bi]);
             sumw += w[bi];
         }
 
