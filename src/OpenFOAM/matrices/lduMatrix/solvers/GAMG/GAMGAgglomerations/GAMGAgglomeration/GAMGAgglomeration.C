@@ -211,9 +211,9 @@ bool Foam::GAMGAgglomeration::continueAgglomerating
 ) const
 {
     const label nTotalCoarseCells = returnReduce(nCoarseCells, sumOp<label>());
-    if (nTotalCoarseCells >= Pstream::nProcs()*nCellsInCoarsestLevel_)
+    if (nTotalCoarseCells < Pstream::nProcs()*nCellsInCoarsestLevel_)
     {
-        return true;
+        return false;
     }
     else
     {
