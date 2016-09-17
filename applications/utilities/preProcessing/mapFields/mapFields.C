@@ -236,8 +236,8 @@ int main(int argc, char *argv[])
     fileName rootDirTarget(args.rootPath());
     fileName caseDirTarget(args.globalCaseName());
 
-    const fileName casePath = args[1];
-    const fileName rootDirSource = casePath.path();
+    fileName casePath = args[1];
+    const fileName rootDirSource = casePath.path().toAbsolute();
     const fileName caseDirSource = casePath.name();
 
     Info<< "Source: " << rootDirSource << " " << caseDirSource << endl;
