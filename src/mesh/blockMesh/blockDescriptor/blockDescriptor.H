@@ -90,6 +90,9 @@ class blockDescriptor
 
     // Private Member Functions
 
+        //- Check block has outward-pointing faces
+        void check(const Istream& is);
+
         //- Set the points/weights for all edges
         void makeBlockEdges();
 

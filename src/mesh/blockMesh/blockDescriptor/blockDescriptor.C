@@ -23,8 +23,65 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "blockDescriptor.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::blockDescriptor::check(const Istream& is)
+{
+    const point blockCentre(blockShape_.centre(blockPointField_));
+    const faceList faces(blockShape_.faces());
+
+    // Check each face is outward-pointing with respect to the block centre
+    label outwardFaceCount = 0;
+    boolList correctFaces(faces.size(), true);
+
+    forAll(faces, i)
+    {
+        point faceCentre(faces[i].centre(blockPointField_));
+        vector faceNormal(faces[i].normal(blockPointField_));
+        if (mag(faceNormal) > SMALL)
+        {
+            if (((faceCentre - blockCentre) & faceNormal) > 0)
+            {
+                outwardFaceCount++;
+            }
+            else
+            {
+                correctFaces[i] = false;
+            }
+        }
+        else
+        {
+            outwardFaceCount++;
+        }
+    }
+
+    // If all faces are inward-pointing the block is inside-out
+    if (outwardFaceCount == 0)
+    {
+        FatalIOErrorInFunction(is)
+            << "Block " << *this << " is inside-out"
+            << exit(FatalIOError);
+    }
+    else if (outwardFaceCount != faces.size())
+    {
+        FatalIOErrorInFunction(is)
+            << "Block " << *this << " has inward-pointing faces"
+            << nl << "    ";
+
+        forAll(correctFaces, i)
+        {
+            if (!correctFaces[i])
+            {
+                FatalIOError<< faces[i] << token::SPACE;
+            }
+        }
+
+        FatalIOError << exit(FatalIOError);
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -156,10 +213,12 @@ Foam::blockDescriptor::blockDescriptor
     }
     else
     {
-        FatalErrorInFunction
+        FatalIOErrorInFunction(is)
             << "Unknown definition of expansion ratios: " << expRatios
-            << exit(FatalError);
+            << exit(FatalIOError);
     }
+
+    check(is);
 
     // Create a list of edges
     makeBlockEdges();
