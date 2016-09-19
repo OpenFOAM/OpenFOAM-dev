@@ -1,3 +1,5 @@
+#include "createRDeltaT.H"
+
 Info<< "Creating reaction model\n" << endl;
 
 autoPtr<combustionModels::psiCombustionModel> reaction

@@ -36,6 +36,8 @@ Description
 #include "turbulentFluidThermoModel.H"
 #include "fixedRhoFvPatchScalarField.H"
 #include "directionInterpolate.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 #include "motionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

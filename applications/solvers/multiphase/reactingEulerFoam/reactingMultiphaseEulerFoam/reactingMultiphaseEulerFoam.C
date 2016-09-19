@@ -50,7 +50,6 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createControl.H"
     #include "createTimeControls.H"
-    #include "createRDeltaT.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
 

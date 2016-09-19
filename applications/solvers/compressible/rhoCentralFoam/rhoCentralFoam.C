@@ -51,7 +51,6 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "createTimeControls.H"
-    #include "createRDeltaT.H"
 
     turbulence->validate();
 
