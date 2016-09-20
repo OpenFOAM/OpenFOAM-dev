@@ -1,0 +1,27 @@
+#!/bin/sh
+
+tail -n +4 ../postProcessing/probes/0/U  | \
+    tr -s " " | tr -d '(' | cut -d " " -f2-3 > ../Numerical.dat
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+fi
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced "Helvetica,20"
+    set output "planarPoiseuille.eps"
+    set xlabel "Time / [s]" font "Helvetica,24"
+    set ylabel "Velocity / [m/s]" font "Helvetica,24"
+    set grid
+    set key right top
+    set xrange [0:25]
+    set yrange [0:8]
+    plot \
+        "../Numerical.dat" t "OpenFOAM (every 100 pts)" \
+            with linespoints pointinterval 100 lt 1 pt 6 ps 1.5, \
+        "../WatersKing.dat" with lines t "Analytical" lt -1
+EOF
+
+# ----------------------------------------------------------------- end-of-file

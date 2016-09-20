@@ -45,6 +45,9 @@ makeBaseTurbulenceModel
 #include "Stokes.H"
 makeLaminarModel(Stokes);
 
+#include "Maxwell.H"
+makeLaminarModel(Maxwell);
+
 
 // -------------------------------------------------------------------------- //
 // RAS models

@@ -1,0 +1,112 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.0032;
+
+vertices
+(
+    (-40 0 -1)
+    (  0 0 -1)
+    ( 30 0 -1)
+    (-40 1 -1)
+    (  0 1 -1)
+    ( 30 1 -1)
+    (-40 4 -1)
+    (  0 4 -1)
+
+    (-40 0  1)
+    (  0 0  1)
+    ( 30 0  1)
+    (-40 1  1)
+    (  0 1  1)
+    ( 30 1  1)
+    (-40 4  1)
+    (  0 4  1)
+);
+
+blocks
+(
+    hex (0 1 4 3  8  9 12 11) (40 12 1) simpleGrading (0.02 0.4 1)
+    hex (1 2 5 4  9 10 13 12) (30 12 1) simpleGrading (50 0.4 1)
+    hex (3 4 7 6 11 12 15 14) (40 24 1) simpleGrading (0.02 ((0.5 0.5 4.0) (0.5 0.5 0.25)) 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 3 11 8)
+            (3 6 14 11)
+        );
+    }
+
+    walls
+    {
+        type wall;
+        faces
+        (
+            (6 7 15 14)
+            (7 4 12 15)
+            (4 5 13 12)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (2 5 13 10)
+        );
+    }
+
+    centreline
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 1 9 8)
+            (1 2 10 9)
+        );
+    }
+
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 1 4 3)
+            (3 4 7 6)
+            (1 2 5 4)
+            (8 9 12 11)
+            (11 12 15 14)
+            (9 10 13 12)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
