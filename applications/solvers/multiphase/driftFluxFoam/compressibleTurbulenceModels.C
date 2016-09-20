@@ -28,7 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
-#include "laminar.H"
+#include "laminarModel.H"
 #include "RASModel.H"
 #include "LESModel.H"
 
@@ -52,6 +52,14 @@ makeBaseTurbulenceModel
     incompressibleTwoPhaseInteractingMixture
 );
 
+#define makeLaminarModel(Type)                                                 \
+    makeTemplatedTurbulenceModel                                               \
+    (                                                                          \
+        incompressibleTwoPhaseInteractingMixtureCompressibleTurbulenceModel,   \
+        laminar,                                                               \
+        Type                                                                   \
+    )
+
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
     (                                                                          \
@@ -67,6 +75,9 @@ makeBaseTurbulenceModel
         LES,                                                                   \
         Type                                                                   \
     )
+
+#include "Stokes.H"
+makeLaminarModel(Stokes);
 
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);

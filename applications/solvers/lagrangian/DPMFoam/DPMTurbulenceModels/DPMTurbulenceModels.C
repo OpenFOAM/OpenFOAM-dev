@@ -28,8 +28,8 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
-#include "laminar.H"
-#include "turbulentTransportModel.H"
+#include "laminarModel.H"
+#include "RASModel.H"
 #include "LESModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -52,6 +52,10 @@ makeBaseTurbulenceModel
     singlePhaseTransportModel
 );
 
+#define makeLaminarModel(Type)                                                 \
+    makeTemplatedTurbulenceModel                                               \
+    (singlePhaseTransportModelPhaseIncompressibleTurbulenceModel, laminar, Type)
+
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
     (singlePhaseTransportModelPhaseIncompressibleTurbulenceModel, RAS, Type)
@@ -59,6 +63,9 @@ makeBaseTurbulenceModel
 #define makeLESModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
     (singlePhaseTransportModelPhaseIncompressibleTurbulenceModel, LES, Type)
+
+#include "Stokes.H"
+makeLaminarModel(Stokes);
 
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);

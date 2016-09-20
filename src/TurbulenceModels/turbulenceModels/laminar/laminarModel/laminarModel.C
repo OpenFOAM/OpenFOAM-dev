@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,18 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "laminar.H"
-#include "volFields.H"
-#include "surfaceFields.H"
-#include "fvcGrad.H"
-#include "fvcDiv.H"
-#include "fvmLaplacian.H"
+#include "laminarModel.H"
+#include "Stokes.H"
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+template<class BasicTurbulenceModel>
+void Foam::laminarModel<BasicTurbulenceModel>::printCoeffs(const word& type)
+{
+    if (printCoeffs_)
+    {
+        Info<< type << "Coeffs" << coeffDict_ << endl;
+    }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-Foam::laminar<BasicTurbulenceModel>::laminar
+Foam::laminarModel<BasicTurbulenceModel>::laminarModel
 (
+    const word& type,
     const alphaField& alpha,
     const rhoField& rho,
     const volVectorField& U,
@@ -44,9 +53,9 @@ Foam::laminar<BasicTurbulenceModel>::laminar
     const word& propertiesName
 )
 :
-    linearViscousStress<BasicTurbulenceModel>
+    BasicTurbulenceModel
     (
-        typeName,
+        type,
         alpha,
         rho,
         U,
@@ -54,15 +63,23 @@ Foam::laminar<BasicTurbulenceModel>::laminar
         phi,
         transport,
         propertiesName
-    )
-{}
+    ),
+
+    laminarDict_(this->subOrEmptyDict("laminar")),
+    printCoeffs_(laminarDict_.lookupOrDefault<Switch>("printCoeffs", false)),
+    coeffDict_(laminarDict_.subOrEmptyDict(type + "Coeffs"))
+{
+    // Force the construction of the mesh deltaCoeffs which may be needed
+    // for the construction of the derived models and BCs
+    this->mesh_.deltaCoeffs();
+}
 
 
-// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-Foam::autoPtr<Foam::laminar<BasicTurbulenceModel>>
-Foam::laminar<BasicTurbulenceModel>::New
+Foam::autoPtr<Foam::laminarModel<BasicTurbulenceModel>>
+Foam::laminarModel<BasicTurbulenceModel>::New
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -73,42 +90,107 @@ Foam::laminar<BasicTurbulenceModel>::New
     const word& propertiesName
 )
 {
-    return autoPtr<laminar>
+    IOdictionary modelDict
     (
-        new laminar
+        IOobject
         (
-            alpha,
-            rho,
-            U,
-            alphaRhoPhi,
-            phi,
-            transport,
-            propertiesName
+            IOobject::groupName(propertiesName, U.group()),
+            U.time().constant(),
+            U.db(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            false
         )
     );
+
+    if (modelDict.found("laminar"))
+    {
+        // get model name, but do not register the dictionary
+        // otherwise it is registered in the database twice
+        const word modelType
+        (
+            modelDict.subDict("laminar").lookup("laminarModel")
+        );
+
+        Info<< "Selecting laminar stress model " << modelType << endl;
+
+        typename dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(modelType);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown laminarModel type "
+                << modelType << nl << nl
+                << "Valid laminarModel types:" << endl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
+        }
+
+        return autoPtr<laminarModel>
+        (
+            cstrIter()
+            (
+                alpha,
+                rho,
+                U,
+                alphaRhoPhi,
+                phi,
+                transport, propertiesName)
+        );
+    }
+    else
+    {
+        Info<< "Selecting laminar stress model "
+            << laminarModels::Stokes<BasicTurbulenceModel>::typeName << endl;
+
+        return autoPtr<laminarModel>
+        (
+            new laminarModels::Stokes<BasicTurbulenceModel>
+            (
+                alpha,
+                rho,
+                U,
+                alphaRhoPhi,
+                phi,
+                transport,
+                propertiesName
+            )
+        );
+    }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-const Foam::dictionary&
-Foam::laminar<BasicTurbulenceModel>::coeffDict() const
+bool Foam::laminarModel<BasicTurbulenceModel>::read()
 {
-    return dictionary::null;
-}
+    if (BasicTurbulenceModel::read())
+    {
+        laminarDict_ <<= this->subDict("laminar");
 
+        if
+        (
+            const dictionary* dictPtr =
+                laminarDict_.subDictPtr(type() + "Coeffs")
+        )
+        {
+            coeffDict_ <<= *dictPtr;
+        }
 
-template<class BasicTurbulenceModel>
-bool Foam::laminar<BasicTurbulenceModel>::read()
-{
-    return true;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
-Foam::laminar<BasicTurbulenceModel>::nut() const
+Foam::laminarModel<BasicTurbulenceModel>::nut() const
 {
     return tmp<volScalarField>
     (
@@ -132,7 +214,7 @@ Foam::laminar<BasicTurbulenceModel>::nut() const
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::scalarField>
-Foam::laminar<BasicTurbulenceModel>::nut
+Foam::laminarModel<BasicTurbulenceModel>::nut
 (
     const label patchi
 ) const
@@ -146,7 +228,7 @@ Foam::laminar<BasicTurbulenceModel>::nut
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
-Foam::laminar<BasicTurbulenceModel>::nuEff() const
+Foam::laminarModel<BasicTurbulenceModel>::nuEff() const
 {
     return tmp<volScalarField>
     (
@@ -160,7 +242,7 @@ Foam::laminar<BasicTurbulenceModel>::nuEff() const
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::scalarField>
-Foam::laminar<BasicTurbulenceModel>::nuEff
+Foam::laminarModel<BasicTurbulenceModel>::nuEff
 (
     const label patchi
 ) const
@@ -171,7 +253,7 @@ Foam::laminar<BasicTurbulenceModel>::nuEff
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
-Foam::laminar<BasicTurbulenceModel>::k() const
+Foam::laminarModel<BasicTurbulenceModel>::k() const
 {
     return tmp<volScalarField>
     (
@@ -195,7 +277,7 @@ Foam::laminar<BasicTurbulenceModel>::k() const
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volScalarField>
-Foam::laminar<BasicTurbulenceModel>::epsilon() const
+Foam::laminarModel<BasicTurbulenceModel>::epsilon() const
 {
     return tmp<volScalarField>
     (
@@ -222,7 +304,7 @@ Foam::laminar<BasicTurbulenceModel>::epsilon() const
 
 template<class BasicTurbulenceModel>
 Foam::tmp<Foam::volSymmTensorField>
-Foam::laminar<BasicTurbulenceModel>::R() const
+Foam::laminarModel<BasicTurbulenceModel>::R() const
 {
     return tmp<volSymmTensorField>
     (
@@ -248,7 +330,7 @@ Foam::laminar<BasicTurbulenceModel>::R() const
 
 
 template<class BasicTurbulenceModel>
-void Foam::laminar<BasicTurbulenceModel>::correct()
+void Foam::laminarModel<BasicTurbulenceModel>::correct()
 {
     BasicTurbulenceModel::correct();
 }

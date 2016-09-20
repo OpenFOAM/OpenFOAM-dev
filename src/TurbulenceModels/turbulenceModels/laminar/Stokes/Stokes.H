@@ -22,34 +22,37 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminar
+    Foam::Stokes
 
 Description
-    Turbulence model for laminar flow.
+    Turbulence model for Stokes flow.
 
 SourceFiles
-    laminar.C
+    Stokes.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef laminar_H
-#define laminar_H
+#ifndef Stokes_H
+#define Stokes_H
 
+#include "laminarModel.H"
 #include "linearViscousStress.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace laminarModels
+{
 
 /*---------------------------------------------------------------------------* \
-                           Class laminar Declaration
+                           Class Stokes Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicTurbulenceModel>
-class laminar
+class Stokes
 :
-    public linearViscousStress<BasicTurbulenceModel>
+    public linearViscousStress<laminarModel<BasicTurbulenceModel>>
 {
 
 public:
@@ -60,13 +63,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("laminar");
+    TypeName("Stokes");
 
 
     // Constructors
 
         //- Construct from components
-        laminar
+        Stokes
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -81,7 +84,7 @@ public:
     // Selectors
 
         //- Return a reference to the selected turbulence model
-        static autoPtr<laminar> New
+        static autoPtr<Stokes> New
         (
             const alphaField& alpha,
             const rhoField& rho,
@@ -94,7 +97,7 @@ public:
 
 
     //- Destructor
-    virtual ~laminar()
+    virtual ~Stokes()
     {}
 
 
@@ -106,41 +109,42 @@ public:
         //- Read turbulenceProperties dictionary
         virtual bool read();
 
-        //- Return the turbulence viscosity, i.e. 0 for laminar flow
+        //- Return the turbulence viscosity, i.e. 0 for Stokes flow
         virtual tmp<volScalarField> nut() const;
 
         //- Return the turbulence viscosity on patch
         virtual tmp<scalarField> nut(const label patchi) const;
 
-        //- Return the effective viscosity, i.e. the laminar viscosity
+        //- Return the effective viscosity, i.e. the Stokes viscosity
         virtual tmp<volScalarField> nuEff() const;
 
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const;
 
-        //- Return the turbulence kinetic energy, i.e. 0 for laminar flow
+        //- Return the turbulence kinetic energy, i.e. 0 for Stokes flow
         virtual tmp<volScalarField> k() const;
 
         //- Return the turbulence kinetic energy dissipation rate,
-        //  i.e. 0 for laminar flow
+        //  i.e. 0 for Stokes flow
         virtual tmp<volScalarField> epsilon() const;
 
-        //- Return the Reynolds stress tensor, i.e. 0 for laminar flow
+        //- Return the Reynolds stress tensor, i.e. 0 for Stokes flow
         virtual tmp<volSymmTensorField> R() const;
 
-        //- Correct the laminar viscosity
+        //- Correct the Stokes viscosity
         virtual void correct();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace laminarModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "laminar.C"
+    #include "Stokes.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

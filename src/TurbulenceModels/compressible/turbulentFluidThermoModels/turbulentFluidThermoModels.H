@@ -32,7 +32,7 @@ License
 #include "ThermalDiffusivity.H"
 #include "EddyDiffusivity.H"
 
-#include "laminar.H"
+#include "laminarModel.H"
 #include "RASModel.H"
 #include "LESModel.H"
 
@@ -47,6 +47,10 @@ makeTurbulenceModelTypes
     ThermalDiffusivity,
     fluidThermo
 );
+
+#define makeLaminarModel(Type)                                                 \
+    makeTemplatedLaminarModel                                                  \
+    (fluidThermoCompressibleTurbulenceModel, laminar, Type)
 
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \

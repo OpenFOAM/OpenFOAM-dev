@@ -28,7 +28,8 @@ License
     namespace Foam                                                             \
     {                                                                          \
         typedef BaseModel<Transport> Transport##BaseModel;                     \
-        typedef laminar<Transport##BaseModel> Laminar##Transport##BaseModel;   \
+        typedef laminarModel<Transport##BaseModel>                             \
+            laminar##Transport##BaseModel;                                     \
         typedef RASModel<Transport##BaseModel> RAS##Transport##BaseModel;      \
         typedef LESModel<Transport##BaseModel> LES##Transport##BaseModel;      \
     }
@@ -53,12 +54,15 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        defineNamedTemplateTypeNameAndDebug(Laminar##Transport##BaseModel, 0); \
+        defineNamedTemplateTypeNameAndDebug(laminar##Transport##BaseModel, 0); \
+                                                                               \
+        defineTemplateRunTimeSelectionTable                                    \
+        (laminar##Transport##BaseModel, dictionary);                           \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
             Transport##baseModel,                                              \
-            Laminar##Transport##BaseModel,                                     \
+            laminar##Transport##BaseModel,                                     \
             dictionary                                                         \
         );                                                                     \
                                                                                \

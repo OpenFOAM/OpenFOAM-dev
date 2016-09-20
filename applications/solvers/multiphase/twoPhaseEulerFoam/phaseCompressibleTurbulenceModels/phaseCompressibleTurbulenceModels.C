@@ -32,7 +32,7 @@ License
 #include "ThermalDiffusivity.H"
 #include "EddyDiffusivity.H"
 
-#include "laminar.H"
+#include "laminarModel.H"
 #include "RASModel.H"
 #include "LESModel.H"
 
@@ -58,6 +58,10 @@ makeBaseTurbulenceModel
     phaseModel
 );
 
+#define makeLaminarModel(Type)                                                 \
+    makeTemplatedLaminarModel                                                  \
+    (phaseModelPhaseCompressibleTurbulenceModel, laminar, Type)
+
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
     (phaseModelPhaseCompressibleTurbulenceModel, RAS, Type)
@@ -65,6 +69,9 @@ makeBaseTurbulenceModel
 #define makeLESModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \
     (phaseModelPhaseCompressibleTurbulenceModel, LES, Type)
+
+#include "Stokes.H"
+makeLaminarModel(Stokes);
 
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);

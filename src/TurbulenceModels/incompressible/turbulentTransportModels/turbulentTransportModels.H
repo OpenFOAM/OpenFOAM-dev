@@ -28,7 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
-#include "laminar.H"
+#include "laminarModel.H"
 #include "RASModel.H"
 #include "LESModel.H"
 
@@ -42,6 +42,10 @@ makeTurbulenceModelTypes
     IncompressibleTurbulenceModel,
     transportModel
 );
+
+#define makeLaminarModel(Type)                                                 \
+    makeTemplatedTurbulenceModel                                               \
+    (transportModelIncompressibleTurbulenceModel, laminar, Type)
 
 #define makeRASModel(Type)                                                     \
     makeTemplatedTurbulenceModel                                               \

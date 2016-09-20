@@ -34,7 +34,8 @@ License
     {                                                                          \
         typedef TDModel<BaseModel<Transport>>                                  \
             Transport##BaseModel;                                              \
-        typedef laminar<Transport##BaseModel> Laminar##Transport##BaseModel;   \
+        typedef laminarModel<Transport##BaseModel>                             \
+            laminar##Transport##BaseModel;                                     \
         typedef RASModel<EddyDiffusivity<Transport##BaseModel>>                \
             RAS##Transport##BaseModel;                                         \
         typedef LESModel<EddyDiffusivity<Transport##BaseModel>>                \
@@ -65,14 +66,18 @@ License
             Transport##BaseModel;                                              \
                                                                                \
                                                                                \
-        typedef laminar<Transport##BaseModel> Laminar##Transport##BaseModel;   \
+        typedef laminarModel<Transport##BaseModel>                             \
+            laminar##Transport##BaseModel;                                     \
                                                                                \
-        defineNamedTemplateTypeNameAndDebug(Laminar##Transport##BaseModel, 0); \
+        defineNamedTemplateTypeNameAndDebug(laminar##Transport##BaseModel, 0); \
+                                                                               \
+        defineTemplateRunTimeSelectionTable                                    \
+        (laminar##Transport##BaseModel, dictionary);                           \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
             Transport##baseModel,                                              \
-            Laminar##Transport##BaseModel,                                     \
+            laminar##Transport##BaseModel,                                     \
             dictionary                                                         \
         );                                                                     \
                                                                                \
@@ -107,6 +112,27 @@ License
             LES##Transport##BaseModel,                                         \
             dictionary                                                         \
         );                                                                     \
+    }
+
+
+#define makeTemplatedLaminarModel(BaseModel, SType, Type)                      \
+    typedef Foam::SType##Models::Type<Foam::BaseModel>                         \
+        Type##SType##BaseModel;                                                \
+    defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);            \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace SType##Models                                                \
+        {                                                                      \
+            typedef Type<BaseModel> Type##SType##BaseModel;                    \
+                                                                               \
+            addToRunTimeSelectionTable                                         \
+            (                                                                  \
+                SType##BaseModel,                                              \
+                Type##SType##BaseModel,                                        \
+                dictionary                                                     \
+            );                                                                 \
+        }                                                                      \
     }
 
 
