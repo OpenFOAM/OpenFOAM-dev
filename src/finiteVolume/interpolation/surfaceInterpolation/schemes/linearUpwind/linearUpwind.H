@@ -57,7 +57,7 @@ class linearUpwind
     // Private Data
 
         word gradSchemeName_;
-        tmp<fv::gradScheme<Type>> gradScheme_;
+        tmp<fv::gradScheme<scalar>> gradScheme_;
 
 
     // Private Member Functions
@@ -88,7 +88,7 @@ public:
             gradSchemeName_("grad"),
             gradScheme_
             (
-                new fv::gaussGrad<Type>(mesh)
+                new fv::gaussGrad<scalar>(mesh)
             )
         {}
 
@@ -105,7 +105,7 @@ public:
             gradSchemeName_(schemeData),
             gradScheme_
             (
-                fv::gradScheme<Type>::New
+                fv::gradScheme<scalar>::New
                 (
                     mesh,
                     mesh.gradScheme(gradSchemeName_)
@@ -125,7 +125,7 @@ public:
             gradSchemeName_(schemeData),
             gradScheme_
             (
-                fv::gradScheme<Type>::New
+                fv::gradScheme<scalar>::New
                 (
                     mesh,
                     mesh.gradScheme(gradSchemeName_)
@@ -148,7 +148,6 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
-
 };
 
 

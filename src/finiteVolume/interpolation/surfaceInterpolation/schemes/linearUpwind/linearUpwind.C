@@ -65,66 +65,65 @@ Foam::linearUpwind<Type>::correction
     const volVectorField& C = mesh.C();
     const surfaceVectorField& Cf = mesh.Cf();
 
-    tmp
-    <
-        GeometricField
-        <
-            typename outerProduct<vector, Type>::type,
-            fvPatchField,
-            volMesh
-        >
-    > tgradVf = gradScheme_().grad(vf, gradSchemeName_);
-
-    const GeometricField
-    <
-        typename outerProduct<vector, Type>::type,
-        fvPatchField,
-        volMesh
-    >& gradVf = tgradVf();
-
-    forAll(faceFlux, facei)
+    for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
     {
-        label celli = (faceFlux[facei] > 0) ? owner[facei] : neighbour[facei];
-        sfCorr[facei] = (Cf[facei] - C[celli]) & gradVf[celli];
-    }
+        tmp<volVectorField> tgradVf =
+            gradScheme_().grad(vf.component(cmpt), gradSchemeName_);
 
+        const volVectorField& gradVf = tgradVf();
 
-    typename GeometricField<Type, fvsPatchField, surfaceMesh>::
-        Boundary& bSfCorr = sfCorr.boundaryFieldRef();
-
-    forAll(bSfCorr, patchi)
-    {
-        fvsPatchField<Type>& pSfCorr = bSfCorr[patchi];
-
-        if (pSfCorr.coupled())
+        forAll(faceFlux, facei)
         {
-            const labelUList& pOwner =
-                mesh.boundary()[patchi].faceCells();
+            const label celli =
+                (faceFlux[facei] > 0) ? owner[facei] : neighbour[facei];
 
-            const vectorField& pCf = Cf.boundaryField()[patchi];
+            setComponent(sfCorr[facei], cmpt) =
+                (Cf[facei] - C[celli]) & gradVf[celli];
+        }
 
-            const scalarField& pFaceFlux = faceFlux.boundaryField()[patchi];
+        typename GeometricField<Type, fvsPatchField, surfaceMesh>::
+            Boundary& bSfCorr = sfCorr.boundaryFieldRef();
 
-            const Field<typename outerProduct<vector, Type>::type> pGradVfNei
-            (
-                gradVf.boundaryField()[patchi].patchNeighbourField()
-            );
+        forAll(bSfCorr, patchi)
+        {
+            fvsPatchField<Type>& pSfCorr = bSfCorr[patchi];
 
-            // Build the d-vectors
-            vectorField pd(Cf.boundaryField()[patchi].patch().delta());
-
-            forAll(pOwner, facei)
+            if (pSfCorr.coupled())
             {
-                label own = pOwner[facei];
+                const labelUList& pOwner =
+                    mesh.boundary()[patchi].faceCells();
 
-                if (pFaceFlux[facei] > 0)
+                const vectorField& pCf = Cf.boundaryField()[patchi];
+
+                const scalarField& pFaceFlux = faceFlux.boundaryField()[patchi];
+
+                const vectorField pGradVfNei
+                (
+                    gradVf.boundaryField()[patchi].patchNeighbourField()
+                );
+
+                // Build the d-vectors
+                const vectorField pd
+                (
+                    Cf.boundaryField()[patchi].patch().delta()
+                );
+
+                forAll(pOwner, facei)
                 {
-                    pSfCorr[facei] = (pCf[facei] - C[own]) & gradVf[own];
-                }
-                else
-                {
-                    pSfCorr[facei] =
-                        (pCf[facei] - pd[facei] - C[own]) & pGradVfNei[facei];
+                    label own = pOwner[facei];
+
+                    if (pFaceFlux[facei] > 0)
+                    {
+                        setComponent(pSfCorr[facei], cmpt) =
+                            (pCf[facei] - C[own])
+                          & gradVf[own];
+                    }
+                    else
+                    {
+                        setComponent(pSfCorr[facei], cmpt) =
+                            (pCf[facei] - pd[facei] - C[own])
+                          & pGradVfNei[facei];
+                    }
                 }
             }
         }
@@ -136,9 +135,7 @@ Foam::linearUpwind<Type>::correction
 
 namespace Foam
 {
-    //makelimitedSurfaceInterpolationScheme(linearUpwind)
-    makelimitedSurfaceInterpolationTypeScheme(linearUpwind, scalar)
-    makelimitedSurfaceInterpolationTypeScheme(linearUpwind, vector)
+    makelimitedSurfaceInterpolationScheme(linearUpwind)
 }
 
 // ************************************************************************* //
