@@ -37,8 +37,6 @@ volScalarField rho
 );
 
 volScalarField& p = thermo.p();
-const volScalarField& T = thermo.T();
-const volScalarField& psi = thermo.psi();
 
 Info<< "\nReading field U\n" << endl;
 volVectorField U

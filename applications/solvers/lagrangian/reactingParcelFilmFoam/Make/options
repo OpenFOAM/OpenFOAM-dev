@@ -1,4 +1,5 @@
 EXE_INC = \
+    -I. \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I${LIB_SRC}/sampling/lnInclude \
     -I${LIB_SRC}/meshTools/lnInclude \
@@ -24,7 +25,6 @@ EXE_INC = \
     -I$(LIB_SRC)/ODE/lnInclude \
     -I$(LIB_SRC)/combustionModels/lnInclude \
     -I$(FOAM_SOLVERS)/combustion/reactingFoam
-
 
 EXE_LIBS = \
     -lfiniteVolume \
