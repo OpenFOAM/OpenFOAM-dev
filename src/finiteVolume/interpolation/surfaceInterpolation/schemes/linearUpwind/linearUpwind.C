@@ -99,11 +99,8 @@ Foam::linearUpwind<Type>::correction
 
             if (pSfCorr.coupled())
             {
-                const labelUList& pOwner =
-                    mesh.boundary()[patchi].faceCells();
-
+                const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
                 const vectorField& pCf = Cf.boundaryField()[patchi];
-
                 const scalarField& pFaceFlux = faceFlux.boundaryField()[patchi];
 
                 const vectorField pGradVfNei
@@ -151,9 +148,9 @@ Foam::linearUpwind<Foam::vector>::correction
 {
     const fvMesh& mesh = this->mesh();
 
-    tmp<GeometricField<vector, fvsPatchField, surfaceMesh>> tsfCorr
+    tmp<surfaceVectorField> tsfCorr
     (
-        new GeometricField<vector, fvsPatchField, surfaceMesh>
+        new surfaceVectorField
         (
             IOobject
             (
@@ -169,7 +166,7 @@ Foam::linearUpwind<Foam::vector>::correction
         )
     );
 
-    GeometricField<vector, fvsPatchField, surfaceMesh>& sfCorr = tsfCorr.ref();
+    surfaceVectorField& sfCorr = tsfCorr.ref();
 
     const surfaceScalarField& faceFlux = this->faceFlux_;
 
@@ -188,47 +185,30 @@ Foam::linearUpwind<Foam::vector>::correction
         )
     );
 
-    tmp
-    <
-        GeometricField
-        <
-            typename outerProduct<vector, vector>::type,
-            fvPatchField,
-            volMesh
-        >
-    > tgradVf = gradScheme_().grad(vf, gradSchemeName_);
-
-    const GeometricField
-    <
-        typename outerProduct<vector, vector>::type,
-        fvPatchField,
-        volMesh
-    >& gradVf = tgradVf();
+    tmp<volTensorField> tgradVf = gradScheme_().grad(vf, gradSchemeName_);
+    const volTensorField& gradVf = tgradVf();
 
     forAll(faceFlux, facei)
     {
-        label celli = (faceFlux[facei] > 0) ? owner[facei] : neighbour[facei];
+        const label celli =
+            (faceFlux[facei] > 0) ? owner[facei] : neighbour[facei];
         sfCorr[facei] = (Cf[facei] - C[celli]) & gradVf[celli];
     }
 
 
-    typename GeometricField<vector, fvsPatchField, surfaceMesh>::
-        Boundary& bSfCorr = sfCorr.boundaryFieldRef();
+    typename surfaceVectorField::Boundary& bSfCorr = sfCorr.boundaryFieldRef();
 
     forAll(bSfCorr, patchi)
     {
-        fvsPatchField<vector>& pSfCorr = bSfCorr[patchi];
+        fvsPatchVectorField& pSfCorr = bSfCorr[patchi];
 
         if (pSfCorr.coupled())
         {
-            const labelUList& pOwner =
-                mesh.boundary()[patchi].faceCells();
-
+            const labelUList& pOwner = mesh.boundary()[patchi].faceCells();
             const vectorField& pCf = Cf.boundaryField()[patchi];
-
             const scalarField& pFaceFlux = faceFlux.boundaryField()[patchi];
 
-            const Field<typename outerProduct<vector, vector>::type> pGradVfNei
+            const tensorField pGradVfNei
             (
                 gradVf.boundaryField()[patchi].patchNeighbourField()
             );
