@@ -151,7 +151,7 @@ int USERD_set_filenames
     {
         runTime.setTime(timeDirs[n+1], n+1);
 
-        Cloud<passiveParticle> lagrangian(*meshPtr);
+        Cloud<passiveParticle> lagrangian(*meshPtr, cloud::defaultName);
 
         n++;
         if (lagrangian.size())
@@ -177,7 +177,7 @@ int USERD_set_filenames
 
         delete sprayPtr;
 
-        sprayPtr = new Cloud<passiveParticle>(*meshPtr);
+        sprayPtr = new Cloud<passiveParticle>(*meshPtr, cloud::defaultName);
 
         IOobjectList objects(*meshPtr, runTime.timeName(), cloud::prefix);
 

@@ -148,25 +148,6 @@ template<class ParticleType>
 Foam::Cloud<ParticleType>::Cloud
 (
     const polyMesh& pMesh,
-    const bool checkClass
-)
-:
-    cloud(pMesh),
-    polyMesh_(pMesh),
-    labels_(),
-    nTrackingRescues_(),
-    cellWallFacesPtr_()
-{
-    checkPatches();
-
-    initCloud(checkClass);
-}
-
-
-template<class ParticleType>
-Foam::Cloud<ParticleType>::Cloud
-(
-    const polyMesh& pMesh,
     const word& cloudName,
     const bool checkClass
 )

@@ -133,25 +133,9 @@ public:
         Cloud
         (
             const polyMesh& mesh,
-            const IDLList<ParticleType>& particles
-        );
-
-        //- Construct from mesh, cloud name, and a list of particles
-        Cloud
-        (
-            const polyMesh& mesh,
             const word& cloudName,
             const IDLList<ParticleType>& particles
         );
-
-        //- Construct from mesh by reading from file
-        //  Optionally disable checking of class name for post-processing
-        Cloud
-        (
-            const polyMesh& mesh,
-            const bool checkClass = true
-        );
-
 
         //- Construct from mesh by reading from file with given cloud instance
         //  Optionally disable checking of class name for post-processing

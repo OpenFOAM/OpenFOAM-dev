@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ public:
     // Constructors
 
         //- Construct for the given objectRegistry and named cloud instance
-        cloud(const objectRegistry&, const word& cloudName = "");
+        cloud(const objectRegistry&, const word& cloudName = defaultName);
 
 
     //- Destructor

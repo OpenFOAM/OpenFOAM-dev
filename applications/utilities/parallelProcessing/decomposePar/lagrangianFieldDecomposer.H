@@ -101,7 +101,6 @@ public:
             const label cloudI,
             const IOobjectList& lagrangianObjects,
             PtrList<PtrList<IOField<Type>>>& lagrangianFields
-//            PtrList<IOField<Type>>& lagrangianFields
         );
 
         template<class Type>
@@ -113,7 +112,6 @@ public:
             <
                 PtrList<CompactIOField<Field<Type>, Type>>
             >& lagrangianFields
-//            PtrList<CompactIOField<Field<Type>, Type >>& lagrangianFields
         );
 
 

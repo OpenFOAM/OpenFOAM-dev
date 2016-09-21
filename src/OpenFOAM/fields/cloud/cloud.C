@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,10 +30,10 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(cloud, 0);
+    defineTypeNameAndDebug(cloud, 0);
 
-const word cloud::prefix("lagrangian");
-word cloud::defaultName("defaultCloud");
+    const word cloud::prefix("lagrangian");
+    word cloud::defaultName("defaultCloud");
 }
 
 
@@ -45,7 +45,7 @@ Foam::cloud::cloud(const objectRegistry& obr, const word& cloudName)
     (
         IOobject
         (
-            (cloudName.size() ? cloudName : defaultName),
+            cloudName,
             obr.time().timeName(),
             prefix,
             obr,
