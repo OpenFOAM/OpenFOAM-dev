@@ -337,7 +337,7 @@ then
 
     (
         export WM_COLLECT_DIR=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}/${PWD////_}
-        WM_SCHEDULER=wmakeCollect
+        export WM_SCHEDULER=wmakeCollect
         trap '$WM_SCHEDULER -kill' TERM INT
         $WM_SCHEDULER -clean                                                   \
      && wmake -all objects                                                     \
