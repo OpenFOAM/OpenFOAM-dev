@@ -1771,12 +1771,12 @@ Foam::globalMeshData::globalMeshData(const polyMesh& mesh)
     processorPatchIndices_(0),
     processorPatchNeighbours_(0),
     nGlobalPoints_(-1),
-    sharedPointLabelsPtr_(NULL),
-    sharedPointAddrPtr_(NULL),
-    sharedPointGlobalLabelsPtr_(NULL),
+    sharedPointLabelsPtr_(nullptr),
+    sharedPointAddrPtr_(nullptr),
+    sharedPointGlobalLabelsPtr_(nullptr),
     nGlobalEdges_(-1),
-    sharedEdgeLabelsPtr_(NULL),
-    sharedEdgeAddrPtr_(NULL)
+    sharedEdgeLabelsPtr_(nullptr),
+    sharedEdgeAddrPtr_(nullptr)
 {
     updateMesh();
 }
