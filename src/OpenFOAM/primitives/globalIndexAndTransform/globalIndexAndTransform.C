@@ -25,13 +25,14 @@ License
 
 #include "globalIndexAndTransform.H"
 #include "cyclicPolyPatch.H"
+#include "DynamicField.H"
+#include "globalMeshData.H"
 
 // * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(globalIndexAndTransform, 0);
-const label globalIndexAndTransform::base_ = 32;
+    defineTypeNameAndDebug(globalIndexAndTransform, 0);
 }
 
 
@@ -127,10 +128,8 @@ void Foam::globalIndexAndTransform::determineTransforms()
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    transforms_ = List<vectorTensorTransform>(6);
-    scalarField maxTol(6);
-
-    label nextTrans = 0;
+    DynamicList<vectorTensorTransform> localTransforms;
+    DynamicField<scalar> localTols;
 
     label dummyMatch = -1;
 
@@ -170,7 +169,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
                         (
                             matchTransform
                             (
-                                transforms_,
+                                localTransforms,
                                 dummyMatch,
                                 transform,
                                 cpp.matchTolerance(),
@@ -178,15 +177,8 @@ void Foam::globalIndexAndTransform::determineTransforms()
                             ) == 0
                         )
                         {
-                            if (nextTrans == 6)
-                            {
-                                FatalErrorInFunction
-                                    << "More than six unsigned transforms"
-                                    << " detected:" << nl << transforms_
-                                    << exit(FatalError);
-                            }
-                            transforms_[nextTrans] = transform;
-                            maxTol[nextTrans++] = cpp.matchTolerance();
+                            localTransforms.append(transform);
+                            localTols.append(cpp.matchTolerance());
                         }
                     }
                 }
@@ -207,7 +199,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
                         (
                             matchTransform
                             (
-                                transforms_,
+                                localTransforms,
                                 dummyMatch,
                                 transform,
                                 cpp.matchTolerance(),
@@ -215,15 +207,8 @@ void Foam::globalIndexAndTransform::determineTransforms()
                             ) == 0
                         )
                         {
-                            if (nextTrans == 6)
-                            {
-                                FatalErrorInFunction
-                                    << "More than six unsigned transforms"
-                                    << " detected:" << nl << transforms_
-                                    << exit(FatalError);
-                            }
-                            transforms_[nextTrans] = transform;
-                            maxTol[nextTrans++] = cpp.matchTolerance();
+                            localTransforms.append(transform);
+                            localTols.append(cpp.matchTolerance());
                         }
                     }
                 }
@@ -233,21 +218,18 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
 
     // Collect transforms on master
-
     List<List<vectorTensorTransform>> allTransforms(Pstream::nProcs());
-    allTransforms[Pstream::myProcNo()] = transforms_;
+    allTransforms[Pstream::myProcNo()] = localTransforms;
     Pstream::gatherList(allTransforms);
 
     // Collect matching tolerance on master
     List<scalarField> allTols(Pstream::nProcs());
-    allTols[Pstream::myProcNo()] = maxTol;
+    allTols[Pstream::myProcNo()] = localTols;
     Pstream::gatherList(allTols);
 
     if (Pstream::master())
     {
-        transforms_ = List<vectorTensorTransform>(3);
-
-        label nextTrans = 0;
+        localTransforms.clear();
 
         forAll(allTransforms, proci)
         {
@@ -264,45 +246,23 @@ void Foam::globalIndexAndTransform::determineTransforms()
                     (
                         matchTransform
                         (
-                            transforms_,
+                            localTransforms,
                             dummyMatch,
                             transform,
                             allTols[proci][pSVI],
                             true
-                        ) ==  0
+                        ) == 0
                     )
                     {
-                        transforms_[nextTrans++] = transform;
-                    }
-
-                    if (nextTrans > 3)
-                    {
-                        FatalErrorInFunction
-                            << "More than three independent basic "
-                            << "transforms detected:" << nl
-                            << allTransforms
-                            << transforms_
-                            << exit(FatalError);
+                        localTransforms.append(transform);
                     }
                 }
             }
         }
-
-        transforms_.setSize(nextTrans);
     }
 
+    transforms_.transfer(localTransforms);
     Pstream::scatter(transforms_);
-
-    if (transforms_.size() > 3)
-    {
-        WarningInFunction
-            << "More than three independent basic "
-            << "transforms detected:" << nl
-            << transforms_ << nl
-            << "This is not a space filling tiling and will probably"
-            << " give problems for e.g. lagrangian tracking or interpolation"
-            << endl;
-    }
 }
 
 
@@ -351,15 +311,11 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    patchTransformSign_.setSize(patches.size(), Pair<label>(-1, 0));
-
-    label matchTransI = -1;
+    patchTransformSign_.setSize(patches.size(), labelPair(-1, 0));
 
     forAll(patches, patchi)
     {
         const polyPatch& pp = patches[patchi];
-
-        // Pout<< nl << patchi << " " << pp.name() << endl;
 
         // Note: special check for unordered cyclics. These are in fact
         // transform bcs and should probably be split off.
@@ -375,14 +331,11 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
             )
         )
         {
-            const coupledPolyPatch& cpp =
-            refCast<const coupledPolyPatch>(pp);
+            const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 
             if (cpp.separated())
             {
                 const vectorField& sepVecs = cpp.separation();
-
-                // Pout<< "sepVecs " << sepVecs << endl;
 
                 // This loop is implicitly expecting only a single
                 // value for separation()
@@ -394,6 +347,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                     {
                         vectorTensorTransform t(sepVec);
 
+                        label matchTransI;
                         label sign = matchTransform
                         (
                             transforms_,
@@ -402,22 +356,8 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                             cpp.matchTolerance(),
                             true
                         );
-
-                        // Pout<< sign << " " << matchTransI << endl;
-
-                        // List<label> permutation(transforms_.size(), 0);
-
-                        // permutation[matchTransI] = sign;
-
-                        // Pout<< encodeTransformIndex(permutation) << nl
-                        //     << transformPermutations_
-                        //        [
-                        //            encodeTransformIndex(permutation)
-                        //        ]
-                        //     << endl;
-
                         patchTransformSign_[patchi] =
-                            Pair<label>(matchTransI, sign);
+                            labelPair(matchTransI, sign);
                     }
                 }
 
@@ -425,8 +365,6 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
             else if (!cpp.parallel())
             {
                 const tensorField& transTensors = cpp.reverseT();
-
-                // Pout<< "transTensors " << transTensors << endl;
 
                 // This loop is implicitly expecting only a single
                 // value for reverseT()
@@ -438,6 +376,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                     {
                         vectorTensorTransform t(transT);
 
+                        label matchTransI;
                         label sign = matchTransform
                         (
                             transforms_,
@@ -447,37 +386,65 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                             true
                         );
 
-                        // Pout<< sign << " " << matchTransI << endl;
-
-                        // List<label> permutation(transforms_.size(), 0);
-
-                        // permutation[matchTransI] = sign;
-
-                        // Pout<< encodeTransformIndex(permutation) << nl
-                        //     << transformPermutations_
-                        //        [
-                        //            encodeTransformIndex(permutation)
-                        //        ]
-                        //     << endl;
-
                         patchTransformSign_[patchi] =
-                            Pair<label>(matchTransI, sign);
+                            labelPair(matchTransI, sign);
                     }
                 }
             }
         }
     }
+}
 
-    // Pout<< patchTransformSign_ << endl;
+
+bool Foam::globalIndexAndTransform::uniqueTransform
+(
+    const point& pt,
+    labelPairList& trafos,
+    const label patchi,
+    const labelPair& patchTrafo
+) const
+{
+    if (findIndex(trafos, patchTrafo) == -1)
+    {
+        // New transform. Check if already have 3
+        if (trafos.size() == 3)
+        {
+            if (patchi > -1)
+            {
+                WarningInFunction
+                    << "Point " << pt
+                    << " is on patch " << mesh_.boundaryMesh()[patchi].name();
+            }
+            else
+            {
+                WarningInFunction
+                    << "Point " << pt << " is on a coupled patch";
+            }
+            Warning
+                << " with transformation " << patchTrafo
+                << " but also on 3 other patches with transforms "
+                << trafos << nl
+                << "This is not a space filling tiling and might"
+                << " indicate a setup problem and give problems"
+                << " for e.g. lagrangian tracking or interpolation" << endl;
+
+            // Already warned so no need to extend more
+            trafos.clear();
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::globalIndexAndTransform::globalIndexAndTransform
-(
-    const polyMesh& mesh
-)
+Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
 :
     mesh_(mesh),
     transforms_(),
@@ -546,13 +513,102 @@ Foam::globalIndexAndTransform::globalIndexAndTransform
         Info<< "nullTransformIndex:" << nullTransformIndex() << endl
             << endl;
     }
+
+
+    if (transforms_.size() > 0)
+    {
+        // Check that the transforms are space filling : any point
+        // can only use up to three transforms
+
+        const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+
+
+        // 1. Collect transform&sign per point and do local check
+
+        List<labelPairList> pointToTrafos(mesh_.nPoints());
+
+        forAll(patches, patchi)
+        {
+            const polyPatch& pp = patches[patchi];
+
+            const labelPair& transSign = patchTransformSign_[patchi];
+
+            if (transSign.first() > -1)
+            {
+                const labelList& mp = pp.meshPoints();
+                forAll(mp, i)
+                {
+                    labelPairList& trafos = pointToTrafos[mp[i]];
+
+                    bool newTransform = uniqueTransform
+                    (
+                        mesh_.points()[mp[i]],
+                        trafos,
+                        patchi,
+                        transSign
+                    );
+
+                    if (newTransform)
+                    {
+                        trafos.append(transSign);
+                    }
+                }
+            }
+        }
+
+
+        // Synchronise across collocated (= untransformed) points
+        // TBD: there is a big problem in that globalMeshData uses
+        //      globalIndexAndTransform. Triggers recursion.
+        if (false)
+        {
+            const globalMeshData& gmd = mesh_.globalData();
+            const indirectPrimitivePatch& cpp = gmd.coupledPatch();
+            const labelList& meshPoints = cpp.meshPoints();
+            const mapDistribute& slavesMap = gmd.globalCoPointSlavesMap();
+            const labelListList& slaves = gmd.globalCoPointSlaves();
+
+            List<labelPairList> elems(slavesMap.constructSize());
+            forAll(meshPoints, i)
+            {
+                elems[i] = pointToTrafos[meshPoints[i]];
+            }
+
+            // Pull slave data onto master. No need to update transformed slots.
+            slavesMap.distribute(elems, false);
+
+            // Combine master data with slave data
+            forAll(slaves, i)
+            {
+                labelPairList& trafos = elems[i];
+
+                const labelList& slavePoints = slaves[i];
+
+                // Combine master with untransformed slave data
+                forAll(slavePoints, j)
+                {
+                    const labelPairList& slaveTrafos = elems[slavePoints[j]];
+
+                    forAll(slaveTrafos, slaveI)
+                    {
+                        bool newTransform = uniqueTransform
+                        (
+                            mesh_.points()[meshPoints[i]],
+                            trafos,
+                            -1,
+                            slaveTrafos[slaveI]
+                        );
+
+                        if (newTransform)
+                        {
+                            trafos.append(slaveTrafos[slaveI]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::globalIndexAndTransform::~globalIndexAndTransform()
-{}
 
 
 // ************************************************************************* //

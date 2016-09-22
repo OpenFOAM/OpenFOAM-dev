@@ -64,15 +64,15 @@ Foam::label Foam::globalPoints::findSamePoint
     const labelPair& info
 ) const
 {
-    const label proci = globalIndexAndTransform::processor(info);
-    const label index = globalIndexAndTransform::index(info);
+    const label proci = globalTransforms_.processor(info);
+    const label index = globalTransforms_.index(info);
 
     forAll(allInfo, i)
     {
         if
         (
-            globalIndexAndTransform::processor(allInfo[i]) == proci
-         && globalIndexAndTransform::index(allInfo[i]) == index
+            globalTransforms_.processor(allInfo[i]) == proci
+         && globalTransforms_.index(allInfo[i]) == index
         )
         {
             return i;
@@ -98,21 +98,21 @@ Foam::labelPairList Foam::globalPoints::addSendTransform
     forAll(info, i)
     {
         //Pout<< "    adding send transform to" << nl
-        //    << "    proc:" << globalIndexAndTransform::processor(info[i])
+        //    << "    proc:" << globalTransforms_.processor(info[i])
         //    << nl
-        //    << "    index:" << globalIndexAndTransform::index(info[i]) << nl
+        //    << "    index:" << globalTransforms_.index(info[i]) << nl
         //    << "    trafo:"
         //    <<  globalTransforms_.decodeTransformIndex
-        //        (globalIndexAndTransform::transformIndex(info[i]))
+        //        (globalTransforms_.transformIndex(info[i]))
         //    << endl;
 
-        sendInfo[i] = globalIndexAndTransform::encode
+        sendInfo[i] = globalTransforms_.encode
         (
-            globalIndexAndTransform::processor(info[i]),
-            globalIndexAndTransform::index(info[i]),
+            globalTransforms_.processor(info[i]),
+            globalTransforms_.index(info[i]),
             globalTransforms_.addToTransformIndex
             (
-                globalIndexAndTransform::transformIndex(info[i]),
+                globalTransforms_.transformIndex(info[i]),
                 patchi,
                 true,           // patchi is sending side
                 tol             // tolerance for comparison
@@ -204,11 +204,11 @@ bool Foam::globalPoints::mergeInfo
             }
             else
             {
-                label myTransform = globalIndexAndTransform::transformIndex
+                label myTransform = globalTransforms_.transformIndex
                 (
                     myInfo[index]
                 );
-                label nbrTransform = globalIndexAndTransform::transformIndex
+                label nbrTransform = globalTransforms_.transformIndex
                 (
                     nbrInfo[i]
                 );
@@ -294,7 +294,7 @@ bool Foam::globalPoints::mergeInfo
         labelPairList knownInfo
         (
             1,
-            globalIndexAndTransform::encode
+            globalTransforms_.encode
             (
                 Pstream::myProcNo(),
                 localPointi,
@@ -356,9 +356,9 @@ void Foam::globalPoints::printProcPoint
     const labelPair& pointInfo
 ) const
 {
-    label proci = globalIndexAndTransform::processor(pointInfo);
-    label index = globalIndexAndTransform::index(pointInfo);
-    label trafoI = globalIndexAndTransform::transformIndex(pointInfo);
+    label proci = globalTransforms_.processor(pointInfo);
+    label index = globalTransforms_.index(pointInfo);
+    label trafoI = globalTransforms_.transformIndex(pointInfo);
 
     Pout<< "    proc:" << proci;
     Pout<< " localpoint:";
@@ -421,7 +421,7 @@ void Foam::globalPoints::initOwnPoints
                     labelPairList knownInfo
                     (
                         1,
-                        globalIndexAndTransform::encode
+                        globalTransforms_.encode
                         (
                             Pstream::myProcNo(),
                             localPointi,
@@ -457,7 +457,7 @@ void Foam::globalPoints::initOwnPoints
                     labelPairList knownInfo
                     (
                         1,
-                        globalIndexAndTransform::encode
+                        globalTransforms_.encode
                         (
                             Pstream::myProcNo(),
                             localPointi,
@@ -750,8 +750,8 @@ void Foam::globalPoints::remove
             // is in it. This would be an ordinary connection and can be
             // handled by normal face-face connectivity.
 
-            label proc0 = globalIndexAndTransform::processor(pointInfo[0]);
-            label proc1 = globalIndexAndTransform::processor(pointInfo[1]);
+            label proc0 = globalTransforms_.processor(pointInfo[0]);
+            label proc1 = globalTransforms_.processor(pointInfo[1]);
 
             if
             (
@@ -759,14 +759,14 @@ void Foam::globalPoints::remove
                     proc0 == Pstream::myProcNo()
                  && directNeighbours.found
                     (
-                        globalIndexAndTransform::index(pointInfo[0])
+                        globalTransforms_.index(pointInfo[0])
                     )
                 )
              || (
                     proc1 == Pstream::myProcNo()
                  && directNeighbours.found
                     (
-                        globalIndexAndTransform::index(pointInfo[1])
+                        globalTransforms_.index(pointInfo[1])
                     )
                 )
             )
@@ -776,14 +776,14 @@ void Foam::globalPoints::remove
                 {
                     //Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
-                    //       [globalIndexAndTransform::index(pointInfo[0])]
+                    //       [globalTransforms_.index(pointInfo[0])]
                     //    << endl;
                 }
                 else if (proc1 == Pstream::myProcNo())
                 {
                     //Pout<< "Removing direct neighbour:"
                     //    << mesh_.points()
-                    //       [globalIndexAndTransform::index(pointInfo[1])]
+                    //       [globalTransforms_.index(pointInfo[1])]
                     //    << endl;
                 }
             }
@@ -812,11 +812,11 @@ void Foam::globalPoints::remove
             // So this meshPoint will have info of size one only.
             if
             (
-                globalIndexAndTransform::processor(pointInfo[0])
+                globalTransforms_.processor(pointInfo[0])
              != Pstream::myProcNo()
              || !directNeighbours.found
                 (
-                    globalIndexAndTransform::index(pointInfo[0])
+                    globalTransforms_.index(pointInfo[0])
                 )
             )
             {
@@ -995,7 +995,7 @@ void Foam::globalPoints::calculateSharedPoints
     forAllConstIter(Map<label>, meshToProcPoint_, iter)
     {
         labelPairList& pointInfo = procPoints_[iter()];
-        sort(pointInfo, globalIndexAndTransform::less());
+        sort(pointInfo, globalIndexAndTransform::less(globalTransforms_));
     }
 
 
@@ -1017,10 +1017,10 @@ void Foam::globalPoints::calculateSharedPoints
             if
             (
                 (
-                    globalIndexAndTransform::processor(masterInfo)
+                    globalTransforms_.processor(masterInfo)
                  == Pstream::myProcNo()
                 )
-             && (globalIndexAndTransform::index(masterInfo) == iter.key())
+             && (globalTransforms_.index(masterInfo) == iter.key())
             )
             {
                 labelList& pPoints = pointPoints_[iter.key()];
@@ -1035,9 +1035,9 @@ void Foam::globalPoints::calculateSharedPoints
                 for (label i = 1; i < pointInfo.size(); i++)
                 {
                     const labelPair& info = pointInfo[i];
-                    label proci = globalIndexAndTransform::processor(info);
-                    label index = globalIndexAndTransform::index(info);
-                    label transform = globalIndexAndTransform::transformIndex
+                    label proci = globalTransforms_.processor(info);
+                    label index = globalTransforms_.index(info);
+                    label transform = globalTransforms_.transformIndex
                     (
                         info
                     );

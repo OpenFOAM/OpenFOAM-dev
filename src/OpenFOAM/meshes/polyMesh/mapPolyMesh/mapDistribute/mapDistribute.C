@@ -270,10 +270,10 @@ Foam::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label proci = globalIndexAndTransform::processor(elem);
+        label proci = globalTransforms.processor(elem);
         if (proci != Pstream::myProcNo())
         {
-            label index = globalIndexAndTransform::index(elem);
+            label index = globalTransforms.index(elem);
             label nCompact = compactMap[proci].size();
             compactMap[proci].insert(index, nCompact);
         }
@@ -301,7 +301,7 @@ Foam::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label trafoI = globalIndexAndTransform::transformIndex(elem);
+        label trafoI = globalTransforms.transformIndex(elem);
         nPerTransform[trafoI]++;
     }
     // Offset per transformIndex
@@ -321,9 +321,9 @@ Foam::mapDistribute::mapDistribute
     forAll(transformedElements, i)
     {
         labelPair elem = transformedElements[i];
-        label proci = globalIndexAndTransform::processor(elem);
-        label index = globalIndexAndTransform::index(elem);
-        label trafoI = globalIndexAndTransform::transformIndex(elem);
+        label proci = globalTransforms.processor(elem);
+        label index = globalTransforms.index(elem);
+        label trafoI = globalTransforms.transformIndex(elem);
 
         // Get compact index for untransformed element
         label rawElemI =
@@ -378,10 +378,10 @@ Foam::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label proci = globalIndexAndTransform::processor(elems[i]);
+            label proci = globalTransforms.processor(elems[i]);
             if (proci != Pstream::myProcNo())
             {
-                label index = globalIndexAndTransform::index(elems[i]);
+                label index = globalTransforms.index(elems[i]);
                 label nCompact = compactMap[proci].size();
                 compactMap[proci].insert(index, nCompact);
             }
@@ -413,7 +413,7 @@ Foam::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label trafoI = globalIndexAndTransform::transformIndex(elems[i]);
+            label trafoI = globalTransforms.transformIndex(elems[i]);
             nPerTransform[trafoI]++;
         }
     }
@@ -438,9 +438,9 @@ Foam::mapDistribute::mapDistribute
 
         forAll(elems, i)
         {
-            label proci = globalIndexAndTransform::processor(elems[i]);
-            label index = globalIndexAndTransform::index(elems[i]);
-            label trafoI = globalIndexAndTransform::transformIndex(elems[i]);
+            label proci = globalTransforms.processor(elems[i]);
+            label index = globalTransforms.index(elems[i]);
+            label trafoI = globalTransforms.transformIndex(elems[i]);
 
             // Get compact index for untransformed element
             label rawElemI =

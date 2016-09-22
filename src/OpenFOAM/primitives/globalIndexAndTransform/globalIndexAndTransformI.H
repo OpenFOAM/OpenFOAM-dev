@@ -33,8 +33,8 @@ bool Foam::globalIndexAndTransform::less::operator()
     const labelPair& b
 ) const
 {
-    label procA = globalIndexAndTransform::processor(a);
-    label procB = globalIndexAndTransform::processor(b);
+    label procA = gi_.processor(a);
+    label procB = gi_.processor(b);
 
     if (procA < procB)
     {
@@ -47,8 +47,8 @@ bool Foam::globalIndexAndTransform::less::operator()
     else
     {
         // Equal proc.
-        label indexA = globalIndexAndTransform::index(a);
-        label indexB = globalIndexAndTransform::index(b);
+        label indexA = gi_.index(a);
+        label indexB = gi_.index(b);
 
         if (indexA < indexB)
         {
@@ -61,8 +61,8 @@ bool Foam::globalIndexAndTransform::less::operator()
         else
         {
             // Equal index
-            label transformA = globalIndexAndTransform::transformIndex(a);
-            label transformB = globalIndexAndTransform::transformIndex(b);
+            label transformA = gi_.transformIndex(a);
+            label transformB = gi_.transformIndex(b);
 
             return transformA < transformB;
         }
@@ -72,7 +72,7 @@ bool Foam::globalIndexAndTransform::less::operator()
 
 Foam::label Foam::globalIndexAndTransform::encodeTransformIndex
 (
-    const List<label>& permutationIndices
+    const labelList& permutationIndices
 ) const
 {
     if (permutationIndices.size() != transforms_.size())
@@ -106,67 +106,19 @@ Foam::label Foam::globalIndexAndTransform::encodeTransformIndex
 }
 
 
-Foam::label Foam::globalIndexAndTransform::encodeTransformIndex
-(
-    const FixedList<Foam::label, 3>& permutation
-) const
-{
-    if (nIndependentTransforms() == 0)
-    {
-        return 0;
-    }
-    if (nIndependentTransforms() == 1)
-    {
-        return permutation[0]+1;
-    }
-    else if (nIndependentTransforms() == 2)
-    {
-        return (permutation[1]+1)*3 + (permutation[0]+1);
-    }
-    else
-    {
-        return
-            (permutation[2]+1)*9
-          + (permutation[1]+1)*3
-          + (permutation[0]+1);
-    }
-}
-
-
-Foam::FixedList<Foam::label, 3>
-Foam::globalIndexAndTransform::decodeTransformIndex
+Foam::labelList Foam::globalIndexAndTransform::decodeTransformIndex
 (
     const label transformIndex
 ) const
 {
-    FixedList<label, 3> permutation(label(0));
+    labelList permutation(transforms_.size(), 0);
 
     label t = transformIndex;
-    if (nIndependentTransforms() > 0)
+    forAll(permutation, i)
     {
-        permutation[0] = (t%3)-1;
-        if (nIndependentTransforms() > 1)
-        {
-            t /= 3;
-            permutation[1] = (t%3)-1;
-            if (nIndependentTransforms() > 2)
-            {
-                t /= 3;
-                permutation[2] = (t%3)-1;
-            }
-        }
+        permutation[i] = (t%3)-1;
+        t /= 3;
     }
-
-    #ifdef FULLDEBUG
-    t /= 3;
-    if (t != 0)
-    {
-        FatalErrorInFunction
-            << "transformIndex : " << transformIndex
-            << " has more than 3 fields."
-            << abort(FatalError);
-    }
-    #endif
 
     return permutation;
 }
@@ -180,15 +132,28 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
     const scalar tol
 ) const
 {
-    const Pair<label>& transSign = patchTransformSign_[patchi];
+    const labelPair& transSign = patchTransformSign_[patchi];
 
     label matchTransI = transSign.first();
 
-    // Hardcoded for max 3 transforms only!
-
-    if (matchTransI > -1 && matchTransI < 3)
+    if (matchTransI >= transforms_.size())
     {
-        FixedList<label, 3> permutation = decodeTransformIndex(transformIndex);
+        FatalErrorInFunction
+            << "patch:" << mesh_.boundaryMesh()[patchi].name()
+            << " transform:" << matchTransI
+            << " out of possible transforms:" << transforms_
+            << exit(FatalError);
+        return labelMin;
+    }
+    else if (matchTransI == -1)
+    {
+        // No additional transformation for this patch
+        return transformIndex;
+    }
+    else
+    {
+        // Decode current set of transforms
+        labelList permutation(decodeTransformIndex(transformIndex));
 
 
         // Add patch transform
@@ -267,10 +232,6 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
 
         return encodeTransformIndex(permutation);
     }
-    else
-    {
-        return transformIndex;
-    }
 }
 
 
@@ -287,7 +248,7 @@ Foam::label Foam::globalIndexAndTransform::minimumTransformIndex
 
 
     // Count number of transforms
-    FixedList<label, 3> permutation0 = decodeTransformIndex(transformIndex0);
+    labelList permutation0(decodeTransformIndex(transformIndex0));
     label n0 = 0;
     forAll(permutation0, i)
     {
@@ -297,7 +258,7 @@ Foam::label Foam::globalIndexAndTransform::minimumTransformIndex
         }
     }
 
-    FixedList<label, 3> permutation1 = decodeTransformIndex(transformIndex1);
+    labelList permutation1(decodeTransformIndex(transformIndex1));
     label n1 = 0;
     forAll(permutation1, i)
     {
@@ -324,8 +285,8 @@ Foam::label Foam::globalIndexAndTransform::subtractTransformIndex
     const label transformIndex1
 ) const
 {
-    FixedList<label, 3> permutation0 = decodeTransformIndex(transformIndex0);
-    FixedList<label, 3> permutation1 = decodeTransformIndex(transformIndex1);
+    labelList permutation0(decodeTransformIndex(transformIndex0));
+    labelList permutation1(decodeTransformIndex(transformIndex1));
 
     forAll(permutation0, i)
     {
@@ -340,7 +301,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
 (
     const label index,
     const label transformIndex
-)
+) const
 {
     return encode(Pstream::myProcNo(), index, transformIndex);
 }
@@ -351,21 +312,22 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
     const label proci,
     const label index,
     const label transformIndex
-)
+) const
 {
-    if (transformIndex < 0 || transformIndex >= base_)
+    if (transformIndex < 0 || transformIndex >= transformPermutations_.size())
     {
         FatalErrorInFunction
             << "TransformIndex " << transformIndex
             << " is outside allowed range of 0 to "
-            << base_ - 1
+            << transformPermutations_.size() - 1
             << abort(FatalError);
     }
 
-    if (proci > labelMax/base_)
+    if (proci > labelMax/transformPermutations_.size())
     {
         FatalErrorInFunction
-            << "Overflow : encoding processor " << proci << " in base " << base_
+            << "Overflow : encoding processor " << proci
+            << " in base " << transformPermutations_.size()
             << " exceeds capability of label (" << labelMax
             << "). Please recompile with larger datatype for label."
             << exit(FatalError);
@@ -374,7 +336,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
     return labelPair
     (
         index,
-        transformIndex + proci*base_
+        transformIndex + proci*transformPermutations_.size()
     );
 }
 
@@ -382,7 +344,7 @@ Foam::labelPair Foam::globalIndexAndTransform::encode
 Foam::label Foam::globalIndexAndTransform::index
 (
     const labelPair& globalIAndTransform
-)
+) const
 {
     return globalIAndTransform.first();
 }
@@ -391,18 +353,18 @@ Foam::label Foam::globalIndexAndTransform::index
 Foam::label Foam::globalIndexAndTransform::processor
 (
     const labelPair& globalIAndTransform
-)
+) const
 {
-    return globalIAndTransform.second()/base_;
+    return globalIAndTransform.second()/transformPermutations_.size();
 }
 
 
 Foam::label Foam::globalIndexAndTransform::transformIndex
 (
     const labelPair& globalIAndTransform
-)
+) const
 {
-    return globalIAndTransform.second() % base_;
+    return globalIAndTransform.second()%transformPermutations_.size();
 }
 
 
@@ -432,7 +394,7 @@ Foam::label Foam::globalIndexAndTransform::nullTransformIndex() const
 }
 
 
-const Foam::List<Foam::Pair<Foam::label>>&
+const Foam::labelPairList&
 Foam::globalIndexAndTransform::patchTransformSign() const
 {
     return patchTransformSign_;
@@ -453,7 +415,7 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
     const labelHashSet& patchis
 ) const
 {
-    List<label> permutation(transforms_.size(), 0);
+    labelList permutation(transforms_.size(), 0);
 
     labelList selectedTransformIs(0);
 
@@ -466,7 +428,7 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
     {
         label patchi = iter.key();
 
-        const Pair<label>& transSign = patchTransformSign_[patchi];
+        const labelPair& transSign = patchTransformSign_[patchi];
 
         label matchTransI = transSign.first();
 
@@ -520,7 +482,7 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
         }
         case 2:
         {
-            List<label> tempPermutation = permutation;
+            labelList tempPermutation = permutation;
 
             label a = 0;
             label b = 1;
@@ -565,7 +527,7 @@ Foam::labelList Foam::globalIndexAndTransform::transformIndicesForPatches
         }
         case 3:
         {
-            List<label> tempPermutation = permutation;
+            labelList tempPermutation = permutation;
 
             tempPermutation[0] = 0;
             tempPermutation[1] = 0;

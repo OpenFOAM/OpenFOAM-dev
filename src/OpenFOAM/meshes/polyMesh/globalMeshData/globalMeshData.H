@@ -72,7 +72,6 @@ See also
     mapDistribute
     globalIndexAndTransform
 
-
 SourceFiles
     globalMeshData.C
     globalMeshDataTemplates.C
