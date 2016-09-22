@@ -39,8 +39,8 @@ License
 
 #define makeChemistrySolverType(SS, Comp, Thermo)                              \
                                                                                \
-    typedef SS<chemistryModel<Comp, Thermo> > SS##Comp##Thermo;                \
-    typedef SS<TDACChemistryModel<Comp, Thermo> > TDAC##SS##Comp##Thermo;      \
+    typedef SS<chemistryModel<Comp, Thermo>> SS##Comp##Thermo;                 \
+    typedef SS<TDACChemistryModel<Comp, Thermo>> TDAC##SS##Comp##Thermo;       \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
