@@ -29,6 +29,25 @@ License
 
 void Foam::blockDescriptor::check(const Istream& is)
 {
+    forAll(blockShape_, pi)
+    {
+        if (blockShape_[pi] < 0)
+        {
+            FatalIOErrorInFunction(is)
+                << "Negative point label " << blockShape_[pi]
+                << " in block " << *this
+                << exit(FatalIOError);
+        }
+        else if (blockShape_[pi] >= blockPointField_.size())
+        {
+            FatalIOErrorInFunction(is)
+                << "Point label " << blockShape_[pi]
+                << " out of range 0.." << blockPointField_.size() - 1
+                << " in block " << *this
+                << exit(FatalIOError);
+        }
+    }
+
     const point blockCentre(blockShape_.centre(blockPointField_));
     const faceList faces(blockShape_.faces());
 

@@ -29,8 +29,79 @@ License
 #include "emptyPolyPatch.H"
 #include "cyclicPolyPatch.H"
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::blockMesh::readPatches
+template<class Source>
+void Foam::blockMesh::checkPatchLabels
+(
+    const Source& source,
+    const word& patchName,
+    const pointField& points,
+    faceList& patchFaces
+) const
+{
+    forAll(patchFaces, facei)
+    {
+        face& f = patchFaces[facei];
+
+        // Replace (<block> <face>) face description
+        // with the corresponding block face
+        if (f.size() == 2)
+        {
+            const label bi = f[0];
+            const label fi = f[1];
+
+            if (bi >= size())
+            {
+                FatalIOErrorInFunction(source)
+                    << "Block index out of range for patch face " << f << nl
+                    << "    Number of blocks = " << size()
+                    << ", index = " << f[0] << nl
+                    << "    on patch " << patchName << ", face " << facei
+                    << exit(FatalIOError);
+            }
+            else if (fi >= operator[](bi).blockShape().faces().size())
+            {
+                FatalIOErrorInFunction(source)
+                    << "Block face index out of range for patch face " << f
+                    << nl
+                    << "    Number of block faces = "
+                    << operator[](bi).blockShape().faces().size()
+                    << ", index = " << f[1] << nl
+                    << "    on patch " << patchName << ", face " << facei
+                    << exit(FatalIOError);
+            }
+            else
+            {
+                f = operator[](bi).blockShape().faces()[fi];
+            }
+        }
+        else
+        {
+            forAll(f, fp)
+            {
+                if (f[fp] < 0)
+                {
+                    FatalIOErrorInFunction(source)
+                        << "Negative point label " << f[fp] << nl
+                        << "    on patch " << patchName << ", face " << facei
+                        << exit(FatalIOError);
+                }
+                else if (f[fp] >= points.size())
+                {
+                    FatalIOErrorInFunction(source)
+                        << "Point label " << f[fp]
+                        << " out of range 0.." << points.size() - 1 << nl
+                        << "    on patch " << patchName << ", face " << facei
+                        << exit(FatalIOError);
+                }
+            }
+        }
+    }
+}
+
+
+void Foam::blockMesh::readPatches
 (
     const dictionary& meshDescription,
     faceListList& tmpBlocksPatches,
@@ -39,8 +110,6 @@ bool Foam::blockMesh::readPatches
     wordList& nbrPatchNames
 )
 {
-    bool topologyOK = true;
-
     ITstream& patchStream(meshDescription.lookup("patches"));
 
     // read number of patches in mesh
@@ -94,22 +163,22 @@ bool Foam::blockMesh::readPatches
         patchStream >> tmpBlocksPatches[nPatches];
 
 
-        // Catch multiple patches asap.
+        // Check for multiple patches
         for (label i = 0; i < nPatches; i++)
         {
             if (patchNames[nPatches] == patchNames[i])
             {
-                FatalErrorInFunction
+                FatalIOErrorInFunction(patchStream)
                     << "Duplicate patch " << patchNames[nPatches]
                     << " at line " << patchStream.lineNumber()
-                    << ". Exiting !" << nl
-                    << exit(FatalError);
+                    << exit(FatalIOError);
             }
         }
 
-        topologyOK = topologyOK && patchLabelsOK
+        checkPatchLabels
         (
-            nPatches,
+            patchStream,
+            patchNames[nPatches],
             blockPointField_,
             tmpBlocksPatches[nPatches]
         );
@@ -124,13 +193,13 @@ bool Foam::blockMesh::readPatches
             word halfA = patchNames[nPatches-1] + "_half0";
             word halfB = patchNames[nPatches-1] + "_half1";
 
-            WarningInFunction
+            FatalIOErrorInFunction(patchStream)
                 << "Old-style cyclic definition."
                 << " Splitting patch "
                 << patchNames[nPatches-1] << " into two halves "
                 << halfA << " and " << halfB << endl
                 << "    Alternatively use new 'boundary' dictionary syntax."
-                << endl;
+                << exit(FatalIOError);
 
             // Add extra patch
             if (tmpBlocksPatches.size() <= nPatches)
@@ -152,10 +221,10 @@ bool Foam::blockMesh::readPatches
             // Split faces
             if ((tmpBlocksPatches[nPatches-1].size() % 2) != 0)
             {
-                FatalErrorInFunction
+                FatalIOErrorInFunction(patchStream)
                     << "Size of cyclic faces is not a multiple of 2 :"
                     << tmpBlocksPatches[nPatches-1]
-                    << exit(FatalError);
+                    << exit(FatalIOError);
             }
             label sz = tmpBlocksPatches[nPatches-1].size()/2;
             faceList unsplitFaces(tmpBlocksPatches[nPatches-1], true);
@@ -177,12 +246,10 @@ bool Foam::blockMesh::readPatches
 
     // Read end of blocks
     patchStream.readEnd("patches");
-
-    return topologyOK;
 }
 
 
-bool Foam::blockMesh::readBoundary
+void Foam::blockMesh::readBoundary
 (
     const dictionary& meshDescription,
     wordList& patchNames,
@@ -190,8 +257,6 @@ bool Foam::blockMesh::readBoundary
     PtrList<dictionary>& patchDicts
 )
 {
-    bool topologyOK = true;
-
     // Read like boundary file
     const PtrList<entry> patchesInfo
     (
@@ -210,24 +275,26 @@ bool Foam::blockMesh::readBoundary
         {
             FatalIOErrorInFunction(meshDescription)
                 << "Entry " << patchInfo << " in boundary section is not a"
-                << " valid dictionary." << exit(FatalIOError);
+                << " valid dictionary."
+                << exit(FatalIOError);
         }
 
         patchNames[patchi] = patchInfo.keyword();
-        // Construct dictionary
+
+        // Construct patch dictionary
         patchDicts.set(patchi, new dictionary(patchInfo.dict()));
+
         // Read block faces
         patchDicts[patchi].lookup("faces") >> tmpBlocksPatches[patchi];
 
-        topologyOK = topologyOK && patchLabelsOK
+        checkPatchLabels
         (
-            patchi,
+            patchInfo.dict(),
+            patchNames[patchi],
             blockPointField_,
             tmpBlocksPatches[patchi]
         );
     }
-
-    return topologyOK;
 }
 
 
@@ -241,14 +308,7 @@ void Foam::blockMesh::createCellShapes
     tmpBlockCells.setSize(blocks.size());
     forAll(blocks, blockI)
     {
-        tmpBlockCells[blockI] = cellShape(blocks[blockI].blockShape());
-
-        if (tmpBlockCells[blockI].mag(blockPointField_) < 0.0)
-        {
-            WarningInFunction
-                << "negative volume block : " << blockI
-                << ", probably defined inside-out" << endl;
-        }
+        tmpBlockCells[blockI] = blocks[blockI].blockShape();
     }
 }
 
@@ -261,8 +321,6 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     const word& regionName
 )
 {
-    bool topologyOK = true;
-
     blockList& blocks = *this;
 
     word defaultPatchName = "defaultFaces";
@@ -411,13 +469,6 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 )
             );
 
-            topologyOK = topologyOK && blockLabelsOK
-            (
-                nBlocks,
-                blockPointField_,
-                blocks[nBlocks].blockShape()
-            );
-
             nBlocks++;
 
             is >> lastToken;
@@ -448,7 +499,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         wordList patchTypes;
         wordList nbrPatchNames;
 
-        topologyOK = topologyOK && readPatches
+        readPatches
         (
             meshDescription,
             tmpBlocksPatches,
@@ -456,13 +507,6 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             patchTypes,
             nbrPatchNames
         );
-
-        if (!topologyOK)
-        {
-            FatalErrorInFunction
-                << "Cannot create mesh due to errors in topology, exiting !"
-                << nl << exit(FatalError);
-        }
 
         Info<< nl << "Creating block mesh topology" << endl;
 
@@ -504,14 +548,12 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             }
             else if (word(dict.lookup("type")) != patchTypes[patchi])
             {
-                IOWarningInFunction
-                (
-                    meshDescription
-                )   << "For patch " << patchNames[patchi]
+                FatalIOErrorInFunction(meshDescription)
+                    << "For patch " << patchNames[patchi]
                     << " overriding type '" << patchTypes[patchi]
                     << "' with '" << word(dict.lookup("type"))
                     << "' (read from boundary file)"
-                    << endl;
+                    << exit(FatalIOError);
             }
 
             // Override neighbourpatch name
@@ -520,7 +562,6 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 dict.set("neighbourPatch", nbrPatchNames[patchi]);
             }
         }
-
 
         blockMeshPtr = new polyMesh
         (
@@ -548,7 +589,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         faceListList tmpBlocksPatches;
         PtrList<dictionary> patchDicts;
 
-        topologyOK = topologyOK && readBoundary
+        readBoundary
         (
             meshDescription,
             patchNames,
@@ -556,20 +597,10 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             patchDicts
         );
 
-        if (!topologyOK)
-        {
-            FatalErrorInFunction
-                << "Cannot create mesh due to errors in topology, exiting !"
-                << nl << exit(FatalError);
-        }
-
-
         Info<< nl << "Creating block mesh topology" << endl;
 
         cellShapeList tmpBlockCells(blocks.size());
         createCellShapes(tmpBlockCells);
-
-        // Extract
 
         blockMeshPtr = new polyMesh
         (
@@ -592,7 +623,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         );
     }
 
-    checkBlockMesh(*blockMeshPtr);
+    check(*blockMeshPtr);
 
     return blockMeshPtr;
 }

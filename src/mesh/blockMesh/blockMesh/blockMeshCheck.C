@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::blockMesh::checkBlockMesh(const polyMesh& bm) const
+void Foam::blockMesh::check(const polyMesh& bm) const
 {
     if (verboseOutput)
     {
@@ -143,84 +143,6 @@ void Foam::blockMesh::checkBlockMesh(const polyMesh& bm) const
             << "Block mesh topology incorrect, stopping mesh generation!"
             << exit(FatalError);
     }
-}
-
-
-bool Foam::blockMesh::blockLabelsOK
-(
-    const label blockLabel,
-    const pointField& points,
-    const cellShape& blockShape
-) const
-{
-    bool ok = true;
-
-    forAll(blockShape, blockI)
-    {
-        if (blockShape[blockI] < 0)
-        {
-            ok = false;
-
-            WarningInFunction
-                << "out-of-range point label " << blockShape[blockI]
-                << " (min = 0"
-                << ") in block " << blockLabel << endl;
-        }
-        else if (blockShape[blockI] >= points.size())
-        {
-            ok = false;
-
-            WarningInFunction
-                << "out-of-range point label " << blockShape[blockI]
-                << " (max = " << points.size() - 1
-                << ") in block " << blockLabel << endl;
-        }
-    }
-
-    return ok;
-}
-
-
-bool Foam::blockMesh::patchLabelsOK
-(
-    const label patchLabel,
-    const pointField& points,
-    const faceList& patchFaces
-) const
-{
-    bool ok = true;
-
-    forAll(patchFaces, facei)
-    {
-        const labelList& f = patchFaces[facei];
-
-        forAll(f, fp)
-        {
-            if (f[fp] < 0)
-            {
-                ok = false;
-
-                WarningInFunction
-                    << "out-of-range point label " << f[fp]
-                    << " (min = 0"
-                    << ") on patch " << patchLabel
-                    << ", face " << facei << endl;
-            }
-            else if (f[fp] >= points.size())
-            {
-                ok = false;
-
-                WarningInFunction
-                    << "out-of-range point label " << f[fp]
-                    << " (max = " << points.size() - 1
-                    << ") on patch " << patchLabel
-                    << ", face " << facei << endl;
-
-            }
-        }
-    }
-
-    return ok;
 }
 
 

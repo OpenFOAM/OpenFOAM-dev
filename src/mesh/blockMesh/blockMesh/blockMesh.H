@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,21 +97,16 @@ class blockMesh
 
     // Private Member Functions
 
-        bool blockLabelsOK
+        template<class Source>
+        void checkPatchLabels
         (
-            const label blockLabel,
+            const Source& source,
+            const word& patchName,
             const pointField& points,
-            const cellShape& blockShape
+            faceList& patchShapes
         ) const;
 
-        bool patchLabelsOK
-        (
-            const label patchLabel,
-            const pointField& points,
-            const faceList& patchShapes
-        ) const;
-
-        bool readPatches
+        void readPatches
         (
             const dictionary& meshDescription,
             faceListList& tmpBlocksPatches,
@@ -120,7 +115,7 @@ class blockMesh
             wordList& nbrPatchNames
         );
 
-        bool readBoundary
+        void readBoundary
         (
             const dictionary& meshDescription,
             wordList& patchNames,
@@ -131,7 +126,8 @@ class blockMesh
         void createCellShapes(cellShapeList& tmpBlockCells);
 
         polyMesh* createTopology(const IOdictionary&, const word& regionName);
-        void checkBlockMesh(const polyMesh&) const;
+
+        void check(const polyMesh&) const;
 
         //- Determine the merge info and the final number of cells/points
         void calcMergeInfo();
