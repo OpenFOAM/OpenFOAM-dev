@@ -28,6 +28,21 @@ Description
     Takes the description of the block and the list of curved edges and
     creates a list of points on edges together with the weighting factors
 
+    For a given block, the correspondence between the ordering of vertex labels
+    and face labels is shown below.  For vertex numbering in the sequence 0 to 7
+    (block, centre): faces 0 (f0) and 1 are left and right, respectively; faces
+    2 and 3 are bottom and top; and faces 4 and 5 are front the back:
+    \verbatim
+             4 ---- 5
+        f3   |\     |\   f5
+         |   | 7 ---- 6    \
+         |   0 |--- 1 |     \
+         |    \|     \|      f4
+        f2     3 ---- 2
+
+             f0 ----- f1
+     \endverbatim
+
 SourceFiles
     blockDescriptor.C
     blockDescriptorEdges.C
