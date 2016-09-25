@@ -70,6 +70,38 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
 template<class Type>
 Foam::processorFvPatchField<Type>::processorFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
+    procPatch_(refCast<const processorFvPatch>(p)),
+    sendBuf_(0),
+    receiveBuf_(0),
+    outstandingSendRequest_(-1),
+    outstandingRecvRequest_(-1),
+    scalarSendBuf_(0),
+    scalarReceiveBuf_(0)
+{
+    if (!isA<processorFvPatch>(p))
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "\n    patch type '" << p.type()
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalIOError);
+    }
+}
+
+
+template<class Type>
+Foam::processorFvPatchField<Type>::processorFvPatchField
+(
     const processorFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -99,38 +131,6 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
         FatalErrorInFunction
             << "On patch " << procPatch_.name() << " outstanding request."
             << abort(FatalError);
-    }
-}
-
-
-template<class Type>
-Foam::processorFvPatchField<Type>::processorFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    coupledFvPatchField<Type>(p, iF, dict),
-    procPatch_(refCast<const processorFvPatch>(p)),
-    sendBuf_(0),
-    receiveBuf_(0),
-    outstandingSendRequest_(-1),
-    outstandingRecvRequest_(-1),
-    scalarSendBuf_(0),
-    scalarReceiveBuf_(0)
-{
-    if (!isA<processorFvPatch>(p))
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "\n    patch type '" << p.type()
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
-            << exit(FatalIOError);
     }
 }
 
