@@ -96,6 +96,12 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
             << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
+
+    // If the value is not supplied set to the internal field
+    if (!dict.found("value"))
+    {
+        fvPatchField<Type>::operator=(this->patchInternalField());
+    }
 }
 
 
