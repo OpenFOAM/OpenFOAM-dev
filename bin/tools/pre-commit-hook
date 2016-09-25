@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -48,11 +48,14 @@
 #     test the specified files/directories for standards conformance.
 #
 #------------------------------------------------------------------------------
+
 hookName="pre-commit"
+headerSeparator="-----------------------------------"
+
 die()
 {
     echo "$hookName hook failure" 1>&2
-    echo '-----------------------------------' 1>&2
+    echo $headerSeparator 1>&2
     echo '' 1>&2
     echo "$@" 1>&2
     echo '' 1>&2
@@ -105,7 +108,7 @@ dieOnBadFiles()
     if [ -n "$badFiles" ]
     then
         echo "$hookName hook failure" 1>&2
-        echo '-----------------------------------' 1>&2
+        echo $headerSeparator 1>&2
         echo "$@" 1>&2
         echo '' 1>&2
         echo "File(s):" 1>&2
@@ -268,6 +271,49 @@ checkLineLengthNonDirective()
 
 
 #
+# check for non-standard code patterns
+#
+checkNonStandardCodePatterns()
+{
+    echo "$hookName: checking for non-standard code ..." 1>&2
+
+    scope=$(gitScope $@)
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.[CH] files
+        case "$f" in
+        (*.[CH])
+            # Directly report the incorrect markers
+            git grep -n --color \
+                -e '> >' -e 'NULL' \
+                $scope"$f"
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "$(cat<<MESSAGE
+Please revise the files reported below for the following non-standard code:
+
+  1. Spaced ending of multi-level template parameters are not allowed, such as:
+
+      List<List<scalar> >
+
+    which instead should be:
+
+      List<List<scalar>>
+
+  2. The use of the 'NULL' macro should be replaced by 'nullptr'
+
+$headerSeparator
+MESSAGE
+    )"
+}
+
+
+#
 # check that OpenFOAM Foundation copyright is current
 #
 checkCopyright()
@@ -321,6 +367,9 @@ checkIllegalCode
 
 # ensure code conforms to 80 columns max
 checkLineLengthNonDirective
+
+# check for non-standard code patterns
+checkNonStandardCodePatterns
 
 checkCopyright
 
