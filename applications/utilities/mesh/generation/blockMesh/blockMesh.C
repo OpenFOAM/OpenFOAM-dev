@@ -83,6 +83,27 @@ int main(int argc, char *argv[])
         "specify alternative dictionary for the blockMesh description"
     );
 
+    argList::addNote
+    (
+        "Block description\n"
+        "\n"
+        "  For a given block, the correspondence between the ordering of\n"
+        "  vertex labels and face labels is shown below.\n"
+        "  For vertex numbering in the sequence 0 to 7 (block, centre):\n"
+        "    faces 0 (f0) and 1 are left and right, respectively;\n"
+        "    faces 2 and 3 are bottom and top;\n"
+        "    and faces 4 and 5 are front the back:\n"
+        "\n"
+        "           4 ---- 5\n"
+        "      f3   |\\     |\\   f5\n"
+        "      |    | 7 ---- 6   \\\n"
+        "      |    0 |--- 1 |    \\\n"
+        "      |     \\|     \\|    f4\n"
+        "      f2     3 ---- 2\n"
+        "\n"
+        "            f0 ----- f1\n"
+    );
+
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
