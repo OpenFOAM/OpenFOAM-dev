@@ -50,7 +50,7 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict, false),
     tau0_(dict.lookupOrDefault<vector>("tau", Zero))
 {
     fvPatchField<vector>::operator=(patchInternalField());

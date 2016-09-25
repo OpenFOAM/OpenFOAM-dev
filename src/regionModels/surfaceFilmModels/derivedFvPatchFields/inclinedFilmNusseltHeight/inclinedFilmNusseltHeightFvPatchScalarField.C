@@ -68,13 +68,11 @@ inclinedFilmNusseltHeightFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict),
     GammaMean_(Function1<scalar>::New("GammaMean", dict)),
     a_(Function1<scalar>::New("a", dict)),
     omega_(Function1<scalar>::New("omega", dict))
-{
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
-}
+{}
 
 
 Foam::inclinedFilmNusseltHeightFvPatchScalarField::

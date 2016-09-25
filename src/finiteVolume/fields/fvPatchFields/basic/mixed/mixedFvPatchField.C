@@ -49,7 +49,7 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
     const dictionary& dict
 )
 :
-    fvPatchField<Type>(p, iF, dict),
+    fvPatchField<Type>(p, iF, dict, false),
     refValue_("refValue", dict, p.size()),
     refGrad_("refGradient", dict, p.size()),
     valueFraction_("valueFraction", dict, p.size())

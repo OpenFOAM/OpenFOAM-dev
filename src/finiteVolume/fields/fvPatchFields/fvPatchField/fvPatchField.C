@@ -114,24 +114,23 @@ Foam::fvPatchField<Type>::fvPatchField
     manipulatedMatrix_(false),
     patchType_(dict.lookupOrDefault<word>("patchType", word::null))
 {
-    if (dict.found("value"))
+    if (valueRequired)
     {
-        Field<Type>::operator=
-        (
-            Field<Type>("value", dict, p.size())
-        );
-    }
-    else if (!valueRequired)
-    {
-        Field<Type>::operator=(Zero);
-    }
-    else
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Essential entry 'value' missing"
-            << exit(FatalIOError);
+        if (dict.found("value"))
+        {
+            Field<Type>::operator=
+            (
+                Field<Type>("value", dict, p.size())
+            );
+        }
+        else
+        {
+            FatalIOErrorInFunction
+            (
+                dict
+            )   << "Essential entry 'value' missing"
+                << exit(FatalIOError);
+        }
     }
 }
 

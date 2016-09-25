@@ -55,10 +55,11 @@ Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool valueRequired
 )
 :
-    fvPatchField<Type>(p, iF, dict, true)
+    fvPatchField<Type>(p, iF, dict, valueRequired)
 {}
 
 

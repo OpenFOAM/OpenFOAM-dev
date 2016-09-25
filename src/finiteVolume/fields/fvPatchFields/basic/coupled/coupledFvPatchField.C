@@ -71,11 +71,12 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool valueRequired
 )
 :
     LduInterfaceField<Type>(refCast<const lduInterface>(p)),
-    fvPatchField<Type>(p, iF, dict)
+    fvPatchField<Type>(p, iF, dict, valueRequired)
 {}
 
 

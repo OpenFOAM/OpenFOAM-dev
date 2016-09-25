@@ -56,7 +56,7 @@ uniformTotalPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),

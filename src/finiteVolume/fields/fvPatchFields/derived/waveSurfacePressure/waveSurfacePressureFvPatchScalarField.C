@@ -82,16 +82,11 @@ waveSurfacePressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     zetaName_(dict.lookupOrDefault<word>("zeta", "zeta")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
-{
-    fvPatchField<scalar>::operator=
-    (
-        scalarField("value", dict, p.size())
-    );
-}
+{}
 
 
 Foam::waveSurfacePressureFvPatchScalarField::

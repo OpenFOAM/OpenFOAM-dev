@@ -87,8 +87,7 @@ public:
         (
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&,
-            const bool valueRequired=false
+            const dictionary&
         );
 
         //- Construct by mapping given patchField<Type> onto a new patch

@@ -52,7 +52,7 @@ rotatingWallVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF),
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
     origin_(dict.lookup("origin")),
     axis_(dict.lookup("axis")),
     omega_(Function1<scalar>::New("omega", dict))

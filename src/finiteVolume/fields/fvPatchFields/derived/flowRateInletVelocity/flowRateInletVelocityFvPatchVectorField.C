@@ -54,7 +54,7 @@ flowRateInletVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF),
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
     rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -VGREAT)),
     extrapolateProfile_
     (

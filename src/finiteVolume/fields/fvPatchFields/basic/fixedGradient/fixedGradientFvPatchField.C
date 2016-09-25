@@ -48,7 +48,7 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
     const dictionary& dict
 )
 :
-    fvPatchField<Type>(p, iF, dict),
+    fvPatchField<Type>(p, iF, dict, false),
     gradient_("gradient", dict, p.size())
 {
     evaluate();

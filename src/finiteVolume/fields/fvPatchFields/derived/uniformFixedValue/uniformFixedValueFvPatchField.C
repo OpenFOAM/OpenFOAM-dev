@@ -60,7 +60,7 @@ Foam::uniformFixedValueFvPatchField<Type>::uniformFixedValueFvPatchField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
+    fixedValueFvPatchField<Type>(p, iF, dict, false),
     uniformValue_(Function1<Type>::New("uniformValue", dict))
 {
     this->evaluate();

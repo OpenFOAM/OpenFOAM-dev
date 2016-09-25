@@ -85,7 +85,7 @@ activeBaffleVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict, false),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     cyclicPatchName_(dict.lookup("cyclicPatch")),
     cyclicPatchLabel_(p.patch().boundaryMesh().findPatchID(cyclicPatchName_)),

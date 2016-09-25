@@ -65,7 +65,7 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict),
     gamma_(readScalar(dict.lookup("gamma"))),
     R_(readScalar(dict.lookup("R"))),
     supplyMassFlowRate_(readScalar(dict.lookup("supplyMassFlowRate"))),
@@ -87,8 +87,6 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     UName_(dict.lookupOrDefault<word>("U", "U"))
 {
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
-
     if (dict.found("rho"))
     {
         rho_ = readScalar(dict.lookup("rho"));

@@ -46,12 +46,13 @@ extrapolatedCalculatedFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
+    const dictionary& dict
 )
 :
-    calculatedFvPatchField<Type>(p, iF, dict, valueRequired)
-{}
+    calculatedFvPatchField<Type>(p, iF, dict, false)
+{
+    evaluate();
+}
 
 
 template<class Type>

@@ -200,7 +200,7 @@ public:
             const fvPatch&,
             const DimensionedField<Type, volMesh>&,
             const dictionary&,
-            const bool valueRequired=false
+            const bool valueRequired=true
         );
 
         //- Construct by mapping the given fvPatchField onto a new patch

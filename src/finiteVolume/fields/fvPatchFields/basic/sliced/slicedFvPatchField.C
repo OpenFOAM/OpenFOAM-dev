@@ -61,7 +61,7 @@ Foam::slicedFvPatchField<Type>::slicedFvPatchField
     const dictionary& dict
 )
 :
-    fvPatchField<Type>(p, iF, dict)
+    fvPatchField<Type>(p, iF, dict, false)
 {
     NotImplemented;
 }

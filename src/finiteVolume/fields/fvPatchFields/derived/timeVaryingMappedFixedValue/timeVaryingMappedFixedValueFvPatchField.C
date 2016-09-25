@@ -63,7 +63,7 @@ timeVaryingMappedFixedValueFvPatchField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
+    fixedValueFvPatchField<Type>(p, iF, dict, false),
     fieldTableName_(iF.name()),
     setAverage_(dict.lookupOrDefault("setAverage", false)),
     perturb_(dict.lookupOrDefault("perturb", 1e-5)),

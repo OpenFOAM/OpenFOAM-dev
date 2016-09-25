@@ -50,7 +50,7 @@ surfaceNormalFixedValueFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict, false),
     refValue_("refValue", dict, p.size())
 {
     fvPatchVectorField::operator=(refValue_*patch().nf());

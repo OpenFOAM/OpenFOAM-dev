@@ -49,7 +49,7 @@ translatingWallVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<vector>(p, iF),
+    fixedValueFvPatchField<vector>(p, iF, dict, false),
     U_(Function1<vector>::New("U", dict))
 {
     // Evaluate the wall velocity

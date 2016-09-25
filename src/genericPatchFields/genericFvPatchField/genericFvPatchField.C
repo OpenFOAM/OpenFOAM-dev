@@ -53,7 +53,7 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
     const dictionary& dict
 )
 :
-    calculatedFvPatchField<Type>(p, iF, dict, false),
+    calculatedFvPatchField<Type>(p, iF, dict),
     actualTypeName_(dict.lookup("type")),
     dict_(dict)
 {

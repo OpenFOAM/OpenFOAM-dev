@@ -64,12 +64,10 @@ Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict),
     relative_(dict.lookup("relative")),
     inletValue_("inletValue", dict, p.size())
-{
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
-}
+{}
 
 
 Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField

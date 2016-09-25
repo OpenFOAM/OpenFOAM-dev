@@ -71,7 +71,7 @@ filmPyrolysisTemperatureCoupledFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict),
     filmRegionName_
     (
         dict.lookupOrDefault<word>("filmRegion", "surfaceFilmProperties")
@@ -82,9 +82,7 @@ filmPyrolysisTemperatureCoupledFvPatchScalarField
     ),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
-{
-    fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
-}
+{}
 
 
 Foam::filmPyrolysisTemperatureCoupledFvPatchScalarField::

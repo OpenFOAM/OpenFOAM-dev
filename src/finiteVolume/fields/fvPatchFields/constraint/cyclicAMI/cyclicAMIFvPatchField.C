@@ -41,38 +41,13 @@ Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 template<class Type>
 Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 (
-    const cyclicAMIFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    cyclicAMILduInterfaceField(),
-    coupledFvPatchField<Type>(ptf, p, iF, mapper),
-    cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
-{
-    if (!isA<cyclicAMIFvPatch>(this->patch()))
-    {
-        FatalErrorInFunction
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
 )
 :
     cyclicAMILduInterfaceField(),
-    coupledFvPatchField<Type>(p, iF, dict),
+    coupledFvPatchField<Type>(p, iF, dict, dict.found("value")),
     cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
 {
     if (!isA<cyclicAMIFvPatch>(p))
@@ -91,6 +66,31 @@ Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
     if (!dict.found("value") && this->coupled())
     {
         this->evaluate(Pstream::blocking);
+    }
+}
+
+
+template<class Type>
+Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
+(
+    const cyclicAMIFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    cyclicAMILduInterfaceField(),
+    coupledFvPatchField<Type>(ptf, p, iF, mapper),
+    cyclicAMIPatch_(refCast<const cyclicAMIFvPatch>(p))
+{
+    if (!isA<cyclicAMIFvPatch>(this->patch()))
+    {
+        FatalErrorInFunction
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalIOError);
     }
 }
 

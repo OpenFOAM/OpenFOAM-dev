@@ -47,7 +47,7 @@ Foam::zeroGradientFvPatchField<Type>::zeroGradientFvPatchField
     const dictionary& dict
 )
 :
-    fvPatchField<Type>(p, iF, dict)
+    fvPatchField<Type>(p, iF, dict, false)
 {
     fvPatchField<Type>::operator=(this->patchInternalField());
 }

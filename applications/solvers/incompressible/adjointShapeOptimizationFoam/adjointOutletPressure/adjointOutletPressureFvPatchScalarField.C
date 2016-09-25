@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,13 +63,8 @@ adjointOutletPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF)
-{
-    fvPatchField<scalar>::operator=
-    (
-        scalarField("value", dict, p.size())
-    );
-}
+    fixedValueFvPatchScalarField(p, iF, dict)
+{}
 
 
 Foam::adjointOutletPressureFvPatchScalarField::

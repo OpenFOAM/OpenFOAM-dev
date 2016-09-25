@@ -61,7 +61,7 @@ Foam::transformFvPatchField<Type>::transformFvPatchField
     const dictionary& dict
 )
 :
-    fvPatchField<Type>(p, iF, dict)
+    fvPatchField<Type>(p, iF, dict, false)
 {}
 
 

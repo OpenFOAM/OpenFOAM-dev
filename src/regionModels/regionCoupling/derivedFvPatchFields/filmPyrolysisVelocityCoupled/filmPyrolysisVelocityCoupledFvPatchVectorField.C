@@ -71,7 +71,7 @@ filmPyrolysisVelocityCoupledFvPatchVectorField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchVectorField(p, iF),
+    fixedValueFvPatchVectorField(p, iF, dict),
     filmRegionName_
     (
         dict.lookupOrDefault<word>("filmRegion", "surfaceFilmProperties")
@@ -82,9 +82,7 @@ filmPyrolysisVelocityCoupledFvPatchVectorField
     ),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
-{
-    fvPatchVectorField::operator=(vectorField("value", dict, p.size()));
-}
+{}
 
 
 Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::

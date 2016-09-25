@@ -50,7 +50,7 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     Ap_(readScalar(dict.lookup("Ap"))),
     Sp_(readScalar(dict.lookup("Sp"))),
     VsI_(readScalar(dict.lookup("VsI"))),

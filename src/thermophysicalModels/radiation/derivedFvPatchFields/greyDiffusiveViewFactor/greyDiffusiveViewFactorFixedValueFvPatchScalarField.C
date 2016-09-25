@@ -72,7 +72,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
     const dictionary& dict
 )
 :
-    fixedValueFvPatchScalarField(p, iF),
+    fixedValueFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
     Qro_("Qro", dict, p.size())
 {
