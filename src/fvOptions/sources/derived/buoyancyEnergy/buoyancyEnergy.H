@@ -33,7 +33,7 @@ Usage
     \verbatim
     buoyancyEnergyCoeffs
     {
-        fieldNames      (h);                    // Name of energy field
+        fields          (h);                    // Name of energy field
     }
     \endverbatim
 

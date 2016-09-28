@@ -35,7 +35,7 @@ Usage
     \verbatim
     rotorDiskSourceCoeffs
     {
-        fieldNames      (U);    // names of fields on which to apply source
+        fields          (U);    // names of fields on which to apply source
         nBlades         3;      // number of blades
         tipEffect       0.96;   // normalised radius above which lift = 0
 

@@ -49,7 +49,7 @@ Usage
     \verbatim
     actuationDiskSourceCoeffs
     {
-        fieldNames      (U);        // names of fields to apply source
+        fields          (U);        // names of fields to apply source
         diskDir         (-1 0 0);   // disk direction
         Cp              0.1;        // power coefficient
         Ct              0.5;        // thrust coefficient
