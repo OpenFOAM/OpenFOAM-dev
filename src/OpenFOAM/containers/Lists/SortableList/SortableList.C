@@ -72,6 +72,15 @@ Foam::SortableList<T>::SortableList(const SortableList<T>& lst)
 {}
 
 
+template<class T>
+Foam::SortableList<T>::SortableList(std::initializer_list<T> values)
+:
+    List<T>(values)
+{
+    sort();
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 
@@ -138,20 +147,27 @@ inline void Foam::SortableList<T>::operator=(const T& t)
 
 
 template<class T>
-inline void Foam::SortableList<T>::operator=(const UList<T>& rhs)
+inline void Foam::SortableList<T>::operator=(const UList<T>& lst)
 {
-    List<T>::operator=(rhs);
+    List<T>::operator=(lst);
     indices_.clear();
 }
 
 
 template<class T>
-inline void Foam::SortableList<T>::operator=(const SortableList<T>& rhs)
+inline void Foam::SortableList<T>::operator=(const SortableList<T>& lst)
 {
-    List<T>::operator=(rhs);
-    indices_ = rhs.indices();
+    List<T>::operator=(lst);
+    indices_ = lst.indices();
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class T>
+inline void Foam::SortableList<T>::operator=(std::initializer_list<T> lst)
+{
+    List<T>::operator=(lst);
+    sort();
+}
+
 
 // ************************************************************************* //
