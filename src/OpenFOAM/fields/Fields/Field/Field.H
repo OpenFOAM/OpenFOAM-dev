@@ -123,6 +123,9 @@ public:
         //- Construct as copy of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
+        //- Construct as copy of a UIndirectList\<Type\>
+        explicit Field(const UIndirectList<Type>&);
+
         //- Construct by transferring the List contents
         explicit Field(const Xfer<List<Type>>&);
 

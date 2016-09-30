@@ -244,6 +244,13 @@ Foam::Field<Type>::Field(const UList<Type>& list)
 {}
 
 
+template<class Type>
+Foam::Field<Type>::Field(const UIndirectList<Type>& list)
+:
+    List<Type>(list)
+{}
+
+
 #ifndef NoConstructFromTmp
 template<class Type>
 Foam::Field<Type>::Field(const tmp<Field<Type>>& tf)
