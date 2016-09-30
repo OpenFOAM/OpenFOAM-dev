@@ -91,10 +91,10 @@ private:
         Field<Type>& dataDual_;
 
         //- Tet vertex labels
-        mutable List<label> tetVertices_;
+        mutable FixedList<label, 3> tetVertices_;
 
         //- Tet barycentric coordinates
-        mutable List<scalar> tetCoordinates_;
+        mutable FixedList<scalar, 4> tetCoordinates_;
 
 
     //- Private static member functions

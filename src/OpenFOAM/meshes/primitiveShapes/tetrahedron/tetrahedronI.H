@@ -316,7 +316,7 @@ template<class Point, class PointRef>
 Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
 (
     const point& pt,
-    List<scalar>& bary
+    FixedList<scalar, 4>& bary
 ) const
 {
     // Reference:
@@ -345,8 +345,6 @@ Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
     }
 
     vector res = inv(t, detT) & (pt - d_);
-
-    bary.setSize(4);
 
     bary[0] = res.x();
     bary[1] = res.y();

@@ -97,7 +97,7 @@ Foam::scalarField Foam::cellShapeControl::cellSize
 
 Foam::scalar Foam::cellShapeControl::cellSize(const point& pt) const
 {
-    scalarList bary;
+    FixedList<scalar, 4> bary;
     cellShapeControlMesh::Cell_handle ch;
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
@@ -172,7 +172,7 @@ Foam::scalar Foam::cellShapeControl::cellSize(const point& pt) const
 
 Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
 {
-    scalarList bary;
+    FixedList<scalar, 4> bary;
     cellShapeControlMesh::Cell_handle ch;
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
@@ -244,7 +244,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
     tensor& alignment
 ) const
 {
-    scalarList bary;
+    FixedList<scalar, 4> bary;
     cellShapeControlMesh::Cell_handle ch;
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);

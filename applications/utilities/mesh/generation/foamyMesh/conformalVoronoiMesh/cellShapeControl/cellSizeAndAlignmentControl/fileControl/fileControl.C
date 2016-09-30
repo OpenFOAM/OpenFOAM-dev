@@ -94,7 +94,7 @@ Foam::fileControl::~fileControl()
 //
 //Foam::scalar Foam::fileControl::cellSize(const point& pt) const
 //{
-//    scalarList bary;
+//    FixedList<scalar, 4> bary;
 //    Cell_handle ch;
 //
 //    triangulatedMesh_.barycentricCoords(pt, bary, ch);
@@ -112,7 +112,7 @@ Foam::fileControl::~fileControl()
 ////- Return the cell alignment at the given location
 //Foam::tensor Foam::fileControl::cellAlignment(const point& pt) const
 //{
-//    scalarList bary;
+//    FixedList<scalar, 4> bary;
 //    Cell_handle ch;
 //
 //    triangulatedMesh_.barycentricCoords(pt, bary, ch);
@@ -144,7 +144,7 @@ Foam::fileControl::~fileControl()
 //    tensor& alignment
 //) const
 //{
-//    scalarList bary;
+//    FixedList<scalar, 4> bary;
 //    Cell_handle ch;
 //
 //    triangulatedMesh_.barycentricCoords(pt, bary, ch);

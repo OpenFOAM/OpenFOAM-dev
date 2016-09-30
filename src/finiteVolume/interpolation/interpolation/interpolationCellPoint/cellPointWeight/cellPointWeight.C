@@ -166,7 +166,7 @@ void Foam::cellPointWeight::findTriangle
     {
         const tetIndices& tetIs = faceTets[tetI];
 
-        List<scalar> triWeights(3);
+        FixedList<scalar, 3> triWeights;
 
         // Barycentric coordinates of the position
         scalar det = tetIs.faceTri(mesh).barycentric(position, triWeights);
@@ -234,7 +234,7 @@ void Foam::cellPointWeight::findTriangle
     // determinant is suitable.  If not, the return from barycentric
     // to triWeights is safe.
 
-    List<scalar> triWeights(3);
+    FixedList<scalar, 3> triWeights;
 
     tetIs.faceTri(mesh).barycentric(position, triWeights);
 
@@ -260,9 +260,7 @@ Foam::cellPointWeight::cellPointWeight
     const label facei
 )
 :
-    celli_(celli),
-    weights_(4),
-    faceVertices_(3)
+    celli_(celli)
 {
     if (facei < 0)
     {

@@ -452,7 +452,7 @@ Foam::cellShapeControlMesh::~cellShapeControlMesh()
 void Foam::cellShapeControlMesh::barycentricCoords
 (
     const Foam::point& pt,
-    scalarList& bary,
+    FixedList<scalar, 4>& bary,
     Cell_handle& ch
 ) const
 {

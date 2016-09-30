@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ public:
             void barycentricCoords
             (
                 const Foam::point& pt,
-                scalarList& bary,
+                FixedList<scalar, 4>& bary,
                 Cell_handle& ch
             ) const;
 

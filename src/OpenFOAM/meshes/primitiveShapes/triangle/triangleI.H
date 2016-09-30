@@ -267,7 +267,7 @@ template<class Point, class PointRef>
 Foam::scalar Foam::triangle<Point, PointRef>::barycentric
 (
     const point& pt,
-    List<scalar>& bary
+    FixedList<scalar, 3>& bary
 ) const
 {
     // Reference:
@@ -289,12 +289,10 @@ Foam::scalar Foam::triangle<Point, PointRef>::barycentric
     {
         // Degenerate triangle, returning 1/3 barycentric coordinates.
 
-        bary = List<scalar>(3, 1.0/3.0);
+        bary = FixedList<scalar, 3>(1.0/3.0);
 
         return denom;
     }
-
-    bary.setSize(3);
 
     bary[1] = (d11*d20 - d01*d21)/denom;
     bary[2] = (d00*d21 - d01*d20)/denom;

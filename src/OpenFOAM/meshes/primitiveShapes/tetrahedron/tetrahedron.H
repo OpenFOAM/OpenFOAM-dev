@@ -249,7 +249,7 @@ public:
             inline scalar barycentric
             (
                 const point& pt,
-                List<scalar>& bary
+                FixedList<scalar, 4>& bary
             ) const;
 
             //- Return nearest point to p on tetrahedron. Is p itself

@@ -31,8 +31,8 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
     const cellPointWeightWallModified& cpw
 ) const
 {
-    const List<scalar>& weights = cpw.weights();
-    const List<label>& faceVertices = cpw.faceVertices();
+    const FixedList<scalar, 4>& weights = cpw.weights();
+    const FixedList<label, 3>& faceVertices = cpw.faceVertices();
 
     Type t = this->psi_[cpw.cell()]*weights[0];
     t += this->psip_[faceVertices[0]]*weights[1];

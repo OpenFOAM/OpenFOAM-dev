@@ -55,9 +55,7 @@ Foam::AveragingMethods::Dual<Type>::Dual
     volumeCell_(mesh.V()),
     volumeDual_(mesh.nPoints(), 0.0),
     dataCell_(FieldField<Field, Type>::operator[](0)),
-    dataDual_(FieldField<Field, Type>::operator[](1)),
-    tetVertices_(3),
-    tetCoordinates_(4)
+    dataDual_(FieldField<Field, Type>::operator[](1))
 {
     forAll(this->mesh_.C(), celli)
     {
@@ -123,7 +121,10 @@ void Foam::AveragingMethods::Dual<Type>::tetGeometry
 
     tetIs.tet(this->mesh_).barycentric(position, tetCoordinates_);
 
-    tetCoordinates_ = max(tetCoordinates_, scalar(0));
+    forAll(tetCoordinates_, i)
+    {
+        tetCoordinates_[i] = max(tetCoordinates_[i], scalar(0));
+    }
 }
 
 

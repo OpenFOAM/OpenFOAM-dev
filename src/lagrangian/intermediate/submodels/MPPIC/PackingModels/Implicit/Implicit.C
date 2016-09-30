@@ -340,7 +340,7 @@ Foam::vector Foam::PackingModels::Implicit<CloudType>::velocityCorrection
     const label celli = p.cell();
     const label facei = p.tetFace();
     const tetIndices tetIs(celli, facei, p.tetPt(), mesh);
-    List<scalar> tetCoordinates(4);
+    FixedList<scalar, 4> tetCoordinates;
     tetIs.tet(mesh).barycentric(p.position(), tetCoordinates);
 
     // cell velocity

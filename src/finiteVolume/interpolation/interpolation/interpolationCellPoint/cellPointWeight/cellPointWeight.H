@@ -58,10 +58,10 @@ protected:
        const label celli_;
 
        //- Weights applied to tet vertices
-       List<scalar> weights_;
+       FixedList<scalar, 4> weights_;
 
        //- Face vertex indices
-       List<label> faceVertices_;
+       FixedList<label, 3> faceVertices_;
 
 
     // Protected Member Functions
@@ -112,13 +112,13 @@ public:
         }
 
         //- Interpolation weights
-        inline const List<scalar>& weights() const
+        inline const FixedList<scalar, 4>& weights() const
         {
             return weights_;
         }
 
         //- Interpolation addressing for points on face
-        inline const List<label>& faceVertices() const
+        inline const FixedList<label, 3>& faceVertices() const
         {
             return faceVertices_;
         }
