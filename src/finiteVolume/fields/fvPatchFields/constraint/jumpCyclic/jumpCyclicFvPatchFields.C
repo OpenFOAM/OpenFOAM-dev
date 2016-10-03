@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-    makePatchFieldsTypeName(jumpCyclic);
+    makePatchFieldTypeNames(jumpCyclic);
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

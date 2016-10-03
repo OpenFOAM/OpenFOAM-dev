@@ -34,7 +34,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-makePatchFieldsTypeName(jumpCyclicAMI);
+makePatchFieldTypeNames(jumpCyclicAMI);
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

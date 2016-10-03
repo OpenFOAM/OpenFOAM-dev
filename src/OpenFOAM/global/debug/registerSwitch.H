@@ -34,6 +34,7 @@ Description
 #define registerSwitch_H
 
 #include "simpleRegIOobject.H"
+#include "macros.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,10 +85,6 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#define CONCAT(x, y) x ## y
-#define CONCAT2(x, y) CONCAT(x, y)
-#define FILE_UNIQUE(x) CONCAT2(x, __LINE__)
 
 #define registerOptSwitch(Name, Type, Switch)                                  \
     static Foam::RegisterSwitch<Type> FILE_UNIQUE(_addToOpt_)                  \

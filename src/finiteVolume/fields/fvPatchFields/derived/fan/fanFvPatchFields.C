@@ -126,11 +126,7 @@ Foam::fanFvPatchField<Foam::scalar>::fanFvPatchField
 
 namespace Foam
 {
-    makeTemplatePatchTypeField
-    (
-        fvPatchScalarField,
-        fanFvPatchScalarField
-    );
+    makeTemplatePatchTypeField(scalar, fan);
 }
 
 

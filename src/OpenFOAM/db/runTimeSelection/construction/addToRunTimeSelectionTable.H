@@ -31,8 +31,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-// add to hash-table of functions with typename as the key
+//- Add to hash-table of functions with typename as the key
 #define addToRunTimeSelectionTable\
 (baseType,thisType,argNames)                                                   \
                                                                                \
@@ -41,7 +40,7 @@ Description
         add##thisType##argNames##ConstructorTo##baseType##Table_
 
 
-// add to hash-table of functions with 'lookup' as the key
+//- Add to hash-table of functions with 'lookup' as the key
 #define addNamedToRunTimeSelectionTable\
 (baseType,thisType,argNames,lookup)                                            \
                                                                                \
@@ -51,7 +50,7 @@ Description
         (#lookup)
 
 
-// add to hash-table of functions with typename as the key
+//- Add to hash-table of functions with typename as the key
 #define addRemovableToRunTimeSelectionTable\
 (baseType,thisType,argNames)                                                   \
                                                                                \
@@ -60,7 +59,7 @@ Description
         addRemovable##thisType##argNames##ConstructorTo##baseType##Table_
 
 
-// add to hash-table of functions with 'lookup' as the key
+//- Add to hash-table of functions with 'lookup' as the key
 #define addRemovableNamedToRunTimeSelectionTable\
 (baseType,thisType,argNames,lookup)                                            \
                                                                                \
@@ -72,9 +71,8 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-// add to hash-table of functions with typename as the key
-// use when baseType doesn't need a template argument (eg, is a typedef)
+//- Add to hash-table of functions with typename as the key.
+//  Use when baseType doesn't need a template argument (eg, is a typedef)
 #define addTemplateToRunTimeSelectionTable\
 (baseType,thisType,Targ,argNames)                                              \
                                                                                \
@@ -83,8 +81,8 @@ Description
         add##thisType##Targ##argNames##ConstructorTo##baseType##Table_
 
 
-// add to hash-table of functions with 'lookup' as the key
-// use when baseType doesn't need a template argument (eg, is a typedef)
+//- Add to hash-table of functions with 'lookup' as the key.
+//  Use when baseType doesn't need a template argument (eg, is a typedef)
 #define addNamedTemplateToRunTimeSelectionTable\
 (baseType,thisType,Targ,argNames,lookup)                                       \
                                                                                \
@@ -96,9 +94,8 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
-// add to hash-table of functions with typename as the key
-// use when baseType requires the Targ template argument as well
+//- Add to hash-table of functions with typename as the key.
+//  Use when baseType requires the Targ template argument as well
 #define addTemplatedToRunTimeSelectionTable\
 (baseType,thisType,Targ,argNames)                                              \
                                                                                \
@@ -107,8 +104,8 @@ Description
         add##thisType##Targ##argNames##ConstructorTo##baseType##Targ##Table_
 
 
-// add to hash-table of functions with 'lookup' as the key
-// use when baseType requires the Targ template argument as well
+//- Add to hash-table of functions with 'lookup' as the key.
+//  Use when baseType requires the Targ template argument as well
 #define addNamedTemplatedToRunTimeSelectionTable\
 (baseType,thisType,Targ,argNames,lookup)                                       \
                                                                                \
