@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,8 +117,6 @@ SourceFiles
 #define CGAL_INEXACT
 #define CGAL_HIERARCHY
 
-// Include uint.H before CGAL headers to define __STDC_LIMIT_MACROS
-#include "uint.H"
 #include "CGALTriangulation2Ddefs.H"
 #include "Time.H"
 #include "point2DFieldFwd.H"

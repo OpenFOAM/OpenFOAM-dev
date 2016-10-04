@@ -41,8 +41,6 @@ SourceFiles
 #ifndef conformalVoronoiMesh_H
 #define conformalVoronoiMesh_H
 
-// Include uint.H before CGAL headers to define __STDC_LIMIT_MACROS
-#include "uint.H"
 #include "CGALTriangulation3Ddefs.H"
 #include "searchableSurfaces.H"
 #include "conformationSurfaces.H"
