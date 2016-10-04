@@ -1979,11 +1979,17 @@ boundaryField
     }
     wall2
     {
-        type            compressible::alphatPhaseChangeJayatillekeWallFunction;
+        type            compressible::alphatWallBoilingWallFunction;
+        phaseType       vapor;
         Prt             0.85;
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
+        partitioningModel
+        {
+            type        Lavieville;
+            alphaCrit   0.2;
+        }
         value           uniform 0;
     }
     defaultFaces

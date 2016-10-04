@@ -28,11 +28,17 @@ Group
     grpCmpWallFunctions
 
 Description
-    A thermal wall function for simulation of subcooled nucleate wall boiling.
+    A thermal wall function for simulation of subcooled nucleate wall boiling
+    with runtime selctable submodels for:
+      - wall heat flux partitioning model
+      - nucleation site density
+      - bubble departure frequency
+      - bubble departure diameter
 
     Implements a version of the well-known RPI wall boiling model
     (Kurul & Podowski, 1991). The model implementation is similar to the model
-    described by Peltola & Pättikangas (2012).
+    described by Peltola & Pättikangas (2012) but has been extended with the
+    wall heat flux partitioning models.
 
     References:
     \verbatim
@@ -51,8 +57,66 @@ Description
         Daejeon, Korea, September 10-12 2012
     \endverbatim
 
-See also
-    Foam::fixedValueFvPatchField
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        phaseType    | 'vapor' or 'liquid'     | yes         |
+        relax        |wall boiling model relaxation| yes     |
+        Prt          | inherited from alphatPhaseChangeJayatillekeWallFunction
+        Cmu          | inherited from alphatPhaseChangeJayatillekeWallFunction
+        kappa        | inherited from alphatPhaseChangeJayatillekeWallFunction
+        E            | inherited from alphatPhaseChangeJayatillekeWallFunction
+        dmdt         | phase change mass flux  | yes         |
+        value        | initial alphat value    | yes         |
+
+        if phaseType 'vapor':
+
+        partitioningModel|                     | yes         |
+
+        if phaseType 'liquid':
+
+        partitioningModel|                     | yes         |
+        nucleationSiteModel|                     | yes         |
+        departureDiamModel|                     | yes         |
+        departureFreqModel|                     | yes         |
+    \endtable
+
+    NOTE: Runtime selectabale submodels may require model specific entries
+
+    Example usage:
+    \verbatim
+    hotWall
+    {
+        type            compressible::alphatWallBoiling2WallFunction;
+        phaseType       liquid;
+        Prt             0.85;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
+        relax           0.001;
+        dmdt            uniform 0;
+        partitioningModel
+        {
+            type        Lavieville;
+            alphaCrit   0.2;
+        }
+        nucleationSiteModel
+        {
+            type        LemmertChawla;
+        }
+        departureDiamModel
+        {
+            type        TolubinskiKostanchuk;
+        }
+        departureFreqModel
+        {
+            type        Cole;
+        }
+        value           uniform 0.01;
+    \endverbatim
+
+SeeAlso
+    Foam::alphatPhaseChangeJayatillekeWallFunctionFvPatchField
 
 SourceFiles
     alphatWallBoilingWallFunctionFvPatchScalarField.C
@@ -63,6 +127,10 @@ SourceFiles
 #define compressiblealphatWallBoilingWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.H"
+#include "partitioningModel.H"
+#include "nucleationSiteModel.H"
+#include "departureDiameterModel.H"
+#include "departureFrequencyModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -79,7 +147,27 @@ class alphatWallBoilingWallFunctionFvPatchScalarField
 :
     public alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
 {
+public:
+
+    // Data types
+
+        //- Enumeration listing the possible operational modes
+        enum phaseType
+        {
+            vaporPhase,
+            liquidPhase
+        };
+
+
+private:
+
     // Private data
+
+        //- Heat source type names
+        static const NamedEnum<phaseType, 2> phaseTypeNames_;
+
+        //- Heat source type
+        phaseType phaseType_;
 
         //- dmdt relaxationFactor
         scalar relax_;
@@ -89,6 +177,22 @@ class alphatWallBoilingWallFunctionFvPatchScalarField
 
         //- Convective turbulent thermal diffusivity
         scalarField alphatConv_;
+
+        //- Run-time selected heat flux partitioning model
+        autoPtr<wallBoilingModels::partitioningModel>
+            partitioningModel_;
+
+        //- Run-time selected nucleation site density model
+        autoPtr<wallBoilingModels::nucleationSiteModel>
+            nucleationSiteModel_;
+
+        //- Run-time selected bubble departure diameter model
+        autoPtr<wallBoilingModels::departureDiameterModel>
+            departureDiamModel_;
+
+        //- Run-time selected bubble departure frequency model
+        autoPtr<wallBoilingModels::departureFrequencyModel>
+            departureFreqModel_;
 
 
 public:
