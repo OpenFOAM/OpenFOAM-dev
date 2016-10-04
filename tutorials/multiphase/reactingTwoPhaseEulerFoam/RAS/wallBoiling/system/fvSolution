@@ -80,10 +80,10 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors    3;
+    nOuterCorrectors    6;
     nCorrectors         1;
     nNonOrthogonalCorrectors 0;
-    nEnergyCorrectors   3;
+    nEnergyCorrectors   2;
     faceMomentum        yes;
 }
 
@@ -97,7 +97,7 @@ relaxationFactors
     equations
     {
         ".*"            1;
-        "h.*"           0.4;
+        "h.*"           0.3;
     }
 }
 

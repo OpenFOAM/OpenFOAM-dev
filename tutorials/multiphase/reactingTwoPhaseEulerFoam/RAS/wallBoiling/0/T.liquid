@@ -17,21 +17,21 @@ FoamFile
 
 dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 370;
+internalField   uniform 368;
 
 boundaryField
 {
     inlet
     {
         type            fixedValue;
-        value           uniform 370;
+        value           uniform 368;
     }
     outlet
     {
         type            inletOutlet;
         phi             phi.liquid;
-        inletValue      uniform 370;
-        value           uniform 370;
+        inletValue      uniform 368;
+        value           uniform 368;
     }
     wall1
     {
@@ -41,9 +41,9 @@ boundaryField
     {
         type            fixedMultiPhaseHeatFlux;
         relax           0.5;
-        q               uniform 100000;
+        q               uniform 0;
         phase           "liquid";
-        value           uniform 370;
+        value           uniform 368;
     }
     defaultFaces
     {

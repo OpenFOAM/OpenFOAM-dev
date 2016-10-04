@@ -17,21 +17,21 @@ FoamFile
 
 dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 373.55;
+internalField   uniform 368;
 
 boundaryField
 {
     inlet
     {
         type            fixedValue;
-        value           uniform 373.55;
+        value           uniform 368;
     }
     outlet
     {
         type            inletOutlet;
         phi             phi.gas;
-        inletValue      uniform 373.55;
-        value           uniform 373.55;
+        inletValue      uniform 368;
+        value           uniform 368;
     }
     wall1
     {
@@ -41,7 +41,7 @@ boundaryField
     {
         type            copiedFixedValue;
         sourceFieldName T.liquid;
-        value           uniform 373.55;
+        value           uniform 368;
     }
     defaultFaces
     {
