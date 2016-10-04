@@ -411,6 +411,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const scalarField fLiquid(partitioningModel_->fLiquid(liquidw));
 
+            // Convective thermal diffusivity
+            alphatConv_ = calcAlphat(alphatConv_);
+
             for (label i=0; i<10; i++)
             {
                 // Liquid temperature at y+=250 is estimated from logarithmic
@@ -493,9 +496,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 // Quenching heat flux
                 const scalarField Qq(A2*hQ*max(Tw - Tl, scalar(0)));
-
-                // Convective heat flux
-                alphatConv_ = calcAlphat(alphatConv_);
 
                 // Effective thermal diffusivity that corresponds to the
                 // calculated convective, quenching and evaporative heat fluxes
