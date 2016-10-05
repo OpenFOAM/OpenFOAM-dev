@@ -74,14 +74,16 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
 frictionalPressure
 (
-    const volScalarField& alpha1,
+    const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax
 ) const
 {
+    const volScalarField& alpha = phase;
+
     return
         dimensionedScalar("1e24", dimensionSet(1, -1, -2, 0, 0), 1e24)
-       *pow(Foam::max(alpha1 - alphaMinFriction, scalar(0)), 10.0);
+       *pow(Foam::max(alpha - alphaMinFriction, scalar(0)), 10.0);
 }
 
 
@@ -89,31 +91,31 @@ Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::
 frictionalPressurePrime
 (
-    const volScalarField& alpha1,
+    const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax
 ) const
 {
+    const volScalarField& alpha = phase;
+
     return
         dimensionedScalar("1e25", dimensionSet(1, -1, -2, 0, 0), 1e25)
-       *pow(Foam::max(alpha1 - alphaMinFriction, scalar(0)), 9.0);
+       *pow(Foam::max(alpha - alphaMinFriction, scalar(0)), 9.0);
 }
 
 
 Foam::tmp<Foam::volScalarField>
 Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 (
-    const volScalarField& alpha1,
+    const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
     const dimensionedScalar& alphaMax,
     const volScalarField& pf,
     const volSymmTensorField& D
 ) const
 {
-    const scalar I2Dsmall = 1.0e-15;
+    const volScalarField& alpha = phase;
 
-    // Creating nu assuming it should be 0 on the boundary which may not be
-    // true
     tmp<volScalarField> tnu
     (
         new volScalarField
@@ -121,13 +123,13 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
             IOobject
             (
                 "Schaeffer:nu",
-                alpha1.mesh().time().timeName(),
-                alpha1.mesh(),
+                phase.mesh().time().timeName(),
+                phase.mesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
             ),
-            alpha1.mesh(),
+            phase.mesh(),
             dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), 0.0)
         )
     );
@@ -136,16 +138,33 @@ Foam::kineticTheoryModels::frictionalStressModels::Schaeffer::nu
 
     forAll(D, celli)
     {
-        if (alpha1[celli] > alphaMinFriction.value())
+        if (alpha[celli] > alphaMinFriction.value())
         {
             nuf[celli] =
                 0.5*pf[celli]*sin(phi_.value())
                /(
-                    sqrt(1.0/6.0*(sqr(D[celli].xx() - D[celli].yy())
-                  + sqr(D[celli].yy() - D[celli].zz())
-                  + sqr(D[celli].zz() - D[celli].xx()))
-                  + sqr(D[celli].xy()) + sqr(D[celli].xz())
-                  + sqr(D[celli].yz())) + I2Dsmall
+                    sqrt((1.0/3.0)*sqr(tr(D[celli])) - invariantII(D[celli]))
+                  + SMALL
+                );
+        }
+    }
+
+    const fvPatchList& patches = phase.mesh().boundary();
+    const volVectorField& U = phase.U();
+
+    volScalarField::Boundary& nufBf = nuf.boundaryFieldRef();
+
+    forAll(patches, patchi)
+    {
+        if (!patches[patchi].coupled())
+        {
+            nufBf[patchi] =
+                (
+                    pf.boundaryField()[patchi]*sin(phi_.value())
+                   /(
+                        mag(U.boundaryField()[patchi].snGrad())
+                      + SMALL
+                    )
                 );
         }
     }

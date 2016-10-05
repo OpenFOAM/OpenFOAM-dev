@@ -65,7 +65,8 @@ JohnsonJacksonParticleThetaFvPatchScalarField
     mixedFvPatchScalarField(ptf, p, iF, mapper),
     restitutionCoefficient_(ptf.restitutionCoefficient_),
     specularityCoefficient_(ptf.specularityCoefficient_)
-{}
+{
+}
 
 
 Foam::JohnsonJacksonParticleThetaFvPatchScalarField::

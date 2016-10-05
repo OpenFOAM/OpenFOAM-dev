@@ -47,8 +47,7 @@ SourceFiles
 
 #include "RASModel.H"
 #include "eddyViscosity.H"
-#include "PhaseCompressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "EddyDiffusivity.H"
 #include "phaseModel.H"
 #include "dragModel.H"
@@ -74,10 +73,7 @@ class kineticTheoryModel
 :
     public eddyViscosity
     <
-        RASModel<EddyDiffusivity<ThermalDiffusivity
-        <
-            PhaseCompressibleTurbulenceModel<phaseModel>
-        >>>
+        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
     >
 {
     // Private data
@@ -124,6 +120,9 @@ class kineticTheoryModel
             //- Residual phase fraction
             dimensionedScalar residualAlpha_;
 
+            //- Maximum turbulent viscosity
+            dimensionedScalar maxNut_;
+
 
         // Kinetic Theory Model Fields
 
@@ -138,6 +137,9 @@ class kineticTheoryModel
 
             //- The granular "thermal" conductivity
             volScalarField kappa_;
+
+            //- The frictional viscosity
+            volScalarField nuFric_;
 
 
     // Private Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "JohnsonJacksonFrictionalStress.H"
+#include "JohnsonJacksonSchaefferFrictionalStress.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
 
@@ -35,12 +35,12 @@ namespace kineticTheoryModels
 {
 namespace frictionalStressModels
 {
-    defineTypeNameAndDebug(JohnsonJackson, 0);
+    defineTypeNameAndDebug(JohnsonJacksonSchaeffer, 0);
 
     addToRunTimeSelectionTable
     (
         frictionalStressModel,
-        JohnsonJackson,
+        JohnsonJacksonSchaeffer,
         dictionary
     );
 }
@@ -50,8 +50,8 @@ namespace frictionalStressModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
-JohnsonJackson
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::JohnsonJacksonSchaeffer
 (
     const dictionary& dict
 )
@@ -70,16 +70,16 @@ JohnsonJackson
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
-~JohnsonJackson()
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::~JohnsonJacksonSchaeffer()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
-frictionalPressure
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::frictionalPressure
 (
     const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
@@ -95,8 +95,8 @@ frictionalPressure
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::
-frictionalPressurePrime
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::frictionalPressurePrime
 (
     const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
@@ -115,7 +115,8 @@ frictionalPressurePrime
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
+Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::nu
 (
     const phaseModel& phase,
     const dimensionedScalar& alphaMinFriction,
@@ -124,11 +125,70 @@ Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
     const volSymmTensorField& D
 ) const
 {
-    return dimensionedScalar("0.5", dimTime, 0.5)*pf*sin(phi_);
+    const volScalarField& alpha = phase;
+
+    tmp<volScalarField> tnu
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "JohnsonJacksonSchaeffer:nu",
+                phase.mesh().time().timeName(),
+                phase.mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                false
+            ),
+            phase.mesh(),
+            dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), 0.0)
+        )
+    );
+
+    volScalarField& nuf = tnu.ref();
+
+    forAll(D, celli)
+    {
+        if (alpha[celli] > alphaMinFriction.value())
+        {
+            nuf[celli] =
+                0.5*pf[celli]*sin(phi_.value())
+               /(
+                    sqrt((1.0/3.0)*sqr(tr(D[celli])) - invariantII(D[celli]))
+                  + SMALL
+                );
+        }
+    }
+
+    const fvPatchList& patches = phase.mesh().boundary();
+    const volVectorField& U = phase.U();
+
+    volScalarField::Boundary& nufBf = nuf.boundaryFieldRef();
+
+    forAll(patches, patchi)
+    {
+        if (!patches[patchi].coupled())
+        {
+            nufBf[patchi] =
+                (
+                    pf.boundaryField()[patchi]*sin(phi_.value())
+                   /(
+                        mag(U.boundaryField()[patchi].snGrad())
+                      + SMALL
+                    )
+                );
+        }
+    }
+
+    // Correct coupled BCs
+    nuf.correctBoundaryConditions();
+
+    return tnu;
 }
 
 
-bool Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::read()
+bool Foam::kineticTheoryModels::frictionalStressModels::
+JohnsonJacksonSchaeffer::read()
 {
     coeffDict_ <<= dict_.subDict(typeName + "Coeffs");
 

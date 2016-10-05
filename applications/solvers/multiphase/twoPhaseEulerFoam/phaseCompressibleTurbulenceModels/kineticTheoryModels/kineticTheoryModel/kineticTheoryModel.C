@@ -26,6 +26,7 @@ License
 #include "kineticTheoryModel.H"
 #include "mathematicalConstants.H"
 #include "twoPhaseSystem.H"
+#include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -43,10 +44,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
 :
     eddyViscosity
     <
-        RASModel<EddyDiffusivity<ThermalDiffusivity
-        <
-            PhaseCompressibleTurbulenceModel<phaseModel>
-        >>>
+        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
     >
     (
         type,
@@ -113,6 +111,13 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         coeffDict_
     ),
 
+    maxNut_
+    (
+        "maxNut",
+        dimensionSet(0,2,-1,0,0),
+        coeffDict_.lookupOrDefault<scalar>("maxNut",1000)
+    ),
+
     Theta_
     (
         IOobject
@@ -166,6 +171,20 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         ),
         U.mesh(),
         dimensionedScalar("zero", dimensionSet(1, -1, -1, 0, 0), 0.0)
+    ),
+
+    nuFric_
+    (
+        IOobject
+        (
+            IOobject::groupName("nuFric", phase.name()),
+            U.time().timeName(),
+            U.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        U.mesh(),
+        dimensionedScalar("zero", dimensionSet(0, 2, -1, 0, 0), 0.0)
     )
 {
     if (type == typeName)
@@ -189,10 +208,7 @@ bool Foam::RASModels::kineticTheoryModel::read()
     (
         eddyViscosity
         <
-            RASModel<EddyDiffusivity<ThermalDiffusivity
-            <
-                PhaseCompressibleTurbulenceModel<phaseModel>
-            >>>
+            RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
         >::read()
     )
     {
@@ -272,7 +288,7 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
         )
      +  frictionalStressModel_->frictionalPressurePrime
         (
-            alpha_,
+            phase_,
             alphaMinFriction_,
             alphaMax_
         )
@@ -424,6 +440,8 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // 'thermal' conductivity (Table 3.3, p. 49)
         kappa_ = conductivityModel_->kappa(alpha, Theta_, gs0_, rho, da, e_);
 
+        fv::options& fvOptions(fv::options::New(mesh_));
+
         // Construct the granular temperature equation (Eq. 3.20, p. 44)
         // NB. note that there are two typos in Eq. 3.20:
         //     Ps should be without grad
@@ -443,10 +461,13 @@ void Foam::RASModels::kineticTheoryModel::correct()
           + fvm::Sp(-gammaCoeff, Theta_)
           + fvm::Sp(-J1, Theta_)
           + fvm::Sp(J2/(Theta_ + ThetaSmall), Theta_)
+          + fvOptions(alpha, rho, Theta_)
         );
 
         ThetaEqn.relax();
+        fvOptions.constrain(ThetaEqn);
         ThetaEqn.solve();
+        fvOptions.correct(Theta_);
     }
     else
     {
@@ -519,24 +540,25 @@ void Foam::RASModels::kineticTheoryModel::correct()
         (
             frictionalStressModel_->frictionalPressure
             (
-                alpha,
+                phase_,
                 alphaMinFriction_,
                 alphaMax_
             )
         );
 
-        // Add frictional shear viscosity, Eq. 3.30, p. 52
-        nut_ += frictionalStressModel_->nu
+        nuFric_ = frictionalStressModel_->nu
         (
-            alpha,
+            phase_,
             alphaMinFriction_,
             alphaMax_,
             pf/rho,
             D
         );
 
-        // Limit viscosity
-        nut_.min(100);
+        // Limit viscosity and add frictional viscosity
+        nut_.min(maxNut_);
+        nuFric_ = min(nuFric_, maxNut_ - nut_);
+        nut_ += nuFric_;
     }
 
     if (debug)
