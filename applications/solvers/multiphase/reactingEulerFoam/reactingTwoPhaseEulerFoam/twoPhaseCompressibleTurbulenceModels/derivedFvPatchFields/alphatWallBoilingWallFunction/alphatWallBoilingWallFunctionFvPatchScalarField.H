@@ -178,6 +178,9 @@ private:
         //- Convective turbulent thermal diffusivity
         scalarField alphatConv_;
 
+        //- Departure diameter field
+        scalarField dDep_;
+
         //- Run-time selected heat flux partitioning model
         autoPtr<wallBoilingModels::partitioningModel>
             partitioningModel_;
@@ -265,6 +268,13 @@ public:
 
 
     // Member functions
+
+        //- Calculate and return the departure diameter field
+        const scalarField& dDeparture() const
+        {
+            return dDep_;
+        }
+
 
         // Evaluation functions
 

@@ -84,6 +84,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     relax_(0.5),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
+    dDep_(p.size(), 0),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiamModel_(nullptr),
@@ -92,7 +93,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     AbyV_ = this->patch().magSf();
     forAll(AbyV_, facei)
     {
-        label faceCelli = this->patch().faceCells()[facei];
+        const label faceCelli = this->patch().faceCells()[facei];
         AbyV_[facei] /= iF.mesh().V()[faceCelli];
     }
 }
@@ -111,6 +112,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     relax_(dict.lookupOrDefault<scalar>("relax", 0.5)),
     AbyV_(p.size(), 0),
     alphatConv_(p.size(), 0),
+    dDep_(p.size(), 0),
     partitioningModel_(nullptr),
     nucleationSiteModel_(nullptr),
     departureDiamModel_(nullptr),
@@ -192,6 +194,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     relax_(psf.relax_),
     AbyV_(psf.AbyV_),
     alphatConv_(psf.alphatConv_, mapper),
+    dDep_(psf.dDep_, mapper),
     partitioningModel_(psf.partitioningModel_),
     nucleationSiteModel_(psf.nucleationSiteModel_),
     departureDiamModel_(psf.departureDiamModel_),
@@ -209,6 +212,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     relax_(psf.relax_),
     AbyV_(psf.AbyV_),
     alphatConv_(psf.alphatConv_),
+    dDep_(psf.dDep_),
     partitioningModel_(psf.partitioningModel_),
     nucleationSiteModel_(psf.nucleationSiteModel_),
     departureDiamModel_(psf.departureDiamModel_),
@@ -227,6 +231,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     relax_(psf.relax_),
     AbyV_(psf.AbyV_),
     alphatConv_(psf.alphatConv_),
+    dDep_(psf.dDep_),
     partitioningModel_(psf.partitioningModel_),
     nucleationSiteModel_(psf.nucleationSiteModel_),
     departureDiamModel_(psf.departureDiamModel_),
@@ -444,15 +449,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 );
 
                 // Bubble departure diameter:
-                const scalarField dDep
+                dDep_ = departureDiamModel_->dDeparture
                 (
-                    departureDiamModel_->dDeparture
-                    (
-                        liquid,
-                        vapor,
-                        patchi,
-                        Tsub
-                    )
+                    liquid,
+                    vapor,
+                    patchi,
+                    Tsub
                 );
 
                 // Bubble departure frequency:
@@ -463,7 +465,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                         liquid,
                         vapor,
                         patchi,
-                        dDep
+                        dDep_
                     )
                 );
 
@@ -473,12 +475,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const scalarField Ja(rhoLiquidw*Cpw*Tsub/(rhoVaporw*L));
                 const scalarField Al(fLiquid*4.8*exp(-Ja/80));
 
-                const scalarField A2(min(M_PI*sqr(dDep)*N*Al/4, scalar(1)));
+                const scalarField A2(min(M_PI*sqr(dDep_)*N*Al/4, scalar(1)));
                 const scalarField A1(max(1 - A2, scalar(1e-4)));
-                const scalarField A2E(min(M_PI*sqr(dDep)*N*Al/4, scalar(5)));
+                const scalarField A2E(min(M_PI*sqr(dDep_)*N*Al/4, scalar(5)));
 
                 // Wall evaporation heat flux [kg/s3 = J/m2s]
-                const scalarField Qe((1.0/6.0)*A2E*dDep*rhoVaporw*fDep*L);
+                const scalarField Qe((1.0/6.0)*A2E*dDep_*rhoVaporw*fDep*L);
 
                 // Volumetric mass source in the near wall cell due to the
                 // wall boiling
@@ -540,8 +542,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     Info<< "  L: " << gMin(L) << " - " << gMax(L) << endl;
                     Info<< "  Tl: " << gMin(Tl) << " - " << gMax(Tl) << endl;
                     Info<< "  N: " << gMin(N) << " - " << gMax(N) << endl;
-                    Info<< "  dDep: " << gMin(dDep) << " - "
-                        << gMax(dDep) << endl;
+                    Info<< "  dDep_: " << gMin(dDep_) << " - "
+                        << gMax(dDep_) << endl;
                     Info<< "  fDep: " << gMin(fDep) << " - "
                         << gMax(fDep) << endl;
                     Info<< "  Al: " << gMin(Al) << " - " << gMax(Al) << endl;

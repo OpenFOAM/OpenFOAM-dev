@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,43 +116,33 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::dsm() const
     return max(6/max(kappai_, 6/dMax_), dMin_);
 }
 
-// Placeholder for the nucleation/condensation model
-// Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::Rph() const
-// {
-//     const volScalarField& T = phase_thermo().T();
-//     const volScalarField& p = phase_.p();
-//
-//     scalar A, B, C, sigma, vm, Rph;
-//
-//     volScalarField ps(1e5*pow(10, A - B/(T + C)));
-//     volScalarField Dbc
-//     (
-//         4*sigma*vm/(constant::physicoChemical::k*T*log(p/ps))
-//     );
-//
-//     return constant::mathematical::pi*sqr(Dbc)*Rph;
-// }
-
 void Foam::diameterModels::IATE::correct()
 {
     // Initialise the accumulated source term to the dilatation effect
-    volScalarField R
+    fvScalarMatrix R
     (
+       -fvm::SuSp
         (
-            (1.0/3.0)
-           /max
             (
-                fvc::average(phase_ + phase_.oldTime()),
-                residualAlpha_
+                (1.0/3.0)
+               /max
+                (
+                    fvc::average(phase_ + phase_.oldTime()),
+                    residualAlpha_
+                )
             )
+           *(
+                fvc::ddt(phase_) + fvc::div(phase_.alphaPhi())
+              - phase_.continuityError()/phase_.rho()
+            ),
+            kappai_
         )
-       *(fvc::ddt(phase_) + fvc::div(phase_.alphaPhi()))
     );
 
     // Accumulate the run-time selectable sources
     forAll(sources_, j)
     {
-        R -= sources_[j].R();
+        R += sources_[j].R(kappai_);
     }
 
     fv::options& fvOptions(fv::options::New(phase_.mesh()));
@@ -163,8 +153,7 @@ void Foam::diameterModels::IATE::correct()
         fvm::ddt(kappai_) + fvm::div(phase_.phi(), kappai_)
       - fvm::Sp(fvc::div(phase_.phi()), kappai_)
      ==
-      - fvm::SuSp(R, kappai_)
-    //+ Rph() // Omit the nucleation/condensation term
+        R
       + fvOptions(kappai_)
     );
 

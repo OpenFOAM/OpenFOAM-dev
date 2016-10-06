@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,13 +21,23 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Class
+    Foam::diameterModels::IATEsources::wallBoiling
+
+Description
+    Wall-boiling IATE source.
+
+SourceFiles
+    wallBoiling.C
+
 \*---------------------------------------------------------------------------*/
 
-#include "wakeEntrainmentCoalescence.H"
-#include "fvmSup.H"
-#include "addToRunTimeSelectionTable.H"
+#ifndef wallBoiling_H
+#define wallBoiling_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "IATEsource.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -35,42 +45,50 @@ namespace diameterModels
 {
 namespace IATEsources
 {
-    defineTypeNameAndDebug(wakeEntrainmentCoalescence, 0);
-    addToRunTimeSelectionTable
-    (
-        IATEsource,
-        wakeEntrainmentCoalescence,
-        dictionary
-    );
-}
-}
-}
 
+/*---------------------------------------------------------------------------*\
+                           Class wallBoiling Declaration
+\*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::diameterModels::IATEsources::wakeEntrainmentCoalescence::
-wakeEntrainmentCoalescence
-(
-    const IATE& iate,
-    const dictionary& dict
-)
+class wallBoiling
 :
-    IATEsource(iate),
-    Cwe_("Cwe", dimless, dict)
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::diameterModels::IATEsources::wakeEntrainmentCoalescence::R
-(
-    volScalarField& kappai
-) const
+    public IATEsource
 {
-    return -fvm::SuSp(12*phi()*Cwe_*cbrt(CD())*iate_.a()*Ur(), kappai);
-}
 
+public:
+
+    //- Runtime type information
+    TypeName("wallBoiling");
+
+
+    // Constructors
+
+        wallBoiling
+        (
+            const IATE& iate,
+            const dictionary& dict
+        );
+
+
+    //- Destructor
+    virtual ~wallBoiling()
+    {}
+
+
+    // Member Functions
+
+        virtual tmp<fvScalarMatrix> R(volScalarField& kappai) const;
+};
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace IATEsources
+} // End namespace diameterModels
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

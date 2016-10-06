@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF),
-    dmdt_(p.size(), 0.0),
-    mDotL_(p.size(), 0.0)
+    dmdt_(p.size(), 0),
+    mDotL_(p.size(), 0)
 {}
 
 
@@ -63,8 +63,8 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    dmdt_(p.size(), 0.0),
-    mDotL_(p.size(), 0.0)
+    dmdt_(p.size(), 0),
+    mDotL_(p.size(), 0)
 {
     if (dict.found("dmdt"))
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "turbulentBreakUp.H"
+#include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -58,46 +59,39 @@ turbulentBreakUp
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::IATEsources::turbulentBreakUp::R() const
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::diameterModels::IATEsources::turbulentBreakUp::R
+(
+    volScalarField& kappai
+) const
 {
-    tmp<volScalarField> tR
+    volScalarField::Internal R
     (
-        new volScalarField
+        IOobject
         (
-            IOobject
-            (
-                "R",
-                iate_.phase().time().timeName(),
-                iate_.phase().mesh()
-            ),
-            iate_.phase().mesh(),
-            dimensionedScalar("R", dimless/dimTime, 0)
-        )
+            "turbulentBreakUp:R",
+            iate_.phase().time().timeName(),
+            iate_.phase().mesh()
+        ),
+        iate_.phase().mesh(),
+        dimensionedScalar("R", kappai.dimensions()/dimTime, 0)
     );
 
-    volScalarField R = tR();
-
-    scalar Cti = Cti_.value();
-    scalar WeCr = WeCr_.value();
-    volScalarField Ut(this->Ut());
-    volScalarField We(this->We());
-    const volScalarField& d(iate_.d()());
+    const scalar Cti = Cti_.value();
+    const scalar WeCr = WeCr_.value();
+    const volScalarField Ut(this->Ut());
+    const volScalarField We(this->We());
 
     forAll(R, celli)
     {
         if (We[celli] > WeCr)
         {
             R[celli] =
-                (1.0/3.0)
-               *Cti/d[celli]
-               *Ut[celli]
-               *sqrt(1 - WeCr/We[celli])
-               *exp(-WeCr/We[celli]);
+               2*Cti*Ut[celli]*sqrt(1 - WeCr/We[celli])*exp(-WeCr/We[celli]);
         }
     }
 
-    return tR;
+    return fvm::Su(R, kappai);
 }
 
 

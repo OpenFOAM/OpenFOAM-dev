@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "randomCoalescence.H"
+#include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -59,42 +60,39 @@ randomCoalescence
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::IATEsources::randomCoalescence::R() const
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::diameterModels::IATEsources::randomCoalescence::R
+(
+    volScalarField& kappai
+) const
 {
-    tmp<volScalarField> tR
+    volScalarField::Internal R
     (
-        new volScalarField
+        IOobject
         (
-            IOobject
-            (
-                "R",
-                iate_.phase().time().timeName(),
-                iate_.phase().mesh()
-            ),
-            iate_.phase().mesh(),
-            dimensionedScalar("R", dimless/dimTime, 0)
-        )
+            "randomCoalescence:R",
+            iate_.phase().time().timeName(),
+            iate_.phase().mesh()
+        ),
+        iate_.phase().mesh(),
+        dimensionedScalar("R", dimless/dimTime, 0)
     );
 
-    volScalarField R = tR();
-
-    scalar Crc = Crc_.value();
-    scalar C = C_.value();
-    scalar alphaMax = alphaMax_.value();
-    volScalarField Ut(this->Ut());
+    const scalar Crc = Crc_.value();
+    const scalar C = C_.value();
+    const scalar alphaMax = alphaMax_.value();
+    const volScalarField Ut(this->Ut());
     const volScalarField& alpha = phase();
-    const volScalarField& kappai = iate_.kappai();
-    scalar cbrtAlphaMax = cbrt(alphaMax);
+    const scalar cbrtAlphaMax = cbrt(alphaMax);
 
     forAll(R, celli)
     {
         if (alpha[celli] < alphaMax - SMALL)
         {
-            scalar cbrtAlphaMaxMAlpha = cbrtAlphaMax - cbrt(alpha[celli]);
+            const scalar cbrtAlphaMaxMAlpha = cbrtAlphaMax - cbrt(alpha[celli]);
 
             R[celli] =
-                (-12)*phi()*kappai[celli]*alpha[celli]
+                12*phi()*kappai[celli]*alpha[celli]
                *Crc
                *Ut[celli]
                *(1 - exp(-C*cbrt(alpha[celli]*alphaMax)/cbrtAlphaMaxMAlpha))
@@ -102,7 +100,7 @@ Foam::diameterModels::IATEsources::randomCoalescence::R() const
         }
     }
 
-    return tR;
+    return -fvm::Sp(R, kappai);
 }
 
 
