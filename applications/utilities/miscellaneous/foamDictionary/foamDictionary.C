@@ -43,6 +43,9 @@ Usage
       - \par -set \<value\>
         Adds or replaces the entry
 
+      - \par -remove
+        Remove the selected entry
+
       - \par -expand
         Read the specified dictionary file, expand the macros etc. and write
         the resulting dictionary to standard output.
@@ -121,6 +124,109 @@ word keyword(const word& scopedName)
         key = scopedName.substr(i+1, string::npos);
     }
     return key;
+}
+
+
+void removeScoped(dictionary& dict, const word& keyword)
+{
+    if (keyword[0] == ':')
+    {
+        // Go up to top level and recurse to find entries
+        removeScoped
+        (
+            const_cast<dictionary&>(dict.topDict()),
+            keyword.substr(1, keyword.size()-1)
+        );
+        return;
+    }
+    else
+    {
+        string::size_type dotPos = keyword.find('.');
+
+        if (dotPos == string::npos)
+        {
+            // Non-scoped lookup
+            dict.remove(keyword);
+            return;
+        }
+        else
+        {
+            if (dotPos == 0)
+            {
+                // Starting with a '.'. Go up for every 2nd '.' found
+
+                const dictionary* dictPtr = &dict;
+
+                string::size_type begVar = dotPos + 1;
+                string::const_iterator iter =
+                    keyword.begin() + begVar;
+                string::size_type endVar = begVar;
+                while
+                (
+                    iter != keyword.end()
+                 && *iter == '.'
+                )
+                {
+                    ++iter;
+                    ++endVar;
+
+                    // Go to parent
+                    if (&dictPtr->parent() == &dictionary::null)
+                    {
+                        FatalIOErrorInFunction(dict)
+                            << "No parent of current dictionary"
+                            << " when searching for "
+                            <<  keyword.substr
+                                (
+                                    begVar,
+                                    keyword.size() - begVar
+                                )
+                            << exit(FatalIOError);
+                    }
+                    dictPtr = &dictPtr->parent();
+                }
+
+                removeScoped
+                (
+                    const_cast<dictionary&>(*dictPtr),
+                    keyword.substr(endVar)
+                );
+                return;
+            }
+            else
+            {
+                // Extract the first word
+                word firstWord = keyword.substr(0, dotPos);
+
+                const entry* entPtr = dict.lookupScopedEntryPtr
+                (
+                    firstWord,
+                    false,          // Recursive
+                    false
+                );
+
+                if (!entPtr || !entPtr->isDict())
+                {
+                    FatalIOErrorInFunction(dict)
+                        << "keyword " << firstWord
+                        << " is undefined in dictionary "
+                        << dict.name() << " or is not a dictionary"
+                        << endl
+                        << "Valid keywords are " << dict.keys()
+                        << exit(FatalIOError);
+                }
+
+                const dictionary& firstDict = entPtr->dict();
+
+                removeScoped
+                (
+                    const_cast<dictionary&>(firstDict),
+                    keyword.substr(dotPos, keyword.size()-dotPos)
+                );
+                return;
+            }
+        }
+    }
 }
 
 
@@ -273,6 +379,11 @@ int main(int argc, char *argv[])
     );
     argList::addBoolOption
     (
+        "remove",
+        "remove the entry."
+    );
+    argList::addBoolOption
+    (
         "includes",
         "List the #include/#includeIfPresent files to standard output."
     );
@@ -349,6 +460,11 @@ int main(int argc, char *argv[])
                 {
                     Info<< *entPtr << endl;
                 }
+            }
+            else if (args.optionFound("remove"))
+            {
+                removeScoped(dict, scopedName);
+                changed = true;
             }
             else
             {
