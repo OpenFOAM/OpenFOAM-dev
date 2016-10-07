@@ -258,14 +258,79 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::massTransfer() const
 
 
 template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
+(
+    const phasePairKey& key
+) const
+{
+    const scalar dmdtSign(Pair<word>::compare(iDmdt_.find(key).key(), key));
+
+    return dmdtSign**iDmdt_[key];
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
+(
+    const Foam::phaseModel& phase
+) const
+{
+    tmp<volScalarField> tiDmdt
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("iDmdt", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
+
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        const phaseModel* phase1 = &pair.phase1();
+        const phaseModel* phase2 = &pair.phase2();
+
+        forAllConstIter(phasePair, pair, iter)
+        {
+            if (phase1 == &phase)
+            {
+                tiDmdt.ref() += this->iDmdt(pair);
+            }
+
+            Swap(phase1, phase2);
+        }
+    }
+
+    return tiDmdt;
+}
+
+
+template<class BasePhaseSystem>
 void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
 {
     typedef compressible::alphatPhaseChangeWallFunctionFvPatchScalarField
         alphatPhaseChangeWallFunction;
 
     BasePhaseSystem::correctThermo();
-
-
 
     forAllConstIter
     (

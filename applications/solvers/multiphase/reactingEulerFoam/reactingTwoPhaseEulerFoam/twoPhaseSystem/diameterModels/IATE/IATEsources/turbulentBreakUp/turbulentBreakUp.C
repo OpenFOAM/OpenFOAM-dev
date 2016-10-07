@@ -62,6 +62,7 @@ turbulentBreakUp
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::diameterModels::IATEsources::turbulentBreakUp::R
 (
+    const volScalarField& alphai,
     volScalarField& kappai
 ) const
 {

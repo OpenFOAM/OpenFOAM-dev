@@ -54,6 +54,9 @@ gas
                 WeCr        6;
             }
 
+            phaseChange
+            {}
+
             wallBoiling
             {}
         );

@@ -118,19 +118,21 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::dsm() const
 
 void Foam::diameterModels::IATE::correct()
 {
+    volScalarField alphaAv
+    (
+        max
+        (
+            fvc::average(phase_ + phase_.oldTime()),
+            residualAlpha_
+        )
+    );
+
     // Initialise the accumulated source term to the dilatation effect
     fvScalarMatrix R
     (
        -fvm::SuSp
         (
-            (
-                (1.0/3.0)
-               /max
-                (
-                    fvc::average(phase_ + phase_.oldTime()),
-                    residualAlpha_
-                )
-            )
+            ((1.0/3.0)/alphaAv)
            *(
                 fvc::ddt(phase_) + fvc::div(phase_.alphaPhi())
               - phase_.continuityError()/phase_.rho()
@@ -142,7 +144,7 @@ void Foam::diameterModels::IATE::correct()
     // Accumulate the run-time selectable sources
     forAll(sources_, j)
     {
-        R += sources_[j].R(kappai_);
+        R += sources_[j].R(alphaAv, kappai_);
     }
 
     fv::options& fvOptions(fv::options::New(phase_.mesh()));

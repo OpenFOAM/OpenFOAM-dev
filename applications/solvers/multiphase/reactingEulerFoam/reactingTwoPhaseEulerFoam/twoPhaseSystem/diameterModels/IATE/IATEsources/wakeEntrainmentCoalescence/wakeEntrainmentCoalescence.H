@@ -86,7 +86,11 @@ public:
 
     // Member Functions
 
-        virtual tmp<fvScalarMatrix> R(volScalarField& kappai) const;
+        virtual tmp<fvScalarMatrix> R
+        (
+            const volScalarField& alphai,
+            volScalarField& kappai
+        ) const;
 };
 
 

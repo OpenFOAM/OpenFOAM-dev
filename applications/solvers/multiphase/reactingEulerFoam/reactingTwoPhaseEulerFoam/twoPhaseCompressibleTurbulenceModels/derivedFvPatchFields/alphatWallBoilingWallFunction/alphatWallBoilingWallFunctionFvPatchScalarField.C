@@ -257,10 +257,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     }
 
     // Lookup the fluid model
-    const ThermalPhaseChangePhaseSystem<MomentumTransferPhaseSystem
+    const ThermalPhaseChangePhaseSystem
     <
-        twoPhaseSystem>
-    >& fluid = refCast
+        MomentumTransferPhaseSystem
+        <
+            twoPhaseSystem>
+        >& fluid = refCast
         <
             const ThermalPhaseChangePhaseSystem
             <

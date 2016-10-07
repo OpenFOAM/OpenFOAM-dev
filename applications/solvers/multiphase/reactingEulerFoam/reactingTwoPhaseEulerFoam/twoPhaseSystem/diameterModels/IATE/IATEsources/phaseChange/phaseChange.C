@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "wakeEntrainmentCoalescence.H"
+#include "phaseChange.H"
+#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
+#include "ThermalPhaseChangePhaseSystem.H"
+#include "MomentumTransferPhaseSystem.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -35,13 +39,8 @@ namespace diameterModels
 {
 namespace IATEsources
 {
-    defineTypeNameAndDebug(wakeEntrainmentCoalescence, 0);
-    addToRunTimeSelectionTable
-    (
-        IATEsource,
-        wakeEntrainmentCoalescence,
-        dictionary
-    );
+    defineTypeNameAndDebug(phaseChange, 0);
+    addToRunTimeSelectionTable(IATEsource, phaseChange, dictionary);
 }
 }
 }
@@ -49,28 +48,46 @@ namespace IATEsources
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::IATEsources::wakeEntrainmentCoalescence::
-wakeEntrainmentCoalescence
+Foam::diameterModels::IATEsources::phaseChange::phaseChange
 (
     const IATE& iate,
     const dictionary& dict
 )
 :
-    IATEsource(iate),
-    Cwe_("Cwe", dimless, dict)
+    IATEsource(iate)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::diameterModels::IATEsources::wakeEntrainmentCoalescence::R
+Foam::diameterModels::IATEsources::phaseChange::R
 (
     const volScalarField& alphai,
     volScalarField& kappai
 ) const
 {
-    return -fvm::SuSp(12*phi()*Cwe_*cbrt(CD())*iate_.a()*Ur(), kappai);
+    const ThermalPhaseChangePhaseSystem
+    <
+        MomentumTransferPhaseSystem
+        <
+            twoPhaseSystem
+        >
+    >& phaseChangeFluid = refCast
+    <
+        const ThermalPhaseChangePhaseSystem
+        <
+            MomentumTransferPhaseSystem<twoPhaseSystem>
+        >
+    >(fluid());
+
+    return -fvm::SuSp
+    (
+        (1.0/3.0)
+       *phaseChangeFluid.iDmdt(phase())()()
+       /(alphai()*phase().rho()()),
+        kappai
+    );
 }
 
 

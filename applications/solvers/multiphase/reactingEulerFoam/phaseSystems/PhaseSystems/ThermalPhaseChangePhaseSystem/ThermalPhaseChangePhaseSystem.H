@@ -101,6 +101,12 @@ public:
         //- Return the mass transfer matrices
         virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
+        //- Return the interfacial mass flow rate
+        virtual tmp<volScalarField> iDmdt(const phasePairKey& key) const;
+
+        //- Return the total interfacial mass transfer rate for phase
+        virtual tmp<volScalarField> iDmdt(const phaseModel& phase) const;
+
         //- Correct the thermodynamics
         virtual void correctThermo();
 

@@ -61,6 +61,7 @@ Foam::diameterModels::IATEsources::wallBoiling::wallBoiling
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::diameterModels::IATEsources::wallBoiling::R
 (
+    const volScalarField& alphai,
     volScalarField& kappai
 ) const
 {
@@ -129,7 +130,8 @@ Foam::diameterModels::IATEsources::wallBoiling::R
                 if (dmdt[facei] > SMALL)
                 {
                     const label faceCelli = faceCells[facei];
-                    R[faceCelli] = (dmdt[facei]/rho[faceCelli]);
+                    R[faceCelli] =
+                        dmdt[facei]/(alphai[faceCelli]*rho[faceCelli]);
                     Rdk[faceCelli] = R[faceCelli]*(6.0/dDep[facei]);
                 }
             }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::IATEsources::dummy
+    Foam::diameterModels::IATEsources::phaseChange
 
 Description
+    Phase-change IATE source.
 
 SourceFiles
-    dummy.C
+    phaseChange.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef dummy_H
-#define dummy_H
+#ifndef phaseChange_H
+#define phaseChange_H
 
 #include "IATEsource.H"
 
@@ -46,10 +47,10 @@ namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class dummy Declaration
+                           Class phaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
-class dummy
+class phaseChange
 :
     public IATEsource
 {
@@ -57,23 +58,20 @@ class dummy
 public:
 
     //- Runtime type information
-    TypeName("dummy");
+    TypeName("phaseChange");
+
 
     // Constructors
 
-        dummy
+        phaseChange
         (
-            const word& name,
             const IATE& iate,
             const dictionary& dict
-        )
-        :
-            IATEsource(iate)
-        {}
+        );
 
 
     //- Destructor
-    virtual ~dummy()
+    virtual ~phaseChange()
     {}
 
 

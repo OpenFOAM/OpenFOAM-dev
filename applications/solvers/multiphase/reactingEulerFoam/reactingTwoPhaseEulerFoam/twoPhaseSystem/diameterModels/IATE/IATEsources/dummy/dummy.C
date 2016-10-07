@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,23 +43,26 @@ namespace IATEsources
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::IATEsources::dummy::R() const
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::diameterModels::IATEsources::dummy::R
+(
+    const volScalarField& alphai,
+    volScalarField& kappai
+) const
 {
-    return tmp<volScalarField>
+    volScalarField::Internal R
     (
-        new volScalarField
+        IOobject
         (
-            IOobject
-            (
-                "R",
-                iate_.phase().U().time().timeName(),
-                iate_.phase().mesh()
-            ),
-            iate_.phase().U().mesh(),
-            dimensionedScalar("R", dimless/dimTime, 0)
-        )
+            "dummy:R",
+            iate_.phase().time().timeName(),
+            iate_.phase().mesh()
+        ),
+        iate_.phase().mesh(),
+        dimensionedScalar("R", kappai.dimensions()/dimTime, 0)
     );
+
+    return fvm::Su(R, kappai);
 }
 
 

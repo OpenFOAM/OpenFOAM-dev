@@ -63,6 +63,7 @@ randomCoalescence
 Foam::tmp<Foam::fvScalarMatrix>
 Foam::diameterModels::IATEsources::randomCoalescence::R
 (
+    const volScalarField& alphai,
     volScalarField& kappai
 ) const
 {
