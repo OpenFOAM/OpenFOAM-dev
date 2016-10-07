@@ -112,7 +112,7 @@ void Foam::blockMesh::readPatches
 {
     ITstream& patchStream(meshDescription.lookup("patches"));
 
-    // read number of patches in mesh
+    // Read number of patches in mesh
     label nPatches = 0;
 
     token firstToken(patchStream);
@@ -213,6 +213,7 @@ void Foam::blockMesh::readPatches
             // Update halfA info
             patchNames[nPatches-1] = halfA;
             nbrPatchNames[nPatches-1] = halfB;
+
             // Update halfB info
             patchTypes[nPatches] = patchTypes[nPatches-1];
             patchNames[nPatches] = halfB;
@@ -326,7 +327,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     word defaultPatchName = "defaultFaces";
     word defaultPatchType = emptyPolyPatch::typeName;
 
-    // get names/types for the unassigned patch faces
+    // Read the names/types for the unassigned patch faces
     // this is a bit heavy handed (and ugly), but there is currently
     // no easy way to rename polyMesh patches subsequently
     if (const dictionary* dictPtr = meshDescription.subDictPtr("defaultPatch"))
@@ -335,85 +336,36 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         dictPtr->readIfPresent("type", defaultPatchType);
     }
 
-    // optional 'convertToMeters' or 'scale'  scaling factor
+    // Optional 'convertToMeters' or 'scale' scaling factor
     if (!meshDescription.readIfPresent("convertToMeters", scaleFactor_))
     {
         meshDescription.readIfPresent("scale", scaleFactor_);
     }
 
 
-    //
-    // get the non-linear edges in mesh
-    //
+    // Read the block edges
     if (meshDescription.found("edges"))
     {
         if (verboseOutput)
         {
-            Info<< "Creating curved edges" << endl;
+            Info<< "Creating block edges" << endl;
         }
 
-        ITstream& is(meshDescription.lookup("edges"));
-
-        // read number of edges in mesh
-        label nEdges = 0;
-
-        token firstToken(is);
-
-        if (firstToken.isLabel())
-        {
-            nEdges = firstToken.labelToken();
-            edges_.setSize(nEdges);
-        }
-        else
-        {
-            is.putBack(firstToken);
-        }
-
-        // Read beginning of edges
-        is.readBegin("edges");
-
-        nEdges = 0;
-
-        token lastToken(is);
-        while
+        curvedEdgeList blockEdges
         (
-           !(
-                 lastToken.isPunctuation()
-              && lastToken.pToken() == token::END_LIST
-            )
-        )
-        {
-            if (edges_.size() <= nEdges)
-            {
-                edges_.setSize(nEdges + 1);
-            }
+            meshDescription.lookup("edges"),
+            curvedEdge::iNew(blockPointField_)
+        );
 
-            is.putBack(lastToken);
-
-            edges_.set
-            (
-                nEdges,
-                curvedEdge::New(blockPointField_, is)
-            );
-
-            nEdges++;
-
-            is >> lastToken;
-        }
-        is.putBack(lastToken);
-
-        // Read end of edges
-        is.readEnd("edges");
+        edges_.transfer(blockEdges);
     }
     else if (verboseOutput)
     {
-        Info<< "No non-linear edges defined" << endl;
+        Info<< "No non-linear block edges defined" << endl;
     }
 
 
-    //
     // Create the blocks
-    //
     if (verboseOutput)
     {
         Info<< "Creating topology blocks" << endl;
@@ -422,7 +374,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     {
         ITstream& is(meshDescription.lookup("blocks"));
 
-        // read number of blocks in mesh
+        // Read number of blocks in mesh
         label nBlocks = 0;
 
         token firstToken(is);
@@ -482,9 +434,8 @@ Foam::polyMesh* Foam::blockMesh::createTopology
 
     polyMesh* blockMeshPtr = nullptr;
 
-    //
     // Create the patches
-    //
+
     if (verboseOutput)
     {
         Info<< "Creating topology patches" << endl;
@@ -574,7 +525,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // copy these points, do NOT move
+            xferCopy(blockPointField_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,
@@ -613,7 +564,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // copy these points, do NOT move
+            xferCopy(blockPointField_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,

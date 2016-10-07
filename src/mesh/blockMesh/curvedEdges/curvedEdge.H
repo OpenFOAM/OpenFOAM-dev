@@ -123,6 +123,25 @@ public:
         //- New function which constructs and returns pointer to a curvedEdge
         static autoPtr<curvedEdge> New(const pointField&, Istream&);
 
+        //- Class used for the read-construction of
+        //  PtrLists of curvedEdge
+        class iNew
+        {
+            const pointField& points_;
+
+        public:
+
+            iNew(const pointField& points)
+            :
+                points_(points)
+            {}
+
+            autoPtr<curvedEdge> operator()(Istream& is) const
+            {
+                return curvedEdge::New(points_, is);
+            }
+        };
+
 
     //- Destructor
     virtual ~curvedEdge(){}
