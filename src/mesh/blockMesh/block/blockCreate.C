@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "block.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -31,9 +30,9 @@ License
 void Foam::block::createPoints() const
 {
     // Set local variables for mesh specification
-    const label ni = meshDensity().x();
-    const label nj = meshDensity().y();
-    const label nk = meshDensity().z();
+    const label ni = density().x();
+    const label nj = density().y();
+    const label nk = density().z();
 
     const point& p000 = blockPoint(0);
     const point& p100 = blockPoint(1);
@@ -53,8 +52,8 @@ void Foam::block::createPoints() const
     //
     // Generate vertices
     //
-    vertices_.clear();
-    vertices_.setSize(nPoints());
+    points_.clear();
+    points_.setSize(nPoints());
 
     for (label k = 0; k <= nk; k++)
     {
@@ -218,14 +217,14 @@ void Foam::block::createPoints() const
 
 
                 // Add the contributions
-                vertices_[vertexNo] =
+                points_[vertexNo] =
                 (
                     edgex1 + edgex2 + edgex3 + edgex4
                   + edgey1 + edgey2 + edgey3 + edgey4
                   + edgez1 + edgez2 + edgez3 + edgez4
                 ) / 3.0;
 
-                vertices_[vertexNo] +=
+                points_[vertexNo] +=
                 (
                     corx1 + corx2 + corx3 + corx4
                   + cory1 + cory2 + cory3 + cory4
@@ -239,9 +238,9 @@ void Foam::block::createPoints() const
 
 void Foam::block::createCells() const
 {
-    const label ni = meshDensity().x();
-    const label nj = meshDensity().y();
-    const label nk = meshDensity().z();
+    const label ni = density().x();
+    const label nj = density().y();
+    const label nk = density().z();
 
     //
     // Generate cells
@@ -276,9 +275,9 @@ void Foam::block::createCells() const
 
 void Foam::block::createBoundary() const
 {
-    const label ni = meshDensity().x();
-    const label nj = meshDensity().y();
-    const label nk = meshDensity().z();
+    const label ni = density().x();
+    const label nj = density().y();
+    const label nk = density().z();
 
     //
     // Generate boundaries on each side of the hex
@@ -457,7 +456,7 @@ void Foam::block::createBoundary() const
 
 void Foam::block::clearGeom()
 {
-    vertices_.clear();
+    points_.clear();
     cells_.clear();
     boundaryPatches_.clear();
 }

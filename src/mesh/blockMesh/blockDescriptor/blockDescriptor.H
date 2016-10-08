@@ -55,7 +55,7 @@ SourceFiles
 #include "cellShape.H"
 #include "pointField.H"
 #include "scalarList.H"
-#include "curvedEdgeList.H"
+#include "blockEdgeList.H"
 #include "gradingDescriptors.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,16 +79,16 @@ class blockDescriptor
     // Private data
 
         //- Reference to point field defining the block mesh
-        const pointField& blockPointField_;
+        const pointField& vertices_;
 
-        //- Reference to a list of curved edges
-        const curvedEdgeList& curvedEdges_;
+        //- Reference to a list of block edges
+        const blockEdgeList& edges_;
 
         //- Block shape
         cellShape blockShape_;
 
         //- The number of cells in the i,j,k directions
-        Vector<label> meshDensity_;
+        Vector<label> density_;
 
         //- Block edge points
         List<List<point>> edgePoints_;
@@ -99,7 +99,7 @@ class blockDescriptor
         //- Expansion ratios in all directions
         List<gradingDescriptors> expand_;
 
-        //- Name of the zone (empty string if none)
+        //- Name of the zone (empty word if none)
         word zoneName_;
 
 
@@ -112,7 +112,7 @@ class blockDescriptor
         void makeBlockEdges();
 
         //- Set the edge points/weights
-        void setEdge(label edgeI, label start, label end, label dim);
+        void setEdge(label edgei, label start, label end, label dim);
 
 
     // Private Member Functions
@@ -129,9 +129,9 @@ public:
         blockDescriptor
         (
             const cellShape&,
-            const pointField& blockPointField,
-            const curvedEdgeList&,
-            const Vector<label>& meshDensity,
+            const pointField& vertices,
+            const blockEdgeList&,
+            const Vector<label>& density,
             const UList<gradingDescriptors>& expand,
             const word& zoneName = ""
         );
@@ -139,17 +139,10 @@ public:
         //- Construct from Istream
         blockDescriptor
         (
-            const pointField& blockPointField,
-            const curvedEdgeList&,
+            const pointField& vertices,
+            const blockEdgeList&,
             Istream&
         );
-
-        //- Clone
-        autoPtr<blockDescriptor> clone() const
-        {
-            NotImplemented;
-            return autoPtr<blockDescriptor>(nullptr);
-        }
 
 
     //- Destructor
@@ -160,38 +153,29 @@ public:
 
         // Access
 
-        //- Return the number of cells in the i,j,k directions
-        const Vector<label>& density() const
-        {
-            return meshDensity_;
-        }
-
-        //- Reference to point field defining the block mesh
-        const pointField& blockPointField() const;
-
         //- Return the block shape
-        const cellShape& blockShape() const;
+        inline const cellShape& blockShape() const;
 
         //- Return the block points along each edge
-        const List<List<point>>& blockEdgePoints() const;
+        inline const List<List<point>>& blockEdgePoints() const;
 
         //- Return the weightings along each edge
-        const scalarListList& blockEdgeWeights() const;
+        inline const scalarListList& blockEdgeWeights() const;
 
         //- Return the mesh density (number of cells) in the i,j,k directions
-        const Vector<label>& meshDensity() const;
+        inline const Vector<label>& density() const;
 
         //- Return the (optional) zone name
-        const word& zoneName() const;
+        inline const word& zoneName() const;
 
         //- Return the number of points
-        label nPoints() const;
+        inline label nPoints() const;
 
         //- Return the number of cells
-        label nCells() const;
+        inline label nCells() const;
 
-        //- Return block point at local label i
-        const point& blockPoint(const label i) const;
+        //- Return block point for local label i
+        inline const point& blockPoint(const label i) const;
 
 
     // IOstream Operators
@@ -203,6 +187,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "blockDescriptorI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

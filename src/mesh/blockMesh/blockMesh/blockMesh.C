@@ -40,8 +40,8 @@ namespace Foam
 
 Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
 :
-    blockPointField_(dict.lookup("vertices")),
     scaleFactor_(1.0),
+    vertices_(dict.lookup("vertices")),
     topologyPtr_(createTopology(dict, regionName))
 {
     Switch fastMerge(dict.lookupOrDefault<Switch>("fastMerge", false));
@@ -73,9 +73,9 @@ void Foam::blockMesh::verbose(const bool on)
 }
 
 
-const Foam::pointField& Foam::blockMesh::blockPointField() const
+const Foam::pointField& Foam::blockMesh::vertices() const
 {
-    return blockPointField_;
+    return vertices_;
 }
 
 

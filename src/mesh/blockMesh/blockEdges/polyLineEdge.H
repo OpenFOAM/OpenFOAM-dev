@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::BSplineEdge
+    Foam::polyLineEdge
 
 Description
-    A curvedEdge interface for B-splines.
+    A blockEdge defined in terms of a series of straight line segments.
 
 SourceFiles
-    BSplineEdge.C
+    polyLineEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef BSplineEdge_H
-#define BSplineEdge_H
+#ifndef polyLineEdge_H
+#define polyLineEdge_H
 
-#include "curvedEdge.H"
-#include "BSpline.H"
+#include "blockEdge.H"
+#include "polyLine.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,56 +44,56 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class BSplineEdge Declaration
+                        Class polyLineEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-class BSplineEdge
+class polyLineEdge
 :
-    public curvedEdge,
-    public BSpline
+    public blockEdge,
+    public polyLine
 {
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        BSplineEdge(const BSplineEdge&);
+        polyLineEdge(const polyLineEdge&);
 
         //- Disallow default bitwise assignment
-        void operator=(const BSplineEdge&);
+        void operator=(const polyLineEdge&);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("BSpline");
+    // Static data members
+    TypeName("polyLine");
 
 
     // Constructors
 
         //- Construct from components
-        BSplineEdge
+        polyLineEdge
         (
             const pointField&,
             const label start,
             const label end,
-            const pointField& internalPoints
+            const pointField& otherPoints
         );
 
-        //- Construct from Istream, setting pointsList
-        BSplineEdge(const pointField&, Istream&);
+        //- Construct from Istream
+        polyLineEdge(const pointField&, Istream&);
 
 
-    //- Destructor
-    virtual ~BSplineEdge();
+        //- Destructor
+        virtual ~polyLineEdge();
 
 
     // Member Functions
 
         //- Return the point position corresponding to the curve parameter
         //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
+        point position(const scalar lambda) const;
 
-        //- Return the length of the spline curve (not implemented)
-        virtual scalar length() const;
+        //- Return the length of the curve
+        scalar length() const;
 };
 
 

@@ -1,14 +1,14 @@
-curvedEdges/BSpline.C
-curvedEdges/CatmullRomSpline.C
-curvedEdges/polyLine.C
+blockEdges/BSpline.C
+blockEdges/CatmullRomSpline.C
+blockEdges/polyLine.C
 
-curvedEdges/arcEdge.C
-curvedEdges/curvedEdge.C
-curvedEdges/lineEdge.C
-curvedEdges/polyLineEdge.C
-curvedEdges/lineDivide.C
-curvedEdges/BSplineEdge.C
-curvedEdges/splineEdge.C
+blockEdges/arcEdge.C
+blockEdges/blockEdge.C
+blockEdges/lineEdge.C
+blockEdges/polyLineEdge.C
+blockEdges/lineDivide.C
+blockEdges/BSplineEdge.C
+blockEdges/splineEdge.C
 
 gradingDescriptor/gradingDescriptor.C
 gradingDescriptor/gradingDescriptors.C

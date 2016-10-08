@@ -24,20 +24,20 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "error.H"
-#include "curvedEdge.H"
+#include "blockEdge.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(curvedEdge, 0);
-    defineRunTimeSelectionTable(curvedEdge, Istream);
+    defineTypeNameAndDebug(blockEdge, 0);
+    defineRunTimeSelectionTable(blockEdge, Istream);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::curvedEdge::curvedEdge
+Foam::blockEdge::blockEdge
 (
     const pointField& points,
     const label start,
@@ -50,7 +50,7 @@ Foam::curvedEdge::curvedEdge
 {}
 
 
-Foam::curvedEdge::curvedEdge(const pointField& points, Istream& is)
+Foam::blockEdge::blockEdge(const pointField& points, Istream& is)
 :
     points_(points),
     start_(readLabel(is)),
@@ -58,7 +58,7 @@ Foam::curvedEdge::curvedEdge(const pointField& points, Istream& is)
 {}
 
 
-Foam::curvedEdge::curvedEdge(const curvedEdge& c)
+Foam::blockEdge::blockEdge(const blockEdge& c)
 :
     points_(c.points_),
     start_(c.start_),
@@ -66,14 +66,14 @@ Foam::curvedEdge::curvedEdge(const curvedEdge& c)
 {}
 
 
-Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::clone() const
+Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::clone() const
 {
     NotImplemented;
-    return autoPtr<curvedEdge>(nullptr);
+    return autoPtr<blockEdge>(nullptr);
 }
 
 
-Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::New
+Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::New
 (
     const pointField& points,
     Istream& is
@@ -81,7 +81,7 @@ Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::New
 {
     if (debug)
     {
-        InfoInFunction << "Constructing curvedEdge" << endl;
+        InfoInFunction << "Constructing blockEdge" << endl;
     }
 
     const word edgeType(is);
@@ -92,20 +92,20 @@ Foam::autoPtr<Foam::curvedEdge> Foam::curvedEdge::New
     if (cstrIter == IstreamConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown curvedEdge type "
+            << "Unknown blockEdge type "
             << edgeType << nl << nl
-            << "Valid curvedEdge types are" << endl
+            << "Valid blockEdge types are" << endl
             << IstreamConstructorTablePtr_->sortedToc()
             << abort(FatalError);
     }
 
-    return autoPtr<curvedEdge>(cstrIter()(points, is));
+    return autoPtr<blockEdge>(cstrIter()(points, is));
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::pointField Foam::curvedEdge::appendEndPoints
+Foam::pointField Foam::blockEdge::appendEndPoints
 (
     const pointField& points,
     const label start,
@@ -131,13 +131,13 @@ Foam::pointField Foam::curvedEdge::appendEndPoints
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-void Foam::curvedEdge::operator=(const curvedEdge&)
+void Foam::blockEdge::operator=(const blockEdge&)
 {
     NotImplemented;
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const curvedEdge& p)
+Foam::Ostream& Foam::operator<<(Ostream& os, const blockEdge& p)
 {
     os << p.start_ << tab << p.end_ << endl;
 

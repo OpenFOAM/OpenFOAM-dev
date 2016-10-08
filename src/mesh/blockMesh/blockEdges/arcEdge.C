@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(arcEdge, 0);
-    addToRunTimeSelectionTable(curvedEdge, arcEdge, Istream);
+    addToRunTimeSelectionTable(blockEdge, arcEdge, Istream);
 }
 
 
@@ -110,7 +110,7 @@ Foam::arcEdge::arcEdge
     const point& pMid
 )
 :
-    curvedEdge(points, start, end),
+    blockEdge(points, start, end),
     p1_(points_[start_]),
     p2_(pMid),
     p3_(points_[end_]),
@@ -120,7 +120,7 @@ Foam::arcEdge::arcEdge
 
 Foam::arcEdge::arcEdge(const pointField& points, Istream& is)
 :
-    curvedEdge(points, is),
+    blockEdge(points, is),
     p1_(points_[start_]),
     p2_(is),
     p3_(points_[end_]),

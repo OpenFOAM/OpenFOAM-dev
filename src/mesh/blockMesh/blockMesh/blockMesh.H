@@ -45,7 +45,7 @@ SourceFiles
 #include "blockList.H"
 #include "polyMesh.H"
 #include "IOdictionary.H"
-#include "curvedEdgeList.H"
+#include "blockEdgeList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,14 +65,14 @@ class blockMesh
         //- Switch for verbose output
         static bool verboseOutput;
 
-        //- Point field defining the block mesh (corners)
-        pointField blockPointField_;
-
-        //- The list of curved edges
-        curvedEdgeList edges_;
-
         //- The scaling factor to convert to metres
         scalar scaleFactor_;
+
+        //- Vertices defining the block mesh (corners)
+        pointField vertices_;
+
+        //- The list of curved edges
+        blockEdgeList edges_;
 
         //- The blocks themselves (the topology) as a polyMesh
         polyMesh* topologyPtr_;
@@ -166,15 +166,15 @@ public:
 
         // Access
 
-            //- Reference to point field defining the block mesh
+            //- Reference to point field defining the blockMesh
             //  these points have not been scaled by scaleFactor
-            const pointField& blockPointField() const;
+            const pointField& vertices() const;
 
             //- Return the blockMesh topology as a polyMesh
             const polyMesh& topology() const;
 
             //- Return the curved edges
-            const curvedEdgeList& edges() const
+            const blockEdgeList& edges() const
             {
                 return edges_;
             }

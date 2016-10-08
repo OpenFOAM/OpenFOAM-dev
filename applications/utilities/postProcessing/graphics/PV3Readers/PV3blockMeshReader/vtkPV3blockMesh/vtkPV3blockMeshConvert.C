@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::vtkPV3blockMesh::convertMeshBlocks
     label datasetNo = 0;       // restart at dataset 0
 
     const blockMesh& blkMesh = *meshPtr_;
-    const Foam::pointField& blockPoints = blkMesh.blockPointField();
+    const Foam::pointField& blockPoints = blkMesh.vertices();
 
     if (debug)
     {
@@ -148,7 +148,7 @@ void Foam::vtkPV3blockMesh::convertMeshEdges
     label datasetNo = 0;       // restart at dataset 0
 
     const blockMesh& blkMesh = *meshPtr_;
-    const curvedEdgeList& edges = blkMesh.edges();
+    const blockEdgeList& edges = blkMesh.edges();
 
     int edgeI = 0;
     const scalar scaleFactor = blkMesh.scaleFactor();
@@ -256,7 +256,7 @@ void Foam::vtkPV3blockMesh::convertMeshCorners
     range.block(blockNo);      // set output block
     label datasetNo = 0;       // restart at dataset 0
 
-    const pointField& blockPoints = meshPtr_->blockPointField();
+    const pointField& blockPoints = meshPtr_->vertices();
     const scalar& scaleFactor = meshPtr_->scaleFactor();
 
     if (debug)

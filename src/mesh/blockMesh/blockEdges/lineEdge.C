@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,57 +24,61 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "error.H"
-#include "polyLineEdge.H"
+#include "lineEdge.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(polyLineEdge, 0);
-    addToRunTimeSelectionTable(curvedEdge, polyLineEdge, Istream);
+    defineTypeNameAndDebug(lineEdge, 0);
+    addToRunTimeSelectionTable(blockEdge, lineEdge, Istream);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyLineEdge::polyLineEdge
+Foam::lineEdge::lineEdge
 (
-    const pointField& ps,
+    const pointField& points,
     const label start,
-    const label end,
-    const pointField& otherPoints
+    const label end
 )
 :
-    curvedEdge(ps, start, end),
-    polyLine(appendEndPoints(ps, start_, end_, otherPoints))
+    blockEdge(points, start, end)
 {}
 
 
-Foam::polyLineEdge::polyLineEdge(const pointField& ps, Istream& is)
+Foam::lineEdge::lineEdge(const pointField& points, Istream& is)
 :
-    curvedEdge(ps, is),
-    polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
+    blockEdge(points, is)
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
 
-Foam::polyLineEdge::~polyLineEdge()
+Foam::lineEdge::~lineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::polyLineEdge::position(const scalar lambda) const
+Foam::point Foam::lineEdge::position(const scalar lambda) const
 {
-    return polyLine::position(lambda);
+    if (lambda < -SMALL || lambda > 1+SMALL)
+    {
+        FatalErrorInFunction
+            << "Parameter out of range, lambda = " << lambda
+            << abort(FatalError);
+    }
+
+    return points_[start_] + lambda * (points_[end_] - points_[start_]);
 }
 
 
-Foam::scalar Foam::polyLineEdge::length() const
+Foam::scalar Foam::lineEdge::length() const
 {
-    return polyLine::lineLength_;
+    return mag(points_[end_] - points_[start_]);
 }
 
 

@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "blockMesh.H"
 #include "cellModeller.H"
 
@@ -50,7 +49,7 @@ void Foam::blockMesh::createPoints() const
 
         if (verboseOutput)
         {
-            const Vector<label>& density = blocks[blockI].meshDensity();
+            const Vector<label>& density = blocks[blockI].density();
 
             label v0 = blocks[blockI].vtxLabel(0, 0, 0);
             label vi1 = blocks[blockI].vtxLabel(1, 0, 0);

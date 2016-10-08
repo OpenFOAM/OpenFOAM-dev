@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::curvedEdge
+    Foam::blockEdge
 
 Description
     Define a curved edge that is parameterized for 0<lambda<1
     between the start and end point.
 
 SourceFiles
-    curvedEdge.C
+    blockEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef curvedEdges_H
-#define curvedEdges_H
+#ifndef blockEdges_H
+#define blockEdges_H
 
 #include "edge.H"
 #include "pointField.H"
@@ -49,16 +49,16 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-class curvedEdge;
+class blockEdge;
 
-Ostream& operator<<(Ostream&, const curvedEdge&);
+Ostream& operator<<(Ostream&, const blockEdge&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class curvedEdge Declaration
+                         Class blockEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-class curvedEdge
+class blockEdge
 {
 protected:
 
@@ -84,14 +84,14 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("curvedEdge");
+    TypeName("blockEdge");
 
     // Declare run-time constructor selection tables
 
         declareRunTimeSelectionTable
         (
             autoPtr,
-            curvedEdge,
+            blockEdge,
             Istream,
             (
                 const pointField& points,
@@ -104,7 +104,7 @@ public:
     // Constructors
 
         //- Construct from components
-        curvedEdge
+        blockEdge
         (
             const pointField& points,
             const label start,
@@ -112,19 +112,19 @@ public:
         );
 
         //- Construct from Istream setting pointsList
-        curvedEdge(const pointField&, Istream&);
+        blockEdge(const pointField&, Istream&);
 
         //- Copy construct
-        curvedEdge(const curvedEdge&);
+        blockEdge(const blockEdge&);
 
         //- Clone function
-        virtual autoPtr<curvedEdge> clone() const;
+        virtual autoPtr<blockEdge> clone() const;
 
-        //- New function which constructs and returns pointer to a curvedEdge
-        static autoPtr<curvedEdge> New(const pointField&, Istream&);
+        //- New function which constructs and returns pointer to a blockEdge
+        static autoPtr<blockEdge> New(const pointField&, Istream&);
 
         //- Class used for the read-construction of
-        //  PtrLists of curvedEdge
+        //  PtrLists of blockEdge
         class iNew
         {
             const pointField& points_;
@@ -136,15 +136,15 @@ public:
                 points_(points)
             {}
 
-            autoPtr<curvedEdge> operator()(Istream& is) const
+            autoPtr<blockEdge> operator()(Istream& is) const
             {
-                return curvedEdge::New(points_, is);
+                return blockEdge::New(points_, is);
             }
         };
 
 
     //- Destructor
-    virtual ~curvedEdge(){}
+    virtual ~blockEdge(){}
 
 
     // Member Functions
@@ -160,7 +160,7 @@ public:
         //  -  0: different
         //  - +1: identical
         //  - -1: same edge, but different orientation
-        inline int compare(const curvedEdge&) const;
+        inline int compare(const blockEdge&) const;
 
         //- Compare the given start and end points with this curve
         //  Return:
@@ -186,12 +186,12 @@ public:
 
     // Member operators
 
-        void operator=(const curvedEdge&);
+        void operator=(const blockEdge&);
 
 
     // Ostream operator
 
-        friend Ostream& operator<<(Ostream&, const curvedEdge&);
+        friend Ostream& operator<<(Ostream&, const blockEdge&);
 };
 
 
@@ -201,7 +201,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "curvedEdgeI.H"
+#include "blockEdgeI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

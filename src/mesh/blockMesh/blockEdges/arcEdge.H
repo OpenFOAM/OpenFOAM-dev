@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,24 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::polyLine
+    Foam::arcEdge
 
 Description
-    A series of straight line segments, which can also be interpreted as
-    a series of control points for splines, etc.
-
-    A future implementation could also handle a closed polyLine.
+    Defines the arcEdge of a circle in terms of 3 points on its circumference
 
 SourceFiles
-    polyLine.C
+    arcEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polyLine_H
-#define polyLine_H
+#ifndef arcEdge_H
+#define arcEdge_H
 
-#include "pointField.H"
-#include "scalarList.H"
+#include "blockEdge.H"
+#include "cylindricalCS.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,73 +44,60 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class polyLine Declaration
+                           Class arcEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-
-class polyLine
+class arcEdge
+:
+    public blockEdge
 {
+    // Private data
+
+        point p1_, p2_, p3_;
+        cylindricalCS cs_;
+        scalar angle_;
+        scalar radius_;
+
     // Private Member Functions
 
+        //- Calculate the coordinate system, angle and radius
+        cylindricalCS calcAngle();
+
         //- Disallow default bitwise copy construct
-        polyLine(const polyLine&);
+        arcEdge(const arcEdge&);
 
         //- Disallow default bitwise assignment
-        void operator=(const polyLine&);
-
-
-protected:
-
-    // Protected data
-
-        //- The control points or ends of each segments
-        pointField points_;
-
-        //- The real line length
-        scalar lineLength_;
-
-        //- The rational (0-1) cumulative parameter value for each point
-        scalarList param_;
-
-
-    // Protected Member Functions
-
-        //- Precalculate the rational cumulative parameter value
-        //  and the line-length
-        void calcParam();
-
-        //- Return the line segment and the local parameter [0..1]
-        //  corresponding to the global lambda [0..1]
-        label localParameter(scalar& lambda) const;
-
+        void operator=(const arcEdge&);
 
 public:
+
+    //- Runtime type information
+    TypeName("arc");
+
 
     // Constructors
 
         //- Construct from components
-        polyLine
+        arcEdge
         (
-            const pointField&,
-            const bool notImplementedClosed = false
+            const pointField& points,
+            const label start, const label end,
+            const point& pMid
         );
+
+        //- Construct from Istream setting pointsList
+        arcEdge(const pointField& points, Istream&);
+
+
+    //- Destructor
+    virtual ~arcEdge(){}
 
 
     // Member Functions
 
-        //- Return const-access to the control-points
-        const pointField& points() const;
-
-        //- Return the number of line segments
-        label nSegments() const;
-
         //- Return the point position corresponding to the curve parameter
         //  0 <= lambda <= 1
         point position(const scalar) const;
-
-        //- Return the point position corresponding to the local parameter
-        //  0 <= lambda <= 1 on the given segment
-        point position(const label segment, const scalar) const;
 
         //- Return the length of the curve
         scalar length() const;

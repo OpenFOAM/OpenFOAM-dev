@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "block.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::block::block
 (
-    const pointField& blockPointField,
-    const curvedEdgeList& edges,
+    const pointField& vertices,
+    const blockEdgeList& edges,
     Istream& is
 )
 :
-    blockDescriptor(blockPointField, edges, is),
-    vertices_(0),
+    blockDescriptor(vertices, edges, is),
+    points_(0),
     cells_(0),
     boundaryPatches_(0)
 {}
@@ -45,7 +44,7 @@ Foam::block::block
 Foam::block::block(const blockDescriptor& blockDesc)
 :
     blockDescriptor(blockDesc),
-    vertices_(0),
+    points_(0),
     cells_(0),
     boundaryPatches_(0)
 {}
@@ -61,12 +60,12 @@ Foam::block::~block()
 
 const Foam::pointField& Foam::block::points() const
 {
-    if (vertices_.empty())
+    if (points_.empty())
     {
         createPoints();
     }
 
-    return vertices_;
+    return points_;
 }
 
 

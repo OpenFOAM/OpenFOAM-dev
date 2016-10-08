@@ -23,24 +23,65 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::label Foam::block::vtxLabel(label i, label j, label k) const
+inline const Foam::cellShape& Foam::blockDescriptor::blockShape() const
+{
+    return blockShape_;
+}
+
+
+inline const Foam::List<Foam::List<Foam::point>>&
+Foam::blockDescriptor::blockEdgePoints() const
+{
+    return edgePoints_;
+}
+
+
+inline const Foam::scalarListList&
+Foam::blockDescriptor::blockEdgeWeights() const
+{
+    return edgeWeights_;
+}
+
+
+inline const Foam::Vector<Foam::label>& Foam::blockDescriptor::density() const
+{
+    return density_;
+}
+
+
+inline const Foam::word& Foam::blockDescriptor::zoneName() const
+{
+    return zoneName_;
+}
+
+
+inline Foam::label Foam::blockDescriptor::nPoints() const
 {
     return
     (
-        i
-      + j * (density().x() + 1)
-      + k * (density().x() + 1) * (density().y() + 1)
+        (density_.x() + 1)
+      * (density_.y() + 1)
+      * (density_.z() + 1)
     );
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-inline const Foam::blockDescriptor& Foam::block::blockDef() const
+inline Foam::label Foam::blockDescriptor::nCells() const
 {
-    return *this;
+    return
+    (
+        density_.x()
+      * density_.y()
+      * density_.z()
+    );
+}
+
+
+inline const Foam::point& Foam::blockDescriptor::blockPoint(const label i) const
+{
+    return vertices_[blockShape_[i]];
 }
 
 

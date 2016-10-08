@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineEdge
+    Foam::BSplineEdge
 
 Description
-    A straight edge between the start point and the end point.
+    A blockEdge interface for B-splines.
 
 SourceFiles
-    lineEdge.C
+    BSplineEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineEdge_H
-#define lineEdge_H
+#ifndef BSplineEdge_H
+#define BSplineEdge_H
 
-#include "curvedEdge.H"
+#include "blockEdge.H"
+#include "BSpline.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,41 +44,56 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class lineEdge Declaration
+                      Class BSplineEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-
-class lineEdge
+class BSplineEdge
 :
-    public curvedEdge
+    public blockEdge,
+    public BSpline
 {
+    // Private Member Functions
+
+        //- Disallow default bitwise copy construct
+        BSplineEdge(const BSplineEdge&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const BSplineEdge&);
+
 
 public:
 
     //- Runtime type information
-    TypeName("line");
+    TypeName("BSpline");
+
 
     // Constructors
 
         //- Construct from components
-        lineEdge(const pointField&, const label start, const label end);
+        BSplineEdge
+        (
+            const pointField&,
+            const label start,
+            const label end,
+            const pointField& internalPoints
+        );
 
-        //- Construct from Istream with a pointField
-        lineEdge(const pointField&, Istream&);
+        //- Construct from Istream, setting pointsList
+        BSplineEdge(const pointField&, Istream&);
 
 
-        //- Destructor
-        virtual ~lineEdge();
+    //- Destructor
+    virtual ~BSplineEdge();
 
 
     // Member Functions
 
         //- Return the point position corresponding to the curve parameter
         //  0 <= lambda <= 1
-        point position(const scalar) const;
+        virtual point position(const scalar) const;
 
-        //- Return the length of the curve
-        scalar length() const;
+        //- Return the length of the spline curve (not implemented)
+        virtual scalar length() const;
 };
 
 

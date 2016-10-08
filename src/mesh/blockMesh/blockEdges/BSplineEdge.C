@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "splineEdge.H"
+#include "BSplineEdge.H"
 #include "addToRunTimeSelectionTable.H"
 
 
@@ -31,12 +31,12 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(splineEdge, 0);
+    defineTypeNameAndDebug(BSplineEdge, 0);
 
     addToRunTimeSelectionTable
     (
-        curvedEdge,
-        splineEdge,
+        blockEdge,
+        BSplineEdge,
         Istream
     );
 }
@@ -44,7 +44,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::splineEdge::splineEdge
+Foam::BSplineEdge::BSplineEdge
 (
     const pointField& points,
     const label start,
@@ -52,15 +52,15 @@ Foam::splineEdge::splineEdge
     const pointField& internalPoints
 )
 :
-    curvedEdge(points, start, end),
-    CatmullRomSpline(appendEndPoints(points, start, end, internalPoints))
+    blockEdge(points, start, end),
+    BSpline(appendEndPoints(points, start, end, internalPoints))
 {}
 
 
-Foam::splineEdge::splineEdge(const pointField& points, Istream& is)
+Foam::BSplineEdge::BSplineEdge(const pointField& points, Istream& is)
 :
-    curvedEdge(points, is),
-    CatmullRomSpline(appendEndPoints(points, start_, end_, pointField(is)))
+    blockEdge(points, is),
+    BSpline(appendEndPoints(points, start_, end_, pointField(is)))
 {
     token t(is);
     is.putBack(t);
@@ -76,21 +76,21 @@ Foam::splineEdge::splineEdge(const pointField& points, Istream& is)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::splineEdge::~splineEdge()
+Foam::BSplineEdge::~BSplineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::splineEdge::position(const scalar mu) const
+Foam::point Foam::BSplineEdge::position(const scalar mu) const
 {
-    return CatmullRomSpline::position(mu);
+    return BSpline::position(mu);
 }
 
 
-Foam::scalar Foam::splineEdge::length() const
+Foam::scalar Foam::BSplineEdge::length() const
 {
-    return CatmullRomSpline::length();
+    return BSpline::length();
 }
 
 

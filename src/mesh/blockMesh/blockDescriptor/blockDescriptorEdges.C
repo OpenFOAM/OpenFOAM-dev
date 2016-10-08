@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ License
 
 void Foam::blockDescriptor::makeBlockEdges()
 {
-    const label ni = meshDensity_.x();
-    const label nj = meshDensity_.y();
-    const label nk = meshDensity_.z();
+    const label ni = density_.x();
+    const label nj = density_.y();
+    const label nk = density_.z();
 
     // These edges correspond to the "hex" cellModel
 
@@ -59,7 +59,7 @@ void Foam::blockDescriptor::makeBlockEdges()
 
 void Foam::blockDescriptor::setEdge
 (
-    label edgeI,
+    label edgei,
     label start,
     label end,
     label nDiv
@@ -69,14 +69,14 @@ void Foam::blockDescriptor::setEdge
     const labelList& blockLabels = blockShape_;
 
     // Get list of points for this block
-    const pointField blockPoints = blockShape_.points(blockPointField_);
+    const pointField blockPoints = blockShape_.points(vertices_);
 
     // Set the edge points/weights
-    // The edge is a straight-line if it is not in the list of curvedEdges
+    // The edge is a straight-line if it is not in the list of blockEdges
 
-    forAll(curvedEdges_, cedgeI)
+    forAll(edges_, cedgei)
     {
-        const curvedEdge& cedge = curvedEdges_[cedgeI];
+        const blockEdge& cedge = edges_[cedgei];
 
         int cmp = cedge.compare(blockLabels[start], blockLabels[end]);
 
@@ -87,29 +87,29 @@ void Foam::blockDescriptor::setEdge
                 // Curve has the same orientation
 
                 // Divide the line
-                lineDivide divEdge(cedge, nDiv, expand_[edgeI]);
+                lineDivide divEdge(cedge, nDiv, expand_[edgei]);
 
-                edgePoints_[edgeI]  = divEdge.points();
-                edgeWeights_[edgeI] = divEdge.lambdaDivisions();
+                edgePoints_[edgei]  = divEdge.points();
+                edgeWeights_[edgei] = divEdge.lambdaDivisions();
             }
             else
             {
                 // Curve has the opposite orientation
 
                 // Divide the line
-                lineDivide divEdge(cedge, nDiv, expand_[edgeI].inv());
+                lineDivide divEdge(cedge, nDiv, expand_[edgei].inv());
 
                 const pointField& p = divEdge.points();
                 const scalarList& d = divEdge.lambdaDivisions();
 
-                edgePoints_[edgeI].setSize(p.size());
-                edgeWeights_[edgeI].setSize(d.size());
+                edgePoints_[edgei].setSize(p.size());
+                edgeWeights_[edgei].setSize(d.size());
 
                 label pMax = p.size() - 1;
                 forAll(p, pI)
                 {
-                    edgePoints_[edgeI][pI]  = p[pMax - pI];
-                    edgeWeights_[edgeI][pI] = 1.0 - d[pMax - pI];
+                    edgePoints_[edgei][pI]  = p[pMax - pI];
+                    edgeWeights_[edgei][pI] = 1.0 - d[pMax - pI];
                 }
             }
 
@@ -124,11 +124,11 @@ void Foam::blockDescriptor::setEdge
     (
         lineEdge(blockPoints, start, end),
         nDiv,
-        expand_[edgeI]
+        expand_[edgei]
     );
 
-    edgePoints_[edgeI]  = divEdge.points();
-    edgeWeights_[edgeI] = divEdge.lambdaDivisions();
+    edgePoints_[edgei]  = divEdge.points();
+    edgeWeights_[edgei] = divEdge.lambdaDivisions();
 }
 
 

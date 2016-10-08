@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,62 +23,74 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-#include "lineEdge.H"
+#include "splineEdge.H"
 #include "addToRunTimeSelectionTable.H"
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(lineEdge, 0);
-    addToRunTimeSelectionTable(curvedEdge, lineEdge, Istream);
+    defineTypeNameAndDebug(splineEdge, 0);
+
+    addToRunTimeSelectionTable
+    (
+        blockEdge,
+        splineEdge,
+        Istream
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::lineEdge::lineEdge
+Foam::splineEdge::splineEdge
 (
     const pointField& points,
     const label start,
-    const label end
+    const label end,
+    const pointField& internalPoints
 )
 :
-    curvedEdge(points, start, end)
+    blockEdge(points, start, end),
+    CatmullRomSpline(appendEndPoints(points, start, end, internalPoints))
 {}
 
 
-Foam::lineEdge::lineEdge(const pointField& points, Istream& is)
+Foam::splineEdge::splineEdge(const pointField& points, Istream& is)
 :
-    curvedEdge(points, is)
-{}
+    blockEdge(points, is),
+    CatmullRomSpline(appendEndPoints(points, start_, end_, pointField(is)))
+{
+    token t(is);
+    is.putBack(t);
+
+    // discard unused start/end tangents
+    if (t == token::BEGIN_LIST)
+    {
+        vector tangent0Ignored(is);
+        vector tangent1Ignored(is);
+    }
+}
 
 
-// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::lineEdge::~lineEdge()
+Foam::splineEdge::~splineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::lineEdge::position(const scalar lambda) const
+Foam::point Foam::splineEdge::position(const scalar mu) const
 {
-    if (lambda < -SMALL || lambda > 1+SMALL)
-    {
-        FatalErrorInFunction
-            << "Parameter out of range, lambda = " << lambda
-            << abort(FatalError);
-    }
-
-    return points_[start_] + lambda * (points_[end_] - points_[start_]);
+    return CatmullRomSpline::position(mu);
 }
 
 
-Foam::scalar Foam::lineEdge::length() const
+Foam::scalar Foam::splineEdge::length() const
 {
-    return mag(points_[end_] - points_[start_]);
+    return CatmullRomSpline::length();
 }
 
 

@@ -38,17 +38,17 @@ void Foam::blockDescriptor::check(const Istream& is)
                 << " in block " << *this
                 << exit(FatalIOError);
         }
-        else if (blockShape_[pi] >= blockPointField_.size())
+        else if (blockShape_[pi] >= vertices_.size())
         {
             FatalIOErrorInFunction(is)
                 << "Point label " << blockShape_[pi]
-                << " out of range 0.." << blockPointField_.size() - 1
+                << " out of range 0.." << vertices_.size() - 1
                 << " in block " << *this
                 << exit(FatalIOError);
         }
     }
 
-    const point blockCentre(blockShape_.centre(blockPointField_));
+    const point blockCentre(blockShape_.centre(vertices_));
     const faceList faces(blockShape_.faces());
 
     // Check each face is outward-pointing with respect to the block centre
@@ -57,8 +57,8 @@ void Foam::blockDescriptor::check(const Istream& is)
 
     forAll(faces, i)
     {
-        point faceCentre(faces[i].centre(blockPointField_));
-        vector faceNormal(faces[i].normal(blockPointField_));
+        point faceCentre(faces[i].centre(vertices_));
+        vector faceNormal(faces[i].normal(vertices_));
         if (mag(faceNormal) > SMALL)
         {
             if (((faceCentre - blockCentre) & faceNormal) > 0)
@@ -107,17 +107,17 @@ void Foam::blockDescriptor::check(const Istream& is)
 Foam::blockDescriptor::blockDescriptor
 (
     const cellShape& bshape,
-    const pointField& blockPointField,
-    const curvedEdgeList& edges,
-    const Vector<label>& meshDensity,
+    const pointField& vertices,
+    const blockEdgeList& edges,
+    const Vector<label>& density,
     const UList<gradingDescriptors>& expand,
     const word& zoneName
 )
 :
-    blockPointField_(blockPointField),
-    curvedEdges_(edges),
+    vertices_(vertices),
+    edges_(edges),
     blockShape_(bshape),
-    meshDensity_(meshDensity),
+    density_(density),
     edgePoints_(12),
     edgeWeights_(12),
     expand_(expand),
@@ -137,15 +137,15 @@ Foam::blockDescriptor::blockDescriptor
 
 Foam::blockDescriptor::blockDescriptor
 (
-    const pointField& blockPointField,
-    const curvedEdgeList& edges,
+    const pointField& vertices,
+    const blockEdgeList& edges,
     Istream& is
 )
 :
-    blockPointField_(blockPointField),
-    curvedEdges_(edges),
+    vertices_(vertices),
+    edges_(edges),
     blockShape_(is),
-    meshDensity_(),
+    density_(),
     edgePoints_(12),
     edgeWeights_(12),
     expand_
@@ -173,7 +173,7 @@ Foam::blockDescriptor::blockDescriptor
         // New-style: read a list of 3 values
         if (t.pToken() == token::BEGIN_LIST)
         {
-            is >> meshDensity_;
+            is >> density_;
         }
         else
         {
@@ -188,9 +188,9 @@ Foam::blockDescriptor::blockDescriptor
     else
     {
         // Old-style: read three labels
-        is  >> meshDensity_.x()
-            >> meshDensity_.y()
-            >> meshDensity_.z();
+        is  >> density_.x()
+            >> density_.y()
+            >> density_.z();
     }
 
     is >> t;
@@ -250,73 +250,6 @@ Foam::blockDescriptor::~blockDescriptor()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::pointField& Foam::blockDescriptor::blockPointField() const
-{
-    return blockPointField_;
-}
-
-
-const Foam::cellShape& Foam::blockDescriptor::blockShape() const
-{
-    return blockShape_;
-}
-
-
-const Foam::List<Foam::List<Foam::point>>&
-Foam::blockDescriptor::blockEdgePoints() const
-{
-    return edgePoints_;
-}
-
-
-const Foam::scalarListList& Foam::blockDescriptor::blockEdgeWeights() const
-{
-    return edgeWeights_;
-}
-
-
-const Foam::Vector<Foam::label>& Foam::blockDescriptor::meshDensity() const
-{
-    return meshDensity_;
-}
-
-
-const Foam::word& Foam::blockDescriptor::zoneName() const
-{
-    return zoneName_;
-}
-
-
-Foam::label Foam::blockDescriptor::nPoints() const
-{
-    return
-    (
-        (meshDensity_.x() + 1)
-      * (meshDensity_.y() + 1)
-      * (meshDensity_.z() + 1)
-    );
-}
-
-
-Foam::label Foam::blockDescriptor::nCells() const
-{
-    return
-    (
-        meshDensity_.x()
-      * meshDensity_.y()
-      * meshDensity_.z()
-    );
-}
-
-
-const Foam::point& Foam::blockDescriptor::blockPoint(const label i) const
-{
-    return blockPointField_[blockShape_[i]];
-}
-
-
 // * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const blockDescriptor& bd)
@@ -341,7 +274,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const blockDescriptor& bd)
         os  << ' ' << bd.zoneName();
     }
 
-    os  << ' '  << bd.meshDensity()
+    os  << ' '  << bd.density()
         << " simpleGrading (";
 
 
@@ -374,13 +307,13 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const blockDescriptor& bd)
     }
     else
     {
-        forAll(expand, edgeI)
+        forAll(expand, edgei)
         {
-            if (edgeI)
+            if (edgei)
             {
                 os  << ' ';
             }
-            os  << expand[edgeI];
+            os  << expand[edgei];
         }
     }
 

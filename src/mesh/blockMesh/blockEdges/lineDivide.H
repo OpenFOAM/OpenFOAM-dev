@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,78 +22,62 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::splineEdge
+    Foam::lineDivide
 
 Description
-    A curvedEdge interface for Catmull-Rom splines.
+    Divides a line into segments
 
 SourceFiles
-    splineEdge.C
+    lineDivide.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef splineEdge_H
-#define splineEdge_H
+#ifndef lineDivide_H
+#define lineDivide_H
 
-#include "curvedEdge.H"
-#include "CatmullRomSpline.H"
+#include "pointField.H"
+#include "scalarList.H"
+#include "gradingDescriptors.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+class blockEdge;
+
 /*---------------------------------------------------------------------------*\
-                      Class splineEdge Declaration
+                         Class lineDivide Declaration
 \*---------------------------------------------------------------------------*/
 
-class splineEdge
-:
-    public curvedEdge,
-    public CatmullRomSpline
+class lineDivide
 {
-    // Private Member Functions
+    // Private data
 
-        //- Disallow default bitwise copy construct
-        splineEdge(const splineEdge&);
+        pointField points_;
 
-        //- Disallow default bitwise assignment
-        void operator=(const splineEdge&);
-
+        scalarList divisions_;
 
 public:
-
-    //- Runtime type information
-    TypeName("spline");
-
 
     // Constructors
 
         //- Construct from components
-        splineEdge
+        lineDivide
         (
-            const pointField&,
-            const label start,
-            const label end,
-            const pointField& internalPoints
+            const blockEdge&,
+            const label ndiv,
+            const gradingDescriptors& gd = gradingDescriptors()
         );
-
-        //- Construct from Istream, setting pointsList
-        splineEdge(const pointField&, Istream&);
-
-
-    //- Destructor
-    virtual ~splineEdge();
 
 
     // Member Functions
 
-        //- Return the point position corresponding to the curve parameter
-        //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
+        //- Return the points
+        const pointField& points() const;
 
-        //- Return the length of the spline curve (not implemented)
-        virtual scalar length() const;
+        //- Return the list of lambda values
+        const scalarList& lambdaDivisions() const;
 };
 
 

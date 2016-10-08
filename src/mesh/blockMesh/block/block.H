@@ -67,8 +67,8 @@ class block
 {
     // Private data
 
-        //- List of vertices
-        mutable pointField vertices_;
+        //- List of points
+        mutable pointField points_;
 
         //- List of cells
         mutable labelListList cells_;
@@ -101,9 +101,9 @@ public:
         //- Construct from components with Istream
         block
         (
-            const pointField& blockPointField,
-            const curvedEdgeList&,
-            Istream&
+            const pointField& vertices,
+            const blockEdgeList& edges,
+            Istream& is
         );
 
         //- Construct from a block definition
@@ -115,6 +115,27 @@ public:
             NotImplemented;
             return autoPtr<block>(nullptr);
         }
+
+        //- Class used for the read-construction of
+        //  PtrLists of blocks
+        class iNew
+        {
+            const pointField& points_;
+            const blockEdgeList& edges_;
+
+        public:
+
+            iNew(const pointField& points, const blockEdgeList& edges)
+            :
+                points_(points),
+                edges_(edges)
+            {}
+
+            autoPtr<block> operator()(Istream& is) const
+            {
+                return autoPtr<block>(new block(points_, edges_, is));
+            }
+        };
 
 
     //- Destructor

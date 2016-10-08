@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,74 +23,58 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "BSplineEdge.H"
+#include "error.H"
+#include "polyLineEdge.H"
 #include "addToRunTimeSelectionTable.H"
-
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(BSplineEdge, 0);
-
-    addToRunTimeSelectionTable
-    (
-        curvedEdge,
-        BSplineEdge,
-        Istream
-    );
+    defineTypeNameAndDebug(polyLineEdge, 0);
+    addToRunTimeSelectionTable(blockEdge, polyLineEdge, Istream);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::BSplineEdge::BSplineEdge
+Foam::polyLineEdge::polyLineEdge
 (
-    const pointField& points,
+    const pointField& ps,
     const label start,
     const label end,
-    const pointField& internalPoints
+    const pointField& otherPoints
 )
 :
-    curvedEdge(points, start, end),
-    BSpline(appendEndPoints(points, start, end, internalPoints))
+    blockEdge(ps, start, end),
+    polyLine(appendEndPoints(ps, start_, end_, otherPoints))
 {}
 
 
-Foam::BSplineEdge::BSplineEdge(const pointField& points, Istream& is)
+Foam::polyLineEdge::polyLineEdge(const pointField& ps, Istream& is)
 :
-    curvedEdge(points, is),
-    BSpline(appendEndPoints(points, start_, end_, pointField(is)))
-{
-    token t(is);
-    is.putBack(t);
-
-    // discard unused start/end tangents
-    if (t == token::BEGIN_LIST)
-    {
-        vector tangent0Ignored(is);
-        vector tangent1Ignored(is);
-    }
-}
+    blockEdge(ps, is),
+    polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::BSplineEdge::~BSplineEdge()
+Foam::polyLineEdge::~polyLineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::BSplineEdge::position(const scalar mu) const
+Foam::point Foam::polyLineEdge::position(const scalar lambda) const
 {
-    return BSpline::position(mu);
+    return polyLine::position(lambda);
 }
 
 
-Foam::scalar Foam::BSplineEdge::length() const
+Foam::scalar Foam::polyLineEdge::length() const
 {
-    return BSpline::length();
+    return polyLine::lineLength_;
 }
 
 

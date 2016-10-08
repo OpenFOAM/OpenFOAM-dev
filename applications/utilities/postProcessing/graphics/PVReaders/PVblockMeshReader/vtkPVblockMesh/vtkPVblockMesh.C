@@ -115,7 +115,7 @@ void Foam::vtkPVblockMesh::updateInfoEdges
     arrayRangeEdges_.reset( arraySelection->GetNumberOfArrays() );
 
     const blockMesh& blkMesh = *meshPtr_;
-    const curvedEdgeList& edges = blkMesh.edges();
+    const blockEdgeList& edges = blkMesh.edges();
 
     const int nEdges = edges.size();
     forAll(edges, edgeI)
@@ -429,7 +429,7 @@ void Foam::vtkPVblockMesh::renderPointNumbers
 
     if (show && meshPtr_)
     {
-        const pointField& cornerPts = meshPtr_->blockPointField();
+        const pointField& cornerPts = meshPtr_->vertices();
         const scalar scaleFactor = meshPtr_->scaleFactor();
 
         pointNumberTextActorsPtrs_.setSize(cornerPts.size());

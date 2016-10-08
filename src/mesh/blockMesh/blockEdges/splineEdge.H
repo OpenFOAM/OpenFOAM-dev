@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::arcEdge
+    Foam::splineEdge
 
 Description
-    Defines the arcEdge of a circle in terms of 3 points on its circumference
+    A blockEdge interface for Catmull-Rom splines.
 
 SourceFiles
-    arcEdge.C
+    splineEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef arcEdge_H
-#define arcEdge_H
+#ifndef splineEdge_H
+#define splineEdge_H
 
-#include "curvedEdge.H"
-#include "cylindricalCS.H"
+#include "blockEdge.H"
+#include "CatmullRomSpline.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,63 +44,56 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class arcEdge Declaration
+                      Class splineEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-class arcEdge
+class splineEdge
 :
-    public curvedEdge
+    public blockEdge,
+    public CatmullRomSpline
 {
-    // Private data
-
-        point p1_, p2_, p3_;
-        cylindricalCS cs_;
-        scalar angle_;
-        scalar radius_;
-
     // Private Member Functions
 
-        //- Calculate the coordinate system, angle and radius
-        cylindricalCS calcAngle();
-
         //- Disallow default bitwise copy construct
-        arcEdge(const arcEdge&);
+        splineEdge(const splineEdge&);
 
         //- Disallow default bitwise assignment
-        void operator=(const arcEdge&);
+        void operator=(const splineEdge&);
+
 
 public:
 
     //- Runtime type information
-    TypeName("arc");
+    TypeName("spline");
 
 
     // Constructors
 
         //- Construct from components
-        arcEdge
+        splineEdge
         (
-            const pointField& points,
-            const label start, const label end,
-            const point& pMid
+            const pointField&,
+            const label start,
+            const label end,
+            const pointField& internalPoints
         );
 
-        //- Construct from Istream setting pointsList
-        arcEdge(const pointField& points, Istream&);
+        //- Construct from Istream, setting pointsList
+        splineEdge(const pointField&, Istream&);
 
 
     //- Destructor
-    virtual ~arcEdge(){}
+    virtual ~splineEdge();
 
 
     // Member Functions
 
         //- Return the point position corresponding to the curve parameter
         //  0 <= lambda <= 1
-        point position(const scalar) const;
+        virtual point position(const scalar) const;
 
-        //- Return the length of the curve
-        scalar length() const;
+        //- Return the length of the spline curve (not implemented)
+        virtual scalar length() const;
 };
 
 

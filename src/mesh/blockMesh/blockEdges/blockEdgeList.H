@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,49 +21,35 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::blockEdgeList
+
+Description
+    A PtrList of blockEdges
+
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+#ifndef blockEdgeList_H
+#define blockEdgeList_H
 
-inline Foam::label Foam::curvedEdge::start() const
+#include "blockEdge.H"
+#include "PtrList.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    return start_;
-}
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::label Foam::curvedEdge::end() const
-{
-    return end_;
-}
+typedef PtrList<blockEdge> blockEdgeList;
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline int Foam::curvedEdge::compare(const label start, const label end) const
-{
-    if (start_ == start && end_ == end)
-    {
-        return 1;
-    }
-    else if (start_ == end && end_ == start)
-    {
-        return -1;
-    }
-    else
-    {
-        return 0;
-    }
-}
+} // End namespace Foam
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline int Foam::curvedEdge::compare(const curvedEdge& e) const
-{
-    return Foam::curvedEdge::compare(e.start(), e.end());
-}
-
-
-inline int Foam::curvedEdge::compare(const edge& e) const
-{
-    return Foam::curvedEdge::compare(e.start(), e.end());
-}
-
+#endif
 
 // ************************************************************************* //

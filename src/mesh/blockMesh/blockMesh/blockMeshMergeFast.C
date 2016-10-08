@@ -162,18 +162,18 @@ Pair<label> faceNij(const label facei, const block& block)
 
     if (i == 0)
     {
-        fnij.first() = block.meshDensity().y() + 1;
-        fnij.second() = block.meshDensity().z() + 1;
+        fnij.first() = block.density().y() + 1;
+        fnij.second() = block.density().z() + 1;
     }
     else if (i == 1)
     {
-        fnij.first() = block.meshDensity().x() + 1;
-        fnij.second() = block.meshDensity().z() + 1;
+        fnij.first() = block.density().x() + 1;
+        fnij.second() = block.density().z() + 1;
     }
     else if (i == 2)
     {
-        fnij.first() = block.meshDensity().x() + 1;
-        fnij.second() = block.meshDensity().y() + 1;
+        fnij.first() = block.density().x() + 1;
+        fnij.second() = block.density().y() + 1;
     }
 
     return fnij;
@@ -211,15 +211,15 @@ inline label facePoint
         case 0:
             return block.vtxLabel(0, i, j);
         case 1:
-            return block.vtxLabel(block.meshDensity().x(), i, j);
+            return block.vtxLabel(block.density().x(), i, j);
         case 2:
             return block.vtxLabel(i, 0, j);
         case 3:
-            return block.vtxLabel(i, block.meshDensity().y(), j);
+            return block.vtxLabel(i, block.density().y(), j);
         case 4:
             return block.vtxLabel(i, j, 0);
         case 5:
-            return block.vtxLabel(i, j, block.meshDensity().z());
+            return block.vtxLabel(i, j, block.density().z());
         default:
             return -1;
     }
@@ -236,9 +236,9 @@ inline label facePointN
 {
     return block.vtxLabel
     (
-        unsignIndex(i, block.meshDensity().x()),
-        unsignIndex(j, block.meshDensity().y()),
-        unsignIndex(k, block.meshDensity().z())
+        unsignIndex(i, block.density().x()),
+        unsignIndex(j, block.density().y()),
+        unsignIndex(k, block.density().z())
     );
 }
 
@@ -256,15 +256,15 @@ inline label facePointN
         case 0:
             return facePointN(block, 0, i, j);
         case 1:
-            return facePointN(block, block.meshDensity().x(), i, j);
+            return facePointN(block, block.density().x(), i, j);
         case 2:
             return facePointN(block, i, 0, j);
         case 3:
-            return facePointN(block, i, block.meshDensity().y(), j);
+            return facePointN(block, i, block.density().y(), j);
         case 4:
             return facePointN(block, i, j, 0);
         case 5:
-            return facePointN(block, i, j, block.meshDensity().z());
+            return facePointN(block, i, j, block.density().z());
         default:
             return -1;
     }

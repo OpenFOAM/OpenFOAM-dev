@@ -179,7 +179,7 @@ void Foam::blockMesh::readPatches
         (
             patchStream,
             patchNames[nPatches],
-            blockPointField_,
+            vertices_,
             tmpBlocksPatches[nPatches]
         );
 
@@ -292,7 +292,7 @@ void Foam::blockMesh::readBoundary
         (
             patchInfo.dict(),
             patchNames[patchi],
-            blockPointField_,
+            vertices_,
             tmpBlocksPatches[patchi]
         );
     }
@@ -351,13 +351,13 @@ Foam::polyMesh* Foam::blockMesh::createTopology
             Info<< "Creating block edges" << endl;
         }
 
-        curvedEdgeList blockEdges
+        blockEdgeList edges
         (
             meshDescription.lookup("edges"),
-            curvedEdge::iNew(blockPointField_)
+            blockEdge::iNew(vertices_)
         );
 
-        edges_.transfer(blockEdges);
+        edges_.transfer(edges);
     }
     else if (verboseOutput)
     {
@@ -370,65 +370,13 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     {
         Info<< "Creating topology blocks" << endl;
     }
-
     {
-        ITstream& is(meshDescription.lookup("blocks"));
-
-        // Read number of blocks in mesh
-        label nBlocks = 0;
-
-        token firstToken(is);
-
-        if (firstToken.isLabel())
-        {
-            nBlocks = firstToken.labelToken();
-            blocks.setSize(nBlocks);
-        }
-        else
-        {
-            is.putBack(firstToken);
-        }
-
-        // Read beginning of blocks
-        is.readBegin("blocks");
-
-        nBlocks = 0;
-
-        token lastToken(is);
-        while
+        blockList blocks
         (
-           !(
-                 lastToken.isPunctuation()
-              && lastToken.pToken() == token::END_LIST
-            )
-        )
-        {
-            if (blocks.size() <= nBlocks)
-            {
-                blocks.setSize(nBlocks + 1);
-            }
-
-            is.putBack(lastToken);
-
-            blocks.set
-            (
-                nBlocks,
-                new block
-                (
-                    blockPointField_,
-                    edges_,
-                    is
-                )
-            );
-
-            nBlocks++;
-
-            is >> lastToken;
-        }
-        is.putBack(lastToken);
-
-        // Read end of blocks
-        is.readEnd("blocks");
+            meshDescription.lookup("blocks"),
+            block::iNew(vertices_, edges_)
+        );
+        transfer(blocks);
     }
 
 
@@ -525,7 +473,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // Copy these points, do NOT move
+            xferCopy(vertices_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,
@@ -564,7 +512,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
                 IOobject::NO_WRITE,
                 false
             ),
-            xferCopy(blockPointField_),   // Copy these points, do NOT move
+            xferCopy(vertices_),   // Copy these points, do NOT move
             tmpBlockCells,
             tmpBlocksPatches,
             patchNames,
