@@ -31,20 +31,6 @@ inline const Foam::cellShape& Foam::blockDescriptor::blockShape() const
 }
 
 
-inline const Foam::List<Foam::List<Foam::point>>&
-Foam::blockDescriptor::blockEdgePoints() const
-{
-    return edgePoints_;
-}
-
-
-inline const Foam::scalarListList&
-Foam::blockDescriptor::blockEdgeWeights() const
-{
-    return edgeWeights_;
-}
-
-
 inline const Foam::Vector<Foam::label>& Foam::blockDescriptor::density() const
 {
     return density_;

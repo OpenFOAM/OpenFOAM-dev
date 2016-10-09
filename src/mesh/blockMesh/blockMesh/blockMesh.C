@@ -48,7 +48,7 @@ Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
 
     if (fastMerge)
     {
-         calcMergeInfoFast();
+        calcMergeInfoFast();
     }
     else
     {

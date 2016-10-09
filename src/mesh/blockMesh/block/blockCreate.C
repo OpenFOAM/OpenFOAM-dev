@@ -44,10 +44,10 @@ void Foam::block::createPoints() const
     const point& p111 = blockPoint(6);
     const point& p011 = blockPoint(7);
 
-
     // List of edge point and weighting factors
-    const List<List<point>>& p = blockEdgePoints();
-    const scalarListList& w = blockEdgeWeights();
+    List<point> p[12];
+    scalarList w[12];
+    edgesPointsWeights(p, w);
 
     //
     // Generate vertices
@@ -63,51 +63,34 @@ void Foam::block::createPoints() const
             {
                 const label vertexNo = vtxLabel(i, j, k);
 
-                // Points on edges
-                vector edgex1 = p000 + (p100 - p000)*w[0][i];
-                vector edgex2 = p010 + (p110 - p010)*w[1][i];
-                vector edgex3 = p011 + (p111 - p011)*w[2][i];
-                vector edgex4 = p001 + (p101 - p001)*w[3][i];
-
-                vector edgey1 = p000 + (p010 - p000)*w[4][j];
-                vector edgey2 = p100 + (p110 - p100)*w[5][j];
-                vector edgey3 = p101 + (p111 - p101)*w[6][j];
-                vector edgey4 = p001 + (p011 - p001)*w[7][j];
-
-                vector edgez1 = p000 + (p001 - p000)*w[8][k];
-                vector edgez2 = p100 + (p101 - p100)*w[9][k];
-                vector edgez3 = p110 + (p111 - p110)*w[10][k];
-                vector edgez4 = p010 + (p011 - p010)*w[11][k];
-
-
                 // Calculate the importance factors for all edges
 
                 // x-direction
                 scalar impx1 =
                 (
-                    (1.0 - w[0][i])*(1.0 - w[4][j])*(1.0 - w[8][k])
-                  + w[0][i]*(1.0 - w[5][j])*(1.0 - w[9][k])
+                    (1 - w[0][i])*(1 - w[4][j])*(1 - w[8][k])
+                  + w[0][i]*(1 - w[5][j])*(1 - w[9][k])
                 );
 
                 scalar impx2 =
                 (
-                    (1.0 - w[1][i])*w[4][j]*(1.0 - w[11][k])
-                  + w[1][i]*w[5][j]*(1.0 - w[10][k])
+                    (1 - w[1][i])*w[4][j]*(1 - w[11][k])
+                  + w[1][i]*w[5][j]*(1 - w[10][k])
                 );
 
                 scalar impx3 =
                 (
-                     (1.0 - w[2][i])*w[7][j]*w[11][k]
+                     (1 - w[2][i])*w[7][j]*w[11][k]
                    + w[2][i]*w[6][j]*w[10][k]
                 );
 
                 scalar impx4 =
                 (
-                    (1.0 - w[3][i])*(1.0 - w[7][j])*w[8][k]
-                  + w[3][i]*(1.0 - w[6][j])*w[9][k]
+                    (1 - w[3][i])*(1 - w[7][j])*w[8][k]
+                  + w[3][i]*(1 - w[6][j])*w[9][k]
                 );
 
-                scalar magImpx = impx1 + impx2 + impx3 + impx4;
+                const scalar magImpx = impx1 + impx2 + impx3 + impx4;
                 impx1 /= magImpx;
                 impx2 /= magImpx;
                 impx3 /= magImpx;
@@ -117,29 +100,29 @@ void Foam::block::createPoints() const
                 // y-direction
                 scalar impy1 =
                 (
-                    (1.0 - w[4][j])*(1.0 - w[0][i])*(1.0 - w[8][k])
-                  + w[4][j]*(1.0 - w[1][i])*(1.0 - w[11][k])
+                    (1 - w[4][j])*(1 - w[0][i])*(1 - w[8][k])
+                  + w[4][j]*(1 - w[1][i])*(1 - w[11][k])
                 );
 
                 scalar impy2 =
                 (
-                    (1.0 - w[5][j])*w[0][i]*(1.0 - w[9][k])
-                  + w[5][j]*w[1][i]*(1.0 - w[10][k])
+                    (1 - w[5][j])*w[0][i]*(1 - w[9][k])
+                  + w[5][j]*w[1][i]*(1 - w[10][k])
                 );
 
                 scalar impy3 =
                 (
-                    (1.0 - w[6][j])*w[3][i]*w[9][k]
+                    (1 - w[6][j])*w[3][i]*w[9][k]
                   + w[6][j]*w[2][i]*w[10][k]
                 );
 
                 scalar impy4 =
                 (
-                    (1.0 - w[7][j])*(1.0 - w[3][i])*w[8][k]
-                  + w[7][j]*(1.0 - w[2][i])*w[11][k]
+                    (1 - w[7][j])*(1 - w[3][i])*w[8][k]
+                  + w[7][j]*(1 - w[2][i])*w[11][k]
                 );
 
-                scalar magImpy = impy1 + impy2 + impy3 + impy4;
+                const scalar magImpy = impy1 + impy2 + impy3 + impy4;
                 impy1 /= magImpy;
                 impy2 /= magImpy;
                 impy3 /= magImpy;
@@ -149,80 +132,75 @@ void Foam::block::createPoints() const
                 // z-direction
                 scalar impz1 =
                 (
-                    (1.0 - w[8][k])*(1.0 - w[0][i])*(1.0 - w[4][j])
-                  + w[8][k]*(1.0 - w[3][i])*(1.0 - w[7][j])
+                    (1 - w[8][k])*(1 - w[0][i])*(1 - w[4][j])
+                  + w[8][k]*(1 - w[3][i])*(1 - w[7][j])
                 );
 
                 scalar impz2 =
                 (
-                    (1.0 - w[9][k])*w[0][i]*(1.0 - w[5][j])
-                  + w[9][k]*w[3][i]*(1.0 - w[6][j])
+                    (1 - w[9][k])*w[0][i]*(1 - w[5][j])
+                  + w[9][k]*w[3][i]*(1 - w[6][j])
                 );
 
                 scalar impz3 =
                 (
-                    (1.0 - w[10][k])*w[1][i]*w[5][j]
+                    (1 - w[10][k])*w[1][i]*w[5][j]
                   + w[10][k]*w[2][i]*w[6][j]
                 );
 
                 scalar impz4 =
                 (
-                    (1.0 - w[11][k])*(1.0 - w[1][i])*w[4][j]
-                  + w[11][k]*(1.0 - w[2][i])*w[7][j]
+                    (1 - w[11][k])*(1 - w[1][i])*w[4][j]
+                  + w[11][k]*(1 - w[2][i])*w[7][j]
                 );
 
-                scalar magImpz = impz1 + impz2 + impz3 + impz4;
+                const scalar magImpz = impz1 + impz2 + impz3 + impz4;
                 impz1 /= magImpz;
                 impz2 /= magImpz;
                 impz3 /= magImpz;
                 impz4 /= magImpz;
 
 
-                // Calculate the correction vectors
-                vector corx1 = impx1*(p[0][i] - edgex1);
-                vector corx2 = impx2*(p[1][i] - edgex2);
-                vector corx3 = impx3*(p[2][i] - edgex3);
-                vector corx4 = impx4*(p[3][i] - edgex4);
+                // Points on straight edges
+                const vector edgex1 = p000 + (p100 - p000)*w[0][i];
+                const vector edgex2 = p010 + (p110 - p010)*w[1][i];
+                const vector edgex3 = p011 + (p111 - p011)*w[2][i];
+                const vector edgex4 = p001 + (p101 - p001)*w[3][i];
 
-                vector cory1 = impy1*(p[4][j] - edgey1);
-                vector cory2 = impy2*(p[5][j] - edgey2);
-                vector cory3 = impy3*(p[6][j] - edgey3);
-                vector cory4 = impy4*(p[7][j] - edgey4);
+                const vector edgey1 = p000 + (p010 - p000)*w[4][j];
+                const vector edgey2 = p100 + (p110 - p100)*w[5][j];
+                const vector edgey3 = p101 + (p111 - p101)*w[6][j];
+                const vector edgey4 = p001 + (p011 - p001)*w[7][j];
 
-                vector corz1 = impz1*(p[8][k] - edgez1);
-                vector corz2 = impz2*(p[9][k] - edgez2);
-                vector corz3 = impz3*(p[10][k] - edgez3);
-                vector corz4 = impz4*(p[11][k] - edgez4);
-
-
-                // Multiply by the importance factor
-
-                // x-direction
-                edgex1 *= impx1;
-                edgex2 *= impx2;
-                edgex3 *= impx3;
-                edgex4 *= impx4;
-
-                // y-direction
-                edgey1 *= impy1;
-                edgey2 *= impy2;
-                edgey3 *= impy3;
-                edgey4 *= impy4;
-
-                // z-direction
-                edgez1 *= impz1;
-                edgez2 *= impz2;
-                edgez3 *= impz3;
-                edgez4 *= impz4;
-
+                const vector edgez1 = p000 + (p001 - p000)*w[8][k];
+                const vector edgez2 = p100 + (p101 - p100)*w[9][k];
+                const vector edgez3 = p110 + (p111 - p110)*w[10][k];
+                const vector edgez4 = p010 + (p011 - p010)*w[11][k];
 
                 // Add the contributions
                 points_[vertexNo] =
                 (
-                    edgex1 + edgex2 + edgex3 + edgex4
-                  + edgey1 + edgey2 + edgey3 + edgey4
-                  + edgez1 + edgez2 + edgez3 + edgez4
-                ) / 3.0;
+                    impx1*edgex1 + impx2*edgex2 + impx3*edgex3 + impx4*edgex4
+                  + impy1*edgey1 + impy2*edgey2 + impy3*edgey3 + impy4*edgey4
+                  + impz1*edgez1 + impz2*edgez2 + impz3*edgez3 + impz4*edgez4
+                )/3.0;
+
+
+                // Calculate the correction vectors
+                const vector corx1 = impx1*(p[0][i] - edgex1);
+                const vector corx2 = impx2*(p[1][i] - edgex2);
+                const vector corx3 = impx3*(p[2][i] - edgex3);
+                const vector corx4 = impx4*(p[3][i] - edgex4);
+
+                const vector cory1 = impy1*(p[4][j] - edgey1);
+                const vector cory2 = impy2*(p[5][j] - edgey2);
+                const vector cory3 = impy3*(p[6][j] - edgey3);
+                const vector cory4 = impy4*(p[7][j] - edgey4);
+
+                const vector corz1 = impz1*(p[8][k] - edgez1);
+                const vector corz2 = impz2*(p[9][k] - edgez2);
+                const vector corz3 = impz3*(p[10][k] - edgez3);
+                const vector corz4 = impz4*(p[11][k] - edgez4);
 
                 points_[vertexNo] +=
                 (

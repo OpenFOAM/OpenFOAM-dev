@@ -118,8 +118,6 @@ Foam::blockDescriptor::blockDescriptor
     edges_(edges),
     blockShape_(bshape),
     density_(density),
-    edgePoints_(12),
-    edgeWeights_(12),
     expand_(expand),
     zoneName_(zoneName)
 {
@@ -129,9 +127,6 @@ Foam::blockDescriptor::blockDescriptor
             << "Unknown definition of expansion ratios"
             << exit(FatalError);
     }
-
-    // Create a list of edges
-    makeBlockEdges();
 }
 
 
@@ -146,8 +141,6 @@ Foam::blockDescriptor::blockDescriptor
     edges_(edges),
     blockShape_(is),
     density_(),
-    edgePoints_(12),
-    edgeWeights_(12),
     expand_
     (
         12,
@@ -238,9 +231,6 @@ Foam::blockDescriptor::blockDescriptor
     }
 
     check(is);
-
-    // Create a list of edges
-    makeBlockEdges();
 }
 
 

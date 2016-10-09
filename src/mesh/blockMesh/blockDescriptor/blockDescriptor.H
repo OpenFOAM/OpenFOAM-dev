@@ -90,12 +90,6 @@ class blockDescriptor
         //- The number of cells in the i,j,k directions
         Vector<label> density_;
 
-        //- Block edge points
-        List<List<point>> edgePoints_;
-
-        //- Block edge weighting factors
-        scalarListList edgeWeights_;
-
         //- Expansion ratios in all directions
         List<gradingDescriptors> expand_;
 
@@ -108,11 +102,16 @@ class blockDescriptor
         //- Check block has outward-pointing faces
         void check(const Istream& is);
 
-        //- Set the points/weights for all edges
-        void makeBlockEdges();
-
-        //- Set the edge points/weights
-        void setEdge(label edgei, label start, label end, label dim);
+        //- Calculate the points and weights for the specified edge
+        void edgePointsWeights
+        (
+            List<point> (&edgePoints)[12],
+            scalarList (&edgeWeights)[12],
+            const label edgei,
+            const label start,
+            const label end,
+            const label dim
+        ) const;
 
 
     // Private Member Functions
@@ -156,12 +155,6 @@ public:
         //- Return the block shape
         inline const cellShape& blockShape() const;
 
-        //- Return the block points along each edge
-        inline const List<List<point>>& blockEdgePoints() const;
-
-        //- Return the weightings along each edge
-        inline const scalarListList& blockEdgeWeights() const;
-
         //- Return the mesh density (number of cells) in the i,j,k directions
         inline const Vector<label>& density() const;
 
@@ -176,6 +169,13 @@ public:
 
         //- Return block point for local label i
         inline const point& blockPoint(const label i) const;
+
+        //- Calculate the points and weights for all edges
+        void edgesPointsWeights
+        (
+            List<point> (&edgePoints)[12],
+            scalarList (&edgeWeights)[12]
+        ) const;
 
 
     // IOstream Operators

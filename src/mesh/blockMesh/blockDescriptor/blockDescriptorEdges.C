@@ -29,41 +29,15 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::blockDescriptor::makeBlockEdges()
-{
-    const label ni = density_.x();
-    const label nj = density_.y();
-    const label nk = density_.z();
-
-    // These edges correspond to the "hex" cellModel
-
-    // X-direction
-    setEdge(0,  0, 1, ni);
-    setEdge(1,  3, 2, ni);
-    setEdge(2,  7, 6, ni);
-    setEdge(3,  4, 5, ni);
-
-    // Y-direction
-    setEdge(4,  0, 3, nj);
-    setEdge(5,  1, 2, nj);
-    setEdge(6,  5, 6, nj);
-    setEdge(7,  4, 7, nj);
-
-    // Z-direction
-    setEdge(8,  0, 4, nk);
-    setEdge(9,  1, 5, nk);
-    setEdge(10, 2, 6, nk);
-    setEdge(11, 3, 7, nk);
-}
-
-
-void Foam::blockDescriptor::setEdge
+void Foam::blockDescriptor::edgePointsWeights
 (
-    label edgei,
-    label start,
-    label end,
-    label nDiv
-)
+    List<point> (&edgePoints)[12],
+    scalarList (&edgeWeights)[12],
+    const label edgei,
+    const label start,
+    const label end,
+    const label nDiv
+) const
 {
     // Set reference to the list of labels defining the block
     const labelList& blockLabels = blockShape_;
@@ -78,7 +52,7 @@ void Foam::blockDescriptor::setEdge
     {
         const blockEdge& cedge = edges_[cedgei];
 
-        int cmp = cedge.compare(blockLabels[start], blockLabels[end]);
+        const int cmp = cedge.compare(blockLabels[start], blockLabels[end]);
 
         if (cmp)
         {
@@ -87,29 +61,29 @@ void Foam::blockDescriptor::setEdge
                 // Curve has the same orientation
 
                 // Divide the line
-                lineDivide divEdge(cedge, nDiv, expand_[edgei]);
+                const lineDivide divEdge(cedge, nDiv, expand_[edgei]);
 
-                edgePoints_[edgei]  = divEdge.points();
-                edgeWeights_[edgei] = divEdge.lambdaDivisions();
+                edgePoints[edgei]  = divEdge.points();
+                edgeWeights[edgei] = divEdge.lambdaDivisions();
             }
             else
             {
                 // Curve has the opposite orientation
 
                 // Divide the line
-                lineDivide divEdge(cedge, nDiv, expand_[edgei].inv());
+                const lineDivide divEdge(cedge, nDiv, expand_[edgei].inv());
 
                 const pointField& p = divEdge.points();
                 const scalarList& d = divEdge.lambdaDivisions();
 
-                edgePoints_[edgei].setSize(p.size());
-                edgeWeights_[edgei].setSize(d.size());
+                edgePoints[edgei].setSize(p.size());
+                edgeWeights[edgei].setSize(d.size());
 
                 label pMax = p.size() - 1;
                 forAll(p, pI)
                 {
-                    edgePoints_[edgei][pI]  = p[pMax - pI];
-                    edgeWeights_[edgei][pI] = 1.0 - d[pMax - pI];
+                    edgePoints[edgei][pI]  = p[pMax - pI];
+                    edgeWeights[edgei][pI] = 1.0 - d[pMax - pI];
                 }
             }
 
@@ -127,8 +101,41 @@ void Foam::blockDescriptor::setEdge
         expand_[edgei]
     );
 
-    edgePoints_[edgei]  = divEdge.points();
-    edgeWeights_[edgei] = divEdge.lambdaDivisions();
+    edgePoints[edgei]  = divEdge.points();
+    edgeWeights[edgei] = divEdge.lambdaDivisions();
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::blockDescriptor::edgesPointsWeights
+(
+    List<point> (&edgePoints)[12],
+    scalarList (&edgeWeights)[12]
+) const
+{
+    // These edges correspond to the "hex" cellModel
+
+    // X-direction
+    const label ni = density_.x();
+    edgePointsWeights(edgePoints, edgeWeights, 0,  0, 1, ni);
+    edgePointsWeights(edgePoints, edgeWeights, 1,  3, 2, ni);
+    edgePointsWeights(edgePoints, edgeWeights, 2,  7, 6, ni);
+    edgePointsWeights(edgePoints, edgeWeights, 3,  4, 5, ni);
+
+    // Y-direction
+    const label nj = density_.y();
+    edgePointsWeights(edgePoints, edgeWeights, 4,  0, 3, nj);
+    edgePointsWeights(edgePoints, edgeWeights, 5,  1, 2, nj);
+    edgePointsWeights(edgePoints, edgeWeights, 6,  5, 6, nj);
+    edgePointsWeights(edgePoints, edgeWeights, 7,  4, 7, nj);
+
+    // Z-direction
+    const label nk = density_.z();
+    edgePointsWeights(edgePoints, edgeWeights, 8,  0, 4, nk);
+    edgePointsWeights(edgePoints, edgeWeights, 9,  1, 5, nk);
+    edgePointsWeights(edgePoints, edgeWeights, 10, 2, 6, nk);
+    edgePointsWeights(edgePoints, edgeWeights, 11, 3, 7, nk);
 }
 
 
