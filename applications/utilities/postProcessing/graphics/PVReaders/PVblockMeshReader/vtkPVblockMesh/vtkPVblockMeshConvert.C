@@ -172,6 +172,11 @@ void Foam::vtkPVblockMesh::convertMeshEdges
 
             edgeList blkEdges = blockDef.blockShape().edges();
 
+            // List of edge point and weighting factors
+            List<point> edgesPoints[12];
+            scalarList edgesWeights[12];
+            blockDef.edgesPointsWeights(edgesPoints, edgesWeights);
+
             // find the corresponding edge within the block
             label foundEdgeI = -1;
             forAll(blkEdges, blkEdgeI)
@@ -185,9 +190,7 @@ void Foam::vtkPVblockMesh::convertMeshEdges
 
             if (foundEdgeI != -1)
             {
-                const List<point>& edgePoints =
-                    blockDef.blockEdgePoints()[foundEdgeI];
-
+                const List<point>& edgePoints = edgesPoints[foundEdgeI];
 
                 vtkPolyData* vtkmesh = vtkPolyData::New();
                 vtkPoints* vtkpoints = vtkPoints::New();
