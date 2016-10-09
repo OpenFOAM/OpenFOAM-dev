@@ -86,8 +86,9 @@ unsetenv WM_THIRD_PARTY_DIR
 
 unsetenv FOAM_APPBIN
 unsetenv FOAM_APP
-unsetenv FOAM_EXT_LIBBIN
 unsetenv FOAM_CODE_TEMPLATES
+unsetenv FOAM_ETC
+unsetenv FOAM_EXT_LIBBIN
 unsetenv FOAM_INST_DIR
 unsetenv FOAM_JOB_DIR
 unsetenv FOAM_LIBBIN
