@@ -384,7 +384,6 @@ void Foam::tecplotWriter::writeConnectivity(const fvMesh& mesh) const
     }
 }
 
-
 void Foam::tecplotWriter::writeConnectivity
 (
     const indirectPrimitivePatch& pp
@@ -394,7 +393,8 @@ void Foam::tecplotWriter::writeConnectivity
     INTEGER4  NumFaceNodes    = 2*pp.nEdges();
 
     // All faces (=edges) have 2 nodes
-    List<INTEGER4> FaceNodeCounts(NumFaces, 2);
+    List<INTEGER4> FaceNodeCounts(NumFaces);
+    FaceNodeCounts = 2;
 
     List<INTEGER4> FaceNodes(NumFaceNodes);
     label nodeI = 0;
