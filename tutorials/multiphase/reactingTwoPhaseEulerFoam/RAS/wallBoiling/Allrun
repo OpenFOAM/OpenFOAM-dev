@@ -8,8 +8,12 @@ application=`getApplication`
 
 runApplication blockMesh
 runApplication $application
-foamDictionary system/controlDict -entry endTime -set 5
-foamDictionary 2/T.liquid -entry boundaryField.wall2.q -set 1e5
-runApplication -a $application
+
+if ! isTest $@
+then
+    foamDictionary system/controlDict -entry endTime -set 5
+    foamDictionary 2/T.liquid -entry boundaryField.wall2.q -set 1e5
+    runApplication -a $application
+fi
 
 #------------------------------------------------------------------------------
