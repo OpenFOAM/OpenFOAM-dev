@@ -403,7 +403,7 @@ void Foam::twoPhaseSystem::solve()
             fvScalarMatrix alpha1Eqn
             (
                 fvm::ddt(alpha1) - fvc::ddt(alpha1)
-              - fvm::laplacian(alphaDbyA, alpha1, "bounded")
+              - fvm::laplacian(alphaDbyA(), alpha1, "bounded")
             );
 
             alpha1Eqn.relax();
