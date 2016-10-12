@@ -13,7 +13,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lfiniteVolume \
     -ldecompositionMethods \
-    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp \
+    -L$(FOAM_LIBBIN)/dummy -lscotchDecomp -lptscotchDecomp \
     -lmeshTools \
     -lsurfMesh \
     -lfileFormats \
