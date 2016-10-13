@@ -68,14 +68,7 @@ cleanCase()
 
     if [ -d constant/polyMesh ]
     then
-        (cd constant/polyMesh && \
-            rm -rf \
-            allOwner* cell* face* meshModifiers* \
-            owner* neighbour* point* edge* \
-            cellLevel* pointLevel* refinementHistory* level0Edge* surfaceIndex* sets \
-            boundary \
-            > /dev/null 2>&1 \
-        )
+        rm -rf constant/polyMesh > /dev/null 2>&1
     fi
     if [ -d constant ]
     then
