@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,43 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "block.H"
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::block::block
-(
-    const pointField& vertices,
-    const blockEdgeList& edges,
-    const blockFaceList& faces,
-    Istream& is
-)
-:
-    blockDescriptor(vertices, edges, faces, is)
+inline const Foam::face& Foam::blockFace::vertices() const
 {
-    createPoints();
-    createBoundary();
+    return vertices_;
 }
 
 
-Foam::block::block(const blockDescriptor& blockDesc)
-:
-    blockDescriptor(blockDesc)
+inline bool Foam::blockFace::compare(const blockFace& bf) const
 {
-    createPoints();
-    createBoundary();
+    return compare(bf.vertices());
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const block& b)
+inline bool Foam::blockFace::compare(const face& vertices) const
 {
-    os << b.points() << nl
-       << b.cells() << nl
-       << b.boundaryPatches() << endl;
-
-    return os;
+    return face::sameVertices(vertices_, vertices);
 }
 
 

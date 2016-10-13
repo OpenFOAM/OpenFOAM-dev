@@ -118,7 +118,12 @@ Foam::arcEdge::arcEdge
 {}
 
 
-Foam::arcEdge::arcEdge(const pointField& points, Istream& is)
+Foam::arcEdge::arcEdge
+(
+    const searchableSurfaces& geometry,
+    const pointField& points,
+    Istream& is
+)
 :
     blockEdge(points, is),
     p1_(points_[start_]),

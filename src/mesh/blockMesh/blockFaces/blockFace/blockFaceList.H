@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,46 +21,35 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::blockFaceList
+
+Description
+    A PtrList of blockFaces
+
 \*---------------------------------------------------------------------------*/
 
-#include "block.H"
+#ifndef blockFaceList_H
+#define blockFaceList_H
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+#include "blockFace.H"
+#include "PtrList.H"
 
-Foam::block::block
-(
-    const pointField& vertices,
-    const blockEdgeList& edges,
-    const blockFaceList& faces,
-    Istream& is
-)
-:
-    blockDescriptor(vertices, edges, faces, is)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    createPoints();
-    createBoundary();
-}
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::block::block(const blockDescriptor& blockDesc)
-:
-    blockDescriptor(blockDesc)
-{
-    createPoints();
-    createBoundary();
-}
+typedef PtrList<blockFace> blockFaceList;
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+} // End namespace Foam
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const block& b)
-{
-    os << b.points() << nl
-       << b.cells() << nl
-       << b.boundaryPatches() << endl;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    return os;
-}
-
+#endif
 
 // ************************************************************************* //

@@ -27,7 +27,22 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::block::createPoints() const
+#define w0 w[0][i]
+#define w1 w[1][i]
+#define w2 w[2][i]
+#define w3 w[3][i]
+
+#define w4 w[4][j]
+#define w5 w[5][j]
+#define w6 w[6][j]
+#define w7 w[7][j]
+
+#define w8 w[8][k]
+#define w9 w[9][k]
+#define w10 w[10][k]
+#define w11 w[11][k]
+
+void Foam::block::createPoints()
 {
     // Set local variables for mesh specification
     const label ni = density().x();
@@ -45,168 +60,285 @@ void Foam::block::createPoints() const
     const point& p011 = blockPoint(7);
 
     // List of edge point and weighting factors
-    List<point> p[12];
+    pointField p[12];
     scalarList w[12];
-    edgesPointsWeights(p, w);
+    label nCurvedEdges = edgesPointsWeights(p, w);
 
-    //
-    // Generate vertices
-    //
-    points_.clear();
     points_.setSize(nPoints());
 
-    for (label k = 0; k <= nk; k++)
-    {
-        for (label j = 0; j <= nj; j++)
-        {
-            for (label i = 0; i <= ni; i++)
-            {
-                const label vertexNo = vtxLabel(i, j, k);
+    points_[pointLabel(0,  0,  0)] = p000;
+    points_[pointLabel(ni, 0,  0)] = p100;
+    points_[pointLabel(ni, nj, 0)] = p110;
+    points_[pointLabel(0,  nj, 0)] = p010;
+    points_[pointLabel(0,  0,  nk)] = p001;
+    points_[pointLabel(ni, 0,  nk)] = p101;
+    points_[pointLabel(ni, nj, nk)] = p111;
+    points_[pointLabel(0,  nj, nk)] = p011;
 
-                // Calculate the importance factors for all edges
+    for (label k=0; k<=nk; k++)
+    {
+        for (label j=0; j<=nj; j++)
+        {
+            for (label i=0; i<=ni; i++)
+            {
+                // Skip block vertices
+                if (vertex(i, j, k)) continue;
+
+                const label vijk = pointLabel(i, j, k);
+
+                // Calculate the weighting factors for all edges
 
                 // x-direction
-                scalar impx1 =
-                (
-                    (1 - w[0][i])*(1 - w[4][j])*(1 - w[8][k])
-                  + w[0][i]*(1 - w[5][j])*(1 - w[9][k])
-                );
+                scalar wx1 = (1 - w0)*(1 - w4)*(1 - w8) + w0*(1 - w5)*(1 - w9);
+                scalar wx2 = (1 - w1)*w4*(1 - w11)      + w1*w5*(1 - w10);
+                scalar wx3 = (1 - w2)*w7*w11            + w2*w6*w10;
+                scalar wx4 = (1 - w3)*(1 - w7)*w8       + w3*(1 - w6)*w9;
 
-                scalar impx2 =
-                (
-                    (1 - w[1][i])*w[4][j]*(1 - w[11][k])
-                  + w[1][i]*w[5][j]*(1 - w[10][k])
-                );
-
-                scalar impx3 =
-                (
-                     (1 - w[2][i])*w[7][j]*w[11][k]
-                   + w[2][i]*w[6][j]*w[10][k]
-                );
-
-                scalar impx4 =
-                (
-                    (1 - w[3][i])*(1 - w[7][j])*w[8][k]
-                  + w[3][i]*(1 - w[6][j])*w[9][k]
-                );
-
-                const scalar magImpx = impx1 + impx2 + impx3 + impx4;
-                impx1 /= magImpx;
-                impx2 /= magImpx;
-                impx3 /= magImpx;
-                impx4 /= magImpx;
+                const scalar sumWx = wx1 + wx2 + wx3 + wx4;
+                wx1 /= sumWx;
+                wx2 /= sumWx;
+                wx3 /= sumWx;
+                wx4 /= sumWx;
 
 
                 // y-direction
-                scalar impy1 =
-                (
-                    (1 - w[4][j])*(1 - w[0][i])*(1 - w[8][k])
-                  + w[4][j]*(1 - w[1][i])*(1 - w[11][k])
-                );
+                scalar wy1 = (1 - w4)*(1 - w0)*(1 - w8) + w4*(1 - w1)*(1 - w11);
+                scalar wy2 = (1 - w5)*w0*(1 - w9)       + w5*w1*(1 - w10);
+                scalar wy3 = (1 - w6)*w3*w9             + w6*w2*w10;
+                scalar wy4 = (1 - w7)*(1 - w3)*w8       + w7*(1 - w2)*w11;
 
-                scalar impy2 =
-                (
-                    (1 - w[5][j])*w[0][i]*(1 - w[9][k])
-                  + w[5][j]*w[1][i]*(1 - w[10][k])
-                );
-
-                scalar impy3 =
-                (
-                    (1 - w[6][j])*w[3][i]*w[9][k]
-                  + w[6][j]*w[2][i]*w[10][k]
-                );
-
-                scalar impy4 =
-                (
-                    (1 - w[7][j])*(1 - w[3][i])*w[8][k]
-                  + w[7][j]*(1 - w[2][i])*w[11][k]
-                );
-
-                const scalar magImpy = impy1 + impy2 + impy3 + impy4;
-                impy1 /= magImpy;
-                impy2 /= magImpy;
-                impy3 /= magImpy;
-                impy4 /= magImpy;
+                const scalar sumWy = wy1 + wy2 + wy3 + wy4;
+                wy1 /= sumWy;
+                wy2 /= sumWy;
+                wy3 /= sumWy;
+                wy4 /= sumWy;
 
 
                 // z-direction
-                scalar impz1 =
-                (
-                    (1 - w[8][k])*(1 - w[0][i])*(1 - w[4][j])
-                  + w[8][k]*(1 - w[3][i])*(1 - w[7][j])
-                );
+                scalar wz1 = (1 - w8)*(1 - w0)*(1 - w4) + w8*(1 - w3)*(1 - w7);
+                scalar wz2 = (1 - w9)*w0*(1 - w5)       + w9*w3*(1 - w6);
+                scalar wz3 = (1 - w10)*w1*w5            + w10*w2*w6;
+                scalar wz4 = (1 - w11)*(1 - w1)*w4      + w11*(1 - w2)*w7;
 
-                scalar impz2 =
-                (
-                    (1 - w[9][k])*w[0][i]*(1 - w[5][j])
-                  + w[9][k]*w[3][i]*(1 - w[6][j])
-                );
-
-                scalar impz3 =
-                (
-                    (1 - w[10][k])*w[1][i]*w[5][j]
-                  + w[10][k]*w[2][i]*w[6][j]
-                );
-
-                scalar impz4 =
-                (
-                    (1 - w[11][k])*(1 - w[1][i])*w[4][j]
-                  + w[11][k]*(1 - w[2][i])*w[7][j]
-                );
-
-                const scalar magImpz = impz1 + impz2 + impz3 + impz4;
-                impz1 /= magImpz;
-                impz2 /= magImpz;
-                impz3 /= magImpz;
-                impz4 /= magImpz;
+                const scalar sumWz = wz1 + wz2 + wz3 + wz4;
+                wz1 /= sumWz;
+                wz2 /= sumWz;
+                wz3 /= sumWz;
+                wz4 /= sumWz;
 
 
                 // Points on straight edges
-                const vector edgex1 = p000 + (p100 - p000)*w[0][i];
-                const vector edgex2 = p010 + (p110 - p010)*w[1][i];
-                const vector edgex3 = p011 + (p111 - p011)*w[2][i];
-                const vector edgex4 = p001 + (p101 - p001)*w[3][i];
+                const vector edgex1 = p000 + (p100 - p000)*w0;
+                const vector edgex2 = p010 + (p110 - p010)*w1;
+                const vector edgex3 = p011 + (p111 - p011)*w2;
+                const vector edgex4 = p001 + (p101 - p001)*w3;
 
-                const vector edgey1 = p000 + (p010 - p000)*w[4][j];
-                const vector edgey2 = p100 + (p110 - p100)*w[5][j];
-                const vector edgey3 = p101 + (p111 - p101)*w[6][j];
-                const vector edgey4 = p001 + (p011 - p001)*w[7][j];
+                const vector edgey1 = p000 + (p010 - p000)*w4;
+                const vector edgey2 = p100 + (p110 - p100)*w5;
+                const vector edgey3 = p101 + (p111 - p101)*w6;
+                const vector edgey4 = p001 + (p011 - p001)*w7;
 
-                const vector edgez1 = p000 + (p001 - p000)*w[8][k];
-                const vector edgez2 = p100 + (p101 - p100)*w[9][k];
-                const vector edgez3 = p110 + (p111 - p110)*w[10][k];
-                const vector edgez4 = p010 + (p011 - p010)*w[11][k];
+                const vector edgez1 = p000 + (p001 - p000)*w8;
+                const vector edgez2 = p100 + (p101 - p100)*w9;
+                const vector edgez3 = p110 + (p111 - p110)*w10;
+                const vector edgez4 = p010 + (p011 - p010)*w11;
 
                 // Add the contributions
-                points_[vertexNo] =
+                points_[vijk] =
                 (
-                    impx1*edgex1 + impx2*edgex2 + impx3*edgex3 + impx4*edgex4
-                  + impy1*edgey1 + impy2*edgey2 + impy3*edgey3 + impy4*edgey4
-                  + impz1*edgez1 + impz2*edgez2 + impz3*edgez3 + impz4*edgez4
-                )/3.0;
+                    wx1*edgex1 + wx2*edgex2 + wx3*edgex3 + wx4*edgex4
+                  + wy1*edgey1 + wy2*edgey2 + wy3*edgey3 + wy4*edgey4
+                  + wz1*edgez1 + wz2*edgez2 + wz3*edgez3 + wz4*edgez4
+                )/3;
 
 
-                // Calculate the correction vectors
-                const vector corx1 = impx1*(p[0][i] - edgex1);
-                const vector corx2 = impx2*(p[1][i] - edgex2);
-                const vector corx3 = impx3*(p[2][i] - edgex3);
-                const vector corx4 = impx4*(p[3][i] - edgex4);
+                // Apply curved-edge correction if block has curved edges
+                if (nCurvedEdges)
+                {
+                    // Calculate the correction vectors
+                    const vector corx1 = wx1*(p[0][i] - edgex1);
+                    const vector corx2 = wx2*(p[1][i] - edgex2);
+                    const vector corx3 = wx3*(p[2][i] - edgex3);
+                    const vector corx4 = wx4*(p[3][i] - edgex4);
 
-                const vector cory1 = impy1*(p[4][j] - edgey1);
-                const vector cory2 = impy2*(p[5][j] - edgey2);
-                const vector cory3 = impy3*(p[6][j] - edgey3);
-                const vector cory4 = impy4*(p[7][j] - edgey4);
+                    const vector cory1 = wy1*(p[4][j] - edgey1);
+                    const vector cory2 = wy2*(p[5][j] - edgey2);
+                    const vector cory3 = wy3*(p[6][j] - edgey3);
+                    const vector cory4 = wy4*(p[7][j] - edgey4);
 
-                const vector corz1 = impz1*(p[8][k] - edgez1);
-                const vector corz2 = impz2*(p[9][k] - edgez2);
-                const vector corz3 = impz3*(p[10][k] - edgez3);
-                const vector corz4 = impz4*(p[11][k] - edgez4);
+                    const vector corz1 = wz1*(p[8][k] - edgez1);
+                    const vector corz2 = wz2*(p[9][k] - edgez2);
+                    const vector corz3 = wz3*(p[10][k] - edgez3);
+                    const vector corz4 = wz4*(p[11][k] - edgez4);
 
-                points_[vertexNo] +=
+                    points_[vijk] +=
+                    (
+                        corx1 + corx2 + corx3 + corx4
+                      + cory1 + cory2 + cory3 + cory4
+                      + corz1 + corz2 + corz3 + corz4
+                    );
+                }
+            }
+        }
+    }
+
+    if (!nCurvedFaces()) return;
+
+    // Apply curvature correction to face points
+    FixedList<pointField, 6> facePoints(this->facePoints(points_));
+    correctFacePoints(facePoints);
+
+    // Loop over points and apply the correction from the from the i-faces
+    for (label ii=0; ii<=ni; ii++)
+    {
+        // Process the points on the curved faces last
+        label i = (ii + 1)%(ni + 1);
+
+        for (label j=0; j<=nj; j++)
+        {
+            for (label k=0; k<=nk; k++)
+            {
+                // Skip non-curved faces and edges
+                if (flatFaceOrEdge(i, j, k)) continue;
+
+                const label vijk = pointLabel(i, j, k);
+
+                scalar wf0 =
                 (
-                    corx1 + corx2 + corx3 + corx4
-                  + cory1 + cory2 + cory3 + cory4
-                  + corz1 + corz2 + corz3 + corz4
+                    (1 - w0)*(1 - w4)*(1 - w8)
+                  + (1 - w1)*w4*(1 - w11)
+                  + (1 - w2)*w7*w11
+                  + (1 - w3)*(1 - w7)*w8
+                );
+
+                scalar wf1 =
+                (
+                    w0*(1 - w5)*(1 - w9)
+                  + w1*w5*(1 - w10)
+                  + w2*w5*w10
+                  + w3*(1 - w6)*w9
+                );
+
+                const scalar sumWf = wf0 + wf1;
+                wf0 /= sumWf;
+                wf1 /= sumWf;
+
+                points_[vijk] +=
+                (
+                    wf0
+                   *(
+                       facePoints[0][facePointLabel(0, j, k)]
+                     - points_[pointLabel(0, j, k)]
+                    )
+                  + wf1
+                   *(
+                       facePoints[1][facePointLabel(1, j, k)]
+                     - points_[pointLabel(ni, j, k)]
+                    )
+                );
+            }
+        }
+    }
+
+    // Loop over points and apply the correction from the from the j-faces
+    for (label jj=0; jj<=nj; jj++)
+    {
+        // Process the points on the curved faces last
+        label j = (jj + 1)%(nj + 1);
+
+        for (label i=0; i<=ni; i++)
+        {
+            for (label k=0; k<=nk; k++)
+            {
+                // Skip flat faces and edges
+                if (flatFaceOrEdge(i, j, k)) continue;
+
+                const label vijk = pointLabel(i, j, k);
+
+                scalar wf2 =
+                (
+                    (1 - w4)*(1 - w1)*(1 - w8)
+                  + (1 - w5)*w0*(1 - w9)
+                  + (1 - w6)*w3*w9
+                  + (1 - w7)*(1 - w3)*w8
+                );
+
+                scalar wf3 =
+                (
+                    w4*(1 - w1)*(1 - w11)
+                  + w5*w1*(1 - w10)
+                  + w6*w2*w10
+                  + w7*(1 - w2)*w11
+                );
+
+                const scalar sumWf = wf2 + wf3;
+                wf2 /= sumWf;
+                wf3 /= sumWf;
+
+                points_[vijk] +=
+                (
+                    wf2
+                   *(
+                       facePoints[2][facePointLabel(2, i, k)]
+                     - points_[pointLabel(i, 0, k)]
+                    )
+                  + wf3
+                   *(
+                       facePoints[3][facePointLabel(3, i, k)]
+                     - points_[pointLabel(i, nj, k)]
+                    )
+                );
+            }
+        }
+    }
+
+    // Loop over points and apply the correction from the from the k-faces
+    for (label kk=0; kk<=nk; kk++)
+    {
+        // Process the points on the curved faces last
+        label k = (kk + 1)%(nk + 1);
+
+        for (label i=0; i<=ni; i++)
+        {
+            for (label j=0; j<=nj; j++)
+            {
+                // Skip flat faces and edges
+                if (flatFaceOrEdge(i, j, k)) continue;
+
+                const label vijk = pointLabel(i, j, k);
+
+                scalar wf4 =
+                (
+                    (1 - w8)*(1 - w0)*(1 - w4)
+                  + (1 - w9)*w0*(1 - w5)
+                  + (1 - w10)*w1*w5
+                  + (1 - w11)*(1 - w1)*w4
+                );
+
+                scalar wf5 =
+                (
+                    w8*(1 - w3)*(1 - w7)
+                  + w9*w3*(1 - w6)
+                  + w10*w2*w6
+                  + w11*(1 - w2)*w7
+                );
+
+                const scalar sumWf = wf4 + wf5;
+                wf4 /= sumWf;
+                wf5 /= sumWf;
+
+                points_[vijk] +=
+                (
+                    wf4
+                   *(
+                       facePoints[4][facePointLabel(4, i, j)]
+                     - points_[pointLabel(i, j, 0)]
+                    )
+                  + wf5
+                   *(
+                       facePoints[5][facePointLabel(5, i, j)]
+                     - points_[pointLabel(i, j, nk)]
+                    )
                 );
             }
         }
@@ -214,229 +346,163 @@ void Foam::block::createPoints() const
 }
 
 
-void Foam::block::createCells() const
+Foam::List<Foam::FixedList<Foam::label, 8>> Foam::block::cells() const
 {
     const label ni = density().x();
     const label nj = density().y();
     const label nk = density().z();
 
-    //
-    // Generate cells
-    //
-    cells_.clear();
-    cells_.setSize(nCells());
+    List<FixedList<label, 8>> cells(nCells());
 
-    label cellNo = 0;
+    label celli = 0;
 
-    for (label k = 0; k < nk; k++)
+    for (label k=0; k<nk; k++)
     {
-        for (label j = 0; j < nj; j++)
+        for (label j=0; j<nj; j++)
         {
-            for (label i = 0; i < ni; i++)
+            for (label i=0; i<ni; i++)
             {
-                cells_[cellNo].setSize(8);
+                cells[celli][0] = pointLabel(i,   j,   k);
+                cells[celli][1] = pointLabel(i+1, j,   k);
+                cells[celli][2] = pointLabel(i+1, j+1, k);
+                cells[celli][3] = pointLabel(i,   j+1, k);
+                cells[celli][4] = pointLabel(i,   j,   k+1);
+                cells[celli][5] = pointLabel(i+1, j,   k+1);
+                cells[celli][6] = pointLabel(i+1, j+1, k+1);
+                cells[celli][7] = pointLabel(i,   j+1, k+1);
 
-                cells_[cellNo][0] =  vtxLabel(i, j, k);
-                cells_[cellNo][1] =  vtxLabel(i+1, j, k);
-                cells_[cellNo][2] =  vtxLabel(i+1, j+1, k);
-                cells_[cellNo][3] =  vtxLabel(i, j+1, k);
-                cells_[cellNo][4] =  vtxLabel(i, j, k+1);
-                cells_[cellNo][5] =  vtxLabel(i+1, j, k+1);
-                cells_[cellNo][6] =  vtxLabel(i+1, j+1, k+1);
-                cells_[cellNo][7] =  vtxLabel(i, j+1, k+1);
-                cellNo++;
+                celli++;
             }
         }
     }
+
+    return cells;
 }
 
 
-void Foam::block::createBoundary() const
+void Foam::block::createBoundary()
 {
     const label ni = density().x();
     const label nj = density().y();
     const label nk = density().z();
 
-    //
-    // Generate boundaries on each side of the hex
-    //
-    boundaryPatches_.clear();
-    boundaryPatches_.setSize(6);
-
+    label patchi = 0;
+    label facei = 0;
 
     // x-direction
 
-    label wallLabel = 0;
-    label wallCellLabel = 0;
-
     // x-min
-    boundaryPatches_[wallLabel].setSize(nj*nk);
-    for (label k = 0; k < nk; k++)
+    boundaryPatches_[patchi].setSize(nj*nk);
+    for (label k=0; k<nk; k++)
     {
-        for (label j = 0; j < nj; j++)
+        for (label j=0; j<nj; j++)
         {
-            boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
+            boundaryPatches_[patchi][facei][0] = pointLabel(0, j,   k);
+            boundaryPatches_[patchi][facei][1] = pointLabel(0, j,   k+1);
+            boundaryPatches_[patchi][facei][2] = pointLabel(0, j+1, k+1);
+            boundaryPatches_[patchi][facei][3] = pointLabel(0, j+1, k);
 
-            // Set the points
-            boundaryPatches_[wallLabel][wallCellLabel][0] =
-                vtxLabel(0, j, k);
-            boundaryPatches_[wallLabel][wallCellLabel][1] =
-                vtxLabel(0, j, k + 1);
-            boundaryPatches_[wallLabel][wallCellLabel][2] =
-                vtxLabel(0, j + 1, k + 1);
-            boundaryPatches_[wallLabel][wallCellLabel][3] =
-                vtxLabel(0, j + 1, k);
-
-            // Update the counter
-            wallCellLabel++;
+            facei++;
         }
     }
 
     // x-max
-    wallLabel++;
-    wallCellLabel = 0;
+    patchi++;
+    facei = 0;
 
-    boundaryPatches_[wallLabel].setSize(nj*nk);
+    boundaryPatches_[patchi].setSize(nj*nk);
 
-    for (label k = 0; k < nk; k++)
+    for (label k=0; k<nk; k++)
     {
-        for (label j = 0; j < nj; j++)
+        for (label j=0; j<nj; j++)
         {
-            boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
+            boundaryPatches_[patchi][facei][0] = pointLabel(ni, j,   k);
+            boundaryPatches_[patchi][facei][1] = pointLabel(ni, j+1, k);
+            boundaryPatches_[patchi][facei][2] = pointLabel(ni, j+1, k+1);
+            boundaryPatches_[patchi][facei][3] = pointLabel(ni, j,   k+1);
 
-            // Set the points
-            boundaryPatches_[wallLabel][wallCellLabel][0] =
-                vtxLabel(ni, j, k);
-            boundaryPatches_[wallLabel][wallCellLabel][1] =
-                vtxLabel(ni, j+1, k);
-            boundaryPatches_[wallLabel][wallCellLabel][2] =
-                vtxLabel(ni, j+1, k+1);
-            boundaryPatches_[wallLabel][wallCellLabel][3] =
-                vtxLabel(ni, j, k+1);
-
-            // Update the counter
-            wallCellLabel++;
+            facei++;
         }
     }
 
     // y-direction
 
     // y-min
-    wallLabel++;
-    wallCellLabel = 0;
+    patchi++;
+    facei = 0;
 
-    boundaryPatches_[wallLabel].setSize(ni*nk);
-    for (label i = 0; i < ni; i++)
+    boundaryPatches_[patchi].setSize(ni*nk);
+    for (label i=0; i<ni; i++)
     {
-        for (label k = 0; k < nk; k++)
+        for (label k=0; k<nk; k++)
         {
-            boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
+            boundaryPatches_[patchi][facei][0] = pointLabel(i,   0, k);
+            boundaryPatches_[patchi][facei][1] = pointLabel(i+1, 0, k);
+            boundaryPatches_[patchi][facei][2] = pointLabel(i+1, 0, k+1);
+            boundaryPatches_[patchi][facei][3] = pointLabel(i,   0, k+1);
 
-            // Set the points
-            boundaryPatches_[wallLabel][wallCellLabel][0] =
-                vtxLabel(i, 0, k);
-            boundaryPatches_[wallLabel][wallCellLabel][1] =
-                vtxLabel(i + 1, 0, k);
-            boundaryPatches_[wallLabel][wallCellLabel][2] =
-                vtxLabel(i + 1, 0, k + 1);
-            boundaryPatches_[wallLabel][wallCellLabel][3] =
-                vtxLabel(i, 0, k + 1);
-
-            // Update the counter
-            wallCellLabel++;
+            facei++;
         }
     }
 
     // y-max
-    wallLabel++;
-    wallCellLabel = 0;
+    patchi++;
+    facei = 0;
 
-    boundaryPatches_[wallLabel].setSize(ni*nk);
+    boundaryPatches_[patchi].setSize(ni*nk);
 
-    for (label i = 0; i < ni; i++)
+    for (label i=0; i<ni; i++)
     {
-        for (label k = 0; k < nk; k++)
+        for (label k=0; k<nk; k++)
         {
-            boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
+            boundaryPatches_[patchi][facei][0] = pointLabel(i,   nj, k);
+            boundaryPatches_[patchi][facei][1] = pointLabel(i,   nj, k+1);
+            boundaryPatches_[patchi][facei][2] = pointLabel(i+1, nj, k+1);
+            boundaryPatches_[patchi][facei][3] = pointLabel(i+1, nj, k);
 
-            // Set the points
-            boundaryPatches_[wallLabel][wallCellLabel][0] =
-                vtxLabel(i, nj, k);
-            boundaryPatches_[wallLabel][wallCellLabel][1] =
-                vtxLabel(i, nj, k + 1);
-            boundaryPatches_[wallLabel][wallCellLabel][2] =
-                vtxLabel(i + 1, nj, k + 1);
-            boundaryPatches_[wallLabel][wallCellLabel][3] =
-                vtxLabel(i + 1, nj, k);
-
-            // Update the counter
-            wallCellLabel++;
+            facei++;
         }
     }
 
     // z-direction
 
     // z-min
-    wallLabel++;
-    wallCellLabel = 0;
+    patchi++;
+    facei = 0;
 
-    boundaryPatches_[wallLabel].setSize(ni*nj);
+    boundaryPatches_[patchi].setSize(ni*nj);
 
-    for (label i = 0; i < ni; i++)
+    for (label i=0; i<ni; i++)
     {
-        for (label j = 0; j < nj; j++)
+        for (label j=0; j<nj; j++)
         {
-            boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
+            boundaryPatches_[patchi][facei][0] = pointLabel(i,   j,   0);
+            boundaryPatches_[patchi][facei][1] = pointLabel(i,   j+1, 0);
+            boundaryPatches_[patchi][facei][2] = pointLabel(i+1, j+1, 0);
+            boundaryPatches_[patchi][facei][3] = pointLabel(i+1, j,   0);
 
-            // Set the points
-            boundaryPatches_[wallLabel][wallCellLabel][0] =
-                vtxLabel(i, j, 0);
-            boundaryPatches_[wallLabel][wallCellLabel][1] =
-                vtxLabel(i, j + 1, 0);
-            boundaryPatches_[wallLabel][wallCellLabel][2] =
-                vtxLabel(i + 1, j + 1, 0);
-            boundaryPatches_[wallLabel][wallCellLabel][3] =
-                vtxLabel(i + 1, j, 0);
-
-            // Update the counter
-            wallCellLabel++;
+            facei++;
         }
     }
 
     // z-max
-    wallLabel++;
-    wallCellLabel = 0;
+    patchi++;
+    facei = 0;
 
-    boundaryPatches_[wallLabel].setSize(ni*nj);
+    boundaryPatches_[patchi].setSize(ni*nj);
 
-    for (label i = 0; i < ni; i++)
+    for (label i=0; i<ni; i++)
     {
-        for (label j = 0; j < nj; j++)
+        for (label j=0; j<nj; j++)
         {
-            boundaryPatches_[wallLabel][wallCellLabel].setSize(4);
+            boundaryPatches_[patchi][facei][0] = pointLabel(i,   j,   nk);
+            boundaryPatches_[patchi][facei][1] = pointLabel(i+1, j,   nk);
+            boundaryPatches_[patchi][facei][2] = pointLabel(i+1, j+1, nk);
+            boundaryPatches_[patchi][facei][3] = pointLabel(i,   j+1, nk);
 
-            // Set the points
-            boundaryPatches_[wallLabel][wallCellLabel][0] =
-                vtxLabel(i, j, nk);
-            boundaryPatches_[wallLabel][wallCellLabel][1] =
-                vtxLabel(i + 1, j, nk);
-            boundaryPatches_[wallLabel][wallCellLabel][2] =
-                vtxLabel(i + 1, j + 1, nk);
-            boundaryPatches_[wallLabel][wallCellLabel][3] =
-                vtxLabel(i, j + 1, nk);
-
-            // Update the counter
-            wallCellLabel++;
+            facei++;
         }
     }
-}
-
-
-void Foam::block::clearGeom()
-{
-    points_.clear();
-    cells_.clear();
-    boundaryPatches_.clear();
 }
 
 

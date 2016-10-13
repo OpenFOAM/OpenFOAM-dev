@@ -77,7 +77,7 @@ void Foam::vtkPV3blockMesh::convertMeshBlocks
             continue;
         }
 
-        const blockDescriptor& blockDef = blkMesh[blockI].blockDef();
+        const blockDescriptor& blockDef = blkMesh[blockI];
 
         vtkUnstructuredGrid* vtkmesh = vtkUnstructuredGrid::New();
 
@@ -168,7 +168,7 @@ void Foam::vtkPV3blockMesh::convertMeshEdges
         // search each block
         forAll(blkMesh, blockI)
         {
-            const blockDescriptor& blockDef = blkMesh[blockI].blockDef();
+            const blockDescriptor& blockDef = blkMesh[blockI];
 
             edgeList blkEdges = blockDef.blockShape().edges();
 

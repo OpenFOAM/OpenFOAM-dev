@@ -43,9 +43,11 @@ SourceFiles
 #define blockMesh_H
 
 #include "blockList.H"
+#include "searchableSurfaces.H"
 #include "polyMesh.H"
 #include "IOdictionary.H"
 #include "blockEdgeList.H"
+#include "blockFaceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,7 +65,10 @@ class blockMesh
     // Private data
 
         //- Switch for verbose output
-        static bool verboseOutput;
+        bool verboseOutput;
+
+        //- Optional searchable geometry to project face-points to
+        searchableSurfaces geometry_;
 
         //- The scaling factor to convert to metres
         scalar scaleFactor_;
@@ -73,6 +78,9 @@ class blockMesh
 
         //- The list of curved edges
         blockEdgeList edges_;
+
+        //- The list of curved faces
+        blockFaceList faces_;
 
         //- The blocks themselves (the topology) as a polyMesh
         polyMesh* topologyPtr_;
@@ -166,6 +174,12 @@ public:
 
         // Access
 
+            //- Optional searchable geometry to project face-points to
+            const searchableSurfaces& geometry() const
+            {
+                return geometry_;
+            }
+
             //- Reference to point field defining the blockMesh
             //  these points have not been scaled by scaleFactor
             const pointField& vertices() const;
@@ -177,6 +191,12 @@ public:
             const blockEdgeList& edges() const
             {
                 return edges_;
+            }
+
+            //- Return the curved faces
+            const blockFaceList& faces() const
+            {
+                return faces_;
             }
 
             //- The scaling factor used to convert to metres
@@ -204,11 +224,8 @@ public:
 
         // Edit
 
-            //- Clear geometry (internal points, cells, boundaryPatches)
-            void clearGeom();
-
             //- Enable/disable verbose information about the progress
-            static void verbose(const bool on=true);
+            void verbose(const bool on=true);
 
 
         // Write

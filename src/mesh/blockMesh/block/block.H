@@ -68,31 +68,26 @@ class block
     // Private data
 
         //- List of points
-        mutable pointField points_;
-
-        //- List of cells
-        mutable labelListList cells_;
+        pointField points_;
 
         //- Boundary patches
-        mutable labelListListList boundaryPatches_;
+        FixedList<List<FixedList<label, 4>>, 6> boundaryPatches_;
 
 
     // Private Member Functions
 
         //- Creates vertices for cells filling the block
-        void createPoints() const;
-
-        //- Creates cells for filling the block
-        void createCells() const;
+        void createPoints();
 
         //- Creates boundary patch faces for the block
-        void createBoundary() const;
+        void createBoundary();
 
         //- Disallow default bitwise copy construct
         block(const block&);
 
         //- Disallow default bitwise assignment
         void operator=(const block&);
+
 
 public:
 
@@ -103,6 +98,7 @@ public:
         (
             const pointField& vertices,
             const blockEdgeList& edges,
+            const blockFaceList& faces,
             Istream& is
         );
 
@@ -122,50 +118,42 @@ public:
         {
             const pointField& points_;
             const blockEdgeList& edges_;
+            const blockFaceList& faces_;
 
         public:
 
-            iNew(const pointField& points, const blockEdgeList& edges)
+            iNew
+            (
+                const pointField& points,
+                const blockEdgeList& edges,
+                const blockFaceList& faces
+            )
             :
                 points_(points),
-                edges_(edges)
+                edges_(edges),
+                faces_(faces)
             {}
 
             autoPtr<block> operator()(Istream& is) const
             {
-                return autoPtr<block>(new block(points_, edges_, is));
+                return autoPtr<block>(new block(points_, edges_, faces_, is));
             }
         };
-
-
-    //- Destructor
-    ~block();
 
 
     // Member Functions
 
         // Access
 
-            //- Return the block definition
-            inline const blockDescriptor& blockDef() const;
-
-            //- Vertex label offset for a particular i,j,k position
-            inline label vtxLabel(label i, label j, label k) const;
-
             //- Return the points for filling the block
-            const pointField& points() const;
+            inline const pointField& points() const;
 
             //- Return the cells for filling the block
-            const labelListList& cells() const;
+            List<FixedList<label, 8>> cells() const;
 
             //- Return the boundary patch faces for the block
-            const labelListListList& boundaryPatches() const;
-
-
-        // Edit
-
-            //- Clear geometry (internal points, cells, boundaryPatches)
-            void clearGeom();
+            inline const FixedList<List<FixedList<label, 4>>, 6>&
+                boundaryPatches() const;
 
 
     // Ostream Operator

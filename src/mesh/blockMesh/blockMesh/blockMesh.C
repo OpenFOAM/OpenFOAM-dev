@@ -24,11 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockMesh.H"
+#include "Time.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-bool Foam::blockMesh::blockMesh::verboseOutput(false);
 
 namespace Foam
 {
@@ -40,6 +39,23 @@ namespace Foam
 
 Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
 :
+    verboseOutput(dict.lookupOrDefault<Switch>("verbose", true)),
+    geometry_
+    (
+        IOobject
+        (
+            "geometry",                 // dummy name
+            dict.time().constant(),     // instance
+            "geometry",                 // local
+            dict.time(),                // registry
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        ),
+        dict.found("geometry")
+      ? dict.subDict("geometry")
+      : dictionary(),
+        true
+    ),
     scaleFactor_(1.0),
     vertices_(dict.lookup("vertices")),
     topologyPtr_(createTopology(dict, regionName))
@@ -170,9 +186,9 @@ Foam::label Foam::blockMesh::numZonedBlocks() const
 {
     label num = 0;
 
-    forAll(*this, blockI)
+    forAll(*this, blocki)
     {
-        if (operator[](blockI).zoneName().size())
+        if (operator[](blocki).zoneName().size())
         {
             num++;
         }

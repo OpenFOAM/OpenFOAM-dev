@@ -69,6 +69,7 @@ class arcEdge
         //- Disallow default bitwise assignment
         void operator=(const arcEdge&);
 
+
 public:
 
     //- Runtime type information
@@ -86,11 +87,17 @@ public:
         );
 
         //- Construct from Istream setting pointsList
-        arcEdge(const pointField& points, Istream&);
+        arcEdge
+        (
+            const searchableSurfaces& geometry,
+            const pointField& points,
+            Istream&
+        );
 
 
     //- Destructor
-    virtual ~arcEdge(){}
+    virtual ~arcEdge()
+    {}
 
 
     // Member Functions

@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
 #include "blockEdge.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -50,19 +49,15 @@ Foam::blockEdge::blockEdge
 {}
 
 
-Foam::blockEdge::blockEdge(const pointField& points, Istream& is)
+Foam::blockEdge::blockEdge
+(
+    const pointField& points,
+    Istream& is
+)
 :
     points_(points),
     start_(readLabel(is)),
     end_(readLabel(is))
-{}
-
-
-Foam::blockEdge::blockEdge(const blockEdge& c)
-:
-    points_(c.points_),
-    start_(c.start_),
-    end_(c.end_)
 {}
 
 
@@ -75,6 +70,7 @@ Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::clone() const
 
 Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::New
 (
+    const searchableSurfaces& geometry,
     const pointField& points,
     Istream& is
 )
@@ -99,7 +95,7 @@ Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::New
             << abort(FatalError);
     }
 
-    return autoPtr<blockEdge>(cstrIter()(points, is));
+    return autoPtr<blockEdge>(cstrIter()(geometry, points, is));
 }
 
 
@@ -130,12 +126,6 @@ Foam::pointField Foam::blockEdge::appendEndPoints
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::blockEdge::operator=(const blockEdge&)
-{
-    NotImplemented;
-}
-
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const blockEdge& p)
 {

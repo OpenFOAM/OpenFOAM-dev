@@ -23,58 +23,79 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-#include "polyLineEdge.H"
+#include "splineEdge.H"
 #include "addToRunTimeSelectionTable.H"
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(polyLineEdge, 0);
-    addToRunTimeSelectionTable(blockEdge, polyLineEdge, Istream);
+    defineTypeNameAndDebug(splineEdge, 0);
+
+    addToRunTimeSelectionTable
+    (
+        blockEdge,
+        splineEdge,
+        Istream
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::polyLineEdge::polyLineEdge
+Foam::splineEdge::splineEdge
 (
-    const pointField& ps,
+    const pointField& points,
     const label start,
     const label end,
-    const pointField& otherPoints
+    const pointField& internalPoints
 )
 :
-    blockEdge(ps, start, end),
-    polyLine(appendEndPoints(ps, start_, end_, otherPoints))
+    blockEdge(points, start, end),
+    CatmullRomSpline(appendEndPoints(points, start, end, internalPoints))
 {}
 
 
-Foam::polyLineEdge::polyLineEdge(const pointField& ps, Istream& is)
+Foam::splineEdge::splineEdge
+(
+    const searchableSurfaces& geometry,
+    const pointField& points,
+    Istream& is
+)
 :
-    blockEdge(ps, is),
-    polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
-{}
+    blockEdge(points, is),
+    CatmullRomSpline(appendEndPoints(points, start_, end_, pointField(is)))
+{
+    token t(is);
+    is.putBack(t);
+
+    // discard unused start/end tangents
+    if (t == token::BEGIN_LIST)
+    {
+        vector tangent0Ignored(is);
+        vector tangent1Ignored(is);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::polyLineEdge::~polyLineEdge()
+Foam::splineEdge::~splineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::polyLineEdge::position(const scalar lambda) const
+Foam::point Foam::splineEdge::position(const scalar mu) const
 {
-    return polyLine::position(lambda);
+    return CatmullRomSpline::position(mu);
 }
 
 
-Foam::scalar Foam::polyLineEdge::length() const
+Foam::scalar Foam::splineEdge::length() const
 {
-    return polyLine::lineLength_;
+    return CatmullRomSpline::length();
 }
 
 

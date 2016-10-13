@@ -77,7 +77,7 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
             continue;
         }
 
-        const blockDescriptor& blockDef = blkMesh[blockI].blockDef();
+        const blockDescriptor& blockDef = blkMesh[blockI];
 
         vtkUnstructuredGrid* vtkmesh = vtkUnstructuredGrid::New();
 
@@ -168,12 +168,12 @@ void Foam::vtkPVblockMesh::convertMeshEdges
         // search each block
         forAll(blkMesh, blockI)
         {
-            const blockDescriptor& blockDef = blkMesh[blockI].blockDef();
+            const blockDescriptor& blockDef = blkMesh[blockI];
 
             edgeList blkEdges = blockDef.blockShape().edges();
 
             // List of edge point and weighting factors
-            List<point> edgesPoints[12];
+            pointField edgesPoints[12];
             scalarList edgesWeights[12];
             blockDef.edgesPointsWeights(edgesPoints, edgesWeights);
 

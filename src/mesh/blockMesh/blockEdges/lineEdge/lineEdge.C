@@ -23,43 +23,66 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "block.H"
+#include "lineEdge.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(lineEdge, 0);
+    addToRunTimeSelectionTable(blockEdge, lineEdge, Istream);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::block::block
+Foam::lineEdge::lineEdge
 (
-    const pointField& vertices,
-    const blockEdgeList& edges,
-    const blockFaceList& faces,
+    const pointField& points,
+    const label start,
+    const label end
+)
+:
+    blockEdge(points, start, end)
+{}
+
+
+Foam::lineEdge::lineEdge
+(
+    const searchableSurfaces& geometry,
+    const pointField& points,
     Istream& is
 )
 :
-    blockDescriptor(vertices, edges, faces, is)
+    blockEdge(points, is)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
+
+Foam::lineEdge::~lineEdge()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::point Foam::lineEdge::position(const scalar lambda) const
 {
-    createPoints();
-    createBoundary();
+    if (lambda < -SMALL || lambda > 1+SMALL)
+    {
+        FatalErrorInFunction
+            << "Parameter out of range, lambda = " << lambda
+            << abort(FatalError);
+    }
+
+    return points_[start_] + lambda * (points_[end_] - points_[start_]);
 }
 
 
-Foam::block::block(const blockDescriptor& blockDesc)
-:
-    blockDescriptor(blockDesc)
+Foam::scalar Foam::lineEdge::length() const
 {
-    createPoints();
-    createBoundary();
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const block& b)
-{
-    os << b.points() << nl
-       << b.cells() << nl
-       << b.boundaryPatches() << endl;
-
-    return os;
+    return mag(points_[end_] - points_[start_]);
 }
 
 

@@ -23,24 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::label Foam::block::vtxLabel(label i, label j, label k) const
+inline const Foam::pointField& Foam::block::points() const
 {
-    return
-    (
-        i
-      + j * (density().x() + 1)
-      + k * (density().x() + 1) * (density().y() + 1)
-    );
+    return points_;
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-inline const Foam::blockDescriptor& Foam::block::blockDef() const
+inline const Foam::FixedList<Foam::List<Foam::FixedList<Foam::label, 4>>, 6>&
+Foam::block::boundaryPatches() const
 {
-    return *this;
+    return boundaryPatches_;
 }
 
 

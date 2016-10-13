@@ -23,43 +23,62 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "block.H"
+#include "polyLineEdge.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(polyLineEdge, 0);
+    addToRunTimeSelectionTable(blockEdge, polyLineEdge, Istream);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::block::block
+Foam::polyLineEdge::polyLineEdge
 (
-    const pointField& vertices,
-    const blockEdgeList& edges,
-    const blockFaceList& faces,
+    const pointField& ps,
+    const label start,
+    const label end,
+    const pointField& otherPoints
+)
+:
+    blockEdge(ps, start, end),
+    polyLine(appendEndPoints(ps, start_, end_, otherPoints))
+{}
+
+
+Foam::polyLineEdge::polyLineEdge
+(
+    const searchableSurfaces& geometry,
+    const pointField& ps,
     Istream& is
 )
 :
-    blockDescriptor(vertices, edges, faces, is)
+    blockEdge(ps, is),
+    polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::polyLineEdge::~polyLineEdge()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::point Foam::polyLineEdge::position(const scalar lambda) const
 {
-    createPoints();
-    createBoundary();
+    return polyLine::position(lambda);
 }
 
 
-Foam::block::block(const blockDescriptor& blockDesc)
-:
-    blockDescriptor(blockDesc)
+Foam::scalar Foam::polyLineEdge::length() const
 {
-    createPoints();
-    createBoundary();
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const block& b)
-{
-    os << b.points() << nl
-       << b.cells() << nl
-       << b.boundaryPatches() << endl;
-
-    return os;
+    return polyLine::lineLength_;
 }
 
 

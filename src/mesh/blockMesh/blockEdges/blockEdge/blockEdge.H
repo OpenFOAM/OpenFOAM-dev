@@ -36,11 +36,7 @@ SourceFiles
 #ifndef blockEdges_H
 #define blockEdges_H
 
-#include "edge.H"
-#include "pointField.H"
-#include "typeInfo.H"
-#include "HashTable.H"
-#include "autoPtr.H"
+#include "searchableSurfaces.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,8 +61,10 @@ protected:
     // Protected data
 
         const pointField& points_;
+
         const label start_;
         const label end_;
+
 
     // Protected Member Functions
 
@@ -94,10 +92,11 @@ public:
             blockEdge,
             Istream,
             (
+                const searchableSurfaces& geometry,
                 const pointField& points,
                 Istream& is
             ),
-            (points, is)
+            (geometry, points, is)
         );
 
 
@@ -112,39 +111,48 @@ public:
         );
 
         //- Construct from Istream setting pointsList
-        blockEdge(const pointField&, Istream&);
-
-        //- Copy construct
-        blockEdge(const blockEdge&);
+        blockEdge
+        (
+            const pointField&,
+            Istream&
+        );
 
         //- Clone function
         virtual autoPtr<blockEdge> clone() const;
 
         //- New function which constructs and returns pointer to a blockEdge
-        static autoPtr<blockEdge> New(const pointField&, Istream&);
+        static autoPtr<blockEdge> New
+        (
+            const searchableSurfaces& geometry,
+            const pointField&,
+            Istream&
+        );
 
         //- Class used for the read-construction of
         //  PtrLists of blockEdge
         class iNew
         {
+            const searchableSurfaces& geometry_;
             const pointField& points_;
 
         public:
 
-            iNew(const pointField& points)
+            iNew(const searchableSurfaces& geometry, const pointField& points)
             :
+                geometry_(geometry),
                 points_(points)
             {}
 
             autoPtr<blockEdge> operator()(Istream& is) const
             {
-                return blockEdge::New(points_, is);
+                return blockEdge::New(geometry_, points_, is);
             }
         };
 
 
     //- Destructor
-    virtual ~blockEdge(){}
+    virtual ~blockEdge()
+    {}
 
 
     // Member Functions
@@ -182,11 +190,6 @@ public:
 
         //- Return the length of the curve
         virtual scalar length() const = 0;
-
-
-    // Member operators
-
-        void operator=(const blockEdge&);
 
 
     // Ostream operator

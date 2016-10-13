@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::splineEdge
+    Foam::polyLineEdge
 
 Description
-    A blockEdge interface for Catmull-Rom splines.
+    A blockEdge defined in terms of a series of straight line segments.
 
 SourceFiles
-    splineEdge.C
+    polyLineEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef splineEdge_H
-#define splineEdge_H
+#ifndef polyLineEdge_H
+#define polyLineEdge_H
 
 #include "blockEdge.H"
-#include "CatmullRomSpline.H"
+#include "polyLine.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,56 +44,61 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class splineEdge Declaration
+                        Class polyLineEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-class splineEdge
+class polyLineEdge
 :
     public blockEdge,
-    public CatmullRomSpline
+    public polyLine
 {
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        splineEdge(const splineEdge&);
+        polyLineEdge(const polyLineEdge&);
 
         //- Disallow default bitwise assignment
-        void operator=(const splineEdge&);
+        void operator=(const polyLineEdge&);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("spline");
+    // Static data members
+    TypeName("polyLine");
 
 
     // Constructors
 
         //- Construct from components
-        splineEdge
+        polyLineEdge
         (
             const pointField&,
             const label start,
             const label end,
-            const pointField& internalPoints
+            const pointField& otherPoints
         );
 
-        //- Construct from Istream, setting pointsList
-        splineEdge(const pointField&, Istream&);
+        //- Construct from Istream
+        polyLineEdge
+        (
+            const searchableSurfaces& geometry,
+            const pointField&,
+            Istream&
+        );
 
 
-    //- Destructor
-    virtual ~splineEdge();
+        //- Destructor
+        virtual ~polyLineEdge();
 
 
     // Member Functions
 
         //- Return the point position corresponding to the curve parameter
         //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
+        point position(const scalar lambda) const;
 
-        //- Return the length of the spline curve (not implemented)
-        virtual scalar length() const;
+        //- Return the length of the curve
+        scalar length() const;
 };
 
 

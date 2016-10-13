@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineEdge
+    Foam::projectFace
 
 Description
-    A straight edge between the start point and the end point.
+    Projects the given set of face points onto the selected surface of the
+    geometry provided as a searchableSurfaces object.
 
 SourceFiles
-    lineEdge.C
+    projectFace.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineEdge_H
-#define lineEdge_H
+#ifndef projectFace_H
+#define projectFace_H
 
-#include "blockEdge.H"
+#include "blockFace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,41 +44,59 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class lineEdge Declaration
+                           Class projectFace Declaration
 \*---------------------------------------------------------------------------*/
 
-
-class lineEdge
+class projectFace
 :
-    public blockEdge
+    public blockFace
 {
+    // Private data
+
+        //- The surface onto which the points are projected
+        const searchableSurface& surface_;
+
+
+    // Private Member Functions
+
+        const searchableSurface& lookupSurface
+        (
+            const searchableSurfaces& geometry,
+            Istream& is
+        ) const;
+
+        //- Disallow default bitwise copy construct
+        projectFace(const projectFace&);
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectFace&);
+
 
 public:
 
     //- Runtime type information
-    TypeName("line");
+    TypeName("project");
+
 
     // Constructors
 
-        //- Construct from components
-        lineEdge(const pointField&, const label start, const label end);
+        //- Construct from Istream setting pointsList
+        projectFace
+        (
+            const searchableSurfaces& geometry,
+            Istream&
+        );
 
-        //- Construct from Istream with a pointField
-        lineEdge(const pointField&, Istream&);
 
-
-        //- Destructor
-        virtual ~lineEdge();
+    //- Destructor
+    virtual ~projectFace()
+    {}
 
 
     // Member Functions
 
-        //- Return the point position corresponding to the curve parameter
-        //  0 <= lambda <= 1
-        point position(const scalar) const;
-
-        //- Return the length of the curve
-        scalar length() const;
+        //- Project the given points onto the surface
+        virtual void project(pointField& points) const;
 };
 
 

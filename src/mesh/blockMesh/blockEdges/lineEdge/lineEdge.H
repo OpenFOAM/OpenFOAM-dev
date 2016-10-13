@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::polyLineEdge
+    Foam::lineEdge
 
 Description
-    A blockEdge defined in terms of a series of straight line segments.
+    A straight edge between the start point and the end point.
 
 SourceFiles
-    polyLineEdge.C
+    lineEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polyLineEdge_H
-#define polyLineEdge_H
+#ifndef lineEdge_H
+#define lineEdge_H
 
 #include "blockEdge.H"
-#include "polyLine.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,53 +43,44 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class polyLineEdge Declaration
+                          Class lineEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-class polyLineEdge
+
+class lineEdge
 :
-    public blockEdge,
-    public polyLine
+    public blockEdge
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        polyLineEdge(const polyLineEdge&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyLineEdge&);
-
 
 public:
 
-    // Static data members
-    TypeName("polyLine");
+    //- Runtime type information
+    TypeName("line");
 
 
     // Constructors
 
         //- Construct from components
-        polyLineEdge
+        lineEdge(const pointField&, const label start, const label end);
+
+        //- Construct from Istream with a pointField
+        lineEdge
         (
+            const searchableSurfaces& geometry,
             const pointField&,
-            const label start,
-            const label end,
-            const pointField& otherPoints
+            Istream&
         );
 
-        //- Construct from Istream
-        polyLineEdge(const pointField&, Istream&);
 
-
-        //- Destructor
-        virtual ~polyLineEdge();
+    //- Destructor
+    virtual ~lineEdge();
 
 
     // Member Functions
 
         //- Return the point position corresponding to the curve parameter
         //  0 <= lambda <= 1
-        point position(const scalar lambda) const;
+        point position(const scalar) const;
 
         //- Return the length of the curve
         scalar length() const;

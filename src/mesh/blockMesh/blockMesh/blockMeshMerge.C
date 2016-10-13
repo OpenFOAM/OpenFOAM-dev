@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,12 +41,12 @@ void Foam::blockMesh::calcMergeInfo()
     nPoints_ = 0;
     nCells_  = 0;
 
-    forAll(blocks, blockI)
+    forAll(blocks, blocki)
     {
-        blockOffsets_[blockI] = nPoints_;
+        blockOffsets_[blocki] = nPoints_;
 
-        nPoints_ += blocks[blockI].nPoints();
-        nCells_  += blocks[blockI].nCells();
+        nPoints_ += blocks[blocki].nPoints();
+        nCells_  += blocks[blocki].nCells();
     }
 
 
@@ -100,7 +100,7 @@ void Foam::blockMesh::calcMergeInfo()
                 << exit(FatalError);
         }
 
-        const labelListList& blockPfaceFaces =
+        const List<FixedList<label, 4>>& blockPfaceFaces =
             blocks[blockPlabel].boundaryPatches()[blockPfaceLabel];
 
         labelListList& curPairs = glueMergePairs[blockFaceLabel];
@@ -122,7 +122,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         forAll(blockPfaceFaces, blockPfaceFaceLabel)
         {
-            const labelList& blockPfaceFacePoints
+            const FixedList<label, 4>& blockPfaceFacePoints
                 = blockPfaceFaces[blockPfaceFaceLabel];
 
             forAll(blockPfaceFacePoints, blockPfaceFacePointLabel)
@@ -209,7 +209,7 @@ void Foam::blockMesh::calcMergeInfo()
                 << exit(FatalError);
         }
 
-        const labelListList& blockNfaceFaces =
+        const List<FixedList<label, 4>>& blockNfaceFaces =
             blocks[blockNlabel].boundaryPatches()[blockNfaceLabel];
 
         if (blockPfaceFaces.size() != blockNfaceFaces.size())
@@ -225,7 +225,7 @@ void Foam::blockMesh::calcMergeInfo()
         // master block over all point of all faces of slave block
         forAll(blockPfaceFaces, blockPfaceFaceLabel)
         {
-            const labelList& blockPfaceFacePoints
+            const FixedList<label, 4>& blockPfaceFacePoints
                 = blockPfaceFaces[blockPfaceFaceLabel];
 
             labelList& cp = curPairs[blockPfaceFaceLabel];
@@ -236,7 +236,7 @@ void Foam::blockMesh::calcMergeInfo()
             {
                 forAll(blockNfaceFaces, blockNfaceFaceLabel)
                 {
-                    const labelList& blockNfaceFacePoints
+                    const FixedList<label, 4>& blockNfaceFacePoints
                         = blockNfaceFaces[blockNfaceFaceLabel];
 
                     forAll(blockNfaceFacePoints, blockNfaceFacePointLabel)
@@ -299,7 +299,7 @@ void Foam::blockMesh::calcMergeInfo()
     }
 
 
-    const faceList::subList blockInternalFaces
+    const faceList::subList blockinternalFaces
     (
         blockFaces,
         topology().nInternalFaces()
@@ -313,7 +313,7 @@ void Foam::blockMesh::calcMergeInfo()
         changedPointMerge = false;
         nPasses++;
 
-        forAll(blockInternalFaces, blockFaceLabel)
+        forAll(blockinternalFaces, blockFaceLabel)
         {
             label blockPlabel = faceOwnerBlocks[blockFaceLabel];
             label blockNlabel = faceNeighbourBlocks[blockFaceLabel];
@@ -334,7 +334,7 @@ void Foam::blockMesh::calcMergeInfo()
                 if
                 (
                     blockFaces[blockPfaces[blockPfaceLabel]]
-                 == blockInternalFaces[blockFaceLabel]
+                 == blockinternalFaces[blockFaceLabel]
                 )
                 {
                     break;
@@ -353,7 +353,7 @@ void Foam::blockMesh::calcMergeInfo()
                 if
                 (
                     blockFaces[blockNfaces[blockNfaceLabel]]
-                 == blockInternalFaces[blockFaceLabel]
+                 == blockinternalFaces[blockFaceLabel]
                 )
                 {
                     break;
@@ -361,12 +361,12 @@ void Foam::blockMesh::calcMergeInfo()
             }
 
 
-            const labelListList& blockPfaceFaces =
+            const List<FixedList<label, 4>>& blockPfaceFaces =
                 blocks[blockPlabel].boundaryPatches()[blockPfaceLabel];
 
             forAll(blockPfaceFaces, blockPfaceFaceLabel)
             {
-                const labelList& blockPfaceFacePoints
+                const FixedList<label, 4>& blockPfaceFacePoints
                     = blockPfaceFaces[blockPfaceFaceLabel];
 
                 const labelList& cp = curPairs[blockPfaceFaceLabel];
@@ -419,7 +419,7 @@ void Foam::blockMesh::calcMergeInfo()
         Info<< endl;
     }
 
-    forAll(blockInternalFaces, blockFaceLabel)
+    forAll(blockinternalFaces, blockFaceLabel)
     {
         label blockPlabel = faceOwnerBlocks[blockFaceLabel];
         label blockNlabel = faceNeighbourBlocks[blockFaceLabel];
@@ -442,7 +442,7 @@ void Foam::blockMesh::calcMergeInfo()
             if
             (
                 blockFaces[blockPfaces[blockPfaceLabel]]
-             == blockInternalFaces[blockFaceLabel]
+             == blockinternalFaces[blockFaceLabel]
             )
             {
                 foundFace = true;
@@ -469,7 +469,7 @@ void Foam::blockMesh::calcMergeInfo()
             if
             (
                 blockFaces[blockNfaces[blockNfaceLabel]]
-             == blockInternalFaces[blockFaceLabel]
+             == blockinternalFaces[blockFaceLabel]
             )
             {
                 foundFace = true;
@@ -484,15 +484,15 @@ void Foam::blockMesh::calcMergeInfo()
                 << exit(FatalError);
         }
 
-        const labelListList& blockPfaceFaces =
+        const List<FixedList<label, 4>>& blockPfaceFaces =
             blocks[blockPlabel].boundaryPatches()[blockPfaceLabel];
 
-        const labelListList& blockNfaceFaces =
+        const List<FixedList<label, 4>>& blockNfaceFaces =
             blocks[blockNlabel].boundaryPatches()[blockNfaceLabel];
 
         forAll(blockPfaceFaces, blockPfaceFaceLabel)
         {
-            const labelList& blockPfaceFacePoints
+            const FixedList<label, 4>& blockPfaceFacePoints
                 = blockPfaceFaces[blockPfaceFaceLabel];
 
             forAll(blockPfaceFacePoints, blockPfaceFacePointLabel)
@@ -518,7 +518,7 @@ void Foam::blockMesh::calcMergeInfo()
 
         forAll(blockNfaceFaces, blockNfaceFaceLabel)
         {
-            const labelList& blockNfaceFacePoints
+            const FixedList<label, 4>& blockNfaceFacePoints
                 = blockNfaceFaces[blockNfaceFaceLabel];
 
             forAll(blockNfaceFacePoints, blockNfaceFacePointLabel)

@@ -23,12 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-#include "CatmullRomSpline.H"
+#include "BSpline.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::CatmullRomSpline::CatmullRomSpline
+Foam::BSpline::BSpline
 (
     const pointField& knots,
     const bool closed
@@ -40,7 +39,7 @@ Foam::CatmullRomSpline::CatmullRomSpline
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::CatmullRomSpline::position(const scalar mu) const
+Foam::point Foam::BSpline::position(const scalar mu) const
 {
     // endpoints
     if (mu < SMALL)
@@ -58,7 +57,7 @@ Foam::point Foam::CatmullRomSpline::position(const scalar mu) const
 }
 
 
-Foam::point Foam::CatmullRomSpline::position
+Foam::point Foam::BSpline::position
 (
     const label segment,
     const scalar mu
@@ -113,15 +112,15 @@ Foam::point Foam::CatmullRomSpline::position
     }
 
 
-    return 0.5 *
+    return 1.0/6.0 *
     (
-        ( 2*p0 )
+        ( e0 + 4*p0 + p1 )
       + mu *
         (
-            ( -e0 + p1 )
+            ( -3*e0 + 3*p1 )
           + mu *
             (
-                ( 2*e0 - 5*p0 + 4*p1 - e1 )
+                ( 3*e0 - 6*p0 + 3*p1 )
               + mu *
                 ( -e0 + 3*p0 - 3*p1 + e1 )
             )
@@ -130,7 +129,7 @@ Foam::point Foam::CatmullRomSpline::position
 }
 
 
-Foam::scalar Foam::CatmullRomSpline::length() const
+Foam::scalar Foam::BSpline::length() const
 {
     NotImplemented;
     return 1.0;

@@ -29,9 +29,9 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::blockDescriptor::edgePointsWeights
+Foam::label Foam::blockDescriptor::edgePointsWeights
 (
-    List<point> (&edgePoints)[12],
+    pointField (&edgePoints)[12],
     scalarList (&edgeWeights)[12],
     const label edgei,
     const label start,
@@ -79,16 +79,16 @@ void Foam::blockDescriptor::edgePointsWeights
                 edgePoints[edgei].setSize(p.size());
                 edgeWeights[edgei].setSize(d.size());
 
-                label pMax = p.size() - 1;
-                forAll(p, pI)
+                label pn = p.size() - 1;
+                forAll(p, pi)
                 {
-                    edgePoints[edgei][pI]  = p[pMax - pI];
-                    edgeWeights[edgei][pI] = 1.0 - d[pMax - pI];
+                    edgePoints[edgei][pi]  = p[pn - pi];
+                    edgeWeights[edgei][pi] = 1 - d[pn - pi];
                 }
             }
 
             // Found curved-edge: done
-            return;
+            return 1;
         }
     }
 
@@ -103,39 +103,43 @@ void Foam::blockDescriptor::edgePointsWeights
 
     edgePoints[edgei]  = divEdge.points();
     edgeWeights[edgei] = divEdge.lambdaDivisions();
+
+    return 0;
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::blockDescriptor::edgesPointsWeights
+Foam::label Foam::blockDescriptor::edgesPointsWeights
 (
-    List<point> (&edgePoints)[12],
+    pointField (&edgePoints)[12],
     scalarList (&edgeWeights)[12]
 ) const
 {
-    // These edges correspond to the "hex" cellModel
+    label nCurvedEdges = 0;
 
     // X-direction
     const label ni = density_.x();
-    edgePointsWeights(edgePoints, edgeWeights, 0,  0, 1, ni);
-    edgePointsWeights(edgePoints, edgeWeights, 1,  3, 2, ni);
-    edgePointsWeights(edgePoints, edgeWeights, 2,  7, 6, ni);
-    edgePointsWeights(edgePoints, edgeWeights, 3,  4, 5, ni);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 0,  0, 1, ni);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 1,  3, 2, ni);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 2,  7, 6, ni);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 3,  4, 5, ni);
 
     // Y-direction
     const label nj = density_.y();
-    edgePointsWeights(edgePoints, edgeWeights, 4,  0, 3, nj);
-    edgePointsWeights(edgePoints, edgeWeights, 5,  1, 2, nj);
-    edgePointsWeights(edgePoints, edgeWeights, 6,  5, 6, nj);
-    edgePointsWeights(edgePoints, edgeWeights, 7,  4, 7, nj);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 4,  0, 3, nj);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 5,  1, 2, nj);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 6,  5, 6, nj);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 7,  4, 7, nj);
 
     // Z-direction
     const label nk = density_.z();
-    edgePointsWeights(edgePoints, edgeWeights, 8,  0, 4, nk);
-    edgePointsWeights(edgePoints, edgeWeights, 9,  1, 5, nk);
-    edgePointsWeights(edgePoints, edgeWeights, 10, 2, 6, nk);
-    edgePointsWeights(edgePoints, edgeWeights, 11, 3, 7, nk);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 8,  0, 4, nk);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 9,  1, 5, nk);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 10, 2, 6, nk);
+    nCurvedEdges += edgePointsWeights(edgePoints, edgeWeights, 11, 3, 7, nk);
+
+    return nCurvedEdges;
 }
 
 

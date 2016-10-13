@@ -75,7 +75,7 @@ void Foam::vtkPV3blockMesh::updateInfoBlocks
     const int nBlocks = blkMesh.size();
     for (int blockI = 0; blockI < nBlocks; ++blockI)
     {
-        const blockDescriptor& blockDef = blkMesh[blockI].blockDef();
+        const blockDescriptor& blockDef = blkMesh[blockI];
 
         word partName = Foam::name(blockI);
 

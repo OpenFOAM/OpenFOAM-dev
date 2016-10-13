@@ -209,17 +209,17 @@ inline label facePoint
     switch (facei)
     {
         case 0:
-            return block.vtxLabel(0, i, j);
+            return block.pointLabel(0, i, j);
         case 1:
-            return block.vtxLabel(block.density().x(), i, j);
+            return block.pointLabel(block.density().x(), i, j);
         case 2:
-            return block.vtxLabel(i, 0, j);
+            return block.pointLabel(i, 0, j);
         case 3:
-            return block.vtxLabel(i, block.density().y(), j);
+            return block.pointLabel(i, block.density().y(), j);
         case 4:
-            return block.vtxLabel(i, j, 0);
+            return block.pointLabel(i, j, 0);
         case 5:
-            return block.vtxLabel(i, j, block.density().z());
+            return block.pointLabel(i, j, block.density().z());
         default:
             return -1;
     }
@@ -234,7 +234,7 @@ inline label facePointN
     const label k
 )
 {
-    return block.vtxLabel
+    return block.pointLabel
     (
         unsignIndex(i, block.density().x()),
         unsignIndex(j, block.density().y()),
@@ -305,12 +305,12 @@ void Foam::blockMesh::calcMergeInfoFast()
     nPoints_ = 0;
     nCells_  = 0;
 
-    forAll(blocks, blockI)
+    forAll(blocks, blocki)
     {
-        blockOffsets_[blockI] = nPoints_;
+        blockOffsets_[blocki] = nPoints_;
 
-        nPoints_ += blocks[blockI].nPoints();
-        nCells_  += blocks[blockI].nCells();
+        nPoints_ += blocks[blocki].nPoints();
+        nCells_  += blocks[blocki].nCells();
     }
 
     if (verboseOutput)

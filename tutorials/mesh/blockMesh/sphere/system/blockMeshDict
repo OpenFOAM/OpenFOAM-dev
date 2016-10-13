@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+geometry
+{
+    sphere
+    {
+        type searchableSphere;
+        centre (0 0 0);
+        radius 1;
+    }
+}
+
+scale 1;
+
+v 0.5773502;
+mv -0.5773502;
+
+a 0.7071067;
+ma -0.7071067;
+
+vertices
+(
+    ($mv $mv $mv)
+    ( $v $mv $mv)
+    ( $v  $v $mv)
+    ($mv  $v $mv)
+    ($mv $mv  $v)
+    ( $v $mv  $v)
+    ( $v  $v  $v)
+    ($mv  $v  $v)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (10 10 10) simpleGrading (1 1 1)
+);
+
+edges
+(
+    arc 0 1 (0 $ma $ma)
+    arc 2 3 (0 $a $ma)
+    arc 6 7 (0 $a $a)
+    arc 4 5 (0 $ma $a)
+
+    arc 0 3 ($ma 0 $ma)
+    arc 1 2 ($a 0 $ma)
+    arc 5 6 ($a 0 $a)
+    arc 4 7 ($ma 0 $a)
+
+    arc 0 4 ($ma $ma 0)
+    arc 1 5 ($a $ma 0)
+    arc 2 6 ($a $a 0)
+    arc 3 7 ($ma $a 0)
+);
+
+faces
+(
+    project (0 4 7 3) sphere
+    project (2 6 5 1) sphere
+    project (1 5 4 0) sphere
+    project (3 7 6 2) sphere
+    project (0 3 2 1) sphere
+    project (4 5 6 7) sphere
+);
+
+boundary
+(
+    walls
+    {
+        type wall;
+        faces
+        (
+            (0 4 7 3)
+            (2 6 5 1)
+            (1 5 4 0)
+            (3 7 6 2)
+            (0 3 2 1)
+            (4 5 6 7)
+        );
+    }
+);
+
+// ************************************************************************* //

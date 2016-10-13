@@ -79,7 +79,12 @@ public:
         );
 
         //- Construct from Istream, setting pointsList
-        BSplineEdge(const pointField&, Istream&);
+        BSplineEdge
+        (
+            const searchableSurfaces& geometry,
+            const pointField&,
+            Istream&
+        );
 
 
     //- Destructor

@@ -47,8 +47,6 @@ SourceFiles
 namespace Foam
 {
 
-// Forward declaration of classes
-
 /*---------------------------------------------------------------------------*\
                  Class searchableSurfaceCollection Declaration
 \*---------------------------------------------------------------------------*/
@@ -57,8 +55,6 @@ class searchableSurfaceCollection
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         // Per instance data
@@ -82,6 +78,7 @@ private:
 
         //- Region names
         mutable wordList regions_;
+
         //- From individual regions to collection regions
         mutable labelList regionOffset_;
 
@@ -133,6 +130,7 @@ public:
             const dictionary& dict
         );
 
+
     //- Destructor
     virtual ~searchableSurfaceCollection();
 
@@ -162,7 +160,6 @@ public:
         {
             return transform_;
         }
-
 
         virtual const wordList& regions() const;
 
@@ -281,7 +278,6 @@ public:
                 NotImplemented;
                 return false;
             }
-
 };
 
 

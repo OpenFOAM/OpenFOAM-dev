@@ -307,9 +307,9 @@ void Foam::blockMesh::createCellShapes
     const blockMesh& blocks = *this;
 
     tmpBlockCells.setSize(blocks.size());
-    forAll(blocks, blockI)
+    forAll(blocks, blocki)
     {
-        tmpBlockCells[blockI] = blocks[blockI].blockShape();
+        tmpBlockCells[blocki] = blocks[blocki].blockShape();
     }
 }
 
@@ -354,7 +354,7 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         blockEdgeList edges
         (
             meshDescription.lookup("edges"),
-            blockEdge::iNew(vertices_)
+            blockEdge::iNew(geometry_, vertices_)
         );
 
         edges_.transfer(edges);
@@ -362,6 +362,28 @@ Foam::polyMesh* Foam::blockMesh::createTopology
     else if (verboseOutput)
     {
         Info<< "No non-linear block edges defined" << endl;
+    }
+
+
+    // Read the block faces
+    if (meshDescription.found("faces"))
+    {
+        if (verboseOutput)
+        {
+            Info<< "Creating block faces" << endl;
+        }
+
+        blockFaceList faces
+        (
+            meshDescription.lookup("faces"),
+            blockFace::iNew(geometry_)
+        );
+
+        faces_.transfer(faces);
+    }
+    else if (verboseOutput)
+    {
+        Info<< "No non-planar block faces defined" << endl;
     }
 
 
@@ -374,10 +396,12 @@ Foam::polyMesh* Foam::blockMesh::createTopology
         blockList blocks
         (
             meshDescription.lookup("blocks"),
-            block::iNew(vertices_, edges_)
+            block::iNew(vertices_, edges_, faces_)
         );
+
         transfer(blocks);
     }
+
 
 
     polyMesh* blockMeshPtr = nullptr;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,74 +23,75 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "BSplineEdge.H"
-#include "addToRunTimeSelectionTable.H"
-
+#include "blockFace.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(BSplineEdge, 0);
-
-    addToRunTimeSelectionTable
-    (
-        blockEdge,
-        BSplineEdge,
-        Istream
-    );
+    defineTypeNameAndDebug(blockFace, 0);
+    defineRunTimeSelectionTable(blockFace, Istream);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::BSplineEdge::BSplineEdge
+Foam::blockFace::blockFace(const face& vertices)
+:
+    vertices_(vertices)
+{}
+
+
+Foam::blockFace::blockFace(Istream& is)
+:
+    vertices_(is)
+{}
+
+
+Foam::autoPtr<Foam::blockFace> Foam::blockFace::clone() const
+{
+    NotImplemented;
+    return autoPtr<blockFace>(nullptr);
+}
+
+
+Foam::autoPtr<Foam::blockFace> Foam::blockFace::New
 (
-    const pointField& points,
-    const label start,
-    const label end,
-    const pointField& internalPoints
+    const searchableSurfaces& geometry,
+    Istream& is
 )
-:
-    blockEdge(points, start, end),
-    BSpline(appendEndPoints(points, start, end, internalPoints))
-{}
-
-
-Foam::BSplineEdge::BSplineEdge(const pointField& points, Istream& is)
-:
-    blockEdge(points, is),
-    BSpline(appendEndPoints(points, start_, end_, pointField(is)))
 {
-    token t(is);
-    is.putBack(t);
-
-    // discard unused start/end tangents
-    if (t == token::BEGIN_LIST)
+    if (debug)
     {
-        vector tangent0Ignored(is);
-        vector tangent1Ignored(is);
+        InfoInFunction << "Constructing blockFace" << endl;
     }
+
+    const word faceType(is);
+
+    IstreamConstructorTable::iterator cstrIter =
+        IstreamConstructorTablePtr_->find(faceType);
+
+    if (cstrIter == IstreamConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown blockFace type "
+            << faceType << nl << nl
+            << "Valid blockFace types are" << endl
+            << IstreamConstructorTablePtr_->sortedToc()
+            << abort(FatalError);
+    }
+
+    return autoPtr<blockFace>(cstrIter()(geometry, is));
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-Foam::BSplineEdge::~BSplineEdge()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::point Foam::BSplineEdge::position(const scalar mu) const
+Foam::Ostream& Foam::operator<<(Ostream& os, const blockFace& p)
 {
-    return BSpline::position(mu);
-}
+    os << p.vertices_ << endl;
 
-
-Foam::scalar Foam::BSplineEdge::length() const
-{
-    return BSpline::length();
+    return os;
 }
 
 

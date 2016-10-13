@@ -102,6 +102,32 @@ void Foam::blockDescriptor::check(const Istream& is)
 }
 
 
+void Foam::blockDescriptor::findCurvedFaces()
+{
+    const faceList blockFaces(blockShape().faces());
+
+    forAll(blockFaces, blockFacei)
+    {
+        forAll(faces_, facei)
+        {
+            if
+            (
+                face::sameVertices
+                (
+                    faces_[facei].vertices(),
+                    blockFaces[blockFacei]
+                )
+            )
+            {
+                curvedFaces_[blockFacei] = facei;
+                nCurvedFaces_++;
+                break;
+            }
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::blockDescriptor::blockDescriptor
@@ -109,6 +135,7 @@ Foam::blockDescriptor::blockDescriptor
     const cellShape& bshape,
     const pointField& vertices,
     const blockEdgeList& edges,
+    const blockFaceList& faces,
     const Vector<label>& density,
     const UList<gradingDescriptors>& expand,
     const word& zoneName
@@ -116,10 +143,13 @@ Foam::blockDescriptor::blockDescriptor
 :
     vertices_(vertices),
     edges_(edges),
+    faces_(faces),
     blockShape_(bshape),
     density_(density),
     expand_(expand),
-    zoneName_(zoneName)
+    zoneName_(zoneName),
+    curvedFaces_(-1),
+    nCurvedFaces_(0)
 {
     if (expand_.size() != 12)
     {
@@ -127,6 +157,8 @@ Foam::blockDescriptor::blockDescriptor
             << "Unknown definition of expansion ratios"
             << exit(FatalError);
     }
+
+    findCurvedFaces();
 }
 
 
@@ -134,19 +166,19 @@ Foam::blockDescriptor::blockDescriptor
 (
     const pointField& vertices,
     const blockEdgeList& edges,
+    const blockFaceList& faces,
     Istream& is
 )
 :
     vertices_(vertices),
     edges_(edges),
+    faces_(faces),
     blockShape_(is),
     density_(),
-    expand_
-    (
-        12,
-        gradingDescriptors()
-    ),
-    zoneName_()
+    expand_(12, gradingDescriptors()),
+    zoneName_(),
+    curvedFaces_(-1),
+    nCurvedFaces_(0)
 {
     // Examine next token
     token t(is);
@@ -231,13 +263,83 @@ Foam::blockDescriptor::blockDescriptor
     }
 
     check(is);
+
+    findCurvedFaces();
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::blockDescriptor::~blockDescriptor()
-{}
+Foam::FixedList<Foam::pointField, 6>
+Foam::blockDescriptor::facePoints(const pointField& points) const
+{
+    // Caches points for curvature correction
+    FixedList<pointField, 6> facePoints;
+
+    // Set local variables for mesh specification
+    const label ni = density_.x();
+    const label nj = density_.y();
+    const label nk = density_.z();
+
+    facePoints[0].setSize((nj + 1)*(nk + 1));
+    facePoints[1].setSize((nj + 1)*(nk + 1));
+
+    for (label j=0; j<=nj; j++)
+    {
+        for (label k=0; k<=nk; k++)
+        {
+            facePoints[0][facePointLabel(0, j, k)] =
+                points[pointLabel(0, j, k)];
+            facePoints[1][facePointLabel(1, j, k)] =
+                points[pointLabel(ni, j, k)];
+        }
+    }
+
+    facePoints[2].setSize((ni + 1)*(nk + 1));
+    facePoints[3].setSize((ni + 1)*(nk + 1));
+
+    for (label i=0; i<=ni; i++)
+    {
+        for (label k=0; k<=nk; k++)
+        {
+            facePoints[2][facePointLabel(2, i, k)] =
+                points[pointLabel(i, 0, k)];
+            facePoints[3][facePointLabel(3, i, k)] =
+                points[pointLabel(i, nj, k)];
+        }
+    }
+
+    facePoints[4].setSize((ni + 1)*(nj + 1));
+    facePoints[5].setSize((ni + 1)*(nj + 1));
+
+    for (label i=0; i<=ni; i++)
+    {
+        for (label j=0; j<=nj; j++)
+        {
+            facePoints[4][facePointLabel(4, i, j)] =
+                points[pointLabel(i, j, 0)];
+            facePoints[5][facePointLabel(5, i, j)] =
+                points[pointLabel(i, j, nk)];
+        }
+    }
+
+    return facePoints;
+}
+
+
+void Foam::blockDescriptor::correctFacePoints
+(
+    FixedList<pointField, 6>& facePoints
+) const
+{
+    forAll(curvedFaces_, blockFacei)
+    {
+        if (curvedFaces_[blockFacei] != -1)
+        {
+            faces_[curvedFaces_[blockFacei]].project(facePoints[blockFacei]);
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //

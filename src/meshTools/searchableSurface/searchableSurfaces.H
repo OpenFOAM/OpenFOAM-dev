@@ -92,6 +92,7 @@ public:
 
     ClassName("searchableSurfaces");
 
+
     // Constructors
 
         //- Construct with length specified. Fill later.
@@ -119,6 +120,7 @@ public:
         {
             return names_;
         }
+
         wordList& names()
         {
             return names_;
@@ -128,6 +130,7 @@ public:
         {
             return regionNames_;
         }
+
         List<wordList>& regionNames()
         {
             return regionNames_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,62 +23,77 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-#include "lineEdge.H"
+#include "projectFace.H"
+#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(lineEdge, 0);
-    addToRunTimeSelectionTable(blockEdge, lineEdge, Istream);
+    defineTypeNameAndDebug(projectFace, 0);
+    addToRunTimeSelectionTable(blockFace, projectFace, Istream);
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+const Foam::searchableSurface& Foam::projectFace::lookupSurface
+(
+    const searchableSurfaces& geometry,
+    Istream& is
+) const
+{
+    word name(is);
+
+    forAll(geometry, i)
+    {
+        if (geometry[i].name() == name)
+        {
+            return geometry[i];
+        }
+    }
+
+    FatalIOErrorInFunction(is)
+        << "Cannot find surface " << name << " in geometry"
+        << exit(FatalIOError);
+
+    return geometry[0];
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::lineEdge::lineEdge
+Foam::projectFace::projectFace
 (
-    const pointField& points,
-    const label start,
-    const label end
+    const searchableSurfaces& geometry,
+    Istream& is
 )
 :
-    blockEdge(points, start, end)
-{}
-
-
-Foam::lineEdge::lineEdge(const pointField& points, Istream& is)
-:
-    blockEdge(points, is)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
-
-Foam::lineEdge::~lineEdge()
+    blockFace(is),
+    surface_(lookupSurface(geometry, is))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::lineEdge::position(const scalar lambda) const
+void Foam::projectFace::project(pointField& points) const
 {
-    if (lambda < -SMALL || lambda > 1+SMALL)
+    List<pointIndexHit> hits;
+    scalarField nearestDistSqr
+    (
+        points.size(),
+        magSqr(points[0] - points[points.size()-1])
+    );
+    surface_.findNearest(points, nearestDistSqr, hits);
+
+    forAll(hits, i)
     {
-        FatalErrorInFunction
-            << "Parameter out of range, lambda = " << lambda
-            << abort(FatalError);
+        if (hits[i].hit())
+        {
+            points[i] = hits[i].hitPoint();
+        }
     }
-
-    return points_[start_] + lambda * (points_[end_] - points_[start_]);
-}
-
-
-Foam::scalar Foam::lineEdge::length() const
-{
-    return mag(points_[end_] - points_[start_]);
 }
 
 
