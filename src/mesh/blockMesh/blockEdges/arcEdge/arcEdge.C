@@ -31,14 +31,17 @@ License
 
 namespace Foam
 {
+namespace blockEdges
+{
     defineTypeNameAndDebug(arcEdge, 0);
     addToRunTimeSelectionTable(blockEdge, arcEdge, Istream);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::cylindricalCS Foam::arcEdge::calcAngle()
+Foam::cylindricalCS Foam::blockEdges::arcEdge::calcAngle()
 {
     vector a = p2_ - p1_;
     vector b = p3_ - p1_;
@@ -102,7 +105,7 @@ Foam::cylindricalCS Foam::arcEdge::calcAngle()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::arcEdge::arcEdge
+Foam::blockEdges::arcEdge::arcEdge
 (
     const pointField& points,
     const label start,
@@ -118,7 +121,7 @@ Foam::arcEdge::arcEdge
 {}
 
 
-Foam::arcEdge::arcEdge
+Foam::blockEdges::arcEdge::arcEdge
 (
     const searchableSurfaces& geometry,
     const pointField& points,
@@ -135,7 +138,7 @@ Foam::arcEdge::arcEdge
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::arcEdge::position(const scalar lambda) const
+Foam::point Foam::blockEdges::arcEdge::position(const scalar lambda) const
 {
     if (lambda < -SMALL || lambda > 1 + SMALL)
     {
@@ -159,7 +162,7 @@ Foam::point Foam::arcEdge::position(const scalar lambda) const
 }
 
 
-Foam::scalar Foam::arcEdge::length() const
+Foam::scalar Foam::blockEdges::arcEdge::length() const
 {
     return degToRad(angle_*radius_);
 }

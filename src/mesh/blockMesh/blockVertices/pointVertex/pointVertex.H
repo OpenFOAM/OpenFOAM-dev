@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,91 +22,71 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blockEdges::splineEdge
+    Foam::blockVertices::pointVertex
 
 Description
-    A blockEdge interface for Catmull-Rom splines.
 
 SourceFiles
-    splineEdge.C
+    pointVertex.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_splineEdge_H
-#define blockEdges_splineEdge_H
+#ifndef blockVertices_pointVertex_H
+#define blockVertices_pointVertex_H
 
-#include "blockEdge.H"
-#include "CatmullRomSpline.H"
+#include "blockVertex.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockEdges
+namespace blockVertices
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class splineEdge Declaration
+                           Class pointVertex Declaration
 \*---------------------------------------------------------------------------*/
 
-class splineEdge
+class pointVertex
 :
-    public blockEdge,
-    public CatmullRomSpline
+    public blockVertex
 {
-    // Private Member Functions
+    // Private member data
 
-        //- Disallow default bitwise copy construct
-        splineEdge(const splineEdge&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const splineEdge&);
+        //- The vertex location
+        point vertex_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("spline");
+    TypeName("point");
 
 
     // Constructors
 
-        //- Construct from components
-        splineEdge
-        (
-            const pointField&,
-            const label start,
-            const label end,
-            const pointField& internalPoints
-        );
-
-        //- Construct from Istream, setting pointsList
-        splineEdge
+        //- Construct from Istream setting pointsList
+        pointVertex
         (
             const searchableSurfaces& geometry,
-            const pointField&,
             Istream&
         );
 
 
     //- Destructor
-    virtual ~splineEdge();
+    virtual ~pointVertex()
+    {}
 
 
     // Member Functions
 
-        //- Return the point position corresponding to the curve parameter
-        //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
-
-        //- Return the length of the spline curve (not implemented)
-        virtual scalar length() const;
+        virtual operator point() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End of namespace blockEdges
+} // End namespace blockVertices
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

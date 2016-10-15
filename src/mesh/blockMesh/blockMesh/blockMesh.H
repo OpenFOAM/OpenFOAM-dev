@@ -46,6 +46,7 @@ SourceFiles
 #include "searchableSurfaces.H"
 #include "polyMesh.H"
 #include "IOdictionary.H"
+#include "blockVertexList.H"
 #include "blockEdgeList.H"
 #include "blockFaceList.H"
 
@@ -73,7 +74,10 @@ class blockMesh
         //- The scaling factor to convert to metres
         scalar scaleFactor_;
 
-        //- Vertices defining the block mesh (corners)
+        //- The list of block vertices
+        blockVertexList blockVertices_;
+
+        //- The list of block vertex positions
         pointField vertices_;
 
         //- The list of curved edges

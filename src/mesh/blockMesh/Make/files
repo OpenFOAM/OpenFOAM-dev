@@ -1,3 +1,6 @@
+blockVertices/blockVertex/blockVertex.C
+blockVertices/pointVertex/pointVertex.C
+
 blockEdges/blockEdge/blockEdge.C
 blockEdges/lineDivide/lineDivide.C
 blockEdges/lineEdge/lineEdge.C

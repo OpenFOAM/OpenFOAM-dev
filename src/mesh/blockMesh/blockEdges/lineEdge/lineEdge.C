@@ -30,14 +30,17 @@ License
 
 namespace Foam
 {
+namespace blockEdges
+{
     defineTypeNameAndDebug(lineEdge, 0);
     addToRunTimeSelectionTable(blockEdge, lineEdge, Istream);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::lineEdge::lineEdge
+Foam::blockEdges::lineEdge::lineEdge
 (
     const pointField& points,
     const label start,
@@ -48,7 +51,7 @@ Foam::lineEdge::lineEdge
 {}
 
 
-Foam::lineEdge::lineEdge
+Foam::blockEdges::lineEdge::lineEdge
 (
     const searchableSurfaces& geometry,
     const pointField& points,
@@ -61,13 +64,13 @@ Foam::lineEdge::lineEdge
 
 // * * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * //
 
-Foam::lineEdge::~lineEdge()
+Foam::blockEdges::lineEdge::~lineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::lineEdge::position(const scalar lambda) const
+Foam::point Foam::blockEdges::lineEdge::position(const scalar lambda) const
 {
     if (lambda < -SMALL || lambda > 1+SMALL)
     {
@@ -80,7 +83,7 @@ Foam::point Foam::lineEdge::position(const scalar lambda) const
 }
 
 
-Foam::scalar Foam::lineEdge::length() const
+Foam::scalar Foam::blockEdges::lineEdge::length() const
 {
     return mag(points_[end_] - points_[start_]);
 }

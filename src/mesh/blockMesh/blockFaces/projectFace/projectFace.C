@@ -31,14 +31,17 @@ License
 
 namespace Foam
 {
+namespace blockFaces
+{
     defineTypeNameAndDebug(projectFace, 0);
     addToRunTimeSelectionTable(blockFace, projectFace, Istream);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::searchableSurface& Foam::projectFace::lookupSurface
+const Foam::searchableSurface& Foam::blockFaces::projectFace::lookupSurface
 (
     const searchableSurfaces& geometry,
     Istream& is
@@ -64,7 +67,7 @@ const Foam::searchableSurface& Foam::projectFace::lookupSurface
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::projectFace::projectFace
+Foam::blockFaces::projectFace::projectFace
 (
     const searchableSurfaces& geometry,
     Istream& is
@@ -77,7 +80,7 @@ Foam::projectFace::projectFace
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::projectFace::project(pointField& points) const
+void Foam::blockFaces::projectFace::project(pointField& points) const
 {
     List<pointIndexHit> hits;
     scalarField nearestDistSqr

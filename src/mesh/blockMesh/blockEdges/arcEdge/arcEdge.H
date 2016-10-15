@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::arcEdge
+    Foam::blockEdges::arcEdge
 
 Description
     Defines the arcEdge of a circle in terms of 3 points on its circumference
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef arcEdge_H
-#define arcEdge_H
+#ifndef blockEdges_arcEdge_H
+#define blockEdges_arcEdge_H
 
 #include "blockEdge.H"
 #include "cylindricalCS.H"
@@ -41,6 +41,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace blockEdges
 {
 
 /*---------------------------------------------------------------------------*\
@@ -113,6 +115,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace blockEdges
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

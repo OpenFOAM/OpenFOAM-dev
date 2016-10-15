@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::polyLineEdge
+    Foam::blockEdges::polyLineEdge
 
 Description
     A blockEdge defined in terms of a series of straight line segments.
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef polyLineEdge_H
-#define polyLineEdge_H
+#ifndef blockEdges_polyLineEdge_H
+#define blockEdges_polyLineEdge_H
 
 #include "blockEdge.H"
 #include "polyLine.H"
@@ -41,6 +41,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace blockEdges
 {
 
 /*---------------------------------------------------------------------------*\
@@ -104,6 +106,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace blockEdges
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

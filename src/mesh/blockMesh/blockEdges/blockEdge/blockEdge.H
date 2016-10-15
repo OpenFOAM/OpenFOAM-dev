@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_H
-#define blockEdges_H
+#ifndef blockEdge_H
+#define blockEdge_H
 
 #include "searchableSurfaces.H"
 

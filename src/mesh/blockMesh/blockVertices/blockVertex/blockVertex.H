@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,91 +22,102 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::blockEdges::splineEdge
+    Foam::blockVertex
 
 Description
-    A blockEdge interface for Catmull-Rom splines.
+    Define a block vertex.
 
 SourceFiles
-    splineEdge.C
+    blockVertex.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockEdges_splineEdge_H
-#define blockEdges_splineEdge_H
+#ifndef blockVertex_H
+#define blockVertex_H
 
-#include "blockEdge.H"
-#include "CatmullRomSpline.H"
+#include "searchableSurfaces.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockEdges
-{
 
 /*---------------------------------------------------------------------------*\
-                      Class splineEdge Declaration
+                         Class blockVertex Declaration
 \*---------------------------------------------------------------------------*/
 
-class splineEdge
-:
-    public blockEdge,
-    public CatmullRomSpline
+class blockVertex
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        splineEdge(const splineEdge&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const splineEdge&);
-
 
 public:
 
     //- Runtime type information
-    TypeName("spline");
+    TypeName("blockVertex");
+
+
+    // Declare run-time constructor selection tables
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            blockVertex,
+            Istream,
+            (
+                const searchableSurfaces& geometry,
+                Istream& is
+            ),
+            (geometry, is)
+        );
 
 
     // Constructors
 
-        //- Construct from components
-        splineEdge
-        (
-            const pointField&,
-            const label start,
-            const label end,
-            const pointField& internalPoints
-        );
+        //- Construct null
+        blockVertex();
 
-        //- Construct from Istream, setting pointsList
-        splineEdge
+        //- Clone function
+        virtual autoPtr<blockVertex> clone() const;
+
+        //- New function which constructs and returns pointer to a blockVertex
+        static autoPtr<blockVertex> New
         (
             const searchableSurfaces& geometry,
-            const pointField&,
             Istream&
         );
 
+        //- Class used for the read-construction of
+        //  PtrLists of blockVertex
+        class iNew
+        {
+            const searchableSurfaces& geometry_;
+
+        public:
+
+            iNew(const searchableSurfaces& geometry)
+            :
+                geometry_(geometry)
+            {}
+
+            autoPtr<blockVertex> operator()(Istream& is) const
+            {
+                return blockVertex::New(geometry_, is);
+            }
+        };
+
 
     //- Destructor
-    virtual ~splineEdge();
+    virtual ~blockVertex()
+    {}
 
 
     // Member Functions
 
-        //- Return the point position corresponding to the curve parameter
-        //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
-
-        //- Return the length of the spline curve (not implemented)
-        virtual scalar length() const;
+        virtual operator point() const = 0;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End of namespace blockEdges
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

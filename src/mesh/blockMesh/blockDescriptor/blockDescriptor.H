@@ -33,12 +33,12 @@ Description
     (block, centre): faces 0 (f0) and 1 are left and right, respectively; faces
     2 and 3 are front the back; and faces 4 and 5 are bottom and top:
     \verbatim
-             4 ---- 5
+             7 ---- 6
         f5   |\     |\   f3
-         |   | 7 ---- 6    \
-         |   0 |--- 1 |     \
+         |   | 4 ---- 5    \
+         |   3 |--- 2 |     \
          |    \|     \|      f2
-        f4     3 ---- 2
+        f4     0 ---- 1
 
              f0 ----- f1
      \endverbatim

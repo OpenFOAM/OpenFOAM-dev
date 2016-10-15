@@ -21,90 +21,42 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::blockFaces::projectFace
+Typedef
+    Foam::blockVertexList
 
 Description
-    Projects the given set of face points onto the selected surface of the
-    geometry provided as a searchableSurfaces object.
-
-SourceFiles
-    projectFace.C
+    A PtrList of blockVertex
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockFaces_projectFace_H
-#define blockFaces_projectFace_H
+#ifndef blockVertexList_H
+#define blockVertexList_H
 
-#include "blockFace.H"
+#include "blockVertex.H"
+#include "PtrList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockFaces
-{
-
-/*---------------------------------------------------------------------------*\
-                           Class projectFace Declaration
-\*---------------------------------------------------------------------------*/
-
-class projectFace
-:
-    public blockFace
-{
-    // Private data
-
-        //- The surface onto which the points are projected
-        const searchableSurface& surface_;
-
-
-    // Private Member Functions
-
-        const searchableSurface& lookupSurface
-        (
-            const searchableSurfaces& geometry,
-            Istream& is
-        ) const;
-
-        //- Disallow default bitwise copy construct
-        projectFace(const projectFace&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectFace&);
-
-
-public:
-
-    //- Runtime type information
-    TypeName("project");
-
-
-    // Constructors
-
-        //- Construct from Istream setting pointsList
-        projectFace
-        (
-            const searchableSurfaces& geometry,
-            Istream&
-        );
-
-
-    //- Destructor
-    virtual ~projectFace()
-    {}
-
-
-    // Member Functions
-
-        //- Project the given points onto the surface
-        virtual void project(pointField& points) const;
-};
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace blockFaces
+typedef PtrList<blockVertex> blockVertexList;
+
+inline pointField vertices(const blockVertexList& bvl)
+{
+    pointField vertices(bvl.size());
+    forAll(bvl, pi)
+    {
+        vertices[pi] = bvl[pi];
+    }
+
+    return vertices;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockFaces_H
-#define blockFaces_H
+#ifndef blockFace_H
+#define blockFace_H
 
 #include "searchableSurfaces.H"
 

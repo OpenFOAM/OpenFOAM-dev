@@ -96,7 +96,7 @@ Foam::label Foam::blockDescriptor::edgePointsWeights
     // Not curved-edge: divide the edge as a straight line
     lineDivide divEdge
     (
-        lineEdge(blockPoints, start, end),
+        blockEdges::lineEdge(blockPoints, start, end),
         nDiv,
         expand_[edgei]
     );

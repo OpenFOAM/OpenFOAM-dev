@@ -31,6 +31,8 @@ License
 
 namespace Foam
 {
+namespace blockEdges
+{
     defineTypeNameAndDebug(splineEdge, 0);
 
     addToRunTimeSelectionTable
@@ -40,11 +42,12 @@ namespace Foam
         Istream
     );
 }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::splineEdge::splineEdge
+Foam::blockEdges::splineEdge::splineEdge
 (
     const pointField& points,
     const label start,
@@ -57,7 +60,7 @@ Foam::splineEdge::splineEdge
 {}
 
 
-Foam::splineEdge::splineEdge
+Foam::blockEdges::splineEdge::splineEdge
 (
     const searchableSurfaces& geometry,
     const pointField& points,
@@ -81,19 +84,19 @@ Foam::splineEdge::splineEdge
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::splineEdge::~splineEdge()
+Foam::blockEdges::splineEdge::~splineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::splineEdge::position(const scalar mu) const
+Foam::point Foam::blockEdges::splineEdge::position(const scalar mu) const
 {
     return CatmullRomSpline::position(mu);
 }
 
 
-Foam::scalar Foam::splineEdge::length() const
+Foam::scalar Foam::blockEdges::splineEdge::length() const
 {
     return CatmullRomSpline::length();
 }

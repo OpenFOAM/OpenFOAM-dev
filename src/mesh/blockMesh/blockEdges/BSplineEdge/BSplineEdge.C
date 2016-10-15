@@ -31,6 +31,8 @@ License
 
 namespace Foam
 {
+namespace blockEdges
+{
     defineTypeNameAndDebug(BSplineEdge, 0);
 
     addToRunTimeSelectionTable
@@ -40,11 +42,12 @@ namespace Foam
         Istream
     );
 }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::BSplineEdge::BSplineEdge
+Foam::blockEdges::BSplineEdge::BSplineEdge
 (
     const pointField& points,
     const label start,
@@ -57,7 +60,7 @@ Foam::BSplineEdge::BSplineEdge
 {}
 
 
-Foam::BSplineEdge::BSplineEdge
+Foam::blockEdges::BSplineEdge::BSplineEdge
 (
     const searchableSurfaces& geometry,
     const pointField& points,
@@ -81,19 +84,19 @@ Foam::BSplineEdge::BSplineEdge
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::BSplineEdge::~BSplineEdge()
+Foam::blockEdges::BSplineEdge::~BSplineEdge()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::BSplineEdge::position(const scalar mu) const
+Foam::point Foam::blockEdges::BSplineEdge::position(const scalar mu) const
 {
     return BSpline::position(mu);
 }
 
 
-Foam::scalar Foam::BSplineEdge::length() const
+Foam::scalar Foam::blockEdges::BSplineEdge::length() const
 {
     return BSpline::length();
 }

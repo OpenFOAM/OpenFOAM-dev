@@ -25,7 +25,6 @@ License
 
 #include "blockMesh.H"
 #include "Time.H"
-#include "Switch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -57,7 +56,12 @@ Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
         true
     ),
     scaleFactor_(1.0),
-    vertices_(dict.lookup("vertices")),
+    blockVertices_
+    (
+        dict.lookup("vertices"),
+        blockVertex::iNew(geometry_)
+    ),
+    vertices_(Foam::vertices(blockVertices_)),
     topologyPtr_(createTopology(dict, regionName))
 {
     Switch fastMerge(dict.lookupOrDefault<Switch>("fastMerge", false));

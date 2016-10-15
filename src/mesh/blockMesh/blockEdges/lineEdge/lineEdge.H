@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::lineEdge
+    Foam::blockEdges::lineEdge
 
 Description
     A straight edge between the start point and the end point.
@@ -32,14 +32,16 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef lineEdge_H
-#define lineEdge_H
+#ifndef blockEdges_lineEdge_H
+#define blockEdges_lineEdge_H
 
 #include "blockEdge.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace blockEdges
 {
 
 /*---------------------------------------------------------------------------*\
@@ -89,6 +91,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End of namespace blockEdges
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

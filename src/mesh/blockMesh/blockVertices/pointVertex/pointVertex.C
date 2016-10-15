@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,65 +23,38 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyLineEdge.H"
+#include "pointVertex.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockEdges
+namespace blockVertices
 {
-    defineTypeNameAndDebug(polyLineEdge, 0);
-    addToRunTimeSelectionTable(blockEdge, polyLineEdge, Istream);
+    defineTypeNameAndDebug(pointVertex, 0);
+    addToRunTimeSelectionTable(blockVertex, pointVertex, Istream);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blockEdges::polyLineEdge::polyLineEdge
-(
-    const pointField& ps,
-    const label start,
-    const label end,
-    const pointField& otherPoints
-)
-:
-    blockEdge(ps, start, end),
-    polyLine(appendEndPoints(ps, start_, end_, otherPoints))
-{}
-
-
-Foam::blockEdges::polyLineEdge::polyLineEdge
+Foam::blockVertices::pointVertex::pointVertex
 (
     const searchableSurfaces& geometry,
-    const pointField& ps,
     Istream& is
 )
 :
-    blockEdge(ps, is),
-    polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::blockEdges::polyLineEdge::~polyLineEdge()
+    vertex_(is)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::blockEdges::polyLineEdge::position(const scalar lambda) const
+Foam::blockVertices::pointVertex::operator point() const
 {
-    return polyLine::position(lambda);
-}
-
-
-Foam::scalar Foam::blockEdges::polyLineEdge::length() const
-{
-    return polyLine::lineLength_;
+    return vertex_;
 }
 
 

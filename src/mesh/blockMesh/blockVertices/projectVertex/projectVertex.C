@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,65 +23,77 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyLineEdge.H"
+#include "projectFace.H"
+#include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockEdges
-{
-    defineTypeNameAndDebug(polyLineEdge, 0);
-    addToRunTimeSelectionTable(blockEdge, polyLineEdge, Istream);
+    defineTypeNameAndDebug(projectFace, 0);
+    addToRunTimeSelectionTable(blockVertex, projectFace, Istream);
 }
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+const Foam::searchableSurface& Foam::projectFace::lookupSurface
+(
+    const searchableSurfaces& geometry,
+    Istream& is
+) const
+{
+    word name(is);
+
+    forAll(geometry, i)
+    {
+        if (geometry[i].name() == name)
+        {
+            return geometry[i];
+        }
+    }
+
+    FatalIOErrorInFunction(is)
+        << "Cannot find surface " << name << " in geometry"
+        << exit(FatalIOError);
+
+    return geometry[0];
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blockEdges::polyLineEdge::polyLineEdge
-(
-    const pointField& ps,
-    const label start,
-    const label end,
-    const pointField& otherPoints
-)
-:
-    blockEdge(ps, start, end),
-    polyLine(appendEndPoints(ps, start_, end_, otherPoints))
-{}
-
-
-Foam::blockEdges::polyLineEdge::polyLineEdge
+Foam::projectFace::projectFace
 (
     const searchableSurfaces& geometry,
-    const pointField& ps,
     Istream& is
 )
 :
-    blockEdge(ps, is),
-    polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::blockEdges::polyLineEdge::~polyLineEdge()
+    blockVertex(is),
+    surface_(lookupSurface(geometry, is))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::blockEdges::polyLineEdge::position(const scalar lambda) const
+void Foam::projectFace::project(pointField& points) const
 {
-    return polyLine::position(lambda);
-}
+    List<pointIndexHit> hits;
+    scalarField nearestDistSqr
+    (
+        points.size(),
+        magSqr(points[0] - points[points.size()-1])
+    );
+    surface_.findNearest(points, nearestDistSqr, hits);
 
-
-Foam::scalar Foam::blockEdges::polyLineEdge::length() const
-{
-    return polyLine::lineLength_;
+    forAll(hits, i)
+    {
+        if (hits[i].hit())
+        {
+            points[i] = hits[i].hitPoint();
+        }
+    }
 }
 
 
