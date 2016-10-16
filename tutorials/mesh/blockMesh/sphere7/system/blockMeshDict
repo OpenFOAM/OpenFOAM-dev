@@ -1,0 +1,136 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+verbose no;
+
+geometry
+{
+    sphere
+    {
+        type searchableSphere;
+        centre (0 0 0);
+        radius 1;
+    }
+}
+
+scale 1;
+
+n    10;
+
+v    0.5773502;
+mv  -0.5773502;
+vh   0.2886751;
+mvh -0.2886751;
+
+a    0.7071067;
+ma  -0.7071067;
+ah   0.3464101;
+mah -0.3464101;
+
+vertices
+(
+    ($mvh $mvh $mvh)
+    ( $vh $mvh $mvh)
+    ( $vh  $vh $mvh)
+    ($mvh  $vh $mvh)
+    ($mvh $mvh  $vh)
+    ( $vh $mvh  $vh)
+    ( $vh  $vh  $vh)
+    ($mvh  $vh  $vh)
+
+    ($mv $mv $mv)
+    ( $v $mv $mv)
+    ( $v  $v $mv)
+    ($mv  $v $mv)
+    ($mv $mv  $v)
+    ( $v $mv  $v)
+    ( $v  $v  $v)
+    ($mv  $v  $v)
+);
+
+blocks
+(
+    hex ( 0  1  2  3  4  5  6  7) ($n $n $n) simpleGrading (1 1 1)
+    hex ( 9  8 12 13  1  0  4  5) ($n $n $n) simpleGrading (1 1 1)
+    hex (10  9 13 14  2  1  5  6) ($n $n $n) simpleGrading (1 1 1)
+    hex (11 10 14 15  3  2  6  7) ($n $n $n) simpleGrading (1 1 1)
+    hex ( 8 11 15 12  0  3  7  4) ($n $n $n) simpleGrading (1 1 1)
+    hex ( 8  9 10 11  0  1  2  3) ($n $n $n) simpleGrading (1 1 1)
+    hex (13 12 15 14  5  4  7  6) ($n $n $n) simpleGrading (1 1 1)
+);
+
+edges
+(
+    arc  8  9 (0 $ma $ma)
+    arc 10 11 (0 $a $ma)
+    arc 14 15 (0 $a $a)
+    arc 12 13 (0 $ma $a)
+
+    arc  8 11 ($ma 0 $ma)
+    arc  9 10 ($a 0 $ma)
+    arc 13 14 ($a 0 $a)
+    arc 12 15 ($ma 0 $a)
+
+    arc  8 12 ($ma $ma 0)
+    arc  9 13 ($a $ma 0)
+    arc 10 14 ($a $a 0)
+    arc 11 15 ($ma $a 0)
+
+
+    arc  0  1 (0 $mah $mah)
+    arc  2  3 (0 $ah $mah)
+    arc  6  7 (0 $ah $ah)
+    arc  4  5 (0 $mah $ah)
+
+    arc  0  3 ($mah 0 $mah)
+    arc  1  2 ($ah 0 $mah)
+    arc  5  6 ($ah 0 $ah)
+    arc  4  7 ($mah 0 $ah)
+
+    arc  0  4 ($mah $mah 0)
+    arc  1  5 ($ah $mah 0)
+    arc  2  6 ($ah $ah 0)
+    arc  3  7 ($mah $ah 0)
+);
+
+faces
+(
+    project ( 8 12 15 11) sphere
+    project (10 14 13  9) sphere
+    project ( 9 13 12  8) sphere
+    project (11 15 14 10) sphere
+    project ( 8 11 10  9) sphere
+    project (12 13 14 15) sphere
+);
+
+boundary
+(
+    walls
+    {
+        type wall;
+        faces
+        (
+            ( 8 12 15 11)
+            (10 14 13  9)
+            ( 9 13 12  8)
+            (11 15 14 10)
+            ( 8 11 10  9)
+            (12 13 14 15)
+        );
+    }
+);
+
+// ************************************************************************* //
