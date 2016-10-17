@@ -37,7 +37,7 @@ Usage
         Property     | Description             | Required    | Default value
         U            | velocity field name     | no          | U
         phi          | flux field name         | no          | phi
-        psi          | compressibility field name |  no      | psi
+        psi          | compressibility field name |  no      | thermo:psi
         gamma        | heat capacity ration (Cp/Cv) | yes    |
         inletValue   | reverse flow (inlet) value | yes      |
         T0           | static temperature [K]  | yes         |

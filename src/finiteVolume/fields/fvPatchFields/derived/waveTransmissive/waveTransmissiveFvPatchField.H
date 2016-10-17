@@ -52,7 +52,7 @@ Usage
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
         rho          | density field name      | no          | rho
-        psi          | compressibility field name | no       | psi
+        psi          | compressibility field name | no       | thermo:psi
         gamma        | ratio of specific heats (Cp/Cv) | yes |
     \endtable
 
