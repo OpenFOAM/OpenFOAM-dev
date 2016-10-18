@@ -33,9 +33,25 @@ void Foam::blockMesh::check(const polyMesh& bm) const
 
     bool ok = true;
 
-    // Check curved-edge/block-edge correspondence
     const edgeList& edges = bm.edges();
 
+    // Check for duplicate curved edge definitions
+    forAll(edges_, cei)
+    {
+        for (label cej=cei+1; cej<edges_.size(); cej++)
+        {
+            if (edges_[cei].compare(edges_[cej]) != 0)
+            {
+                Info<< "    Curved edge " << edges_[cej]
+                    << "    is a duplicate of curved edge " << edges_[cei]
+                    << endl;
+                ok = false;
+                break;
+            }
+        }
+    }
+
+    // Check curved-edge/block-edge correspondence
     forAll(edges_, cei)
     {
         bool found = false;
