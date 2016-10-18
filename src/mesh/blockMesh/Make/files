@@ -1,5 +1,6 @@
 blockVertices/blockVertex/blockVertex.C
 blockVertices/pointVertex/pointVertex.C
+blockVertices/projectVertex/projectVertex.C
 
 blockEdges/blockEdge/blockEdge.C
 blockEdges/lineDivide/lineDivide.C
@@ -11,6 +12,7 @@ blockEdges/BSplineEdge/BSpline.C
 blockEdges/BSplineEdge/BSplineEdge.C
 blockEdges/splineEdge/CatmullRomSpline.C
 blockEdges/splineEdge/splineEdge.C
+blockEdges/projectEdge/projectEdge.C
 
 blockFaces/blockFace/blockFace.C
 blockFaces/projectFace/projectFace.C

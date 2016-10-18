@@ -336,7 +336,12 @@ void Foam::blockDescriptor::correctFacePoints
     {
         if (curvedFaces_[blockFacei] != -1)
         {
-            faces_[curvedFaces_[blockFacei]].project(facePoints[blockFacei]);
+            faces_[curvedFaces_[blockFacei]].project
+            (
+                *this,
+                blockFacei,
+                facePoints[blockFacei]
+            );
         }
     }
 }

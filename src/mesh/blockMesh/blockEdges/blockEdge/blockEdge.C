@@ -125,6 +125,20 @@ Foam::pointField Foam::blockEdge::appendEndPoints
 }
 
 
+Foam::tmp<Foam::pointField>
+Foam::blockEdge::position(const scalarList& lambdas) const
+{
+    tmp<pointField> tpoints(new pointField(lambdas.size()));
+    pointField& points = tpoints.ref();
+
+    forAll(lambdas, i)
+    {
+        points[i] = position(lambdas[i]);
+    }
+    return tpoints;
+}
+
+
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const blockEdge& p)

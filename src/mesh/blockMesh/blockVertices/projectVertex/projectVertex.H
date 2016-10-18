@@ -22,54 +22,52 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::projectFace
+    Foam::blockVertices::projectVertex
 
 Description
-    Projects the given set of face points onto the selected surface of the
+    Projects the vertex onto the selected surfacees of the
     geometry provided as a searchableSurfaces object.
 
 SourceFiles
-    projectFace.C
+    projectVertex.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef projectFace_H
-#define projectFace_H
+#ifndef blockVertices_projectVertex_H
+#define blockVertices_projectVertex_H
 
-#include "blockVertex.H"
+#include "pointVertex.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace blockVertices
+{
 
 /*---------------------------------------------------------------------------*\
-                           Class projectFace Declaration
+                        Class projectVertex Declaration
 \*---------------------------------------------------------------------------*/
 
-class projectFace
+class projectVertex
 :
-    public blockVertex
+    public pointVertex
 {
     // Private data
 
-        //- The surface onto which the points are projected
-        const searchableSurface& surface_;
+        const searchableSurfaces& geometry_;
+
+        //- The indices of surfaces onto which the points are projected
+        labelList surfaces_;
 
 
     // Private Member Functions
 
-        const searchableSurface& lookupSurface
-        (
-            const searchableSurfaces& geometry,
-            Istream& is
-        ) const;
-
         //- Disallow default bitwise copy construct
-        projectFace(const projectFace&);
+        projectVertex(const projectVertex&);
 
         //- Disallow default bitwise assignment
-        void operator=(const projectFace&);
+        void operator=(const projectVertex&);
 
 
 public:
@@ -81,7 +79,7 @@ public:
     // Constructors
 
         //- Construct from Istream setting pointsList
-        projectFace
+        projectVertex
         (
             const searchableSurfaces& geometry,
             Istream&
@@ -89,19 +87,20 @@ public:
 
 
     //- Destructor
-    virtual ~projectFace()
+    virtual ~projectVertex()
     {}
 
 
     // Member Functions
 
         //- Project the given points onto the surface
-        virtual void project(pointField& points) const;
+        virtual operator point() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace blockVertices
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

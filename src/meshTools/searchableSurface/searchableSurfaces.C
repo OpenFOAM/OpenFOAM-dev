@@ -419,24 +419,6 @@ Foam::boundBox Foam::searchableSurfaces::bounds() const
 }
 
 
-Foam::pointIndexHit Foam::searchableSurfaces::facesIntersection
-(
-    const scalar initDistSqr,
-    const scalar convergenceDistSqr,
-    const point& start
-) const
-{
-    return searchableSurfacesQueries::facesIntersection
-    (
-        *this,
-        allSurfaces_,
-        initDistSqr,
-        convergenceDistSqr,
-        start
-    );
-}
-
-
 bool Foam::searchableSurfaces::checkClosed(const bool report) const
 {
     if (report)

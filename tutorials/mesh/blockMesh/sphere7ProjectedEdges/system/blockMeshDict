@@ -1,0 +1,143 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+verbose no;
+
+geometry
+{
+    sphere
+    {
+        type searchableSphere;
+        centre (0 0 0);
+        radius 1;
+    }
+
+    innerSphere
+    {
+        type searchableSphere;
+        centre (0 0 0);
+        radius 0.5;
+    }
+}
+
+scale 1;
+
+n    10;
+
+// Rough approximation of corner points
+v    0.5773502;
+mv  -0.5773502;
+vh   0.2886751;
+mvh -0.2886751;
+
+vertices
+(
+    // Inner block points
+    project ($mvh $mvh $mvh) (innerSphere)
+    project ( $vh $mvh $mvh) (innerSphere)
+    project ( $vh  $vh $mvh) (innerSphere)
+    project ($mvh  $vh $mvh) (innerSphere)
+    project ($mvh $mvh  $vh) (innerSphere)
+    project ( $vh $mvh  $vh) (innerSphere)
+    project ( $vh  $vh  $vh) (innerSphere)
+    project ($mvh  $vh  $vh) (innerSphere)
+
+    // Outer block points
+    project ($mv $mv $mv) (sphere)
+    project ( $v $mv $mv) (sphere)
+    project ( $v  $v $mv) (sphere)
+    project ($mv  $v $mv) (sphere)
+    project ($mv $mv  $v) (sphere)
+    project ( $v $mv  $v) (sphere)
+    project ( $v  $v  $v) (sphere)
+    project ($mv  $v  $v) (sphere)
+);
+
+blocks
+(
+    hex ( 0  1  2  3  4  5  6  7) ($n $n $n) simpleGrading (1 1 1)
+    hex ( 9  8 12 13  1  0  4  5) ($n $n $n) simpleGrading (1 1 1)
+    hex (10  9 13 14  2  1  5  6) ($n $n $n) simpleGrading (1 1 1)
+    hex (11 10 14 15  3  2  6  7) ($n $n $n) simpleGrading (1 1 1)
+    hex ( 8 11 15 12  0  3  7  4) ($n $n $n) simpleGrading (1 1 1)
+    hex ( 8  9 10 11  0  1  2  3) ($n $n $n) simpleGrading (1 1 1)
+    hex (13 12 15 14  5  4  7  6) ($n $n $n) simpleGrading (1 1 1)
+);
+
+edges
+(
+    // Outer edges
+    project  8  9 (sphere)
+    project 10 11 (sphere)
+    project 14 15 (sphere)
+    project 12 13 (sphere)
+
+    project  8 11 (sphere)
+    project  9 10 (sphere)
+    project 13 14 (sphere)
+    project 12 15 (sphere)
+
+    project  8 12 (sphere)
+    project  9 13 (sphere)
+    project 10 14 (sphere)
+    project 11 15 (sphere)
+
+
+    // Inner edges
+    project  0  1 (innerSphere)
+    project  2  3 (innerSphere)
+    project  6  7 (innerSphere)
+    project  4  5 (innerSphere)
+
+    project  0  3 (innerSphere)
+    project  1  2 (innerSphere)
+    project  5  6 (innerSphere)
+    project  4  7 (innerSphere)
+
+    project  0  4 (innerSphere)
+    project  1  5 (innerSphere)
+    project  2  6 (innerSphere)
+    project  3  7 (innerSphere)
+);
+
+faces
+(
+    project ( 8 12 15 11) sphere
+    project (10 14 13  9) sphere
+    project ( 9 13 12  8) sphere
+    project (11 15 14 10) sphere
+    project ( 8 11 10  9) sphere
+    project (12 13 14 15) sphere
+);
+
+boundary
+(
+    walls
+    {
+        type wall;
+        faces
+        (
+            ( 8 12 15 11)
+            (10 14 13  9)
+            ( 9 13 12  8)
+            (11 15 14 10)
+            ( 8 11 10  9)
+            (12 13 14 15)
+        );
+    }
+);
+
+// ************************************************************************* //

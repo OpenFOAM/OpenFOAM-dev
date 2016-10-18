@@ -26,6 +26,7 @@ License
 #include "projectFace.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
+#include "blockDescriptor.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -80,7 +81,12 @@ Foam::blockFaces::projectFace::projectFace
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::blockFaces::projectFace::project(pointField& points) const
+void Foam::blockFaces::projectFace::project
+(
+    const blockDescriptor& desc,
+    const label blockFacei,
+    pointField& points
+) const
 {
     List<pointIndexHit> hits;
     scalarField nearestDistSqr

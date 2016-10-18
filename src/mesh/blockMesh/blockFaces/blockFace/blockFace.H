@@ -44,10 +44,10 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
+class blockDescriptor;
 class blockFace;
 
 Ostream& operator<<(Ostream&, const blockFace&);
-
 
 /*---------------------------------------------------------------------------*\
                          Class blockFace Declaration
@@ -138,7 +138,12 @@ public:
         //- Compare with the given block and block face
         inline bool compare(const face& vertices) const;
 
-        virtual void project(pointField& points) const = 0;
+        virtual void project
+        (
+            const blockDescriptor&,
+            const label blockFacei,
+            pointField& points
+        ) const = 0;
 
 
     // Ostream operator

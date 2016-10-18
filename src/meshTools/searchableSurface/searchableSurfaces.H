@@ -213,18 +213,6 @@ public:
             //- Calculate bounding box
             boundBox bounds() const;
 
-
-        // Single point queries
-
-            //- Calculate point which is on a set of surfaces.
-            pointIndexHit facesIntersection
-            (
-                const scalar initialDistSqr,
-                const scalar convergenceDistSqr,
-                const point& start
-            ) const;
-
-
         // Checking
 
             //- Are all surfaces closed and manifold

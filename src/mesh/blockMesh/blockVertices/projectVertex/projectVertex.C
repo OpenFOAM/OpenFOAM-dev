@@ -23,77 +23,76 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "projectFace.H"
+#include "projectVertex.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
+#include "searchableSurfacesQueries.H"
+#include "pointConstraint.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(projectFace, 0);
-    addToRunTimeSelectionTable(blockVertex, projectFace, Istream);
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-const Foam::searchableSurface& Foam::projectFace::lookupSurface
-(
-    const searchableSurfaces& geometry,
-    Istream& is
-) const
+namespace blockVertices
 {
-    word name(is);
-
-    forAll(geometry, i)
-    {
-        if (geometry[i].name() == name)
-        {
-            return geometry[i];
-        }
-    }
-
-    FatalIOErrorInFunction(is)
-        << "Cannot find surface " << name << " in geometry"
-        << exit(FatalIOError);
-
-    return geometry[0];
+    defineTypeNameAndDebug(projectVertex, 0);
+    addToRunTimeSelectionTable(blockVertex, projectVertex, Istream);
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::projectFace::projectFace
+Foam::blockVertices::projectVertex::projectVertex
 (
     const searchableSurfaces& geometry,
     Istream& is
 )
 :
-    blockVertex(is),
-    surface_(lookupSurface(geometry, is))
-{}
+    pointVertex(geometry, is),
+    geometry_(geometry)
+{
+    wordList names(is);
+    surfaces_.setSize(names.size());
+    forAll(names, i)
+    {
+        surfaces_[i] = geometry_.findSurfaceID(names[i]);
+
+        if (surfaces_[i] == -1)
+        {
+            FatalIOErrorInFunction(is)
+                << "Cannot find surface " << names[i] << " in geometry"
+                << exit(FatalIOError);
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::projectFace::project(pointField& points) const
+Foam::blockVertices::projectVertex::operator point() const
 {
-    List<pointIndexHit> hits;
-    scalarField nearestDistSqr
-    (
-        points.size(),
-        magSqr(points[0] - points[points.size()-1])
-    );
-    surface_.findNearest(points, nearestDistSqr, hits);
+    pointField start(1, pointVertex::operator point());
 
-    forAll(hits, i)
-    {
-        if (hits[i].hit())
-        {
-            points[i] = hits[i].hitPoint();
-        }
-    }
+    pointField boundaryNear(start);
+    List<pointConstraint> boundaryConstraint;
+
+
+    // Note: how far do we need to search? Probably not further than
+    //       span of surfaces themselves.
+    boundBox bb(searchableSurfacesQueries::bounds(geometry_, surfaces_));
+
+    searchableSurfacesQueries::findNearest
+    (
+        geometry_,
+        surfaces_,
+        start,
+        scalarField(start.size(), magSqr(bb.span())),
+        boundaryNear,
+        boundaryConstraint
+    );
+
+    return boundaryNear[0];
 }
 
 

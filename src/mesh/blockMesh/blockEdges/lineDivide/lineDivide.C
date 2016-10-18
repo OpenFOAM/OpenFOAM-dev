@@ -131,10 +131,7 @@ Foam::lineDivide::lineDivide
     }
 
     // Calculate the points
-    for (label i = 0; i <= nDiv; i++)
-    {
-        points_[i] = cedge.position(divisions_[i]);
-    }
+    points_ = cedge.position(divisions_);
 }
 
 

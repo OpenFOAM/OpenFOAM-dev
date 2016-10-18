@@ -44,6 +44,7 @@ namespace Foam
 
 // Forward declaration of classes
 class plane;
+class pointConstraint;
 
 /*---------------------------------------------------------------------------*\
                            Class searchableSurfacesQueries Declaration
@@ -51,67 +52,7 @@ class plane;
 
 class searchableSurfacesQueries
 {
-    // Private data
-
     // Private Member Functions
-
-        //- Temporary wrapper around findNearest. Used in facesIntersection only
-        static pointIndexHit tempFindNearest
-        (
-            const searchableSurface&,
-            const point& pt,
-            const scalar initDistSqr
-        );
-
-        //- Calculate sum of distances to nearest point on surfaces. Is used
-        //  in minimisation to find intersection. Returns sum of (square of)
-        //  distances to the surfaces.
-        static scalar sumDistSqr
-        (
-            const PtrList<searchableSurface>&,
-            const labelList& surfacesToTest,
-            const scalar initialDistSqr,    // search box
-            const point& pt
-        );
-
-        //- Takes the tet (points p) and reflects the point with the
-        //  highest value around the centre (pSum). Checks if it gets closer
-        //  and updates p, y if so.
-        static scalar tryMorphTet
-        (
-            const PtrList<searchableSurface>&,
-            const labelList& surfacesToTest,
-            const scalar initialDistSqr,
-            List<vector>& p,
-            List<scalar>& y,
-            vector& pSum,
-            const label ihi,
-            const scalar fac
-        );
-
-        //- Downhill simplex method: find the point with min cumulative
-        //  distance to all surfaces. Does so by morphing a tet (points p).
-        //  Returns the point on the 0th surface or hit if not reached within
-        //  maxIters iterations.
-        static bool morphTet
-        (
-            const PtrList<searchableSurface>&,
-            const labelList& surfacesToTest,
-            const scalar initialDistSqr,
-            const scalar convergenceDistSqr,
-            const label maxIter,
-            List<vector>& p,
-            List<scalar>& y
-        );
-
-        //static void findAllIntersections
-        //(
-        //    const searchableSurface& s,
-        //    const pointField& start,
-        //    const pointField& end,
-        //    const vectorField& smallVec,
-        //    List<List<pointIndexHit>>&
-        //);
 
         static void mergeHits
         (
@@ -158,7 +99,7 @@ public:
                 List<List<pointIndexHit>>& surfaceHits
             );
 
-            //Find intersections of edge nearest to both endpoints.
+            //- Find intersections of edge nearest to both endpoints.
             static void findNearestIntersection
             (
                 const PtrList<searchableSurface>& allSurfaces,
@@ -195,6 +136,21 @@ public:
                 List<pointIndexHit>& nearestInfo
             );
 
+            //- Find nearest points that are on all supplied surfaces
+            //  (nearest point if single surface; nearest intersection by
+            //   steepst descent if on multiple surfaces). Returns current
+            //   best guess). Wip.
+            static void findNearest
+            (
+                const PtrList<searchableSurface>& allSurfaces,
+                const labelList& surfacesToTest,
+                const pointField& start,
+                const scalarField& distSqr,
+                pointField& near,
+                List<pointConstraint>& constraint,
+                const label nIter = 20
+            );
+
             //- Find signed distance to nearest surface. Outside is positive.
             //  illegalHandling: how to handle non-inside or outside
             //      OUTSIDE : treat as outside
@@ -216,18 +172,6 @@ public:
             (
                 const PtrList<searchableSurface>& allSurfaces,
                 const labelList& surfacesToTest
-            );
-
-        // Single point queries
-
-            //- Calculate point which is on a set of surfaces. WIP.
-            static pointIndexHit facesIntersection
-            (
-                const PtrList<searchableSurface>& allSurfaces,
-                const labelList& surfacesToTest,
-                const scalar initDistSqr,
-                const scalar convergenceDistSqr,
-                const point& start
             );
 };
 

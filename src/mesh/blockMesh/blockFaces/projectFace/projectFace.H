@@ -98,7 +98,12 @@ public:
     // Member Functions
 
         //- Project the given points onto the surface
-        virtual void project(pointField& points) const;
+        virtual void project
+        (
+            const blockDescriptor&,
+            const label blockFacei,
+            pointField& points
+        ) const;
 };
 
 

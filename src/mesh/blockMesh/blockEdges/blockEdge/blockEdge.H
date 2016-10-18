@@ -188,6 +188,10 @@ public:
         //  0 <= lambda <= 1
         virtual point position(const scalar) const = 0;
 
+        //- Return the point positions corresponding to the curve parameters
+        //  0 <= lambda <= 1
+        virtual tmp<pointField> position(const scalarList&) const;
+
         //- Return the length of the curve
         virtual scalar length() const = 0;
 
