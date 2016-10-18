@@ -29,12 +29,31 @@ License
 
 void Foam::blockMesh::check(const polyMesh& bm) const
 {
-    if (verboseOutput)
-    {
-        Info<< nl << "Check topology" << endl;
-    }
+    Info<< nl << "Check topology" << endl;
 
     bool ok = true;
+
+    // Check curved-edge/block-edge correspondence
+    const edgeList& edges = bm.edges();
+
+    forAll(edges_, cei)
+    {
+        bool found = false;
+
+        forAll(edges, ci)
+        {
+            found = edges_[cei].compare(edges[ci][0], edges[ci][1]) != 0;
+            if (found) break;
+        }
+
+        if (!found)
+        {
+            Info<< "    Curved edge " << edges_[cei]
+                << "    does not correspond to a block edge."
+                << endl;
+            ok = false;
+        }
+    }
 
     const pointField& points = bm.points();
     const faceList& faces = bm.faces();
