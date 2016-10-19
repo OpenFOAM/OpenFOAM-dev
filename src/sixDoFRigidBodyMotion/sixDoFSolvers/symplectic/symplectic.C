@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,14 +67,6 @@ void Foam::sixDoFSolvers::symplectic::solve
     scalar deltaT0
 )
 {
-    if (!firstIter)
-    {
-        FatalErrorInFunction
-            << "The symplectic integrator is explicit "
-               "and can only be solved once per time-step"
-            << exit(FatalError);
-    }
-
     // First simplectic step:
     //     Half-step for linear and angular velocities
     //     Update position and orientation
