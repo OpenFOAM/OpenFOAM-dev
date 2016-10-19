@@ -56,9 +56,9 @@ void Foam::blockMesh::check(const polyMesh& bm) const
     {
         bool found = false;
 
-        forAll(edges, ci)
+        forAll(edges, ei)
         {
-            found = edges_[cei].compare(edges[ci][0], edges[ci][1]) != 0;
+            found = edges_[cei].compare(edges[ei][0], edges[ei][1]) != 0;
             if (found) break;
         }
 
@@ -71,8 +71,45 @@ void Foam::blockMesh::check(const polyMesh& bm) const
         }
     }
 
-    const pointField& points = bm.points();
     const faceList& faces = bm.faces();
+
+    // Check for duplicate curved face definitions
+    forAll(faces_, cfi)
+    {
+        for (label cfj=cfi+1; cfj<faces_.size(); cfj++)
+        {
+            if (faces_[cfi].compare(faces_[cfj]) != 0)
+            {
+                Info<< "    Curved face " << faces_[cfj]
+                    << "    is a duplicate of curved face " << faces_[cfi]
+                    << endl;
+                ok = false;
+                break;
+            }
+        }
+    }
+
+    // Check curved-face/block-face correspondence
+    forAll(faces_, cfi)
+    {
+        bool found = false;
+
+        forAll(faces, fi)
+        {
+            found = faces_[cfi].compare(faces[fi]) != 0;
+            if (found) break;
+        }
+
+        if (!found)
+        {
+            Info<< "    Curved face " << faces_[cfi]
+                << "    does not correspond to a block face."
+                << endl;
+            ok = false;
+        }
+    }
+
+    const pointField& points = bm.points();
     const cellList& cells = bm.cells();
     const polyPatchList& patches = bm.boundaryMesh();
 
