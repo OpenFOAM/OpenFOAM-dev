@@ -33,8 +33,6 @@ void Foam::blockMesh::check(const polyMesh& bm) const
 
     bool ok = true;
 
-    const edgeList& edges = bm.edges();
-
     // Check for duplicate curved edge definitions
     forAll(edges_, cei)
     {
@@ -52,13 +50,25 @@ void Foam::blockMesh::check(const polyMesh& bm) const
     }
 
     // Check curved-edge/block-edge correspondence
+    //
+    // Loop over the edges of each block rather than the edgeList of the
+    // topological mesh due to problems with calcEdges for blocks with
+    // repeated point labels
+    const blockList& blocks = *this;
+
     forAll(edges_, cei)
     {
         bool found = false;
 
-        forAll(edges, ei)
+        forAll(blocks, blocki)
         {
-            found = edges_[cei].compare(edges[ei][0], edges[ei][1]) != 0;
+            edgeList edges = blocks[blocki].blockShape().edges();
+
+            forAll(edges, ei)
+            {
+                found = edges_[cei].compare(edges[ei][0], edges[ei][1]) != 0;
+                if (found) break;
+            }
             if (found) break;
         }
 
