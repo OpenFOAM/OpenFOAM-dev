@@ -28,7 +28,7 @@ License
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 #include "pointConstraint.H"
-#include "plane.H"
+#include "OBJstream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -125,6 +125,8 @@ Foam::point Foam::projectEdge::position(const scalar lambda) const
 Foam::tmp<Foam::pointField>
 Foam::projectEdge::position(const scalarList& lambdas) const
 {
+    static label iter = 0;
+
     tmp<pointField> tpoints(new pointField(lambdas.size()));
     pointField& points = tpoints.ref();
 
@@ -132,17 +134,93 @@ Foam::projectEdge::position(const scalarList& lambdas) const
     const point& endPt = points_[end_];
     const vector d = endPt-startPt;
 
+    // Initial guess
     forAll(lambdas, i)
     {
         points[i] = startPt+lambdas[i]*d;
     }
 
-    forAll(lambdas, i)
+
+    for (label i = 0; i < 3; i++)
     {
-        if (lambdas[i] >= SMALL && lambdas[i] < 1.0-SMALL)
+        // Do projection
         {
-            pointConstraint constraint;
-            findNearest(points[i], points[i], constraint);
+            List<pointConstraint> constraints(lambdas.size());
+            searchableSurfacesQueries::findNearest
+            (
+                geometry_,
+                surfaces_,
+                pointField(points),
+                scalarField(points.size(), magSqr(d)),
+                points,
+                constraints
+            );
+
+            // Reset start and end point
+            if (lambdas[0] < SMALL)
+            {
+                points[0] = startPt;
+            }
+            if (lambdas.last() > 1.0-SMALL)
+            {
+                points.last() = endPt;
+            }
+        }
+
+        // Calculate distances
+        scalarField nearLength(points.size());
+        {
+            nearLength[0] = 0.0;
+            for(label i = 1; i < points.size(); i++)
+            {
+                nearLength[i] = nearLength[i-1] + mag(points[i]-points[i-1]);
+            }
+        }
+
+        // Compare actual distances and move points (along straight line;
+        // not along surface)
+        for(label i = 1; i < points.size() - 1; i++)
+        {
+            scalar nearDelta = mag(points[i]-points[i-1])/nearLength.last();
+            scalar wantedDelta = lambdas[i]-lambdas[i-1];
+
+            vector v(points[i]-points[i-1]);
+            points[i] = points[i-1]+wantedDelta/nearDelta*v;
+        }
+    }
+
+
+    if (debug)
+    {
+        OBJstream str("projectEdge_" + Foam::name(iter++) + ".obj");
+        Info<< "Writing lines from straight-line start points"
+            << " to projected points to " << str.name() << endl;
+
+        pointField startPts(lambdas.size());
+        forAll(lambdas, i)
+        {
+            startPts[i] = startPt+lambdas[i]*d;
+        }
+
+        pointField nearPts(lambdas.size());
+        List<pointConstraint> nearConstraints(lambdas.size());
+        {
+            const scalar distSqr = magSqr(d);
+            searchableSurfacesQueries::findNearest
+            (
+                geometry_,
+                surfaces_,
+                startPts,
+                scalarField(startPts.size(), distSqr),
+                nearPts,
+                nearConstraints
+            );
+        }
+
+        forAll(startPts, i)
+        {
+            str.write(linePointRef(startPts[i], nearPts[i]));
+            str.write(linePointRef(nearPts[i], points[i]));
         }
     }
 
