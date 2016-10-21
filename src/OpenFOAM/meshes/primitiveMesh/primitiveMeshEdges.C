@@ -56,7 +56,14 @@ Foam::label Foam::primitiveMesh::getEdge
     // Make new edge.
     label edgeI = es.size();
     pe[pointi].append(edgeI);
-    pe[nextPointi].append(edgeI);
+
+    if (nextPointi != pointi)
+    {
+        // Very occasionally (e.g. blockMesh) a face can have duplicate
+        // vertices. Make sure we register pointEdges only once.
+        pe[nextPointi].append(edgeI);
+    }
+
     if (pointi < nextPointi)
     {
         es.append(edge(pointi, nextPointi));
