@@ -107,7 +107,7 @@ do
     ##DEBUG echo "remove>$wildcard<" 1>&2
     if [ -n "$wildcard" ]
     then
-        dirList=$(echo "$dirList:" | sed -e "s@${wildcard}[^:]*:@@g")
+        dirList=$(echo "$dirList:" | sed -e "s|${wildcard}[^:]*:||g")
     fi
 done
 
