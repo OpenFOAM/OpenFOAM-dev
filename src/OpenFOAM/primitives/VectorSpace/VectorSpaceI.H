@@ -106,7 +106,7 @@ inline const Cmpt& VectorSpace<Form, Cmpt, Ncmpts>::component
     if (d >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -125,7 +125,7 @@ inline Cmpt& VectorSpace<Form, Cmpt, Ncmpts>::component
     if (d >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << "out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -145,7 +145,7 @@ inline void VectorSpace<Form, Cmpt, Ncmpts>::component
     if (d >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -165,7 +165,7 @@ inline void VectorSpace<Form, Cmpt, Ncmpts>::replace
     if (d >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -205,7 +205,7 @@ inline const Cmpt& VectorSpace<Form, Cmpt, Ncmpts>::operator[]
     if (d >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -224,7 +224,7 @@ inline Cmpt& VectorSpace<Form, Cmpt, Ncmpts>::operator[]
     if (d >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -246,7 +246,7 @@ ConstBlock<SubVector, BStart>::operator[]
     if (i >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
     #endif
@@ -269,7 +269,7 @@ ConstBlock<SubVector, BStart>::operator()
     if (i >= Ncmpts)
     {
         FatalErrorInFunction
-            << "index " << d << " out of range"
+            << "index out of range"
             << abort(FatalError);
     }
 
