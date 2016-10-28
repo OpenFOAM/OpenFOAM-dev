@@ -444,28 +444,7 @@ void Foam::twoPhaseSystem::solve()
             )
         );
 
-        surfaceScalarField::Boundary& alphaPhic1Bf =
-            alphaPhic1.boundaryFieldRef();
-
-        // Ensure that the flux at inflow BCs is preserved
-        forAll(alphaPhic1Bf, patchi)
-        {
-            fvsPatchScalarField& alphaPhic1p = alphaPhic1Bf[patchi];
-
-            if (!alphaPhic1p.coupled())
-            {
-                const scalarField& phi1p = phi1.boundaryField()[patchi];
-                const scalarField& alpha1p = alpha1.boundaryField()[patchi];
-
-                forAll(alphaPhic1p, facei)
-                {
-                    if (phi1p[facei] < 0)
-                    {
-                        alphaPhic1p[facei] = alpha1p[facei]*phi1p[facei];
-                    }
-                }
-            }
-        }
+        phase1_.correctInflowFlux(alphaPhic1);
 
         if (nAlphaSubCycles > 1)
         {
@@ -537,6 +516,7 @@ void Foam::twoPhaseSystem::solve()
 
         phase2_.alphaPhi() = phi_ - phase1_.alphaPhi();
         alpha2 = scalar(1) - alpha1;
+        phase2_.correctInflowFlux(phase2_.alphaPhi());
         phase2_.alphaRhoPhi() =
             fvc::interpolate(phase2_.rho())*phase2_.alphaPhi();
 

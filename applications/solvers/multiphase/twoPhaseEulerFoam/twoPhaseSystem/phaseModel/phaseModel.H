@@ -319,6 +319,9 @@ public:
             return alphaRhoPhi_;
         }
 
+        //- Ensure that the flux at inflow BCs is preserved
+        void correctInflowFlux(surfaceScalarField& alphaPhi) const;
+
         //- Correct the phase properties
         //  other than the thermodynamics and turbulence
         //  which have special treatment
