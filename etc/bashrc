@@ -61,7 +61,7 @@ export FOAM_INST_DIR=$HOME/$WM_PROJECT
 export WM_COMPILER_TYPE=system
 
 #- Compiler:
-#    WM_COMPILER = Gcc | Gcc45 | Gcc46 | Gcc47 | Gcc48 | Gcc49| Clang | Icc
+#    WM_COMPILER = Gcc | Gcc48 ... Gcc62 | Clang | Icc
 export WM_COMPILER=Gcc
 unset WM_COMPILER_ARCH WM_COMPILER_LIB_ARCH
 
