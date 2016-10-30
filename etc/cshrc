@@ -43,7 +43,6 @@ setenv WM_PROJECT_VERSION dev
 #
 setenv FOAM_INST_DIR `lsof +p $$ |& grep -oE '/.*'$WM_PROJECT'[^/]*/etc/cshrc' | \
     sed 's%/'$WM_PROJECT'[^/]*/etc/cshrc%%'`
-echo $FOAM_INST_DIR
 # setenv FOAM_INST_DIR  $HOME/$WM_PROJECT
 # setenv FOAM_INST_DIR  ~$WM_PROJECT
 # setenv FOAM_INST_DIR  /opt/$WM_PROJECT
