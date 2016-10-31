@@ -55,11 +55,10 @@ Description
             // Lookup U
             const volVectorField& U = mesh().lookupObject<volVectorField>("U");
             // Write
-            mag(U).write();
-        }
+            mag(U)().write();
+        #};"
     }
     \endverbatim
-
 
 See also
     Foam::functionObject
