@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockEdge.H"
+#include "blockDescriptor.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -51,13 +52,15 @@ Foam::blockEdge::blockEdge
 
 Foam::blockEdge::blockEdge
 (
+    const dictionary& dict,
+    const label index,
     const pointField& points,
     Istream& is
 )
 :
     points_(points),
-    start_(readLabel(is)),
-    end_(readLabel(is))
+    start_(blockDescriptor::read(is, dict.subOrEmptyDict("namedVertices"))),
+    end_(blockDescriptor::read(is, dict.subOrEmptyDict("namedVertices")))
 {}
 
 
@@ -70,6 +73,8 @@ Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::clone() const
 
 Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::New
 (
+    const dictionary& dict,
+    const label index,
     const searchableSurfaces& geometry,
     const pointField& points,
     Istream& is
@@ -95,7 +100,7 @@ Foam::autoPtr<Foam::blockEdge> Foam::blockEdge::New
             << abort(FatalError);
     }
 
-    return autoPtr<blockEdge>(cstrIter()(geometry, points, is));
+    return autoPtr<blockEdge>(cstrIter()(dict, index, geometry, points, is));
 }
 
 
@@ -136,6 +141,25 @@ Foam::blockEdge::position(const scalarList& lambdas) const
         points[i] = position(lambdas[i]);
     }
     return tpoints;
+}
+
+
+void Foam::blockEdge::write(Ostream& os, const dictionary& d) const
+{
+    const dictionary* varDictPtr = d.subDictPtr("namedVertices");
+    if (varDictPtr)
+    {
+        const dictionary& varDict = *varDictPtr;
+
+        blockDescriptor::write(os, start_, varDict);
+        os << tab;
+        blockDescriptor::write(os, end_, varDict);
+        os << endl;
+    }
+    else
+    {
+        os << start_ << tab << end_ << endl;
+    }
 }
 
 

@@ -22,102 +22,66 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::projectEdge
+    Foam::blocks::namedBlock
 
 Description
-    Defines the edge from the projection onto a surface (single surface)
-    or intersection of two surfaces.
+    Gives name to a block.
 
 SourceFiles
-    projectEdge.C
+    namedBlock.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef projectEdge_H
-#define projectEdge_H
+#ifndef blocks_namedBlock_H
+#define blocks_namedBlock_H
 
-#include "blockEdge.H"
+#include "block.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class pointConstraint;
+namespace blocks
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class projectEdge Declaration
+                           Class namedBlock Declaration
 \*---------------------------------------------------------------------------*/
 
-class projectEdge
+class namedBlock
 :
-    public blockEdge
+    public word,
+    public block
 {
-    // Private data
-
-        const searchableSurfaces& geometry_;
-
-        //- The indices of surfaces onto which the points are projected
-        labelList surfaces_;
-
-
-    // Private Member Functions
-
-        //- Single point find nearest
-        void findNearest(const point&, point& near, pointConstraint&) const;
-
-        //- Disallow default bitwise copy construct
-        projectEdge(const projectEdge&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectEdge&);
-
-
 public:
 
     //- Runtime type information
-    TypeName("project");
+    TypeName("named");
 
 
     // Constructors
 
         //- Construct from Istream setting pointsList
-        projectEdge
+        namedBlock
         (
             const dictionary& dict,
             const label index,
-            const searchableSurfaces& geometry,
-            const pointField& points,
-            Istream&
+            const pointField& vertices,
+            const blockEdgeList& edges,
+            const blockFaceList& faces,
+            Istream& is
         );
 
 
     //- Destructor
-    virtual ~projectEdge()
+    virtual ~namedBlock()
     {}
-
-
-    // Member Functions
-
-        //- Return the point positions corresponding to the curve parameters
-        //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
-
-        //- Return the point positions corresponding to the curve parameters
-        //  0 <= lambda <= 1
-        virtual tmp<pointField> position(const scalarList&) const;
-
-        //- Return the length of the curve
-        virtual scalar length() const
-        {
-            NotImplemented;
-            return 1;
-        }
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace blocks
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

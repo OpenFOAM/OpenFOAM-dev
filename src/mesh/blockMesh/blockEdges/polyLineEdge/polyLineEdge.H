@@ -83,6 +83,8 @@ public:
         //- Construct from Istream
         polyLineEdge
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             const pointField&,
             Istream&

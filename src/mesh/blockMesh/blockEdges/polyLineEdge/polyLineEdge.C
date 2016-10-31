@@ -55,12 +55,14 @@ Foam::blockEdges::polyLineEdge::polyLineEdge
 
 Foam::blockEdges::polyLineEdge::polyLineEdge
 (
+    const dictionary& dict,
+    const label index,
     const searchableSurfaces& geometry,
     const pointField& ps,
     Istream& is
 )
 :
-    blockEdge(ps, is),
+    blockEdge(dict, index, ps, is),
     polyLine(appendEndPoints(ps, start_, end_, pointField(is)))
 {}
 

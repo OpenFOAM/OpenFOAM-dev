@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,43 +21,35 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::blockList
+
+Description
+    A PtrList of blocks
+
 \*---------------------------------------------------------------------------*/
 
-#include "pointVertex.H"
-#include "addToRunTimeSelectionTable.H"
+#ifndef blockList_H
+#define blockList_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "block.H"
+#include "PtrList.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockVertices
-{
-    defineTypeNameAndDebug(pointVertex, 0);
-    addToRunTimeSelectionTable(blockVertex, pointVertex, Istream);
-}
-}
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+typedef PtrList<block> blockList;
 
-Foam::blockVertices::pointVertex::pointVertex
-(
-    const dictionary&,
-    const label index,
-    const searchableSurfaces& geometry,
-    Istream& is
-)
-:
-    vertex_(is)
-{}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace Foam
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::blockVertices::pointVertex::operator point() const
-{
-    return vertex_;
-}
-
+#endif
 
 // ************************************************************************* //

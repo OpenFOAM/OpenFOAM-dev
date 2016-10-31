@@ -50,6 +50,8 @@ Foam::autoPtr<Foam::blockVertex> Foam::blockVertex::clone() const
 
 Foam::autoPtr<Foam::blockVertex> Foam::blockVertex::New
 (
+    const dictionary& dict,
+    const label index,
     const searchableSurfaces& geometry,
     Istream& is
 )
@@ -61,14 +63,14 @@ Foam::autoPtr<Foam::blockVertex> Foam::blockVertex::New
 
     token firstToken(is);
 
-    if (firstToken.pToken() == token::BEGIN_LIST)
+    if (firstToken.isPunctuation() && firstToken.pToken() == token::BEGIN_LIST)
     {
         // Putback the opening bracket
         is.putBack(firstToken);
 
         return autoPtr<blockVertex>
         (
-            new blockVertices::pointVertex(geometry, is)
+            new blockVertices::pointVertex(dict, index, geometry, is)
         );
     }
     else if (firstToken.isWord())
@@ -88,7 +90,7 @@ Foam::autoPtr<Foam::blockVertex> Foam::blockVertex::New
                 << abort(FatalError);
         }
 
-        return autoPtr<blockVertex>(cstrIter()(geometry, is));
+        return autoPtr<blockVertex>(cstrIter()(dict, index, geometry, is));
     }
     else
     {

@@ -67,6 +67,22 @@ class projectFace
             Istream& is
         ) const;
 
+        //- Convert i,j to single index
+        label index
+        (
+            const labelPair& n,
+            const labelPair& coord
+        ) const;
+
+        //- Calulate lambdas (but unnormalised)
+        void calcLambdas
+        (
+            const labelPair& n,
+            const pointField& points,
+            scalarField& lambdaI,
+            scalarField& lambdaJ
+        ) const;
+
         //- Disallow default bitwise copy construct
         projectFace(const projectFace&);
 
@@ -85,6 +101,8 @@ public:
         //- Construct from Istream setting pointsList
         projectFace
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             Istream&
         );

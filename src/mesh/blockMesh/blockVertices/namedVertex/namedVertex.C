@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,84 +23,58 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "splineEdge.H"
+#include "namedVertex.H"
 #include "addToRunTimeSelectionTable.H"
-
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockEdges
+namespace blockVertices
 {
-    defineTypeNameAndDebug(splineEdge, 0);
-
-    addToRunTimeSelectionTable
-    (
-        blockEdge,
-        splineEdge,
-        Istream
-    );
+    defineTypeNameAndDebug(namedVertex, 0);
+    addToRunTimeSelectionTable(blockVertex, namedVertex, Istream);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blockEdges::splineEdge::splineEdge
-(
-    const pointField& points,
-    const label start,
-    const label end,
-    const pointField& internalPoints
-)
-:
-    blockEdge(points, start, end),
-    CatmullRomSpline(appendEndPoints(points, start, end, internalPoints))
-{}
-
-
-Foam::blockEdges::splineEdge::splineEdge
+Foam::blockVertices::namedVertex::namedVertex
 (
     const dictionary& dict,
     const label index,
     const searchableSurfaces& geometry,
-    const pointField& points,
     Istream& is
 )
 :
-    blockEdge(dict, index, points, is),
-    CatmullRomSpline(appendEndPoints(points, start_, end_, pointField(is)))
+    name_(is),
+    vertexPtr_(blockVertex::New(dict, index, geometry, is))
 {
-    token t(is);
-    is.putBack(t);
+    //Info<< "Vertex " << name_ << " at " <<  vertexPtr_().operator point()
+    //    << " has index " << index << endl;
 
-    // discard unused start/end tangents
-    if (t == token::BEGIN_LIST)
+    dictionary& d = const_cast<dictionary&>(dict);
+
+    const dictionary* varDictPtr = d.subDictPtr("namedVertices");
+    if (varDictPtr)
     {
-        vector tangent0Ignored(is);
-        vector tangent1Ignored(is);
+        const_cast<dictionary&>(*varDictPtr).add(name_, index);
+    }
+    else
+    {
+        dictionary varDict;
+        varDict.add(name_, index);
+        d.add("namedVertices", varDict);
     }
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::blockEdges::splineEdge::~splineEdge()
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::blockEdges::splineEdge::position(const scalar mu) const
+Foam::blockVertices::namedVertex::operator point() const
 {
-    return CatmullRomSpline::position(mu);
-}
-
-
-Foam::scalar Foam::blockEdges::splineEdge::length() const
-{
-    return CatmullRomSpline::length();
+    return vertexPtr_().operator point();
 }
 
 

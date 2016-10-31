@@ -92,11 +92,13 @@ public:
             blockEdge,
             Istream,
             (
+                const dictionary& dict,
+                const label index,
                 const searchableSurfaces& geometry,
                 const pointField& points,
                 Istream& is
             ),
-            (geometry, points, is)
+            (dict, index, geometry, points, is)
         );
 
 
@@ -113,6 +115,8 @@ public:
         //- Construct from Istream setting pointsList
         blockEdge
         (
+            const dictionary& dict,
+            const label index,
             const pointField&,
             Istream&
         );
@@ -123,6 +127,8 @@ public:
         //- New function which constructs and returns pointer to a blockEdge
         static autoPtr<blockEdge> New
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             const pointField&,
             Istream&
@@ -132,20 +138,29 @@ public:
         //  PtrLists of blockEdge
         class iNew
         {
+            const dictionary& dict_;
             const searchableSurfaces& geometry_;
             const pointField& points_;
+            mutable label index_;
 
         public:
 
-            iNew(const searchableSurfaces& geometry, const pointField& points)
+            iNew
+            (
+                const dictionary& dict,
+                const searchableSurfaces& geometry,
+                const pointField& points
+            )
             :
+                dict_(dict),
                 geometry_(geometry),
-                points_(points)
+                points_(points),
+                index_(0)
             {}
 
             autoPtr<blockEdge> operator()(Istream& is) const
             {
-                return blockEdge::New(geometry_, points_, is);
+                return blockEdge::New(dict_, index_++, geometry_, points_, is);
             }
         };
 
@@ -194,6 +209,9 @@ public:
 
         //- Return the length of the curve
         virtual scalar length() const = 0;
+
+        //- Write edge with variable backsubstitution
+        void write(Ostream&, const dictionary&) const;
 
 
     // Ostream operator

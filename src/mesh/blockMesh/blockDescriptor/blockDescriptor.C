@@ -128,6 +128,90 @@ void Foam::blockDescriptor::findCurvedFaces()
 }
 
 
+void Foam::blockDescriptor::read
+(
+    Istream& is,
+    label& val,
+    const dictionary& dict
+)
+{
+    token t(is);
+    if (t.isLabel())
+    {
+        val = t.labelToken();
+    }
+    else if (t.isWord())
+    {
+        const word& varName = t.wordToken();
+        const entry* ePtr = dict.lookupScopedEntryPtr
+        (
+            varName,
+            true,
+            true
+        );
+        if (ePtr)
+        {
+            // Read as label
+            val = Foam::readLabel(ePtr->stream());
+        }
+        else
+        {
+            FatalIOErrorInFunction(is)
+                << "Undefined variable "
+                << varName << ". Valid variables are " << dict
+                << exit(FatalIOError);
+        }
+    }
+    else
+    {
+        FatalIOErrorInFunction(is)
+            << "Illegal token " << t.info()
+            << " when trying to read label"
+            << exit(FatalIOError);
+    }
+
+    is.fatalCheck
+    (
+        "operator>>(Istream&, List<T>&) : reading entry"
+    );
+}
+
+
+Foam::label Foam::blockDescriptor::read
+(
+    Istream& is,
+    const dictionary& dict
+)
+{
+    label val;
+    read(is, val, dict);
+    return val;
+}
+
+
+void Foam::blockDescriptor::write
+(
+    Ostream& os,
+    const label val,
+    const dictionary& dict
+)
+{
+    forAllConstIter(dictionary, dict, iter)
+    {
+        if (iter().isStream())
+        {
+            label keyVal(Foam::readLabel(iter().stream()));
+            if (keyVal == val)
+            {
+                os << iter().keyword();
+                return;
+            }
+        }
+    }
+    os << val;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::blockDescriptor::blockDescriptor
@@ -164,6 +248,8 @@ Foam::blockDescriptor::blockDescriptor
 
 Foam::blockDescriptor::blockDescriptor
 (
+    const dictionary& dict,
+    const label index,
     const pointField& vertices,
     const blockEdgeList& edges,
     const blockFaceList& faces,
@@ -173,13 +259,24 @@ Foam::blockDescriptor::blockDescriptor
     vertices_(vertices),
     edges_(edges),
     faces_(faces),
-    blockShape_(is),
     density_(),
     expand_(12, gradingDescriptors()),
     zoneName_(),
     curvedFaces_(-1),
     nCurvedFaces_(0)
 {
+    // Read cell model and list of vertices (potentially with variables)
+    word model(is);
+    blockShape_ = cellShape
+    (
+        model,
+        read<label>
+        (
+            is,
+            dict.subOrEmptyDict("namedVertices")
+        )
+    );
+
     // Examine next token
     token t(is);
 

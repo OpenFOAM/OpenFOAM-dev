@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::blockMesh::check(const polyMesh& bm) const
+void Foam::blockMesh::check(const polyMesh& bm, const dictionary& dict) const
 {
     Info<< nl << "Check topology" << endl;
 
@@ -40,8 +40,9 @@ void Foam::blockMesh::check(const polyMesh& bm) const
         {
             if (edges_[cei].compare(edges_[cej]) != 0)
             {
-                Info<< "    Curved edge " << edges_[cej]
-                    << "    is a duplicate of curved edge " << edges_[cei]
+                Info<< "    Curved edge ";
+                edges_[cej].write(Info, dict);
+                Info<< "    is a duplicate of curved edge " << edges_[cei]
                     << endl;
                 ok = false;
                 break;
@@ -74,8 +75,9 @@ void Foam::blockMesh::check(const polyMesh& bm) const
 
         if (!found)
         {
-            Info<< "    Curved edge " << edges_[cei]
-                << "    does not correspond to a block edge."
+            Info<< "    Curved edge ";
+            edges_[cei].write(Info, dict);
+            Info<< "    does not correspond to a block edge."
                 << endl;
             ok = false;
         }
@@ -90,9 +92,11 @@ void Foam::blockMesh::check(const polyMesh& bm) const
         {
             if (faces_[cfi].compare(faces_[cfj]) != 0)
             {
-                Info<< "    Curved face " << faces_[cfj]
-                    << "    is a duplicate of curved face " << faces_[cfi]
-                    << endl;
+                Info<< "    Curved face ";
+                faces_[cfj].write(Info, dict);
+                Info<< "    is a duplicate of curved face ";
+                faces_[cfi].write(Info, dict);
+                Info<< endl;
                 ok = false;
                 break;
             }
@@ -112,9 +116,9 @@ void Foam::blockMesh::check(const polyMesh& bm) const
 
         if (!found)
         {
-            Info<< "    Curved face " << faces_[cfi]
-                << "    does not correspond to a block face."
-                << endl;
+            Info<< "    Curved face ";
+            faces_[cfi].write(Info, dict);
+            Info<< "    does not correspond to a block face." << endl;
             ok = false;
         }
     }

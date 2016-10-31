@@ -63,10 +63,12 @@ public:
             blockVertex,
             Istream,
             (
+                const dictionary& dict,
+                const label index,
                 const searchableSurfaces& geometry,
                 Istream& is
             ),
-            (geometry, is)
+            (dict, index, geometry, is)
         );
 
 
@@ -81,6 +83,8 @@ public:
         //- New function which constructs and returns pointer to a blockVertex
         static autoPtr<blockVertex> New
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             Istream&
         );
@@ -89,18 +93,22 @@ public:
         //  PtrLists of blockVertex
         class iNew
         {
+            const dictionary& dict_;
             const searchableSurfaces& geometry_;
+            mutable label index_;
 
         public:
 
-            iNew(const searchableSurfaces& geometry)
+            iNew(const dictionary& dict, const searchableSurfaces& geometry)
             :
-                geometry_(geometry)
+                dict_(dict),
+                geometry_(geometry),
+                index_(0)
             {}
 
             autoPtr<blockVertex> operator()(Istream& is) const
             {
-                return blockVertex::New(geometry_, is);
+                return blockVertex::New(dict_, index_++, geometry_, is);
             }
         };
 

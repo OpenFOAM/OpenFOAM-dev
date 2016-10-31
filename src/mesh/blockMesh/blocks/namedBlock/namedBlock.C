@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,84 +23,52 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "splineEdge.H"
+#include "namedBlock.H"
 #include "addToRunTimeSelectionTable.H"
-
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blockEdges
+namespace blocks
 {
-    defineTypeNameAndDebug(splineEdge, 0);
-
-    addToRunTimeSelectionTable
-    (
-        blockEdge,
-        splineEdge,
-        Istream
-    );
+    defineTypeNameAndDebug(namedBlock, 0);
+    addToRunTimeSelectionTable(block, namedBlock, Istream);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blockEdges::splineEdge::splineEdge
-(
-    const pointField& points,
-    const label start,
-    const label end,
-    const pointField& internalPoints
-)
-:
-    blockEdge(points, start, end),
-    CatmullRomSpline(appendEndPoints(points, start, end, internalPoints))
-{}
-
-
-Foam::blockEdges::splineEdge::splineEdge
+Foam::blocks::namedBlock::namedBlock
 (
     const dictionary& dict,
     const label index,
-    const searchableSurfaces& geometry,
-    const pointField& points,
+    const pointField& vertices,
+    const blockEdgeList& edges,
+    const blockFaceList& faces,
     Istream& is
 )
 :
-    blockEdge(dict, index, points, is),
-    CatmullRomSpline(appendEndPoints(points, start_, end_, pointField(is)))
+    word(is),
+    block(dict, index, vertices, edges, faces, is)
 {
-    token t(is);
-    is.putBack(t);
+    //Info<< "Block " << static_cast<word&>(*this)
+    //    << " has index " << index << endl;
 
-    // discard unused start/end tangents
-    if (t == token::BEGIN_LIST)
+    dictionary& d = const_cast<dictionary&>(dict);
+
+    const dictionary* varDictPtr = d.subDictPtr("namedBlocks");
+    if (varDictPtr)
     {
-        vector tangent0Ignored(is);
-        vector tangent1Ignored(is);
+        const_cast<dictionary&>(*varDictPtr).add(*this, index);
     }
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::blockEdges::splineEdge::~splineEdge()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::point Foam::blockEdges::splineEdge::position(const scalar mu) const
-{
-    return CatmullRomSpline::position(mu);
-}
-
-
-Foam::scalar Foam::blockEdges::splineEdge::length() const
-{
-    return CatmullRomSpline::length();
+    else
+    {
+        dictionary varDict;
+        varDict.add(*this, index);
+        d.add("namedBlocks", varDict);
+    }
 }
 
 

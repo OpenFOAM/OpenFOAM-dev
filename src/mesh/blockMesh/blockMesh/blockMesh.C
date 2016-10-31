@@ -59,7 +59,7 @@ Foam::blockMesh::blockMesh(const IOdictionary& dict, const word& regionName)
     blockVertices_
     (
         dict.lookup("vertices"),
-        blockVertex::iNew(geometry_)
+        blockVertex::iNew(dict, geometry_)
     ),
     vertices_(Foam::vertices(blockVertices_)),
     topologyPtr_(createTopology(dict, regionName))

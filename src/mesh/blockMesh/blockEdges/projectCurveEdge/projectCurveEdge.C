@@ -24,61 +24,26 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchableSurfacesQueries.H"
-#include "projectEdge.H"
+#include "projectCurveEdge.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"
 #include "pointConstraint.H"
 #include "OBJstream.H"
 #include "linearInterpolationWeights.H"
+#include "searchableCurve.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(projectEdge, 0);
-    addToRunTimeSelectionTable(blockEdge, projectEdge, Istream);
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::projectEdge::findNearest
-(
-    const point& pt,
-    point& near,
-    pointConstraint& constraint
-) const
-{
-    if (surfaces_.size())
-    {
-        const scalar distSqr = magSqr(points_[end_]-points_[start_]);
-
-        pointField boundaryNear(1);
-        List<pointConstraint> boundaryConstraint(1);
-
-        searchableSurfacesQueries::findNearest
-        (
-            geometry_,
-            surfaces_,
-            pointField(1, pt),
-            scalarField(1, distSqr),
-            boundaryNear,
-            boundaryConstraint
-        );
-        near = boundaryNear[0];
-        constraint = boundaryConstraint[0];
-    }
-    else
-    {
-        near = pt;
-        constraint = pointConstraint();
-    }
+    defineTypeNameAndDebug(projectCurveEdge, 0);
+    addToRunTimeSelectionTable(blockEdge, projectCurveEdge, Istream);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::projectEdge::projectEdge
+Foam::projectCurveEdge::projectCurveEdge
 (
     const dictionary& dict,
     const label index,
@@ -102,31 +67,21 @@ Foam::projectEdge::projectEdge
                 << "Cannot find surface " << names[i] << " in geometry"
                 << exit(FatalIOError);
         }
+
+        if (isA<searchableCurve>(geometry_[surfaces_[i]]))
+        {
+            Info<< type() << " : Using curved surface "
+                << geometry_[surfaces_[i]].name()
+                << " to predict starting points." << endl;
+        }
     }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::point Foam::projectEdge::position(const scalar lambda) const
-{
-    // Initial guess
-    const point start(points_[start_]+lambda*(points_[end_]-points_[start_]));
-
-    point near(start);
-
-    if (lambda >= SMALL && lambda < 1.0-SMALL)
-    {
-        pointConstraint constraint;
-        findNearest(start, near, constraint);
-    }
-
-    return near;
-}
-
-
 Foam::tmp<Foam::pointField>
-Foam::projectEdge::position(const scalarList& lambdas) const
+Foam::projectCurveEdge::position(const scalarList& lambdas) const
 {
     // For debugging to tag the output
     static label eIter = 0;
@@ -136,7 +91,7 @@ Foam::projectEdge::position(const scalarList& lambdas) const
     {
         debugStr.reset
         (
-            new OBJstream("projectEdge_" + Foam::name(eIter++) + ".obj")
+            new OBJstream("projectCurveEdge_" + Foam::name(eIter++) + ".obj")
         );
         Info<< "Writing lines from straight-line start points"
             << " to projected points to " << debugStr().name() << endl;
@@ -155,6 +110,36 @@ Foam::projectEdge::position(const scalarList& lambdas) const
     {
         points[i] = startPt+lambdas[i]*d;
     }
+
+    // Use special interpolation to keep initial guess on same position on
+    // surface
+    forAll(surfaces_, i)
+    {
+        if (isA<searchableCurve>(geometry_[surfaces_[i]]))
+        {
+            const searchableCurve& s =
+                refCast<const searchableCurve>(geometry_[surfaces_[i]]);
+            List<pointIndexHit> nearInfo;
+            s.findNearest
+            (
+                points[0],
+                points.last(),
+                scalarField(lambdas),
+                scalarField(points.size(), magSqr(d)),
+                nearInfo
+            );
+            forAll(nearInfo, i)
+            {
+                if (nearInfo[i].hit())
+                {
+                    points[i] = nearInfo[i].hitPoint();
+                }
+            }
+
+            break;
+        }
+    }
+
 
 
     // Upper limit for number of iterations

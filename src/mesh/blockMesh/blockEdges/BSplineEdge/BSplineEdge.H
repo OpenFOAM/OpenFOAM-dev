@@ -83,6 +83,8 @@ public:
         //- Construct from Istream, setting pointsList
         BSplineEdge
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             const pointField&,
             Istream&

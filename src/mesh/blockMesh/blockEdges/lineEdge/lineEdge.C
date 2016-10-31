@@ -53,12 +53,14 @@ Foam::blockEdges::lineEdge::lineEdge
 
 Foam::blockEdges::lineEdge::lineEdge
 (
+    const dictionary& dict,
+    const label index,
     const searchableSurfaces& geometry,
     const pointField& points,
     Istream& is
 )
 :
-    blockEdge(points, is)
+    blockEdge(dict, index, points, is)
 {}
 
 

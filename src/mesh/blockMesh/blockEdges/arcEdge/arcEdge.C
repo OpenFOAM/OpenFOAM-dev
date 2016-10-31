@@ -123,12 +123,14 @@ Foam::blockEdges::arcEdge::arcEdge
 
 Foam::blockEdges::arcEdge::arcEdge
 (
+    const dictionary& dict,
+    const label index,
     const searchableSurfaces& geometry,
     const pointField& points,
     Istream& is
 )
 :
-    blockEdge(points, is),
+    blockEdge(dict, index, points, is),
     p1_(points_[start_]),
     p2_(is),
     p3_(points_[end_]),

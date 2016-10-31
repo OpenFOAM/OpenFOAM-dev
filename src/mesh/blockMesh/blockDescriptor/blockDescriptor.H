@@ -152,6 +152,8 @@ public:
         //- Construct from Istream
         blockDescriptor
         (
+            const dictionary& dict,
+            const label index,
             const pointField& vertices,
             const blockEdgeList&,
             const blockFaceList&,
@@ -160,6 +162,9 @@ public:
 
 
     // Member Functions
+
+        //- Reference to point field defining the block mesh
+        inline const pointField& vertices() const;
 
         //- Return reference to the list of curved faces
         inline const blockFaceList& faces() const;
@@ -233,6 +238,23 @@ public:
         //  to lie on the faces of the block
         void correctFacePoints(FixedList<pointField, 6>&) const;
 
+        //- In-place read with dictionary lookup
+        static void read(Istream&, label&, const dictionary&);
+
+        //- In-place read with dictionary lookup
+        template<class T>
+        static void read(Istream&, List<T>&, const dictionary&);
+
+        //- Return-read with dictionary lookup
+        static label read(Istream&, const dictionary&);
+
+        //- Return-read with dictionary lookup
+        template<class T>
+        static List<T> read(Istream& is, const dictionary&);
+
+        //- Write with dictionary lookup
+        static void write(Ostream&, const label, const dictionary&);
+
 
     // IOstream Operators
 
@@ -247,6 +269,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "blockDescriptorI.H"
+
+#ifdef NoRepository
+    #include "blockDescriptorTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

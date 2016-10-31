@@ -81,6 +81,8 @@ public:
         //- Construct from Istream setting pointsList
         projectVertex
         (
+            const dictionary&,
+            const label index,
             const searchableSurfaces& geometry,
             Istream&
         );

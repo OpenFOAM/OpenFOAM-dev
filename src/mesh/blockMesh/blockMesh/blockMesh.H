@@ -139,7 +139,7 @@ class blockMesh
 
         polyMesh* createTopology(const IOdictionary&, const word& regionName);
 
-        void check(const polyMesh&) const;
+        void check(const polyMesh&, const dictionary&) const;
 
         //- Determine the merge info and the final number of cells/points
         void calcMergeInfo();

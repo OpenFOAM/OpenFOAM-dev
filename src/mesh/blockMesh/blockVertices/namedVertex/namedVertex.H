@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,31 +21,80 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::blockList
+Class
+    Foam::blockVertices::namedVertex
 
 Description
-    A PtrList of blocks
+    Gives name to a vertex.
+
+SourceFiles
+    namedVertex.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blockList_H
-#define blockList_H
+#ifndef blockVertices_namedVertex_H
+#define blockVertices_namedVertex_H
 
-#include "block.H"
-#include "PtrList.H"
+#include "blockVertex.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace blockVertices
+{
+
+/*---------------------------------------------------------------------------*\
+                           Class namedVertex Declaration
+\*---------------------------------------------------------------------------*/
+
+class namedVertex
+:
+    public blockVertex
+{
+protected:
+
+    // Protected member data
+
+        //- The dictionary variable name for the vertex number
+        word name_;
+
+        //- The vertex location
+        autoPtr<blockVertex> vertexPtr_;
+
+
+public:
+
+    //- Runtime type information
+    TypeName("named");
+
+
+    // Constructors
+
+        //- Construct from Istream setting pointsList
+        namedVertex
+        (
+            const dictionary&,
+            const label index,
+            const searchableSurfaces& geometry,
+            Istream&
+        );
+
+
+    //- Destructor
+    virtual ~namedVertex()
+    {}
+
+
+    // Member Functions
+
+        virtual operator point() const;
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-typedef PtrList<block> blockList;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
+} // End namespace blockVertices
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -53,4 +102,3 @@ typedef PtrList<block> blockList;
 #endif
 
 // ************************************************************************* //
-

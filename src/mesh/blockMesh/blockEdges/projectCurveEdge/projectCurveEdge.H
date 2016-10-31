@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::projectEdge
+    Foam::projectCurveEdge
 
 Description
     Defines the edge from the projection onto a surface (single surface)
     or intersection of two surfaces.
 
 SourceFiles
-    projectEdge.C
+    projectCurveEdge.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef projectEdge_H
-#define projectEdge_H
+#ifndef projectCurveEdge_H
+#define projectCurveEdge_H
 
 #include "blockEdge.H"
 
@@ -46,10 +46,10 @@ namespace Foam
 class pointConstraint;
 
 /*---------------------------------------------------------------------------*\
-                         Class projectEdge Declaration
+                      Class projectCurveEdge Declaration
 \*---------------------------------------------------------------------------*/
 
-class projectEdge
+class projectCurveEdge
 :
     public blockEdge
 {
@@ -63,26 +63,23 @@ class projectEdge
 
     // Private Member Functions
 
-        //- Single point find nearest
-        void findNearest(const point&, point& near, pointConstraint&) const;
-
         //- Disallow default bitwise copy construct
-        projectEdge(const projectEdge&);
+        projectCurveEdge(const projectCurveEdge&);
 
         //- Disallow default bitwise assignment
-        void operator=(const projectEdge&);
+        void operator=(const projectCurveEdge&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("project");
+    TypeName("projectCurve");
 
 
     // Constructors
 
         //- Construct from Istream setting pointsList
-        projectEdge
+        projectCurveEdge
         (
             const dictionary& dict,
             const label index,
@@ -93,7 +90,7 @@ public:
 
 
     //- Destructor
-    virtual ~projectEdge()
+    virtual ~projectCurveEdge()
     {}
 
 
@@ -101,7 +98,11 @@ public:
 
         //- Return the point positions corresponding to the curve parameters
         //  0 <= lambda <= 1
-        virtual point position(const scalar) const;
+        virtual point position(const scalar) const
+        {
+            NotImplemented;
+            return point::max;
+        }
 
         //- Return the point positions corresponding to the curve parameters
         //  0 <= lambda <= 1

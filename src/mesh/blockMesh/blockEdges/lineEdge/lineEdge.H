@@ -68,6 +68,8 @@ public:
         //- Construct from Istream with a pointField
         lineEdge
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             const pointField&,
             Istream&

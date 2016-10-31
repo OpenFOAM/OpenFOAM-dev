@@ -91,6 +91,8 @@ public:
         //- Construct from Istream setting pointsList
         arcEdge
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             const pointField& points,
             Istream&

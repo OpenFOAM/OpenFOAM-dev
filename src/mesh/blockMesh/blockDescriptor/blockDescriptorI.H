@@ -25,6 +25,12 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+inline const Foam::pointField& Foam::blockDescriptor::vertices() const
+{
+    return vertices_;
+}
+
+
 inline const Foam::blockFaceList& Foam::blockDescriptor::faces() const
 {
     return faces_;

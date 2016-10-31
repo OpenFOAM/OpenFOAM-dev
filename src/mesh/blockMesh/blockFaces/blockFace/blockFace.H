@@ -77,10 +77,12 @@ public:
             blockFace,
             Istream,
             (
+                const dictionary& dict,
+                const label index,
                 const searchableSurfaces& geometry,
                 Istream& is
             ),
-            (geometry, is)
+            (dict, index, geometry, is)
         );
 
 
@@ -90,7 +92,12 @@ public:
         blockFace(const face& vertices);
 
         //- Construct from Istream
-        blockFace(Istream&);
+        blockFace
+        (
+            const dictionary& dict,
+            const label index,
+            Istream&
+        );
 
         //- Clone function
         virtual autoPtr<blockFace> clone() const;
@@ -98,6 +105,8 @@ public:
         //- New function which constructs and returns pointer to a blockFace
         static autoPtr<blockFace> New
         (
+            const dictionary& dict,
+            const label index,
             const searchableSurfaces& geometry,
             Istream&
         );
@@ -106,18 +115,22 @@ public:
         //  PtrLists of blockFace
         class iNew
         {
+            const dictionary& dict_;
             const searchableSurfaces& geometry_;
+            mutable label index_;
 
         public:
 
-            iNew(const searchableSurfaces& geometry)
+            iNew(const dictionary& dict, const searchableSurfaces& geometry)
             :
-                geometry_(geometry)
+                dict_(dict),
+                geometry_(geometry),
+                index_(0)
             {}
 
             autoPtr<blockFace> operator()(Istream& is) const
             {
-                return blockFace::New(geometry_, is);
+                return blockFace::New(dict_, index_++, geometry_, is);
             }
         };
 
@@ -144,6 +157,9 @@ public:
             const label blockFacei,
             pointField& points
         ) const = 0;
+
+        //- Write face with variable backsubstitution
+        void write(Ostream&, const dictionary&) const;
 
 
     // Ostream operator
