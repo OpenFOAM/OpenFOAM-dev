@@ -12,7 +12,7 @@
         (
             "initialConditions",
             runTime.constant(),
-            runTime,
+            mesh,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
@@ -37,7 +37,7 @@
         (
             "rho",
             runTime.timeName(),
-            runTime,
+            mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
@@ -50,7 +50,7 @@
         (
             "Rspecific",
             runTime.timeName(),
-            runTime,
+            mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
@@ -69,7 +69,7 @@
         (
             "U",
             runTime.timeName(),
-            runTime,
+            mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
