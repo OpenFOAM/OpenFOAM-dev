@@ -47,40 +47,40 @@ geometry
 vertices
 (
     // Vertical cylinder
-    named v0 project (-1 -0.1 -1) (cylinder cylinder2)
-    named v1 project ( 1 -0.1 -1) (cylinder)
-    named v2 project ( 1  0.9 -1) (cylinder)
-    named v3 project (-1  0.9 -1) (cylinder cylinder2)
-    named v4 project (-1 -0.1  1) (cylinder cylinder2)
-    named v5 project ( 1 -0.1  1) (cylinder)
-    named v6 project ( 1  0.9  1) (cylinder)
-    named v7 project (-1  0.9  1) (cylinder cylinder2)
+    name v0 project (-1 -0.1 -1) (cylinder cylinder2)
+    name v1 project ( 1 -0.1 -1) (cylinder)
+    name v2 project ( 1  0.9 -1) (cylinder)
+    name v3 project (-1  0.9 -1) (cylinder cylinder2)
+    name v4 project (-1 -0.1  1) (cylinder cylinder2)
+    name v5 project ( 1 -0.1  1) (cylinder)
+    name v6 project ( 1  0.9  1) (cylinder)
+    name v7 project (-1  0.9  1) (cylinder cylinder2)
 
 
     // Horizontal cylinder
-    named v8 project (-4   0 -0.5) (cylinder2 inletPlane)
-    named v9 project (-4   1 -0.5) (cylinder2 inletPlane)
-    named v10 project (-4  0  0.5) (cylinder2 inletPlane)
-    named v11 project (-4  1  0.5) (cylinder2 inletPlane)
+    name v8  project (-4  0 -0.5) (cylinder2 inletPlane)
+    name v9  project (-4  1 -0.5) (cylinder2 inletPlane)
+    name v10 project (-4  0  0.5) (cylinder2 inletPlane)
+    name v11 project (-4  1  0.5) (cylinder2 inletPlane)
 
 
     // On top of vertical cylinder
-    named v12 project (-1 2 -1) (cylinder)
-    named v13 project ( 1 2 -1) (cylinder)
-    named v14 project ( 1 2  1) (cylinder)
-    named v15 project (-1 2  1) (cylinder)
+    name v12 project (-1 2 -1) (cylinder)
+    name v13 project ( 1 2 -1) (cylinder)
+    name v14 project ( 1 2  1) (cylinder)
+    name v15 project (-1 2  1) (cylinder)
 
     // Below vertical cylinder
-    named v16 project (-1 -1 -1) (cylinder)
-    named v17 project ( 1 -1 -1) (cylinder)
-    named v18 project ( 1 -1  1) (cylinder)
-    named v19 project (-1 -1  1) (cylinder)
+    name v16 project (-1 -1 -1) (cylinder)
+    name v17 project ( 1 -1 -1) (cylinder)
+    name v18 project ( 1 -1  1) (cylinder)
+    name v19 project (-1 -1  1) (cylinder)
 );
 
 blocks
 (
     hex (v0 v1 v2 v3 v4 v5 v6 v7) (8 8 8) simpleGrading (1 1 1)
-    named sideBlock hex (v0 v3 v9 v8 v4 v7 v11 v10) (8 20 8)
+    name sideBlock hex (v0 v3 v9 v8 v4 v7 v11 v10) (8 20 8)
         simpleGrading (1 1 1)
 
     hex ( v7 v6 v2 v3 v15 v14 v13 v12) (8 8 8) simpleGrading (1 1 1)

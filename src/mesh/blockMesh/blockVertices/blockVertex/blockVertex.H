@@ -121,6 +121,12 @@ public:
     // Member Functions
 
         virtual operator point() const = 0;
+
+        //- Read vertex index with optional name lookup
+        static label read(Istream&, const dictionary&);
+
+        //- Write vertex index with optional name backsubstitution
+        static void write(Ostream&, const label, const dictionary&);
 };
 
 

@@ -65,6 +65,9 @@ class blockMesh
 {
     // Private data
 
+        //- Reference to mesh dictionary
+        const IOdictionary& meshDict_;
+
         //- Switch for verbose output
         bool verboseOutput;
 
@@ -177,6 +180,12 @@ public:
     // Member Functions
 
         // Access
+
+            //- Access to input dictionary
+            const dictionary& meshDict() const
+            {
+                return meshDict_;
+            }
 
             //- Optional searchable geometry to project face-points to
             const searchableSurfaces& geometry() const

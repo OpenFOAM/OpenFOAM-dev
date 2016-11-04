@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------*\
+/*---------------------------------------------------------------------------* \
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -21,68 +21,62 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::blocks::namedBlock
+Namespace
+    Foam::blockMeshTools
 
 Description
-    Gives name to a block.
+    Tools for parsing label(List) with dictionary lookup.
 
 SourceFiles
-    namedBlock.C
+    blockMeshTools.C
+    blockMeshToolsTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blocks_namedBlock_H
-#define blocks_namedBlock_H
+#ifndef blockMeshTools_H
+#define blockMeshTools_H
 
-#include "block.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace blocks
+namespace blockMeshTools
 {
-
-/*---------------------------------------------------------------------------*\
-                           Class namedBlock Declaration
-\*---------------------------------------------------------------------------*/
-
-class namedBlock
-:
-    public word,
-    public block
-{
-public:
-
-    //- Runtime type information
-    TypeName("name");
-
-
-    // Constructors
-
-        //- Construct from Istream setting pointsList
-        namedBlock
-        (
-            const dictionary& dict,
-            const label index,
-            const pointField& vertices,
-            const blockEdgeList& edges,
-            const blockFaceList& faces,
-            Istream& is
-        );
-
-
-    //- Destructor
-    virtual ~namedBlock()
-    {}
-};
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace blocks
+    //- In-place read with dictionary lookup
+    void read(Istream&, label&, const dictionary&);
+
+    //- In-place read with dictionary lookup
+    template<class T>
+    void read(Istream&, List<T>&, const dictionary&);
+
+    //- Return-read with dictionary lookup
+    label read(Istream&, const dictionary&);
+
+    //- Return-read with dictionary lookup
+    template<class T>
+    List<T> read(Istream& is, const dictionary&);
+
+    //- Write with dictionary lookup
+    void write(Ostream&, const label, const dictionary&);
+
+    //- Linear search for label entry
+    const keyType& findEntry(const dictionary&, const label);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace blockMeshTools
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "blockMeshToolsTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockDescriptor.H"
+#include "blockMeshTools.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -128,90 +129,6 @@ void Foam::blockDescriptor::findCurvedFaces()
 }
 
 
-void Foam::blockDescriptor::read
-(
-    Istream& is,
-    label& val,
-    const dictionary& dict
-)
-{
-    token t(is);
-    if (t.isLabel())
-    {
-        val = t.labelToken();
-    }
-    else if (t.isWord())
-    {
-        const word& varName = t.wordToken();
-        const entry* ePtr = dict.lookupScopedEntryPtr
-        (
-            varName,
-            true,
-            true
-        );
-        if (ePtr)
-        {
-            // Read as label
-            val = Foam::readLabel(ePtr->stream());
-        }
-        else
-        {
-            FatalIOErrorInFunction(is)
-                << "Undefined variable "
-                << varName << ". Valid variables are " << dict
-                << exit(FatalIOError);
-        }
-    }
-    else
-    {
-        FatalIOErrorInFunction(is)
-            << "Illegal token " << t.info()
-            << " when trying to read label"
-            << exit(FatalIOError);
-    }
-
-    is.fatalCheck
-    (
-        "operator>>(Istream&, List<T>&) : reading entry"
-    );
-}
-
-
-Foam::label Foam::blockDescriptor::read
-(
-    Istream& is,
-    const dictionary& dict
-)
-{
-    label val;
-    read(is, val, dict);
-    return val;
-}
-
-
-void Foam::blockDescriptor::write
-(
-    Ostream& os,
-    const label val,
-    const dictionary& dict
-)
-{
-    forAllConstIter(dictionary, dict, iter)
-    {
-        if (iter().isStream())
-        {
-            label keyVal(Foam::readLabel(iter().stream()));
-            if (keyVal == val)
-            {
-                os << iter().keyword();
-                return;
-            }
-        }
-    }
-    os << val;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::blockDescriptor::blockDescriptor
@@ -270,7 +187,7 @@ Foam::blockDescriptor::blockDescriptor
     blockShape_ = cellShape
     (
         model,
-        read<label>
+        blockMeshTools::read<label>
         (
             is,
             dict.subOrEmptyDict("namedVertices")
@@ -440,6 +357,25 @@ void Foam::blockDescriptor::correctFacePoints
                 facePoints[blockFacei]
             );
         }
+    }
+}
+
+
+void Foam::blockDescriptor::write
+(
+    Ostream& os,
+    const label val,
+    const dictionary& d
+)
+{
+    const dictionary* varDictPtr = d.subDictPtr("namedBlocks");
+    if (varDictPtr)
+    {
+        blockMeshTools::write(os, val, *varDictPtr);
+    }
+    else
+    {
+        os << val;
     }
 }
 

@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockMesh.H"
+#include "blockMeshTools.H"
 #include "Time.H"
 #include "preservePatchTypes.H"
 #include "emptyPolyPatch.H"
@@ -165,7 +166,7 @@ void Foam::blockMesh::readPatches
             >> patchNames[nPatches];
 
         // Read patch faces
-        tmpBlocksPatches[nPatches] = blockDescriptor::read<face>
+        tmpBlocksPatches[nPatches] = blockMeshTools::read<face>
         (
             patchStream,
             varDict
@@ -300,7 +301,7 @@ void Foam::blockMesh::readBoundary
         patchDicts.set(patchi, new dictionary(patchInfo.dict()));
 
         // Read block faces
-        tmpBlocksPatches[patchi] = blockDescriptor::read<face>
+        tmpBlocksPatches[patchi] = blockMeshTools::read<face>
         (
             patchDicts[patchi].lookup("faces"),
             varDict

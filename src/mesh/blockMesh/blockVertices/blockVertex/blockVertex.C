@@ -25,6 +25,7 @@ License
 
 #include "blockVertex.H"
 #include "pointVertex.H"
+#include "blockMeshTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -100,6 +101,36 @@ Foam::autoPtr<Foam::blockVertex> Foam::blockVertex::New
             << exit(FatalIOError);
 
         return autoPtr<blockVertex>(nullptr);
+    }
+}
+
+
+Foam::label Foam::blockVertex::read(Istream& is, const dictionary& dict)
+{
+    const dictionary* varDictPtr = dict.subDictPtr("namedVertices");
+    if (varDictPtr)
+    {
+        return blockMeshTools::read(is, *varDictPtr);
+    }
+    return readLabel(is);
+}
+
+
+void Foam::blockVertex::write
+(
+    Ostream& os,
+    const label val,
+    const dictionary& d
+)
+{
+    const dictionary* varDictPtr = d.subDictPtr("namedVertices");
+    if (varDictPtr)
+    {
+        blockMeshTools::write(os, val, *varDictPtr);
+    }
+    else
+    {
+        os << val;
     }
 }
 

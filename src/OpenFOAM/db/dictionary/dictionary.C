@@ -630,6 +630,21 @@ const Foam::dictionary* Foam::dictionary::subDictPtr(const word& keyword) const
 }
 
 
+Foam::dictionary* Foam::dictionary::subDictPtr(const word& keyword)
+{
+    entry* entryPtr = lookupEntryPtr(keyword, false, true);
+
+    if (entryPtr)
+    {
+        return &entryPtr->dict();
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
+
 const Foam::dictionary& Foam::dictionary::subDict(const word& keyword) const
 {
     const entry* entryPtr = lookupEntryPtr(keyword, false, true);

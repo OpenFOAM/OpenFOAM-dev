@@ -36,6 +36,8 @@ blockMesh/blockMeshCheck.C
 blockMesh/blockMeshMerge.C
 blockMesh/blockMeshMergeFast.C
 
+blockMeshTools/blockMeshTools.C
+
 searchableCurve/searchableCurve.C
 
 LIB = $(FOAM_LIBBIN)/libblockMesh

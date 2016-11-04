@@ -379,6 +379,10 @@ public:
             //  otherwise return nullptr.
             const dictionary* subDictPtr(const word&) const;
 
+            //- Find and return a sub-dictionary pointer if present
+            //  otherwise return nullptr.
+            dictionary* subDictPtr(const word&);
+
             //- Find and return a sub-dictionary
             const dictionary& subDict(const word&) const;
 

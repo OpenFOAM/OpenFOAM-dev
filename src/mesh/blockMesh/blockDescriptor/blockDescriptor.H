@@ -238,22 +238,8 @@ public:
         //  to lie on the faces of the block
         void correctFacePoints(FixedList<pointField, 6>&) const;
 
-        //- In-place read with dictionary lookup
-        static void read(Istream&, label&, const dictionary&);
-
-        //- In-place read with dictionary lookup
-        template<class T>
-        static void read(Istream&, List<T>&, const dictionary&);
-
-        //- Return-read with dictionary lookup
-        static label read(Istream&, const dictionary&);
-
-        //- Return-read with dictionary lookup
-        template<class T>
-        static List<T> read(Istream& is, const dictionary&);
-
-        //- Write with dictionary lookup
-        static void write(Ostream&, const label, const dictionary&);
+        //- Write block index with dictionary lookup
+        static void write(Ostream&, const label blocki, const dictionary&);
 
 
     // IOstream Operators
@@ -269,10 +255,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "blockDescriptorI.H"
-
-#ifdef NoRepository
-    #include "blockDescriptorTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

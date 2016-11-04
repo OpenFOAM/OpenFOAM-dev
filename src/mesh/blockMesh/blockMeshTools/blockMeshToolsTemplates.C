@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
-void Foam::blockDescriptor::read
+void Foam::blockMeshTools::read
 (
     Istream& is,
     List<T>& L,
@@ -100,7 +100,7 @@ void Foam::blockDescriptor::read
 
 
 template<class T>
-Foam::List<T> Foam::blockDescriptor::read
+Foam::List<T> Foam::blockMeshTools::read
 (
     Istream& is,
     const dictionary& dict
@@ -110,5 +110,6 @@ Foam::List<T> Foam::blockDescriptor::read
     read(is, L, dict);
     return L;
 }
+
 
 // ************************************************************************* //

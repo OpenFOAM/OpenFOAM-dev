@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockEdge.H"
-#include "blockDescriptor.H"
+#include "blockVertex.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -59,8 +59,8 @@ Foam::blockEdge::blockEdge
 )
 :
     points_(points),
-    start_(blockDescriptor::read(is, dict.subOrEmptyDict("namedVertices"))),
-    end_(blockDescriptor::read(is, dict.subOrEmptyDict("namedVertices")))
+    start_(blockVertex::read(is, dict)),
+    end_(blockVertex::read(is, dict))
 {}
 
 
@@ -146,20 +146,10 @@ Foam::blockEdge::position(const scalarList& lambdas) const
 
 void Foam::blockEdge::write(Ostream& os, const dictionary& d) const
 {
-    const dictionary* varDictPtr = d.subDictPtr("namedVertices");
-    if (varDictPtr)
-    {
-        const dictionary& varDict = *varDictPtr;
-
-        blockDescriptor::write(os, start_, varDict);
-        os << tab;
-        blockDescriptor::write(os, end_, varDict);
-        os << endl;
-    }
-    else
-    {
-        os << start_ << tab << end_ << endl;
-    }
+    blockVertex::write(os, start_, d);
+    os << tab;
+    blockVertex::write(os, end_, d);
+    os << endl;
 }
 
 

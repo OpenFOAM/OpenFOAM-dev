@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "blockFace.H"
-#include "blockDescriptor.H"
+#include "blockMeshTools.H"
+#include "blockVertex.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -52,7 +53,7 @@ Foam::blockFace::blockFace
 :
     vertices_
     (
-        blockDescriptor::read<label>
+        blockMeshTools::read<label>
         (
             is,
             dict.subOrEmptyDict("namedVertices")
@@ -104,28 +105,18 @@ Foam::autoPtr<Foam::blockFace> Foam::blockFace::New
 
 void Foam::blockFace::write(Ostream& os, const dictionary& d) const
 {
-    const dictionary* varDictPtr = d.subDictPtr("namedVertices");
-    if (varDictPtr)
+    // Write size and start delimiter
+    os << vertices_.size() << token::BEGIN_LIST;
+
+    // Write contents
+    forAll(vertices_, i)
     {
-        const dictionary& varDict = *varDictPtr;
-
-        // Write size and start delimiter
-        os << vertices_.size() << token::BEGIN_LIST;
-
-        // Write contents
-        forAll(vertices_, i)
-        {
-            if (i > 0) os << token::SPACE;
-            blockDescriptor::write(os, vertices_[i], varDict);
-        }
-
-        // Write end delimiter
-        os << token::END_LIST;
+        if (i > 0) os << token::SPACE;
+        blockVertex::write(os, vertices_[i], d);
     }
-    else
-    {
-        os << vertices_ << endl;
-    }
+
+    // Write end delimiter
+    os << token::END_LIST;
 }
 
 
