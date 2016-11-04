@@ -58,6 +58,15 @@ class AnisothermalPhaseModel
         volScalarField K_;
 
 
+    // Private member functions
+
+        //- Optionally filter the pressure work term as the phase-fraction -> 0
+        tmp<volScalarField> filterPressureWork
+        (
+            const tmp<volScalarField>& pressureWork
+        ) const;
+
+
 public:
 
     // Constructors
