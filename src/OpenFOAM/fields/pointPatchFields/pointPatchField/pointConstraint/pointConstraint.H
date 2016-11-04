@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,9 @@ public:
         //- Return the accumulated unconstrained directions. Directions
         //  coded as first n rows of tensor.
         inline void unconstrainedDirections(label& n, tensor& vecs) const;
+
+        //- Constrain a displacement
+        inline vector constrainDisplacement(const vector& disp) const;
 };
 
 
@@ -103,7 +106,7 @@ inline pointConstraint transform(const tensor& tt, const pointConstraint& v);
 //- contiguous
 template<class T> bool contiguous();
 template<>
-inline bool contiguous<pointConstraint>()                {return true;}
+inline bool contiguous<pointConstraint>() {return true;}
 
 
 

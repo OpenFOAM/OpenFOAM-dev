@@ -45,7 +45,7 @@ inline Foam::pointConstraint::pointConstraint(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::pointConstraint::applyConstraint(const vector& cd)
+inline void Foam::pointConstraint::applyConstraint(const vector& cd)
 {
     if (first() == 0)
     {
@@ -74,7 +74,7 @@ void Foam::pointConstraint::applyConstraint(const vector& cd)
 }
 
 
-void Foam::pointConstraint::combine(const pointConstraint& pc)
+inline void Foam::pointConstraint::combine(const pointConstraint& pc)
 {
     if (first() == 0)
     {
@@ -115,7 +115,7 @@ void Foam::pointConstraint::combine(const pointConstraint& pc)
 }
 
 
-Foam::tensor Foam::pointConstraint::constraintTransformation() const
+inline Foam::tensor Foam::pointConstraint::constraintTransformation() const
 {
     if (first() == 0)
     {
@@ -136,8 +136,11 @@ Foam::tensor Foam::pointConstraint::constraintTransformation() const
 }
 
 
-void Foam::pointConstraint::unconstrainedDirections(label& n, tensor& tt)
-const
+inline void Foam::pointConstraint::unconstrainedDirections
+(
+    label& n,
+    tensor& tt
+) const
 {
     n = 3-first();
 
@@ -179,7 +182,36 @@ const
 }
 
 
-void Foam::combineConstraintsEqOp::operator()
+inline Foam::vector Foam::pointConstraint::constrainDisplacement
+(
+    const vector& d
+) const
+{
+    vector cd;
+
+    if (first() == 0)
+    {
+        cd = d;
+    }
+    else if (first() == 1)
+    {
+        // Remove plane normal
+        cd = d-(d&second())*second();
+    }
+    else if (first() == 2)
+    {
+        // Keep line direction only
+        cd = (d&second())*second();
+    }
+    else
+    {
+        cd = Zero;
+    }
+    return cd;
+}
+
+
+inline void Foam::combineConstraintsEqOp::operator()
 (
     pointConstraint& x,
     const pointConstraint& y
@@ -189,7 +221,7 @@ void Foam::combineConstraintsEqOp::operator()
 }
 
 
-Foam::pointConstraint Foam::transform
+inline Foam::pointConstraint Foam::transform
 (
     const tensor& tt,
     const pointConstraint& v
