@@ -43,6 +43,20 @@
       </Documentation>
     </IntVectorProperty>
 
+    <!-- Refresh button -->
+    <IntVectorProperty
+      name="UiRefresh"
+      command="SetRefresh"
+      number_of_elements="1"
+      is_internal="0"
+      default_values="0"
+      animateable="0">
+      <BooleanDomain name="bool"/>
+      <Documentation>
+        Rescan for updated blockMeshDict.
+      </Documentation>
+    </IntVectorProperty>
+
 
     <!--
        | Selections

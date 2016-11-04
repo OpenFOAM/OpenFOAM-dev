@@ -81,6 +81,9 @@ public:
     vtkSetMacro(UpdateGUI, int);
     vtkGetMacro(UpdateGUI, int);
 
+    // Description:
+    // Refresh blockMesh from changes to blockMeshDict
+    virtual void SetRefresh(int);
 
     // Description:
     // Blocks selection list control

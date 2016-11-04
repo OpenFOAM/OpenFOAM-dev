@@ -106,10 +106,6 @@ public:
 
         //- Construct from components
         pqPVFoamReaderPanel(pqProxy*, QWidget*);
-
-
-    //- Destructor
-    // virtual ~pqPVFoamReaderPanel();
 };
 
 

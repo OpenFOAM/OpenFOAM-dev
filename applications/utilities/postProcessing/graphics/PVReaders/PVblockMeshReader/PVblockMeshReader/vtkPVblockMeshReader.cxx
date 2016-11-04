@@ -97,7 +97,7 @@ vtkPVblockMeshReader::~vtkPVblockMeshReader()
 
     if (foamData_)
     {
-        // remove point numbers
+        // Remove point numbers
         updatePointNumbersView(false);
         delete foamData_;
     }
@@ -117,7 +117,6 @@ vtkPVblockMeshReader::~vtkPVblockMeshReader()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-// Do everything except set the output info
 int vtkPVblockMeshReader::RequestInformation
 (
     vtkInformation* vtkNotUsed(request),
@@ -158,23 +157,10 @@ int vtkPVblockMeshReader::RequestInformation
         foamData_->updateInfo();
     }
 
-    // might need some other type of error handling
-
-//    {
-//        vtkErrorMacro("could not find valid OpenFOAM blockMesh");
-//
-//        // delete foamData and flag it as fatal error
-//        delete foamData_;
-//        foamData_ = nullptr;
-//        return 0;
-//    }
-
-
     return 1;
 }
 
 
-// Set the output info
 int vtkPVblockMeshReader::RequestData
 (
     vtkInformation* vtkNotUsed(request),
@@ -190,7 +176,7 @@ int vtkPVblockMeshReader::RequestData
         return 0;
     }
 
-    // catch previous error
+    // Catch previous error
     if (!foamData_)
     {
         vtkErrorMacro("Reader failed - perhaps no mesh?");
@@ -233,6 +219,18 @@ int vtkPVblockMeshReader::RequestData
 }
 
 
+void vtkPVblockMeshReader::SetRefresh(int val)
+{
+    // Delete the current blockMesh to force re-read and update
+    if (foamData_)
+    {
+        delete foamData_;
+        foamData_ = 0;
+    }
+
+    Modified();
+}
+
 
 void vtkPVblockMeshReader::SetShowPointNumbers(const int val)
 {
@@ -248,7 +246,7 @@ void vtkPVblockMeshReader::updatePointNumbersView(const bool show)
 {
     pqApplicationCore* appCore = pqApplicationCore::instance();
 
-    // need to check this, since our destructor calls this
+    // Need to check this, since our destructor calls this
     if (!appCore)
     {
         return;
@@ -273,7 +271,7 @@ void vtkPVblockMeshReader::updatePointNumbersView(const bool show)
         );
     }
 
-    // use refresh here?
+    // Use refresh here?
 }
 
 

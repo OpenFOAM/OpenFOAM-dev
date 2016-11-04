@@ -67,6 +67,7 @@ class pqPVblockMeshReaderPanel
 protected slots:
 
     void ShowPointNumbersToggled();
+    void RefreshPressed();
 
 
 public:
@@ -75,10 +76,6 @@ public:
 
         //- Construct from components
         pqPVblockMeshReaderPanel(pqProxy*, QWidget*);
-
-
-    //- Destructor
-    // virtual ~pqPVblockMeshReaderPanel();
 };
 
 
