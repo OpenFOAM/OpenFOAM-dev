@@ -258,7 +258,12 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
             {
                 // If we are running in parallel and the particle is on a
                 // boundary face
-                if (Pstream::parRun() && p.face() >= pMesh().nInternalFaces())
+                if
+                (
+                    Pstream::parRun()
+                 && td.switchProcessor
+                 && p.face() >= pMesh().nInternalFaces()
+                )
                 {
                     label patchi = pbm.whichPatch(p.face());
 
