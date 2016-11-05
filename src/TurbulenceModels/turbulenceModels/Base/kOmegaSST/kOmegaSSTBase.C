@@ -388,7 +388,7 @@ kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::kOmegaSST
 template<class TurbulenceModel, class BasicTurbulenceModel>
 bool kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::read()
 {
-    if (BasicTurbulenceModel::read())
+    if (TurbulenceModel::read())
     {
         alphaK1_.readIfPresent(this->coeffDict());
         alphaK2_.readIfPresent(this->coeffDict());
