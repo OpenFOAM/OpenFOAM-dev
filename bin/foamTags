@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -47,7 +47,7 @@ then
 fi
 
 
-for cmd in etags ectags
+for cmd in etags ctags-exuberant
 do
     type $cmd >/dev/null 2>&1 || {
         echo "${0##*/} cannot build tag files: '$cmd' command not found"
@@ -64,20 +64,19 @@ etagsCmd="etags --declarations -l c++ -o .tags/etags -"
 #etagsDefCmd="etags -l c++ -o .tags/etagsDef -"
 #etagsDecCmd="etags --declarations -l c++ -o .tags/etagsDec -"
 
-etagsCmd="ectags -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etags -L -"
-etagsDefCmd="ectags -e --extra=+fq --file-scope=no -o .tags/etagsDef -L -"
-etagsDecCmd="ectags -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etagsDec -L -"
+etagsCmd="ctags-exuberant -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etags -L -"
+etagsDefCmd="ctags-exuberant -e --extra=+fq --file-scope=no -o .tags/etagsDef -L -"
+etagsDecCmd="ctags-exuberant -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etagsDec -L -"
 
-ectagsDecCmd="ectags -o .tags/ectagsDec --file-scope=no --c-kinds=+p --excmd=n --extra=+fq --fields=+afiKmnsSzt -L -"
+ectagsDecCmd="ctags-exuberant -o .tags/ectagsDec --file-scope=no --c-kinds=+p --excmd=n --extra=+fq --fields=+afiKmnsSzt -L -"
 
 find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsCmd
 find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsDefCmd
 find -H $WM_PROJECT_DIR \( -name "*.H" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsDecCmd
 find -H $WM_PROJECT_DIR \( -name "*.H" -o -name lnInclude -prune -o -name Doxygen -prune \) | $ectagsDecCmd
 
-gtags -i --gtagsconf bin/tools/gtagsrc .tags
+#gtags -i --gtagsconf bin/tools/gtagsrc .tags
 
 foamEbrowse
-
 
 #------------------------------------------------------------------------------
