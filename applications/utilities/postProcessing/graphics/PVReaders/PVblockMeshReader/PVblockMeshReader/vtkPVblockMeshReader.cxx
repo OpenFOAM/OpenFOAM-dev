@@ -224,6 +224,7 @@ void vtkPVblockMeshReader::SetRefresh(int val)
     // Delete the current blockMesh to force re-read and update
     if (foamData_)
     {
+        updatePointNumbersView(false);
         delete foamData_;
         foamData_ = 0;
     }
