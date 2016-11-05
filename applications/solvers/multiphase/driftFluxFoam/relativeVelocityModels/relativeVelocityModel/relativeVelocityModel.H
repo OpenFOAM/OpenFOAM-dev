@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,15 @@ class relativeVelocityModel
 {
     // Private Member Functions
 
+        //- Return the list of patchFieldTypes for Udm derived from U
+        wordList UdmPatchFieldTypes() const;
+
         //- Disallow default bitwise copy construct
         relativeVelocityModel(const relativeVelocityModel&);
 
         //- Disallow default bitwise assignment
         void operator=(const relativeVelocityModel&);
+
 
 protected:
 
