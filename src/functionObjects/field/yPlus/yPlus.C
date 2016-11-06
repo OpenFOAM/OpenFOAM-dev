@@ -142,6 +142,7 @@ Foam::functionObjects::yPlus::yPlus
 
     mesh_.objectRegistry::store(yPlusPtr);
 
+    read(dict);
     resetName(typeName);
 }
 
