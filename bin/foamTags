@@ -46,7 +46,6 @@ then
     exit 1
 fi
 
-
 for cmd in etags ctags-exuberant
 do
     type $cmd >/dev/null 2>&1 || {
@@ -55,28 +54,16 @@ do
     }
 done
 
-
 cd $WM_PROJECT_DIR || exit 1
 mkdir .tags 2>/dev/null
 
-
-etagsCmd="etags --declarations -l c++ -o .tags/etags -"
-#etagsDefCmd="etags -l c++ -o .tags/etagsDef -"
-#etagsDecCmd="etags --declarations -l c++ -o .tags/etagsDec -"
-
+#etagsCmd="etags --declarations -l c++ -o .tags/etags -"
 etagsCmd="ctags-exuberant -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etags -L -"
-etagsDefCmd="ctags-exuberant -e --extra=+fq --file-scope=no -o .tags/etagsDef -L -"
-etagsDecCmd="ctags-exuberant -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etagsDec -L -"
-
-ectagsDecCmd="ctags-exuberant -o .tags/ectagsDec --file-scope=no --c-kinds=+p --excmd=n --extra=+fq --fields=+afiKmnsSzt -L -"
 
 find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsCmd
-find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsDefCmd
-find -H $WM_PROJECT_DIR \( -name "*.H" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsDecCmd
-find -H $WM_PROJECT_DIR \( -name "*.H" -o -name lnInclude -prune -o -name Doxygen -prune \) | $ectagsDecCmd
 
 #gtags -i --gtagsconf bin/tools/gtagsrc .tags
 
-foamEbrowse
+#foamEbrowse
 
 #------------------------------------------------------------------------------
