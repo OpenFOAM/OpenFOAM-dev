@@ -16,7 +16,8 @@
       - contErr1*K1
       + (
             he1.name() == thermo1.phasePropertyName("e")
-          ? fvc::ddt(alpha1)*p + fvc::div(alphaPhi1, p)
+          ? fvc::div(fvc::absolute(alphaPhi1, alpha1, U1), p)
+          + p*fvc::ddt(alpha1)
           : -alpha1*dpdt
         )
 
@@ -48,7 +49,8 @@
       - contErr2*K2
       + (
             he2.name() == thermo2.phasePropertyName("e")
-          ? fvc::ddt(alpha2)*p + fvc::div(alphaPhi2, p)
+          ? fvc::div(fvc::absolute(alphaPhi2, alpha2, U2), p)
+          + p*fvc::ddt(alpha1)
           : -alpha2*dpdt
         )
 
