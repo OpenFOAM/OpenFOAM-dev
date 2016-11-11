@@ -460,7 +460,7 @@ int main(int argc, char *argv[])
             {
                 FatalIOErrorInFunction(dictFile)
                     << "Cannot find entry " << entryName
-                    << exit(FatalError, 2);
+                    << exit(FatalIOError, 2);
             }
         }
     }
