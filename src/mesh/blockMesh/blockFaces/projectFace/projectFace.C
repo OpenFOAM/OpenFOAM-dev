@@ -74,7 +74,7 @@ Foam::label Foam::blockFaces::projectFace::index
     const labelPair& coord
 ) const
 {
-    return coord.first()+coord.second()*n.first();
+    return coord.first() + coord.second()*n.first();
 }
 
 
@@ -173,24 +173,24 @@ void Foam::blockFaces::projectFace::project
         case 0:
         case 1:
         {
-            n.first() = desc.density()[1]+1;
-            n.second() = desc.density()[2]+1;
+            n.first() = desc.density()[1] + 1;
+            n.second() = desc.density()[2] + 1;
         }
         break;
 
         case 2:
         case 3:
         {
-            n.first() = desc.density()[0]+1;
-            n.second() = desc.density()[2]+1;
+            n.first() = desc.density()[0] + 1;
+            n.second() = desc.density()[2] + 1;
         }
         break;
 
         case 4:
         case 5:
         {
-            n.first() = desc.density()[0]+1;
-            n.second() = desc.density()[1]+1;
+            n.first() = desc.density()[0] + 1;
+            n.second() = desc.density()[1] + 1;
         }
         break;
     }
@@ -293,8 +293,8 @@ void Foam::blockFaces::projectFace::project
         {
             forAll(points, i)
             {
-                const linePointRef ln(points[i], points[i]+residual[i]);
-                debugStr().write(ln);
+                const point predicted(points[i] + residual[i]);
+                debugStr().write(linePointRef(points[i], predicted));
             }
         }
 
@@ -345,8 +345,8 @@ void Foam::blockFaces::projectFace::project
         {
             forAll(points, i)
             {
-                const linePointRef ln(points[i], points[i]+residual[i]);
-                debugStr().write(ln);
+                const point predicted(points[i] + residual[i]);
+                debugStr().write(linePointRef(points[i], predicted));
             }
         }
 

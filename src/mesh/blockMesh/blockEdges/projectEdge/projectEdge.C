@@ -111,7 +111,7 @@ Foam::projectEdge::projectEdge
 Foam::point Foam::projectEdge::position(const scalar lambda) const
 {
     // Initial guess
-    const point start(points_[start_]+lambda*(points_[end_]-points_[start_]));
+    const point start(points_[start_] + lambda*(points_[end_]-points_[start_]));
 
     point near(start);
 
@@ -255,8 +255,8 @@ Foam::projectEdge::position(const scalarList& lambdas) const
         {
             forAll(points, i)
             {
-                const linePointRef ln(points[i], points[i]+residual[i]);
-                debugStr().write(ln);
+                const point predicted(points[i] + residual[i]);
+                debugStr().write(linePointRef(points[i], predicted));
             }
         }
 

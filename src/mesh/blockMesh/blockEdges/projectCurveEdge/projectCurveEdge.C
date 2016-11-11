@@ -240,8 +240,8 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
         {
             forAll(points, i)
             {
-                const linePointRef ln(points[i], points[i]+residual[i]);
-                debugStr().write(ln);
+                const point predicted(points[i] + residual[i]);
+                debugStr().write(linePointRef(points[i], predicted));
             }
         }
 
