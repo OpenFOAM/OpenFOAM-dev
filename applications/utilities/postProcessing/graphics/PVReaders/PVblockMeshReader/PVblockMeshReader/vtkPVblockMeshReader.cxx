@@ -60,7 +60,6 @@ vtkPVblockMeshReader::vtkPVblockMeshReader()
     foamData_ = nullptr;
 
     ShowPointNumbers = 1;
-    UpdateGUI = 0;
 
     BlockSelection = vtkDataArraySelection::New();
     CurvedEdgesSelection = vtkDataArraySelection::New();

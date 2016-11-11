@@ -30,19 +30,6 @@
       </Documentation>
     </IntVectorProperty>
 
-    <!-- Update GUI check box -->
-    <IntVectorProperty
-      name="UpdateGUI"
-      command="SetUpdateGUI"
-      number_of_elements="1"
-      default_values="0"
-      animateable="0">
-      <BooleanDomain name="bool"/>
-      <Documentation>
-        A simple way to cause a reader GUI modification.
-      </Documentation>
-    </IntVectorProperty>
-
     <!-- Refresh button -->
     <IntVectorProperty
       name="UiRefresh"
@@ -116,6 +103,7 @@
 
   <Hints>
     <Property name="FileName" show="0"/>
+    <Property name="UiRefresh" show="0"/>
     <Property name="UiShowPointNumbers" show="0"/>
     <ReaderFactory extensions="blockMesh"
                    file_description="OpenFOAM blockMesh"/>
