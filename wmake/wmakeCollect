@@ -99,6 +99,12 @@ then
 fi
 
 
+if [ -n "$WM_QUIET" ]
+then
+    E="@"
+fi
+
+
 # Collected makefile for this build
 makefile="$WM_COLLECT_DIR.Makefile"
 
@@ -117,6 +123,9 @@ then
     # Make sure directories exist
     mkdir -p $WM_COLLECT_DIR
 
+    # The current source file
+    source="${@: -3:1}"
+
     # The current target
     object="${@: -1:1}"
 
@@ -128,7 +137,9 @@ then
 
     # Add the build rule for the current target
     echo "$object: $makefile" >> $file
-    echo -e "\tcd $PWD && \\" >> $file
+    [ -z "$E" ] ||
+        echo -e "\t@echo \"    compiling: ${source##*/}\"" >> $file
+    echo -e "\t$E cd $PWD && \\" >> $file
     echo -e "\t${@:1:($#-1)} $object" >> $file
     echo >> $file
 else

@@ -67,7 +67,7 @@ Usage: $Script [OPTION] [dir]
        $Script [OPTION] target [dir [MakeDir]]
 
 options:
-  -s | -silent      'silent' mode (does not echo commands)
+  -s | -silent      Quiet mode (does not echo commands)
   -a | -all         wmake all sub-directories, running Allwmake if present
   -q | -queue       wmakeQueue all sub-directories, running Allwmake if present
   -k or -non-stop   Compile without stopping when errors occur
@@ -138,7 +138,7 @@ do
             usage
             ;;
         -s | -silent)
-            make="$make -s"
+            export WM_QUIET=1
             ;;
         -a | -all | all)
             all="all"

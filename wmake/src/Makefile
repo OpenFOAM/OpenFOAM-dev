@@ -60,18 +60,18 @@ include $(GENERAL_RULES)/general
 all:  $(WMAKE_BIN)/dirToString $(WMAKE_BIN)/wmkdep
 
 clean:
-	rm -f $(WMAKE_BIN)/* 2>/dev/null
-
+	@E rm -f $(WMAKE_BIN)/* 2>/dev/null
 
 $(WMAKE_BIN)/dirToString: dirToString.c
 	@mkdir -p $(WMAKE_BIN)
-	$(cc) $(cFLAGS) dirToString.c -o $(WMAKE_BIN)/dirToString
-
+	$(call QUIET_MESSAGE, "    compile: $<")
+	$E $(cc) $(cFLAGS) dirToString.c -o $(WMAKE_BIN)/dirToString
 
 $(WMAKE_BIN)/wmkdep: wmkdep.l
 	@mkdir -p $(WMAKE_BIN)
-	flex wmkdep.l
-	$(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep
+	$(call QUIET_MESSAGE, "   lex: $<")
+	$E flex wmkdep.l; \
+	$E $(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep
 	@rm -f lex.yy.c 2>/dev/null
 
 

@@ -130,16 +130,18 @@ LIB_HEADER_DIRS = \
 
 $(EXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(EXE)
-	$(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
+	$(call QUIET_MESSAGE, "    ld: $(notdir $(EXE))")
+	$E $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) \
 	    $(LINK_LIBS) $(GLIBS) -o $(EXE)
 
 exe:    $(SEXE)
-	@echo \'$(SEXE)\' is up to date.
+	@echo "->> $(SEXE)"
 
 $(SEXE):$(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(SEXE)
-	$(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
+	$(call QUIET_MESSAGE, "    ld: $(notdir $(SEXE))")
+	$E $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
 	    $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXE)
 
 
@@ -150,29 +152,33 @@ $(SEXE):$(OBJECTS)
 objects: $(OBJECTS)
 
 libso:  $(LIB).$(SO)
-	@echo \'$(LIB).$(SO)\' is up to date.
+	@echo "->> $(LIB).$(SO)"
 
 $(LIB).$(SO): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
-	$(LINKLIBSO) $(OBJECTS) -L$(LIB_PLATFORMS) \
+	$(call QUIET_MESSAGE, "    ld: $(notdir $(LIB)).$(SO)")
+	$E $(LINKLIBSO) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
 
 lib:    $(LIB).a
-	@echo \'$(LIB).a\' is up to date.
+	@echo "->> $(LIB).a"
 
 $(LIB).a: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).a
-	$(AR) $(ARFLAGS) $(LIB).a $(OBJECTS)
-	$(RANLIB) $(LIB).a
+	$(call QUIET_MESSAGE, "    ar: $(notdir $(LIB))")
+	$E $(AR) $(ARFLAGS) $(LIB).a $(OBJECTS)
+	$(call QUIET_MESSAGE, "    ranlib: $(notdir $(LIB))")
+	$E $(RANLIB) $(LIB).a
 
 libo:   $(LIB).o
-	@echo \'$(LIB).o\' is up to date.
+	@echo "->> $(LIB).o"
 
 $(LIB).o: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).o
-	$(LD) -r -o $(LIB).o $(OBJECTS)
+	$(call QUIET_MESSAGE, "    ld: $(notdir $(LIB)).o")
+	$E $(LD) -r -o $(LIB).o $(OBJECTS)
 
 
 #------------------------------------------------------------------------------
@@ -205,4 +211,4 @@ ifeq ($(findstring lnInclude,$(MAKECMDGOALS))$(findstring updatedep,$(MAKECMDGOA
 endif
 
 
-#------------------------------------------------------------------------------
+#----------------------------- vim: set ft=make: ------------------------------

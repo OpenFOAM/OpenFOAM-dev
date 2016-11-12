@@ -1,15 +1,29 @@
 #-------------------------------*- makefile -*---------------------------------
 
+ifneq ("$(WM_QUIET)","")
+    E=@
+    define QUIET_MESSAGE
+        @echo $1 ;
+    endef
+    QUIET_OP=-s
+else
+    E=
+    define QUIET_MESSAGE
+    endef
+    QUIET_OP=
+endif
+
 define DEFINE_TRANSFORM
 $(OBJECTS_DIR)/%.o : %$1
-	$$($(subst .,,$(1))too)
+	$(call QUIET_MESSAGE, "    $(subst .,,$(1))too: $(value <F)")
+	$E $$($(subst .,,$(1))too)
 endef
 
 $(foreach s,$(SUFFIXES),$(eval $(call DEFINE_TRANSFORM,$(s))))
 
 $(OBJECTS_DIR)/%.dep : %
 	@$(WM_SCRIPTS)/makeTargetDir $@
-	@$(WMAKE_BIN)/wmkdep -I$(*D) $(LIB_HEADER_DIRS) $< | \
+	@$(WMAKE_BIN)/wmkdep $(QUIET_OP) -I$(*D) $(LIB_HEADER_DIRS) $< | \
 		sed -e 's,^$(WM_PROJECT_DIR)/,$$(WM_PROJECT_DIR)/,' \
 			-e 's,^$(WM_THIRD_PARTY_DIR)/,$$(WM_THIRD_PARTY_DIR)/,' > $@
 

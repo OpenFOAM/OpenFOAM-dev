@@ -1,4 +1,5 @@
 SUFFIXES += .L
 
-Ltoo = $(WM_SCHEDULER) flex -+ -o$(@D)/$(<F).C -f $< $(AND) \
+Ltoo = $E $(call QUIET_MESSAGE, "    flex++: $(<F)") \
+    $(WM_SCHEDULER) flex -+ -o$(@D)/$(<F).C -f $< $(AND) \
     $(CC) $(c++FLAGS) $(c++LESSWARN) -c $(@D)/$(<F).C -o $@

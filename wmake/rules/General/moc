@@ -1,4 +1,5 @@
 SUFFIXES += .qt
 
-qttoo = $(WM_SCHEDULER) $(QTDIR)/bin/moc -f $< -o $(@D)/$(<F).C $(AND) \
-    $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@
+qttoo = $E $(call QUIET_MESSAGE, "    moc: $(<F)") \
+       $(WM_SCHEDULER) $(QTDIR)/bin/moc -f $< -o $(@D)/$(<F).C $(AND) \
+       $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@

@@ -47,6 +47,7 @@ Usage
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
+#include <libgen.h>
 
 void nextFile(const char* fileName);
 void importFile(const char* fileName);
@@ -145,7 +146,7 @@ const char* bufferPaths[FILE_STACK_SIZE];
 int main(int argc, char* argv[])
 {
     char *basePos, *dotPos;
-    int i;
+    int i, silent;
 
     if (argc == 1)
     {
@@ -154,7 +155,20 @@ int main(int argc, char* argv[])
     }
 
     sourceFile = strdup(argv[argc-1]);
-    fprintf(stderr, "Making dependency list for source file %s\n", sourceFile);
+    silent = (strncmp(argv[1], "-s", 2) == 0);
+    if (silent)
+    {
+        fprintf(stderr, "    wmkdep: %s\n", basename(sourceFile));
+    }
+    else
+    {
+        fprintf
+        (
+            stderr,
+            "Making dependency list for source file %s\n",
+            sourceFile
+        );
+    }
 
 
     if ((basePos = strrchr(sourceFile, '/')) == NULL)

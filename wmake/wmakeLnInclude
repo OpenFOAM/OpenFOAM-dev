@@ -138,9 +138,12 @@ fi
 
 cd $incDir || exit 1
 
-[ "$silentOpt" = true ] || {
+if [ "$silentOpt" = true -o -n "$WM_QUIET" ]
+then
+    echo "    ln: $incDir" 1>&2
+else
     echo "$Script: linking include files to $incDir" 1>&2
-}
+fi
 
 
 #------------------------------------------------------------------------------
