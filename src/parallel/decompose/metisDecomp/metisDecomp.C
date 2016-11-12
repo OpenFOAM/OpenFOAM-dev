@@ -67,7 +67,7 @@ Foam::label Foam::metisDecomp::decompose
 
     // Processor weights initialised with no size, only used if specified in
     // a file
-    Field<scalar> processorWeights;
+    Field<real_t> processorWeights;
 
     // Cell weights (so on the vertices of the dual)
     List<label> cellWeights;
