@@ -138,7 +138,7 @@ $(EXE): $(OBJECTS)
 	$E $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) \
 	    $(LINK_LIBS) $(GLIBS) -o $(EXE)
-	@echo "->> $(EXE)"
+	@echo "    ->> $(EXE)"
 
 .PHONY: exe
 exe: $(SEXE) | silent
@@ -148,7 +148,7 @@ $(SEXE): $(OBJECTS)
 	$(call QUIET_MESSAGE,ld,$(notdir $(SEXE)))
 	$E $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
 	    $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXE)
-	@echo "->> $(SEXE)"
+	@echo "    ->> $(SEXE)"
 
 
 #------------------------------------------------------------------------------
@@ -166,7 +166,7 @@ $(LIB).$(SO): $(OBJECTS)
 	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).$(SO))
 	$E $(LINKLIBSO) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
-	@echo "->> $(LIB).$(SO)"
+	@echo "    ->> $(LIB).$(SO)"
 
 .PHONY: lib
 lib: $(LIB).a | silent
@@ -178,7 +178,7 @@ $(LIB).a: $(OBJECTS)
 	$E $(AR) $(ARFLAGS) $(LIB).a $(OBJECTS)
 	$(call QUIET_MESSAGE,ranlib,$(notdir $(LIB)))
 	$E $(RANLIB) $(LIB).a
-	@echo "->> $(LIB).a"
+	@echo "    ->> $(LIB).a"
 
 .PHONY: libo
 libo: $(LIB).o | silent
@@ -188,7 +188,7 @@ $(LIB).o: $(OBJECTS)
 	@rm -f $(LIB).o
 	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).o)
 	$E $(LD) -r -o $(LIB).o $(OBJECTS)
-	@echo "->> $(LIB).o"
+	@echo "    ->> $(LIB).o"
 
 
 #------------------------------------------------------------------------------
