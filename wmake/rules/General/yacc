@@ -1,11 +1,13 @@
 SUFFIXES += .y .Y
 
-ytoo = $(WM_SCHEDULER) yacc -v -d $< $(AND) \
+ytoo = $E $(call QUIET_MESSAGE, "    yacc: $(<F)") \
+    $(WM_SCHEDULER) yacc -v -d $< $(AND) \
     mv y.tab.c $(@D)/$(<F).c $(AND) \
     mv y.tab.h $(@D)/parser.h $(AND) \
     $(CC) $(c++FLAGS) -c $(@D)/$(<F).c -o $@
 
-Ytoo = $(WM_SCHEDULER) yacc -v -d $< $(AND) \
+Ytoo = $E $(call QUIET_MESSAGE, "    yacc: $(<F)") \
+    $(WM_SCHEDULER) yacc -v -d $< $(AND) \
     mv y.tab.c $(@D)/$(<F).C $(AND) \
     mv y.tab.h $(@D)/parser.H $(AND) \
     $(CC) $(c++FLAGS) -c $(@D)/$(<F).C -o $@
