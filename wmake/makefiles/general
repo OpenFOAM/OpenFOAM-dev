@@ -130,19 +130,21 @@ LIB_HEADER_DIRS = \
 
 $(EXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(EXE)
-	$(call QUIET_MESSAGE, "    ld: $(notdir $(EXE))")
+	$(call QUIET_MESSAGE,ld,$(notdir $(EXE)))
 	$E $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) \
 	    $(LINK_LIBS) $(GLIBS) -o $(EXE)
+	@echo "->> $(EXE)"
 
 exe:    $(SEXE)
 	@echo "->> $(SEXE)"
 
 $(SEXE):$(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(SEXE)
-	$(call QUIET_MESSAGE, "    ld: $(notdir $(SEXE))")
+	$(call QUIET_MESSAGE,ld,$(notdir $(SEXE)))
 	$E $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
 	    $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXE)
+	@echo "->> $(SEXE)"
 
 
 #------------------------------------------------------------------------------
@@ -156,7 +158,7 @@ libso:  $(LIB).$(SO)
 
 $(LIB).$(SO): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
-	$(call QUIET_MESSAGE, "    ld: $(notdir $(LIB)).$(SO)")
+	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).$(SO))
 	$E $(LINKLIBSO) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
 
@@ -166,9 +168,9 @@ lib:    $(LIB).a
 $(LIB).a: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).a
-	$(call QUIET_MESSAGE, "    ar: $(notdir $(LIB))")
+	$(call QUIET_MESSAGE,ar,$(notdir $(LIB)))
 	$E $(AR) $(ARFLAGS) $(LIB).a $(OBJECTS)
-	$(call QUIET_MESSAGE, "    ranlib: $(notdir $(LIB))")
+	$(call QUIET_MESSAGE,ranlib,$(notdir $(LIB)))
 	$E $(RANLIB) $(LIB).a
 
 libo:   $(LIB).o
@@ -177,7 +179,7 @@ libo:   $(LIB).o
 $(LIB).o: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).o
-	$(call QUIET_MESSAGE, "    ld: $(notdir $(LIB)).o")
+	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).o)
 	$E $(LD) -r -o $(LIB).o $(OBJECTS)
 
 

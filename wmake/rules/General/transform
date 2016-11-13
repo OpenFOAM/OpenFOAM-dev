@@ -3,7 +3,7 @@
 ifneq ("$(WM_QUIET)","")
     E=@
     define QUIET_MESSAGE
-        @echo $1 ;
+        @echo "    $1: $2";
     endef
     QUIET_OP=-s
 else
@@ -15,7 +15,7 @@ endif
 
 define DEFINE_TRANSFORM
 $(OBJECTS_DIR)/%.o : %$1
-	$(call QUIET_MESSAGE, "    $(subst .,,$(1))too: $(value <F)")
+	$(call QUIET_MESSAGE,$(subst .,,$(1))too,$(value <F))
 	$E $$($(subst .,,$(1))too)
 endef
 

@@ -1,6 +1,6 @@
 SUFFIXES += .y
 
-ytoo = $E $(call QUIET_MESSAGE, "    byacc: $(<F)") \
+ytoo = $E $(call QUIET_MESSAGE,byacc,$(<F)) \
     $(WM_SCHEDULER) byacc -v $(YYPREFIX) -d $< $(AND) \
     mv y.tab.c $(@D)/$(<F).C $(AND) \
     mv y.tab.h $(@D)/$(<F).H $(AND) \

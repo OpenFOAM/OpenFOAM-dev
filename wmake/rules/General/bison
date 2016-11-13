@@ -1,12 +1,12 @@
 SUFFIXES += .y .Y
 
-ytoo = $E $(call QUIET_MESSAGE, "    bison: $(<F)) \
+ytoo = $E $(call QUIET_MESSAGE,bison,$(<F)) \
     $(WM_SCHEDULER) bison -v -d -y $< $(AND) \
     mv y.tab.c $(@D)/$(<F).c $(AND) \
     mv y.tab.h $(@D)/$(<F).h $(AND) \
     $(cc) $(cFLAGS) -c  $(@D)/$(<F).c -o $@
 
-Ytoo = $E $(call QUIET_MESSAGE, "    bison: $(<F)) \
+Ytoo = $E $(call QUIET_MESSAGE,bison,$(<F)) \
     $(WM_SCHEDULER) bison -v -d -y $< $(AND) \
     mv y.tab.c $(@D)/$(<F).C $(AND) \
     mv y.tab.h $(@D)/$(<F).H $(AND) \

@@ -1,6 +1,6 @@
 SUFFIXES += .y
 
-ytoo = $E $(call QUIET_MESSAGE, "    btyacc: $(<F)") \
+ytoo = $E $(call QUIET_MESSAGE,btyacc,$(<F)) \
     $(WM_SCHEDULER) btyacc -v -d $(SKELETON) $< $(AND) \
     mv y_tab.c $(@D)/$(<F).C $(AND) \
     mv y_tab.h $(@D)/$(<F).H $(AND) \
