@@ -71,7 +71,7 @@ $(WMAKE_BIN)/wmkdep: wmkdep.l
 	@mkdir -p $(WMAKE_BIN)
 	$(call QUIET_MESSAGE, "   lex: $<")
 	$E flex wmkdep.l; \
-	$E $(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep
+	$(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep
 	@rm -f lex.yy.c 2>/dev/null
 
 
