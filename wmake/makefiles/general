@@ -128,16 +128,20 @@ LIB_HEADER_DIRS = \
 # Define link statements for executables
 #------------------------------------------------------------------------------
 
+.PHONY: all
+all: $(EXE)
+	@:
+
+.PHONY: silent
+silent:
+	@:
+
 $(EXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(EXE)
 	$(call QUIET_MESSAGE,ld,$(EXE))
 	$E $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) \
 	    $(LINK_LIBS) $(GLIBS) -o $(EXE)
-
-.PHONY: silent
-silent:
-	@:
 
 .PHONY: exe
 exe: $(SEXE) | silent
