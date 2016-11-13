@@ -128,27 +128,25 @@ LIB_HEADER_DIRS = \
 # Define link statements for executables
 #------------------------------------------------------------------------------
 
-.PHONY: silent
-silent:
-	@:
-
 $(EXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(EXE)
-	$(call QUIET_MESSAGE,ld,$(notdir $(EXE)))
+	$(call QUIET_MESSAGE,ld,$(EXE))
 	$E $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) \
 	    $(LINK_LIBS) $(GLIBS) -o $(EXE)
-	@echo "    ->> $(EXE)"
+
+.PHONY: silent
+silent:
+	@:
 
 .PHONY: exe
 exe: $(SEXE) | silent
 
 $(SEXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(SEXE)
-	$(call QUIET_MESSAGE,ld,$(notdir $(SEXE)))
+	$(call QUIET_MESSAGE,ld,$(SEXE))
 	$E $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
 	    $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXE)
-	@echo "    ->> $(SEXE)"
 
 
 #------------------------------------------------------------------------------
@@ -163,10 +161,9 @@ libso: $(LIB).$(SO) | silent
 
 $(LIB).$(SO): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
-	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).$(SO))
+	$(call QUIET_MESSAGE,ld,$(LIB).$(SO))
 	$E $(LINKLIBSO) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
-	@echo "    ->> $(LIB).$(SO)"
 
 .PHONY: lib
 lib: $(LIB).a | silent
@@ -174,11 +171,10 @@ lib: $(LIB).a | silent
 $(LIB).a: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).a
-	$(call QUIET_MESSAGE,ar,$(notdir $(LIB)))
+	$(call QUIET_MESSAGE,ar,$(LIB))
 	$E $(AR) $(ARFLAGS) $(LIB).a $(OBJECTS)
 	$(call QUIET_MESSAGE,ranlib,$(notdir $(LIB)))
 	$E $(RANLIB) $(LIB).a
-	@echo "    ->> $(LIB).a"
 
 .PHONY: libo
 libo: $(LIB).o | silent
@@ -186,9 +182,8 @@ libo: $(LIB).o | silent
 $(LIB).o: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).o
-	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).o)
+	$(call QUIET_MESSAGE,ld,$(LIB).o)
 	$E $(LD) -r -o $(LIB).o $(OBJECTS)
-	@echo "    ->> $(LIB).o"
 
 
 #------------------------------------------------------------------------------
