@@ -1,13 +1,11 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # Run from this directory
 makeType=${1:-libso}
-set -x
 
 wclean $makeType regionModel
 wclean $makeType pyrolysisModels
 wclean $makeType surfaceFilmModels
 wclean $makeType thermalBaffleModels
 wclean $makeType regionCoupling
-
 
 #------------------------------------------------------------------------------

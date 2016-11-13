@@ -3,7 +3,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
-#set -x
 
 case "$ParaView_VERSION" in
 3*)
@@ -22,11 +21,8 @@ case "$ParaView_VERSION" in
         PV3blockMeshReader/Allwmake $targetType $*
         PV3FoamReader/Allwmake $targetType $*
     else
-        echo "ERROR: ParaView not found in $ParaView_DIR"
+        echo "    ERROR: ParaView not found in $ParaView_DIR"
     fi
-    ;;
-*)
-    echo "WARN: PV3 readers not building: ParaView_VERSION=$ParaView_VERSION"
     ;;
 esac
 

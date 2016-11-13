@@ -122,8 +122,9 @@ then
         }
     fi
 
-    # Provide some feedback
-    echo "$Script $targetType ${dir:-.}"
+    # Print command
+    [ -z "$targetType" ] || targetSpace=" "
+    echo "$Script $targetType$targetSpace${dir:-.}"
 fi
 
 
@@ -164,7 +165,7 @@ then
 
         if [ -d $objectsDir ]
         then
-            echo "Removing redundant object directories in $objectsDir"
+            echo "    Removing redundant object directories in $objectsDir"
 
             find $objectsDir -name 'variables' -print | \
             while read variablesFile
@@ -253,7 +254,7 @@ unset targetType
 if [ -d $MakeDir ]
 then
     objectsDir=$MakeDir/$WM_OPTIONS
-    if echo $PWD | grep "$WM_PROJECT_DIR"
+    if [ $(echo $PWD | grep "$WM_PROJECT_DIR") ]
     then
         platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
         objectsDir=$platformPath$(echo $PWD | sed s%$WM_PROJECT_DIR%% )

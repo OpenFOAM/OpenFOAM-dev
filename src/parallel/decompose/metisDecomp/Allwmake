@@ -8,14 +8,14 @@ cd ${0%/*} || exit 1    # Run from this directory
 if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/metis`
 then
     . $settings
-    echo "using METIS_ARCH_PATH=$METIS_ARCH_PATH"
+    echo "    using METIS_ARCH_PATH=$METIS_ARCH_PATH"
     if [ -r $METIS_ARCH_PATH/lib/libmetis.so ]
     then
         wmake $targetType
     fi
 else
     echo
-    echo "Error: no config.sh/metis settings"
+    echo "    Error: no config.sh/metis settings"
     echo
 fi
 

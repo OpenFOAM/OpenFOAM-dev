@@ -17,10 +17,7 @@ wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
     exit 1
 }
 
-set -x
-
 wmake -all $targetType solvers
 wmake -all $targetType utilities
-
 
 #------------------------------------------------------------------------------

@@ -4,26 +4,24 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-# get SCOTCH_VERSION, SCOTCH_ARCH_PATH
+
+# Get SCOTCH_VERSION, SCOTCH_ARCH_PATH
 if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/scotch`
 then
     . $settings
-    echo "using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
+    echo "    using SCOTCH_ARCH_PATH=$SCOTCH_ARCH_PATH"
 else
     echo
-    echo "Error: no config.sh/scotch settings"
+    echo "    Error: no config.sh/scotch settings"
     echo
 fi
 
 
-#
-# define how to create an mpi-versioned library of $targetType
+# Define how to create an mpi-versioned library of $targetType
 # compile into qualified directory
 # use sentinel file to handle version changes
-#
 wmakeMpiLib()
 {
-    set +x
     for libName
     do
     (
@@ -36,10 +34,7 @@ wmakeMpiLib()
         touch "$whichmpi" "$whichscotch"
     )
     done
-    set -x
 }
-
-set -x
 
 wmakeLnInclude decompositionMethods
 
@@ -52,18 +47,15 @@ then
         wmakeMpiLib ptscotchDecomp
     fi
 else
-    echo
-    echo "Skipping scotchDecomp (ptscotchDecomp)"
-    echo
+    echo "    skipping scotchDecomp (ptscotchDecomp)"
 fi
 
 
 # Try and build metisDecomp (has own logic)
 (cd metisDecomp && ./Allwmake $targetType)
 
-
 wmake $targetType decompositionMethods
-
 wmake $targetType decompose
+
 
 #------------------------------------------------------------------------------

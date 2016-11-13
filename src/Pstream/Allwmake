@@ -10,27 +10,22 @@ cd ${0%/*} || exit 1    # Run from this directory
 # use sentinel file to handle version changes
 wmakeMpiLib()
 {
-    set +x
     for libName
     do
     (
         WM_OPTIONS="$WM_OPTIONS$WM_MPLIB"
         whichmpi="$WM_PROJECT_DIR/platforms/$WM_OPTIONS/src/Pstream/$libName/using:$FOAM_MPI"
         [ -e "$whichmpi" ] || wclean $libName
-        echo "wmake $targetType $libName"
         wmake $targetType $libName
         touch "$whichmpi"
     )
     done
-    set -x
 }
 
-set -x
 wmake $targetType dummy
 
 case "$WM_MPLIB" in
 *MPI*)
-    set +x
     wmakeMpiLib mpi
     ;;
 esac

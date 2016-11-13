@@ -5,7 +5,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 # clean the qualified directory
 wcleanMpiLib()
 {
-    set +x
     for libName
     do
     (
@@ -13,15 +12,12 @@ wcleanMpiLib()
         wclean $libName
     )
     done
-    set -x
 }
 
-set -x
 wclean dummy
 
 case "$WM_MPLIB" in
 *MPI*)
-    set +x
     wcleanMpiLib mpi
     ;;
 esac

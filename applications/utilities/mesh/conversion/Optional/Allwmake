@@ -6,7 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 # Parse arguments for compilation (at least for error catching)
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
-set -x
 
 # build libccmio and create lnInclude directory
 $WM_THIRD_PARTY_DIR/AllwmakeLibccmio

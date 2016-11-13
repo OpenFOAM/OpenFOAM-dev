@@ -17,8 +17,6 @@ wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
     exit 1
 }
 
-set -x
-
 # Update OpenFOAM version strings if required
 wmakePrintBuild -check || wrmo OpenFOAM/global/global.o 2>/dev/null
 

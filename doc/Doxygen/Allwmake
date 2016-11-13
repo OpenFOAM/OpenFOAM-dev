@@ -2,9 +2,9 @@
 cd ${0%/*} || exit 1    # Run from this directory
 
 [ -d "$WM_PROJECT_DIR" ] || {
-    echo "Error: WM_PROJECT_DIR directory does not exist"
-    echo "    Check the OpenFOAM entries in your dot-files and source them."
-    echo "    WM_PROJECT_DIR=$WM_PROJECT_DIR"
+    echo "    Error: WM_PROJECT_DIR directory does not exist"
+    echo "        Check the OpenFOAM entries in your dot-files and source them."
+    echo "        WM_PROJECT_DIR=$WM_PROJECT_DIR"
     exit 1
 }
 
@@ -61,8 +61,6 @@ do
 done
 
 #------------------------------------------------------------------------------
-
-set -x
 
 rm -rf latex man
 

@@ -11,7 +11,7 @@ unset COMP_FLAGS LINK_FLAGS
 #
 if [ -f /usr/include/readline/readline.h ]
 then
-    echo "Found <readline/readline.h>  --  enabling readline support."
+    echo "    found <readline/readline.h>  --  enabling readline support."
     export COMP_FLAGS="-DHAS_READLINE"
     export LINK_FLAGS="-lreadline"
 fi

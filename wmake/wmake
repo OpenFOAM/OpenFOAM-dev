@@ -268,6 +268,10 @@ then
             exit 1
         }
     fi
+
+    # Print command
+    [ -z "$targetType" ] || targetSpace=" "
+    echo "$Script $targetType$targetSpace${dir:-.}"
 fi
 
 
@@ -386,7 +390,7 @@ fi
 #------------------------------------------------------------------------------
 
 objectsDir=$MakeDir/$WM_OPTIONS
-if echo $PWD | grep "$WM_PROJECT_DIR"
+if [ $(echo $PWD | grep "$WM_PROJECT_DIR") ]
 then
     platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
     objectsDir=$platformPath$(echo $PWD | sed s%$WM_PROJECT_DIR%% )
