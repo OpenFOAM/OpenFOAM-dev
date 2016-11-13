@@ -1,4 +1,4 @@
-#-------------------------------*- makefile -*---------------------------------
+#----------------------------*- makefile-gmake -*------------------------------
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
@@ -128,6 +128,10 @@ LIB_HEADER_DIRS = \
 # Define link statements for executables
 #------------------------------------------------------------------------------
 
+.PHONY: silent
+silent:
+	@:
+
 $(EXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(EXE)
 	$(call QUIET_MESSAGE,ld,$(notdir $(EXE)))
@@ -136,10 +140,10 @@ $(EXE): $(OBJECTS)
 	    $(LINK_LIBS) $(GLIBS) -o $(EXE)
 	@echo "->> $(EXE)"
 
-exe:    $(SEXE)
-	@echo "->> $(SEXE)"
+.PHONY: exe
+exe: $(SEXE) | silent
 
-$(SEXE):$(OBJECTS)
+$(SEXE): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(SEXE)
 	$(call QUIET_MESSAGE,ld,$(notdir $(SEXE)))
 	$E $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
@@ -151,19 +155,21 @@ $(SEXE):$(OBJECTS)
 # Define link statements for libraries
 #------------------------------------------------------------------------------
 
-objects: $(OBJECTS)
+.PHONY: objects
+objects: $(OBJECTS) | silent
 
-libso:  $(LIB).$(SO)
-	@echo "->> $(LIB).$(SO)"
+.PHONY: libso
+libso: $(LIB).$(SO) | silent
 
 $(LIB).$(SO): $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).$(SO))
 	$E $(LINKLIBSO) $(OBJECTS) -L$(LIB_PLATFORMS) \
 	    $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
+	@echo "->> $(LIB).$(SO)"
 
-lib:    $(LIB).a
-	@echo "->> $(LIB).a"
+.PHONY: lib
+lib: $(LIB).a | silent
 
 $(LIB).a: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
@@ -172,15 +178,17 @@ $(LIB).a: $(OBJECTS)
 	$E $(AR) $(ARFLAGS) $(LIB).a $(OBJECTS)
 	$(call QUIET_MESSAGE,ranlib,$(notdir $(LIB)))
 	$E $(RANLIB) $(LIB).a
+	@echo "->> $(LIB).a"
 
-libo:   $(LIB).o
-	@echo "->> $(LIB).o"
+.PHONY: libo
+libo: $(LIB).o | silent
 
 $(LIB).o: $(OBJECTS)
 	@$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	@rm -f $(LIB).o
 	$(call QUIET_MESSAGE,ld,$(notdir $(LIB)).o)
 	$E $(LD) -r -o $(LIB).o $(OBJECTS)
+	@echo "->> $(LIB).o"
 
 
 #------------------------------------------------------------------------------
@@ -195,7 +203,7 @@ lnInclude: $(MAKE_DIR)/files $(MAKE_DIR)/options
 # Declare all object files depend on $(OBJECTS_DIR)/options
 #------------------------------------------------------------------------------
 
-$(OBJECTS) : $(OBJECTS_DIR)/options
+$(OBJECTS): $(OBJECTS_DIR)/options
 $(foreach S,$(SOURCE),$(eval $(OBJECTS_DIR)/$(basename $S).o : $(OBJECTS_DIR)/$S.dep))
 
 
