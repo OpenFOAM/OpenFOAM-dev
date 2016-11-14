@@ -14,7 +14,6 @@ else
     define VERBOSE_MESSAGE
         @echo "$1 $2";
     endef
-    QUIET_OP=
 endif
 
 define DEFINE_TRANSFORM
