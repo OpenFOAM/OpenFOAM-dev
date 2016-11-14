@@ -155,21 +155,6 @@ int main(int argc, char* argv[])
     }
 
     sourceFile = strdup(argv[argc-1]);
-    silent = (strncmp(argv[1], "-s", 2) == 0);
-    if (silent)
-    {
-        fprintf(stderr, "    wmkdep: %s\n", basename(sourceFile));
-    }
-    else
-    {
-        fprintf
-        (
-            stderr,
-            "Making dependency list for source file %s\n",
-            sourceFile
-        );
-    }
-
 
     if ((basePos = strrchr(sourceFile, '/')) == NULL)
     {

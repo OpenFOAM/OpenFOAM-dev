@@ -5,10 +5,14 @@ ifneq ("$(WM_QUIET)","")
     define QUIET_MESSAGE
         @echo "    $1: $2";
     endef
-    QUIET_OP=-s
+    define VERBOSE_MESSAGE
+    endef
 else
     E=
     define QUIET_MESSAGE
+    endef
+    define VERBOSE_MESSAGE
+        @echo "$1 $2";
     endef
     QUIET_OP=
 endif
@@ -22,8 +26,10 @@ endef
 $(foreach s,$(SUFFIXES),$(eval $(call DEFINE_TRANSFORM,$(s))))
 
 $(OBJECTS_DIR)/%.dep : %
+	$(call QUIET_MESSAGE,wmkdep,$(<F))
+	$(call VERBOSE_MESSAGE,Making dependency list for source file,$(<F))
 	@$(WM_SCRIPTS)/makeTargetDir $@
-	@$(WMAKE_BIN)/wmkdep $(QUIET_OP) -I$(*D) $(LIB_HEADER_DIRS) $< | \
+	@$(WMAKE_BIN)/wmkdep -I$(*D) $(LIB_HEADER_DIRS) $< | \
 		sed -e 's,^$(WM_PROJECT_DIR)/,$$(WM_PROJECT_DIR)/,' \
 			-e 's,^$(WM_THIRD_PARTY_DIR)/,$$(WM_THIRD_PARTY_DIR)/,' > $@
 
