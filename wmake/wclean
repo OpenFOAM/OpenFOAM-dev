@@ -231,7 +231,7 @@ then
         for dir in `find . \( -type d -a -name Make \)`
         do
             dir=${dir%/Make} # Parent directory - trim /Make from the end
-            echo $dir
+
             # If Allwclean exists execute otherwise wclean
             if [ -e "$dir/Allwclean" ]
             then
