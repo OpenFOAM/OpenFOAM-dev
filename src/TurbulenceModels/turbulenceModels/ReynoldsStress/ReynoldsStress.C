@@ -89,16 +89,13 @@ void Foam::ReynoldsStress<BasicTurbulenceModel>::correctWallShearStress
             forAll(curPatch, facei)
             {
                 // Calculate near-wall velocity gradient
-                tensor gradUw
+                const tensor gradUw
                     = (faceAreas[facei]/magFaceAreas[facei])*snGradU[facei];
 
-                // Calculate near-wall shear-stress tensor
-                tensor tauw = -nutw[facei]*2*dev(symm(gradUw));
-
-                // Reset the shear components of the stress tensor
-                Rw[facei].xy() = tauw.xy();
-                Rw[facei].xz() = tauw.xz();
-                Rw[facei].yz() = tauw.yz();
+                // Set the wall Reynolds-stress to the near-wall shear-stress
+                // Note: the spherical part of the normal stress is included in
+                // the pressure
+                Rw[facei] = -nutw[facei]*2*dev(symm(gradUw));
             }
         }
     }
