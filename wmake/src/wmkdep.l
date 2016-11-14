@@ -47,7 +47,6 @@ Usage
 #include <sys/types.h>
 #include <dirent.h>
 #include <errno.h>
-#include <libgen.h>
 
 void nextFile(const char* fileName);
 void importFile(const char* fileName);
