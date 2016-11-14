@@ -75,6 +75,14 @@ protected:
         //- Update the eddy-viscosity
         virtual void correctNut() = 0;
 
+        //- Return the source term for the momentum equation
+        template<class RhoFieldType>
+        tmp<fvVectorMatrix> DivDevRhoReff
+        (
+            const RhoFieldType& rho,
+            volVectorField& U
+        ) const;
+
 
 public:
 
