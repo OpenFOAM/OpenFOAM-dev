@@ -538,6 +538,18 @@ inline Cmpt cmptProduct
 
 
 template<class Form, class Cmpt, direction Ncmpts>
+inline Form cmptSqr
+(
+    const VectorSpace<Form, Cmpt, Ncmpts>& vs
+)
+{
+    Form v;
+    VectorSpaceOps<Ncmpts,0>::eqOp(v, vs, eqSqrOp<Cmpt>());
+    return v;
+}
+
+
+template<class Form, class Cmpt, direction Ncmpts>
 inline Form cmptMag
 (
     const VectorSpace<Form, Cmpt, Ncmpts>& vs
