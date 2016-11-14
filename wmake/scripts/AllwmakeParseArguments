@@ -91,20 +91,16 @@ done
 
 
 #------------------------------------------------------------------------------
-# Print command
-#------------------------------------------------------------------------------
-
-[ -z "$targetType" ] || targetSpace=" "
-echo "$Script $targetType$targetSpace$(echo $PWD | sed s%$WM_PROJECT_DIR/%% )"
-
-
-#------------------------------------------------------------------------------
 # Execute wmake -all if not called from wmake
 #------------------------------------------------------------------------------
 
 if [ -z "$fromWmake" ]
 then
     exec wmake -all $qOpt $*
+else
+    # Print command
+    [ -z "$targetType" ] || targetSpace=" "
+    echo "$Script $targetType$targetSpace$(echo $PWD | sed s%$WM_PROJECT_DIR/%% )"
 fi
 
 
