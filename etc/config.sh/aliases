@@ -70,7 +70,13 @@ alias run='cd $FOAM_RUN'
 # Refresh the environment
 # ~~~~~~~~~~~~~~~~~~~~~~~
 # For backward-compatibility unalias wmRefresh if it is defined as an alias
-[ "$(type -t wmRefresh)" = "alias" ] && unalias wmRefresh || unset wmRefresh
+if declare -f wmRefresh > /dev/null
+then
+    unset wmRefresh
+else
+    unalias wmRefresh 2> /dev/null
+fi
+
 wmRefresh()
 {
     wmProjectDir=$WM_PROJECT_DIR
