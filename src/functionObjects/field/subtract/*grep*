@@ -1,9 +1,0 @@
--*- mode: grep; default-directory: "~/OpenFOAM/OpenFOAM-dev/src/functionObjects/field/subtract/" -*-
-Grep started at Fri Nov 18 21:41:56
-
-grep --color -nH -e nitude *
-subtract.H:31:    Calculates the subtract of a field.
-subtract.H:66:        //- Calculate the subtract of the field and register the result
-subtract.H:70:        //- Calculate the subtract of the field and return true if successful
-
-Grep finished (matches found) at Fri Nov 18 21:41:56
