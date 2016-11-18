@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::fieldExpression
+    Foam::functionObjects::fieldsExpression
 
 Group
     grpFieldFunctionObjects
@@ -33,12 +33,12 @@ See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    fieldExpression.C
+    fieldsExpression.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_fieldExpression_H
-#define functionObjects_fieldExpression_H
+#ifndef functionObjects_fieldsExpression_H
+#define functionObjects_fieldsExpression_H
 
 #include "fvMeshFunctionObject.H"
 #include "volFieldsFwd.H"
@@ -51,10 +51,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class fieldExpression Declaration
+                         Class fieldsExpression Declaration
 \*---------------------------------------------------------------------------*/
 
-class fieldExpression
+class fieldsExpression
 :
     public fvMeshFunctionObject
 {
@@ -62,10 +62,10 @@ protected:
 
     // Protected member data
 
-        //- Name of field to process
-        word fieldName_;
+        //- Names of fields to process
+        wordList fieldNames_;
 
-        //- Name of result field
+        //- Name of result fields
         word resultName_;
 
 
@@ -73,7 +73,7 @@ protected:
 
         virtual bool calc() = 0;
 
-        void setResultName(const word& typeName, const word& defaultArg);
+        void setResultName(const word& typeName, const wordList& defaultArg);
 
 
 private:
@@ -81,47 +81,47 @@ private:
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        fieldExpression(const fieldExpression&);
+        fieldsExpression(const fieldsExpression&);
 
         //- Disallow default bitwise assignment
-        void operator=(const fieldExpression&);
+        void operator=(const fieldsExpression&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("fieldExpression");
+    TypeName("fieldsExpression");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        fieldExpression
+        fieldsExpression
         (
             const word& name,
             const Time& runTime,
             const dictionary& dict,
-            const word& fieldName = word::null,
+            const wordList& fieldNames = wordList::null(),
             const word& resultName = word::null
         );
 
 
     //- Destructor
-    virtual ~fieldExpression();
+    virtual ~fieldsExpression();
 
 
     // Member Functions
 
-        //- Read the fieldExpression data
+        //- Read the fieldsExpression data
         virtual bool read(const dictionary&);
 
-        //- Calculate the result field
+        //- Calculate the result fields
         virtual bool execute();
 
-        //- Write the result field
+        //- Write the result fields
         virtual bool write();
 
-        //- Clear the result field from the objectRegistry
+        //- Clear the result fields from the objectRegistry
         virtual bool clear();
 };
 

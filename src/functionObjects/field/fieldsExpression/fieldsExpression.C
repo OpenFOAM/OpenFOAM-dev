@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fieldExpression.H"
+#include "fieldsExpression.H"
 #include "dictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,29 +32,34 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(fieldExpression, 0);
+    defineTypeNameAndDebug(fieldsExpression, 0);
 }
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::functionObjects::fieldExpression::setResultName
+void Foam::functionObjects::fieldsExpression::setResultName
 (
     const word& typeName,
-    const word& defaultArg
+    const wordList& defaultArgs
 )
 {
-    if (fieldName_.empty())
+    if (fieldNames_.empty())
     {
-        fieldName_ = defaultArg;
+        fieldNames_ = defaultArgs;
     }
 
     if (resultName_.empty())
     {
-        if (fieldName_ != defaultArg)
+        if (fieldNames_ != defaultArgs)
         {
-            resultName_ = typeName + '(' + fieldName_ + ')';
+            resultName_ = typeName + '(';
+            forAll(fieldNames_, i)
+            {
+                resultName_ += fieldNames_[i];
+            }
+            resultName_ += ')';
         }
         else
         {
@@ -66,17 +71,17 @@ void Foam::functionObjects::fieldExpression::setResultName
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldExpression::fieldExpression
+Foam::functionObjects::fieldsExpression::fieldsExpression
 (
     const word& name,
     const Time& runTime,
     const dictionary& dict,
-    const word& fieldName,
+    const wordList& fieldNames,
     const word& resultName
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fieldName_(fieldName),
+    fieldNames_(fieldNames),
     resultName_(resultName)
 {
     read(dict);
@@ -85,19 +90,19 @@ Foam::functionObjects::fieldExpression::fieldExpression
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldExpression::~fieldExpression()
+Foam::functionObjects::fieldsExpression::~fieldsExpression()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
+bool Foam::functionObjects::fieldsExpression::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    if (fieldName_.empty() || dict.found("field"))
+    if (fieldNames_.empty() || dict.found("fields"))
     {
-        dict.lookup("field") >> fieldName_;
+        dict.lookup("fields") >> fieldNames_;
     }
 
     if (dict.found("result"))
@@ -109,15 +114,15 @@ bool Foam::functionObjects::fieldExpression::read(const dictionary& dict)
 }
 
 
-bool Foam::functionObjects::fieldExpression::execute()
+bool Foam::functionObjects::fieldsExpression::execute()
 {
     if (!calc())
     {
         Warning
             << "    functionObjects::" << type() << " " << name()
-            << " cannot find required field " << fieldName_ << endl;
+            << " cannot find required fields " << fieldNames_ << endl;
 
-        // Clear the result field from the objectRegistry if present
+        // Clear the result fields from the objectRegistry if present
         clear();
 
         return false;
@@ -129,13 +134,13 @@ bool Foam::functionObjects::fieldExpression::execute()
 }
 
 
-bool Foam::functionObjects::fieldExpression::write()
+bool Foam::functionObjects::fieldsExpression::write()
 {
     return writeObject(resultName_);
 }
 
 
-bool Foam::functionObjects::fieldExpression::clear()
+bool Foam::functionObjects::fieldsExpression::clear()
 {
     return clearObject(resultName_);
 }

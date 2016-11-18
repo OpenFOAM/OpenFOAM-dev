@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,26 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::fieldExpression
+    Foam::functionObjects::subtract
 
 Group
     grpFieldFunctionObjects
 
 Description
+    From the first field subtract the remaining fields in the list.
+
+    The operation can be applied to any volume or surface fields generating a
+    volume or surface scalar field.
+
+    Example of function object specification:
+    \verbatim
+    Tdiff
+    {
+        type            subtract;
+        libs            ("libfieldFunctionObjects.so");
+        fields          (T Tmean);
+        result          Tdiff;
+        executeControl  writeTime;
+        writeControl    writeTime;
+    }
+    \endverbatim
 
 See also
+    Foam::functionObjects::fieldsExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    fieldExpression.C
+    subtract.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_fieldExpression_H
-#define functionObjects_fieldExpression_H
+#ifndef functionObjects_subtract_H
+#define functionObjects_subtract_H
 
-#include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
+#include "fieldsExpression.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,78 +68,47 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class fieldExpression Declaration
+                           Class subtract Declaration
 \*---------------------------------------------------------------------------*/
 
-class fieldExpression
+class subtract
 :
-    public fvMeshFunctionObject
+    public fieldsExpression
 {
-protected:
-
-    // Protected member data
-
-        //- Name of field to process
-        word fieldName_;
-
-        //- Name of result field
-        word resultName_;
-
-
-    // Protected member functions
-
-        virtual bool calc() = 0;
-
-        void setResultName(const word& typeName, const word& defaultArg);
-
-
-private:
-
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fieldExpression(const fieldExpression&);
+        //- Subtract the list of fields of the specified type
+        //  and return the result
+        template<class GeoFieldType>
+        tmp<GeoFieldType> subtractFields() const;
 
-        //- Disallow default bitwise assignment
-        void operator=(const fieldExpression&);
+        //- Subtract the list of fields and register the result
+        template<class Type>
+        bool calcSubtract();
+
+        //- Subtract the list of fields and return true if successful
+        virtual bool calc();
 
 
 public:
 
     //- Runtime type information
-    TypeName("fieldExpression");
+    TypeName("subtract");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        fieldExpression
+        subtract
         (
             const word& name,
             const Time& runTime,
-            const dictionary& dict,
-            const word& fieldName = word::null,
-            const word& resultName = word::null
+            const dictionary& dict
         );
 
 
     //- Destructor
-    virtual ~fieldExpression();
-
-
-    // Member Functions
-
-        //- Read the fieldExpression data
-        virtual bool read(const dictionary&);
-
-        //- Calculate the result field
-        virtual bool execute();
-
-        //- Write the result field
-        virtual bool write();
-
-        //- Clear the result field from the objectRegistry
-        virtual bool clear();
+    virtual ~subtract();
 };
 
 
@@ -130,6 +116,12 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "subtractTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

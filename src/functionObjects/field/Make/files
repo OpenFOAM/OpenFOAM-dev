@@ -61,4 +61,7 @@ writeCellVolumes/writeCellVolumes.C
 XiReactionRate/XiReactionRate.C
 streamFunction/streamFunction.C
 
+fieldsExpression/fieldsExpression.C
+subtract/subtract.C
+
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects
