@@ -38,11 +38,12 @@ Description
         libs            ("libfieldFunctionObjects.so");
         operation       subtract;
 
-        fieldValue1
+        region1
         {
             ...
         }
-        fieldValue2
+
+        region2
         {
             ...
         }
