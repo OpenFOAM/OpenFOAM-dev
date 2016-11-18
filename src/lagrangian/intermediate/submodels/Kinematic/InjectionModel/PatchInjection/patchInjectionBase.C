@@ -28,6 +28,8 @@ License
 #include "SubField.H"
 #include "cachedRandom.H"
 #include "triPointRef.H"
+#include "volFields.H"
+#include "polyMeshTetDecomposition.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -148,7 +150,7 @@ void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
 
 void Foam::patchInjectionBase::setPositionAndCell
 (
-    const polyMesh& mesh,
+    const fvMesh& mesh,
     cachedRandom& rnd,
     vector& position,
     label& cellOwner,
@@ -174,25 +176,25 @@ void Foam::patchInjectionBase::setPositionAndCell
         if (Pstream::myProcNo() == proci)
         {
             // Find corresponding decomposed face triangle
-            label triI = 0;
+            label trii = 0;
             scalar offset = sumTriMagSf_[proci];
             forAllReverse(triCumulativeMagSf_, i)
             {
                 if (areaFraction > triCumulativeMagSf_[i] + offset)
                 {
-                    triI = i;
+                    trii = i;
                     break;
                 }
             }
 
             // Set cellOwner
-            label facei = triToFace_[triI];
+            label facei = triToFace_[trii];
             cellOwner = cellOwners_[facei];
 
             // Find random point in triangle
             const polyPatch& patch = mesh.boundaryMesh()[patchId_];
             const pointField& points = patch.points();
-            const face& tf = triFace_[triI];
+            const face& tf = triFace_[trii];
             const triPointRef tri(points[tf[0]], points[tf[1]], points[tf[2]]);
             const point pf(tri.randomPoint(rnd));
 
@@ -203,13 +205,43 @@ void Foam::patchInjectionBase::setPositionAndCell
 
             position = pf - a*d;
 
-            // The position is between the face and cell centre, which could
-            // be in any tet of the decomposed cell, so arbitrarily choose the
-            // first face of the cell as the tetFace and the first point after
-            // the base point on the face as the tetPt.  The tracking will pick
-            // the cell consistent with the motion in the first tracking step
-            tetFacei = mesh.cells()[cellOwner][0];
-            tetPti = 1;
+            //Try to find tetFacei and tetPti in the current position
+            mesh.findTetFacePt(cellOwner, position, tetFacei, tetPti);
+
+            //Search failed, choose a random position
+            if (tetFacei == -1 ||tetPti == -1)
+            {
+                const scalarField& V = mesh.V();
+
+                // Construct cell tet indices
+                const List<tetIndices> cellTetIs =
+                    polyMeshTetDecomposition::cellTetIndices(mesh, cellOwner);
+
+                // Construct cell tet volume fractions
+                scalarList cTetVFrac(cellTetIs.size(), 0.0);
+                for (label teti=1; teti<cellTetIs.size()-1; teti++)
+                {
+                    cTetVFrac[teti] =
+                        cTetVFrac[teti-1]
+                      + cellTetIs[teti].tet(mesh).mag()/V[cellOwner];
+                }
+                cTetVFrac.last() = 1;
+
+                // Set new particle position
+                const scalar volFrac = rnd.sample01<scalar>();
+                label teti = 0;
+                forAll(cTetVFrac, vfI)
+                {
+                    if (cTetVFrac[vfI] > volFrac)
+                    {
+                        teti = vfI;
+                        break;
+                    }
+                }
+                position = cellTetIs[teti].tet(mesh).randomPoint(rnd);
+                tetFacei = cellTetIs[teti].face();
+                tetPti = cellTetIs[teti].tetPt();
+            }
         }
         else
         {

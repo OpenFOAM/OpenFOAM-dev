@@ -28,7 +28,7 @@ Description
     Base class for patch-based injection models.
 
     Class handles injecting at a random point adjacent to the patch faces to
-    provide a more stochsatic view of the injection process.  Patch faces are
+    provide a more stochastic view of the injection process.  Patch faces are
     triangulated, and area fractions accumulated.  The fractional areas are
     then applied to determine across which face a parcel is to be injected.
 
@@ -53,6 +53,7 @@ namespace Foam
 
 // Forward class declarations
 class polyMesh;
+class fvMesh;
 class cachedRandom;
 
 /*---------------------------------------------------------------------------*\
@@ -116,7 +117,7 @@ public:
         //- Set the injection position and owner cell, tetFace and tetPt
         virtual void setPositionAndCell
         (
-            const polyMesh& mesh,
+            const fvMesh& mesh,
             cachedRandom& rnd,
             vector& position,
             label& cellOwner,
