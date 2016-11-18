@@ -169,7 +169,7 @@ bool Foam::InjectionModel<CloudType>::findCellAtPosition
             FatalErrorInFunction
                 << "Cannot find parcel injection cell. "
                 << "Parcel position = " << p0 << nl
-                << abort(FatalError);
+                << exit(FatalError);
         }
         else
         {
@@ -215,8 +215,8 @@ Foam::scalar Foam::InjectionModel<CloudType>::setNumberOfParticles
         {
             nP = 0.0;
             FatalErrorInFunction
-             << "Unknown parcelBasis type" << nl
-             << exit(FatalError);
+                << "Unknown parcelBasis type" << nl
+                << exit(FatalError);
         }
     }
 
@@ -346,8 +346,8 @@ Foam::InjectionModel<CloudType>::InjectionModel
     else
     {
         FatalErrorInFunction
-         << "parcelBasisType must be either 'number', 'mass' or 'fixed'" << nl
-         << exit(FatalError);
+            << "parcelBasisType must be either 'number', 'mass' or 'fixed'"
+            << nl << exit(FatalError);
     }
 }
 
