@@ -71,9 +71,27 @@ protected:
 
     // Protected member functions
 
-        virtual bool calc() = 0;
+        void setResultName
+        (
+            const word& typeName,
+            const wordList& defaultArg = wordList::null()
+        );
 
-        void setResultName(const word& typeName, const wordList& defaultArg);
+        //- Call 'calcFieldType' for the given functionObject
+        //  for 'volField' and 'surfaceField' field types
+        template<class Type, class FOType>
+        bool calcFieldTypes(FOType& fo);
+
+        //- Call 'calcFieldTypes' for the given 'Type' and functionObject
+        template<class Type, class FOType>
+        bool calcType(FOType& fo);
+
+        //- Call 'calcType' for the given functionObject
+        //  for each primitive type
+        template<class FOType>
+        bool calcAllTypes(FOType& fo);
+
+        virtual bool calc() = 0;
 
 
 private:
@@ -130,6 +148,12 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "fieldsExpressionTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

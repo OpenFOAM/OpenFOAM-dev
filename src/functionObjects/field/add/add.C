@@ -23,25 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "add.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace functionObjects
+{
+    defineTypeNameAndDebug(add, 0);
+    addToRunTimeSelectionTable(functionObject, add, dictionary);
+}
+}
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class GeoFieldType>
-Foam::tmp<GeoFieldType>
-Foam::functionObjects::subtract::calcFieldType() const
+bool Foam::functionObjects::add::calc()
 {
-    tmp<GeoFieldType> tresult
-    (
-        lookupObject<GeoFieldType>(fieldNames_[0])
-      - lookupObject<GeoFieldType>(fieldNames_[1])
-    );
-
-    for (label i=2; i<fieldNames_.size(); i++)
-    {
-        tresult.ref() -= lookupObject<GeoFieldType>(fieldNames_[i]);
-    }
-
-    return tresult;
+    return calcAllTypes(*this);
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionObjects::add::add
+(
+    const word& name,
+    const Time& runTime,
+    const dictionary& dict
+)
+:
+    fieldsExpression(name, runTime, dict)
+{
+    setResultName("add");
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::functionObjects::add::~add()
+{}
 
 
 // ************************************************************************* //

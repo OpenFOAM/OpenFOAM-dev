@@ -52,12 +52,12 @@ void Foam::functionObjects::fieldsExpression::setResultName
 
     if (resultName_.empty())
     {
-        if (fieldNames_ != defaultArgs)
+        if (!fieldNames_.empty())
         {
-            resultName_ = typeName + '(';
-            forAll(fieldNames_, i)
+            resultName_ = typeName + '(' + fieldNames_[0];
+            for (label i=1; i<fieldNames_.size(); i++)
             {
-                resultName_ += fieldNames_[i];
+                resultName_ += ',' + fieldNames_[i];
             }
             resultName_ += ')';
         }
@@ -85,6 +85,15 @@ Foam::functionObjects::fieldsExpression::fieldsExpression
     resultName_(resultName)
 {
     read(dict);
+
+    if (fieldNames_.size() < 2)
+    {
+        FatalIOErrorInFunction(dict)
+            << "functionObject::" << type() << " " << name
+            << " requires at least 2 fields only "
+            << fieldNames_.size() << " provided: " << fieldNames_
+            << exit(FatalIOError);
+    }
 }
 
 

@@ -42,15 +42,7 @@ namespace functionObjects
 
 bool Foam::functionObjects::subtract::calc()
 {
-    bool processed = false;
-
-    processed = processed || calcSubtract<scalar>();
-    processed = processed || calcSubtract<vector>();
-    processed = processed || calcSubtract<sphericalTensor>();
-    processed = processed || calcSubtract<symmTensor>();
-    processed = processed || calcSubtract<tensor>();
-
-    return processed;
+    return calcAllTypes(*this);
 }
 
 
@@ -65,15 +57,7 @@ Foam::functionObjects::subtract::subtract
 :
     fieldsExpression(name, runTime, dict)
 {
-    read(dict);
-
-    if (fieldNames_.size() < 2)
-    {
-        FatalIOErrorInFunction(dict)
-            << type() << " requires at least 2 fields only "
-            << fieldNames_.size() << " provided: " << fieldNames_
-            << exit(FatalIOError);
-    }
+    setResultName("subtract");
 }
 
 

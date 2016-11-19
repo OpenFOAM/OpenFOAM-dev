@@ -22,25 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::subtract
+    Foam::functionObjects::add
 
 Group
     grpFieldFunctionObjects
 
 Description
-    From the first field subtract the remaining fields in the list.
+    Add a list of fields.
 
     The operation can be applied to any volume or surface fields generating a
     volume or surface scalar field.
 
     Example of function object specification:
     \verbatim
-    Tdiff
+    Ttot
     {
-        type            subtract;
+        type            add;
         libs            ("libfieldFunctionObjects.so");
-        fields          (T Tmean);
-        result          Tdiff;
+        fields          (T Tdelta);
+        result          Ttot;
         executeControl  writeTime;
         writeControl    writeTime;
     }
@@ -51,12 +51,12 @@ See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    subtract.C
+    add.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_subtract_H
-#define functionObjects_subtract_H
+#ifndef functionObjects_add_H
+#define functionObjects_add_H
 
 #include "fieldsExpression.H"
 
@@ -68,21 +68,21 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class subtract Declaration
+                           Class add Declaration
 \*---------------------------------------------------------------------------*/
 
-class subtract
+class add
 :
     public fieldsExpression
 {
     // Private Member Functions
 
-        //- Subtract the list of fields of the specified type
+        //- Add the list of fields of the specified type
         //  and return the result
         template<class GeoFieldType>
         tmp<GeoFieldType> calcFieldType() const;
 
-        //- Subtract the list of fields and return true if successful
+        //- Add the list of fields and return true if successful
         virtual bool calc();
 
 
@@ -92,13 +92,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("subtract");
+    TypeName("add");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        subtract
+        add
         (
             const word& name,
             const Time& runTime,
@@ -107,7 +107,7 @@ public:
 
 
     //- Destructor
-    virtual ~subtract();
+    virtual ~add();
 };
 
 
@@ -119,7 +119,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "subtractTemplates.C"
+    #include "addTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
