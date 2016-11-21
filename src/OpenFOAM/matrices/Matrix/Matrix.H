@@ -298,7 +298,7 @@ public:
             mType&
         );
 
-        // Write Matrix to Ostream.
+        //- Write Matrix to Ostream.
         friend Ostream& operator<< <Form, Type>
         (
             Ostream&,

@@ -108,7 +108,7 @@ Type det(const SymmetricSquareMatrix<Type>&);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "SymmetricSquareMatrixI.H"
+#include "SymmetricSquareMatrixI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
