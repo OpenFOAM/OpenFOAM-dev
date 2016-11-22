@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "exponential.H"
+#include "massRosinRammler.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,14 +32,14 @@ namespace Foam
 {
 namespace distributionModels
 {
-    defineTypeNameAndDebug(exponential, 0);
-    addToRunTimeSelectionTable(distributionModel, exponential, dictionary);
+    defineTypeNameAndDebug(massRosinRammler, 0);
+    addToRunTimeSelectionTable(distributionModel, massRosinRammler, dictionary);
 }
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::distributionModels::exponential::exponential
+Foam::distributionModels::massRosinRammler::massRosinRammler
 (
     const dictionary& dict,
     cachedRandom& rndGen
@@ -48,52 +48,66 @@ Foam::distributionModels::exponential::exponential
     distributionModel(typeName, dict, rndGen),
     minValue_(readScalar(distributionModelDict_.lookup("minValue"))),
     maxValue_(readScalar(distributionModelDict_.lookup("maxValue"))),
-    lambda_(readScalar(distributionModelDict_.lookup("lambda")))
+    d_(readScalar(distributionModelDict_.lookup("d"))),
+    n_(readScalar(distributionModelDict_.lookup("n")))
 {
     check();
 }
 
 
-Foam::distributionModels::exponential::exponential(const exponential& p)
+Foam::distributionModels::massRosinRammler::massRosinRammler
+(
+    const massRosinRammler& p
+)
 :
     distributionModel(p),
     minValue_(p.minValue_),
     maxValue_(p.maxValue_),
-    lambda_(p.lambda_)
+    d_(p.d_),
+    n_(p.n_)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::distributionModels::exponential::~exponential()
+Foam::distributionModels::massRosinRammler::~massRosinRammler()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::distributionModels::exponential::sample() const
+Foam::scalar Foam::distributionModels::massRosinRammler::sample() const
 {
-    scalar y = rndGen_.sample01<scalar>();
-    scalar K = exp(-lambda_*maxValue_) - exp(-lambda_*minValue_);
-    return -(1.0/lambda_)*log(exp(-lambda_*minValue_) + y*K);
+    scalar d;
+
+    // Re-sample if the calculated d is out of the physical range
+    do
+    {
+        const scalar a = 3/n_ + 1;
+        const scalar P = rndGen_.sample01<scalar>();
+        const scalar x = invIncGamma(a, P);
+        d = d_*pow(x, 1/n_);
+    } while (d < minValue_ || d > maxValue_);
+
+    return d;
 }
 
 
-Foam::scalar Foam::distributionModels::exponential::minValue() const
+Foam::scalar Foam::distributionModels::massRosinRammler::minValue() const
 {
     return minValue_;
 }
 
 
-Foam::scalar Foam::distributionModels::exponential::maxValue() const
+Foam::scalar Foam::distributionModels::massRosinRammler::maxValue() const
 {
     return maxValue_;
 }
 
 
-Foam::scalar Foam::distributionModels::exponential::meanValue() const
+Foam::scalar Foam::distributionModels::massRosinRammler::meanValue() const
 {
-    return 1.0/lambda_;
+    return d_;
 }
 
 

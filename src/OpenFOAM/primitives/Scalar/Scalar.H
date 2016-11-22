@@ -134,6 +134,7 @@ transFunc(atanh)
 transFunc(erf)
 transFunc(erfc)
 transFunc(lgamma)
+transFunc(tgamma)
 
 transFunc(j0)
 transFunc(j1)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniform
+    Foam::massRosinRammler
 
 Description
-    Uniform/equally-weighted distribution model
+    Mass-based Rosin-Rammler distributionModel.
+
+    Corrected form of the Rosin-Rammler distribution taking into account the
+    varying number of particels per parces for for fixed-mass parcels.  This
+    distribution should be used when
+    \verbatim
+        parcelBasisType mass;
+    \endverbatim
+
+    See equation 10 in reference:
+    \verbatim
+        Yoon, S. S., Hewson, J. C., DesJardin, P. E., Glaze, D. J.,
+        Black, A. R., & Skaggs, R. R. (2004).
+        Numerical modeling and experimental measurements of a high speed
+        solid-cone water spray for use in fire suppression applications.
+        International Journal of Multiphase Flow, 30(11), 1369-1388.
+    \endverbatim
 
 SourceFiles
-    uniform.C
+    massRosinRammler.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniform_H
-#define uniform_H
+#ifndef massRosinRammler_H
+#define massRosinRammler_H
 
 #include "distributionModel.H"
 
@@ -45,10 +61,10 @@ namespace distributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class uniform Declaration
+                       Class massRosinRammler Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniform
+class massRosinRammler
 :
     public distributionModel
 {
@@ -60,30 +76,37 @@ class uniform
         //- Distribution maximum
         scalar maxValue_;
 
+        //- Characteristic droplet size
+        scalar d_;
+
+        //- Empirical dimensionless constant to specify the distribution width,
+        //  sometimes referred to as the dispersion coefficient
+        scalar n_;
+
 
 public:
 
     //- Runtime type information
-    TypeName("uniform");
+    TypeName("massRosinRammler");
 
 
     // Constructors
 
         //- Construct from components
-        uniform(const dictionary& dict, cachedRandom& rndGen);
+        massRosinRammler(const dictionary& dict, cachedRandom& rndGen);
 
         //- Construct copy
-        uniform(const uniform& p);
+        massRosinRammler(const massRosinRammler& p);
 
         //- Construct and return a clone
         virtual autoPtr<distributionModel> clone() const
         {
-            return autoPtr<distributionModel>(new uniform(*this));
+            return autoPtr<distributionModel>(new massRosinRammler(*this));
         }
 
 
     //- Destructor
-    virtual ~uniform();
+    virtual ~massRosinRammler();
 
 
     // Member Functions
