@@ -129,10 +129,10 @@ public:
         explicit plane(const vector& normalVector);
 
         //- Construct from normal vector and point in plane
-        explicit plane(const point& basePoint, const vector& normalVector);
+        plane(const point& basePoint, const vector& normalVector);
 
         //- Construct from three points in plane
-        explicit plane
+        plane
         (
             const point& point1,
             const point& point2,
