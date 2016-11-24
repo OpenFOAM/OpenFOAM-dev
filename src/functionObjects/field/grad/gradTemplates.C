@@ -39,7 +39,7 @@ bool Foam::functionObjects::grad::calcGrad()
         (
             resultName_,
             fvc::grad(lookupObject<VolFieldType>(fieldName_)),
-            true
+            mesh_.changing() && mesh_.cache(resultName_)
         );
     }
     else if (foundObject<SurfaceFieldType>(fieldName_))
@@ -48,7 +48,7 @@ bool Foam::functionObjects::grad::calcGrad()
         (
             resultName_,
             fvc::grad(lookupObject<SurfaceFieldType>(fieldName_)),
-            true
+            mesh_.changing() && mesh_.cache(resultName_)
         );
     }
     else
