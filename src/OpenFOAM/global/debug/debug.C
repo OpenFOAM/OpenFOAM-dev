@@ -190,6 +190,19 @@ int Foam::debug::optimisationSwitch(const char* name, const int defaultValue)
 }
 
 
+float Foam::debug::floatOptimisationSwitch
+(
+    const char* name,
+    const float defaultValue
+)
+{
+    return optimisationSwitches().lookupOrAddDefault
+    (
+        name, defaultValue, false, false
+    );
+}
+
+
 void Foam::debug::addDebugObject(const char* name, simpleRegIOobject* obj)
 {
     simpleObjectRegistryEntry* ptr = debugObjects().lookupPtr(name);

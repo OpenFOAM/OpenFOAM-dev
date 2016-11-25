@@ -122,6 +122,9 @@ off_t fileSize(const fileName&);
 //- Return time of last file modification
 time_t lastModified(const fileName&);
 
+//- Return time of last file modification
+double highResLastModified(const fileName&);
+
 //- Read a directory and return the entries as a string list
 fileNameList readDir
 (

@@ -872,8 +872,23 @@ void Foam::argList::parse
                 << regIOobject::fileCheckTypesNames
                     [
                         regIOobject::fileModificationChecking
-                    ]
-                << endl;
+                    ];
+            if
+            (
+                (
+                    regIOobject::fileModificationChecking
+                 == regIOobject::timeStamp
+                )
+             || (
+                    regIOobject::fileModificationChecking
+                 == regIOobject::timeStampMaster
+                )
+            )
+            {
+                Info<< " (fileModificationSkew "
+                    << regIOobject::fileModificationSkew << ")";
+            }
+            Info<< endl;
 
             Info<< "allowSystemOperations : ";
             if (dynamicCode::allowSystemOperations)
