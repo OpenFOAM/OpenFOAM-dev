@@ -52,11 +52,11 @@ bool Foam::functionObjects::MachNo::calc()
     if
     (
         foundObject<volVectorField>(fieldName_)
-     && mesh_.foundObject<fluidThermo>(fluidThermo::dictName)
+     && foundObject<fluidThermo>(fluidThermo::dictName)
     )
     {
         const fluidThermo& thermo =
-            mesh_.lookupObject<fluidThermo>(fluidThermo::dictName);
+            lookupObject<fluidThermo>(fluidThermo::dictName);
 
         const volVectorField& U = lookupObject<volVectorField>(fieldName_);
 

@@ -115,7 +115,7 @@ bool Foam::functionObjects::fieldExpression::execute()
     {
         Warning
             << "    functionObjects::" << type() << " " << name()
-            << " cannot find required field " << fieldName_ << endl;
+            << " failed to execute." << endl;
 
         // Clear the result field from the objectRegistry if present
         clear();
