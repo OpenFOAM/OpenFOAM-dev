@@ -342,8 +342,12 @@ FoamFile
 //
 // cellZoneSet
 // ~~~~~~~~~~~
-// (mirrors operations on a cellSet into a cellZone)
+// Manipulates a cellZone (as well as a cellSet)
+// Takes any cellSet source. The difference with a cellSet is
+// - reads the cells from the cellZone, not the cellSet
+// - write to the cellZone as well as the cellSet
 //
+// For backwards compatibility:
 //    // Select based on cellSet
 //    source setToCellZone;
 //    sourceInfo
@@ -355,6 +359,9 @@ FoamFile
 //
 // faceZoneSet
 // ~~~~~~~~~~~
+// Manipulates a faceZone (as well as a faceSet). It can only be used
+// with two special sources:
+//
 //    // Select based on faceSet without orientation
 //    source setToFaceZone;
 //    sourceInfo
@@ -391,17 +398,19 @@ FoamFile
 //
 // pointZoneSet
 // ~~~~~~~~~~~~
-// (mirrors operations on a pointSet into a pointZone)
+// Manipulates a pointZone (as well as a pointSet)
+// Takes any pointSet source. The difference with a pointSet is
+// - reads the cells from the pointZone, not the pointSet
+// - write to the pointZone as well as the pointSet
 //
+// For backwards compatibility:
 //    // Select based on pointSet
 //    source setToPointZone;
 //    sourceInfo
 //    {
 //        set p0;           // name of pointSet
 //    }
-//
-//
-//
+
 
 actions
 (
@@ -413,7 +422,7 @@ actions
         name    c0;
         type    cellSet;
         action  new;
-        source labelToCell;
+        source  labelToCell;
         sourceInfo
         {
             value (12 13 56);
@@ -460,6 +469,19 @@ actions
         {
             set     c1;
             option  all;
+        }
+    }
+
+
+    // Example: create cellZone from geometric region
+    {
+        name    c0;
+        type    cellZoneSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box   (0.04 0 0)(0.06 100 100);
         }
     }
 );

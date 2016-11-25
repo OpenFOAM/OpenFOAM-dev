@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::cellZoneSet
 
 Description
-    Like cellSet but updates cellZone when writing.
+    Like cellSet but -reads data from cellZone -updates cellZone when writing.
 
 SourceFiles
     cellZone.C
@@ -126,7 +126,7 @@ public:
         //- Delete elements present in set.
         virtual void deleteSet(const topoSet& set);
 
-        //- Sync cellZoneSet across coupled patches.
+        //- Sync cellSet across coupled patches; update cellZone from cellSet
         virtual void sync(const polyMesh& mesh);
 
         //- Write maxLen items with label and coordinates.
@@ -150,10 +150,6 @@ public:
 
         //- Return max index+1.
         virtual label maxSize(const polyMesh& mesh) const;
-
-
-
-
 };
 
 

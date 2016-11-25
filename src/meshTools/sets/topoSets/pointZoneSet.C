@@ -230,7 +230,13 @@ void pointZoneSet::deleteSet(const topoSet& set)
 
 
 void pointZoneSet::sync(const polyMesh& mesh)
-{}
+{
+    pointSet::sync(mesh);
+
+    // Take over contents of pointSet into addressing.
+    addressing_ = sortedToc();
+    updateSet();
+}
 
 
 label pointZoneSet::maxSize(const polyMesh& mesh) const

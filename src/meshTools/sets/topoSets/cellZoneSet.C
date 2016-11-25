@@ -229,7 +229,13 @@ void cellZoneSet::deleteSet(const topoSet& set)
 
 
 void cellZoneSet::sync(const polyMesh& mesh)
-{}
+{
+    cellSet::sync(mesh);
+
+    // Take over contents of cellSet into addressing.
+    addressing_ = sortedToc();
+    updateSet();
+}
 
 
 label cellZoneSet::maxSize(const polyMesh& mesh) const
