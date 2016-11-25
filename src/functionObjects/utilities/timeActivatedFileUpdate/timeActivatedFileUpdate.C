@@ -65,7 +65,9 @@ void Foam::functionObjects::timeActivatedFileUpdate::updateFile()
         Info<< nl << type() << ": copying file" << nl << timeVsFile_[i].second()
             << nl << "to:" << nl << fileToUpdate_ << nl << endl;
 
-        cp(timeVsFile_[i].second(), fileToUpdate_);
+        fileName destFile(fileToUpdate_ + Foam::name(pid()));
+        cp(timeVsFile_[i].second(), destFile);
+        mv(destFile, fileToUpdate_);
         lastIndex_ = i;
     }
 }
