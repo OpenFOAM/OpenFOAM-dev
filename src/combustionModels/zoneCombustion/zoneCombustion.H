@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::combustionModels::singleStepCombustion
+    Foam::combustionModels::zoneCombustion
 
 Description
-    Base class for combustion models using singleStepReactingMixture.
+    Zone-filtered combustion model.
+
+    Enable the reactions within the specified list of cell-zones and set
+    to zero elsewhere.
 
 SourceFiles
-    singleStepCombustion.C
+    zoneCombustion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef singleStepCombustion_H
-#define singleStepCombustion_H
-
-#include "singleStepReactingMixture.H"
+#ifndef zoneCombustion_H
+#define zoneCombustion_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,43 +46,48 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class singleStepCombustion Declaration
+                            Class zoneCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CombThermoType, class ThermoType>
-class singleStepCombustion
+template<class Type>
+class zoneCombustion
 :
-    public CombThermoType
+    public Type
 {
+    // Private data
+
+        //- The combustion model to be zone-filtered
+        autoPtr<typename Type::CombustionModel> combustionModelPtr_;
+
+        //- List of zone names in which the reactions are active
+        wordList zoneNames_;
+
+
     // Private Member Functions
 
+        //- Filter the reaction-rate matrix on the cellZones
+        tmp<fvScalarMatrix> filter(const tmp<fvScalarMatrix>& tR) const;
+
+        //- Filter the given field on the cellZones
+        tmp<volScalarField> filter(const tmp<volScalarField>& tS) const;
+
         //- Disallow copy construct
-        singleStepCombustion(const singleStepCombustion&);
+        zoneCombustion(const zoneCombustion&);
 
         //- Disallow default bitwise assignment
-        void operator=(const singleStepCombustion&);
-
-
-protected:
-
-    // Protected data
-
-        //- Pointer to singleStepReactingMixture mixture
-        singleStepReactingMixture<ThermoType>* singleMixturePtr_;
-
-        //- Fuel consumption rate
-        volScalarField wFuel_;
-
-        //- Semi-implicit (true) or explicit (false) treatment
-        bool semiImplicit_;
+        void operator=(const zoneCombustion&);
 
 
 public:
 
+    //- Runtime type information
+    TypeName("zoneCombustion");
+
+
     // Constructors
 
         //- Construct from components
-        singleStepCombustion
+        zoneCombustion
         (
             const word& modelType,
             const fvMesh& mesh,
@@ -91,18 +97,21 @@ public:
 
 
     //- Destructor
-    virtual ~singleStepCombustion();
+    virtual ~zoneCombustion();
 
 
     // Member Functions
 
-        //- Fuel consumption rate matrix
+        //- Correct combustion rate
+        virtual void correct();
+
+        //- Fuel consumption rate matrix.
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
         //- Heat release rate calculated from fuel consumption rate matrix
         virtual tmp<volScalarField> dQ() const;
 
-        //- Sensible enthalpy source term
+        //-  Return source for enthalpy equation [kg/m/s3]
         virtual tmp<volScalarField> Sh() const;
 
         //- Update properties from given dictionary
@@ -118,7 +127,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "singleStepCombustion.C"
+    #include "zoneCombustion.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -24,6 +24,8 @@ FSD/reactionRateFlameAreaModels/relaxation/relaxation.C
 
 FSD/FSDs.C
 
+zoneCombustion/zoneCombustions.C
+
 noCombustion/noCombustions.C
 
 LIB = $(FOAM_LIBBIN)/libcombustionModels

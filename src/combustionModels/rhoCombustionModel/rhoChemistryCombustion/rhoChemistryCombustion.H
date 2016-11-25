@@ -73,6 +73,8 @@ protected:
 
 public:
 
+    typedef rhoCombustionModel CombustionModel;
+
     // Constructors
 
         //- Construct from components and thermo
@@ -80,6 +82,7 @@ public:
         (
             const word& modelType,
             const fvMesh& mesh,
+            const word& combustionProperties,
             const word& phaseName
         );
 

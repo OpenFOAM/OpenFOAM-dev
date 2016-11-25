@@ -82,9 +82,10 @@ public:
         (
             const word& modelType,
             const fvMesh& mesh,
+            const word& combustionProperties,
             const word& phaseName
         ),
-        (modelType, mesh, phaseName)
+        (modelType, mesh, combustionProperties, phaseName)
     );
 
 
@@ -96,6 +97,7 @@ public:
         (
             const word& modelType,
             const fvMesh& mesh,
+            const word& combustionProperties,
             const word& phaseName
         );
 
@@ -105,6 +107,7 @@ public:
     static autoPtr<rhoCombustionModel> New
     (
         const fvMesh& mesh,
+        const word& combustionProperties=combustionPropertiesName,
         const word& phaseName=word::null
     );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,43 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "makeCombustionTypes.H"
+
 #include "psiChemistryCombustion.H"
+#include "rhoChemistryCombustion.H"
+#include "zoneCombustion.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::combustionModels::psiChemistryCombustion::psiChemistryCombustion
-(
-    const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
-)
-:
-    psiCombustionModel(modelType, mesh, combustionProperties, phaseName),
-    chemistryPtr_(psiChemistryModel::New(mesh, phaseName))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::combustionModels::psiChemistryCombustion::~psiChemistryCombustion()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::psiReactionThermo&
-Foam::combustionModels::psiChemistryCombustion::thermo()
-{
-    return chemistryPtr_->thermo();
-}
-
-
-const Foam::psiReactionThermo&
-Foam::combustionModels::psiChemistryCombustion::thermo() const
-{
-    return chemistryPtr_->thermo();
-}
+makeCombustionTypes(zoneCombustion, psiChemistryCombustion, psiCombustionModel);
+makeCombustionTypes(zoneCombustion, rhoChemistryCombustion, rhoCombustionModel);
 
 
 // ************************************************************************* //

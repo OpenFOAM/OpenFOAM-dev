@@ -31,10 +31,11 @@ Foam::combustionModels::rhoChemistryCombustion::rhoChemistryCombustion
 (
     const word& modelType,
     const fvMesh& mesh,
+    const word& combustionProperties,
     const word& phaseName
 )
 :
-    rhoCombustionModel(modelType, mesh, phaseName),
+    rhoCombustionModel(modelType, mesh, combustionProperties, phaseName),
     chemistryPtr_(rhoChemistryModel::New(mesh, phaseName))
 {}
 

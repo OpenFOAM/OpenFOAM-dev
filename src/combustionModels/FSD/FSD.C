@@ -41,6 +41,7 @@ FSD<CombThermoType, ThermoType>::FSD
 (
     const word& modelType,
     const fvMesh& mesh,
+    const word& combustionProperties,
     const word& phaseName
 )
 :
@@ -48,6 +49,7 @@ FSD<CombThermoType, ThermoType>::FSD
     (
         modelType,
         mesh,
+        combustionProperties,
         phaseName
     ),
     reactionRateFlameArea_

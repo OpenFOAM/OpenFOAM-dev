@@ -33,6 +33,7 @@ Foam::combustionModels::noCombustion<CombThermoType>::noCombustion
 (
     const word& modelType,
     const fvMesh& mesh,
+    const word& combustionProperties,
     const word& phaseName
 )
 :

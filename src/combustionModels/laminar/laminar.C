@@ -34,10 +34,11 @@ Foam::combustionModels::laminar<Type>::laminar
 (
     const word& modelType,
     const fvMesh& mesh,
+    const word& combustionProperties,
     const word& phaseName
 )
 :
-    Type(modelType, mesh, phaseName),
+    Type(modelType, mesh, combustionProperties, phaseName),
     integrateReactionRate_
     (
         this->coeffs().lookupOrDefault("integrateReactionRate", true)

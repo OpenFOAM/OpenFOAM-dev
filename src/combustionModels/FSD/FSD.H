@@ -136,20 +136,23 @@ public:
     // Constructors
 
         //- Construct from components
-        FSD(const word& modelType, const fvMesh& mesh, const word& phaseName);
+        FSD
+        (
+            const word& modelType,
+            const fvMesh& mesh,
+            const word& combustionProperties,
+            const word& phaseName
+        );
 
 
-    // Destructor
-        virtual ~FSD();
+    //- Destructor
+    virtual ~FSD();
 
 
-    // Evolution
+    // Member Functions
 
         //- Correct combustion rate
         virtual void correct();
-
-
-    // IO
 
         //- Update properties
         virtual bool read();

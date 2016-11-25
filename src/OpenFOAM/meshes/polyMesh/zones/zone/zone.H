@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,9 +78,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Return a reference to the look-up map
-        const Map<label>& lookupMap() const;
 
         //- Construct the look-up map
         void calcLookupMap() const;
@@ -163,6 +160,9 @@ public:
         {
             return index_;
         }
+
+        //- Return a reference to the look-up map
+        const Map<label>& lookupMap() const;
 
         //- Clear addressing
         virtual void clearAddressing();

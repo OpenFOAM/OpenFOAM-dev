@@ -38,6 +38,7 @@ singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
 (
     const word& modelType,
     const fvMesh& mesh,
+    const word& combustionProperties,
     const word& phaseName
 )
 :

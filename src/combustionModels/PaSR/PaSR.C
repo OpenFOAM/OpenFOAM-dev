@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,11 @@ Foam::combustionModels::PaSR<Type>::PaSR
 (
     const word& modelType,
     const fvMesh& mesh,
+    const word& combustionProperties,
     const word& phaseName
 )
 :
-    laminar<Type>(modelType, mesh, phaseName),
+    laminar<Type>(modelType, mesh, combustionProperties, phaseName),
     Cmix_(readScalar(this->coeffs().lookup("Cmix"))),
     turbulentReaction_(this->coeffs().lookup("turbulentReaction")),
     kappa_

@@ -83,6 +83,7 @@ public:
         (
             const word& modelType,
             const fvMesh& mesh,
+            const word& combustionProperties,
             const word& phaseName
         );
 
@@ -93,16 +94,11 @@ public:
 
     // Member Functions
 
-        // Evolution
+        //- Correct combustion rate
+        virtual void correct();
 
-            //- Correct combustion rate
-            virtual void correct();
-
-
-        // IO
-
-            //- Update properties
-            virtual bool read();
+        //- Update properties
+        virtual bool read();
 };
 
 

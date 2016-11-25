@@ -34,7 +34,7 @@ Foam::combustionModels::rhoThermoCombustion::rhoThermoCombustion
     const word& phaseName
 )
 :
-    rhoCombustionModel(modelType, mesh, phaseName),
+    rhoCombustionModel(modelType, mesh, combustionPropertiesName, phaseName),
     thermoPtr_(rhoReactionThermo::New(mesh, phaseName))
 {}
 
