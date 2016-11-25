@@ -23,21 +23,19 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "entry.H"
 #include "primitiveEntry.H"
 #include "dictionaryEntry.H"
 #include "functionEntry.H"
 #include "includeEntry.H"
 #include "inputModeEntry.H"
 #include "stringOps.H"
+#include "dictionaryListEntry.H"
 
-#include "IOstreams.H"
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-bool Foam::entry::getKeyword(keyType& keyword, Istream& is)
+bool Foam::entry::getKeyword(keyType& keyword, token& keywordToken, Istream& is)
 {
-    token keywordToken;
-
     // Read the next valid token discarding spurious ';'s
     do
     {
@@ -65,25 +63,43 @@ bool Foam::entry::getKeyword(keyType& keyword, Istream& is)
         keyword = keywordToken.stringToken();
         return true;
     }
-    // If it is the end of the dictionary or file return false...
-    else if (keywordToken == token::END_BLOCK || is.eof())
+    else
     {
         return false;
     }
-    // Otherwise the token is invalid
+}
+
+
+bool Foam::entry::getKeyword(keyType& keyword, Istream& is)
+{
+    token keywordToken;
+    bool ok = getKeyword(keyword, keywordToken, is);
+
+    if (ok)
+    {
+        return true;
+    }
     else
     {
-        cerr<< "--> FOAM Warning : " << std::endl
-            << "    From function "
-            << "entry::getKeyword(keyType&, Istream&)" << std::endl
-            << "    in file " << __FILE__
-            << " at line " << __LINE__ << std::endl
-            << "    Reading " << is.name().c_str() << std::endl
-            << "    found " << keywordToken << std::endl
-            << "    expected either " << token::END_BLOCK << " or EOF"
-            << std::endl;
-
-        return false;
+        // Do some more checking
+        if (keywordToken == token::END_BLOCK || is.eof())
+        {
+            return false;
+        }
+        else
+        {
+            // Otherwise the token is invalid
+            cerr<< "--> FOAM Warning : " << std::endl
+                << "    From function "
+                << "entry::getKeyword(keyType&, Istream&)" << std::endl
+                << "    in file " << __FILE__
+                << " at line " << __LINE__ << std::endl
+                << "    Reading " << is.name().c_str() << std::endl
+                << "    found " << keywordToken << std::endl
+                << "    expected either " << token::END_BLOCK << " or EOF"
+                << std::endl;
+            return false;
+        }
     }
 }
 
@@ -93,22 +109,68 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     is.fatalCheck("entry::New(const dictionary& parentDict, Istream&)");
 
     keyType keyword;
+    token keyToken;
 
-    // Get the next keyword and if invalid return false
-    if (!getKeyword(keyword, is))
+    // Get the next keyword and if a valid keyword return true
+    bool valid = getKeyword(keyword, keyToken, is);
+
+    if (!valid)
     {
-        return false;
+        // Do some more checking
+        if (keyToken == token::END_BLOCK || is.eof())
+        {
+            return false;
+        }
+        else if
+        (
+            keyToken.isLabel()
+         || (keyToken.isPunctuation() && keyToken.pToken() == token::BEGIN_LIST)
+        )
+        {
+            is.putBack(keyToken);
+            return parentDict.add
+            (
+                new dictionaryListEntry(parentDict, is),
+                false
+            );
+        }
+        else
+        {
+            // Otherwise the token is invalid
+            cerr<< "--> FOAM Warning : " << std::endl
+                << "    From function "
+                << "entry::getKeyword(keyType&, Istream&)" << std::endl
+                << "    in file " << __FILE__
+                << " at line " << __LINE__ << std::endl
+                << "    Reading " << is.name().c_str() << std::endl
+                << "    found " << keyToken << std::endl
+                << "    expected either " << token::END_BLOCK << " or EOF"
+                << std::endl;
+            return false;
+        }
     }
     else  // Keyword starts entry ...
     {
-        if
-        (
-           !disableFunctionEntries
-         && keyword[0] == '#'
-        )                           // ... Function entry
+        if (keyword[0] == '#')      // ... Function entry
         {
             word functionName = keyword(1, keyword.size()-1);
-            return functionEntry::execute(functionName, parentDict, is);
+            if (disableFunctionEntries)
+            {
+                return parentDict.add
+                (
+                    new functionEntry
+                    (
+                        keyword,
+                        parentDict,
+                        is
+                    ),
+                    false
+                );
+            }
+            else
+            {
+                return functionEntry::execute(functionName, parentDict, is);
+            }
         }
         else if
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "functionEntry.H"
+#include "IOstreams.H"
+#include "ISstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,6 +45,34 @@ namespace Foam
         primitiveEntryIstream
     );
 }
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::token Foam::functionEntry::readLine(const word& key, Istream& is)
+{
+    string s;
+    dynamic_cast<ISstream&>(is).getLine(s);
+
+    return token(string(key+s), is.lineNumber());
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::functionEntry::functionEntry
+(
+    const word& key,
+    const dictionary& dict,
+    Istream& is
+)
+:
+    primitiveEntry
+    (
+        word(key+dict.name()+Foam::name(is.lineNumber())),
+        readLine(key, is)
+    )
+{}
 
 
 // * * * * * * * * * * * * Member Function Selectors * * * * * * * * * * * * //
@@ -129,6 +159,19 @@ bool Foam::functionEntry::execute
     }
 
     return mfIter()(parentDict, entry, is);
+}
+
+
+void Foam::functionEntry::write(Ostream& os) const
+{
+    // Contents should be single string token
+    const token& t = operator[](0);
+    const string& s = t.stringToken();
+
+    for (size_t i = 0; i < s.size(); i++)
+    {
+        os.write(s[i]);
+    }
 }
 
 

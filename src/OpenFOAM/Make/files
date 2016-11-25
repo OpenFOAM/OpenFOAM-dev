@@ -182,6 +182,10 @@ dictionaryEntry = $(dictionary)/dictionaryEntry
 $(dictionaryEntry)/dictionaryEntry.C
 $(dictionaryEntry)/dictionaryEntryIO.C
 
+dictionaryListEntry = $(dictionary)/dictionaryListEntry
+$(dictionaryListEntry)/dictionaryListEntry.C
+$(dictionaryListEntry)/dictionaryListEntryIO.C
+
 functionEntries = $(dictionary)/functionEntries
 $(functionEntries)/calcEntry/calcEntry.C
 $(functionEntries)/codeStream/codeStream.C

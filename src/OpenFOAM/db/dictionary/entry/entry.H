@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,9 @@ class entry
 
 
     // Private Member Functions
+
+        //- Get the next valid keyword. Return true if is valid keyType.
+        static bool getKeyword(keyType&, token&, Istream&);
 
         //- Get the next valid keyword otherwise return false
         static bool getKeyword(keyType&, Istream&);

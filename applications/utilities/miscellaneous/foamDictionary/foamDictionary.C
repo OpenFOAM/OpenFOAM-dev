@@ -57,6 +57,9 @@ Usage
       - \par -includes
         List the \c #include and \c #includeIfPresent files to standard output
 
+      - \par -disableFunctionEntries
+        Do not expand macros or directives (#include etc)
+
     Example usage:
       - Change simulation to run for one timestep only:
         \verbatim
@@ -96,6 +99,15 @@ Usage
           foamDictionary 0/U -diff $FOAM_ETC/templates/closedVolume/0/U \
             -entry boundaryField
         \endverbatim
+
+      - Change patch type:
+        \verbatim
+          foamDictionary constant/polyMesh/boundary \
+            -entry entry0.fixedWalls.type -set patch
+        \endverbatim
+        This uses special parsing of Lists which stores these in the
+        dictionary with keyword 'entryDDD' where DDD is the position
+        in the dictionary (after ignoring the FoamFile entry).
 
 \*---------------------------------------------------------------------------*/
 
@@ -271,6 +283,11 @@ int main(int argc, char *argv[])
         "Read the specified dictionary file, expand the macros etc. and write "
         "the resulting dictionary to standard output"
     );
+    argList::addBoolOption
+    (
+        "disableFunctionEntries",
+        "Disable expansion of dictionary directives - #include, #codeStream etc"
+    );
 
     argList args(argc, argv);
 
@@ -280,6 +297,15 @@ int main(int argc, char *argv[])
     {
         Foam::functionEntries::includeEntry::log = true;
     }
+
+    const bool disableEntries = args.optionFound("disableFunctionEntries");
+    if (disableEntries)
+    {
+        Info<< "Not expanding variables or dictionary directives"
+            << endl;
+        entry::disableFunctionEntries = true;
+    }
+
 
     fileName dictFileName(args[1]);
 

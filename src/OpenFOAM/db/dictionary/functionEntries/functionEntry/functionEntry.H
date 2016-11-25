@@ -48,13 +48,13 @@ SourceFiles
 
 #include "word.H"
 #include "memberFunctionSelectionTables.H"
+#include "primitiveEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-class primitiveEntry;
 class dictionary;
 
 /*---------------------------------------------------------------------------*\
@@ -62,8 +62,13 @@ class dictionary;
 \*---------------------------------------------------------------------------*/
 
 class functionEntry
+:
+    public primitiveEntry
 {
     // Private Member Functions
+
+        //- Read line as string token
+        static token readLine(const word& key, Istream& is);
 
         //- Disallow default bitwise copy construct
         functionEntry(const functionEntry&);
@@ -73,6 +78,12 @@ class functionEntry
 
 
 public:
+
+    // Constructors
+
+        //- Construct from keyword, parent dictionary and Istream
+        functionEntry(const word&, const dictionary&, Istream&);
+
 
     // Member Function Selectors
 
@@ -119,6 +130,9 @@ public:
             primitiveEntry&,
             Istream&
         );
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 
