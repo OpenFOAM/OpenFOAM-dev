@@ -123,7 +123,7 @@ Foam::vector Foam::eigenValues(const tensor& t)
         }
 
         // Two identical roots and one distinct root
-        else if (mag(PPP/QQ - 1) < SMALL)
+        else if (mag(QQ) > SMALL && mag(PPP/QQ - 1) < SMALL)
         {
             scalar sqrtP = sqrt(P);
             scalar signQ = sign(Q);
