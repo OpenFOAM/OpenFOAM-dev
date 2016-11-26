@@ -64,23 +64,24 @@ Description
         libs     | Libraries containing implementation   | yes      |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
+        log      | Log information to standard output    | no       | yes
         timeStart| Start time                            | no       |
         timeEnd  | End time                              | no       |
-        evaluateControl  | See time controls below       | no       | timeStep
-        evaluateInterval | Steps between output          | no       |
-        writeControl     | See time controls below       | no       | timeStep
-        writeInterval    | Steps between output          | no       |
+        executeControl  | See time controls below        | no       | timeStep
+        executeInterval | Steps between each execute phase | no     |
+        writeControl    | See time controls below        | no       | timeStep
+        writeInterval   | Steps between each write phase | no       |
     \endtable
 
     Time controls:
     \table
         Option            | Description
-        timeStep          | Execute/write every 'writeInterval' time-steps
-        writeTime         | Execute/write every 'writeInterval' output times
-        adjustableRunTime | Execute/write every 'writeInterval' run time period
-        runTime           | Execute/write every 'writeInterval' run time period
-        clockTime        | Execute/write every 'writeInterval' clock time period
-        cpuTime           | Execute/write every 'writeInterval' CPU time period
+        timeStep          | Execute/write every 'Interval' time-steps
+        writeTime         | Execute/write every 'Interval' output times
+        adjustableRunTime | Execute/write every 'Interval' run time period
+        runTime           | Execute/write every 'Interval' run time period
+        clockTime         | Execute/write every 'Interval' clock time period
+        cpuTime           | Execute/write every 'Interval' CPU time period
         none              | Execute/write every time-step
     \endtable
 
@@ -90,6 +91,14 @@ Description
     object properties that follow.  FunctionObjects are packaged into separate
     libraries and the \c libs entry is used to specify which library should be
     loaded.
+
+    Each function object has two separate run phases:
+
+      - The \c execute phase is meant to be used for updating calculations
+        or for management tasks.
+      - The \c write phase is meant for writing the calculated data to disk.
+
+    For each phase the respective time controls are provided, as listed above.
 
 Class
     Foam::functionObject

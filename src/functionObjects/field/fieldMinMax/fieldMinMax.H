@@ -28,7 +28,7 @@ Group
     grpFieldFunctionObjects
 
 Description
-    Calculates the value and location of scalar minimim and maximum for a list
+    Calculates the value and location of scalar minimum and maximum for a list
     of user-specified fields.
 
     For variables with a rank greater than zero, either the min/max of a
