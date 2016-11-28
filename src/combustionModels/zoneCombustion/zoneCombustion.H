@@ -57,7 +57,7 @@ class zoneCombustion
     // Private data
 
         //- The combustion model to be zone-filtered
-        autoPtr<typename Type::CombustionModel> combustionModelPtr_;
+        autoPtr<Type> combustionModelPtr_;
 
         //- List of zone names in which the reactions are active
         wordList zoneNames_;
@@ -101,6 +101,12 @@ public:
 
 
     // Member Functions
+
+        //- Return access to the thermo package
+        virtual typename Type::ReactionThermo& thermo();
+
+        //- Return const access to the thermo package
+        virtual const typename Type::ReactionThermo& thermo() const;
 
         //- Correct combustion rate
         virtual void correct();

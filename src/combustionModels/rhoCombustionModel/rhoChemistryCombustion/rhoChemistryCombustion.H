@@ -73,8 +73,6 @@ protected:
 
 public:
 
-    typedef rhoCombustionModel CombustionModel;
-
     // Constructors
 
         //- Construct from components and thermo

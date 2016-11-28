@@ -25,14 +25,13 @@ License
 
 #include "makeCombustionTypes.H"
 
-#include "psiChemistryCombustion.H"
-#include "rhoChemistryCombustion.H"
+#include "psiCombustionModel.H"
+#include "rhoCombustionModel.H"
 #include "zoneCombustion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeCombustionTypes(zoneCombustion, psiChemistryCombustion, psiCombustionModel);
-makeCombustionTypes(zoneCombustion, rhoChemistryCombustion, rhoCombustionModel);
-
+makeCombustionTypes(zoneCombustion, psiCombustionModel, psiCombustionModel);
+makeCombustionTypes(zoneCombustion, rhoCombustionModel, rhoCombustionModel);
 
 // ************************************************************************* //

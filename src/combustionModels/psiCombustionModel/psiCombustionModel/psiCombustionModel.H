@@ -68,6 +68,9 @@ class psiCombustionModel
 
 public:
 
+    typedef psiReactionThermo ReactionThermo;
+
+
     //- Runtime type information
     TypeName("psiCombustionModel");
 

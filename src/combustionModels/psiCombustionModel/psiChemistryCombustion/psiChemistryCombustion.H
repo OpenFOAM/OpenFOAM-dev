@@ -73,8 +73,6 @@ protected:
 
 public:
 
-    typedef psiCombustionModel CombustionModel;
-
     // Constructors
 
         //- Construct from components and thermo

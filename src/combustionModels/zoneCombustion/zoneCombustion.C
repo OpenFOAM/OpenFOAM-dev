@@ -112,7 +112,7 @@ Foam::combustionModels::zoneCombustion<Type>::zoneCombustion
     Type(modelType, mesh, combustionProperties, phaseName),
     combustionModelPtr_
     (
-        Type::CombustionModel::New
+        Type::New
         (
             mesh,
             "zoneCombustionProperties",
@@ -131,6 +131,22 @@ Foam::combustionModels::zoneCombustion<Type>::~zoneCombustion()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class Type>
+typename Type::ReactionThermo&
+Foam::combustionModels::zoneCombustion<Type>::thermo()
+{
+    return combustionModelPtr_->thermo();
+}
+
+
+template<class Type>
+const typename Type::ReactionThermo&
+Foam::combustionModels::zoneCombustion<Type>::thermo() const
+{
+    return combustionModelPtr_->thermo();
+}
+
 
 template<class Type>
 void Foam::combustionModels::zoneCombustion<Type>::correct()

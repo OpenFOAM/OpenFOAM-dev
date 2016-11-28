@@ -69,6 +69,9 @@ class rhoCombustionModel
 
 public:
 
+    typedef rhoReactionThermo ReactionThermo;
+
+
     //- Runtime type information
     TypeName("rhoCombustionModel");
 
