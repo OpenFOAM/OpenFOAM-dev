@@ -29,7 +29,7 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 void Foam::fv::CodedSource<Type>::prepare

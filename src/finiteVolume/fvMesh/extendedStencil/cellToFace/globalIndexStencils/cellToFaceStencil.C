@@ -29,7 +29,7 @@ License
 #include "syncTools.H"
 #include "dummyTransform.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::cellToFaceStencil::merge
 (

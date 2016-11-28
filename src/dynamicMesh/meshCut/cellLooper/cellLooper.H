@@ -71,8 +71,6 @@ class cellLooper
 :
     public edgeVertex
 {
-    // Private data
-
 
 protected:
 
@@ -104,6 +102,7 @@ protected:
         //- Return edge from cellEdges that is most perpendicular
         //  to refinement direction.
         label getMisAlignedEdge(const vector& refDir, const label celli) const;
+
 
 private:
 

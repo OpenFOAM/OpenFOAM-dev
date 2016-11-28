@@ -39,7 +39,7 @@ namespace Foam
 
 Foam::scalar Foam::meshToMeshMethod::tolerance_ = 1e-6;
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::labelList Foam::meshToMeshMethod::maskCells() const
 {

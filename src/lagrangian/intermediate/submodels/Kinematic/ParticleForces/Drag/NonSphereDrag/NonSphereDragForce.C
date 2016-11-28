@@ -25,7 +25,7 @@ License
 
 #include "NonSphereDragForce.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class CloudType>
 Foam::scalar Foam::NonSphereDragForce<CloudType>::CdRe(const scalar Re) const

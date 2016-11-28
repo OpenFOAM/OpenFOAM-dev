@@ -38,7 +38,8 @@ namespace Foam
     addToRunTimeSelectionTable(polyPatch, wedgePolyPatch, dictionary);
 }
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::wedgePolyPatch::calcGeometry(PstreamBuffers&)
 {

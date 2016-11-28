@@ -23,6 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+inline Foam::pointField& Foam::edgeMesh::storedPoints()
+{
+    return points_;
+}
+
+
+inline Foam::edgeList& Foam::edgeMesh::storedEdges()
+{
+    return edges_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::edgeMesh::edgeMesh(const edgeMesh& em)
@@ -55,18 +69,6 @@ inline const Foam::labelListList& Foam::edgeMesh::pointEdges() const
         calcPointEdges();
     }
     return pointEdgesPtr_();
-}
-
-
-inline Foam::pointField& Foam::edgeMesh::storedPoints()
-{
-    return points_;
-}
-
-
-inline Foam::edgeList& Foam::edgeMesh::storedEdges()
-{
-    return edges_;
 }
 
 

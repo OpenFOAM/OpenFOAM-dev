@@ -298,59 +298,6 @@ void Foam::refinementFeatures::buildTrees(const label featI)
 }
 
 
-const Foam::PtrList<Foam::indexedOctree<Foam::treeDataEdge>>&
-Foam::refinementFeatures::regionEdgeTrees() const
-{
-    if (!regionEdgeTreesPtr_.valid())
-    {
-        regionEdgeTreesPtr_.reset
-        (
-            new PtrList<indexedOctree<treeDataEdge>>(size())
-        );
-        PtrList<indexedOctree<treeDataEdge>>& trees = regionEdgeTreesPtr_();
-
-        forAll(*this, featI)
-        {
-            const extendedEdgeMesh& eMesh = operator[](featI);
-            const pointField& points = eMesh.points();
-            const edgeList& edges = eMesh.edges();
-
-            // Calculate bb of all points
-            treeBoundBox bb(points);
-
-            // Random number generator. Bit dodgy since not exactly random ;-)
-            Random rndGen(65431);
-
-            // Slightly extended bb. Slightly off-centred just so on symmetric
-            // geometry there are less face/edge aligned items.
-            bb = bb.extend(rndGen, 1e-4);
-            bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-            bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
-
-            trees.set
-            (
-                featI,
-                new indexedOctree<treeDataEdge>
-                (
-                    treeDataEdge
-                    (
-                        false,                  // do not cache bb
-                        edges,
-                        points,
-                        eMesh.regionEdges()
-                    ),
-                    bb,     // overall search domain
-                    8,      // maxLevel
-                    10,     // leafsize
-                    3.0     // duplicity
-                )
-            );
-        }
-    }
-    return regionEdgeTreesPtr_();
-}
-
-
 // Find maximum level of a shell.
 void Foam::refinementFeatures::findHigherLevel
 (
@@ -421,6 +368,61 @@ void Foam::refinementFeatures::findHigherLevel
             maxLevel[pointi] = levels[minDistI+1];
         }
     }
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+const Foam::PtrList<Foam::indexedOctree<Foam::treeDataEdge>>&
+Foam::refinementFeatures::regionEdgeTrees() const
+{
+    if (!regionEdgeTreesPtr_.valid())
+    {
+        regionEdgeTreesPtr_.reset
+        (
+            new PtrList<indexedOctree<treeDataEdge>>(size())
+        );
+        PtrList<indexedOctree<treeDataEdge>>& trees = regionEdgeTreesPtr_();
+
+        forAll(*this, featI)
+        {
+            const extendedEdgeMesh& eMesh = operator[](featI);
+            const pointField& points = eMesh.points();
+            const edgeList& edges = eMesh.edges();
+
+            // Calculate bb of all points
+            treeBoundBox bb(points);
+
+            // Random number generator. Bit dodgy since not exactly random ;-)
+            Random rndGen(65431);
+
+            // Slightly extended bb. Slightly off-centred just so on symmetric
+            // geometry there are less face/edge aligned items.
+            bb = bb.extend(rndGen, 1e-4);
+            bb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+            bb.max() += point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
+
+            trees.set
+            (
+                featI,
+                new indexedOctree<treeDataEdge>
+                (
+                    treeDataEdge
+                    (
+                        false,                  // do not cache bb
+                        edges,
+                        points,
+                        eMesh.regionEdges()
+                    ),
+                    bb,     // overall search domain
+                    8,      // maxLevel
+                    10,     // leafsize
+                    3.0     // duplicity
+                )
+            );
+        }
+    }
+    return regionEdgeTreesPtr_();
 }
 
 

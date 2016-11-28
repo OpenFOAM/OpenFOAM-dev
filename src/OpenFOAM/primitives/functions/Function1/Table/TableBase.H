@@ -104,6 +104,9 @@ protected:
         //- Return (demand driven) interpolator
         const interpolationWeights& interpolator() const;
 
+
+private:
+
         //- Disallow default bitwise assignment
         void operator=(const TableBase<Type>&);
 

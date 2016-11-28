@@ -27,6 +27,13 @@ License
 #include "runTimeSelectionTables.H"
 #include "pointMesh.H"
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::AveragingMethod<Type>::updateGrad()
+{}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -104,15 +111,6 @@ Foam::AveragingMethod<Type>::New
 template<class Type>
 Foam::AveragingMethod<Type>::~AveragingMethod()
 {}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::AveragingMethod<Type>::updateGrad()
-{
-    // do nothing
-}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

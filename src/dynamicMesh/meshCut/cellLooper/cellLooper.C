@@ -62,9 +62,8 @@ Foam::autoPtr<Foam::cellLooper> Foam::cellLooper::New
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-// Get faces (on cell) connected to vertI which are not using edgeI
 Foam::labelList Foam::cellLooper::getVertFacesNonEdge
 (
     const label celli,
@@ -101,7 +100,6 @@ Foam::labelList Foam::cellLooper::getVertFacesNonEdge
 }
 
 
-// Get first edge connected to vertI and on facei
 Foam::label Foam::cellLooper::getFirstVertEdge
 (
     const label facei,
@@ -131,7 +129,6 @@ Foam::label Foam::cellLooper::getFirstVertEdge
 }
 
 
-// Get edges (on cell) connected to vertI which are not on facei
 Foam::labelList Foam::cellLooper::getVertEdgesNonFace
 (
     const label celli,
@@ -166,8 +163,6 @@ Foam::labelList Foam::cellLooper::getVertEdgesNonFace
 }
 
 
-// Return edge from cellEdges that is most perpendicular
-// to refinement direction.
 Foam::label Foam::cellLooper::getMisAlignedEdge
 (
     const vector& refDir,

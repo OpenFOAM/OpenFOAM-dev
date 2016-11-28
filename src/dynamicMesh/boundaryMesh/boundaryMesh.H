@@ -70,6 +70,7 @@ class boundaryMesh
         //  the largest distance from face centre to one of its vertices.
         static const scalar distanceTol_;
 
+
     // Private data
 
         //- All boundary mesh data. Reconstructed every time faces are repatched

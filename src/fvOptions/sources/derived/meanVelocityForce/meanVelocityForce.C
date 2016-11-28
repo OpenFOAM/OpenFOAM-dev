@@ -47,7 +47,7 @@ namespace fv
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::fv::meanVelocityForce::writeProps
 (

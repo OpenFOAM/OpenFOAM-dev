@@ -36,9 +36,11 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(triSurface, 0);
+    defineTypeNameAndDebug(triSurface, 0);
 }
 
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::fileName Foam::triSurface::triSurfInstance(const Time& d)
 {

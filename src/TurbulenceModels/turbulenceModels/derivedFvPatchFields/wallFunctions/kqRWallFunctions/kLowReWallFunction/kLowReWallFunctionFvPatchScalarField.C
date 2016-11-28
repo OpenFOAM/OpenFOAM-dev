@@ -35,7 +35,7 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void kLowReWallFunctionFvPatchScalarField::checkType()
 {
@@ -50,8 +50,6 @@ void kLowReWallFunctionFvPatchScalarField::checkType()
     }
 }
 
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 scalar kLowReWallFunctionFvPatchScalarField::yPlusLam
 (

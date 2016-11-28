@@ -33,7 +33,7 @@ int Foam::cellPointWeight::debug(debug::debugSwitch("cellPointWeight", 0));
 
 Foam::scalar Foam::cellPointWeight::tol(SMALL);
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::cellPointWeight::findTetrahedron
 (

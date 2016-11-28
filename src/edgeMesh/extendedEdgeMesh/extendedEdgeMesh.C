@@ -168,7 +168,7 @@ bool Foam::extendedEdgeMesh::canRead
 }
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::extendedEdgeMesh::pointStatus
 Foam::extendedEdgeMesh::classifyFeaturePoint

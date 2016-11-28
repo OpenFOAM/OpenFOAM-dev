@@ -56,7 +56,7 @@ inline void Foam::fileFormats::STARCDedgeFormat::writeLines
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::fileFormats::STARCDedgeFormat::writeCase
 (

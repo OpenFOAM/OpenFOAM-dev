@@ -334,32 +334,7 @@ void Foam::cuttingPlane::walkCellCuts
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-// Construct without cutting
-Foam::cuttingPlane::cuttingPlane(const plane& pln)
-:
-    plane(pln)
-{}
-
-
-// Construct from plane and mesh reference, restricted to a list of cells
-Foam::cuttingPlane::cuttingPlane
-(
-    const plane& pln,
-    const primitiveMesh& mesh,
-    const bool triangulate,
-    const labelUList& cellIdLabels
-)
-:
-    plane(pln)
-{
-    reCut(mesh, triangulate, cellIdLabels);
-}
-
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::cuttingPlane::reCut
 (
@@ -403,6 +378,30 @@ void Foam::cuttingPlane::remapFaces
         }
         cutCells_.transfer(newCutCells);
     }
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+// Construct without cutting
+Foam::cuttingPlane::cuttingPlane(const plane& pln)
+:
+    plane(pln)
+{}
+
+
+// Construct from plane and mesh reference, restricted to a list of cells
+Foam::cuttingPlane::cuttingPlane
+(
+    const plane& pln,
+    const primitiveMesh& mesh,
+    const bool triangulate,
+    const labelUList& cellIdLabels
+)
+:
+    plane(pln)
+{
+    reCut(mesh, triangulate, cellIdLabels);
 }
 
 

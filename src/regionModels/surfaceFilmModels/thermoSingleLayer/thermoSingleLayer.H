@@ -65,8 +65,6 @@ class thermoSingleLayer
 :
     public kinematicSingleLayer
 {
-private:
-
     // Private member functions
 
         //- Disallow default bitwise copy construct

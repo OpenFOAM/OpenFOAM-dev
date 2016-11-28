@@ -43,7 +43,8 @@ namespace Foam
 
 const char* const Foam::faceZone::labelsName = "faceLabels";
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::faceZone::calcFaceZonePatch() const
 {

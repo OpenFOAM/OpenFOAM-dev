@@ -81,6 +81,8 @@ Foam::word Foam::ThermoSurfaceFilm<CloudType>::interactionTypeStr
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
 template<class CloudType>
 Foam::vector Foam::ThermoSurfaceFilm<CloudType>::tangentVector
 (

@@ -33,7 +33,7 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class TurbulenceModel, class BasicTurbulenceModel>
 tmp<volScalarField>

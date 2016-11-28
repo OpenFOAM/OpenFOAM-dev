@@ -238,7 +238,7 @@ private:
 
 protected:
 
-    // Protected data
+    // Protected member data
 
         //- Pointers to cell shape models
         static const cellModel* unknownModel;
@@ -285,10 +285,11 @@ protected:
         cellTable cellTable_;
 
 
-    // Member Functions
+    // Protected member functions
 
         //- Subclasses are required to supply this information
         virtual bool readGeometry(const scalar scaleFactor = 1.0) = 0;
+
 
 public:
 

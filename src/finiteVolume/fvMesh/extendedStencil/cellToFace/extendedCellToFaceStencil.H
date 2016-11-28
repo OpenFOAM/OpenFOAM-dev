@@ -72,7 +72,7 @@ protected:
         const polyMesh& mesh_;
 
 
-protected:
+    // Protected member functions
 
         //- Write some statistics about stencil
         static void writeStencilStats
@@ -81,6 +81,7 @@ protected:
             const labelListList& stencil,
             const mapDistribute& map
         );
+
 
 public:
 

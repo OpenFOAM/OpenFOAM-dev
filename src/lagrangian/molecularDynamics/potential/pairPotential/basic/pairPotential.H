@@ -60,7 +60,7 @@ class pairPotential
 
 protected:
 
-    // Protected data
+    // Protected member data
 
         word name_;
         dictionary pairPotentialProperties_;
@@ -79,7 +79,7 @@ protected:
         bool writeTables_;
 
 
-    // Private Member Functions
+    // Protected member functions
 
         void scaleEnergy(scalar& e, const scalar r) const;
 
@@ -93,7 +93,7 @@ protected:
 public:
 
     //- Runtime type information
-        TypeName("pairPotential");
+    TypeName("pairPotential");
 
 
     // Declare run-time constructor selection table

@@ -36,7 +36,7 @@ namespace Foam
 Foam::scalar Foam::pointMVCWeight::tol(SMALL);
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::pointMVCWeight::calcWeights
 (

@@ -28,7 +28,7 @@ License
 #include "SortableList.H"
 #include "emptyPolyPatch.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::cellToCellStencil::merge
 (

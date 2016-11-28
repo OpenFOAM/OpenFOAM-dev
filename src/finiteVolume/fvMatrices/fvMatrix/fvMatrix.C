@@ -30,7 +30,7 @@ License
 #include "coupledFvPatchFields.H"
 #include "UIndirectList.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 template<class Type2>

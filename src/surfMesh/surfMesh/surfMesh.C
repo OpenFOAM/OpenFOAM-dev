@@ -69,6 +69,32 @@ Foam::word Foam::surfMesh::meshSubDir = "surfMesh";
 // }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::surfMesh::updatePointsRef()
+{
+    // Assign the reference to the points (this is truly ugly)
+    reinterpret_cast<SubField<point>&>
+    (
+        const_cast<Field<point>&>(MeshReference::points())
+    ) = reinterpret_cast<SubField<point>&>(this->storedPoints());
+}
+
+
+void Foam::surfMesh::updateFacesRef()
+{
+    // Assign the reference to the faces
+    shallowCopy(this->storedFaces());
+}
+
+
+void Foam::surfMesh::updateRefs()
+{
+    this->updatePointsRef();
+    this->updateFacesRef();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::surfMesh::surfMesh(const IOobject& io, const word& surfName)
@@ -226,30 +252,6 @@ Foam::surfMesh::~surfMesh()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::surfMesh::updatePointsRef()
-{
-    // Assign the reference to the points (this is truly ugly)
-    reinterpret_cast<SubField<point>&>
-    (
-        const_cast<Field<point>&>(MeshReference::points())
-    ) = reinterpret_cast<SubField<point>&>(this->storedPoints());
-}
-
-
-void Foam::surfMesh::updateFacesRef()
-{
-    // Assign the reference to the faces
-    shallowCopy(this->storedFaces());
-}
-
-
-void Foam::surfMesh::updateRefs()
-{
-    this->updatePointsRef();
-    this->updateFacesRef();
-}
-
 
 void Foam::surfMesh::resetPrimitives
 (

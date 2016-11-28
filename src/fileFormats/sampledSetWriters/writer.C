@@ -53,7 +53,7 @@ Foam::autoPtr<Foam::writer<Type>> Foam::writer<Type>::New
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 Foam::fileName Foam::writer<Type>::getBaseName

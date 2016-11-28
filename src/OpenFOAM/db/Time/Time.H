@@ -59,6 +59,7 @@ SourceFiles
 
 namespace Foam
 {
+
 // Forward declaration of classes
 class argList;
 
@@ -85,6 +86,7 @@ class Time
 
         //- The controlDict
         IOdictionary controlDict_;
+
 
 public:
 

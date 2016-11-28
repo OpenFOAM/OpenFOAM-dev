@@ -141,7 +141,7 @@ protected:
         static label externalStart_;
 
 
-    // Private data
+    // Protected data
 
         //- Index of the start of the concave feature points
         label concaveStart_;
@@ -203,7 +203,7 @@ protected:
         mutable PtrList<indexedOctree<treeDataEdge>> edgeTreesByType_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Classify the type of feature point.  Requires valid stored member
         //  data for edges and normals.

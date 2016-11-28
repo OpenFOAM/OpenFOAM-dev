@@ -78,7 +78,7 @@ const int Foam::Time::maxPrecision_(3 - log10(SMALL));
 Foam::word Foam::Time::controlDictName("controlDict");
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::Time::adjustDeltaT()
 {

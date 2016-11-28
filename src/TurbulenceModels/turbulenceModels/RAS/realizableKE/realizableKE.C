@@ -34,7 +34,7 @@ namespace Foam
 namespace RASModels
 {
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
 tmp<volScalarField> realizableKE<BasicTurbulenceModel>::rCmu

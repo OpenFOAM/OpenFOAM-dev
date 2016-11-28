@@ -90,7 +90,7 @@ protected:
         };
 
 
-    // Private data
+    // Protected member data
 
         //- Const reference to fvMesh
         const fvMesh& mesh_;
@@ -140,7 +140,7 @@ protected:
             HashPtrTable<OFstream> probeFilePtrs_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Clear old field groups
         void clearFieldGroups();

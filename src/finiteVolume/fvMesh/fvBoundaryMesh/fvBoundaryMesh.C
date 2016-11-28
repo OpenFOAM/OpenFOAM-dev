@@ -131,6 +131,8 @@ Foam::lduInterfacePtrsList Foam::fvBoundaryMesh::interfaces() const
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
 void Foam::fvBoundaryMesh::readUpdate(const polyBoundaryMesh& basicBdry)
 {
     clear();

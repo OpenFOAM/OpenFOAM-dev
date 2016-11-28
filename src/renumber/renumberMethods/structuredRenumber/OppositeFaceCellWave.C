@@ -26,7 +26,7 @@ License
 #include "OppositeFaceCellWave.H"
 #include "polyMesh.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type, class TrackingData>
 void Foam::OppositeFaceCellWave<Type, TrackingData>::opposingFaceLabels

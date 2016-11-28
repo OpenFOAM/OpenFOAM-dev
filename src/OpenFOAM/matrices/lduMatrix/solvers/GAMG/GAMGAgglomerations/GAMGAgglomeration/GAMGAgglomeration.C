@@ -43,7 +43,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::GAMGAgglomeration::compactLevels(const label nCreatedLevels)
 {

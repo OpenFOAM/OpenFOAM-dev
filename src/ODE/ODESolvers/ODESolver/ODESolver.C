@@ -34,7 +34,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::scalar Foam::ODESolver::normalizeError
 (

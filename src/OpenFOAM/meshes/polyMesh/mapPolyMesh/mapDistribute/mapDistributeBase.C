@@ -33,11 +33,11 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(mapDistributeBase, 0);
+    defineTypeNameAndDebug(mapDistributeBase, 0);
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::List<Foam::labelPair> Foam::mapDistributeBase::schedule
 (

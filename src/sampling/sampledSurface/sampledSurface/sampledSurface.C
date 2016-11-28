@@ -39,15 +39,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::sampledSurface::clearGeom() const
-{
-    deleteDemandDrivenData(SfPtr_);
-    deleteDemandDrivenData(magSfPtr_);
-    deleteDemandDrivenData(CfPtr_);
-    area_ = -1;
-}
-
-
 void Foam::sampledSurface::makeSf() const
 {
     // It is an error to recalculate if the pointer is already set
@@ -108,6 +99,17 @@ void Foam::sampledSurface::makeCf() const
     {
         values[facei] = theFaces[facei].centre(points());
     }
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+void Foam::sampledSurface::clearGeom() const
+{
+    deleteDemandDrivenData(SfPtr_);
+    deleteDemandDrivenData(magSfPtr_);
+    deleteDemandDrivenData(CfPtr_);
+    area_ = -1;
 }
 
 

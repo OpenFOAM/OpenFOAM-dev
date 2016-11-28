@@ -39,7 +39,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::label Foam::sampledSet::getBoundaryCell(const label facei) const
 {

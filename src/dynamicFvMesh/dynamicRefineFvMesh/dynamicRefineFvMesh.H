@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ protected:
         PackedBoolList protectedCell_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Count set/unset elements in packedlist.
         static label count(const PackedBoolList&, const unsigned int);

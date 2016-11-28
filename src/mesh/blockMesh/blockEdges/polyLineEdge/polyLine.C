@@ -25,7 +25,7 @@ License
 
 #include "polyLine.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::polyLine::calcParam()
 {

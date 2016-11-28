@@ -385,6 +385,8 @@ void Foam::ParticleCollector<CloudType>::collectParcelConcentricCircles
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
 template<class CloudType>
 void Foam::ParticleCollector<CloudType>::write()
 {

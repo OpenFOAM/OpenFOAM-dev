@@ -32,11 +32,11 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(extendedCellToFaceStencil, 0);
+    defineTypeNameAndDebug(extendedCellToFaceStencil, 0);
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::extendedCellToFaceStencil::writeStencilStats
 (

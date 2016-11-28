@@ -52,14 +52,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class OppositeFaceCellWaveName Declaration
+                  Class OppositeFaceCellWaveName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(OppositeFaceCellWave);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class OppositeFaceCellWave Declaration
+                    Class OppositeFaceCellWave Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type, class TrackingData = int>

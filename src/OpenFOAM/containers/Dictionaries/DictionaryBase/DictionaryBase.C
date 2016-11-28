@@ -25,7 +25,7 @@ License
 
 #include "DictionaryBase.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class IDLListType, class T>
 void Foam::DictionaryBase<IDLListType, T>::addEntries()

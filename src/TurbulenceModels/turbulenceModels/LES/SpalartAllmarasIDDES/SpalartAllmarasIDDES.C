@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,6 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::rd
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fd
 (
@@ -98,6 +96,8 @@ tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::fd
     return 1 - tanh(pow3(8*rd(this->nuEff(), magGradU)));
 }
 
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
 tmp<volScalarField> SpalartAllmarasIDDES<BasicTurbulenceModel>::dTilda

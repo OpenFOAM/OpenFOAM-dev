@@ -27,7 +27,7 @@ License
 #include "Time.H"
 #include "interpolationWeights.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 const Foam::interpolationWeights&

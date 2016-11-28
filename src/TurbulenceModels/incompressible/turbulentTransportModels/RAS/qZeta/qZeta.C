@@ -41,7 +41,7 @@ namespace RASModels
 defineTypeNameAndDebug(qZeta, 0);
 addToRunTimeSelectionTable(RASModel, qZeta, dictionary);
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 tmp<volScalarField> qZeta::fMu() const
 {

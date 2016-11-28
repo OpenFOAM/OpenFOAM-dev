@@ -33,7 +33,7 @@ namespace Foam
 namespace LESModels
 {
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
 volScalarField dynamicKEqn<BasicTurbulenceModel>::Ck

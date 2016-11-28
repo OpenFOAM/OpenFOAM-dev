@@ -74,6 +74,8 @@ void Foam::FacePostProcessing<CloudType>::makeLogFile
 }
 
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
 template<class CloudType>
 void Foam::FacePostProcessing<CloudType>::write()
 {

@@ -35,8 +35,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::pairPotential::scaleEnergy(scalar& e, const scalar r) const
 {

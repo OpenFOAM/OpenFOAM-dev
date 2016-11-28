@@ -29,7 +29,7 @@ License
 
 using namespace Foam::constant::mathematical;
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class CloudType>
 Foam::tmp<Foam::scalarField> Foam::LiquidEvaporationBoil<CloudType>::calcXc

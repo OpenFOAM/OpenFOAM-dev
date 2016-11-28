@@ -53,8 +53,6 @@ class refinementFeatures
 :
     public PtrList<extendedFeatureEdgeMesh>
 {
-private:
-
     // Private data
 
         //- Per shell the list of ranges

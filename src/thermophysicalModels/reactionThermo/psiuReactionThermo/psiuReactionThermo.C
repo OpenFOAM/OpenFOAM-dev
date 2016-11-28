@@ -40,7 +40,7 @@ namespace Foam
 defineTypeNameAndDebug(psiuReactionThermo, 0);
 defineRunTimeSelectionTable(psiuReactionThermo, fvMesh);
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 wordList psiuReactionThermo::heuBoundaryTypes()
 {
