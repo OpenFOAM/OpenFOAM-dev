@@ -67,44 +67,6 @@ Foam::vector Foam::cyclicAMIPolyPatch::findFaceNormalMaxRadius
 }
 
 
-// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
-
-void Foam::cyclicAMIPolyPatch::calcTransforms()
-{
-    const cyclicAMIPolyPatch& half0 = *this;
-    vectorField half0Areas(half0.size());
-    forAll(half0, facei)
-    {
-        half0Areas[facei] = half0[facei].normal(half0.points());
-    }
-
-    const cyclicAMIPolyPatch& half1 = neighbPatch();
-    vectorField half1Areas(half1.size());
-    forAll(half1, facei)
-    {
-        half1Areas[facei] = half1[facei].normal(half1.points());
-    }
-
-    calcTransforms
-    (
-        half0,
-        half0.faceCentres(),
-        half0Areas,
-        half1.faceCentres(),
-        half1Areas
-    );
-
-    if (debug)
-    {
-        Pout<< "calcTransforms() : patch: " << name() << nl
-            << "    forwardT = " << forwardT() << nl
-            << "    reverseT = " << reverseT() << nl
-            << "    separation = " << separation() << nl
-            << "    collocated = " << collocated() << nl << endl;
-    }
-}
-
-
 void Foam::cyclicAMIPolyPatch::calcTransforms
 (
     const primitivePatch& half0,
@@ -319,7 +281,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 void Foam::cyclicAMIPolyPatch::resetAMI
 (
@@ -391,6 +353,42 @@ void Foam::cyclicAMIPolyPatch::resetAMI
                 << "    " << "tgAddress :" << AMIPtr_().tgtAddress().size()
                 << nl << endl;
         }
+    }
+}
+
+
+void Foam::cyclicAMIPolyPatch::calcTransforms()
+{
+    const cyclicAMIPolyPatch& half0 = *this;
+    vectorField half0Areas(half0.size());
+    forAll(half0, facei)
+    {
+        half0Areas[facei] = half0[facei].normal(half0.points());
+    }
+
+    const cyclicAMIPolyPatch& half1 = neighbPatch();
+    vectorField half1Areas(half1.size());
+    forAll(half1, facei)
+    {
+        half1Areas[facei] = half1[facei].normal(half1.points());
+    }
+
+    calcTransforms
+    (
+        half0,
+        half0.faceCentres(),
+        half0Areas,
+        half1.faceCentres(),
+        half1Areas
+    );
+
+    if (debug)
+    {
+        Pout<< "calcTransforms() : patch: " << name() << nl
+            << "    forwardT = " << forwardT() << nl
+            << "    reverseT = " << reverseT() << nl
+            << "    separation = " << separation() << nl
+            << "    collocated = " << collocated() << nl << endl;
     }
 }
 

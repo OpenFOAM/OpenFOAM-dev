@@ -37,9 +37,6 @@ SourceFiles
 
 #include "treeBoundBox.H"
 #include "searchableSurface.H"
-//#include "edgeMesh.H"
-//#include "indexedOctree.H"
-//#include "treeDataEdge.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,8 +56,6 @@ class searchableCurve
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- Feature
@@ -222,15 +217,11 @@ public:
                 NotImplemented;
             }
 
-
-        // regIOobject implementation
-
             bool writeData(Ostream&) const
             {
                 NotImplemented;
                 return false;
             }
-
 };
 
 

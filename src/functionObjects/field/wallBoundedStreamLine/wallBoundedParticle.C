@@ -33,7 +33,7 @@ const std::size_t Foam::wallBoundedParticle::sizeofFields_
 );
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 Foam::edge Foam::wallBoundedParticle::currentEdge() const
 {

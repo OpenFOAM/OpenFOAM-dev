@@ -134,7 +134,7 @@ Foam::Istream& Foam::topoSetSource::checkIs(Istream& is)
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::topoSetSource::addOrDelete
 (

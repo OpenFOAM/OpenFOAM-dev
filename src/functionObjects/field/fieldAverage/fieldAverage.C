@@ -40,7 +40,7 @@ namespace functionObjects
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::functionObjects::fieldAverage::resetFields()
 {

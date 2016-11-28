@@ -185,7 +185,7 @@ protected:
             label periodIndex_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         // Initialisation routines
 

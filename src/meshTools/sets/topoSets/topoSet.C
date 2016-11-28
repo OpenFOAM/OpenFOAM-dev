@@ -130,7 +130,7 @@ Foam::fileName Foam::topoSet::localPath
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 // Update stored cell numbers using map.
 // Do in two passes to prevent allocation if nothing changed.

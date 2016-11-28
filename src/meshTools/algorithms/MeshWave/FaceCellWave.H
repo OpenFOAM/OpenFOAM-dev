@@ -77,8 +77,6 @@ class FaceCellWave
 :
     public FaceCellWaveName
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -90,7 +88,7 @@ private:
 
 protected:
 
-    // Private data
+    // Protected data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -244,7 +242,7 @@ protected:
             void handleExplicitConnections();
 
 
-      // Private static data
+      // Protected static data
 
             static const scalar geomTol_;
             static scalar propagationTol_;

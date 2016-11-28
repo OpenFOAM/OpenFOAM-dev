@@ -159,7 +159,7 @@ class triSurfaceTools
             );
 
             //- Calculate minimum (cos of) edge angle using addressing from
-            /// collapsing
+            //  collapsing
             //  edge to v1 at pt. Returns 1 if v1 is on edge without neighbours
             //  (and hence no edge angle can be defined)
             static scalar collapseMinCosAngle

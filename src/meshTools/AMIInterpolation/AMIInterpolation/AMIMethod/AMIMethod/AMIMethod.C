@@ -28,7 +28,7 @@ License
 #include "mapDistribute.H"
 #include "unitConversion.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class SourcePatch, class TargetPatch>
 void Foam::AMIMethod<SourcePatch, TargetPatch>::checkPatches() const

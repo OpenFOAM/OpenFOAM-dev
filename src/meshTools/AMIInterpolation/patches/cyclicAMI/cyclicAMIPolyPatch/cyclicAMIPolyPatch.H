@@ -53,9 +53,6 @@ class cyclicAMIPolyPatch
 :
     public coupledPolyPatch
 {
-
-private:
-
     // Private Member Functions
 
         //- Return normal of face at max distance from rotation axis

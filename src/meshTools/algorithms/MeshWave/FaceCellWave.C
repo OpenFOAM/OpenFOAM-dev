@@ -104,7 +104,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type, class TrackingData>
 bool Foam::FaceCellWave<Type, TrackingData>::updateCell

@@ -123,7 +123,7 @@ protected:
         wordList fieldSet_;
 
 
-    // Private Member Functions
+    // Protected Member Functions
 
         //- Helper function to write the output
         template<class Type>

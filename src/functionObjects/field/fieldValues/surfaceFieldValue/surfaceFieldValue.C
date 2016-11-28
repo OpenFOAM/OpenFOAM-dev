@@ -98,7 +98,7 @@ const Foam::NamedEnum
 > Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 void Foam::functionObjects::fieldValues::surfaceFieldValue::setFaceZoneFaces()
 {

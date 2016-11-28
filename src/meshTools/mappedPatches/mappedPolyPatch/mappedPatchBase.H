@@ -133,7 +133,7 @@ public:
 
 
     //- Helper class for finding nearest
-    // Nearest:
+    //  Nearest:
     //  - point+local index
     //  - sqr(distance)
     //  - processor
