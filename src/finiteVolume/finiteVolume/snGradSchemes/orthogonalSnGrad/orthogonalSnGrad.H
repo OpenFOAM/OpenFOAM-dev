@@ -25,7 +25,8 @@ Class
     Foam::fv::orthogonalSnGrad
 
 Description
-    Simple central-difference snGrad scheme without non-orthogonal correction.
+    Simple central-difference snGrad scheme using the cell-centre to cell-centre
+    delta-coefficients.
 
 SourceFiles
     orthogonalSnGrad.C

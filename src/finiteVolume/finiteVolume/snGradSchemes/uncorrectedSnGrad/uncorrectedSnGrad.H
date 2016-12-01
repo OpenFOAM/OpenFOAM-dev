@@ -25,7 +25,8 @@ Class
     Foam::fv::uncorrectedSnGrad
 
 Description
-    Simple central-difference snGrad scheme without non-orthogonal correction.
+    Simple central-difference snGrad scheme using the non-orthogonal mesh
+    delta-coefficients but without non-orthogonal correction.
 
 SourceFiles
     uncorrectedSnGrad.C
