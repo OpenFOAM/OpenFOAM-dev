@@ -17,8 +17,6 @@ FoamFile
 
 dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-motionSolverLibs ( "libfvMotionSolvers.so" );
-
 solver solidBody;
 
 solidBodyCoeffs
