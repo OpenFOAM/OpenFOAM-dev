@@ -53,7 +53,7 @@ Foam::velocityLaplacianFvMotionSolver::velocityLaplacianFvMotionSolver
 )
 :
     velocityMotionSolver(mesh, dict, typeName),
-    fvMotionSolverCore(mesh),
+    fvMotionSolver(mesh),
     cellMotionU_
     (
         IOobject

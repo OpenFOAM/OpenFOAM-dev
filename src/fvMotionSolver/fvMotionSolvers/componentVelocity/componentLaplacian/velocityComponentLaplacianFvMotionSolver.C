@@ -54,7 +54,7 @@ velocityComponentLaplacianFvMotionSolver
 )
 :
     componentVelocityMotionSolver(mesh, dict, typeName),
-    fvMotionSolverCore(mesh),
+    fvMotionSolver(mesh),
     cellMotionU_
     (
         IOobject

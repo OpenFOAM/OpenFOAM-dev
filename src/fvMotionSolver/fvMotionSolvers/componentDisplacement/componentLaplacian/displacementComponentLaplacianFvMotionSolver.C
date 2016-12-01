@@ -55,7 +55,7 @@ displacementComponentLaplacianFvMotionSolver
 )
 :
     componentDisplacementMotionSolver(mesh, dict, type()),
-    fvMotionSolverCore(mesh),
+    fvMotionSolver(mesh),
     cellDisplacement_
     (
         IOobject

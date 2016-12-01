@@ -98,11 +98,31 @@ motionSmoother/polyMeshGeometry/polyMeshGeometry.C
 motionSmoother/badQualityToCell/badQualityToCell.C
 motionSmoother/badQualityToFace/badQualityToFace.C
 
-motionSolver/motionSolver/motionSolver.C
-motionSolver/displacement/displacementMotionSolver.C
-motionSolver/componentDisplacement/componentDisplacementMotionSolver.C
-motionSolver/velocity/velocityMotionSolver.C
-motionSolver/componentVelocity/componentVelocityMotionSolver.C
+motionSolvers/motionSolver/motionSolver.C
+motionSolvers/displacement/points0/points0MotionSolver.C
+motionSolvers/displacement/displacement/displacementMotionSolver.C
+motionSolvers/displacement/interpolation/displacementInterpolationMotionSolver.C
+motionSolvers/displacement/layeredSolver/displacementLayeredMotionMotionSolver.C
+motionSolvers/displacement/layeredSolver/pointEdgeStructuredWalk.C
+motionSolvers/componentDisplacement/componentDisplacementMotionSolver.C
+motionSolvers/velocity/velocityMotionSolver.C
+motionSolvers/componentVelocity/componentVelocityMotionSolver.C
+motionSolvers/displacement/solidBody/solidBodyMotionSolver.C
+motionSolvers/displacement/solidBody/multiSolidBodyMotionSolver.C
+
+solidBodyMotionFunctions = motionSolvers/displacement/solidBody/solidBodyMotionFunctions
+$(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunction.C
+$(solidBodyMotionFunctions)/solidBodyMotionFunction/solidBodyMotionFunctionNew.C
+$(solidBodyMotionFunctions)/SDA/SDA.C
+$(solidBodyMotionFunctions)/tabulated6DoFMotion/tabulated6DoFMotion.C
+$(solidBodyMotionFunctions)/linearMotion/linearMotion.C
+$(solidBodyMotionFunctions)/rotatingMotion/rotatingMotion.C
+$(solidBodyMotionFunctions)/axisRotationMotion/axisRotationMotion.C
+$(solidBodyMotionFunctions)/multiMotion/multiMotion.C
+$(solidBodyMotionFunctions)/oscillatingLinearMotion/oscillatingLinearMotion.C
+$(solidBodyMotionFunctions)/oscillatingRotatingMotion/oscillatingRotatingMotion.C
+
+motionSolvers/displacement/solidBody/pointPatchFields/derived/solidBodyMotionDisplacement/solidBodyMotionDisplacementPointPatchVectorField.C
 
 createShellMesh/createShellMesh.C
 

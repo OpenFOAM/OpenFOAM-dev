@@ -17,9 +17,11 @@ FoamFile
 
 #include "${FOAM_CASE}/constant/caseSettings"
 
-dynamicFvMesh   solidBodyMotionFvMesh;
+dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-solidBodyMotionFvMeshCoeffs
+solver solidBody;
+
+solidBodyCoeffs
 {
     cellZone        rotatingZone;
 
