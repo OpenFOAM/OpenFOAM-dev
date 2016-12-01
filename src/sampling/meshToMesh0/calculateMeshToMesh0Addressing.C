@@ -156,6 +156,7 @@ void Foam::meshToMesh0::calcAddressing()
                     << "Source patch " << fromPatch.name()
                     << " has no faces. Not performing mapping for it."
                     << endl;
+                boundaryAddressing_[patchi].setSize(toPatch.size());
                 boundaryAddressing_[patchi] = -1;
             }
             else
