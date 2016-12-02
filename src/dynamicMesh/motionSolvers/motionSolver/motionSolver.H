@@ -105,7 +105,6 @@ public:
         class iNew
         {
             const polyMesh& mesh_;
-            mutable label index_;
 
         public:
 
