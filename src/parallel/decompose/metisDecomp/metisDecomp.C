@@ -291,7 +291,7 @@ Foam::labelList Foam::metisDecomp::decompose
         fineDistribution[i] = finalDecomp[agglom[i]];
     }
 
-    return finalDecomp;
+    return fineDistribution;
 }
 
 
