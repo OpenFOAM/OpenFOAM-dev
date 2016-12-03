@@ -378,24 +378,18 @@ public:
 
 int main(int argc, char *argv[])
 {
+    #include "addDictOption.H"
     #include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createNamedMesh.H"
 
-    Info<< "Reading setFieldsDict\n" << endl;
+    const word dictName("setFieldsDict");
+    #include "setSystemMeshDictionaryIO.H"
 
-    IOdictionary setFieldsDict
-    (
-        IOobject
-        (
-            "setFieldsDict",
-            runTime.system(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
+    Info<< "Reading " << dictName << "\n" << endl;
+
+    IOdictionary setFieldsDict(dictIO);
 
     if (setFieldsDict.found("defaultFieldValues"))
     {
