@@ -301,20 +301,4 @@ inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>& t)
 }
 
 
-//- Return the const reference of the non-const reference argument
-template<class T>
-inline const T& Const(T& t)
-{
-    return t;
-}
-
-
-//- Return the const reference of the non-const rvalue reference argument
-template<class T>
-inline const T& Const(T&& t)
-{
-    return t;
-}
-
-
 // ************************************************************************* //
