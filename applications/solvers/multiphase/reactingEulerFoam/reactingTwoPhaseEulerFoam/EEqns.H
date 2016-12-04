@@ -29,37 +29,25 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
     }
 
     {
-        tmp<fvScalarMatrix> E2eqn(phase2.heEqn());
+        tmp<fvScalarMatrix> E2Eqn(phase2.heEqn());
 
-        if (E2eqn.valid())
+        if (E2Eqn.valid())
         {
-            E2eqn =
+            E2Eqn =
             (
-                E2eqn
+                E2Eqn
              ==
                *heatTransfer[phase2.name()]
               + alpha2*rho2*(U2&g)
               + fvOptions(alpha2, rho2, phase2.thermo().he())
             );
 
-            E2eqn->relax();
-            fvOptions.constrain(E2eqn.ref());
-            E2eqn->solve();
+            E2Eqn->relax();
+            fvOptions.constrain(E2Eqn.ref());
+            E2Eqn->solve();
         }
     }
 
     fluid.correctThermo();
     fluid.correct();
 }
-
-Info<< phase1.name() << " min/max T "
-    << min(phase1.thermo().T()).value()
-    << " - "
-    << max(phase1.thermo().T()).value()
-    << endl;
-
-Info<< phase2.name() << " min/max T "
-    << min(phase2.thermo().T()).value()
-    << " - "
-    << max(phase2.thermo().T()).value()
-    << endl;

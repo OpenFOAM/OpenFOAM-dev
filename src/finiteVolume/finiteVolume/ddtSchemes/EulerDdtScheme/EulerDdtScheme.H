@@ -124,6 +124,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& psi
         );
 
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
+        (
+            const GeometricField<Type, fvsPatchField, surfaceMesh>&
+        );
+
         tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&

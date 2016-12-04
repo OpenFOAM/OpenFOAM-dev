@@ -133,6 +133,22 @@ tmp<fvMatrix<Type>> ddtScheme<Type>::fvmDdt
 
 
 template<class Type>
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> ddtScheme<Type>::fvcDdt
+(
+    const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
+)
+{
+    NotImplemented;
+
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    (
+        GeometricField<Type, fvsPatchField, surfaceMesh>::null()
+    );
+}
+
+
+
+template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,

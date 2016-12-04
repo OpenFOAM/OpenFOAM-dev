@@ -126,6 +126,21 @@ ddt
 
 
 template<class Type>
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+ddt
+(
+    const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
+)
+{
+    return fv::ddtScheme<Type>::New
+    (
+        sf.mesh(),
+        sf.mesh().ddtScheme("ddt(" + sf.name() + ')')
+    ).ref().fvcDdt(sf);
+}
+
+
+template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>>
 ddt
 (

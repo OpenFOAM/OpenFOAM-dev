@@ -47,6 +47,13 @@ const volScalarField& localEulerDdtScheme<Type>::localRDeltaT() const
 
 
 template<class Type>
+const surfaceScalarField& localEulerDdtScheme<Type>::localRDeltaTf() const
+{
+    return localEulerDdt::localRDeltaTf(mesh());
+}
+
+
+template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>>
 localEulerDdtScheme<Type>::fvcDdt
 (
@@ -330,6 +337,33 @@ localEulerDdtScheme<Type>::fvcDdt
             )
         );
     }
+}
+
+
+template<class Type>
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+localEulerDdtScheme<Type>::fvcDdt
+(
+    const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
+)
+{
+    const surfaceScalarField& rDeltaT = localRDeltaTf();
+
+    IOobject ddtIOobject
+    (
+        "ddt("+sf.name()+')',
+        mesh().time().timeName(),
+        mesh()
+    );
+
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    (
+        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        (
+            ddtIOobject,
+            rDeltaT*(sf - sf.oldTime())
+        )
+    );
 }
 
 

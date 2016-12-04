@@ -89,6 +89,12 @@ namespace fvc
     );
 
     template<class Type>
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> ddt
+    (
+        const GeometricField<Type, fvsPatchField, surfaceMesh>&
+    );
+
+    template<class Type>
     tmp<GeometricField<Type, fvPatchField, volMesh>> ddt
     (
         const one&,

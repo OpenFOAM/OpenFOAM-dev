@@ -69,6 +69,9 @@ public:
     //- Name of the reciprocal local time-step field
     static word rDeltaTName;
 
+    //- Name of the reciprocal local face time-step field
+    static word rDeltaTfName;
+
     //- Name of the reciprocal local sub-cycling time-step field
     static word rSubDeltaTName;
 
@@ -87,6 +90,10 @@ public:
         //- Return the reciprocal of the local time-step
         //  looked-up from the objectRegistry
         static const volScalarField& localRDeltaT(const fvMesh& mesh);
+
+        //- Return the reciprocal of the local face time-step
+        //  looked-up from the objectRegistry
+        static const surfaceScalarField& localRDeltaTf(const fvMesh& mesh);
 
         //- Calculate and return the reciprocal of the local sub-cycling
         //  time-step
@@ -118,6 +125,9 @@ class localEulerDdtScheme
 
         //- Return the reciprocal of the local time-step
         const volScalarField& localRDeltaT() const;
+
+        //- Return the reciprocal of the local face time-step
+        const surfaceScalarField& localRDeltaTf() const;
 
 
 public:
@@ -176,6 +186,11 @@ public:
             const volScalarField& alpha,
             const volScalarField& rho,
             const GeometricField<Type, fvPatchField, volMesh>& psi
+        );
+
+        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
+        (
+            const GeometricField<Type, fvsPatchField, surfaceMesh>&
         );
 
         tmp<fvMatrix<Type>> fvmDdt

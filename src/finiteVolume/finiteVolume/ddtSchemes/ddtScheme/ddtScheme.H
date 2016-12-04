@@ -167,6 +167,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
 
+        virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> fvcDdt
+        (
+            const GeometricField<Type, fvsPatchField, surfaceMesh>&
+        );
+
         virtual tmp<fvMatrix<Type>> fvmDdt
         (
             const GeometricField<Type, fvPatchField, volMesh>&

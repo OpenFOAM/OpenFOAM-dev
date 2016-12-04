@@ -318,6 +318,33 @@ EulerDdtScheme<Type>::fvcDdt
 
 
 template<class Type>
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+EulerDdtScheme<Type>::fvcDdt
+(
+    const GeometricField<Type, fvsPatchField, surfaceMesh>& sf
+)
+{
+    dimensionedScalar rDeltaT = 1.0/mesh().time().deltaT();
+
+    IOobject ddtIOobject
+    (
+        "ddt("+sf.name()+')',
+        mesh().time().timeName(),
+        mesh()
+    );
+
+    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    (
+        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        (
+            ddtIOobject,
+            rDeltaT*(sf - sf.oldTime())
+        )
+    );
+}
+
+
+template<class Type>
 tmp<fvMatrix<Type>>
 EulerDdtScheme<Type>::fvmDdt
 (

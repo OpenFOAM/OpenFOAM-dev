@@ -73,6 +73,7 @@ int main(int argc, char *argv[])
         )
     );
 
+    #include "createRDeltaTf.H"
     #include "pUf/createDDtU.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -91,6 +92,10 @@ int main(int argc, char *argv[])
         if (LTS)
         {
             #include "setRDeltaT.H"
+            if (faceMomentum)
+            {
+                #include "setRDeltaTf.H"
+            }
         }
         else
         {
