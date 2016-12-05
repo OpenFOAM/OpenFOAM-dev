@@ -26,7 +26,6 @@ License
 #include "thermalBaffleFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "emptyPolyPatch.H"
-#include "polyPatch.H"
 #include "mappedWallPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

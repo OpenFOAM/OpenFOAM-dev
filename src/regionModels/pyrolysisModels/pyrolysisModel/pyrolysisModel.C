@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "pyrolysisModel.H"
-#include "fvMesh.H"
-#include "mappedFieldFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

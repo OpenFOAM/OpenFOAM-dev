@@ -139,6 +139,27 @@ Foam::mappedFieldFvPatchField<Type>::mappedFieldFvPatchField
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
+void Foam::mappedFieldFvPatchField<Type>::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    mappedPatchBase::clearOut();
+}
+
+
+template<class Type>
+void Foam::mappedFieldFvPatchField<Type>::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    mappedPatchBase::clearOut();
+}
+
+
+template<class Type>
 void Foam::mappedFieldFvPatchField<Type>::updateCoeffs()
 {
     if (this->updated())
