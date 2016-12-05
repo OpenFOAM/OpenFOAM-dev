@@ -29,7 +29,8 @@ Group
 
 Description
     This boundary condition provides an advective outflow condition, based on
-    solving DDt(psi, U) = 0 at the boundary.
+    solving DDt(W, field) = 0 at the boundary where \c W is the wave velocity
+    and \c field is the field to which this boundary condition is applied.
 
     The standard (Euler, backward, CrankNicolson, localEuler) time schemes are
     supported.  Additionally an optional mechanism to relax the value at
@@ -37,7 +38,7 @@ Description
     switched on by specifying the relaxation length-scale \c lInf and the
     far-field value \c fieldInf.
 
-    The flow/wave speed at the outlet is provided by the virtual function
+    The flow/wave speed \c (w) at the outlet is provided by the virtual function
     advectionSpeed() the default implementation of which requires the name of
     the flux field \c (phi) and optionally the density \c (rho) if the
     mass-flux rather than the volumetric-flux is given.
