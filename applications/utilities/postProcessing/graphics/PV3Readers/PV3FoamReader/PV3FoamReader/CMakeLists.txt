@@ -79,8 +79,9 @@ ADD_PARAVIEW_PLUGIN(
 
 TARGET_LINK_LIBRARIES(
     PV3FoamReader_SM
-    OpenFOAM
-    finiteVolume
     vtkPV3Foam
+    finiteVolume
+    OpenFOAM
 )
+
 #-----------------------------------------------------------------------------

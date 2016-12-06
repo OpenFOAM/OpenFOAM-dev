@@ -80,8 +80,9 @@ ADD_PARAVIEW_PLUGIN(
 
 TARGET_LINK_LIBRARIES(
     PV3blockMeshReader_SM
-    OpenFOAM
-    blockMesh
     vtkPV3blockMesh
+    blockMesh
+    OpenFOAM
 )
+
 #-----------------------------------------------------------------------------

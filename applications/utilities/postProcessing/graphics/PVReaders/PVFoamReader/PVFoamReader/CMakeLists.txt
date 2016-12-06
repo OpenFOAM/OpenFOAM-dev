@@ -78,9 +78,9 @@ ENDIF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
 TARGET_LINK_LIBRARIES(
     PVFoamReader_SM
     LINK_PUBLIC
-    OpenFOAM
-    finiteVolume
     vtkPVFoam
+    finiteVolume
+    OpenFOAM
 )
 
 #-----------------------------------------------------------------------------
