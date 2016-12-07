@@ -15,7 +15,7 @@ cp system/decomposeParDict.hierarchical system/decomposeParDict
 runApplication decomposePar
 
 cp system/decomposeParDict.ptscotch system/decomposeParDict
-runParallel snappyHexMesh -overwrite -parallel
+runParallel snappyHexMesh -overwrite
 
 find . -type f -iname "*level*" -exec rm {} \;
 
