@@ -151,7 +151,7 @@ void Foam::mappedFieldFvPatchField<Type>::autoMap
 template<class Type>
 void Foam::mappedFieldFvPatchField<Type>::rmap
 (
-    const fvPatchScalarField& ptf,
+    const fvPatchField<Type>& ptf,
     const labelList& addr
 )
 {

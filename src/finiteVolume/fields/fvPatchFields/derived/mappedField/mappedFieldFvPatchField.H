@@ -204,7 +204,7 @@ public:
             //- Reverse map the given fvPatchField onto this fvPatchField
             virtual void rmap
             (
-                const fvPatchScalarField&,
+                const fvPatchField<Type>&,
                 const labelList&
             );
 
