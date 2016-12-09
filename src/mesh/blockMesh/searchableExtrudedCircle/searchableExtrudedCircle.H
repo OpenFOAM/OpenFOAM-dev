@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::searchableCurve
+    Foam::searchableExtrudedCircle
 
 Description
     Searching on edgemesh with constant radius
 
 SourceFiles
-    searchableCurve.C
+    searchableExtrudedCircle.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef searchableCurve_H
-#define searchableCurve_H
+#ifndef searchableExtrudedCircle_H
+#define searchableExtrudedCircle_H
 
 #include "treeBoundBox.H"
 #include "searchableSurface.H"
@@ -49,10 +49,10 @@ class treeDataEdge;
 template <class Type> class indexedOctree;
 
 /*---------------------------------------------------------------------------*\
-                           Class searchableCurve Declaration
+                  Class searchableExtrudedCircle Declaration
 \*---------------------------------------------------------------------------*/
 
-class searchableCurve
+class searchableExtrudedCircle
 :
     public searchableSurface
 {
@@ -74,22 +74,22 @@ class searchableCurve
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        searchableCurve(const searchableCurve&);
+        searchableExtrudedCircle(const searchableExtrudedCircle&);
 
         //- Disallow default bitwise assignment
-        void operator=(const searchableCurve&);
+        void operator=(const searchableExtrudedCircle&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("searchableCurve");
+    TypeName("searchableExtrudedCircle");
 
 
     // Constructors
 
         //- Construct from dictionary (used by searchableSurface)
-        searchableCurve
+        searchableExtrudedCircle
         (
             const IOobject& io,
             const dictionary& dict
@@ -97,7 +97,7 @@ public:
 
 
     //- Destructor
-    virtual ~searchableCurve();
+    virtual ~searchableExtrudedCircle();
 
 
     // Member Functions
@@ -152,7 +152,7 @@ public:
             //  an interpolated (along the curve) point on the surface.
             //  The lambdas[0] is equivalent for start, lambdas.last()
             //  is equivalent for end.
-            virtual void findNearest
+            virtual void findParametricNearest
             (
                 const point& start,
                 const point& end,

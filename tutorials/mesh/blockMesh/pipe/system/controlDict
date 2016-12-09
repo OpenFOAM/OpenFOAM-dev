@@ -20,7 +20,7 @@ libs            ("libblockMesh.so");
 DebugSwitches
 {
 //    project 1;
-//    searchableCurve 1;
+//    searchableExtrudedCircle 1;
 //    projectCurve 1;
 }
 

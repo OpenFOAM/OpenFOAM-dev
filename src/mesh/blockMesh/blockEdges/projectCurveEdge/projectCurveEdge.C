@@ -30,7 +30,7 @@ License
 #include "pointConstraint.H"
 #include "OBJstream.H"
 #include "linearInterpolationWeights.H"
-#include "searchableCurve.H"
+#include "searchableExtrudedCircle.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -68,7 +68,7 @@ Foam::projectCurveEdge::projectCurveEdge
                 << exit(FatalIOError);
         }
 
-        if (isA<searchableCurve>(geometry_[surfaces_[i]]))
+        if (isA<searchableExtrudedCircle>(geometry_[surfaces_[i]]))
         {
             Info<< type() << " : Using curved surface "
                 << geometry_[surfaces_[i]].name()
@@ -115,12 +115,15 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
     // surface
     forAll(surfaces_, i)
     {
-        if (isA<searchableCurve>(geometry_[surfaces_[i]]))
+        if (isA<searchableExtrudedCircle>(geometry_[surfaces_[i]]))
         {
-            const searchableCurve& s =
-                refCast<const searchableCurve>(geometry_[surfaces_[i]]);
+            const searchableExtrudedCircle& s =
+            refCast<const searchableExtrudedCircle>
+            (
+                geometry_[surfaces_[i]]
+            );
             List<pointIndexHit> nearInfo;
-            s.findNearest
+            s.findParametricNearest
             (
                 points[0],
                 points.last(),

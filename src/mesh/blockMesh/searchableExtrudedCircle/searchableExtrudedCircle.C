@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "searchableCurve.H"
+#include "searchableExtrudedCircle.H"
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "edgeMesh.H"
@@ -36,14 +36,19 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(searchableCurve, 0);
-    addToRunTimeSelectionTable(searchableSurface, searchableCurve, dict);
+    defineTypeNameAndDebug(searchableExtrudedCircle, 0);
+    addToRunTimeSelectionTable
+    (
+        searchableSurface,
+        searchableExtrudedCircle,
+        dict
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::searchableCurve::searchableCurve
+Foam::searchableExtrudedCircle::searchableExtrudedCircle
 (
     const IOobject& io,
     const dictionary& dict
@@ -110,13 +115,13 @@ Foam::searchableCurve::searchableCurve
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::searchableCurve::~searchableCurve()
+Foam::searchableExtrudedCircle::~searchableExtrudedCircle()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::wordList& Foam::searchableCurve::regions() const
+const Foam::wordList& Foam::searchableExtrudedCircle::regions() const
 {
     if (regions_.empty())
     {
@@ -127,19 +132,19 @@ const Foam::wordList& Foam::searchableCurve::regions() const
 }
 
 
-Foam::label Foam::searchableCurve::size() const
+Foam::label Foam::searchableExtrudedCircle::size() const
 {
     return eMeshPtr_().points().size();
 }
 
 
-Foam::tmp<Foam::pointField> Foam::searchableCurve::coordinates() const
+Foam::tmp<Foam::pointField> Foam::searchableExtrudedCircle::coordinates() const
 {
     return eMeshPtr_().points();
 }
 
 
-void Foam::searchableCurve::boundingSpheres
+void Foam::searchableExtrudedCircle::boundingSpheres
 (
     pointField& centres,
     scalarField& radiusSqr
@@ -153,7 +158,7 @@ void Foam::searchableCurve::boundingSpheres
 }
 
 
-void Foam::searchableCurve::findNearest
+void Foam::searchableExtrudedCircle::findNearest
 (
     const pointField& samples,
     const scalarField& nearestDistSqr,
@@ -177,7 +182,7 @@ void Foam::searchableCurve::findNearest
 }
 
 
-void Foam::searchableCurve::findNearest
+void Foam::searchableExtrudedCircle::findParametricNearest
 (
     const point& start,
     const point& end,
@@ -381,7 +386,7 @@ void Foam::searchableCurve::findNearest
 }
 
 
-void Foam::searchableCurve::getRegion
+void Foam::searchableExtrudedCircle::getRegion
 (
     const List<pointIndexHit>& info,
     labelList& region
@@ -392,7 +397,7 @@ void Foam::searchableCurve::getRegion
 }
 
 
-void Foam::searchableCurve::getNormal
+void Foam::searchableExtrudedCircle::getNormal
 (
     const List<pointIndexHit>& info,
     vectorField& normal

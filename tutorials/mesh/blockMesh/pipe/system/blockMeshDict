@@ -32,7 +32,7 @@ geometry
     }
     cylinder2
     {
-        type    searchableCurve;
+        type    searchableExtrudedCircle;
         file    "curve2.vtk";
         radius  0.5;
     }
