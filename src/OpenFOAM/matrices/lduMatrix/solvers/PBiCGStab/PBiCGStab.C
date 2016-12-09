@@ -223,7 +223,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
 
             // --- Calculate omega from tA and sA
             //     (cheaper than using zA with preconditioned tA)
-            omega = gSumProd(tA, sA)/tAtA;
+            omega = gSumProd(tA, sA, matrix().mesh().comm())/tAtA;
 
             // --- Update solution and residual
             for (label cell=0; cell<nCells; cell++)
