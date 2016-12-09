@@ -405,6 +405,11 @@ void Foam::MRFZone::addCoriolis
 
 void Foam::MRFZone::makeRelative(volVectorField& U) const
 {
+    if (cellZoneID_ == -1)
+    {
+        return;
+    }
+
     const volVectorField& C = mesh_.C();
 
     const vector Omega = this->Omega();
@@ -474,6 +479,11 @@ void Foam::MRFZone::makeRelative
 
 void Foam::MRFZone::makeAbsolute(volVectorField& U) const
 {
+    if (cellZoneID_ == -1)
+    {
+        return;
+    }
+
     const volVectorField& C = mesh_.C();
 
     const vector Omega = this->Omega();
@@ -530,6 +540,11 @@ void Foam::MRFZone::makeAbsolute
 
 void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
 {
+    if (!active_)
+    {
+        return;
+    }
+
     const vector Omega = this->Omega();
 
     // Included patches

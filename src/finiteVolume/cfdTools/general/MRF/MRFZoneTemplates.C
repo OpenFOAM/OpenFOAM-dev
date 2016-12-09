@@ -38,6 +38,11 @@ void Foam::MRFZone::makeRelativeRhoFlux
     surfaceScalarField& phi
 ) const
 {
+    if (!active_)
+    {
+        return;
+    }
+
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
@@ -65,6 +70,11 @@ void Foam::MRFZone::makeRelativeRhoFlux
     FieldField<fvsPatchField, scalar>& phi
 ) const
 {
+    if (!active_)
+    {
+        return;
+    }
+
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
@@ -105,6 +115,11 @@ void Foam::MRFZone::makeRelativeRhoFlux
     const label patchi
 ) const
 {
+    if (!active_)
+    {
+        return;
+    }
+
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
@@ -138,6 +153,11 @@ void Foam::MRFZone::makeAbsoluteRhoFlux
     surfaceScalarField& phi
 ) const
 {
+    if (!active_)
+    {
+        return;
+    }
+
     const surfaceVectorField& Cf = mesh_.Cf();
     const surfaceVectorField& Sf = mesh_.Sf();
 
