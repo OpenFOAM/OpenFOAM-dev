@@ -104,6 +104,7 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
 :
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
+    writeLocalObjects(obr_, log),
     patchSet_()
 {
     volScalarField* wallHeatFluxPtr
@@ -127,6 +128,7 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
 
     read(dict);
     resetName(typeName);
+    resetLocalObjectName(typeName);
 }
 
 
@@ -141,6 +143,7 @@ Foam::functionObjects::wallHeatFlux::~wallHeatFlux()
 bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
+    writeLocalObjects::read(dict);
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
@@ -229,15 +232,14 @@ bool Foam::functionObjects::wallHeatFlux::execute()
 
 bool Foam::functionObjects::wallHeatFlux::write()
 {
+    Log << type() << " " << name() << " write:" << nl;
+
+    writeLocalObjects::write();
+
     logFiles::write();
 
     const volScalarField& wallHeatFlux =
         obr_.lookupObject<volScalarField>(type());
-
-    Log << type() << " " << name() << " write:" << nl
-        << "    writing field " << wallHeatFlux.name() << endl;
-
-    wallHeatFlux.write();
 
     const fvPatchList& patches = mesh_.boundary();
 
@@ -249,8 +251,7 @@ bool Foam::functionObjects::wallHeatFlux::write()
         label patchi = iter.key();
         const fvPatch& pp = patches[patchi];
 
-        const scalarField& hfp =
-            wallHeatFlux.boundaryField()[patchi];
+        const scalarField& hfp = wallHeatFlux.boundaryField()[patchi];
 
         const scalar minHfp = gMin(hfp);
         const scalar maxHfp = gMax(hfp);
@@ -267,9 +268,11 @@ bool Foam::functionObjects::wallHeatFlux::write()
                 << endl;
         }
 
-        Log << "    min/max(" << pp.name() << ") = "
+        Log << "    min/max/integ(" << pp.name() << ") = "
             << minHfp << ", " << maxHfp << ", " << integralHfp << endl;
     }
+
+    Log << endl;
 
     return true;
 }

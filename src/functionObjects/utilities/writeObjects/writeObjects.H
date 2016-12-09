@@ -72,6 +72,7 @@ Usage
 
 See also
     Foam::functionObject
+    Foam::functionObjects::writeObjectsBase
     Foam::functionObjects::timeControl
 
 SourceFiles
@@ -83,16 +84,13 @@ SourceFiles
 #define functionObjects_writeObjects_H
 
 #include "functionObject.H"
-#include "wordReList.H"
+#include "writeObjectsBase.H"
 #include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class objectRegistry;
 
 namespace functionObjects
 {
@@ -103,7 +101,8 @@ namespace functionObjects
 
 class writeObjects
 :
-    public functionObject
+    public functionObject,
+    public writeObjectsBase
 {
 public:
 
@@ -124,17 +123,14 @@ private:
 
     // Private data
 
-        //- Reference to Db
-        const objectRegistry& obr_;
-
         //- To only write objects of defined writeOption
         writeOption writeOption_;
 
-        //- Names of objects to control
-        wordReList objectNames_;
-
 
     // Private Member Functions
+
+        //- Write the requested registered IO object
+        virtual void writeObject(const regIOobject& obj);
 
         //- Disallow default bitwise copy construct
         writeObjects(const writeObjects&);

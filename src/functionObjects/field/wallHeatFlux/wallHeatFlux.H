@@ -52,10 +52,15 @@ Usage
         patches  | list of patches to process | no         | all wall patches
     \endtable
 
+Note
+    Writing field 'wallHeatFlux' is done by default, but it can be overridden by
+    defining an empty \c objects list. For details see writeLocalObjects.
+
 See also
     Foam::functionObject
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
+    Foam::functionObjects::writeLocalObjects
     Foam::functionObjects::pressureTools
     Foam::functionObjects::timeControl
 
@@ -69,6 +74,7 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "logFiles.H"
+#include "writeLocalObjects.H"
 #include "volFieldsFwd.H"
 #include "surfaceFieldsFwd.H"
 #include "HashSet.H"
@@ -88,7 +94,8 @@ namespace functionObjects
 class wallHeatFlux
 :
     public fvMeshFunctionObject,
-    public logFiles
+    public logFiles,
+    public writeLocalObjects
 {
 
 protected:

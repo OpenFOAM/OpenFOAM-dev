@@ -90,6 +90,7 @@ Foam::functionObjects::wallShearStress::wallShearStress
 :
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
+    writeLocalObjects(obr_, log),
     patchSet_()
 {
     volVectorField* wallShearStressPtr
@@ -118,6 +119,7 @@ Foam::functionObjects::wallShearStress::wallShearStress
 
     read(dict);
     resetName(typeName);
+    resetLocalObjectName(typeName);
 }
 
 
@@ -132,6 +134,7 @@ Foam::functionObjects::wallShearStress::~wallShearStress()
 bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
+    writeLocalObjects::read(dict);
 
     const polyBoundaryMesh& pbm = mesh_.boundaryMesh();
 
@@ -225,15 +228,14 @@ bool Foam::functionObjects::wallShearStress::execute()
 
 bool Foam::functionObjects::wallShearStress::write()
 {
+    Log << type() << " " << name() << " write:" << nl;
+
+    writeLocalObjects::write();
+
     logFiles::write();
 
     const volVectorField& wallShearStress =
         obr_.lookupObject<volVectorField>(type());
-
-    Log << type() << " " << name() << " write:" << nl
-        << "    writing field " << wallShearStress.name() << endl;
-
-    wallShearStress.write();
 
     const fvPatchList& patches = mesh_.boundary();
 
@@ -259,6 +261,8 @@ bool Foam::functionObjects::wallShearStress::write()
         Log << "    min/max(" << pp.name() << ") = "
             << minSsp << ", " << maxSsp << endl;
     }
+
+    Log << endl;
 
     return true;
 }
