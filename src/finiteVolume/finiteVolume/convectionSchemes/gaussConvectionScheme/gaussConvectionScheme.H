@@ -36,7 +36,6 @@ SourceFiles
 #define gaussConvectionScheme_H
 
 #include "convectionScheme.H"
-#include "etcFiles.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,10 +46,6 @@ namespace Foam
 
 namespace fv
 {
-
-//- Temporary debug switch to provide warning about backward-compatibility
-//  issue with setting div schemes for steady-state
-extern int warnUnboundedGauss;
 
 /*---------------------------------------------------------------------------*\
                        Class gaussConvectionScheme Declaration
@@ -108,29 +103,7 @@ public:
             (
                 surfaceInterpolationScheme<Type>::New(mesh, faceFlux, is)
             )
-        {
-            is.rewind();
-            word bounded(is);
-
-            if
-            (
-                warnUnboundedGauss
-             && word(mesh.ddtScheme("default")) == "steadyState"
-             && bounded != "bounded"
-            )
-            {
-                fileNameList controlDictFiles(findEtcFiles("controlDict"));
-
-                IOWarningInFunction(is)
-                    << "Unbounded 'Gauss' div scheme used in "
-                       "steady-state solver, use 'bounded Gauss' "
-                       "to ensure boundedness.\n"
-                    << "    To remove this warning switch off "
-                    << "'warnUnboundedGauss' in "
-                    << controlDictFiles[controlDictFiles.size()-1]
-                    << endl;
-            }
-        }
+        {}
 
 
     // Member Functions

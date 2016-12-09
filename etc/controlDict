@@ -889,7 +889,6 @@ DebugSwitches
     wallHeatTransfer    0;
     wallLayerCells      0;
     wallModel           0;
-    warnUnboundedGauss  1;
     waveTransmissive    0;
     wedge               0;
     weighted            0;
