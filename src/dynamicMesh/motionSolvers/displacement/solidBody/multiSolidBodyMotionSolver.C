@@ -139,22 +139,18 @@ Foam::multiSolidBodyMotionSolver::~multiSolidBodyMotionSolver()
 
 Foam::tmp<Foam::pointField> Foam::multiSolidBodyMotionSolver::curPoints() const
 {
-    tmp<pointField> ttransformedPts
-    (
-        new pointField(points0_)
-    );
+    tmp<pointField> ttransformedPts(new pointField(mesh().points()));
     pointField& transformedPts = ttransformedPts.ref();
 
     forAll(zoneIDs_, i)
     {
         const labelList& zonePoints = pointIDs_[i];
 
-        UIndirectList<point>(transformedPts, zonePoints) =
-            transformPoints
-            (
-                SBMFs_[i].transformation(),
-                pointField(transformedPts, zonePoints)
-            );
+        UIndirectList<point>(transformedPts, zonePoints) = transformPoints
+        (
+            SBMFs_[i].transformation(),
+            pointField(points0_, zonePoints)
+        );
     }
 
     return ttransformedPts;

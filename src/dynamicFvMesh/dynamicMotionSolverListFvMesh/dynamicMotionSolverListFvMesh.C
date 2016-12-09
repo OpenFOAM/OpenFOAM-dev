@@ -26,6 +26,7 @@ License
 #include "dynamicMotionSolverListFvMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "motionSolver.H"
+#include "pointMesh.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -78,16 +79,23 @@ Foam::dynamicMotionSolverListFvMesh::~dynamicMotionSolverListFvMesh()
 
 bool Foam::dynamicMotionSolverListFvMesh::update()
 {
-    forAll(motionSolvers_, i)
+    if (motionSolvers_.size())
     {
-        fvMesh::movePoints(motionSolvers_[i].newPoints());
-    }
+        // Accumulated displacement
+        pointField disp(motionSolvers_[0].newPoints() - fvMesh::points());
 
-    if (foundObject<volVectorField>("U"))
-    {
-        volVectorField& U =
-            const_cast<volVectorField&>(lookupObject<volVectorField>("U"));
-        U.correctBoundaryConditions();
+        for (label i = 1; i < motionSolvers_.size(); i++)
+        {
+            disp += motionSolvers_[i].newPoints() - fvMesh::points();
+        }
+
+        fvMesh::movePoints(points() + disp);
+
+        if (foundObject<volVectorField>("U"))
+        {
+            const_cast<volVectorField&>(lookupObject<volVectorField>("U"))
+            .correctBoundaryConditions();
+        }
     }
 
     return true;

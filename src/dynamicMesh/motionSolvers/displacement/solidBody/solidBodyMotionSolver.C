@@ -162,16 +162,13 @@ Foam::tmp<Foam::pointField> Foam::solidBodyMotionSolver::curPoints() const
     }
     else
     {
-        tmp<pointField> ttransformedPts
-        (
-            new pointField(points0_)
-        );
+        tmp<pointField> ttransformedPts(new pointField(mesh().points()));
         pointField& transformedPts = ttransformedPts.ref();
 
         UIndirectList<point>(transformedPts, pointIDs_) = transformPoints
         (
             SBMFPtr_().transformation(),
-            pointField(transformedPts, pointIDs_)
+            pointField(points0_, pointIDs_)
         );
 
         return ttransformedPts;
