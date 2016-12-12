@@ -40,8 +40,9 @@ void Foam::pimpleControl::read()
 {
     solutionControl::read(false);
 
-    // Read solution controls
     const dictionary& pimpleDict = dict();
+
+    solveFlow_ = pimpleDict.lookupOrDefault<Switch>("solveFlow", true);
     nCorrPIMPLE_ = pimpleDict.lookupOrDefault<label>("nOuterCorrectors", 1);
     nCorrPISO_ = pimpleDict.lookupOrDefault<label>("nCorrectors", 1);
     turbOnFinalIterOnly_ =
@@ -123,6 +124,7 @@ bool Foam::pimpleControl::criteriaSatisfied()
 Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& dictName)
 :
     solutionControl(mesh, dictName),
+    solveFlow_(true),
     nCorrPIMPLE_(0),
     nCorrPISO_(0),
     corrPISO_(0),
