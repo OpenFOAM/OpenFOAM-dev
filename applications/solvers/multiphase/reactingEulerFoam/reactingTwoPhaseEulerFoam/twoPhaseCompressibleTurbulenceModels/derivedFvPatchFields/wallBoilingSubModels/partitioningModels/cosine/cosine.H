@@ -32,13 +32,11 @@ Description
       - alphaLiquid0 0.05
 
     \verbatim
-        Ioilev, A., Samigulin, M., Ustinenko, V., Kucherova, P., Tentner,
-        A., Lo, S., & Splawski, A. (2007).
-        Advances in the modeling of cladding heat transfer
-        and critical heat flux in boiling water reactor fuel assemblies.
-        In Proc. 12th International Topical Meeting on Nuclear Reactor
-        Thermal Hydraulics (NURETH-12),
-        Pittsburgh, Pennsylvania, USA.
+        Tentner, A., Lo, S., & Kozlov, V. (2006).
+        Advances in computational fluid dynamics modeling
+        of two-phase flow in boiling water reactor fuel assemblies.
+        In International Conference of Nuclear Engineering,
+        Miami, Florida, USA.
     \endverbatim
 
 SourceFiles

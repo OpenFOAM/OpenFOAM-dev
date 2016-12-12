@@ -31,10 +31,8 @@ Description
       - alphaLiquid1 0.1
       - alphaLiquid0 0.05
 
-    Reference:
     \verbatim
-        Ioilev, A., Samigulin, M., Ustinenko, V., Kucherova, P., Tentner, A.,
-        Lo, S., & Splawski, A. (2007).
+        Ioilev, A., Samigulin, M., Ustinenko (2007).
         Advances in the modeling of cladding heat transfer
         and critical heat flux in boiling water reactor fuel assemblies.
         In Proc. 12th International Topical Meeting on
