@@ -105,6 +105,13 @@ int main(int argc, char *argv[])
                 combustion->dQ()().write();
             }
         }
+        else
+        {
+            if (runTime.writeTime())
+            {
+                parcels.write();
+            }
+        }
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
