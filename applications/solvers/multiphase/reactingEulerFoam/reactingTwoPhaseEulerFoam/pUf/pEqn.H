@@ -159,7 +159,7 @@ while (pimple.correct())
             (alphaRhof10 + Vmf)
            *byDt(MRF.absolute(phi1.oldTime()))
           + fvc::flux(U1Eqn.H())
-          + Vmf*ddtPhi2
+          + Vmf*tddtPhi2()
           + Kdf*MRF.absolute(phi2)
           - Ff1()
         );
@@ -177,7 +177,7 @@ while (pimple.correct())
             (alphaRhof20 + Vmf)
            *byDt(MRF.absolute(phi2.oldTime()))
           + fvc::flux(U2Eqn.H())
-          + Vmf*ddtPhi1
+          + Vmf*tddtPhi1()
           + Kdf*MRF.absolute(phi1)
           - Ff2()
        );

@@ -7,8 +7,7 @@ volScalarField rAU1
     1.0
    /(
         U1Eqn.A()
-      + max(phase1.residualAlpha() - alpha1, scalar(0))
-       *rho1/runTime.deltaT()
+      + byDt(max(phase1.residualAlpha() - alpha1, scalar(0))*rho1)
     )
 );
 volScalarField rAU2
@@ -17,8 +16,7 @@ volScalarField rAU2
     1.0
    /(
         U2Eqn.A()
-      + max(phase2.residualAlpha() - alpha2, scalar(0))
-       *rho2/runTime.deltaT()
+      + byDt(max(phase2.residualAlpha() - alpha2, scalar(0))*rho2)
     )
 );
 
@@ -101,8 +99,8 @@ while (pimple.correct())
         rAU1
        *(
             U1Eqn.H()
-          + max(phase1.residualAlpha() - alpha1, scalar(0))
-           *rho1*U1.oldTime()/runTime.deltaT()
+          + byDt(max(phase1.residualAlpha() - alpha1, scalar(0))*rho1)
+           *U1.oldTime()
         );
 
     volVectorField HbyA2
@@ -114,8 +112,8 @@ while (pimple.correct())
         rAU2
        *(
             U2Eqn.H()
-         +  max(phase2.residualAlpha() - alpha2, scalar(0))
-           *rho2*U2.oldTime()/runTime.deltaT()
+         +  byDt(max(phase2.residualAlpha() - alpha2, scalar(0))*rho2)
+           *U2.oldTime()
         );
 
     surfaceScalarField ghSnGradRho
@@ -175,11 +173,9 @@ while (pimple.correct())
     (
         IOobject::groupName("phiHbyA", phase1.name()),
         fvc::flux(HbyA1)
-      + phiCorrCoeff1*fvc::interpolate(alpha1.oldTime()*rho1.oldTime()*rAU1)
-       *(
-            MRF.absolute(phi1.oldTime())
-          - fvc::flux(U1.oldTime())
-        )/runTime.deltaT()
+      + phiCorrCoeff1
+       *fvc::interpolate(byDt(alpha1.oldTime()*rho1.oldTime()*rAU1))
+       *(MRF.absolute(phi1.oldTime()) - fvc::flux(U1.oldTime()))
       - phiF1()
       - phig1
     );
@@ -189,11 +185,9 @@ while (pimple.correct())
     (
         IOobject::groupName("phiHbyA", phase2.name()),
         fvc::flux(HbyA2)
-      + phiCorrCoeff2*fvc::interpolate(alpha2.oldTime()*rho2.oldTime()*rAU2)
-       *(
-            MRF.absolute(phi2.oldTime())
-          - fvc::flux(U2.oldTime())
-        )/runTime.deltaT()
+      + phiCorrCoeff2
+       *fvc::interpolate(byDt(alpha2.oldTime()*rho2.oldTime()*rAU2))
+       *(MRF.absolute(phi2.oldTime()) - fvc::flux(U2.oldTime()))
       - phiF2()
       - phig2
     );
