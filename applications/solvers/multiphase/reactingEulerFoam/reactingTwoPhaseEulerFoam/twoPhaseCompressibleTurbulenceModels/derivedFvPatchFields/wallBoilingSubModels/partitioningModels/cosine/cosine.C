@@ -83,7 +83,7 @@ cosine::fLiquid
                     1 - cos
                     (
                         constant::mathematical::pi
-                       *(alphaLiquid1_ - alphaLiquid)
+                       *(alphaLiquid - alphaLiquid0_)
                        /(alphaLiquid1_ - alphaLiquid0_)
                     )
                 )
