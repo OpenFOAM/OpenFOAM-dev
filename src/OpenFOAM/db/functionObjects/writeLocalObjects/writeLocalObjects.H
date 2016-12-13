@@ -144,7 +144,6 @@ public:
 
         //- Read the list of objects to be written
         virtual bool read(const dictionary&);
-
 };
 
 
