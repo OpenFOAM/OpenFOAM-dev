@@ -24,6 +24,6 @@ dragDir     (1 0 0);
 CofR        (0 0 0);
 pitchAxis   (0 1 0);
 
-#includeEtc "caseDicts/postProcessing/forces/forceCoeffs.cfg"
+#includeEtc "caseDicts/postProcessing/forces/forceCoeffsIncompressible.cfg"
 
 // ************************************************************************* //
