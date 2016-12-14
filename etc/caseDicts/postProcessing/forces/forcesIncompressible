@@ -11,7 +11,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/forces/forces.cfg"
+#includeEtc "caseDicts/postProcessing/forces/forcesIncompressible.cfg"
 
 rhoInf      1.225;    // Fluid density
 patches     (patch1 patch2);

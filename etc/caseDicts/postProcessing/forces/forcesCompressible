@@ -16,6 +16,6 @@ patches     (patch1 patch2);
 CofR        (0 0 0);
 pitchAxis   (0 1 0);
 
-#includeEtc "caseDicts/postProcessing/forces/forcesCompressible.cfg"
+#includeEtc "caseDicts/postProcessing/forces/forces.cfg"
 
 // ************************************************************************* //
