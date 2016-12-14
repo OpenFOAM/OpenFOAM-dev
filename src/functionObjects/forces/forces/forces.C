@@ -638,7 +638,7 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
         // Reference density needed for incompressible calculations
         if (rhoName_ == "rhoInf")
         {
-            rhoRef_ = readScalar(dict.lookup("rhoInf"));
+            dict.lookup("rhoInf") >> rhoRef_;
         }
 
         // Reference pressure, 0 by default

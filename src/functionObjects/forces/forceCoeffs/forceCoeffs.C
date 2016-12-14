@@ -163,6 +163,9 @@ bool Foam::functionObjects::forceCoeffs::read(const dictionary& dict)
     // Free stream velocity magnitude
     dict.lookup("magUInf") >> magUInf_;
 
+    // Reference (free stream) density
+    dict.lookup("rhoInf") >> rhoRef_;
+
     // Reference length and area scales
     dict.lookup("lRef") >> lRef_;
     dict.lookup("Aref") >> Aref_;
