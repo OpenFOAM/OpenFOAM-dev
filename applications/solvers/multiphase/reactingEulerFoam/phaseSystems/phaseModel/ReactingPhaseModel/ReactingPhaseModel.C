@@ -105,9 +105,9 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::R
 
 template<class BasePhaseModel, class ReactionType>
 Foam::tmp<Foam::volScalarField>
-Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::Sh() const
+Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::Qdot() const
 {
-    return reaction_->Sh();
+    return reaction_->Qdot();
 }
 
 

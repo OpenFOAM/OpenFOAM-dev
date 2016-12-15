@@ -65,7 +65,7 @@ Foam::InertPhaseModel<BasePhaseModel>::R
 
 template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
-Foam::InertPhaseModel<BasePhaseModel>::Sh() const
+Foam::InertPhaseModel<BasePhaseModel>::Qdot() const
 {
     return tmp<volScalarField>
     (
@@ -73,7 +73,7 @@ Foam::InertPhaseModel<BasePhaseModel>::Sh() const
         (
             IOobject
             (
-                IOobject::groupName("Sh", this->name()),
+                IOobject::groupName("Qdot", this->name()),
                 this->mesh().time().timeName(),
                 this->mesh()
             ),

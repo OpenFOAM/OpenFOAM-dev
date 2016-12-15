@@ -81,7 +81,6 @@ Foam::combustionModel::~combustionModel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-
 bool Foam::combustionModel::read()
 {
     if (regIOobject::read())
@@ -94,27 +93,6 @@ bool Foam::combustionModel::read()
     {
         return false;
     }
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::combustionModel::Sh() const
-{
-    return tmp<Foam::volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("Sh", phaseName_),
-                mesh_.time().timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
-            mesh_,
-            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
-        )
-    );
 }
 
 

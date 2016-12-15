@@ -249,31 +249,32 @@ Foam::radiation::wideBandAbsorptionEmission::ECont(const label bandI) const
         )
     );
 
-    if (mesh().foundObject<volScalarField>("dQ"))
+    if (mesh().foundObject<volScalarField>("Qdot"))
     {
-        const volScalarField& dQ = mesh().lookupObject<volScalarField>("dQ");
+        const volScalarField& Qdot =
+            mesh().lookupObject<volScalarField>("Qdot");
 
-        if (dQ.dimensions() == dimEnergy/dimTime)
+        if (Qdot.dimensions() == dimEnergy/dimTime)
         {
             E.ref().primitiveFieldRef() =
                 iEhrrCoeffs_[bandI]
-               *dQ.primitiveField()
+               *Qdot.primitiveField()
                *(iBands_[bandI][1] - iBands_[bandI][0])
                /totalWaveLength_
                /mesh_.V();
         }
-        else if (dQ.dimensions() == dimEnergy/dimTime/dimVolume)
+        else if (Qdot.dimensions() == dimEnergy/dimTime/dimVolume)
         {
             E.ref().primitiveFieldRef() =
                 iEhrrCoeffs_[bandI]
-               *dQ.primitiveField()
+               *Qdot.primitiveField()
                *(iBands_[bandI][1] - iBands_[bandI][0])
                /totalWaveLength_;
         }
         else
         {
             WarningInFunction
-                << "Incompatible dimensions for dQ field" << endl;
+                << "Incompatible dimensions for Qdot field" << endl;
         }
     }
 

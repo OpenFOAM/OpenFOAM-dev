@@ -131,18 +131,18 @@ volScalarField dpdt
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
 
-volScalarField dQ
+volScalarField Qdot
 (
     IOobject
     (
-        "dQ",
+        "Qdot",
         runTime.timeName(),
         mesh,
-        IOobject::NO_READ,
+        IOobject::READ_IF_PRESENT,
         IOobject::AUTO_WRITE
     ),
     mesh,
-    dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
+    dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
 );
 
 #include "createMRF.H"

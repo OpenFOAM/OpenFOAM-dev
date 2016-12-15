@@ -78,8 +78,8 @@ public:
                 volScalarField& Yi
             ) const;
 
-            //- Return the reaction heat source
-            virtual tmp<volScalarField> Sh() const;
+            //- Return the heat release rate
+            virtual tmp<volScalarField> Qdot() const;
 };
 
 

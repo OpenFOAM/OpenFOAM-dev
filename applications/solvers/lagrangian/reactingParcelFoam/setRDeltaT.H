@@ -79,7 +79,7 @@ License
             mag
             (
                parcels.hsTrans()/(mesh.V()*runTime.deltaT())
-             + combustion->Sh()()
+             + Qdot
             )
            /(
                alphaTemp

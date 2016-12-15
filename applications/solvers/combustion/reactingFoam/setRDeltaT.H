@@ -77,7 +77,7 @@ License
     {
         volScalarField::Internal rDeltaTT
         (
-            mag(reaction->Sh())/(alphaTemp*rho*thermo.Cp()*T)
+            mag(Qdot)/(alphaTemp*rho*thermo.Cp()*T)
         );
 
         Info<< "    Temperature = "

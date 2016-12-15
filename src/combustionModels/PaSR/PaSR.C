@@ -116,29 +116,14 @@ Foam::combustionModels::PaSR<Type>::R(volScalarField& Y) const
 
 template<class Type>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::PaSR<Type>::dQ() const
+Foam::combustionModels::PaSR<Type>::Qdot() const
 {
     return tmp<volScalarField>
     (
         new volScalarField
         (
             IOobject::groupName("PaSR:dQ", this->phaseName_),
-            kappa_*laminar<Type>::dQ()
-        )
-    );
-}
-
-
-template<class Type>
-Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::PaSR<Type>::Sh() const
-{
-    return tmp<volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject::groupName("PaSR:Sh", this->phaseName_),
-            kappa_*laminar<Type>::Sh()
+            kappa_*laminar<Type>::Qdot()
         )
     );
 }

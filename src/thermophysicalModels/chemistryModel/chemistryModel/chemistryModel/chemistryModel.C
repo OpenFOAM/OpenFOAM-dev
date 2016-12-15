@@ -545,15 +545,15 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
 
 template<class CompType, class ThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::chemistryModel<CompType, ThermoType>::Sh() const
+Foam::chemistryModel<CompType, ThermoType>::Qdot() const
 {
-    tmp<volScalarField> tSh
+    tmp<volScalarField> tQdot
     (
         new volScalarField
         (
             IOobject
             (
-                "Sh",
+                "Qdot",
                 this->mesh_.time().timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
@@ -561,57 +561,25 @@ Foam::chemistryModel<CompType, ThermoType>::Sh() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
         )
     );
 
     if (this->chemistry_)
     {
-        scalarField& Sh = tSh.ref();
+        scalarField& Qdot = tQdot.ref();
 
         forAll(Y_, i)
         {
-            forAll(Sh, celli)
+            forAll(Qdot, celli)
             {
                 const scalar hi = specieThermo_[i].Hc();
-                Sh[celli] -= hi*RR_[i][celli];
+                Qdot[celli] -= hi*RR_[i][celli];
             }
         }
     }
 
-    return tSh;
-}
-
-
-template<class CompType, class ThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::chemistryModel<CompType, ThermoType>::dQ() const
-{
-    tmp<volScalarField> tdQ
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "dQ",
-                this->mesh_.time().timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
-        )
-    );
-
-    if (this->chemistry_)
-    {
-        volScalarField& dQ = tdQ.ref();
-        dQ.ref() = this->mesh_.V()*Sh()();
-    }
-
-    return tdQ;
+    return tQdot;
 }
 
 

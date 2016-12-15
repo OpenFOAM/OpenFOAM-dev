@@ -114,15 +114,15 @@ Foam::solidChemistryModel<CompType, SolidThermo>::tc() const
 
 template<class CompType, class SolidThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::solidChemistryModel<CompType, SolidThermo>::Sh() const
+Foam::solidChemistryModel<CompType, SolidThermo>::Qdot() const
 {
-    tmp<volScalarField> tSh
+    tmp<volScalarField> tQdot
     (
         new volScalarField
         (
             IOobject
             (
-                "Sh",
+                "Qdot",
                 this->mesh_.time().timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
@@ -130,57 +130,25 @@ Foam::solidChemistryModel<CompType, SolidThermo>::Sh() const
                 false
             ),
             this->mesh_,
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
+            dimensionedScalar("zero", dimEnergy/dimVolume/dimTime, 0.0)
         )
     );
 
     if (this->chemistry_)
     {
-        scalarField& Sh = tSh.ref();
+        scalarField& Qdot = tQdot.ref();
 
         forAll(Ys_, i)
         {
-            forAll(Sh, celli)
+            forAll(Qdot, celli)
             {
                 scalar hf = solidThermo_[i].Hc();
-                Sh[celli] -= hf*RRs_[i][celli];
+                Qdot[celli] -= hf*RRs_[i][celli];
             }
         }
     }
 
-    return tSh;
-}
-
-
-template<class CompType, class SolidThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::solidChemistryModel<CompType, SolidThermo>::dQ() const
-{
-    tmp<volScalarField> tdQ
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "dQ",
-                this->mesh_.time().timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
-        )
-    );
-
-    if (this->chemistry_)
-    {
-        volScalarField& dQ = tdQ.ref();
-        dQ.ref() = this->mesh_.V()*Sh()();
-    }
-
-    return tdQ;
+    return tQdot;
 }
 
 

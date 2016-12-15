@@ -136,15 +136,15 @@ Foam::combustionModels::laminar<Type>::R(volScalarField& Y) const
 
 template<class Type>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::laminar<Type>::dQ() const
+Foam::combustionModels::laminar<Type>::Qdot() const
 {
-    tmp<volScalarField> tdQ
+    tmp<volScalarField> tQdot
     (
         new volScalarField
         (
             IOobject
             (
-                IOobject::groupName(typeName + ":dQ", this->phaseName_),
+                IOobject::groupName(typeName + ":Qdot", this->phaseName_),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,
@@ -152,47 +152,16 @@ Foam::combustionModels::laminar<Type>::dQ() const
                 false
             ),
             this->mesh(),
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
+            dimensionedScalar("Qdot", dimEnergy/dimVolume/dimTime, 0.0)
         )
     );
 
     if (this->active())
     {
-        tdQ.ref() = this->chemistryPtr_->dQ();
+        tQdot.ref() = this->chemistryPtr_->Qdot();
     }
 
-    return tdQ;
-}
-
-
-template<class Type>
-Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::laminar<Type>::Sh() const
-{
-    tmp<volScalarField> tSh
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName(typeName + ":Sh", this->phaseName_),
-                this->mesh().time().timeName(),
-                this->mesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh(),
-            dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
-        )
-    );
-
-    if (this->active())
-    {
-        tSh.ref() = this->chemistryPtr_->Sh();
-    }
-
-    return tSh;
+    return tQdot;
 }
 
 

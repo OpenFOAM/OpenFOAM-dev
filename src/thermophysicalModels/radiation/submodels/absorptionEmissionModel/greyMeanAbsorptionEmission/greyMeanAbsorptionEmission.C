@@ -293,32 +293,32 @@ Foam::radiation::greyMeanAbsorptionEmission::ECont(const label bandI) const
         )
     );
 
-    if (mesh_.foundObject<volScalarField>("dQ"))
+    if (mesh_.foundObject<volScalarField>("Qdot"))
     {
-        const volScalarField& dQ =
-            mesh_.lookupObject<volScalarField>("dQ");
+        const volScalarField& Qdot =
+            mesh_.lookupObject<volScalarField>("Qdot");
 
-        if (dQ.dimensions() == dimEnergy/dimTime)
+        if (Qdot.dimensions() == dimEnergy/dimTime)
         {
-            E.ref().primitiveFieldRef() = EhrrCoeff_*dQ/mesh_.V();
+            E.ref().primitiveFieldRef() = EhrrCoeff_*Qdot/mesh_.V();
         }
-        else if (dQ.dimensions() == dimEnergy/dimTime/dimVolume)
+        else if (Qdot.dimensions() == dimEnergy/dimTime/dimVolume)
         {
-            E.ref().primitiveFieldRef() = EhrrCoeff_*dQ;
+            E.ref().primitiveFieldRef() = EhrrCoeff_*Qdot;
         }
         else
         {
             if (debug)
             {
                 WarningInFunction
-                    << "Incompatible dimensions for dQ field" << endl;
+                    << "Incompatible dimensions for Qdot field" << endl;
             }
         }
     }
     else
     {
         WarningInFunction
-          << "dQ field not found in mesh" << endl;
+          << "Qdot field not found in mesh" << endl;
     }
 
     return E;

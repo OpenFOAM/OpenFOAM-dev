@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
 
             if (runTime.write())
             {
-                combustion->dQ()().write();
+                combustion->Qdot()().write();
             }
         }
         else

@@ -80,7 +80,7 @@ License
             (
                (coalParcels.hsTrans() + limestoneParcels.hsTrans())
               /(mesh.V()*runTime.deltaT())
-             + combustion->Sh()()
+             + Qdot
             )
            /(
                alphaTemp

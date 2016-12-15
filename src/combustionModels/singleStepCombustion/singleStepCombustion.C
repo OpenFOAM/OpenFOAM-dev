@@ -127,44 +127,13 @@ tmp<fvScalarMatrix> singleStepCombustion<CombThermoType, ThermoType>::R
 
 template<class CombThermoType, class ThermoType>
 tmp<volScalarField>
-singleStepCombustion<CombThermoType, ThermoType>::Sh() const
+singleStepCombustion<CombThermoType, ThermoType>::Qdot() const
 {
     const label fuelI = singleMixturePtr_->fuelIndex();
     volScalarField& YFuel =
         const_cast<volScalarField&>(this->thermoPtr_->composition().Y(fuelI));
 
     return -singleMixturePtr_->qFuel()*(R(YFuel) & YFuel);
-}
-
-
-template<class CombThermoType, class ThermoType>
-tmp<volScalarField>
-singleStepCombustion<CombThermoType, ThermoType>::dQ() const
-{
-    tmp<volScalarField> tdQ
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("dQ", this->phaseName_),
-                this->mesh_.time().timeName(),
-                this->mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            this->mesh_,
-            dimensionedScalar("dQ", dimEnergy/dimTime, 0.0)
-        )
-    );
-
-    if (this->active())
-    {
-        volScalarField& dQ = tdQ.ref();
-        dQ.ref() = this->mesh().V()*Sh()();
-    }
-    return tdQ;
 }
 
 

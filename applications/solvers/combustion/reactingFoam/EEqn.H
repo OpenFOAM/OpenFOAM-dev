@@ -17,7 +17,7 @@
         )
       - fvm::laplacian(turbulence->alphaEff(), he)
      ==
-        reaction->Sh()
+        Qdot
       + fvOptions(rho, he)
     );
 

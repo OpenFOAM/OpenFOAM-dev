@@ -165,17 +165,9 @@ Foam::combustionModels::zoneCombustion<Type>::R(volScalarField& Y) const
 
 template<class Type>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::zoneCombustion<Type>::dQ() const
+Foam::combustionModels::zoneCombustion<Type>::Qdot() const
 {
-    return filter(combustionModelPtr_->dQ());
-}
-
-
-template<class Type>
-Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::zoneCombustion<Type>::Sh() const
-{
-    return filter(combustionModelPtr_->Sh());
+    return filter(combustionModelPtr_->Qdot());
 }
 
 

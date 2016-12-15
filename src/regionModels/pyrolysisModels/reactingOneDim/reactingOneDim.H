@@ -117,8 +117,8 @@ protected:
             //- Sensible enthalpy gas flux [J/m2/s]
             volScalarField phiHsGas_;
 
-            //- Heat release [J/s/m3]
-            volScalarField chemistrySh_;
+            //- Heat release rate [J/s/m3]
+            volScalarField chemistryQdot_;
 
 
         // Source term fields
