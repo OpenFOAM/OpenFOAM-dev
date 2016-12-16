@@ -64,7 +64,6 @@ EXE_LIBS = \
     -lrandomProcesses \
     -lreactingEulerianInterfacialCompositionModels \
     -lreactingEulerianInterfacialModels \
-    -lreactingMultiphaseSystem \
     -lreactingPhaseSystem \
     -lreactingTwoPhaseSystem \
     -lreactionThermophysicalModels \
