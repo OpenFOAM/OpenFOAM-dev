@@ -8,6 +8,6 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lgenericPatchFields \
     -ldecompositionMethods \
-    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp \
+    -L$(FOAM_LIBBIN)/dummy -lscotchDecomp -lptscotchDecomp \
     -lmeshTools \
     -ldynamicMesh

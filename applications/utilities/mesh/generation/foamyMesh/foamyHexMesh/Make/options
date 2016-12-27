@@ -30,7 +30,7 @@ EXE_LIBS = \
     -lconformalVoronoiMesh \
     -lmeshTools \
     -ldecompositionMethods \
-    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp \
+    -L$(FOAM_LIBBIN)/dummy -lscotchDecomp -lptscotchDecomp \
     -ledgeMesh \
     -lfileFormats \
     -ltriSurface \

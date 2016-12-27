@@ -15,4 +15,5 @@ EXE_LIBS = \
     -lgenericPatchFields \
     -lrenumberMethods \
     $(LINK_FLAGS) \
-    -ldecompositionMethods -L$(FOAM_LIBBIN)/dummy -lmetisDecomp -lscotchDecomp
+    -ldecompositionMethods \
+    -L$(FOAM_LIBBIN)/dummy -lmetisDecomp -lscotchDecomp
