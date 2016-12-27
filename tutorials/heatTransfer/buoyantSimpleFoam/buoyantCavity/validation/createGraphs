@@ -31,6 +31,11 @@
 #
 #------------------------------------------------------------------------------
 
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Stop on first error
+set -e
+
 createEpsT()
 {
     index=$1
@@ -78,11 +83,12 @@ createEpsU()
 EOF
 }
 
+echo "createGraphs:"
 
 # test if gnuplot exists on the system
 if ! which gnuplot > /dev/null 2>&1
 then
-    echo "gnuplot not found - skipping graph creation" >&2
+    echo "FOAM FATAL ERROR: gnuplot not found - skipping graph creation" >&2
     exit 1
 fi
 
@@ -90,8 +96,8 @@ SETSDIR="../postProcessing/sample"
 
 if [ ! -d $SETSDIR ]
 then
-    echo "createGraphs: results sets not available in directory $SETSDIR"
-    exit 0
+    echo "FOAM FATAL ERROR: result sets not available in directory $SETSDIR" >&2
+    exit 1
 fi
 
 # paths to data
@@ -104,8 +110,7 @@ EXPTDATAROOT=./exptData
 TSets="1 3 4 5 6 7 9"
 for i in $TSets
 do
-    echo "    processing temperature profile at y/yMax of 0.$i" \
-        > log.createGraphs 2>&1
+    echo "    processing temperature profile at y/yMax of 0.$i"
 
     OF="$OFDATAROOT/y0.${i}_T.xy"
     EXPT="$EXPTDATAROOT/mt_z0_${i}0_lo.dat"
@@ -118,8 +123,7 @@ done
 USets="1 3 4 5 6 7 9"
 for i in $USets
 do
-    echo "    processing velocity profile at y/yMax of 0.$i" \
-        > log.createGraphs 2>&1
+    echo "    processing velocity profile at y/yMax of 0.$i"
 
     OF="$OFDATAROOT/y0.${i}_U.xy"
     EXPT="$EXPTDATAROOT/mv_z0_${i}0_lo.dat"
@@ -127,6 +131,6 @@ do
     createEpsU $i $OF $EXPT
 done
 
-echo Done
+echo "End"
 
 #------------------------------------------------------------------------------

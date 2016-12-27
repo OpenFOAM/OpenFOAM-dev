@@ -11,6 +11,6 @@ runApplication blockMesh
 runApplication $application
 runApplication -s sample  postProcess -latestTime -func sample
 
-( cd validation && ./createGraphs )
+runApplication validation/createGraphs
 
 #------------------------------------------------------------------------------

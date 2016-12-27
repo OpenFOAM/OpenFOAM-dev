@@ -6,7 +6,11 @@
 #   \\  /    A nd           | Web:      www.OpenFOAM.org                      #
 #    \\/     M anipulation  |                                                 #
 #-----------------------------------------------------------------------------#
+
 cd ${0%/*} || exit 1    # Run from this directory
+
+# Stop on first error
+set -e
 
 x0=0.4
 y0=0.1
@@ -156,5 +160,7 @@ echo "cellSet floorCells new faceToCell FloorFaces owner" >> $tmpSetSet
 echo "faceZoneSet floorFaces new setsToFaceZone FloorFaces floorCells" >> $tmpSetSet
 
 setSet -batch $tmpSetSet > log.setSet.patchifyObstacles 2>&1
+
+echo "End"
 
 # *************************************************************************
