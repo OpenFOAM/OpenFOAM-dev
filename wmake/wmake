@@ -49,7 +49,7 @@
 #         wdep -h
 #
 # See also
-#     wmakeLnInclude, wmakeLnIncludeAll, wmakeQueue, wdep, wrmdep, wrmo,
+#     wmakeLnInclude, wmakeLnIncludeAll, wmakeCollect, wdep, wrmdep, wrmo,
 #     wclean, wcleanPlatform, wcleanLnIncludeAll
 #
 #------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ Usage: $Script [OPTION] [dir]
 options:
   -s | -silent      Quiet mode (does not echo commands)
   -a | -all         wmake all sub-directories, running Allwmake if present
-  -q | -queue       wmakeQueue all sub-directories, running Allwmake if present
+  -q | -queue       wmakeCollect all sub-directories, running Allwmake if present
   -k or -non-stop   Compile without stopping when errors occur
   -j                Compile using all local cores/hyperthreads
   -jN or -j N       Compile using N cores/hyperthreads
@@ -87,7 +87,7 @@ The 'target' is a Makefile target:
 
 or a special target:
   all               wmake all sub-directories, running Allwmake if present
-  queue             wmakeQueue all sub-directories, running Allwmake if present
+  queue             wmakeCollect all sub-directories, running Allwmake if present
   exe               Compile statically linked executable
   lib               Compile statically linked archive lib (.a)
   libo              Compile statically linked lib (.o)
@@ -332,7 +332,7 @@ fi
 
 
 #------------------------------------------------------------------------------
-# Recurse the source tree to compile "all" targets using wmakeQueue
+# Recurse the source tree to compile "all" targets using wmakeCollect
 #------------------------------------------------------------------------------
 
 if [ "$all" = "queue" ]
@@ -353,7 +353,7 @@ fi
 
 #------------------------------------------------------------------------------
 # Search up the directory tree for the Make sub-directory,
-# check the existance of the 'files' file and build there if present
+# check the existence of the 'files' file and build there if present
 #------------------------------------------------------------------------------
 
 cdSource
