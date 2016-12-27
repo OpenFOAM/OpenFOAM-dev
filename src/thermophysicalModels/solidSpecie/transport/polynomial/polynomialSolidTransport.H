@@ -25,11 +25,39 @@ Class
     Foam::polynomialSolidTransport
 
 Description
-    Transport package using polynomial functions for solid kappa
+    Transport package using polynomial functions for solid \c kappa.
+
+Usage
+
+    \table
+        Property        | Description
+        kappaCoeffs<8>  | Thermal conductivity polynomial coefficients
+    \endtable
+
+    Example of the specification of the transport properties:
+    \verbatim
+    transport
+    {
+        kappaCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
+    }
+    \endverbatim
+
+    The polynomial expression is evaluated as so:
+
+        \f[
+            \kappa = 1000 - 0.05 T + 0.003 T^2
+        \f]
+
+Note
+    Thermal conductivity polynomial coefficients evaluate to an expression in
+    [W/m/K].
 
 SourceFiles
     polynomialSolidTransportI.H
     polynomialSolidTransport.C
+
+See also
+    Foam::Polynomial
 
 \*---------------------------------------------------------------------------*/
 

@@ -33,6 +33,9 @@ Description
 
         \f[
             p_rgh = p - \rho g.(h - hRef)
+        \f]
+
+        \f[
             p = p0 - 0.5 \rho |U|^2
         \f]
 

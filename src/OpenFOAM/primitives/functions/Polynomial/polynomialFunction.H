@@ -27,16 +27,18 @@ Class
 Description
     Polynomial function representation
 
-        poly = logCoeff*log(x) + sum(coeff_[i]*x^i)
+    \verbatim
+        poly = logCoeff*log(x) + sum(coeffs[i]*x^i)
+    \endverbatim
 
-    where 0 \<= i \<= N
+    where <tt> 0 <= i <= N </tt>
 
     - integer powers, starting at zero
-    - value(x) to evaluate the poly for a given value
-    - integrate(x1, x2) between two scalar values
-    - integral() to return a new, integral coeff polynomial
+    - \c value(x) to evaluate the poly for a given value
+    - \c integrate(x1, x2) between two scalar values
+    - \c integral() to return a new, integral coeff polynomial
       - increases the size (order)
-    - integralMinus1() to return a new, integral coeff polynomial where
+    - \c integralMinus1() to return a new, integral coeff polynomial where
       the base poly starts at order -1
 
 See also

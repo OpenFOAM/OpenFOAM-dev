@@ -25,11 +25,47 @@ Class
     Foam::polynomialTransport
 
 Description
-    Transport package using polynomial functions for mu and kappa
+    Transport package using polynomial functions for \c mu and \c kappa.
+
+Usage
+
+    \table
+        Property        | Description
+        muCoeffs<8>     | Dynamic viscosity polynomial coefficients
+        kappaCoeffs<8>  | Thermal conductivity polynomial coefficients
+    \endtable
+
+    Example of the specification of the transport properties:
+    \verbatim
+    transport
+    {
+        muCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
+        kappaCoeffs<8>  ( 2000 -0.15 0.023 0 0 0 0 0 );
+    }
+    \endverbatim
+
+    The polynomial expressions are evaluated as so:
+
+        \f[
+            \mu    = 1000 - 0.05 T + 0.003 T^2
+        \f]
+
+        \f[
+            \kappa = 2000 - 0.15 T + 0.023 T^2
+        \f]
+
+Note
+    - Dynamic viscosity polynomial coefficients evaluate to an expression in
+      [Pa.s], but internally uses [Pa.s/kmol].
+    - Thermal conductivity polynomial coefficients evaluate to an expression in
+      [W/m/K], but internally uses [W/m/K/kmol].
 
 SourceFiles
     polynomialTransportI.H
     polynomialTransport.C
+
+See also
+    Foam::Polynomial
 
 \*---------------------------------------------------------------------------*/
 
@@ -95,11 +131,9 @@ class polynomialTransport
     // Private data
 
         //- Dynamic viscosity polynomial coefficients
-        //  Note: input in [Pa.s], but internally uses [Pa.s/kmol]
         Polynomial<PolySize> muCoeffs_;
 
         //- Thermal conductivity polynomial coefficients
-        //  Note: input in [W/m/K], but internally uses [W/m/K/kmol]
         Polynomial<PolySize> kappaCoeffs_;
 
 

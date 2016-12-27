@@ -25,14 +25,56 @@ Class
     Foam::logPolynomialTransport
 
 Description
-    Transport package using polynomial functions of ln(T) for mu and kappa:
+    Transport package using polynomial functions of \c ln(T) for \c mu and
+    \c kappa:
 
-        ln(mu)    = sum_i=1^N( a[i] * ln(T)^(i-1) )
-        ln(kappa) = sum_i=1^N( b[i] * ln(T)^(i-1) )
+        \f[
+            ln(mu)    = \sum_{i=1}^N \left( a[i] * ln(T)^{i-1} \right)
+        \f]
+
+        \f[
+            ln(kappa) = \sum_{i=1}^N \left( b[i] * ln(T)^{i-1} \right)
+        \f]
+
+Usage
+
+    \table
+        Property        | Description
+        muCoeffs<8>     | Dynamic viscosity polynomial coefficients
+        kappaCoeffs<8>  | Thermal conductivity polynomial coefficients
+    \endtable
+
+    Example of the specification of the transport properties:
+    \verbatim
+    transport
+    {
+        muCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
+        kappaCoeffs<8>  ( 2000 -0.15 0.023 0 0 0 0 0 );
+    }
+    \endverbatim
+
+    The polynomial expressions are evaluated as so:
+
+        \f[
+            \mu    = 1000 - 0.05 ln(T) + 0.003 ln(T)^2
+        \f]
+
+        \f[
+            \kappa = 2000 - 0.15 ln(T) + 0.023 ln(T)^2
+        \f]
+
+Note
+    - Dynamic viscosity polynomial coefficients evaluate to an expression in
+      [Pa.s], but internally uses [Pa.s/kmol].
+    - Thermal conductivity polynomial coefficients evaluate to an expression in
+      [W/m/K], but internally uses [W/m/K/kmol].
 
 SourceFiles
     logPolynomialTransportI.H
     logPolynomialTransport.C
+
+See also
+    Foam::Polynomial
 
 \*---------------------------------------------------------------------------*/
 

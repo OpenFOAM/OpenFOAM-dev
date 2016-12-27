@@ -26,13 +26,47 @@ Class
 
 Description
     Thermodynamics package templated on the equation of state, using polynomial
-    functions for cp, h and s
+    functions for \c cp, \c h and \c s.
 
-    Polynomials for h and s derived from cp
+    Polynomials for \c h and \c s derived from \c cp.
+
+Usage
+
+    \table
+        Property     | Description
+        Hf           | Heat of formation
+        Sf           | Standard entropy
+        CpCoeffs<8>  | Specific heat at constant pressure polynomial coeffs
+    \endtable
+
+    Example of the specification of the thermodynamic properties:
+    \verbatim
+    thermodynamics
+    {
+        Hf              0;
+        Sf              0;
+        CpCoeffs<8>     ( 1000 -0.05 0.003 0 0 0 0 0 );
+    }
+    \endverbatim
+
+    The polynomial expression is evaluated as so:
+
+        \f[
+            Cp = 1000 - 0.05 T + 0.003 T^2
+        \f]
+
+Note
+    - Heat of formation is inputted in [J/kg], but internally uses [J/kmol]
+    - Standard entropy is inputted in [J/kg/K], but internally uses [J/kmol/K]
+    - Specific heat at constant pressure polynomial coefficients evaluate to an
+      expression in [J/(kg.K)].
 
 SourceFiles
     hPolynomialThermoI.H
     hPolynomialThermo.C
+
+See also
+    Foam::Polynomial
 
 \*---------------------------------------------------------------------------*/
 
@@ -100,14 +134,12 @@ class hPolynomialThermo
     // Private data
 
         //- Heat of formation
-        //  Note: input in [J/kg], but internally uses [J/kmol]
         scalar Hf_;
 
         //- Standard entropy
-        //  Note: input in [J/kg/K], but internally uses [J/kmol/K]
         scalar Sf_;
 
-        //- Specific heat at constant pressure polynomial coeffs [J/(kg.K)]
+        //- Specific heat at constant pressure polynomial coeffs
         Polynomial<PolySize> CpCoeffs_;
 
         //- Enthalpy polynomial coeffs - derived from cp [J/kg]

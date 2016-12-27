@@ -28,9 +28,35 @@ Description
     Incompressible, polynomial form of equation of state, using a polynomial
     function for density.
 
+Usage
+    \table
+        Property     | Description
+        rhoCoeffs<8> | Density polynomial coefficients
+    \endtable
+
+    Example of the specification of the equation of state:
+    \verbatim
+    equationOfState
+    {
+        rhoCoeffs<8>    ( 1000 -0.05 0.003 0 0 0 0 0 );
+    }
+    \endverbatim
+
+    The polynomial expression is evaluated as so:
+
+        \f[
+            \rho = 1000 - 0.05 T + 0.003 T^2
+        \f]
+
+Note
+    Input in [kg/m3], but internally uses [kg/m3/kmol].
+
 SourceFiles
     icoPolynomialI.H
     icoPolynomial.C
+
+See also
+    Foam::Polynomial
 
 \*---------------------------------------------------------------------------*/
 
@@ -98,7 +124,6 @@ class icoPolynomial
     // Private data
 
         //- Density polynomial coefficients
-        //  Note: input in [kg/m3], but internally uses [kg/m3/kmol]
         Polynomial<PolySize> rhoCoeffs_;
 
 
