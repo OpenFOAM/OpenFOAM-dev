@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -871,6 +871,12 @@ int main(int argc, char *argv[])
         "factor",
         "geometry scaling factor - default is 1"
     );
+    argList::addOption
+    (
+        "2D",
+        "thickness",
+        "use when converting a 2-D mesh (applied before scale)"
+    );
     argList::addBoolOption
     (
         "writeSets",
@@ -957,22 +963,26 @@ int main(int argc, char *argv[])
     // Construct shapes from face lists
     cellShapeList cellShapes(nCells);
 
-    // Extrude 2-D mesh into 3-D
-
     Info<< "dimension of grid: " << dimensionOfGrid << endl;
     faceList frontAndBackFaces;
 
     if (dimensionOfGrid == 2)
     {
-        const scalar extrusionFactor = 0.01;
+        // Extrude 2-D mesh into 3-D, in z-direction
 
-        boundBox box(max(points), min(points));
+        scalar twoDThickness = 1.0;
 
-        const scalar zOffset = extrusionFactor*box.mag();
+        if (!args.optionReadIfPresent("2D", twoDThickness))
+        {
+            const scalar extrusionFactor = 0.02; //0.01 in each direction
+            boundBox box(points);
+            twoDThickness = extrusionFactor*box.mag();
+        }
 
-        // two-dimensional grid. Extrude in z-direction
-        Info<< "Grid is 2-D. Extruding in z-direction by: "
-            << 2*zOffset << endl;
+        Info<< "Grid is 2-D. Extruding in z-direction by: " << twoDThickness
+            << endl;
+
+        const scalar zOffset = twoDThickness / 2;
 
         pointField oldPoints = points;
 
