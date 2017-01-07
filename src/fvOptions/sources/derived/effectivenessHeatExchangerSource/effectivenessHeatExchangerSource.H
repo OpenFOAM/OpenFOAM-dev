@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ Usage
 
 
 Note
-- the table with name "fileName" should have the same units as the
+- the table with name "file" should have the same units as the
   secondary mass flow rate and kg/s for phi
 - faceZone is the faces at the inlet of the cellzone, it needs to be
   created with flip map flags. It is used to integrate the net mass flow

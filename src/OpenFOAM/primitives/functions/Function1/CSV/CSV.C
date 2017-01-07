@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -214,7 +214,7 @@ Foam::Function1Types::CSV<Type>::CSV
     componentColumns_(coeffs_.lookup("componentColumns")),
     separator_(coeffs_.lookupOrDefault<string>("separator", string(","))[0]),
     mergeSeparators_(readBool(coeffs_.lookup("mergeSeparators"))),
-    fName_(coeffs_.lookup("fileName"))
+    fName_(coeffs_.lookup("file"))
 {
     if (componentColumns_.size() != pTraits<Type>::nComponents)
     {
@@ -293,7 +293,7 @@ void Foam::Function1Types::CSV<Type>::writeData(Ostream& os) const
         << token::END_STATEMENT << nl;
     os.writeKeyword("mergeSeparators") << mergeSeparators_
         << token::END_STATEMENT << nl;
-    os.writeKeyword("fileName") << fName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

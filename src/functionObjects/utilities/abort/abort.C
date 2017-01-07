@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ bool Foam::functionObjects::abort::read(const dictionary& dict)
         action_ = nextWrite;
     }
 
-    if (dict.readIfPresent("fileName", abortFile_))
+    if (dict.readIfPresent("file", abortFile_))
     {
         abortFile_.expand();
     }

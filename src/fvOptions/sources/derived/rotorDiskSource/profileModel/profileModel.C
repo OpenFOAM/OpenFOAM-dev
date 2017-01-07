@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::profileModel::profileModel(const dictionary& dict, const word& name)
     name_(name),
     fName_(fileName::null)
 {
-    dict.readIfPresent("fileName", fName_);
+    dict.readIfPresent("file", fName_);
 }
 
 // * * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //

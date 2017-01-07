@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -497,7 +497,7 @@ externalCoupledMixedFvPatchField
 :
     mixedFvPatchField<Type>(p, iF),
     commsDir_(dict.lookup("commsDir")),
-    fName_(dict.lookup("fileName")),
+    fName_(dict.lookup("file")),
     waitInterval_(dict.lookupOrDefault("waitInterval", 1)),
     timeOut_(dict.lookupOrDefault("timeOut", 100*waitInterval_)),
     calcFrequency_(dict.lookupOrDefault("calcFrequency", 1)),
@@ -809,7 +809,7 @@ void Foam::externalCoupledMixedFvPatchField<Type>::write(Ostream& os) const
     mixedFvPatchField<Type>::write(os);
 
     os.writeKeyword("commsDir") << commsDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("fileName") << fName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
     os.writeKeyword("waitInterval") << waitInterval_ << token::END_STATEMENT
         << nl;
     os.writeKeyword("timeOut") << timeOut_ << token::END_STATEMENT << nl;

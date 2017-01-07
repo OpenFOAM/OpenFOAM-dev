@@ -35,7 +35,7 @@ boundaryField
     {
         type            externalCoupledTemperature;
         commsDir        "${FOAM_CASE}/comms";
-        fileName        "data";
+        file            "data";
         initByExternal  yes;
         log             true;
         value           uniform 307.75; // 34.6 degC
@@ -45,7 +45,7 @@ boundaryField
     {
         type            externalCoupledTemperature;
         commsDir        "${FOAM_CASE}/comms";
-        fileName        "data";
+        file            "data";
         initByExternal  yes;
         log             true;
         value           uniform 288.15; // 15 degC
