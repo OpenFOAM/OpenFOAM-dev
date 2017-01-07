@@ -55,7 +55,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
             IOobject::AUTO_WRITE
         ),
         mesh,
-        0
+        scalar(0)
     )
 {
     basicMultiComponentMixture& composition = this->thermo().composition();
