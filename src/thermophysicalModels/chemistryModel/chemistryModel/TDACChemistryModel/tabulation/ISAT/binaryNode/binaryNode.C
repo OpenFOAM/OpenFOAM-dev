@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,11 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
     leafRight_(nullptr),
     nodeLeft_(nullptr),
     nodeRight_(nullptr),
-    parent_(nullptr)
-{}
+    parent_(nullptr),
+    variableTimeStep_(false),
+    nAdditionalEqns_(0)
+{
+}
 
 
 template<class CompType, class ThermoType>
@@ -53,8 +56,18 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
     nodeLeft_(nullptr),
     nodeRight_(nullptr),
     parent_(parent),
-    v_(elementLeft->completeSpaceSize(),0.0)
+    variableTimeStep_(elementLeft->variableTimeStep()),
+    v_(elementLeft->completeSpaceSize(), 0)
 {
+    if (this->variableTimeStep_)
+    {
+        nAdditionalEqns_ = 3;
+    }
+    else
+    {
+        nAdditionalEqns_ = 2;
+    }
+
     calcV(elementLeft, elementRight, v_);
     a_ = calcA(elementLeft, elementRight);
 }
@@ -70,9 +83,22 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
     nodeLeft_(bn->nodeLeft()),
     nodeRight_(bn->nodeRight()),
     parent_(bn->parent()),
+    variableTimeStep_
+    (
+        this->coeffsDict_.lookupOrDefault("variableTimeStep", false)
+    ),
     v_(bn->v()),
     a_(bn->a())
-{}
+{
+    if (this->variableTimeStep_)
+    {
+        nAdditionalEqns_ = 3;
+    }
+    else
+    {
+        nAdditionalEqns_ = 2;
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -102,7 +128,7 @@ Foam::binaryNode<CompType, ThermoType>::calcV
         bool outOfIndexI = true;
         if (mechReductionActive)
         {
-            if (i<elementLeft->completeSpaceSize()-2)
+            if (i<elementLeft->completeSpaceSize() - nAdditionalEqns_)
             {
                 si = elementLeft->completeToSimplifiedIndex()[i];
                 outOfIndexI = (si==-1);
@@ -110,8 +136,9 @@ Foam::binaryNode<CompType, ThermoType>::calcV
             else// temperature and pressure
             {
                 outOfIndexI = false;
-                label dif = i-(elementLeft->completeSpaceSize()-2);
-                si = elementLeft->nActiveSpecies()+dif;
+                const label dif =
+                    i - (elementLeft->completeSpaceSize() - nAdditionalEqns_);
+                si = elementLeft->nActiveSpecies() + dif;
             }
         }
         if (!mechReductionActive || (mechReductionActive && !(outOfIndexI)))
@@ -123,7 +150,7 @@ Foam::binaryNode<CompType, ThermoType>::calcV
                 bool outOfIndexJ = true;
                 if (mechReductionActive)
                 {
-                    if (j<elementLeft->completeSpaceSize()-2)
+                    if (j < elementLeft->completeSpaceSize() - nAdditionalEqns_)
                     {
                         sj = elementLeft->completeToSimplifiedIndex()[j];
                         outOfIndexJ = (sj==-1);
@@ -131,8 +158,13 @@ Foam::binaryNode<CompType, ThermoType>::calcV
                     else
                     {
                         outOfIndexJ = false;
-                        label dif = j-(elementLeft->completeSpaceSize()-2);
-                        sj = elementLeft->nActiveSpecies()+dif;
+                        const label dif =
+                            j
+                          - (
+                                elementLeft->completeSpaceSize()
+                              - nAdditionalEqns_
+                            );
+                        sj = elementLeft->nActiveSpecies() + dif;
                     }
                 }
                 if

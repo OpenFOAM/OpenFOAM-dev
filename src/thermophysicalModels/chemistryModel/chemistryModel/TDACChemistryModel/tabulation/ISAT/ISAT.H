@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,6 +112,9 @@ class ISAT
 
         bool cleaningRequired_;
 
+        //- Number of equations in addition to the species eqs.
+        label nAdditionalEqns_;
+
 
     // Private Member Functions
 
@@ -168,7 +171,8 @@ class ISAT
         (
             scalarSquareMatrix& A,
             const scalarField& Rphiq,
-            const scalar rho
+            const scalar rho,
+            const scalar dt
         );
 
 
@@ -224,11 +228,12 @@ public:
         //  This function can grow an existing point or add a new leaf to the
         //  binary tree Input : phiq the new composition to store Rphiq the
         //  mapping of the new composition point
-        virtual bool add
+        virtual label add
         (
             const scalarField& phiq,
             const scalarField& Rphiq,
-            const scalar rho
+            const scalar rho,
+            const scalar deltaT
         );
 
         virtual bool update()

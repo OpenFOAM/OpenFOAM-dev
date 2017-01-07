@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,8 @@ protected:
 
     scalar tolerance_;
 
+    //- Switch to allow variable time step (off by default)
+    const Switch variableTimeStep_;
 
 public:
 
@@ -130,6 +132,11 @@ public:
             return active_ && log_;
         }
 
+        inline bool variableTimeStep()
+        {
+            return variableTimeStep_;
+        }
+
         inline scalar tolerance() const
         {
             return tolerance_;
@@ -152,11 +159,12 @@ public:
         // Add function: (only virtual here)
         // Add information to the tabulation algorithm. Give the reference for
         // future retrieve (phiQ) and the corresponding result (RphiQ).
-        virtual bool add
+        virtual label add
         (
             const scalarField& phiQ,
             const scalarField& RphiQ,
-            const scalar rho
+            const scalar rho,
+            const scalar deltaT
         ) = 0;
 
         // Update function: (only virtual here)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,14 @@ public:
     //- Parent node
     binaryNode<CompType, ThermoType>* parent_;
 
+    //- Switch to allow variable time step (off by default)
+    bool variableTimeStep_;
+
+    //- Number of equations in addition to the species eqs.
+    label nAdditionalEqns_;
+
     scalarField v_;
+
     scalar a_;
 
     //- Compute vector v:

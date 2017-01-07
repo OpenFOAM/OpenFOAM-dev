@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,16 +41,11 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
         chemistry
     ),
     chemisTree_(chemistry, this->coeffsDict_),
-    scaleFactor_(chemistry.nEqns(), 1.0),
+    scaleFactor_(chemistry.nEqns() + ((this->variableTimeStep()) ? 1 : 0), 1),
     runTime_(chemistry.time()),
     chPMaxLifeTime_
     (
-        this->coeffsDict_.lookupOrDefault
-        (
-            "chPMaxLifeTime",
-            (runTime_.endTime().value()-runTime_.startTime().value())
-           /runTime_.deltaT().value()
-        )
+        this->coeffsDict_.lookupOrDefault("chPMaxLifeTime", INT_MAX)
     ),
     maxGrowth_(this->coeffsDict_.lookupOrDefault("maxGrowth", INT_MAX)),
     checkEntireTreeInterval_
@@ -104,6 +99,36 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
         }
         scaleFactor_[Ysize] = readScalar(scaleDict.lookup("Temperature"));
         scaleFactor_[Ysize+1] = readScalar(scaleDict.lookup("Pressure"));
+        if (this->variableTimeStep())
+        {
+            scaleFactor_[Ysize + 2] = readScalar(scaleDict.lookup("deltaT"));
+        }
+        else
+        {
+            // When the variableTimeStep option is false, if the application
+            // has variable time step activated, the maximum lifetime of a
+            // chemPoint should be 1 time step.
+            bool adjustTimeStep =
+                runTime_.controlDict().lookupOrDefault("adjustTimeStep", false);
+            if (chPMaxLifeTime_ > 1 && adjustTimeStep)
+            {
+                WarningInFunction
+                    << " variableTimeStep is not activate for ISAT while"
+                    << " the time step might be adjusted by the application."
+                    << nl
+                    << " This might lead to errors in the chemistry." << nl
+                    << " To avoid this warning either set chPMaxLifeTime to 1"
+                    << " or activate variableTimeStep." << endl;
+            }
+        }
+    }
+    if (this->variableTimeStep())
+    {
+        nAdditionalEqns_ = 3;
+    }
+    else
+    {
+        nAdditionalEqns_ = 2;
     }
 
     if (this->log())
@@ -190,16 +215,16 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::calcNewC
     scalarField& Rphiq
 )
 {
-    label nEqns = this->chemistry_.nEqns(); // Full set of species
+    label nEqns = this->chemistry_.nEqns(); // Species, T, p
     bool mechRedActive = this->chemistry_.mechRed()->active();
     Rphiq = phi0->Rphi();
     scalarField dphi(phiq-phi0->phi());
     const scalarSquareMatrix& gradientsMatrix = phi0->A();
     List<label>& completeToSimplified(phi0->completeToSimplifiedIndex());
 
-    // Rphiq[i] = Rphi0[i]+A(i, j)dphi[j]
+    // Rphiq[i]=Rphi0[i]+A(i, j)dphi[j]
     // where Aij is dRi/dphi_j
-    for (label i=0; i<nEqns-2; i++)
+    for (label i=0; i<nEqns-nAdditionalEqns_; i++)
     {
         if (mechRedActive)
         {
@@ -216,9 +241,18 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::calcNewC
                     }
                 }
                 Rphiq[i] +=
-                    gradientsMatrix(si, phi0->nActiveSpecies())*dphi[nEqns-2];
+                    gradientsMatrix(si, phi0->nActiveSpecies())*dphi[nEqns - 2];
                 Rphiq[i] +=
-                    gradientsMatrix(si, phi0->nActiveSpecies()+1)*dphi[nEqns-1];
+                    gradientsMatrix(si, phi0->nActiveSpecies() + 1)
+                   *dphi[nEqns - 1];
+
+                if (this->variableTimeStep())
+                {
+                    Rphiq[i] +=
+                        gradientsMatrix(si, phi0->nActiveSpecies() + 2)
+                       *dphi[nEqns];
+                }
+
                 // As we use an approximation of A, Rphiq should be checked for
                 // negative values
                 Rphiq[i] = max(0.0,Rphiq[i]);
@@ -260,10 +294,11 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::grow
 
     // Raise a flag when the chemPoint used has been grown more than the
     // allowed number of time
-    if (!phi0->toRemove() && phi0->nGrowth() > maxGrowth_)
+    if (phi0->nGrowth() > maxGrowth_)
     {
         cleaningRequired_ = true;
         phi0->toRemove() = true;
+        return false;
     }
 
     // If the solution RphiQ is still within the tolerance we try to grow it
@@ -294,14 +329,10 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::cleanAndBalance()
     {
         chemPointISAT<CompType, ThermoType>* xtmp =
             chemisTree_.treeSuccessor(x);
-        // timeOutputValue returns timeToUserTime(value()), therefore, it should
-        // be compare with timeToUserTime(deltaT)
-        scalar elapsedTime = runTime_.timeOutputValue() - x->timeTag();
-        scalar maxElapsedTime =
-            chPMaxLifeTime_
-          * runTime_.timeToUserTime(runTime_.deltaTValue());
 
-        if ((elapsedTime > maxElapsedTime) || (x->nGrowth() > maxGrowth_))
+        scalar elapsedTimeSteps = this->chemistry_.timeSteps() - x->timeTag();
+
+        if ((elapsedTimeSteps > chPMaxLifeTime_) || (x->nGrowth() > maxGrowth_))
         {
             chemisTree_.deleteLeaf(x);
             treeModified = true;
@@ -334,13 +365,13 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
 (
     scalarSquareMatrix& A,
     const scalarField& Rphiq,
-    const scalar rhoi
+    const scalar rhoi,
+    const scalar dt
 )
 {
-    scalar dt = runTime_.deltaTValue();
     bool mechRedActive = this->chemistry_.mechRed()->active();
     label speciesNumber = this->chemistry_.nSpecie();
-    scalarField Rcq(this->chemistry_.nEqns());
+    scalarField Rcq(this->chemistry_.nEqns() + nAdditionalEqns_ - 2);
     for (label i=0; i<speciesNumber; i++)
     {
         label s2c = i;
@@ -350,8 +381,12 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
         }
         Rcq[i] = rhoi*Rphiq[s2c]/this->chemistry_.specieThermo()[s2c].W();
     }
-    Rcq[speciesNumber] = Rphiq[Rphiq.size()-2];
-    Rcq[speciesNumber+1] = Rphiq[Rphiq.size()-1];
+    Rcq[speciesNumber] = Rphiq[Rphiq.size() - nAdditionalEqns_];
+    Rcq[speciesNumber+1] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 1];
+    if (this->variableTimeStep())
+    {
+        Rcq[speciesNumber + 2] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 2];
+    }
 
     // Aaa is computed implicitely,
     // A is given by A = C(psi0, t0+dt), where C is obtained through solving
@@ -399,6 +434,10 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
     // For temperature and pressure, only unity on the diagonal
     A(speciesNumber, speciesNumber) = 1;
     A(speciesNumber+1, speciesNumber+1) = 1;
+    if (this->variableTimeStep())
+    {
+        A[speciesNumber + 2][speciesNumber + 2] = 1;
+    }
 
     // Inverse of (I-dt*J(psi(t0+dt)))
     LUscalarMatrix LUA(A);
@@ -463,20 +502,18 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::retrieve
 
     if (retrieved)
     {
-        scalar elapsedTime =
-            runTime_.timeOutputValue() - phi0->timeTag();
-        scalar maxElapsedTime =
-            chPMaxLifeTime_
-          * runTime_.timeToUserTime(runTime_.deltaTValue());
+        phi0->increaseNumRetrieve();
+        scalar elapsedTimeSteps =
+            this->chemistry_.timeSteps() - phi0->timeTag();
 
         // Raise a flag when the chemPoint has been used more than the allowed
         // number of time steps
-        if (elapsedTime > maxElapsedTime && !phi0->toRemove())
+        if (elapsedTimeSteps > chPMaxLifeTime_ && !phi0->toRemove())
         {
             cleaningRequired_ = true;
             phi0->toRemove() = true;
         }
-        lastSearch_->lastTimeUsed() = runTime_.timeOutputValue();
+        lastSearch_->lastTimeUsed() = this->chemistry_.timeSteps();
         addToMRU(phi0);
         calcNewC(phi0,phiq, Rphiq);
         nRetrieved_++;
@@ -492,13 +529,15 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::retrieve
 
 
 template<class CompType, class ThermoType>
-bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
+Foam::label Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
 (
     const scalarField& phiq,
     const scalarField& Rphiq,
-    const scalar rho
+    const scalar rho,
+    const scalar deltaT
 )
 {
+    label growthOrAddFlag = 1;
     // If lastSearch_ holds a valid pointer to a chemPoint AND the growPoints_
     // option is on, the code first tries to grow the point hold by lastSearch_
     if (lastSearch_ && growPoints_)
@@ -506,12 +545,11 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
         if (grow(lastSearch_,phiq, Rphiq))
         {
             nGrowth_++;
-            // the structure of the tree is not modified, return false
-            return false;
+            growthOrAddFlag = 0;
+            //the structure of the tree is not modified, return false
+            return growthOrAddFlag;
         }
     }
-
-    bool treeCleanedOrCleared(false);
 
     // If the code reach this point, it is either because lastSearch_ is not
     // valid, OR because growPoints_ is not on, OR because the grow operation
@@ -567,16 +605,12 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
         // The structure has been changed, it will force the binary tree to
         // perform a new search and find the most appropriate point still stored
         lastSearch_ = nullptr;
-
-        // Either cleanAndBalance has changed the tree or it has been cleared
-        // in any case treeCleanedOrCleared should be set to true
-        treeCleanedOrCleared = true;
     }
 
     // Compute the A matrix needed to store the chemPoint.
-    label ASize = this->chemistry_.nEqns(); // Reduced when mechRed is active
+    label ASize = this->chemistry_.nEqns() + nAdditionalEqns_ - 2;
     scalarSquareMatrix A(ASize, Zero);
-    computeA(A, Rphiq, rho);
+    computeA(A, Rphiq, rho, deltaT);
 
     chemisTree().insertNewLeaf
     (
@@ -591,7 +625,7 @@ bool Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::add
 
     nAdd_++;
 
-    return treeCleanedOrCleared;
+    return growthOrAddFlag;
 }
 
 

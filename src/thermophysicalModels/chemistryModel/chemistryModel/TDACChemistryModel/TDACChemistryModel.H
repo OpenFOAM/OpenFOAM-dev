@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,14 +85,16 @@ class TDACChemistryModel
 {
     // Private member data
 
+        label timeSteps_;
+
         // Mechanism reduction
         label NsDAC_;
         scalarField completeC_;
         scalarField simplifiedC_;
         Field<bool> reactionsDisabled_;
+        List<List<specieElement>> specieComp_;
         Field<label> completeToSimplifiedIndex_;
         DynamicList<label> simplifiedToCompleteIndex_;
-        List<List<specieElement>> specieComp_;
         autoPtr<chemistryReductionMethod<CompType, ThermoType>> mechRed_;
 
         // Tabulation
@@ -112,6 +114,12 @@ class TDACChemistryModel
 
         //- Log file for average time spent solving the chemistry
         autoPtr<OFstream> cpuSolveFile_;
+
+        // Field containing information about tabulation:
+        // 0 -> add (direct integration)
+        // 1 -> grow
+        // 2 -> retrieve
+        volScalarField tabulationResults_;
 
 
     // Private Member Functions
@@ -150,6 +158,12 @@ public:
 
 
     // Member Functions
+
+        inline label timeSteps() const
+        {
+            return timeSteps_;
+        }
+
 
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
@@ -256,6 +270,17 @@ public:
 
             inline autoPtr<chemistryReductionMethod<CompType, ThermoType>>&
                 mechRed();
+
+            tmp<volScalarField> tabulationResults() const
+            {
+                return tabulationResults_;
+            }
+
+            void setTabulationResultsAdd(const label celli);
+
+            void setTabulationResultsGrow(const label celli);
+
+            void setTabulationResultsRetrieve(const label celli);
 };
 
 

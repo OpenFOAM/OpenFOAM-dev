@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,8 @@ Foam::chemistryTabulationMethod<CompType, ThermoType>::chemistryTabulationMethod
     active_(coeffsDict_.lookupOrDefault<Switch>("active", false)),
     log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
     chemistry_(chemistry),
-    tolerance_(coeffsDict_.lookupOrDefault<scalar>("tolerance", 1e-4))
+    tolerance_(coeffsDict_.lookupOrDefault<scalar>("tolerance", 1e-4)),
+    variableTimeStep_(coeffsDict_.lookupOrDefault("variableTimeStep", false))
 {}
 
 

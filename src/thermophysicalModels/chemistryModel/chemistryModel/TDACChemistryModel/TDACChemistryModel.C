@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,12 +37,26 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
 )
 :
     chemistryModel<CompType, ThermoType>(mesh, phaseName),
+    timeSteps_(0),
     NsDAC_(this->nSpecie_),
-    completeC_(this->nSpecie_,0.0),
+    completeC_(this->nSpecie_, 0),
     reactionsDisabled_(this->reactions_.size(), false),
-    completeToSimplifiedIndex_(this->nSpecie_,-1),
+    specieComp_(this->nSpecie_),
+    completeToSimplifiedIndex_(this->nSpecie_, -1),
     simplifiedToCompleteIndex_(this->nSpecie_),
-    specieComp_(this->nSpecie_)
+    tabulationResults_
+    (
+        IOobject
+        (
+            "TabulationResults",
+            this->time().timeName(),
+            this->mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        0
+    )
 {
     basicMultiComponentMixture& composition = this->thermo().composition();
 
@@ -53,7 +67,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
         dynamicCast<const reactingMixture<ThermoType>&>(this->thermo())
        .specieComposition();
 
-    forAll(specieComp_,i)
+    forAll(specieComp_, i)
     {
         specieComp_[i] = specComp[this->Y()[i].name()];
     }
@@ -579,7 +593,12 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
     const DeltaTType& deltaT
 )
 {
+    // Increment counter of time-step
+    timeSteps_++;
+
     const bool reduced = mechRed_->active();
+
+    label nAdditionalEqn = (tabulation_->variableTimeStep() ? 1:0);
 
     basicMultiComponentMixture& composition = this->thermo().composition();
 
@@ -625,9 +644,9 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
     scalarField c0(this->nSpecie_);
 
     // Composition vector (Yi, T, p)
-    scalarField phiq(this->nEqns());
+    scalarField phiq(this->nEqns() + nAdditionalEqn);
 
-    scalarField Rphiq(this->nEqns());
+    scalarField Rphiq(this->nEqns() + nAdditionalEqn);
 
     forAll(rho, celli)
     {
@@ -643,6 +662,11 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
         }
         phiq[this->nSpecie()]=Ti;
         phiq[this->nSpecie()+1]=pi;
+        if (tabulation_->variableTimeStep())
+        {
+            phiq[this->nSpecie()+2] = deltaT[celli];
+        }
+
 
         // Initialise time progress
         scalar timeLeft = deltaT[celli];
@@ -668,7 +692,7 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
         // This position is reached when tabulation is not used OR
         // if the solution is not retrieved.
         // In the latter case, it adds the information to the tabulation
-        // (it will either expand the current data or add a new stored poin).
+        // (it will either expand the current data or add a new stored point).
         else
         {
             clockTime_.timeIncrement();
@@ -720,12 +744,28 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
                 {
                     Rphiq[i] = c[i]/rhoi*this->specieThermo_[i].W();
                 }
-
-                Rphiq[Rphiq.size()-2] = Ti;
-                Rphiq[Rphiq.size()-1] = pi;
-                tabulation_->add(phiq, Rphiq, rhoi);
+                if (tabulation_->variableTimeStep())
+                {
+                    Rphiq[Rphiq.size()-3] = Ti;
+                    Rphiq[Rphiq.size()-2] = pi;
+                    Rphiq[Rphiq.size()-1] = deltaT[celli];
+                }
+                else
+                {
+                    Rphiq[Rphiq.size()-2] = Ti;
+                    Rphiq[Rphiq.size()-1] = pi;
+                }
+                label growOrAdd =
+                    tabulation_->add(phiq, Rphiq, rhoi, deltaT[celli]);
+                if (growOrAdd)
+                {
+                    this->setTabulationResultsAdd(celli);
+                }
+                else
+                {
+                    this->setTabulationResultsGrow(celli);
+                }
             }
-
             addNewLeafCpuTime_ += clockTime_.timeIncrement();
 
             // When operations are done and if mechanism reduction is active,
@@ -837,6 +877,37 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
 )
 {
     return this->solve<scalarField>(deltaT);
+}
+
+
+template<class CompType, class ThermoType>
+void Foam::TDACChemistryModel<CompType, ThermoType>::setTabulationResultsAdd
+(
+    const label celli
+)
+{
+    tabulationResults_[celli] = 0.0;
+}
+
+
+template<class CompType, class ThermoType>
+void Foam::TDACChemistryModel<CompType, ThermoType>::setTabulationResultsGrow
+(
+    const label celli
+)
+{
+    tabulationResults_[celli] = 1.0;
+}
+
+
+template<class CompType, class ThermoType>
+void Foam::TDACChemistryModel<CompType, ThermoType>::
+setTabulationResultsRetrieve
+(
+    const label celli
+)
+{
+    tabulationResults_[celli] = 2.0;
 }
 
 

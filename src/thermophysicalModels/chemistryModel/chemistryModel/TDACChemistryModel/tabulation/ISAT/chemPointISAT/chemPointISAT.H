@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,6 +146,7 @@ class chemPointISAT
         TDACChemistryModel<CompType, ThermoType>& chemistry_;
 
         //- Vector storing the composition, temperature and pressure
+        //  and deltaT if a variable time step is set on
         scalarField phi_;
 
         //- Vector storing the mapping of the composition phi
@@ -176,20 +177,38 @@ class chemPointISAT
         //- Number of active species stored in the chemPoint
         label nActiveSpecies_;
 
-
-        // Vectors that store the index conversion between the simplified
-        // and the complete chemical mechanism
-        List<label> completeToSimplifiedIndex_;
+        //- Vectors that store the index conversion between the simplified
+        //  and the complete chemical mechanism
         List<label> simplifiedToCompleteIndex_;
 
-        scalar timeTag_;
-        scalar lastTimeUsed_;
+        label timeTag_;
+        label lastTimeUsed_;
 
         bool toRemove_;
 
         label maxNumNewDim_;
 
         Switch printProportion_;
+
+        //- Variable to store the number of retrieves the chemPoint
+        //  will generate at each time step
+        label numRetrieve_;
+
+        //- Variable to store the number of time steps the chempoint is allowed
+        //   to still live according to the maxChPLifeTime_ parameter
+        label nLifeTime_;
+
+        //- Switch to allow variable time step (off by default)
+        Switch variableTimeStep_;
+
+        List<label> completeToSimplifiedIndex_;
+
+        //- Number of equations in addition to the species eqs.
+        label nAdditionalEqns_;
+
+        label idT_;
+        label idp_;
+        label iddeltaT_;
 
         //- QR decomposition of a matrix
         //  Input : nCols cols number
@@ -311,6 +330,7 @@ public:
         {
             return A_;
         }
+
         inline const scalarSquareMatrix& LT() const
         {
             return LT_;
@@ -336,32 +356,23 @@ public:
             return simplifiedToCompleteIndex_;
         }
 
-        inline label simplifiedToCompleteIndex(label i)
-        {
-            if (i < nActiveSpecies_)
-            {
-                return simplifiedToCompleteIndex_[i];
-            }
-            else if (i == nActiveSpecies_)
-            {
-                return completeSpaceSize_-2;
-            }
-            else if (i == nActiveSpecies_+1)
-            {
-                return completeSpaceSize_-1;
-            }
-            else
-            {
-                return -1;
-            }
-        }
+        //- Increases the number of retrieves the chempoint has generated
+        void increaseNumRetrieve();
 
-        inline const scalar& timeTag()
+        //- Resets the number of retrieves at each time step
+        void resetNumRetrieve();
+
+        //- Increases the "counter" of the chP life
+        void increaseNLifeTime();
+
+        label simplifiedToCompleteIndex(const label i);
+
+        inline const label& timeTag()
         {
             return timeTag_;
         }
 
-        inline scalar& lastTimeUsed()
+        inline label& lastTimeUsed()
         {
             return lastTimeUsed_;
         }
@@ -374,6 +385,21 @@ public:
         inline label& maxNumNewDim()
         {
             return maxNumNewDim_;
+        }
+
+        inline const label& numRetrieve()
+        {
+            return numRetrieve_;
+        }
+
+        inline const label& nLifeTime()
+        {
+            return nLifeTime_;
+        }
+
+        inline Switch variableTimeStep()
+        {
+            return variableTimeStep_;
         }
 
         // ISAT functions
