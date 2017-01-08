@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,7 +267,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
         InfoInFunction << "Constructing fvMesh from IOobject" << endl;
     }
 
-    // Check the existance of the cell volumes and read if present
+    // Check the existence of the cell volumes and read if present
     // and set the storage of V00
     if (isFile(time().timePath()/"V0"))
     {
@@ -288,7 +288,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
         V00();
     }
 
-    // Check the existance of the mesh fluxes, read if present and set the
+    // Check the existence of the mesh fluxes, read if present and set the
     // mesh to be moving
     if (isFile(time().timePath()/"meshPhi"))
     {

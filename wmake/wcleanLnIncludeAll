@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -58,7 +58,7 @@ fi
 
 #------------------------------------------------------------------------------
 # Search up the directory tree for the Make sub-directory,
-# check the existance of the 'files' file and clean there if present
+# check the existence of the 'files' file and clean there if present
 #------------------------------------------------------------------------------
 
 # Need to add an option or special logic to control cdSource

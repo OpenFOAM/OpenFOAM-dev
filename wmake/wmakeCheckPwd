@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -89,7 +89,7 @@ dirName="$1"
 # Simple check against $PWD
 [ "$PWD" = "$dirName" ] && exit 0
 
-# Check existance of <dir>
+# Check existence of <dir>
 [ -d "$dirName" ] || {
     [ "$quietOpt" = true ] || {
         echo "$Script error: Directory does not exist $dirName"
