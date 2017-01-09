@@ -98,30 +98,13 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
             }
         }
         scaleFactor_[Ysize] = readScalar(scaleDict.lookup("Temperature"));
-        scaleFactor_[Ysize+1] = readScalar(scaleDict.lookup("Pressure"));
+        scaleFactor_[Ysize + 1] = readScalar(scaleDict.lookup("Pressure"));
         if (this->variableTimeStep())
         {
             scaleFactor_[Ysize + 2] = readScalar(scaleDict.lookup("deltaT"));
         }
-        else
-        {
-            // When the variableTimeStep option is false, if the application
-            // has variable time step activated, the maximum lifetime of a
-            // chemPoint should be 1 time step.
-            bool adjustTimeStep =
-                runTime_.controlDict().lookupOrDefault("adjustTimeStep", false);
-            if (chPMaxLifeTime_ > 1 && adjustTimeStep)
-            {
-                WarningInFunction
-                    << " variableTimeStep is not activate for ISAT while"
-                    << " the time step might be adjusted by the application."
-                    << nl
-                    << " This might lead to errors in the chemistry." << nl
-                    << " To avoid this warning either set chPMaxLifeTime to 1"
-                    << " or activate variableTimeStep." << endl;
-            }
-        }
     }
+
     if (this->variableTimeStep())
     {
         nAdditionalEqns_ = 3;
@@ -433,7 +416,7 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
 
     // For temperature and pressure, only unity on the diagonal
     A(speciesNumber, speciesNumber) = 1;
-    A(speciesNumber+1, speciesNumber+1) = 1;
+    A(speciesNumber + 1, speciesNumber + 1) = 1;
     if (this->variableTimeStep())
     {
         A[speciesNumber + 2][speciesNumber + 2] = 1;

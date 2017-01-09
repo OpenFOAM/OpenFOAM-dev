@@ -25,6 +25,7 @@ License
 
 #include "TDACChemistryModel.H"
 #include "UniformField.H"
+#include "localEulerDdtScheme.H"
 #include "clockTime.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -37,6 +38,11 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
 )
 :
     chemistryModel<CompType, ThermoType>(mesh, phaseName),
+    variableTimeStep_
+    (
+        mesh.time().controlDict().lookupOrDefault("adjustTimeStep", false)
+     || fv::localEulerDdt::enabled(mesh)
+    ),
     timeSteps_(0),
     NsDAC_(this->nSpecie_),
     completeC_(this->nSpecie_, 0),
@@ -598,7 +604,7 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
 
     const bool reduced = mechRed_->active();
 
-    label nAdditionalEqn = (tabulation_->variableTimeStep() ? 1:0);
+    label nAdditionalEqn = (tabulation_->variableTimeStep() ? 1 : 0);
 
     basicMultiComponentMixture& composition = this->thermo().composition();
 
@@ -661,10 +667,10 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
             phiq[i] = this->Y()[i][celli];
         }
         phiq[this->nSpecie()]=Ti;
-        phiq[this->nSpecie()+1]=pi;
+        phiq[this->nSpecie() + 1]=pi;
         if (tabulation_->variableTimeStep())
         {
-            phiq[this->nSpecie()+2] = deltaT[celli];
+            phiq[this->nSpecie() + 2] = deltaT[celli];
         }
 
 

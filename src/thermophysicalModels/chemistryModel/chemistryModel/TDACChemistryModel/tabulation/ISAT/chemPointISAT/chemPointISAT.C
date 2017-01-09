@@ -227,18 +227,14 @@ Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
     printProportion_(coeffsDict.lookupOrDefault("printProportion",false)),
     numRetrieve_(0),
     nLifeTime_(0),
-    variableTimeStep_
-    (
-        coeffsDict.lookupOrDefault("variableTimeStep", false)
-    ),
     completeToSimplifiedIndex_
     (
-        completeSpaceSize - (2 + (variableTimeStep_ == 1 ? 1 : 0))
+        completeSpaceSize - (2 + (variableTimeStep() == 1 ? 1 : 0))
     )
 {
-    tolerance_=tolerance;
+    tolerance_ = tolerance;
 
-    if (this->variableTimeStep_)
+    if (variableTimeStep())
     {
         nAdditionalEqns_ = 3;
         iddeltaT_ = completeSpaceSize - 1;
@@ -342,12 +338,11 @@ Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
     maxNumNewDim_(p.maxNumNewDim()),
     numRetrieve_(0),
     nLifeTime_(0),
-    variableTimeStep_(p.variableTimeStep()),
     completeToSimplifiedIndex_(p.completeToSimplifiedIndex())
 {
     tolerance_ = p.tolerance();
 
-    if (this->variableTimeStep_)
+    if (variableTimeStep())
     {
         nAdditionalEqns_ = 3;
         idT_ = completeSpaceSize() - 3;
@@ -407,7 +402,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
 
             temp += LT_(si, dim)*dphi[idT_];
             temp += LT_(si, dim+1)*dphi[idp_];
-            if (variableTimeStep_)
+            if (variableTimeStep())
             {
                 temp += LT_(si, dim+2)*dphi[iddeltaT_];
             }
@@ -426,7 +421,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
     }
 
     // Temperature
-    if (variableTimeStep_)
+    if (variableTimeStep())
     {
         epsTemp +=
             sqr
@@ -447,7 +442,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
     }
 
     // Pressure
-    if (variableTimeStep_)
+    if (variableTimeStep())
     {
         epsTemp +=
             sqr
@@ -461,7 +456,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
         epsTemp += sqr(LT_(dim+1, dim+1)*dphi[idp_]);
     }
 
-    if (variableTimeStep_)
+    if (variableTimeStep())
     {
         epsTemp += sqr(LT_[dim+2][dim+2]*dphi[iddeltaT_]);
     }
@@ -477,7 +472,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
         propEps[idp_] =
             sqr(LT_(dim+1, dim+1)*dphi[idp_]);
 
-        if (variableTimeStep_)
+        if (variableTimeStep())
         {
             propEps[iddeltaT_] =
                 sqr(LT_[dim+2][dim+2]*dphi[iddeltaT_]);
@@ -572,7 +567,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::checkSolution
                 }
                 dRl += Avar(si, nActiveSpecies_)*dphi[idT_];
                 dRl += Avar(si, nActiveSpecies_+1)*dphi[idp_];
-                if (variableTimeStep_)
+                if (variableTimeStep())
                 {
                     dRl += Avar(si, nActiveSpecies_+2)*dphi[iddeltaT_];
                 }
@@ -719,7 +714,8 @@ bool Foam::chemPointISAT<CompType, ThermoType>::grow(const scalarField& phiq)
                 LTvar(initNActiveSpecies+1, initNActiveSpecies+1);
             A_(nActiveSpecies_+1, nActiveSpecies_+1)=
                 Avar(initNActiveSpecies+1, initNActiveSpecies+1);
-            if (variableTimeStep_)
+
+            if (variableTimeStep())
             {
                 LT_(nActiveSpecies_+2, nActiveSpecies_+2)=
                     LTvar(initNActiveSpecies+2, initNActiveSpecies+2);
@@ -755,9 +751,11 @@ bool Foam::chemPointISAT<CompType, ThermoType>::grow(const scalarField& phiq)
             }
             phiTilde[i] += LT_(i, j)*dphi[sj];
         }
+
         phiTilde[i] += LT_(i, dim-nAdditionalEqns_)*dphi[idT_];
         phiTilde[i] += LT_(i, dim-nAdditionalEqns_+1)*dphi[idp_];
-        if (variableTimeStep_)
+
+        if (variableTimeStep())
         {
             phiTilde[i] += LT_(i, dim-nAdditionalEqns_ + 2)*dphi[iddeltaT_];
         }
@@ -827,7 +825,7 @@ simplifiedToCompleteIndex
     {
         return completeSpaceSize_-nAdditionalEqns_ + 1;
     }
-    else if (variableTimeStep_ && (i == nActiveSpecies_ + 2))
+    else if (variableTimeStep() && (i == nActiveSpecies_ + 2))
     {
         return completeSpaceSize_-nAdditionalEqns_ + 2;
     }

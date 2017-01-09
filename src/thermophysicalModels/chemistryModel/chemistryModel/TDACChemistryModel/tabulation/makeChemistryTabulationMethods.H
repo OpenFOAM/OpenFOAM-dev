@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ License
         add##chemistryTabulationMethods##SS##Comp##Thermo##ConstructorToTable_;
 
 
-#define makeChemistryTabulationMethods(CompChemModel, Thermo)                   \
+#define makeChemistryTabulationMethods(CompChemModel, Thermo)                  \
                                                                                \
     typedef chemistryTabulationMethod<CompChemModel, Thermo>                   \
         chemistryTabulationMethod##CompChemModel##Thermo;                      \

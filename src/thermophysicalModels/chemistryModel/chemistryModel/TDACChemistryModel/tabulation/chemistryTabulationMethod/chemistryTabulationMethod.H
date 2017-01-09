@@ -74,8 +74,6 @@ protected:
 
     scalar tolerance_;
 
-    //- Switch to allow variable time step (off by default)
-    const Switch variableTimeStep_;
 
 public:
 
@@ -134,7 +132,7 @@ public:
 
         inline bool variableTimeStep()
         {
-            return variableTimeStep_;
+            return chemistry_.variableTimeStep();
         }
 
         inline scalar tolerance() const

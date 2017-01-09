@@ -28,19 +28,15 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CompType, class ThermoType>
-Foam::binaryNode<CompType, ThermoType>::binaryNode
-(
-)
+Foam::binaryNode<CompType, ThermoType>::binaryNode()
 :
     leafLeft_(nullptr),
     leafRight_(nullptr),
     nodeLeft_(nullptr),
     nodeRight_(nullptr),
     parent_(nullptr),
-    variableTimeStep_(false),
     nAdditionalEqns_(0)
-{
-}
+{}
 
 
 template<class CompType, class ThermoType>
@@ -56,10 +52,9 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
     nodeLeft_(nullptr),
     nodeRight_(nullptr),
     parent_(parent),
-    variableTimeStep_(elementLeft->variableTimeStep()),
     v_(elementLeft->completeSpaceSize(), 0)
 {
-    if (this->variableTimeStep_)
+    if (elementLeft->variableTimeStep())
     {
         nAdditionalEqns_ = 3;
     }
@@ -72,41 +67,11 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
     a_ = calcA(elementLeft, elementRight);
 }
 
-template<class CompType, class ThermoType>
-Foam::binaryNode<CompType, ThermoType>::binaryNode
-(
-    binaryNode<CompType, ThermoType> *bn
-)
-:
-    leafLeft_(bn->leafLeft()),
-    leafRight_(bn->leafRight()),
-    nodeLeft_(bn->nodeLeft()),
-    nodeRight_(bn->nodeRight()),
-    parent_(bn->parent()),
-    variableTimeStep_
-    (
-        this->coeffsDict_.lookupOrDefault("variableTimeStep", false)
-    ),
-    v_(bn->v()),
-    a_(bn->a())
-{
-    if (this->variableTimeStep_)
-    {
-        nAdditionalEqns_ = 3;
-    }
-    else
-    {
-        nAdditionalEqns_ = 2;
-    }
-}
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
 template<class CompType, class ThermoType>
-void
-Foam::binaryNode<CompType, ThermoType>::calcV
+void Foam::binaryNode<CompType, ThermoType>::calcV
 (
     chemPointISAT<CompType, ThermoType>*& elementLeft,
     chemPointISAT<CompType, ThermoType>*& elementRight,
@@ -116,7 +81,8 @@ Foam::binaryNode<CompType, ThermoType>::calcV
     // LT is the transpose of the L matrix
     scalarSquareMatrix& LT = elementLeft->LT();
     bool mechReductionActive = elementLeft->chemistry().mechRed()->active();
-    // difference of composition in the full species domain
+
+    // Difference of composition in the full species domain
     scalarField phiDif(elementRight->phi() - elementLeft->phi());
     const scalarField& scaleFactor(elementLeft->scaleFactor());
     scalar epsTol = elementLeft->tolerance();
@@ -131,9 +97,9 @@ Foam::binaryNode<CompType, ThermoType>::calcV
             if (i<elementLeft->completeSpaceSize() - nAdditionalEqns_)
             {
                 si = elementLeft->completeToSimplifiedIndex()[i];
-                outOfIndexI = (si==-1);
+                outOfIndexI = (si == -1);
             }
-            else// temperature and pressure
+            else // temperature and pressure
             {
                 outOfIndexI = false;
                 const label dif =
@@ -143,7 +109,7 @@ Foam::binaryNode<CompType, ThermoType>::calcV
         }
         if (!mechReductionActive || (mechReductionActive && !(outOfIndexI)))
         {
-            v[i]=0.0;
+            v[i] = 0;
             for (label j=0; j<elementLeft->completeSpaceSize(); j++)
             {
                 label sj = j;
@@ -173,7 +139,7 @@ Foam::binaryNode<CompType, ThermoType>::calcV
                   ||(mechReductionActive && !(outOfIndexJ))
                 )
                 {
-                    // since L is a lower triangular matrix k=0->min(i, j)
+                    // Since L is a lower triangular matrix k=0->min(i, j)
                     for (label k=0; k<=min(si, sj); k++)
                     {
                         v[i] += LT(k, si)*LT(k, sj)*phiDif[j];
@@ -183,8 +149,8 @@ Foam::binaryNode<CompType, ThermoType>::calcV
         }
         else
         {
-            // when it is an inactive species the diagonal element of LT is
-            //  1/(scaleFactor*epsTol)
+            // When it is an inactive species the diagonal element of LT is
+            // 1/(scaleFactor*epsTol)
             v[i] = phiDif[i]/sqr(scaleFactor[i]*epsTol);
         }
     }
@@ -198,13 +164,13 @@ Foam::scalar Foam::binaryNode<CompType, ThermoType>::calcA
     chemPointISAT<CompType, ThermoType>* elementRight
 )
 {
-    scalar a = 0.0;
-    scalarField phih((elementLeft->phi()+elementRight->phi())/2);
-    label completeSpaceSize = elementLeft->completeSpaceSize();
-    for (label i=0; i<completeSpaceSize; i++)
+    scalarField phih((elementLeft->phi() + elementRight->phi())/2);
+    scalar a = 0;
+    forAll(phih, i)
     {
         a += v_[i]*phih[i];
     }
+
     return a;
 }
 

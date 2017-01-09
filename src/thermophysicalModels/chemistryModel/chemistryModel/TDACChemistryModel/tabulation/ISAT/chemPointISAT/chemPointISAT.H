@@ -198,9 +198,6 @@ class chemPointISAT
         //   to still live according to the maxChPLifeTime_ parameter
         label nLifeTime_;
 
-        //- Switch to allow variable time step (off by default)
-        Switch variableTimeStep_;
-
         List<label> completeToSimplifiedIndex_;
 
         //- Number of equations in addition to the species eqs.
@@ -397,9 +394,9 @@ public:
             return nLifeTime_;
         }
 
-        inline Switch variableTimeStep()
+        inline bool variableTimeStep() const
         {
-            return variableTimeStep_;
+            return chemistry_.variableTimeStep();
         }
 
         // ISAT functions

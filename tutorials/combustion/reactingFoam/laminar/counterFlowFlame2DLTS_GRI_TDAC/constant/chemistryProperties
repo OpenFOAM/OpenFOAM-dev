@@ -78,8 +78,6 @@ tabulation
 
     printNumRetrieve   off;
 
-    variableTimeStep   on;
-
     // Tolerance used for retrieve and grow
     tolerance   1e-3;
 

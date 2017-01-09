@@ -40,8 +40,7 @@ Foam::chemistryTabulationMethod<CompType, ThermoType>::chemistryTabulationMethod
     active_(coeffsDict_.lookupOrDefault<Switch>("active", false)),
     log_(coeffsDict_.lookupOrDefault<Switch>("log", false)),
     chemistry_(chemistry),
-    tolerance_(coeffsDict_.lookupOrDefault<scalar>("tolerance", 1e-4)),
-    variableTimeStep_(coeffsDict_.lookupOrDefault("variableTimeStep", false))
+    tolerance_(coeffsDict_.lookupOrDefault<scalar>("tolerance", 1e-4))
 {}
 
 

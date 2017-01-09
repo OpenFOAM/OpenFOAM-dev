@@ -85,6 +85,8 @@ class TDACChemistryModel
 {
     // Private member data
 
+        bool variableTimeStep_;
+
         label timeSteps_;
 
         // Mechanism reduction
@@ -159,11 +161,11 @@ public:
 
     // Member Functions
 
-        inline label timeSteps() const
-        {
-            return timeSteps_;
-        }
+        //- Return true if the time-step is variable and/or non-uniform
+        inline bool variableTimeStep() const;
 
+        //- Return the number of chemistry evaluations (used by ISAT)
+        inline label timeSteps() const;
 
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
