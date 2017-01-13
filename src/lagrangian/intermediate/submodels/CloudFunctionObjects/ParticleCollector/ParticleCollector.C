@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,7 +171,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
     }
     else
     {
-        // set 4 quadrants for single sector cases
+        // Set 4 quadrants for single sector cases
         nS = 4;
 
         vector tangent = Zero;
@@ -200,7 +200,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
     label nPoint = radius_.size()*nPointPerRadius;
     label nFace = radius_.size()*nS;
 
-    // add origin
+    // Add origin
     nPoint++;
 
     points_.setSize(nPoint);
@@ -213,7 +213,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
 
     points_[0] = origin;
 
-    // points
+    // Points
     forAll(radius_, radI)
     {
         label pointOffset = radI*nPointPerRadius + 1;
@@ -226,7 +226,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
         }
     }
 
-    // faces
+    // Faces
     DynamicList<label> facePts(2*nPointPerSector);
     forAll(radius_, radI)
     {
@@ -236,7 +236,7 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
             {
                 facePts.clear();
 
-                // append origin point
+                // Append origin point
                 facePts.append(0);
 
                 for (label ptI = 0; ptI < nPointPerSector; ptI++)
@@ -304,16 +304,16 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
 
         if (sign(d1) == sign(d2))
         {
-            // did not cross polygon plane
+            // Did not cross polygon plane
             continue;
         }
 
-        // intersection point
+        // Intersection point
         const point pIntersect = p1 + (d1/(d1 - d2))*(p2 - p1);
 
         const List<face>& tris = faceTris_[facei];
 
-        // identify if point is within poly bounds
+        // Identify if point is within poly bounds
         forAll(tris, triI)
         {
             const face& tri = tris[triI];
@@ -347,11 +347,11 @@ void Foam::ParticleCollector<CloudType>::collectParcelConcentricCircles
 
     if (sign(d1) == sign(d2))
     {
-        // did not cross plane
+        // Did not cross plane
         return;
     }
 
-    // intersection point in cylindrical co-ordinate system
+    // Intersection point in cylindrical co-ordinate system
     const point pCyl = coordSys_.localPosition(p1 + (d1/(d1 - d2))*(p2 - p1));
 
     scalar r = pCyl[0];
@@ -381,7 +381,10 @@ void Foam::ParticleCollector<CloudType>::collectParcelConcentricCircles
         }
     }
 
-    hitFaceIDs_.append(secI);
+    if (secI != -1)
+    {
+        hitFaceIDs_.append(secI);
+    }
 }
 
 
@@ -651,7 +654,7 @@ void Foam::ParticleCollector<CloudType>::postMove
         return;
     }
 
-    // slightly extend end position to avoid falling within tracking tolerances
+    // Slightly extend end position to avoid falling within tracking tolerances
     const point position1 = position0 + 1.0001*(p.position() - position0);
 
     hitFaceIDs_.clear();
@@ -669,8 +672,7 @@ void Foam::ParticleCollector<CloudType>::postMove
             break;
         }
         default:
-        {
-        }
+        {}
     }
 
 
@@ -681,15 +683,33 @@ void Foam::ParticleCollector<CloudType>::postMove
 
         if (negateParcelsOppositeNormal_)
         {
+            scalar Unormal = 0;
             vector Uhat = p.U();
-            Uhat /= mag(Uhat) + ROOTVSMALL;
-            if ((Uhat & normal_[facei]) < 0)
+            switch (mode_)
             {
-                m *= -1.0;
+                case mtPolygon:
+                {
+                    Unormal = Uhat & normal_[facei];
+                    break;
+                }
+                case mtConcentricCircle:
+                {
+                    Unormal = Uhat & normal_[0];
+                    break;
+                }
+                default:
+                {}
+            }
+
+            Uhat /= mag(Uhat) + ROOTVSMALL;
+
+            if (Unormal < 0)
+            {
+                m = -m;
             }
         }
 
-        // add mass contribution
+        // Add mass contribution
         mass_[facei] += m;
 
         if (nSector_ == 1)
