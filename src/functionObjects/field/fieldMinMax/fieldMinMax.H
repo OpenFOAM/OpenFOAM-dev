@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,6 +131,8 @@ protected:
         (
             const word& fieldName,
             const word& outputName,
+            const label minCell,
+            const label maxCell,
             const vector& minC,
             const vector& maxC,
             const label minProci,
