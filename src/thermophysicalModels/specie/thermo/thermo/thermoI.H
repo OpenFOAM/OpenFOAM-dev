@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,13 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
     scalar (thermo<Thermo, Type>::*limit)(const scalar) const
 ) const
 {
+    if (T0 < 0)
+    {
+        FatalErrorInFunction
+            << "Negative initial temperature T0: " << T0
+            << abort(FatalError);
+    }
+
     scalar Test = T0;
     scalar Tnew = T0;
     scalar Ttol = T0*tol_;
@@ -64,7 +71,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
         if (iter++ > maxIter_)
         {
             FatalErrorInFunction
-                << "Maximum number of iterations exceeded"
+                << "Maximum number of iterations exceeded: " << maxIter_
                 << abort(FatalError);
         }
 
