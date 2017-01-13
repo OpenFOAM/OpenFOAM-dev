@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,6 @@ Description
     \verbatim
         realizableKECoeffs
         {
-            Cmu         0.09;
             A0          4.0;
             C2          1.9;
             sigmak      1.0;
@@ -90,7 +89,6 @@ protected:
 
         // Model coefficients
 
-            dimensionedScalar Cmu_;
             dimensionedScalar A0_;
             dimensionedScalar C2_;
             dimensionedScalar sigmak_;
