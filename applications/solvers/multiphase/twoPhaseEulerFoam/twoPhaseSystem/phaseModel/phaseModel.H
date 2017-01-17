@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -319,8 +319,8 @@ public:
             return alphaRhoPhi_;
         }
 
-        //- Ensure that the flux at inflow BCs is preserved
-        void correctInflowFlux(surfaceScalarField& alphaPhi) const;
+        //- Ensure that the flux at inflow/outflow BCs is preserved
+        void correctInflowOutflow(surfaceScalarField& alphaPhi) const;
 
         //- Correct the phase properties
         //  other than the thermodynamics and turbulence

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -680,6 +680,14 @@ void Foam::multiphaseMixture::solveAlphas
         << ' ' << min(sumAlpha).value()
         << ' ' << max(sumAlpha).value()
         << endl;
+
+    // Correct the sum of the phase-fractions to avoid 'drift'
+    volScalarField sumCorr(1.0 - sumAlpha);
+    forAllIter(PtrDictionary<phase>, phases_, iter)
+    {
+        phase& alpha = iter();
+        alpha += alpha*sumCorr;
+    }
 
     calcAlphas();
 }

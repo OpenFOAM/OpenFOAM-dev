@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -282,6 +282,9 @@ public:
 
             //- Access the mass flux of the phase
             virtual surfaceScalarField& alphaRhoPhi() = 0;
+
+            //- Ensure that the flux at inflow/outflow BCs is preserved
+            void correctInflowOutflow(surfaceScalarField& alphaPhi) const;
 
 
         // Transport

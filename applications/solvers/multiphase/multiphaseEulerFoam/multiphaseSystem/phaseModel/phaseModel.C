@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -233,6 +233,24 @@ bool Foam::phaseModel::read(const dictionary& phaseDict)
     // }
 
     return true;
+}
+
+
+void Foam::phaseModel::correctInflowOutflow(surfaceScalarField& alphaPhi) const
+{
+    surfaceScalarField::Boundary& alphaPhiBf = alphaPhi.boundaryFieldRef();
+    const volScalarField::Boundary& alphaBf = boundaryField();
+    const surfaceScalarField::Boundary& phiBf = phi().boundaryField();
+
+    forAll(alphaPhiBf, patchi)
+    {
+        fvsPatchScalarField& alphaPhip = alphaPhiBf[patchi];
+
+        if (!alphaPhip.coupled())
+        {
+            alphaPhip = phiBf[patchi]*alphaBf[patchi];
+        }
+    }
 }
 
 

@@ -24,7 +24,7 @@ solvers
         cAlpha          1;
 
         MULESCorr       yes;
-        nLimiterIter    3;
+        nLimiterIter    5;
 
         solver          smoothSolver;
         smoother        symGaussSeidel;

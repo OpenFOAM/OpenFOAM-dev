@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,12 +185,12 @@ void Foam::MULES::limiter
 
     const dictionary& MULEScontrols = mesh.solverDict(psi.name());
 
-    label nLimiterIter
+    const label nLimiterIter
     (
         MULEScontrols.lookupOrDefault<label>("nLimiterIter", 3)
     );
 
-    scalar smoothLimiter
+    const scalar smoothLimiter
     (
         MULEScontrols.lookupOrDefault<scalar>("smoothLimiter", 0)
     );
@@ -228,8 +228,7 @@ void Foam::MULES::limiter
     );
 
     scalarField& lambdaIf = lambda;
-    surfaceScalarField::Boundary& lambdaBf =
-        lambda.boundaryFieldRef();
+    surfaceScalarField::Boundary& lambdaBf = lambda.boundaryFieldRef();
 
     scalarField psiMaxn(psiIf.size(), psiMin);
     scalarField psiMinn(psiIf.size(), psiMax);
@@ -241,8 +240,8 @@ void Foam::MULES::limiter
 
     forAll(phiCorrIf, facei)
     {
-        label own = owner[facei];
-        label nei = neighb[facei];
+        const label own = owner[facei];
+        const label nei = neighb[facei];
 
         psiMaxn[own] = max(psiMaxn[own], psiIf[nei]);
         psiMinn[own] = min(psiMinn[own], psiIf[nei]);
@@ -253,9 +252,9 @@ void Foam::MULES::limiter
         sumPhiBD[own] += phiBDIf[facei];
         sumPhiBD[nei] -= phiBDIf[facei];
 
-        scalar phiCorrf = phiCorrIf[facei];
+        const scalar phiCorrf = phiCorrIf[facei];
 
-        if (phiCorrf > 0.0)
+        if (phiCorrf > 0)
         {
             sumPhip[own] += phiCorrf;
             mSumPhim[nei] += phiCorrf;
@@ -281,7 +280,7 @@ void Foam::MULES::limiter
 
             forAll(phiCorrPf, pFacei)
             {
-                label pfCelli = pFaceCells[pFacei];
+                const label pfCelli = pFaceCells[pFacei];
 
                 psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiPNf[pFacei]);
                 psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPNf[pFacei]);
@@ -291,7 +290,7 @@ void Foam::MULES::limiter
         {
             forAll(phiCorrPf, pFacei)
             {
-                label pfCelli = pFaceCells[pFacei];
+                const label pfCelli = pFaceCells[pFacei];
 
                 psiMaxn[pfCelli] = max(psiMaxn[pfCelli], psiPf[pFacei]);
                 psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPf[pFacei]);
@@ -300,13 +299,13 @@ void Foam::MULES::limiter
 
         forAll(phiCorrPf, pFacei)
         {
-            label pfCelli = pFaceCells[pFacei];
+            const label pfCelli = pFaceCells[pFacei];
 
             sumPhiBD[pfCelli] += phiBDPf[pFacei];
 
-            scalar phiCorrf = phiCorrPf[pFacei];
+            const scalar phiCorrf = phiCorrPf[pFacei];
 
-            if (phiCorrf > 0.0)
+            if (phiCorrf > 0)
             {
                 sumPhip[pfCelli] += phiCorrf;
             }
@@ -376,17 +375,17 @@ void Foam::MULES::limiter
 
     for (int j=0; j<nLimiterIter; j++)
     {
-        sumlPhip = 0.0;
-        mSumlPhim = 0.0;
+        sumlPhip = 0;
+        mSumlPhim = 0;
 
         forAll(lambdaIf, facei)
         {
-            label own = owner[facei];
-            label nei = neighb[facei];
+            const label own = owner[facei];
+            const label nei = neighb[facei];
 
             scalar lambdaPhiCorrf = lambdaIf[facei]*phiCorrIf[facei];
 
-            if (lambdaPhiCorrf > 0.0)
+            if (lambdaPhiCorrf > 0)
             {
                 sumlPhip[own] += lambdaPhiCorrf;
                 mSumlPhim[nei] += lambdaPhiCorrf;
@@ -407,11 +406,11 @@ void Foam::MULES::limiter
 
             forAll(lambdaPf, pFacei)
             {
-                label pfCelli = pFaceCells[pFacei];
+                const label pfCelli = pFaceCells[pFacei];
+                const scalar lambdaPhiCorrf =
+                    lambdaPf[pFacei]*phiCorrfPf[pFacei];
 
-                scalar lambdaPhiCorrf = lambdaPf[pFacei]*phiCorrfPf[pFacei];
-
-                if (lambdaPhiCorrf > 0.0)
+                if (lambdaPhiCorrf > 0)
                 {
                     sumlPhip[pfCelli] += lambdaPhiCorrf;
                 }
@@ -446,7 +445,7 @@ void Foam::MULES::limiter
 
         forAll(lambdaIf, facei)
         {
-            if (phiCorrIf[facei] > 0.0)
+            if (phiCorrIf[facei] > 0)
             {
                 lambdaIf[facei] = min
                 (
@@ -463,7 +462,6 @@ void Foam::MULES::limiter
                 );
             }
         }
-
 
         forAll(lambdaBf, patchi)
         {
@@ -482,9 +480,9 @@ void Foam::MULES::limiter
 
                 forAll(lambdaPf, pFacei)
                 {
-                    label pfCelli = pFaceCells[pFacei];
+                    const label pfCelli = pFaceCells[pFacei];
 
-                    if (phiCorrfPf[pFacei] > 0.0)
+                    if (phiCorrfPf[pFacei] > 0)
                     {
                         lambdaPf[pFacei] =
                             min(lambdaPf[pFacei], lambdap[pfCelli]);
@@ -493,33 +491,6 @@ void Foam::MULES::limiter
                     {
                         lambdaPf[pFacei] =
                             min(lambdaPf[pFacei], lambdam[pfCelli]);
-                    }
-                }
-            }
-            else
-            {
-                const labelList& pFaceCells =
-                    mesh.boundary()[patchi].faceCells();
-                const scalarField& phiBDPf = phiBDBf[patchi];
-                const scalarField& phiCorrPf = phiCorrBf[patchi];
-
-                forAll(lambdaPf, pFacei)
-                {
-                    // Limit outlet faces only
-                    if ((phiBDPf[pFacei] + phiCorrPf[pFacei]) > SMALL*SMALL)
-                    {
-                        label pfCelli = pFaceCells[pFacei];
-
-                        if (phiCorrfPf[pFacei] > 0.0)
-                        {
-                            lambdaPf[pFacei] =
-                                min(lambdaPf[pFacei], lambdap[pfCelli]);
-                        }
-                        else
-                        {
-                            lambdaPf[pFacei] =
-                                min(lambdaPf[pFacei], lambdam[pfCelli]);
-                        }
                     }
                 }
             }
@@ -548,6 +519,19 @@ void Foam::MULES::limit
     const fvMesh& mesh = psi.mesh();
 
     surfaceScalarField phiBD(upwind<scalar>(psi.mesh(), phi).flux(psi));
+
+    surfaceScalarField::Boundary& phiBDBf = phiBD.boundaryFieldRef();
+    const surfaceScalarField::Boundary& phiPsiBf = phiPsi.boundaryField();
+
+    forAll(phiBDBf, patchi)
+    {
+        fvsPatchScalarField& phiBDPf = phiBDBf[patchi];
+
+        if (!phiBDPf.coupled())
+        {
+            phiBDPf = phiPsiBf[patchi];
+        }
+    }
 
     surfaceScalarField& phiCorr = phiPsi;
     phiCorr -= phiBD;

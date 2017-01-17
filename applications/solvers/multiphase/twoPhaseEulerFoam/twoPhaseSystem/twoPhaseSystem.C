@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -444,7 +444,7 @@ void Foam::twoPhaseSystem::solve()
             )
         );
 
-        phase1_.correctInflowFlux(alphaPhic1);
+        phase1_.correctInflowOutflow(alphaPhic1);
 
         if (nAlphaSubCycles > 1)
         {
@@ -515,8 +515,7 @@ void Foam::twoPhaseSystem::solve()
             fvc::interpolate(phase1_.rho())*phase1_.alphaPhi();
 
         phase2_.alphaPhi() = phi_ - phase1_.alphaPhi();
-        alpha2 = scalar(1) - alpha1;
-        phase2_.correctInflowFlux(phase2_.alphaPhi());
+        phase2_.correctInflowOutflow(phase2_.alphaPhi());
         phase2_.alphaRhoPhi() =
             fvc::interpolate(phase2_.rho())*phase2_.alphaPhi();
 
@@ -525,6 +524,12 @@ void Foam::twoPhaseSystem::solve()
             << "  Min(" << alpha1.name() << ") = " << min(alpha1).value()
             << "  Max(" << alpha1.name() << ") = " << max(alpha1).value()
             << endl;
+
+        // Ensure the phase-fractions are bounded
+        alpha1.max(0);
+        alpha1.min(1);
+
+        alpha2 = scalar(1) - alpha1;
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,11 +64,8 @@ void Foam::multiphaseSystem::solveAlphas()
 
     forAllIter(PtrDictionary<phaseModel>, phases_, iter)
     {
-        phaseModel& phase1 = iter();
-        volScalarField& alpha1 = phase1;
-
-        phase1.alphaPhi() =
-            dimensionedScalar("0", dimensionSet(0, 3, -1, 0, 0), 0);
+        phaseModel& phase = iter();
+        volScalarField& alpha1 = phase;
 
         alphaPhiCorrs.set
         (
@@ -79,7 +76,7 @@ void Foam::multiphaseSystem::solveAlphas()
                 fvc::flux
                 (
                     phi_,
-                    phase1,
+                    phase,
                     "div(phi," + alpha1.name() + ')'
                 )
             )
@@ -92,13 +89,13 @@ void Foam::multiphaseSystem::solveAlphas()
             phaseModel& phase2 = iter2();
             volScalarField& alpha2 = phase2;
 
-            if (&phase2 == &phase1) continue;
+            if (&phase2 == &phase) continue;
 
-            surfaceScalarField phir(phase1.phi() - phase2.phi());
+            surfaceScalarField phir(phase.phi() - phase2.phi());
 
             scalarCoeffSymmTable::const_iterator cAlpha
             (
-                cAlphas_.find(interfacePair(phase1, phase2))
+                cAlphas_.find(interfacePair(phase, phase2))
             );
 
             if (cAlpha != cAlphas_.end())
@@ -108,7 +105,7 @@ void Foam::multiphaseSystem::solveAlphas()
                     (mag(phi_) + mag(phir))/mesh_.magSf()
                 );
 
-                phir += min(cAlpha()*phic, max(phic))*nHatf(phase1, phase2);
+                phir += min(cAlpha()*phic, max(phic))*nHatf(phase, phase2);
             }
 
             word phirScheme
@@ -119,39 +116,18 @@ void Foam::multiphaseSystem::solveAlphas()
             alphaPhiCorr += fvc::flux
             (
                 -fvc::flux(-phir, phase2, phirScheme),
-                phase1,
+                phase,
                 phirScheme
             );
         }
 
-        surfaceScalarField::Boundary& alphaPhiCorrBf =
-            alphaPhiCorr.boundaryFieldRef();
-
-        // Ensure that the flux at inflow BCs is preserved
-        forAll(alphaPhiCorrBf, patchi)
-        {
-            fvsPatchScalarField& alphaPhiCorrp = alphaPhiCorrBf[patchi];
-
-            if (!alphaPhiCorrp.coupled())
-            {
-                const scalarField& phi1p = phase1.phi().boundaryField()[patchi];
-                const scalarField& alpha1p = alpha1.boundaryField()[patchi];
-
-                forAll(alphaPhiCorrp, facei)
-                {
-                    if (phi1p[facei] < 0)
-                    {
-                        alphaPhiCorrp[facei] = alpha1p[facei]*phi1p[facei];
-                    }
-                }
-            }
-        }
+        phase.correctInflowOutflow(alphaPhiCorr);
 
         MULES::limit
         (
             1.0/mesh_.time().deltaT().value(),
             geometricOneField(),
-            phase1,
+            phase,
             phi_,
             alphaPhiCorr,
             zeroField(),
@@ -182,29 +158,30 @@ void Foam::multiphaseSystem::solveAlphas()
 
     forAllIter(PtrDictionary<phaseModel>, phases_, iter)
     {
-        phaseModel& phase1 = iter();
+        phaseModel& phase = iter();
 
         surfaceScalarField& alphaPhi = alphaPhiCorrs[phasei];
-        alphaPhi += upwind<scalar>(mesh_, phi_).flux(phase1);
+        alphaPhi += upwind<scalar>(mesh_, phi_).flux(phase);
+        phase.correctInflowOutflow(alphaPhi);
 
         MULES::explicitSolve
         (
             geometricOneField(),
-            phase1,
+            phase,
             alphaPhi,
             zeroField(),
             zeroField()
         );
 
-        phase1.alphaPhi() += alphaPhi;
+        phase.alphaPhi() = alphaPhi;
 
-        Info<< phase1.name() << " volume fraction, min, max = "
-            << phase1.weightedAverage(mesh_.V()).value()
-            << ' ' << min(phase1).value()
-            << ' ' << max(phase1).value()
+        Info<< phase.name() << " volume fraction, min, max = "
+            << phase.weightedAverage(mesh_.V()).value()
+            << ' ' << min(phase).value()
+            << ' ' << max(phase).value()
             << endl;
 
-        sumAlpha += phase1;
+        sumAlpha += phase;
 
         phasei++;
     }
@@ -214,6 +191,15 @@ void Foam::multiphaseSystem::solveAlphas()
         << ' ' << min(sumAlpha).value()
         << ' ' << max(sumAlpha).value()
         << endl;
+
+    // Correct the sum of the phase-fractions to avoid 'drift'
+    volScalarField sumCorr(1.0 - sumAlpha);
+    forAllIter(PtrDictionary<phaseModel>, phases_, iter)
+    {
+        phaseModel& phase = iter();
+        volScalarField& alpha = phase;
+        alpha += alpha*sumCorr;
+    }
 
     calcAlphas();
 }
