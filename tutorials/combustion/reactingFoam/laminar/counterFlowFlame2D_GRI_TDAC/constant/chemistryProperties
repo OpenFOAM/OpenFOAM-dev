@@ -90,6 +90,7 @@ tabulation
         otherSpecies 1;
         Temperature  2500;
         Pressure     1e15;
+        deltaT       1;
     }
 
     // Maximum number of leafs stored in the binary tree
