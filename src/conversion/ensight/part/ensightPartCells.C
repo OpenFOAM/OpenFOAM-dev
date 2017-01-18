@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,8 @@ namespace Foam
     defineTypeNameAndDebug(ensightPartCells, 0);
     addToRunTimeSelectionTable(ensightPart, ensightPartCells, istream);
 }
+
+const Foam::polyMesh* const Foam::ensightPartCells::polyMeshNullPtr_ = nullptr;
 
 const Foam::List<Foam::word> Foam::ensightPartCells::elemTypes_
 (
@@ -182,7 +184,7 @@ Foam::ensightPartCells::ensightPartCells
 )
 :
     ensightPart(partNumber, partDescription),
-    mesh_(*reinterpret_cast<polyMesh*>(0))
+    mesh_(*polyMeshNullPtr_)
 {}
 
 
@@ -237,7 +239,7 @@ Foam::ensightPartCells::ensightPartCells(const ensightPartCells& part)
 Foam::ensightPartCells::ensightPartCells(Istream& is)
 :
     ensightPart(),
-    mesh_(*reinterpret_cast<polyMesh*>(0))
+    mesh_(*polyMeshNullPtr_)
 {
     reconstruct(is);
 }
