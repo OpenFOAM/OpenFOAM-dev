@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ SourceFiles
     labelRange.C
 
 \*---------------------------------------------------------------------------*/
+
 #ifndef labelRange_H
 #define labelRange_H
 
@@ -78,6 +79,7 @@ public:
                 return a.first() < b.first();
             }
         };
+
 
     // Constructors
 
@@ -196,9 +198,11 @@ public:
 
 private:
 
+        //- const labelRange held by endIter_
+        static const labelRange endLabelRange_;
+
         //- const_iterator returned by end(), cend()
         static const const_iterator endIter_;
-
 };
 
 

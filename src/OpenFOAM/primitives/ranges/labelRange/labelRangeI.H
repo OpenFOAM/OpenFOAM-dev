@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ inline Foam::labelRange::labelRange(const label start, const label size)
 
 inline Foam::labelRange::const_iterator::const_iterator()
 :
-   range_(*reinterpret_cast<Foam::labelRange* >(0)),
+   range_(endLabelRange_),
    index_(-1)
 {}
 

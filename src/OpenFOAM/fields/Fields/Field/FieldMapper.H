@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,12 +32,12 @@ Description
 #ifndef FieldMapper_H
 #define FieldMapper_H
 
+#include "mapDistributeBase.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-class mapDistributeBase;
 
 /*---------------------------------------------------------------------------*\
                            Class FieldMapper Declaration
@@ -76,7 +76,7 @@ public:
             FatalErrorInFunction
                 << "attempt to access null distributeMap"
                 << abort(FatalError);
-            return *static_cast<mapDistributeBase*>(nullptr);
+            return *(new mapDistributeBase());
         }
 
         //- Are there unmapped values? I.e. do all size() elements get
