@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,10 +84,12 @@ int main(int argc, char *argv[])
 
     #include "createNamedPolyMesh.H"
 
+    const fileName setsSubPath(mesh.dbDir()/polyMesh::meshSubDir/"sets");
+
     // Search for list of objects for the time of the mesh
     word setsInstance = runTime.findInstance
     (
-        polyMesh::meshSubDir/"sets",
+        setsSubPath,
         word::null,
         IOobject::MUST_READ,
         mesh.facesInstance()
@@ -95,7 +97,7 @@ int main(int argc, char *argv[])
 
     IOobjectList objects(mesh, setsInstance, polyMesh::meshSubDir/"sets");
 
-    Info<< "Searched : " << setsInstance/polyMesh::meshSubDir/"sets"
+    Info<< "Searched : " << setsInstance/setsSubPath
         << nl
         << "Found    : " << objects.names() << nl
         << endl;
