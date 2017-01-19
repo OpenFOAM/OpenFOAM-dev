@@ -59,4 +59,3 @@ int USERD_get_block_ghost_flags
 {
   return(Z_OK);
 }
-

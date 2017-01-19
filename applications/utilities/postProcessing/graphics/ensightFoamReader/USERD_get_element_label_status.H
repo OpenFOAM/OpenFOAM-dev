@@ -8,4 +8,3 @@ int USERD_get_element_label_status(void)
 #endif
     return TRUE;
 }
-

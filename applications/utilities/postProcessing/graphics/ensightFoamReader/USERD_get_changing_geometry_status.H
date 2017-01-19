@@ -8,4 +8,3 @@ int USERD_get_changing_geometry_status(void)
     // Choose the most general option
     return Z_CHANGE_CONN;
 }
-

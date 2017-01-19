@@ -54,4 +54,3 @@ Info<< "Creating base fields for time " << runTime.timeName() << endl;
 
     T.write();
 }
-

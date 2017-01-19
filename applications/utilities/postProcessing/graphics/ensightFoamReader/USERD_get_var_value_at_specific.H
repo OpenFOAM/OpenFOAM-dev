@@ -68,4 +68,3 @@ int USERD_get_var_value_at_specific
 #endif
     return Z_OK;
 }
-

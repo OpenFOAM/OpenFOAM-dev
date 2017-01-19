@@ -9,4 +9,3 @@ int USERD_get_node_label_status(void)
 
     return TRUE;
 }
-

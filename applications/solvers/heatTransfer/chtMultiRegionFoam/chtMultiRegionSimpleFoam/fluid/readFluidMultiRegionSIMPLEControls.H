@@ -2,4 +2,3 @@
 
     const int nNonOrthCorr =
         simple.lookupOrDefault<int>("nNonOrthogonalCorrectors", 0);
-

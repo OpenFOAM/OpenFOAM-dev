@@ -45,4 +45,3 @@
     }
 
     scalarField samples(nIntervals, 0);
-

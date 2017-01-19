@@ -44,4 +44,3 @@ else
     // Info<< "getLagrangianVector: nVar = " << nVar << endl;
     return Z_UNDEF;
 }
-

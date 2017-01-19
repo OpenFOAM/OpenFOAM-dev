@@ -118,6 +118,3 @@ int USERD_get_gold_variable_info
 
     return Z_OK;
 }
-
-
-

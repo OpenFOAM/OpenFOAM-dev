@@ -41,4 +41,3 @@ int USERD_get_sol_times
 
     return Z_OK;
 }
-

@@ -32,4 +32,3 @@ else
     // Info<< "getLagrangianScalar: nVar = " << nVar << endl;
     return Z_UNDEF;
 }
-

@@ -29,4 +29,3 @@ int USERD_get_descrip_lines
 #endif
     return Z_OK;
 }
-
