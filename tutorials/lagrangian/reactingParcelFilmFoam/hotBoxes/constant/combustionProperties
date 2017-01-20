@@ -15,15 +15,12 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combustionModel  PaSR<psiChemistryCombustion>;
+combustionModel  laminar<psiChemistryCombustion>;
 
 active  false;
 
-PaSRCoeffs
-{
-    Cmix                1.0;
-    turbulentReaction   off;
-}
+laminarCoeffs
+{}
 
 
 // ************************************************************************* //

@@ -19,11 +19,9 @@ combustionModel  PaSR<psiChemistryCombustion>;
 
 active  true;
 
-
 PaSRCoeffs
 {
     Cmix                1.0;
-    turbulentReaction   on;
 }
 
 

@@ -22,7 +22,6 @@ active  false;
 PaSRCoeffs
 {
     Cmix                1.0;
-    turbulentReaction   on;
 }
 
 

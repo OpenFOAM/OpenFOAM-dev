@@ -15,9 +15,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combustionModel    PaSR<rhoChemistryCombustion>;
+combustionModel PaSR<rhoChemistryCombustion>;
 
-active  false;
+active false;
 
 laminarCoeffs
 {}
@@ -28,7 +28,6 @@ noCombustionCoeffs
 PaSRCoeffs
 {
     Cmix                1.0;
-    turbulentReaction   yes;
 }
 
 // ************************************************************************* //

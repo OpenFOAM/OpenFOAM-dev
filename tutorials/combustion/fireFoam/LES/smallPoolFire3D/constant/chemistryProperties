@@ -23,8 +23,6 @@ chemistryType
 
 chemistry       off;
 
-turbulentReaction off;
-
 initialChemicalTimeStep 1e-07;
 
 
