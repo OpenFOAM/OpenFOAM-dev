@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,14 @@ License
 #include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class CompType, class ThermoType>
+inline Foam::label Foam::chemistryModel<CompType, ThermoType>::nEqns() const
+{
+    // nEqns = number of species + temperature + pressure
+    return nSpecie_ + 2;
+}
+
 
 template<class CompType, class ThermoType>
 inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
     c_(nSpecie_),
     dcdt_(nSpecie_)
 {
-    // create the fields for the chemistry sources
+    // Create the fields for the chemistry sources
     forAll(RR_, fieldi)
     {
         RR_.set
@@ -148,7 +148,6 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::omegaI
     label& rRef
 ) const
 {
-
     const Reaction<ThermoType>& R = reactions_[index];
     scalar w = omega(R, c, T, p, pf, cf, lRef, pr, cr, rRef);
     return(w);
@@ -224,7 +223,7 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::omega
     label srRef = 0;
     rRef = R.rhs()[srRef].index;
 
-    // find the matrix element and element position for the rhs
+    // Find the matrix element and element position for the rhs
     pr = kr;
     for (label s = 1; s < Nr; s++)
     {
@@ -285,7 +284,7 @@ void Foam::chemistryModel<CompType, ThermoType>::derivatives
 
     omega(c_, T, p, dcdt);
 
-    // constant pressure
+    // Constant pressure
     // dT/dt = ...
     scalar rho = 0.0;
     scalar cSum = 0.0;
@@ -463,23 +462,6 @@ template<class CompType, class ThermoType>
 Foam::tmp<Foam::volScalarField>
 Foam::chemistryModel<CompType, ThermoType>::tc() const
 {
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
-
-    const volScalarField rho
-    (
-        IOobject
-        (
-            "rho",
-            this->time().timeName(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        this->thermo().rho()
-    );
-
     tmp<volScalarField> ttc
     (
         new volScalarField
@@ -500,24 +482,31 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
     );
 
     scalarField& tc = ttc.ref();
+
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
+
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
 
     const label nReaction = reactions_.size();
 
+    scalar pf, cf, pr, cr;
+    label lRef, rRef;
+
     if (this->chemistry_)
     {
         forAll(rho, celli)
         {
-            scalar rhoi = rho[celli];
-            scalar Ti = T[celli];
-            scalar pi = p[celli];
+            const scalar rhoi = rho[celli];
+            const scalar Ti = T[celli];
+            const scalar pi = p[celli];
+
             scalar cSum = 0.0;
 
             for (label i=0; i<nSpecie_; i++)
             {
-                scalar Yi = Y_[i][celli];
-                c_[i] = rhoi*Yi/specieThermo_[i].W();
+                c_[i] = rhoi*Y_[i][celli]/specieThermo_[i].W();
                 cSum += c_[i];
             }
 
@@ -529,10 +518,10 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
 
                 forAll(R.rhs(), s)
                 {
-                    scalar sr = R.rhs()[s].stoichCoeff;
-                    tc[celli] += sr*pf*cf;
+                    tc[celli] += R.rhs()[s].stoichCoeff*pf*cf;
                 }
             }
+
             tc[celli] = nReaction*cSum/tc[celli];
         }
     }
@@ -584,14 +573,6 @@ Foam::chemistryModel<CompType, ThermoType>::Qdot() const
 
 
 template<class CompType, class ThermoType>
-Foam::label Foam::chemistryModel<CompType, ThermoType>::nEqns() const
-{
-    // nEqns = number of species + temperature + pressure
-    return nSpecie_ + 2;
-}
-
-
-template<class CompType, class ThermoType>
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::chemistryModel<CompType, ThermoType>::calculateRR
 (
@@ -601,20 +582,6 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
 {
     scalar pf, cf, pr, cr;
     label lRef, rRef;
-
-    const volScalarField rho
-    (
-        IOobject
-        (
-            "rho",
-            this->time().timeName(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        this->thermo().rho()
-    );
 
     tmp<volScalarField::Internal> tRR
     (
@@ -634,6 +601,9 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
     );
 
     volScalarField::Internal& RR = tRR.ref();
+
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -679,19 +649,8 @@ void Foam::chemistryModel<CompType, ThermoType>::calculate()
         return;
     }
 
-    const volScalarField rho
-    (
-        IOobject
-        (
-            "rho",
-            this->time().timeName(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        this->thermo().rho()
-    );
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
@@ -734,19 +693,8 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
         return deltaTMin;
     }
 
-    const volScalarField rho
-    (
-        IOobject
-        (
-            "rho",
-            this->time().timeName(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        this->thermo().rho()
-    );
+    tmp<volScalarField> trho(this->thermo().rho());
+    const scalarField& rho = trho();
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
