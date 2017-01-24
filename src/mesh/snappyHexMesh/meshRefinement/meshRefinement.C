@@ -70,7 +70,6 @@ namespace Foam
     >::names[] =
     {
         "mesh",
-        //"scalarLevels",
         "intersections",
         "featureSeeds",
         "attraction",
@@ -91,10 +90,11 @@ namespace Foam
     const char* Foam::NamedEnum
     <
         Foam::meshRefinement::IOwriteType,
-        4
+        5
     >::names[] =
     {
         "mesh",
+        "noRefinement",
         "scalarLevels",
         "layerSets",
         "layerFields"
@@ -108,7 +108,7 @@ Foam::meshRefinement::IOdebugTypeNames;
 const Foam::NamedEnum<Foam::meshRefinement::IOoutputType, 1>
 Foam::meshRefinement::IOoutputTypeNames;
 
-const Foam::NamedEnum<Foam::meshRefinement::IOwriteType, 4>
+const Foam::NamedEnum<Foam::meshRefinement::IOwriteType, 5>
 Foam::meshRefinement::IOwriteTypeNames;
 
 
@@ -2565,11 +2565,7 @@ void Foam::meshRefinement::updateMesh
 
 bool Foam::meshRefinement::write() const
 {
-    bool writeOk =
-        mesh_.write()
-     && meshCutter_.write()
-     && surfaceIndex_.write();
-
+    bool writeOk = mesh_.write();
 
     // Make sure that any distributed surfaces (so ones which probably have
     // been changed) get written as well.
@@ -2908,10 +2904,18 @@ void Foam::meshRefinement::write
     {
         write();
     }
+
+    if (writeFlags && !(writeFlags & NOWRITEREFINEMENT))
+    {
+        meshCutter_.write();
+        surfaceIndex_.write();
+    }
+
     if (writeFlags & WRITELEVELS)
     {
         dumpRefinementLevel();
     }
+
     if (debugFlags & OBJINTERSECTIONS && prefix.size())
     {
         dumpIntersections(prefix);

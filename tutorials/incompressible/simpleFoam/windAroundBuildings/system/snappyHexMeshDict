@@ -87,14 +87,14 @@ addLayersControls
 }
 
 meshQualityControls
-{
-}
+{}
 
 writeFlags
 (
-    scalarLevels
-    layerSets
-    layerFields
+    noRefinement
+    // scalarLevels
+    // layerSets
+    // layerFields
 );
 
 mergeTolerance 1e-6;
