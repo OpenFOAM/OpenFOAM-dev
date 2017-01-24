@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1938,7 +1938,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
             polyMesh::meshSubDir,
             mesh_,
             IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         labelList(mesh_.nCells(), 0)
     ),
@@ -1951,7 +1951,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
             polyMesh::meshSubDir,
             mesh_,
             IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         labelList(mesh_.nPoints(), 0)
     ),
@@ -1964,7 +1964,7 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
             polyMesh::meshSubDir,
             mesh_,
             IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         dimensionedScalar("level0Edge", dimLength, getLevel0EdgeLength())
     ),
@@ -1977,9 +1977,10 @@ Foam::hexRef8::hexRef8(const polyMesh& mesh, const bool readHistory)
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
-        (readHistory ? mesh_.nCells() : 0)  // All cells visible if not be read
+        // All cells visible if not read or readHistory = false
+        (readHistory ? mesh_.nCells() : 0)
     ),
     faceRemover_(mesh_, GREAT),     // merge boundary faces wherever possible
     savedPointLevel_(0),
@@ -2063,7 +2064,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         cellLevel
     ),
@@ -2076,7 +2077,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         pointLevel
     ),
@@ -2089,7 +2090,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         dimensionedScalar
         (
@@ -2107,7 +2108,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         history
     ),
@@ -2171,7 +2172,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         cellLevel
     ),
@@ -2184,7 +2185,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         pointLevel
     ),
@@ -2197,7 +2198,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         dimensionedScalar
         (
@@ -2215,7 +2216,7 @@ Foam::hexRef8::hexRef8
             polyMesh::meshSubDir,
             mesh_,
             IOobject::NO_READ,
-            IOobject::AUTO_WRITE
+            IOobject::NO_WRITE
         ),
         List<refinementHistory::splitCell8>(0),
         labelList(0),
@@ -3075,7 +3076,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement2
     //            fMesh.time().timeName(),
     //            fMesh,
     //            IOobject::NO_READ,
-    //            IOobject::AUTO_WRITE,
+    //            IOobject::NO_WRITE,
     //            false
     //        ),
     //        fMesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,8 +207,6 @@ void Foam::meshRefinement::calcNeighbourData
 }
 
 
-// Find intersections of edges (given by their two endpoints) with surfaces.
-// Returns first intersection if there are more than one.
 void Foam::meshRefinement::updateIntersections(const labelList& changedFaces)
 {
     const pointField& cellCentres = mesh_.cellCentres();
@@ -609,8 +607,6 @@ void Foam::meshRefinement::setInstance(const fileName& inst)
 }
 
 
-// Remove cells. Put exposedFaces (output of getExposedFaces(cellsToRemove))
-// into exposedPatchIDs.
 Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemoveCells
 (
     const labelList& cellsToRemove,
@@ -670,7 +666,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::doRemoveCells
 }
 
 
-// Split faces
 Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
 (
     const labelList& splitFaces,
@@ -683,7 +678,6 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
     {
         label facei = splitFaces[i];
         const face& f = mesh_.faces()[facei];
-
 
         // Split as start and end index in face
         const labelPair& split = splits[i];
@@ -737,9 +731,12 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
         }
 
 
-Pout<< "face:" << facei << " verts:" << f
-    << " split into f0:" << f0
-    << " f1:" << f1 << endl;
+        if (debug)
+        {
+            Pout<< "face:" << facei << " verts:" << f
+                << " split into f0:" << f0
+                << " f1:" << f1 << endl;
+        }
 
         // Change/add faces
         meshMod.modifyFace
@@ -753,6 +750,7 @@ Pout<< "face:" << facei << " verts:" << f
             zoneI,                      // zone for face
             zoneFlip                    // face flip in zone
         );
+
         meshMod.addFace
         (
             f1,                         // modified face
@@ -1160,7 +1158,6 @@ Pout<< "face:" << facei << " verts:" << f
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::meshRefinement::meshRefinement
 (
     fvMesh& mesh,
@@ -1381,11 +1378,6 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
 
     if (Pstream::parRun())
     {
-        //if (debug_)
-        //{
-        //    const_cast<Time&>(mesh_.time())++;
-        //}
-
         // Wanted distribution
         labelList distribution;
 
@@ -1648,7 +1640,6 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::meshRefinement::balance
 }
 
 
-// Helper function to get intersected faces
 Foam::labelList Foam::meshRefinement::intersectedFaces() const
 {
     label nBoundaryFaces = 0;
@@ -1675,7 +1666,6 @@ Foam::labelList Foam::meshRefinement::intersectedFaces() const
 }
 
 
-// Helper function to get points used by faces
 Foam::labelList Foam::meshRefinement::intersectedPoints() const
 {
     const faceList& faces = mesh_.faces();
@@ -1788,7 +1778,6 @@ Foam::autoPtr<Foam::indirectPrimitivePatch> Foam::meshRefinement::makePatch
 }
 
 
-// Construct pointVectorField with correct boundary conditions
 Foam::tmp<Foam::pointVectorField> Foam::meshRefinement::makeDisplacementField
 (
     const pointMesh& pMesh,
@@ -2088,7 +2077,6 @@ Foam::label Foam::meshRefinement::appendPatch
 }
 
 
-// Adds patch if not yet there. Returns patchID.
 Foam::label Foam::meshRefinement::addPatch
 (
     fvMesh& mesh,
@@ -2451,7 +2439,6 @@ void Foam::meshRefinement::distribute(const mapDistributePolyMesh& map)
 }
 
 
-// Update local data for a mesh change
 void Foam::meshRefinement::updateMesh
 (
     const mapPolyMesh& map,
