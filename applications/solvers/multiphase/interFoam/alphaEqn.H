@@ -182,6 +182,11 @@
     if (alphaApplyPrevCorr && MULESCorr)
     {
         talphaPhiCorr0 = alphaPhi - talphaPhiCorr0;
+        talphaPhiCorr0.ref().rename("alphaPhiCorr0");
+    }
+    else
+    {
+        talphaPhiCorr0.clear();
     }
 
     if
