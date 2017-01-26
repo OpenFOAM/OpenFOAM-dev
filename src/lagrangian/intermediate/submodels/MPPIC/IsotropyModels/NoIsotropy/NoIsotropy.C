@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,7 @@ Foam::IsotropyModels::NoIsotropy<CloudType>::~NoIsotropy()
 
 template<class CloudType>
 void Foam::IsotropyModels::NoIsotropy<CloudType>::calculate()
-{
-    // do nothing
-}
+{}
 
 
 template<class CloudType>

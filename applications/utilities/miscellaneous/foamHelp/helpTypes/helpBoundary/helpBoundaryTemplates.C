@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ void Foam::helpTypes::helpBoundary::fixedValueFieldConditions
             IOobject::NO_WRITE,
             false
         ),
-        mesh,   
+        mesh,
         dimensioned<Type>("zero", dimless, Zero)
     );
 
@@ -142,9 +142,7 @@ void Foam::helpTypes::helpBoundary::fixedValueFieldConditions
             }
         }
         catch (...)
-        {
-            // do nothing
-        }
+        {}
     }
 
     if (!foundFixed)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,7 @@ void Foam::phaseSystem::generatePairs
 
         // pair already exists
         if (phasePairs_.found(key))
-        {
-            // do nothing ...
-        }
+        {}
 
         // new ordered pair
         else if (key.ordered())

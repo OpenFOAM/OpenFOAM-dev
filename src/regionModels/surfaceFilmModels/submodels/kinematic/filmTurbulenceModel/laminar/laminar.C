@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,9 +118,7 @@ tmp<volScalarField> laminar::mut() const
 
 
 void laminar::correct()
-{
-    // do nothing
-}
+{}
 
 
 tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const

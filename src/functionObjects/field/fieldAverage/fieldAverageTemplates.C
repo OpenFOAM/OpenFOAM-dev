@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,9 +39,7 @@ void Foam::functionObjects::fieldAverage::addMeanFieldType(const label fieldi)
     Log << "    Reading/initialising field " << meanFieldName << endl;
 
     if (obr_.foundObject<Type>(meanFieldName))
-    {
-       // do nothing
-    }
+    {}
     else if (obr_.found(meanFieldName))
     {
         Log << "    Cannot allocate average field " << meanFieldName
@@ -114,9 +112,7 @@ void Foam::functionObjects::fieldAverage::addPrime2MeanFieldType
     Log << "    Reading/initialising field " << prime2MeanFieldName << nl;
 
     if (obr_.foundObject<Type2>(prime2MeanFieldName))
-    {
-        // do nothing
-    }
+    {}
     else if (obr_.found(prime2MeanFieldName))
     {
         Log << "    Cannot allocate average field " << prime2MeanFieldName

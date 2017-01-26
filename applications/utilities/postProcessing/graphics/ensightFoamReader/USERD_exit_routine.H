@@ -1,4 +1,3 @@
-// Do nothing
 void USERD_exit_routine
 (
     void

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,7 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::update
 (
     const volScalarField& Tf
 )
-{
-    // do nothing
-}
+{}
 
 
 template<class Thermo, class OtherThermo>

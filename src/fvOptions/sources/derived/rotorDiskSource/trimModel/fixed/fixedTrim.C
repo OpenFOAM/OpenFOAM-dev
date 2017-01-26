@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,9 +91,7 @@ void Foam::fixedTrim::correct
     const vectorField& U,
     vectorField& force
 )
-{
-    // do nothing
-}
+{}
 
 
 void Foam::fixedTrim::correct
@@ -101,9 +99,7 @@ void Foam::fixedTrim::correct
     const volScalarField rho,
     const vectorField& U,
     vectorField& force)
-{
-    // do nothing
-}
+{}
 
 
 // ************************************************************************* //

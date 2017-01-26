@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -155,9 +155,7 @@ Foam::InflationInjection<CloudType>::~InflationInjection()
 
 template<class CloudType>
 void Foam::InflationInjection<CloudType>::updateMesh()
-{
-    // do nothing
-}
+{}
 
 
 template<class CloudType>

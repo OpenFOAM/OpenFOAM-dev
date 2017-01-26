@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,9 +95,7 @@ Foam::CloudFunctionObject<CloudType>::~CloudFunctionObject()
 
 template<class CloudType>
 void Foam::CloudFunctionObject<CloudType>::preEvolve()
-{
-    // do nothing
-}
+{}
 
 
 template<class CloudType>
@@ -119,9 +117,7 @@ void Foam::CloudFunctionObject<CloudType>::postMove
     const point&,
     bool&
 )
-{
-    // do nothing
-}
+{}
 
 
 template<class CloudType>
@@ -133,9 +129,7 @@ void Foam::CloudFunctionObject<CloudType>::postPatch
     const tetIndices&,
     bool&
 )
-{
-    // do nothing
-}
+{}
 
 
 template<class CloudType>
@@ -145,9 +139,7 @@ void Foam::CloudFunctionObject<CloudType>::postFace
     const label,
     bool&
 )
-{
-    // do nothing
-}
+{}
 
 
 template<class CloudType>

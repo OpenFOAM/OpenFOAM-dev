@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ void Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
 
     if (!foundFilm || !foundPyrolysis)
     {
-        // do nothing on construction - film model doesn't exist yet
+        // Do nothing on construction - film model doesn't exist yet
         return;
     }
 
@@ -172,9 +172,7 @@ void Foam::filmPyrolysisVelocityCoupledFvPatchVectorField::updateCoeffs()
         db().lookupObject<surfaceScalarField>(phiName_);
 
     if (phi.dimensions() == dimVelocity*dimArea)
-    {
-        // do nothing
-    }
+    {}
     else if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {
         const fvPatchField<scalar>& rhop =

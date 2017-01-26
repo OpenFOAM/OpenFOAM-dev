@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,7 @@ Foam::scalar Foam::NoSurfaceReaction<CloudType>::calculate
     scalarField&
 ) const
 {
-    // do nothing
-    return 0.0;
+    return 0;
 }
 
 
