@@ -31,7 +31,7 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-echo $Script "has been superceded by the postProcess utility:"
+echo $Script "has been superseded by the postProcess utility:"
 echo "    postProcess -func 'grad(U)'"
 
 #------------------------------------------------------------------------------

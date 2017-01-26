@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -23,15 +23,18 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     supercededByPostProcess
+#     supersededByPostProcessOption
 #
 # Description
-#     Script to suggest using the new "postProcess" utility.
+#     Replacement script to suggest using the new "-postProcess"
+#     solver command-line option.
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-echo $Script "has been superceded by the postProcess utility:"
-echo "    postProcess -func" $Script
+echo $Script "has been superseded by the \
+'-postProcess' solver command-line option, e.g."
+
+echo "simpleFoam -postProcess -func" $Script
 
 #------------------------------------------------------------------------------

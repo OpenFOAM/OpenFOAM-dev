@@ -31,7 +31,7 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-echo $Script "has been superceded by the -postProcess solver option:"
+echo $Script "has been superseded by the -postProcess solver option:"
 echo "<solverName> -funcs '(R components(turbulenceProperties:R))'"
 echo "e.g."
 echo "simpleFoam -postProcess -funcs '(R components(turbulenceProperties:R))'"

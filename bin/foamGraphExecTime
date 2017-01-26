@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -29,7 +29,7 @@
 #     Deprecated script extract the 'ExecutionTime' for each time-step from a
 #     log file for graphing.
 #
-#     Superceded by the more general foamLog script.
+#     Superseded by the more general foamLog script.
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
