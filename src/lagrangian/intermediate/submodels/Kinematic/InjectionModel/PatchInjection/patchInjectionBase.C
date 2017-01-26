@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,16 +201,26 @@ void Foam::patchInjectionBase::setPositionAndCell
             // Position perturbed away from face (into domain)
             const scalar a = rnd.position(scalar(0.1), scalar(0.5));
             const vector& pc = mesh.cellCentres()[cellOwner];
-            const vector d = mag(pf - pc)*patchNormal_[facei];
+            const vector d =
+                mag((pf - pc) & patchNormal_[facei])*patchNormal_[facei];
 
             position = pf - a*d;
 
-            //Try to find tetFacei and tetPti in the current position
+            // Try to find tetFacei and tetPti in the current position
             mesh.findTetFacePt(cellOwner, position, tetFacei, tetPti);
 
-            //Search failed, choose a random position
+            // tetFacei and tetPti not found, check if the cell has changed
             if (tetFacei == -1 ||tetPti == -1)
             {
+                mesh.findCellFacePt(position, cellOwner, tetFacei, tetPti);
+            }
+
+            // Both searches failed, choose a random position within
+            // the original cell
+            if (tetFacei == -1 ||tetPti == -1)
+            {
+                // Reset cellOwner
+                cellOwner = cellOwners_[facei];
                 const scalarField& V = mesh.V();
 
                 // Construct cell tet indices
