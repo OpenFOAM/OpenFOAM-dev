@@ -42,14 +42,14 @@ Foam::combustionModels::PaSR<Type>::PaSR
     (
         IOobject
         (
-            IOobject::groupName("PaSR:kappa", phaseName),
+            IOobject::groupName(typeName + ":kappa", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
         mesh,
-        dimensionedScalar("kappa", dimless, 0.0)
+        dimensionedScalar("kappa", dimless, 0)
     )
 {}
 
@@ -72,10 +72,13 @@ void Foam::combustionModels::PaSR<Type>::correct()
 
         tmp<volScalarField> tepsilon(this->turbulence().epsilon());
         const scalarField& epsilon = tepsilon();
+
         tmp<volScalarField> tmuEff(this->turbulence().muEff());
         const scalarField& muEff = tmuEff();
+
         tmp<volScalarField> ttc(this->tc());
         const scalarField& tc = ttc();
+
         tmp<volScalarField> trho(this->rho());
         const scalarField& rho = trho();
 
@@ -113,7 +116,7 @@ Foam::combustionModels::PaSR<Type>::Qdot() const
     (
         new volScalarField
         (
-            IOobject::groupName("PaSR:dQ", this->phaseName_),
+            IOobject::groupName(typeName + ":Qdot", this->phaseName_),
             kappa_*laminar<Type>::Qdot()
         )
     );

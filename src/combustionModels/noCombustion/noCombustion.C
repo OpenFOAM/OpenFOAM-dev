@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,7 @@ Foam::combustionModels::noCombustion<CombThermoType>::~noCombustion()
 
 template<class CombThermoType>
 void Foam::combustionModels::noCombustion<CombThermoType>::correct()
-{
-//  Do Nothing
-}
+{}
 
 
 template<class CombThermoType>
@@ -83,7 +81,7 @@ Foam::combustionModels::noCombustion<CombThermoType>::Qdot() const
         (
             IOobject
             (
-                IOobject::groupName("Qdot", this->phaseName_),
+                IOobject::groupName(typeName + ":Qdot", this->phaseName_),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,
