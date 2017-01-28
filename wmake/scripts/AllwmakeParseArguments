@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -33,6 +33,15 @@
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
+
+if [ -z "$WM_PROJECT_DIR" ]
+then
+    echo "$Script error: The OpenFOAM environment is not set."
+    echo "    Check the OpenFOAM entries in your dot-files and source them."
+    echo "    If in doubt, please read:"
+    echo "       http://openfoam.org/download/source/setting-environment"
+    exit 1
+fi
 
 usage() {
     exec 1>&2

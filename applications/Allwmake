@@ -2,8 +2,9 @@
 cd ${0%/*} || exit 1    # Run from this directory
 
 # Parse arguments for library compilation
-. $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
+. ../wmake/scripts/AllwmakeParseArguments
 
+# Perform various checks
 wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
     echo "Allwmake error: Current directory is not \$WM_PROJECT_DIR/applications"
     echo "    The environment variables are inconsistent with the installation."
