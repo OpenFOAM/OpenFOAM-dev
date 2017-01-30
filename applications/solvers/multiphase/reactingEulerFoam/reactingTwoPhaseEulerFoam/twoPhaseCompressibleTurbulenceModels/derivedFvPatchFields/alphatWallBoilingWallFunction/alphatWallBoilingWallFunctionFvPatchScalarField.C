@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,9 @@ License
 #include "saturationModel.H"
 #include "wallFvPatch.H"
 #include "uniformDimensionedFields.H"
+#include "mathematicalConstants.H"
 
+using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -157,6 +159,12 @@ alphatWallBoilingWallFunctionFvPatchScalarField
                 (
                     dict.subDict("departureFreqModel")
                 );
+
+            if (dict.found("dDep"))
+            {
+                dDep_ = scalarField("dDep", dict, p.size());
+            }
+
             break;
         }
     }
@@ -259,10 +267,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     // Lookup the fluid model
     const ThermalPhaseChangePhaseSystem
     <
-        MomentumTransferPhaseSystem
-        <
-            twoPhaseSystem>
-        >& fluid = refCast
+        MomentumTransferPhaseSystem<twoPhaseSystem>
+    >& fluid =
+        refCast
         <
             const ThermalPhaseChangePhaseSystem
             <
@@ -477,9 +484,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const scalarField Ja(rhoLiquidw*Cpw*Tsub/(rhoVaporw*L));
                 const scalarField Al(fLiquid*4.8*exp(-Ja/80));
 
-                const scalarField A2(min(M_PI*sqr(dDep_)*N*Al/4, scalar(1)));
+                const scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
                 const scalarField A1(max(1 - A2, scalar(1e-4)));
-                const scalarField A2E(min(M_PI*sqr(dDep_)*N*Al/4, scalar(5)));
+                const scalarField A2E(min(pi*sqr(dDep_)*N*Al/4, scalar(5)));
 
                 // Wall evaporation heat flux [kg/s3 = J/m2s]
                 const scalarField Qe((1.0/6.0)*A2E*dDep_*rhoVaporw*fDep*L);
@@ -495,7 +502,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 // Quenching heat transfer coefficient
                 const scalarField hQ
                 (
-                    2*(alphaw*Cpw)*fDep*sqrt((0.8/fDep)/(M_PI*alphaw/rhow))
+                    2*(alphaw*Cpw)*fDep*sqrt((0.8/fDep)/(pi*alphaw/rhow))
                 );
 
                 // Quenching heat flux
@@ -622,11 +629,13 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::write(Ostream& os) const
             os << indent << token::BEGIN_BLOCK << incrIndent << nl;
             departureFreqModel_->write(os);
             os << decrIndent << indent << token::END_BLOCK << nl;
+
             break;
         }
     }
 
     dmdt_.writeEntry("dmdt", os);
+    dDep_.writeEntry("dDep", os);
     alphatConv_.writeEntry("alphatConv", os);
     writeEntry("value", os);
 }

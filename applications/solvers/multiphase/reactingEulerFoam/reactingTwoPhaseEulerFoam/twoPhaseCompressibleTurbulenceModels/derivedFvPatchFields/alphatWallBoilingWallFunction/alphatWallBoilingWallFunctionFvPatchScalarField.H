@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -269,7 +269,7 @@ public:
 
     // Member functions
 
-        //- Calculate and return the departure diameter field
+        //- Return the departure diameter field
         const scalarField& dDeparture() const
         {
             return dDep_;
