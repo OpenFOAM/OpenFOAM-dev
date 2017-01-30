@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,9 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "meshTools.H"
 #include "OFstream.H"
+#include "mathematicalConstants.H"
+
+using namespace Foam::constant::mathematical;
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -244,7 +247,6 @@ void Foam::movingConeTopoFvMesh::addZonesAndModifiers()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::movingConeTopoFvMesh::movingConeTopoFvMesh(const IOobject& io)
 :
     topoChangerFvMesh(io),
@@ -267,8 +269,7 @@ Foam::movingConeTopoFvMesh::movingConeTopoFvMesh(const IOobject& io)
     motionVelPeriod_(readScalar(motionDict_.lookup("motionVelPeriod"))),
     curMotionVel_
     (
-        motionVelAmplitude_*
-        Foam::sin(time().value()*M_PI/motionVelPeriod_)
+        motionVelAmplitude_*sin(time().value()*pi/motionVelPeriod_)
     ),
     leftEdge_(readScalar(motionDict_.lookup("leftEdge"))),
     curLeft_(readScalar(motionDict_.lookup("leftObstacleEdge"))),
@@ -323,8 +324,7 @@ bool Foam::movingConeTopoFvMesh::update()
     pointField newPoints;
 
     vector curMotionVel_ =
-        motionVelAmplitude_*
-        Foam::sin(time().value()*M_PI/motionVelPeriod_);
+        motionVelAmplitude_*sin(time().value()*pi/motionVelPeriod_);
 
     Pout<< "time:" << time().value() << " curMotionVel_:" << curMotionVel_
         << " curLeft:" << curLeft_ << " curRight:" << curRight_
@@ -387,6 +387,7 @@ bool Foam::movingConeTopoFvMesh::update()
     // The mesh now contains the cells with zero volume
     Info << "Executing mesh motion" << endl;
     movePoints(newPoints);
+
     //  The mesh now has got non-zero volume cells
 
     curLeft_ = average
@@ -404,7 +405,6 @@ bool Foam::movingConeTopoFvMesh::update()
             faceZones().findZoneID("rightExtrusionFaces")
         ]().localPoints()
     ).x() + SMALL;
-
 
     return true;
 }
