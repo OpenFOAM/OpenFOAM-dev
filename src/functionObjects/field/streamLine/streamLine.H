@@ -72,7 +72,7 @@ Usage
         Property     | Description             | Required    | Default value
         type         | Type name: streamLine   | yes         |
         setFormat    | Output data type        | yes         |
-        U            | Tracking velocity field name | yes    |
+        U            | Tracking velocity field name | no     | U
         fields       | Fields to sample        | yes         |
         lifetime     | Maximum number of particle tracking steps | yes |
         trackLength  | Tracking segment length | no          |
