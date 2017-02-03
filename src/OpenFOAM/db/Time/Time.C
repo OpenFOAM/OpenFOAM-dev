@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,6 +184,8 @@ void Foam::Time::setControls()
         int oldPrecision = precision_;
         int requiredPrecision = -1;
         bool found = false;
+        word oldTime(timeName());
+
         for
         (
             precision_ = maxPrecision_;
@@ -193,6 +195,14 @@ void Foam::Time::setControls()
         {
             // Update the time formatting
             setTime(startTime_, 0);
+
+            // Check that the time name has changed otherwise exit loop
+            word newTime(timeName());
+            if (newTime == oldTime)
+            {
+                break;
+            }
+            oldTime = newTime;
 
             // Check the existence of the time directory with the new format
             found = exists(timePath(), false);
