@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,7 +121,7 @@ void Foam::NonInertialFrameForce<CloudType>::cacheFields(const bool store)
             )
         )
         {
-            uniformDimensionedVectorField W = this->mesh().template
+            const uniformDimensionedVectorField& W = this->mesh().template
                 lookupObject<uniformDimensionedVectorField>(WName_);
 
             W_ = W.value();
@@ -135,7 +135,7 @@ void Foam::NonInertialFrameForce<CloudType>::cacheFields(const bool store)
             )
         )
         {
-            uniformDimensionedVectorField omega = this->mesh().template
+            const uniformDimensionedVectorField& omega = this->mesh().template
                 lookupObject<uniformDimensionedVectorField>(omegaName_);
 
             omega_ = omega.value();
@@ -149,7 +149,8 @@ void Foam::NonInertialFrameForce<CloudType>::cacheFields(const bool store)
             )
         )
         {
-            uniformDimensionedVectorField omegaDot = this->mesh().template
+            const uniformDimensionedVectorField& omegaDot =
+                this->mesh().template
                 lookupObject<uniformDimensionedVectorField>(omegaDotName_);
 
             omegaDot_ = omegaDot.value();
@@ -163,7 +164,7 @@ void Foam::NonInertialFrameForce<CloudType>::cacheFields(const bool store)
             )
         )
         {
-            uniformDimensionedVectorField centreOfRotation =
+            const uniformDimensionedVectorField& centreOfRotation =
                 this->mesh().template
                 lookupObject<uniformDimensionedVectorField>
                 (
