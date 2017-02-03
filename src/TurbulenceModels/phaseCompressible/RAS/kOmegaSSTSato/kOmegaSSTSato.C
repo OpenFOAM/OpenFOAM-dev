@@ -136,7 +136,6 @@ void kOmegaSSTSato<BasicTurbulenceModel>::correctNut
     const volScalarField& F2
 )
 {
-    InfoInFunction;
     const PhaseCompressibleTurbulenceModel<transportModel>& gasTurbulence =
         this->gasTurbulence();
 
