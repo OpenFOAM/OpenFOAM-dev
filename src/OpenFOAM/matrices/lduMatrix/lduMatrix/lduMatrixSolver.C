@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,10 +157,10 @@ Foam::lduMatrix::solver::solver
 
 void Foam::lduMatrix::solver::readControls()
 {
-    maxIter_   = controlDict_.lookupOrDefault<label>("maxIter", 1000);
-    minIter_   = controlDict_.lookupOrDefault<label>("minIter", 0);
+    maxIter_ = controlDict_.lookupOrDefault<label>("maxIter", defaultMaxIter_);
+    minIter_ = controlDict_.lookupOrDefault<label>("minIter", 0);
     tolerance_ = controlDict_.lookupOrDefault<scalar>("tolerance", 1e-6);
-    relTol_    = controlDict_.lookupOrDefault<scalar>("relTol", 0);
+    relTol_ = controlDict_.lookupOrDefault<scalar>("relTol", 0);
 }
 
 
