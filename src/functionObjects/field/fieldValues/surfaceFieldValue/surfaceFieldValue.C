@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,12 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    15
+    17
 >::names[] =
 {
     "none",
     "sum",
+    "weightedSum",
     "sumMag",
     "sumDirection",
     "sumDirectionBalance",
@@ -78,6 +79,7 @@ const char* Foam::NamedEnum
     "areaAverage",
     "weightedAreaAverage",
     "areaIntegrate",
+    "weightedAreaIntegrate",
     "min",
     "max",
     "CoV",
@@ -94,7 +96,7 @@ const Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    15
+    17
 > Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 

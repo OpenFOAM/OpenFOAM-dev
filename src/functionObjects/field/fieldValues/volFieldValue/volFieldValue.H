@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,17 +79,19 @@ Usage
 
     The \c operation is one of:
     \plaintable
-       none               | No operation
-       sum                | Sum
-       sumMag             | Sum of component magnitudes
-       average            | Ensemble average
-       weightedAverage    | Weighted average
-       volAverage         | Volume weighted average
-       weightedVolAverage | Weighted volume average
-       volIntegrate       | Volume integral
-       min                | Minimum
-       max                | Maximum
-       CoV                | Coefficient of variation: standard deviation/mean
+       none                 | No operation
+       sum                  | Sum
+       weightedSum          | Weighted sum
+       sumMag               | Sum of component magnitudes
+       average              | Ensemble average
+       weightedAverage      | Weighted average
+       volAverage           | Volume weighted average
+       weightedVolAverage   | Weighted volume average
+       volIntegrate         | Volume integral
+       weightedVolIntegrate | Weighted volume integral
+       min                  | Minimum
+       max                  | Maximum
+       CoV                  | Coefficient of variation: standard deviation/mean
     \endplaintable
 
 See also
@@ -136,19 +138,21 @@ public:
         {
             opNone,
             opSum,
+            opWeightedSum,
             opSumMag,
             opAverage,
             opWeightedAverage,
             opVolAverage,
             opWeightedVolAverage,
             opVolIntegrate,
+            opWeightedVolIntegrate,
             opMin,
             opMax,
             opCoV
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 11> operationTypeNames_;
+        static const NamedEnum<operationType, 13> operationTypeNames_;
 
 
 protected:
@@ -158,7 +162,7 @@ protected:
         //- Operation to apply to values
         operationType operation_;
 
-        //- Weight field name - only used for opWeightedAverage mode
+        //- Weight field name - only used for weighted modes
         word weightFieldName_;
 
 

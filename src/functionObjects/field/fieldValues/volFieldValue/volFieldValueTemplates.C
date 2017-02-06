@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,11 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
             result = gSum(values);
             break;
         }
+        case opWeightedSum:
+        {
+            result = gSum(weightField*values);
+            break;
+        }
         case opSumMag:
         {
             result = gSum(cmptMag(values));
@@ -115,6 +120,11 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
         case opVolIntegrate:
         {
             result = gSum(V*values);
+            break;
+        }
+        case opWeightedVolIntegrate:
+        {
+            result = gSum(weightField*V*values);
             break;
         }
         case opMin:
