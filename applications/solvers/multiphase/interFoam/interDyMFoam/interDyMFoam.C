@@ -126,7 +126,11 @@ int main(int argc, char *argv[])
                         << " s" << endl;
 
                     // Do not apply previous time-step mesh compression flux
-                    talphaPhiCorr0.clear();
+                    // if the mesh topology changed
+                    if (mesh.topoChanging())
+                    {
+                        talphaPhiCorr0.clear();
+                    }
 
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;

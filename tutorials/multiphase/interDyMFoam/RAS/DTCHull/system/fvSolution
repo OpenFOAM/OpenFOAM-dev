@@ -41,7 +41,7 @@ solvers
 
         smoother        DIC;
 
-        tolerance       0.1;
+        tolerance       1e-3;
         relTol          0;
     };
 
