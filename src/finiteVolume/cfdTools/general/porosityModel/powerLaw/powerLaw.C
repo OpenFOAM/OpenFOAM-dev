@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,14 +94,16 @@ void Foam::porosityModels::powerLaw::correct
     fvVectorMatrix& UEqn
 ) const
 {
-    const vectorField& U = UEqn.psi();
+    const volVectorField& U = UEqn.psi();
     const scalarField& V = mesh_.V();
     scalarField& Udiag = UEqn.diag();
- 
+
     if (UEqn.dimensions() == dimForce)
     {
-        const volScalarField& rho =
-            mesh_.lookupObject<volScalarField>(rhoName_);
+        const volScalarField& rho = mesh_.lookupObject<volScalarField>
+        (
+            IOobject::groupName(rhoName_, U.group())
+        );
 
         apply(Udiag, V, rho, U);
     }
@@ -122,7 +124,7 @@ void Foam::porosityModels::powerLaw::correct
     const vectorField& U = UEqn.psi();
     const scalarField& V = mesh_.V();
     scalarField& Udiag = UEqn.diag();
- 
+
     apply(Udiag, V, rho, U);
 }
 
@@ -133,12 +135,14 @@ void Foam::porosityModels::powerLaw::correct
     volTensorField& AU
 ) const
 {
-    const vectorField& U = UEqn.psi();
+    const volVectorField& U = UEqn.psi();
 
     if (UEqn.dimensions() == dimForce)
     {
-        const volScalarField& rho =
-            mesh_.lookupObject<volScalarField>(rhoName_);
+        const volScalarField& rho = mesh_.lookupObject<volScalarField>
+        (
+            IOobject::groupName(rhoName_, U.group())
+        );
 
         apply(AU, rho, U);
     }
