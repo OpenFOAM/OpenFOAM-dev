@@ -101,6 +101,7 @@
             U = HbyA
               + rAU*fvc::reconstruct((phig + p_rghEqnIncomp.flux())/rAUf);
             U.correctBoundaryConditions();
+            fvOptions.correct(U);
         }
     }
 
@@ -121,7 +122,4 @@
     p_rgh.correctBoundaryConditions();
 
     K = 0.5*magSqr(U);
-
-    Info<< "max(U) " << max(mag(U)).value() << endl;
-    Info<< "min(p_rgh) " << min(p_rgh).value() << endl;
 }
