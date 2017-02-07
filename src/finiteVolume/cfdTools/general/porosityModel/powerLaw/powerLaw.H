@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::powerLaw
+    Foam::porosityModels::powerLaw
 
 Description
     Power law porosity model, given by:
@@ -36,7 +36,6 @@ Description
         C_0      | model linear coefficient
         C_1      | model exponent coefficient
     \endvartable
-
 
 SourceFiles
     powerLaw.C
