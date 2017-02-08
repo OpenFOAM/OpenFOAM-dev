@@ -44,7 +44,6 @@ Description
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"
-#include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
