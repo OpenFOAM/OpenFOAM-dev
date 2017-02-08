@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,7 +254,7 @@ bool Foam::functionObjects::scalarTransport::execute()
         FatalErrorInFunction
             << "Incompatible dimensions for phi: " << phi.dimensions() << nl
             << "Dimensions should be " << dimMass/dimTime << " or "
-            << dimVolume/dimTime << endl;
+            << dimVolume/dimTime << exit(FatalError);
     }
 
     Info<< endl;
