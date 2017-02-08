@@ -53,6 +53,7 @@ Foam::porosityModels::solidification::solidification
 :
     porosityModel(name, modelType, mesh, dict, cellZoneName),
     TName_(coeffs_.lookupOrDefault<word>("T", "T")),
+    alphaName_(coeffs_.lookupOrDefault<word>("alpha", "none")),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho")),
     D_(Function1<scalar>::New("D", coeffs_))
 {}

@@ -31,12 +31,13 @@ Description
     is represented as a porous blockage with the drag-coefficient evaluated from
 
         \f[
-            S = - \rho D(T) U
+            S = - \alpha \rho D(T) U
         \f]
 
     where
     \vartable
-        D(T) | User-defined drag-coefficient as function of temperature
+        \alpha  | Optional phase-fraction of solidifying phase
+        D(T)    | User-defined drag-coefficient as function of temperature
     \endvartable
 
     Note that the latent heat of solidification is not included and the
@@ -54,6 +55,9 @@ Description
                 (330.0     10000) // Solid below 330K
                 (330.5     0)     // Liquid above 330.5K
             );
+
+            // Optional phase-fraction of solidifying phase
+            alpha alpha.liquid;
 
             // Solidification porosity is isotropic
             // use the global coordinate system
@@ -103,6 +107,9 @@ class solidification
         //- Name of temperature field, default = "T"
         word TName_;
 
+        //- Name of optional phase-fraction field, default = "none"
+        word alphaName_;
+
         //- Name of density field, default = "rho"
         word rhoName_;
 
@@ -111,6 +118,27 @@ class solidification
 
 
     // Private Member Functions
+
+        //- Apply resistance
+        template<class AlphaFieldType, class RhoFieldType>
+        void apply
+        (
+            scalarField& Udiag,
+            const scalarField& V,
+            const AlphaFieldType& alpha,
+            const RhoFieldType& rho,
+            const volVectorField& U
+        ) const;
+
+        //- Apply resistance
+        template<class AlphaFieldType, class RhoFieldType>
+        void apply
+        (
+            tensorField& AU,
+            const AlphaFieldType& alpha,
+            const RhoFieldType& rho,
+            const volVectorField& U
+        ) const;
 
         //- Apply resistance
         template<class RhoFieldType>
