@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,13 @@ namespace Foam
 
 Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
 (
-    const fvMesh& mesh
+    const volVectorField& U,
+    const surfaceScalarField& phi
 )
 :
-    psiThermo(mesh, word::null),
-    twoPhaseMixture(mesh, *this),
+    psiThermo(U.mesh(), word::null),
+    twoPhaseMixture(U.mesh(), *this),
+    interfaceProperties(alpha1(), U, *this),
     thermo1_(nullptr),
     thermo2_(nullptr)
 {
@@ -58,8 +60,8 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
         T2.write();
     }
 
-    thermo1_ = rhoThermo::New(mesh, phase1Name());
-    thermo2_ = rhoThermo::New(mesh, phase2Name());
+    thermo1_ = rhoThermo::New(U.mesh(), phase1Name());
+    thermo2_ = rhoThermo::New(U.mesh(), phase2Name());
 
     thermo1_->validate(phase1Name(), "e");
     thermo2_->validate(phase2Name(), "e");
@@ -76,17 +78,23 @@ Foam::twoPhaseMixtureThermo::~twoPhaseMixtureThermo()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::twoPhaseMixtureThermo::correct()
+void Foam::twoPhaseMixtureThermo::correctThermo()
 {
     thermo1_->he() = thermo1_->he(p_, T_);
     thermo1_->correct();
 
     thermo2_->he() = thermo2_->he(p_, T_);
     thermo2_->correct();
+}
 
+
+void Foam::twoPhaseMixtureThermo::correct()
+{
     psi_ = alpha1()*thermo1_->psi() + alpha2()*thermo2_->psi();
     mu_ = alpha1()*thermo1_->mu() + alpha2()*thermo2_->mu();
     alpha_ = alpha1()*thermo1_->alpha() + alpha2()*thermo2_->alpha();
+
+    interfaceProperties::correct();
 }
 
 

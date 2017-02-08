@@ -41,13 +41,14 @@ Description
 #include "dynamicFvMesh.H"
 #include "MULES.H"
 #include "subCycle.H"
-#include "interfaceProperties.H"
 #include "twoPhaseMixture.H"
 #include "twoPhaseMixtureThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,63 +82,66 @@ int main(int argc, char *argv[])
     {
         #include "readControls.H"
 
-        {
-            // Store divU from the previous mesh so that it can be mapped
-            // and used in correctPhi to ensure the corrected phi has the
-            // same divergence
-            volScalarField divU("divU0", fvc::div(fvc::absolute(phi, U)));
+        // Store divU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        volScalarField divU("divU0", fvc::div(fvc::absolute(phi, U)));
 
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
             #include "CourantNo.H"
+            #include "alphaCourantNo.H"
             #include "setDeltaT.H"
-
-            runTime++;
-
-            Info<< "Time = " << runTime.timeName() << nl << endl;
-
-            scalar timeBeforeMeshUpdate = runTime.elapsedCpuTime();
-
-            // Do any mesh changes
-            mesh.update();
-
-            if (mesh.changing())
-            {
-                Info<< "Execution time for mesh.update() = "
-                    << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
-                    << " s" << endl;
-
-                gh = (g & mesh.C()) - ghRef;
-                ghf = (g & mesh.Cf()) - ghRef;
-            }
-
-            if (mesh.changing() && correctPhi)
-            {
-                // Calculate absolute flux from the mapped surface velocity
-                phi = mesh.Sf() & Uf;
-
-                #include "correctPhi.H"
-
-                // Make the fluxes relative to the mesh motion
-                fvc::makeRelative(phi, U);
-            }
         }
 
-        if (mesh.changing() && checkMeshCourantNo)
-        {
-            #include "meshCourantNo.H"
-        }
+        runTime++;
 
-        turbulence->correct();
+        Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            #include "alphaEqnsSubCycle.H"
-
-            // correct interface on first PIMPLE corrector
-            if (pimple.corr() == 1)
+            if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
-                interface.correct();
+                scalar timeBeforeMeshUpdate = runTime.elapsedCpuTime();
+
+                mesh.update();
+
+                if (mesh.changing())
+                {
+                    Info<< "Execution time for mesh.update() = "
+                        << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
+                        << " s" << endl;
+
+                    gh = (g & mesh.C()) - ghRef;
+                    ghf = (g & mesh.Cf()) - ghRef;
+                }
+
+                if (mesh.changing() && correctPhi)
+                {
+                    // Calculate absolute flux from the mapped surface velocity
+                    phi = mesh.Sf() & Uf;
+
+                    #include "correctPhi.H"
+
+                    // Make the fluxes relative to the mesh motion
+                    fvc::makeRelative(phi, U);
+
+                    mixture.correct();
+                }
+
+                if (mesh.changing() && checkMeshCourantNo)
+                {
+                    #include "meshCourantNo.H"
+                }
             }
+
+            #include "alphaControls.H"
+            #include "alphaEqnSubCycle.H"
 
             solve(fvm::ddt(rho) + fvc::div(rhoPhi));
 
@@ -149,13 +153,12 @@ int main(int argc, char *argv[])
             {
                 #include "pEqn.H"
             }
+
+            if (pimple.turbCorr())
+            {
+                turbulence->correct();
+            }
         }
-
-        rho = alpha1*rho1 + alpha2*rho2;
-
-        // Correct p_rgh for consistency with p and the updated densities
-        p_rgh = p - rho*gh;
-        p_rgh.correctBoundaryConditions();
 
         runTime.write();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ SourceFiles
 #include "rhoThermo.H"
 #include "psiThermo.H"
 #include "twoPhaseMixture.H"
+#include "interfaceProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +53,8 @@ namespace Foam
 class twoPhaseMixtureThermo
 :
     public psiThermo,
-    public twoPhaseMixture
+    public twoPhaseMixture,
+    public interfaceProperties
 {
     // Private data
 
@@ -71,10 +73,11 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
+        //- Construct from components
         twoPhaseMixtureThermo
         (
-            const fvMesh& mesh
+            const volVectorField& U,
+            const surfaceScalarField& phi
         );
 
 
@@ -104,7 +107,10 @@ public:
             return thermo2_();
         }
 
-        //- Update properties
+        //- Correct the thermodynamics of each phase
+        virtual void correctThermo();
+
+        //- Update mixture properties
         virtual void correct();
 
         //- Return true if the equation of state is incompressible

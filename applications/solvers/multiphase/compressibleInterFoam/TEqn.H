@@ -24,5 +24,6 @@
 
     fvOptions.correct(T);
 
+    mixture.correctThermo();
     mixture.correct();
 }

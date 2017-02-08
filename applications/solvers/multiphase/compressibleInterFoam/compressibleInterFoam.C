@@ -39,12 +39,13 @@ Description
 #include "MULES.H"
 #include "subCycle.H"
 #include "rhoThermo.H"
-#include "interfaceProperties.H"
 #include "twoPhaseMixture.H"
 #include "twoPhaseMixtureThermo.H"
 #include "turbulentFluidThermoModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,8 +60,6 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createFields.H"
     #include "createFvOptions.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
 
     volScalarField& p = mixture.p();
     volScalarField& T = mixture.T();
@@ -69,6 +68,13 @@ int main(int argc, char *argv[])
 
     turbulence->validate();
 
+    if (!LTS)
+    {
+        #include "readTimeControls.H"
+        #include "CourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
@@ -76,8 +82,17 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readTimeControls.H"
-        #include "CourantNo.H"
-        #include "setDeltaT.H"
+
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
+        else
+        {
+            #include "CourantNo.H"
+            #include "alphaCourantNo.H"
+            #include "setDeltaT.H"
+        }
 
         runTime++;
 
@@ -86,13 +101,8 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            #include "alphaEqnsSubCycle.H"
-
-            // correct interface on first PIMPLE corrector
-            if (pimple.corr() == 1)
-            {
-                interface.correct();
-            }
+            #include "alphaControls.H"
+            #include "alphaEqnSubCycle.H"
 
             solve(fvm::ddt(rho) + fvc::div(rhoPhi));
 

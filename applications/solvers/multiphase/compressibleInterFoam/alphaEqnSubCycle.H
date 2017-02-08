@@ -1,8 +1,6 @@
 {
-    #include "alphaControls.H"
-
     surfaceScalarField phic(mag(phi/mesh.magSf()));
-    phic = min(interface.cAlpha()*phic, max(phic));
+    phic = min(mixture.cAlpha()*phic, max(phic));
 
     volScalarField divU(fvc::div(fvc::absolute(phi, U)));
 
@@ -27,7 +25,7 @@
             !(++alphaSubCycle).end();
         )
         {
-            #include "alphaEqns.H"
+            #include "alphaEqn.H"
             rhoPhiSum += (runTime.deltaT()/totalDeltaT)*rhoPhi;
         }
 
@@ -35,6 +33,6 @@
     }
     else
     {
-        #include "alphaEqns.H"
+        #include "alphaEqn.H"
     }
 }
