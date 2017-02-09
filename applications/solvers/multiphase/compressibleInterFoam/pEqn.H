@@ -8,6 +8,7 @@
         fvc::flux(HbyA)
       + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, phi)
     );
+    MRF.makeRelative(phiHbyA);
 
     surfaceScalarField phig
     (
@@ -20,7 +21,7 @@
     phiHbyA += phig;
 
     // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p_rgh, U, phiHbyA, rAUf);
+    constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
     tmp<fvScalarMatrix> p_rghEqnComp1;
     tmp<fvScalarMatrix> p_rghEqnComp2;

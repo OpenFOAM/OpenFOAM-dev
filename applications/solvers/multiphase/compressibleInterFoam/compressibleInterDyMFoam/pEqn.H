@@ -8,6 +8,7 @@
         fvc::flux(HbyA)
       + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, Uf)
     );
+    MRF.makeRelative(phiHbyA);
 
     surfaceScalarField phig
     (
@@ -20,7 +21,7 @@
     phiHbyA += phig;
 
     // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p_rgh, U, phiHbyA, rAUf);
+    constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
     // Make the fluxes relative to the mesh motion
     fvc::makeRelative(phiHbyA, U);

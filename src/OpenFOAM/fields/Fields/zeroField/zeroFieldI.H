@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,5 +38,81 @@ inline Foam::zeroField Foam::zeroField::field() const
     return zeroField();
 }
 
+
+inline Foam::zeroField Foam::zeroField::operator()() const
+{
+    return zeroField();
+}
+
+
+inline Foam::zeroField Foam::zeroField::operator-() const
+{
+    return zeroField();
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inline const zeroField operator+(const zeroField&, const zeroField&)
+{
+    return zeroField();
+}
+
+template<class Type>
+inline const Type& operator+(const Type& t, const zeroField&)
+{
+    return t;
+}
+
+template<class Type>
+inline const Type& operator+(const zeroField&, const Type& t)
+{
+    return t;
+}
+
+inline const zeroField operator-(const zeroField&, const zeroField&)
+{
+    return zeroField();
+}
+
+template<class Type>
+inline const Type& operator-(const Type& t, const zeroField&)
+{
+    return t;
+}
+
+template<class Type>
+inline Type operator-(const zeroField&, const Type& t)
+{
+    return -t;
+}
+
+template<class Type>
+inline zeroField operator*(const Type& t, const zeroField&)
+{
+    return zeroField();
+}
+
+template<class Type>
+inline zeroField operator*(const zeroField&, const Type& t)
+{
+    return zeroField();
+}
+
+template<class Type>
+inline zeroField operator/(const zeroField&, const Type& t)
+{
+    return zeroField();
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

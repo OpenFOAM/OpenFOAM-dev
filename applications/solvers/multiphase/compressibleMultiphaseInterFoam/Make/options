@@ -1,5 +1,6 @@
 EXE_INC = \
     -I. \
+    -I../VoF \
     -I../interFoam \
     -ImultiphaseMixtureThermo/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \

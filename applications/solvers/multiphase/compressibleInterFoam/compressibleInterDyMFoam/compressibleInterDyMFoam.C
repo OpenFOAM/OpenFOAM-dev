@@ -39,7 +39,10 @@ Description
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "MULES.H"
+#include "CMULES.H"
+#include "EulerDdtScheme.H"
+#include "localEulerDdtScheme.H"
+#include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
 #include "twoPhaseMixture.H"
 #include "twoPhaseMixtureThermo.H"
@@ -47,7 +50,6 @@ Description
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"
-#include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -141,7 +143,7 @@ int main(int argc, char *argv[])
             }
 
             #include "alphaControls.H"
-            #include "alphaEqnSubCycle.H"
+            #include "compressibleAlphaEqnSubCycle.H"
 
             solve(fvm::ddt(rho) + fvc::div(rhoPhi));
 

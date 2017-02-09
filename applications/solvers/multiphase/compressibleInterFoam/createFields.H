@@ -63,6 +63,7 @@ dimensionedScalar pMin
 );
 
 mesh.setFluxRequired(p_rgh.name());
+mesh.setFluxRequired(alpha1.name());
 
 
 #include "readGravitationalAcceleration.H"
@@ -99,3 +100,22 @@ autoPtr<compressible::turbulenceModel> turbulence
 
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
+
+// MULES flux from previous time-step
+surfaceScalarField alphaPhi
+(
+    IOobject
+    (
+        "alphaPhi",
+        runTime.timeName(),
+        mesh,
+        IOobject::READ_IF_PRESENT,
+        IOobject::AUTO_WRITE
+    ),
+    phi*fvc::interpolate(alpha1)
+);
+
+// MULES Correction
+tmp<surfaceScalarField> talphaPhiCorr0;
+
+#include "createMRF.H"

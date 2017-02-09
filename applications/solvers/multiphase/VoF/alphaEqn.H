@@ -79,6 +79,8 @@
 
     if (MULESCorr)
     {
+        #include "alphaSuSp.H"
+
         fvScalarMatrix alpha1Eqn
         (
             (
@@ -92,6 +94,8 @@
                 phiCN,
                 upwind<scalar>(mesh, phiCN)
             ).fvmDiv(phiCN, alpha1)
+         ==
+            Su + fvm::Sp(Sp + divU, alpha1)
         );
 
         alpha1Eqn.solve();
@@ -124,6 +128,8 @@
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
+        #include "alphaSuSp.H"
+
         surfaceScalarField phir(phic*mixture.nHatf());
 
         tmp<surfaceScalarField> talphaPhiUn
@@ -154,7 +160,17 @@
             tmp<surfaceScalarField> talphaPhiCorr(talphaPhiUn() - alphaPhi);
             volScalarField alpha10("alpha10", alpha1);
 
-            MULES::correct(alpha1, talphaPhiUn(), talphaPhiCorr.ref(), 1, 0);
+            MULES::correct
+            (
+                geometricOneField(),
+                alpha1,
+                talphaPhiUn(),
+                talphaPhiCorr.ref(),
+                Sp,
+                (-Sp*alpha1)(),
+                1,
+                0
+            );
 
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
@@ -171,7 +187,17 @@
         {
             alphaPhi = talphaPhiUn;
 
-            MULES::explicitSolve(alpha1, phiCN, alphaPhi, 1, 0);
+            MULES::explicitSolve
+            (
+                geometricOneField(),
+                alpha1,
+                phiCN,
+                alphaPhi,
+                Sp,
+                (Su + divU*min(alpha1(), scalar(1)))(),
+                1,
+                0
+            );
         }
 
         alpha2 = 1.0 - alpha1;
@@ -195,7 +221,8 @@
      == fv::EulerDdtScheme<vector>::typeName
     )
     {
-        rhoPhi = alphaPhi*(rho1 - rho2) + phiCN*rho2;
+        #include "rhofs.H"
+        rhoPhi = alphaPhi*(rho1f - rho2f) + phiCN*rho2f;
     }
     else
     {
@@ -206,7 +233,8 @@
         }
 
         // Calculate the end-of-time-step mass flux
-        rhoPhi = alphaPhi*(rho1 - rho2) + phi*rho2;
+        #include "rhofs.H"
+        rhoPhi = alphaPhi*(rho1f - rho2f) + phi*rho2f;
     }
 
     Info<< "Phase-1 volume fraction = "

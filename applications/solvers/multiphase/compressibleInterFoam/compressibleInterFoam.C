@@ -36,7 +36,10 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "MULES.H"
+#include "CMULES.H"
+#include "EulerDdtScheme.H"
+#include "localEulerDdtScheme.H"
+#include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
 #include "rhoThermo.H"
 #include "twoPhaseMixture.H"
@@ -44,7 +47,6 @@ Description
 #include "turbulentFluidThermoModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
-#include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
