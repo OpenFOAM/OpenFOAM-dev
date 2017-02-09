@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ namespace Foam
 
         os << nl;
     }
-} // end namespace
+}
 
 
 template<class Type>
@@ -183,17 +183,24 @@ void Foam::csvSetWriter<Type>::writeCoordHeader
     Ostream& os
 ) const
 {
+    const word axisName(points.axis());
+
     if (points.hasVectorAxis())
     {
-        forAll(points, i)
+        for
+        (
+            word::const_iterator iter = axisName.begin();
+            iter != axisName.end();
+            ++iter
+        )
         {
-            os << points.axis()[i];
+            os << *iter;
             writeSeparator(os);
         }
     }
     else
     {
-        os << points.axis();
+        os << axisName;
         writeSeparator(os);
     }
 }
