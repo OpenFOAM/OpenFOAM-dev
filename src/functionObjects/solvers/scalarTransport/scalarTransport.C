@@ -89,7 +89,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
             turbulenceModel::propertiesName
         );
 
-        return model.nuEff();
+        return alphaD_*model.nu() + alphaDt_*model.nut();
     }
     else if (mesh_.foundObject<cmpModel>(turbulenceModel::propertiesName))
     {
@@ -98,7 +98,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
             turbulenceModel::propertiesName
         );
 
-        return model.muEff();
+        return alphaD_*model.mu() + alphaDt_*model.mut();
     }
     else
     {
@@ -169,11 +169,9 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
     rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
     schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
 
-    constantD_ = false;
-    if (dict.readIfPresent("D", D_))
-    {
-        constantD_ = true;
-    }
+    constantD_ = dict.readIfPresent("D", D_);
+    alphaD_ = dict.lookupOrDefault("alphat", 1.0);
+    alphaDt_ = dict.lookupOrDefault("alphaDt", 1.0);
 
     dict.readIfPresent("nCorr", nCorr_);
 
