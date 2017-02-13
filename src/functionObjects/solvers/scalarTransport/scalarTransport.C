@@ -170,7 +170,7 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
     schemesField_ = dict.lookupOrDefault<word>("schemesField", fieldName_);
 
     constantD_ = dict.readIfPresent("D", D_);
-    alphaD_ = dict.lookupOrDefault("alphat", 1.0);
+    alphaD_ = dict.lookupOrDefault("alphaD", 1.0);
     alphaDt_ = dict.lookupOrDefault("alphaDt", 1.0);
 
     dict.readIfPresent("nCorr", nCorr_);
