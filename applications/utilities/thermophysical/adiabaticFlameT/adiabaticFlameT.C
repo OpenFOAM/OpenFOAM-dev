@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,28 +97,59 @@ int main(int argc, char *argv[])
 
 
     scalar stoicO2 = n + m/4.0;
-    scalar stoicN2 = (0.79/0.21)*(n + m/4.0);
+    scalar stoicN2 = (0.79/0.21)*stoicO2;
     scalar stoicCO2 = n;
     scalar stoicH2O = m/2.0;
 
-    thermo fuel
+    thermo FUEL
     (
         "fuel",
         thermo(thermoData.subDict(fuelName))
     );
+    Info<< "fuel " << FUEL << ';' << endl;
+    FUEL *= FUEL.W();
+
+    thermo O2
+    (
+        "O2",
+        thermo(thermoData.subDict("O2"))
+    );
+    O2 *= O2.W();
+
+    thermo N2
+    (
+        "N2",
+        thermo(thermoData.subDict("N2"))
+    );
+    N2 *= N2.W();
+
+    thermo CO2
+    (
+        "CO2",
+        thermo(thermoData.subDict("CO2"))
+    );
+    CO2 *= CO2.W();
+
+    thermo H2O
+    (
+        "H2O",
+        thermo(thermoData.subDict("H2O"))
+    );
+    H2O *= H2O.W();
 
     thermo oxidant
     (
         "oxidant",
-        stoicO2*thermo(thermoData.subDict("O2"))
-      + stoicN2*thermo(thermoData.subDict("N2"))
+        stoicO2*O2
+      + stoicN2*N2
     );
+    Info<< "oxidant " << (1/oxidant.Y())*oxidant << ';' << endl;
 
     dimensionedScalar stoichiometricAirFuelMassRatio
     (
         "stoichiometricAirFuelMassRatio",
         dimless,
-        (oxidant.W()*oxidant.nMoles())/fuel.W()
+        oxidant.Y()/FUEL.W()
     );
 
     Info<< "stoichiometricAirFuelMassRatio "
@@ -138,49 +169,34 @@ int main(int argc, char *argv[])
         scalar ores = max(1.0/equiv - 1.0, 0.0);
         scalar fburnt = 1.0 - fres;
 
-        thermo fuel
-        (
-            "fuel",
-            thermo(thermoData.subDict(fuelName))
-        );
-        Info<< "fuel " << fuel << ';' << endl;
-
-        thermo oxidant
-        (
-            "oxidant",
-            o2*thermo(thermoData.subDict("O2"))
-          + n2*thermo(thermoData.subDict("N2"))
-        );
-        Info<< "oxidant " << (1/oxidant.nMoles())*oxidant << ';' << endl;
-
         thermo reactants
         (
             "reactants",
-            fuel + oxidant
+            FUEL + (1.0/equiv)*oxidant
         );
-        Info<< "reactants " << (1/reactants.nMoles())*reactants << ';' << endl;
+        Info<< "reactants " << (1/reactants.Y())*reactants << ';' << endl;
 
         thermo burntProducts
         (
             "burntProducts",
-          + (n2 - (0.79/0.21)*ores*stoicO2)*thermo(thermoData.subDict("N2"))
-          + fburnt*stoicCO2*thermo(thermoData.subDict("CO2"))
-          + fburnt*stoicH2O*thermo(thermoData.subDict("H2O"))
+          + (n2 - (0.79/0.21)*ores*stoicO2)*N2
+          + fburnt*stoicCO2*CO2
+          + fburnt*stoicH2O*H2O
         );
         Info<< "burntProducts "
-            << (1/burntProducts.nMoles())*burntProducts << ';' << endl;
+            << (1/burntProducts.Y())*burntProducts << ';' << endl;
 
         thermo products
         (
             "products",
-            fres*fuel
-          + n2*thermo(thermoData.subDict("N2"))
-          + fburnt*stoicCO2*thermo(thermoData.subDict("CO2"))
-          + fburnt*stoicH2O*thermo(thermoData.subDict("H2O"))
-          + ores*stoicO2*thermo(thermoData.subDict("O2"))
+            fres*FUEL
+          + n2*N2
+          + fburnt*stoicCO2*CO2
+          + fburnt*stoicH2O*H2O
+          + ores*stoicO2*O2
         );
 
-        Info<< "products " << (1/products.nMoles())*products << ';' << endl;
+        Info<< "products " << (1/products.Y())*products << ';' << endl;
 
         scalar Tad = products.THa(reactants.Ha(P, T0), P, 1000.0);
         Info<< "Tad = " << Tad << nl << endl;

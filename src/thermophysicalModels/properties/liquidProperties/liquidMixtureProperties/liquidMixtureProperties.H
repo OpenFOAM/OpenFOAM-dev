@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -226,7 +226,7 @@ public:
 
         //- Estimate thermal conductivity  [W/(m K)]
         //  Li's method, Eq. 10-12.27 - 10.12-19
-        scalar K
+        scalar kappa
         (
             const scalar p,
             const scalar T,

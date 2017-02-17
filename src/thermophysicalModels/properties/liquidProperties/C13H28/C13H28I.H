@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,15 +77,15 @@ inline Foam::scalar Foam::C13H28::mug(scalar p, scalar T) const
 }
 
 
-inline Foam::scalar Foam::C13H28::K(scalar p, scalar T) const
+inline Foam::scalar Foam::C13H28::kappa(scalar p, scalar T) const
 {
-    return K_.f(p, T);
+    return kappa_.f(p, T);
 }
 
 
-inline Foam::scalar Foam::C13H28::Kg(scalar p, scalar T) const
+inline Foam::scalar Foam::C13H28::kappag(scalar p, scalar T) const
 {
-    return Kg_.f(p, T);
+    return kappag_.f(p, T);
 }
 
 

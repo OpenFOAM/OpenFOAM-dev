@@ -46,7 +46,6 @@ gas
 {
     specie
     {
-        nMoles          1;
         molWeight       18.0153;
     }
     thermodynamics

@@ -32,7 +32,6 @@ fuel
 {
     specie
     {
-        nMoles          1;
         molWeight       44.0962;
     }
     thermodynamics
@@ -55,7 +54,6 @@ oxidant
 {
     specie
     {
-        nMoles          1;
         molWeight       28.8504;
     }
     thermodynamics
@@ -77,7 +75,6 @@ burntProducts
 {
     specie
     {
-        nMoles         1;
         molWeight      28.3233;
     }
     thermodynamics

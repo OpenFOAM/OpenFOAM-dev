@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,8 @@ Foam::C4H10O::C4H10O()
     ),
     mu_(10.197, -63.8, -3.226, 0.0, 0.0),
     mug_(1.948e-06, 0.41, 495.8, 0.0),
-    K_(0.249, -0.0004005, 0.0, 0.0, 0.0, 0.0),
-    Kg_(-0.0044894, 0.6155, -3266.3, 0.0),
+    kappa_(0.249, -0.0004005, 0.0, 0.0, 0.0, 0.0),
+    kappag_(-0.0044894, 0.6155, -3266.3, 0.0),
     sigma_(466.70, 0.057356, 1.288, 0.0, 0.0, 0.0),
     D_(147.18, 20.1, 74.123, 28) // note: Same as nHeptane
 {}
@@ -121,8 +121,8 @@ Foam::C4H10O::C4H10O
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -140,8 +140,8 @@ Foam::C4H10O::C4H10O(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -159,8 +159,8 @@ Foam::C4H10O::C4H10O(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -178,8 +178,8 @@ Foam::C4H10O::C4H10O(const C4H10O& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

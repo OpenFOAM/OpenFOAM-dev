@@ -67,6 +67,17 @@ dimensionedScalar rhoMin
     )
 );
 
+dimensionedScalar pMin
+(
+    dimensionedScalar::lookupOrDefault
+    (
+        "pMin",
+        simple.dict(),
+        dimPressure,
+        10
+    )
+);
+
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence
 (

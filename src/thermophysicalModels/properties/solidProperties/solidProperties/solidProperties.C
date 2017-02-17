@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::solidProperties::solidProperties
 :
     rho_(rho),
     Cp_(Cp),
-    K_(K),
+    kappa_(K),
     Hf_(Hf),
     emissivity_(emissivity)
 {}
@@ -58,7 +58,7 @@ Foam::solidProperties::solidProperties(Istream& is)
 :
     rho_(readScalar(is)),
     Cp_(readScalar(is)),
-    K_(readScalar(is)),
+    kappa_(readScalar(is)),
     Hf_(readScalar(is)),
     emissivity_(readScalar(is))
 {}
@@ -68,7 +68,7 @@ Foam::solidProperties::solidProperties(const dictionary& dict)
 :
     rho_(readScalar(dict.lookup("rho"))),
     Cp_(readScalar(dict.lookup("Cp"))),
-    K_(readScalar(dict.lookup("K"))),
+    kappa_(readScalar(dict.lookup("K"))),
     Hf_(readScalar(dict.lookup("Hf"))),
     emissivity_(readScalar(dict.lookup("emissivity")))
 {}
@@ -78,7 +78,7 @@ Foam::solidProperties::solidProperties(const solidProperties& s)
 :
     rho_(s.rho_),
     Cp_(s.Cp_),
-    K_(s.K_),
+    kappa_(s.kappa_),
     Hf_(s.Hf_),
     emissivity_(s.emissivity_)
 {}
@@ -90,7 +90,7 @@ void Foam::solidProperties::writeData(Ostream& os) const
 {
     os  << rho_ << token::SPACE
         << Cp_ << token::SPACE
-        << K_ << token::SPACE
+        << kappa_ << token::SPACE
         << Hf_ << token::SPACE
         << emissivity_;
 }

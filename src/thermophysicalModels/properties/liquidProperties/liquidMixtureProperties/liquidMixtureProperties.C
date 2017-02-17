@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -438,7 +438,7 @@ Foam::scalar Foam::liquidMixtureProperties::mu
 }
 
 
-Foam::scalar Foam::liquidMixtureProperties::K
+Foam::scalar Foam::liquidMixtureProperties::kappa
 (
     const scalar p,
     const scalar T,
@@ -473,8 +473,8 @@ Foam::scalar Foam::liquidMixtureProperties::K
             scalar Kij =
                 2.0
                /(
-                    1.0/properties_[i].K(p, Ti)
-                  + 1.0/properties_[j].K(p, Tj)
+                    1.0/properties_[i].kappa(p, Ti)
+                  + 1.0/properties_[j].kappa(p, Tj)
                 );
             K += phii[i]*phii[j]*Kij;
         }

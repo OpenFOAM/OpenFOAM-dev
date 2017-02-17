@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,31 +114,15 @@ inline void Foam::constIsoSolidTransport<thermo>::operator+=
     const constIsoSolidTransport<thermo>& ct
 )
 {
-    scalar molr1 = this->nMoles();
+    scalar Y1 = this->Y();
     thermo::operator+=(ct);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
+    Y1 /= this->Y();
+    scalar Y2 = ct.Y()/this->Y();
 
-    kappa_ = molr1*kappa_ + molr2*ct.kappa_;
+    kappa_ = Y1*kappa_ + Y2*ct.kappa_;
 }
 
-
-template<class thermo>
-inline void Foam::constIsoSolidTransport<thermo>::operator-=
-(
-    const constIsoSolidTransport<thermo>& ct
-)
-{
-    scalar molr1 = this->nMoles();
-
-    thermo::operator-=(ct);
-
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
-
-    kappa_ = molr1*kappa_ - molr2*ct.kappa_;
-}
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 

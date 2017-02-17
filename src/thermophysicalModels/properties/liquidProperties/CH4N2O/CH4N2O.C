@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,8 +70,8 @@ Foam::CH4N2O::CH4N2O()
     ),
     mu_(-51.964, 3670.6, 5.7331, -5.3495e-29, 10.0),
     mug_(2.6986e-06, 0.498, 1257.7, -19570.0),
-    K_(-0.4267, 0.0056903, -8.0065e-06, 1.815e-09, 0.0, 0.0),
-    Kg_(6.977e-05, 1.1243, 844.9, -148850.0),
+    kappa_(-0.4267, 0.0056903, -8.0065e-06, 1.815e-09, 0.0, 0.0),
+    kappag_(6.977e-05, 1.1243, 844.9, -148850.0),
     sigma_(705.0, 1.0, 0.0, 0.0, 0.0, 0.0), // note: set to constant
     D_(147.18, 20.1, 60.056, 28.0) // note: Same as nHeptane
 {}
@@ -105,8 +105,8 @@ Foam::CH4N2O::CH4N2O
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -124,8 +124,8 @@ Foam::CH4N2O::CH4N2O(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -143,8 +143,8 @@ Foam::CH4N2O::CH4N2O(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -162,8 +162,8 @@ Foam::CH4N2O::CH4N2O(const CH4N2O& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,13 +56,6 @@ template<class EquationOfState> class hPowerThermo;
 
 template<class EquationOfState>
 inline hPowerThermo<EquationOfState> operator+
-(
-    const hPowerThermo<EquationOfState>&,
-    const hPowerThermo<EquationOfState>&
-);
-
-template<class EquationOfState>
-inline hPowerThermo<EquationOfState> operator-
 (
     const hPowerThermo<EquationOfState>&,
     const hPowerThermo<EquationOfState>&
@@ -167,36 +160,29 @@ public:
         // Fundamental properties
 
             //- Heat capacity at constant pressure [J/(kg K)]
-            inline scalar cp(const scalar p, const scalar T) const;
+            inline scalar Cp(const scalar p, const scalar T) const;
 
-            //- Absolute enthalpy [J/kmol]
-            inline scalar ha(const scalar p, const scalar T) const;
+            //- Absolute Enthalpy [J/kg]
+            inline scalar Ha(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
-            inline scalar hs(const scalar p, const scalar T) const;
+            inline scalar Hs(const scalar p, const scalar T) const;
 
             //- Chemical enthalpy [J/kg]
-            inline scalar hc() const;
+            inline scalar Hc() const;
 
-            //- Entropy [J/(kmol K)]
-            inline scalar s(const scalar p, const scalar T) const;
+            //- Entropy [J/(kg K)]
+            inline scalar S(const scalar p, const scalar T) const;
 
 
     // Member operators
 
         inline void operator+=(const hPowerThermo&);
-        inline void operator-=(const hPowerThermo&);
 
 
     // Friend operators
 
         friend hPowerThermo operator+ <EquationOfState>
-        (
-            const hPowerThermo&,
-            const hPowerThermo&
-        );
-
-        friend hPowerThermo operator- <EquationOfState>
         (
             const hPowerThermo&,
             const hPowerThermo&

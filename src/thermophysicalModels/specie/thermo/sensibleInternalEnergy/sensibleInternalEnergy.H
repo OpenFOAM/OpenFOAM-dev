@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::sensibleInternalEnergy
 
 Description
-    Thermodynamics mapping class to expose the sensible internal energy function
-    as the standard internal energy function e(T).
+    Thermodynamics mapping class to expose the sensible internal energy
+    functions.
 
 \*---------------------------------------------------------------------------*/
 
@@ -70,29 +70,19 @@ public:
                 return "e";
             }
 
-            //- Sensible Internal energy [J/kmol]
-            scalar he
-            (
-                const Thermo& thermo,
-                const scalar p,
-                const scalar T) const
-            {
-                return thermo.es(p, T);
-            }
-
-            //- Heat capacity at constant volume [J/(kmol K)]
-            scalar cpv
+            //- Heat capacity at constant volume [J/(kg K)]
+            scalar Cpv
             (
                 const Thermo& thermo,
                 const scalar p,
                 const scalar T
             ) const
             {
-                return thermo.cv(p, T);
+                return thermo.Cv(p, T);
             }
 
-            //- cp/cv []
-            scalar cpBycpv
+            //- Cp/Cv []
+            scalar CpByCpv
             (
                 const Thermo& thermo,
                 const scalar p,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+inline Foam::scalar Foam::liquidProperties::limit(const scalar T) const
+{
+    return T;
+}
+
+
 inline Foam::scalar Foam::liquidProperties::W() const
 {
     return W_;
+}
+
+
+inline Foam::scalar Foam::liquidProperties::Y() const
+{
+    return 1;
 }
 
 
@@ -86,6 +98,42 @@ inline Foam::scalar Foam::liquidProperties::omega() const
 inline Foam::scalar Foam::liquidProperties::delta() const
 {
     return delta_;
+}
+
+
+inline Foam::scalar Foam::liquidProperties::psi(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+inline Foam::scalar Foam::liquidProperties::CpMCv(scalar p, scalar T) const
+{
+    return 0;
+}
+
+
+inline Foam::scalar Foam::liquidProperties::Ha(scalar p, scalar T) const
+{
+    return h(p, T);
+}
+
+
+inline Foam::scalar Foam::liquidProperties::Hs(scalar p, scalar T) const
+{
+    return h(p, T);
+}
+
+
+inline Foam::scalar Foam::liquidProperties::Hc() const
+{
+    return 0;
+}
+
+
+inline Foam::scalar Foam::liquidProperties::alphah(scalar p, scalar T) const
+{
+    return kappa(p, T)/Cp(p, T);
 }
 
 

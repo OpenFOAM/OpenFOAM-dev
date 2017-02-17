@@ -83,6 +83,8 @@
             /fvc::domainIntegrate(psi);
     }
 
+    p = max(p, pMin);
+
     rho = thermo.rho();
     rho = max(rho, rhoMin);
     rho = min(rho, rhoMax);

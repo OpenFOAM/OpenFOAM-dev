@@ -19,32 +19,43 @@ thermoType
 {
     type            heheuPsiThermo;
     mixture         homogeneousMixture;
-    transport       sutherland;
+    transport       const;
     thermo          janaf;
     equationOfState perfectGas;
     specie          specie;
     energy          absoluteEnthalpy;
 }
 
-stoichiometricAirFuelMassRatio stoichiometricAirFuelMassRatio [0 0 0 0 0 0 0] 15.675;
+stoichiometricAirFuelMassRatio
+    stoichiometricAirFuelMassRatio [0 0 0 0 0 0 0] 15.675;
 
 reactants
 {
     specie
     {
-        nMoles          24.8095;
         molWeight       29.4649;
     }
     thermodynamics
     {
         Tlow            200;
-        Thigh           5000;
+        Thigh           6000;
         Tcommon         1000;
-        highCpCoeffs    ( 3.28069 0.00195035 -6.53483e-07 1.00239e-10 -5.64653e-15 -1609.55 4.41496 );
-        lowCpCoeffs     ( 3.47696 0.000367499 1.84866e-06 -9.8993e-10 -3.10214e-14 -1570.81 3.76075 );
+        highCpCoeffs
+        (
+            3.24515 0.00202212 -6.98806e-07 1.11477e-10
+            -6.60444e-15 -1601.58 4.60831
+        );
+        lowCpCoeffs
+        (
+            3.60909 -0.000628822 4.45105e-06 -3.81328e-09
+            1.0553e-12 -1587.86 3.21309
+        );
     }
     transport
     {
+        mu              1e-5;
+        Pr              1;
+
         As              1.67212e-06;
         Ts              170.672;
     }
@@ -54,19 +65,29 @@ products
 {
     specie
     {
-        nMoles          1;
         molWeight       28.3233;
     }
     thermodynamics
     {
         Tlow            200;
-        Thigh           5000;
+        Thigh           6000;
         Tcommon         1000;
-        highCpCoeffs    ( 3.106 0.00179682 -5.94382e-07 9.04998e-11 -5.08033e-15 -11003.7 5.11872 );
-        lowCpCoeffs     ( 3.49612 0.000650364 -2.08029e-07 1.2291e-09 -7.73697e-13 -11080.3 3.18978 );
+        highCpCoeffs
+        (
+            3.10561 0.00179748 -5.94701e-07 9.05612e-11
+            -5.08447e-15 -11003.6 5.12109
+        );
+        lowCpCoeffs
+        (
+            3.498 0.000638554 -1.83885e-07 1.20991e-09
+            -7.68702e-13 -11080.6 3.1819
+        );
     }
     transport
     {
+        mu              1e-5;
+        Pr              1;
+
         As              1.67212e-06;
         Ts              170.672;
     }

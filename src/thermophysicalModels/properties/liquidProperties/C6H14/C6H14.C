@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,8 @@ Foam::C6H14::C6H14()
     ),
     mu_(-20.715, 1207.5, 1.4993, 0.0, 0.0),
     mug_(1.7514e-07, 0.70737, 157.14, 0.0),
-    K_(0.22492, -0.0003533, 0.0, 0.0, 0.0, 0.0),
-    Kg_(-650.5, 0.8053, -1412100000, 0.0),
+    kappa_(0.22492, -0.0003533, 0.0, 0.0, 0.0, 0.0),
+    kappag_(-650.5, 0.8053, -1412100000, 0.0),
     sigma_(507.60, 0.055003, 1.2674, 0.0, 0.0, 0.0),
     D_(147.18, 20.1, 86.177, 28) // note: Same as nHeptane
 {}
@@ -121,8 +121,8 @@ Foam::C6H14::C6H14
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -140,8 +140,8 @@ Foam::C6H14::C6H14(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -159,8 +159,8 @@ Foam::C6H14::C6H14(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -178,8 +178,8 @@ Foam::C6H14::C6H14(const C6H14& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

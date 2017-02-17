@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,9 +37,6 @@ Foam::hPowerThermo<EquationOfState>::hPowerThermo(Istream& is)
     Hf_(readScalar(is))
 {
     is.check("hPowerThermo::hPowerThermo(Istream& is)");
-
-    c0_ *= this->W();
-    Hf_ *= this->W();
 }
 
 
@@ -54,10 +51,7 @@ Foam::hPowerThermo<EquationOfState>::hPowerThermo
     n0_(readScalar(dict.subDict("thermodynamics").lookup("n0"))),
     Tref_(readScalar(dict.subDict("thermodynamics").lookup("Tref"))),
     Hf_(readScalar(dict.subDict("thermodynamics").lookup("Hf")))
-{
-    c0_ *= this->W();
-    Hf_ *= this->W();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //

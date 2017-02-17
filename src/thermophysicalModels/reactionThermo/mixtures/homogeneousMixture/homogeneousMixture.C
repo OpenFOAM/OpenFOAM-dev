@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,8 +75,8 @@ const ThermoType& Foam::homogeneousMixture<ThermoType>::mixture
     }
     else
     {
-        mixture_ = b/reactants_.W()*reactants_;
-        mixture_ += (1 - b)/products_.W()*products_;
+        mixture_ = b*reactants_;
+        mixture_ += (1 - b)*products_;
 
         return mixture_;
     }

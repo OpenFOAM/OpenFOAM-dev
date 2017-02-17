@@ -30,7 +30,6 @@ mixture
 {
     specie
     {
-        nMoles      1;
         molWeight   100.21;
     }
     equationOfState

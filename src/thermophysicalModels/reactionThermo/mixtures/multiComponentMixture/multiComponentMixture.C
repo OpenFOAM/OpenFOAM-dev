@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,11 +132,11 @@ const ThermoType& Foam::multiComponentMixture<ThermoType>::cellMixture
     const label celli
 ) const
 {
-    mixture_ = Y_[0][celli]/speciesData_[0].W()*speciesData_[0];
+    mixture_ = Y_[0][celli]*speciesData_[0];
 
     for (label n=1; n<Y_.size(); n++)
     {
-        mixture_ += Y_[n][celli]/speciesData_[n].W()*speciesData_[n];
+        mixture_ += Y_[n][celli]*speciesData_[n];
     }
 
     return mixture_;
@@ -150,15 +150,11 @@ const ThermoType& Foam::multiComponentMixture<ThermoType>::patchFaceMixture
     const label facei
 ) const
 {
-    mixture_ =
-        Y_[0].boundaryField()[patchi][facei]
-       /speciesData_[0].W()*speciesData_[0];
+    mixture_ = Y_[0].boundaryField()[patchi][facei]*speciesData_[0];
 
     for (label n=1; n<Y_.size(); n++)
     {
-        mixture_ +=
-            Y_[n].boundaryField()[patchi][facei]
-           /speciesData_[n].W()*speciesData_[n];
+        mixture_ += Y_[n].boundaryField()[patchi][facei]*speciesData_[n];
     }
 
     return mixture_;

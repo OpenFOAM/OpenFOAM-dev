@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,8 +92,8 @@ Foam::IDEA::IDEA()
     ),
     mu_(-6.9645853822e+01, 4.4390635942e+03, 8.4680722718e+00, 0.0, 0.0),
     mug_(4.2629382158e-08, 8.8144402122e-01, 9.6918097636e+01, 0.0),
-    K_(2.03684e-01, -2.3168e-04, 0.0, 0.0, 0.0, 0.0),
-    Kg_
+    kappa_(2.03684e-01, -2.3168e-04, 0.0, 0.0, 0.0, 0.0),
+    kappag_
     (
        -5.664925956707e+02,
         8.896721676320e-01,
@@ -141,8 +141,8 @@ Foam::IDEA::IDEA
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -160,8 +160,8 @@ Foam::IDEA::IDEA(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -179,8 +179,8 @@ Foam::IDEA::IDEA(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -198,8 +198,8 @@ Foam::IDEA::IDEA(const IDEA& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

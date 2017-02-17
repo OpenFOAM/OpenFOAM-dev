@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ namespace Foam
 Foam::specie::specie(Istream& is)
 :
     name_(is),
-    nMoles_(readScalar(is)),
+    Y_(readScalar(is)),
     molWeight_(readScalar(is))
 {
     is.check("specie::specie(Istream& is)");
@@ -50,7 +50,7 @@ Foam::specie::specie(Istream& is)
 Foam::specie::specie(const dictionary& dict)
 :
     name_(dict.dictName()),
-    nMoles_(readScalar(dict.subDict("specie").lookup("nMoles"))),
+    Y_(dict.subDict("specie").lookupOrDefault("massFraction", 1.0)),
     molWeight_(readScalar(dict.subDict("specie").lookup("molWeight")))
 {}
 
@@ -60,7 +60,10 @@ Foam::specie::specie(const dictionary& dict)
 void Foam::specie::write(Ostream& os) const
 {
     dictionary dict("specie");
-    dict.add("nMoles", nMoles_);
+    if (Y_ != 1)
+    {
+        dict.add("massFraction", Y_);
+    }
     dict.add("molWeight", molWeight_);
     os  << indent << dict.dictName() << dict;
 }
@@ -71,7 +74,7 @@ void Foam::specie::write(Ostream& os) const
 Foam::Ostream& Foam::operator<<(Ostream& os, const specie& st)
 {
     os  << st.name_ << tab
-        << st.nMoles_ << tab
+        << st.Y_ << tab
         << st.molWeight_;
 
     os.check("Ostream& operator<<(Ostream& os, const specie& st)");

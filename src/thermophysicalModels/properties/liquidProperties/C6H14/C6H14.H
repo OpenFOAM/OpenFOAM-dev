@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,8 +71,8 @@ class C6H14
         NSRDSfunc4 B_;
         NSRDSfunc1 mu_;
         NSRDSfunc2 mug_;
-        NSRDSfunc0 K_;
-        NSRDSfunc2 Kg_;
+        NSRDSfunc0 kappa_;
+        NSRDSfunc2 kappag_;
         NSRDSfunc6 sigma_;
         APIdiffCoefFunc D_;
 
@@ -153,10 +153,10 @@ public:
         inline scalar mug(scalar p, scalar T) const;
 
         //- Liquid thermal conductivity  [W/(m K)]
-        inline scalar K(scalar p, scalar T) const;
+        inline scalar kappa(scalar p, scalar T) const;
 
         //- Vapour thermal conductivity  [W/(m K)]
-        inline scalar Kg(scalar p, scalar T) const;
+        inline scalar kappag(scalar p, scalar T) const;
 
         //- Surface tension [N/m]
         inline scalar sigma(scalar p, scalar T) const;
@@ -183,8 +183,8 @@ public:
             B_.writeData(os); os << nl;
             mu_.writeData(os); os << nl;
             mug_.writeData(os); os << nl;
-            K_.writeData(os); os << nl;
-            Kg_.writeData(os); os << nl;
+            kappa_.writeData(os); os << nl;
+            kappag_.writeData(os); os << nl;
             sigma_.writeData(os); os << nl;
             D_.writeData(os); os << endl;
         }

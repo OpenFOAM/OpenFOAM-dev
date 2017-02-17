@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,23 +101,23 @@ inline Foam::scalar Foam::perfectFluid<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::h(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::H(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::cp(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::Cp(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::s(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::S(scalar p, scalar T) const
 {
-    return -RR*log(p/Pstd);
+    return -this->R()*log(p/Pstd);
 }
 
 
@@ -136,7 +136,7 @@ inline Foam::scalar Foam::perfectFluid<Specie>::Z(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectFluid<Specie>::cpMcv(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectFluid<Specie>::CpMCv(scalar p, scalar T) const
 {
     return 0;
 }
@@ -150,33 +150,17 @@ inline void Foam::perfectFluid<Specie>::operator+=
     const perfectFluid<Specie>& pf
 )
 {
-    scalar molr1 = this->nMoles();
-
+    scalar Y1 = this->Y();
     Specie::operator+=(pf);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = pf.nMoles()/this->nMoles();
+    if (mag(this->Y()) > SMALL)
+    {
+        Y1 /= this->Y();
+        const scalar Y2 = pf.Y()/this->Y();
 
-    R_ = 1.0/(molr1/R_ + molr2/pf.R_);
-    rho0_ = molr1*rho0_ + molr2*pf.rho0_;
-}
-
-
-template<class Specie>
-inline void Foam::perfectFluid<Specie>::operator-=
-(
-    const perfectFluid<Specie>& pf
-)
-{
-    scalar molr1 = this->nMoles();
-
-    Specie::operator-=(pf);
-
-    molr1 /= this->nMoles();
-    scalar molr2 = pf.nMoles()/this->nMoles();
-
-    R_ = 1.0/(molr1/R_ - molr2/pf.R_);
-    rho0_ = molr1*rho0_ - molr2*pf.rho0_;
+        R_ = 1.0/(Y1/R_ + Y2/pf.R_);
+        rho0_ = Y1*rho0_ + Y2*pf.rho0_;
+    }
 }
 
 
@@ -196,38 +180,33 @@ inline Foam::perfectFluid<Specie> Foam::operator+
     const perfectFluid<Specie>& pf2
 )
 {
-    scalar nMoles = pf1.nMoles() + pf2.nMoles();
-    scalar molr1 = pf1.nMoles()/nMoles;
-    scalar molr2 = pf2.nMoles()/nMoles;
-
-    return perfectFluid<Specie>
+    Specie sp
     (
         static_cast<const Specie&>(pf1)
-      + static_cast<const Specie&>(pf2),
-        1.0/(molr1/pf1.R_ + molr2/pf2.R_),
-        molr1*pf1.rho0_ + molr2*pf2.rho0_
+      + static_cast<const Specie&>(pf2)
     );
-}
 
+    if (mag(sp.Y()) < SMALL)
+    {
+        return perfectFluid<Specie>
+        (
+            sp,
+            pf1.R_,
+            pf1.rho0_
+        );
+    }
+    else
+    {
+        const scalar Y1 = pf1.Y()/sp.Y();
+        const scalar Y2 = pf2.Y()/sp.Y();
 
-template<class Specie>
-inline Foam::perfectFluid<Specie> Foam::operator-
-(
-    const perfectFluid<Specie>& pf1,
-    const perfectFluid<Specie>& pf2
-)
-{
-    scalar nMoles = pf1.nMoles() + pf2.nMoles();
-    scalar molr1 = pf1.nMoles()/nMoles;
-    scalar molr2 = pf2.nMoles()/nMoles;
-
-    return perfectFluid<Specie>
-    (
-        static_cast<const Specie&>(pf1)
-      - static_cast<const Specie&>(pf2),
-        1.0/(molr1/pf1.R_ - molr2/pf2.R_),
-        molr1*pf1.rho0_ - molr2*pf2.rho0_
-    );
+        return perfectFluid<Specie>
+        (
+            sp,
+            1.0/(Y1/pf1.R_ + Y2/pf2.R_),
+            Y1*pf1.rho0_ + Y2*pf2.rho0_
+        );
+    }
 }
 
 
@@ -254,7 +233,21 @@ inline Foam::perfectFluid<Specie> Foam::operator==
     const perfectFluid<Specie>& pf2
 )
 {
-    return pf2 - pf1;
+    Specie sp
+    (
+        static_cast<const Specie&>(pf1)
+     == static_cast<const Specie&>(pf2)
+    );
+
+    const scalar Y1 = pf1.Y()/sp.Y();
+    const scalar Y2 = pf2.Y()/sp.Y();
+
+    return perfectFluid<Specie>
+    (
+        sp,
+        1.0/(Y2/pf2.R_ - Y1/pf1.R_),
+        Y2*pf2.rho0_ - Y1*pf1.rho0_
+    );
 }
 
 

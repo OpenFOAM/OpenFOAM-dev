@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,23 +35,23 @@ namespace Foam
 inline specie::specie
 (
     const word& name,
-    const scalar nMoles,
+    const scalar Y,
     const scalar molWeight
 )
 :
     name_(name),
-    nMoles_(nMoles),
+    Y_(Y),
     molWeight_(molWeight)
 {}
 
 
 inline specie::specie
 (
-    const scalar nMoles,
+    const scalar Y,
     const scalar molWeight
 )
 :
-    nMoles_(nMoles),
+    Y_(Y),
     molWeight_(molWeight)
 {}
 
@@ -61,7 +61,7 @@ inline specie::specie
 inline specie::specie(const specie& st)
 :
     name_(st.name_),
-    nMoles_(st.nMoles_),
+    Y_(st.Y_),
     molWeight_(st.molWeight_)
 {}
 
@@ -69,7 +69,7 @@ inline specie::specie(const specie& st)
 inline specie::specie(const word& name, const specie& st)
 :
     name_(name),
-    nMoles_(st.nMoles_),
+    Y_(st.Y_),
     molWeight_(st.molWeight_)
 {}
 
@@ -88,9 +88,9 @@ inline scalar specie::W() const
 }
 
 
-inline scalar specie::nMoles() const
+inline scalar specie::Y() const
 {
-    return nMoles_;
+    return Y_;
 }
 
 
@@ -105,42 +105,26 @@ inline scalar specie::R() const
 inline void specie::operator=(const specie& st)
 {
     //name_ = st.name_;
-    nMoles_ = st.nMoles_;
+    Y_ = st.Y_;
     molWeight_ = st.molWeight_;
 }
 
 
 inline void specie::operator+=(const specie& st)
 {
-    scalar sumNmoles = max(nMoles_ + st.nMoles_, SMALL);
-
-    molWeight_ =
-        nMoles_/sumNmoles*molWeight_
-      + st.nMoles_/sumNmoles*st.molWeight_;
-
-    nMoles_ = sumNmoles;
-}
-
-
-inline void specie::operator-=(const specie& st)
-{
-    scalar diffnMoles = nMoles_ - st.nMoles_;
-    if (mag(diffnMoles) < SMALL)
+    const scalar sumY = Y_ + st.Y_;
+    if (mag(sumY) > SMALL)
     {
-        diffnMoles = SMALL;
+        molWeight_ = sumY/(Y_/molWeight_ + st.Y_/st.molWeight_);
     }
 
-    molWeight_ =
-        nMoles_/diffnMoles*molWeight_
-      - st.nMoles_/diffnMoles*st.molWeight_;
-
-    nMoles_ = diffnMoles;
+    Y_ = sumY;
 }
 
 
 inline void specie::operator*=(const scalar s)
 {
-    nMoles_ *= s;
+    Y_ *= s;
 }
 
 
@@ -148,31 +132,20 @@ inline void specie::operator*=(const scalar s)
 
 inline specie operator+(const specie& st1, const specie& st2)
 {
-    scalar sumNmoles = max(st1.nMoles_ + st2.nMoles_, SMALL);
+    const scalar sumY = max(st1.Y_ + st2.Y_, SMALL);
 
-    return specie
-    (
-        sumNmoles,
-        st1.nMoles_/sumNmoles*st1.molWeight_
-      + st2.nMoles_/sumNmoles*st2.molWeight_
-    );
-}
-
-
-inline specie operator-(const specie& st1, const specie& st2)
-{
-    scalar diffNmoles = st1.nMoles_ - st2.nMoles_;
-    if (mag(diffNmoles) < SMALL)
+    if (mag(sumY) > SMALL)
     {
-        diffNmoles = SMALL;
+        return specie
+        (
+            sumY,
+            sumY/(st1.Y_/st1.molWeight_ + st2.Y_/st2.molWeight_)
+        );
     }
-
-    return specie
-    (
-        diffNmoles,
-        st1.nMoles_/diffNmoles*st1.molWeight_
-      - st2.nMoles_/diffNmoles*st2.molWeight_
-    );
+    else
+    {
+        return st1;
+    }
 }
 
 
@@ -180,7 +153,7 @@ inline specie operator*(const scalar s, const specie& st)
 {
     return specie
     (
-        s*st.nMoles_,
+        s*st.Y_,
         st.molWeight_
     );
 }
@@ -188,7 +161,22 @@ inline specie operator*(const scalar s, const specie& st)
 
 inline specie operator==(const specie& st1, const specie& st2)
 {
-    return st2 - st1;
+    scalar diffY = st2.Y_ - st1.Y_;
+    if (mag(diffY) < SMALL)
+    {
+        diffY = SMALL;
+    }
+
+    const scalar diffRW =
+        st2.Y_/st2.molWeight_ - st1.Y_/st1.molWeight_;
+
+    scalar molWeight = GREAT;
+    if (mag(diffRW) > SMALL)
+    {
+        molWeight = diffY/diffRW;
+    }
+
+    return specie(diffY, molWeight);
 }
 
 

@@ -19,7 +19,6 @@ wood
 {
     specie
     {
-        nMoles      1;
         molWeight   100;
     }
     transport
@@ -41,7 +40,6 @@ char
 {
     specie
     {
-        nMoles      1;
         molWeight   50;
     }
     transport

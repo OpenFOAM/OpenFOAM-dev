@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class solidProperties
         scalar Cp_;
 
         //- Thermal conductivity [W/(m.K)]
-        scalar K_;
+        scalar kappa_;
 
         //- Heat of formation [J/kg]
         scalar Hf_;
@@ -168,7 +168,7 @@ public:
             inline scalar Cp() const;
 
             //- Thermal conductivity [W/(m.K)]
-            inline scalar K() const;
+            inline scalar kappa() const;
 
             //- Heat of formation [J/kg]
             inline scalar Hf() const;

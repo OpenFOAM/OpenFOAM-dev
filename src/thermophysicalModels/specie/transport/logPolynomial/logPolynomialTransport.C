@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,10 +37,7 @@ Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
     Thermo(is),
     muCoeffs_("muLogCoeffs<" + Foam::name(PolySize) + '>', is),
     kappaCoeffs_("kappaLogCoeffs<" + Foam::name(PolySize) + '>', is)
-{
-    muCoeffs_ *= this->W();
-    kappaCoeffs_ *= this->W();
-}
+{}
 
 
 template<class Thermo, int PolySize>
@@ -64,10 +61,7 @@ Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
             "kappaLogCoeffs<" + Foam::name(PolySize) + '>'
         )
     )
-{
-    muCoeffs_ *= this->W();
-    kappaCoeffs_ *= this->W();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -84,12 +78,12 @@ void Foam::logPolynomialTransport<Thermo, PolySize>::write(Ostream& os) const
     dict.add
     (
         word("muLogCoeffs<" + Foam::name(PolySize) + '>'),
-        muCoeffs_/this->W()
+        muCoeffs_
     );
     dict.add
     (
         word("kappaLogCoeffs<" + Foam::name(PolySize) + '>'),
-        kappaCoeffs_/this->W()
+        kappaCoeffs_
     );
     os  << indent << dict.dictName() << dict;
 
@@ -108,9 +102,9 @@ Foam::Ostream& Foam::operator<<
 {
     os  << static_cast<const Thermo&>(pt) << tab
         << "muLogCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << pt.muCoeffs_/pt.W() << tab
+        << pt.muCoeffs_ << tab
         << "kappaLogCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << pt.kappaCoeffs_/pt.W();
+        << pt.kappaCoeffs_;
 
     os.check
     (

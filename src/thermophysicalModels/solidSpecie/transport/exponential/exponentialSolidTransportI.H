@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,31 +128,14 @@ inline void Foam::exponentialSolidTransport<Thermo>::operator+=
     const exponentialSolidTransport<Thermo>& ct
 )
 {
-    scalar molr1 = this->nMoles();
+    scalar Y1 = this->Y();
 
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
+    Y1 /= this->Y();
+    scalar Y2 = ct.Y()/this->Y();
 
-    kappa0_ = molr1*kappa0_ + molr2*ct.kappa0_;
-    n0_ = (molr1*n0_ + molr2*ct.n0_);
-    Tref_ = (molr1*Tref_ + molr2*ct.Tref_);
-}
-
-
-template<class Thermo>
-inline void Foam::exponentialSolidTransport<Thermo>::operator-=
-(
-    const exponentialSolidTransport<Thermo>& ct
-)
-{
-    scalar molr1 = this->nMoles();
-
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
-
-    kappa0_ = (molr1*kappa0_ - molr2*ct.kappa0_);
-    n0_ = (molr1*n0_ - molr2*ct.n0_);
-    Tref_ = (molr1*Tref_ - molr2*ct.Tref_);
+    kappa0_ = Y1*kappa0_ + Y2*ct.kappa0_;
+    n0_ = (Y1*n0_ + Y2*ct.n0_);
+    Tref_ = (Y1*Tref_ + Y2*ct.Tref_);
 }
 
 

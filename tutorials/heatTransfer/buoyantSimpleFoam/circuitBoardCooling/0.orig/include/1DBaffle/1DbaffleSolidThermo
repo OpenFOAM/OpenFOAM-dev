@@ -8,7 +8,6 @@
 
 specie
 {
-    nMoles          1;
     molWeight       20;
 }
 transport

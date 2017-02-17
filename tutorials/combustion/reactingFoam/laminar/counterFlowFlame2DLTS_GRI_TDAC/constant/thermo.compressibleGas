@@ -19,7 +19,6 @@ O2
 {
     specie
     {
-        nMoles          1;
         molWeight       31.9988;
     }
     elements
@@ -45,7 +44,6 @@ H2O
 {
     specie
     {
-        nMoles          1;
         molWeight       18.0153;
     }
     elements
@@ -72,7 +70,6 @@ CH4
 {
     specie
     {
-        nMoles          1;
         molWeight       16.0428;
     }
     elements
@@ -99,7 +96,6 @@ CO2
 {
     specie
     {
-        nMoles          1;
         molWeight       44.01;
     }
     elements
@@ -126,7 +122,6 @@ N2
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0134;
     }
     elements

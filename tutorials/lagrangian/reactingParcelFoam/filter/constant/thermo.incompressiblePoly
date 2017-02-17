@@ -19,7 +19,6 @@ N2
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0134;
     }
     equationOfState
@@ -43,7 +42,6 @@ O2
 {
     specie
     {
-        nMoles          1;
         molWeight       31.9988;
     }
     equationOfState
@@ -67,7 +65,6 @@ H2O
 {
     specie
     {
-        nMoles          1;
         molWeight       18.0153;
     }
     equationOfState
@@ -91,7 +88,6 @@ air
 {
     specie
     {
-        nMoles          1;
         molWeight       28.85;
     }
     equationOfState

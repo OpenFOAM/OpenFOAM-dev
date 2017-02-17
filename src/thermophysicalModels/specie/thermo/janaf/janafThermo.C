@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,31 +57,6 @@ void Foam::janafThermo<EquationOfState>::checkInputData() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-Foam::janafThermo<EquationOfState>::janafThermo(Istream& is)
-:
-    EquationOfState(is),
-    Tlow_(readScalar(is)),
-    Thigh_(readScalar(is)),
-    Tcommon_(readScalar(is))
-{
-    checkInputData();
-
-    forAll(highCpCoeffs_, i)
-    {
-        is >> highCpCoeffs_[i];
-    }
-
-    forAll(lowCpCoeffs_, i)
-    {
-        is >> lowCpCoeffs_[i];
-    }
-
-    // Check state of Istream
-    is.check("janafThermo::janafThermo(Istream& is)");
-}
-
-
-template<class EquationOfState>
 Foam::janafThermo<EquationOfState>::janafThermo(const dictionary& dict)
 :
     EquationOfState(dict),
@@ -91,6 +66,13 @@ Foam::janafThermo<EquationOfState>::janafThermo(const dictionary& dict)
     highCpCoeffs_(dict.subDict("thermodynamics").lookup("highCpCoeffs")),
     lowCpCoeffs_(dict.subDict("thermodynamics").lookup("lowCpCoeffs"))
 {
+    // Convert coefficients to mass-basis
+    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
+    {
+        highCpCoeffs_[coefLabel] *= this->R();
+        lowCpCoeffs_[coefLabel] *= this->R();
+    }
+
     checkInputData();
 }
 
@@ -102,12 +84,21 @@ void Foam::janafThermo<EquationOfState>::write(Ostream& os) const
 {
     EquationOfState::write(os);
 
+    // Convert coefficients back to dimensionless form
+    coeffArray highCpCoeffs;
+    coeffArray lowCpCoeffs;
+    for (label coefLabel=0; coefLabel<nCoeffs_; coefLabel++)
+    {
+        highCpCoeffs[coefLabel] = highCpCoeffs_[coefLabel]/this->R();
+        lowCpCoeffs[coefLabel] = lowCpCoeffs_[coefLabel]/this->R();
+    }
+
     dictionary dict("thermodynamics");
     dict.add("Tlow", Tlow_);
     dict.add("Thigh", Thigh_);
     dict.add("Tcommon", Tcommon_);
-    dict.add("highCpCoeffs", highCpCoeffs_);
-    dict.add("lowCpCoeffs", lowCpCoeffs_);
+    dict.add("highCpCoeffs", highCpCoeffs);
+    dict.add("lowCpCoeffs", lowCpCoeffs);
     os  << indent << dict.dictName() << dict;
 }
 
@@ -130,14 +121,14 @@ Foam::Ostream& Foam::operator<<
 
     forAll(jt.highCpCoeffs_, i)
     {
-        os << jt.highCpCoeffs_[i] << ' ';
+        os << jt.highCpCoeffs_[i]/jt.R() << ' ';
     }
 
     os << nl << "    ";
 
     forAll(jt.lowCpCoeffs_, i)
     {
-        os << jt.lowCpCoeffs_[i] << ' ';
+        os << jt.lowCpCoeffs_[i]/jt.R() << ' ';
     }
 
     os << endl;

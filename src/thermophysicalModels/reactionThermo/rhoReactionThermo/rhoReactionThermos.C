@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,7 +261,7 @@ makeReactionMixtureThermo
 );
 
 
-    // Multi-component reaction thermo
+// Multi-component reaction thermo
 
 makeReactionMixtureThermo
 (
@@ -316,8 +316,6 @@ makeReactionMixtureThermo
     singleStepReactingMixture,
     gasEThermoPhysics
 );
-
-
 
 
 // Multi-component thermo for sensible enthalpy

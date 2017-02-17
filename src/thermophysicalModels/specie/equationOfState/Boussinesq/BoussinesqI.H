@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,21 +121,21 @@ inline Foam::scalar Foam::Boussinesq<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::Boussinesq<Specie>::h(scalar p, scalar T) const
+inline Foam::scalar Foam::Boussinesq<Specie>::H(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::Boussinesq<Specie>::cp(scalar p, scalar T) const
+inline Foam::scalar Foam::Boussinesq<Specie>::Cp(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::Boussinesq<Specie>::s
+inline Foam::scalar Foam::Boussinesq<Specie>::S
 (
     scalar p,
     scalar T
@@ -168,13 +168,13 @@ inline Foam::scalar Foam::Boussinesq<Specie>::Z
 
 
 template<class Specie>
-inline Foam::scalar Foam::Boussinesq<Specie>::cpMcv
+inline Foam::scalar Foam::Boussinesq<Specie>::CpMCv
 (
     scalar p,
     scalar T
 ) const
 {
-    return RR;
+    return this->R();
 }
 
 
@@ -200,27 +200,18 @@ inline void Foam::Boussinesq<Specie>::operator+=
     const Boussinesq<Specie>& b
 )
 {
-    scalar molr1 = this->nMoles();
+    scalar Y1 = this->Y();
     Specie::operator+=(b);
-    molr1 /= this->nMoles();
-    scalar molr2 = b.nMoles()/this->nMoles();
 
-    rho0_ = molr1*rho0_ + molr2*b.rho0_;
-    T0_ = molr1*T0_ + molr2*b.T0_;
-    beta_ = molr1*beta_ + molr2*b.beta_;
-}
+    if (mag(this->Y()) > SMALL)
+    {
+        Y1 /= this->Y();
+        const scalar Y2 = b.Y()/this->Y();
 
-
-template<class Specie>
-inline void Foam::Boussinesq<Specie>::operator-=
-(
-    const Boussinesq<Specie>& b
-)
-{
-    Specie::operator-=(b);
-    rho0_ = b.rho0_;
-    T0_ = b.T0_;
-    beta_ = b.beta_;
+        rho0_ = Y1*rho0_ + Y2*b.rho0_;
+        T0_ = Y1*T0_ + Y2*b.T0_;
+        beta_ = Y1*beta_ + Y2*b.beta_;
+    }
 }
 
 
@@ -240,36 +231,31 @@ inline Foam::Boussinesq<Specie> Foam::operator+
     const Boussinesq<Specie>& b2
 )
 {
-    scalar nMoles = b1.nMoles() + b2.nMoles();
-    scalar molr1 = b1.nMoles()/nMoles;
-    scalar molr2 = b2.nMoles()/nMoles;
+    Specie sp(static_cast<const Specie&>(b1) + static_cast<const Specie&>(b2));
 
-    return Boussinesq<Specie>
-    (
-        static_cast<const Specie&>(b1)
-      + static_cast<const Specie&>(b2),
-        molr1*b1.rho0_ + molr2*b2.rho0_,
-        molr1*b1.T0_ + molr2*b2.T0_,
-        molr1*b1.beta_ + molr2*b2.beta_
-    );
-}
+    if (mag(sp.Y()) < SMALL)
+    {
+        return Boussinesq<Specie>
+        (
+            sp,
+            b1.rho0_,
+            b1.T0_,
+            b1.beta_
+        );
+    }
+    else
+    {
+        const scalar Y1 = b1.Y()/sp.Y();
+        const scalar Y2 = b2.Y()/sp.Y();
 
-
-template<class Specie>
-inline Foam::Boussinesq<Specie> Foam::operator-
-(
-    const Boussinesq<Specie>& b1,
-    const Boussinesq<Specie>& b2
-)
-{
-    return Boussinesq<Specie>
-    (
-        static_cast<const Specie&>(b1)
-      - static_cast<const Specie&>(b2),
-        b1.rho0_ - b2.rho0_,
-        b1.T0_ - b2.T0_,
-        b1.beta_ - b2.beta_
-    );
+        return Boussinesq<Specie>
+        (
+            sp,
+            Y1*b1.rho0_ + Y2*b2.rho0_,
+            Y1*b1.T0_ + Y2*b2.T0_,
+            Y1*b1.beta_ + Y2*b2.beta_
+        );
+    }
 }
 
 
@@ -293,11 +279,22 @@ inline Foam::Boussinesq<Specie> Foam::operator*
 template<class Specie>
 inline Foam::Boussinesq<Specie> Foam::operator==
 (
-    const Boussinesq<Specie>& pg1,
-    const Boussinesq<Specie>& pg2
+    const Boussinesq<Specie>& b1,
+    const Boussinesq<Specie>& b2
 )
 {
-    return pg2 - pg1;
+    Specie sp(static_cast<const Specie&>(b1) == static_cast<const Specie&>(b2));
+
+    const scalar Y1 = b1.Y()/sp.Y();
+    const scalar Y2 = b2.Y()/sp.Y();
+
+    return Boussinesq<Specie>
+    (
+        sp,
+        Y2*b2.rho0_ - Y1*b1.rho0_,
+        Y2*b2.T0_   - Y1*b1.T0_,
+        Y2*b2.beta_ - Y1*b1.beta_
+    );
 }
 
 

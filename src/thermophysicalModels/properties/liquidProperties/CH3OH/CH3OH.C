@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,8 @@ Foam::CH3OH::CH3OH()
     ),
     mu_(-7.288, 1065.3, -0.6657, 0.0, 0.0),
     mug_(3.0663e-07, 0.69655, 205.0, 0.0),
-    K_(0.2837, -0.000281, 0.0, 0.0, 0.0, 0.0),
-    Kg_(-7.763, 1.0279, -74360000.0, 6770000000.0),
+    kappa_(0.2837, -0.000281, 0.0, 0.0, 0.0, 0.0),
+    kappag_(-7.763, 1.0279, -74360000.0, 6770000000.0),
     sigma_(512.58, 0.056, -0.00014583, 1.08e-07, 0.0, 0.0),
     D_(147.18, 20.1, 32.042, 28.0) // note: Same as nHeptane
 {}
@@ -121,8 +121,8 @@ Foam::CH3OH::CH3OH
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -140,8 +140,8 @@ Foam::CH3OH::CH3OH(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -159,8 +159,8 @@ Foam::CH3OH::CH3OH(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -178,8 +178,8 @@ Foam::CH3OH::CH3OH(const CH3OH& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

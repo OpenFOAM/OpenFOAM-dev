@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,7 @@ public:
     // Selectors
 
         //- Return a pointer to a new liquidProperties created from input
-        static autoPtr<liquidProperties> New(Istream& is);
+    // static autoPtr<liquidProperties> New(Istream& is);
 
         //- Return a pointer to a new liquidProperties created from dictionary
         static autoPtr<liquidProperties> New(const dictionary& dict);
@@ -178,6 +178,17 @@ public:
 
             //- Molecular weight [kg/kmol]
             inline scalar W() const;
+
+            //- No of moles of this species in mixture
+            //  Note Mixing of liquidProperties is not currently supported
+            //  so Y = 1
+            inline scalar Y() const;
+
+            //- Is the equation of state is incompressible i.e. rho != f(p)
+            static const bool incompressible = true;
+
+            //- Is the equation of state is isochoric i.e. rho = const
+            static const bool isochoric = false;
 
             //- Critical temperature [K]
             inline scalar Tc() const;
@@ -209,11 +220,44 @@ public:
             //- Solubility parameter [(J/m^3)^(1/2)]
             inline scalar delta() const;
 
+            //- Limit the temperature to be in the range Tlow_ to Thigh_
+            inline scalar limit(const scalar T) const;
 
-        // Physical property pure virtual functions
 
-            //- Liquid rho [kg/m^3]
+        // Fundamental equation of state properties
+
+            //- Liquid density [kg/m^3]
             virtual scalar rho(scalar p, scalar T) const;
+
+            //- Liquid compressibility rho/p [s^2/m^2]
+            //  Note: currently it is assumed the liquid is incompressible
+            inline scalar psi(scalar p, scalar T) const;
+
+            //- Return (Cp - Cv) [J/(kg K]
+            //  Note: currently it is assumed the liquid is incompressible
+            //  so CpMCv = 0
+            inline scalar CpMCv(scalar p, scalar T) const;
+
+
+        // Fundamental thermodynamic properties
+
+            //- Heat capacity at constant pressure [J/(kg K)]
+            virtual scalar Cp(const scalar p, const scalar T) const;
+
+            //- Absolute Enthalpy [J/kg]
+            inline scalar Ha(const scalar p, const scalar T) const;
+
+            //- Sensible enthalpy [J/kg]
+            inline scalar Hs(const scalar p, const scalar T) const;
+
+            //- Chemical enthalpy [J/kg]
+            inline scalar Hc() const;
+
+            // Entropy [J/(kg K)]
+            // inline scalar S(const scalar p, const scalar T) const;
+
+
+        // Physical properties
 
             //- Vapour pressure [Pa]
             virtual scalar pv(scalar p, scalar T) const;
@@ -221,13 +265,10 @@ public:
             //- Heat of vapourisation [J/kg]
             virtual scalar hl(scalar p, scalar T) const;
 
-            //- Liquid heat capacity [J/(kg K)]
-            virtual scalar Cp(scalar p, scalar T) const;
-
             //- Liquid enthalpy [J/kg] - reference to 298.15 K
             virtual scalar h(scalar p, scalar T) const;
 
-            //- Ideal gas heat capacity [J/(kg K)]
+            //- Vapour heat capacity [J/(kg K)]
             virtual scalar Cpg(scalar p, scalar T) const;
 
             //- Liquid viscosity [Pa s]
@@ -237,10 +278,13 @@ public:
             virtual scalar mug(scalar p, scalar T) const;
 
             //- Liquid thermal conductivity  [W/(m K)]
-            virtual scalar K(scalar p, scalar T) const;
+            virtual scalar kappa(scalar p, scalar T) const;
+
+            //- Liquid thermal diffusivity of enthalpy [kg/ms]
+            inline scalar alphah(const scalar p, const scalar T) const;
 
             //- Vapour thermal conductivity  [W/(m K)]
-            virtual scalar Kg(scalar p, scalar T) const;
+            virtual scalar kappag(scalar p, scalar T) const;
 
             //- Surface tension [N/m]
             virtual scalar sigma(scalar p, scalar T) const;

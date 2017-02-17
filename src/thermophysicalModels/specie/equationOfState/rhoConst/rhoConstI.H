@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,21 +79,21 @@ inline Foam::scalar Foam::rhoConst<Specie>::rho(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::rhoConst<Specie>::h(scalar p, scalar T) const
+inline Foam::scalar Foam::rhoConst<Specie>::H(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::rhoConst<Specie>::cp(scalar p, scalar T) const
+inline Foam::scalar Foam::rhoConst<Specie>::Cp(scalar p, scalar T) const
 {
     return 0;
 }
 
 
 template<class Specie>
-inline Foam::scalar Foam::rhoConst<Specie>::s(scalar p, scalar T) const
+inline Foam::scalar Foam::rhoConst<Specie>::S(scalar p, scalar T) const
 {
     return 0;
 }
@@ -114,7 +114,7 @@ inline Foam::scalar Foam::rhoConst<Specie>::Z(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::rhoConst<Specie>::cpMcv(scalar p, scalar T) const
+inline Foam::scalar Foam::rhoConst<Specie>::CpMCv(scalar p, scalar T) const
 {
     return 0;
 }
@@ -125,28 +125,16 @@ inline Foam::scalar Foam::rhoConst<Specie>::cpMcv(scalar p, scalar T) const
 template<class Specie>
 inline void Foam::rhoConst<Specie>::operator+=(const rhoConst<Specie>& ico)
 {
-    scalar molr1 = this->nMoles();
-
+    scalar Y1 = this->Y();
     Specie::operator+=(ico);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = ico.nMoles()/this->nMoles();
+    if (mag(this->Y()) > SMALL)
+    {
+        Y1 /= this->Y();
+        const scalar Y2 = ico.Y()/this->Y();
 
-    rho_ = molr1*rho_ + molr2*ico.rho_;
-}
-
-
-template<class Specie>
-inline void Foam::rhoConst<Specie>::operator-=(const rhoConst<Specie>& ico)
-{
-    scalar molr1 = this->nMoles();
-
-    Specie::operator-=(ico);
-
-    molr1 /= this->nMoles();
-    scalar molr2 = ico.nMoles()/this->nMoles();
-
-    rho_ = molr1*rho_ - molr2*ico.rho_;
+        rho_ = Y1*rho_ + Y2*ico.rho_;
+    }
 }
 
 
@@ -166,36 +154,31 @@ inline Foam::rhoConst<Specie> Foam::operator+
     const rhoConst<Specie>& ico2
 )
 {
-    scalar nMoles = ico1.nMoles() + ico2.nMoles();
-    scalar molr1 = ico1.nMoles()/nMoles;
-    scalar molr2 = ico2.nMoles()/nMoles;
-
-    return rhoConst<Specie>
+    Specie sp
     (
         static_cast<const Specie&>(ico1)
-      + static_cast<const Specie&>(ico2),
-        molr1*ico1.rho_ + molr2*ico2.rho_
+      + static_cast<const Specie&>(ico2)
     );
-}
 
+    if (mag(sp.Y()) < SMALL)
+    {
+        return rhoConst<Specie>
+        (
+            sp,
+            ico1.rho_
+        );
+    }
+    else
+    {
+        const scalar Y1 = ico1.Y()/sp.Y();
+        const scalar Y2 = ico2.Y()/sp.Y();
 
-template<class Specie>
-inline Foam::rhoConst<Specie> Foam::operator-
-(
-    const rhoConst<Specie>& ico1,
-    const rhoConst<Specie>& ico2
-)
-{
-    scalar nMoles = ico1.nMoles() + ico2.nMoles();
-    scalar molr1 = ico1.nMoles()/nMoles;
-    scalar molr2 = ico2.nMoles()/nMoles;
-
-    return rhoConst<Specie>
-    (
-        static_cast<const Specie&>(ico1)
-      - static_cast<const Specie&>(ico2),
-        molr1*ico1.rho_ - molr2*ico2.rho_
-    );
+        return rhoConst<Specie>
+        (
+            sp,
+            Y1*ico1.rho_ + Y2*ico2.rho_
+        );
+    }
 }
 
 
@@ -217,7 +200,20 @@ inline Foam::rhoConst<Specie> Foam::operator==
     const rhoConst<Specie>& ico2
 )
 {
-    return ico2 - ico1;
+    Specie sp
+    (
+        static_cast<const Specie&>(ico1)
+     == static_cast<const Specie&>(ico2)
+    );
+
+    const scalar Y1 = ico1.Y()/sp.Y();
+    const scalar Y2 = ico2.Y()/sp.Y();
+
+    return rhoConst<Specie>
+    (
+        sp,
+        Y2*ico2.rho_ - Y1*ico1.rho_
+    );
 }
 
 

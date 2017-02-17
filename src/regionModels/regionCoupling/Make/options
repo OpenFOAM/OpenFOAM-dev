@@ -7,9 +7,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/SLGThermo/lnInclude\
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidChemistryModel/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/properties/liquidMixtureProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/properties/liquidProperties/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/properties/solidMixtureProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidSpecie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/properties/solidProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \

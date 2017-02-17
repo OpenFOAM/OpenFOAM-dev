@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,8 @@ Foam::C8H18::C8H18()
     ),
     mu_(-20.463, 1497.4, 1.379, 0.0, 0.0),
     mug_(3.1191e-08, 0.92925, 55.092, 0.0),
-    K_(0.2156, -0.00029483, 0.0, 0.0, 0.0, 0.0),
-    Kg_(-8758, 0.8448, -27121000000.0, 0.0),
+    kappa_(0.2156, -0.00029483, 0.0, 0.0, 0.0, 0.0),
+    kappag_(-8758, 0.8448, -27121000000.0, 0.0),
     sigma_(568.70, 0.052789, 1.2323, 0.0, 0.0, 0.0),
     D_(147.18, 20.1, 114.231, 28.0) // note: Same as nHeptane
 {}
@@ -121,8 +121,8 @@ Foam::C8H18::C8H18
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -140,8 +140,8 @@ Foam::C8H18::C8H18(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -159,8 +159,8 @@ Foam::C8H18::C8H18(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -178,8 +178,8 @@ Foam::C8H18::C8H18(const C8H18& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

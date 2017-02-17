@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,38 +147,17 @@ inline void Foam::constTransport<Thermo>::operator+=
     const constTransport<Thermo>& st
 )
 {
-    scalar molr1 = this->nMoles();
+    scalar Y1 = this->Y();
 
     Thermo::operator+=(st);
 
-    if (mag(molr1) + mag(st.nMoles()) > SMALL)
+    if (mag(this->Y()) > SMALL)
     {
-        molr1 /= this->nMoles();
-        scalar molr2 = st.nMoles()/this->nMoles();
+        Y1 /= this->Y();
+        scalar Y2 = st.Y()/this->Y();
 
-        mu_ = molr1*mu_ + molr2*st.mu_;
-        rPr_ = 1.0/(molr1/rPr_ + molr2/st.rPr_);
-    }
-}
-
-
-template<class Thermo>
-inline void Foam::constTransport<Thermo>::operator-=
-(
-    const constTransport<Thermo>& st
-)
-{
-    scalar molr1 = this->nMoles();
-
-    Thermo::operator-=(st);
-
-    if (mag(molr1) + mag(st.nMoles()) > SMALL)
-    {
-        molr1 /= this->nMoles();
-        scalar molr2 = st.nMoles()/this->nMoles();
-
-        mu_ = molr1*mu_ - molr2*st.mu_;
-        rPr_ = 1.0/(molr1/rPr_ - molr2/st.rPr_);
+        mu_ = Y1*mu_ + Y2*st.mu_;
+        rPr_ = 1.0/(Y1/rPr_ + Y2/st.rPr_);
     }
 }
 
@@ -207,7 +186,7 @@ inline Foam::constTransport<Thermo> Foam::operator+
         static_cast<const Thermo&>(ct1) + static_cast<const Thermo&>(ct2)
     );
 
-    if (mag(ct1.nMoles()) + mag(ct2.nMoles()) < SMALL)
+    if (mag(t.Y()) < SMALL)
     {
         return constTransport<Thermo>
         (
@@ -218,50 +197,14 @@ inline Foam::constTransport<Thermo> Foam::operator+
     }
     else
     {
-        scalar molr1 = ct1.nMoles()/t.nMoles();
-        scalar molr2 = ct2.nMoles()/t.nMoles();
+        scalar Y1 = ct1.Y()/t.Y();
+        scalar Y2 = ct2.Y()/t.Y();
 
         return constTransport<Thermo>
         (
             t,
-            molr1*ct1.mu_ + molr2*ct2.mu_,
-            1.0/(molr1/ct1.rPr_ + molr2/ct2.rPr_)
-        );
-    }
-}
-
-
-template<class Thermo>
-inline Foam::constTransport<Thermo> Foam::operator-
-(
-    const constTransport<Thermo>& ct1,
-    const constTransport<Thermo>& ct2
-)
-{
-    Thermo t
-    (
-        static_cast<const Thermo&>(ct1) - static_cast<const Thermo&>(ct2)
-    );
-
-    if (mag(ct1.nMoles()) + mag(ct2.nMoles()) < SMALL)
-    {
-        return constTransport<Thermo>
-        (
-            t,
-            0,
-            ct1.rPr_
-        );
-    }
-    else
-    {
-        scalar molr1 = ct1.nMoles()/t.nMoles();
-        scalar molr2 = ct2.nMoles()/t.nMoles();
-
-        return constTransport<Thermo>
-        (
-            t,
-            molr1*ct1.mu_ - molr2*ct2.mu_,
-            1.0/(molr1/ct1.rPr_ - molr2/ct2.rPr_)
+            Y1*ct1.mu_ + Y2*ct2.mu_,
+            1.0/(Y1/ct1.rPr_ + Y2/ct2.rPr_)
         );
     }
 }
@@ -280,17 +223,6 @@ inline Foam::constTransport<Thermo> Foam::operator*
         ct.mu_,
         1.0/ct.rPr_
     );
-}
-
-
-template<class Thermo>
-inline Foam::constTransport<Thermo> Foam::operator==
-(
-    const constTransport<Thermo>& ct1,
-    const constTransport<Thermo>& ct2
-)
-{
-    return ct2 - ct1;
 }
 
 

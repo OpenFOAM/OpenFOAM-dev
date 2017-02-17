@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,23 +55,9 @@ inline constTransport<Thermo> operator+
 );
 
 template<class Thermo>
-inline constTransport<Thermo> operator-
-(
-    const constTransport<Thermo>&,
-    const constTransport<Thermo>&
-);
-
-template<class Thermo>
 inline constTransport<Thermo> operator*
 (
     const scalar,
-    const constTransport<Thermo>&
-);
-
-template<class Thermo>
-inline constTransport<Thermo> operator==
-(
-    const constTransport<Thermo>&,
     const constTransport<Thermo>&
 );
 
@@ -165,8 +151,6 @@ public:
 
         inline void operator+=(const constTransport&);
 
-        inline void operator-=(const constTransport&);
-
         inline void operator*=(const scalar);
 
 
@@ -178,21 +162,9 @@ public:
             const constTransport&
         );
 
-        friend constTransport operator- <Thermo>
-        (
-            const constTransport&,
-            const constTransport&
-        );
-
         friend constTransport operator* <Thermo>
         (
             const scalar,
-            const constTransport&
-        );
-
-        friend constTransport operator== <Thermo>
-        (
-            const constTransport&,
             const constTransport&
         );
 

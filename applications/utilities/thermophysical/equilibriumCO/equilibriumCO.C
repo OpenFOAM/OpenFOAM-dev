@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,52 +73,44 @@ int main(int argc, char *argv[])
 
 
 
-    scalar P = 1e5;
-    scalar T = 3000.0;
+    const scalar P = 1e5;
+    const scalar T = 3000.0;
+
+    // Oxidant (mole-based)
+    thermo O2(thermoData.subDict("O2")); O2 *= O2.W();
+    thermo N2(thermoData.subDict("N2")); N2 *= N2.W();
+
+    // Intermediates (mole-based)
+    thermo H2(thermoData.subDict("H2")); H2 *= H2.W();
+    thermo OH(thermoData.subDict("OH")); OH *= OH.W();
+    thermo H(thermoData.subDict("H")); H *= H.W();
+    thermo O(thermoData.subDict("O")); O *= O.W();
+
+    // Products (mole-based)
+    thermo CO2(thermoData.subDict("CO2")); CO2 *= CO2.W();
+    thermo H2O(thermoData.subDict("H2O")); H2O *= H2O.W();
+    thermo CO(thermoData.subDict("CO")); CO *= CO.W();
 
     SLPtrList<thermo> EQreactions;
 
     EQreactions.append
     (
-        new thermo
-        (
-            thermo(thermoData.subDict("CO2"))
-         ==
-            thermo(thermoData.subDict("CO"))
-          + 0.5*thermo(thermoData.subDict("O2"))
-        )
+        new thermo(CO2 == CO + 0.5*O2)
     );
 
     EQreactions.append
     (
-        new thermo
-        (
-            thermo(thermoData.subDict("O2"))
-         ==
-            2.0*thermo(thermoData.subDict("O"))
-        )
+        new thermo(O2 == 2*O)
     );
 
     EQreactions.append
     (
-        new thermo
-        (
-            thermo(thermoData.subDict("H2O"))
-         ==
-            thermo(thermoData.subDict("H2"))
-          + 0.5*thermo(thermoData.subDict("O2"))
-        )
+        new thermo(H2O == H2 + 0.5*O2)
     );
 
     EQreactions.append
     (
-        new thermo
-        (
-            thermo(thermoData.subDict("H2O"))
-         ==
-            thermo(thermoData.subDict("H"))
-          + thermo(thermoData.subDict("OH"))
-        )
+        new thermo(H2O == H + OH)
     );
 
 

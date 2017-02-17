@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,13 +54,6 @@ template<class Thermo, template<class> class Type> class thermo;
 
 template<class Thermo, template<class> class Type>
 inline thermo<Thermo, Type> operator+
-(
-    const thermo<Thermo, Type>&,
-    const thermo<Thermo, Type>&
-);
-
-template<class Thermo, template<class> class Type>
-inline thermo<Thermo, Type> operator-
 (
     const thermo<Thermo, Type>&,
     const thermo<Thermo, Type>&
@@ -154,102 +147,94 @@ public:
                 + Type<thermo<Thermo, Type>>::typeName();
         }
 
+        //- Name of Enthalpy/Internal energy
+        static inline word heName();
+
+
         // Fundamental properties
         // (These functions must be provided in derived types)
 
-            // Heat capacity at constant pressure [J/(kmol K)]
-            // scalar cp(const scalar) const;
+            // Heat capacity at constant pressure [J/(kg K)]
+            // inline scalar Cp(const scalar p, const scalar T) const;
 
-            // Absolute Enthalpy [J/kmol]
-            // scalar ha(const scalar) const;
+            // Sensible enthalpy [J/kg]
+            // inline scalar Hs(const scalar p, const scalar T) const;
 
-            // Sensible enthalpy [J/kmol]
-            // scalar hs(const scalar) const;
+            // Chemical enthalpy [J/kg]
+            // inline scalar Hc() const;
 
-            // Chemical enthalpy [J/kmol]
-            // scalar hc(const scalar) const;
+            // Absolute Enthalpy [J/kg]
+            // inline scalar Ha(const scalar p, const scalar T) const;
 
-            // Entropy [J/(kmol K)]
-            // scalar s(const scalar) const;
-
-
-        // Calculate and return derived properties
-        // (These functions need not provided in derived types)
-
-            // Mole specific properties
-
-                //- Name of Enthalpy/Internal energy
-                static inline word heName();
-
-                //- Enthalpy/Internal energy [J/kmol]
-                inline scalar he(const scalar p, const scalar T) const;
-
-                //- Heat capacity at constant volume [J/(kmol K)]
-                inline scalar cv(const scalar p, const scalar T) const;
-
-                //- Heat capacity at constant pressure/volume [J/(kmol K)]
-                inline scalar cpv(const scalar p, const scalar T) const;
-
-                //- Gamma = cp/cv []
-                inline scalar gamma(const scalar p, const scalar T) const;
-
-                //- Ratio of heat capacity at constant pressure to that at
-                //  constant pressure/volume []
-                inline scalar cpBycpv(const scalar p, const scalar T) const;
-
-                //- Sensible internal energy [J/kmol]
-                inline scalar es(const scalar p, const scalar T) const;
-
-                //- Absolute internal energy [J/kmol]
-                inline scalar ea(const scalar p, const scalar T) const;
-
-                //- Gibbs free energy [J/kmol]
-                inline scalar g(const scalar p, const scalar T) const;
-
-                //- Helmholtz free energy [J/kmol]
-                inline scalar a(const scalar p, const scalar T) const;
+            // Entropy [J/(kg K)]
+            // inline scalar S(const scalar p, const scalar T) const;
 
 
-            // Mass specific properties
+        // Mass specific derived properties
 
-                //- Heat capacity at constant pressure [J/(kg K)]
-                inline scalar Cp(const scalar p, const scalar T) const;
+            //- Heat capacity at constant volume [J/(kg K)]
+            inline scalar Cv(const scalar p, const scalar T) const;
 
-                //- Heat capacity at constant volume [J/(kg K)]
-                inline scalar Cv(const scalar p, const scalar T) const;
+            //- Heat capacity at constant pressure/volume [J/(kg K)]
+            inline scalar Cpv(const scalar p, const scalar T) const;
 
-                //- Heat capacity at constant pressure/volume [J/(kg K)]
-                inline scalar Cpv(const scalar p, const scalar T) const;
+            //- Gamma = Cp/Cv []
+            inline scalar gamma(const scalar p, const scalar T) const;
 
-                //- Enthalpy/Internal energy [J/kg]
-                inline scalar HE(const scalar p, const scalar T) const;
+            //- Ratio of heat capacity at constant pressure to that at
+            //  constant pressure/volume []
+            inline scalar CpByCpv(const scalar p, const scalar T) const;
 
-                //- Sensible enthalpy [J/kg]
-                inline scalar Hs(const scalar p, const scalar T) const;
+            //- Enthalpy/Internal energy [J/kg]
+            inline scalar HE(const scalar p, const scalar T) const;
 
-                //- Chemical enthalpy [J/kg]
-                inline scalar Hc() const;
+            //- Sensible internal energy [J/kg]
+            inline scalar Es(const scalar p, const scalar T) const;
 
-                //- Absolute Enthalpy [J/kg]
-                inline scalar Ha(const scalar p, const scalar T) const;
+            //- Absolute internal energy [J/kg]
+            inline scalar Ea(const scalar p, const scalar T) const;
 
-                //- Entropy [J/(kg K)]
-                inline scalar S(const scalar p, const scalar T) const;
+            //- Gibbs free energy [J/kg]
+            inline scalar G(const scalar p, const scalar T) const;
 
-                //- Internal energy [J/kg]
-                inline scalar E(const scalar p, const scalar T) const;
+            //- Helmholtz free energy [J/kg]
+            inline scalar A(const scalar p, const scalar T) const;
 
-                //- Sensible internal energy [J/kg]
-                inline scalar Es(const scalar p, const scalar T) const;
 
-                //- Absolute internal energy [J/kg]
-                inline scalar Ea(const scalar p, const scalar T) const;
+        // Mole specific derived properties
 
-                //- Gibbs free energy [J/kg]
-                inline scalar G(const scalar p, const scalar T) const;
+            //- Heat capacity at constant pressure [J/(kmol K)]
+            inline scalar cp(const scalar p, const scalar T) const;
 
-                //- Helmholtz free energy [J/kg]
-                inline scalar A(const scalar p, const scalar T) const;
+            //- Absolute Enthalpy [J/kmol]
+            inline scalar ha(const scalar p, const scalar T) const;
+
+            //- Sensible enthalpy [J/kmol]
+            inline scalar hs(const scalar p, const scalar T) const;
+
+            //- Chemical enthalpy [J/kmol]
+            inline scalar hc() const;
+
+            //- Entropy [J/(kmol K)]
+            inline scalar s(const scalar p, const scalar T) const;
+
+            //- Enthalpy/Internal energy [J/kmol]
+            inline scalar he(const scalar p, const scalar T) const;
+
+            //- Heat capacity at constant volume [J/(kmol K)]
+            inline scalar cv(const scalar p, const scalar T) const;
+
+            //- Sensible internal energy [J/kmol]
+            inline scalar es(const scalar p, const scalar T) const;
+
+            //- Absolute internal energy [J/kmol]
+            inline scalar ea(const scalar p, const scalar T) const;
+
+            //- Gibbs free energy [J/kmol]
+            inline scalar g(const scalar p, const scalar T) const;
+
+            //- Helmholtz free energy [J/kmol]
+            inline scalar a(const scalar p, const scalar T) const;
 
 
         // Equilibrium reaction thermodynamics
@@ -345,20 +330,12 @@ public:
     // Member operators
 
         inline void operator+=(const thermo&);
-        inline void operator-=(const thermo&);
-
         inline void operator*=(const scalar);
 
 
     // Friend operators
 
         friend thermo operator+ <Thermo, Type>
-        (
-            const thermo&,
-            const thermo&
-        );
-
-        friend thermo operator- <Thermo, Type>
         (
             const thermo&,
             const thermo&

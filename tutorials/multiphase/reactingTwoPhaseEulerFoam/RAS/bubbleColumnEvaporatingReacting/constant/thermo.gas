@@ -2,7 +2,6 @@ CO
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0106;
     }
     thermodynamics
@@ -24,7 +23,6 @@ CO2
 {
     specie
     {
-        nMoles          1;
         molWeight       44.01;
     }
     thermodynamics
@@ -46,7 +44,6 @@ H2
 {
     specie
     {
-        nMoles          1;
         molWeight       2.01594;
     }
     thermodynamics
@@ -68,7 +65,6 @@ H2O
 {
     specie
     {
-        nMoles          1;
         molWeight       18.0153;
     }
     thermodynamics
@@ -90,7 +86,6 @@ AIR
 {
     specie
     {
-        nMoles          1;
         molWeight       28.9596;
     }
     thermodynamics

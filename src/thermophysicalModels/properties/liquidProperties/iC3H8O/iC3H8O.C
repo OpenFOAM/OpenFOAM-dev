@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,8 +86,8 @@ Foam::iC3H8O::iC3H8O()
     ),
     mu_(-8.23, 2282.2, -0.98495, 0.0, 0.0),
     mug_(1.993e-07, 0.7233, 178.0, 0.0),
-    K_(0.2029, -0.0002278, 0.0, 0.0, 0.0, 0.0),
-    Kg_(-80.642, -1.4549, -604.42, 0.0),
+    kappa_(0.2029, -0.0002278, 0.0, 0.0, 0.0, 0.0),
+    kappag_(-80.642, -1.4549, -604.42, 0.0),
     sigma_(0.03818, -3.818e-05, -6.51e-08, 0.0, 0.0, 0.0),
     D_(4.75e-10, 1.75, 0.0, 0.0, 0.0)
 {}
@@ -121,8 +121,8 @@ Foam::iC3H8O::iC3H8O
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -140,8 +140,8 @@ Foam::iC3H8O::iC3H8O(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -159,8 +159,8 @@ Foam::iC3H8O::iC3H8O(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -178,8 +178,8 @@ Foam::iC3H8O::iC3H8O(const iC3H8O& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

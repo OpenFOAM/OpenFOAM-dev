@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,23 +91,9 @@ inline polynomialTransport<Thermo, PolySize> operator+
 );
 
 template<class Thermo, int PolySize>
-inline polynomialTransport<Thermo, PolySize> operator-
-(
-    const polynomialTransport<Thermo, PolySize>&,
-    const polynomialTransport<Thermo, PolySize>&
-);
-
-template<class Thermo, int PolySize>
 inline polynomialTransport<Thermo, PolySize> operator*
 (
     const scalar,
-    const polynomialTransport<Thermo, PolySize>&
-);
-
-template<class Thermo, int PolySize>
-inline polynomialTransport<Thermo, PolySize> operator==
-(
-    const polynomialTransport<Thermo, PolySize>&,
     const polynomialTransport<Thermo, PolySize>&
 );
 
@@ -201,8 +187,9 @@ public:
     // Member operators
 
         inline void operator=(const polynomialTransport&);
+
         inline void operator+=(const polynomialTransport&);
-        inline void operator-=(const polynomialTransport&);
+
         inline void operator*=(const scalar);
 
 
@@ -214,21 +201,9 @@ public:
             const polynomialTransport&
         );
 
-        friend polynomialTransport operator- <Thermo, PolySize>
-        (
-            const polynomialTransport&,
-            const polynomialTransport&
-        );
-
         friend polynomialTransport operator* <Thermo, PolySize>
         (
             const scalar,
-            const polynomialTransport&
-        );
-
-        friend polynomialTransport operator== <Thermo, PolySize>
-        (
-            const polynomialTransport&,
             const polynomialTransport&
         );
 

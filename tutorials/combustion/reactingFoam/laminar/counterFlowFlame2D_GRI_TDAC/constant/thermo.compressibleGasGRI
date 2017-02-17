@@ -2,7 +2,6 @@ OH
 {
     specie
     {
-        nMoles          1;
         molWeight       17.0074;
     }
     thermodynamics
@@ -28,7 +27,6 @@ CN
 {
     specie
     {
-        nMoles          1;
         molWeight       26.0179;
     }
     thermodynamics
@@ -54,7 +52,6 @@ C2H3
 {
     specie
     {
-        nMoles          1;
         molWeight       27.0462;
     }
     thermodynamics
@@ -80,7 +77,6 @@ N2
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0134;
     }
     thermodynamics
@@ -105,7 +101,6 @@ HOCN
 {
     specie
     {
-        nMoles          1;
         molWeight       43.0252;
     }
     thermodynamics
@@ -133,7 +128,6 @@ N
 {
     specie
     {
-        nMoles          1;
         molWeight       14.0067;
     }
     thermodynamics
@@ -158,7 +152,6 @@ C2H
 {
     specie
     {
-        nMoles          1;
         molWeight       25.0303;
     }
     thermodynamics
@@ -184,7 +177,6 @@ HNO
 {
     specie
     {
-        nMoles          1;
         molWeight       31.0141;
     }
     thermodynamics
@@ -211,7 +203,6 @@ CH2CO
 {
     specie
     {
-        nMoles          1;
         molWeight       42.0376;
     }
     thermodynamics
@@ -238,7 +229,6 @@ CH3
 {
     specie
     {
-        nMoles          1;
         molWeight       15.0351;
     }
     thermodynamics
@@ -264,7 +254,6 @@ C2H5
 {
     specie
     {
-        nMoles          1;
         molWeight       29.0622;
     }
     thermodynamics
@@ -290,7 +279,6 @@ C2H4
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0542;
     }
     thermodynamics
@@ -316,7 +304,6 @@ C3H8
 {
     specie
     {
-        nMoles          1;
         molWeight       44.0972;
     }
     thermodynamics
@@ -342,7 +329,6 @@ HCN
 {
     specie
     {
-        nMoles          1;
         molWeight       27.0258;
     }
     thermodynamics
@@ -369,7 +355,6 @@ C2H6
 {
     specie
     {
-        nMoles          1;
         molWeight       30.0701;
     }
     thermodynamics
@@ -395,7 +380,6 @@ NH3
 {
     specie
     {
-        nMoles          1;
         molWeight       17.0306;
     }
     thermodynamics
@@ -421,7 +405,6 @@ CO2
 {
     specie
     {
-        nMoles          1;
         molWeight       44.01;
     }
     thermodynamics
@@ -447,7 +430,6 @@ C2H2
 {
     specie
     {
-        nMoles          1;
         molWeight       26.0382;
     }
     thermodynamics
@@ -473,7 +455,6 @@ CH2OH
 {
     specie
     {
-        nMoles          1;
         molWeight       31.0345;
     }
     thermodynamics
@@ -500,7 +481,6 @@ H2CN
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0338;
     }
     thermodynamics
@@ -527,7 +507,6 @@ HCCOH
 {
     specie
     {
-        nMoles          1;
         molWeight       42.0376;
     }
     thermodynamics
@@ -554,7 +533,6 @@ H2O2
 {
     specie
     {
-        nMoles          1;
         molWeight       34.0147;
     }
     thermodynamics
@@ -580,7 +558,6 @@ HCO
 {
     specie
     {
-        nMoles          1;
         molWeight       29.0185;
     }
     thermodynamics
@@ -607,7 +584,6 @@ NNH
 {
     specie
     {
-        nMoles          1;
         molWeight       29.0214;
     }
     thermodynamics
@@ -633,7 +609,6 @@ N2O
 {
     specie
     {
-        nMoles          1;
         molWeight       44.0128;
     }
     thermodynamics
@@ -659,7 +634,6 @@ CH2(S)
 {
     specie
     {
-        nMoles          1;
         molWeight       14.0271;
     }
     thermodynamics
@@ -685,7 +659,6 @@ O2
 {
     specie
     {
-        nMoles          1;
         molWeight       31.9988;
     }
     thermodynamics
@@ -710,7 +683,6 @@ CH2CHO
 {
     specie
     {
-        nMoles          1;
         molWeight       43.0456;
     }
     thermodynamics
@@ -737,7 +709,6 @@ HNCO
 {
     specie
     {
-        nMoles          1;
         molWeight       43.0252;
     }
     thermodynamics
@@ -765,7 +736,6 @@ HCCO
 {
     specie
     {
-        nMoles          1;
         molWeight       41.0297;
     }
     thermodynamics
@@ -792,7 +762,6 @@ H2
 {
     specie
     {
-        nMoles          1;
         molWeight       2.01594;
     }
     thermodynamics
@@ -817,7 +786,6 @@ NO2
 {
     specie
     {
-        nMoles          1;
         molWeight       46.0055;
     }
     thermodynamics
@@ -843,7 +811,6 @@ CH4
 {
     specie
     {
-        nMoles          1;
         molWeight       16.043;
     }
     thermodynamics
@@ -869,7 +836,6 @@ C
 {
     specie
     {
-        nMoles          1;
         molWeight       12.0112;
     }
     thermodynamics
@@ -894,7 +860,6 @@ HO2
 {
     specie
     {
-        nMoles          1;
         molWeight       33.0068;
     }
     thermodynamics
@@ -920,7 +885,6 @@ CH3CHO
 {
     specie
     {
-        nMoles          1;
         molWeight       44.0536;
     }
     thermodynamics
@@ -947,7 +911,6 @@ C3H7
 {
     specie
     {
-        nMoles          1;
         molWeight       43.0892;
     }
     thermodynamics
@@ -973,7 +936,6 @@ CH3OH
 {
     specie
     {
-        nMoles          1;
         molWeight       32.0424;
     }
     thermodynamics
@@ -1000,7 +962,6 @@ CH2O
 {
     specie
     {
-        nMoles          1;
         molWeight       30.0265;
     }
     thermodynamics
@@ -1027,7 +988,6 @@ CO
 {
     specie
     {
-        nMoles          1;
         molWeight       28.0106;
     }
     thermodynamics
@@ -1053,7 +1013,6 @@ CH3O
 {
     specie
     {
-        nMoles          1;
         molWeight       31.0345;
     }
     thermodynamics
@@ -1080,7 +1039,6 @@ O
 {
     specie
     {
-        nMoles          1;
         molWeight       15.9994;
     }
     thermodynamics
@@ -1105,7 +1063,6 @@ HCNN
 {
     specie
     {
-        nMoles          1;
         molWeight       41.0325;
     }
     thermodynamics
@@ -1132,7 +1089,6 @@ NCO
 {
     specie
     {
-        nMoles          1;
         molWeight       42.0173;
     }
     thermodynamics
@@ -1159,7 +1115,6 @@ CH2
 {
     specie
     {
-        nMoles          1;
         molWeight       14.0271;
     }
     thermodynamics
@@ -1185,7 +1140,6 @@ HCNO
 {
     specie
     {
-        nMoles          1;
         molWeight       43.0252;
     }
     thermodynamics
@@ -1213,7 +1167,6 @@ NH2
 {
     specie
     {
-        nMoles          1;
         molWeight       16.0226;
     }
     thermodynamics
@@ -1239,7 +1192,6 @@ H2O
 {
     specie
     {
-        nMoles          1;
         molWeight       18.0153;
     }
     thermodynamics
@@ -1265,7 +1217,6 @@ NH
 {
     specie
     {
-        nMoles          1;
         molWeight       15.0147;
     }
     thermodynamics
@@ -1291,7 +1242,6 @@ H
 {
     specie
     {
-        nMoles          1;
         molWeight       1.00797;
     }
     thermodynamics
@@ -1316,7 +1266,6 @@ AR
 {
     specie
     {
-        nMoles          1;
         molWeight       39.948;
     }
     thermodynamics
@@ -1341,7 +1290,6 @@ NO
 {
     specie
     {
-        nMoles          1;
         molWeight       30.0061;
     }
     thermodynamics
@@ -1367,7 +1315,6 @@ CH
 {
     specie
     {
-        nMoles          1;
         molWeight       13.0191;
     }
     thermodynamics

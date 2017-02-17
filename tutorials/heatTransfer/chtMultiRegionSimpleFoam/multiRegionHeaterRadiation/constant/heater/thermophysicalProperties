@@ -29,7 +29,6 @@ mixture
 {
     specie
     {
-        nMoles      1;
         molWeight   12;
     }
 

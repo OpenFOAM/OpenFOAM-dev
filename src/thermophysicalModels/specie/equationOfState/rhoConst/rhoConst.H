@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,13 +49,6 @@ template<class Specie> class rhoConst;
 
 template<class Specie>
 inline rhoConst<Specie> operator+
-(
-    const rhoConst<Specie>&,
-    const rhoConst<Specie>&
-);
-
-template<class Specie>
-inline rhoConst<Specie> operator-
 (
     const rhoConst<Specie>&,
     const rhoConst<Specie>&
@@ -141,14 +134,14 @@ public:
             //- Return density [kg/m^3]
             inline scalar rho(scalar p, scalar T) const;
 
-            //- Return enthalpy departure [J/kmol]
-            inline scalar h(const scalar p, const scalar T) const;
+            //- Return enthalpy departure [J/kg]
+            inline scalar H(const scalar p, const scalar T) const;
 
-            //- Return cp departure [J/(kmol K]
-            inline scalar cp(scalar p, scalar T) const;
+            //- Return Cp departure [J/(kg K]
+            inline scalar Cp(scalar p, scalar T) const;
 
-            //- Return entropy [J/(kmol K)]
-            inline scalar s(const scalar p, const scalar T) const;
+            //- Return entropy [J/(kg K)]
+            inline scalar S(const scalar p, const scalar T) const;
 
             //- Return compressibility rho/p [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
@@ -156,8 +149,8 @@ public:
             //- Return compression factor []
             inline scalar Z(scalar p, scalar T) const;
 
-            //- Return (cp - cv) [J/(kmol K]
-            inline scalar cpMcv(scalar p, scalar T) const;
+            //- Return (Cp - Cv) [J/(kg K]
+            inline scalar CpMCv(scalar p, scalar T) const;
 
 
         // IO
@@ -169,20 +162,12 @@ public:
     // Member operators
 
         inline void operator+=(const rhoConst&);
-        inline void operator-=(const rhoConst&);
-
         inline void operator*=(const scalar);
 
 
     // Friend operators
 
         friend rhoConst operator+ <Specie>
-        (
-            const rhoConst&,
-            const rhoConst&
-        );
-
-        friend rhoConst operator- <Specie>
         (
             const rhoConst&,
             const rhoConst&

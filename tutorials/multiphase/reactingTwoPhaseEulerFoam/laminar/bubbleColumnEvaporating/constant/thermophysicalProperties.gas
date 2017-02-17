@@ -38,7 +38,6 @@ H2O
 {
     specie
     {
-        nMoles          1;
         molWeight       18.0153;
     }
     thermodynamics
@@ -60,7 +59,6 @@ air
 {
     specie
     {
-        nMoles          1;
         molWeight       28.9596;
     }
     thermodynamics

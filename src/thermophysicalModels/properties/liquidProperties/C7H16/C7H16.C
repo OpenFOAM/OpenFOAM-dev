@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,8 +85,8 @@ Foam::C7H16::C7H16()
     ),
     mu_(-24.451, 1533.1, 2.0087, 0.0, 0.0),
     mug_(6.672e-08, 0.82837, 85.752, 0.0),
-    K_(0.215, -0.000303, 0.0, 0.0, 0.0, 0.0),
-    Kg_(-0.070028, 0.38068, -7049.9, -2400500.0),
+    kappa_(0.215, -0.000303, 0.0, 0.0, 0.0, 0.0),
+    kappag_(-0.070028, 0.38068, -7049.9, -2400500.0),
     sigma_(540.20, 0.054143, 1.2512, 0.0, 0.0, 0.0),
     D_(147.18, 20.1, 100.204, 28.0)
 {}
@@ -120,8 +120,8 @@ Foam::C7H16::C7H16
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -139,8 +139,8 @@ Foam::C7H16::C7H16(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
@@ -158,8 +158,8 @@ Foam::C7H16::C7H16(const dictionary& dict)
     B_(dict.subDict("B")),
     mu_(dict.subDict("mu")),
     mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
+    kappa_(dict.subDict("K")),
+    kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
 {}
@@ -177,8 +177,8 @@ Foam::C7H16::C7H16(const C7H16& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

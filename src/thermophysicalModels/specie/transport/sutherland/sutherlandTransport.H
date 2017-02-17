@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,23 +61,9 @@ inline sutherlandTransport<Thermo> operator+
 );
 
 template<class Thermo>
-inline sutherlandTransport<Thermo> operator-
-(
-    const sutherlandTransport<Thermo>&,
-    const sutherlandTransport<Thermo>&
-);
-
-template<class Thermo>
 inline sutherlandTransport<Thermo> operator*
 (
     const scalar,
-    const sutherlandTransport<Thermo>&
-);
-
-template<class Thermo>
-inline sutherlandTransport<Thermo> operator==
-(
-    const sutherlandTransport<Thermo>&,
     const sutherlandTransport<Thermo>&
 );
 
@@ -190,8 +176,6 @@ public:
 
         inline void operator+=(const sutherlandTransport&);
 
-        inline void operator-=(const sutherlandTransport&);
-
         inline void operator*=(const scalar);
 
 
@@ -203,21 +187,9 @@ public:
             const sutherlandTransport&
         );
 
-        friend sutherlandTransport operator- <Thermo>
-        (
-            const sutherlandTransport&,
-            const sutherlandTransport&
-        );
-
         friend sutherlandTransport operator* <Thermo>
         (
             const scalar,
-            const sutherlandTransport&
-        );
-
-        friend sutherlandTransport operator== <Thermo>
-        (
-            const sutherlandTransport&,
             const sutherlandTransport&
         );
 

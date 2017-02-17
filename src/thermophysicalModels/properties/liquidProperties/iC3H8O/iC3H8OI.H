@@ -77,15 +77,15 @@ inline Foam::scalar Foam::iC3H8O::mug(scalar p, scalar T) const
 }
 
 
-inline Foam::scalar Foam::iC3H8O::K(scalar p, scalar T) const
+inline Foam::scalar Foam::iC3H8O::kappa(scalar p, scalar T) const
 {
-    return K_.f(p, T);
+    return kappa_.f(p, T);
 }
 
 
-inline Foam::scalar Foam::iC3H8O::Kg(scalar p, scalar T) const
+inline Foam::scalar Foam::iC3H8O::kappag(scalar p, scalar T) const
 {
-    return Kg_.f(p, T);
+    return kappag_.f(p, T);
 }
 
 

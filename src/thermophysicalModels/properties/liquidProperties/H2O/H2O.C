@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,8 +93,8 @@ Foam::H2O::H2O()
     ),
     mu_(-51.964, 3670.6, 5.7331, -5.3495e-29, 10),
     mug_(2.6986e-06, 0.498, 1257.7, -19570),
-    K_(-0.4267, 0.0056903, -8.0065e-06, 1.815e-09, 0, 0),
-    Kg_(6.977e-05, 1.1243, 844.9, -148850),
+    kappa_(-0.4267, 0.0056903, -8.0065e-06, 1.815e-09, 0, 0),
+    kappag_(6.977e-05, 1.1243, 844.9, -148850),
     sigma_(647.13, 0.18548, 2.717, -3.554, 2.047, 0),
     D_(15.0, 15.0, 18.015, 28)
 {}
@@ -128,8 +128,8 @@ Foam::H2O::H2O
     B_(secondVirialCoeff),
     mu_(dynamicViscosity),
     mug_(vapourDynamicViscosity),
-    K_(thermalConductivity),
-    Kg_(vapourThermalConductivity),
+    kappa_(thermalConductivity),
+    kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
     D_(vapourDiffussivity)
 {}
@@ -147,29 +147,31 @@ Foam::H2O::H2O(Istream& is)
     B_(is),
     mu_(is),
     mug_(is),
-    K_(is),
-    Kg_(is),
+    kappa_(is),
+    kappag_(is),
     sigma_(is),
     D_(is)
 {}
 
 
 Foam::H2O::H2O(const dictionary& dict)
-:
-    liquidProperties(dict),
-    rho_(dict.subDict("rho")),
-    pv_(dict.subDict("pv")),
-    hl_(dict.subDict("hl")),
-    Cp_(dict.subDict("Cp")),
-    h_(dict.subDict("h")),
-    Cpg_(dict.subDict("Cpg")),
-    B_(dict.subDict("B")),
-    mu_(dict.subDict("mu")),
-    mug_(dict.subDict("mug")),
-    K_(dict.subDict("K")),
-    Kg_(dict.subDict("Kg")),
-    sigma_(dict.subDict("sigma")),
-    D_(dict.subDict("D"))
+    :
+    H2O()
+// :
+//     liquidProperties(dict),
+//     rho_(dict.subDict("rho")),
+//     pv_(dict.subDict("pv")),
+//     hl_(dict.subDict("hl")),
+//     Cp_(dict.subDict("Cp")),
+//     h_(dict.subDict("h")),
+//     Cpg_(dict.subDict("Cpg")),
+//     B_(dict.subDict("B")),
+//     mu_(dict.subDict("mu")),
+//     mug_(dict.subDict("mug")),
+//     kappa_(dict.subDict("K")),
+//     kappag_(dict.subDict("kappag")),
+//     sigma_(dict.subDict("sigma")),
+//     D_(dict.subDict("D"))
 {}
 
 
@@ -185,8 +187,8 @@ Foam::H2O::H2O(const H2O& liq)
     B_(liq.B_),
     mu_(liq.mu_),
     mug_(liq.mug_),
-    K_(liq.K_),
-    Kg_(liq.Kg_),
+    kappa_(liq.kappa_),
+    kappag_(liq.kappag_),
     sigma_(liq.sigma_),
     D_(liq.D_)
 {}

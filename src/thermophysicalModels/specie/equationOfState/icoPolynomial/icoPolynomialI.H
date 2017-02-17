@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,12 +106,12 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::rho
     scalar T
 ) const
 {
-    return rhoCoeffs_.value(T)/this->W();
+    return rhoCoeffs_.value(T);
 }
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::h
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::H
 (
     scalar p,
     scalar T
@@ -122,7 +122,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::h
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::cp
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Cp
 (
     scalar p,
     scalar T
@@ -133,7 +133,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::cp
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::s
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::S
 (
     scalar p,
     scalar T
@@ -166,7 +166,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Z
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::cpMcv
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::CpMCv
 (
     scalar p,
     scalar T
@@ -196,31 +196,16 @@ inline void Foam::icoPolynomial<Specie, PolySize>::operator+=
     const icoPolynomial<Specie, PolySize>& ip
 )
 {
-    scalar molr1 = this->nMoles();
-
+    scalar Y1 = this->Y();
     Specie::operator+=(ip);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = ip.nMoles()/this->nMoles();
+    if (mag(this->Y()) > SMALL)
+    {
+        Y1 /= this->Y();
+        const scalar Y2 = ip.Y()/this->Y();
 
-    rhoCoeffs_ = molr1*rhoCoeffs_ + molr2*ip.rhoCoeffs_;
-}
-
-
-template<class Specie, int PolySize>
-inline void Foam::icoPolynomial<Specie, PolySize>::operator-=
-(
-    const icoPolynomial<Specie, PolySize>& ip
-)
-{
-    scalar molr1 = this->nMoles();
-
-    Specie::operator-=(ip);
-
-    molr1 /= this->nMoles();
-    scalar molr2 = ip.nMoles()/this->nMoles();
-
-    rhoCoeffs_ = molr1*rhoCoeffs_ - molr2*ip.rhoCoeffs_;
+        rhoCoeffs_ = Y1*rhoCoeffs_ + Y2*ip.rhoCoeffs_;
+    }
 }
 
 
@@ -240,36 +225,31 @@ Foam::icoPolynomial<Specie, PolySize> Foam::operator+
     const icoPolynomial<Specie, PolySize>& ip2
 )
 {
-    scalar nMoles = ip1.nMoles() + ip2.nMoles();
-    scalar molr1 = ip1.nMoles()/nMoles;
-    scalar molr2 = ip2.nMoles()/nMoles;
-
-    return icoPolynomial<Specie, PolySize>
+    Specie sp
     (
         static_cast<const Specie&>(ip1)
-      + static_cast<const Specie&>(ip2),
-        molr1*ip1.rhoCoeffs_ + molr2*ip2.rhoCoeffs_
+      + static_cast<const Specie&>(ip2)
     );
-}
 
+    if (mag(sp.Y()) < SMALL)
+    {
+        return icoPolynomial<Specie, PolySize>
+        (
+            sp,
+            ip1.rhoCoeffs_
+        );
+    }
+    else
+    {
+        const scalar Y1 = ip1.Y()/sp.Y();
+        const scalar Y2 = ip2.Y()/sp.Y();
 
-template<class Specie, int PolySize>
-Foam::icoPolynomial<Specie, PolySize> Foam::operator-
-(
-    const icoPolynomial<Specie, PolySize>& ip1,
-    const icoPolynomial<Specie, PolySize>& ip2
-)
-{
-    scalar nMoles = ip1.nMoles() + ip2.nMoles();
-    scalar molr1 = ip1.nMoles()/nMoles;
-    scalar molr2 = ip2.nMoles()/nMoles;
-
-    return icoPolynomial<Specie, PolySize>
-    (
-        static_cast<const Specie&>(ip1)
-      - static_cast<const Specie&>(ip2),
-        molr1*ip1.rhoCoeffs_ - molr2*ip2.rhoCoeffs_
-    );
+        return icoPolynomial<Specie, PolySize>
+        (
+            sp,
+            Y1*ip1.rhoCoeffs_ + Y2*ip2.rhoCoeffs_
+        );
+    }
 }
 
 
@@ -295,7 +275,20 @@ Foam::icoPolynomial<Specie, PolySize> Foam::operator==
     const icoPolynomial<Specie, PolySize>& ip2
 )
 {
-    return ip2 - ip1;
+    Specie sp
+    (
+        static_cast<const Specie&>(ip1)
+     == static_cast<const Specie&>(ip2)
+    );
+
+    const scalar Y1 = ip1.Y()/sp.Y();
+    const scalar Y2 = ip2.Y()/sp.Y();
+
+    return icoPolynomial<Specie, PolySize>
+    (
+        sp,
+        Y2*ip2.rhoCoeffs_ - Y1*ip1.rhoCoeffs_
+    );
 }
 
 

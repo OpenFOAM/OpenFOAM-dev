@@ -49,7 +49,6 @@ EXE_LIBS = \
     -llagrangianSpray \
     -llagrangianTurbulence \
     -llaminarFlameSpeedModels \
-    -lliquidMixtureProperties \
     -lliquidProperties \
     -lmeshTools \
     -lmolecularMeasurements \
@@ -81,7 +80,6 @@ EXE_LIBS = \
     -lSLGThermo \
     -lsnappyHexMesh \
     -lsolidChemistryModel \
-    -lsolidMixtureProperties \
     -lsolidParticle \
     -lsolidProperties \
     -lsolidSpecie \

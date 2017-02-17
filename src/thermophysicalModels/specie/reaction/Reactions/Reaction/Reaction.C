@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,29 +111,37 @@ void Foam::Reaction<ReactionThermo>::setThermo
     const HashPtrTable<ReactionThermo>& thermoDatabase
 )
 {
-    if (rhs_.size() > 0)
-    {
-        ReactionThermo::thermoType::operator=
-        (
-            rhs_[0].stoichCoeff*(*thermoDatabase[species_[rhs_[0].index]])
-        );
+    typename ReactionThermo::thermoType rhsThermo
+    (
+        rhs_[0].stoichCoeff
+       *(*thermoDatabase[species_[rhs_[0].index]]).W()
+       *(*thermoDatabase[species_[rhs_[0].index]])
+    );
 
-        for (label i=1; i<rhs_.size(); ++i)
-        {
-            this->operator+=
-            (
-                rhs_[i].stoichCoeff*(*thermoDatabase[species_[rhs_[i].index]])
-            );
-        }
+    for (label i=1; i<rhs_.size(); ++i)
+    {
+        rhsThermo +=
+            rhs_[i].stoichCoeff
+           *(*thermoDatabase[species_[rhs_[i].index]]).W()
+           *(*thermoDatabase[species_[rhs_[i].index]]);
     }
 
-    forAll(lhs_, i)
+    typename ReactionThermo::thermoType lhsThermo
+    (
+        lhs_[0].stoichCoeff
+       *(*thermoDatabase[species_[lhs_[0].index]]).W()
+       *(*thermoDatabase[species_[lhs_[0].index]])
+    );
+
+    for (label i=1; i<lhs_.size(); ++i)
     {
-        this->operator-=
-        (
-            lhs_[i].stoichCoeff*(*thermoDatabase[species_[lhs_[i].index]])
-        );
+        lhsThermo +=
+            lhs_[i].stoichCoeff
+           *(*thermoDatabase[species_[lhs_[i].index]]).W()
+           *(*thermoDatabase[species_[lhs_[i].index]]);
     }
+
+    ReactionThermo::thermoType::operator=(lhsThermo == rhsThermo);
 }
 
 

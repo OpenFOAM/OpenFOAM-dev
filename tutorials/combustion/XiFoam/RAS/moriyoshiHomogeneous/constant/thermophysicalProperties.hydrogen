@@ -32,7 +32,6 @@ reactants
 {
     specie
     {
-        nMoles          24.8095;
         molWeight       16.0243;
     }
     thermodynamics
@@ -54,7 +53,6 @@ products
 {
     specie
     {
-        nMoles          1;
         molWeight       17.9973;
     }
     thermodynamics

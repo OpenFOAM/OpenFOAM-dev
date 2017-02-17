@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,53 +125,53 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::limit
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::cp
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Cp
 (
     const scalar p, const scalar T
 ) const
 {
-    return c0_*pow(T/Tref_, n0_) + EquationOfState::cp(p, T);
+    return c0_*pow(T/Tref_, n0_) + EquationOfState::Cp(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::ha
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Ha
 (
     const scalar p, const scalar T
 ) const
 {
-    return hs(p, T) + hc();
+    return Hs(p, T) + Hc();
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::hs
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hs
 (
     const scalar p, const scalar T
 ) const
 {
     return
         c0_*(pow(T, n0_ + 1) - pow(Tstd, n0_ + 1))/(pow(Tref_, n0_)*(n0_ + 1))
-      + EquationOfState::h(p, T);
+      + EquationOfState::H(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::hc() const
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hc() const
 {
     return Hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::s
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::S
 (
     const scalar p, const scalar T
 ) const
 {
     return
         c0_*(pow(T, n0_) - pow(Tstd, n0_))/(pow(Tref_, n0_)*n0_)
-      + EquationOfState::s(p, T);
+      + EquationOfState::S(p, T);
 }
 
 
@@ -183,36 +183,20 @@ inline void Foam::hPowerThermo<EquationOfState>::operator+=
     const hPowerThermo<EquationOfState>& ct
 )
 {
-    scalar molr1 = this->nMoles();
+    scalar Y1 = this->Y();
 
     EquationOfState::operator+=(ct);
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
 
-    Hf_ = molr1*Hf_ + molr2*ct.Hf_;
-    c0_ = molr1*c0_ + molr2*ct.c0_;
-    n0_ = molr1*n0_ + molr2*ct.n0_;
-    Tref_ = molr1*Tref_ + molr2*ct.Tref_;
-}
+    if (mag(this->Y()) > SMALL)
+    {
+        Y1 /= this->Y();
+        const scalar Y2 = ct.Y()/this->Y();
 
-
-template<class EquationOfState>
-inline void Foam::hPowerThermo<EquationOfState>::operator-=
-(
-    const hPowerThermo<EquationOfState>& ct
-)
-{
-    scalar molr1 = this->nMoles();
-
-    EquationOfState::operator-=(ct);
-
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
-
-    Hf_ = molr1*Hf_ - molr2*ct.Hf_;
-    c0_ = (molr1*c0_ - molr2*ct.c0_);
-    n0_ = (molr1*n0_ - molr2*ct.n0_);
-    Tref_ = (molr1*Tref_ - molr2*ct.Tref_);
+        Hf_ = Y1*Hf_ + Y2*ct.Hf_;
+        c0_ = Y1*c0_ + Y2*ct.c0_;
+        n0_ = Y1*n0_ + Y2*ct.n0_;
+        Tref_ = Y1*Tref_ + Y2*ct.Tref_;
+    }
 }
 
 
@@ -231,46 +215,32 @@ inline Foam::hPowerThermo<EquationOfState> Foam::operator+
       + static_cast<const EquationOfState&>(ct2)
     );
 
-    return hPowerThermo<EquationOfState>
-    (
-        eofs,
-        ct1.nMoles()/eofs.nMoles()*ct1.c0_
-      + ct2.nMoles()/eofs.nMoles()*ct2.c0_,
-        ct1.nMoles()/eofs.nMoles()*ct1.n0_
-      + ct2.nMoles()/eofs.nMoles()*ct2.n0_,
-        ct1.nMoles()/eofs.nMoles()*ct1.Tref_
-      + ct2.nMoles()/eofs.nMoles()*ct2.Tref_,
-        ct1.nMoles()/eofs.nMoles()*ct1.Hf_
-      + ct2.nMoles()/eofs.nMoles()*ct2.Hf_
-    );
-}
-
-
-template<class EquationOfState>
-inline Foam::hPowerThermo<EquationOfState> Foam::operator-
-(
-    const hPowerThermo<EquationOfState>& ct1,
-    const hPowerThermo<EquationOfState>& ct2
-)
-{
-    EquationOfState eofs
-    (
-        static_cast<const EquationOfState&>(ct1)
-      + static_cast<const EquationOfState&>(ct2)
-    );
-
-    return hPowerThermo<EquationOfState>
-    (
-        eofs,
-        ct1.nMoles()/eofs.nMoles()*ct1.c0_
-      - ct2.nMoles()/eofs.nMoles()*ct2.c0_,
-        ct1.nMoles()/eofs.nMoles()*ct1.n0_
-      - ct2.nMoles()/eofs.nMoles()*ct2.n0_,
-        ct1.nMoles()/eofs.nMoles()*ct1.Tref_
-      - ct2.nMoles()/eofs.nMoles()*ct2.Tref_,
-        ct1.nMoles()/eofs.nMoles()*ct1.Hf_
-      - ct2.nMoles()/eofs.nMoles()*ct2.Hf_
-    );
+    if (mag(eofs.Y()) < SMALL)
+    {
+        return hPowerThermo<EquationOfState>
+        (
+            eofs,
+            ct1.c0_,
+            ct1.n0_,
+            ct1.Tref_,
+            ct1.Hf_
+        );
+    }
+    else
+    {
+        return hPowerThermo<EquationOfState>
+        (
+            eofs,
+            ct1.Y()/eofs.Y()*ct1.c0_
+          + ct2.Y()/eofs.Y()*ct2.c0_,
+            ct1.Y()/eofs.Y()*ct1.n0_
+          + ct2.Y()/eofs.Y()*ct2.n0_,
+            ct1.Y()/eofs.Y()*ct1.Tref_
+          + ct2.Y()/eofs.Y()*ct2.Tref_,
+            ct1.Y()/eofs.Y()*ct1.Hf_
+          + ct2.Y()/eofs.Y()*ct2.Hf_
+        );
+    }
 }
 
 
@@ -299,7 +269,24 @@ inline Foam::hPowerThermo<EquationOfState> Foam::operator==
     const hPowerThermo<EquationOfState>& ct2
 )
 {
-    return ct2 - ct1;
+    EquationOfState eofs
+    (
+        static_cast<const EquationOfState&>(ct1)
+     == static_cast<const EquationOfState&>(ct2)
+    );
+
+    return hPowerThermo<EquationOfState>
+    (
+        eofs,
+        ct2.Y()/eofs.Y()*ct2.c0_
+      - ct1.Y()/eofs.Y()*ct1.c0_,
+        ct2.Y()/eofs.Y()*ct2.n0_
+      - ct1.Y()/eofs.Y()*ct1.n0_,
+        ct2.Y()/eofs.Y()*ct2.Tref_
+      - ct1.Y()/eofs.Y()*ct1.Tref_,
+        ct2.Y()/eofs.Y()*ct2.Hf_
+      - ct1.Y()/eofs.Y()*ct1.Hf_
+    );
 }
 
 

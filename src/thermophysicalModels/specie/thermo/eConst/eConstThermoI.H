@@ -100,53 +100,53 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::limit
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::cp
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Cp
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cv_ + this->cpMcv(p, T) + EquationOfState::cp(p, T);
+    return Cv_ + this->CpMCv(p, T) + EquationOfState::Cp(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::ha
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Ha
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return cp(p, T)*T + Hf_ + EquationOfState::h(p, T);
+    return Cp(p, T)*T + Hf_ + EquationOfState::H(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::hs
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Hs
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return cp(p, T)*T + EquationOfState::h(p, T);
+    return Cp(p, T)*T + EquationOfState::H(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::hc() const
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Hc() const
 {
     return Hf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::s
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::S
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return cp(p, T)*log(T/Tstd) + EquationOfState::s(p, T);
+    return Cp(p, T)*log(T/Tstd) + EquationOfState::S(p, T);
 }
 
 
@@ -158,33 +158,18 @@ inline void Foam::eConstThermo<EquationOfState>::operator+=
     const eConstThermo<EquationOfState>& ct
 )
 {
-    scalar molr1 = this->nMoles();
+    scalar Y1 = this->Y();
 
     EquationOfState::operator+=(ct);
 
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
+    if (mag(this->Y()) > SMALL)
+    {
+        Y1 /= this->Y();
+        const scalar Y2 = ct.Y()/this->Y();
 
-    Cv_ = molr1*Cv_ + molr2*ct.Cv_;
-    Hf_ = molr1*Hf_ + molr2*ct.Hf_;
-}
-
-
-template<class EquationOfState>
-inline void Foam::eConstThermo<EquationOfState>::operator-=
-(
-    const eConstThermo<EquationOfState>& ct
-)
-{
-    scalar molr1 = this->nMoles();
-
-    EquationOfState::operator-=(ct);
-
-    molr1 /= this->nMoles();
-    scalar molr2 = ct.nMoles()/this->nMoles();
-
-    Cv_ = molr1*Cv_ - molr2*ct.Cv_;
-    Hf_ = molr1*Hf_ - molr2*ct.Hf_;
+        Cv_ = Y1*Cv_ + Y2*ct.Cv_;
+        Hf_ = Y1*Hf_ + Y2*ct.Hf_;
+    }
 }
 
 
@@ -203,38 +188,26 @@ inline Foam::eConstThermo<EquationOfState> Foam::operator+
       + static_cast<const EquationOfState&>(ct2)
     );
 
-    return eConstThermo<EquationOfState>
-    (
-        eofs,
-        ct1.nMoles()/eofs.nMoles()*ct1.Cv_
-      + ct2.nMoles()/eofs.nMoles()*ct2.Cv_,
-        ct1.nMoles()/eofs.nMoles()*ct1.Hf_
-      + ct2.nMoles()/eofs.nMoles()*ct2.Hf_
-    );
-}
-
-
-template<class EquationOfState>
-inline Foam::eConstThermo<EquationOfState> Foam::operator-
-(
-    const eConstThermo<EquationOfState>& ct1,
-    const eConstThermo<EquationOfState>& ct2
-)
-{
-    EquationOfState eofs
-    (
-        static_cast<const EquationOfState&>(ct1)
-      - static_cast<const EquationOfState&>(ct2)
-    );
-
-    return eConstThermo<EquationOfState>
-    (
-        eofs,
-        ct1.nMoles()/eofs.nMoles()*ct1.Cv_
-      - ct2.nMoles()/eofs.nMoles()*ct2.Cv_,
-        ct1.nMoles()/eofs.nMoles()*ct1.Hf_
-      - ct2.nMoles()/eofs.nMoles()*ct2.Hf_
-    );
+    if (mag(eofs.Y()) < SMALL)
+    {
+        return eConstThermo<EquationOfState>
+        (
+            eofs,
+            ct1.Cv_,
+            ct1.Hf_
+        );
+    }
+    else
+    {
+        return eConstThermo<EquationOfState>
+        (
+            eofs,
+            ct1.Y()/eofs.Y()*ct1.Cv_
+          + ct2.Y()/eofs.Y()*ct2.Cv_,
+            ct1.Y()/eofs.Y()*ct1.Hf_
+          + ct2.Y()/eofs.Y()*ct2.Hf_
+        );
+    }
 }
 
 
@@ -261,7 +234,20 @@ inline Foam::eConstThermo<EquationOfState> Foam::operator==
     const eConstThermo<EquationOfState>& ct2
 )
 {
-    return ct2 - ct1;
+    EquationOfState eofs
+    (
+        static_cast<const EquationOfState&>(ct1)
+     == static_cast<const EquationOfState&>(ct2)
+    );
+
+    return eConstThermo<EquationOfState>
+    (
+        eofs,
+        ct2.Y()/eofs.Y()*ct2.Cv_
+      - ct1.Y()/eofs.Y()*ct1.Cv_,
+        ct2.Y()/eofs.Y()*ct2.Hf_
+      - ct1.Y()/eofs.Y()*ct1.Hf_
+    );
 }
 
 

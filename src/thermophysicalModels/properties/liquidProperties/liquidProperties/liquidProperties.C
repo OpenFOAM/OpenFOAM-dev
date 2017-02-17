@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,50 +118,6 @@ Foam::liquidProperties::liquidProperties(const liquidProperties& liq)
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New(Istream& is)
-{
-    if (debug)
-    {
-        InfoInFunction << "Constructing liquidProperties" << endl;
-    }
-
-    const word liquidPropertiesType(is);
-    const word coeffs(is);
-
-    if (coeffs == "defaultCoeffs")
-    {
-        ConstructorTable::iterator cstrIter =
-            ConstructorTablePtr_->find(liquidPropertiesType);
-
-        if (cstrIter == ConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown liquidProperties type "
-                << liquidPropertiesType << nl << nl
-                << "Valid liquidProperties types are:" << nl
-                << ConstructorTablePtr_->sortedToc()
-                << abort(FatalError);
-        }
-
-        return autoPtr<liquidProperties>(cstrIter()());
-    }
-    else if (coeffs == "coeffs")
-    {
-        return autoPtr<liquidProperties>(new liquidProperties(is));
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "liquidProperties type " << liquidPropertiesType
-            << ", option " << coeffs << " given"
-            << ", should be coeffs or defaultCoeffs"
-            << abort(FatalError);
-
-        return autoPtr<liquidProperties>(nullptr);
-    }
-}
-
-
 Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 (
     const dictionary& dict
@@ -274,14 +230,14 @@ Foam::scalar Foam::liquidProperties::mug(scalar p, scalar T) const
 }
 
 
-Foam::scalar Foam::liquidProperties::K(scalar p, scalar T) const
+Foam::scalar Foam::liquidProperties::kappa(scalar p, scalar T) const
 {
     NotImplemented;
     return 0.0;
 }
 
 
-Foam::scalar Foam::liquidProperties::Kg(scalar p, scalar T) const
+Foam::scalar Foam::liquidProperties::kappag(scalar p, scalar T) const
 {
     NotImplemented;
     return 0.0;
