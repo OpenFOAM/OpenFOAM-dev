@@ -81,10 +81,7 @@ inline Foam::Ostream& Foam::operator<<
     const thirdBodyArrheniusReactionRate& arr
 )
 {
-    os  << token::BEGIN_LIST
-        << static_cast<const ArrheniusReactionRate&>(arr)
-        << token::SPACE << arr.thirdBodyEfficiencies_
-        << token::END_LIST;
+    arr.write(os);
     return os;
 }
 

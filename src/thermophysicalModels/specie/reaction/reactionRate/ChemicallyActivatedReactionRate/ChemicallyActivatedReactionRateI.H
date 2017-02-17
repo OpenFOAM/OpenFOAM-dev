@@ -108,9 +108,7 @@ inline Foam::Ostream& Foam::operator<<
         <ReactionRate, ChemicallyActivationFunction>& carr
 )
 {
-    os  << token::BEGIN_LIST
-        << carr.k0_ << token::SPACE << carr.kInf_ << token::SPACE << carr.F_
-        << token::END_LIST;
+    carr.write(os);
     return os;
 }
 

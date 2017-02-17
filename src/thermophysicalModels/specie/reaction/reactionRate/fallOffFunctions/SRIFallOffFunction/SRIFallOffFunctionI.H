@@ -83,14 +83,7 @@ inline Foam::Ostream& Foam::operator<<
     const Foam::SRIFallOffFunction& srifof
 )
 {
-    os  << token::BEGIN_LIST
-        << srifof.a_
-        << token::SPACE << srifof.b_
-        << token::SPACE << srifof.c_
-        << token::SPACE << srifof.d_
-        << token::SPACE << srifof.e_
-        << token::END_LIST;
-
+    srifof.write(os);
     return os;
 }
 

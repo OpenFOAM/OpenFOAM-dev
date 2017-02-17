@@ -114,53 +114,7 @@ inline Foam::Ostream& Foam::operator<<
     const thirdBodyEfficiencies& tbes
 )
 {
-    scalarList orderedTbes = tbes;
-    sort(orderedTbes);
-
-    scalar val = orderedTbes[0];
-    label count = 1;
-
-    scalar valMaxCount = val;
-    label maxCount = 1;
-
-    for (label i=1; i<orderedTbes.size(); i++)
-    {
-        if (equal(orderedTbes[i], val))
-        {
-            count++;
-        }
-        else
-        {
-            if (count > maxCount)
-            {
-                maxCount = count;
-                valMaxCount = val;
-            }
-
-            count = 1;
-            val = orderedTbes[i];
-        }
-    }
-
-    if (count > maxCount)
-    {
-        maxCount = count;
-        valMaxCount = val;
-    }
-
-    os << token::BEGIN_LIST << valMaxCount;
-
-    forAll(tbes, i)
-    {
-        if (notEqual(tbes[i], valMaxCount))
-        {
-            os  << token::SPACE << tbes.species_[i]
-                << token::SPACE << tbes[i];
-        }
-    }
-
-    os << token::END_LIST;
-
+    tbes.write(os);
     return os;
 }
 

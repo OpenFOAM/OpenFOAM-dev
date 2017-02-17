@@ -104,16 +104,7 @@ inline Foam::Ostream& Foam::operator<<
     const JanevReactionRate& jrr
 )
 {
-    os  << token::BEGIN_LIST
-        << jrr.A_ << token::SPACE << jrr.beta_ << token::SPACE << jrr.Ta_;
-
-    for (int n=0; n<JanevReactionRate::nb_; n++)
-    {
-        os  << token::SPACE << jrr.b_[n];
-    }
-
-    os << token::END_LIST;
-
+    jrr.write(os);
     return os;
 }
 

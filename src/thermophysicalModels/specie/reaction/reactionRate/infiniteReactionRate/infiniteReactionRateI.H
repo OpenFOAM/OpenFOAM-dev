@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,7 @@ inline Foam::Ostream& Foam::operator<<
     const infiniteReactionRate& rr
 )
 {
-    os  << token::BEGIN_LIST
-        << token::END_LIST;
+    rr.write(os);
     return os;
 }
 

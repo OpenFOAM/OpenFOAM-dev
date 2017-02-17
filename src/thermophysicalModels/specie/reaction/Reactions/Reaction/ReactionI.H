@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,9 +67,8 @@ Reaction<ReactionThermo>::rhs() const
 template<class ReactionThermo>
 inline Ostream& operator<<(Ostream& os, const Reaction<ReactionThermo>& r)
 {
-    OStringStream reaction;
-    os << r.reactionStr(reaction)<< token::END_STATEMENT <<nl;
-   return os;
+    r.write(os);
+    return os;
 }
 
 

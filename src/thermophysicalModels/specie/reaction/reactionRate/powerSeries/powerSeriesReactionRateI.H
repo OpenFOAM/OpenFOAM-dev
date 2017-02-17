@@ -97,16 +97,7 @@ inline Foam::Ostream& Foam::operator<<
     const powerSeriesReactionRate& psrr
 )
 {
-    os  << token::BEGIN_LIST
-        << psrr.A_ << token::SPACE << psrr.beta_ << token::SPACE << psrr.Ta_;
-
-    for (int n=0; n<powerSeriesReactionRate::nCoeff_; n++)
-    {
-        os  << token::SPACE << psrr.coeffs_[n];
-    }
-
-    os << token::END_LIST;
-
+    psrr.write(os);
     return os;
 }
 

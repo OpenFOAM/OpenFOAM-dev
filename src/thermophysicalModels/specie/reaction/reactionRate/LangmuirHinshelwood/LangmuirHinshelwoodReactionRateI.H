@@ -109,16 +109,7 @@ inline Foam::Ostream& Foam::operator<<
     const LangmuirHinshelwoodReactionRate& lhrr
 )
 {
-    os  << token::BEGIN_LIST;
-
-    for (int i=0; i<LangmuirHinshelwoodReactionRate::n_; i++)
-    {
-        os  << token::SPACE
-            << '(' << lhrr.A_[i] << token::SPACE << lhrr.Ta_[i] << ')';
-    }
-
-    os << token::END_LIST;
-
+    lhrr.write(os);
     return os;
 }
 

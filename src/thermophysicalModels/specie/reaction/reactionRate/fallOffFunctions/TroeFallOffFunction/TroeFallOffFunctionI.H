@@ -92,13 +92,7 @@ inline Foam::Ostream& Foam::operator<<
     const Foam::TroeFallOffFunction& tfof
 )
 {
-    os  << token::BEGIN_LIST
-        << tfof.alpha_
-        << token::SPACE << tfof.Tsss_
-        << token::SPACE << tfof.Ts_
-        << token::SPACE << tfof.Tss_
-        << token::END_LIST;
-
+    tfof.write(os);
     return os;
 }
 

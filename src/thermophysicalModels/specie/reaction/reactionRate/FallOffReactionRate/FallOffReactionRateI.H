@@ -120,12 +120,7 @@ inline Foam::Ostream& Foam::operator<<
     const FallOffReactionRate<ReactionRate, FallOffFunction>& forr
 )
 {
-    os  << token::BEGIN_LIST
-        << forr.k0_ << token::SPACE
-        << forr.kInf_ << token::SPACE
-        << forr.F_ << token::SPACE
-        << forr.thirdBodyEfficiencies_
-        << token::END_LIST;
+    forr.write(os);
     return os;
 }
 

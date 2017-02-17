@@ -114,10 +114,7 @@ inline Foam::Ostream& Foam::operator<<
     const LandauTellerReactionRate& arr
 )
 {
-    os  << token::BEGIN_LIST
-        << arr.A_ << token::SPACE << arr.beta_ << token::SPACE << arr.Ta_
-        << token::SPACE << arr.B_ << token::SPACE << arr.C_
-        << token::END_LIST;
+    arr.write(os);
     return os;
 }
 
