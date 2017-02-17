@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,26 +25,6 @@ License
 
 #include "absorptionCoeffs.H"
 #include "IOstreams.H"
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::radiation::absorptionCoeffs::absorptionCoeffs(Istream& is)
-:
-   Tcommon_(readScalar(is)),
-   Tlow_(readScalar(is)),
-   Thigh_(readScalar(is)),
-   invTemp_(readBool(is))
-{
-    for (label coefLabel=0; absorptionCoeffs::nCoeffs_; coefLabel++)
-    {
-        is >> highACoeffs_[coefLabel];
-    }
-
-    for (label coefLabel=0; absorptionCoeffs::nCoeffs_; coefLabel++)
-    {
-        is >> lowACoeffs_[coefLabel];
-    }
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * //
@@ -83,12 +63,6 @@ Foam::radiation::absorptionCoeffs::coeffs
     {
         return highACoeffs_;
     }
-}
-
-
-void Foam::radiation::absorptionCoeffs::initialise(Istream&)
-{
-    absorptionCoeffs(Istream);
 }
 
 

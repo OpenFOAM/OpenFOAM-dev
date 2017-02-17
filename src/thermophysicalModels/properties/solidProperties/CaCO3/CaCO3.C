@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(CaCO3, 0);
     addToRunTimeSelectionTable(solidProperties, CaCO3,);
-    addToRunTimeSelectionTable(solidProperties, CaCO3, Istream);
     addToRunTimeSelectionTable(solidProperties, CaCO3, dictionary);
 }
 
@@ -57,21 +56,9 @@ Foam::CaCO3::CaCO3(const solidProperties& s)
 {}
 
 
-Foam::CaCO3::CaCO3(Istream& is)
-:
-    solidProperties(is)
-{}
-
-
 Foam::CaCO3::CaCO3(const dictionary& dict)
 :
     solidProperties(dict)
-{}
-
-
-Foam::CaCO3::CaCO3(const CaCO3& s)
-:
-    solidProperties(s)
 {}
 
 

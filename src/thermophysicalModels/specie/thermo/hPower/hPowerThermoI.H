@@ -92,17 +92,6 @@ Foam::hPowerThermo<EquationOfState>::clone() const
 
 template<class EquationOfState>
 inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState>>
-Foam::hPowerThermo<EquationOfState>::New(Istream& is)
-{
-    return autoPtr<hPowerThermo<EquationOfState>>
-    (
-        new hPowerThermo<EquationOfState>(is)
-    );
-}
-
-
-template<class EquationOfState>
-inline Foam::autoPtr<Foam::hPowerThermo<EquationOfState>>
 Foam::hPowerThermo<EquationOfState>::New(const dictionary& dict)
 {
     return autoPtr<hPowerThermo<EquationOfState>>

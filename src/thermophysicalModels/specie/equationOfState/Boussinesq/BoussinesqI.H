@@ -44,19 +44,6 @@ inline Foam::Boussinesq<Specie>::Boussinesq
 template<class Specie>
 inline Foam::Boussinesq<Specie>::Boussinesq
 (
-    const Boussinesq& b
-)
-:
-    Specie(b),
-    rho0_(b.rho0_),
-    T0_(b.T0_),
-    beta_(b.beta_)
-{}
-
-
-template<class Specie>
-inline Foam::Boussinesq<Specie>::Boussinesq
-(
     const word& name,
     const Boussinesq<Specie>& b
 )
@@ -75,20 +62,6 @@ Foam::Boussinesq<Specie>::clone() const
     return autoPtr<Boussinesq<Specie>>
     (
         new Boussinesq<Specie>(*this)
-    );
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::Boussinesq<Specie>>
-Foam::Boussinesq<Specie>::New
-(
-    Istream& is
-)
-{
-    return autoPtr<Boussinesq<Specie>>
-    (
-        new Boussinesq<Specie>(is)
     );
 }
 

@@ -67,14 +67,6 @@ Foam::perfectFluid<Specie>::clone() const
 
 template<class Specie>
 inline Foam::autoPtr<Foam::perfectFluid<Specie>>
-Foam::perfectFluid<Specie>::New(Istream& is)
-{
-    return autoPtr<perfectFluid<Specie>>(new perfectFluid<Specie>(is));
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::perfectFluid<Specie>>
 Foam::perfectFluid<Specie>::New
 (
     const dictionary& dict

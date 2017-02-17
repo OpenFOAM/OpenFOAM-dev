@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,17 +27,6 @@ License
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Thermo>
-Foam::constTransport<Thermo>::constTransport(Istream& is)
-:
-    Thermo(is),
-    mu_(readScalar(is)),
-    rPr_(1.0/readScalar(is))
-{
-    is.check("constTransport::constTransport(Istream& is)");
-}
-
 
 template<class Thermo>
 Foam::constTransport<Thermo>::constTransport(const dictionary& dict)
@@ -72,11 +61,7 @@ void Foam::constTransport<Thermo>::constTransport::write(Ostream& os) const
 template<class Thermo>
 Foam::Ostream& Foam::operator<<(Ostream& os, const constTransport<Thermo>& ct)
 {
-    operator<<(os, static_cast<const Thermo&>(ct));
-    os << tab << ct.mu_ << tab << 1.0/ct.rPr_;
-
-    os.check("Ostream& operator<<(Ostream&, const constTransport&)");
-
+    ct.write(os);
     return os;
 }
 

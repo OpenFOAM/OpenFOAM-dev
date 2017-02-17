@@ -93,9 +93,6 @@ public:
         //- Construct from components
         inline perfectGas(const Specie& sp);
 
-        //- Construct from Istream
-        perfectGas(Istream&);
-
         //- Construct from dictionary
         perfectGas(const dictionary& dict);
 
@@ -104,9 +101,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<perfectGas> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<perfectGas> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<perfectGas> New(const dictionary& dict);

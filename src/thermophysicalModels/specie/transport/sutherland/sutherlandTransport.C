@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,17 +40,6 @@ Foam::scalar Foam::sutherlandTransport<Thermo>::readCoeff
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Thermo>
-Foam::sutherlandTransport<Thermo>::sutherlandTransport(Istream& is)
-:
-    Thermo(is),
-    As_(readScalar(is)),
-    Ts_(readScalar(is))
-{
-    is.check("sutherlandTransport<Thermo>::sutherlandTransport(Istream&)");
-}
-
 
 template<class Thermo>
 Foam::sutherlandTransport<Thermo>::sutherlandTransport(const dictionary& dict)
@@ -102,13 +91,7 @@ Foam::Ostream& Foam::operator<<
     const sutherlandTransport<Thermo>& st
 )
 {
-    os << static_cast<const Thermo&>(st) << tab << st.As_ << tab << st.Ts_;
-
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const sutherlandTransport<Thermo>&)"
-    );
-
+    st.write(os);
     return os;
 }
 

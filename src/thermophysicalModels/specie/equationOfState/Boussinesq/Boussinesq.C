@@ -29,22 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::Boussinesq<Specie>::Boussinesq(Istream& is)
-:
-    Specie(is),
-    rho0_(readScalar(is)),
-    T0_(readScalar(is)),
-    beta_(readScalar(is))
-{
-    is.check
-    (
-        "Boussinesq<Specie>::"
-        "Boussinesq(Istream& is)"
-    );
-}
-
-
-template<class Specie>
 Foam::Boussinesq<Specie>::Boussinesq
 (
     const dictionary& dict
@@ -81,16 +65,7 @@ Foam::Ostream& Foam::operator<<
     const Boussinesq<Specie>& b
 )
 {
-    os  << static_cast<const Specie&>(b)
-        << token::SPACE << b.rho0_
-        << token::SPACE << b.T0_
-        << token::SPACE << b.beta_;
-
-    os.check
-    (
-        "Ostream& operator<<"
-        "(Ostream& os, const Boussinesq<Specie>& st)"
-    );
+    b.write(os);
     return os;
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,13 +76,6 @@ namespace Foam
     (                                                                          \
         Reaction##Thermo,                                                      \
         ReactionType##Thermo##ReactionRate,                                    \
-        Istream                                                                \
-    );                                                                         \
-                                                                               \
-    addToRunTimeSelectionTable                                                 \
-    (                                                                          \
-        Reaction##Thermo,                                                      \
-        ReactionType##Thermo##ReactionRate,                                    \
         dictionary                                                             \
     );
 
@@ -121,7 +114,7 @@ namespace Foam
     makeReaction(Thermo, NonEquilibriumReversibleReaction, ReactionRate)
 
 
-#define makePressureDependentReactions(Thermo, ReactionRate, FallOffFunction) \
+#define makePressureDependentReactions(Thermo, ReactionRate, FallOffFunction)  \
                                                                                \
     makePressureDependentReaction                                              \
     (                                                                          \

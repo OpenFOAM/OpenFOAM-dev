@@ -56,14 +56,6 @@ Foam::perfectGas<Specie>::clone() const
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::perfectGas<Specie>>
-Foam::perfectGas<Specie>::New(Istream& is)
-{
-    return autoPtr<perfectGas<Specie>>(new perfectGas<Specie>(is));
-}
-
-
-template<class Specie>
 inline Foam::autoPtr<Foam::perfectGas<Specie>> Foam::perfectGas<Specie>::New
 (
     const dictionary& dict

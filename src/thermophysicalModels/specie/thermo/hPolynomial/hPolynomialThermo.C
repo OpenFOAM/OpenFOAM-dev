@@ -31,30 +31,6 @@ License
 template<class EquationOfState, int PolySize>
 Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
 (
-    Istream& is
-)
-:
-    EquationOfState(is),
-    Hf_(readScalar(is)),
-    Sf_(readScalar(is)),
-    CpCoeffs_("CpCoeffs<" + Foam::name(PolySize) + '>', is),
-    hCoeffs_(),
-    sCoeffs_()
-{
-    hCoeffs_ = CpCoeffs_.integral();
-    sCoeffs_ = CpCoeffs_.integralMinus1();
-
-    // Offset h poly so that it is relative to the enthalpy at Tstd
-    hCoeffs_[0] += Hf_ - hCoeffs_.value(Tstd);
-
-    // Offset s poly so that it is relative to the entropy at Tstd
-    sCoeffs_[0] += Sf_ - sCoeffs_.value(Tstd);
-}
-
-
-template<class EquationOfState, int PolySize>
-Foam::hPolynomialThermo<EquationOfState, PolySize>::hPolynomialThermo
-(
     const dictionary& dict
 )
 :
@@ -113,21 +89,7 @@ Foam::Ostream& Foam::operator<<
     const hPolynomialThermo<EquationOfState, PolySize>& pt
 )
 {
-    os  << static_cast<const EquationOfState&>(pt) << tab
-        << pt.Hf_ << tab
-        << pt.Sf_ << tab
-        << "CpCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << pt.CpCoeffs_/pt;
-
-    os.check
-    (
-        "operator<<"
-        "("
-            "Ostream&, "
-            "const hPolynomialThermo<EquationOfState, PolySize>&"
-        ")"
-    );
-
+    pt.write(os);
     return os;
 }
 

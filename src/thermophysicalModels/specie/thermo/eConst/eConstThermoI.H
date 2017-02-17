@@ -67,17 +67,6 @@ Foam::eConstThermo<EquationOfState>::clone() const
 
 template<class EquationOfState>
 inline Foam::autoPtr<Foam::eConstThermo<EquationOfState>>
-Foam::eConstThermo<EquationOfState>::New(Istream& is)
-{
-    return autoPtr<eConstThermo<EquationOfState>>
-    (
-        new eConstThermo<EquationOfState>(is)
-    );
-}
-
-
-template<class EquationOfState>
-inline Foam::autoPtr<Foam::eConstThermo<EquationOfState>>
 Foam::eConstThermo<EquationOfState>::New(const dictionary& dict)
 {
     return autoPtr<eConstThermo<EquationOfState>>

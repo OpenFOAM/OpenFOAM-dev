@@ -119,9 +119,6 @@ public:
             const scalar& omega
         );
 
-        //- Construct from Istream
-        PengRobinsonGas(Istream&);
-
         //- Construct from dictionary
         PengRobinsonGas(const dictionary& dict);
 
@@ -130,9 +127,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<PengRobinsonGas> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<PengRobinsonGas> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<PengRobinsonGas> New

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,6 @@ namespace Foam
     (
         thermophysicalFunction,
         APIdiffCoefFunc,
-        Istream
-    );
-    addToRunTimeSelectionTable
-    (
-        thermophysicalFunction,
-        APIdiffCoefFunc,
         dictionary
     );
 }
@@ -61,17 +55,6 @@ Foam::APIdiffCoefFunc::APIdiffCoefFunc
     wa_(wa),
     alpha_(sqrt(1/wf_ + 1/wa_)),
     beta_(sqr(cbrt(a_) + cbrt(b_)))
-{}
-
-
-Foam::APIdiffCoefFunc::APIdiffCoefFunc(Istream& is)
-:
-    a_(readScalar(is)),
-    b_(readScalar(is)),
-    wf_(readScalar(is)),
-    wa_(readScalar(is)),
-    alpha_(sqrt(1/wf_ + 1/wa_)),
-    beta_(sqr((cbrt(a_) + cbrt(b_))))
 {}
 
 

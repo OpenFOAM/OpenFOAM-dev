@@ -42,17 +42,6 @@ inline Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 template<class Specie>
 inline Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 (
-    const incompressiblePerfectGas& ipg
-)
-:
-    Specie(ipg),
-    pRef_(ipg.pRef_)
-{}
-
-
-template<class Specie>
-inline Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
-(
     const word& name,
     const incompressiblePerfectGas<Specie>& ipg
 )
@@ -69,20 +58,6 @@ Foam::incompressiblePerfectGas<Specie>::clone() const
     return autoPtr<incompressiblePerfectGas<Specie>>
     (
         new incompressiblePerfectGas<Specie>(*this)
-    );
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::incompressiblePerfectGas<Specie>>
-Foam::incompressiblePerfectGas<Specie>::New
-(
-    Istream& is
-)
-{
-    return autoPtr<incompressiblePerfectGas<Specie>>
-    (
-        new incompressiblePerfectGas<Specie>(is)
     );
 }
 

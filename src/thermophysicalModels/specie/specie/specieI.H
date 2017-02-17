@@ -58,14 +58,6 @@ inline specie::specie
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline specie::specie(const specie& st)
-:
-    name_(st.name_),
-    Y_(st.Y_),
-    molWeight_(st.molWeight_)
-{}
-
-
 inline specie::specie(const word& name, const specie& st)
 :
     name_(name),

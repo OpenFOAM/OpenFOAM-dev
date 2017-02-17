@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,14 +95,6 @@ public:
             const NonEquilibriumReversibleReaction
                 <ReactionType, ReactionThermo, ReactionRate>&,
             const speciesTable& species
-        );
-
-        //- Construct from Istream
-        NonEquilibriumReversibleReaction
-        (
-            const speciesTable& species,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
-            Istream& is
         );
 
         //- Construct from dictionary

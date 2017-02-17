@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,20 +36,6 @@ inline Foam::ArrheniusReactionRate::ArrheniusReactionRate
     beta_(beta),
     Ta_(Ta)
 {}
-
-
-inline Foam::ArrheniusReactionRate::ArrheniusReactionRate
-(
-    const speciesTable&,
-    Istream& is
-)
-:
-    A_(readScalar(is.readBegin("ArrheniusReactionRate(Istream&)"))),
-    beta_(readScalar(is)),
-    Ta_(readScalar(is))
-{
-    is.readEnd("ArrheniusReactionRate(Istream&)");
-}
 
 
 inline Foam::ArrheniusReactionRate::ArrheniusReactionRate

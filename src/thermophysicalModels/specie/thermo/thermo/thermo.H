@@ -127,9 +127,6 @@ public:
         //- Construct from components
         inline thermo(const Thermo& sp);
 
-        //- Construct from Istream
-        thermo(Istream&);
-
         //- Construct from dictionary
         thermo(const dictionary& dict);
 

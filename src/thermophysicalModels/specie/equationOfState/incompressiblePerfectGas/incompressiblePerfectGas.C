@@ -29,20 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas(Istream& is)
-:
-    Specie(is),
-    pRef_(readScalar(is))
-{
-    is.check
-    (
-        "incompressiblePerfectGas<Specie>::"
-        "incompressiblePerfectGas(Istream& is)"
-    );
-}
-
-
-template<class Specie>
 Foam::incompressiblePerfectGas<Specie>::incompressiblePerfectGas
 (
     const dictionary& dict
@@ -75,14 +61,7 @@ Foam::Ostream& Foam::operator<<
     const incompressiblePerfectGas<Specie>& pg
 )
 {
-    os  << static_cast<const Specie&>(pg)
-        << token::SPACE << pg.pRef_;
-
-    os.check
-    (
-        "Ostream& operator<<"
-        "(Ostream& os, const incompressiblePerfectGas<Specie>& st)"
-    );
+    pg.write(os);
     return os;
 }
 

@@ -29,19 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-Foam::hRefConstThermo<EquationOfState>::hRefConstThermo(Istream& is)
-:
-    EquationOfState(is),
-    Cp_(readScalar(is)),
-    Hf_(readScalar(is)),
-    Tref_(readScalar(is)),
-    Href_(readScalar(is))
-{
-    is.check("hRefConstThermo::hRefConstThermo(Istream& is)");
-}
-
-
-template<class EquationOfState>
 Foam::hRefConstThermo<EquationOfState>::hRefConstThermo(const dictionary& dict)
 :
     EquationOfState(dict),
@@ -77,11 +64,7 @@ Foam::Ostream& Foam::operator<<
     const hRefConstThermo<EquationOfState>& ct
 )
 {
-    os  << static_cast<const EquationOfState&>(ct) << tab
-        << ct.Cp_ << tab << ct.Hf_ << tab
-        << ct.Tref_ << tab << ct.Href_;
-
-    os.check("Ostream& operator<<(Ostream& os, const hRefConstThermo& ct)");
+    ct.write(os);
     return os;
 }
 

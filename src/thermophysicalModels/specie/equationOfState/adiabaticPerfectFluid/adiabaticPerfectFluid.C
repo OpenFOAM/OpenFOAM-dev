@@ -29,22 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid(Istream& is)
-:
-    Specie(is),
-    p0_(readScalar(is)),
-    rho0_(readScalar(is)),
-    gamma_(readScalar(is)),
-    B_(readScalar(is))
-{
-    is.check
-    (
-        "adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid(Istream& is)"
-    );
-}
-
-
-template<class Specie>
 Foam::adiabaticPerfectFluid<Specie>::adiabaticPerfectFluid
 (
     const dictionary& dict
@@ -84,17 +68,7 @@ Foam::Ostream& Foam::operator<<
     const adiabaticPerfectFluid<Specie>& pf
 )
 {
-    os  << static_cast<const Specie&>(pf)
-        << token::SPACE << pf.R_
-        << token::SPACE << pf.rho0_
-        << token::SPACE << pf.gamma_
-        << token::SPACE << pf.B_;
-
-    os.check
-    (
-        "Ostream& operator<<(Ostream&, const adiabaticPerfectFluid<Specie>&)"
-    );
-
+    pf.write(os);
     return os;
 }
 

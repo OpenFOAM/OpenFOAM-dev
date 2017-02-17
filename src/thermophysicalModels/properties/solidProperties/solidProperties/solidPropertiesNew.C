@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,49 +27,6 @@ License
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New(Istream& is)
-{
-    if (debug)
-    {
-        InfoInFunction << "Constructing solid" << endl;
-    }
-
-    const word solidType(is);
-    const word coeffs(is);
-
-    if (coeffs == "defaultCoeffs")
-    {
-        ConstructorTable::iterator cstrIter =
-            ConstructorTablePtr_->find(solidType);
-
-        if (cstrIter == ConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown solidProperties type " << solidType << nl << nl
-                << "Valid solidProperties types are :" << endl
-                << ConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
-        }
-
-        return autoPtr<solidProperties>(cstrIter()());
-    }
-    else if (coeffs == "coeffs")
-    {
-        return autoPtr<solidProperties>(new solidProperties(is));
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "solidProperties type " << solidType
-            << ", option " << coeffs << " given"
-            << ", should be coeffs or defaultCoeffs"
-            << exit(FatalError);
-
-        return autoPtr<solidProperties>(nullptr);
-    }
-}
-
 
 Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 (

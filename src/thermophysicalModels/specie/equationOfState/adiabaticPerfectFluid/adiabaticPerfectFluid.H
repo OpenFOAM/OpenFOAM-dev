@@ -114,9 +114,6 @@ public:
             const scalar B
         );
 
-        //- Construct from Istream
-        adiabaticPerfectFluid(Istream&);
-
         //- Construct from dictionary
         adiabaticPerfectFluid(const dictionary& dict);
 
@@ -129,9 +126,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<adiabaticPerfectFluid> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<adiabaticPerfectFluid> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<adiabaticPerfectFluid> New

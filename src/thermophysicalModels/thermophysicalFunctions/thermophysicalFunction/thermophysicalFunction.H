@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,15 +63,6 @@ public:
         (
             autoPtr,
             thermophysicalFunction,
-            Istream,
-            (Istream& is),
-            (is)
-        );
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            thermophysicalFunction,
             dictionary,
             (const dictionary& dict),
             (dict)
@@ -83,9 +74,6 @@ public:
         //- Construct null
         thermophysicalFunction()
         {}
-
-        //- Return pointer to new thermophysicalFunction created from input
-        static autoPtr<thermophysicalFunction> New(Istream& is);
 
         //- Return pointer to new thermophysicalFunction created from dict
         static autoPtr<thermophysicalFunction> New(const dictionary& dict);

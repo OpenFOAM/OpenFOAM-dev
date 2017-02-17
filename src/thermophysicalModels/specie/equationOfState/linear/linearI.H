@@ -66,14 +66,6 @@ Foam::linear<Specie>::clone() const
 
 template<class Specie>
 inline Foam::autoPtr<Foam::linear<Specie>>
-Foam::linear<Specie>::New(Istream& is)
-{
-    return autoPtr<linear<Specie>>(new linear<Specie>(is));
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::linear<Specie>>
 Foam::linear<Specie>::New
 (
     const dictionary& dict

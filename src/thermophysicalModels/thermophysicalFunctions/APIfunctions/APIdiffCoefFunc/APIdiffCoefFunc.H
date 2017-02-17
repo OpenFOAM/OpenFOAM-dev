@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,9 +78,6 @@ public:
             const scalar wf,
             const scalar wa
         );
-
-        //- Construct from Istream
-        APIdiffCoefFunc(Istream& is);
 
         //- Construct from dictionary
         APIdiffCoefFunc(const dictionary& dict);

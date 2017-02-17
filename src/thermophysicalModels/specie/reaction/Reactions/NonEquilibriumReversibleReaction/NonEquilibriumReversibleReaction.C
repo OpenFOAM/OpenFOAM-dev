@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,32 +49,6 @@ NonEquilibriumReversibleReaction
     ReactionType<ReactionThermo>(reaction),
     fk_(forwardReactionRate),
     rk_(reverseReactionRate)
-{}
-
-
-
-template
-<
-    template<class> class ReactionType,
-    class ReactionThermo,
-    class ReactionRate
->
-Foam::NonEquilibriumReversibleReaction
-<
-    ReactionType,
-    ReactionThermo,
-    ReactionRate
->::
-NonEquilibriumReversibleReaction
-(
-    const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
-    Istream& is
-)
-:
-    ReactionType<ReactionThermo>(species, thermoDatabase, is),
-    fk_(species, is),
-    rk_(species, is)
 {}
 
 

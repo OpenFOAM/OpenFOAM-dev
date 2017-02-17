@@ -112,32 +112,7 @@ Foam::Ostream& Foam::operator<<
     const janafThermo<EquationOfState>& jt
 )
 {
-    os  << static_cast<const EquationOfState&>(jt) << nl
-        << "    " << jt.Tlow_
-        << tab << jt.Thigh_
-        << tab << jt.Tcommon_;
-
-    os << nl << "    ";
-
-    forAll(jt.highCpCoeffs_, i)
-    {
-        os << jt.highCpCoeffs_[i]/jt.R() << ' ';
-    }
-
-    os << nl << "    ";
-
-    forAll(jt.lowCpCoeffs_, i)
-    {
-        os << jt.lowCpCoeffs_[i]/jt.R() << ' ';
-    }
-
-    os << endl;
-
-    os.check
-    (
-        "operator<<(Ostream& os, const janafThermo<EquationOfState>& jt)"
-    );
-
+    jt.write(os);
     return os;
 }
 

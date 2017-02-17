@@ -106,9 +106,6 @@ public:
             const scalar rho0
         );
 
-        //- Construct from Istream
-        perfectFluid(Istream&);
-
         //- Construct from dictionary
         perfectFluid(const dictionary& dict);
 
@@ -117,9 +114,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<perfectFluid> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<perfectFluid> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<perfectFluid> New(const dictionary& dict);

@@ -115,12 +115,6 @@ public:
             const scalar beta
         );
 
-        //- Construct from Boussinesq
-        inline Boussinesq(const Boussinesq& sp);
-
-        //- Construct from Istream
-        Boussinesq(Istream&);
-
         //- Construct from dictionary
         Boussinesq(const dictionary& dict);
 
@@ -133,9 +127,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<Boussinesq> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<Boussinesq> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<Boussinesq> New

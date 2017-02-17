@@ -100,15 +100,6 @@ public:
     (
         autoPtr,
         solidProperties,
-        Istream,
-        (Istream& is),
-        (is)
-    );
-
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        solidProperties,
         dictionary,
         (const dictionary& dict),
         (dict)
@@ -127,14 +118,8 @@ public:
             scalar emissivity
         );
 
-        //- Construct from Istream
-        solidProperties(Istream& is);
-
         //- Construct from dictionary
         solidProperties(const dictionary& dict);
-
-        //- Construct copy
-        solidProperties(const solidProperties& s);
 
         //- Construct and return clone
         virtual autoPtr<solidProperties> clone() const
@@ -144,9 +129,6 @@ public:
 
 
     // Selectors
-
-        //- Return a pointer to a new solidProperties created from input
-        static autoPtr<solidProperties> New(Istream& is);
 
         //- Return a pointer to a new solidProperties created from dictionary
         static autoPtr<solidProperties> New(const dictionary& dict);

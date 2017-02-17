@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,18 +27,6 @@ License
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Thermo, int PolySize>
-Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
-(
-    Istream& is
-)
-:
-    Thermo(is),
-    kappaCoeffs_("kappaCoeffs<" + Foam::name(PolySize) + '>', is)
-{
-}
-
 
 template<class Thermo, int PolySize>
 Foam::polynomialSolidTransport<Thermo, PolySize>::polynomialSolidTransport
@@ -85,19 +73,7 @@ Foam::Ostream& Foam::operator<<
     const polynomialSolidTransport<Thermo, PolySize>& pt
 )
 {
-    os  << static_cast<const Thermo&>(pt) << tab
-        << "kappaCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << pt.kappaCoeffs_;
-
-    os.check
-    (
-        "Ostream& operator<<"
-        "("
-            "Ostream&, "
-            "const polynomialSolidTransport<Thermo, PolySize>&"
-        ")"
-    );
-
+    pt.write(os);
     return os;
 }
 

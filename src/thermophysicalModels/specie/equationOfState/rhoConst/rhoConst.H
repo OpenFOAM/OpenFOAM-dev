@@ -98,9 +98,6 @@ public:
         //- Construct from components
         inline rhoConst(const Specie& sp, const scalar rho);
 
-        //- Construct from Istream
-        rhoConst(Istream&);
-
         //- Construct from dictionary
         rhoConst(const dictionary& dict);
 
@@ -109,9 +106,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<rhoConst> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<rhoConst> New(Istream& is);
 
 
     // Member functions

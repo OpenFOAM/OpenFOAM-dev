@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,15 +117,6 @@ public:
         (
             const solidReaction<ReactionThermo>&,
             const speciesTable& pyrolisisGases
-        );
-
-
-        //- Construct from Istream
-        solidReaction
-        (
-            const speciesTable& pyrolisisGases,
-            const HashPtrTable<ReactionThermo>& thermoDatabase,
-            Istream& is
         );
 
 

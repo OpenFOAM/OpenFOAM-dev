@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,9 +93,6 @@ public:
             const scalar e,
             const scalar f
         );
-
-        //- Construct from Istream
-        NSRDSfunc0(Istream& is);
 
         //- Construct from dictionary
         NSRDSfunc0(const dictionary& dict);

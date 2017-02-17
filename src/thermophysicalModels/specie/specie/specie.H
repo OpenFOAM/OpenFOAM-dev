@@ -96,14 +96,8 @@ public:
             const scalar molWeight
         );
 
-        //- Construct as copy
-        inline specie(const specie&);
-
         //- Construct as named copy
         inline specie(const word& name, const specie&);
-
-        //- Construct from Istream
-        specie(Istream&);
 
         //- Construct from dictionary
         specie(const dictionary& dict);

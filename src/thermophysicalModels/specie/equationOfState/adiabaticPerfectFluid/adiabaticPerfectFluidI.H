@@ -75,17 +75,6 @@ Foam::adiabaticPerfectFluid<Specie>::clone() const
 
 template<class Specie>
 inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie>>
-Foam::adiabaticPerfectFluid<Specie>::New(Istream& is)
-{
-    return autoPtr<adiabaticPerfectFluid<Specie>>
-    (
-        new adiabaticPerfectFluid<Specie>(is)
-    );
-}
-
-
-template<class Specie>
-inline Foam::autoPtr<Foam::adiabaticPerfectFluid<Specie>>
 Foam::adiabaticPerfectFluid<Specie>::New
 (
     const dictionary& dict

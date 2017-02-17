@@ -29,15 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo, int PolySize>
-Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport(Istream& is)
-:
-    Thermo(is),
-    muCoeffs_("muCoeffs<" + Foam::name(PolySize) + '>', is),
-    kappaCoeffs_("kappaCoeffs<" + Foam::name(PolySize) + '>', is)
-{}
-
-
-template<class Thermo, int PolySize>
 Foam::polynomialTransport<Thermo, PolySize>::polynomialTransport
 (
     const dictionary& dict
@@ -97,21 +88,7 @@ Foam::Ostream& Foam::operator<<
     const polynomialTransport<Thermo, PolySize>& pt
 )
 {
-    os  << static_cast<const Thermo&>(pt) << tab
-        << "muCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << pt.muCoeffs_ << tab
-        << "kappaCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << pt.kappaCoeffs_;
-
-    os.check
-    (
-        "Ostream& operator<<"
-        "("
-            "Ostream&, "
-            "const polynomialTransport<Thermo, PolySize>&"
-        ")"
-    );
-
+    pt.write(os);
     return os;
 }
 

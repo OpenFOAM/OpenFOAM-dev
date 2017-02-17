@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,25 +58,6 @@ Foam::ReactionList<ThermoType>::ReactionList
 {
     readReactionDict();
 }
-
-
-template<class ThermoType>
-Foam::ReactionList<ThermoType>::ReactionList
-(
-    const speciesTable& species,
-    const HashPtrTable<ThermoType>& thermoDb,
-    const fileName& fName
-)
-:
-    SLPtrList<Reaction<ThermoType>>
-    (
-        dictionary(IFstream(fName)()).lookup("reactions"),
-        Reaction<ThermoType>::iNew(species, thermoDb)
-    ),
-    species_(species),
-    thermoDb_(thermoDb),
-    dict_(dictionary::null)
-{}
 
 
 template<class ThermoType>

@@ -131,23 +131,14 @@ public:
             const Polynomial<PolySize>& rhoPoly
         );
 
-        //- Construct from Istream
-        icoPolynomial(Istream&);
-
         //- Construct from dictionary
         icoPolynomial(const dictionary& dict);
-
-        //- Construct as copy
-        inline icoPolynomial(const icoPolynomial&);
 
         //- Construct as named copy
         inline icoPolynomial(const word& name, const icoPolynomial&);
 
         //- Construct and return a clone
         inline autoPtr<icoPolynomial> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<icoPolynomial> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<icoPolynomial> New(const dictionary& dict);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,16 +27,6 @@ License
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Specie>
-Foam::rhoConst<Specie>::rhoConst(Istream& is)
-:
-    Specie(is),
-    rho_(readScalar(is))
-{
-    is.check("rhoConst<Specie>::rhoConst(Istream& is)");
-}
-
 
 template<class Specie>
 Foam::rhoConst<Specie>::rhoConst(const dictionary& dict)
@@ -65,10 +55,7 @@ void Foam::rhoConst<Specie>::write(Ostream& os) const
 template<class Specie>
 Foam::Ostream& Foam::operator<<(Ostream& os, const rhoConst<Specie>& ico)
 {
-    os  << static_cast<const Specie&>(ico)
-        << token::SPACE << ico.rho_;
-
-    os.check("Ostream& operator<<(Ostream& os, const rhoConst<Specie>& ico)");
+    ico.write(os);
     return os;
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,9 +90,6 @@ public:
 
     // Constructors
 
-        //- Construct from Istream
-        absorptionCoeffs(Istream&);
-
         // Null constructor
         absorptionCoeffs()
         {}
@@ -109,9 +106,6 @@ public:
 
         // Initialise from a dictionary
         void initialise(const dictionary&);
-
-        // Initialise from an Istream
-        void initialise(Istream&);
 
 
     // Access Functions

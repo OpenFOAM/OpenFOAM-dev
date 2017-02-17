@@ -31,18 +31,6 @@ template<class Thermo, int PolySize>
 inline Foam::polynomialSolidTransport<Thermo, PolySize>::
 polynomialSolidTransport
 (
-    const polynomialSolidTransport& pt
-)
-:
-    Thermo(pt),
-    kappaCoeffs_(pt.kappaCoeffs_)
-{}
-
-
-template<class Thermo, int PolySize>
-inline Foam::polynomialSolidTransport<Thermo, PolySize>::
-polynomialSolidTransport
-(
     const Thermo& t,
     const Polynomial<PolySize>& kappaCoeffs
 )
@@ -72,17 +60,6 @@ Foam::polynomialSolidTransport<Thermo, PolySize>::clone() const
     return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
     (
         new polynomialSolidTransport<Thermo, PolySize>(*this)
-    );
-}
-
-
-template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::polynomialSolidTransport<Thermo, PolySize>>
-Foam::polynomialSolidTransport<Thermo, PolySize>::New(Istream& is)
-{
-    return autoPtr<polynomialSolidTransport<Thermo, PolySize>>
-    (
-        new polynomialSolidTransport<Thermo, PolySize>(is)
     );
 }
 

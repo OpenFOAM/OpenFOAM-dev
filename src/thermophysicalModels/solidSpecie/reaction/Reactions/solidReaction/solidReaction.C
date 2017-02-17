@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,23 +57,6 @@ Foam::solidReaction<ReactionThermo>::solidReaction
     glhs_(r.glhs_),
     grhs_(r.grhs_)
 {}
-
-
-template<class ReactionThermo>
-Foam::solidReaction<ReactionThermo>::solidReaction
-(
-    const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
-    Istream& is
-)
-:
-    Reaction<ReactionThermo>(species, thermoDatabase, is),
-    pyrolisisGases_(),
-    glhs_(),
-    grhs_()
-{
-    NotImplemented;
-}
 
 
 template<class ReactionThermo>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,13 +79,6 @@ public:
             const label co,
             const label c3h6,
             const label no
-        );
-
-        //- Construct from Istream
-        inline LangmuirHinshelwoodReactionRate
-        (
-            const speciesTable& species,
-            Istream& is
         );
 
         //- Construct from dictionary

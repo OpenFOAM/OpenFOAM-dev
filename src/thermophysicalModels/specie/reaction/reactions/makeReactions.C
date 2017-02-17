@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,6 @@ License
 #define makeReactions(Thermo, Reaction)                                        \
                                                                                \
     defineTemplateTypeNameAndDebug(Reaction, 0);                               \
-    defineTemplateRunTimeSelectionTable(Reaction, Istream);                    \
     defineTemplateRunTimeSelectionTable(Reaction, dictionary);                 \
                                                                                \
     makeIRNReactions(Thermo, ArrheniusReactionRate)                            \

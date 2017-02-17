@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,26 +43,6 @@ inline Foam::ChemicallyActivatedReactionRate
     F_(F),
     thirdBodyEfficiencies_(tbes)
 {}
-
-
-template<class ReactionRate, class ChemicallyActivationFunction>
-inline Foam::ChemicallyActivatedReactionRate
-<
-    ReactionRate,
-    ChemicallyActivationFunction
->::ChemicallyActivatedReactionRate
-(
-    const speciesTable& species,
-    Istream& is
-)
-:
-    k0_(species, is.readBegin("ChemicallyActivatedReactionRate(Istream&)")),
-    kInf_(species, is),
-    F_(is),
-    thirdBodyEfficiencies_(species, is)
-{
-    is.readEnd("ChemicallyActivatedReactionRate(Istream&)");
-}
 
 
 template<class ReactionRate, class ChemicallyActivationFunction>

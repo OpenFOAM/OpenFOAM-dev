@@ -30,18 +30,6 @@ License
 template<class Thermo, int PolySize>
 inline Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
 (
-    const logPolynomialTransport& pt
-)
-:
-    Thermo(pt),
-    muCoeffs_(pt.muCoeffs_),
-    kappaCoeffs_(pt.kappaCoeffs_)
-{}
-
-
-template<class Thermo, int PolySize>
-inline Foam::logPolynomialTransport<Thermo, PolySize>::logPolynomialTransport
-(
     const Thermo& t,
     const Polynomial<PolySize>& muCoeffs,
     const Polynomial<PolySize>& kappaCoeffs
@@ -73,17 +61,6 @@ Foam::logPolynomialTransport<Thermo, PolySize>::clone() const
     return autoPtr<logPolynomialTransport<Thermo, PolySize>>
     (
         new logPolynomialTransport<Thermo, PolySize>(*this)
-    );
-}
-
-
-template<class Thermo, int PolySize>
-inline Foam::autoPtr<Foam::logPolynomialTransport<Thermo, PolySize>>
-Foam::logPolynomialTransport<Thermo, PolySize>::New(Istream& is)
-{
-    return autoPtr<logPolynomialTransport<Thermo, PolySize>>
-    (
-        new logPolynomialTransport<Thermo, PolySize>(is)
     );
 }
 

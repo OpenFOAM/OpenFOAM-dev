@@ -109,9 +109,6 @@ public:
 
     // Constructors
 
-        //- Construct from Istream
-        hRefConstThermo(Istream&);
-
         //- Construct from dictionary
         hRefConstThermo(const dictionary& dict);
 
@@ -120,9 +117,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<hRefConstThermo> clone() const;
-
-        //- Selector from Istream
-        inline static autoPtr<hRefConstThermo> New(Istream& is);
 
         //- Selector from dictionary
         inline static autoPtr<hRefConstThermo> New(const dictionary& dict);

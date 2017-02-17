@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,6 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(NSRDSfunc1, 0);
-    addToRunTimeSelectionTable(thermophysicalFunction, NSRDSfunc1, Istream);
     addToRunTimeSelectionTable(thermophysicalFunction, NSRDSfunc1, dictionary);
 }
 
@@ -51,16 +50,6 @@ Foam::NSRDSfunc1::NSRDSfunc1
     c_(c),
     d_(d),
     e_(e)
-{}
-
-
-Foam::NSRDSfunc1::NSRDSfunc1(Istream& is)
-:
-    a_(readScalar(is)),
-    b_(readScalar(is)),
-    c_(readScalar(is)),
-    d_(readScalar(is)),
-    e_(readScalar(is))
 {}
 
 

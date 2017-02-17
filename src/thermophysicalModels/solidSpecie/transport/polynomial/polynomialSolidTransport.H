@@ -127,9 +127,6 @@ public:
 
     // Constructors
 
-        //- Construct copy
-        inline polynomialSolidTransport(const polynomialSolidTransport&);
-
         //- Construct as named copy
         inline polynomialSolidTransport
         (
@@ -137,17 +134,11 @@ public:
             const polynomialSolidTransport&
         );
 
-        //- Construct from Istream
-        polynomialSolidTransport(Istream& is);
-
         //- Construct from dictionary
         polynomialSolidTransport(const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<polynomialSolidTransport> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<polynomialSolidTransport> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<polynomialSolidTransport> New

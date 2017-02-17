@@ -44,17 +44,6 @@ inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
 template<class Specie, int PolySize>
 inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
 (
-    const icoPolynomial<Specie, PolySize>& ip
-)
-:
-    Specie(ip),
-    rhoCoeffs_(ip.rhoCoeffs_)
-{}
-
-
-template<class Specie, int PolySize>
-inline Foam::icoPolynomial<Specie, PolySize>::icoPolynomial
-(
     const word& name,
     const icoPolynomial<Specie, PolySize>& ip
 )
@@ -71,17 +60,6 @@ Foam::icoPolynomial<Specie, PolySize>::clone() const
     return autoPtr<icoPolynomial<Specie, PolySize>>
     (
         new icoPolynomial<Specie, PolySize>(*this)
-    );
-}
-
-
-template<class Specie, int PolySize>
-inline Foam::autoPtr<Foam::icoPolynomial<Specie, PolySize>>
-Foam::icoPolynomial<Specie, PolySize>::New(Istream& is)
-{
-    return autoPtr<icoPolynomial<Specie, PolySize>>
-    (
-        new icoPolynomial<Specie, PolySize>(is)
     );
 }
 

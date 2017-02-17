@@ -61,14 +61,6 @@ Foam::rhoConst<Specie>::clone() const
 }
 
 
-template<class Specie>
-inline Foam::autoPtr<Foam::rhoConst<Specie>>
-Foam::rhoConst<Specie>::New(Istream& is)
-{
-    return autoPtr<rhoConst<Specie>>(new rhoConst<Specie>(is));
-}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Specie>

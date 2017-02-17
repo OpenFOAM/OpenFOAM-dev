@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,18 +40,6 @@ inline Foam::SRIFallOffFunction::SRIFallOffFunction
     d_(d),
     e_(e)
 {}
-
-
-inline Foam::SRIFallOffFunction::SRIFallOffFunction(Istream& is)
-:
-    a_(readScalar(is.readBegin("SRIFallOffFunction(Istream&)"))),
-    b_(readScalar(is)),
-    c_(readScalar(is)),
-    d_(readScalar(is)),
-    e_(readScalar(is))
-{
-    is.readEnd("SRIFallOffFunction(Istream&)");
-}
 
 
 inline Foam::SRIFallOffFunction::SRIFallOffFunction(const dictionary& dict)

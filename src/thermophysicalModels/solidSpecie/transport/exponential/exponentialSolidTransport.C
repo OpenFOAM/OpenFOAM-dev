@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,14 +72,7 @@ Foam::Ostream& Foam::operator<<
     Ostream& os, const exponentialSolidTransport<Thermo>& et
 )
 {
-    operator<<(os, static_cast<const Thermo&>(et));
-    os << tab << et.kappa0_  << tab << et.n0_ << tab << et.Tref_;
-
-    os.check
-    (
-        "Ostream& operator<<(Ostream& os, const exponentialSolidTransport& et)"
-    );
-
+    et.write(os);
     return os;
 }
 

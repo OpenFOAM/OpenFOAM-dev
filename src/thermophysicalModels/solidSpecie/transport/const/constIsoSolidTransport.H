@@ -94,7 +94,7 @@ public:
             const constIsoSolidTransport&
         );
 
-        //- Construct from Istream
+        //- Construct from dictionary
         constIsoSolidTransport(const dictionary& dict);
 
         // Selector from dictionary

@@ -102,20 +102,6 @@ template<class Thermo>
 inline Foam::autoPtr<Foam::sutherlandTransport<Thermo>>
 Foam::sutherlandTransport<Thermo>::New
 (
-    Istream& is
-)
-{
-    return autoPtr<sutherlandTransport<Thermo>>
-    (
-        new sutherlandTransport<Thermo>(is)
-    );
-}
-
-
-template<class Thermo>
-inline Foam::autoPtr<Foam::sutherlandTransport<Thermo>>
-Foam::sutherlandTransport<Thermo>::New
-(
     const dictionary& dict
 )
 {

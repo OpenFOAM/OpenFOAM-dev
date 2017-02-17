@@ -100,12 +100,6 @@ public:
         //- Construct from components
         inline incompressiblePerfectGas(const Specie& sp, const scalar pRef);
 
-        //- Construct from incompressiblePerfectGas
-        inline incompressiblePerfectGas(const incompressiblePerfectGas& sp);
-
-        //- Construct from Istream
-        incompressiblePerfectGas(Istream&);
-
         //- Construct from dictionary
         incompressiblePerfectGas(const dictionary& dict);
 
@@ -118,9 +112,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<incompressiblePerfectGas> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<incompressiblePerfectGas> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<incompressiblePerfectGas> New

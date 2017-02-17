@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,6 @@ namespace Foam
     typedef ReactionType<solidReaction, Thermo, ReactionRate>                  \
         ReactionType##Thermo##ReactionRate;                                    \
                                                                                \
-    defineTemplateRunTimeSelectionTable(Reaction##Thermo, Istream);            \
     defineTemplateRunTimeSelectionTable(Reaction##Thermo, dictionary);         \
                                                                                \
     defineTemplateTypeNameAndDebug(solidReaction##Thermo, 0);                  \
@@ -66,13 +65,6 @@ namespace Foam
         ReactionType::typeName_()                                              \
       + ReactionRate::type()                                                   \
       + solidReaction##Thermo::typeName_()                                     \
-    );                                                                         \
-                                                                               \
-    addToRunTimeSelectionTable                                                 \
-    (                                                                          \
-        Reaction##Thermo,                                                      \
-        ReactionType##Thermo##ReactionRate,                                    \
-        Istream                                                                \
     );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \

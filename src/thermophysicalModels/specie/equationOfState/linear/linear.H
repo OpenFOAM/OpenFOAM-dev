@@ -110,9 +110,6 @@ public:
             const scalar rho0
         );
 
-        //- Construct from Istream
-        linear(Istream&);
-
         //- Construct from dictionary
         linear(const dictionary& dict);
 
@@ -121,9 +118,6 @@ public:
 
         //- Construct and return a clone
         inline autoPtr<linear> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<linear> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<linear> New(const dictionary& dict);

@@ -29,17 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::perfectFluid<Specie>::perfectFluid(Istream& is)
-:
-    Specie(is),
-    R_(readScalar(is)),
-    rho0_(readScalar(is))
-{
-    is.check("perfectFluid<Specie>::perfectFluid(Istream& is)");
-}
-
-
-template<class Specie>
 Foam::perfectFluid<Specie>::perfectFluid(const dictionary& dict)
 :
     Specie(dict),
@@ -68,11 +57,7 @@ void Foam::perfectFluid<Specie>::write(Ostream& os) const
 template<class Specie>
 Foam::Ostream& Foam::operator<<(Ostream& os, const perfectFluid<Specie>& pf)
 {
-    os  << static_cast<const Specie&>(pf)
-        << token::SPACE << pf.R_
-        << token::SPACE << pf.rho0_;
-
-    os.check("Ostream& operator<<(Ostream&, const perfectFluid<Specie>&)");
+    pf.write(os);
     return os;
 }
 

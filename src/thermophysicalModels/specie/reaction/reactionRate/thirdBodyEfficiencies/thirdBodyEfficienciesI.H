@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,62 +42,6 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
             << "number of efficiencies = " << size()
             << " is not equal to the number of species " << species_.size()
             << exit(FatalError);
-    }
-}
-
-
-inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
-(
-    const speciesTable& species,
-    Istream& is
-)
-:
-    scalarList(species.size()),
-    species_(species)
-{
-    is.readBeginList
-    (
-        "thirdBodyEfficiencies::thirdBodyEfficiencies"
-        "(const speciesTable& species, Istream& is)"
-    );
-    scalar defaultEff = readScalar(is);
-    scalarList::operator=(defaultEff);
-
-    token t;
-
-    while ((is >> t) && !t.isPunctuation())
-    {
-        if (t.isWord())
-        {
-            operator[](species[t.wordToken()]) = readScalar(is);
-        }
-        else
-        {
-            FatalIOErrorInFunction
-            (
-                is
-            )   << "expected <word>, found " << t.info()
-                << exit(FatalIOError);
-        }
-    }
-
-    if (t.pToken() != token::END_LIST)
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "expected ')', found " << t.info()
-            << exit(FatalIOError);
-    }
-
-    if (size() != species_.size())
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "number of efficiencies = " << size()
-            << " is not equal to the number of species " << species_.size()
-            << exit(FatalIOError);
     }
 }
 

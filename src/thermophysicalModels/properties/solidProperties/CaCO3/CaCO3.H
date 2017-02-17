@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,14 +74,8 @@ public:
         //- Construct from solidProperties
         CaCO3(const solidProperties& s);
 
-        //- Construct from Istream
-        CaCO3(Istream& is);
-
         //- Construct from dictionary
         CaCO3(const dictionary& dict);
-
-        //- Construct copy
-        CaCO3(const CaCO3& s);
 
         //- Construct and return clone
         virtual autoPtr<solidProperties> clone() const

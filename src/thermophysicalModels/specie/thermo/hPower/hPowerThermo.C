@@ -29,18 +29,6 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-Foam::hPowerThermo<EquationOfState>::hPowerThermo(Istream& is)
-:
-    EquationOfState(is),
-    n0_(readScalar(is)),
-    Tref_(readScalar(is)),
-    Hf_(readScalar(is))
-{
-    is.check("hPowerThermo::hPowerThermo(Istream& is)");
-}
-
-
-template<class EquationOfState>
 Foam::hPowerThermo<EquationOfState>::hPowerThermo
 (
     const dictionary& dict
@@ -63,21 +51,7 @@ Foam::Ostream& Foam::operator<<
     const hPowerThermo<EquationOfState>& et
 )
 {
-    os  << static_cast<const EquationOfState&>(et) << nl
-        << "    " << et.c0_
-        << tab << et.n0_
-        << tab << et.Tref_
-        << tab << et.Hf_;
-
-    os << nl << "    ";
-
-    os << endl;
-
-    os.check
-    (
-        "operator<<(Ostream& os, const hPowerThermo<EquationOfState>& et)"
-    );
-
+    et.write(os);
     return os;
 }
 

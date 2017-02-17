@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,25 +42,6 @@ IrreversibleReaction
 :
     ReactionType<ReactionThermo>(reaction),
     k_(k)
-{}
-
-
-template
-<
-    template<class> class ReactionType,
-    class ReactionThermo,
-    class ReactionRate
->
-Foam::IrreversibleReaction<ReactionType, ReactionThermo, ReactionRate>::
-IrreversibleReaction
-(
-    const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
-    Istream& is
-)
-:
-    ReactionType<ReactionThermo>(species, thermoDatabase, is),
-    k_(species, is)
 {}
 
 

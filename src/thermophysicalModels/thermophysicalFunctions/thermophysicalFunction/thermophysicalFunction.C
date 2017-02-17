@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,44 +31,11 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(thermophysicalFunction, 0);
-    defineRunTimeSelectionTable(thermophysicalFunction, Istream);
     defineRunTimeSelectionTable(thermophysicalFunction, dictionary);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
-(
-    Istream& is
-)
-{
-    if (debug)
-    {
-        InfoInFunction
-            << "Constructing thermophysicalFunction"
-            << endl;
-    }
-
-    const word thermophysicalFunctionType(is);
-
-    IstreamConstructorTable::iterator cstrIter =
-        IstreamConstructorTablePtr_->find(thermophysicalFunctionType);
-
-    if (cstrIter == IstreamConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown thermophysicalFunction type "
-            << thermophysicalFunctionType
-            << nl << nl
-            << "Valid thermophysicalFunction types are :" << endl
-            << IstreamConstructorTablePtr_->sortedToc()
-            << abort(FatalError);
-    }
-
-    return autoPtr<thermophysicalFunction>(cstrIter()(is));
-}
-
 
 Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 (
@@ -87,7 +54,7 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(thermophysicalFunctionType);
 
-    if (cstrIter == IstreamConstructorTablePtr_->end())
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown thermophysicalFunction type "

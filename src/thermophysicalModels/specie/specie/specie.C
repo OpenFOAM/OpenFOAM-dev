@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "specie.H"
-#include "IOstreams.H"
 #include "constants.H"
 
 /* * * * * * * * * * * * * * * public constants  * * * * * * * * * * * * * * */
@@ -36,16 +35,6 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::specie::specie(Istream& is)
-:
-    name_(is),
-    Y_(readScalar(is)),
-    molWeight_(readScalar(is))
-{
-    is.check("specie::specie(Istream& is)");
-}
-
 
 Foam::specie::specie(const dictionary& dict)
 :
@@ -73,10 +62,7 @@ void Foam::specie::write(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const specie& st)
 {
-    os  << st.name_ << tab
-        << st.Y_ << tab
-        << st.molWeight_;
-
+    st.write(os);
     os.check("Ostream& operator<<(Ostream& os, const specie& st)");
     return os;
 }

@@ -149,9 +149,6 @@ public:
 
     // Constructors
 
-        //- Construct copy
-        inline logPolynomialTransport(const logPolynomialTransport&);
-
         //- Construct as named copy
         inline logPolynomialTransport
         (
@@ -159,17 +156,11 @@ public:
             const logPolynomialTransport&
         );
 
-        //- Construct from Istream
-        logPolynomialTransport(Istream& is);
-
         //- Construct from dictionary
         logPolynomialTransport(const dictionary& dict);
 
         //- Construct and return a clone
         inline autoPtr<logPolynomialTransport> clone() const;
-
-        // Selector from Istream
-        inline static autoPtr<logPolynomialTransport> New(Istream& is);
 
         // Selector from dictionary
         inline static autoPtr<logPolynomialTransport> New

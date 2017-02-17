@@ -34,14 +34,6 @@ namespace Foam
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
-icoPolynomial<Specie, PolySize>::icoPolynomial(Istream& is)
-:
-    Specie(is),
-    rhoCoeffs_("rhoCoeffs<" + Foam::name(PolySize) + '>', is)
-{}
-
-
-template<class Specie, int PolySize>
 icoPolynomial<Specie, PolySize>::icoPolynomial(const dictionary& dict)
 :
     Specie(dict),
@@ -78,16 +70,7 @@ void icoPolynomial<Specie, PolySize>::write(Ostream& os) const
 template<class Specie, int PolySize>
 Ostream& operator<<(Ostream& os, const icoPolynomial<Specie, PolySize>& ip)
 {
-    os  << static_cast<const Specie&>(ip) << tab
-        << "rhoCoeffs<" << Foam::name(PolySize) << '>' << tab
-        << ip.rhoCoeffs_;
-
-    os.check
-    (
-        "Ostream& operator<<"
-        "(Ostream& os, const icoPolynomial<Specie, PolySize>& ip)"
-    );
-
+    ip.write(os);
     return os;
 }
 

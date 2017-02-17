@@ -325,23 +325,6 @@ Foam::Reaction<ReactionThermo>::Reaction
 (
     const speciesTable& species,
     const HashPtrTable<ReactionThermo>& thermoDatabase,
-    Istream& is
-)
-:
-    ReactionThermo::thermoType(*thermoDatabase[species[0]]),
-    name_("un-named-reaction" + Foam::name(getNewReactionID())),
-    species_(species)
-{
-    setLRhs(is, species, lhs_, rhs_);
-    setThermo(thermoDatabase);
-}
-
-
-template<class ReactionThermo>
-Foam::Reaction<ReactionThermo>::Reaction
-(
-    const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
     const dictionary& dict
 )
 :
@@ -361,50 +344,6 @@ Foam::Reaction<ReactionThermo>::Reaction
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-template<class ReactionThermo>
-Foam::autoPtr<Foam::Reaction<ReactionThermo>>
-Foam::Reaction<ReactionThermo>::New
-(
-    const speciesTable& species,
-    const HashPtrTable<ReactionThermo>& thermoDatabase,
-    Istream& is
-)
-{
-    if (is.eof())
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "Reaction type not specified" << nl << nl
-            << "Valid Reaction types are :" << nl
-            << IstreamConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    const word reactionTypeName(is);
-
-    typename IstreamConstructorTable::iterator cstrIter
-        = IstreamConstructorTablePtr_->find(reactionTypeName);
-
-    if (cstrIter == IstreamConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "Unknown reaction type "
-            << reactionTypeName << nl << nl
-            << "Valid reaction types are :" << nl
-            << IstreamConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    return autoPtr<Reaction<ReactionThermo>>
-    (
-        cstrIter()(species, thermoDatabase, is)
-    );
-}
-
 
 template<class ReactionThermo>
 Foam::autoPtr<Foam::Reaction<ReactionThermo>>

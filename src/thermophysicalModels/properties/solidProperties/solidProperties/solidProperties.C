@@ -31,7 +31,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(solidProperties, 0);
     defineRunTimeSelectionTable(solidProperties,);
-    defineRunTimeSelectionTable(solidProperties, Istream);
     defineRunTimeSelectionTable(solidProperties, dictionary);
 }
 
@@ -54,16 +53,6 @@ Foam::solidProperties::solidProperties
 {}
 
 
-Foam::solidProperties::solidProperties(Istream& is)
-:
-    rho_(readScalar(is)),
-    Cp_(readScalar(is)),
-    kappa_(readScalar(is)),
-    Hf_(readScalar(is)),
-    emissivity_(readScalar(is))
-{}
-
-
 Foam::solidProperties::solidProperties(const dictionary& dict)
 :
     rho_(readScalar(dict.lookup("rho"))),
@@ -71,16 +60,6 @@ Foam::solidProperties::solidProperties(const dictionary& dict)
     kappa_(readScalar(dict.lookup("K"))),
     Hf_(readScalar(dict.lookup("Hf"))),
     emissivity_(readScalar(dict.lookup("emissivity")))
-{}
-
-
-Foam::solidProperties::solidProperties(const solidProperties& s)
-:
-    rho_(s.rho_),
-    Cp_(s.Cp_),
-    kappa_(s.kappa_),
-    Hf_(s.Hf_),
-    emissivity_(s.emissivity_)
 {}
 
 
