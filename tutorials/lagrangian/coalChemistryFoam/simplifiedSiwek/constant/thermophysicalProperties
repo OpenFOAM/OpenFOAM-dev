@@ -36,10 +36,7 @@ inertSpecie     N2;
 
 liquids
 {
-    H2O
-    {
-        defaultCoeffs   yes;
-    }
+    H2O {}
 }
 
 solids
@@ -47,7 +44,7 @@ solids
     C
     {
         defaultCoeffs   no;
-        // if  defaultCoeffs no properties should be :
+
         CCoeffs
         {
             rho             2010;
@@ -57,10 +54,8 @@ solids
             emissivity      1.0;
         }
     }
-    ash
-    {
-        defaultCoeffs   yes;
-    }
+
+    ash {}
 }
 
 

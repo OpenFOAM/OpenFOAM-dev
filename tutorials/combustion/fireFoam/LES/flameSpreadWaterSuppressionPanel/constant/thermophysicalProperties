@@ -36,13 +36,10 @@ foamChemistryFile "$FOAM_CASE/constant/reactions";
 
 foamChemistryThermoFile "$FOAM_CASE/constant/thermo.compressibleGas";
 
-
 liquids
 {
     H2O
-    {
-        defaultCoeffs yes;
-    }
+    {}
 }
 
 solids

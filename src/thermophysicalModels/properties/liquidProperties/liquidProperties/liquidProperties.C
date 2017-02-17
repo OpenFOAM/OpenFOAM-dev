@@ -97,24 +97,49 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
     const word& liquidPropertiesTypeName = dict.dictName();
 
-    const Switch defaultCoeffs(dict.lookup("defaultCoeffs"));
-
-    if (defaultCoeffs)
+    if (dict.found("defaultCoeffs"))
     {
-        ConstructorTable::iterator cstrIter =
-            ConstructorTablePtr_->find(liquidPropertiesTypeName);
+        // Backward-compatibility
 
-        if (cstrIter == ConstructorTablePtr_->end())
+        const Switch defaultCoeffs(dict.lookup("defaultCoeffs"));
+
+        if (defaultCoeffs)
         {
-            FatalErrorInFunction
-                << "Unknown liquidProperties type "
-                << liquidPropertiesTypeName << nl << nl
-                << "Valid liquidProperties types are:" << nl
-                << ConstructorTablePtr_->sortedToc()
-                << abort(FatalError);
-        }
+            ConstructorTable::iterator cstrIter =
+                ConstructorTablePtr_->find(liquidPropertiesTypeName);
 
-        return autoPtr<liquidProperties>(cstrIter()());
+            if (cstrIter == ConstructorTablePtr_->end())
+            {
+                FatalErrorInFunction
+                    << "Unknown liquidProperties type "
+                    << liquidPropertiesTypeName << nl << nl
+                    << "Valid liquidProperties types are:" << nl
+                    << ConstructorTablePtr_->sortedToc()
+                    << abort(FatalError);
+            }
+
+            return autoPtr<liquidProperties>(cstrIter()());
+        }
+        else
+        {
+            dictionaryConstructorTable::iterator cstrIter =
+                dictionaryConstructorTablePtr_->find(liquidPropertiesTypeName);
+
+            if (cstrIter == dictionaryConstructorTablePtr_->end())
+            {
+                FatalErrorInFunction
+                    << "Unknown liquidProperties type "
+                    << liquidPropertiesTypeName << nl << nl
+                    << "Valid liquidProperties types are:" << nl
+                    << dictionaryConstructorTablePtr_->sortedToc()
+                    << abort(FatalError);
+            }
+
+            return autoPtr<liquidProperties>
+            (
+                cstrIter()(dict.subDict(liquidPropertiesTypeName + "Coeffs"))
+            );
+        }
     }
     else
     {
@@ -131,10 +156,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
                 << abort(FatalError);
         }
 
-        return autoPtr<liquidProperties>
-        (
-            cstrIter()(dict.subDict(liquidPropertiesTypeName + "Coeffs"))
-        );
+        return autoPtr<liquidProperties>(cstrIter()(dict));
     }
 }
 
@@ -144,91 +166,91 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 Foam::scalar Foam::liquidProperties::rho(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::pv(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::hl(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::Cp(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::h(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::Cpg(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::mu(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::mug(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::kappa(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::kappag(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::sigma(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::D(scalar p, scalar T) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
 Foam::scalar Foam::liquidProperties::D(scalar p, scalar T, scalar Wb) const
 {
     NotImplemented;
-    return 0.0;
+    return 0;
 }
 
 
@@ -259,7 +281,7 @@ Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
 
     while ((Thi - Tlo) > 1.0e-4)
     {
-        if ((pv(p, T) - p) <= 0.0)
+        if ((pv(p, T) - p) <= 0)
         {
             Tlo = T;
         }

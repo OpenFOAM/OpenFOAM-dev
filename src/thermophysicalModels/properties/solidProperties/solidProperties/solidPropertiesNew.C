@@ -39,9 +39,8 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
     }
 
     const word solidType(dict.dictName());
-    const Switch defaultCoeffs(dict.lookup("defaultCoeffs"));
 
-    if (defaultCoeffs)
+    if (!dict.found("defaultCoeffs") || Switch(dict.lookup("defaultCoeffs")))
     {
         ConstructorTable::iterator cstrIter =
             ConstructorTablePtr_->find(solidType);
