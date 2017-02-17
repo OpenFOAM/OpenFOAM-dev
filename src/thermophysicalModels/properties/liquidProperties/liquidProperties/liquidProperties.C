@@ -275,6 +275,22 @@ Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
 }
 
 
+void Foam::liquidProperties::readIfPresent(const dictionary &dict)
+{
+    dict.readIfPresent("W", W_);
+    dict.readIfPresent("Tc", Tc_);
+    dict.readIfPresent("Pc", Pc_);
+    dict.readIfPresent("Vc", Vc_);
+    dict.readIfPresent("Zc", Zc_);
+    dict.readIfPresent("Tt", Tt_);
+    dict.readIfPresent("Pt", Pt_);
+    dict.readIfPresent("Tb", Tb_);
+    dict.readIfPresent("dipm", dipm_);
+    dict.readIfPresent("omega", omega_);
+    dict.readIfPresent("delta", delta_);
+}
+
+
 void Foam::liquidProperties::writeData(Ostream& os) const
 {
     os  << W_ << token::SPACE
@@ -288,6 +304,15 @@ void Foam::liquidProperties::writeData(Ostream& os) const
         << dipm_ << token::SPACE
         << omega_<< token::SPACE
         << delta_;
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const liquidProperties& l)
+{
+    l.writeData(os);
+    return os;
 }
 
 

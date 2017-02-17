@@ -284,16 +284,45 @@ public:
 
     // I-O
 
+        //- Read and set the properties present it the given dictionary
+        void readIfPresent(const dictionary& dict);
+
+        //- Read and set the function coefficients
+        //  if present it the given dictionary
+        template<class Func>
+        inline void readIfPresent
+        (
+            Func& f,
+            const word& name,
+            const dictionary& dict
+        );
+
+        //- Read and set the function coefficients
+        //  if present it the given dictionary
+        template<class Liquid>
+        inline void readIfPresent
+        (
+            Liquid& l,
+            const dictionary& dict
+        );
+
         //- Write the function coefficients
         virtual void writeData(Ostream& os) const;
 
+        //- Write the data for each of the property functions
+        template<class Liquid>
+        inline void writeData
+        (
+            const Liquid& l,
+            Ostream& os
+        ) const;
+
         //- Ostream Operator
-        friend Ostream& operator<<(Ostream& os, const liquidProperties& l)
-        {
-            l.writeData(os);
-            return os;
-        }
+        friend Ostream& operator<<(Ostream& os, const liquidProperties& l);
 };
+
+
+Ostream& operator<<(Ostream& os, const liquidProperties& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

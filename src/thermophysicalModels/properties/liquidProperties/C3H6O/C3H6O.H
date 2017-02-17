@@ -79,6 +79,8 @@ class C3H6O
 
 public:
 
+    friend class liquidProperties;
+
     //- Runtime type information
     TypeName("C3H6O");
 
@@ -165,32 +167,14 @@ public:
     // I-O
 
         //- Write the function coefficients
-        void writeData(Ostream& os) const
-        {
-            liquidProperties::writeData(os); os << nl;
-            rho_.writeData(os); os << nl;
-            pv_.writeData(os); os << nl;
-            hl_.writeData(os); os << nl;
-            Cp_.writeData(os); os << nl;
-            h_.writeData(os); os << nl;
-            Cpg_.writeData(os); os << nl;
-            B_.writeData(os); os << nl;
-            mu_.writeData(os); os << nl;
-            mug_.writeData(os); os << nl;
-            kappa_.writeData(os); os << nl;
-            kappag_.writeData(os); os << nl;
-            sigma_.writeData(os); os << nl;
-            D_.writeData(os); os << endl;
-        }
+        void writeData(Ostream& os) const;
 
         //- Ostream Operator
-
-        friend Ostream& operator<<(Ostream& os, const C3H6O& l)
-        {
-            l.writeData(os);
-            return os;
-        }
+        friend Ostream& operator<<(Ostream& os, const C3H6O& l);
 };
+
+
+Ostream& operator<<(Ostream& os, const C3H6O& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

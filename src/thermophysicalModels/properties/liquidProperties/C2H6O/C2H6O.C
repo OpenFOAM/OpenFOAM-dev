@@ -130,21 +130,27 @@ Foam::C2H6O::C2H6O
 
 Foam::C2H6O::C2H6O(const dictionary& dict)
 :
-    liquidProperties(dict),
-    rho_(dict.subDict("rho")),
-    pv_(dict.subDict("pv")),
-    hl_(dict.subDict("hl")),
-    Cp_(dict.subDict("Cp")),
-    h_(dict.subDict("h")),
-    Cpg_(dict.subDict("Cpg")),
-    B_(dict.subDict("B")),
-    mu_(dict.subDict("mu")),
-    mug_(dict.subDict("mug")),
-    kappa_(dict.subDict("K")),
-    kappag_(dict.subDict("kappag")),
-    sigma_(dict.subDict("sigma")),
-    D_(dict.subDict("D"))
-{}
+    C2H6O()
+{
+    readIfPresent(*this, dict);
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::C2H6O::writeData(Ostream& os) const
+{
+    liquidProperties::writeData(*this, os);
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const C2H6O& l)
+{
+    l.writeData(os);
+    return os;
+}
 
 
 // ************************************************************************* //

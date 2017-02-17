@@ -137,4 +137,67 @@ inline Foam::scalar Foam::liquidProperties::alphah(scalar p, scalar T) const
 }
 
 
+template<class Func>
+inline void Foam::liquidProperties::readIfPresent
+(
+    Func& f,
+    const word& name,
+    const dictionary& dict
+)
+{
+    if (dict.found(name))
+    {
+        f = Func(dict.subDict(name));
+    }
+}
+
+
+template<class Liquid>
+inline void Foam::liquidProperties::readIfPresent
+(
+    Liquid& l,
+    const dictionary& dict
+)
+{
+    l.liquidProperties::readIfPresent(dict);
+    readIfPresent(l.rho_, "rho", dict);
+    readIfPresent(l.pv_, "pv", dict);
+    readIfPresent(l.hl_, "hl", dict);
+    readIfPresent(l.Cp_, "Cp", dict);
+    readIfPresent(l.h_, "h", dict);
+    readIfPresent(l.Cpg_, "Cpg", dict);
+    readIfPresent(l.B_, "B", dict);
+    readIfPresent(l.mu_, "mu", dict);
+    readIfPresent(l.mug_, "mug", dict);
+    readIfPresent(l.kappa_, "K", dict);
+    readIfPresent(l.kappag_, "kappag", dict);
+    readIfPresent(l.sigma_, "sigma", dict);
+    readIfPresent(l.D_, "D", dict);
+}
+
+
+template<class Liquid>
+inline void Foam::liquidProperties::writeData
+(
+    const Liquid& l,
+    Ostream& os
+) const
+{
+    l.liquidProperties::writeData(os); os << nl;
+    l.rho_.writeData(os); os << nl;
+    l.pv_.writeData(os); os << nl;
+    l.hl_.writeData(os); os << nl;
+    l.Cp_.writeData(os); os << nl;
+    l.h_.writeData(os); os << nl;
+    l.Cpg_.writeData(os); os << nl;
+    l.B_.writeData(os); os << nl;
+    l.mu_.writeData(os); os << nl;
+    l.mug_.writeData(os); os << nl;
+    l.kappa_.writeData(os); os << nl;
+    l.kappag_.writeData(os); os << nl;
+    l.sigma_.writeData(os); os << nl;
+    l.D_.writeData(os); os << endl;
+}
+
+
 // ************************************************************************* //

@@ -129,21 +129,27 @@ Foam::IC8H18::IC8H18
 
 Foam::IC8H18::IC8H18(const dictionary& dict)
 :
-    liquidProperties(dict),
-    rho_(dict.subDict("rho")),
-    pv_(dict.subDict("pv")),
-    hl_(dict.subDict("hl")),
-    Cp_(dict.subDict("Cp")),
-    h_(dict.subDict("h")),
-    Cpg_(dict.subDict("Cpg")),
-    B_(dict.subDict("B")),
-    mu_(dict.subDict("mu")),
-    mug_(dict.subDict("mug")),
-    kappa_(dict.subDict("K")),
-    kappag_(dict.subDict("kappag")),
-    sigma_(dict.subDict("sigma")),
-    D_(dict.subDict("D"))
-{}
+    IC8H18()
+{
+    readIfPresent(*this, dict);
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::IC8H18::writeData(Ostream& os) const
+{
+    liquidProperties::writeData(*this, os);
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const IC8H18& l)
+{
+    l.writeData(os);
+    return os;
+}
 
 
 // ************************************************************************* //

@@ -129,21 +129,27 @@ Foam::C14H30::C14H30
 
 Foam::C14H30::C14H30(const dictionary& dict)
 :
-    liquidProperties(dict),
-    rho_(dict.subDict("rho")),
-    pv_(dict.subDict("pv")),
-    hl_(dict.subDict("hl")),
-    Cp_(dict.subDict("Cp")),
-    h_(dict.subDict("h")),
-    Cpg_(dict.subDict("Cpg")),
-    B_(dict.subDict("B")),
-    mu_(dict.subDict("mu")),
-    mug_(dict.subDict("mug")),
-    kappa_(dict.subDict("K")),
-    kappag_(dict.subDict("kappag")),
-    sigma_(dict.subDict("sigma")),
-    D_(dict.subDict("D"))
-{}
+    C14H30()
+{
+    readIfPresent(*this, dict);
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::C14H30::writeData(Ostream& os) const
+{
+    liquidProperties::writeData(*this, os);
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const C14H30& l)
+{
+    l.writeData(os);
+    return os;
+}
 
 
 // ************************************************************************* //
