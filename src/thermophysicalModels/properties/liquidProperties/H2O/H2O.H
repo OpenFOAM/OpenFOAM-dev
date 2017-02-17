@@ -106,14 +106,8 @@ public:
             const APIdiffCoefFunc& vapourDiffussivity
         );
 
-        //- Construct from Istream
-        H2O(Istream& is);
-
         //- Construct from dictionary
         H2O(const dictionary& dict);
-
-        //- Construct copy
-        H2O(const H2O& liq);
 
         //- Construct and return clone
         virtual autoPtr<liquidProperties> clone() const
@@ -187,7 +181,6 @@ public:
             sigma_.writeData(os); os << nl;
             D_.writeData(os); os << endl;
         }
-
 
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const H2O& l)

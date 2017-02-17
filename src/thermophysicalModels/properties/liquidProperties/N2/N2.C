@@ -32,7 +32,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(N2, 0);
     addToRunTimeSelectionTable(liquidProperties, N2,);
-    addToRunTimeSelectionTable(liquidProperties, N2, Istream);
     addToRunTimeSelectionTable(liquidProperties, N2, dictionary);
 }
 
@@ -128,25 +127,6 @@ Foam::N2::N2
 {}
 
 
-Foam::N2::N2(Istream& is)
-:
-    liquidProperties(is),
-    rho_(is),
-    pv_(is),
-    hl_(is),
-    Cp_(is),
-    h_(is),
-    Cpg_(is),
-    B_(is),
-    mu_(is),
-    mug_(is),
-    kappa_(is),
-    kappag_(is),
-    sigma_(is),
-    D_(is)
-{}
-
-
 Foam::N2::N2(const dictionary& dict)
 :
     liquidProperties(dict),
@@ -163,25 +143,6 @@ Foam::N2::N2(const dictionary& dict)
     kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
-{}
-
-
-Foam::N2::N2(const N2& liq)
-:
-    liquidProperties(liq),
-    rho_(liq.rho_),
-    pv_(liq.pv_),
-    hl_(liq.hl_),
-    Cp_(liq.Cp_),
-    h_(liq.h_),
-    Cpg_(liq.Cpg_),
-    B_(liq.B_),
-    mu_(liq.mu_),
-    mug_(liq.mug_),
-    kappa_(liq.kappa_),
-    kappag_(liq.kappag_),
-    sigma_(liq.sigma_),
-    D_(liq.D_)
 {}
 
 

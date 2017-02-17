@@ -109,15 +109,6 @@ public:
         (
             autoPtr,
             liquidProperties,
-            Istream,
-            (Istream& is),
-            (is)
-        );
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            liquidProperties,
             dictionary,
             (const dictionary& dict),
             (dict)
@@ -142,14 +133,8 @@ public:
             scalar delta
         );
 
-        //- Construct from Istream
-        liquidProperties(Istream& is);
-
         //- Construct from dictionary
         liquidProperties(const dictionary& dict);
-
-        //- Construct copy
-        liquidProperties(const liquidProperties& liq);
 
         //- Construct and return clone
         virtual autoPtr<liquidProperties> clone() const
@@ -159,9 +144,6 @@ public:
 
 
     // Selectors
-
-        //- Return a pointer to a new liquidProperties created from input
-    // static autoPtr<liquidProperties> New(Istream& is);
 
         //- Return a pointer to a new liquidProperties created from dictionary
         static autoPtr<liquidProperties> New(const dictionary& dict);

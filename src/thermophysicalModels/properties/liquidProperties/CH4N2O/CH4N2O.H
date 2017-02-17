@@ -107,14 +107,8 @@ public:
             const APIdiffCoefFunc& vapourDiffussivity
         );
 
-        //- Construct from Istream
-        CH4N2O(Istream& is);
-
         //- Construct from dictionary
         CH4N2O(const dictionary& dict);
-
-        //- Construct copy
-        CH4N2O(const CH4N2O& liq);
 
         //- Construct and return clone
         virtual autoPtr<liquidProperties> clone() const

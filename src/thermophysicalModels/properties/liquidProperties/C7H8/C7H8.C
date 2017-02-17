@@ -32,7 +32,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(C7H8, 0);
     addToRunTimeSelectionTable(liquidProperties, C7H8,);
-    addToRunTimeSelectionTable(liquidProperties, C7H8, Istream);
     addToRunTimeSelectionTable(liquidProperties, C7H8, dictionary);
 }
 
@@ -128,25 +127,6 @@ Foam::C7H8::C7H8
 {}
 
 
-Foam::C7H8::C7H8(Istream& is)
-:
-    liquidProperties(is),
-    rho_(is),
-    pv_(is),
-    hl_(is),
-    Cp_(is),
-    h_(is),
-    Cpg_(is),
-    B_(is),
-    mu_(is),
-    mug_(is),
-    kappa_(is),
-    kappag_(is),
-    sigma_(is),
-    D_(is)
-{}
-
-
 Foam::C7H8::C7H8(const dictionary& dict)
 :
     liquidProperties(dict),
@@ -163,25 +143,6 @@ Foam::C7H8::C7H8(const dictionary& dict)
     kappag_(dict.subDict("kappag")),
     sigma_(dict.subDict("sigma")),
     D_(dict.subDict("D"))
-{}
-
-
-Foam::C7H8::C7H8(const C7H8& liq)
-:
-    liquidProperties(liq),
-    rho_(liq.rho_),
-    pv_(liq.pv_),
-    hl_(liq.hl_),
-    Cp_(liq.Cp_),
-    h_(liq.h_),
-    Cpg_(liq.Cpg_),
-    B_(liq.B_),
-    mu_(liq.mu_),
-    mug_(liq.mug_),
-    kappa_(liq.kappa_),
-    kappag_(liq.kappag_),
-    sigma_(liq.sigma_),
-    D_(liq.D_)
 {}
 
 

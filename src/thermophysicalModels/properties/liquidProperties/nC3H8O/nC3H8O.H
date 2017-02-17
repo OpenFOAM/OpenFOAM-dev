@@ -105,14 +105,8 @@ public:
             const NSRDSfunc1& vapourDiffussivity
         );
 
-        //- Construct from Istream
-        nC3H8O(Istream& is);
-
         //- Construct from dictionary
         nC3H8O(const dictionary& dict);
-
-        //- Construct copy
-        nC3H8O(const nC3H8O& liq);
 
         //- Construct and return clone
         virtual autoPtr<liquidProperties> clone() const

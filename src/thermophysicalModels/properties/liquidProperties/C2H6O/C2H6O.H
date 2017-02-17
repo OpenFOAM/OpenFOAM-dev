@@ -107,14 +107,8 @@ public:
             const APIdiffCoefFunc& vapourDiffussivity
         );
 
-        //- Construct from Istream
-        C2H6O(Istream& is);
-
         //- Construct from dictionary
         C2H6O(const dictionary& dict);
-
-        //- Construct copy
-        C2H6O(const C2H6O& liq);
 
         //- Construct and return clone
         virtual autoPtr<liquidProperties> clone() const

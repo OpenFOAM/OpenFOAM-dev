@@ -33,7 +33,6 @@ namespace Foam
 {
     defineTypeNameAndDebug(liquidProperties, 0);
     defineRunTimeSelectionTable(liquidProperties,);
-    defineRunTimeSelectionTable(liquidProperties, Istream);
     defineRunTimeSelectionTable(liquidProperties, dictionary);
 }
 
@@ -68,22 +67,6 @@ Foam::liquidProperties::liquidProperties
 {}
 
 
-Foam::liquidProperties::liquidProperties(Istream& is)
-:
-    W_(readScalar(is)),
-    Tc_(readScalar(is)),
-    Pc_(readScalar(is)),
-    Vc_(readScalar(is)),
-    Zc_(readScalar(is)),
-    Tt_(readScalar(is)),
-    Pt_(readScalar(is)),
-    Tb_(readScalar(is)),
-    dipm_(readScalar(is)),
-    omega_(readScalar(is)),
-    delta_(readScalar(is))
-{}
-
-
 Foam::liquidProperties::liquidProperties(const dictionary& dict)
 :
     W_(readScalar(dict.lookup("W"))),
@@ -97,22 +80,6 @@ Foam::liquidProperties::liquidProperties(const dictionary& dict)
     dipm_(readScalar(dict.lookup("dipm"))),
     omega_(readScalar(dict.lookup("omega"))),
     delta_(readScalar(dict.lookup("delta")))
-{}
-
-
-Foam::liquidProperties::liquidProperties(const liquidProperties& liq)
-:
-    W_(liq.W_),
-    Tc_(liq.Tc_),
-    Pc_(liq.Pc_),
-    Vc_(liq.Vc_),
-    Zc_(liq.Zc_),
-    Tt_(liq.Tt_),
-    Pt_(liq.Pt_),
-    Tb_(liq.Tb_),
-    dipm_(liq.dipm_),
-    omega_(liq.omega_),
-    delta_(liq.delta_)
 {}
 
 
@@ -310,7 +277,6 @@ Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
 
 void Foam::liquidProperties::writeData(Ostream& os) const
 {
-
     os  << W_ << token::SPACE
         << Tc_ << token::SPACE
         << Pc_ << token::SPACE
