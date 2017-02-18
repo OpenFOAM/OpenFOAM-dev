@@ -9,7 +9,6 @@ EXE_INC = \
 EXE_LIBS = \
     -llagrangianIntermediate \
     -lradiationModels \
-    -lthermophysicalFunctions \
     -lregionModels \
     -lfiniteVolume \
     -lmeshTools \

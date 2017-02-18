@@ -25,7 +25,7 @@ Class
     Foam::liquidProperties
 
 Description
-    The thermophysical properties of a liquidProperties
+    The thermophysical properties of a liquid
 
 SourceFiles
     liquidProperties.C
@@ -35,12 +35,7 @@ SourceFiles
 #ifndef liquidProperties_H
 #define liquidProperties_H
 
-#include "scalar.H"
-#include "IOstreams.H"
-#include "typeInfo.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
-#include "dictionary.H"
+#include "thermophysicalProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,11 +47,10 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class liquidProperties
+:
+    public thermophysicalProperties
 {
     // Private data
-
-        //- Molecular weight [kg/kmol]
-        scalar W_;
 
         //- Critical temperature [K]
         scalar Tc_;
@@ -137,10 +131,7 @@ public:
         liquidProperties(const dictionary& dict);
 
         //- Construct and return clone
-        virtual autoPtr<liquidProperties> clone() const
-        {
-            return autoPtr<liquidProperties>(new liquidProperties(*this));
-        }
+        virtual autoPtr<liquidProperties> clone() const = 0;
 
 
     // Selectors
@@ -161,19 +152,10 @@ public:
 
         // Physical constants which define the specie
 
-            //- Molecular weight [kg/kmol]
-            inline scalar W() const;
-
             //- No of moles of this species in mixture
             //  Note Mixing of liquidProperties is not currently supported
             //  so Y = 1
             inline scalar Y() const;
-
-            //- Is the equation of state is incompressible i.e. rho != f(p)
-            static const bool incompressible = true;
-
-            //- Is the equation of state is isochoric i.e. rho = const
-            static const bool isochoric = false;
 
             //- Critical temperature [K]
             inline scalar Tc() const;
@@ -211,9 +193,6 @@ public:
 
         // Fundamental equation of state properties
 
-            //- Liquid density [kg/m^3]
-            virtual scalar rho(scalar p, scalar T) const;
-
             //- Liquid compressibility rho/p [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             inline scalar psi(scalar p, scalar T) const;
@@ -226,9 +205,6 @@ public:
 
         // Fundamental thermodynamic properties
 
-            //- Heat capacity at constant pressure [J/(kg K)]
-            virtual scalar Cp(const scalar p, const scalar T) const;
-
             //- Absolute Enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
@@ -239,46 +215,46 @@ public:
             inline scalar Hc() const;
 
             // Entropy [J/(kg K)]
-            // inline scalar S(const scalar p, const scalar T) const;
+            scalar S(const scalar p, const scalar T) const;
 
 
         // Physical properties
 
             //- Vapour pressure [Pa]
-            virtual scalar pv(scalar p, scalar T) const;
+            virtual scalar pv(scalar p, scalar T) const = 0;
 
             //- Heat of vapourisation [J/kg]
-            virtual scalar hl(scalar p, scalar T) const;
+            virtual scalar hl(scalar p, scalar T) const = 0;
 
             //- Liquid enthalpy [J/kg] - reference to 298.15 K
-            virtual scalar h(scalar p, scalar T) const;
+            virtual scalar h(scalar p, scalar T) const = 0;
 
             //- Vapour heat capacity [J/(kg K)]
-            virtual scalar Cpg(scalar p, scalar T) const;
+            virtual scalar Cpg(scalar p, scalar T) const = 0;
 
             //- Liquid viscosity [Pa s]
-            virtual scalar mu(scalar p, scalar T) const;
+            virtual scalar mu(scalar p, scalar T) const = 0;
 
             //- Vapour viscosity [Pa s]
-            virtual scalar mug(scalar p, scalar T) const;
+            virtual scalar mug(scalar p, scalar T) const = 0;
 
             //- Liquid thermal conductivity  [W/(m K)]
-            virtual scalar kappa(scalar p, scalar T) const;
+            virtual scalar kappa(scalar p, scalar T) const = 0;
 
             //- Liquid thermal diffusivity of enthalpy [kg/ms]
             inline scalar alphah(const scalar p, const scalar T) const;
 
             //- Vapour thermal conductivity  [W/(m K)]
-            virtual scalar kappag(scalar p, scalar T) const;
+            virtual scalar kappag(scalar p, scalar T) const = 0;
 
             //- Surface tension [N/m]
-            virtual scalar sigma(scalar p, scalar T) const;
+            virtual scalar sigma(scalar p, scalar T) const = 0;
 
             //- Vapour diffussivity [m2/s]
-            virtual scalar D(scalar p, scalar T) const;
+            virtual scalar D(scalar p, scalar T) const = 0;
 
             //- Vapour diffussivity [m2/s] with specified binary pair
-            virtual scalar D(scalar p, scalar T, scalar Wb) const;
+            virtual scalar D(scalar p, scalar T, scalar Wb) const = 0;
 
             //- Invert the vapour pressure relationship to retrieve the
             //  boiling temperuture as a function of pressure
@@ -306,7 +282,7 @@ public:
         inline void readIfPresent(Liquid& l, const dictionary& dict);
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const;
+        virtual void writeData(Ostream& os) const = 0;;
 
         //- Write the data for each of the property functions
         template<class Liquid>

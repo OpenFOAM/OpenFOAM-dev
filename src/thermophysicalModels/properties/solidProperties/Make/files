@@ -1,9 +1,0 @@
-solidProperties/solidProperties.C
-solidProperties/solidPropertiesNew.C
-solidMixtureProperties/solidMixtureProperties.C
-
-ash/ash.C
-C/C.C
-CaCO3/CaCO3.C
-
-LIB = $(FOAM_LIBBIN)/libsolidProperties

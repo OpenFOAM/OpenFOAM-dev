@@ -29,12 +29,6 @@ inline Foam::scalar Foam::liquidProperties::limit(const scalar T) const
 }
 
 
-inline Foam::scalar Foam::liquidProperties::W() const
-{
-    return W_;
-}
-
-
 inline Foam::scalar Foam::liquidProperties::Y() const
 {
     return 1;

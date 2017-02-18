@@ -15,7 +15,6 @@ LIB_LIBS = \
     -lfluidThermophysicalModels \
     -lreactionThermophysicalModels \
     -lspecie \
-    -lthermophysicalFunctions \
     -lODE \
     -lfiniteVolume \
     -lmeshTools

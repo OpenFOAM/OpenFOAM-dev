@@ -53,7 +53,7 @@ Foam::liquidProperties::liquidProperties
     scalar delta
 )
 :
-    W_(W),
+    thermophysicalProperties(W),
     Tc_(Tc),
     Pc_(Pc),
     Vc_(Vc),
@@ -69,7 +69,7 @@ Foam::liquidProperties::liquidProperties
 
 Foam::liquidProperties::liquidProperties(const dictionary& dict)
 :
-    W_(readScalar(dict.lookup("W"))),
+    thermophysicalProperties(dict),
     Tc_(readScalar(dict.lookup("Tc"))),
     Pc_(readScalar(dict.lookup("Pc"))),
     Vc_(readScalar(dict.lookup("Vc"))),
@@ -174,91 +174,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::liquidProperties::rho(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::pv(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::hl(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::Cp(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::h(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::Cpg(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::mu(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::mug(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::kappa(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::kappag(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::sigma(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::D(scalar p, scalar T) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-Foam::scalar Foam::liquidProperties::D(scalar p, scalar T, scalar Wb) const
+Foam::scalar Foam::liquidProperties::S(scalar p, scalar T) const
 {
     NotImplemented;
     return 0;
@@ -310,7 +226,7 @@ Foam::scalar Foam::liquidProperties::pvInvert(scalar p) const
 
 void Foam::liquidProperties::readIfPresent(const dictionary &dict)
 {
-    dict.readIfPresent("W", W_);
+    thermophysicalProperties::readIfPresent(dict);
     dict.readIfPresent("Tc", Tc_);
     dict.readIfPresent("Pc", Pc_);
     dict.readIfPresent("Vc", Vc_);
@@ -326,7 +242,8 @@ void Foam::liquidProperties::readIfPresent(const dictionary &dict)
 
 void Foam::liquidProperties::writeData(Ostream& os) const
 {
-    os  << W_ << token::SPACE
+    thermophysicalProperties::writeData(os);
+    os  << token::SPACE
         << Tc_ << token::SPACE
         << Pc_ << token::SPACE
         << Vc_ << token::SPACE

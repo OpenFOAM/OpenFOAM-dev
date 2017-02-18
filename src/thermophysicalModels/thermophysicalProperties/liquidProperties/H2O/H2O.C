@@ -31,6 +31,8 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(H2O, 0);
+    addToRunTimeSelectionTable(thermophysicalProperties, H2O,);
+    addToRunTimeSelectionTable(thermophysicalProperties, H2O, dictionary);
     addToRunTimeSelectionTable(liquidProperties, H2O,);
     addToRunTimeSelectionTable(liquidProperties, H2O, dictionary);
 }

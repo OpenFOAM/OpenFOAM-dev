@@ -6,8 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wmake $targetType specie
 wmake $targetType solidSpecie
-wmake $targetType thermophysicalFunctions
-./properties/Allwmake $targetType $*
+wmake $targetType thermophysicalProperties
 
 wmake $targetType basic
 wmake $targetType reactionThermo

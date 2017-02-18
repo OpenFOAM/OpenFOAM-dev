@@ -4,8 +4,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/SLGThermo/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/properties/liquidProperties/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/properties/solidProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
@@ -16,7 +15,6 @@ LIB_LIBS = \
     -lspecie \
     -lsolidThermo \
     -lSLGThermo \
-    -lsolidProperties \
-    -lliquidProperties \
+    -lthermophysicalProperties \
     -lfiniteVolume \
     -lmeshTools

@@ -19,7 +19,6 @@ EXE_LIBS = \
     -llagrangian \
     -llagrangianIntermediate \
     -llagrangianTurbulence \
-    -lthermophysicalFunctions \
     -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \

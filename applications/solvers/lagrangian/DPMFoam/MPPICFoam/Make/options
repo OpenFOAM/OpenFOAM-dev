@@ -25,7 +25,6 @@ EXE_LIBS = \
     -llagrangian \
     -llagrangianIntermediate \
     -llagrangianTurbulence \
-    -lthermophysicalFunctions \
     -lspecie \
     -lradiationModels \
     -lincompressibleTransportModels \
