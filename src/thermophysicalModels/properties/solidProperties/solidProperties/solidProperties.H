@@ -45,22 +45,12 @@ SourceFiles
 namespace Foam
 {
 
-class solidProperties;
-
-Ostream& operator<<
-(
-    Ostream&,
-    const solidProperties&
-);
-
-
 /*---------------------------------------------------------------------------*\
                      Class solidProperties Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidProperties
 {
-
     // Private data
 
         //- Density [kg/m3]
@@ -113,7 +103,7 @@ public:
         (
             scalar rho,
             scalar Cp,
-            scalar K,
+            scalar kappa,
             scalar Hf,
             scalar emissivity
         );
@@ -129,6 +119,9 @@ public:
 
 
     // Selectors
+
+        //- Return a pointer to a new solidProperties created from name
+        static autoPtr<solidProperties> New(const word& name);
 
         //- Return a pointer to a new solidProperties created from dictionary
         static autoPtr<solidProperties> New(const dictionary& dict);
@@ -162,16 +155,20 @@ public:
             inline scalar emissivity() const;
 
 
-        // I-O
+    // I-O
 
-            //- Write the solidProperties properties
-            virtual void writeData(Ostream& os) const;
+        //- Read and set the properties present it the given dictionary
+        void readIfPresent(const dictionary& dict);
 
+        //- Write the solidProperties properties
+        virtual void writeData(Ostream& os) const;
 
-        // Ostream Operator
-
+        //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const solidProperties& s);
 };
+
+
+Ostream& operator<<(Ostream&, const solidProperties&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

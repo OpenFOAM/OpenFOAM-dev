@@ -42,15 +42,6 @@ SourceFiles
 namespace Foam
 {
 
-class CaCO3;
-
-Ostream& operator<<
-(
-    Ostream&,
-    const CaCO3&
-);
-
-
 /*---------------------------------------------------------------------------*\
                           Class CaCO3 Declaration
 \*---------------------------------------------------------------------------*/
@@ -71,9 +62,6 @@ public:
         //- Construct null
         CaCO3();
 
-        //- Construct from solidProperties
-        CaCO3(const solidProperties& s);
-
         //- Construct from dictionary
         CaCO3(const dictionary& dict);
 
@@ -89,11 +77,12 @@ public:
         //- Write the function coefficients
         void writeData(Ostream& os) const;
 
-
-    // Ostream Operator
-
+        //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const CaCO3& s);
 };
+
+
+Ostream& operator<<(Ostream& os, const CaCO3& s);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -42,15 +42,6 @@ SourceFiles
 namespace Foam
 {
 
-class C;
-
-Ostream& operator<<
-(
-    Ostream&,
-    const C&
-);
-
-
 /*---------------------------------------------------------------------------*\
                             Class C Declaration
 \*---------------------------------------------------------------------------*/
@@ -59,6 +50,7 @@ class C
 :
     public solidProperties
 {
+
 public:
 
     //- Runtime type information
@@ -69,9 +61,6 @@ public:
 
         //- Construct null
         C();
-
-        //- Construct from solidProperties
-        C(const solidProperties& s);
 
         //- Construct from dictionary
         C(const dictionary& dict);
@@ -88,10 +77,12 @@ public:
         //- Write the function coefficients
         void writeData(Ostream& os) const;
 
-
-    //- Ostream Operator
-    friend Ostream& operator<<(Ostream& os, const C& s);
+        //- Ostream Operator
+        friend Ostream& operator<<(Ostream& os, const C& s);
 };
+
+
+Ostream& operator<<(Ostream& os, const C& s);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

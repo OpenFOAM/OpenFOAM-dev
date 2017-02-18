@@ -145,6 +145,9 @@ public:
 
     // Selectors
 
+        //- Return a pointer to a new liquidProperties created from name
+        static autoPtr<liquidProperties> New(const word& name);
+
         //- Return a pointer to a new liquidProperties created from dictionary
         static autoPtr<liquidProperties> New(const dictionary& dict);
 
@@ -300,22 +303,14 @@ public:
         //- Read and set the function coefficients
         //  if present it the given dictionary
         template<class Liquid>
-        inline void readIfPresent
-        (
-            Liquid& l,
-            const dictionary& dict
-        );
+        inline void readIfPresent(Liquid& l, const dictionary& dict);
 
         //- Write the function coefficients
         virtual void writeData(Ostream& os) const;
 
         //- Write the data for each of the property functions
         template<class Liquid>
-        inline void writeData
-        (
-            const Liquid& l,
-            Ostream& os
-        ) const;
+        inline void writeData(const Liquid& l, Ostream& os) const;
 
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const liquidProperties& l);

@@ -87,6 +87,32 @@ Foam::liquidProperties::liquidProperties(const dictionary& dict)
 
 Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 (
+    const word& name
+)
+{
+    if (debug)
+    {
+        InfoInFunction << "Constructing liquidProperties" << endl;
+    }
+
+    ConstructorTable::iterator cstrIter = ConstructorTablePtr_->find(name);
+
+    if (cstrIter == ConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown liquidProperties type "
+            << name << nl << nl
+            << "Valid liquidProperties types are:" << nl
+            << ConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<liquidProperties>(cstrIter()());
+}
+
+
+Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
+(
     const dictionary& dict
 )
 {
@@ -101,24 +127,9 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
     {
         // Backward-compatibility
 
-        const Switch defaultCoeffs(dict.lookup("defaultCoeffs"));
-
-        if (defaultCoeffs)
+        if (Switch(dict.lookup("defaultCoeffs")))
         {
-            ConstructorTable::iterator cstrIter =
-                ConstructorTablePtr_->find(liquidPropertiesTypeName);
-
-            if (cstrIter == ConstructorTablePtr_->end())
-            {
-                FatalErrorInFunction
-                    << "Unknown liquidProperties type "
-                    << liquidPropertiesTypeName << nl << nl
-                    << "Valid liquidProperties types are:" << nl
-                    << ConstructorTablePtr_->sortedToc()
-                    << abort(FatalError);
-            }
-
-            return autoPtr<liquidProperties>(cstrIter()());
+            return New(liquidPropertiesTypeName);
         }
         else
         {
@@ -132,7 +143,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
                     << liquidPropertiesTypeName << nl << nl
                     << "Valid liquidProperties types are:" << nl
                     << dictionaryConstructorTablePtr_->sortedToc()
-                    << abort(FatalError);
+                    << exit(FatalError);
             }
 
             return autoPtr<liquidProperties>
@@ -153,7 +164,7 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
                 << liquidPropertiesTypeName << nl << nl
                 << "Valid liquidProperties types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc()
-                << abort(FatalError);
+                << exit(FatalError);
         }
 
         return autoPtr<liquidProperties>(cstrIter()(dict));

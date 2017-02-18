@@ -40,14 +40,14 @@ Foam::solidProperties::solidProperties
 (
     scalar rho,
     scalar Cp,
-    scalar K,
+    scalar kappa,
     scalar Hf,
     scalar emissivity
 )
 :
     rho_(rho),
     Cp_(Cp),
-    kappa_(K),
+    kappa_(kappa),
     Hf_(Hf),
     emissivity_(emissivity)
 {}
@@ -57,13 +57,29 @@ Foam::solidProperties::solidProperties(const dictionary& dict)
 :
     rho_(readScalar(dict.lookup("rho"))),
     Cp_(readScalar(dict.lookup("Cp"))),
-    kappa_(readScalar(dict.lookup("K"))),
+    kappa_
+    (
+        dict.found("K")
+      ? readScalar(dict.lookup("K"))
+      : readScalar(dict.lookup("kappa"))
+    ),
     Hf_(readScalar(dict.lookup("Hf"))),
     emissivity_(readScalar(dict.lookup("emissivity")))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::solidProperties::readIfPresent(const dictionary& dict)
+{
+    dict.readIfPresent("rho", rho_);
+    dict.readIfPresent("Cp", Cp_);
+    dict.readIfPresent("K", kappa_);
+    dict.readIfPresent("kappa", kappa_);
+    dict.readIfPresent("Hf_", Hf_);
+    dict.readIfPresent("emissivity", emissivity_);
+}
+
 
 void Foam::solidProperties::writeData(Ostream& os) const
 {

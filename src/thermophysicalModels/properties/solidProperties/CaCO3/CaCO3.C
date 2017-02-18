@@ -50,16 +50,12 @@ Foam::CaCO3::CaCO3()
 }
 
 
-Foam::CaCO3::CaCO3(const solidProperties& s)
-:
-    solidProperties(s)
-{}
-
-
 Foam::CaCO3::CaCO3(const dictionary& dict)
 :
-    solidProperties(dict)
-{}
+    CaCO3()
+{
+    readIfPresent(dict);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

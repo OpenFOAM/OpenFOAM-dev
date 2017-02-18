@@ -38,7 +38,7 @@ inertSpecie     air;
 
 liquids
 {
-    H2O {}
+    H2O;
 }
 
 solids

@@ -47,11 +47,22 @@ Foam::liquidMixtureProperties::liquidMixtureProperties
 
     forAll(components_, i)
     {
-        properties_.set
-        (
-            i,
-            liquidProperties::New(dict.subDict(components_[i]))
-        );
+        if (dict.isDict(components_[i]))
+        {
+            properties_.set
+            (
+                i,
+                liquidProperties::New(dict.subDict(components_[i]))
+            );
+        }
+        else
+        {
+            properties_.set
+            (
+                i,
+                liquidProperties::New(components_[i])
+            );
+        }
     }
 }
 

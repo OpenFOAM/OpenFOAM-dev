@@ -50,16 +50,12 @@ Foam::C::C()
 }
 
 
-Foam::C::C(const solidProperties& s)
-:
-    solidProperties(s)
-{}
-
-
 Foam::C::C(const dictionary& dict)
 :
-    solidProperties(dict)
-{}
+    C()
+{
+    readIfPresent(dict);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

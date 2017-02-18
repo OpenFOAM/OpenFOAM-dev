@@ -36,7 +36,7 @@ foamChemistryThermoFile "$FOAM_CASE/constant/thermo.incompressiblePoly";
 
 liquids
 {
-    H2O {}
+    H2O;
 }
 
 solids

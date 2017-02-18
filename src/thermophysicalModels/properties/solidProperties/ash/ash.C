@@ -50,16 +50,12 @@ Foam::ash::ash()
 }
 
 
-Foam::ash::ash(const solidProperties& s)
-:
-    solidProperties(s)
-{}
-
-
 Foam::ash::ash(const dictionary& dict)
 :
-    solidProperties(dict)
-{}
+    ash()
+{
+    readIfPresent(dict);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

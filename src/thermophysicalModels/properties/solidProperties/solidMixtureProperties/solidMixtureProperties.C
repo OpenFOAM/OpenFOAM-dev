@@ -34,9 +34,25 @@ Foam::solidMixtureProperties::solidMixtureProperties(const dictionary& dict)
 {
     components_ = dict.toc();
     properties_.setSize(components_.size());
+
     forAll(components_, i)
     {
-        properties_.set(i, solidProperties::New(dict.subDict(components_[i])));
+        if (dict.isDict(components_[i]))
+        {
+            properties_.set
+            (
+                i,
+                solidProperties::New(dict.subDict(components_[i]))
+            );
+        }
+        else
+        {
+            properties_.set
+            (
+                i,
+                solidProperties::New(components_[i])
+            );
+        }
     }
 }
 

@@ -42,15 +42,6 @@ SourceFiles
 namespace Foam
 {
 
-class ash;
-
-Ostream& operator<<
-(
-    Ostream&,
-    const ash&
-);
-
-
 /*---------------------------------------------------------------------------*\
                               Class ash Declaration
 \*---------------------------------------------------------------------------*/
@@ -71,9 +62,6 @@ public:
         //- Construct null
         ash();
 
-        //- Construct from solidProperties
-        ash(const solidProperties& s);
-
         //- Construct from dictionary
         ash(const dictionary& dict);
 
@@ -89,11 +77,12 @@ public:
         //- Write the function coefficients
         void writeData(Ostream& os) const;
 
-
-    // Ostream Operator
-
+        //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const ash& s);
 };
+
+
+Ostream& operator<<(Ostream& os, const ash& s);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

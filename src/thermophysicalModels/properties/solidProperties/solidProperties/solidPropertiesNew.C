@@ -30,6 +30,32 @@ License
 
 Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 (
+    const word& name
+)
+{
+    if (debug)
+    {
+        InfoInFunction << "Constructing solidProperties" << endl;
+    }
+
+    ConstructorTable::iterator cstrIter = ConstructorTablePtr_->find(name);
+
+    if (cstrIter == ConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown solidProperties type "
+            << name << nl << nl
+            << "Valid solidProperties types are:" << nl
+            << ConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<solidProperties>(cstrIter()());
+}
+
+
+Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
+(
     const dictionary& dict
 )
 {
@@ -40,31 +66,38 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
 
     const word solidType(dict.dictName());
 
-    if (!dict.found("defaultCoeffs") || Switch(dict.lookup("defaultCoeffs")))
+    if (dict.found("defaultCoeffs"))
     {
-        ConstructorTable::iterator cstrIter =
-            ConstructorTablePtr_->find(solidType);
+        // Backward-compatibility
 
-        if (cstrIter == ConstructorTablePtr_->end())
+        if (Switch(dict.lookup("defaultCoeffs")))
         {
-            FatalErrorInFunction
-                << "Unknown solidProperties type " << solidType << nl << nl
-                << "Valid solidProperties types are :" << endl
-                << ConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
+            return New(solidType);
         }
-
-        return autoPtr<solidProperties>(cstrIter()());
+        else
+        {
+            return autoPtr<solidProperties>
+            (
+                new solidProperties(dict.subDict(solidType + "Coeffs"))
+            );
+        }
     }
     else
     {
-        return autoPtr<solidProperties>
-        (
-            new solidProperties
-            (
-                dict.subDict(solidType + "Coeffs")
-            )
-        );
+        dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(solidType);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown solidProperties type "
+                << solidType << nl << nl
+                << "Valid solidProperties types are:" << nl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
+        }
+
+        return autoPtr<solidProperties>(cstrIter()(dict));
     }
 }
 

@@ -36,26 +36,21 @@ inertSpecie     N2;
 
 liquids
 {
-    H2O {}
+    H2O;
 }
 
 solids
 {
     C
     {
-        defaultCoeffs   no;
-
-        CCoeffs
-        {
-            rho             2010;
-            Cp              710;
-            K               0.04;
-            Hf              0;
-            emissivity      1.0;
-        }
+        rho             2010;
+        Cp              710;
+        kappa           0.04;
+        Hf              0;
+        emissivity      1.0;
     }
 
-    ash {}
+    ash;
 }
 
 
