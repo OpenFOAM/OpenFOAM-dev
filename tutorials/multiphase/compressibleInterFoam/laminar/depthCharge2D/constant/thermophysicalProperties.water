@@ -19,6 +19,21 @@ thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
+    properties      liquid;
+    energy          sensibleInternalEnergy;
+}
+
+mixture
+{
+    H2O;
+}
+
+
+/*
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
     transport       const;
     thermo          hConst;
     equationOfState perfectFluid;
@@ -48,6 +63,7 @@ mixture
         Pr          2.289;
     }
 }
+*/
 
 
 // ************************************************************************* //

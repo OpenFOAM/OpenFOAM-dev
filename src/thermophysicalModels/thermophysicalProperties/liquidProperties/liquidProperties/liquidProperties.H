@@ -85,7 +85,7 @@ class liquidProperties
 
 public:
 
-    TypeName("liquidProperties");
+    TypeName("liquid");
 
 
     // Declare run-time constructor selection tables
@@ -146,6 +146,15 @@ public:
     //- Destructor
     virtual ~liquidProperties()
     {}
+
+
+    // Static data
+
+        //- Is the equation of state is incompressible i.e. rho != f(p)
+        static const bool incompressible = true;
+
+        //- Is the equation of state is isochoric i.e. rho = const
+        static const bool isochoric = false;
 
 
     // Member Functions

@@ -23,17 +23,38 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+#include "thermophysicalPropertiesSelector.H"
 
-inline Foam::scalar Foam::thermophysicalProperties::limit(const scalar T) const
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class ThermophysicalProperties>
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::
+thermophysicalPropertiesSelector
+(
+    const word& name
+)
+:
+    propertiesPtr_(ThermophysicalProperties::New(name))
+{}
+
+
+template<class ThermophysicalProperties>
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::
+thermophysicalPropertiesSelector
+(
+    const dictionary& dict
+)
 {
-    return T;
-}
+    const word name(dict.first()->keyword());
 
-
-inline Foam::scalar Foam::thermophysicalProperties::W() const
-{
-    return W_;
+    if (dict.isDict(name))
+    {
+        propertiesPtr_ = ThermophysicalProperties::New(dict.subDict(name));
+    }
+    else
+    {
+        propertiesPtr_ = ThermophysicalProperties::New(name);
+    }
 }
 
 

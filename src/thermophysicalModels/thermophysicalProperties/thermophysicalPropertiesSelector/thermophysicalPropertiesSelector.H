@@ -22,24 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalProperties
+    Foam::thermophysicalPropertiesSelector
 
 Description
-    Base-class for thermophysical properties of solids, liquids and gases
-    providing an interface compatible with the templated thermodynamics
-    packages.
+    Wrapper class providing run-time selection of thermophysicalProperties
+    for the templated thermodynamics packages.
 
 SourceFiles
-    thermophysicalPropertiesI.H
-    thermophysicalProperties.C
+    thermophysicalPropertiesSelectorI.H
+    thermophysicalPropertiesSelector.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef thermophysicalProperties_H
-#define thermophysicalProperties_H
+#ifndef thermophysicalPropertiesSelector_H
+#define thermophysicalPropertiesSelector_H
 
-#include "dictionary.H"
-#include "runTimeSelectionTables.H"
+#include "thermophysicalProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,65 +45,37 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class thermophysicalProperties Declaration
+                    Class thermophysicalPropertiesSelector Declaration
 \*---------------------------------------------------------------------------*/
 
-class thermophysicalProperties
+template<class ThermophysicalProperties>
+class thermophysicalPropertiesSelector
 {
-    // Private data
+    // Private member data
 
-        //- Molecular weight [kg/kmol]
-        scalar W_;
+        autoPtr<ThermophysicalProperties> propertiesPtr_;
 
 
 public:
 
-    TypeName("thermophysicalProperties");
-
-
-    // Declare run-time constructor selection tables
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            thermophysicalProperties,
-            ,
-            (),
-            ()
-        );
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            thermophysicalProperties,
-            dictionary,
-            (const dictionary& dict),
-            (dict)
-        );
-
-
     // Constructors
 
-        //- Construct from molecular weight
-        thermophysicalProperties(scalar W);
+        //- Construct from name
+        thermophysicalPropertiesSelector(const word& name);
 
         //- Construct from dictionary
-        thermophysicalProperties(const dictionary& dict);
+        thermophysicalPropertiesSelector(const dictionary& dict);
 
 
-    // Selectors
+    // Static data
 
-        //- Return a pointer to a new thermophysicalProperties created from name
-        static autoPtr<thermophysicalProperties> New(const word& name);
+        //- Is the equation of state is incompressible i.e. rho != f(p)
+        static const bool incompressible =
+            ThermophysicalProperties::incompressible;
 
-        //- Return a pointer to a new thermophysicalProperties
-        //  created from dictionary
-        static autoPtr<thermophysicalProperties> New(const dictionary& dict);
-
-
-    //- Destructor
-    virtual ~thermophysicalProperties()
-    {}
+        //- Is the equation of state is isochoric i.e. rho = const
+        static const bool isochoric =
+            ThermophysicalProperties::isochoric;
 
 
     // Member Functions
@@ -122,66 +92,47 @@ public:
         // Fundamental equation of state properties
 
             //- Liquid density [kg/m^3]
-            virtual scalar rho(scalar p, scalar T) const = 0;
+            inline scalar rho(scalar p, scalar T) const;
 
             //- Liquid compressibility rho/p [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
-            virtual scalar psi(scalar p, scalar T) const = 0;
+            inline scalar psi(scalar p, scalar T) const;
 
             //- Return (Cp - Cv) [J/(kg K]
             //  Note: currently it is assumed the liquid is incompressible
             //  so CpMCv 0
-            virtual scalar CpMCv(scalar p, scalar T) const = 0;
+            inline scalar CpMCv(scalar p, scalar T) const;
 
 
         // Fundamental thermodynamic properties
 
             //- Heat capacity at constant pressure [J/(kg K)]
-            virtual scalar Cp(const scalar p, const scalar T) const = 0;
+            inline scalar Cp(const scalar p, const scalar T) const;
 
             //- Absolute Enthalpy [J/kg]
-            virtual scalar Ha(const scalar p, const scalar T) const = 0;
+            inline scalar Ha(const scalar p, const scalar T) const;
 
             //- Sensible enthalpy [J/kg]
-            virtual scalar Hs(const scalar p, const scalar T) const = 0;
+            inline scalar Hs(const scalar p, const scalar T) const;
 
             //- Chemical enthalpy [J/kg]
-            virtual scalar Hc() const = 0;
+            inline scalar Hc() const;
 
             // Entropy [J/(kg K)]
-            virtual scalar S(const scalar p, const scalar T) const = 0;
+            inline scalar S(const scalar p, const scalar T) const;
 
 
         // Physical properties
 
             //- Liquid viscosity [Pa s]
-            virtual scalar mu(scalar p, scalar T) const = 0;
+            inline scalar mu(scalar p, scalar T) const;
 
             //- Liquid thermal conductivity  [W/(m K)]
-            virtual scalar kappa(scalar p, scalar T) const = 0;
+            inline scalar kappa(scalar p, scalar T) const;
 
             //- Liquid thermal diffusivity of enthalpy [kg/ms]
-            virtual scalar alphah(const scalar p, const scalar T) const = 0;
-
-
-    // I-O
-
-        //- Read and set the properties present it the given dictionary
-        void readIfPresent(const dictionary& dict);
-
-        //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
-
-        //- Ostream Operator
-        friend Ostream& operator<<
-        (
-            Ostream& os,
-            const thermophysicalProperties& l
-        );
+            inline scalar alphah(const scalar p, const scalar T) const;
 };
-
-
-Ostream& operator<<(Ostream& os, const thermophysicalProperties& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -190,7 +141,11 @@ Ostream& operator<<(Ostream& os, const thermophysicalProperties& l);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "thermophysicalPropertiesI.H"
+#include "thermophysicalPropertiesSelectorI.H"
+
+#ifdef NoRepository
+    #include "thermophysicalPropertiesSelector.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

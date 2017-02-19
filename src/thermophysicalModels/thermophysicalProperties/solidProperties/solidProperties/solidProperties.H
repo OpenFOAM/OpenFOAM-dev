@@ -72,7 +72,7 @@ class solidProperties
 public:
 
     //- Runtime type information
-    TypeName("solidProperties");
+    TypeName("solid");
 
 
     // Declare run-time constructor selection tables
