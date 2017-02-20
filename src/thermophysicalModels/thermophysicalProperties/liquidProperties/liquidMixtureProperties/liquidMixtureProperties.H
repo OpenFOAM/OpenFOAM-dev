@@ -31,17 +31,11 @@ Description
     \verbatim
         <parentDictionary>
         {
-            H2O
-            {
-                defaultCoeffs   yes;     // employ default coefficients
-            }
+            H2O; // employ default coefficients
+
             C7H16
             {
-                defaultCoeffs   no;
-                C7H16Coeffs
-                {
-                    ... user defined properties for C7H16
-                }
+                // ... user defined properties for C7H16
             }
         }
     \endverbatim
@@ -57,11 +51,9 @@ See also
 #ifndef liquidMixtureProperties_H
 #define liquidMixtureProperties_H
 
-#include "word.H"
-#include "scalarField.H"
-#include "PtrList.H"
 #include "liquidProperties.H"
-#include "autoPtr.H"
+#include "PtrList.H"
+#include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
