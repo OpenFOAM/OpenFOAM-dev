@@ -31,17 +31,11 @@ Description
     \verbatim
         <parentDictionary>
         {
-            C
-            {
-                defaultCoeffs   yes;     // employ default coefficients
-            }
+            C;
+
             ash
             {
-                defaultCoeffs   no;
-                ashCoeffs
-                {
-                    ... user defined properties for ash
-                }
+                //... user defined properties for ash
             }
         }
     \endverbatim
@@ -58,10 +52,9 @@ See also
 #ifndef solidMixtureProperties_H
 #define solidMixtureProperties_H
 
-#include "scalarField.H"
-#include "PtrList.H"
 #include "solidProperties.H"
-#include "autoPtr.H"
+#include "PtrList.H"
+#include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -134,19 +127,12 @@ public:
             return components_.size();
         }
 
-
-        //- Returns the mass fractions, given mole fractions
-        scalarField Y(const scalarField& X) const;
-
-        //- Returns the mole fractions, given mass fractions
-        scalarField X(const scalarField& Y) const;
-
         //- Calculate the mixture density [kg/m^3] as a function of
-        //  volume fractions
-        scalar rho(const scalarField& X) const;
+        //  mass fractions
+        scalar rho(const scalarField& Y) const;
 
-        //- Calculate the mixture heat capacity [J/(kg K)] as a function
-        //  of mass fractions
+        //- Calculate the mixture heat capacity [J/(kg K)] as a function of
+        //  mass fractions
         scalar Cp(const scalarField& Y) const;
 };
 

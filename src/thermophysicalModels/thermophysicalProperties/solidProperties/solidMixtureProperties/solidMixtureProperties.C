@@ -88,40 +88,29 @@ Foam::autoPtr<Foam::solidMixtureProperties> Foam::solidMixtureProperties::New
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalarField Foam::solidMixtureProperties::X(const scalarField& Y) const
+Foam::scalar Foam::solidMixtureProperties::rho(const scalarField& Y) const
 {
-    scalarField X(Y.size());
-    scalar rhoInv = 0.0;
-    forAll(X, i)
-    {
-        rhoInv += Y[i]/properties_[i].rho();
-        X[i] = Y[i]/properties_[i].rho();
-    }
+    scalar rrho = 0;
 
-    tmp<scalarField> tfld(X/rhoInv);
-    return tfld();
-}
-
-
-Foam::scalar Foam::solidMixtureProperties::rho(const scalarField& X) const
-{
-    scalar val = 0.0;
     forAll(properties_, i)
     {
-        val += properties_[i].rho()*X[i];
+        rrho += Y[i]/properties_[i].rho();
     }
-    return val;
+
+    return 1/rrho;
 }
 
 
 Foam::scalar Foam::solidMixtureProperties::Cp(const scalarField& Y) const
 {
-    scalar val = 0.0;
+    scalar Cp = 0;
+
     forAll(properties_, i)
     {
-        val += properties_[i].Cp()*Y[i];
+        Cp += Y[i]*properties_[i].Cp();
     }
-    return val;
+
+    return Cp;
 }
 
 
