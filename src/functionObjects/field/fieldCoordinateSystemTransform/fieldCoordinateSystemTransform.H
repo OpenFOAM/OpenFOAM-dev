@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,11 +45,16 @@ Description
             UMean
             UPrime2Mean
         );
+
         coordinateSystem
         {
-            origin  (0.001  0       0);
-            e1      (1      0.15    0);
-            e3      (0      0      -1);
+            origin  (0.001 0 0);
+            coordinateRotation
+            {
+                type        axesRotation;
+                e1      (1      0.15    0);
+                e3      (0      0      -1);
+            }
         }
     }
     \endverbatim
