@@ -249,7 +249,7 @@ void Foam::MULES::limiterCorr
                 psiMinn[pfCelli] = min(psiMinn[pfCelli], psiPNf[pFacei]);
             }
         }
-        else
+        else if (psiPf.fixesValue())
         {
             forAll(phiCorrPf, pFacei)
             {
