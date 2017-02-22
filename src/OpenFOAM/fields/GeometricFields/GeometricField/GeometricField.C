@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1164,11 +1164,18 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::operator=
 
     this->dimensions() = gf.dimensions();
 
-    // Transfer the storage from the tmp
-    primitiveFieldRef().transfer
-    (
-        const_cast<Field<Type>&>(gf.primitiveField())
-    );
+    if (tgf.isTmp())
+    {
+        // Transfer the storage from the tmp
+        primitiveFieldRef().transfer
+        (
+            const_cast<Field<Type>&>(gf.primitiveField())
+        );
+    }
+    else
+    {
+        primitiveFieldRef() = gf.primitiveField();
+    }
 
     boundaryFieldRef() = gf.boundaryField();
 
