@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,8 @@ namespace Foam
 
 //- If the field fieldRef needs referencing find the reference cell nearest
 //  (in index) to the given cell looked-up for field, but which is not on a
-//  cyclic, symmetry or processor patch.
-void setRefCell
+//  cyclic, symmetry or processor patch and return true, otherwise return false.
+bool setRefCell
 (
     const volScalarField& field,
     const volScalarField& fieldRef,
@@ -59,8 +59,8 @@ void setRefCell
 
 //- If the field needs referencing find the reference cell nearest
 //  (in index) to the given cell looked-up for field, but which is not on a
-//  cyclic, symmetry or processor patch.
-void setRefCell
+//  cyclic, symmetry or processor patch and return true, otherwise return false.
+bool setRefCell
 (
     const volScalarField& field,
     const dictionary& dict,

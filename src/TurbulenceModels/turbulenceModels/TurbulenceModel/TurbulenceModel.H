@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,13 +158,13 @@ public:
         }
 
         //- Return the laminar viscosity
-        tmp<volScalarField> nu() const
+        virtual tmp<volScalarField> nu() const
         {
             return transport_.nu();
         }
 
         //- Return the laminar viscosity on patchi
-        tmp<scalarField> nu(const label patchi) const
+        virtual tmp<scalarField> nu(const label patchi) const
         {
             return transport_.nu(patchi);
         }

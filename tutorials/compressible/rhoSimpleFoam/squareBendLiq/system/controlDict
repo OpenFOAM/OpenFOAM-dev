@@ -10,56 +10,42 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSolution;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    p
-    {
-        solver          GAMG;
-        smoother        GaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
-    }
+application     rhoSimpleFoam;
 
-    "(U|k|omega|epsilon|e|h)"
-    {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
-    }
-}
+startFrom       startTime;
 
-SIMPLE
-{
-    residualControl
-    {
-        p               1e-4;
-        U               1e-4;
-        "(k|omega|epsilon|e|h)" 1e-4;
-    }
+startTime       0;
 
-    nNonOrthogonalCorrectors 0;
-    pMinFactor      0.1;
-    pMaxFactor      1.5;
-}
+stopAt          endTime;
 
-relaxationFactors
-{
-    fields
-    {
-        p               0.3;
-        rho             0.01;
-    }
-    equations
-    {
-        U               0.7;
-        "(e|h)"         0.7;
-        "(k|epsilon|omega)" 0.7;
-    }
-}
+endTime         500;
+
+deltaT          1;
+
+writeControl    timeStep;
+
+writeInterval   100;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+graphFormat     raw;
+
+runTimeModifiable true;
+
 
 // ************************************************************************* //

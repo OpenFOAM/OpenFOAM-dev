@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,6 +113,19 @@ public:
         virtual tmp<scalarField> mu(const label patchi) const
         {
             return this->transport_.mu(patchi);
+        }
+
+        //- Return the laminar viscosity
+        virtual tmp<volScalarField> nu() const
+        {
+            return this->transport_.mu()/this->rho_;
+        }
+
+        //- Return the laminar viscosity on patchi
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return
+                this->transport_.mu(patchi)/this->rho_.boundaryField()[patchi];
         }
 
         //- Return the turbulence dynamic viscosity

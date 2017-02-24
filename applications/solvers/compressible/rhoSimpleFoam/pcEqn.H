@@ -40,7 +40,11 @@ if (simple.transonic())
         // Relax the pressure equation to maintain diagonal dominance
         pEqn.relax();
 
-        pEqn.setReference(pRefCell, pRefValue);
+        pEqn.setReference
+        (
+            pressureControl.refCell(),
+            pressureControl.refValue()
+        );
 
         pEqn.solve();
 
@@ -75,7 +79,11 @@ else
             fvOptions(psi, p, rho.name())
         );
 
-        pEqn.setReference(pRefCell, pRefValue);
+        pEqn.setReference
+        (
+            pressureControl.refCell(),
+            pressureControl.refValue()
+        );
 
         pEqn.solve();
 
@@ -97,6 +105,8 @@ U = HbyA - rAtU*fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
+pressureControl.limit(p);
+
 // For closed-volume cases adjust the pressure and density levels
 // to obey overall mass continuity
 if (closedVolume)
@@ -105,14 +115,12 @@ if (closedVolume)
         /fvc::domainIntegrate(psi);
 }
 
+p.correctBoundaryConditions();
+
 // Recalculate density from the relaxed pressure
 rho = thermo.rho();
-rho = max(rho, rhoMin);
-rho = min(rho, rhoMax);
 
 if (!simple.transonic())
 {
     rho.relax();
 }
-
-Info<< "rho max/min : " << max(rho).value() << " " << min(rho).value() << endl;

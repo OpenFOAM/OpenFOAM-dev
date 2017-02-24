@@ -10,46 +10,34 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 ddtSchemes
 {
-    default         steadyState;
+    default             steadyState;
 }
 
 gradSchemes
 {
-    default         Gauss linear;
+    default             Gauss linear;
 
-    limited         cellLimited Gauss linear 1;
-    grad(U)         $limited;
-    grad(k)         $limited;
-    grad(omega)     $limited;
-    grad(epsilon)   $limited;
+    limited             cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
-    default         none;
+    default             none;
 
-    div(phi,U)      bounded Gauss linearUpwind limited;
+    div(phi,U)          bounded Gauss linearUpwind limited;
+    div(phi,e)          bounded Gauss linearUpwind limited;
+    div(phi,epsilon)    bounded Gauss linearUpwind limited;
+    div(phi,k)          bounded Gauss linearUpwind limited;
+    div(phi,Ekp)        bounded Gauss linearUpwind limited;
 
-    turbulence      bounded Gauss limitedLinear 1;
-    div(phi,k)      $turbulence;
-    div(phi,omega)  $turbulence;
-    div(phi,epsilon) $turbulence;
-
-    div(phi,e)      $turbulence;
-    div(phi,h)      $turbulence;
-    div(phi,K)      $turbulence;
-    div(phi,Ekp)    $turbulence;
-
-    div(phid,p)     Gauss upwind;
-    div((phi|interpolate(rho)),p)  bounded Gauss upwind;
-
-    div(((rho*nuEff)*dev2(T(grad(U)))))    Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U)))))      Gauss linear;
 }
 
 laplacianSchemes
@@ -67,10 +55,5 @@ snGradSchemes
     default         corrected;
 }
 
-fluxRequired
-{
-    default         no;
-    p                 ;
-}
 
 // ************************************************************************* //

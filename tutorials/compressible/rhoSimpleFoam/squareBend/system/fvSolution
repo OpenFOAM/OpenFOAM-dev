@@ -39,8 +39,8 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    rhoMin          0.1;
-    rhoMax          1.0;
+    pMinFactor      0.1;
+    pMaxFactor      1.5;
     transonic       yes;
     consistent      yes;
 
@@ -60,7 +60,6 @@ relaxationFactors
     fields
     {
         p               1;
-        rho             1;
     }
     equations
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-void Foam::setRefCell
+bool Foam::setRefCell
 (
     const volScalarField& field,
     const volScalarField& fieldRef,
@@ -109,11 +109,17 @@ void Foam::setRefCell
         }
 
         refValue = readScalar(dict.lookup(refValueName));
+
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 
 
-void Foam::setRefCell
+bool Foam::setRefCell
 (
     const volScalarField& field,
     const dictionary& dict,
@@ -122,7 +128,7 @@ void Foam::setRefCell
     const bool forceReference
 )
 {
-    setRefCell(field, field, dict, refCelli, refValue, forceReference);
+    return setRefCell(field, field, dict, refCelli, refValue, forceReference);
 }
 
 

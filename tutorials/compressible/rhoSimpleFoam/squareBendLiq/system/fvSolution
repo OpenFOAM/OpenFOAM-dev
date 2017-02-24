@@ -20,33 +20,18 @@ solvers
     p
     {
         solver          GAMG;
-        tolerance       1e-08;
-        relTol          0.05;
         smoother        GaussSeidel;
-        nCellsInCoarsestLevel 20;
-    }
 
-    U
-    {
-        solver          smoothSolver;
-        smoother        GaussSeidel;
-        nSweeps         2;
-        tolerance       1e-06;
+        tolerance       1e-7;
         relTol          0.1;
     }
 
-    e
+    "(U|e|k|epsilon)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-06;
-        relTol          0.1;
-    }
 
-    "(k|epsilon)"
-    {
-        $U;
-        tolerance       1e-07;
+        tolerance       1e-7;
         relTol          0.1;
     }
 }
@@ -54,17 +39,17 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    pMinFactor      0.4;
+    pMinFactor      0.1;
     pMaxFactor      1.5;
+
+    transonic       no;
+    consistent      no;
 
     residualControl
     {
-        p               1e-2;
+        p               1e-4;
         U               1e-4;
-        e               1e-3;
-
-        // Possibly check turbulence fields
-        "(k|epsilon|omega)" 1e-3;
+        "(k|omega|epsilon|e|h)" 1e-3;
     }
 }
 
@@ -73,15 +58,14 @@ relaxationFactors
     fields
     {
         p               0.3;
-        rho             0.05;
     }
     equations
     {
         U               0.7;
-        "(k|epsilon)"   0.7;
-        e               0.5;
+        e               0.7;
+        k               0.7;
+        epsilon         0.7;
     }
 }
-
 
 // ************************************************************************* //

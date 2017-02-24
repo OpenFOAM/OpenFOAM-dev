@@ -10,56 +10,21 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fvSolution;
+    location    "constant";
+    object      turbulenceProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    p
-    {
-        solver          GAMG;
-        smoother        GaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
-    }
+simulationType  RAS;
 
-    "(U|k|omega|epsilon|e|h)"
-    {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0.1;
-    }
+RAS
+{
+    RASModel        kEpsilon;
+
+    turbulence      on;
+
+    printCoeffs     on;
 }
 
-SIMPLE
-{
-    residualControl
-    {
-        p               1e-4;
-        U               1e-4;
-        "(k|omega|epsilon|e|h)" 1e-4;
-    }
-
-    nNonOrthogonalCorrectors 0;
-    pMinFactor      0.1;
-    pMaxFactor      1.5;
-}
-
-relaxationFactors
-{
-    fields
-    {
-        p               0.3;
-        rho             0.01;
-    }
-    equations
-    {
-        U               0.7;
-        "(e|h)"         0.7;
-        "(k|epsilon|omega)" 0.7;
-    }
-}
 
 // ************************************************************************* //
