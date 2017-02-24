@@ -8,20 +8,23 @@
 
     if (simple.transonic())
     {
+        surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
+        surfaceScalarField rhof(fvc::interpolate(rho));
+        MRF.makeRelative(rhof, phiHbyA);
+
         surfaceScalarField phid
         (
             "phid",
-            fvc::interpolate(psi)
-           *fvc::flux(HbyA)
+            (fvc::interpolate(psi)/rhof)*phiHbyA
         );
-
-        MRF.makeRelative(fvc::interpolate(psi), phid);
+        phiHbyA -= fvc::interpolate(p)*phid;
 
         while (simple.correctNonOrthogonal())
         {
             fvScalarMatrix pEqn
             (
-                fvm::div(phid, p)
+                fvc::div(phiHbyA)
+              + fvm::div(phid, p)
               - fvm::laplacian(rhorAUf, p)
               ==
                 fvOptions(psi, p, rho.name())
@@ -40,7 +43,7 @@
 
             if (simple.finalNonOrthogonalIter())
             {
-                phi == pEqn.flux();
+                phi = phiHbyA + pEqn.flux();
             }
         }
     }

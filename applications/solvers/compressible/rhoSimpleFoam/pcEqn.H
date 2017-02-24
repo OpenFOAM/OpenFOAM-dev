@@ -7,20 +7,19 @@ bool closedVolume = false;
 
 if (simple.transonic())
 {
+    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
+    surfaceScalarField rhof(fvc::interpolate(rho));
+    MRF.makeRelative(rhof, phiHbyA);
+
     surfaceScalarField phid
     (
         "phid",
-        fvc::interpolate(psi)
-       *fvc::flux(HbyA)
+        (fvc::interpolate(psi)/rhof)*phiHbyA
     );
 
-    MRF.makeRelative(fvc::interpolate(psi), phid);
-
-    surfaceScalarField phic
-    (
-        "phic",
+    phiHbyA +=
         fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf()
-    );
+      - fvc::interpolate(p)*phid;
 
     HbyA -= (rAU - rAtU)*fvc::grad(p);
 
@@ -31,7 +30,7 @@ if (simple.transonic())
         fvScalarMatrix pEqn
         (
             fvm::div(phid, p)
-          + fvc::div(phic)
+          + fvc::div(phiHbyA)
           - fvm::laplacian(rhorAtU, p)
          ==
             fvOptions(psi, p, rho.name())
@@ -50,7 +49,7 @@ if (simple.transonic())
 
         if (simple.finalNonOrthogonalIter())
         {
-            phi == phic + pEqn.flux();
+            phi = phiHbyA + pEqn.flux();
         }
     }
 }
