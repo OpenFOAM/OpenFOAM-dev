@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,13 +73,13 @@ Lavieville::fLiquid
 ) const
 {
     return
-        pos(alphaLiquid-alphaCrit_)
+        pos(alphaLiquid - alphaCrit_)
        *(
             1 - 0.5*exp(-20*(alphaLiquid - alphaCrit_))
         )
       + neg(alphaLiquid - alphaCrit_)
        *(
-            pow(0.5*(alphaLiquid/alphaCrit_), 20*alphaCrit_)
+            0.5*pow(alphaLiquid/alphaCrit_, 20*alphaCrit_)
         );
 }
 
