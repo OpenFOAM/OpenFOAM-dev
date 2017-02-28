@@ -59,8 +59,9 @@ PIMPLE
     nOuterCorrectors 1;
     nCorrectors     2;
     nNonOrthogonalCorrectors 0;
-    rhoMin          0.5;
-    rhoMax          2.0;
+
+    pMax                1.2e5;
+    pMin                0.8e5;
 }
 
 

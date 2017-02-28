@@ -7,6 +7,8 @@ autoPtr<fluidThermo> pThermo
 fluidThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
+volScalarField& p = thermo.p();
+
 volScalarField rho
 (
     IOobject
@@ -19,8 +21,6 @@ volScalarField rho
     ),
     thermo.rho()
 );
-
-volScalarField& p = thermo.p();
 
 Info<< "Reading field U\n" << endl;
 volVectorField U

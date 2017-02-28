@@ -28,11 +28,10 @@ solvers
     pFinal
     {
         $p;
-        tolerance       1e-07;
         relTol          0;
     }
 
-    "(rho|U|h|k|epsilon|omega)"
+    "(rho|U|e|k|epsilon|omega)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -40,10 +39,9 @@ solvers
         relTol          0.1;
     }
 
-    "(rho|U|h|k|epsilon|omega)Final"
+    "(rho|U|e|k|epsilon|omega)Final"
     {
         $U;
-        tolerance       1e-06;
         relTol          0;
     }
 }
@@ -57,8 +55,8 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
     consistent          yes;
 
-    rhoMin          0.4;
-    rhoMax          2.0;
+    pMaxFactor          1.5;
+    pMinFactor          0.9;
 
     residualControl
     {
@@ -76,13 +74,13 @@ relaxationFactors
 {
     fields
     {
-        "p.*"           0.9;
+        "p.*"           1;
         "rho.*"         1;
     }
     equations
     {
         "U.*"           0.9;
-        "h.*"           0.7;
+        "e.*"           0.7;
         "(k|epsilon|omega).*" 0.8;
     }
 }

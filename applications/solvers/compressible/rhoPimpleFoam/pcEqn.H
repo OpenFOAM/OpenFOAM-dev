@@ -1,8 +1,3 @@
-rho = thermo.rho();
-rho = max(rho, rhoMin);
-rho = min(rho, rhoMax);
-rho.relax();
-
 volScalarField rAU(1.0/UEqn.A());
 volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
@@ -12,71 +7,63 @@ if (pimple.nCorrPISO() <= 1)
     tUEqn.clear();
 }
 
+surfaceScalarField phiHbyA
+(
+    "phiHbyA",
+    (
+        fvc::flux(rho*HbyA)
+      + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
+    )
+);
+
+MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+volScalarField rhorAtU("rhorAtU", rho*rAtU);
+
+// Update the pressure BCs to ensure flux consistency
+constrainPressure(p, rho, U, phiHbyA, rhorAtU, MRF);
+
 if (pimple.transonic())
 {
     surfaceScalarField phid
     (
         "phid",
-        fvc::interpolate(psi)
-       *(
-            fvc::flux(HbyA)
-          + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
-           /fvc::interpolate(rho)
-        )
+        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
     );
 
-    MRF.makeRelative(fvc::interpolate(psi), phid);
-
-    surfaceScalarField phic
-    (
-        "phic",
+    phiHbyA +=
         fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf()
-    );
+      - fvc::interpolate(p)*phid;
 
     HbyA -= (rAU - rAtU)*fvc::grad(p);
-
-    volScalarField rhorAtU("rhorAtU", rho*rAtU);
 
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
             fvm::ddt(psi, p)
+          + fvc::div(phiHbyA)
           + fvm::div(phid, p)
-          + fvc::div(phic)
           - fvm::laplacian(rhorAtU, p)
          ==
             fvOptions(psi, p, rho.name())
         );
 
+        // Relax the pressure equation to ensure diagonal-dominance
+        pEqn.relax();
+
         pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
 
         if (pimple.finalNonOrthogonalIter())
         {
-            phi == phic + pEqn.flux();
+            phi = phiHbyA + pEqn.flux();
         }
     }
 }
 else
 {
-    surfaceScalarField phiHbyA
-    (
-        "phiHbyA",
-        (
-            fvc::flux(rho*HbyA)
-          + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
-        )
-    );
-
-    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
-
     phiHbyA += fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf();
     HbyA -= (rAU - rAtU)*fvc::grad(p);
-
-    volScalarField rhorAtU("rhorAtU", rho*rAtU);
-
-    // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p, rho, U, phiHbyA, rhorAtU, MRF);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -109,19 +96,16 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
-if (thermo.dpdt())
-{
-    dpdt = fvc::ddt(p);
-}
-
-// Recalculate density from the relaxed pressure
+pressureControl.limit(p);
+p.correctBoundaryConditions();
 rho = thermo.rho();
-rho = max(rho, rhoMin);
-rho = min(rho, rhoMax);
 
 if (!pimple.transonic())
 {
     rho.relax();
 }
 
-Info<< "rho max/min : " << max(rho).value() << " " << min(rho).value() << endl;
+if (thermo.dpdt())
+{
+    dpdt = fvc::ddt(p);
+}

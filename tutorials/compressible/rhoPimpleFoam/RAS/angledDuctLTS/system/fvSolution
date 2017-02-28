@@ -56,8 +56,8 @@ PIMPLE
     nCorrectors       1;
     nNonOrthogonalCorrectors 0;
 
-    rhoMin            0.5;
-    rhoMax            2.0;
+    pMaxFactor          1.5;
+    pMinFactor          0.9;
 
     maxCo             0.2;
     rDeltaTSmoothingCoeff 0.1;

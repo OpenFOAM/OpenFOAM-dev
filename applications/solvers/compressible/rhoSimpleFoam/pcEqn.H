@@ -5,16 +5,20 @@ tUEqn.clear();
 
 bool closedVolume = false;
 
+surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
+MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+volScalarField rhorAtU("rhorAtU", rho*rAtU);
+
+// Update the pressure BCs to ensure flux consistency
+constrainPressure(p, rho, U, phiHbyA, rhorAtU, MRF);
+
 if (simple.transonic())
 {
-    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
-    surfaceScalarField rhof(fvc::interpolate(rho));
-    MRF.makeRelative(rhof, phiHbyA);
-
     surfaceScalarField phid
     (
         "phid",
-        (fvc::interpolate(psi)/rhof)*phiHbyA
+        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
     );
 
     phiHbyA +=
@@ -23,14 +27,12 @@ if (simple.transonic())
 
     HbyA -= (rAU - rAtU)*fvc::grad(p);
 
-    volScalarField rhorAtU("rhorAtU", rho*rAtU);
-
     while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
-            fvm::div(phid, p)
-          + fvc::div(phiHbyA)
+            fvc::div(phiHbyA)
+          + fvm::div(phid, p)
           - fvm::laplacian(rhorAtU, p)
          ==
             fvOptions(psi, p, rho.name())
@@ -55,18 +57,10 @@ if (simple.transonic())
 }
 else
 {
-    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
-    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
-
     closedVolume = adjustPhi(phiHbyA, U, p);
 
     phiHbyA += fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf();
     HbyA -= (rAU - rAtU)*fvc::grad(p);
-
-    volScalarField rhorAtU("rhorAtU", rho*rAtU);
-
-    // Update the pressure BCs to ensure flux consistency
-    constrainPressure(p, rho, U, phiHbyA, rhorAtU, MRF);
 
     while (simple.correctNonOrthogonal())
     {

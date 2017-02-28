@@ -32,105 +32,171 @@ Foam::pressureControl::pressureControl
 (
     const volScalarField& p,
     const volScalarField& rho,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool pRefRequired
 )
 :
-    refCell_(0),
+    refCell_(-1),
     refValue_(0),
     pMax_("pMax", dimPressure, 0),
     pMin_("pMin", dimPressure, GREAT)
 {
-    if (setRefCell(p, dict, refCell_, refValue_))
+    bool pLimits = false;
+
+    // Set the reference cell and value for closed domain simulations
+    if (pRefRequired && setRefCell(p, dict, refCell_, refValue_))
     {
+        pLimits = true;
+
         pMax_.value() = refValue_;
         pMin_.value() = refValue_;
     }
 
-    const volScalarField::Boundary& pbf = p.boundaryField();
-    const volScalarField::Boundary& rhobf = rho.boundaryField();
-
-    scalar rhoRefMax = -GREAT;
-    scalar rhoRefMin = GREAT;
-    bool rhoLimits = false;
-
-    forAll(pbf, patchi)
-    {
-        if (pbf[patchi].fixesValue())
-        {
-            rhoLimits = true;
-
-            pMax_.value() = max(pMax_.value(), max(pbf[patchi]));
-            pMin_.value() = min(pMin_.value(), min(pbf[patchi]));
-
-            rhoRefMax = max(rhoRefMax, max(rhobf[patchi]));
-            rhoRefMin = min(rhoRefMin, min(rhobf[patchi]));
-        }
-    }
-
-    if (dict.found("pMax"))
+    if (dict.found("pMax") && dict.found("pMin"))
     {
         pMax_.value() = readScalar(dict.lookup("pMax"));
-    }
-    else if (dict.found("pMaxFactor"))
-    {
-        const scalar pMaxFactor(readScalar(dict.lookup("pMaxFactor")));
-        pMax_ *= pMaxFactor;
-    }
-    else if (dict.found("rhoMax"))
-    {
-        // For backward-compatibility infer the pMax from rhoMax
-
-        IOWarningInFunction(dict)
-            << "'rhoMax' specified rather than 'pMax' or 'pMaxFactor'" << nl
-            << "    This is supported for backward-compatibility but "
-               "'pMax' or 'pMaxFactor' are more reliable." << endl;
-
-        if (!rhoLimits)
-        {
-            FatalIOErrorInFunction(dict)
-                << "'rhoMax' specified rather than 'pMaxFactor'" << nl
-                << "    but the corresponding reference density cannot"
-                   " be evaluated from the boundary conditions." << nl
-                << "Please specify 'pMaxFactor' rather than 'rhoMax'"
-                << exit(FatalError);
-        }
-
-        dimensionedScalar rhoMax("rhoMax", dimDensity, dict);
-
-        pMax_ *= max(rhoMax.value()/rhoRefMax, 1);
-    }
-
-    if (dict.found("pMin"))
-    {
         pMin_.value() = readScalar(dict.lookup("pMin"));
     }
-    else if (dict.found("pMinFactor"))
+    else
     {
-        const scalar pMinFactor(readScalar(dict.lookup("pMinFactor")));
-        pMin_ *= pMinFactor;
-    }
-    else if (dict.found("rhoMin"))
-    {
-        // For backward-compatibility infer the pMin from rhoMin
+        const volScalarField::Boundary& pbf = p.boundaryField();
+        const volScalarField::Boundary& rhobf = rho.boundaryField();
 
-        IOWarningInFunction(dict)
-            << "'rhoMin' specified rather than 'pMin' or 'pMinFactor'" << nl
-            << "    This is supported for backward-compatibility but"
-               "'pMin' or 'pMinFactor' are more reliable." << endl;
+        scalar rhoRefMax = -GREAT;
+        scalar rhoRefMin = GREAT;
+        bool rhoLimits = false;
 
-        if (!rhoLimits)
+        forAll(pbf, patchi)
         {
-            FatalIOErrorInFunction(dict)
-                << "'rhoMin' specified rather than 'pMinFactor'" << nl
-                << "    but the corresponding reference density cannot"
-                   " be evaluated from the boundary conditions." << nl
-                << "Please specify 'pMinFactor' rather than 'rhoMin'"
-                << exit(FatalError);
+            if (pbf[patchi].fixesValue())
+            {
+                pLimits = true;
+                rhoLimits = true;
+
+                pMax_.value() = max(pMax_.value(), max(pbf[patchi]));
+                pMin_.value() = min(pMin_.value(), min(pbf[patchi]));
+
+                rhoRefMax = max(rhoRefMax, max(rhobf[patchi]));
+                rhoRefMin = min(rhoRefMin, min(rhobf[patchi]));
+            }
         }
 
-        dimensionedScalar rhoMin("rhoMin", dimDensity, dict);
+        reduce(rhoLimits, andOp<bool>());
+        if (rhoLimits)
+        {
+            reduce(pMax_.value(), maxOp<scalar>());
+            reduce(pMin_.value(), minOp<scalar>());
 
-        pMin_ *= min(rhoMin.value()/rhoRefMin, 1);
+            reduce(rhoRefMax, maxOp<scalar>());
+            reduce(rhoRefMin, minOp<scalar>());
+        }
+
+        if (dict.found("pMax"))
+        {
+            pMax_.value() = readScalar(dict.lookup("pMax"));
+        }
+        else if (dict.found("pMaxFactor"))
+        {
+            if (!pLimits)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "'pMaxFactor' specified rather than 'pMax'" << nl
+                    << "    but the corresponding reference pressure cannot"
+                       " be evaluated from the boundary conditions." << nl
+                    << "    Please specify 'pMax' rather than 'pMaxFactor'"
+                    << exit(FatalIOError);
+            }
+
+            const scalar pMaxFactor(readScalar(dict.lookup("pMaxFactor")));
+            pMax_ *= pMaxFactor;
+        }
+        else if (dict.found("rhoMax"))
+        {
+            // For backward-compatibility infer the pMax from rhoMax
+
+            IOWarningInFunction(dict)
+                 << "'rhoMax' specified rather than 'pMax' or 'pMaxFactor'"
+                 << nl
+                 << "    This is supported for backward-compatibility but "
+                    "'pMax' or 'pMaxFactor' are more reliable." << endl;
+
+            if (!pLimits)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "'rhoMax' specified rather than 'pMax'" << nl
+                    << "    but the corresponding reference pressure cannot"
+                       " be evaluated from the boundary conditions." << nl
+                    << "    Please specify 'pMax' rather than 'rhoMax'"
+                    << exit(FatalIOError);
+            }
+
+            if (!rhoLimits)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "'rhoMax' specified rather than 'pMaxFactor'" << nl
+                    << "    but the corresponding reference density cannot"
+                       " be evaluated from the boundary conditions." << nl
+                    << "    Please specify 'pMaxFactor' rather than 'rhoMax'"
+                    << exit(FatalIOError);
+            }
+
+            dimensionedScalar rhoMax("rhoMax", dimDensity, dict);
+
+            pMax_ *= max(rhoMax.value()/rhoRefMax, 1);
+        }
+
+        if (dict.found("pMin"))
+        {
+            pMin_.value() = readScalar(dict.lookup("pMin"));
+        }
+        else if (dict.found("pMinFactor"))
+        {
+            if (!pLimits)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "'pMinFactor' specified rather than 'pMin'" << nl
+                    << "    but the corresponding reference pressure cannot"
+                       " be evaluated from the boundary conditions." << nl
+                    << "    Please specify 'pMin' rather than 'pMinFactor'"
+                    << exit(FatalIOError);
+            }
+
+            const scalar pMinFactor(readScalar(dict.lookup("pMinFactor")));
+            pMin_ *= pMinFactor;
+        }
+        else if (dict.found("rhoMin"))
+        {
+            // For backward-compatibility infer the pMin from rhoMin
+
+            IOWarningInFunction(dict)
+                << "'rhoMin' specified rather than 'pMin' or 'pMinFactor'" << nl
+                << "    This is supported for backward-compatibility but"
+                   "'pMin' or 'pMinFactor' are more reliable." << endl;
+
+            if (!pLimits)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "'rhoMin' specified rather than 'pMin'" << nl
+                    << "    but the corresponding reference pressure cannot"
+                       " be evaluated from the boundary conditions." << nl
+                    << "    Please specify 'pMin' rather than 'rhoMin'"
+                    << exit(FatalIOError);
+            }
+
+            if (!rhoLimits)
+            {
+                FatalIOErrorInFunction(dict)
+                    << "'rhoMin' specified rather than 'pMinFactor'" << nl
+                    << "    but the corresponding reference density cannot"
+                       " be evaluated from the boundary conditions." << nl
+                    << "    Please specify 'pMinFactor' rather than 'rhoMin'"
+                    << exit(FatalIOError);
+            }
+
+            dimensionedScalar rhoMin("rhoMin", dimDensity, dict);
+
+            pMin_ *= min(rhoMin.value()/rhoRefMin, 1);
+        }
     }
 
     Info<< "pressureControl" << nl

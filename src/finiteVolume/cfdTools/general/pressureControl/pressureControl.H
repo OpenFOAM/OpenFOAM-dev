@@ -76,7 +76,8 @@ public:
         (
             const volScalarField& p,
             const volScalarField& rho,
-            const dictionary& dict
+            const dictionary& dict,
+            const bool pRefRequired = true
         );
 
 

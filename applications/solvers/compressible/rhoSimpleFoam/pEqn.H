@@ -6,16 +6,18 @@
 
     bool closedVolume = false;
 
+    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
+    MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+    // Update the pressure BCs to ensure flux consistency
+    constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
+
     if (simple.transonic())
     {
-        surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
-        surfaceScalarField rhof(fvc::interpolate(rho));
-        MRF.makeRelative(rhof, phiHbyA);
-
         surfaceScalarField phid
         (
             "phid",
-            (fvc::interpolate(psi)/rhof)*phiHbyA
+            (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
         );
         phiHbyA -= fvc::interpolate(p)*phid;
 
@@ -49,13 +51,7 @@
     }
     else
     {
-        surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
-        MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
-
         closedVolume = adjustPhi(phiHbyA, U, p);
-
-        // Update the pressure BCs to ensure flux consistency
-        constrainPressure(p, rho, U, phiHbyA, rhorAUf, MRF);
 
         while (simple.correctNonOrthogonal())
         {
