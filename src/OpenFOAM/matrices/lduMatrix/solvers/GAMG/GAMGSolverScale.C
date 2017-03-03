@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ void Foam::GAMGSolver::scale
     vector2D scalingVector(scalingFactorNum, scalingFactorDenom);
     A.mesh().reduce(scalingVector, sumOp<vector2D>());
 
-    scalar sf = scalingVector.x()/stabilise(scalingVector.y(), VSMALL);
+    const scalar sf = scalingVector.x()/stabilise(scalingVector.y(), VSMALL);
 
     if (debug >= 2)
     {
