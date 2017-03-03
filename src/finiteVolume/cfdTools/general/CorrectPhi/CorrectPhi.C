@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,11 @@ void Foam::CorrectPhi
         );
 
         pcorrEqn.setReference(0, 0);
-        pcorrEqn.solve();
+
+        pcorrEqn.solve
+        (
+            mesh.solver(pcorr.select(pimple.finalNonOrthogonalIter()))
+        );
 
         if (pimple.finalNonOrthogonalIter())
         {
@@ -174,7 +178,10 @@ void Foam::CorrectPhi
             divRhoU
         );
 
-        pcorrEqn.solve();
+        pcorrEqn.solve
+        (
+            mesh.solver(pcorr.select(pimple.finalNonOrthogonalIter()))
+        );
 
         if (pimple.finalNonOrthogonalIter())
         {
