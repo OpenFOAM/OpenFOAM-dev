@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,11 +200,11 @@ scalar CrankNicolsonDdtScheme<Type>::coef_
 {
     if (mesh().time().timeIndex() - ddt0.startTimeIndex() > 0)
     {
-        return 1.0 + ocCoeff_;
+        return 1 + ocCoeff_;
     }
     else
     {
-        return 1.0;
+        return 1;
     }
 }
 
@@ -218,11 +218,11 @@ scalar CrankNicolsonDdtScheme<Type>::coef0_
 {
     if (mesh().time().timeIndex() - ddt0.startTimeIndex() > 1)
     {
-        return 1.0 + ocCoeff_;
+        return 1 + ocCoeff_;
     }
     else
     {
-        return 1.0;
+        return 1;
     }
 }
 
@@ -256,7 +256,7 @@ tmp<GeoField> CrankNicolsonDdtScheme<Type>::offCentre_
     const GeoField& ddt0
 ) const
 {
-    if (ocCoeff_ < 1.0)
+    if (ocCoeff_ < 1)
     {
         return ocCoeff_*ddt0;
     }
@@ -368,7 +368,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -456,7 +456,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -546,7 +546,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -647,7 +647,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -773,7 +773,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
 
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar rDtCoef = rDtCoef_(ddt0).value();
+    const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*mesh().V();
 
     vf.oldTime().oldTime();
@@ -782,7 +782,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -855,7 +855,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar rDtCoef = rDtCoef_(ddt0).value();
+    const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*rho.value()*mesh().V();
 
     vf.oldTime().oldTime();
@@ -864,7 +864,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -937,7 +937,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar rDtCoef = rDtCoef_(ddt0).value();
+    const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*rho.primitiveField()*mesh().V();
 
     vf.oldTime().oldTime();
@@ -947,7 +947,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -1028,7 +1028,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     );
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar rDtCoef = rDtCoef_(ddt0).value();
+    const scalar rDtCoef = rDtCoef_(ddt0).value();
     fvm.diag() = rDtCoef*alpha.primitiveField()*rho.primitiveField()*mesh().V();
 
     vf.oldTime().oldTime();
@@ -1039,7 +1039,7 @@ CrankNicolsonDdtScheme<Type>::fvmDdt
     {
         if (evaluate(ddt0))
         {
-            scalar rDtCoef0 = rDtCoef0_(ddt0).value();
+            const scalar rDtCoef0 = rDtCoef0_(ddt0).value();
 
             ddt0.primitiveFieldRef() =
             (
@@ -1124,14 +1124,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
     DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
         ddt0_<GeometricField<Type, fvPatchField, volMesh>>
         (
-            "ddt0(" + U.name() + ')',
+            "ddtCorrDdt0(" + U.name() + ')',
             U.dimensions()
         );
 
     DDt0Field<GeometricField<Type, fvsPatchField, surfaceMesh>>& dUfdt0 =
         ddt0_<GeometricField<Type, fvsPatchField, surfaceMesh>>
         (
-            "ddt0(" + Uf.name() + ')',
+            "ddtCorrDdt0(" + Uf.name() + ')',
             Uf.dimensions()
         );
 
@@ -1185,14 +1185,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
     DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
         ddt0_<GeometricField<Type, fvPatchField, volMesh>>
         (
-            "ddt0(" + U.name() + ')',
+            "ddtCorrDdt0(" + U.name() + ')',
             U.dimensions()
         );
 
     DDt0Field<fluxFieldType>& dphidt0 =
         ddt0_<fluxFieldType>
         (
-            "ddt0(" + phi.name() + ')',
+            "ddtCorrDdt0(" + phi.name() + ')',
             phi.dimensions()
         );
 
@@ -1254,14 +1254,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
         DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
             ddt0_<GeometricField<Type, fvPatchField, volMesh>>
             (
-                "ddt0(" + rho.name() + ',' + U.name() + ')',
+                "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
                 U.dimensions()
             );
 
         DDt0Field<GeometricField<Type, fvsPatchField, surfaceMesh>>& dUfdt0 =
             ddt0_<GeometricField<Type, fvsPatchField, surfaceMesh>>
             (
-                "ddt0(" + Uf.name() + ')',
+                "ddtCorrDdt0(" + Uf.name() + ')',
                 Uf.dimensions()
             );
 
@@ -1349,14 +1349,14 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
         DDt0Field<GeometricField<Type, fvPatchField, volMesh>>& ddt0 =
             ddt0_<GeometricField<Type, fvPatchField, volMesh>>
             (
-                "ddt0(" + rho.name() + ',' + U.name() + ')',
+                "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
                 U.dimensions()
             );
 
         DDt0Field<fluxFieldType>& dphidt0 =
             ddt0_<fluxFieldType>
             (
-                "ddt0(" + phi.name() + ')',
+                "ddtCorrDdt0(" + phi.name() + ')',
                 phi.dimensions()
             );
 

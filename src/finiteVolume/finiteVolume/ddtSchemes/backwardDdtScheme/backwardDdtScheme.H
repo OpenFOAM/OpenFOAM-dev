@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,13 +89,19 @@ public:
         backwardDdtScheme(const fvMesh& mesh)
         :
             ddtScheme<Type>(mesh)
-        {}
+        {
+            // Ensure the old-old-time cell volumes are available
+            mesh.V00();
+        }
 
         //- Construct from mesh and Istream
         backwardDdtScheme(const fvMesh& mesh, Istream& is)
         :
             ddtScheme<Type>(mesh, is)
-        {}
+        {
+            // Ensure the old-old-time cell volumes are available
+            mesh.V00();
+        }
 
 
     // Member Functions
