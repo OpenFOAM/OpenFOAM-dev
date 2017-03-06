@@ -198,7 +198,7 @@ scalar CrankNicolsonDdtScheme<Type>::coef_
     const DDt0Field<GeoField>& ddt0
 ) const
 {
-    if (mesh().time().timeIndex() - ddt0.startTimeIndex() > 0)
+    if (mesh().time().timeIndex() > ddt0.startTimeIndex())
     {
         return 1 + ocCoeff_;
     }
@@ -216,7 +216,7 @@ scalar CrankNicolsonDdtScheme<Type>::coef0_
     const DDt0Field<GeoField>& ddt0
 ) const
 {
-    if (mesh().time().timeIndex() - ddt0.startTimeIndex() > 1)
+    if (mesh().time().timeIndex() > ddt0.startTimeIndex() + 1)
     {
         return 1 + ocCoeff_;
     }

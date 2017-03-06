@@ -2,46 +2,57 @@
     word alphaScheme("div(phi,alpha)");
     word alpharScheme("div(phirb,alpha)");
 
-    tmp<fv::ddtScheme<scalar>> ddtAlpha
-    (
-        fv::ddtScheme<scalar>::New
-        (
-            mesh,
-            mesh.ddtScheme("ddt(alpha)")
-        )
-    );
-
     // Set the off-centering coefficient according to ddt scheme
     scalar ocCoeff = 0;
-    if
-    (
-        isType<fv::EulerDdtScheme<scalar>>(ddtAlpha())
-     || isType<fv::localEulerDdtScheme<scalar>>(ddtAlpha())
-    )
     {
-        ocCoeff = 0;
-    }
-    else if (isType<fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha()))
-    {
-        if (nAlphaSubCycles > 1)
+        tmp<fv::ddtScheme<scalar>> tddtAlpha
+        (
+            fv::ddtScheme<scalar>::New
+            (
+                mesh,
+                mesh.ddtScheme("ddt(alpha)")
+            )
+        );
+        const fv::ddtScheme<scalar>& ddtAlpha = tddtAlpha();
+
+        if
+        (
+            isType<fv::EulerDdtScheme<scalar>>(ddtAlpha)
+         || isType<fv::localEulerDdtScheme<scalar>>(ddtAlpha)
+        )
+        {
+            ocCoeff = 0;
+        }
+        else if (isType<fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha))
+        {
+            if (nAlphaSubCycles > 1)
+            {
+                FatalErrorInFunction
+                    << "Sub-cycling is not supported "
+                       "with the CrankNicolson ddt scheme"
+                    << exit(FatalError);
+            }
+
+            if
+            (
+                alphaRestart
+             || mesh.time().timeIndex() > mesh.time().startTimeIndex() + 1
+            )
+            {
+                ocCoeff =
+                    refCast<const fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha)
+                   .ocCoeff();
+            }
+        }
+        else
         {
             FatalErrorInFunction
-                << "Sub-cycling is not supported "
-                   "with the CrankNicolson ddt scheme"
+                << "Only Euler and CrankNicolson ddt schemes are supported"
                 << exit(FatalError);
         }
-
-        ocCoeff =
-            refCast<const fv::CrankNicolsonDdtScheme<scalar>>(ddtAlpha())
-           .ocCoeff();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Only Euler and CrankNicolson ddt schemes are supported"
-            << exit(FatalError);
     }
 
+    // Set the time blending factor, 1 for Euler
     scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
     // Standard face-flux compression coefficient
@@ -136,8 +147,8 @@
         (
             fvc::flux
             (
-                phi,
-                alpha1,
+                phiCN(),
+                cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime(),
                 alphaScheme
             )
           + fvc::flux
@@ -147,13 +158,6 @@
                 alpharScheme
             )
         );
-
-        // Calculate the Crank-Nicolson off-centred alpha flux
-        if (ocCoeff > 0)
-        {
-            talphaPhiUn =
-                cnCoeff*talphaPhiUn + (1.0 - cnCoeff)*alphaPhi.oldTime();
-        }
 
         if (MULESCorr)
         {

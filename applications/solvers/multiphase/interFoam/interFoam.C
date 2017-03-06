@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
+    #include "createAlphaFluxes.H"
     #include "createFvOptions.H"
     #include "correctPhi.H"
 

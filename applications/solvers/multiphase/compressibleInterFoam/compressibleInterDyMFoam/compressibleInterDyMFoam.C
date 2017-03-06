@@ -64,6 +64,7 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"
     #include "createControl.H"
     #include "createFields.H"
+    #include "createAlphaFluxes.H"
     #include "createFvOptions.H"
     #include "createUf.H"
     #include "createControls.H"
