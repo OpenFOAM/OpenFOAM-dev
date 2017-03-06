@@ -200,7 +200,11 @@ public:
             ocCoeff_(1.0)
         {
             // Ensure the old-old-time cell volumes are available
-            mesh.V00();
+            // for moving meshes
+            if (mesh.moving())
+            {
+                mesh.V00();
+            }
         }
 
         //- Construct from mesh and Istream
@@ -220,7 +224,11 @@ public:
             }
 
             // Ensure the old-old-time cell volumes are available
-            mesh.V00();
+            // for moving meshes
+            if (mesh.moving())
+            {
+                mesh.V00();
+            }
         }
 
 

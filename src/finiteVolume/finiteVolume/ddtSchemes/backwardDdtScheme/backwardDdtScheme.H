@@ -91,7 +91,11 @@ public:
             ddtScheme<Type>(mesh)
         {
             // Ensure the old-old-time cell volumes are available
-            mesh.V00();
+            // for moving meshes
+            if (mesh.moving())
+            {
+                mesh.V00();
+            }
         }
 
         //- Construct from mesh and Istream
@@ -100,7 +104,11 @@ public:
             ddtScheme<Type>(mesh, is)
         {
             // Ensure the old-old-time cell volumes are available
-            mesh.V00();
+            // for moving meshes
+            if (mesh.moving())
+            {
+                mesh.V00();
+            }
         }
 
 
