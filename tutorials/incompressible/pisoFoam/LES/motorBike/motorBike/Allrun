@@ -19,6 +19,7 @@ runParallel snappyHexMesh -overwrite
 
 find . -type f -iname "*level*" -exec rm {} \;
 
+ls -d processor* | xargs -I {} rm -rf ./{}/0
 ls -d processor* | xargs -I {} cp -r 0.orig ./{}/0
 
 runParallel renumberMesh -overwrite
