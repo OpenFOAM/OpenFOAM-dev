@@ -73,7 +73,7 @@ solvers
         maxIter         50;
     };
 
-    pcorr
+    "pcorr.*"
     {
         $p_rgh;
         relTol          0;

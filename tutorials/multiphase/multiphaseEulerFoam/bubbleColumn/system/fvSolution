@@ -37,7 +37,7 @@ solvers
         relTol          0;
     }
 
-    pcorr
+    "pcorr.*"
     {
         $p_rgh;
         tolerance       1e-5;

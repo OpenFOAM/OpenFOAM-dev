@@ -46,7 +46,7 @@ solvers
         maxIter         20;
     }
 
-    pcorr
+    "pcorr.*"
     {
         $p_rghFinal;
         tolerance       1e-5;

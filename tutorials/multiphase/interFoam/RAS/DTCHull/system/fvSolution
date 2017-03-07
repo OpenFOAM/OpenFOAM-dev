@@ -35,7 +35,7 @@ solvers
         minIter         1;
     }
 
-    pcorr
+    "pcorr.*"
     {
         solver          PCG;
 

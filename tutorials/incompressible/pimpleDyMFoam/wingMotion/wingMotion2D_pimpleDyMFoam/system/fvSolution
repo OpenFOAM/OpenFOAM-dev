@@ -16,7 +16,7 @@ FoamFile
 
 solvers
 {
-    pcorr
+    "pcorr.*"
     {
         solver           GAMG;
         tolerance        0.02;
@@ -26,7 +26,7 @@ solvers
 
     p
     {
-        $pcorr
+        $"pcorr.*"
         tolerance        1e-7;
         relTol           0.01;
     }

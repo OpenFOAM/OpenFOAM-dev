@@ -31,7 +31,7 @@ solvers
         relTol          0;
     }
 
-    pcorr
+    "pcorr.*"
     {
         solver          PCG;
         preconditioner  DIC;

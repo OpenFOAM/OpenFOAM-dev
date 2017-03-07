@@ -29,7 +29,7 @@ solvers
         solver          diagonal;
     }
 
-    pcorr
+    "pcorr.*"
     {
         solver          PCG;
         preconditioner

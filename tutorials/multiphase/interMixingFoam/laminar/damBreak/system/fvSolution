@@ -30,7 +30,7 @@ solvers
         nSweeps         1;
     }
 
-    pcorr
+    "pcorr.*"
     {
         solver          PCG;
         preconditioner  DIC;

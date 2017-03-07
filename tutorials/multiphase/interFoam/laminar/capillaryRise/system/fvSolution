@@ -24,7 +24,7 @@ solvers
         cAlpha          1;
     }
 
-    pcorr
+    "pcorr.*"
     {
         solver          PCG;
         preconditioner  DIC;

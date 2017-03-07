@@ -17,7 +17,7 @@ FoamFile
 
 solvers
 {
-    pcorr
+    "pcorr.*"
     {
         solver          GAMG;
         smoother        GaussSeidel;
