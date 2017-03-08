@@ -29,7 +29,7 @@ divSchemes
 {
     default         none;
     div(phi,U)      bounded Gauss upwind;
-    div(phid,p)     bounded Gauss upwind;
+    div(phid,p)     Gauss upwind;
     div(phi,K)      bounded Gauss linear;
     div(phi,h)      bounded Gauss upwind;
     div(phi,k)      bounded Gauss upwind;
