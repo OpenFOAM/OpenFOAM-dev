@@ -4,21 +4,16 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# copy motorbike surface from resources directory
+# Copy motorbike surface from resources directory
 cp $FOAM_TUTORIALS/resources/geometry/motorBike.obj.gz constant/triSurface/
 runApplication surfaceFeatureExtract
 
 runApplication blockMesh
 
-runApplication decomposePar
+[ ! -d 0 ] && cp -r 0.orig 0
+
+runApplication decomposePar -copyZero
 runParallel snappyHexMesh -overwrite
-
-#- For non-parallel running
-#cp -r 0.orig 0 > /dev/null 2>&1
-
-#- For parallel running
-ls -d processor* | xargs -I {} rm -rf ./{}/0
-ls -d processor* | xargs -I {} cp -r 0.orig ./{}/0
 
 runParallel patchSummary
 runParallel potentialFoam

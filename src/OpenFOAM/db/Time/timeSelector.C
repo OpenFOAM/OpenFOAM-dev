@@ -135,8 +135,12 @@ void Foam::timeSelector::addOptions
     argList::addBoolOption
     (
         "noZero",
-        "exclude the '0/' dir from the times list, "
-        "has precedence over the -withZero option"
+        string("exclude the '0/' dir from the times list")
+      + (
+            withZero
+          ? ", has precedence over the -withZero option"
+          : ""
+        )
     );
     argList::addBoolOption
     (
