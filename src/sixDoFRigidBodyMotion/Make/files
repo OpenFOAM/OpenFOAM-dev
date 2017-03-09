@@ -24,9 +24,6 @@ $(constraints)/orientation/sixDoFRigidBodyMotionOrientationConstraint.C
 $(constraints)/plane/sixDoFRigidBodyMotionPlaneConstraint.C
 $(constraints)/point/sixDoFRigidBodyMotionPointConstraint.C
 
-pointPatchFields/derived/sixDoFRigidBodyDisplacement/sixDoFRigidBodyDisplacementPointPatchVectorField.C
-pointPatchFields/derived/uncoupledSixDoFRigidBodyDisplacement/uncoupledSixDoFRigidBodyDisplacementPointPatchVectorField.C
-
 sixDoFRigidBodyMotionSolver/sixDoFRigidBodyMotionSolver.C
 
 sixDoFSolvers/sixDoFSolver/sixDoFSolver.C
