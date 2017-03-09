@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,7 +159,8 @@ void dynamicLagrangian<BasicTurbulenceModel>::correct()
     }
 
     // Local references
-    const surfaceScalarField& phi = this->phi_;
+    tmp<surfaceScalarField> tphi = this->phi();
+    const surfaceScalarField& phi = tphi();
     const volVectorField& U = this->U_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
 
