@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,16 @@ void Foam::functionObjects::fieldAverage::resetFields()
 
 void Foam::functionObjects::fieldAverage::initialize()
 {
+    if (!totalIter_.size())
+    {
+        totalIter_.setSize(faItems_.size(), 1);
+    }
+
+    if (!totalTime_.size())
+    {
+        totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
+    }
+
     resetFields();
 
     // Add mean fields to the field lists
@@ -95,15 +105,11 @@ void Foam::functionObjects::fieldAverage::initialize()
 
 void Foam::functionObjects::fieldAverage::restart()
 {
-    Log
-        << "    Restarting averaging at time " << obr_.time().timeName()
+    Log << "    Restarting averaging at time " << obr_.time().timeName()
         << nl << endl;
 
     totalIter_.clear();
-    totalIter_.setSize(faItems_.size(), 1);
-
     totalTime_.clear();
-    totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
 
     initialize();
 }
@@ -134,8 +140,7 @@ void Foam::functionObjects::fieldAverage::calcAverages()
         periodIndex_++;
     }
 
-    Log
-        << type() << " " << name() << " write:" << nl
+    Log << type() << " " << name() << " write:" << nl
         << "    Calculating averages" << nl;
 
     addMeanSqrToPrime2Mean<scalar, scalar>();
@@ -206,12 +211,6 @@ void Foam::functionObjects::fieldAverage::writeAveragingProperties() const
 
 void Foam::functionObjects::fieldAverage::readAveragingProperties()
 {
-    totalIter_.clear();
-    totalIter_.setSize(faItems_.size(), 1);
-
-    totalTime_.clear();
-    totalTime_.setSize(faItems_.size(), obr_.time().deltaTValue());
-
     if ((restartOnRestart_ || restartOnOutput_) && log)
     {
         Info<< "    Starting averaging at time " << obr_.time().timeName()
@@ -232,8 +231,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
 
         if (!propsDictHeader.headerOk())
         {
-            Log
-                << "    Starting averaging at time "
+            Log << "    Starting averaging at time "
                 << obr_.time().timeName() << nl;
 
             return;
@@ -242,6 +240,9 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
         IOdictionary propsDict(propsDictHeader);
 
         Log << "    Restarting averaging for fields:" << nl;
+
+        totalIter_.setSize(faItems_.size(), 1);
+        totalTime_.setSize(faItems_.size());
 
         forAll(faItems_, fieldi)
         {
@@ -253,8 +254,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
                 totalIter_[fieldi] = readLabel(fieldDict.lookup("totalIter"));
                 totalTime_[fieldi] = readScalar(fieldDict.lookup("totalTime"));
 
-                Log
-                    << "        " << fieldName
+                Log << "        " << fieldName
                     << " iters = " << totalIter_[fieldi]
                     << " time = " << totalTime_[fieldi] << nl;
             }
