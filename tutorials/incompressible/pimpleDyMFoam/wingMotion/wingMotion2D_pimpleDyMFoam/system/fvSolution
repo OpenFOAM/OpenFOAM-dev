@@ -26,7 +26,7 @@ solvers
 
     p
     {
-        $"pcorr.*"
+        $pcorr;
         tolerance        1e-7;
         relTol           0.01;
     }
