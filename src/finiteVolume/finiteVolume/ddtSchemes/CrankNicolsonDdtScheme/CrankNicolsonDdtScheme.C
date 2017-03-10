@@ -1255,7 +1255,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtUfCorr
             ddt0_<GeometricField<Type, fvPatchField, volMesh>>
             (
                 "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
-                U.dimensions()
+                rho.dimensions()*U.dimensions()
             );
 
         DDt0Field<GeometricField<Type, fvsPatchField, surfaceMesh>>& dUfdt0 =
@@ -1350,7 +1350,7 @@ CrankNicolsonDdtScheme<Type>::fvcDdtPhiCorr
             ddt0_<GeometricField<Type, fvPatchField, volMesh>>
             (
                 "ddtCorrDdt0(" + rho.name() + ',' + U.name() + ')',
-                U.dimensions()
+                rho.dimensions()*U.dimensions()
             );
 
         DDt0Field<fluxFieldType>& dphidt0 =
