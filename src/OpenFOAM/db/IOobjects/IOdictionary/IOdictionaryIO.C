@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ void Foam::IOdictionary::readFile(const bool masterOnly)
             // not. Could reset all the ITstreams to ascii?
             IPstream fromAbove
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 Pstream::msgType(),
@@ -121,7 +121,7 @@ void Foam::IOdictionary::readFile(const bool masterOnly)
             }
             OPstream toBelow
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.below()[belowI],
                 0,
                 Pstream::msgType(),

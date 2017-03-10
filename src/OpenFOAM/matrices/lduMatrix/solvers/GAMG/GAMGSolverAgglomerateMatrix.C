@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -318,7 +318,7 @@ void Foam::GAMGSolver::gatherMatrices
 
             IPstream fromSlave
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 procIDs[proci],
                 0,          // bufSize
                 Pstream::msgType(),
@@ -387,7 +387,7 @@ void Foam::GAMGSolver::gatherMatrices
 
         OPstream toMaster
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             procIDs[0],
             0,
             Pstream::msgType(),

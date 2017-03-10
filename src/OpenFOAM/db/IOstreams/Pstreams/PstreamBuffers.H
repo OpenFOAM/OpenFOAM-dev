@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
 
     Example usage:
 
-        PstreamBuffers pBuffers(Pstream::nonBlocking);
+        PstreamBuffers pBuffers(Pstream::commsTypes::nonBlocking);
 
         for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {

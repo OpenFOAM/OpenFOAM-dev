@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,8 @@ public:
             //- Evaluate the patch field
             virtual void evaluate
             (
-                const Pstream::commsTypes commsType=Pstream::blocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::blocking
             );
 
             //- Return face-gradient transform diagonal

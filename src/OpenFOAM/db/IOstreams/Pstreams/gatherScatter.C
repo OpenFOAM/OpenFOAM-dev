@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ void Pstream::gather
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     reinterpret_cast<char*>(&value),
                     sizeof(T),
@@ -78,7 +78,7 @@ void Pstream::gather
             {
                 IPstream fromBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     0,
                     tag,
@@ -97,7 +97,7 @@ void Pstream::gather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -109,7 +109,7 @@ void Pstream::gather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -163,7 +163,7 @@ void Pstream::scatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(&Value),
                     sizeof(T),
@@ -175,7 +175,7 @@ void Pstream::scatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -194,7 +194,7 @@ void Pstream::scatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -206,7 +206,7 @@ void Pstream::scatter
             {
                 OPstream toBelow
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.below()[belowI],
                     0,
                     tag,

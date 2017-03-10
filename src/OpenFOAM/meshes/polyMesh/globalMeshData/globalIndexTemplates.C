@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,11 @@ void Foam::globalIndex::gather
         // Assign my local data
         SubList<Type>(allFld, fld.size(), 0) = fld;
 
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             for (label i = 1; i < procIDs.size(); i++)
             {
@@ -113,7 +117,11 @@ void Foam::globalIndex::gather
     }
     else
     {
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             if (contiguous<Type>())
             {
@@ -209,7 +217,11 @@ void Foam::globalIndex::scatter
     {
         fld.deepCopy(SubList<Type>(allFld, off[1]-off[0]));
 
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             for (label i = 1; i < procIDs.size(); i++)
             {
@@ -286,7 +298,11 @@ void Foam::globalIndex::scatter
     }
     else
     {
-        if (commsType == Pstream::scheduled || commsType == Pstream::blocking)
+        if
+        (
+            commsType == Pstream::commsTypes::scheduled
+         || commsType == Pstream::commsTypes::blocking
+        )
         {
             if (contiguous<Type>())
             {

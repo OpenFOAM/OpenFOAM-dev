@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ void Foam::PstreamBuffers::finishedSends(const bool block)
 {
     finishedSendsCalled_ = true;
 
-    if (commsType_ == UPstream::nonBlocking)
+    if (commsType_ == UPstream::commsTypes::nonBlocking)
     {
         Pstream::exchange<DynamicList<char>, char>
         (
@@ -101,7 +101,7 @@ void Foam::PstreamBuffers::finishedSends(labelList& recvSizes, const bool block)
 {
     finishedSendsCalled_ = true;
 
-    if (commsType_ == UPstream::nonBlocking)
+    if (commsType_ == UPstream::commsTypes::nonBlocking)
     {
         Pstream::exchangeSizes(sendBuf_, recvSizes, comm_);
 

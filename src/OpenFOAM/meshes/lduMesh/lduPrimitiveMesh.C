@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -993,7 +993,7 @@ void Foam::lduPrimitiveMesh::gather
 
             IPstream fromSlave
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 procIDs[i],
                 0,          // bufSize
                 Pstream::msgType(),
@@ -1066,7 +1066,7 @@ void Foam::lduPrimitiveMesh::gather
 
         OPstream toMaster
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             procIDs[0],
             0,
             Pstream::msgType(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ bool Foam::regIOobject::read()
             // not currently supported
             IPstream fromAbove
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 Pstream::msgType(),
@@ -254,7 +254,7 @@ bool Foam::regIOobject::read()
         {
             OPstream toBelow
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 myComm.below()[belowI],
                 0,
                 Pstream::msgType(),

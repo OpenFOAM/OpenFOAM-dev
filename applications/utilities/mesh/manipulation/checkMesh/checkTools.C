@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -417,7 +417,7 @@ void Foam::mergeAndWrite
             // Receive slave ones
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
 
                 pointField slavePts(fromSlave);
                 labelList slaveIDs(fromSlave);
@@ -433,7 +433,7 @@ void Foam::mergeAndWrite
             // be improved.
             OPstream toMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 myPoints.byteSize() + myIDs.byteSize()
             );

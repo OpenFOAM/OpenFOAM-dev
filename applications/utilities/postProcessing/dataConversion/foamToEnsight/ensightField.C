@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ void writeField
 
                 for (int slave=1; slave<Pstream::nProcs(); slave++)
                 {
-                    IPstream fromSlave(Pstream::scheduled, slave);
+                    IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                     scalarField slaveData(fromSlave);
                     ensightFile.write(slaveData);
                 }
@@ -120,7 +120,11 @@ void writeField
         {
             for (direction cmpt=0; cmpt<pTraits<Type>::nComponents; cmpt++)
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< vf.component(cmpt);
             }
         }

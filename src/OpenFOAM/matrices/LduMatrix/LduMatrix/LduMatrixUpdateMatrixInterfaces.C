@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,8 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(interfaces_, interfacei)
@@ -57,7 +57,7 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -78,7 +78,7 @@ void Foam::LduMatrix<Type, DType, LUType>::initMatrixInterfaces
                     psiif,
                     interfaceCoeffs[interfacei],
                     //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }
@@ -103,12 +103,12 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
 {
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         // Block until all sends/receives have been finished
-        if (Pstream::defaultCommsType == Pstream::nonBlocking)
+        if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
         {
             IPstream::waitRequests();
             OPstream::waitRequests();
@@ -129,7 +129,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = this->patchSchedule();
 
@@ -148,7 +148,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                         psiif,
                         interfaceCoeffs[interfacei],
                       //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
                 else
@@ -159,7 +159,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                         psiif,
                         interfaceCoeffs[interfacei],
                       //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
-                        Pstream::scheduled
+                        Pstream::commsTypes::scheduled
                     );
                 }
             }
@@ -182,7 +182,7 @@ void Foam::LduMatrix<Type, DType, LUType>::updateMatrixInterfaces
                     psiif,
                     interfaceCoeffs[interfacei],
                     //Amultiplier<Type, LUType>(interfaceCoeffs[interfacei]),
-                    Pstream::blocking
+                    Pstream::commsTypes::blocking
                 );
             }
         }

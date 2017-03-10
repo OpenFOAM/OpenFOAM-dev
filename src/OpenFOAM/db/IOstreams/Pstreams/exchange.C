@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ void Foam::Pstream::exchange
                 recvBufs[proci].setSize(nRecv);
                 UIPstream::read
                 (
-                    UPstream::nonBlocking,
+                    UPstream::commsTypes::nonBlocking,
                     proci,
                     reinterpret_cast<char*>(recvBufs[proci].begin()),
                     nRecv*sizeof(T),
@@ -101,7 +101,7 @@ void Foam::Pstream::exchange
                 (
                    !UOPstream::write
                     (
-                        UPstream::nonBlocking,
+                        UPstream::commsTypes::nonBlocking,
                         proci,
                         reinterpret_cast<const char*>(sendBufs[proci].begin()),
                         sendBufs[proci].size()*sizeof(T),

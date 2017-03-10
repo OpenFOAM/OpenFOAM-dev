@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,7 +115,7 @@ timeVaryingMappedFixedValueFvPatchField
         //       by re-setting of fvatchfield::updated_ flag. This is
         //       so if first use is in the next time step it retriggers
         //       a new update.
-        this->evaluate(Pstream::blocking);
+        this->evaluate(Pstream::commsTypes::blocking);
     }
 }
 

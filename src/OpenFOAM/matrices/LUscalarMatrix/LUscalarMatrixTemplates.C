@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ void Foam::LUscalarMatrix::solve
             {
                 IPstream::read
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     slave,
                     reinterpret_cast<char*>
                     (
@@ -78,7 +78,7 @@ void Foam::LUscalarMatrix::solve
         {
             OPstream::write
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 reinterpret_cast<const char*>(x.begin()),
                 x.byteSize(),
@@ -106,7 +106,7 @@ void Foam::LUscalarMatrix::solve
             {
                 OPstream::write
                 (
-                    Pstream::scheduled,
+                    Pstream::commsTypes::scheduled,
                     slave,
                     reinterpret_cast<const char*>
                     (
@@ -122,7 +122,7 @@ void Foam::LUscalarMatrix::solve
         {
             IPstream::read
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 reinterpret_cast<char*>(x.begin()),
                 x.byteSize(),

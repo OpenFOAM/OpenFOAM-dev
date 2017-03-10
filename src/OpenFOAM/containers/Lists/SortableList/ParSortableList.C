@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ void Foam::ParSortableList<Type>::checkAndSend
         }
 
         {
-            OPstream toSlave(Pstream::blocking, destProci);
+            OPstream toSlave(Pstream::commsTypes::blocking, destProci);
             toSlave << values << indices;
         }
     }
@@ -306,7 +306,7 @@ void Foam::ParSortableList<Type>::sort()
                     Pout<< "Receiving from " << proci << endl;
                 }
 
-                IPstream fromSlave(Pstream::blocking, proci);
+                IPstream fromSlave(Pstream::commsTypes::blocking, proci);
 
                 fromSlave >> recValues >> recIndices;
 

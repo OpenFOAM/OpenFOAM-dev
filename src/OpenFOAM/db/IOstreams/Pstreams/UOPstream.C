@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ Foam::UOPstream::UOPstream(const int toProcNo, PstreamBuffers& buffers)
     sendBuf_(buffers.sendBuf_[toProcNo]),
     tag_(buffers.tag_),
     comm_(buffers.comm_),
-    sendAtDestruct_(buffers.commsType_ != UPstream::nonBlocking)
+    sendAtDestruct_(buffers.commsType_ != UPstream::commsTypes::nonBlocking)
 {
     setOpened();
     setGood();

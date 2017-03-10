@@ -456,7 +456,7 @@ bool Foam::functionObjects::streamLine::write()
         // to prevent buffering.
         mapDistributeBase::distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             distMap.schedule(),
             distMap.constructSize(),
             distMap.subMap(),
@@ -473,7 +473,7 @@ bool Foam::functionObjects::streamLine::write()
             allScalars_[scalarI].shrink();
             mapDistributeBase::distribute
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 distMap.schedule(),
                 distMap.constructSize(),
                 distMap.subMap(),
@@ -491,7 +491,7 @@ bool Foam::functionObjects::streamLine::write()
             allVectors_[vectorI].shrink();
             mapDistributeBase::distribute
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 distMap.schedule(),
                 distMap.constructSize(),
                 distMap.subMap(),

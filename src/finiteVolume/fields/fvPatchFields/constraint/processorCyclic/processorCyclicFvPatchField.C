@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
             << exit(FatalIOError);
     }
 
-    if (Pstream::defaultCommsType == Pstream::scheduled)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         WarningInFunction
             << "Scheduled communication with split cyclics not supported."

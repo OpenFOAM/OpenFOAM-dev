@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -364,8 +364,9 @@ public:
                 const int tag = UPstream::msgType()
             );
 
-            //- Distribute data. Note:schedule only used for Pstream::scheduled
-            //  for now, all others just use send-to-all, receive-from-all.
+            //- Distribute data. Note:schedule only used for
+            //  Pstream::commsTypes::scheduled for now, all others just use
+            //  send-to-all, receive-from-all.
             template<class T, class negateOp>
             static void distribute
             (

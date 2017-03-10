@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::LUscalarMatrix::LUscalarMatrix
                     (
                         IPstream
                         (
-                            Pstream::scheduled,
+                            Pstream::commsTypes::scheduled,
                             slave,
                             0,          // bufSize
                             Pstream::msgType(),
@@ -111,7 +111,7 @@ Foam::LUscalarMatrix::LUscalarMatrix
         {
             OPstream toMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 0,              // bufSize
                 Pstream::msgType(),

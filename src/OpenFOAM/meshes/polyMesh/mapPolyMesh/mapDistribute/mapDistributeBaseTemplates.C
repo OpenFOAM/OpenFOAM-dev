@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,7 +159,7 @@ void Foam::mapDistributeBase::distribute
         return;
     }
 
-    if (commsType == Pstream::blocking)
+    if (commsType == Pstream::commsTypes::blocking)
     {
         // Since buffered sending can reuse the field to collect the
         // received data.
@@ -171,7 +171,7 @@ void Foam::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                OPstream toNbr(Pstream::blocking, domain, 0, tag);
+                OPstream toNbr(Pstream::commsTypes::blocking, domain, 0, tag);
 
                 List<T> subField(map.size());
                 forAll(subField, i)
@@ -219,7 +219,7 @@ void Foam::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                IPstream fromNbr(Pstream::blocking, domain, 0, tag);
+                IPstream fromNbr(Pstream::commsTypes::blocking, domain, 0, tag);
                 List<T> subField(fromNbr);
 
                 checkReceivedSize(domain, map.size(), subField.size());
@@ -236,7 +236,7 @@ void Foam::mapDistributeBase::distribute
             }
         }
     }
-    else if (commsType == Pstream::scheduled)
+    else if (commsType == Pstream::commsTypes::scheduled)
     {
         // Need to make sure I don't overwrite field with received data
         // since the data might need to be sent to another processor. So
@@ -285,7 +285,13 @@ void Foam::mapDistributeBase::distribute
             {
                 // I am send first, receive next
                 {
-                    OPstream toNbr(Pstream::scheduled, recvProc, 0, tag);
+                    OPstream toNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        recvProc,
+                        0,
+                        tag
+                    );
 
                     const labelList& map = subMap[recvProc];
                     List<T> subField(map.size());
@@ -302,7 +308,13 @@ void Foam::mapDistributeBase::distribute
                     toNbr << subField;
                 }
                 {
-                    IPstream fromNbr(Pstream::scheduled, recvProc, 0, tag);
+                    IPstream fromNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        recvProc,
+                        0,
+                        tag
+                    );
                     List<T> subField(fromNbr);
 
                     const labelList& map = constructMap[recvProc];
@@ -324,7 +336,13 @@ void Foam::mapDistributeBase::distribute
             {
                 // I am receive first, send next
                 {
-                    IPstream fromNbr(Pstream::scheduled, sendProc, 0, tag);
+                    IPstream fromNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        sendProc,
+                        0,
+                        tag
+                    );
                     List<T> subField(fromNbr);
 
                     const labelList& map = constructMap[sendProc];
@@ -342,7 +360,13 @@ void Foam::mapDistributeBase::distribute
                     );
                 }
                 {
-                    OPstream toNbr(Pstream::scheduled, sendProc, 0, tag);
+                    OPstream toNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        sendProc,
+                        0,
+                        tag
+                    );
 
                     const labelList& map = subMap[sendProc];
                     List<T> subField(map.size());
@@ -362,13 +386,13 @@ void Foam::mapDistributeBase::distribute
         }
         field.transfer(newField);
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         label nOutstanding = Pstream::nRequests();
 
         if (!contiguous<T>())
         {
-            PstreamBuffers pBufs(Pstream::nonBlocking, tag);
+            PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking, tag);
 
             // Stream data into buffer
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
@@ -484,7 +508,7 @@ void Foam::mapDistributeBase::distribute
 
                     OPstream::write
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<const char*>(subField.begin()),
                         subField.byteSize(),
@@ -506,7 +530,7 @@ void Foam::mapDistributeBase::distribute
                     recvFields[domain].setSize(map.size());
                     IPstream::read
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<char*>(recvFields[domain].begin()),
                         recvFields[domain].byteSize(),
@@ -591,7 +615,7 @@ void Foam::mapDistributeBase::distribute
     else
     {
         FatalErrorInFunction
-            << "Unknown communication schedule " << commsType
+            << "Unknown communication schedule " << int(commsType)
             << abort(FatalError);
     }
 }
@@ -638,7 +662,7 @@ void Foam::mapDistributeBase::distribute
         return;
     }
 
-    if (commsType == Pstream::blocking)
+    if (commsType == Pstream::commsTypes::blocking)
     {
         // Since buffered sending can reuse the field to collect the
         // received data.
@@ -650,7 +674,7 @@ void Foam::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                OPstream toNbr(Pstream::blocking, domain, 0, tag);
+                OPstream toNbr(Pstream::commsTypes::blocking, domain, 0, tag);
                 List<T> subField(map.size());
                 forAll(subField, i)
                 {
@@ -690,7 +714,7 @@ void Foam::mapDistributeBase::distribute
 
             if (domain != Pstream::myProcNo() && map.size())
             {
-                IPstream fromNbr(Pstream::blocking, domain, 0, tag);
+                IPstream fromNbr(Pstream::commsTypes::blocking, domain, 0, tag);
                 List<T> subField(fromNbr);
 
                 checkReceivedSize(domain, map.size(), subField.size());
@@ -707,7 +731,7 @@ void Foam::mapDistributeBase::distribute
             }
         }
     }
-    else if (commsType == Pstream::scheduled)
+    else if (commsType == Pstream::commsTypes::scheduled)
     {
         // Need to make sure I don't overwrite field with received data
         // since the data might need to be sent to another processor. So
@@ -759,7 +783,13 @@ void Foam::mapDistributeBase::distribute
             {
                 // I am send first, receive next
                 {
-                    OPstream toNbr(Pstream::scheduled, recvProc, 0, tag);
+                    OPstream toNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        recvProc,
+                        0,
+                        tag
+                    );
 
                     const labelList& map = subMap[recvProc];
 
@@ -777,7 +807,13 @@ void Foam::mapDistributeBase::distribute
                     toNbr << subField;
                 }
                 {
-                    IPstream fromNbr(Pstream::scheduled, recvProc, 0, tag);
+                    IPstream fromNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        recvProc,
+                        0,
+                        tag
+                    );
                     List<T> subField(fromNbr);
                     const labelList& map = constructMap[recvProc];
 
@@ -798,7 +834,13 @@ void Foam::mapDistributeBase::distribute
             {
                 // I am receive first, send next
                 {
-                    IPstream fromNbr(Pstream::scheduled, sendProc, 0, tag);
+                    IPstream fromNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        sendProc,
+                        0,
+                        tag
+                    );
                     List<T> subField(fromNbr);
                     const labelList& map = constructMap[sendProc];
 
@@ -815,7 +857,13 @@ void Foam::mapDistributeBase::distribute
                     );
                 }
                 {
-                    OPstream toNbr(Pstream::scheduled, sendProc, 0, tag);
+                    OPstream toNbr
+                    (
+                        Pstream::commsTypes::scheduled,
+                        sendProc,
+                        0,
+                        tag
+                    );
 
                     const labelList& map = subMap[sendProc];
 
@@ -836,13 +884,13 @@ void Foam::mapDistributeBase::distribute
         }
         field.transfer(newField);
     }
-    else if (commsType == Pstream::nonBlocking)
+    else if (commsType == Pstream::commsTypes::nonBlocking)
     {
         label nOutstanding = Pstream::nRequests();
 
         if (!contiguous<T>())
         {
-            PstreamBuffers pBufs(Pstream::nonBlocking, tag);
+            PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking, tag);
 
             // Stream data into buffer
             for (label domain = 0; domain < Pstream::nProcs(); domain++)
@@ -961,7 +1009,7 @@ void Foam::mapDistributeBase::distribute
 
                     OPstream::write
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<const char*>(subField.begin()),
                         subField.size()*sizeof(T),
@@ -983,7 +1031,7 @@ void Foam::mapDistributeBase::distribute
                     recvFields[domain].setSize(map.size());
                     UIPstream::read
                     (
-                        Pstream::nonBlocking,
+                        Pstream::commsTypes::nonBlocking,
                         domain,
                         reinterpret_cast<char*>(recvFields[domain].begin()),
                         recvFields[domain].size()*sizeof(T),
@@ -1067,7 +1115,7 @@ void Foam::mapDistributeBase::distribute
     else
     {
         FatalErrorInFunction
-            << "Unknown communication schedule " << commsType
+            << "Unknown communication schedule " << int(commsType)
             << abort(FatalError);
     }
 }
@@ -1155,11 +1203,11 @@ void Foam::mapDistributeBase::distribute
     const int tag
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             constructSize_,
             subMap_,
@@ -1171,11 +1219,11 @@ void Foam::mapDistributeBase::distribute
             tag
         );
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             schedule(),
             constructSize_,
             subMap_,
@@ -1191,7 +1239,7 @@ void Foam::mapDistributeBase::distribute
     {
         distribute
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             List<labelPair>(),
             constructSize_,
             subMap_,
@@ -1245,11 +1293,11 @@ void Foam::mapDistributeBase::reverseDistribute
     const int tag
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             constructSize,
             constructMap_,
@@ -1261,11 +1309,11 @@ void Foam::mapDistributeBase::reverseDistribute
             tag
         );
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             schedule(),
             constructSize,
             constructMap_,
@@ -1281,7 +1329,7 @@ void Foam::mapDistributeBase::reverseDistribute
     {
         distribute
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             List<labelPair>(),
             constructSize,
             constructMap_,
@@ -1308,11 +1356,11 @@ void Foam::mapDistributeBase::reverseDistribute
     const int tag
 ) const
 {
-    if (Pstream::defaultCommsType == Pstream::nonBlocking)
+    if (Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking)
     {
         distribute
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             List<labelPair>(),
             constructSize,
             constructMap_,
@@ -1326,11 +1374,11 @@ void Foam::mapDistributeBase::reverseDistribute
             tag
         );
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         distribute
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             schedule(),
             constructSize,
             constructMap_,
@@ -1348,7 +1396,7 @@ void Foam::mapDistributeBase::reverseDistribute
     {
         distribute
         (
-            Pstream::blocking,
+            Pstream::commsTypes::blocking,
             List<labelPair>(),
             constructSize,
             constructMap_,

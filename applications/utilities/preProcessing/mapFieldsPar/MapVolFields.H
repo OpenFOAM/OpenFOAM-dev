@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,8 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         label nReq = Pstream::nRequests();
@@ -67,7 +67,7 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
         if
         (
             Pstream::parRun()
-         && Pstream::defaultCommsType == Pstream::nonBlocking
+         && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
         )
         {
             Pstream::waitRequests(nReq);
@@ -87,7 +87,7 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
             }
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule =
             fld.mesh().globalData().patchSchedule();
@@ -105,11 +105,11 @@ void evaluateConstraintTypes(GeometricField<Type, fvPatchField, volMesh>& fld)
             {
                 if (patchSchedule[patchEvali].init)
                 {
-                    tgtField.initEvaluate(Pstream::scheduled);
+                    tgtField.initEvaluate(Pstream::commsTypes::scheduled);
                 }
                 else
                 {
-                    tgtField.evaluate(Pstream::scheduled);
+                    tgtField.evaluate(Pstream::commsTypes::scheduled);
                 }
             }
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Foam::List<Foam::labelPair> Foam::mapDistributeBase::schedule
             slave++
         )
         {
-            IPstream fromSlave(Pstream::scheduled, slave, 0, tag);
+            IPstream fromSlave(Pstream::commsTypes::scheduled, slave, 0, tag);
             List<labelPair> nbrData(fromSlave);
 
             forAll(nbrData, i)
@@ -105,20 +105,26 @@ Foam::List<Foam::labelPair> Foam::mapDistributeBase::schedule
             slave++
         )
         {
-            OPstream toSlave(Pstream::scheduled, slave, 0, tag);
+            OPstream toSlave(Pstream::commsTypes::scheduled, slave, 0, tag);
             toSlave << allComms;
         }
     }
     else
     {
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo(), 0, tag);
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo(),
+                0,
+                tag
+            );
             toMaster << allComms;
         }
         {
             IPstream fromMaster
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 Pstream::masterNo(),
                 0,
                 tag
@@ -861,7 +867,7 @@ void Foam::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
                 recvFields[domain].setSize(map.size());
                 IPstream::read
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<char*>(recvFields[domain].begin()),
                     recvFields[domain].size()*sizeof(bool),
@@ -894,7 +900,7 @@ void Foam::mapDistributeBase::compact(const boolList& elemIsUsed, const int tag)
 
                 OPstream::write
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<const char*>(subField.begin()),
                     subField.size()*sizeof(bool),
@@ -1028,7 +1034,7 @@ void Foam::mapDistributeBase::compact
                 recvFields[domain].setSize(map.size());
                 IPstream::read
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<char*>(recvFields[domain].begin()),
                     recvFields[domain].size()*sizeof(bool),
@@ -1060,7 +1066,7 @@ void Foam::mapDistributeBase::compact
 
                 OPstream::write
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     domain,
                     reinterpret_cast<const char*>(subField.begin()),
                     subField.size()*sizeof(bool),

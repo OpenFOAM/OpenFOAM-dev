@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -225,14 +225,18 @@ void Foam::processorFvPatchField<Type>::initEvaluate
     {
         this->patchInternalField(sendBuf_);
 
-        if (commsType == Pstream::nonBlocking && !Pstream::floatTransfer)
+        if
+        (
+            commsType == Pstream::commsTypes::nonBlocking
+         && !Pstream::floatTransfer
+        )
         {
             // Fast path. Receive into *this
             this->setSize(sendBuf_.size());
             outstandingRecvRequest_ = UPstream::nRequests();
             UIPstream::read
             (
-                Pstream::nonBlocking,
+                Pstream::commsTypes::nonBlocking,
                 procPatch_.neighbProcNo(),
                 reinterpret_cast<char*>(this->begin()),
                 this->byteSize(),
@@ -243,7 +247,7 @@ void Foam::processorFvPatchField<Type>::initEvaluate
             outstandingSendRequest_ = UPstream::nRequests();
             UOPstream::write
             (
-                Pstream::nonBlocking,
+                Pstream::commsTypes::nonBlocking,
                 procPatch_.neighbProcNo(),
                 reinterpret_cast<const char*>(sendBuf_.begin()),
                 this->byteSize(),
@@ -267,7 +271,11 @@ void Foam::processorFvPatchField<Type>::evaluate
 {
     if (Pstream::parRun())
     {
-        if (commsType == Pstream::nonBlocking && !Pstream::floatTransfer)
+        if
+        (
+            commsType == Pstream::commsTypes::nonBlocking
+         && !Pstream::floatTransfer
+        )
         {
             // Fast path. Received into *this
 
@@ -318,7 +326,11 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
 {
     this->patch().patchInternalField(psiInternal, scalarSendBuf_);
 
-    if (commsType == Pstream::nonBlocking && !Pstream::floatTransfer)
+    if
+    (
+        commsType == Pstream::commsTypes::nonBlocking
+     && !Pstream::floatTransfer
+    )
     {
         // Fast path.
         if (debug && !this->ready())
@@ -334,7 +346,7 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
         outstandingRecvRequest_ = UPstream::nRequests();
         UIPstream::read
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             procPatch_.neighbProcNo(),
             reinterpret_cast<char*>(scalarReceiveBuf_.begin()),
             scalarReceiveBuf_.byteSize(),
@@ -345,7 +357,7 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
         outstandingSendRequest_ = UPstream::nRequests();
         UOPstream::write
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             procPatch_.neighbProcNo(),
             reinterpret_cast<const char*>(scalarSendBuf_.begin()),
             scalarSendBuf_.byteSize(),
@@ -379,7 +391,11 @@ void Foam::processorFvPatchField<Type>::updateInterfaceMatrix
 
     const labelUList& faceCells = this->patch().faceCells();
 
-    if (commsType == Pstream::nonBlocking && !Pstream::floatTransfer)
+    if
+    (
+        commsType == Pstream::commsTypes::nonBlocking
+     && !Pstream::floatTransfer
+    )
     {
         // Fast path.
         if
@@ -437,7 +453,11 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
 {
     this->patch().patchInternalField(psiInternal, sendBuf_);
 
-    if (commsType == Pstream::nonBlocking && !Pstream::floatTransfer)
+    if
+    (
+        commsType == Pstream::commsTypes::nonBlocking
+     && !Pstream::floatTransfer
+    )
     {
         // Fast path.
         if (debug && !this->ready())
@@ -453,7 +473,7 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
         outstandingRecvRequest_ = UPstream::nRequests();
         IPstream::read
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             procPatch_.neighbProcNo(),
             reinterpret_cast<char*>(receiveBuf_.begin()),
             receiveBuf_.byteSize(),
@@ -464,7 +484,7 @@ void Foam::processorFvPatchField<Type>::initInterfaceMatrixUpdate
         outstandingSendRequest_ = UPstream::nRequests();
         OPstream::write
         (
-            Pstream::nonBlocking,
+            Pstream::commsTypes::nonBlocking,
             procPatch_.neighbProcNo(),
             reinterpret_cast<const char*>(sendBuf_.begin()),
             sendBuf_.byteSize(),
@@ -497,7 +517,11 @@ void Foam::processorFvPatchField<Type>::updateInterfaceMatrix
 
     const labelUList& faceCells = this->patch().faceCells();
 
-    if (commsType == Pstream::nonBlocking && !Pstream::floatTransfer)
+    if
+    (
+        commsType == Pstream::commsTypes::nonBlocking
+     && !Pstream::floatTransfer
+    )
     {
         // Fast path.
         if

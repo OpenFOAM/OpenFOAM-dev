@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ void Pstream::gatherList
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -96,7 +96,14 @@ void Pstream::gatherList
             }
             else
             {
-                IPstream fromBelow(UPstream::scheduled, belowID, 0, tag, comm);
+                IPstream fromBelow
+                (
+                    UPstream::commsTypes::scheduled,
+                    belowID,
+                    0,
+                    tag,
+                    comm
+                );
                 fromBelow >> Values[belowID];
 
                 if (debug & 2)
@@ -148,7 +155,7 @@ void Pstream::gatherList
 
                 OPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(sendingValues.begin()),
                     sendingValues.byteSize(),
@@ -160,7 +167,7 @@ void Pstream::gatherList
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -234,7 +241,7 @@ void Pstream::scatterList
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -251,7 +258,7 @@ void Pstream::scatterList
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -290,7 +297,7 @@ void Pstream::scatterList
 
                 OPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(sendingValues.begin()),
                     sendingValues.byteSize(),
@@ -300,7 +307,14 @@ void Pstream::scatterList
             }
             else
             {
-                OPstream toBelow(UPstream::scheduled, belowID, 0, tag, comm);
+                OPstream toBelow
+                (
+                    UPstream::commsTypes::scheduled,
+                    belowID,
+                    0,
+                    tag,
+                    comm
+                );
 
                 // Send data destined for all other processors below belowID
                 forAll(notBelowLeaves, leafI)

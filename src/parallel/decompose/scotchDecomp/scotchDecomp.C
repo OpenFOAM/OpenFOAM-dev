@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,7 @@ Foam::label Foam::scotchDecomp::decompose
 
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 Field<label> nbrAdjncy(fromSlave);
                 Field<label> nbrXadj(fromSlave);
                 scalarField nbrWeights(fromSlave);
@@ -162,7 +162,7 @@ Foam::label Foam::scotchDecomp::decompose
             // Send allFinalDecomp back
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << SubField<label>
                 (
                     allFinalDecomp,
@@ -181,13 +181,21 @@ Foam::label Foam::scotchDecomp::decompose
         {
             // Send my part of the graph (already in global numbering)
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster<< adjncy << SubField<label>(xadj, xadj.size()-1)
                     << cWeights;
             }
 
             // Receive back decomposition
-            IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+            IPstream fromMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             fromMaster >> finalDecomp;
         }
     }

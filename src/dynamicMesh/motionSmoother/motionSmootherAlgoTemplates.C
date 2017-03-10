@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,12 +64,12 @@ void Foam::motionSmootherAlgo::checkConstraints
 
     forAllReverse(bFld, patchi)
     {
-        bFld[patchi].initEvaluate(Pstream::blocking);   // buffered
+        bFld[patchi].initEvaluate(Pstream::commsTypes::blocking);   // buffered
     }
 
     forAllReverse(bFld, patchi)
     {
-        bFld[patchi].evaluate(Pstream::blocking);
+        bFld[patchi].evaluate(Pstream::commsTypes::blocking);
     }
 
 

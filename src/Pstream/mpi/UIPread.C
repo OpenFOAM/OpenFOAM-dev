@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::UIPstream::UIPstream
     setOpened();
     setGood();
 
-    if (commsType == UPstream::nonBlocking)
+    if (commsType == commsTypes::nonBlocking)
     {
         // Message is already received into externalBuf
     }
@@ -135,7 +135,11 @@ Foam::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
     clearAtEnd_(true),
     messageSize_(0)
 {
-    if (commsType() != UPstream::scheduled && !buffers.finishedSendsCalled_)
+    if
+    (
+        commsType() != UPstream::commsTypes::scheduled
+     && !buffers.finishedSendsCalled_
+    )
     {
         FatalErrorInFunction
             << "PstreamBuffers::finishedSends() never called." << endl
@@ -147,7 +151,7 @@ Foam::UIPstream::UIPstream(const int fromProcNo, PstreamBuffers& buffers)
     setOpened();
     setGood();
 
-    if (commsType() == UPstream::nonBlocking)
+    if (commsType() == commsTypes::nonBlocking)
     {
         // Message is already received into externalBuf
         messageSize_ = buffers.recvBuf_[fromProcNo].size();
@@ -251,7 +255,7 @@ Foam::label Foam::UIPstream::read
         error::printStack(Pout);
     }
 
-    if (commsType == blocking || commsType == scheduled)
+    if (commsType == commsTypes::blocking || commsType == commsTypes::scheduled)
     {
         MPI_Status status;
 
@@ -301,7 +305,7 @@ Foam::label Foam::UIPstream::read
 
         return messageSize;
     }
-    else if (commsType == nonBlocking)
+    else if (commsType == commsTypes::nonBlocking)
     {
         MPI_Request request;
 
@@ -344,7 +348,7 @@ Foam::label Foam::UIPstream::read
     {
         FatalErrorInFunction
             << "Unsupported communications type "
-            << commsType
+            << int(commsType)
             << Foam::abort(FatalError);
 
         return 0;

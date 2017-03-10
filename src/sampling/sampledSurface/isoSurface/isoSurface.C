@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,11 @@ void Foam::isoSurface::syncUnseparatedPoints
                     patchInfo[nbrPointi] = pointValues[meshPts[pointi]];
                 }
 
-                OPstream toNbr(Pstream::blocking, pp.neighbProcNo());
+                OPstream toNbr
+                (
+                    Pstream::commsTypes::blocking,
+                    pp.neighbProcNo()
+                );
                 toNbr << patchInfo;
             }
         }
@@ -162,7 +166,11 @@ void Foam::isoSurface::syncUnseparatedPoints
                 {
                     // We do not know the number of points on the other side
                     // so cannot use Pstream::read.
-                    IPstream fromNbr(Pstream::blocking, pp.neighbProcNo());
+                    IPstream fromNbr
+                    (
+                        Pstream::commsTypes::blocking,
+                        pp.neighbProcNo()
+                    );
                     fromNbr >> nbrPatchInfo;
                 }
 

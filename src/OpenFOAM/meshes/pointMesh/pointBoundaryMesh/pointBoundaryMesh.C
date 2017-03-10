@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,8 @@ void Foam::pointBoundaryMesh::calcGeometry()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -96,7 +96,7 @@ void Foam::pointBoundaryMesh::calcGeometry()
             operator[](patchi).calcGeometry(pBufs);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 
@@ -126,8 +126,8 @@ void Foam::pointBoundaryMesh::movePoints(const pointField& p)
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -142,7 +142,7 @@ void Foam::pointBoundaryMesh::movePoints(const pointField& p)
             operator[](patchi).movePoints(pBufs, p);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 
@@ -172,8 +172,8 @@ void Foam::pointBoundaryMesh::updateMesh()
 
     if
     (
-        Pstream::defaultCommsType == Pstream::blocking
-     || Pstream::defaultCommsType == Pstream::nonBlocking
+        Pstream::defaultCommsType == Pstream::commsTypes::blocking
+     || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
     )
     {
         forAll(*this, patchi)
@@ -188,7 +188,7 @@ void Foam::pointBoundaryMesh::updateMesh()
             operator[](patchi).updateMesh(pBufs);
         }
     }
-    else if (Pstream::defaultCommsType == Pstream::scheduled)
+    else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
     {
         const lduSchedule& patchSchedule = mesh().globalData().patchSchedule();
 

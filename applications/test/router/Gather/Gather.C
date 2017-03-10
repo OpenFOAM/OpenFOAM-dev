@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Gather<T0>::Gather(const T0& localData, const bool redistribute)
                 slave++, procIndex++
             )
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 fromSlave >> this->operator[](procIndex);
             }
 
@@ -75,7 +75,7 @@ Gather<T0>::Gather(const T0& localData, const bool redistribute)
                 slave++, procIndex++
             )
             {
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
 
                 if (redistribute)
                 {
@@ -92,13 +92,21 @@ Gather<T0>::Gather(const T0& localData, const bool redistribute)
         {
             // Slave: send my local data to master
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster << localData;
             }
 
             // Receive data from master
             {
-                IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+                IPstream fromMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 if (redistribute)
                 {
                     fromMaster >> *this;

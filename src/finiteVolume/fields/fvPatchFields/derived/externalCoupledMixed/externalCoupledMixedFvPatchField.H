@@ -1,8 +1,8 @@
-/*---------------------------------------------------------------------------*\
+/*---------------------------------------------------------------------------* \
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,38 +308,32 @@ public:
 
     // Member functions
 
-        // Access
+        //- Return the log flag
+        bool log() const
+        {
+            return log_;
+        }
 
-            //- Return the log flag
-            bool log() const
-            {
-                return log_;
-            }
+        //- Return the master flag
+        bool master() const
+        {
+            return master_;
+        }
 
-            //- Return the master flag
-            bool master() const
-            {
-                return master_;
-            }
+        //- Return the master flag
+        bool& master()
+        {
+            return master_;
+        }
 
-            //- Return the master flag
-            bool& master()
-            {
-                return master_;
-            }
+        //- Evaluate the patch field
+        virtual void evaluate
+        (
+            const Pstream::commsTypes commsType=Pstream::commsTypes::blocking
+        );
 
-
-        // Evaluation functions
-
-            //- Evaluate the patch field
-            virtual void evaluate
-            (
-                const Pstream::commsTypes commsType=Pstream::blocking
-            );
-
-            //- Transfer data for external source
-            virtual void transferData(OFstream& os) const;
-
+        //- Transfer data for external source
+        virtual void transferData(OFstream& os) const;
 
         //- Write the geometry to the comms dir
         void writeGeometry() const;

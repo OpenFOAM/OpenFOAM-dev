@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ bool Foam::UOPstream::write
 
     bool transferFailed = true;
 
-    if (commsType == blocking)
+    if (commsType == commsTypes::blocking)
     {
         transferFailed = MPI_Bsend
         (
@@ -88,7 +88,7 @@ bool Foam::UOPstream::write
                 << Foam::endl;
         }
     }
-    else if (commsType == scheduled)
+    else if (commsType == commsTypes::scheduled)
     {
         transferFailed = MPI_Send
         (
@@ -108,7 +108,7 @@ bool Foam::UOPstream::write
                 << Foam::endl;
         }
     }
-    else if (commsType == nonBlocking)
+    else if (commsType == commsTypes::nonBlocking)
     {
         MPI_Request request;
 

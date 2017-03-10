@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,7 +171,7 @@ void Foam::meshRefinement::collectAndPrint
         points,
         allPoints,
         UPstream::msgType(),
-        Pstream::blocking
+        Pstream::commsTypes::blocking
     );
 
     List<T> allData;
@@ -182,7 +182,7 @@ void Foam::meshRefinement::collectAndPrint
         data,
         allData,
         UPstream::msgType(),
-        Pstream::blocking
+        Pstream::commsTypes::blocking
     );
 
 

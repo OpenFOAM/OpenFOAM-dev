@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -901,8 +901,8 @@ void Foam::globalPoints::calculateSharedPoints
         PstreamBuffers pBufs
         (
             (
-                Pstream::defaultCommsType == Pstream::scheduled
-              ? Pstream::nonBlocking
+                Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+              ? Pstream::commsTypes::nonBlocking
               : Pstream::defaultCommsType
             )
         );
@@ -939,8 +939,8 @@ void Foam::globalPoints::calculateSharedPoints
         PstreamBuffers pBufs
         (
             (
-                Pstream::defaultCommsType == Pstream::scheduled
-              ? Pstream::nonBlocking
+                Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+              ? Pstream::commsTypes::nonBlocking
               : Pstream::defaultCommsType
             )
         );

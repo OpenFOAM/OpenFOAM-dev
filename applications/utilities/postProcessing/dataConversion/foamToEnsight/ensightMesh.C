@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -694,7 +694,7 @@ void Foam::ensightMesh::writeAllPolys
             // Slaves
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 labelList polys(fromSlave);
                 cellList cellFaces(fromSlave);
 
@@ -708,7 +708,11 @@ void Foam::ensightMesh::writeAllPolys
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< meshCellSets_.polys << cellFaces;
         }
 
@@ -727,7 +731,7 @@ void Foam::ensightMesh::writeAllPolys
             // Slaves
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 labelList polys(fromSlave);
                 cellList cellFaces(fromSlave);
                 faceList faces(fromSlave);
@@ -743,7 +747,11 @@ void Foam::ensightMesh::writeAllPolys
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< meshCellSets_.polys << cellFaces << faces;
         }
 
@@ -763,7 +771,7 @@ void Foam::ensightMesh::writeAllPolys
             // Slaves
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 labelList polys(fromSlave);
                 cellList cellFaces(fromSlave);
                 faceList faces(fromSlave);
@@ -781,7 +789,11 @@ void Foam::ensightMesh::writeAllPolys
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< meshCellSets_.polys << cellFaces << faces << faceOwner;
         }
     }
@@ -807,7 +819,7 @@ void Foam::ensightMesh::writeAllPrims
 
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 cellShapeList cellShapes(fromSlave);
 
                 writePrims(cellShapes, ensightGeometryFile);
@@ -815,7 +827,11 @@ void Foam::ensightMesh::writeAllPrims
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< cellShapes;
         }
     }
@@ -867,7 +883,7 @@ void Foam::ensightMesh::writeAllFacePrims
 
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 faceList patchFaces(fromSlave);
 
                 writeFacePrims(patchFaces, ensightGeometryFile);
@@ -875,7 +891,11 @@ void Foam::ensightMesh::writeAllFacePrims
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< UIndirectList<face>(patchFaces, prims);
         }
     }
@@ -932,7 +952,7 @@ void Foam::ensightMesh::writeAllNSided
 
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 faceList patchFaces(fromSlave);
 
                 writeNSidedNPointsPerFace
@@ -944,7 +964,11 @@ void Foam::ensightMesh::writeAllNSided
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< UIndirectList<face>(patchFaces, prims);
         }
 
@@ -959,7 +983,7 @@ void Foam::ensightMesh::writeAllNSided
 
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 faceList patchFaces(fromSlave);
 
                 writeNSidedPoints(patchFaces, ensightGeometryFile);
@@ -967,7 +991,11 @@ void Foam::ensightMesh::writeAllNSided
         }
         else
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< UIndirectList<face>(patchFaces, prims);
         }
     }
@@ -997,7 +1025,7 @@ void Foam::ensightMesh::writeAllPoints
             ensightGeometryFile.write(uniquePoints.component(d));
             for (int slave=1; slave<Pstream::nProcs(); slave++)
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 scalarField patchPointsComponent(fromSlave);
                 ensightGeometryFile.write(patchPointsComponent);
             }
@@ -1007,7 +1035,11 @@ void Foam::ensightMesh::writeAllPoints
     {
         for (direction d=0; d<vector::nComponents; d++)
         {
-            OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+            OPstream toMaster
+            (
+                Pstream::commsTypes::scheduled,
+                Pstream::masterNo()
+            );
             toMaster<< uniquePoints.component(d);
         }
     }

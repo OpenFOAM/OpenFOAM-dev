@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -459,12 +459,12 @@ void Foam::motionSmootherAlgo::setDisplacementPatchFields
             if (patchSchedule[patchEvalI].init)
             {
                 displacementBf[patchi]
-                    .initEvaluate(Pstream::scheduled);
+                    .initEvaluate(Pstream::commsTypes::scheduled);
             }
             else
             {
                 displacementBf[patchi]
-                    .evaluate(Pstream::scheduled);
+                    .evaluate(Pstream::commsTypes::scheduled);
             }
         }
     }
@@ -597,12 +597,12 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
             if (patchSchedule[patchEvalI].init)
             {
                 displacementBf[patchi]
-                    .initEvaluate(Pstream::blocking);
+                    .initEvaluate(Pstream::commsTypes::blocking);
             }
             else
             {
                 displacementBf[patchi]
-                    .evaluate(Pstream::blocking);
+                    .evaluate(Pstream::commsTypes::blocking);
             }
         }
     }
@@ -618,12 +618,12 @@ void Foam::motionSmootherAlgo::correctBoundaryConditions
             if (patchSchedule[patchEvalI].init)
             {
                 displacementBf[patchi]
-                    .initEvaluate(Pstream::blocking);
+                    .initEvaluate(Pstream::commsTypes::blocking);
             }
             else
             {
                 displacementBf[patchi]
-                    .evaluate(Pstream::blocking);
+                    .evaluate(Pstream::commsTypes::blocking);
             }
         }
     }

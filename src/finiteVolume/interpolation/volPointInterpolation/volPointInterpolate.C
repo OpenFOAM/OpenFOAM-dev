@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ void Foam::volPointInterpolation::addSeparated
             refCast<coupledPointPatchField<Type>>
                 (pfbf[patchi]).initSwapAddSeparated
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     pfi
                 );
         }
@@ -115,7 +115,7 @@ void Foam::volPointInterpolation::addSeparated
             refCast<coupledPointPatchField<Type>>
                 (pfbf[patchi]).swapAddSeparated
                 (
-                    Pstream::nonBlocking,
+                    Pstream::commsTypes::nonBlocking,
                     pfi
                 );
         }

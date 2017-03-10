@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -641,7 +641,7 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     labelList rotation(faces.size(), label(0));
     labelList faceMap(faces.size(), label(-1));
 
-    PstreamBuffers pBufs(Pstream::nonBlocking);
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
     // Send ordering
     forAll(sortMesh.boundaryMesh(), patchi)

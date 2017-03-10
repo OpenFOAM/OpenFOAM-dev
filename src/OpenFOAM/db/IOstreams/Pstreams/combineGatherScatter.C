@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ void Foam::Pstream::combineGather
                 T value;
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(&value),
                     sizeof(T),
@@ -83,7 +83,14 @@ void Foam::Pstream::combineGather
             }
             else
             {
-                IPstream fromBelow(UPstream::scheduled, belowID, 0, tag, comm);
+                IPstream fromBelow
+                (
+                    UPstream::commsTypes::scheduled,
+                    belowID,
+                    0,
+                    tag,
+                    comm
+                );
                 T value(fromBelow);
 
                 if (debug & 2)
@@ -109,7 +116,7 @@ void Foam::Pstream::combineGather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -121,7 +128,7 @@ void Foam::Pstream::combineGather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -189,7 +196,7 @@ void Foam::Pstream::combineScatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(&Value),
                     sizeof(T),
@@ -201,7 +208,7 @@ void Foam::Pstream::combineScatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -231,7 +238,7 @@ void Foam::Pstream::combineScatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(&Value),
                     sizeof(T),
@@ -241,7 +248,14 @@ void Foam::Pstream::combineScatter
             }
             else
             {
-                OPstream toBelow(UPstream::scheduled, belowID, 0, tag, comm);
+                OPstream toBelow
+                (
+                    UPstream::commsTypes::scheduled,
+                    belowID,
+                    0,
+                    tag,
+                    comm
+                );
                 toBelow << Value;
             }
         }
@@ -294,7 +308,7 @@ void Foam::Pstream::listCombineGather
 
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<char*>(receivedValues.begin()),
                     receivedValues.byteSize(),
@@ -315,7 +329,14 @@ void Foam::Pstream::listCombineGather
             }
             else
             {
-                IPstream fromBelow(UPstream::scheduled, belowID, 0, tag, comm);
+                IPstream fromBelow
+                (
+                    UPstream::commsTypes::scheduled,
+                    belowID,
+                    0,
+                    tag,
+                    comm
+                );
                 List<T> receivedValues(fromBelow);
 
                 if (debug & 2)
@@ -344,7 +365,7 @@ void Foam::Pstream::listCombineGather
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<const char*>(Values.begin()),
                     Values.byteSize(),
@@ -356,7 +377,7 @@ void Foam::Pstream::listCombineGather
             {
                 OPstream toAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -424,7 +445,7 @@ void Foam::Pstream::listCombineScatter
             {
                 UIPstream::read
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     reinterpret_cast<char*>(Values.begin()),
                     Values.byteSize(),
@@ -436,7 +457,7 @@ void Foam::Pstream::listCombineScatter
             {
                 IPstream fromAbove
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     myComm.above(),
                     0,
                     tag,
@@ -466,7 +487,7 @@ void Foam::Pstream::listCombineScatter
             {
                 UOPstream::write
                 (
-                    UPstream::scheduled,
+                    UPstream::commsTypes::scheduled,
                     belowID,
                     reinterpret_cast<const char*>(Values.begin()),
                     Values.byteSize(),
@@ -476,7 +497,14 @@ void Foam::Pstream::listCombineScatter
             }
             else
             {
-                OPstream toBelow(UPstream::scheduled, belowID, 0, tag, comm);
+                OPstream toBelow
+                (
+                    UPstream::commsTypes::scheduled,
+                    belowID,
+                    0,
+                    tag,
+                    comm
+                );
                 toBelow << Values;
             }
         }
@@ -535,7 +563,14 @@ void Foam::Pstream::mapCombineGather
         {
             label belowID = myComm.below()[belowI];
 
-            IPstream fromBelow(UPstream::scheduled, belowID, 0, tag, comm);
+            IPstream fromBelow
+            (
+                UPstream::commsTypes::scheduled,
+                belowID,
+                0,
+                tag,
+                comm
+            );
             Container receivedValues(fromBelow);
 
             if (debug & 2)
@@ -575,7 +610,14 @@ void Foam::Pstream::mapCombineGather
                     << " data:" << Values << endl;
             }
 
-            OPstream toAbove(UPstream::scheduled, myComm.above(), 0, tag, comm);
+            OPstream toAbove
+            (
+                UPstream::commsTypes::scheduled,
+                myComm.above(),
+                0,
+                tag,
+                comm
+            );
             toAbove << Values;
         }
     }
@@ -635,7 +677,7 @@ void Foam::Pstream::mapCombineScatter
         {
             IPstream fromAbove
             (
-                UPstream::scheduled,
+                UPstream::commsTypes::scheduled,
                 myComm.above(),
                 0,
                 tag,
@@ -660,7 +702,14 @@ void Foam::Pstream::mapCombineScatter
                 Pout<< " sending to " << belowID << " data:" << Values << endl;
             }
 
-            OPstream toBelow(UPstream::scheduled, belowID, 0, tag, comm);
+            OPstream toBelow
+            (
+                UPstream::commsTypes::scheduled,
+                belowID,
+                0,
+                tag,
+                comm
+            );
             toBelow << Values;
         }
     }

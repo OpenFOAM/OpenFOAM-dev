@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ void Foam::processorCyclicPointPatchField<Type>::initSwapAddSeparated
             )
         );
 
-        if (commsType == Pstream::nonBlocking)
+        if (commsType == Pstream::commsTypes::nonBlocking)
         {
             receiveBuf_.setSize(pf.size());
             IPstream::read
@@ -149,7 +149,7 @@ void Foam::processorCyclicPointPatchField<Type>::swapAddSeparated
     if (Pstream::parRun())
     {
         // If nonblocking data has already been received into receiveBuf_
-        if (commsType != Pstream::nonBlocking)
+        if (commsType != Pstream::commsTypes::nonBlocking)
         {
             receiveBuf_.setSize(this->size());
             IPstream::read

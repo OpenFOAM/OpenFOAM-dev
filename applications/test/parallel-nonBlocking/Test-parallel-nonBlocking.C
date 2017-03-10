@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
             Pstream::myProcNo()
         );
 
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         if (Pstream::myProcNo() != Pstream::masterNo())
         {
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
 
 
         // Send allData back
-        PstreamBuffers pBufs2(Pstream::nonBlocking);
+        PstreamBuffers pBufs2(Pstream::commsTypes::nonBlocking);
         if (Pstream::myProcNo() == Pstream::masterNo())
         {
             for
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 
     // Do a non-blocking send inbetween
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         for (label proci = 0; proci < Pstream::nProcs(); proci++)
         {

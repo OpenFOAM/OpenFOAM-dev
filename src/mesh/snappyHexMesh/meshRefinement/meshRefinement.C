@@ -1099,7 +1099,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
 //    {
 //        if (proci != Pstream::myProcNo())
 //        {
-//            OPstream str(Pstream::blocking, proci);
+//            OPstream str(Pstream::commsTypes::blocking, proci);
 //            str << regionConnectivity[proci];
 //        }
 //    }
@@ -1108,7 +1108,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::splitFaces
 //    {
 //        if (proci != Pstream::myProcNo())
 //        {
-//            IPstream str(Pstream::blocking, proci);
+//            IPstream str(Pstream::commsTypes::blocking, proci);
 //            str >> regionConnectivity[proci];
 //        }
 //    }

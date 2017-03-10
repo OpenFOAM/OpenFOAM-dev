@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ void Foam::syncTools::syncPointMap
 
     if (Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 
@@ -311,7 +311,7 @@ void Foam::syncTools::syncPointMap
                     slave++
                 )
                 {
-                    IPstream fromSlave(Pstream::scheduled, slave);
+                    IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                     Map<T> nbrValues(fromSlave);
 
                     // Merge neighbouring values with my values
@@ -335,7 +335,7 @@ void Foam::syncTools::syncPointMap
                     slave++
                 )
                 {
-                    OPstream toSlave(Pstream::scheduled, slave);
+                    OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                     toSlave << sharedPointValues;
                 }
             }
@@ -343,14 +343,18 @@ void Foam::syncTools::syncPointMap
             {
                 // Slave: send to master
                 {
-                    OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                    OPstream toMaster
+                    (
+                        Pstream::commsTypes::scheduled,
+                        Pstream::masterNo()
+                    );
                     toMaster << sharedPointValues;
                 }
                 // Receive merged values
                 {
                     IPstream fromMaster
                     (
-                        Pstream::scheduled,
+                        Pstream::commsTypes::scheduled,
                         Pstream::masterNo()
                     );
                     fromMaster >> sharedPointValues;
@@ -405,7 +409,7 @@ void Foam::syncTools::syncEdgeMap
 
     if (Pstream::parRun())
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 
@@ -687,7 +691,7 @@ void Foam::syncTools::syncEdgeMap
                 slave++
             )
             {
-                IPstream fromSlave(Pstream::scheduled, slave);
+                IPstream fromSlave(Pstream::commsTypes::scheduled, slave);
                 EdgeMap<T> nbrValues(fromSlave);
 
                 // Merge neighbouring values with my values
@@ -712,7 +716,7 @@ void Foam::syncTools::syncEdgeMap
             )
             {
 
-                OPstream toSlave(Pstream::scheduled, slave);
+                OPstream toSlave(Pstream::commsTypes::scheduled, slave);
                 toSlave << sharedEdgeValues;
             }
         }
@@ -720,12 +724,20 @@ void Foam::syncTools::syncEdgeMap
         {
             // Send to master
             {
-                OPstream toMaster(Pstream::scheduled, Pstream::masterNo());
+                OPstream toMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 toMaster << sharedEdgeValues;
             }
             // Receive merged values
             {
-                IPstream fromMaster(Pstream::scheduled, Pstream::masterNo());
+                IPstream fromMaster
+                (
+                    Pstream::commsTypes::scheduled,
+                    Pstream::masterNo()
+                );
                 fromMaster >> sharedEdgeValues;
             }
         }
@@ -799,7 +811,7 @@ void Foam::syncTools::syncEdgeMap
 //
 //    if (Pstream::parRun())
 //    {
-//        PstreamBuffers pBufs(Pstream::nonBlocking);
+//        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 //
 //        // Send
 //
@@ -1302,7 +1314,7 @@ void Foam::syncTools::syncBoundaryFaceList
 
     if (parRun)
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 
@@ -1422,7 +1434,7 @@ void Foam::syncTools::syncFaceList
 
     if (parRun)
     {
-        PstreamBuffers pBufs(Pstream::nonBlocking);
+        PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
 
         // Send
 

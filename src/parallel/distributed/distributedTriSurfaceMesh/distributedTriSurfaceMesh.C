@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2241,7 +2241,7 @@ void Foam::distributedTriSurfaceMesh::distribute
         {
             if (faceSendSizes[Pstream::myProcNo()][proci] > 0)
             {
-                OPstream str(Pstream::blocking, proci);
+                OPstream str(Pstream::commsTypes::blocking, proci);
 
                 labelList pointMap;
                 triSurface subSurface
@@ -2277,7 +2277,7 @@ void Foam::distributedTriSurfaceMesh::distribute
         {
             if (faceSendSizes[proci][Pstream::myProcNo()] > 0)
             {
-                IPstream str(Pstream::blocking, proci);
+                IPstream str(Pstream::commsTypes::blocking, proci);
 
                 // Receive
                 triSurface subSurface(str);

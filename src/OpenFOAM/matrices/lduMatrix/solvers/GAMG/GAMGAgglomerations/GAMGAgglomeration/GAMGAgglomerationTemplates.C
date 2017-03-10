@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void Foam::GAMGAgglomeration::gatherList
         {
             IPstream fromSlave
             (
-                Pstream::scheduled,
+                Pstream::commsTypes::scheduled,
                 procIDs[i],
                 0,
                 tag,
@@ -62,7 +62,7 @@ void Foam::GAMGAgglomeration::gatherList
     {
         OPstream toMaster
         (
-            Pstream::scheduled,
+            Pstream::commsTypes::scheduled,
             procIDs[0],
             0,
             tag,
@@ -128,7 +128,7 @@ void Foam::GAMGAgglomeration::restrictField
             procIDs,
             cf,
             UPstream::msgType(),
-            Pstream::nonBlocking    //Pstream::scheduled
+            Pstream::commsTypes::nonBlocking    //Pstream::commsTypes::scheduled
         );
     }
 }
@@ -201,7 +201,7 @@ void Foam::GAMGAgglomeration::prolongField
             cf,
             allCf,
             UPstream::msgType(),
-            Pstream::nonBlocking    //Pstream::scheduled
+            Pstream::commsTypes::nonBlocking    //Pstream::commsTypes::scheduled
         );
 
         forAll(fineToCoarse, i)

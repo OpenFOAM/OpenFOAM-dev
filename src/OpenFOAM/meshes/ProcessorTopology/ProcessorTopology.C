@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,11 @@ Foam::ProcessorTopology<Container, ProcPatch>::ProcessorTopology
         Pstream::scatterList(*this, Pstream::msgType(), comm);
     }
 
-    if (Pstream::parRun() && Pstream::defaultCommsType == Pstream::scheduled)
+    if
+    (
+        Pstream::parRun()
+     && Pstream::defaultCommsType == Pstream::commsTypes::scheduled
+    )
     {
         label patchEvali = 0;
 

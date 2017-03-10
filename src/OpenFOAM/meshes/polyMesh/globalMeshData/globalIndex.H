@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,7 +161,8 @@ public:
                 const UList<Type>& fld,
                 List<Type>& allFld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType=Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             );
 
             //- Collect data in processor order on master (== procIDs[0]).
@@ -174,7 +175,8 @@ public:
                 const UList<Type>& fld,
                 List<Type>& allFld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType=Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             ) const
             {
                 gather(offsets_, comm, procIDs, fld, allFld, tag, commsType);
@@ -190,7 +192,8 @@ public:
                 const labelList& procIDs,
                 List<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType=Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             );
 
             //- Inplace collect data in processor order on master
@@ -202,7 +205,8 @@ public:
                 const labelList& procIDs,
                 List<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType=Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             ) const
             {
                 gather(offsets_, comm, procIDs, fld, tag, commsType);
@@ -218,7 +222,8 @@ public:
                 const UList<Type>& allFld,
                 UList<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType=Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             );
 
             //- Distribute data in processor order. Requires fld to be sized!
@@ -230,7 +235,8 @@ public:
                 const UList<Type>& allFld,
                 UList<Type>& fld,
                 const int tag = UPstream::msgType(),
-                const Pstream::commsTypes commsType=Pstream::nonBlocking
+                const Pstream::commsTypes commsType =
+                    Pstream::commsTypes::nonBlocking
             ) const
             {
                 scatter(offsets_, comm, procIDs, allFld, fld, tag, commsType);
