@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ RNGkEpsilon<BasicTurbulenceModel>::RNGkEpsilon
         (
             "C3",
             this->coeffDict_,
-            -0.33
+            0
         )
     ),
     sigmak_
@@ -282,7 +282,7 @@ void RNGkEpsilon<BasicTurbulenceModel>::correct()
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
         (C1_ - R)*alpha*rho*G*epsilon_/k_
-      - fvm::SuSp(((2.0/3.0)*C1_ + C3_)*alpha*rho*divU, epsilon_)
+      - fvm::SuSp(((2.0/3.0)*C1_ - C3_)*alpha*rho*divU, epsilon_)
       - fvm::Sp(C2_*alpha*rho*epsilon_/k_, epsilon_)
       + epsilonSource()
       + fvOptions(alpha, rho, epsilon_)

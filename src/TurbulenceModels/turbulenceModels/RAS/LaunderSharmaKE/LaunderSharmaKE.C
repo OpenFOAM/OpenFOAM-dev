@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ LaunderSharmaKE<BasicTurbulenceModel>::LaunderSharmaKE
         (
             "C3",
             this->coeffDict_,
-            -0.33
+            0
         )
     ),
     sigmak_
@@ -273,7 +273,7 @@ void LaunderSharmaKE<BasicTurbulenceModel>::correct()
       - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
      ==
         C1_*alpha*rho*G*epsilon_/k_
-      - fvm::SuSp(((2.0/3.0)*C1_ + C3_)*alpha*rho*divU, epsilon_)
+      - fvm::SuSp(((2.0/3.0)*C1_ - C3_)*alpha*rho*divU, epsilon_)
       - fvm::Sp(C2_*f2()*alpha*rho*epsilon_/k_, epsilon_)
       + alpha*rho*E
       + epsilonSource()
