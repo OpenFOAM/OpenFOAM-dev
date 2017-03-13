@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -42,8 +42,8 @@ export WM_PROJECT_VERSION=dev
 #
 # Please set to the appropriate path if the default is not correct.
 #
-[ $BASH_SOURCE ] && \
-export FOAM_INST_DIR=$(cd $(dirname $BASH_SOURCE)/../.. && pwd -P) || \
+[ ${BASH_SOURCE:-$0} ] && \
+export FOAM_INST_DIR=$(cd $(dirname ${BASH_SOURCE:-$0})/../.. && pwd -P) || \
 export FOAM_INST_DIR=$HOME/$WM_PROJECT
 # export FOAM_INST_DIR=~$WM_PROJECT
 # export FOAM_INST_DIR=/opt/$WM_PROJECT
