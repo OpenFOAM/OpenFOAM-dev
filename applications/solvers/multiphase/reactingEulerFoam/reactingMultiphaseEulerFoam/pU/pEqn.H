@@ -294,12 +294,11 @@ while (pimple.correct())
     forAll(phases, phasei)
     {
         phaseModel& phase = phases[phasei];
+        const volScalarField& alpha = phase;
+        volScalarField& rho = phase.thermo().rho();
 
         if (phase.compressible())
         {
-            const volScalarField& alpha = phase;
-            const volScalarField& rho = phase.rho();
-
             if (pimple.transonic())
             {
                 surfaceScalarField phid
@@ -357,21 +356,29 @@ while (pimple.correct())
                     ).ptr()
                 );
             }
+        }
+        else
+        {
+            pEqnComps.set
+            (
+                phasei,
+                fvm::Su(-(fvOptions(alpha, rho)&rho)/rho, p_rgh).ptr()
+            );
+        }
 
-            if (fluid.transfersMass(phase))
+        if (fluid.transfersMass(phase))
+        {
+            if (pEqnComps.set(phasei))
             {
-                if (pEqnComps.set(phasei))
-                {
-                    pEqnComps[phasei] -= fluid.dmdt(phase)/rho;
-                }
-                else
-                {
-                    pEqnComps.set
-                    (
-                        phasei,
-                        fvm::Su(-fluid.dmdt(phase)/rho, p_rgh)
-                    );
-                }
+                pEqnComps[phasei] -= fluid.dmdt(phase)/rho;
+            }
+            else
+            {
+                pEqnComps.set
+                (
+                    phasei,
+                    fvm::Su(-fluid.dmdt(phase)/rho, p_rgh)
+                );
             }
         }
     }
@@ -421,7 +428,7 @@ while (pimple.correct())
                 phase.phi() = phiHbyAs[phasei] + alpharAUfs[phasei]*mSfGradp;
 
                 // Set the phase dilatation rates
-                if (phase.compressible())
+                if (pEqnComps.set(phasei))
                 {
                     phase.divU(-pEqnComps[phasei] & p_rgh);
                 }

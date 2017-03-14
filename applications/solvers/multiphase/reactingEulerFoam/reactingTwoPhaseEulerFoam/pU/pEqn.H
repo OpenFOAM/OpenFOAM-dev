@@ -230,9 +230,10 @@ while (pimple.correct())
     tmp<fvScalarMatrix> pEqnComp2;
 
     // Construct the compressibility parts of the pressure equation
-    if (pimple.transonic())
+
+    if (phase1.compressible())
     {
-        if (phase1.compressible())
+        if (pimple.transonic())
         {
             surfaceScalarField phid1
             (
@@ -257,8 +258,24 @@ while (pimple.correct())
             deleteDemandDrivenData(pEqnComp1.ref().faceFluxCorrectionPtr());
             pEqnComp1.ref().relax();
         }
+        else
+        {
+            pEqnComp1 =
+                (
+                    phase1.continuityError()
+                  - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
+                )/rho1
+              + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh));
+        }
+    }
+    else
+    {
+        pEqnComp1 = fvm::Su(-(fvOptions(alpha1, rho1)&rho1)/rho1, p_rgh);
+    }
 
-        if (phase2.compressible())
+    if (phase2.compressible())
+    {
+        if (pimple.transonic())
         {
             surfaceScalarField phid2
             (
@@ -279,23 +296,11 @@ while (pimple.correct())
                       + fvm::div(phid2, p_rgh) - fvm::Sp(fvc::div(phid2), p_rgh)
                     )
                 );
+
             deleteDemandDrivenData(pEqnComp2.ref().faceFluxCorrectionPtr());
             pEqnComp2.ref().relax();
         }
-    }
-    else
-    {
-        if (phase1.compressible())
-        {
-            pEqnComp1 =
-                (
-                    phase1.continuityError()
-                  - fvc::Sp(fvc::ddt(alpha1) + fvc::div(alphaPhi1), rho1)
-                )/rho1
-              + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh));
-        }
-
-        if (phase2.compressible())
+        else
         {
             pEqnComp2 =
                 (
@@ -304,6 +309,10 @@ while (pimple.correct())
                 )/rho2
               + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh));
         }
+    }
+    else
+    {
+        pEqnComp2 = fvm::Su(-(fvOptions(alpha2, rho2)&rho2)/rho2, p_rgh);
     }
 
     if (fluid.transfersMass())
@@ -390,11 +399,11 @@ while (pimple.correct())
             }
 
             // Set the phase dilatation rates
-            if (phase1.compressible())
+            if (pEqnComp1.valid())
             {
                 phase1.divU(-pEqnComp1 & p_rgh);
             }
-            if (phase2.compressible())
+            if (pEqnComp2.valid())
             {
                 phase2.divU(-pEqnComp2 & p_rgh);
             }
