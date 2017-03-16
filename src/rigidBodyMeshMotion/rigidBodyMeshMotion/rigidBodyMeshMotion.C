@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "pointConstraints.H"
 #include "uniformDimensionedFields.H"
 #include "forces.H"
+#include "OneConstant.H"
 #include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -115,11 +116,21 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
     test_(coeffDict().lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
     rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
+    ramp_(nullptr),
     curTimeIndex_(-1)
 {
     if (rhoName_ == "rhoInf")
     {
         rhoInf_ = readScalar(coeffDict().lookup("rhoInf"));
+    }
+
+    if (coeffDict().found("ramp"))
+    {
+        ramp_ = Function1<scalar>::New("ramp", coeffDict());
+    }
+    else
+    {
+        ramp_ = new Function1Types::OneConstant<scalar>("ramp");
     }
 
     const dictionary& bodiesDict = coeffDict().subDict("bodies");
@@ -232,10 +243,12 @@ void Foam::rigidBodyMeshMotion::solve()
         curTimeIndex_ = this->db().time().timeIndex();
     }
 
+    const scalar ramp = ramp_->value(t.value());
+
     if (db().foundObject<uniformDimensionedVectorField>("g"))
     {
         model_.g() =
-            db().lookupObject<uniformDimensionedVectorField>("g").value();
+            ramp*db().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -270,7 +283,7 @@ void Foam::rigidBodyMeshMotion::solve()
             functionObjects::forces f("forces", db(), forcesDict);
             f.calcForcesMoment();
 
-            fx[bodyID] = spatialVector(f.momentEff(), f.forceEff());
+            fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
         }
 
         model_.solve
