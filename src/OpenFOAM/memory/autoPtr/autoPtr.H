@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,6 +124,9 @@ public:
 
             //- Return const object pointer
             inline const T* operator->() const;
+
+            //- Take over the object pointer from parameter
+            inline void operator=(T*);
 
             //- Take over the object pointer from parameter
             inline void operator=(const autoPtr<T>&);
