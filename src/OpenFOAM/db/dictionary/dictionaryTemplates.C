@@ -29,6 +29,30 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
+T Foam::dictionary::lookupType
+(
+    const word& keyword,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr == nullptr)
+    {
+        FatalIOErrorInFunction
+        (
+            *this
+        )   << "keyword " << keyword << " is undefined in dictionary "
+            << name()
+            << exit(FatalIOError);
+    }
+
+    return pTraits<T>(entryPtr->stream());
+}
+
+
+template<class T>
 T Foam::dictionary::lookupOrDefault
 (
     const word& keyword,
