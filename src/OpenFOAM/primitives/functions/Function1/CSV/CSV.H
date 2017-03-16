@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,11 @@ Class
     Foam::Function1Types::CSV
 
 Description
-    Templated CSV container data entry.  Reference column is always a scalar,
-    e.g. time
+    Templated CSV function.
 
+    Reference column is always a scalar, e.g. time.
+
+    Usage:
     \verbatim
         <entryName> csvFile;
         <entryName>Coeffs
@@ -75,9 +77,6 @@ class CSV
 {
     // Private data
 
-        //- Coefficients dictionary (for convenience on reading)
-        dictionary coeffs_;
-
         //- Number header lines
         label nHeaderLine_;
 
@@ -121,8 +120,7 @@ public:
         CSV
         (
             const word& entryName,
-            const dictionary& dict,
-            const word& ext = "Coeffs"
+            const dictionary& dict
         );
 
         //- Copy constructor

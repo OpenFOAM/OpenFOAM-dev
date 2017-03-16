@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,12 @@ Class
     Foam::Function1Types::Table
 
 Description
-    Templated table container data entry. Items are stored in a list of
-    Tuple2's. First column is always stored as scalar entries. Data is read
-    in Tuple2 form, e.g. for an entry \<entryName\> that is (scalar, vector):
+    Templated table container function.
 
+    Items are stored in a list of Tuple2's. First column is always stored as
+    scalar entries. Data is read in Tuple2 form.
+
+    Usage:
     \verbatim
         <entryName>   table
         (

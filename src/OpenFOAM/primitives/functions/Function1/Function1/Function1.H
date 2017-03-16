@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,6 +193,14 @@ public:
                                                                                \
     Function1<Type>::adddictionaryConstructorToTable<Function1Types::SS<Type>> \
         add##SS##Type##ConstructorToTable_;
+
+
+#define makeScalarFunction1(SS)                                                \
+                                                                               \
+    defineTypeNameAndDebug(SS, 0);                                             \
+                                                                               \
+    Function1<scalar>::adddictionaryConstructorToTable<SS>                     \
+        add##SS##ConstructorToTable_;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

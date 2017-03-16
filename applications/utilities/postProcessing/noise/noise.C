@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
     #include "createFields.H"
 
     Info<< "Reading data file" << endl;
-    Function1Types::CSV<scalar> pData("pressure", dict, "Data");
+    Function1Types::CSV<scalar> pData("pressure", dict.subDict("pressureData"));
 
     // time history data
     const scalarField t(pData.x());

@@ -34,11 +34,10 @@ Foam::Function1Types::TableFile<Type>::TableFile
     const dictionary& dict
 )
 :
-    TableBase<Type>(entryName, dict.subDict(entryName + "Coeffs")),
+    TableBase<Type>(entryName, dict),
     fName_("none")
 {
-    const dictionary coeffs(dict.subDict(entryName + "Coeffs"));
-    coeffs.lookup("file") >> fName_;
+    dict.lookup("file") >> fName_;
 
     fileName expandedFile(fName_);
     IFstream is(expandedFile.expand());
