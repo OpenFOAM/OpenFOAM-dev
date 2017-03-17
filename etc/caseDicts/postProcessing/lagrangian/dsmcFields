@@ -1,0 +1,27 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculate intensive fields:
+    - UMean
+    - translationalT
+    - internalT
+    - overallT
+    from averaged extensive fields from a DSMC calculation.
+
+\*---------------------------------------------------------------------------*/
+
+type            dsmcFields;
+libs            ("liblagrangianFunctionObjects.so");
+
+fields          (rhoNMean rhoMMean momentumMean linearKEMean internalEMean
+                 iDofMean fDMean);
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

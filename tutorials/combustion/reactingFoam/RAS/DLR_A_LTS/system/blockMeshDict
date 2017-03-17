@@ -1,0 +1,209 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.001;
+
+R1X 3.99619288633;
+R2X 4.49571699712;
+R3X 179.82867988473;
+R4X 189.81916210055;
+
+R1Y 0.17447754946;
+R2Y 0.19628724314;
+R3Y 7.85148972576;
+R4Y 8.28768359941;
+
+R1Ym -0.17447754946;
+R2Ym -0.19628724314;
+R3Ym -7.85148972576;
+R4Ym -8.28768359941;
+
+L  1000;
+Lm -20;
+
+vertices
+(
+    (0       0        0)    // 0
+    ($R1X    $R1Y     0)    // 1
+    ($R1X    $R1Y     $L)   // 2
+
+    (0       0        $L)   // 3
+    ($R1X    $R1Ym    0)    // 4
+    ($R1X    $R1Ym    $L)   // 5
+
+    (0       0        $Lm)  // 6
+    ($R1X    $R1Y     $Lm)  // 7
+    ($R1X    $R1Ym    $Lm)  // 8
+
+    ($R2X    $R2Y     0)    // 9
+    ($R2X    $R2Ym    0)    // 10
+    ($R2X    $R2Y     $L)   // 11
+    ($R2X    $R2Ym    $L)   // 12
+
+    ($R3X    $R3Y     0)    // 13
+    ($R3X    $R3Ym    0)    // 14
+    ($R3X    $R3Y     $L)   // 15
+    ($R3X    $R3Ym    $L)   // 16
+
+    ($R2X    $R2Y     $Lm)  // 17
+    ($R3X    $R3Y     $Lm)  // 18
+    ($R3X    $R3Ym    $Lm)  // 19
+    ($R2X    $R2Ym    $Lm)  // 20
+
+    ($R4X    $R4Y     0)    // 21
+    ($R4X    $R4Ym    0)    // 22
+    ($R4X    $R4Y     $L)   // 23
+    ($R4X    $R4Ym    $L)   // 24
+);
+
+nFuel          4;
+nBurner        1;
+nCoflow        30;
+nExternal      2;
+nLength        90;
+nLengthReverse 4;
+
+gradingFuel          1;
+gradingCoflow        6;
+gradingLength        12.;
+gradingLengthInverse 0.5;
+
+blocks
+(
+    // Fuel
+    hex (6 8 7 6 0 4 1 0) ($nFuel 1 $nLengthReverse)
+    simpleGrading ($gradingFuel  1 $gradingLengthInverse )
+
+    hex (0 4 1 0 3 5 2 3) ($nFuel  1 $nLength)
+    simpleGrading ($gradingFuel 1 $gradingLength)
+
+    // Wall
+    hex (4 10 9 1 5 12 11 2) ($nBurner 1 $nLength)
+    simpleGrading (1 1 $gradingLength)
+
+    // Coflow
+    hex (20 19 18 17 10 14 13 9) ($nCoflow 1 $nLengthReverse)
+    simpleGrading ($gradingCoflow  1 $gradingLengthInverse)
+    hex (10 14 13 9 12 16 15 11) ($nCoflow 1 $nLength)
+    simpleGrading ($gradingCoflow  1 $gradingLength)
+
+    // External wall
+    hex (14 22 21 13 16 24 23 15) ($nExternal 1 $nLength)
+    simpleGrading (1  1 $gradingLength)
+);
+
+boundary
+(
+    inletfuel
+    {
+        type patch;
+        faces
+        (
+            (6 8 7 6)
+        );
+    }
+
+    inletair
+    {
+        type patch;
+        faces
+        (
+            (19 20 17 18)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (5 3 3 2)
+            (12 11 2 5)
+            (16 15 11 12)
+            (15 16 24 23)
+        );
+    }
+
+    axis
+    {
+        type empty;
+        faces
+        (
+            (3 0 0 3)
+            (0 6 6 0)
+        );
+    }
+
+    leftside
+    {
+        type wall;
+        faces
+        (
+            (14 13 21 22)
+            (19 18 13 14)
+            (23 24 22 21)
+        );
+    }
+
+    burnerwall
+    {
+        type wall;
+        faces
+        (
+            (8 7 1 4)
+            (10 9 17 20)
+        );
+    }
+
+    burnertip
+    {
+        type wall;
+        faces
+        (
+            (4 1 9 10)
+        );
+    }
+
+    front
+    {
+        type wedge;
+        faces
+        (
+            (1 0 3 2)
+            (7 6 0 1)
+            (9 1 2 11)
+            (13 9 11 15)
+            (18 17 9 13)
+            (15 23 21 13)
+        );
+    }
+
+    back
+    {
+        type wedge;
+        faces
+        (
+            (5 3 0 4)
+            (4 0 6 8)
+            (12 5 4 10)
+            (16 12 10 14)
+            (19 14 10 20)
+            (16 14 22 24)
+        );
+    }
+);
+
+// ************************************************************************* //

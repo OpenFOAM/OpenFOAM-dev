@@ -283,6 +283,8 @@ public:
             void setTabulationResultsGrow(const label celli);
 
             void setTabulationResultsRetrieve(const label celli);
+
+            inline void resetTabulationResults();
 };
 
 

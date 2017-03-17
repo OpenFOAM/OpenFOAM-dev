@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,9 @@ Class
     Foam::Function1Types::TableFile
 
 Description
-    Templated table container data entry where data is read from file.
+    Templated table container function where data is read from file.
 
+    Usage:
     \verbatim
         <entryName> tableFile;
         <entryName>Coeffs
@@ -37,7 +38,7 @@ Description
         }
     \endverbatim
 
-    Items are stored in a list of Tuple2's. First column is always stored as
+    Data is stored as a list of Tuple2's. First column is always stored as
     scalar entries.  Data is read in the form, e.g. for an entry \<entryName\>
     that is (scalar, vector):
     \verbatim
@@ -46,7 +47,6 @@ Description
             (1.0 (4 5 6))
         );
     \endverbatim
-
 
 SourceFiles
     TableFile.C

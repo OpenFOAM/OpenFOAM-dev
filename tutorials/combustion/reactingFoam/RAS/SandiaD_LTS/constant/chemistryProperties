@@ -1,0 +1,90 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    location        "constant";
+    object          chemistryProperties;
+}
+
+chemistryType
+{
+    chemistrySolver ode;
+    chemistryThermo psi;
+    TDAC            on;
+}
+
+chemistry       on;
+
+importantSpecies
+{
+    CO2             ;
+    H2O             ;
+    CH4             ;
+    O2              ;
+}
+
+initialChemicalTimeStep 1e-07;
+
+odeCoeffs
+{
+    solver          seulex;
+    absTol          1e-12;
+    relTol          1e-07;
+}
+
+reduction
+{
+    active          on;
+    log             on;
+    tolerance       0.0001;
+    method          DAC;
+    initialSet
+    {
+        CO              ;
+        CH4             ;
+        HO2             ;
+    }
+    automaticSIS    off;
+    fuelSpecies
+    {
+        CH4             1;
+    }
+}
+
+tabulation
+{
+    active          on;
+    log             on;
+    printProportion off;
+    printNumRetrieve off;
+    tolerance       0.003;
+    method          ISAT;
+    scaleFactor
+    {
+        otherSpecies    1;
+        Temperature     10000;
+        Pressure        1e+15;
+        deltaT          1;
+    }
+    maxNLeafs       5000;
+    chPMaxLifeTime  1000;
+    maxGrowth       100;
+    checkEntireTreeInterval 500;
+    maxDepthFactor  2;
+    minBalanceThreshold 30;
+    MRURetrieve     false;
+    maxMRUSize      0;
+    growPoints      true;
+    maxNumNewDim    10;
+}
+
+
+// ************************************************************************* //

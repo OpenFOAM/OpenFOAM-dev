@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,13 +43,12 @@ template<class Type>
 Foam::Function1Types::Sine<Type>::Sine
 (
     const word& entryName,
-    const dictionary& dict,
-    const word& ext
+    const dictionary& dict
 )
 :
     Function1<Type>(entryName)
 {
-    read(dict.subDict(entryName + ext));
+    read(dict);
 }
 
 

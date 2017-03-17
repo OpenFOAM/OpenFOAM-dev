@@ -76,8 +76,14 @@ primitives/quaternion/quaternion.C
 primitives/septernion/septernion.C
 primitives/triad/triad.C
 
-/* functions, data entries */
+/* Run-time selectable functions */
 primitives/functions/Function1/makeDataEntries.C
+primitives/functions/Function1/ramp/ramp.C
+primitives/functions/Function1/linear/linear.C
+primitives/functions/Function1/quadratic/quadratic.C
+primitives/functions/Function1/quarterSine/quarterSine.C
+primitives/functions/Function1/quarterCosine/quarterCosine.C
+primitives/functions/Function1/halfCosine/halfCosine.C
 primitives/functions/Polynomial/polynomialFunction.C
 
 primitives/subModelBase/subModelBase.C
