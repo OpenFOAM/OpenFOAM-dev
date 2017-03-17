@@ -131,6 +131,22 @@ void Foam::phaseSystem::generatePairsAndSubModels
                 )
             )
         );
+
+        if (!phasePairs_.found(key))
+        {
+            phasePairs_.insert
+            (
+                key,
+                autoPtr<phasePair>
+                (
+                    new phasePair
+                    (
+                        phaseModels_[key.first()],
+                        phaseModels_[key.second()]
+                    )
+                )
+            );
+        }
     }
 }
 
