@@ -1,0 +1,210 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      radiationProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Radiation model on/off
+radiation       on;
+
+// Radiation model
+radiationModel  P1;
+
+// Absorption coefficients model
+absorptionEmissionModel greyMeanAbsorptionEmission;
+
+// Number of flow iterations per radiation iteration
+solverFreq 1;
+
+//
+noRadiation
+{
+}
+
+// P1 Model
+P1Coeffs
+{
+
+}
+
+
+fvDOMCoeffs
+{
+    nPhi        2;          // azimuthal angles in PI/2 on X-Y.(from Y to X)
+    nTheta      2;          // polar angles in PI (from Z to X-Y plane)
+    convergence 1e-1;       // convergence criteria for radiation iteration
+    maxIter     1;          // maximum number of iterations
+    cacheDiv    true;       // cache the div of the RTE equation.
+
+//  NOTE: Caching div is "only" accurate if the upwind scheme is used in
+//  div(Ji,Ii_h)
+}
+
+constantAbsorptionEmissionCoeffs
+{
+    absorptivity    absorptivity    [ m^-1 ]       0.01;
+    emissivity      emissivity      [ m^-1 ]       0.01;
+    E               E               [ kg m^-1 s^-3 ]  0;
+}
+
+greyMeanAbsorptionEmissionCoeffs
+{
+    lookUpTableFileName      none;
+
+    EhrrCoeff                0.0;
+
+    CO2
+    {
+        Tcommon         200;   //Common Temp
+        invTemp         true;   //Is the polynomio using inverse temperature.
+        Tlow            200;   //Low Temp
+        Thigh           2500;  //High Temp
+
+        loTcoeffs       //coefss for T < Tcommon
+        (
+            0           //  a0            +
+            0           //  a1*T          +
+            0           //  a2*T^(+/-)2   +
+            0           //  a3*T^(+/-)3   +
+            0           //  a4*T^(+/-)4   +
+            0           //  a5*T^(+/-)5   +
+        );
+        hiTcoeffs        //coefss for T > Tcommon
+        (
+            18.741
+            -121.31e3
+            273.5e6
+            -194.05e9
+            56.31e12
+            -5.8169e15
+        );
+
+    }
+
+    H2O
+    {
+        Tcommon         200;
+        invTemp         true;
+        Tlow            200;
+        Thigh           2500;
+
+        loTcoeffs
+        (
+            0
+            0
+            0
+            0
+            0
+            0
+        );
+        hiTcoeffs
+        (
+            -0.23093
+            -1.12390e3
+             9.4153e6
+            -2.99885e9
+             0.51382e12
+            -1.868e10
+        );
+    }
+
+    CH4
+    {
+        Tcommon         200;
+        Tlow            200;
+        Thigh           2500;
+        invTemp         false;
+
+        loTcoeffs
+        (
+            0
+            0
+            0
+            0
+            0
+            0
+        );
+        hiTcoeffs
+        (
+            6.6334
+            -0.0035686
+            1.6682e-8
+            2.5611e-10
+            -2.6558e-14
+            0
+        );
+    }
+
+    O2
+    {
+        Tcommon         200;
+        invTemp         true;
+        Tlow            200;
+        Thigh           2500;
+
+        loTcoeffs
+        (
+            0
+            0
+            0
+            0
+            0
+            0
+        );
+        hiTcoeffs
+        (
+            0.1
+            0
+            0
+            0
+            0
+            0
+        );
+    }
+
+
+    N2
+    {
+        Tcommon         200;
+        invTemp         true;
+        Tlow            200;
+        Thigh           2500;
+
+        loTcoeffs
+        (
+            0
+            0
+            0
+            0
+            0
+            0
+        );
+        hiTcoeffs
+        (
+            0.1
+            0
+            0
+            0
+            0
+            0
+        );
+    }
+}
+
+scatterModel    none;
+
+sootModel       none;
+
+
+// ************************************************************************* //

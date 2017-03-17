@@ -616,6 +616,8 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
     scalar solveChemistryCpuTime_ = 0;
     scalar searchISATCpuTime_ = 0;
 
+    this->resetTabulationResults();
+
     // Average number of active species
     scalar nActiveSpecies = 0;
     scalar nAvg = 0;
