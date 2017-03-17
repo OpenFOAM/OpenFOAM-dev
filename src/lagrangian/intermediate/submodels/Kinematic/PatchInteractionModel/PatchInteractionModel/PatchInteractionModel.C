@@ -51,6 +51,11 @@ Foam::word Foam::PatchInteractionModel<CloudType>::interactionTypeToWord
 
     switch (itEnum)
     {
+        case itNone:
+        {
+            it = "none";
+            break;
+        }
         case itRebound:
         {
             it = "rebound";
@@ -82,6 +87,10 @@ Foam::PatchInteractionModel<CloudType>::wordToInteractionType
     const word& itWord
 )
 {
+    if (itWord == "none")
+    {
+        return itNone;
+    }
     if (itWord == "rebound")
     {
         return itRebound;

@@ -191,6 +191,10 @@ bool Foam::LocalInteraction<CloudType>::correct
 
         switch (it)
         {
+            case PatchInteractionModel<CloudType>::itNone:
+            {
+                return false;
+            }
             case PatchInteractionModel<CloudType>::itEscape:
             {
                 scalar dm = p.mass()*p.nParticle();

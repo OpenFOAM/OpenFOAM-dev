@@ -74,7 +74,6 @@ Foam::patchInteractionDataList::patchInteractionDataList
         (
             !pp.coupled()
          && !isA<emptyPolyPatch>(pp)
-         && !isA<cyclicAMIPolyPatch>(pp)
          && applyToPatch(pp.index()) < 0
         )
         {

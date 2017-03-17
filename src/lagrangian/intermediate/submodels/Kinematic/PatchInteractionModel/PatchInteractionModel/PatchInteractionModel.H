@@ -65,6 +65,7 @@ public:
         // Interaction types
         enum interactionType
         {
+            itNone,
             itRebound,
             itStick,
             itEscape,

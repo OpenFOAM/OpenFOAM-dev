@@ -410,6 +410,11 @@ bool Foam::KinematicParcel<ParcelType>::hitPatch
         // All interactions done
         return true;
     }
+    else if (pp.coupled())
+    {
+        // Don't apply the patchInteraction models to coupled boundaries
+        return false;
+    }
     else
     {
         // Invoke patch interaction model
