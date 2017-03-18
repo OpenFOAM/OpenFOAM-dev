@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "quarterSine.H"
+#include "quarterSineRamp.H"
 #include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,14 +32,14 @@ namespace Foam
 {
 namespace Function1Types
 {
-    makeScalarFunction1(quarterSine);
+    makeScalarFunction1(quarterSineRamp);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quarterSine::quarterSine
+Foam::Function1Types::quarterSineRamp::quarterSineRamp
 (
     const word& entryName,
     const dictionary& dict
@@ -51,13 +51,13 @@ Foam::Function1Types::quarterSine::quarterSine
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quarterSine::~quarterSine()
+Foam::Function1Types::quarterSineRamp::~quarterSineRamp()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1Types::quarterSine::value(const scalar t) const
+Foam::scalar Foam::Function1Types::quarterSineRamp::value(const scalar t) const
 {
     return sin(0.5*constant::mathematical::pi*linearRamp(t));
 }

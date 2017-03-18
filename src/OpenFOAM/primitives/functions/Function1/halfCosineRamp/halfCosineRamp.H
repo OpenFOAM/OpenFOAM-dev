@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::quadratic
+    Foam::Function1Types::halfCosineRamp
 
 Description
-    Quadratic ramp function starting from 0 and increasing quadratically to 1
-    from \c t_0 over the \c duration and remaining at 1 thereafter.
+    Half-cosine ramp function starting from 0 and increasing to 1 from \c start
+    over the \c duration and remaining at 1 thereafter.
 
 See also
     Foam::Function1Types::ramp
 
 SourceFiles
-    quadratic.C
+    halfCosineRamp.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef quadratic_H
-#define quadratic_H
+#ifndef halfCosineRamp_H
+#define halfCosineRamp_H
 
 #include "ramp.H"
 
@@ -49,29 +49,29 @@ namespace Function1Types
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class quadratic Declaration
+                           Class halfCosineRamp Declaration
 \*---------------------------------------------------------------------------*/
 
-class quadratic
+class halfCosineRamp
 :
     public ramp
 {
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const quadratic&);
+        void operator=(const halfCosineRamp&);
 
 
 public:
 
     // Runtime type information
-    TypeName("quadratic");
+    TypeName("halfCosineRamp");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        quadratic
+        halfCosineRamp
         (
             const word& entryName,
             const dictionary& dict
@@ -79,7 +79,7 @@ public:
 
 
     //- Destructor
-    virtual ~quadratic();
+    virtual ~halfCosineRamp();
 
 
     // Member Functions

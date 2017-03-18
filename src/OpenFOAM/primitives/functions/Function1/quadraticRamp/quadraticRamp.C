@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "quadratic.H"
+#include "quadraticRamp.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -31,14 +31,14 @@ namespace Foam
 {
 namespace Function1Types
 {
-    makeScalarFunction1(quadratic);
+    makeScalarFunction1(quadraticRamp);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quadratic::quadratic
+Foam::Function1Types::quadraticRamp::quadraticRamp
 (
     const word& entryName,
     const dictionary& dict
@@ -50,13 +50,13 @@ Foam::Function1Types::quadratic::quadratic
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quadratic::~quadratic()
+Foam::Function1Types::quadraticRamp::~quadraticRamp()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1Types::quadratic::value(const scalar t) const
+Foam::scalar Foam::Function1Types::quadraticRamp::value(const scalar t) const
 {
     return sqr(linearRamp(t));
 }

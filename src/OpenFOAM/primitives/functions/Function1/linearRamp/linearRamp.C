@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "quarterCosine.H"
-#include "mathematicalConstants.H"
+#include "linearRamp.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -32,14 +31,14 @@ namespace Foam
 {
 namespace Function1Types
 {
-    makeScalarFunction1(quarterCosine);
+    makeScalarFunction1(linearRamp);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quarterCosine::quarterCosine
+Foam::Function1Types::linearRamp::linearRamp
 (
     const word& entryName,
     const dictionary& dict
@@ -51,15 +50,15 @@ Foam::Function1Types::quarterCosine::quarterCosine
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quarterCosine::~quarterCosine()
+Foam::Function1Types::linearRamp::~linearRamp()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1Types::quarterCosine::value(const scalar t) const
+Foam::scalar Foam::Function1Types::linearRamp::value(const scalar t) const
 {
-    return 1 - cos(0.5*constant::mathematical::pi*linearRamp(t));
+    return ramp::linearRamp(t);
 }
 
 

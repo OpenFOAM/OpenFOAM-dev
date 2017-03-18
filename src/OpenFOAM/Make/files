@@ -79,11 +79,11 @@ primitives/triad/triad.C
 /* Run-time selectable functions */
 primitives/functions/Function1/makeDataEntries.C
 primitives/functions/Function1/ramp/ramp.C
-primitives/functions/Function1/linear/linear.C
-primitives/functions/Function1/quadratic/quadratic.C
-primitives/functions/Function1/quarterSine/quarterSine.C
-primitives/functions/Function1/quarterCosine/quarterCosine.C
-primitives/functions/Function1/halfCosine/halfCosine.C
+primitives/functions/Function1/linearRamp/linearRamp.C
+primitives/functions/Function1/quadraticRamp/quadraticRamp.C
+primitives/functions/Function1/quarterSineRamp/quarterSineRamp.C
+primitives/functions/Function1/quarterCosineRamp/quarterCosineRamp.C
+primitives/functions/Function1/halfCosineRamp/halfCosineRamp.C
 primitives/functions/Polynomial/polynomialFunction.C
 
 primitives/subModelBase/subModelBase.C

@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::linear
+    Foam::Function1Types::quarterSineRamp
 
 Description
-    Linear ramp function starting from 0 and increasing linearly to 1 from \c
-    start over the \c duration and remaining at 1 thereafter.
+    Quarter-sine ramp function starting from 0 and increasing to 1 from \c start
+    over the \c duration and remaining at 1 thereafter.
 
 See also
     Foam::Function1Types::ramp
 
 SourceFiles
-    linear.C
+    quarterSineRamp.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef linear_H
-#define linear_H
+#ifndef quarterSineRamp_H
+#define quarterSineRamp_H
 
 #include "ramp.H"
 
@@ -49,29 +49,29 @@ namespace Function1Types
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class linear Declaration
+                           Class quarterSineRamp Declaration
 \*---------------------------------------------------------------------------*/
 
-class linear
+class quarterSineRamp
 :
     public ramp
 {
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const linear&);
+        void operator=(const quarterSineRamp&);
 
 
 public:
 
     // Runtime type information
-    TypeName("linear");
+    TypeName("quarterSineRamp");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        linear
+        quarterSineRamp
         (
             const word& entryName,
             const dictionary& dict
@@ -79,7 +79,7 @@ public:
 
 
     //- Destructor
-    virtual ~linear();
+    virtual ~quarterSineRamp();
 
 
     // Member Functions

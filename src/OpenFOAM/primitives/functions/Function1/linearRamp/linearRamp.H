@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::halfCosine
+    Foam::Function1Types::linearRamp
 
 Description
-    Half-cosine ramp function starting from 0 and increasing to 1 from \c start
-    over the \c duration and remaining at 1 thereafter.
+    Linear ramp function starting from 0 and increasing linearRamply to 1 from
+    \c start over the \c duration and remaining at 1 thereafter.
 
 See also
     Foam::Function1Types::ramp
 
 SourceFiles
-    halfCosine.C
+    linearRamp.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef halfCosine_H
-#define halfCosine_H
+#ifndef linearRamp_H
+#define linearRamp_H
 
 #include "ramp.H"
 
@@ -49,29 +49,29 @@ namespace Function1Types
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class halfCosine Declaration
+                           Class linearRamp Declaration
 \*---------------------------------------------------------------------------*/
 
-class halfCosine
+class linearRamp
 :
     public ramp
 {
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const halfCosine&);
+        void operator=(const linearRamp&);
 
 
 public:
 
     // Runtime type information
-    TypeName("halfCosine");
+    TypeName("linearRamp");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        halfCosine
+        linearRamp
         (
             const word& entryName,
             const dictionary& dict
@@ -79,7 +79,7 @@ public:
 
 
     //- Destructor
-    virtual ~halfCosine();
+    virtual ~linearRamp();
 
 
     // Member Functions

@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::quarterCosine
+    Foam::Function1Types::quadraticRamp
 
 Description
-    Quarter-cosine ramp function starting from 0 and increasing to 1 from \c
-    start over the \c duration and remaining at 1 thereafter.
+    Quadratic ramp function starting from 0 and increasing quadraticRampally
+    to 1 from \c t_0 over the \c duration and remaining at 1 thereafter.
 
 See also
     Foam::Function1Types::ramp
 
 SourceFiles
-    quarterCosine.C
+    quadraticRamp.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef quarterCosine_H
-#define quarterCosine_H
+#ifndef quadraticRamp_H
+#define quadraticRamp_H
 
 #include "ramp.H"
 
@@ -49,29 +49,29 @@ namespace Function1Types
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class quarterCosine Declaration
+                           Class quadraticRamp Declaration
 \*---------------------------------------------------------------------------*/
 
-class quarterCosine
+class quadraticRamp
 :
     public ramp
 {
     // Private Member Functions
 
         //- Disallow default bitwise assignment
-        void operator=(const quarterCosine&);
+        void operator=(const quadraticRamp&);
 
 
 public:
 
     // Runtime type information
-    TypeName("quarterCosine");
+    TypeName("quadraticRamp");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        quarterCosine
+        quadraticRamp
         (
             const word& entryName,
             const dictionary& dict
@@ -79,7 +79,7 @@ public:
 
 
     //- Destructor
-    virtual ~quarterCosine();
+    virtual ~quadraticRamp();
 
 
     // Member Functions
