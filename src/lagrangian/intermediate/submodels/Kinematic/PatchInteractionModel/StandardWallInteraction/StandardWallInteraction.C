@@ -116,6 +116,10 @@ bool Foam::StandardWallInteraction<CloudType>::correct
     {
         switch (interactionType_)
         {
+            case PatchInteractionModel<CloudType>::itNone:
+            {
+                return false;
+            }
             case PatchInteractionModel<CloudType>::itEscape:
             {
                 keepParticle = false;
