@@ -32,6 +32,7 @@ License
 #include "CSV.H"
 #include "Table.H"
 #include "TableFile.H"
+#include "Scale.H"
 
 #include "fieldTypes.H"
 
@@ -47,7 +48,8 @@ License
     makeFunction1Type(Square, Type);                                           \
     makeFunction1Type(CSV, Type);                                              \
     makeFunction1Type(Table, Type);                                            \
-    makeFunction1Type(TableFile, Type);
+    makeFunction1Type(TableFile, Type);                                        \
+    makeFunction1Type(Scale, Type);
 
 namespace Foam
 {
