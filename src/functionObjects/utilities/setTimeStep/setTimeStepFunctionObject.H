@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     Overrides the timeStep. Can only be used with
     solvers with adjustTimeStep control (e.g. pimpleFoam). Makes no attempt
     to cooperate with other timeStep 'controllers' (maxCo, other
-    functionObjects). Supports 'enabled' flag but none of othe other ones
+    functionObjects). Supports 'enabled' flag but none of the other ones
     'timeStart', 'timeEnd', 'writeControl' etc.
 
 SourceFiles
