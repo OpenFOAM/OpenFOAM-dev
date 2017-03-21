@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
         // Calculate nut - reference nut is calculated by the turbulence model
         // on its construction
         tmp<volScalarField> tnut = turbulence->nut();
-        volScalarField& nut = tnut.ref();
+        volScalarField& nut = const_cast<volScalarField&>(tnut());
         volScalarField S(mag(dev(symm(fvc::grad(U)))));
         nut = (1 - mask)*nut + mask*sqr(kappa*min(y, ybl))*::sqrt(2)*S;
 
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
 
         // Turbulence k
         tmp<volScalarField> tk = turbulence->k();
-        volScalarField& k = tk.ref();
+        volScalarField& k = const_cast<volScalarField&>(tk());
         scalar ck0 = pow025(Cmu)*kappa;
         k = (1 - mask)*k + mask*sqr(nut/(ck0*min(y, ybl)));
 
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 
         // Turbulence epsilon
         tmp<volScalarField> tepsilon = turbulence->epsilon();
-        volScalarField& epsilon = tepsilon.ref();
+        volScalarField& epsilon = const_cast<volScalarField&>(tepsilon());
         scalar ce0 = ::pow(Cmu, 0.75)/kappa;
         epsilon = (1 - mask)*epsilon + mask*ce0*k*sqrt(k)/min(y, ybl);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,13 +101,6 @@ public:
 
         //- Re-read model coefficients if they have changed
         virtual bool read() = 0;
-
-        //- Return non-const access to the turbulence viscosity
-        //  to allow modification by means other than derivation
-        volScalarField& evNut()
-        {
-            return nut_;
-        }
 
         //- Return the turbulence viscosity
         virtual tmp<volScalarField> nut() const
