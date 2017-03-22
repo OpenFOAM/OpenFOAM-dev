@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,46 +21,83 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::tensor2D
+Class
+    Foam::cubicEqn
 
 Description
-    Tensor2D or scalars.
+    Cubic equation of the form a*x^3 + b*x^2 + c*x + d = 0
 
 SourceFiles
-    tensor2D.C
+    cubicEqnI.H
+    cubicEqn.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tensor2D_H
-#define tensor2D_H
+#ifndef cubicEqn_H
+#define cubicEqn_H
 
-#include "Tensor2D.H"
-#include "vector2D.H"
-#include "contiguous.H"
+#include "Roots.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                         Class cubicEqn Declaration
+\*---------------------------------------------------------------------------*/
 
-typedef Tensor2D<scalar> tensor2D;
+class cubicEqn
+:
+    public VectorSpace<cubicEqn, scalar, 4>
+{
+public:
 
-vector2D eigenValues(const tensor2D& t);
-vector2D eigenVector
-(
-    const tensor2D& t,
-    const scalar lambda,
-    const vector2D& direction1
-);
-tensor2D eigenVectors(const tensor2D& t, const vector2D& lambdas);
-tensor2D eigenVectors(const tensor2D& t);
+    //- Component labeling enumeration
+    enum components { A, B, C, D };
 
-//- Data associated with tensor2D type are contiguous
-template<>
-inline bool contiguous<tensor2D>() {return true;}
+
+    // Constructors
+
+        //- Construct null
+        inline cubicEqn();
+
+        //- Construct initialized to zero
+        inline cubicEqn(const Foam::zero);
+
+        //- Construct from components
+        inline cubicEqn
+        (
+            const scalar a,
+            const scalar b,
+            const scalar c,
+            const scalar d
+        );
+
+
+    // Member Functions
+
+        // Access
+
+            inline scalar a() const;
+            inline scalar b() const;
+            inline scalar c() const;
+            inline scalar d() const;
+
+            inline scalar& a();
+            inline scalar& b();
+            inline scalar& c();
+            inline scalar& d();
+
+        //- Evaluate at x
+        inline scalar value(const scalar x) const;
+
+        //- Estimate the error of evaluation at x
+        inline scalar error(const scalar x) const;
+
+        //- Get the roots
+        Roots<3> roots() const;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -69,7 +106,7 @@ inline bool contiguous<tensor2D>() {return true;}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "sphericalTensor2D.H"
+#include "cubicEqnI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

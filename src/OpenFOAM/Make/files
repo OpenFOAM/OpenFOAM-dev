@@ -125,6 +125,9 @@ $(spatialVectorAlgebra)/SpatialVector/spatialVector/spatialVector.C
 $(spatialVectorAlgebra)/SpatialTensor/spatialTensor/spatialTensor.C
 $(spatialVectorAlgebra)/CompactSpatialTensor/compactSpatialTensor/compactSpatialTensor.C
 
+primitives/polynomialEqns/cubicEqn/cubicEqn.C
+primitives/polynomialEqns/quadraticEqn/quadraticEqn.C
+
 containers/HashTables/HashTable/HashTableCore.C
 containers/HashTables/StaticHashTable/StaticHashTableCore.C
 containers/Lists/SortableList/ParSortableListName.C

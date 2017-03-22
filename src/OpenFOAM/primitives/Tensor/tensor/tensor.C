@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tensor.H"
+#include "cubicEqn.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam::constant::mathematical;
@@ -72,137 +73,76 @@ const Foam::tensor Foam::tensor::I
 
 Foam::vector Foam::eigenValues(const tensor& t)
 {
-    // The eigenvalues
-    scalar i, ii, iii;
+    // Coefficients of the characteristic cubic polynomial (a = 1)
+    const scalar b =
+      - t.xx() - t.yy() - t.zz();
+    const scalar c =
+        t.xx()*t.yy() + t.xx()*t.zz() + t.yy()*t.zz()
+      - t.xy()*t.yx() - t.yz()*t.zy() - t.zx()*t.xz();
+    const scalar d =
+      - t.xx()*t.yy()*t.zz()
+      - t.xy()*t.yz()*t.zx() - t.xz()*t.zy()*t.yx()
+      + t.xx()*t.yz()*t.zy() + t.yy()*t.zx()*t.xz() + t.zz()*t.xy()*t.yx();
 
-    // diagonal matrix
-    if
-    (
-        (
-            mag(t.xy()) + mag(t.xz()) + mag(t.yx())
-            + mag(t.yz()) + mag(t.zx()) + mag(t.zy())
-        )
-        < SMALL
-    )
+    // Solve
+    Roots<3> roots = cubicEqn(1, b, c, d).roots();
+
+    // Check the root types
+    vector lambda = vector::zero;
+    forAll(roots, i)
     {
-        i = t.xx();
-        ii = t.yy();
-        iii = t.zz();
-    }
-
-    // non-diagonal matrix
-    else
-    {
-        // Coefficients of the characteristic polynmial
-        // x^3 + a*x^2 + b*x + c = 0
-        scalar a =
-           - t.xx() - t.yy() - t.zz();
-
-        scalar b =
-            t.xx()*t.yy() + t.xx()*t.zz() + t.yy()*t.zz()
-          - t.xy()*t.yx() - t.yz()*t.zy() - t.zx()*t.xz();
-
-        scalar c =
-          - t.xx()*t.yy()*t.zz()
-          - t.xy()*t.yz()*t.zx() - t.xz()*t.zy()*t.yx()
-          + t.xx()*t.yz()*t.zy() + t.yy()*t.zx()*t.xz() + t.zz()*t.xy()*t.yx();
-
-        // Auxillary variables
-        scalar aBy3 = a/3;
-
-        scalar P = (a*a - 3*b)/9; // == -p_wikipedia/3
-        scalar PPP = P*P*P;
-
-        scalar Q = (2*a*a*a - 9*a*b + 27*c)/54; // == q_wikipedia/2
-        scalar QQ = Q*Q;
-
-        // Three identical roots
-        if (mag(P) < SMALL && mag(Q) < SMALL)
+        switch (roots.type(i))
         {
-            return vector(- aBy3, - aBy3, - aBy3);
-        }
-
-        // Two identical roots and one distinct root
-        else if (mag(QQ) > SMALL && mag(PPP/QQ - 1) < SMALL)
-        {
-            scalar sqrtP = sqrt(P);
-            scalar signQ = sign(Q);
-
-            i = ii = signQ*sqrtP - aBy3;
-            iii = - 2*signQ*sqrtP - aBy3;
-        }
-
-        // Three distinct roots
-        else if (PPP > QQ)
-        {
-            scalar sqrtP = sqrt(P);
-            scalar value = cos(acos(Q/sqrt(PPP))/3);
-            scalar delta = sqrt(3 - 3*value*value);
-
-            i = - 2*sqrtP*value - aBy3;
-            ii = sqrtP*(value + delta) - aBy3;
-            iii = sqrtP*(value - delta) - aBy3;
-        }
-
-        // One real root, two imaginary roots
-        // based on the above logic, PPP must be less than QQ
-        else
-        {
-            WarningInFunction
-                << "complex eigenvalues detected for tensor: " << t
-                << endl;
-
-            if (mag(P) < SMALL)
-            {
-                i = cbrt(QQ/2);
-            }
-            else
-            {
-                scalar w = cbrt(- Q - sqrt(QQ - PPP));
-                i = w + P/w - aBy3;
-            }
-
-            return vector(-VGREAT, i, VGREAT);
+            case roots::real:
+                lambda[i] = roots[i];
+                break;
+            case roots::complex:
+                WarningInFunction
+                    << "Complex eigenvalues detected for tensor: " << t
+                    << endl;
+                lambda[i] = 0;
+                break;
+            case roots::posInf:
+                lambda[i] = VGREAT;
+                break;
+            case roots::negInf:
+                lambda[i] = - VGREAT;
+                break;
+            case roots::nan:
+                FatalErrorInFunction
+                    << "Eigenvalue calculation failed for tensor: " << t
+                    << exit(FatalError);
         }
     }
 
     // Sort the eigenvalues into ascending order
-    if (i > ii)
+    if (lambda.x() > lambda.y())
     {
-        Swap(i, ii);
+        Swap(lambda.x(), lambda.y());
+    }
+    if (lambda.y() > lambda.z())
+    {
+        Swap(lambda.y(), lambda.z());
+    }
+    if (lambda.x() > lambda.y())
+    {
+        Swap(lambda.x(), lambda.y());
     }
 
-    if (ii > iii)
-    {
-        Swap(ii, iii);
-    }
-
-    if (i > ii)
-    {
-        Swap(i, ii);
-    }
-
-    return vector(i, ii, iii);
+    return lambda;
 }
 
 
 Foam::vector Foam::eigenVector
 (
-    const tensor& t,
-    const scalar lambda
+    const tensor& T,
+    const scalar lambda,
+    const vector& direction1,
+    const vector& direction2
 )
 {
-    // Constantly rotating direction ensures different eigenvectors are
-    // generated when called sequentially with a multiple eigenvalue
-    static vector direction(1,0,0);
-    vector oldDirection(direction);
-    scalar temp = direction[2];
-    direction[2] = direction[1];
-    direction[1] = direction[0];
-    direction[0] = temp;
-
     // Construct the linear system for this eigenvalue
-    tensor A(t - lambda*I);
+    tensor A(T - lambda*I);
 
     // Determinants of the 2x2 sub-matrices used to find the eigenvectors
     scalar sd0, sd1, sd2;
@@ -252,9 +192,9 @@ Foam::vector Foam::eigenVector
     }
 
     // Sub-determinants for a repeated eigenvalue
-    sd0 = A.yy()*direction.z() - A.yz()*direction.y();
-    sd1 = A.zz()*direction.x() - A.zx()*direction.z();
-    sd2 = A.xx()*direction.y() - A.xy()*direction.x();
+    sd0 = A.yy()*direction1.z() - A.yz()*direction1.y();
+    sd1 = A.zz()*direction1.x() - A.zx()*direction1.z();
+    sd2 = A.xx()*direction1.y() - A.xy()*direction1.x();
     magSd0 = mag(sd0);
     magSd1 = mag(sd1);
     magSd2 = mag(sd2);
@@ -265,8 +205,8 @@ Foam::vector Foam::eigenVector
         vector ev
         (
             1,
-            (A.yz()*direction.x() - direction.z()*A.yx())/sd0,
-            (direction.y()*A.yx() - A.yy()*direction.x())/sd0
+            (A.yz()*direction1.x() - direction1.z()*A.yx())/sd0,
+            (direction1.y()*A.yx() - A.yy()*direction1.x())/sd0
         );
 
         return ev/mag(ev);
@@ -275,9 +215,9 @@ Foam::vector Foam::eigenVector
     {
         vector ev
         (
-            (direction.z()*A.zy() - A.zz()*direction.y())/sd1,
+            (direction1.z()*A.zy() - A.zz()*direction1.y())/sd1,
             1,
-            (A.zx()*direction.y() - direction.x()*A.zy())/sd1
+            (A.zx()*direction1.y() - direction1.x()*A.zy())/sd1
         );
 
         return ev/mag(ev);
@@ -286,8 +226,8 @@ Foam::vector Foam::eigenVector
     {
         vector ev
         (
-            (A.xy()*direction.z() - direction.y()*A.xz())/sd2,
-            (direction.x()*A.xz() - A.xx()*direction.z())/sd2,
+            (A.xy()*direction1.z() - direction1.y()*A.xz())/sd2,
+            (direction1.x()*A.xz() - A.xx()*direction1.z())/sd2,
             1
         );
 
@@ -295,40 +235,57 @@ Foam::vector Foam::eigenVector
     }
 
     // Triple eigenvalue
-    return oldDirection;
+    return direction1^direction2;
 }
 
 
-Foam::tensor Foam::eigenVectors(const tensor& t)
+Foam::tensor Foam::eigenVectors(const tensor& T, const vector& lambdas)
 {
-    vector evals(eigenValues(t));
+    vector Ux(1, 0, 0), Uy(0, 1, 0), Uz(0, 0, 1);
 
-    tensor evs
-    (
-        eigenVector(t, evals.x()),
-        eigenVector(t, evals.y()),
-        eigenVector(t, evals.z())
-    );
+    Ux = eigenVector(T, lambdas.x(), Uy, Uz);
+    Uy = eigenVector(T, lambdas.y(), Uz, Ux);
+    Uz = eigenVector(T, lambdas.z(), Ux, Uy);
 
-    return evs;
+    return tensor(Ux, Uy, Uz);
 }
 
 
-Foam::vector Foam::eigenValues(const symmTensor& t)
+Foam::tensor Foam::eigenVectors(const tensor& T)
 {
-    return eigenValues(tensor(t));
+    const vector lambdas(eigenValues(T));
+
+    return eigenVectors(T, lambdas);
 }
 
 
-Foam::vector Foam::eigenVector(const symmTensor& t, const scalar lambda)
+Foam::vector Foam::eigenValues(const symmTensor& T)
 {
-    return eigenVector(tensor(t), lambda);
+    return eigenValues(tensor(T));
 }
 
 
-Foam::tensor Foam::eigenVectors(const symmTensor& t)
+Foam::vector Foam::eigenVector
+(
+    const symmTensor& T,
+    const scalar lambda,
+    const vector& direction1,
+    const vector& direction2
+)
 {
-    return eigenVectors(tensor(t));
+    return eigenVector(tensor(T), lambda, direction1, direction2);
+}
+
+
+Foam::tensor Foam::eigenVectors(const symmTensor& T, const vector& lambdas)
+{
+    return eigenVectors(tensor(T), lambdas);
+}
+
+
+Foam::tensor Foam::eigenVectors(const symmTensor& T)
+{
+    return eigenVectors(tensor(T));
 }
 
 

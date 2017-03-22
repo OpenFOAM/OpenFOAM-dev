@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,65 +21,81 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::tensor
+Class
+    Foam::linearEqn
 
 Description
-    Tensor of scalars.
+    Linear equation of the form a*x + b = 0
 
 SourceFiles
-    tensor.C
+    linearEqnI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tensor_H
-#define tensor_H
+#ifndef linearEqn_H
+#define linearEqn_H
 
-#include "Tensor.H"
-#include "vector.H"
-#include "sphericalTensor.H"
-#include "symmTensor.H"
-#include "contiguous.H"
+#include "Roots.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+/*---------------------------------------------------------------------------*\
+                         Class linearEqn Declaration
+\*---------------------------------------------------------------------------*/
 
-typedef Tensor<scalar> tensor;
+class linearEqn
+:
+    public VectorSpace<linearEqn, scalar, 2>
+{
+public:
 
-vector eigenValues(const tensor& T);
-vector eigenVector
-(
-    const tensor& T,
-    const scalar lambda,
-    const vector& direction1,
-    const vector& direction2
-);
-tensor eigenVectors(const tensor& T, const vector& lambdas);
-tensor eigenVectors(const tensor& T);
+    //- Component labeling enumeration
+    enum components { A, B };
 
-vector eigenValues(const symmTensor& T);
-vector eigenVector
-(
-    const symmTensor& T,
-    const scalar lambda,
-    const vector& direction1,
-    const vector& direction2
-);
-tensor eigenVectors(const symmTensor& T, const vector& lambdas);
-tensor eigenVectors(const symmTensor& T);
 
-//- Data associated with tensor type are contiguous
-template<>
-inline bool contiguous<tensor>() {return true;}
+    // Constructors
+
+        //- Construct null
+        inline linearEqn();
+
+        //- Construct initialized to zero
+        inline linearEqn(const Foam::zero);
+
+        //- Construct from components
+        inline linearEqn(const scalar a, const scalar b);
+
+
+    // Member Functions
+
+        // Access
+
+            inline scalar a() const;
+            inline scalar b() const;
+
+            inline scalar& a();
+            inline scalar& b();
+
+        //- Evaluate at x
+        inline scalar value(const scalar x) const;
+
+        //- Estimate the error of evaluation at x
+        inline scalar error(const scalar x) const;
+
+        //- Get the roots
+        inline Roots<1> roots() const;
+};
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "linearEqnI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

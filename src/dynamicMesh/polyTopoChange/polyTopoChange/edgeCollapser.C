@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -458,7 +458,7 @@ void Foam::edgeCollapser::faceCollapseAxisAndAspectRatio
             // normal, as it has the greatest value.  The minimum eigenvalue
             // is the dominant collapse axis for high aspect ratio faces.
 
-            collapseAxis = eigenVector(J, eVals.x());
+            collapseAxis = eigenVectors(J, eVals).x();
 
             // The inertia calculation describes the mass distribution as a
             // function of distance squared to the axis, so the square root of
