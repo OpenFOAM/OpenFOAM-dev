@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "solidRegionDiffNo.H"
-#include "fvc.H"
+#include "surfaceInterpolate.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 Foam::scalar Foam::solidRegionDiffNo
 (
@@ -34,21 +36,16 @@ Foam::scalar Foam::solidRegionDiffNo
     const volScalarField& kappa
 )
 {
-    scalar DiNum = 0.0;
-    scalar meanDiNum = 0.0;
-
-    //- Take care: can have fluid domains with 0 cells so do not test for
-    //  zero internal faces.
     surfaceScalarField kapparhoCpbyDelta
     (
-        mesh.surfaceInterpolation::deltaCoeffs()
-      * fvc::interpolate(kappa)
-      / fvc::interpolate(Cprho)
+        sqr(mesh.surfaceInterpolation::deltaCoeffs())
+       *fvc::interpolate(kappa)
+       /fvc::interpolate(Cprho)
     );
 
-    DiNum = max(kapparhoCpbyDelta).value()*runTime.deltaT().value();
-
-    meanDiNum = (average(kapparhoCpbyDelta)).value()*runTime.deltaT().value();
+    const scalar DiNum = max(kapparhoCpbyDelta).value()*runTime.deltaTValue();
+    const scalar meanDiNum =
+        average(kapparhoCpbyDelta).value()*runTime.deltaTValue();
 
     Info<< "Region: " << mesh.name() << " Diffusion Number mean: " << meanDiNum
         << " max: " << DiNum << endl;

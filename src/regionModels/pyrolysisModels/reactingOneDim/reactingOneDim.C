@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,11 @@ License
 
 #include "reactingOneDim.H"
 #include "addToRunTimeSelectionTable.H"
-#include "surfaceInterpolate.H"
 #include "fvm.H"
 #include "fvcDiv.H"
 #include "fvcVolumeIntegrate.H"
-#include "fvMatrices.H"
-#include "absorptionEmissionModel.H"
 #include "fvcLaplacian.H"
+#include "absorptionEmissionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -63,7 +61,6 @@ void reactingOneDim::readReactingOneDimControls()
     coeffs().lookup("QrHSource") >> QrHSource_;
     useChemistrySolvers_ =
         coeffs().lookupOrDefault<bool>("useChemistrySolvers", true);
-
 }
 
 
@@ -251,9 +248,7 @@ void reactingOneDim::solveContinuity()
 
     fvScalarMatrix rhoEqn
     (
-        fvm::ddt(rho_)
-        ==
-      - solidChemistry_->RRg()
+        fvm::ddt(rho_) == -solidChemistry_->RRg()
     );
 
     if (regionMesh().moving())
@@ -287,9 +282,7 @@ void reactingOneDim::solveSpeciesMass()
 
         fvScalarMatrix YiEqn
         (
-            fvm::ddt(rho_, Yi)
-         ==
-            solidChemistry_->RRs(i)
+            fvm::ddt(rho_, Yi) == solidChemistry_->RRs(i)
         );
 
         if (regionMesh().moving())
@@ -624,9 +617,9 @@ scalar reactingOneDim::solidRegionDiffNo() const
     {
         surfaceScalarField KrhoCpbyDelta
         (
-            regionMesh().surfaceInterpolation::deltaCoeffs()
-          * fvc::interpolate(kappa())
-          / fvc::interpolate(Cp()*rho_)
+            sqr(regionMesh().surfaceInterpolation::deltaCoeffs())
+           *fvc::interpolate(kappa())
+           /fvc::interpolate(Cp()*rho_)
         );
 
         DiNum = max(KrhoCpbyDelta.primitiveField())*time().deltaTValue();
