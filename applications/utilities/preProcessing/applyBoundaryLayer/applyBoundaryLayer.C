@@ -42,7 +42,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// turbulence constants - file-scope
+// Turbulence constants - file-scope
 static const scalar Cmu(0.09);
 static const scalar kappa(0.41);
 
@@ -130,14 +130,14 @@ int main(int argc, char *argv[])
 
     if (isA<incompressible::RASModel>(turbulence()))
     {
-        // Calculate nut - reference nut is calculated by the turbulence model
-        // on its construction
+        // Calculate nut
+        turbulence->validate();
         tmp<volScalarField> tnut = turbulence->nut();
         volScalarField& nut = const_cast<volScalarField&>(tnut());
         volScalarField S(mag(dev(symm(fvc::grad(U)))));
         nut = (1 - mask)*nut + mask*sqr(kappa*min(y, ybl))*::sqrt(2)*S;
 
-        // do not correct BC - wall functions will 'undo' manipulation above
+        // Do not correct BC - wall functions will 'undo' manipulation above
         // by using nut from turbulence model
 
         if (args.optionFound("writenut"))
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
         scalar ck0 = pow025(Cmu)*kappa;
         k = (1 - mask)*k + mask*sqr(nut/(ck0*min(y, ybl)));
 
-        // do not correct BC - operation may use inconsistent fields wrt these
+        // Do not correct BC - operation may use inconsistent fields wrt these
         // local manipulations
         // k.correctBoundaryConditions();
 
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
         scalar ce0 = ::pow(Cmu, 0.75)/kappa;
         epsilon = (1 - mask)*epsilon + mask*ce0*k*sqrt(k)/min(y, ybl);
 
-        // do not correct BC - wall functions will use non-updated k from
+        // Do not correct BC - wall functions will use non-updated k from
         // turbulence model
         // epsilon.correctBoundaryConditions();
 
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
             dimensionedScalar k0("VSMALL", k.dimensions(), VSMALL);
             omega = (1 - mask)*omega + mask*epsilon/(Cmu*k + k0);
 
-            // do not correct BC - wall functions will use non-updated k from
+            // Do not correct BC - wall functions will use non-updated k from
             // turbulence model
             // omega.correctBoundaryConditions();
 
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             volScalarField nuTilda(nuTildaHeader, mesh);
             nuTilda = nut;
 
-            // do not correct BC
+            // Do not correct BC
             // nuTilda.correctBoundaryConditions();
 
             Info<< "Writing nuTilda\n" << endl;
