@@ -200,7 +200,7 @@ scalar CrankNicolsonDdtScheme<Type>::coef_
 {
     if (mesh().time().timeIndex() > ddt0.startTimeIndex())
     {
-        return 1 + ocCoeff_;
+        return 1 + ocCoeff();
     }
     else
     {
@@ -218,7 +218,7 @@ scalar CrankNicolsonDdtScheme<Type>::coef0_
 {
     if (mesh().time().timeIndex() > ddt0.startTimeIndex() + 1)
     {
-        return 1 + ocCoeff_;
+        return 1 + ocCoeff();
     }
     else
     {
@@ -256,9 +256,9 @@ tmp<GeoField> CrankNicolsonDdtScheme<Type>::offCentre_
     const GeoField& ddt0
 ) const
 {
-    if (ocCoeff_ < 1)
+    if (ocCoeff() < 1)
     {
-        return ocCoeff_*ddt0;
+        return ocCoeff()*ddt0;
     }
     else
     {
