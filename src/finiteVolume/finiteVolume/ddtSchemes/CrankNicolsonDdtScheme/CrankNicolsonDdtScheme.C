@@ -27,6 +27,7 @@ License
 #include "surfaceInterpolate.H"
 #include "fvcDiv.H"
 #include "fvMatrices.H"
+#include "Constant.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -277,7 +278,70 @@ const FieldField<fvPatchField, Type>& ff
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Type>
+CrankNicolsonDdtScheme<Type>::CrankNicolsonDdtScheme(const fvMesh& mesh)
+:
+    ddtScheme<Type>(mesh),
+    ocCoeff_(new Function1Types::Constant<scalar>("ocCoeff", 1))
+{
+    // Ensure the old-old-time cell volumes are available
+    // for moving meshes
+    if (mesh.moving())
+    {
+        mesh.V00();
+    }
+}
+
+
+template<class Type>
+CrankNicolsonDdtScheme<Type>::CrankNicolsonDdtScheme
+(
+    const fvMesh& mesh,
+    Istream& is
+)
+:
+    ddtScheme<Type>(mesh, is)
+{
+    token firstToken(is);
+
+    if (firstToken.isNumber())
+    {
+        const scalar ocCoeff = firstToken.scalarToken();
+        if (ocCoeff < 0 || ocCoeff > 1)
+        {
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "Off-centreing coefficient = " << ocCoeff
+                << " should be >= 0 and <= 1"
+                << exit(FatalIOError);
+        }
+
+        ocCoeff_ = new Function1Types::Constant<scalar>
+        (
+            "ocCoeff",
+            ocCoeff
+        );
+    }
+    else
+    {
+        is.putBack(firstToken);
+        dictionary dict(is);
+        ocCoeff_ = Function1<scalar>::New("ocCoeff", dict);
+    }
+
+    // Ensure the old-old-time cell volumes are available
+    // for moving meshes
+    if (mesh.moving())
+    {
+        mesh.V00();
+    }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
 tmp<GeometricField<Type, fvPatchField, volMesh>>

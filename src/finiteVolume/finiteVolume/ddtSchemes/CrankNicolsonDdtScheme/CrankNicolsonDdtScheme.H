@@ -91,7 +91,7 @@ SourceFiles
 #define CrankNicolsonDdtScheme_H
 
 #include "ddtScheme.H"
-#include "Constant.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -153,7 +153,8 @@ class CrankNicolsonDdtScheme
         };
 
 
-        //- Off-centering coefficient, 1 -> CN, less than one blends with EI
+        //- Off-centering coefficient function
+        //  1 -> CN, less than one blends with EI
         autoPtr<Function1<scalar>> ocCoeff_;
 
 
@@ -210,59 +211,10 @@ public:
     // Constructors
 
         //- Construct from mesh
-        CrankNicolsonDdtScheme(const fvMesh& mesh)
-        :
-            ddtScheme<Type>(mesh),
-            ocCoeff_(new Function1Types::Constant<scalar>("ocCoeff", 1))
-        {
-            // Ensure the old-old-time cell volumes are available
-            // for moving meshes
-            if (mesh.moving())
-            {
-                mesh.V00();
-            }
-        }
+        CrankNicolsonDdtScheme(const fvMesh& mesh);
 
         //- Construct from mesh and Istream
-        CrankNicolsonDdtScheme(const fvMesh& mesh, Istream& is)
-        :
-            ddtScheme<Type>(mesh, is)
-        {
-            token firstToken(is);
-
-            if (firstToken.isNumber())
-            {
-                const scalar ocCoeff = firstToken.scalarToken();
-                if (ocCoeff < 0 || ocCoeff > 1)
-                {
-                    FatalIOErrorInFunction
-                    (
-                        is
-                    )   << "Off-centreing coefficient = " << ocCoeff
-                        << " should be >= 0 and <= 1"
-                        << exit(FatalIOError);
-                }
-
-                ocCoeff_ = new Function1Types::Constant<scalar>
-                (
-                    "ocCoeff",
-                    ocCoeff
-                );
-            }
-            else
-            {
-                is.putBack(firstToken);
-                dictionary dict(is);
-                ocCoeff_ = Function1<scalar>::New("ocCoeff", dict);
-            }
-
-            // Ensure the old-old-time cell volumes are available
-            // for moving meshes
-            if (mesh.moving())
-            {
-                mesh.V00();
-            }
-        }
+        CrankNicolsonDdtScheme(const fvMesh& mesh, Istream& is);
 
 
     // Member Functions
@@ -273,7 +225,7 @@ public:
             return fv::ddtScheme<Type>::mesh();
         }
 
-        //- Return the off-centreing coefficient
+        //- Return the current off-centreing coefficient
         scalar ocCoeff() const
         {
             return ocCoeff_->value(mesh().time().value());
