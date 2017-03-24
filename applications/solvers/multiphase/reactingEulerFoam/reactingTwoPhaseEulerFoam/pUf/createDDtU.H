@@ -3,5 +3,5 @@ tmp<surfaceScalarField> tddtPhi2;
 
 if (faceMomentum)
 {
-    #include "DDtU.H"
+    #include "pUf/DDtU.H"
 }
