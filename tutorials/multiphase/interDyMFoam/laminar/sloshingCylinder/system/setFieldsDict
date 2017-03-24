@@ -5,42 +5,32 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
-type            surfaces;
-libs            ("libsampling.so");
-
-writeControl    writeTime;
-
-surfaceFormat   vtk;
-interpolationScheme cellPoint;
-
-x (1 0 0);
-y (0 1 0);
-z (0 0 1);
-origin (0 0 0);
-
-cuttingPlane
+FoamFile
 {
-    type         cuttingPlane;
-    planeType    pointAndNormal;
-    pointAndNormalDict
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      setFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+defaultFieldValues
+(
+    volScalarFieldValue alpha.water 0
+);
+
+regions
+(
+    boxToCell
     {
-        basePoint    $origin;
-        normalVector $x;
+        box (-1 -1 -1) (1 1 -0.06);
+        fieldValues
+        (
+            volScalarFieldValue alpha.water 1
+        );
     }
-    interpolate  true;
-}
+);
 
-isosurface
-{
-    type            isoSurfaceCell;
-    interpolate     true;
-}
-
-patchSurface
-{
-    type        patch;
-    interpolate true;
-}
 
 // ************************************************************************* //

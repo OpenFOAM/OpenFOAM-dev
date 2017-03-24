@@ -5,42 +5,47 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
-type            surfaces;
-libs            ("libsampling.so");
-
-writeControl    writeTime;
-
-surfaceFormat   vtk;
-interpolationScheme cellPoint;
-
-x (1 0 0);
-y (0 1 0);
-z (0 0 1);
-origin (0 0 0);
-
-cuttingPlane
+FoamFile
 {
-    type         cuttingPlane;
-    planeType    pointAndNormal;
-    pointAndNormalDict
-    {
-        basePoint    $origin;
-        normalVector $x;
-    }
-    interpolate  true;
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         Euler;
 }
 
-isosurface
+gradSchemes
 {
-    type            isoSurfaceCell;
-    interpolate     true;
+    default         Gauss linear;
 }
 
-patchSurface
+divSchemes
 {
-    type        patch;
-    interpolate true;
+    div(rhoPhi,U)  Gauss vanLeerV;
+    div(phi,alpha)  Gauss vanLeer;
+    div(phirb,alpha) Gauss vanLeer;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         corrected;
 }
 
 // ************************************************************************* //

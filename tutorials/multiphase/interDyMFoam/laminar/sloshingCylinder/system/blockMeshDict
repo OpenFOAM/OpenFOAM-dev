@@ -1,0 +1,95 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+radius      0.081;
+radiusNeg  -0.081;
+box         0.025;
+boxNeg     -0.025;
+zMax        0.150;
+zMin       -0.150;
+
+nR          7;
+nZ          20;
+
+verbose no;
+
+geometry
+{
+    cylinder
+    {
+        type      searchableCylinder;
+        point1    (0 0 -1);
+        point2    (0 0  1);
+        radius    $radius;
+    }
+}
+
+scale 1;
+
+
+vertices
+(
+    // Inner
+    ($boxNeg $boxNeg $zMin)
+    ($box    $boxNeg $zMin)
+    ($boxNeg $box    $zMin)
+    ($box    $box    $zMin)
+
+    // Outer block points
+    project ($radiusNeg $radiusNeg $zMin) (cylinder)
+    project ($radius    $radiusNeg $zMin) (cylinder)
+    project ($radiusNeg $radius    $zMin) (cylinder)
+    project ($radius    $radius    $zMin) (cylinder)
+
+    // Inner
+    ($boxNeg $boxNeg $zMax)
+    ($box    $boxNeg $zMax)
+    ($boxNeg $box    $zMax)
+    ($box    $box    $zMax)
+
+    // Outer block points
+    project ($radiusNeg $radiusNeg $zMax) (cylinder)
+    project ($radius    $radiusNeg $zMax) (cylinder)
+    project ($radiusNeg $radius    $zMax) (cylinder)
+    project ($radius    $radius    $zMax) (cylinder)
+);
+
+blocks
+(
+    hex ( 4  5  1  0 12 13  9  8) ($nR $nR $nZ) simpleGrading (1 1 1)
+    hex ( 4  0  2  6 12  8 10 14) ($nR $nR $nZ) simpleGrading (1 1 1)
+    hex ( 1  5  7  3  9 13 15 11) ($nR $nR $nZ) simpleGrading (1 1 1)
+    hex ( 2  3  7  6 10 11 15 14) ($nR $nR $nZ) simpleGrading (1 1 1)
+    hex ( 0  1  3  2  8  9 11 10) ($nR $nR $nZ) simpleGrading (1 1 1)
+);
+
+edges
+(
+    project  4  5 (cylinder)
+    project  7  5 (cylinder)
+    project  6  7 (cylinder)
+    project  4  6 (cylinder)
+    project 12 13 (cylinder)
+    project 13 15 (cylinder)
+    project 12 14 (cylinder)
+    project 14 15 (cylinder)
+);
+
+boundary
+(
+);
+
+// ************************************************************************* //
