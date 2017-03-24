@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
         Bai and Gosman, `Mathematical modelling of wall films formed by
         impinging sprays', SAE 960626, 1996
 
-        Bai et al, `Modelling off gasoline spray impingement', Atom. Sprays,
+        Bai et al, `Modelling of gasoline spray impingement', Atom. Sprays,
         vol 12, pp 1-27, 2002
 
 
