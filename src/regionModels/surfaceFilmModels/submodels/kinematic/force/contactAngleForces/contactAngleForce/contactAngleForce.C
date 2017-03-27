@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,6 @@ namespace surfaceFilmModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(contactAngleForce, 0);
-addToRunTimeSelectionTable(force, contactAngleForce, dictionary);
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
@@ -93,21 +92,13 @@ void contactAngleForce::initialise()
 
 contactAngleForce::contactAngleForce
 (
+    const word& typeName,
     surfaceFilmModel& owner,
     const dictionary& dict
 )
 :
     force(typeName, owner, dict),
     Ccf_(readScalar(coeffDict_.lookup("Ccf"))),
-    rndGen_(label(0), -1),
-    distribution_
-    (
-        distributionModels::distributionModel::New
-        (
-            coeffDict_.subDict("contactAngleDistribution"),
-            rndGen_
-        )
-    ),
     mask_
     (
         IOobject
@@ -163,7 +154,10 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
     const volScalarField& alpha = owner_.alpha();
     const volScalarField& sigma = owner_.sigma();
 
-    volVectorField gradAlpha(fvc::grad(alpha));
+    const tmp<volScalarField> ttheta = theta();
+    const volScalarField& theta = ttheta();
+
+    const volVectorField gradAlpha(fvc::grad(alpha));
 
     forAll(nbr, facei)
     {
@@ -185,14 +179,14 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
             const scalar invDx = owner_.regionMesh().deltaCoeffs()[facei];
             const vector n =
                 gradAlpha[celli]/(mag(gradAlpha[celli]) + ROOTVSMALL);
-            scalar theta = cos(degToRad(distribution_->sample()));
-            force[celli] += Ccf_*n*sigma[celli]*(1.0 - theta)/invDx;
+            const scalar cosTheta = cos(degToRad(theta[celli]));
+            force[celli] += Ccf_*n*sigma[celli]*(1 - cosTheta)/invDx;
         }
     }
 
     forAll(alpha.boundaryField(), patchi)
     {
-        if (!owner().isCoupledPatch(patchi))
+        if (!owner_.isCoupledPatch(patchi))
         {
             const fvPatchField<scalar>& alphaf = alpha.boundaryField()[patchi];
             const fvPatchField<scalar>& maskf = mask_.boundaryField()[patchi];
@@ -210,9 +204,9 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
                         const vector n =
                             gradAlpha[cellO]
                            /(mag(gradAlpha[cellO]) + ROOTVSMALL);
-                        scalar theta = cos(degToRad(distribution_->sample()));
+                        const scalar cosTheta = cos(degToRad(theta[cellO]));
                         force[cellO] +=
-                            Ccf_*n*sigma[cellO]*(1.0 - theta)/invDx[facei];
+                            Ccf_*n*sigma[cellO]*(1 - cosTheta)/invDx[facei];
                     }
                 }
             }

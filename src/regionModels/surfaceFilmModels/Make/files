@@ -13,7 +13,9 @@ KINEMATICMODELS=submodels/kinematic
 $(KINEMATICMODELS)/force/force/force.C
 $(KINEMATICMODELS)/force/force/forceNew.C
 $(KINEMATICMODELS)/force/forceList/forceList.C
-$(KINEMATICMODELS)/force/contactAngleForce/contactAngleForce.C
+$(KINEMATICMODELS)/force/contactAngleForces/contactAngleForce/contactAngleForce.C
+$(KINEMATICMODELS)/force/contactAngleForces/distribution/distributionContactAngleForce.C
+$(KINEMATICMODELS)/force/contactAngleForces/temperatureDependent/temperatureDependentContactAngleForce.C
 $(KINEMATICMODELS)/force/thermocapillaryForce/thermocapillaryForce.C
 
 $(KINEMATICMODELS)/injectionModel/injectionModel/injectionModel.C

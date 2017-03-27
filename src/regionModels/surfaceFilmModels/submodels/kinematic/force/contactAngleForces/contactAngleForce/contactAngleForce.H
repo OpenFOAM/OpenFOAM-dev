@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::contactAngleForce
 
 Description
-    Film contact angle force
+    Base-class for film contact angle force models.
 
     The effect of the contact angle force can be ignored over a specified
     distance from patches.
@@ -39,8 +39,6 @@ SourceFiles
 #define contactAngleForce_H
 
 #include "force.H"
-#include "distributionModel.H"
-#include "cachedRandom.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,18 +57,10 @@ class contactAngleForce
 :
     public force
 {
-private:
-
     // Private Data
 
         //- Coefficient applied to the contact angle force
         scalar Ccf_;
-
-        //- Random number generator
-        cachedRandom rndGen_;
-
-        //- Parcel size PDF model
-        const autoPtr<distributionModels::distributionModel> distribution_;
 
         //- Mask over which force is applied
         volScalarField mask_;
@@ -88,6 +78,12 @@ private:
         void operator=(const contactAngleForce&);
 
 
+protected:
+
+        //- Return the contact angle field
+        virtual tmp<volScalarField> theta() const = 0;
+
+
 public:
 
     //- Runtime type information
@@ -99,6 +95,7 @@ public:
         //- Construct from surface film model
         contactAngleForce
         (
+            const word& typeName,
             surfaceFilmModel& owner,
             const dictionary& dict
         );
@@ -110,10 +107,8 @@ public:
 
     // Member Functions
 
-        // Evolution
-
-            //- Correct
-            virtual tmp<fvVectorMatrix> correct(volVectorField& U);
+        //- Correct
+        virtual tmp<fvVectorMatrix> correct(volVectorField& U);
 };
 
 

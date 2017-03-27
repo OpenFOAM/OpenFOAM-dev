@@ -63,31 +63,6 @@ void Foam::regionModels::regionModel::constructMeshObjects()
 }
 
 
-void Foam::regionModels::regionModel::constructMeshObjects
-(
-    const dictionary& dict
-)
-{
-    // construct region mesh
-    if (!time_.foundObject<fvMesh>(regionName_))
-    {
-        regionMeshPtr_.reset
-        (
-            new fvMesh
-            (
-                IOobject
-                (
-                    regionName_,
-                    time_.timeName(),
-                    time_,
-                    IOobject::MUST_READ
-                )
-            )
-        );
-    }
-}
-
-
 void Foam::regionModels::regionModel::initialise()
 {
     if (debug)
@@ -485,7 +460,7 @@ Foam::regionModels::regionModel::regionModel
 {
     if (active_)
     {
-        constructMeshObjects(dict);
+        constructMeshObjects();
         initialise();
 
         if (readFields)

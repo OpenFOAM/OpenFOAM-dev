@@ -115,7 +115,7 @@ Usage
         value           uniform 0.01;
     \endverbatim
 
-SeeAlso
+See also
     Foam::alphatPhaseChangeJayatillekeWallFunctionFvPatchField
 
 SourceFiles
