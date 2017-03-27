@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::contactAngleForce
+    Foam::regionModels::surfaceFilmModels::contactAngleForce
 
 Description
     Base-class for film contact angle force models.

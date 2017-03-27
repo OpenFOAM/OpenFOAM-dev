@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::temperatureDependentContactAngleForce
+    Foam::regionModels::surfaceFilmModels::temperatureDependentContactAngleForce
 
 Description
     Temperature dependent contact angle force
