@@ -42,14 +42,15 @@ kinematicSingleLayerCoeffs
 
     forces
     (
-        contactAngle
         thermocapillary
+        distributionContactAngle
     );
 
-    contactAngleCoeffs
+    distributionContactAngleCoeffs
     {
         Ccf             1;
-        contactAngleDistribution
+
+        distribution
         {
             type            normal;
             normalDistribution
@@ -61,6 +62,9 @@ kinematicSingleLayerCoeffs
             }
         }
 
-        zeroForcePatches    ();
+        zeroForcePatches ();
     }
 }
+
+
+// ************************************************************************* //

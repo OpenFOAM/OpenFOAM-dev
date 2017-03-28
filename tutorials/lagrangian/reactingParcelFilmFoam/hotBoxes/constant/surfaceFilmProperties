@@ -21,7 +21,6 @@ regionName      wallFilmRegion;
 
 active          true;
 
-
 thermoSingleLayerCoeffs
 {
     filmThermoModel liquid;
@@ -48,13 +47,13 @@ thermoSingleLayerCoeffs
 
     upperSurfaceModels
     {
-/*
+        /*
         heatTransferModel constant;
         constantCoeffs
         {
            c0              1e-8;
         }
-*/
+        */
         heatTransferModel mappedConvectiveHeatTransfer;
     }
 
@@ -70,13 +69,14 @@ thermoSingleLayerCoeffs
     forces
     (
         thermocapillary
-        contactAngle
+        distributionContactAngle
     );
 
-    contactAngleCoeffs
+    distributionContactAngleCoeffs
     {
         Ccf             0.085;
-        contactAngleDistribution
+
+        distribution
         {
             type            normal;
             normalDistribution
@@ -88,8 +88,7 @@ thermoSingleLayerCoeffs
             }
         }
 
-        zeroForcePatches
-        ();
+        zeroForcePatches ();
     }
 
     injectionModels
