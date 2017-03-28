@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ protected:
 
     // Protected data
 
-        //- Reference to the owner surface film model
-        surfaceFilmModel& owner_;
+        //- Reference to the film surface film model
+        surfaceFilmModel& filmModel_;
 
 
 public:
@@ -69,23 +69,23 @@ public:
     // Constructors
 
         //- Construct null
-        filmSubModelBase(surfaceFilmModel& owner);
+        filmSubModelBase(surfaceFilmModel& film);
 
-        //- Construct from owner film wihout name
+        //- Construct from film film wihout name
         filmSubModelBase
         (
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict,
             const word& baseName,
             const word& modelType,
             const word& dictExt = "Coeffs"
         );
 
-        //- Construct from owner film with name
+        //- Construct from film film with name
         filmSubModelBase
         (
             const word& modelName,
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict,
             const word& baseName,
             const word& modelType
@@ -103,11 +103,11 @@ public:
             //- Flag to indicate when to write a property
             virtual bool writeTime() const;
 
-            //- Return const access to the owner surface film model
-            inline const surfaceFilmModel& owner() const;
+            //- Return const access to the film surface film model
+            inline const surfaceFilmModel& film() const;
 
-            //- Return the reference to the owner surface film model
-            inline surfaceFilmModel& owner();
+            //- Return the reference to the film surface film model
+            inline surfaceFilmModel& film();
 
             template<class FilmType>
             inline const FilmType& filmType() const;

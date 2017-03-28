@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,15 +35,15 @@ namespace surfaceFilmModels
 template<class FilmType>
 const FilmType& filmSubModelBase::filmType() const
 {
-    if (!isA<FilmType>(owner_))
+    if (!isA<FilmType>(filmModel_))
     {
         FatalErrorInFunction
             << "Model " << this->modelType() << " requested film type "
-            << FilmType::typeName << " but film is type " << owner_.type()
+            << FilmType::typeName << " but film is type " << filmModel_.type()
             << abort(FatalError);
     }
 
-    return refCast<const FilmType>(owner_);
+    return refCast<const FilmType>(filmModel_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,12 +57,12 @@ addToRunTimeSelectionTable
 
 thixotropicViscosity::thixotropicViscosity
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict,
     volScalarField& mu
 )
 :
-    filmViscosityModel(typeName, owner, dict, mu),
+    filmViscosityModel(typeName, film, dict, mu),
     a_("a", dimless/dimTime, coeffDict_),
     b_("b", dimless, coeffDict_),
     d_("d", dimless, coeffDict_),
@@ -75,12 +75,12 @@ thixotropicViscosity::thixotropicViscosity
         IOobject
         (
             typeName + ":lambda",
-            owner.regionMesh().time().timeName(),
-            owner.regionMesh(),
+            film.regionMesh().time().timeName(),
+            film.regionMesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        owner.regionMesh()
+        film.regionMesh()
     )
 {
     lambda_.min(1.0);
@@ -115,7 +115,7 @@ void thixotropicViscosity::correct
     const volScalarField& deltaRho = film.deltaRho();
     const surfaceScalarField& phi = film.phi();
     const volScalarField& alpha = film.alpha();
-    const Time& runTime = this->owner().regionMesh().time();
+    const Time& runTime = this->film().regionMesh().time();
 
     // Shear rate
     volScalarField gDot("gDot", alpha*mag(U - Uw)/(delta + film.deltaSmall()));

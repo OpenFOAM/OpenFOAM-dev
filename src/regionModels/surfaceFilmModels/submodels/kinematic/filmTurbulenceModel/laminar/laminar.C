@@ -51,11 +51,11 @@ addToRunTimeSelectionTable(filmTurbulenceModel, laminar, dictionary);
 
 laminar::laminar
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmTurbulenceModel(type(), owner, dict),
+    filmTurbulenceModel(type(), film, dict),
     Cf_(readScalar(coeffDict_.lookup("Cf")))
 {}
 
@@ -77,19 +77,19 @@ tmp<volVectorField> laminar::Us() const
             IOobject
             (
                 typeName + ":Us",
-                owner_.regionMesh().time().timeName(),
-                owner_.regionMesh(),
+                filmModel_.regionMesh().time().timeName(),
+                filmModel_.regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner_.regionMesh(),
+            filmModel_.regionMesh(),
             dimensionedVector("zero", dimVelocity, Zero),
             extrapolatedCalculatedFvPatchVectorField::typeName
         )
     );
 
     // apply quadratic profile
-    tUs.ref() = Foam::sqrt(2.0)*owner_.U();
+    tUs.ref() = Foam::sqrt(2.0)*filmModel_.U();
     tUs.ref().correctBoundaryConditions();
 
     return tUs;
@@ -105,12 +105,12 @@ tmp<volScalarField> laminar::mut() const
             IOobject
             (
                 typeName + ":mut",
-                owner_.regionMesh().time().timeName(),
-                owner_.regionMesh(),
+                filmModel_.regionMesh().time().timeName(),
+                filmModel_.regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner_.regionMesh(),
+            filmModel_.regionMesh(),
             dimensionedScalar("zero", dimMass/dimLength/dimTime, 0.0)
         )
     );
@@ -125,7 +125,7 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
 {
     // local reference to film model
     const kinematicSingleLayer& film =
-        static_cast<const kinematicSingleLayer&>(owner_);
+        static_cast<const kinematicSingleLayer&>(filmModel_);
 
     // local references to film fields
     const volScalarField& mu = film.mu();

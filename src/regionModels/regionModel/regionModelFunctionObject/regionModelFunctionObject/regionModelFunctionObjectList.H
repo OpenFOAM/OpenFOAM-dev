@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ protected:
 
     // Protected Data
 
-        //- Reference to the owner region model
-        regionModel& owner_;
+        //- Reference to the region region model
+        regionModel& regionModel_;
 
         //- Dictionary
         const dictionary dict_;
@@ -72,12 +72,12 @@ public:
     // Constructors
 
         //- Null constructor
-        regionModelFunctionObjectList(regionModel& owner);
+        regionModelFunctionObjectList(regionModel& region);
 
         //- Construct from mesh
         regionModelFunctionObjectList
         (
-            regionModel& owner,
+            regionModel& region,
             const dictionary& dict,
             const bool readFields = true
         );
@@ -97,11 +97,11 @@ public:
 
         // Access
 
-            //- Return const access to the cloud owner
-            inline const regionModel& owner() const;
+            //- Return const access to the cloud region
+            inline const regionModel& region() const;
 
-            //- Return refernce to the cloud owner
-            inline regionModel& owner();
+            //- Return refernce to the cloud region
+            inline regionModel& region();
 
             //- Return the forces dictionary
             inline const dictionary& dict() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,16 +36,16 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-injectionModelList::injectionModelList(surfaceFilmModel& owner)
+injectionModelList::injectionModelList(surfaceFilmModel& film)
 :
     PtrList<injectionModel>(),
-    filmSubModelBase(owner)
+    filmSubModelBase(film)
 {}
 
 
 injectionModelList::injectionModelList
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
@@ -53,12 +53,12 @@ injectionModelList::injectionModelList
     filmSubModelBase
     (
         "injectionModelList",
-        owner,
+        film,
         dict,
         "injectionModelList",
         "injectionModelList"
     ),
-    massInjected_(owner.intCoupledPatchIDs().size(), 0.0)
+    massInjected_(film.intCoupledPatchIDs().size(), 0.0)
 {
     const wordList activeModels(dict.lookup("injectionModels"));
 
@@ -77,7 +77,7 @@ injectionModelList::injectionModelList
         forAllConstIter(wordHashSet, models, iter)
         {
             const word& model = iter.key();
-            set(i, injectionModel::New(owner, dict, model));
+            set(i, injectionModel::New(film, dict, model));
             i++;
         }
     }
@@ -114,7 +114,7 @@ void injectionModelList::correct
     massToInject.correctBoundaryConditions();
     diameterToInject.correctBoundaryConditions();
 
-    const labelList& patchIDs = owner().intCoupledPatchIDs();
+    const labelList& patchIDs = film().intCoupledPatchIDs();
 
     forAll(patchIDs, i)
     {
@@ -127,7 +127,7 @@ void injectionModelList::correct
 
 void injectionModelList::info(Ostream& os)
 {
-    const polyBoundaryMesh& pbm = owner().regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
 
     scalar injectedMass = 0;
     scalarField patchInjectedMasses(pbm.size(), 0);
@@ -157,7 +157,7 @@ void injectionModelList::info(Ostream& os)
     Pstream::listCombineGather(mass, plusEqOp<scalar>());
     mass += mass0;
 
-    const labelList& patchIDs = owner().intCoupledPatchIDs();
+    const labelList& patchIDs = film().intCoupledPatchIDs();
 
     forAll(patchIDs, i)
     {
@@ -166,7 +166,7 @@ void injectionModelList::info(Ostream& os)
             << mass[i] << endl;
     }
 
-    if (owner().time().writeTime())
+    if (film().time().writeTime())
     {
         setBaseProperty("massInjected", mass);
         massInjected_ = 0.0;

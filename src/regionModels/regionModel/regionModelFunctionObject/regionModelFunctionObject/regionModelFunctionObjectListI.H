@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,16 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 inline const Foam::regionModels::regionModel&
-Foam::regionModels::regionModelFunctionObjectList::owner() const
+Foam::regionModels::regionModelFunctionObjectList::region() const
 {
-    return owner_;
+    return regionModel_;
 }
 
 
 inline Foam::regionModels::regionModel&
-Foam::regionModels::regionModelFunctionObjectList::owner()
+Foam::regionModels::regionModelFunctionObjectList::region()
 {
-    return owner_;
+    return regionModel_;
 }
 
 

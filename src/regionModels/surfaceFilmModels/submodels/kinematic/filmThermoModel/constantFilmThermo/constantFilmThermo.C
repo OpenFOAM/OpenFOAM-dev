@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,11 +61,11 @@ void constantFilmThermo::init(thermoData& td)
 
 constantFilmThermo::constantFilmThermo
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmThermoModel(typeName, owner, dict),
+    filmThermoModel(typeName, film, dict),
     name_(coeffDict_.lookup("specie")),
     rho0_("rho0"),
     mu0_("mu0"),
@@ -264,12 +264,12 @@ tmp<volScalarField> constantFilmThermo::rho() const
             IOobject
             (
                 type() + ':' + rho0_.name_,
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("0", dimDensity, 0.0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
@@ -291,12 +291,12 @@ tmp<volScalarField> constantFilmThermo::mu() const
             IOobject
             (
                 type() + ':' + mu0_.name_,
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("0", dimPressure*dimTime, 0.0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
@@ -318,12 +318,12 @@ tmp<volScalarField> constantFilmThermo::sigma() const
             IOobject
             (
                 type() + ':' + sigma0_.name_,
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("0", dimMass/sqr(dimTime), 0.0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
@@ -345,12 +345,12 @@ tmp<volScalarField> constantFilmThermo::Cp() const
             IOobject
             (
                 type() + ':' + Cp0_.name_,
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("0", dimEnergy/dimMass/dimTemperature, 0.0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
@@ -372,12 +372,12 @@ tmp<volScalarField> constantFilmThermo::kappa() const
             IOobject
             (
                 type() + ':' + kappa0_.name_,
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("0", dimPower/dimLength/dimTemperature, 0.0),
             extrapolatedCalculatedFvPatchScalarField::typeName
         )

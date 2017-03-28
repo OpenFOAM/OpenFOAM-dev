@@ -96,7 +96,7 @@ public:
         contactAngleForce
         (
             const word& typeName,
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict
         );
 

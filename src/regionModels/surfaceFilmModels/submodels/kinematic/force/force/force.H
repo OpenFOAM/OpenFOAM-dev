@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,22 +82,22 @@ public:
              force,
              dictionary,
              (
-                surfaceFilmModel& owner,
+                surfaceFilmModel& film,
                 const dictionary& dict
              ),
-             (owner, dict)
+             (film, dict)
          );
 
     // Constructors
 
         //- Construct null
-        force(surfaceFilmModel& owner);
+        force(surfaceFilmModel& film);
 
         //- Construct from type name, dictionary and surface film model
         force
         (
             const word& modelType,
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict
         );
 
@@ -107,7 +107,7 @@ public:
         //- Return a reference to the selected force model
         static autoPtr<force> New
         (
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict,
             const word& modelType
         );

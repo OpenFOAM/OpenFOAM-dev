@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,14 +44,14 @@ addToRunTimeSelectionTable(injectionModel, patchInjection, dictionary);
 
 patchInjection::patchInjection
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    injectionModel(type(), owner, dict),
+    injectionModel(type(), film, dict),
     deltaStable_(coeffDict_.lookupOrDefault<scalar>("deltaStable", 0.0))
 {
-    const polyBoundaryMesh& pbm = owner.regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
     patchIDs_.setSize(pbm.size());
 
     if (coeffDict_.found("patches"))
@@ -110,11 +110,11 @@ void patchInjection::correct
     // Do not correct if no patches selected
     if (!patchIDs_.size()) return;
 
-    const scalarField& delta = owner().delta();
-    const scalarField& rho = owner().rho();
-    const scalarField& magSf = owner().magSf();
+    const scalarField& delta = film().delta();
+    const scalarField& rho = film().rho();
+    const scalarField& magSf = film().magSf();
 
-    const polyBoundaryMesh& pbm = owner().regionMesh().boundaryMesh();
+    const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
 
     forAll(patchIDs_, pidi)
     {

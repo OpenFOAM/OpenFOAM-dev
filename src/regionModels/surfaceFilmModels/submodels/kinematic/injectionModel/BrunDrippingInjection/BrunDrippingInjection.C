@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,15 +45,15 @@ addToRunTimeSelectionTable(injectionModel, BrunDrippingInjection, dictionary);
 
 BrunDrippingInjection::BrunDrippingInjection
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    injectionModel(type(), owner, dict),
+    injectionModel(type(), film, dict),
     ubarStar_(coeffDict_.lookupOrDefault("ubarStar", 1.62208)),
     dCoeff_(coeffDict_.lookupOrDefault("dCoeff", 3.3)),
     deltaStable_(coeffDict_.lookupOrDefault("deltaStable", scalar(0))),
-    diameter_(owner.regionMesh().nCells(), -1.0)
+    diameter_(film.regionMesh().nCells(), -1.0)
 {}
 
 
@@ -73,7 +73,7 @@ void BrunDrippingInjection::correct
 )
 {
     const kinematicSingleLayer& film =
-        refCast<const kinematicSingleLayer>(this->owner());
+        refCast<const kinematicSingleLayer>(this->film());
 
     // Calculate available dripping mass
     tmp<volScalarField> tsinAlpha(film.gNorm()/mag(film.g()));

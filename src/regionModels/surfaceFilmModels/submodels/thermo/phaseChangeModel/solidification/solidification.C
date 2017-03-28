@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,11 @@ addToRunTimeSelectionTable
 
 solidification::solidification
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    phaseChangeModel(typeName, owner, dict),
+    phaseChangeModel(typeName, film, dict),
     T0_(readScalar(coeffDict_.lookup("T0"))),
     maxSolidificationFrac_
     (
@@ -76,12 +76,12 @@ solidification::solidification
         IOobject
         (
             typeName + ":mass",
-            owner.regionMesh().time().timeName(),
-            owner.regionMesh(),
+            film.regionMesh().time().timeName(),
+            film.regionMesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        owner.regionMesh(),
+        film.regionMesh(),
         dimensionedScalar("zero", dimMass, 0.0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -90,12 +90,12 @@ solidification::solidification
         IOobject
         (
             typeName + ":thickness",
-            owner.regionMesh().time().timeName(),
-            owner.regionMesh(),
+            film.regionMesh().time().timeName(),
+            film.regionMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        owner.regionMesh(),
+        film.regionMesh(),
         dimensionedScalar("zero", dimLength, 0.0),
         zeroGradientFvPatchScalarField::typeName
     )
@@ -128,7 +128,7 @@ void solidification::correctModel
         maxSolidificationFrac_,
         (
             maxSolidificationRate_
-           *owner_.regionMesh().time().deltaTValue()
+           *filmModel_.regionMesh().time().deltaTValue()
         ).value()
     );
 

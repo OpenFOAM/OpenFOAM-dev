@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Foam::autoPtr<Foam::regionModels::regionModelFunctionObject>
 Foam::regionModels::regionModelFunctionObject::New
 (
     const dictionary& dict,
-    regionModel& owner,
+    regionModel& region,
     const word& modelName
 )
 {
@@ -58,7 +58,7 @@ Foam::regionModels::regionModelFunctionObject::New
             cstrIter()
             (
                 dict.subDict(modelName),
-                owner
+                region
             )
         );
 }

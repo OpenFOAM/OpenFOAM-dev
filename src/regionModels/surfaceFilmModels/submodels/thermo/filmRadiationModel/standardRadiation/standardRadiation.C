@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,36 +52,36 @@ addToRunTimeSelectionTable
 
 standardRadiation::standardRadiation
 (
-     surfaceFilmModel& owner,
+     surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmRadiationModel(typeName, owner, dict),
+    filmRadiationModel(typeName, film, dict),
     QinPrimary_
     (
         IOobject
         (
             "Qin", // same name as Qin on primary region to enable mapping
-            owner.time().timeName(),
-            owner.regionMesh(),
+            film.time().timeName(),
+            film.regionMesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        owner.regionMesh(),
+        film.regionMesh(),
         dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
-        owner.mappedPushedFieldPatchTypes<scalar>()
+        film.mappedPushedFieldPatchTypes<scalar>()
     ),
     QrNet_
     (
         IOobject
         (
             "QrNet",
-            owner.time().timeName(),
-            owner.regionMesh(),
+            film.time().timeName(),
+            film.regionMesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        owner.regionMesh(),
+        film.regionMesh(),
         dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
         zeroGradientFvPatchScalarField::typeName
     ),
@@ -114,20 +114,20 @@ tmp<volScalarField> standardRadiation::Shs()
             IOobject
             (
                 typeName + ":Shs",
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );
 
     scalarField& Shs = tShs.ref();
     const scalarField& QinP = QinPrimary_;
-    const scalarField& delta = owner_.delta();
-    const scalarField& alpha = owner_.alpha();
+    const scalarField& delta = filmModel_.delta();
+    const scalarField& alpha = filmModel_.alpha();
 
     Shs = beta_*QinP*alpha*(1.0 - exp(-kappaBar_*delta));
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,22 +93,22 @@ public:
              phaseChangeModel,
              dictionary,
              (
-                surfaceFilmModel& owner,
+                surfaceFilmModel& film,
                 const dictionary& dict
              ),
-             (owner, dict)
+             (film, dict)
          );
 
     // Constructors
 
         //- Construct null
-        phaseChangeModel(surfaceFilmModel& owner);
+        phaseChangeModel(surfaceFilmModel& film);
 
         //- Construct from type name, dictionary and surface film model
         phaseChangeModel
         (
             const word& modelType,
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict
         );
 
@@ -118,7 +118,7 @@ public:
         //- Return a reference to the selected phase change model
         static autoPtr<phaseChangeModel> New
         (
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict
         );
 

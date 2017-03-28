@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        laminar(surfaceFilmModel& owner, const dictionary& dict);
+        laminar(surfaceFilmModel& film, const dictionary& dict);
 
 
     //- Destructor

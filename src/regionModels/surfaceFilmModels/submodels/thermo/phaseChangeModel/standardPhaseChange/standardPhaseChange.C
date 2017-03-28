@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,11 @@ scalar standardPhaseChange::Sh
 
 standardPhaseChange::standardPhaseChange
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    phaseChangeModel(typeName, owner, dict),
+    phaseChangeModel(typeName, film, dict),
     deltaMin_(readScalar(coeffDict_.lookup("deltaMin"))),
     L_(readScalar(coeffDict_.lookup("L"))),
     TbFactor_(coeffDict_.lookupOrDefault<scalar>("TbFactor", 1.1))

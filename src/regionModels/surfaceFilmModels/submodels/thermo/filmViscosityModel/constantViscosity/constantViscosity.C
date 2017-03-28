@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,12 +50,12 @@ addToRunTimeSelectionTable
 
 constantViscosity::constantViscosity
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict,
     volScalarField& mu
 )
 :
-    filmViscosityModel(typeName, owner, dict, mu),
+    filmViscosityModel(typeName, film, dict, mu),
     mu0_("mu0", dimDynamicViscosity, coeffDict_)
 {
     mu_ == mu0_;

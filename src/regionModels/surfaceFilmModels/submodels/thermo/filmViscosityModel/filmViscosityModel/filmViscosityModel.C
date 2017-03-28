@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,12 +44,12 @@ defineRunTimeSelectionTable(filmViscosityModel, dictionary);
 filmViscosityModel::filmViscosityModel
 (
     const word& modelType,
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict,
     volScalarField& mu
 )
 :
-    filmSubModelBase(owner, dict, typeName, modelType),
+    filmSubModelBase(film, dict, typeName, modelType),
     mu_(mu)
 {}
 

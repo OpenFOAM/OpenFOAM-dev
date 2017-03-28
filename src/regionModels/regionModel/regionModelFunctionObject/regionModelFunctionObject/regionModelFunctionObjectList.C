@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,24 +29,24 @@ License
 
 Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList
 (
-    regionModel& owner
+    regionModel& region
 )
 :
     PtrList<regionModelFunctionObject>(),
-    owner_(owner),
+    regionModel_(region),
     dict_(dictionary::null)
 {}
 
 
 Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList
 (
-    regionModel& owner,
+    regionModel& region,
     const dictionary& dict,
     const bool readFields
 )
 :
     PtrList<regionModelFunctionObject>(),
-    owner_(owner),
+    regionModel_(region),
     dict_(dict)
 {
     if (readFields)
@@ -69,7 +69,7 @@ Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList
                     regionModelFunctionObject::New
                     (
                         dict,
-                        owner,
+                        region,
                         modelName
                     )
                 );
@@ -89,7 +89,7 @@ Foam::regionModels::regionModelFunctionObjectList::regionModelFunctionObjectList
 )
 :
     PtrList<regionModelFunctionObject>(cfol),
-    owner_(cfol.owner_),
+    regionModel_(cfol.regionModel_),
     dict_(cfol.dict_)
 {}
 

@@ -51,11 +51,11 @@ addToRunTimeSelectionTable
 
 noRadiation::noRadiation
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmRadiationModel(owner)
+    filmRadiationModel(film)
 {}
 
 
@@ -80,12 +80,12 @@ tmp<volScalarField> noRadiation::Shs()
             IOobject
             (
                 typeName + ":Shs",
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );

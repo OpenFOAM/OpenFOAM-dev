@@ -50,11 +50,11 @@ addToRunTimeSelectionTable
 
 temperatureDependentContactAngleForce::temperatureDependentContactAngleForce
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    contactAngleForce(typeName, owner, dict),
+    contactAngleForce(typeName, film, dict),
     thetaPtr_(Function1<scalar>::New("theta", coeffDict_))
 {}
 
@@ -76,23 +76,23 @@ tmp<volScalarField> temperatureDependentContactAngleForce::theta() const
             IOobject
             (
                 typeName + ":theta",
-                owner_.time().timeName(),
-                owner_.regionMesh()
+                filmModel_.time().timeName(),
+                filmModel_.regionMesh()
             ),
-            owner_.regionMesh(),
+            filmModel_.regionMesh(),
             dimensionedScalar("0", dimless, 0)
         )
     );
 
     volScalarField& theta = ttheta.ref();
 
-    const volScalarField& T = owner_.T();
+    const volScalarField& T = filmModel_.T();
 
     theta.ref().field() = thetaPtr_->value(T());
 
     forAll(theta.boundaryField(), patchi)
     {
-        if (!owner_.isCoupledPatch(patchi))
+        if (!filmModel_.isCoupledPatch(patchi))
         {
             theta.boundaryFieldRef()[patchi] =
                 thetaPtr_->value(T.boundaryField()[patchi]);

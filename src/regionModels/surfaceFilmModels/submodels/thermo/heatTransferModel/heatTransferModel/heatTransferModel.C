@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,21 +43,21 @@ defineRunTimeSelectionTable(heatTransferModel, dictionary);
 
 heatTransferModel::heatTransferModel
 (
-    surfaceFilmModel& owner
+    surfaceFilmModel& film
 )
 :
-    filmSubModelBase(owner)
+    filmSubModelBase(film)
 {}
 
 
 heatTransferModel::heatTransferModel
 (
     const word& modelType,
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmSubModelBase(owner, dict, typeName, modelType)
+    filmSubModelBase(film, dict, typeName, modelType)
 {}
 
 

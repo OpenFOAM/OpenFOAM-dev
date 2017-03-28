@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,36 +52,36 @@ addToRunTimeSelectionTable
 
 mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    heatTransferModel(owner),
+    heatTransferModel(film),
     htcConvPrimary_
     (
         IOobject
         (
             "htcConv",
-            owner.time().timeName(),
-            owner.primaryMesh(),
+            film.time().timeName(),
+            film.primaryMesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        owner.primaryMesh()
+        film.primaryMesh()
     ),
     htcConvFilm_
     (
         IOobject
         (
             htcConvPrimary_.name(), // must have same name as above for mapping
-            owner.time().timeName(),
-            owner.regionMesh(),
+            film.time().timeName(),
+            film.regionMesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        owner.regionMesh(),
+        film.regionMesh(),
         dimensionedScalar("zero", dimMass/pow3(dimTime)/dimTemperature, 0.0),
-        owner.mappedPushedFieldPatchTypes<scalar>()
+        film.mappedPushedFieldPatchTypes<scalar>()
     )
 {
     // Update the primary-side convective heat transfer coefficient

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,34 +51,34 @@ addToRunTimeSelectionTable
 
 constantRadiation::constantRadiation
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmRadiationModel(typeName, owner, dict),
+    filmRadiationModel(typeName, film, dict),
     QrConst_
     (
         IOobject
         (
             typeName + ":QrConst",
-            owner.time().timeName(),
-            owner.regionMesh(),
+            film.time().timeName(),
+            film.regionMesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        owner.regionMesh()
+        film.regionMesh()
     ),
     mask_
     (
         IOobject
         (
             typeName + ":mask",
-            owner.time().timeName(),
-            owner.regionMesh(),
+            film.time().timeName(),
+            film.regionMesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
-        owner.regionMesh(),
+        film.regionMesh(),
         dimensionedScalar("one", dimless, 1.0)
     ),
     absorptivity_(readScalar(coeffDict_.lookup("absorptivity"))),
@@ -110,23 +110,23 @@ tmp<volScalarField> constantRadiation::Shs()
             IOobject
             (
                 typeName + ":Shs",
-                owner().time().timeName(),
-                owner().regionMesh(),
+                film().time().timeName(),
+                film().regionMesh(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            owner().regionMesh(),
+            film().regionMesh(),
             dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0)
         )
     );
 
-    const scalar time = owner().time().value();
+    const scalar time = film().time().value();
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
         scalarField& Shs = tShs.ref();
         const scalarField& Qr = QrConst_;
-        const scalarField& alpha = owner_.alpha();
+        const scalarField& alpha = filmModel_.alpha();
 
         Shs = mask_*Qr*alpha*absorptivity_;
     }

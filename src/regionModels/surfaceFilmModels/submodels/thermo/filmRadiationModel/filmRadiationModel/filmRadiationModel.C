@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,20 +41,20 @@ defineRunTimeSelectionTable(filmRadiationModel, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-filmRadiationModel::filmRadiationModel(surfaceFilmModel& owner)
+filmRadiationModel::filmRadiationModel(surfaceFilmModel& film)
 :
-    filmSubModelBase(owner)
+    filmSubModelBase(film)
 {}
 
 
 filmRadiationModel::filmRadiationModel
 (
     const word& modelType,
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmSubModelBase(owner, dict, typeName, modelType)
+    filmSubModelBase(film, dict, typeName, modelType)
 {}
 
 

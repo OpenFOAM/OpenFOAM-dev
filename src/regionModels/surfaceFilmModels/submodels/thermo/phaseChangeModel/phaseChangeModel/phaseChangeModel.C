@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,10 +43,10 @@ defineRunTimeSelectionTable(phaseChangeModel, dictionary);
 
 phaseChangeModel::phaseChangeModel
 (
-    surfaceFilmModel& owner
+    surfaceFilmModel& film
 )
 :
-    filmSubModelBase(owner),
+    filmSubModelBase(film),
     latestMassPC_(0.0),
     totalMassPC_(0.0)
 {}
@@ -55,11 +55,11 @@ phaseChangeModel::phaseChangeModel
 phaseChangeModel::phaseChangeModel
 (
     const word& modelType,
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmSubModelBase(owner, dict, typeName, modelType),
+    filmSubModelBase(film, dict, typeName, modelType),
     latestMassPC_(0.0),
     totalMassPC_(0.0)
 {}
@@ -114,7 +114,7 @@ void phaseChangeModel::info(Ostream& os) const
 {
     const scalar massPCRate =
         returnReduce(latestMassPC_, sumOp<scalar>())
-       /owner_.time().deltaTValue();
+       /filmModel_.time().deltaTValue();
 
     scalar phaseChangeMass = getModelProperty<scalar>("phaseChangeMass");
     phaseChangeMass += returnReduce(totalMassPC_, sumOp<scalar>());

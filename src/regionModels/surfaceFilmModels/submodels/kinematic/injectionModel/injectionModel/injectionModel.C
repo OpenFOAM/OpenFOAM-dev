@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,9 @@ void injectionModel::addToInjectedMass(const scalar dMass)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-injectionModel::injectionModel(surfaceFilmModel& owner)
+injectionModel::injectionModel(surfaceFilmModel& film)
 :
-    filmSubModelBase(owner),
+    filmSubModelBase(film),
     injectedMass_(0.0)
 {}
 
@@ -59,11 +59,11 @@ injectionModel::injectionModel(surfaceFilmModel& owner)
 injectionModel::injectionModel
 (
     const word& modelType,
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    filmSubModelBase(owner, dict, typeName, modelType),
+    filmSubModelBase(film, dict, typeName, modelType),
     injectedMass_(0.0)
 {}
 

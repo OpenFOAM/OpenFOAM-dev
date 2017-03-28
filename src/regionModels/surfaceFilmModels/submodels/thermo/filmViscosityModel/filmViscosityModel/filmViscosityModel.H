@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,11 +90,11 @@ public:
              filmViscosityModel,
              dictionary,
              (
-                surfaceFilmModel& owner,
+                surfaceFilmModel& film,
                 const dictionary& dict,
                 volScalarField& mu
              ),
-             (owner, dict, mu)
+             (film, dict, mu)
          );
 
     // Constructors
@@ -103,7 +103,7 @@ public:
         filmViscosityModel
         (
             const word& modelType,
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict,
             volScalarField& mu
         );
@@ -114,7 +114,7 @@ public:
         //- Return a reference to the selected phase change model
         static autoPtr<filmViscosityModel> New
         (
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict,
             volScalarField& mu
         );

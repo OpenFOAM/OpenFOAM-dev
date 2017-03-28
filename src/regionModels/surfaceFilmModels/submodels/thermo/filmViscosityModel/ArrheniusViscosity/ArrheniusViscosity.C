@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,13 +51,13 @@ addToRunTimeSelectionTable
 
 ArrheniusViscosity::ArrheniusViscosity
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict,
     volScalarField& mu
 )
 :
-    filmViscosityModel(typeName, owner, dict, mu),
-    viscosity_(filmViscosityModel::New(owner, coeffDict_, mu)),
+    filmViscosityModel(typeName, film, dict, mu),
+    viscosity_(filmViscosityModel::New(film, coeffDict_, mu)),
     k1_("k1", dimTemperature, coeffDict_),
     k2_("k2", dimTemperature, coeffDict_),
     Tref_("Tref", dimTemperature, coeffDict_)

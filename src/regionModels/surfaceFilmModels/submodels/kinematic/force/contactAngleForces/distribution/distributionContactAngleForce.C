@@ -45,11 +45,11 @@ addToRunTimeSelectionTable(force, distributionContactAngleForce, dictionary);
 
 distributionContactAngleForce::distributionContactAngleForce
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    contactAngleForce(typeName, owner, dict),
+    contactAngleForce(typeName, film, dict),
     rndGen_(label(0), -1),
     distribution_
     (
@@ -79,10 +79,10 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
             IOobject
             (
                 typeName + ":theta",
-                owner_.time().timeName(),
-                owner_.regionMesh()
+                filmModel_.time().timeName(),
+                filmModel_.regionMesh()
             ),
-            owner_.regionMesh(),
+            filmModel_.regionMesh(),
             dimensionedScalar("0", dimless, 0)
         )
     );
@@ -97,7 +97,7 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
 
     forAll(theta.boundaryField(), patchi)
     {
-        if (!owner_.isCoupledPatch(patchi))
+        if (!filmModel_.isCoupledPatch(patchi))
         {
             fvPatchField<scalar>& thetaf = theta.boundaryFieldRef()[patchi];
 

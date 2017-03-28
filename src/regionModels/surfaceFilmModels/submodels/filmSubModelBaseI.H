@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,15 +34,15 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const surfaceFilmModel& filmSubModelBase::owner() const
+inline const surfaceFilmModel& filmSubModelBase::film() const
 {
-    return owner_;
+    return filmModel_;
 }
 
 
-inline surfaceFilmModel& filmSubModelBase::owner()
+inline surfaceFilmModel& filmSubModelBase::film()
 {
-    return owner_;
+    return filmModel_;
 }
 
 

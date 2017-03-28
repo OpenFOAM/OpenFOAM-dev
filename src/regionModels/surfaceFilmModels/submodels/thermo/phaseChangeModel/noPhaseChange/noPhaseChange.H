@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        noPhaseChange(surfaceFilmModel& owner, const dictionary& dict);
+        noPhaseChange(surfaceFilmModel& film, const dictionary& dict);
 
 
     //- Destructor

@@ -95,7 +95,7 @@ public:
         //- Construct from surface film model
         distributionContactAngleForce
         (
-            surfaceFilmModel& owner,
+            surfaceFilmModel& film,
             const dictionary& dict
         );
 

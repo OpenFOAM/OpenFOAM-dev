@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ protected:
         dictionary dict_;
 
         //- Reference to the region model
-        regionModel& owner_;
+        regionModel& regionModel_;
 
         //- Model type name
         word modelType_;
@@ -83,22 +83,22 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            regionModel& owner
+            regionModel& region
         ),
-        (dict, owner)
+        (dict, region)
     );
 
 
     // Constructors
 
-        //- Construct null from owner
-        regionModelFunctionObject(regionModel& owner);
+        //- Construct null from region
+        regionModelFunctionObject(regionModel& region);
 
         //- Construct from dictionary
         regionModelFunctionObject
         (
             const dictionary& dict,
-            regionModel& owner,
+            regionModel& region,
             const word& modelType
         );
 
@@ -123,7 +123,7 @@ public:
     static autoPtr<regionModelFunctionObject> New
     (
         const dictionary& dict,
-        regionModel& owner,
+        regionModel& region,
         const word& modelType
     );
 

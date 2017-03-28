@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
 /*
     tmp<volScalarField> tinvR1
     (
-        new volScalarField("invR1", fvc::div(owner().nHat()))
+        new volScalarField("invR1", fvc::div(film().nHat()))
     );
 */
 
@@ -82,7 +82,7 @@ tmp<volScalarField> curvatureSeparation::calcInvR1
 
     // apply defined patch radii
     const scalar rMin = 1e-6;
-    const fvMesh& mesh = owner().regionMesh();
+    const fvMesh& mesh = film().regionMesh();
     const polyBoundaryMesh& pbm = mesh.boundaryMesh();
     forAll(definedPatchRadii_, i)
     {
@@ -115,7 +115,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
     const surfaceScalarField& phi
 ) const
 {
-    const fvMesh& mesh = owner().regionMesh();
+    const fvMesh& mesh = film().regionMesh();
     const vectorField nf(mesh.Sf()/mesh.magSf());
     const unallocLabelList& own = mesh.owner();
     const unallocLabelList& nbr = mesh.neighbour();
@@ -220,15 +220,15 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
 
 curvatureSeparation::curvatureSeparation
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
-    injectionModel(type(), owner, dict),
-    gradNHat_(fvc::grad(owner.nHat())),
+    injectionModel(type(), film, dict),
+    gradNHat_(fvc::grad(film.nHat())),
     deltaByR1Min_(coeffDict_.lookupOrDefault<scalar>("deltaByR1Min", 0.0)),
     definedPatchRadii_(),
-    magG_(mag(owner.g().value())),
+    magG_(mag(film.g().value())),
     gHat_(Zero)
 {
     if (magG_ < ROOTVSMALL)
@@ -238,10 +238,10 @@ curvatureSeparation::curvatureSeparation
             << exit(FatalError);
     }
 
-    gHat_ = owner.g().value()/magG_;
+    gHat_ = film.g().value()/magG_;
 
     List<Tuple2<word, scalar>> prIn(coeffDict_.lookup("definedPatchRadii"));
-    const wordList& allPatchNames = owner.regionMesh().boundaryMesh().names();
+    const wordList& allPatchNames = film.regionMesh().boundaryMesh().names();
 
     DynamicList<Tuple2<label, scalar>> prData(allPatchNames.size());
 
@@ -284,7 +284,7 @@ void curvatureSeparation::correct
 )
 {
     const kinematicSingleLayer& film =
-        refCast<const kinematicSingleLayer>(this->owner());
+        refCast<const kinematicSingleLayer>(this->film());
     const fvMesh& mesh = film.regionMesh();
 
     const volScalarField& delta = film.delta();

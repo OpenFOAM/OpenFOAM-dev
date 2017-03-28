@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-forceList::forceList(surfaceFilmModel& owner)
+forceList::forceList(surfaceFilmModel& film)
 :
     PtrList<force>()
 {}
@@ -44,7 +44,7 @@ forceList::forceList(surfaceFilmModel& owner)
 
 forceList::forceList
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict
 )
 :
@@ -59,7 +59,7 @@ forceList::forceList
 
         forAll(models, i)
         {
-            set(i, force::New(owner, dict, models[i]));
+            set(i, force::New(film, dict, models[i]));
         }
     }
     else

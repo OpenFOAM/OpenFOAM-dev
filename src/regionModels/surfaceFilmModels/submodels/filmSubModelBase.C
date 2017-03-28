@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,16 +36,16 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-filmSubModelBase::filmSubModelBase(surfaceFilmModel& owner)
+filmSubModelBase::filmSubModelBase(surfaceFilmModel& film)
 :
-    subModelBase(owner.outputProperties()),
-    owner_(owner)
+    subModelBase(film.outputProperties()),
+    filmModel_(film)
 {}
 
 
 filmSubModelBase::filmSubModelBase
 (
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict,
     const word& baseName,
     const word& modelType,
@@ -54,20 +54,20 @@ filmSubModelBase::filmSubModelBase
 :
     subModelBase
     (
-        owner.outputProperties(),
+        film.outputProperties(),
         dict,
         baseName,
         modelType,
         dictExt
     ),
-    owner_(owner)
+    filmModel_(film)
 {}
 
 
 filmSubModelBase::filmSubModelBase
 (
     const word& modelName,
-    surfaceFilmModel& owner,
+    surfaceFilmModel& film,
     const dictionary& dict,
     const word& baseName,
     const word& modelType
@@ -76,12 +76,12 @@ filmSubModelBase::filmSubModelBase
     subModelBase
     (
         modelName,
-        owner.outputProperties(),
+        film.outputProperties(),
         dict,
         baseName,
         modelType
     ),
-    owner_(owner)
+    filmModel_(film)
 {}
 
 
@@ -95,7 +95,7 @@ filmSubModelBase::~filmSubModelBase()
 
 bool filmSubModelBase::writeTime() const
 {
-    return active() && owner_.time().writeTime();
+    return active() && filmModel_.time().writeTime();
 }
 
 
