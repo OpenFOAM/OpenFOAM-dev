@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,16 +127,6 @@ public:
             return nHatf_;
         }
 
-        const volScalarField& K() const
-        {
-            return K_;
-        }
-
-        const dimensionedScalar& sigma() const
-        {
-            return sigma_;
-        }
-
         tmp<volScalarField> sigmaK() const
         {
             return sigma_*K_;
@@ -148,10 +138,7 @@ public:
         //  Field values are 1 near and 0 away for the interface.
         tmp<volScalarField> nearInterface() const;
 
-        void correct()
-        {
-            calculateK();
-        }
+        void correct();
 
         //- Read transportProperties dictionary
         bool read();

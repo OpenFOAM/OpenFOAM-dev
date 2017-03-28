@@ -222,6 +222,12 @@ Foam::interfaceProperties::nearInterface() const
 }
 
 
+void Foam::interfaceProperties::correct()
+{
+    calculateK();
+}
+
+
 bool Foam::interfaceProperties::read()
 {
     alpha1_.mesh().solverDict(alpha1_.name()).lookup("cAlpha") >> cAlpha_;
