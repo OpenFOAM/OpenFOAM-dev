@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -278,6 +278,7 @@ void Foam::uniformSet::calcSamples
         // (or is along edge)
         // Set points and cell/face labels to empty lists
 
+        const_cast<polyMesh&>(mesh()).moving(oldMoving);
         return;
     }
 
