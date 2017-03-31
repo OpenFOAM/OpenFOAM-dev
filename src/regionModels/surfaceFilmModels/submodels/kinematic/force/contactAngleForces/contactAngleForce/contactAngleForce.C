@@ -46,7 +46,10 @@ defineTypeNameAndDebug(contactAngleForce, 0);
 
 void contactAngleForce::initialise()
 {
-    const wordReList zeroForcePatches(coeffDict_.lookup("zeroForcePatches"));
+    const wordReList zeroForcePatches
+    (
+        coeffDict_.lookupOrDefault<wordReList>("zeroForcePatches", wordReList())
+    );
 
     if (zeroForcePatches.size())
     {
