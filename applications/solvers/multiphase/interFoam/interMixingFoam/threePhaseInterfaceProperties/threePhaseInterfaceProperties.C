@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,8 +168,8 @@ Foam::threePhaseInterfaceProperties::threePhaseInterfaceProperties
             ).lookup("cAlpha")
         )
     ),
-    sigma12_(mixture.lookup("sigma12")),
-    sigma13_(mixture.lookup("sigma13")),
+    sigma12_("sigma12", dimensionSet(1, 0, -2, 0, 0), mixture),
+    sigma13_("sigma13", dimensionSet(1, 0, -2, 0, 0), mixture),
 
     deltaN_
     (

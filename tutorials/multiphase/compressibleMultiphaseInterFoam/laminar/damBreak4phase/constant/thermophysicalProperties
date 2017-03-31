@@ -17,16 +17,16 @@ FoamFile
 
 phases (water oil mercury air);
 
-pMin            [1 -1 -2 0 0 0 0] 10000;
+pMin            10000;
 
 sigmas
 (
-    (air water) 0.07
-    (air oil) 0.07
-    (air mercury) 0.07
-    (water oil) 0.07
+    (air water)     0.07
+    (air oil)       0.07
+    (air mercury)   0.07
+    (water oil)     0.07
     (water mercury) 0.07
-    (oil mercury) 0.07
+    (oil mercury)   0.07
 );
 
 

@@ -20,18 +20,18 @@ phases (water air);
 water
 {
     transportModel  Newtonian;
-    nu              [0 2 -1 0 0 0 0] 1e-06;
-    rho             [1 -3 0 0 0 0 0] 998.2;
+    nu              1e-06;
+    rho             998.2;
 }
 
 air
 {
     transportModel  Newtonian;
-    nu              [0 2 -1 0 0 0 0] 1.48e-05;
-    rho             [1 -3 0 0 0 0 0] 1;
+    nu              1.48e-05;
+    rho             1;
 }
 
-sigma           [1 0 -2 0 0 0 0] 0;
+sigma           0;
 
 
 // ************************************************************************* //

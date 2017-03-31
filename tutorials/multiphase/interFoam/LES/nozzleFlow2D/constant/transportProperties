@@ -20,17 +20,17 @@ phases (fuel air);
 fuel
 {
     transportModel  Newtonian;
-    nu              [0 2 -1 0 0 0 0] 5.952e-06;
-    rho             [1 -3 0 0 0 0 0] 840;
+    nu              5.952e-06;
+    rho             840;
 }
 
 air
 {
     transportModel  Newtonian;
-    nu              [0 2 -1 0 0 0 0] 8.5e-07;
-    rho             [1 -3 0 0 0 0 0] 20;
+    nu              8.5e-07;
+    rho             20;
 }
 
-sigma           [1 0 -2 0 0 0 0] 0.0261;
+sigma           0.0261;
 
 // ************************************************************************* //

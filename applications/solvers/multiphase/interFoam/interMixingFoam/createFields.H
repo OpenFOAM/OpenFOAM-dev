@@ -40,7 +40,7 @@ const dimensionedScalar& rho1 = mixture.rho1();
 const dimensionedScalar& rho2 = mixture.rho2();
 const dimensionedScalar& rho3 = mixture.rho3();
 
-dimensionedScalar D23(mixture.lookup("D23"));
+dimensionedScalar D23("D23", dimViscosity, mixture);
 
 // Need to store rho for ddt(rho, U)
 volScalarField rho

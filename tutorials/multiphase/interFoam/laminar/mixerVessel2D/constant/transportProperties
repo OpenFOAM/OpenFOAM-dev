@@ -20,18 +20,18 @@ phases (water oir);
 water
 {
     transportModel  Newtonian;
-    nu              [0 2 -1 0 0 0 0] 1e-4;
-    rho             [1 -3 0 0 0 0 0] 1000;
+    nu              1e-4;
+    rho             1000;
 }
 
 oir
 {
     transportModel  Newtonian;
-    nu              [0 2 -1 0 0 0 0] 1e-4;
-    rho             [1 -3 0 0 0 0 0] 500;
+    nu              1e-4;
+    rho             500;
 }
 
-sigma           [1 0 -2 0 0 0 0] 0.05;
+sigma           0.05;
 
 
 // ************************************************************************* //
