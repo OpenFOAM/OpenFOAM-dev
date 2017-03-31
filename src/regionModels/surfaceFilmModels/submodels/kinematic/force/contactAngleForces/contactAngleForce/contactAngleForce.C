@@ -27,7 +27,6 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "fvcGrad.H"
 #include "unitConversion.H"
-#include "fvPatchField.H"
 #include "meshWavePatchDistMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -188,25 +187,27 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
     {
         if (!filmModel_.isCoupledPatch(patchi))
         {
-            const fvPatchField<scalar>& alphaf = alpha.boundaryField()[patchi];
-            const fvPatchField<scalar>& maskf = mask_.boundaryField()[patchi];
-            const scalarField& invDx = alphaf.patch().deltaCoeffs();
-            const labelUList& faceCells = alphaf.patch().faceCells();
+            const fvPatchField<scalar>& alphaPf = alpha.boundaryField()[patchi];
+            const fvPatchField<scalar>& maskPf = mask_.boundaryField()[patchi];
+            const fvPatchField<scalar>& sigmaPf = sigma.boundaryField()[patchi];
+            const fvPatchField<scalar>& thetaPf = theta.boundaryField()[patchi];
+            const scalarField& invDx = alphaPf.patch().deltaCoeffs();
+            const labelUList& faceCells = alphaPf.patch().faceCells();
 
-            forAll(alphaf, facei)
+            forAll(alphaPf, facei)
             {
-                if (maskf[facei] > 0.5)
+                if (maskPf[facei] > 0.5)
                 {
                     label cellO = faceCells[facei];
 
-                    if ((alpha[cellO] > 0.5) && (alphaf[facei] < 0.5))
+                    if ((alpha[cellO] > 0.5) && (alphaPf[facei] < 0.5))
                     {
                         const vector n =
                             gradAlpha[cellO]
                            /(mag(gradAlpha[cellO]) + ROOTVSMALL);
-                        const scalar cosTheta = cos(degToRad(theta[cellO]));
+                        const scalar cosTheta = cos(degToRad(thetaPf[facei]));
                         force[cellO] +=
-                            Ccf_*n*sigma[cellO]*(1 - cosTheta)/invDx[facei];
+                            Ccf_*n*sigmaPf[facei]*(1 - cosTheta)/invDx[facei];
                     }
                 }
             }
@@ -220,8 +221,10 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         tForce().write();
     }
 
-    tmp<fvVectorMatrix>
-        tfvm(new fvVectorMatrix(U, dimForce/dimArea*dimVolume));
+    tmp<fvVectorMatrix> tfvm
+    (
+        new fvVectorMatrix(U, dimForce/dimArea*dimVolume)
+    );
 
     tfvm.ref() += tForce;
 
