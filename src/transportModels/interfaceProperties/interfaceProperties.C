@@ -167,7 +167,8 @@ Foam::interfaceProperties::interfaceProperties
             alpha1.mesh().solverDict(alpha1.name()).lookup("cAlpha")
         )
     ),
-    sigma_("sigma", dimensionSet(1, 0, -2, 0, 0), dict),
+
+    sigmaPtr_(surfaceTensionModel::New(dict, alpha1.mesh())),
 
     deltaN_
     (
@@ -208,6 +209,13 @@ Foam::interfaceProperties::interfaceProperties
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::tmp<Foam::volScalarField>
+Foam::interfaceProperties::sigmaK() const
+{
+    return sigmaPtr_->sigma()*K_;
+}
+
+
 Foam::tmp<Foam::surfaceScalarField>
 Foam::interfaceProperties::surfaceTensionForce() const
 {
@@ -231,7 +239,7 @@ void Foam::interfaceProperties::correct()
 bool Foam::interfaceProperties::read()
 {
     alpha1_.mesh().solverDict(alpha1_.name()).lookup("cAlpha") >> cAlpha_;
-    transportPropertiesDict_.lookup("sigma") >> sigma_;
+    sigmaPtr_->read(transportPropertiesDict_);
 
     return true;
 }

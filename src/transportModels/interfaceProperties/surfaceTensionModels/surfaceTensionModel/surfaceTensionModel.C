@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,30 +23,50 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "immiscibleIncompressibleTwoPhaseMixture.H"
+#include "surfaceTensionModel.H"
+#include "fvMesh.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(surfaceTensionModel, 0);
+    defineRunTimeSelectionTable(surfaceTensionModel, dictionary);
+}
+
+const Foam::dimensionSet Foam::surfaceTensionModel::dimSigma(1, 0, -2, 0, 0);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::immiscibleIncompressibleTwoPhaseMixture::
-immiscibleIncompressibleTwoPhaseMixture
-(
-    const volVectorField& U,
-    const surfaceScalarField& phi
-)
+Foam::surfaceTensionModel::surfaceTensionModel(const fvMesh& mesh)
 :
-    incompressibleTwoPhaseMixture(U, phi),
-    interfaceProperties(alpha1(), U, *this)
+    regIOobject
+    (
+        IOobject
+        (
+            typeName, mesh.name(),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        )
+    ),
+    mesh_(mesh)
 {}
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-bool Foam::immiscibleIncompressibleTwoPhaseMixture::read()
+Foam::surfaceTensionModel::~surfaceTensionModel()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::surfaceTensionModel::writeData(Ostream& os) const
 {
-    return
-        incompressibleTwoPhaseMixture::read()
-     && interfaceProperties::read();
+    return os.good();
 }
 
 

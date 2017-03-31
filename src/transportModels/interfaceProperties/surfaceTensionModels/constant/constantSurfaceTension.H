@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,70 +22,92 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::immiscibleIncompressibleTwoPhaseMixture
+    Foam::surfaceTensionModels::constant
 
 Description
-    An immiscible incompressible two-phase mixture transport model
+    Uniform constant surface tension model.
+
+Usage
+    Example of the surface tension specification:
+    \verbatim
+        sigma
+        {
+            type                constant;
+            sigma               0.07;
+        }
+    \endverbatim
+
+See also
+    Foam::surfaceTensionModel
 
 SourceFiles
-    immiscibleIncompressibleTwoPhaseMixture.C
+    constantSurfaceTension.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef immiscibleIncompressibleTwoPhaseMixture_H
-#define immiscibleIncompressibleTwoPhaseMixture_H
+#ifndef constantSurfaceTension_H
+#define constantSurfaceTension_H
 
-#include "incompressibleTwoPhaseMixture.H"
-#include "interfaceProperties.H"
+#include "surfaceTensionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+namespace surfaceTensionModels
+{
+
 /*---------------------------------------------------------------------------*\
-           Class immiscibleIncompressibleTwoPhaseMixture Declaration
+                           Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
-class immiscibleIncompressibleTwoPhaseMixture
+class constant
 :
-    public incompressibleTwoPhaseMixture,
-    public interfaceProperties
+    public surfaceTensionModel
 {
+    // Private data
+
+        //- Surface tension coefficient
+        dimensionedScalar sigma_;
+
 
 public:
 
+    //- Runtime type information
+    TypeName("constant");
+
+
     // Constructors
 
-        //- Construct from components
-        immiscibleIncompressibleTwoPhaseMixture
+        //- Construct from dictionary and mesh
+        constant
         (
-            const volVectorField& U,
-            const surfaceScalarField& phi
+            const dictionary& dict,
+            const fvMesh& mesh
         );
 
 
     //- Destructor
-    virtual ~immiscibleIncompressibleTwoPhaseMixture()
-    {}
+    virtual ~constant();
 
 
     // Member Functions
 
-        //- Correct the transport and interface properties
-        virtual void correct()
-        {
-            incompressibleTwoPhaseMixture::correct();
-            interfaceProperties::correct();
-        }
+        //- Surface tension coefficient
+        virtual tmp<volScalarField> sigma() const;
 
-        //- Read base transportProperties dictionary
-        virtual bool read();
+        //- Update surface tension coefficient from given dictionary
+        virtual bool read(const dictionary& dict);
+
+        //- Write in dictionary format
+        virtual bool writeData(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace surfaceTensionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

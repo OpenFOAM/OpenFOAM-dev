@@ -25,13 +25,17 @@ Class
     Foam::temperatureDependentAlphaContactAngleFvPatchScalarField
 
 Description
-    Temperature-dependent constant alphaContactAngle scalar boundary condition.
+    Temperature-dependent alphaContactAngle scalar boundary condition.
+
+    The contact angle is evaluated from the specified Foam::Function1 for the
+    temperature field looked-up from the mesh database the name of which
+    may optionally be provided.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
         T            | Temperature field name  | no          | T
-        theta0       | Contact angle data      | yes         |
+        theta0       | Contact angle function  | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -46,6 +50,7 @@ Usage
 See also
     Foam::alphaContactAngleFvPatchScalarField
     Foam::constantAlphaContactAngleFvPatchScalarField
+    Foam::Function1
 
 SourceFiles
     temperatureDependentAlphaContactAngleFvPatchScalarField.C

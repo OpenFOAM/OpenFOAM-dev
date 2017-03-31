@@ -285,6 +285,12 @@ public:
                 const scalarField& alphat,
                 const label patchi
             ) const;
+
+
+    // IO
+
+        //- Read base transportProperties dictionary
+        virtual bool read();
 };
 
 

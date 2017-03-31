@@ -360,4 +360,17 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::alphaEff
 }
 
 
+bool Foam::twoPhaseMixtureThermo::read()
+{
+    if (psiThermo::read())
+    {
+        return interfaceProperties::read();
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 // ************************************************************************* //

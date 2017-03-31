@@ -162,7 +162,7 @@ public:
             friend Ostream& operator<< <Type>
             (
                 Ostream& os,
-                const Function1<Type>& de
+                const Function1<Type>& func
             );
 
             //- Write in dictionary format

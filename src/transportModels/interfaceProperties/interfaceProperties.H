@@ -40,6 +40,7 @@ SourceFiles
 #define interfaceProperties_H
 
 #include "IOdictionary.H"
+#include "surfaceTensionModel.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
@@ -63,7 +64,7 @@ class interfaceProperties
         scalar cAlpha_;
 
         //- Surface tension
-        dimensionedScalar sigma_;
+        autoPtr<surfaceTensionModel> sigmaPtr_;
 
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;
@@ -127,10 +128,7 @@ public:
             return nHatf_;
         }
 
-        tmp<volScalarField> sigmaK() const
-        {
-            return sigma_*K_;
-        }
+        tmp<volScalarField> sigmaK() const;
 
         tmp<surfaceScalarField> surfaceTensionForce() const;
 
