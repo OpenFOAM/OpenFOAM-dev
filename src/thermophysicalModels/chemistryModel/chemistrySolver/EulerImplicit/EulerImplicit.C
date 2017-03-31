@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,16 +72,16 @@ void Foam::EulerImplicit<ChemistryModel>::updateRRInReactionI
 
     forAll(R.lhs(), s)
     {
-        label si = R.lhs()[s].index;
-        scalar sl = R.lhs()[s].stoichCoeff;
+        const label si = R.lhs()[s].index;
+        const scalar sl = R.lhs()[s].stoichCoeff;
         RR[si][rRef] -= sl*pr*corr;
         RR[si][lRef] += sl*pf*corr;
     }
 
     forAll(R.rhs(), s)
     {
-        label si = R.rhs()[s].index;
-        scalar sr = R.rhs()[s].stoichCoeff;
+        const label si = R.rhs()[s].index;
+        const scalar sr = R.rhs()[s].stoichCoeff;
         RR[si][lRef] -= sr*pf*corr;
         RR[si][rRef] += sr*pr*corr;
     }
@@ -103,40 +103,40 @@ void Foam::EulerImplicit<ChemistryModel>::solve
 
     for (label i=0; i<nSpecie; i++)
     {
-        c[i] = max(0.0, c[i]);
+        c[i] = max(0, c[i]);
     }
 
     // Calculate the absolute enthalpy
-    scalar cTot = sum(c);
+    const scalar cTot = sum(c);
     typename ChemistryModel::thermoType mixture
     (
-        (c[0]/cTot)*this->specieThermo_[0]
+        (this->specieThermo_[0].W()*c[0])*this->specieThermo_[0]
     );
     for (label i=1; i<nSpecie; i++)
     {
-        mixture += (c[i]/cTot)*this->specieThermo_[i];
+        mixture += (this->specieThermo_[i].W()*c[i])*this->specieThermo_[i];
     }
-    scalar ha = mixture.Ha(p, T);
-
-    scalar deltaTEst = min(deltaT, subDeltaT);
+    const scalar ha = mixture.Ha(p, T);
+    const scalar deltaTEst = min(deltaT, subDeltaT);
 
     forAll(this->reactions(), i)
     {
         scalar pf, cf, pr, cr;
         label lRef, rRef;
 
-        scalar omegai = this->omegaI(i, c, T, p, pf, cf, lRef, pr, cr, rRef);
+        const scalar omegai =
+            this->omegaI(i, c, T, p, pf, cf, lRef, pr, cr, rRef);
 
-        scalar corr = 1.0;
+        scalar corr = 1;
         if (eqRateLimiter_)
         {
-            if (omegai < 0.0)
+            if (omegai < 0)
             {
-                corr = 1.0/(1.0 + pr*deltaTEst);
+                corr = 1/(1 + pr*deltaTEst);
             }
             else
             {
-                corr = 1.0/(1.0 + pf*deltaTEst);
+                corr = 1/(1 + pf*deltaTEst);
             }
         }
 
@@ -161,7 +161,7 @@ void Foam::EulerImplicit<ChemistryModel>::solve
         else
         {
             d = max(d, SMALL);
-            scalar cm = max(cTot - c[i], 1.0e-5);
+            const scalar cm = max(cTot - c[i], 1e-5);
             tMin = min(tMin, cm/d);
         }
     }
@@ -172,7 +172,7 @@ void Foam::EulerImplicit<ChemistryModel>::solve
     // Add the diagonal and source contributions from the time-derivative
     for (label i=0; i<nSpecie; i++)
     {
-        RR(i, i) += 1.0/deltaT;
+        RR(i, i) += 1/deltaT;
         RR.source()[i] = c[i]/deltaT;
     }
 
@@ -182,26 +182,16 @@ void Foam::EulerImplicit<ChemistryModel>::solve
     // Limit the composition
     for (label i=0; i<nSpecie; i++)
     {
-        c[i] = max(0.0, c[i]);
+        c[i] = max(0, c[i]);
     }
 
     // Update the temperature
-    cTot = sum(c);
-    mixture = (c[0]/cTot)*this->specieThermo_[0];
+    mixture = (this->specieThermo_[0].W()*c[0])*this->specieThermo_[0];
     for (label i=1; i<nSpecie; i++)
     {
-        mixture += (c[i]/cTot)*this->specieThermo_[i];
+        mixture += (this->specieThermo_[i].W()*c[i])*this->specieThermo_[i];
     }
     T = mixture.THa(ha, p, T);
-
-    /*
-    for (label i=0; i<nSpecie; i++)
-    {
-        cTp_[i] = c[i];
-    }
-    cTp_[nSpecie] = T;
-    cTp_[nSpecie+1] = p;
-    */
 }
 
 
