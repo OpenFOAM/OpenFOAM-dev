@@ -72,7 +72,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
     dSeed_(SMALL),
     sizeDistribution_
     (
-        distributionModels::distributionModel::New
+        distributionModel::New
         (
             this->coeffDict().subDict("sizeDistribution"),
             owner.rndGen()

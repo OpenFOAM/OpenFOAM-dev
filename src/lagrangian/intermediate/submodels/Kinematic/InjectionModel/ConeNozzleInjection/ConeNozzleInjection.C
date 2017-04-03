@@ -146,7 +146,7 @@ Foam::ConeNozzleInjection<CloudType>::ConeNozzleInjection
     ),
     sizeDistribution_
     (
-        distributionModels::distributionModel::New
+        distributionModel::New
         (
             this->coeffDict().subDict("sizeDistribution"),
             owner.rndGen()

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ Foam::solverPerformance Foam::fvMatrix<Foam::scalar>::fvSolver::solve
     scalarField totalSource(fvMat_.source());
     fvMat_.addBoundarySource(totalSource, false);
 
-    // assign new solver controls
+    // Assign new solver controls
     solver_->read(solverControls);
 
     solverPerformance solverPerf = solver_->solve

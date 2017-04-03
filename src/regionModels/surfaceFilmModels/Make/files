@@ -16,6 +16,7 @@ $(KINEMATICMODELS)/force/forceList/forceList.C
 $(KINEMATICMODELS)/force/contactAngleForces/contactAngleForce/contactAngleForce.C
 $(KINEMATICMODELS)/force/contactAngleForces/distribution/distributionContactAngleForce.C
 $(KINEMATICMODELS)/force/contactAngleForces/temperatureDependent/temperatureDependentContactAngleForce.C
+$(KINEMATICMODELS)/force/contactAngleForces/perturbedTemperatureDependent/perturbedTemperatureDependentContactAngleForce.C
 $(KINEMATICMODELS)/force/thermocapillaryForce/thermocapillaryForce.C
 
 $(KINEMATICMODELS)/injectionModel/injectionModel/injectionModel.C

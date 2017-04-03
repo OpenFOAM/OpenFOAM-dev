@@ -87,7 +87,7 @@ protected:
         cachedRandom rndGen_;
 
         //- Parcel size PDF model
-        const autoPtr<distributionModels::distributionModel>
+        const autoPtr<distributionModel>
             parcelDistribution_;
 
         //- Diameters of particles to inject into the dripping

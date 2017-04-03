@@ -27,7 +27,7 @@ Class
 Description
     Temperature dependent contact angle force
 
-    The contact angle in degrees is specified as a \c Function1 type, to
+    The contact angle in degrees is specified as a Foam::Function1 type, to
     enable the use of, e.g.  contant, polynomial, table values.
 
 See also
@@ -55,7 +55,7 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class temperatureDependentContactAngleForce Declaration
+            Class temperatureDependentContactAngleForce Declaration
 \*---------------------------------------------------------------------------*/
 
 class temperatureDependentContactAngleForce

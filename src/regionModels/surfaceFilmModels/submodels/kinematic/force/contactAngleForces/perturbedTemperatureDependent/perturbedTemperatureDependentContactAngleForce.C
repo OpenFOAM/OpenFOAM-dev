@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "distributionContactAngleForce.H"
+#include "perturbedTemperatureDependentContactAngleForce.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,19 +37,26 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(distributionContactAngleForce, 0);
-addToRunTimeSelectionTable(force, distributionContactAngleForce, dictionary);
+defineTypeNameAndDebug(perturbedTemperatureDependentContactAngleForce, 0);
+addToRunTimeSelectionTable
+(
+    force,
+    perturbedTemperatureDependentContactAngleForce,
+    dictionary
+);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-distributionContactAngleForce::distributionContactAngleForce
+perturbedTemperatureDependentContactAngleForce::
+perturbedTemperatureDependentContactAngleForce
 (
     surfaceFilmModel& film,
     const dictionary& dict
 )
 :
     contactAngleForce(typeName, film, dict),
+    thetaPtr_(Function1<scalar>::New("theta", coeffDict_)),
     rndGen_(label(0), -1),
     distribution_
     (
@@ -64,13 +71,15 @@ distributionContactAngleForce::distributionContactAngleForce
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-distributionContactAngleForce::~distributionContactAngleForce()
+perturbedTemperatureDependentContactAngleForce::
+~perturbedTemperatureDependentContactAngleForce()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-tmp<volScalarField> distributionContactAngleForce::theta() const
+tmp<volScalarField>
+perturbedTemperatureDependentContactAngleForce::theta() const
 {
     tmp<volScalarField> ttheta
     (
@@ -90,9 +99,15 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
     volScalarField& theta = ttheta.ref();
     volScalarField::Internal& thetai = theta.ref();
 
+    const volScalarField& T = filmModel_.T();
+
+    // Initialize with the function of temperature
+    thetai.field() = thetaPtr_->value(T());
+
+    // Add the stochastic perturbation
     forAll(thetai, celli)
     {
-        thetai[celli] = distribution_->sample();
+        thetai[celli] += distribution_->sample();
     }
 
     forAll(theta.boundaryField(), patchi)
@@ -101,9 +116,13 @@ tmp<volScalarField> distributionContactAngleForce::theta() const
         {
             fvPatchField<scalar>& thetaf = theta.boundaryFieldRef()[patchi];
 
+            // Initialize with the function of temperature
+            thetaf = thetaPtr_->value(T.boundaryField()[patchi]);
+
+            // Add the stochastic perturbation
             forAll(thetaf, facei)
             {
-                thetaf[facei] = distribution_->sample();
+                thetaf[facei] += distribution_->sample();
             }
         }
     }

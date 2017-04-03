@@ -60,7 +60,7 @@ drippingInjection::drippingInjection
     rndGen_(label(0), -1),
     parcelDistribution_
     (
-        distributionModels::distributionModel::New
+        distributionModel::New
         (
             coeffDict_.subDict("parcelDistribution"),
             rndGen_

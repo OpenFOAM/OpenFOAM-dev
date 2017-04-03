@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,17 +29,14 @@ License
 
 namespace Foam
 {
-    namespace distributionModels
-    {
-        defineTypeNameAndDebug(distributionModel, 0);
-        defineRunTimeSelectionTable(distributionModel, dictionary);
-    }
+    defineTypeNameAndDebug(distributionModel, 0);
+    defineRunTimeSelectionTable(distributionModel, dictionary);
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::distributionModels::distributionModel::check() const
+void Foam::distributionModel::check() const
 {
     if (minValue() < 0)
     {
@@ -62,7 +59,7 @@ void Foam::distributionModels::distributionModel::check() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::distributionModels::distributionModel::distributionModel
+Foam::distributionModel::distributionModel
 (
     const word& name,
     const dictionary& dict,
@@ -74,7 +71,7 @@ Foam::distributionModels::distributionModel::distributionModel
 {}
 
 
-Foam::distributionModels::distributionModel::distributionModel
+Foam::distributionModel::distributionModel
 (
     const distributionModel& p
 )
@@ -86,7 +83,7 @@ Foam::distributionModels::distributionModel::distributionModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::distributionModels::distributionModel::~distributionModel()
+Foam::distributionModel::~distributionModel()
 {}
 
 

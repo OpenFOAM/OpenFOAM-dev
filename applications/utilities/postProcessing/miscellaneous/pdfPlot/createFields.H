@@ -22,9 +22,9 @@
 
     cachedRandom rndGen(label(0), -1);
 
-    autoPtr<distributionModels::distributionModel> p
+    autoPtr<distributionModel> p
     (
-        distributionModels::distributionModel::New
+        distributionModel::New
         (
             pdfDictionary,
             rndGen

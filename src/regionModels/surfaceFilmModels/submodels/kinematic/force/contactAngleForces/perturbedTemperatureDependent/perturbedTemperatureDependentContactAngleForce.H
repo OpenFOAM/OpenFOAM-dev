@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------* \
+/*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
@@ -22,24 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::distributionContactAngleForce
+    Foam::regionModels::surfaceFilmModels::
+        perturbedTemperatureDependentContactAngleForce
 
 Description
-    PDF distribution based film contact angle force
+    Temperature dependent contact angle force with a stochastic perturbation
+
+    The contact angle in degrees is specified as a Foam::Function1 type, to
+    enable the use of, e.g.  contant, polynomial, table values and the
+    stochastic perturbation obtained from a
+    Foam::distributionModels::distributionModel
 
 See also
     Foam::regionModels::surfaceFilmModels::contactAngleForce
+    Foam::regionModels::surfaceFilmModels::temperatureDependentContactAngleForce
+    Foam::regionModels::surfaceFilmModels::distributionContactAngleForce
+    Foam::Function1Types
     Foam::distributionModel
 
 SourceFiles
-    distributionContactAngleForce.C
+    perturbedTemperatureDependentContactAngleForce.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef distributionContactAngleForce_H
-#define distributionContactAngleForce_H
+#ifndef perturbedTemperatureDependentContactAngleForce_H
+#define perturbedTemperatureDependentContactAngleForce_H
 
 #include "contactAngleForce.H"
+#include "Function1.H"
 #include "distributionModel.H"
 #include "cachedRandom.H"
 
@@ -53,14 +63,17 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                Class distributionContactAngleForce Declaration
+       Class perturbedTemperatureDependentContactAngleForce Declaration
 \*---------------------------------------------------------------------------*/
 
-class distributionContactAngleForce
+class perturbedTemperatureDependentContactAngleForce
 :
     public contactAngleForce
 {
     // Private Data
+
+        //- Contact angle function
+        autoPtr<Function1<scalar>> thetaPtr_;
 
         //- Random number generator
         cachedRandom rndGen_;
@@ -72,10 +85,13 @@ class distributionContactAngleForce
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        distributionContactAngleForce(const distributionContactAngleForce&);
+        perturbedTemperatureDependentContactAngleForce
+        (
+            const perturbedTemperatureDependentContactAngleForce&
+        );
 
         //- Disallow default bitwise assignment
-        void operator=(const distributionContactAngleForce&);
+        void operator=(const perturbedTemperatureDependentContactAngleForce&);
 
 
 protected:
@@ -87,13 +103,13 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("distributionContactAngle");
+    TypeName("perturbedTemperatureDependentContactAngle");
 
 
     // Constructors
 
         //- Construct from surface film model
-        distributionContactAngleForce
+        perturbedTemperatureDependentContactAngleForce
         (
             surfaceFilmModel& film,
             const dictionary& dict
@@ -101,7 +117,7 @@ public:
 
 
     //- Destructor
-    virtual ~distributionContactAngleForce();
+    virtual ~perturbedTemperatureDependentContactAngleForce();
 };
 
 
