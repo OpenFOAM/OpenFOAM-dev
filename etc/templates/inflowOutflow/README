@@ -12,18 +12,12 @@ Background Mesh
 ===============
 + The user should establish the bounds of their CAD.obj file
 + The blockMeshDict file contains a backgroundMesh subditionary
-+ Set xMin, xMax, etc to be beyond the CAD.obj bounds
++ For internal flows, where CAD.obj describes the external boundary, set xMin,
+  xMax, etc to be beyond the CAD.obj bounds
++ For external flows, the background mesh can define the external boundary by
+  uncommenting entries, e.g. inlet, in the boundary section of blockMeshDict
 + Set background mesh density with xCells, yCells, zCells
 + Run blockMesh
-
-Background Mesh (alternative)
-=============================
-+ The user can adopt the background mesh patches in the mesh
-+ For example, the background mesh can provide external patches of an external
-  flow
-+ An alternative blockMeshDict file is set up for this: blockMeshDict.extPatches
-+ Simply copy blockMeshDict.extPatches to blockMeshDict and edit inlet, outlet
-  patches accordingly
 
 Castellated Mesh
 ================
