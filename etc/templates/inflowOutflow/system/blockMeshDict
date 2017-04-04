@@ -59,6 +59,7 @@ edges
 
 boundary
 (
+//  Uncomment below to define patches in background mesh
 /*
     left
     {
