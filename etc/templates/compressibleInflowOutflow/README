@@ -15,7 +15,7 @@ Background Mesh
 + For internal flows, where CAD.obj describes the external boundary, set xMin,
   xMax, etc to be beyond the CAD.obj bounds
 + For external flows, the background mesh can define the external boundary by
-  uncommenting entries, e.g. inlet, in the boundary section of blockMeshDict
+  uncommenting entries, e.g. left, in the boundary section of blockMeshDict
 + Set background mesh density with xCells, yCells, zCells
 + Run blockMesh
 
