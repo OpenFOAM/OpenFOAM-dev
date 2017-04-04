@@ -12,12 +12,48 @@ Overview
 + The fixed.obj should contain an inlet and outlet region to create the relevant
   patches in the mesh
 
-Meshing
-=======
-+ Meshing is setup as in the inflowOutflow template
-+ See $FOAM_ETC/templates/inflowOutflow/README for details
-+ For AMI, the AMI interface can be set up by running createBaffles which uses
-  the createBafflesDict file
+Background Mesh
+===============
++ The blockMeshDict file contains a configuration for a cylindrical background
+  mesh aligned along the z-axis
++ The mesh includes a core box-shaped block and inner and outer cylinders
++ The backgroundMesh subdictionary includes key geometric parameters of the mesh
++ The inner cylinder relates to the rotatingZone.obj
++ The outer cyliner relates to the external boundary, e.g. fixed.obj
++ Set the radii of inner and outer cylinders to ~2% larger than respective OBJ
+  files
++ The background mesh can define the external boundary by uncommenting
+  entries, e.g. inlet, in the boundary section of blockMeshDict
++ Set background mesh density with boxCells, inCells, outCells and zCells
++ Run blockMesh
++ NOTE: An alternative blockMeshDict-box file exists if the user wants a regular
+  box-shaped background mesh, similar to set up in the inflowOutflow template
+
+Features
+========
++ Run surfaceFeatureExtract to extract features for explicit feature capturing
+
+Castellated Mesh
+================
++ In the snappyHexMeshDict file, replace <inletPatch> with the name of the inlet
+  region in the fixed.obj file, if it defines the external boundary
++ Replace <outletPatch> with the name of the outlet region
++ run snappyHexMesh to obtain a castellatedMesh
++ Review the mesh; modify refinement levels and regenerate the mesh as required
+  (levels are set in refinementSurfaces and refinementRegions)
+
+Snapped Mesh
+============
++ In snappyHexMeshDict, set castellatedMesh off; snap on;
++ Run the snapping phase of snappyHexMesh
++ Review the mesh
+
+Layers
+======
++ To add layers to the mesh along wall boundary patches...
++ Switch on addLayers; switch snap off;
++ Run snappyHexMesh
++ The number of layers can be changed by modifying nSurfaceLayers
 
 Initialisation
 ==============

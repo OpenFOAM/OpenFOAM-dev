@@ -2,6 +2,61 @@ Overview
 ========
 + Template case for rotating geometry flow for a closed geometry
 + Can be used for MRF or AMI simulations
-+ Setup to run the simpleFoam solver
-+ Set up is like inflowOutflowRotating but without inlet and outlet
-+ See $FOAM_ETC/templates/closedVolume/README for details of use
++ Setup to run the simpleFoam solver for MRF, pimpleDyMFoam for AMI
++ The case is designed to be meshed with snappyHexMesh
++ snappyHexMesh is setup to use 3 trisurface files
+  + fixed.obj: CAD of the stationary geometry
+  + rotating.obj: CAD of the rotating geometry
+  + rotatingZone.obj: CAD of surface bounding the rotating region
++ Copy the *.obj files to the constant/triSurface directory
++ The fixed.obj should contain an inlet and outlet region to create the relevant
+  patches in the mesh
+
+Background Mesh
+===============
++ The blockMeshDict file contains a configuration for a cylindrical background
+  mesh aligned along the z-axis
++ The mesh includes a core box-shaped block and inner and outer cylinders
++ The backgroundMesh subdictionary includes key geometric parameters of the mesh
++ The inner cylinder relates to the rotatingZone.obj
++ The outer cyliner relates to the external boundary, e.g. fixed.obj
++ Set the radii of inner and outer cylinders to ~2% larger than respective OBJ
+  files
++ Set background mesh density with boxCells, inCells, outCells and zCells
++ Run blockMesh
++ NOTE: An alternative blockMeshDict-box file exists if the user wants a regular
+  box-shaped background mesh, similar to set up in the inflowOutflow template
+
+Features
+========
++ Run surfaceFeatureExtract to extract features for explicit feature capturing
+
+Castellated Mesh
+================
++ run snappyHexMesh to obtain a castellatedMesh
++ Review the mesh; modify refinement levels and regenerate the mesh as required
+  (levels are set in refinementSurfaces and refinementRegions)
+
+Snapped Mesh
+============
++ In snappyHexMeshDict, set castellatedMesh off; snap on;
++ Run the snapping phase of snappyHexMesh
++ Review the mesh
+
+Layers
+======
++ To add layers to the mesh along wall boundary patches...
++ Switch on addLayers; switch snap off;
++ Run snappyHexMesh
++ The number of layers can be changed by modifying nSurfaceLayers
+
+Initialisation
+==============
++ Initialise the field files in the 0 directory
++ Set the viscosity in constant/transportProperties
++ Rotating properties are set in constant/rotatingZoneProperties
+  + For MRF, this file is included from system/fvOptions
+  + For AMI, this file is included from constant/dynamicMeshDict
++ Ensure settings are appropriate in controlDict, fvSchemes, fvSolution, for
+  relevant simulation; for AMI, in particular, ensure that deltaT, ddtSchemes
+  and relaxationFactors are set for transient simulation

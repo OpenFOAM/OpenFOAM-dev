@@ -14,47 +14,175 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Example configuration:
+// - Cylindrical mesh along z-axis (0 < z < 10)
+// - External boundary (fixed.obj) radius = 3
+// - Rotating zone (rotatingZone.obj) radius = 1
+
 backgroundMesh
 {
-    xMin    -1;
-    xMax     1;
-    yMin    -1;
-    yMax     1;
-    zMin    -1;
-    zMax     1;
-    xCells  20;
-    yCells  20;
-    zCells  20;
+    radOut     3.06; // larger than fixed.obj by ~ 1/cos(45/boxCells)
+    radOutN   -3.06;
+    radIn      1.02; // larger than rotatingZone.obj (see above)
+    radInN    -1.02;
+    radBox     0.30; // ~30% of rotatingZone.obj
+    radBoxN   -0.30;
+
+    zMin       0;
+    zMax       10;   // External boundary axial length
+
+    boxCells   5;    // Cells across inner box-shaped block
+    inCells    5;    // Cells in radial direction, inner cylinder
+    outCells   8;    // Cells in radial direction, outer cylinder
+    zCells     50;   // Cells in axial direction
+
+    outGrading 2.0;  // Expansion ratio in outer region, radial direction
+}
+
+geometry
+{
+    rotatingZone
+    {
+        type   searchableCylinder;
+        point1 (0 0 -100);
+        point2 (0 0  100);
+        radius $:backgroundMesh.radIn;
+    }
+
+    fixed
+    {
+        type   searchableCylinder;
+        point1 (0 0 -100);
+        point2 (0 0  100);
+        radius $:backgroundMesh.radOut;
+    }
 }
 
 convertToMeters 1;
 
 vertices
 (
-    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMin)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMin)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMin)
-    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMin)
+    ($:backgroundMesh.radBoxN $:backgroundMesh.radBoxN $:backgroundMesh.zMin)
+    ($:backgroundMesh.radBox  $:backgroundMesh.radBoxN $:backgroundMesh.zMin)
+    ($:backgroundMesh.radBox  $:backgroundMesh.radBox  $:backgroundMesh.zMin)
+    ($:backgroundMesh.radBoxN $:backgroundMesh.radBox  $:backgroundMesh.zMin)
 
-    ($:backgroundMesh.xMin $:backgroundMesh.yMin $:backgroundMesh.zMax)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMin $:backgroundMesh.zMax)
-    ($:backgroundMesh.xMax $:backgroundMesh.yMax $:backgroundMesh.zMax)
-    ($:backgroundMesh.xMin $:backgroundMesh.yMax $:backgroundMesh.zMax)
+    project
+    ($:backgroundMesh.radInN $:backgroundMesh.radInN $:backgroundMesh.zMin)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radIn $:backgroundMesh.radInN $:backgroundMesh.zMin)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radIn $:backgroundMesh.radIn $:backgroundMesh.zMin)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radInN $:backgroundMesh.radIn $:backgroundMesh.zMin)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radOutN $:backgroundMesh.radOutN $:backgroundMesh.zMin)
+    (fixed)
+
+    project
+    ($:backgroundMesh.radOut  $:backgroundMesh.radOutN $:backgroundMesh.zMin)
+    (fixed)
+
+    project
+    ($:backgroundMesh.radOut  $:backgroundMesh.radOut  $:backgroundMesh.zMin)
+    (fixed)
+
+    project
+    ($:backgroundMesh.radOutN $:backgroundMesh.radOut  $:backgroundMesh.zMin)
+    (fixed)
+
+    ($:backgroundMesh.radBoxN $:backgroundMesh.radBoxN $:backgroundMesh.zMax)
+    ($:backgroundMesh.radBox  $:backgroundMesh.radBoxN $:backgroundMesh.zMax)
+    ($:backgroundMesh.radBox  $:backgroundMesh.radBox  $:backgroundMesh.zMax)
+    ($:backgroundMesh.radBoxN $:backgroundMesh.radBox  $:backgroundMesh.zMax)
+
+    project
+    ($:backgroundMesh.radInN  $:backgroundMesh.radInN  $:backgroundMesh.zMax)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radIn   $:backgroundMesh.radInN  $:backgroundMesh.zMax)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radIn   $:backgroundMesh.radIn   $:backgroundMesh.zMax)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radInN  $:backgroundMesh.radIn   $:backgroundMesh.zMax)
+    (rotatingZone)
+
+    project
+    ($:backgroundMesh.radOutN $:backgroundMesh.radOutN $:backgroundMesh.zMax)
+    (fixed)
+
+    project
+    ($:backgroundMesh.radOut  $:backgroundMesh.radOutN $:backgroundMesh.zMax)
+    (fixed)
+
+    project
+    ($:backgroundMesh.radOut  $:backgroundMesh.radOut  $:backgroundMesh.zMax)
+    (fixed)
+
+    project
+    ($:backgroundMesh.radOutN $:backgroundMesh.radOut  $:backgroundMesh.zMax)
+    (fixed)
 );
+
+boxMesh
+($:backgroundMesh.boxCells $:backgroundMesh.boxCells $:backgroundMesh.zCells)
+simpleGrading (1 1 1);
+
+inMesh
+($:backgroundMesh.boxCells $:backgroundMesh.inCells $:backgroundMesh.zCells)
+simpleGrading (1 1 1);
+
+outMesh
+($:backgroundMesh.boxCells $:backgroundMesh.outCells $:backgroundMesh.zCells)
+simpleGrading (1 $:backgroundMesh.outGrading 1);
 
 blocks
 (
-    hex (0 1 2 3 4 5 6 7)
-    (
-        $:backgroundMesh.xCells
-        $:backgroundMesh.yCells
-        $:backgroundMesh.zCells
-    )
-    simpleGrading (1 1 1)
+    hex (0 1 2 3 12 13 14 15) $boxMesh
+
+    hex (1 0 4 5 13 12 16 17) $inMesh
+    hex (0 3 7 4 12 15 19 16) $inMesh
+    hex (2 1 5 6 14 13 17 18) $inMesh
+    hex (3 2 6 7 15 14 18 19) $inMesh
+
+    hex (5 4  8  9 17 16 20 21) $outMesh
+    hex (4 7 11  8 16 19 23 20) $outMesh
+    hex (6 5  9 10 18 17 21 22) $outMesh
+    hex (7 6 10 11 19 18 22 23) $outMesh
 );
 
 edges
 (
+    project  4  5  (rotatingZone)
+    project  5  6  (rotatingZone)
+    project  6  7  (rotatingZone)
+    project  7  4  (rotatingZone)
+    project 16 17  (rotatingZone)
+    project 17 18  (rotatingZone)
+    project 18 19  (rotatingZone)
+    project 19 16  (rotatingZone)
+
+    project  8  9  (fixed)
+    project  9 10  (fixed)
+    project 10 11  (fixed)
+    project 11  8  (fixed)
+    project 20 21  (fixed)
+    project 21 22  (fixed)
+    project 22 23  (fixed)
+    project 23 20  (fixed)
 );
 
 boundary

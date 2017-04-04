@@ -59,6 +59,8 @@ edges
 
 boundary
 (
+//  Uncomment below to define patches in background mesh
+/*
     left
     {
         type patch;
@@ -112,6 +114,7 @@ boundary
             (3 2 6 7)
         );
     }
+*/
 );
 
 mergePatchPairs

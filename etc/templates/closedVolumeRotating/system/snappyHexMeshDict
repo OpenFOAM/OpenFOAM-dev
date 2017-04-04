@@ -88,6 +88,7 @@ castellatedMeshControls
 snapControls
 {
     explicitFeatureSnap    true;
+    implicitFeatureSnap    false;
 }
 
 addLayersControls
