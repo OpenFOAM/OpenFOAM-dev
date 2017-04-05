@@ -80,6 +80,10 @@ public:
 
     // Member Functions
 
+        //- Return reference to the selected physical properties class
+        inline const ThermophysicalProperties& properties() const;
+
+
         // Physical constants which define the specie
 
             //- Molecular weight [kg/kmol]

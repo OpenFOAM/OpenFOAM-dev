@@ -26,6 +26,14 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermophysicalProperties>
+inline const ThermophysicalProperties&
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>
+::properties() const
+{
+    return propertiesPtr_();
+}
+
+template<class ThermophysicalProperties>
 inline Foam::scalar
 Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::W() const
 {

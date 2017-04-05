@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,111 +22,99 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pureMixture
+    Foam::surfaceTensionModels::liquidProperties
 
 Description
-    Foam::pureMixture
+    Temperature-dependent surface tension model in which the surface tension
+    function provided by the phase Foam::liquidProperties class is used.
+
+Usage
+    \table
+        Property     | Description               | Required    | Default value
+        phase        | Phase name                | yes         |
+    \endtable
+
+    Example of the surface tension specification:
+    \verbatim
+        sigma
+        {
+            type    liquidProperties;
+            phase   water;
+        }
+    \endverbatim
+
+See also
+    Foam::surfaceTensionModel
 
 SourceFiles
-    pureMixture.C
+    liquidPropertiesSurfaceTension.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pureMixture_H
-#define pureMixture_H
+#ifndef liquidPropertiesSurfaceTension_H
+#define liquidPropertiesSurfaceTension_H
 
-#include "basicMixture.H"
+#include "surfaceTensionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
+namespace surfaceTensionModels
+{
+
 /*---------------------------------------------------------------------------*\
-                         Class pureMixture Declaration
+                           Class liquidProperties Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
-class pureMixture
+class liquidProperties
 :
-    public basicMixture
+    public surfaceTensionModel
 {
     // Private data
 
-        ThermoType mixture_;
-
-        //- Construct as copy (not implemented)
-        pureMixture(const pureMixture<ThermoType>&);
+        //- Name of the liquid phase
+        word phaseName_;
 
 
 public:
 
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
+    //- Runtime type information
+    TypeName("liquidProperties");
 
 
     // Constructors
 
-        //- Construct from dictionary, mesh and phase name
-        pureMixture(const dictionary&, const fvMesh&, const word&);
-
-
-    // Member functions
-
-        const ThermoType& mixture() const
-        {
-            return mixture_;
-        }
-
-        const ThermoType& cellMixture(const label) const
-        {
-            return mixture_;
-        }
-
-        const ThermoType& patchFaceMixture
+        //- Construct from dictionary and mesh
+        liquidProperties
         (
-            const label,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
+            const dictionary& dict,
+            const fvMesh& mesh
+        );
 
-        const ThermoType& cellVolMixture
-        (
-            const scalar,
-            const scalar,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
 
-        const ThermoType& patchFaceVolMixture
-        (
-            const scalar,
-            const scalar,
-            const label,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
+    //- Destructor
+    virtual ~liquidProperties();
 
-        //- Read dictionary
-        void read(const dictionary&);
+
+    // Member Functions
+
+        //- Surface tension coefficient
+        virtual tmp<volScalarField> sigma() const;
+
+        //- Update surface tension coefficient from given dictionary
+        virtual bool read(const dictionary& dict);
+
+        //- Write in dictionary format
+        virtual bool writeData(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace surfaceTensionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-#ifdef NoRepository
-    #include "pureMixture.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

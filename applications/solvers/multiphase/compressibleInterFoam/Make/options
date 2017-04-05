@@ -13,6 +13,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -ltwoPhaseMixtureThermo \
+    -ltwoPhaseSurfaceTension \
     -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \

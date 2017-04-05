@@ -23,8 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "liquidThermo.H"
-#include "addToRunTimeSelectionTable.H"
+#include "rhoThermo.H"
+#include "heRhoThermo.H"
+#include "pureMixture.H"
+#include "thermo.H"
+#include "sensibleInternalEnergy.H"
+#include "thermophysicalPropertiesSelector.H"
+#include "liquidProperties.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -33,33 +38,18 @@ namespace Foam
 
 /* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
 
-defineTemplateTypeNameAndDebugWithName
-(
-    heRhoThermopureMixtureliquidProperties,
-    "heRhoThermo<pureMixture<liquid,sensibleInternalEnergy>>",
-    0
-);
-
-addToRunTimeSelectionTable
-(
-    basicThermo,
-    heRhoThermopureMixtureliquidProperties,
-    fvMesh
-);
-
-addToRunTimeSelectionTable
-(
-    fluidThermo,
-    heRhoThermopureMixtureliquidProperties,
-    fvMesh
-);
-
-addToRunTimeSelectionTable
-(
+typedef heRhoThermo
+<
     rhoThermo,
-    heRhoThermopureMixtureliquidProperties,
-    fvMesh
-);
+    pureMixture
+    <
+        species::thermo
+        <
+            thermophysicalPropertiesSelector<liquidProperties>,
+            sensibleInternalEnergy
+        >
+    >
+> heRhoThermopureMixtureliquidProperties;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
