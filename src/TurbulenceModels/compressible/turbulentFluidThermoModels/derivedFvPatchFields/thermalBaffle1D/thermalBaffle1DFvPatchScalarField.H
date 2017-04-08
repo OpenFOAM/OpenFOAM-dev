@@ -31,8 +31,8 @@ Description
     This BC solves a steady 1D thermal baffle.
 
     The solid properties are specify as dictionary. Optionaly radiative heat
-    flux (Qr) can be incorporated into the balance. Some under-relaxation might
-    be needed on Qr.  Baffle and solid properties need to be specified on the
+    flux (qr) can be incorporated into the balance. Some under-relaxation might
+    be needed on qr.  Baffle and solid properties need to be specified on the
     master side of the baffle.
 
 Usage
@@ -48,7 +48,7 @@ Usage
         thickness       uniform 0.005;  // thickness [m]
         Qs              uniform 100;    // heat flux [W/m2]
 
-        Qr              none;
+        qr              none;
         relaxation      1;
 
         // Solid thermo
@@ -78,7 +78,7 @@ Usage
         type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
         samplePatch     <masterPatchName>;
 
-        Qr              none;
+        qr              none;
         relaxation      1;
     }
     \endverbatim
@@ -132,14 +132,14 @@ class thermalBaffle1DFvPatchScalarField
         //- Solid thermo
         mutable autoPtr<solidType> solidPtr_;
 
-        //- Cache Qr for relaxation
-        scalarField QrPrevious_;
+        //- Cache qr for relaxation
+        scalarField qrPrevious_;
 
-        //- Relaxation for Qr
-        scalar QrRelaxation_;
+        //- Relaxation for qr
+        scalar qrRelaxation_;
 
         //- Name of the radiative heat flux in local region
-        const word QrName_;
+        const word qrName_;
 
 
     // Private members

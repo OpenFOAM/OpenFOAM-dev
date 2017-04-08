@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Description
         type            filmPyrolysisRadiativeCoupledMixed;
         Tnbr            T;
         kappa           fluidThermo;
-        Qr              Qr;
+        qr              qr;
         kappaName       none;
         filmDeltaDry    0.0;
         filmDeltaWet    3e-4;
@@ -58,7 +58,7 @@ Description
 
     \verbatim
         qConv = ratio*htcwfilm*(Tfilm - *this);
-        qRad = (1.0 - ratio)*Qr;
+        qRad = (1.0 - ratio)*qr;
     \endverbatim
 
     Then the solid can gain or loose energy through radiation or conduction
@@ -67,7 +67,7 @@ Description
     Notes:
 
     - kappa and \c kappaName are inherited from temperatureCoupledBase.
-    - Qr is the radiative flux defined in the radiation model.
+    - qr is the radiative flux defined in the radiation model.
 
 
 See also
@@ -124,7 +124,7 @@ private:
         const word TnbrName_;
 
         //- Name of the radiative heat flux
-        const word QrName_;
+        const word qrName_;
 
         //- Convective Scaling Factor (as determined by Prateep's tests)
         const scalar convectiveScaling_;

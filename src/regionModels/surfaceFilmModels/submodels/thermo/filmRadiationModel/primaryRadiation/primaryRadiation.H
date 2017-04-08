@@ -101,7 +101,7 @@ public:
             virtual void correct();
 
             //- Return the radiation sensible enthalpy source
-            //  Also updates QrNet
+            //  Also updates qrNet
             virtual tmp<volScalarField> Shs();
 };
 

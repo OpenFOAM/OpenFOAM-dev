@@ -74,7 +74,7 @@ relaxationFactors
         "(k|epsilon|omega)" 0.7;
         G               0.7;
         "ILambda.*"     0.7;
-        Qr              0.7;
+        qr              0.7;
     }
 }
 

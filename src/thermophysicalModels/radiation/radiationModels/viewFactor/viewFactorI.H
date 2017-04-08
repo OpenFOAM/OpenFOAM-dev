@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,11 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-inline const Foam::volScalarField& Foam::radiation::viewFactor::Qr() const
+inline const Foam::volScalarField& Foam::radiation::viewFactor::qr() const
 {
-    return Qr_;
+    return qr_;
 }
-
 
 
 // ************************************************************************* //

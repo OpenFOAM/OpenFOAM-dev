@@ -54,8 +54,8 @@ Usage
         Tnbr               T;
         kappa              fluidThermo; // or solidThermo
         KappaName          none;
-        QrNbr              Qr;//or none.Name of Qr field on neighbourregion
-        Qr                 none;// or none.Name of Qr field on localregion
+        qrNbr              qr;//or none.Name of qr field on neighbourregion
+        qr                 none;// or none.Name of qr field on localregion
         value              uniform 300;
 
         // Baffle region name

@@ -38,8 +38,8 @@ boundaryField
         filmRegion      filmRegion;
         Tnbr            T;
         kappaMethod     solidThermo;
-        QrNbr           Qr;
-        Qr              none;
+        qrNbr           qr;
+        qr              none;
         filmDeltaDry    0.0;
         filmDeltaWet    2e-4;
         value           uniform 298;

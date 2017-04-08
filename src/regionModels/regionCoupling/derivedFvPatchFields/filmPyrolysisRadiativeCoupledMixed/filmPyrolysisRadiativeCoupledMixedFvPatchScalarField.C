@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
     filmRegionName_("surfaceFilmProperties"),
     pyrolysisRegionName_("pyrolysisProperties"),
     TnbrName_("undefined-Tnbr"),
-    QrName_("undefined-Qr"),
+    qrName_("undefined-qr"),
     convectiveScaling_(1.0),
     filmDeltaDry_(0.0),
     filmDeltaWet_(0.0)
@@ -135,7 +135,7 @@ filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
     filmRegionName_(psf.filmRegionName_),
     pyrolysisRegionName_(psf.pyrolysisRegionName_),
     TnbrName_(psf.TnbrName_),
-    QrName_(psf.QrName_),
+    qrName_(psf.qrName_),
     convectiveScaling_(psf.convectiveScaling_),
     filmDeltaDry_(psf.filmDeltaDry_),
     filmDeltaWet_(psf.filmDeltaWet_)
@@ -161,7 +161,7 @@ filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
         dict.lookupOrDefault<word>("pyrolysisRegion", "pyrolysisProperties")
     ),
     TnbrName_(dict.lookup("Tnbr")),
-    QrName_(dict.lookup("Qr")),
+    qrName_(dict.lookup("qr")),
     convectiveScaling_(dict.lookupOrDefault<scalar>("convectiveScaling", 1.0)),
     filmDeltaDry_(readScalar(dict.lookup("filmDeltaDry"))),
     filmDeltaWet_(readScalar(dict.lookup("filmDeltaWet")))
@@ -207,7 +207,7 @@ filmPyrolysisRadiativeCoupledMixedFvPatchScalarField
     filmRegionName_(psf.filmRegionName_),
     pyrolysisRegionName_(psf.pyrolysisRegionName_),
     TnbrName_(psf.TnbrName_),
-    QrName_(psf.QrName_),
+    qrName_(psf.qrName_),
     convectiveScaling_(psf.convectiveScaling_),
     filmDeltaDry_(psf.filmDeltaDry_),
     filmDeltaWet_(psf.filmDeltaWet_)
@@ -268,25 +268,25 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
     const pyrolysisModelType& pyrolysis = pyrModel();
     const filmModelType& film = filmModel();
 
-    // Obtain Rad heat (Qr)
-    scalarField Qr(patch().size(), 0.0);
+    // Obtain Rad heat (qr)
+    scalarField qr(patch().size(), 0.0);
 
     label coupledPatchi = -1;
     if (pyrolysisRegionName_ == mesh.name())
     {
         coupledPatchi = patchi;
-        if (QrName_ != "none")
+        if (qrName_ != "none")
         {
-            Qr = nbrPatch.lookupPatchField<volScalarField, scalar>(QrName_);
-            mpp.distribute(Qr);
+            qr = nbrPatch.lookupPatchField<volScalarField, scalar>(qrName_);
+            mpp.distribute(qr);
         }
     }
     else if (pyrolysis.primaryMesh().name() == mesh.name())
     {
         coupledPatchi = nbrPatch.index();
-        if (QrName_ != "none")
+        if (qrName_ != "none")
         {
-            Qr = patch().lookupPatchField<volScalarField, scalar>(QrName_);
+            qr = patch().lookupPatchField<volScalarField, scalar>(qrName_);
         }
     }
     else
@@ -344,7 +344,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
 
     scalarField qConv(ratio*htcwfilm*(Tfilm - Tp)*convectiveScaling_);
 
-    scalarField qRad((1.0 - ratio)*Qr);
+    scalarField qRad((1.0 - ratio)*qr);
 
     scalarField alpha(KDeltaNbr - (qRad + qConv)/Tp);
 
@@ -357,7 +357,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
     if (debug)
     {
         scalar Qc = gSum(qConv*patch().magSf());
-        scalar Qr = gSum(qRad*patch().magSf());
+        scalar qr = gSum(qRad*patch().magSf());
         scalar Qt = gSum((qConv + qRad)*patch().magSf());
 
         Info<< mesh.name() << ':'
@@ -367,7 +367,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
             << nbrPatch.name() << ':'
             << this->internalField().name() << " :" << nl
             << "     convective heat[W] : " << Qc << nl
-            << "     radiative heat [W] : " << Qr << nl
+            << "     radiative heat [W] : " << qr << nl
             << "     total heat     [W] : " << Qt << nl
             << "     wall temperature "
             << " min:" << gMin(*this)
@@ -399,7 +399,7 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::write
         pyrolysisRegionName_
     );
     os.writeKeyword("Tnbr")<< TnbrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Qr")<< QrName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
     os.writeKeyword("convectiveScaling") << convectiveScaling_
         << token::END_STATEMENT << nl;
     os.writeKeyword("filmDeltaDry") << filmDeltaDry_

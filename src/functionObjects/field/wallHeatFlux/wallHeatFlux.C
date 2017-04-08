@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,12 +78,12 @@ void Foam::functionObjects::wallHeatFlux::calcHeatFlux
         wallHeatFluxBf[patchi] = heatFluxBf[patchi];
     }
 
-    if (foundObject<volScalarField>("Qr"))
+    if (foundObject<volScalarField>("qr"))
     {
-        const volScalarField& Qr = lookupObject<volScalarField>("Qr");
+        const volScalarField& qr = lookupObject<volScalarField>("qr");
 
         const volScalarField::Boundary& radHeatFluxBf =
-            Qr.boundaryField();
+            qr.boundaryField();
 
         forAll(wallHeatFluxBf, patchi)
         {

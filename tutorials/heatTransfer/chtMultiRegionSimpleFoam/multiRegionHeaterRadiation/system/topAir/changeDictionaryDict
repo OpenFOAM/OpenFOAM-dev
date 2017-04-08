@@ -65,8 +65,8 @@ T
             type            compressible::turbulentTemperatureRadCoupledMixed;
             Tnbr            T;
             kappaMethod     fluidThermo;
-            QrNbr           none;
-            Qr              Qr;
+            qrNbr           none;
+            qr              qr;
             value           uniform 300;
         }
     }
@@ -160,7 +160,7 @@ p
     }
 }
 
-Qr
+qr
 {
     internalField   uniform 0;
     boundaryField
@@ -169,7 +169,7 @@ Qr
         {
             type            greyDiffusiveRadiationViewFactor;
             emissivityMode  lookup;
-            Qro             uniform 0;
+            qro             uniform 0;
             emissivity      uniform 1.0;
             value           uniform 0;
         }
@@ -178,7 +178,7 @@ Qr
         {
             type            greyDiffusiveRadiationViewFactor;
             emissivityMode  solidRadiation;
-            Qro             uniform 0;
+            qro             uniform 0;
             value           uniform 0;
         }
     }

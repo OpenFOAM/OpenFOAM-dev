@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ class viewFactor
         singleCellFvMesh coarseMesh_;
 
         //- Net radiative heat flux [W/m2]
-        volScalarField Qr_;
+        volScalarField qr_;
 
         //- View factor matrix
         autoPtr<scalarSquareMatrix> Fmatrix_;
@@ -168,7 +168,7 @@ public:
     // Access
 
         //- Const access to total radiative heat flux field
-        inline const volScalarField& Qr() const;
+        inline const volScalarField& qr() const;
 };
 
 

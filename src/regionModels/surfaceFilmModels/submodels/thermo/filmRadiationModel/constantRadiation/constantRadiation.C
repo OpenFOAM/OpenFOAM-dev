@@ -56,11 +56,11 @@ constantRadiation::constantRadiation
 )
 :
     filmRadiationModel(typeName, film, dict),
-    QrConst_
+    qrConst_
     (
         IOobject
         (
-            typeName + ":QrConst",
+            typeName + ":qrConst",
             film.time().timeName(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -125,10 +125,10 @@ tmp<volScalarField> constantRadiation::Shs()
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
         scalarField& Shs = tShs.ref();
-        const scalarField& Qr = QrConst_;
+        const scalarField& qr = qrConst_;
         const scalarField& alpha = filmModel_.alpha();
 
-        Shs = mask_*Qr*alpha*absorptivity_;
+        Shs = mask_*qr*alpha*absorptivity_;
     }
 
     return tShs;

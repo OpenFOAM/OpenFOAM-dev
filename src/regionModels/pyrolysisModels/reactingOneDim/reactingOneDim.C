@@ -58,7 +58,7 @@ void reactingOneDim::readReactingOneDimControls()
     coeffs().lookup("minimumDelta") >> minimumDelta_;
 
     coeffs().lookup("gasHSource") >> gasHSource_;
-    coeffs().lookup("QrHSource") >> QrHSource_;
+    coeffs().lookup("qrHSource") >> qrHSource_;
     useChemistrySolvers_ =
         coeffs().lookupOrDefault<bool>("useChemistrySolvers", true);
 }
@@ -92,41 +92,41 @@ bool reactingOneDim::read(const dictionary& dict)
 }
 
 
-void reactingOneDim::updateQr()
+void reactingOneDim::updateqr()
 {
-    // Update local Qr from coupled Qr field
-    Qr_ == dimensionedScalar("zero", Qr_.dimensions(), 0.0);
+    // Update local qr from coupled qr field
+    qr_ == dimensionedScalar("zero", qr_.dimensions(), 0.0);
 
     // Retrieve field from coupled region using mapped boundary conditions
-    Qr_.correctBoundaryConditions();
+    qr_.correctBoundaryConditions();
 
-    volScalarField::Boundary& QrBf = Qr_.boundaryFieldRef();
+    volScalarField::Boundary& qrBf = qr_.boundaryFieldRef();
 
     forAll(intCoupledPatchIDs_, i)
     {
         const label patchi = intCoupledPatchIDs_[i];
 
-        // Qr is positive going in the solid
+        // qr is positive going in the solid
         // If the surface is emitting the radiative flux is set to zero
-        QrBf[patchi] = max(QrBf[patchi], scalar(0.0));
+        qrBf[patchi] = max(qrBf[patchi], scalar(0.0));
     }
 
     const vectorField& cellC = regionMesh().cellCentres();
 
     tmp<volScalarField> kappa = kappaRad();
 
-    // Propagate Qr through 1-D regions
+    // Propagate qr through 1-D regions
     label localPyrolysisFacei = 0;
     forAll(intCoupledPatchIDs_, i)
     {
         const label patchi = intCoupledPatchIDs_[i];
 
-        const scalarField& Qrp = Qr_.boundaryField()[patchi];
+        const scalarField& qrp = qr_.boundaryField()[patchi];
         const vectorField& Cf = regionMesh().Cf().boundaryField()[patchi];
 
-        forAll(Qrp, facei)
+        forAll(qrp, facei)
         {
-            const scalar Qr0 = Qrp[facei];
+            const scalar qr0 = qrp[facei];
             point Cf0 = Cf[facei];
             const labelList& cells = boundaryFaceCells_[localPyrolysisFacei++];
             scalar kappaInt = 0.0;
@@ -136,7 +136,7 @@ void reactingOneDim::updateQr()
                 const point& Cf1 = cellC[celli];
                 const scalar delta = mag(Cf1 - Cf0);
                 kappaInt += kappa()[celli]*delta;
-                Qr_[celli] = Qr0*exp(-kappaInt);
+                qr_[celli] = qr0*exp(-kappaInt);
                 Cf0 = Cf1;
             }
         }
@@ -202,9 +202,9 @@ void reactingOneDim::updatePhiGas()
 
 void reactingOneDim::updateFields()
 {
-    if (QrHSource_)
+    if (qrHSource_)
     {
-        updateQr();
+        updateqr();
     }
 
     updatePhiGas();
@@ -332,10 +332,10 @@ void reactingOneDim::solveEnergy()
         hEqn += fvc::div(phiGas);
     }
 
-    if (QrHSource_)
+    if (qrHSource_)
     {
-        const surfaceScalarField phiQr(fvc::interpolate(Qr_)*nMagSf());
-        hEqn += fvc::div(phiQr);
+        const surfaceScalarField phiqr(fvc::interpolate(qr_)*nMagSf());
+        hEqn += fvc::div(phiqr);
     }
 
     if (regionMesh().moving())
@@ -447,11 +447,11 @@ reactingOneDim::reactingOneDim
         dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
     ),
 
-    Qr_
+    qr_
     (
         IOobject
         (
-            "Qr",
+            "qr",
             time().timeName(),
             regionMesh(),
             IOobject::MUST_READ,
@@ -465,7 +465,7 @@ reactingOneDim::reactingOneDim
     totalGasMassFlux_(0.0),
     totalHeatRR_(dimensionedScalar("zero", dimEnergy/dimTime, 0.0)),
     gasHSource_(false),
-    QrHSource_(false),
+    qrHSource_(false),
     useChemistrySolvers_(true)
 {
     if (active_)
@@ -547,11 +547,11 @@ reactingOneDim::reactingOneDim
         dimensionedScalar("zero", dimEnergy/dimTime/dimVolume, 0.0)
     ),
 
-    Qr_
+    qr_
     (
         IOobject
         (
-            "Qr",
+            "qr",
             time().timeName(),
             regionMesh(),
             IOobject::MUST_READ,
@@ -565,7 +565,7 @@ reactingOneDim::reactingOneDim
     totalGasMassFlux_(0.0),
     totalHeatRR_(dimensionedScalar("zero", dimEnergy/dimTime, 0.0)),
     gasHSource_(false),
-    QrHSource_(false),
+    qrHSource_(false),
     useChemistrySolvers_(true)
 {
     if (active_)

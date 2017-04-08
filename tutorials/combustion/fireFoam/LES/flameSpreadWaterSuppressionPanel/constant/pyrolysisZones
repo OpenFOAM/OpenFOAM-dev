@@ -28,9 +28,9 @@ pyrolysis
         filmCoupled     true;
 
         gasHSource      true;
-        QrHSource       false;
+        qrHSource       false;
 
-        radFluxName     Qr;
+        radFluxName     qr;
 
         moveMesh        false; // true;
         minimumDelta    1e-6;

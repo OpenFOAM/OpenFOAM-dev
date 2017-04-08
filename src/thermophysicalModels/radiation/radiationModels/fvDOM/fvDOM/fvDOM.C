@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,18 +222,18 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
         mesh_,
         dimensionedScalar("G", dimMass/pow3(dimTime), 0.0)
     ),
-    Qr_
+    qr_
     (
         IOobject
         (
-            "Qr",
+            "qr",
             mesh_.time().timeName(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
     ),
     Qem_
     (
@@ -309,18 +309,18 @@ Foam::radiation::fvDOM::fvDOM
         mesh_,
         dimensionedScalar("G", dimMass/pow3(dimTime), 0.0)
     ),
-    Qr_
+    qr_
     (
         IOobject
         (
-            "Qr",
+            "qr",
             mesh_.time().timeName(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
     ),
     Qem_
     (
@@ -490,7 +490,7 @@ void Foam::radiation::fvDOM::updateBlackBodyEmission()
 void Foam::radiation::fvDOM::updateG()
 {
     G_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
-    Qr_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
+    qr_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
     Qem_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
     Qin_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
 
@@ -498,7 +498,7 @@ void Foam::radiation::fvDOM::updateG()
     {
         IRay_[rayI].addIntensity();
         G_ += IRay_[rayI].I()*IRay_[rayI].omega();
-        Qr_.boundaryFieldRef() += IRay_[rayI].Qr().boundaryField();
+        qr_.boundaryFieldRef() += IRay_[rayI].qr().boundaryField();
         Qem_.boundaryFieldRef() += IRay_[rayI].Qem().boundaryField();
         Qin_.boundaryFieldRef() += IRay_[rayI].Qin().boundaryField();
     }

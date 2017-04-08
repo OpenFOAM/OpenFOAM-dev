@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,18 +69,18 @@ Foam::radiation::radiativeIntensityRay::radiativeIntensityRay
         mesh_,
         dimensionedScalar("I", dimMass/pow3(dimTime), 0.0)
     ),
-    Qr_
+    qr_
     (
         IOobject
         (
-            "Qr" + name(rayId),
+            "qr" + name(rayId),
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qr", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
     ),
     Qin_
     (
@@ -206,7 +206,7 @@ Foam::radiation::radiativeIntensityRay::~radiativeIntensityRay()
 Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
 {
     // Reset boundary heat flux to zero
-    Qr_.boundaryFieldRef() = 0.0;
+    qr_.boundaryFieldRef() = 0.0;
 
     scalar maxResidual = -GREAT;
 

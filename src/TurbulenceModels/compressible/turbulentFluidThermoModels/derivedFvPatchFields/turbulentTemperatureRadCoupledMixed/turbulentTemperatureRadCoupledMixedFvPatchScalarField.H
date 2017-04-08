@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,8 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         Tnbr         | name of the field    | no | T
-        QrNbr      | name of the radiative flux in the nbr region | no | none
-        Qr         | name of the radiative flux in this region | no | none
+        qrNbr      | name of the radiative flux in the nbr region | no | none
+        qr         | name of the radiative flux in this region | no | none
         thicknessLayers | list of thicknesses per layer [m] | no |
         kappaLayers  | list of thermal conductivites per layer [W/m/K] | no |
         kappaMethod  | inherited from temperatureCoupledBase | inherited |
@@ -52,8 +52,8 @@ Usage
     {
         type            compressible::turbulentTemperatureRadCoupledMixed;
         Tnbr            T;
-        QrNbr           Qr; // or none. Name of Qr field on neighbour region
-        Qr              Qr; // or none. Name of Qr field on local region
+        qrNbr           qr; // or none. Name of qr field on neighbour region
+        qr              qr; // or none. Name of qr field on local region
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
         kappaMethod     lookup;
@@ -101,10 +101,10 @@ class turbulentTemperatureRadCoupledMixedFvPatchScalarField
         const word TnbrName_;
 
          //- Name of the radiative heat flux in the neighbout region
-        const word QrNbrName_;
+        const word qrNbrName_;
 
         //- Name of the radiative heat flux in local region
-        const word QrName_;
+        const word qrName_;
 
         //- Thickness of layers
         scalarList thicknessLayers_;

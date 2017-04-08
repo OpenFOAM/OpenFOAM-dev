@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ private:
         volScalarField I_;
 
         //- Total radiative heat flux on boundary
-        volScalarField Qr_;
+        volScalarField qr_;
 
         //- Incident radiative heat flux on boundary
         volScalarField Qin_;
@@ -176,10 +176,10 @@ public:
             inline const volScalarField& I() const;
 
             //- Return const access to the boundary heat flux
-            inline const volScalarField& Qr() const;
+            inline const volScalarField& qr() const;
 
             //- Return non-const access to the boundary heat flux
-            inline volScalarField& Qr();
+            inline volScalarField& qr();
 
             //- Return non-const access to the boundary incident heat flux
             inline volScalarField& Qin();

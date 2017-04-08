@@ -71,11 +71,11 @@ standardRadiation::standardRadiation
         dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0),
         film.mappedPushedFieldPatchTypes<scalar>()
     ),
-    QrNet_
+    qrNet_
     (
         IOobject
         (
-            "QrNet",
+            "qrNet",
             film.time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
@@ -100,7 +100,7 @@ standardRadiation::~standardRadiation()
 
 void standardRadiation::correct()
 {
-    // Transfer Qr from primary region
+    // Transfer qr from primary region
     QinPrimary_.correctBoundaryConditions();
 }
 
@@ -131,9 +131,9 @@ tmp<volScalarField> standardRadiation::Shs()
 
     Shs = beta_*QinP*alpha*(1.0 - exp(-kappaBar_*delta));
 
-    // Update net Qr on local region
-    QrNet_.primitiveFieldRef() = QinP - Shs;
-    QrNet_.correctBoundaryConditions();
+    // Update net qr on local region
+    qrNet_.primitiveFieldRef() = QinP - Shs;
+    qrNet_.correctBoundaryConditions();
 
     return tShs;
 }

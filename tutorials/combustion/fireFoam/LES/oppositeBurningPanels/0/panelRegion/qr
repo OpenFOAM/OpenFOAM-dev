@@ -11,7 +11,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      Qr;
+    object      qr;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +43,7 @@ boundaryField
         sampleMode      nearestPatchFace;
         samplePatch     region0_to_panelRegion_fLeft_zone;
         offset          (0 0 0);
-        field       Qr;
+        field       qr;
         setAverage      no;
         average         0;
         value           uniform 0;
@@ -56,7 +56,7 @@ boundaryField
         sampleMode      nearestPatchFace;
         samplePatch     region0_to_panelRegion_fRight_zone;
         offset          (0 0 0);
-        field       Qr;
+        field       qr;
         setAverage      no;
         average         0;
         value           uniform 0;

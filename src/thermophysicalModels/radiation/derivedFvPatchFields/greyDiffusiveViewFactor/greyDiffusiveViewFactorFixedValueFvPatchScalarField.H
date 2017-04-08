@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,12 +29,12 @@ Group
 
 Description
     This boundary condition provides a grey-diffuse condition for radiative
-    heat flux, \c Qr, for use with the view factor model
+    heat flux, \c qr, for use with the view factor model
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Qro          | external radiative heat flux | yes    |
+        qro          | external radiative heat flux | yes    |
         emissivityMode | emissivity mode: solidRadiation or lookup | yes |
     \endtable
 
@@ -43,7 +43,7 @@ Usage
     <patchName>
     {
         type            greyDiffusiveRadiationViewFactor;
-        Qro             uniform 0;
+        qro             uniform 0;
         emissivityMode  solidRadiation;
         value           uniform 0;
     }
@@ -85,7 +85,7 @@ class greyDiffusiveViewFactorFixedValueFvPatchScalarField
     // Private data
 
         //- External radiative heat flux
-        scalarField Qro_;
+        scalarField qro_;
 
 
 public:
@@ -165,9 +165,9 @@ public:
         // Access
 
             //- Return external radiative heat flux
-            const scalarList& Qro()
+            const scalarList& qro()
             {
-                return Qro_;
+                return qro_;
             }
 
 

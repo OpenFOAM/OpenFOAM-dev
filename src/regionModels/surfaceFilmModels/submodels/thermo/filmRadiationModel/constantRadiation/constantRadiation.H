@@ -63,7 +63,7 @@ private:
     // Private data
 
         //- Constant radiative flux [kg/s3]
-        volScalarField QrConst_;
+        volScalarField qrConst_;
 
         //- Radiation mask
         volScalarField mask_;
@@ -115,7 +115,7 @@ public:
             virtual void correct();
 
             //- Return the radiation sensible enthalpy source
-            //  Also updates QrNet
+            //  Also updates qrNet
             virtual tmp<volScalarField> Shs();
 };
 

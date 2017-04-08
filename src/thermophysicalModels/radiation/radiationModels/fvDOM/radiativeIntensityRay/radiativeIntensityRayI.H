@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,15 @@ Foam::radiation::radiativeIntensityRay::I() const
 
 
 inline const Foam::volScalarField&
-Foam::radiation::radiativeIntensityRay::Qr() const
+Foam::radiation::radiativeIntensityRay::qr() const
 {
-    return Qr_;
+    return qr_;
 }
 
 
-inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::Qr()
+inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::qr()
 {
-    return Qr_;
+    return qr_;
 }
 
 inline const Foam::volScalarField& Foam::radiation::

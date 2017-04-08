@@ -63,7 +63,7 @@ private:
         volScalarField QinPrimary_;
 
         //- Remaining radiative flux after removing local contribution
-        volScalarField QrNet_;
+        volScalarField qrNet_;
 
 
         // Model coefficients
@@ -112,7 +112,7 @@ public:
             virtual void correct();
 
             //- Return the radiation sensible enthalpy source
-            //  Also updates QrNet
+            //  Also updates qrNet
             virtual tmp<volScalarField> Shs();
 };
 

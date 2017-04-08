@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF),
     radiationCoupledBase(patch(), "undefined", scalarField::null()),
-    Qro_(p.size(), 0.0)
+    qro_(p.size(), 0.0)
 {}
 
 
@@ -60,7 +60,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
         ptf.emissivityMethod(),
         ptf.emissivity_
     ),
-    Qro_(ptf.Qro_)
+    qro_(ptf.qro_)
 {}
 
 
@@ -74,7 +74,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
 :
     fixedValueFvPatchScalarField(p, iF, dict, false),
     radiationCoupledBase(p, dict),
-    Qro_("Qro", dict, p.size())
+    qro_("qro", dict, p.size())
 {
     if (dict.found("value"))
     {
@@ -104,7 +104,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
         ptf.emissivityMethod(),
         ptf.emissivity_
     ),
-    Qro_(ptf.Qro_)
+    qro_(ptf.qro_)
 {}
 
 
@@ -122,7 +122,7 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
         ptf.emissivityMethod(),
         ptf.emissivity_
     ),
-    Qro_(ptf.Qro_)
+    qro_(ptf.qro_)
 {}
 
 
@@ -163,7 +163,7 @@ write
 {
     fixedValueFvPatchScalarField::write(os);
     radiationCoupledBase::write(os);
-    Qro_.writeEntry("Qro", os);
+    qro_.writeEntry("qro", os);
 }
 
 

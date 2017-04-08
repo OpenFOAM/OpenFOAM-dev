@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,9 +53,9 @@ thermalBaffle1DFvPatchScalarField
     Qs_(p.size()),
     solidDict_(),
     solidPtr_(nullptr),
-    QrPrevious_(p.size()),
-    QrRelaxation_(1),
-    QrName_("undefined-Qr")
+    qrPrevious_(p.size()),
+    qrRelaxation_(1),
+    qrName_("undefined-qr")
 {}
 
 
@@ -77,9 +77,9 @@ thermalBaffle1DFvPatchScalarField
     Qs_(ptf.Qs_, mapper),
     solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
-    QrPrevious_(ptf.QrPrevious_, mapper),
-    QrRelaxation_(ptf.QrRelaxation_),
-    QrName_(ptf.QrName_)
+    qrPrevious_(ptf.qrPrevious_, mapper),
+    qrRelaxation_(ptf.qrRelaxation_),
+    qrName_(ptf.qrName_)
 {}
 
 
@@ -100,9 +100,9 @@ thermalBaffle1DFvPatchScalarField
     Qs_(p.size(), 0),
     solidDict_(dict),
     solidPtr_(),
-    QrPrevious_(p.size(), 0.0),
-    QrRelaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
-    QrName_(dict.lookupOrDefault<word>("Qr", "none"))
+    qrPrevious_(p.size(), 0.0),
+    qrRelaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
+    qrName_(dict.lookupOrDefault<word>("qr", "none"))
 {
     fvPatchScalarField::operator=(scalarField("value", dict, p.size()));
 
@@ -116,9 +116,9 @@ thermalBaffle1DFvPatchScalarField
         Qs_ = scalarField("Qs", dict, p.size());
     }
 
-    if (dict.found("QrPrevious"))
+    if (dict.found("qrPrevious"))
     {
-        QrPrevious_ = scalarField("QrPrevious", dict, p.size());
+        qrPrevious_ = scalarField("qrPrevious", dict, p.size());
     }
 
     if (dict.found("refValue") && baffleActivated_)
@@ -154,9 +154,9 @@ thermalBaffle1DFvPatchScalarField
     Qs_(ptf.Qs_),
     solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
-    QrPrevious_(ptf.QrPrevious_),
-    QrRelaxation_(ptf.QrRelaxation_),
-    QrName_(ptf.QrName_)
+    qrPrevious_(ptf.qrPrevious_),
+    qrRelaxation_(ptf.qrRelaxation_),
+    qrName_(ptf.qrName_)
 {}
 
 
@@ -176,9 +176,9 @@ thermalBaffle1DFvPatchScalarField
     Qs_(ptf.Qs_),
     solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
-    QrPrevious_(ptf.QrPrevious_),
-    QrRelaxation_(ptf.QrRelaxation_),
-    QrName_(ptf.QrName_)
+    qrPrevious_(ptf.qrPrevious_),
+    qrRelaxation_(ptf.qrRelaxation_),
+    qrName_(ptf.qrName_)
 {}
 
 
@@ -364,15 +364,15 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
             patch().template lookupPatchField<volScalarField, scalar>(TName_);
 
 
-        scalarField Qr(Tp.size(), 0.0);
+        scalarField qr(Tp.size(), 0.0);
 
-        if (QrName_ != "none")
+        if (qrName_ != "none")
         {
-            Qr = patch().template lookupPatchField<volScalarField, scalar>
-                (QrName_);
+            qr = patch().template lookupPatchField<volScalarField, scalar>
+                (qrName_);
 
-            Qr = QrRelaxation_*Qr + (1.0 - QrRelaxation_)*QrPrevious_;
-            QrPrevious_ = Qr;
+            qr = qrRelaxation_*qr + (1.0 - qrRelaxation_)*qrPrevious_;
+            qrPrevious_ = qr;
         }
 
         tmp<scalarField> Ti = patchInternalField();
@@ -393,7 +393,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
 
         scalarField KDeltaSolid(kappas/baffleThickness());
 
-        scalarField alpha(KDeltaSolid - Qr/Tp);
+        scalarField alpha(KDeltaSolid - qr/Tp);
 
         valueFraction() = alpha/(alpha + myKDelta);
 
@@ -435,9 +435,9 @@ void thermalBaffle1DFvPatchScalarField<solidType>::write(Ostream& os) const
         solid().write(os);
     }
 
-    QrPrevious_.writeEntry("QrPrevious", os);
-    os.writeKeyword("Qr")<< QrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("relaxation")<< QrRelaxation_
+    qrPrevious_.writeEntry("qrPrevious", os);
+    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
+    os.writeKeyword("relaxation")<< qrRelaxation_
         << token::END_STATEMENT << nl;
 }
 

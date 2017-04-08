@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     Each view factor between the agglomerated faces i and j (Fij) is calculated
     using a double integral of the sub-areas composing the agglomaration.
 
-    The patches involved in the view factor calculation are taken from the Qr
+    The patches involved in the view factor calculation are taken from the qr
     volScalarField (radiative flux) when is greyDiffusiveRadiationViewFactor
     otherwise they are not included.
 
@@ -272,11 +272,11 @@ int main(int argc, char *argv[])
 
     const label debug = viewFactorDict.lookupOrDefault<label>("debug", 0);
 
-    volScalarField Qr
+    volScalarField qr
     (
         IOobject
         (
-            "Qr",
+            "qr",
             runTime.timeName(),
             mesh,
             IOobject::MUST_READ,
@@ -338,17 +338,17 @@ int main(int argc, char *argv[])
 
     labelList viewFactorsPatches(patches.size());
 
-    const volScalarField::Boundary& Qrb = Qr.boundaryField();
+    const volScalarField::Boundary& qrb = qr.boundaryField();
 
     label count = 0;
-    forAll(Qrb, patchi)
+    forAll(qrb, patchi)
     {
         const polyPatch& pp = patches[patchi];
-        const fvPatchScalarField& QrpI = Qrb[patchi];
+        const fvPatchScalarField& qrpI = qrb[patchi];
 
-        if ((isA<fixedValueFvPatchScalarField>(QrpI)) && (pp.size() > 0))
+        if ((isA<fixedValueFvPatchScalarField>(qrpI)) && (pp.size() > 0))
         {
-            viewFactorsPatches[count] = QrpI.patch().index();
+            viewFactorsPatches[count] = qrpI.patch().index();
             nCoarseFaces += coarsePatches[patchi].size();
             nFineFaces += patches[patchi].size();
             count ++;
