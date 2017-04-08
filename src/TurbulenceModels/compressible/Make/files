@@ -2,7 +2,6 @@ compressibleTurbulenceModel.C
 turbulentFluidThermoModels/turbulentFluidThermoModels.C
 
 BCs = turbulentFluidThermoModels/derivedFvPatchFields
-$(BCs)/turbulentHeatFluxTemperature/turbulentHeatFluxTemperatureFvPatchScalarField.C
 $(BCs)/temperatureCoupledBase/temperatureCoupledBase.C
 $(BCs)/turbulentTemperatureCoupledBaffleMixed/turbulentTemperatureCoupledBaffleMixedFvPatchScalarField.C
 $(BCs)/thermalBaffle1D/thermalBaffle1DFvPatchScalarFields.C

@@ -847,7 +847,6 @@ DebugSwitches
     triSurface          0;
     triSurfaceMesh      0;
     turbulenceModel     0;
-    turbulentHeatFluxTemperature 0;
     turbulentInlet      0;
     turbulentIntensityKineticEnergyInlet 0;
     turbulentMixingLengthDissipationRateInlet 0;
