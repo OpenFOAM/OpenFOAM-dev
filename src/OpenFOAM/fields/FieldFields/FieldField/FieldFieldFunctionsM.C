@@ -200,7 +200,7 @@ tmp<FieldField<Field, ReturnType>> Func                                        \
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define BINARY_TYPE_FUNCTION_SF(ReturnType, Type1, Type2, Func)                \
+#define BINARY_TYPE_FUNCTION_FS(ReturnType, Type1, Type2, Func)                \
                                                                                \
 TEMPLATE                                                                       \
 void Func                                                                      \
@@ -248,7 +248,7 @@ tmp<FieldField<Field, ReturnType>> Func                                        \
 }
 
 
-#define BINARY_TYPE_FUNCTION_FS(ReturnType, Type1, Type2, Func)                \
+#define BINARY_TYPE_FUNCTION_SF(ReturnType, Type1, Type2, Func)                \
                                                                                \
 TEMPLATE                                                                       \
 void Func                                                                      \
