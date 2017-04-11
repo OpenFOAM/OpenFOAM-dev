@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,44 +22,48 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    pimpleDyMFoam.C
+    DPMDyMFoam
 
 Description
-    Transient solver for incompressible, turbulent flow of Newtonian fluids
-    on a moving mesh.
-
-    Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
+    Transient solver for the coupled transport of a single kinematic particle
+    cloud including the effect of the volume fraction of particles on the
+    continuous phase, with optional mesh motion and mesh topology changes.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "singlePhaseTransportModel.H"
-#include "turbulentTransportModel.H"
+#include "PhaseIncompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
 #include "CorrectPhi.H"
-#include "fvOptions.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#ifdef MPPIC
+    #include "basicKinematicMPPICCloud.H"
+    #define basicKinematicTypeCloud basicKinematicMPPICCloud
+#else
+    #include "basicKinematicCollidingCloud.H"
+    #define basicKinematicTypeCloud basicKinematicCollidingCloud
+#endif
 
 int main(int argc, char *argv[])
 {
+    argList::addOption
+    (
+        "cloudName",
+        "name",
+        "specify alternative cloud name. default is 'kinematicCloud'"
+    );
+
     #include "postProcess.H"
 
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "initContinuityErrs.H"
     #include "createControls.H"
     #include "createFields.H"
-    #include "createUf.H"
-    #include "createFvOptions.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
-
-    turbulence->validate();
-
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+    #include "createUcf.H"
+    #include "initContinuityErrs.H"
 
     Info<< "\nStarting time loop\n" << endl;
 
@@ -76,27 +80,62 @@ int main(int argc, char *argv[])
         mesh.update();
 
         // Calculate absolute flux from the mapped surface velocity
-        phi = mesh.Sf() & Uf;
+        phic = mesh.Sf() & Ucf;
 
         if (mesh.changing() && correctPhi)
         {
-            #include "correctPhi.H"
+            #include "correctPhic.H"
         }
 
         // Make the flux relative to the mesh motion
-        fvc::makeRelative(phi, U);
+        fvc::makeRelative(phic, Uc);
 
         if (mesh.changing() && checkMeshCourantNo)
         {
             #include "meshCourantNo.H"
         }
 
+        continuousPhaseTransport.correct();
+        muc = rhoc*continuousPhaseTransport.nu();
+
+        Info<< "Evolving " << kinematicCloud.name() << endl;
+        kinematicCloud.evolve();
+
+        // Update continuous phase volume fraction field
+        alphac = max(1.0 - kinematicCloud.theta(), alphacMin);
+        alphac.correctBoundaryConditions();
+        alphacf = fvc::interpolate(alphac);
+        alphaPhic = alphacf*phic;
+
+        fvVectorMatrix cloudSU(kinematicCloud.SU(Uc));
+        volVectorField cloudVolSUSu
+        (
+            IOobject
+            (
+                "cloudVolSUSu",
+                runTime.timeName(),
+                mesh
+            ),
+            mesh,
+            dimensionedVector
+            (
+                "0",
+                cloudSU.dimensions()/dimVolume,
+                Zero
+            ),
+            zeroGradientFvPatchVectorField::typeName
+        );
+
+        cloudVolSUSu.primitiveFieldRef() = -cloudSU.source()/mesh.V();
+        cloudVolSUSu.correctBoundaryConditions();
+        cloudSU.source() = Zero;
+
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            #include "UEqn.H"
+            #include "UcEqn.H"
 
-            // --- Pressure corrector loop
+            // --- PISO loop
             while (pimple.correct())
             {
                 #include "pEqn.H"
@@ -104,8 +143,7 @@ int main(int argc, char *argv[])
 
             if (pimple.turbCorr())
             {
-                laminarTransport.correct();
-                turbulence->correct();
+                continuousPhaseTurbulence->correct();
             }
         }
 
