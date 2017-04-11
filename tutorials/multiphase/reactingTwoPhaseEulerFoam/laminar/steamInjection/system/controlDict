@@ -25,11 +25,11 @@ stopAt          endTime;
 
 endTime         10;
 
-deltaT          1e-6;
+deltaT          1e-3;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.5;
+writeInterval   0.1;
 
 purgeWrite      0;
 
@@ -41,7 +41,7 @@ writeCompression compressed;
 
 timeFormat      general;
 
-timePrecision   6;
+timePrecision   9;
 
 runTimeModifiable yes;
 
@@ -50,6 +50,31 @@ adjustTimeStep  yes;
 maxCo           0.1;
 
 maxDeltaT       1e-2;
+
+functions
+{
+    timeStepping
+    {
+        type            setTimeStep;
+        functionObjectLibs ("libutilityFunctionObjects.so");
+        enabled         yes;
+        deltaT          tableFile;
+        file            "system/deltaTvalues";
+    }
+
+    minMaxp
+    {
+        type        fieldMinMax;
+        functionObjectLibs ("libfieldFunctionObjects.so");
+        fields
+        (
+             p
+        );
+        location        no;
+        writeControl    timeStep;
+        writeInterval   1;
+    }
+}
 
 
 // ************************************************************************* //

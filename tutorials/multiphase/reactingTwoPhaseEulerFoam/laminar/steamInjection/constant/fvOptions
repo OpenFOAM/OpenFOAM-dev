@@ -71,7 +71,7 @@ options
             volumeMode      absolute;
             injectionRateSuSp
             {
-                e.steam      (3700 0); // kg*m^2/s^3
+                h.steam      (3700 0); // kg*m^2/s^3
             }
         }
     }

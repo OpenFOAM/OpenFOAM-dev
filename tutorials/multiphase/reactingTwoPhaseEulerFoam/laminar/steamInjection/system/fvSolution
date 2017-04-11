@@ -27,8 +27,8 @@ solvers
     {
         solver          PCG;
         preconditioner  DIC;
-        tolerance       1e-8;
-        relTol          0;
+        tolerance       1e-10;
+        relTol          0.001;
     }
 
     p_rghFinal
@@ -78,10 +78,10 @@ solvers
 
 PIMPLE
 {
-    nOuterCorrectors 4;
+    nOuterCorrectors 3;
     nCorrectors      1;
     nNonOrthogonalCorrectors 0;
-    nEnergyCorrectors 1;
+    nEnergyCorrectors 2;
     faceMomentum    yes;
 }
 
@@ -89,7 +89,7 @@ relaxationFactors
 {
     fields
     {
-        iDmdt 1;
+        iDmdt           1;
     }
 
     equations

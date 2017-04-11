@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type    thermalPhaseChangeTwoPhaseSystem;
+type thermalPhaseChangeTwoPhaseSystem;
 
 phases (steam water);
 
@@ -34,7 +34,7 @@ steam
     }
     Sc              0.7;
 
-    residualAlpha   1e-6;
+    residualAlpha   1e-3;
 }
 
 water
@@ -47,7 +47,7 @@ water
     }
     Sc              0.7;
 
-    residualAlpha   1e-6;
+    residualAlpha   1e-3;
 }
 
 blending
@@ -56,30 +56,6 @@ blending
     {
         type            none;
         continuousPhase water;
-        minFullyContinuousAlpha.steam 0.7;
-        minPartlyContinuousAlpha.steam 0.5;
-        minFullyContinuousAlpha.water 0.7;
-        minPartlyContinuousAlpha.water 0.5;
-    }
-
-    heatTransfer
-    {
-        type            none;
-        continuousPhase water;
-        minFullyContinuousAlpha.steam 1;
-        minPartlyContinuousAlpha.steam 0;
-        minFullyContinuousAlpha.water 1;
-        minPartlyContinuousAlpha.water 0;
-    }
-
-    massTransfer
-    {
-        type            none;
-        continuousPhase water;
-        minFullyContinuousAlpha.steam 1;
-        minPartlyContinuousAlpha.steam 0;
-        minFullyContinuousAlpha.water 1;
-        minPartlyContinuousAlpha.water 0;
     }
 }
 
@@ -107,27 +83,11 @@ aspectRatio
         type            constant;
         E0              1.0;
     }
-
-    (water in steam)
-    {
-        type            constant;
-        E0              1.0;
-    }
 );
 
 drag
 (
     (steam in water)
-    {
-        type            SchillerNaumann;
-        residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
-    }
-
-    (water in steam)
     {
         type            SchillerNaumann;
         residualRe      1e-3;
@@ -145,27 +105,18 @@ virtualMass
         type            constantCoefficient;
         Cvm             0.5;
     }
-
-    (water in steam)
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
 );
 
 interfaceComposition
+();
+
+heatTransfer
 (
     (steam in water)
     {
-        type Saturated;
-        species ( H2O );
-        Le 1.0;
-        saturationPressure
-        {
-            type ArdenBuck;
-        }
+        type spherical;
+        residualAlpha 1e-4;
     }
-
 );
 
 heatTransfer.steam
@@ -187,33 +138,19 @@ heatTransfer.water
 );
 
 massTransfer.steam
-(
-
-);
+();
 
 massTransfer.water
-(
-
-);
+();
 
 lift
-(
-);
+();
 
 wallLubrication
-(
-);
+();
 
 turbulentDispersion
-(
-    (steam in water)
-    {
-        type                Burns;//
-        sigma               0.7;
-        Ctd                 1.0;
-        residualAlpha       1e-3;
-    }
-);
+();
 
 // Minimum allowable pressure
 pMin            10000;
