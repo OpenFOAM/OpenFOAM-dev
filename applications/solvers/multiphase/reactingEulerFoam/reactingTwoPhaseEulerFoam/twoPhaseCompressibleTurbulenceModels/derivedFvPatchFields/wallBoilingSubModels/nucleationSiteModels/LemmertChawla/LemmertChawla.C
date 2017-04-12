@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,8 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::LemmertChawla
     const dictionary& dict
 )
 :
-    nucleationSiteModel()
+    nucleationSiteModel(),
+    Cn_(dict.lookupOrDefault<scalar>("Cn", 1))
 {}
 
 
@@ -71,13 +72,15 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::N
     const phaseModel& liquid,
     const phaseModel& vapor,
     const label patchi,
-    const fvPatchScalarField& Tsatw
+    const scalarField& Tl,
+    const scalarField& Tsatw,
+    const scalarField& L
 ) const
 {
     const fvPatchScalarField& Tw =
         liquid.thermo().T().boundaryField()[patchi];
 
-    return 0.8*9.922e5*pow(max((Tw - Tsatw)/10, scalar(0)), 1.805);
+    return Cn_*9.922e5*pow(max((Tw - Tsatw)/10, scalar(0)), 1.805);
 }
 
 

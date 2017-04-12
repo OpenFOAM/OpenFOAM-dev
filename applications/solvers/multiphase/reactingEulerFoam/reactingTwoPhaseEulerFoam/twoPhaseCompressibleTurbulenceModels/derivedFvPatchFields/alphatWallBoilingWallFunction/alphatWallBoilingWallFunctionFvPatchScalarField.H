@@ -181,6 +181,9 @@ private:
         //- Departure diameter field
         scalarField dDep_;
 
+        //- Quenching surface heat flux
+        scalarField qq_;
+
         //- Run-time selected heat flux partitioning model
         autoPtr<wallBoilingModels::partitioningModel>
             partitioningModel_;
@@ -275,6 +278,17 @@ public:
             return dDep_;
         }
 
+        //- Return the quenching surface heat flux [W/m2]
+        const scalarField& qq() const
+        {
+            return qq_;
+        }
+
+        //- Return the evaporation surface heat flux [W/m2]
+        tmp<scalarField> qe() const
+        {
+            return mDotL_/AbyV_;
+        }
 
         // Evaluation functions
 

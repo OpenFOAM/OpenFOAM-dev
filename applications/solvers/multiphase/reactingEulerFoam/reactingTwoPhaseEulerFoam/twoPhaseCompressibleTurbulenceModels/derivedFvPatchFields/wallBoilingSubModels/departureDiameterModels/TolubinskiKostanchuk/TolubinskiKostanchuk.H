@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,17 @@ class TolubinskiKostanchuk
     public departureDiameterModel
 {
 
+    // Private data:
+
+        //- Coefficient of the temperature term
+        scalar dRef_;
+
+        //- Maximum diameter
+        scalar dMax_;
+
+        //- Minimum diameter
+        scalar dMin_;
+
 public:
 
     //- Runtime type information
@@ -87,8 +98,12 @@ public:
             const phaseModel& liquid,
             const phaseModel& vapor,
             const label patchi,
-            const scalarField& Tsub
+            const scalarField& Tl,
+            const scalarField& Tsatw,
+            const scalarField& L
         ) const;
+
+        virtual void write(Ostream& os) const;
 };
 
 

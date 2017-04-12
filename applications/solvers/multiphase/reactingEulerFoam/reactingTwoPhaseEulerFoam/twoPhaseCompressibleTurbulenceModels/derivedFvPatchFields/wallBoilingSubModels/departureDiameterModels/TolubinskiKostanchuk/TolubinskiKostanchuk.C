@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,10 @@ TolubinskiKostanchuk::TolubinskiKostanchuk
     const dictionary& dict
 )
 :
-    departureDiameterModel()
+    departureDiameterModel(),
+    dRef_(dict.lookupOrDefault<scalar>("dRef", 6e-4)),
+    dMax_(dict.lookupOrDefault<scalar>("dMax", 0.0014)),
+    dMin_(dict.lookupOrDefault<scalar>("dMin", 1e-6))
 {}
 
 
@@ -74,10 +77,22 @@ TolubinskiKostanchuk::dDeparture
     const phaseModel& liquid,
     const phaseModel& vapor,
     const label patchi,
-    const scalarField& Tsub
+    const scalarField& Tl,
+    const scalarField& Tsatw,
+    const scalarField& L
 ) const
 {
-    return max(min(0.0006*exp(-Tsub/45), scalar(0.0014)), scalar(1e-6));
+    return max(min(dRef_*exp(-(Tsatw-Tl)/45), dMax_), dMin_);
+}
+
+
+void Foam::wallBoilingModels::departureDiameterModels::
+TolubinskiKostanchuk::write(Ostream& os) const
+{
+    departureDiameterModel::write(os);
+    os.writeKeyword("dRef") << dRef_ << token::END_STATEMENT << nl;
+    os.writeKeyword("dMax") << dMax_ << token::END_STATEMENT << nl;
+    os.writeKeyword("dMin") << dMin_ << token::END_STATEMENT << nl;
 }
 
 
