@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,54 +206,6 @@ TEMPLATE                                                                       \
 void Func                                                                      \
 (                                                                              \
     FieldField<Field, ReturnType>& f,                                          \
-    const FieldField<Field, Type1>& f1,                                        \
-    const Type2& s                                                             \
-)                                                                              \
-{                                                                              \
-    forAll(f, i)                                                               \
-    {                                                                          \
-        Func(f[i], f1[i], s);                                                  \
-    }                                                                          \
-}                                                                              \
-                                                                               \
-TEMPLATE                                                                       \
-tmp<FieldField<Field, ReturnType>> Func                                        \
-(                                                                              \
-    const FieldField<Field, Type1>& f1,                                        \
-    const Type2& s                                                             \
-)                                                                              \
-{                                                                              \
-    tmp<FieldField<Field, ReturnType>> tRes                                    \
-    (                                                                          \
-        FieldField<Field, Type1>::NewCalculatedType(f1)                        \
-    );                                                                         \
-    Func(tRes.ref(), f1, s);                                                   \
-    return tRes;                                                               \
-}                                                                              \
-                                                                               \
-TEMPLATE                                                                       \
-tmp<FieldField<Field, ReturnType>> Func                                        \
-(                                                                              \
-    const tmp<FieldField<Field, Type1>>& tf1,                                  \
-    const Type2& s                                                             \
-)                                                                              \
-{                                                                              \
-    tmp<FieldField<Field, ReturnType>> tRes                                    \
-    (                                                                          \
-        reuseTmpFieldField<Field, ReturnType, Type1>::New(tf1)                 \
-    );                                                                         \
-    Func(tRes.ref(), tf1(), s);                                                \
-    tf1.clear();                                                               \
-    return tRes;                                                               \
-}
-
-
-#define BINARY_TYPE_FUNCTION_FS(ReturnType, Type1, Type2, Func)                \
-                                                                               \
-TEMPLATE                                                                       \
-void Func                                                                      \
-(                                                                              \
-    FieldField<Field, ReturnType>& f,                                          \
     const Type1& s,                                                            \
     const FieldField<Field, Type2>& f2                                         \
 )                                                                              \
@@ -292,6 +244,54 @@ tmp<FieldField<Field, ReturnType>> Func                                        \
     );                                                                         \
     Func(tRes.ref(), s, tf2());                                                \
     tf2.clear();                                                               \
+    return tRes;                                                               \
+}
+
+
+#define BINARY_TYPE_FUNCTION_FS(ReturnType, Type1, Type2, Func)                \
+                                                                               \
+TEMPLATE                                                                       \
+void Func                                                                      \
+(                                                                              \
+    FieldField<Field, ReturnType>& f,                                          \
+    const FieldField<Field, Type1>& f1,                                        \
+    const Type2& s                                                             \
+)                                                                              \
+{                                                                              \
+    forAll(f, i)                                                               \
+    {                                                                          \
+        Func(f[i], f1[i], s);                                                  \
+    }                                                                          \
+}                                                                              \
+                                                                               \
+TEMPLATE                                                                       \
+tmp<FieldField<Field, ReturnType>> Func                                        \
+(                                                                              \
+    const FieldField<Field, Type1>& f1,                                        \
+    const Type2& s                                                             \
+)                                                                              \
+{                                                                              \
+    tmp<FieldField<Field, ReturnType>> tRes                                    \
+    (                                                                          \
+        FieldField<Field, Type1>::NewCalculatedType(f1)                        \
+    );                                                                         \
+    Func(tRes.ref(), f1, s);                                                   \
+    return tRes;                                                               \
+}                                                                              \
+                                                                               \
+TEMPLATE                                                                       \
+tmp<FieldField<Field, ReturnType>> Func                                        \
+(                                                                              \
+    const tmp<FieldField<Field, Type1>>& tf1,                                  \
+    const Type2& s                                                             \
+)                                                                              \
+{                                                                              \
+    tmp<FieldField<Field, ReturnType>> tRes                                    \
+    (                                                                          \
+        reuseTmpFieldField<Field, ReturnType, Type1>::New(tf1)                 \
+    );                                                                         \
+    Func(tRes.ref(), tf1(), s);                                                \
+    tf1.clear();                                                               \
     return tRes;                                                               \
 }
 
