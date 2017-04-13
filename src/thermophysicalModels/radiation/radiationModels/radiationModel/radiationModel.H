@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ SourceFiles
 namespace Foam
 {
 
-class fluidThermo;
+class basicThermo;
 class fvMesh;
 
 namespace radiation
@@ -224,7 +224,11 @@ public:
             virtual tmp<volScalarField::Internal> Ru() const = 0;
 
             //- Energy source term
-            virtual tmp<fvScalarMatrix> Sh(fluidThermo& thermo) const;
+            virtual tmp<fvScalarMatrix> Sh
+            (
+                const basicThermo& thermo,
+                const volScalarField& he
+            ) const;
 
             //- Temperature source term
             virtual tmp<fvScalarMatrix> ST

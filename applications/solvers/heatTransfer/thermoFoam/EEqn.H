@@ -17,7 +17,7 @@
         )
       - fvm::laplacian(alphaEff, he)
      ==
-        radiation->Sh(thermo)
+        radiation->Sh(thermo, he)
       + fvOptions(rho, he)
     );
 

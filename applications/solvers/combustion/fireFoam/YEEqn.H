@@ -67,7 +67,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
       - fvm::laplacian(turbulence->alphaEff(), he)
      ==
         Qdot
-      + radiation->Sh(thermo)
+      + radiation->Sh(thermo, he)
       + parcels.Sh(he)
       + surfaceFilm.Sh()
       + fvOptions(rho, he)

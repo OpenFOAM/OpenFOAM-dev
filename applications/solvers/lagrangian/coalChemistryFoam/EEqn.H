@@ -21,7 +21,7 @@
       + Qdot
       + coalParcels.Sh(he)
       + limestoneParcels.Sh(he)
-      + radiation->Sh(thermo)
+      + radiation->Sh(thermo, he)
       + fvOptions(rho, he)
     );
 
