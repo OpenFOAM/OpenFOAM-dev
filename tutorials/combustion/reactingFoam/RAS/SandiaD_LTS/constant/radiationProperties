@@ -5,6 +5,7 @@
 |   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
+
 FoamFile
 {
     version     2.0;
@@ -15,48 +16,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Radiation model on/off
-radiation       on;
+radiation on;
 
-// Radiation model
 radiationModel  P1;
 
-// Absorption coefficients model
-absorptionEmissionModel greyMeanAbsorptionEmission;
+P1Coeffs
+{
+    C               C [0 0 0 0 0 0 0] 0;
+}
 
 // Number of flow iterations per radiation iteration
 solverFreq 1;
 
-//
-noRadiation
-{
-}
-
-// P1 Model
-P1Coeffs
-{
-
-}
-
-
-fvDOMCoeffs
-{
-    nPhi        2;          // azimuthal angles in PI/2 on X-Y.(from Y to X)
-    nTheta      2;          // polar angles in PI (from Z to X-Y plane)
-    convergence 1e-1;       // convergence criteria for radiation iteration
-    maxIter     1;          // maximum number of iterations
-    cacheDiv    true;       // cache the div of the RTE equation.
-
-//  NOTE: Caching div is "only" accurate if the upwind scheme is used in
-//  div(Ji,Ii_h)
-}
-
-constantAbsorptionEmissionCoeffs
-{
-    absorptivity    absorptivity    [ m^-1 ]       0.01;
-    emissivity      emissivity      [ m^-1 ]       0.01;
-    E               E               [ kg m^-1 s^-3 ]  0;
-}
+absorptionEmissionModel greyMeanAbsorptionEmission;
 
 greyMeanAbsorptionEmissionCoeffs
 {
@@ -205,6 +177,5 @@ greyMeanAbsorptionEmissionCoeffs
 scatterModel    none;
 
 sootModel       none;
-
 
 // ************************************************************************* //

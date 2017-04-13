@@ -56,6 +56,20 @@ solvers
         tolerance       1e-8;
         relTol          0.1;
     }
+
+    G
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-5;
+        relTol          0.1;
+    }
+
+    GFinal
+    {
+        $G;
+        relTol          0;
+    }
 }
 
 PIMPLE
