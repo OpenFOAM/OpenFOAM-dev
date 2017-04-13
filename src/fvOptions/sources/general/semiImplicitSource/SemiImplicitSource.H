@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,14 +42,11 @@ Description
     Example of the source specification:
 
     \verbatim
-    <Type>SemiImplicitSourceCoeffs
+    volumeMode      absolute; // specific
+    injectionRateSuSp
     {
-        volumeMode      absolute; // specific
-        injectionRateSuSp
-        {
-            k           (30.7 0);
-            epsilon     (1.5  0);
-        }
+        k           (30.7 0);
+        epsilon     (1.5  0);
     }
     \endverbatim
 

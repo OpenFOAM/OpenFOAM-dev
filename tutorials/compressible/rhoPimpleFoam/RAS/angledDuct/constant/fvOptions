@@ -18,7 +18,6 @@ FoamFile
 porosity1
 {
     type            explicitPorositySource;
-    active          yes;
 
     explicitPorositySourceCoeffs
     {
@@ -27,21 +26,18 @@ porosity1
 
         type            DarcyForchheimer;
 
-        DarcyForchheimerCoeffs
-        {
-            d   (7e5 -1000 -1000);
-            f   (0 0 0);
+        d   (7e5 -1000 -1000);
+        f   (0 0 0);
 
-            coordinateSystem
+        coordinateSystem
+        {
+            type    cartesian;
+            origin  (0 0 0);
+            coordinateRotation
             {
-                type    cartesian;
-                origin  (0 0 0);
-                coordinateRotation
-                {
-                    type    axesRotation;
-                    e1      (0.70710678 0.70710678 0);
-                    e3      (0 0 1);
-                }
+                type    axesRotation;
+                e1      (0.70710678 0.70710678 0);
+                e3      (0 0 1);
             }
         }
     }

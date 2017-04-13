@@ -18,18 +18,14 @@ FoamFile
 porousToair
 {
     type            constantHeatTransfer;
-    active          yes;
 
-    constantHeatTransferCoeffs
-    {
-        interpolationMethod cellVolumeWeight;
-        nbrRegionName   air;
-        master          true;
+    interpolationMethod cellVolumeWeight;
+    nbrRegionName   air;
+    master          true;
 
-        nbrModel        airToporous;
-        fields          (h);
-        semiImplicit    no;
-    }
+    nbrModel        airToporous;
+    fields          (h);
+    semiImplicit    no;
 }
 
 

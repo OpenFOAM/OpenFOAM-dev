@@ -18,39 +18,31 @@ FoamFile
 disk1
 {
     type            actuationDiskSource;
-    active          on;
 
-    actuationDiskSourceCoeffs
-    {
-        fields      (U);
+    fields      (U);
 
-        selectionMode   cellSet;
-        cellSet         actuationDisk1;
-        diskDir         (1 0 0);    // Orientation of the disk
-        Cp              0.386;
-        Ct              0.58;
-        diskArea        40;
-        upstreamPoint   (581849 4785810 1065);
-    }
+    selectionMode   cellSet;
+    cellSet         actuationDisk1;
+    diskDir         (1 0 0);    // Orientation of the disk
+    Cp              0.386;
+    Ct              0.58;
+    diskArea        40;
+    upstreamPoint   (581849 4785810 1065);
 }
 
 disk2
 {
     type            actuationDiskSource;
-    active          on;
 
-    actuationDiskSourceCoeffs
-    {
-        fields      (U);
+    fields      (U);
 
-        selectionMode   cellSet;
-        cellSet         actuationDisk2;
-        diskDir         (1 0 0);    // Orientation of the disk
-        Cp              0.53;
-        Ct              0.58;
-        diskArea        40;
-        upstreamPoint   (581753 4785663 1070);
-    }
+    selectionMode   cellSet;
+    cellSet         actuationDisk2;
+    diskDir         (1 0 0);    // Orientation of the disk
+    Cp              0.53;
+    Ct              0.58;
+    diskArea        40;
+    upstreamPoint   (581753 4785663 1070);
 }
 
 

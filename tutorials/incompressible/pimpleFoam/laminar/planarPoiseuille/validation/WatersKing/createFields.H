@@ -50,13 +50,7 @@ IOdictionary fvOptions
     )
 );
 const dictionary& gradPDict =
-    fvOptions.subDict("momentumSource").subDict
-    (
-        "vectorSemiImplicitSourceCoeffs"
-    ).subDict
-    (
-        "injectionRateSuSp"
-    );
+    fvOptions.subDict("momentumSource").subDict("injectionRateSuSp");
 const scalar K =
     Tuple2<vector, scalar>(gradPDict.lookup("U")).first().x();
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,15 +35,12 @@ Usage
         type            scalarFixedValueConstraint;
         active          yes;
 
-        scalarFixedValueConstraintCoeffs
+        selectionMode   cellZone;
+        cellZone        porosity;
+        fieldValues
         {
-            selectionMode   cellZone;
-            cellZone        porosity;
-            fieldValues
-            {
-                k           1;
-                epsilon     150;
-            }
+            k           1;
+            epsilon     150;
         }
     }
     \endverbatim

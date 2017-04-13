@@ -18,15 +18,11 @@ FoamFile
 momentumSource
 {
     type            meanVelocityForce;
-    active          yes;
 
-    meanVelocityForceCoeffs
-    {
-        selectionMode   all;
+    selectionMode   all;
 
-        fields      (U);
-        Ubar            (0.1335 0 0);
-    }
+    fields      (U);
+    Ubar            (0.1335 0 0);
 }
 
 

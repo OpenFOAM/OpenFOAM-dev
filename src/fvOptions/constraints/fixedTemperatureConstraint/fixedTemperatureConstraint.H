@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,16 +34,13 @@ Usage
         type            fixedTemperatureConstraint;
         active          yes;
 
-        fixedTemperatureConstraintCoeffs
-        {
-            mode            uniform;      // uniform or lookup
+        mode            uniform;      // uniform or lookup
 
-            // For uniform option
-            temperature     constant 500; // fixed temperature with time [K]
+        // For uniform option
+        temperature     constant 500; // fixed temperature with time [K]
 
-            // For lookup option
-            // T            <Tname>;      // optional temperature field name
-        }
+        // For lookup option
+        // T            <Tname>;      // optional temperature field name
     }
     \endverbatim
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,15 +31,12 @@ Description
         type            scalarExplicitSource    // Source type
         active          on;                     // on/off switch
 
-        scalarExplicitSourceCoeffs
-        {
-            timeStart       0.0;        // Start time
-            duration        1000.0;     // Duration
-            selectionMode   cellSet;    // cellSet, points, cellZone
-            .
-            .
-            .
-        }
+        timeStart       0.0;        // Start time
+        duration        1000.0;     // Duration
+        selectionMode   cellSet;    // cellSet, points, cellZone
+        .
+        .
+        .
     \endverbatim
 
 Note

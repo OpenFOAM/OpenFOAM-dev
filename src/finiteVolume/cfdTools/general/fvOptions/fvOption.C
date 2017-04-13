@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,12 @@ Foam::fv::option::option
     modelType_(modelType),
     mesh_(mesh),
     dict_(dict),
-    coeffs_(dict.subDict(modelType + "Coeffs")),
+    coeffs_
+    (
+        dict.found(modelType + "Coeffs")
+      ? dict.subDict(modelType + "Coeffs")
+      : dict
+    ),
     active_(dict_.lookupOrDefault<Switch>("active", true)),
     fieldNames_(),
     applied_()
@@ -74,6 +79,13 @@ Foam::autoPtr<Foam::fv::option> Foam::fv::option::New
 
     Info<< indent
         << "Selecting finite volume options model type " << modelType << endl;
+
+    const_cast<Time&>(mesh.time()).libs().open
+    (
+        coeffs,
+        "libs",
+        dictionaryConstructorTablePtr_
+    );
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);

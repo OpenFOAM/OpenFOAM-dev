@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,7 @@ Description
 Usage
     Example usage:
     \verbatim
-    buoyancyEnergyCoeffs
-    {
-        fields          (h);                    // Name of energy field
-    }
+    fields          (h);                    // Name of energy field
     \endverbatim
 
 SourceFiles

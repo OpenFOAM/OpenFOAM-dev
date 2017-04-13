@@ -32,15 +32,12 @@ options
     {
         type            scalarSemiImplicitSource;
 
-        scalarSemiImplicitSourceCoeffs
-        {
-            $injector1;
+        $injector1;
 
-            volumeMode      absolute;
-            injectionRateSuSp
-            {
-                thermo:rho.steam     (1.0e-3 0); // kg/s
-            }
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            thermo:rho.steam     (1.0e-3 0); // kg/s
         }
     }
 
@@ -48,15 +45,12 @@ options
     {
         type            vectorSemiImplicitSource;
 
-        vectorSemiImplicitSourceCoeffs
-        {
-            $injector1;
+        $injector1;
 
-            volumeMode      absolute;
-            injectionRateSuSp
-            {
-                U.steam           ((0 1e-1 0) 0); // kg*m/s^2
-            }
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            U.steam           ((0 1e-1 0) 0); // kg*m/s^2
         }
     }
 
@@ -64,15 +58,12 @@ options
     {
         type            scalarSemiImplicitSource;
 
-        scalarSemiImplicitSourceCoeffs
-        {
-            $injector1;
+        $injector1;
 
-            volumeMode      absolute;
-            injectionRateSuSp
-            {
-                h.steam      (3700 0); // kg*m^2/s^3
-            }
+        volumeMode      absolute;
+        injectionRateSuSp
+        {
+            h.steam      (3700 0); // kg*m^2/s^3
         }
     }
 }

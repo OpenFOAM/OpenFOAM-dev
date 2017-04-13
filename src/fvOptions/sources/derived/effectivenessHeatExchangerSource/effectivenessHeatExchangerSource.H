@@ -67,18 +67,15 @@ Usage
         type            effectivenessHeatExchangerSource;
         active          yes;
 
-        effectivenessHeatExchangerSourceCoeffs
-        {
-            selectionMode   cellZone;
-            cellZone        porosity;
+        selectionMode   cellZone;
+        cellZone        porosity;
 
-            secondaryMassFlowRate   1.0;
-            secondaryInletT         336;
-            primaryInletT           293;
-            faceZone                facesZoneInletOriented;
-            outOfBounds             clamp;
-            fileName                "effTable";
-        }
+        secondaryMassFlowRate   1.0;
+        secondaryInletT         336;
+        primaryInletT           293;
+        faceZone                facesZoneInletOriented;
+        outOfBounds             clamp;
+        fileName                "effTable";
     }
     \endverbatim
 

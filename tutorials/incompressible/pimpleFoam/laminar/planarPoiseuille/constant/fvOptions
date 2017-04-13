@@ -18,19 +18,15 @@ FoamFile
 momentumSource
 {
     type      vectorSemiImplicitSource;
-    active    yes;
 
-    vectorSemiImplicitSourceCoeffs
+    timeStart       0.0;
+    duration        1000;
+    selectionMode   all;
+
+    volumeMode      specific;
+    injectionRateSuSp
     {
-        timeStart       0.0;
-        duration        1000;
-        selectionMode   all;
-
-        volumeMode      specific;
-        injectionRateSuSp
-        {
-            U    ((5 0 0) 0);
-        }
+        U    ((5 0 0) 0);
     }
 }
 

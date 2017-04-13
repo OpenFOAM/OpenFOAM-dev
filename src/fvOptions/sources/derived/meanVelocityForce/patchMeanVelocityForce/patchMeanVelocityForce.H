@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,14 +33,11 @@ Description
 Usage
     Example usage:
     \verbatim
-    patchMeanVelocityForceCoeffs
-    {
-        selectionMode   all;                    // Apply force to all cells
-        fields          (U);                    // Name of velocity field
-        patch           inlet;                  // Name of the patch
-        Ubar            (10.0 0 0);             // Desired mean velocity
-        relaxation      0.2;                    // Optional relaxation factor
-    }
+    selectionMode   all;                    // Apply force to all cells
+    fields          (U);                    // Name of velocity field
+    patch           inlet;                  // Name of the patch
+    Ubar            (10.0 0 0);             // Desired mean velocity
+    relaxation      0.2;                    // Optional relaxation factor
     \endverbatim
 
 SourceFiles

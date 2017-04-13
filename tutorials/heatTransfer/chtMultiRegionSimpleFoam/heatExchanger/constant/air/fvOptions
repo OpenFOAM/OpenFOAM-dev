@@ -18,24 +18,19 @@ FoamFile
 airToporous
 {
     type            constantHeatTransfer;
-    active          yes;
 
-    constantHeatTransferCoeffs
-    {
-        interpolationMethod cellVolumeWeight;
-        nbrRegionName   porous;
-        master          false;
+    interpolationMethod cellVolumeWeight;
+    nbrRegionName   porous;
+    master          false;
 
-        nbrModel        porousToair;
-        fields          (h);
-        semiImplicit    no;
-    }
+    nbrModel        porousToair;
+    fields          (h);
+    semiImplicit    no;
 }
 
 porosityBlockage
 {
     type            interRegionExplicitPorositySource;
-    active          yes;
 
     interRegionExplicitPorositySourceCoeffs
     {
@@ -44,21 +39,18 @@ porosityBlockage
 
         type            DarcyForchheimer;
 
-        DarcyForchheimerCoeffs
-        {
-            d   (-1000 -1000 1e4);
-            f   (0 0 0);
+        d   (-1000 -1000 1e4);
+        f   (0 0 0);
 
-            coordinateSystem
+        coordinateSystem
+        {
+            type    cartesian;
+            origin  (0 0 0);
+            coordinateRotation
             {
-                type    cartesian;
-                origin  (0 0 0);
-                coordinateRotation
-                {
-                    type    axesRotation;
-                    e1      (0 1 0);
-                    e2      (0 0 1);
-                }
+                type    axesRotation;
+                e1      (0 1 0);
+                e2      (0 0 1);
             }
         }
     }

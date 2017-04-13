@@ -18,7 +18,6 @@ FoamFile
 filter1
 {
     type            explicitPorositySource;
-    active          yes;
 
     explicitPorositySourceCoeffs
     {
@@ -27,21 +26,18 @@ filter1
 
         type            DarcyForchheimer;
 
-        DarcyForchheimerCoeffs
-        {
-            d   (500000 -1000 -1000);
-            f   (0 0 0);
+        d   (500000 -1000 -1000);
+        f   (0 0 0);
 
-            coordinateSystem
+        coordinateSystem
+        {
+            type    cartesian;
+            origin  (0 0 0);
+            coordinateRotation
             {
-                type    cartesian;
-                origin  (0 0 0);
-                coordinateRotation
-                {
-                    type    axesRotation;
-                    e1  (1 0 0);
-                    e2  (0 1 0);
-                }
+                type    axesRotation;
+                e1  (1 0 0);
+                e2  (0 1 0);
             }
         }
     }
@@ -51,24 +47,20 @@ filter1
 massSource1
 {
     type            scalarSemiImplicitSource;
-    active          yes;
 
-    scalarSemiImplicitSourceCoeffs
+    timeStart       0.2;
+    duration        2.0;
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    volumeMode      absolute;
+    injectionRateSuSp
     {
-        timeStart       0.2;
-        duration        2.0;
-        selectionMode   points;
-        points
-        (
-            (2.75 0.5 0)
-        );
-
-        volumeMode      absolute;
-        injectionRateSuSp
-        {
-            rho         (1e-4 0); // kg/s
-            H2O         (1e-4 0); // kg/s
-        }
+        rho         (1e-4 0); // kg/s
+        H2O         (1e-4 0); // kg/s
     }
 }
 
@@ -76,23 +68,19 @@ massSource1
 momentumSource1
 {
     type            vectorSemiImplicitSource;
-    active          yes;
 
-    vectorSemiImplicitSourceCoeffs
+    timeStart       0.2;
+    duration        2.0;
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    volumeMode      absolute;
+    injectionRateSuSp
     {
-        timeStart       0.2;
-        duration        2.0;
-        selectionMode   points;
-        points
-        (
-            (2.75 0.5 0)
-        );
-
-        volumeMode      absolute;
-        injectionRateSuSp
-        {
-            U           ((0 0.005 0) 0);
-        }
+        U           ((0 0.005 0) 0);
     }
 }
 
@@ -100,23 +88,19 @@ momentumSource1
 energySource1
 {
     type            scalarSemiImplicitSource;
-    active          yes;
 
-    scalarSemiImplicitSourceCoeffs
+    timeStart       0.2;
+    duration        2.0;
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    volumeMode      absolute;
+    injectionRateSuSp
     {
-        timeStart       0.2;
-        duration        2.0;
-        selectionMode   points;
-        points
-        (
-            (2.75 0.5 0)
-        );
-
-        volumeMode      absolute;
-        injectionRateSuSp
-        {
-            h           (10 0);
-        }
+        h           (10 0);
     }
 }
 
