@@ -18,24 +18,21 @@ FoamFile
 porosity1
 {
     type            DarcyForchheimer;
-    active          yes;
+
     cellZone        porosity;
 
-    DarcyForchheimerCoeffs
-    {
-        d   (5e7 -1000 -1000);
-        f   (0 0 0);
+    d   (5e7 -1000 -1000);
+    f   (0 0 0);
 
-        coordinateSystem
+    coordinateSystem
+    {
+        type    cartesian;
+        origin  (0 0 0);
+        coordinateRotation
         {
-            type    cartesian;
-            origin  (0 0 0);
-            coordinateRotation
-            {
-                type    axesRotation;
-                e1      (0.70710678 0.70710678 0);
-                e2      (0 0 1);
-            }
+            type    axesRotation;
+            e1      (0.70710678 0.70710678 0);
+            e2      (0 0 1);
         }
     }
 }
