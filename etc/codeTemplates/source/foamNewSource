@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -104,7 +104,9 @@ else
     fi
 
     # process class name
-    sed "s/CLASSNAME/$className/g" $Template$subType$Type > $fileName
+    sed -e "s/CLASSNAME/$className/g" \
+        -e "s/YEAR/$(date +%Y)/g" \
+        $Template$subType$Type > $fileName
 
     if [ "$subType" = App -a ! -d Make ]
     then

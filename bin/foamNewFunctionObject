@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -66,12 +66,15 @@ esac
 [ -d "$1" ] && usage "$1 directory already exists, aborting..."
 
 NAME=$1
+YEAR=$(date +%Y)
 
 echo "Creating function object code directory $NAME" && mkdir $NAME
 for F in $(ls ${DIR}/*.*)
 do
     FILE=$(basename $F | sed "s#FUNCTIONOBJECT#${NAME}#g")
-    sed "s#FUNCTIONOBJECT#${NAME}#g" ${F} > ${NAME}/${FILE}
+    sed -e "s#FUNCTIONOBJECT#${NAME}#g" \
+        -e "s#YEAR#${YEAR}#g" \
+        ${F} > ${NAME}/${FILE}
 done
 
 echo "Creating Make subdirectory" && mkdir $NAME/Make

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -62,9 +62,12 @@ esac
 [ -d "$1" ] && usage "$1 directory already exists, aborting..."
 
 NAME=$1
+YEAR=$(date +%Y)
 
 echo "Creating application code directory $NAME" && mkdir $NAME
-sed "s#NAME#${NAME}#g" ${DIR}/app.C > $NAME/$NAME.C
+sed -e "s#NAME#${NAME}#g" \
+    -e "s#YEAR#${YEAR}#g" \
+    ${DIR}/app.C > $NAME/$NAME.C
 
 echo "Creating Make subdirectory" && mkdir $NAME/Make
 sed "s#NAME#${NAME}#g" ${DIR}/Make/files > $NAME/Make/files

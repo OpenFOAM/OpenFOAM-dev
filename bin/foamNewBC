@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -134,6 +134,7 @@ FVPATCHF=fvPatch$(cap $FIELD)
 CLASS=$NAME$(cap $FVPATCHF)
 PARENT=$BASE$(cap $FVPATCHF)
 CONSTRUCT=$(echo $CLASS | sed 's/<Type>//g')
+YEAR=$(date +%Y)
 
 # Create some example values for the Description
 n=0
@@ -155,6 +156,7 @@ do
         -e "s#NAME#${NAME}#g" \
         -e "s#BASE#${BASE}#g" \
         -e "s#CONSTRUCT#${CONSTRUCT}#g" \
+        -e "s#YEAR#${YEAR}#g" \
         -e "s#CLASS#${CLASS}#g" \
         -e "s#FIELD#${FIELD}#g" \
         -e "s#FVPATCHF#${FVPATCHF}#g" \
