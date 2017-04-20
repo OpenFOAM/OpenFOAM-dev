@@ -54,14 +54,7 @@ bool Foam::fv::option::read(const dictionary& dict)
 {
     dict.readIfPresent("active", active_);
 
-    if (dict.found(modelType_ + "Coeffs"))
-    {
-        coeffs_ = dict.subDict(modelType_ + "Coeffs");
-    }
-    else
-    {
-        coeffs_ = dict;
-    }
+    coeffs_ = dict.optionalSubDict(modelType_ + "Coeffs");
 
     return true;
 }

@@ -52,12 +52,7 @@ Foam::fv::option::option
     modelType_(modelType),
     mesh_(mesh),
     dict_(dict),
-    coeffs_
-    (
-        dict.found(modelType + "Coeffs")
-      ? dict.subDict(modelType + "Coeffs")
-      : dict
-    ),
+    coeffs_(dict.optionalSubDict(modelType + "Coeffs")),
     active_(dict_.lookupOrDefault<Switch>("active", true)),
     fieldNames_(),
     applied_()

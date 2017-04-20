@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 Foam::structuredDecomp::structuredDecomp(const dictionary& decompositionDict)
 :
     decompositionMethod(decompositionDict),
-    methodDict_(decompositionDict_.subDict(typeName + "Coeffs")),
+    methodDict_(decompositionDict_.optionalSubDict(typeName + "Coeffs")),
     patches_(methodDict_.lookup("patches"))
 {
     methodDict_.set("numberOfSubdomains", nDomains());

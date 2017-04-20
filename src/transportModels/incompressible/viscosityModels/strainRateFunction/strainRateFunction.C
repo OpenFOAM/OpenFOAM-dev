@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,10 @@ Foam::viscosityModels::strainRateFunction::strainRateFunction
 )
 :
     viscosityModel(name, viscosityProperties, U, phi),
-    strainRateFunctionCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
+    strainRateFunctionCoeffs_
+    (
+        viscosityProperties.optionalSubDict(typeName + "Coeffs")
+    ),
     strainRateFunction_
     (
         Function1<scalar>::New("function", strainRateFunctionCoeffs_)
@@ -119,7 +122,7 @@ bool Foam::viscosityModels::strainRateFunction::read
 {
     viscosityModel::read(viscosityProperties);
 
-    strainRateFunctionCoeffs_ = viscosityProperties.subDict
+    strainRateFunctionCoeffs_ = viscosityProperties.optionalSubDict
     (
         typeName + "Coeffs"
     );

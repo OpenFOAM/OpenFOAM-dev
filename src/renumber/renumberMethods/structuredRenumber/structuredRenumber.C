@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::structuredRenumber::structuredRenumber
 )
 :
     renumberMethod(renumberDict),
-    methodDict_(renumberDict.subDict(typeName + "Coeffs")),
+    methodDict_(renumberDict.optionalSubDict(typeName + "Coeffs")),
     patches_(methodDict_.lookup("patches")),
     nLayers_(methodDict_.lookupOrDefault<label>("nLayers", labelMax)),
     depthFirst_(methodDict_.lookup("depthFirst")),

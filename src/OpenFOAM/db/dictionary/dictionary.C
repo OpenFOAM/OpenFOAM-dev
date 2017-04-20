@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -751,6 +751,24 @@ Foam::dictionary Foam::dictionary::subOrEmptyDict
     else
     {
         return entryPtr->dict();
+    }
+}
+
+
+const Foam::dictionary& Foam::dictionary::optionalSubDict
+(
+    const word& keyword
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, false, true);
+
+    if (entryPtr)
+    {
+        return entryPtr->dict();
+    }
+    else
+    {
+        return *this;
     }
 }
 

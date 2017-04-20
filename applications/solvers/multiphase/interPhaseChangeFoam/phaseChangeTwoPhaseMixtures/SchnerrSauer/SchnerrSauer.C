@@ -151,7 +151,7 @@ bool Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::read()
 {
     if (phaseChangeTwoPhaseMixture::read())
     {
-        phaseChangeTwoPhaseMixtureCoeffs_ = subDict(type() + "Coeffs");
+        phaseChangeTwoPhaseMixtureCoeffs_ = optionalSubDict(type() + "Coeffs");
 
         phaseChangeTwoPhaseMixtureCoeffs_.lookup("n") >> n_;
         phaseChangeTwoPhaseMixtureCoeffs_.lookup("dNuc") >> dNuc_;

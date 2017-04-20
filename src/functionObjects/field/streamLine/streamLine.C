@@ -372,19 +372,17 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     );
 
     cloudName_ = dict.lookupOrDefault<word>("cloudName", "streamLine");
-    dict.lookup("seedSampleSet") >> seedSet_;
 
     meshSearchPtr_.reset(new meshSearch(mesh_));
 
-    const dictionary& coeffsDict = dict.subDict(seedSet_ + "Coeffs");
     sampledSetPtr_ = sampledSet::New
     (
-        seedSet_,
+        "seedSampleSet",
         mesh_,
         meshSearchPtr_(),
-        coeffsDict
+        dict.subDict("seedSampleSet")
     );
-    coeffsDict.lookup("axis") >> sampledSetAxis_;
+    sampledSetAxis_ = sampledSetPtr_->axis();
 
     scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
     vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));

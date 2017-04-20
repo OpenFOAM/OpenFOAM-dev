@@ -138,7 +138,7 @@ autoPtr<refinementSurfaces> createRefinementSurfaces
             const word scsFuncName =
                 shapeDict.lookup("surfaceCellSizeFunction");
             const dictionary& scsDict =
-                shapeDict.subDict(scsFuncName + "Coeffs");
+                shapeDict.optionalSubDict(scsFuncName + "Coeffs");
 
             const scalar surfaceCellSize =
                 readScalar(scsDict.lookup("surfaceCellSizeCoeff"));

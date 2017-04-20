@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::HrenyaSinclair
 )
 :
     conductivityModel(dict),
-    coeffDict_(dict.subDict(typeName + "Coeffs")),
+    coeffDict_(dict.optionalSubDict(typeName + "Coeffs")),
     L_("L", dimensionSet(0, 1, 0, 0, 0), coeffDict_)
 {}
 
@@ -103,7 +103,7 @@ Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::kappa
 
 bool Foam::kineticTheoryModels::conductivityModels::HrenyaSinclair::read()
 {
-    coeffDict_ <<= dict_.subDict(typeName + "Coeffs");
+    coeffDict_ <<= dict_.optionalSubDict(typeName + "Coeffs");
 
     L_.readIfPresent(coeffDict_);
 

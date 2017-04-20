@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ greyMeanSolidAbsorptionEmission
 )
 :
     absorptionEmissionModel(dict, mesh),
-    coeffsDict_((dict.subDict(typeName + "Coeffs"))),
+    coeffsDict_((dict.optionalSubDict(typeName + "Coeffs"))),
     thermo_(mesh.lookupObject<solidThermo>(basicThermo::dictName)),
     speciesNames_(0),
     mixture_(dynamic_cast<const basicSpecieMixture&>(thermo_)),
@@ -104,7 +104,7 @@ greyMeanSolidAbsorptionEmission
     }
 
     label nFunc = 0;
-    const dictionary& functionDicts = dict.subDict(typeName + "Coeffs");
+    const dictionary& functionDicts = dict.optionalSubDict(typeName + "Coeffs");
 
     forAllConstIter(dictionary, functionDicts, iter)
     {

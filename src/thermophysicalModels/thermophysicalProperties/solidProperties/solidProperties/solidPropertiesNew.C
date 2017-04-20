@@ -78,7 +78,7 @@ Foam::autoPtr<Foam::solidProperties> Foam::solidProperties::New
         {
             return autoPtr<solidProperties>
             (
-                new solidProperties(dict.subDict(solidType + "Coeffs"))
+                new solidProperties(dict.optionalSubDict(solidType + "Coeffs"))
             );
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::phaseChangeTwoPhaseMixture::phaseChangeTwoPhaseMixture
 )
 :
     incompressibleTwoPhaseMixture(U, phi),
-    phaseChangeTwoPhaseMixtureCoeffs_(subDict(type + "Coeffs")),
+    phaseChangeTwoPhaseMixtureCoeffs_(optionalSubDict(type + "Coeffs")),
     pSat_("pSat", dimPressure, lookup("pSat"))
 {}
 
@@ -77,7 +77,7 @@ bool Foam::phaseChangeTwoPhaseMixture::read()
 {
     if (incompressibleTwoPhaseMixture::read())
     {
-        phaseChangeTwoPhaseMixtureCoeffs_ = subDict(type() + "Coeffs");
+        phaseChangeTwoPhaseMixtureCoeffs_ = optionalSubDict(type() + "Coeffs");
         lookup("pSat") >> pSat_;
 
         return true;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::PDRDragModel::~PDRDragModel()
 
 bool Foam::PDRDragModel::read(const dictionary& PDRProperties)
 {
-    PDRDragModelCoeffs_ = PDRProperties.subDict(type() + "Coeffs");
+    PDRDragModelCoeffs_ = PDRProperties.optionalSubDict(type() + "Coeffs");
 
     PDRDragModelCoeffs_.lookup("drag") >> on_;
 

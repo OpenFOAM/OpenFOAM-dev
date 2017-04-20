@@ -263,7 +263,7 @@ Foam::movingConeTopoFvMesh::movingConeTopoFvMesh(const IOobject& io)
                 IOobject::NO_WRITE,
                 false
             )
-        ).subDict(typeName + "Coeffs")
+        ).optionalSubDict(typeName + "Coeffs")
     ),
     motionVelAmplitude_(motionDict_.lookup("motionVelAmplitude")),
     motionVelPeriod_(readScalar(motionDict_.lookup("motionVelPeriod"))),

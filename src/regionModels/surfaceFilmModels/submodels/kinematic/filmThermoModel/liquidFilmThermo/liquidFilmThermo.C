@@ -94,7 +94,7 @@ void liquidFilmThermo::initLiquid(const dictionary& dict)
         ownLiquid_ = true;
 
         liquidPtr_ =
-            liquidProperties::New(dict.subDict(name_ + "Coeffs")).ptr();
+            liquidProperties::New(dict.optionalSubDict(name_ + "Coeffs")).ptr();
     }
 }
 

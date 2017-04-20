@@ -68,29 +68,31 @@ wallBoundedStreamLines
     cloudName       wallBoundedParticleTracks;
 
     // Seeding method.
-    seedSampleSet   patchSeed;    //cloud; //triSurfaceMeshPointSet;
-
-    uniformCoeffs
-    {
-        type        uniform;
-        axis        x;  //distance;
-
-        start       (0.0035 0.0999 0.0001);
-        end         (0.0035 0.0999 0.0099);
-        nPoints     20;
-    }
-    cloudCoeffs
-    {
-        type        cloud;
-        axis        x;  //distance;
-        points      ((0.351516548679288 -0.0116085375585099 1.24));
-    }
-    patchSeedCoeffs
+    seedSampleSet
     {
         type        patchSeed;
-        patches     (motorBikeGroup);
-        axis        x;  //distance;
-        maxPoints   20000;
+
+        uniformCoeffs
+        {
+            axis        x;  //distance;
+
+            start       (0.0035 0.0999 0.0001);
+            end         (0.0035 0.0999 0.0099);
+            nPoints     20;
+        }
+
+        cloudCoeffs
+        {
+            axis        x;  //distance;
+            points      ((0.351516548679288 -0.0116085375585099 1.24));
+        }
+
+        patchSeedCoeffs
+        {
+            patches     (motorBikeGroup);
+            axis        x;  //distance;
+            maxPoints   20000;
+        }
     }
 }
 

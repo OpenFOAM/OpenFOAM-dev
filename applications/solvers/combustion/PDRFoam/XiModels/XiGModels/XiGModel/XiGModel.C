@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::XiGModel::~XiGModel()
 
 bool Foam::XiGModel::read(const dictionary& XiGProperties)
 {
-    XiGModelCoeffs_ = XiGProperties.subDict(type() + "Coeffs");
+    XiGModelCoeffs_ = XiGProperties.optionalSubDict(type() + "Coeffs");
 
     return true;
 }

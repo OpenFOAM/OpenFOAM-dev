@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ Foam::mixtureViscosityModels::plastic::plastic
 )
 :
     mixtureViscosityModel(name, viscosityProperties, U, phi),
-    plasticCoeffs_(viscosityProperties.subDict(modelName + "Coeffs")),
+    plasticCoeffs_(viscosityProperties.optionalSubDict(modelName + "Coeffs")),
     plasticViscosityCoeff_
     (
         "coeff",
@@ -117,7 +117,7 @@ bool Foam::mixtureViscosityModels::plastic::read
 {
     mixtureViscosityModel::read(viscosityProperties);
 
-    plasticCoeffs_ = viscosityProperties.subDict(typeName + "Coeffs");
+    plasticCoeffs_ = viscosityProperties.optionalSubDict(typeName + "Coeffs");
 
     plasticCoeffs_.lookup("k") >> plasticViscosityCoeff_;
     plasticCoeffs_.lookup("n") >> plasticViscosityExponent_;

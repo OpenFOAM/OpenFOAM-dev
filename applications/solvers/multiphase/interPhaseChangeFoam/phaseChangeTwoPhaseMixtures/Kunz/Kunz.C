@@ -102,7 +102,7 @@ bool Foam::phaseChangeTwoPhaseMixtures::Kunz::read()
 {
     if (phaseChangeTwoPhaseMixture::read())
     {
-        phaseChangeTwoPhaseMixtureCoeffs_ = subDict(type() + "Coeffs");
+        phaseChangeTwoPhaseMixtureCoeffs_ = optionalSubDict(type() + "Coeffs");
 
         phaseChangeTwoPhaseMixtureCoeffs_.lookup("UInf") >> UInf_;
         phaseChangeTwoPhaseMixtureCoeffs_.lookup("tInf") >> tInf_;

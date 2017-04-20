@@ -59,8 +59,7 @@ functions
         lifeTime        10000;
         nSubCycle       5;
         cloudName       particleTracks;
-        seedSampleSet   uniform;
-        uniformCoeffs
+        seedSampleSet
         {
             type            uniform;
             axis            x;

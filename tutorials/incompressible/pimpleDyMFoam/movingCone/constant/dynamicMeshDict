@@ -17,15 +17,12 @@ FoamFile
 
 dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-motionSolverLibs ( "libfvMotionSolvers.so" );
+motionSolverLibs ("libfvMotionSolvers.so");
 
-solver          velocityComponentLaplacian;
+motionSolver    velocityComponentLaplacian;
 
-velocityComponentLaplacianCoeffs
-{
-    component       x;
-    diffusivity     directional (1 200 0);
-}
+component       x;
+diffusivity     directional (1 200 0);
 
 
 // ************************************************************************* //

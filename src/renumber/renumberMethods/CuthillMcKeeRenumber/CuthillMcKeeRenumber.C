@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,9 +50,10 @@ Foam::CuthillMcKeeRenumber::CuthillMcKeeRenumber(const dictionary& renumberDict)
     renumberMethod(renumberDict),
     reverse_
     (
-        renumberDict.found(typeName + "Coeffs")
-      ? Switch(renumberDict.subDict(typeName + "Coeffs").lookup("reverse"))
-      : Switch(false)
+        renumberDict.optionalSubDict
+        (
+            typeName + "Coeffs"
+        ).lookupOrDefault<Switch>("reverse", false)
     )
 {}
 

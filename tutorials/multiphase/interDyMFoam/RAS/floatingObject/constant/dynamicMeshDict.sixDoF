@@ -18,7 +18,7 @@ dynamicFvMesh       dynamicMotionSolverFvMesh;
 
 motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
 
-solver              sixDoFRigidBodyMotion;
+motionSolver        sixDoFRigidBodyMotion;
 
 sixDoFRigidBodyMotionCoeffs
 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::extrudeModel::extrudeModel
     nLayers_(dict.lookupOrDefault<label>("nLayers", 1)),
     expansionRatio_(dict.lookupOrDefault<scalar>("expansionRatio", 1)),
     dict_(dict),
-    coeffDict_(dict.subDict(modelType + "Coeffs"))
+    coeffDict_(dict.optionalSubDict(modelType + "Coeffs"))
 {}
 
 

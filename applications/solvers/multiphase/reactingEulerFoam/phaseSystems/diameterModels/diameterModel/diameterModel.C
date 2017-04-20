@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ void Foam::diameterModel::correct()
 
 bool Foam::diameterModel::read(const dictionary& phaseProperties)
 {
-    diameterProperties_ = phaseProperties.subDict(type() + "Coeffs");
+    diameterProperties_ = phaseProperties.optionalSubDict(type() + "Coeffs");
 
     return true;
 }

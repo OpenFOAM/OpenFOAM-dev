@@ -32,9 +32,7 @@ streamLines
     cloudName       particleTracks;
 
     // Seeding method.
-    seedSampleSet   uniform;  //cloud; //triSurfaceMeshPointSet;
-
-    uniformCoeffs
+    seedSampleSet
     {
         type        uniform;
         axis        x;  //distance;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Foam::SRF::SRFModel::SRFModel
     mesh_(Urel_.mesh()),
     origin_("origin", dimLength, lookup("origin")),
     axis_(lookup("axis")),
-    SRFModelCoeffs_(subDict(type + "Coeffs")),
+    SRFModelCoeffs_(optionalSubDict(type + "Coeffs")),
     omega_(dimensionedVector("omega", dimless/dimTime, Zero))
 {
     // Normalise the axis
@@ -89,7 +89,7 @@ bool Foam::SRF::SRFModel::read()
         axis_ /= mag(axis_);
 
         // Re-read sub-model coeffs
-        SRFModelCoeffs_ = subDict(type() + "Coeffs");
+        SRFModelCoeffs_ = optionalSubDict(type() + "Coeffs");
 
         return true;
     }

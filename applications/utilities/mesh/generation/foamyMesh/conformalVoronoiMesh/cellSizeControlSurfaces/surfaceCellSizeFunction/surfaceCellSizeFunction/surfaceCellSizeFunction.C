@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::surfaceCellSizeFunction::surfaceCellSizeFunction
 :
     dictionary(surfaceCellSizeFunctionDict),
     surface_(surface),
-    coeffsDict_(subDict(type + "Coeffs")),
+    coeffsDict_(optionalSubDict(type + "Coeffs")),
     defaultCellSize_(defaultCellSize),
     refinementFactor_
     (

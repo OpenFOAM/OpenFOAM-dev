@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Foam::geomDecomp::geomDecomp
 )
 :
     decompositionMethod(decompositionDict),
-    geomDecomDict_(decompositionDict.subDict(derivedType + "Coeffs")),
+    geomDecomDict_(decompositionDict.optionalSubDict(derivedType + "Coeffs")),
     n_(geomDecomDict_.lookup("n")),
     delta_(readScalar(geomDecomDict_.lookup("delta"))),
     rotDelta_(I)

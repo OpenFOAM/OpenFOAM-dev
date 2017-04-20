@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,10 @@ Foam::viscosityModels::BirdCarreau::BirdCarreau
 )
 :
     viscosityModel(name, viscosityProperties, U, phi),
-    BirdCarreauCoeffs_(viscosityProperties.subDict(typeName + "Coeffs")),
+    BirdCarreauCoeffs_
+    (
+        viscosityProperties.optionalSubDict(typeName + "Coeffs")
+    ),
     nu0_("nu0", dimViscosity, BirdCarreauCoeffs_),
     nuInf_("nuInf", dimViscosity, BirdCarreauCoeffs_),
     k_("k", dimTime, BirdCarreauCoeffs_),
@@ -104,7 +107,8 @@ bool Foam::viscosityModels::BirdCarreau::read
 {
     viscosityModel::read(viscosityProperties);
 
-    BirdCarreauCoeffs_ = viscosityProperties.subDict(typeName + "Coeffs");
+    BirdCarreauCoeffs_ =
+        viscosityProperties.optionalSubDict(typeName + "Coeffs");
 
     BirdCarreauCoeffs_.lookup("nu0") >> nu0_;
     BirdCarreauCoeffs_.lookup("nuInf") >> nuInf_;

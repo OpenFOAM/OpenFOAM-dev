@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::automatic::automatic
         surface,
         defaultCellSize
     ),
-    coeffsDict_(cellSizeCalcTypeDict.subDict(typeName + "Coeffs")),
+    coeffsDict_(cellSizeCalcTypeDict.optionalSubDict(typeName + "Coeffs")),
     surfaceName_(surface.searchableSurface::name()),
     readCurvature_(Switch(coeffsDict_.lookup("curvature"))),
     curvatureFile_(coeffsDict_.lookup("curvatureFile")),

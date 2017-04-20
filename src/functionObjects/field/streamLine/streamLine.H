@@ -55,8 +55,7 @@ Description
         nSubCycle       5;
         cloudName       particleTracks;
 
-        seedSampleSet   uniform;
-        uniformCoeffs
+        seedSampleSet
         {
             type        uniform;
             axis        x;  //distance;
@@ -81,7 +80,7 @@ Usage
         seedSampleSet| Seeding method (see below)| yes       |
     \endtable
 
-    Where \c seedSampleSet is typically one of
+    Where \c seedSampleSet \c type is typically one of
     \plaintable
         uniform | uniform particle seeding
         cloud   | cloud of points

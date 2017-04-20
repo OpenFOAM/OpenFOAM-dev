@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::tabulatedWallFunctions::tabulatedWallFunction::tabulatedWallFunction
 :
     dict_(dict),
     mesh_(mesh),
-    coeffDict_(dict.subDict(name + "Coeffs")),
+    coeffDict_(dict.optionalSubDict(name + "Coeffs")),
     invertedTableName_(dict.lookup("invertedTableName")),
     invertedTable_(invertedTableName_, mesh_, dict, true)
 {}

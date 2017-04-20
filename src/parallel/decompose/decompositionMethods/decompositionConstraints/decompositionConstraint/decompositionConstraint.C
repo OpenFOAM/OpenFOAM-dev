@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(decompositionConstraint, 1);
-defineRunTimeSelectionTable(decompositionConstraint, dictionary);
+    defineTypeNameAndDebug(decompositionConstraint, 1);
+    defineRunTimeSelectionTable(decompositionConstraint, dictionary);
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -41,7 +41,6 @@ Foam::decompositionConstraint::decompositionConstraint
     const word& type
 )
 :
-    //coeffDict_(constraintsDict.subOrEmptyDict(type + "Coeffs"))
     coeffDict_(constraintsDict)
 {}
 

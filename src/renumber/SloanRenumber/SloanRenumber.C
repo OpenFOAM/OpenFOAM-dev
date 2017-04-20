@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,9 +92,10 @@ Foam::SloanRenumber::SloanRenumber(const dictionary& renumberDict)
     renumberMethod(renumberDict),
     reverse_
     (
-        renumberDict.found(typeName + "Coeffs")
-      ? Switch(renumberDict.subDict(typeName + "Coeffs").lookup("reverse"))
-      : Switch(false)
+        renumberDict.optionalSubDict
+        (
+            typeName + "Coeffs"
+        ).lookupOrDefault<Switch>("reverse", false)
     )
 {}
 

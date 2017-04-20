@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -243,7 +243,7 @@ void Foam::multiLevelDecomp::decompose
 
             // Retrieve original level0 dictionary and modify number of domains
             dictionary::const_iterator iter =
-                decompositionDict_.subDict(typeName + "Coeffs").begin();
+                decompositionDict_.optionalSubDict(typeName + "Coeffs").begin();
             dictionary myDict = iter().dict();
             myDict.set("numberOfSubdomains", nTotal);
 
@@ -330,7 +330,7 @@ void Foam::multiLevelDecomp::decompose
 Foam::multiLevelDecomp::multiLevelDecomp(const dictionary& decompositionDict)
 :
     decompositionMethod(decompositionDict),
-    methodsDict_(decompositionDict_.subDict(typeName + "Coeffs"))
+    methodsDict_(decompositionDict_.optionalSubDict(typeName + "Coeffs"))
 {
     methods_.setSize(methodsDict_.size());
     label i = 0;

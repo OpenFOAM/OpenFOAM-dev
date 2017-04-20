@@ -14,59 +14,56 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dynamicFvMesh       dynamicMotionSolverFvMesh;
+dynamicFvMesh   dynamicMotionSolverFvMesh;
 
 motionSolverLibs    ("libsixDoFRigidBodyMotion.so");
 
-solver              sixDoFRigidBodyMotion;
+motionSolver    sixDoFRigidBodyMotion;
 
-sixDoFRigidBodyMotionCoeffs
+patches         (hull);
+innerDistance   0.3;
+outerDistance   1;
+
+centreOfMass    (2.929541 0 0.2);
+mass            412.73;
+momentOfInertia (40 921 921);
+rhoInf          1;
+report          on;
+
+value           uniform (0 0 0);
+
+accelerationRelaxation 0.4;
+
+solver
 {
-    patches         (hull);
-    innerDistance   0.3;
-    outerDistance   1;
+    type Newmark;
+}
 
-    centreOfMass    (2.929541 0 0.2);
-    mass            412.73;
-    momentOfInertia (40 921 921);
-    rhoInf          1;
-    report          on;
-
-    value           uniform (0 0 0);
-
-    accelerationRelaxation 0.4;
-
-    solver
+constraints
+{
+    zAxis
     {
-        type Newmark;
+        sixDoFRigidBodyMotionConstraint line;
+        direction     (0 0 1);
     }
-
-    constraints
+    yPlane
     {
-        zAxis
-        {
-            sixDoFRigidBodyMotionConstraint line;
-            direction     (0 0 1);
-        }
-        yPlane
-        {
-            sixDoFRigidBodyMotionConstraint axis;
-            axis          (0 1 0);
-        }
+        sixDoFRigidBodyMotionConstraint axis;
+        axis          (0 1 0);
     }
+}
 
-    restraints
+restraints
+{
+    translationDamper
     {
-        translationDamper
-        {
-            sixDoFRigidBodyMotionRestraint linearDamper;
-            coeff         8596;
-        }
-        rotationDamper
-        {
-            sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
-            coeff         11586;
-        }
+        sixDoFRigidBodyMotionRestraint linearDamper;
+        coeff         8596;
+    }
+    rotationDamper
+    {
+        sixDoFRigidBodyMotionRestraint sphericalAngularDamper;
+        coeff         11586;
     }
 }
 

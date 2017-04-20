@@ -97,12 +97,7 @@ Foam::porosityModel::porosityModel
     name_(name),
     mesh_(mesh),
     dict_(dict),
-    coeffs_
-    (
-        dict.found(modelType + "Coeffs")
-      ? dict.subDict(modelType + "Coeffs")
-      : dict
-    ),
+    coeffs_(dict.optionalSubDict(modelType + "Coeffs")),
     active_(true),
     zoneName_(cellZoneName),
     cellZoneIDs_(),
@@ -234,14 +229,7 @@ bool Foam::porosityModel::read(const dictionary& dict)
 {
     dict.readIfPresent("active", active_);
 
-    if (dict.found(type() + "Coeffs"))
-    {
-        coeffs_ = dict.subDict(type() + "Coeffs");
-    }
-    else
-    {
-        coeffs_ = dict;
-    }
+    coeffs_ = dict.optionalSubDict(type() + "Coeffs");
 
     dict.lookup("cellZone") >> zoneName_;
     cellZoneIDs_ = mesh_.cellZones().findIndices(zoneName_);

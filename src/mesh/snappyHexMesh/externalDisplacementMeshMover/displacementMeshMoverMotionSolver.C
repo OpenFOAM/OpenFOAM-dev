@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::displacementMeshMoverMotionSolver::meshMover() const
         meshMoverPtr_ = externalDisplacementMeshMover::New
         (
             moverType,
-            coeffDict().subDict(moverType + "Coeffs"),
+            coeffDict().optionalSubDict(moverType + "Coeffs"),
             localPointRegion::findDuplicateFacePairs(mesh()),
             pointDisplacement_
         );
@@ -108,7 +108,7 @@ void Foam::displacementMeshMoverMotionSolver::solve()
     labelList checkFaces(identity(mesh().nFaces()));
     meshMover().move
     (
-        coeffDict().subDict(meshMover().type() + "Coeffs"),
+        coeffDict().optionalSubDict(meshMover().type() + "Coeffs"),
         nAllowableErrors,
         checkFaces
     );

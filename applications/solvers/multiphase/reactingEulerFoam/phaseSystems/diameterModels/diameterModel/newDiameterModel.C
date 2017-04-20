@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,11 @@ Foam::autoPtr<Foam::diameterModel> Foam::diameterModel::New
            << exit(FatalError);
     }
 
-    return cstrIter()(dict.subDict(diameterModelType + "Coeffs"), phase);
+    return cstrIter()
+    (
+        dict.optionalSubDict(diameterModelType + "Coeffs"),
+        phase
+    );
 }
 
 

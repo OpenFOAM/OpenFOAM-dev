@@ -19,20 +19,15 @@ dynamicFvMesh   dynamicMotionSolverFvMesh;
 
 motionSolverLibs ( "libfvMotionSolvers.so" );
 
-solver solidBody;
+motionSolver    solidBody;
 
-solidBodyCoeffs
-{
-    cellZone        rotor;
+cellZone        rotor;
 
-    solidBodyMotionFunction  rotatingMotion;
-    rotatingMotionCoeffs
-    {
-        origin        (0 0 0);
-        axis          (0 0 1);
-        omega         6.2832; // rad/s
-    }
-}
+solidBodyMotionFunction  rotatingMotion;
+
+origin        (0 0 0);
+axis          (0 0 1);
+omega         6.2832; // rad/s
 
 
 // ************************************************************************* //

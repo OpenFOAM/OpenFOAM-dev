@@ -19,19 +19,14 @@ FoamFile
 
 dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-solver solidBody;
+motionSolver    solidBody;
 
-solidBodyCoeffs
-{
-    cellZone        rotatingZone;
+cellZone        rotatingZone;
 
-    solidBodyMotionFunction  rotatingMotion;
-    rotatingMotionCoeffs
-    {
-        origin      (0 0 0);
-        axis        (0 0 1);
-        omega       $:meshMotionProperties.omega;
-    }
-}
+solidBodyMotionFunction  rotatingMotion;
+
+origin      (0 0 0);
+axis        (0 0 1);
+omega       $:meshMotionProperties.omega;
 
 // ************************************************************************* //

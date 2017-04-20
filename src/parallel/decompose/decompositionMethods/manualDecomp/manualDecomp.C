@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,10 @@ Foam::manualDecomp::manualDecomp(const dictionary& decompositionDict)
     decompositionMethod(decompositionDict),
     decompDataFile_
     (
-        decompositionDict.subDict(word(decompositionDict.lookup("method"))
-      + "Coeffs").lookup("dataFile")
+        decompositionDict.optionalSubDict
+        (
+            word(decompositionDict.lookup("method")) + "Coeffs"
+        ).lookup("dataFile")
     )
 {}
 

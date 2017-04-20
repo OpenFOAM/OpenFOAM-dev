@@ -148,7 +148,10 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
             return autoPtr<liquidProperties>
             (
-                cstrIter()(dict.subDict(liquidPropertiesTypeName + "Coeffs"))
+                cstrIter()
+                (
+                    dict.optionalSubDict(liquidPropertiesTypeName + "Coeffs")
+                )
             );
         }
     }

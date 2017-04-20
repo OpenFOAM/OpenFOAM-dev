@@ -419,6 +419,10 @@ public:
                 const bool mustRead = false
             ) const;
 
+            //- Find and return a sub-dictionary if found
+            //  otherwise return this dictionary
+            const dictionary& optionalSubDict(const word&) const;
+
             //- Return the table of contents
             wordList toc() const;
 

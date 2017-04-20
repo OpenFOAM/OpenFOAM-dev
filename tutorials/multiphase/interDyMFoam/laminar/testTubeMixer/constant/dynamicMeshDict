@@ -17,49 +17,43 @@ FoamFile
 
 dynamicFvMesh   dynamicMotionSolverFvMesh;
 
-solver solidBody;
+motionSolver    solidBody;
 
-solidBodyCoeffs
+solidBodyMotionFunction multiMotion;
+
+// Table rotating in z axis
+rotatingTable
 {
-    solidBodyMotionFunction multiMotion;
-
-    multiMotionCoeffs
+    solidBodyMotionFunction rotatingMotion;
+    rotatingMotionCoeffs
     {
-        // Table rotating in z axis
-        rotatingTable
-        {
-            solidBodyMotionFunction rotatingMotion;
-            rotatingMotionCoeffs
-            {
-                origin          (0 0.1 0);
-                axis            (0 0 1);
-                omega           6.2832; // rad/s
-            }
-        }
+        origin          (0 0.1 0);
+        axis            (0 0 1);
+        omega           6.2832; // rad/s
+    }
+}
 
-        //// Box rotates on rotating table
-        //rotatingBox
-        //{
-        //    solidBodyMotionFunction rotatingMotion;
-        //    rotatingMotionCoeffs
-        //    {
-        //        origin          (0 0 0);
-        //        axis            (1 0 0);
-        //        omega           12.5664; // rad/s
-        //    }
-        //}
+//// Box rotates on rotating table
+//rotatingBox
+//{
+//    solidBodyMotionFunction rotatingMotion;
+//    rotatingMotionCoeffs
+//    {
+//        origin          (0 0 0);
+//        axis            (1 0 0);
+//        omega           12.5664; // rad/s
+//    }
+//}
 
-        // Tube rocking on rotating table
-        rotatingBox
-        {
-            solidBodyMotionFunction oscillatingRotatingMotion;
-            oscillatingRotatingMotionCoeffs
-            {
-                origin          (0 0 0);
-                omega           40;         // rad/s
-                amplitude       (45 0 0);   // 45 degrees max tilt
-            }
-        }
+// Tube rocking on rotating table
+rotatingBox
+{
+    solidBodyMotionFunction oscillatingRotatingMotion;
+    oscillatingRotatingMotionCoeffs
+    {
+        origin          (0 0 0);
+        omega           40;         // rad/s
+        amplitude       (45 0 0);   // 45 degrees max tilt
     }
 }
 

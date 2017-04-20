@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Foam::combustionModel::combustionModel
     turbulencePtr_(),
     mesh_(mesh),
     active_(lookupOrDefault<Switch>("active", true)),
-    coeffs_(subDict(modelType + "Coeffs")),
+    coeffs_(optionalSubDict(modelType + "Coeffs")),
     modelType_(modelType),
     phaseName_(phaseName)
 {}
@@ -86,7 +86,7 @@ bool Foam::combustionModel::read()
     if (regIOobject::read())
     {
         this->lookup("active") >> active_;
-        coeffs_ = subDict(modelType_ + "Coeffs");
+        coeffs_ = optionalSubDict(modelType_ + "Coeffs");
         return true;
     }
     else
