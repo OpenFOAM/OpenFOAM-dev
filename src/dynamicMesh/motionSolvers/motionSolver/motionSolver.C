@@ -104,7 +104,12 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
     const IOdictionary& solverDict
 )
 {
-    const word solverTypeName(solverDict.lookup("motionSolver"));
+    const word solverTypeName
+    (
+        solverDict.found("motionSolver")
+      ? solverDict.lookup("motionSolver")
+      : solverDict.lookup("solver")
+    );
 
     Info<< "Selecting motion solver: " << solverTypeName << endl;
 
