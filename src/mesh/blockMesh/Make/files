@@ -38,6 +38,4 @@ blockMesh/blockMeshMergeFast.C
 
 blockMeshTools/blockMeshTools.C
 
-searchableExtrudedCircle/searchableExtrudedCircle.C
-
 LIB = $(FOAM_LIBBIN)/libblockMesh

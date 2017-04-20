@@ -42,6 +42,6 @@ efm = $(eem)/extendedFeatureEdgeMesh
 
 $(efm)/extendedFeatureEdgeMesh.C
 
-
+searchableSurfaces/searchableExtrudedCircle/searchableExtrudedCircle.C
 
 LIB = $(FOAM_LIBBIN)/libedgeMesh

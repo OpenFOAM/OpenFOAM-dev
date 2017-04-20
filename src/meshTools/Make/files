@@ -61,20 +61,19 @@ indexedOctree/treeDataPoint.C
 indexedOctree/treeDataPrimitivePatchName.C
 indexedOctree/treeDataTriSurface.C
 
-searchableSurface = searchableSurface
-$(searchableSurface)/searchableBox.C
-$(searchableSurface)/searchableCylinder.C
-$(searchableSurface)/searchableDisk.C
-$(searchableSurface)/searchablePlane.C
-$(searchableSurface)/searchablePlate.C
-$(searchableSurface)/searchableSphere.C
-$(searchableSurface)/searchableSurface.C
-$(searchableSurface)/searchableSurfaceCollection.C
-$(searchableSurface)/searchableSurfaces.C
-$(searchableSurface)/searchableSurfacesQueries.C
-$(searchableSurface)/searchableSurfaceWithGaps.C
-$(searchableSurface)/triSurfaceMesh.C
-$(searchableSurface)/closedTriSurfaceMesh.C
+searchableSurfaces/searchableSurface/searchableSurface.C
+searchableSurfaces/searchableBox/searchableBox.C
+searchableSurfaces/searchableCylinder/searchableCylinder.C
+searchableSurfaces/searchableDisk/searchableDisk.C
+searchableSurfaces/searchablePlane/searchablePlane.C
+searchableSurfaces/searchablePlate/searchablePlate.C
+searchableSurfaces/searchableSphere/searchableSphere.C
+searchableSurfaces/searchableSurfaceCollection/searchableSurfaceCollection.C
+searchableSurfaces/searchableSurfaces/searchableSurfaces.C
+searchableSurfaces/searchableSurfacesQueries/searchableSurfacesQueries.C
+searchableSurfaces/searchableSurfaceWithGaps/searchableSurfaceWithGaps.C
+searchableSurfaces/triSurfaceMesh/triSurfaceMesh.C
+searchableSurfaces/closedTriSurfaceMesh/closedTriSurfaceMesh.C
 
 topoSets = sets/topoSets
 $(topoSets)/cellSet.C
