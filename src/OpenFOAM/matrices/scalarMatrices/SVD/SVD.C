@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
     {
         if (i < Un-1)
         {
-            if (g != 0)
+            if (g*U_(i, l) != 0)
             {
                 for (label j=l; j<Un; j++)
                 {
@@ -199,7 +199,7 @@ Foam::SVD::SVD(const scalarRectangularMatrix& A, const scalar minCondition)
             U_(i, j) = 0;
         }
 
-        if (g != 0)
+        if (g*U_(i, i) != 0)
         {
             g = 1.0/g;
 
