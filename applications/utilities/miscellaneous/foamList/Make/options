@@ -28,7 +28,6 @@ EXE_LIBS = \
     -lDSMC \
     -ldynamicFvMesh \
     -ldynamicMesh \
-    -ledgeMesh \
     -lengine \
     -lextrudeModel \
     -lfieldFunctionObjects \

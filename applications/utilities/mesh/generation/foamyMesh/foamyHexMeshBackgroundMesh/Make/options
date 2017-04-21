@@ -9,7 +9,6 @@ EXE_INC = \
     ${CGAL_INC} \
     -I../conformalVoronoiMesh/lnInclude \
     -I$(LIB_SRC)/parallel/decompose/decompositionMethods/lnInclude \
-    -I$(LIB_SRC)/edgeMesh/lnInclude \
     -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
@@ -26,7 +25,6 @@ EXE_LIBS = \
     -lgmp \
     -lconformalVoronoiMesh \
     -ldecompositionMethods /* -L$(FOAM_LIBBIN)/dummy -lscotchDecomp */ \
-    -ledgeMesh \
     -ltriSurface \
     -lmeshTools \
     -lfileFormats \

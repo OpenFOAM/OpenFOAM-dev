@@ -32,7 +32,6 @@ wmake $targetType fileFormats
 wmake $targetType surfMesh
 wmake $targetType triSurface
 wmake $targetType meshTools
-wmake $targetType edgeMesh
 
 # Decomposition methods needed by dummyThirdParty
 # (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools

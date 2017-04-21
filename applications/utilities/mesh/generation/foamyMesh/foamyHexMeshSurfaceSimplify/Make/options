@@ -8,7 +8,6 @@ EXE_INC = \
     /* -IMarchingCubes */ \
     -I$(FASTDUALOCTREE_SRC_PATH) \
     -I../conformalVoronoiMesh/lnInclude \
-    -I$(LIB_SRC)/edgeMesh/lnInclude \
     -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \
     -I$(LIB_SRC)/fileFormats/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
@@ -22,7 +21,6 @@ EXE_LIBS = \
     -lGL \
     -lconformalVoronoiMesh \
     -ldecompositionMethods -L$(FOAM_LIBBIN)/dummy -lscotchDecomp \
-    -ledgeMesh \
     -lfileFormats \
     -ltriSurface \
     -lmeshTools \
