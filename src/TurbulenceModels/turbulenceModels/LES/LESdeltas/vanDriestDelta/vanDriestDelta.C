@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,21 +108,29 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
         (
             IOobject::groupName("geometricDelta", turbulence.U().group()),
             turbulence,
-            dict.subDict(type() + "Coeffs")
+            dict.optionalSubDict(type() + "Coeffs")
         )
     ),
     kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
     Aplus_
     (
-        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>("Aplus", 26.0)
+        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        (
+            "Aplus",
+            26.0
+        )
     ),
     Cdelta_
     (
-        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>("Cdelta", 0.158)
+        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        (
+            "Cdelta",
+            0.158
+        )
     ),
     calcInterval_
     (
-        dict.subDict(type() + "Coeffs").lookupOrDefault<label>
+        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<label>
         (
             "calcInterval",
             1
@@ -137,7 +145,7 @@ Foam::LESModels::vanDriestDelta::vanDriestDelta
 
 void Foam::LESModels::vanDriestDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
+    const dictionary& coeffsDict(dict.optionalSubDict(type() + "Coeffs"));
 
     geometricDelta_().read(coeffsDict);
     dict.readIfPresent<scalar>("kappa", kappa_);

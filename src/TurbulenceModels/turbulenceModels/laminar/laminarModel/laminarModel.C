@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ void Foam::laminarModel<BasicTurbulenceModel>::printCoeffs(const word& type)
 {
     if (printCoeffs_)
     {
-        Info<< type << "Coeffs" << coeffDict_ << endl;
+        Info<< coeffDict_.dictName() << coeffDict_ << endl;
     }
 }
 
@@ -67,7 +67,7 @@ Foam::laminarModel<BasicTurbulenceModel>::laminarModel
 
     laminarDict_(this->subOrEmptyDict("laminar")),
     printCoeffs_(laminarDict_.lookupOrDefault<Switch>("printCoeffs", false)),
-    coeffDict_(laminarDict_.subOrEmptyDict(type + "Coeffs"))
+    coeffDict_(laminarDict_.optionalSubDict(type + "Coeffs"))
 {
     // Force the construction of the mesh deltaCoeffs which may be needed
     // for the construction of the derived models and BCs
@@ -170,14 +170,7 @@ bool Foam::laminarModel<BasicTurbulenceModel>::read()
     {
         laminarDict_ <<= this->subDict("laminar");
 
-        if
-        (
-            const dictionary* dictPtr =
-                laminarDict_.subDictPtr(type() + "Coeffs")
-        )
-        {
-            coeffDict_ <<= *dictPtr;
-        }
+        coeffDict_ <<= laminarDict_.optionalSubDict(type() + "Coeffs");
 
         return true;
     }

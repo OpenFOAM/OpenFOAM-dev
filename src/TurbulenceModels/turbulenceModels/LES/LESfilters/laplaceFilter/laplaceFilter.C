@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,10 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, scalar widthCoeff)
 Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, const dictionary& bd)
 :
     LESfilter(mesh),
-    widthCoeff_(readScalar(bd.subDict(type() + "Coeffs").lookup("widthCoeff"))),
+    widthCoeff_
+    (
+        readScalar(bd.optionalSubDict(type() + "Coeffs").lookup("widthCoeff"))
+    ),
     coeff_
     (
         IOobject
@@ -86,7 +89,7 @@ Foam::laplaceFilter::laplaceFilter(const fvMesh& mesh, const dictionary& bd)
 
 void Foam::laplaceFilter::read(const dictionary& bd)
 {
-    bd.subDict(type() + "Coeffs").lookup("widthCoeff") >> widthCoeff_;
+    bd.optionalSubDict(type() + "Coeffs").lookup("widthCoeff") >> widthCoeff_;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,12 +153,15 @@ Foam::LESModels::smoothDelta::smoothDelta
         (
             "geometricDelta",
             turbulence,
-            dict.subDict(type() + "Coeffs")
+            dict.optionalSubDict(type() + "Coeffs")
         )
     ),
     maxDeltaRatio_
     (
-        readScalar(dict.subDict(type() + "Coeffs").lookup("maxDeltaRatio"))
+        readScalar
+        (
+            dict.optionalSubDict(type() + "Coeffs").lookup("maxDeltaRatio")
+        )
     )
 {
     calcDelta();
@@ -169,7 +172,7 @@ Foam::LESModels::smoothDelta::smoothDelta
 
 void Foam::LESModels::smoothDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
+    const dictionary& coeffsDict(dict.optionalSubDict(type() + "Coeffs"));
 
     geometricDelta_().read(coeffsDict);
     coeffsDict.lookup("maxDeltaRatio") >> maxDeltaRatio_;

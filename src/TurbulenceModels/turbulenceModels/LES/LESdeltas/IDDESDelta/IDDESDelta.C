@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,11 @@ Foam::LESModels::IDDESDelta::IDDESDelta
     ),
     Cw_
     (
-        dict.subDict(type() + "Coeffs").lookupOrDefault<scalar>("Cw", 0.15)
+        dict.optionalSubDict(type() + "Coeffs").lookupOrDefault<scalar>
+        (
+            "Cw",
+            0.15
+        )
     )
 {
     calcDelta();
@@ -159,7 +163,7 @@ Foam::LESModels::IDDESDelta::IDDESDelta
 
 void Foam::LESModels::IDDESDelta::read(const dictionary& dict)
 {
-    const dictionary& coeffsDict(dict.subDict(type() + "Coeffs"));
+    const dictionary& coeffsDict(dict.optionalSubDict(type() + "Coeffs"));
 
     coeffsDict.readIfPresent<scalar>("Cw", Cw_);
 

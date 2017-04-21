@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ void Foam::LESModel<BasicTurbulenceModel>::printCoeffs(const word& type)
 {
     if (printCoeffs_)
     {
-        Info<< type << "Coeffs" << coeffDict_ << endl;
+        Info<< coeffDict_.dictName() << coeffDict_ << endl;
     }
 }
 
@@ -67,7 +67,7 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
     LESDict_(this->subOrEmptyDict("LES")),
     turbulence_(LESDict_.lookup("turbulence")),
     printCoeffs_(LESDict_.lookupOrDefault<Switch>("printCoeffs", false)),
-    coeffDict_(LESDict_.subOrEmptyDict(type + "Coeffs")),
+    coeffDict_(LESDict_.optionalSubDict(type + "Coeffs")),
 
     kMin_
     (
@@ -183,10 +183,7 @@ bool Foam::LESModel<BasicTurbulenceModel>::read()
         LESDict_ <<= this->subDict("LES");
         LESDict_.lookup("turbulence") >> turbulence_;
 
-        if (const dictionary* dictPtr = LESDict_.subDictPtr(type() + "Coeffs"))
-        {
-            coeffDict_ <<= *dictPtr;
-        }
+        coeffDict_ <<= LESDict_.optionalSubDict(type() + "Coeffs");
 
         delta_().read(LESDict_);
 
