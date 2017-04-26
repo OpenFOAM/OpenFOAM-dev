@@ -59,6 +59,8 @@ Usage
     Ta           | Ambient temperature [K]     | for mode 'coefficient' |
     thicknessLayers | Layer thicknesses [m] | no |
     kappaLayers  | Layer thermal conductivities [W/m/K] | no |
+    relaxation   | Relaxation for the wall temperature | no | 1
+    emissivity   | Surface emissivity for radiative flux to ambient | no | 0
     qr           | Name of the radiative field | no | none
     qrRelaxation | Relaxation factor for radiative field | no | 1
     kappaMethod  | Inherited from temperatureCoupledBase | inherited |
@@ -147,7 +149,13 @@ private:
         //- Ambient temperature [K]
         scalarField Ta_;
 
-        //- Chache qr for relaxation
+        //- Relaxation for the wall temperature (thermal inertia)
+        scalar relaxation_;
+
+        //- Optional surface emissivity for radiative transfer to ambient
+        scalar emissivity_;
+
+        //- Cache qr for relaxation
         scalarField qrPrevious_;
 
         //- Relaxation for qr

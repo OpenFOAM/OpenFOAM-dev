@@ -27,6 +27,9 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
+#include "physicoChemicalConstants.H"
+
+using Foam::constant::physicoChemical::sigma;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,6 +69,8 @@ externalWallHeatFluxTemperatureFvPatchScalarField
     temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
     mode_(fixedHeatFlux),
     Q_(0),
+    relaxation_(1),
+    emissivity_(0),
     qrRelaxation_(1),
     qrName_("undefined-qr"),
     thicknessLayers_(),
@@ -89,6 +94,8 @@ externalWallHeatFluxTemperatureFvPatchScalarField
     temperatureCoupledBase(patch(), dict),
     mode_(operationModeNames.read(dict.lookup("mode"))),
     Q_(0),
+    relaxation_(dict.lookupOrDefault<scalar>("relaxation", 1)),
+    emissivity_(dict.lookupOrDefault<scalar>("emissivity", 0)),
     qrRelaxation_(dict.lookupOrDefault<scalar>("qrRelaxation", 1)),
     qrName_(dict.lookupOrDefault<word>("qr", "none")),
     thicknessLayers_(),
@@ -167,6 +174,8 @@ externalWallHeatFluxTemperatureFvPatchScalarField
     temperatureCoupledBase(patch(), ptf),
     mode_(ptf.mode_),
     Q_(ptf.Q_),
+    relaxation_(ptf.relaxation_),
+    emissivity_(ptf.emissivity_),
     qrRelaxation_(ptf.qrRelaxation_),
     qrName_(ptf.qrName_),
     thicknessLayers_(ptf.thicknessLayers_),
@@ -213,6 +222,8 @@ externalWallHeatFluxTemperatureFvPatchScalarField
     q_(tppsf.q_),
     h_(tppsf.h_),
     Ta_(tppsf.Ta_),
+    relaxation_(tppsf.relaxation_),
+    emissivity_(tppsf.emissivity_),
     qrPrevious_(tppsf.qrPrevious_),
     qrRelaxation_(tppsf.qrRelaxation_),
     qrName_(tppsf.qrName_),
@@ -235,6 +246,8 @@ externalWallHeatFluxTemperatureFvPatchScalarField
     q_(tppsf.q_),
     h_(tppsf.h_),
     Ta_(tppsf.Ta_),
+    relaxation_(tppsf.relaxation_),
+    emissivity_(tppsf.emissivity_),
     qrPrevious_(tppsf.qrPrevious_),
     qrRelaxation_(tppsf.qrRelaxation_),
     qrName_(tppsf.qrName_),
@@ -326,8 +339,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    const scalarField Tp(*this);
-    scalarField hp(patch().size(), 0);
+    const scalarField& Tp(*this);
 
     scalarField qr(Tp.size(), 0);
     if (qrName_ != "none")
@@ -372,17 +384,63 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
                     }
                 }
             }
-            hp = 1/(1/h_ + totalSolidRes);
+            scalarField hp(1/(1/h_ + totalSolidRes));
 
-            qr /= Tp;
+            scalarField hpTa(hp*Ta_);
+
+            if (emissivity_ > 0)
+            {
+                // Evaluate the radiative flux to the environment
+                // from the surface temperature ...
+                if (totalSolidRes > 0)
+                {
+                    // ... including the effect of the solid wall thermal
+                    // resistance
+                    scalarField TpLambda(h_/(h_ + 1/totalSolidRes));
+                    scalarField Ts(TpLambda*Tp + (1 - TpLambda)*Ta_);
+                    scalarField lambdaTa4(pow4((1 - TpLambda)*Ta_));
+
+                    hp += emissivity_*sigma.value()*(pow4(Ts) - lambdaTa4)/Tp;
+                    hpTa += sigma.value()*(emissivity_*lambdaTa4 + pow4(Ta_));
+                }
+                else
+                {
+                    // ... if there is no solid wall thermal resistance use
+                    // the current wall temperature
+                    hp += emissivity_*sigma.value()*pow3(Tp);
+                    hpTa += sigma.value()*pow4(Ta_);
+                }
+            }
+
+            const scalarField kappaDeltaCoeffs
+            (
+                this->kappa(Tp)*patch().deltaCoeffs()
+            );
+
             refGrad() = 0;
-            refValue() = hp*Ta_/(hp - qr);
-            valueFraction() =
-                (hp - qr)/((hp - qr) + kappa(Tp)*patch().deltaCoeffs());
+
+            forAll(Tp, i)
+            {
+                if (qr[i] < 0)
+                {
+                    const scalar hpmqr = hp[i] - qr[i]/Tp[i];
+
+                    refValue()[i] = hpTa[i]/hpmqr;
+                    valueFraction()[i] = hpmqr/(hpmqr + kappaDeltaCoeffs[i]);
+                }
+                else
+                {
+                    refValue()[i] = (hpTa[i] + qr[i])/hp[i];
+                    valueFraction()[i] = hp[i]/(hp[i] + kappaDeltaCoeffs[i]);
+                }
+            }
 
             break;
         }
     }
+
+    valueFraction() = relaxation_*valueFraction() + (1 - relaxation_);
+    refValue() = relaxation_*refValue() + (1 - relaxation_)*Tp;
 
     mixedFvPatchScalarField::updateCoeffs();
 
@@ -434,6 +492,18 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
             h_.writeEntry("h", os);
             Ta_.writeEntry("Ta", os);
 
+            if (relaxation_ < 1)
+            {
+                os.writeKeyword("relaxation")
+                    << relaxation_ << token::END_STATEMENT << nl;
+            }
+
+            if (emissivity_ > 0)
+            {
+                os.writeKeyword("emissivity")
+                    << emissivity_ << token::END_STATEMENT << nl;
+            }
+
             if (thicknessLayers_.size())
             {
                 thicknessLayers_.writeEntry("thicknessLayers", os);
@@ -448,9 +518,10 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
 
     if (qrName_ != "none")
     {
-        qrPrevious_.writeEntry("qrPrevious", os);
         os.writeKeyword("qrRelaxation")
             << qrRelaxation_ << token::END_STATEMENT << nl;
+
+        qrPrevious_.writeEntry("qrPrevious", os);
     }
 
     refValue().writeEntry("refValue", os);
