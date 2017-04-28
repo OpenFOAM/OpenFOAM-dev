@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,7 +220,7 @@ inline Foam::molecule::constantProperties::constantProperties
 inline Foam::molecule::molecule
 (
     const polyMesh& mesh,
-    const vector& position,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti,
@@ -236,7 +236,42 @@ inline Foam::molecule::molecule
 
 )
 :
-    particle(mesh, position, celli, tetFacei, tetPti),
+    particle(mesh, coordinates, celli, tetFacei, tetPti),
+    Q_(Q),
+    v_(v),
+    a_(a),
+    pi_(pi),
+    tau_(tau),
+    specialPosition_(specialPosition),
+    potentialEnergy_(0.0),
+    rf_(Zero),
+    special_(special),
+    id_(id),
+    siteForces_(constProps.nSites(), Zero),
+    sitePositions_(constProps.nSites())
+{
+    setSitePositions(constProps);
+}
+
+
+inline Foam::molecule::molecule
+(
+    const polyMesh& mesh,
+    const vector& position,
+    const label celli,
+    const tensor& Q,
+    const vector& v,
+    const vector& a,
+    const vector& pi,
+    const vector& tau,
+    const vector& specialPosition,
+    const constantProperties& constProps,
+    const label special,
+    const label id
+
+)
+:
+    particle(mesh, position, celli),
     Q_(Q),
     v_(v),
     a_(a),

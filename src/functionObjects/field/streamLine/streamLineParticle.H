@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,15 +46,11 @@ SourceFiles
 namespace Foam
 {
 
-class streamLineParticleCloud;
-
-
 // Forward declaration of friend functions and operators
 
 class streamLineParticle;
 
 Ostream& operator<<(Ostream&, const streamLineParticle&);
-
 
 /*---------------------------------------------------------------------------*\
                      Class streamLineParticle Declaration
@@ -64,32 +60,38 @@ class streamLineParticle
 :
     public particle
 {
-
 public:
 
-    //- Class used to pass tracking data to the trackToFace function
     class trackingData
     :
         public particle::TrackingData<Cloud<streamLineParticle>>
     {
-
     public:
 
+        // Public data
 
-        const PtrList<interpolation<scalar>>& vsInterp_;
-        const PtrList<interpolation<vector>>& vvInterp_;
-        const label UIndex_;
-        const bool trackForward_;
-        const label nSubCycle_;
-        const scalar trackLength_;
+            const PtrList<interpolation<scalar>>& vsInterp_;
 
-        DynamicList<vectorList>& allPositions_;
-        List<DynamicList<scalarList>>& allScalars_;
-        List<DynamicList<vectorList>>& allVectors_;
+            const PtrList<interpolation<vector>>& vvInterp_;
+
+            const label UIndex_;
+
+            const bool trackForward_;
+
+            const label nSubCycle_;
+
+            const scalar trackLength_;
+
+            DynamicList<vectorList>& allPositions_;
+
+            List<DynamicList<scalarList>>& allScalars_;
+
+            List<DynamicList<vectorList>>& allVectors_;
 
 
         // Constructors
 
+            //- Construct from components
             trackingData
             (
                 Cloud<streamLineParticle>& cloud,
@@ -99,7 +101,6 @@ public:
                 const bool trackForward,
                 const label nSubCycle,
                 const scalar trackLength,
-
                 DynamicList<List<point>>& allPositions,
                 List<DynamicList<scalarList>>& allScalars,
                 List<DynamicList<vectorList>>& allVectors
@@ -112,7 +113,6 @@ public:
                 trackForward_(trackForward),
                 nSubCycle_(nSubCycle),
                 trackLength_(trackLength),
-
                 allPositions_(allPositions),
                 allScalars_(allScalars),
                 allVectors_(allVectors)
@@ -138,22 +138,6 @@ private:
 
 
     // Private Member Functions
-
-        //- Estimate dt to cross from current face to next one in nSubCycle
-        //  steps.
-        scalar calcSubCycleDeltaT
-        (
-            trackingData& td,
-            const scalar dt,
-            const vector& U
-        ) const;
-
-        void constrainVelocity
-        (
-            trackingData& td,
-            const scalar dt,
-            vector& U
-        );
 
         //- Interpolate all quantities; return interpolated velocity.
         vector interpolateFields
@@ -195,8 +179,7 @@ public:
             return autoPtr<particle>(new streamLineParticle(*this));
         }
 
-        //- Factory class to read-construct particles used for
-        //  parallel transfer
+        //- Factory class to read-construct particles used for parallel transfer
         class iNew
         {
             const polyMesh& mesh_;
@@ -223,8 +206,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(trackingData&, const scalar trackTime);
-
+            bool move(trackingData&, const scalar);
 
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions

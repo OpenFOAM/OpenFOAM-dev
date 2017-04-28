@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,44 +21,54 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::barycentric
+
+Description
+    A scalar version of the templated Barycentric
+
 \*---------------------------------------------------------------------------*/
 
-#include "wallBoundedStreamLineParticleCloud.H"
+#ifndef barycentric_H
+#define barycentric_H
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+#include "scalar.H"
+#include "Barycentric.H"
+#include "contiguous.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTemplateTypeNameAndDebug(Cloud<wallBoundedStreamLineParticle>, 0);
-}
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// Forward declaration of classes
+class Random;
+class cachedRandom;
 
-Foam::wallBoundedStreamLineParticleCloud::wallBoundedStreamLineParticleCloud
-(
-    const polyMesh& mesh,
-    const word& cloudName,
-    bool readFields
-)
-:
-    Cloud<wallBoundedStreamLineParticle>(mesh, cloudName, false)
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+typedef Barycentric<scalar> barycentric;
+
+
+//- Generate a random barycentric coordinate within the unit tetrahedron
+barycentric barycentric01(Random& rndGen);
+barycentric barycentric01(cachedRandom& rndGen);
+
+
+template<>
+inline bool contiguous<barycentric>()
 {
-    if (readFields)
-    {
-        wallBoundedStreamLineParticle::readFields(*this);
-    }
+    return true;
 }
 
 
-Foam::wallBoundedStreamLineParticleCloud::wallBoundedStreamLineParticleCloud
-(
-    const polyMesh& mesh,
-    const word& cloudName,
-    const IDLList<wallBoundedStreamLineParticle>& particles
-)
-:
-    Cloud<wallBoundedStreamLineParticle>(mesh, cloudName, particles)
-{}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

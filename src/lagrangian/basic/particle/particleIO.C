@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,12 +32,12 @@ Foam::string Foam::particle::propertyList_ = Foam::particle::propertyList();
 
 const std::size_t Foam::particle::sizeofPosition_
 (
-    offsetof(particle, facei_) - offsetof(particle, position_)
+    offsetof(particle, facei_) - offsetof(particle, coordinates_)
 );
 
 const std::size_t Foam::particle::sizeofFields_
 (
-    sizeof(particle) - offsetof(particle, position_)
+    sizeof(particle) - offsetof(particle, coordinates_)
 );
 
 
@@ -46,38 +46,33 @@ const std::size_t Foam::particle::sizeofFields_
 Foam::particle::particle(const polyMesh& mesh, Istream& is, bool readFields)
 :
     mesh_(mesh),
-    position_(),
+    coordinates_(),
     celli_(-1),
-    facei_(-1),
-    stepFraction_(0.0),
     tetFacei_(-1),
     tetPti_(-1),
+    facei_(-1),
+    stepFraction_(0.0),
     origProc_(Pstream::myProcNo()),
     origId_(-1)
 {
     if (is.format() == IOstream::ASCII)
     {
-        is  >> position_ >> celli_;
+        is  >> coordinates_ >> celli_ >> tetFacei_ >> tetPti_;
 
         if (readFields)
         {
-            is  >> facei_
-                >> stepFraction_
-                >> tetFacei_
-                >> tetPti_
-                >> origProc_
-                >> origId_;
+            is  >> facei_ >> stepFraction_ >> origProc_ >> origId_;
         }
     }
     else
     {
         if (readFields)
         {
-            is.read(reinterpret_cast<char*>(&position_), sizeofFields_);
+            is.read(reinterpret_cast<char*>(&coordinates_), sizeofFields_);
         }
         else
         {
-            is.read(reinterpret_cast<char*>(&position_), sizeofPosition_);
+            is.read(reinterpret_cast<char*>(&coordinates_), sizeofPosition_);
         }
     }
 
@@ -90,11 +85,14 @@ void Foam::particle::writePosition(Ostream& os) const
 {
     if (os.format() == IOstream::ASCII)
     {
-        os  << position_ << token::SPACE << celli_;
+        os  << coordinates_
+            << token::SPACE << celli_
+            << token::SPACE << tetFacei_
+            << token::SPACE << tetPti_;
     }
     else
     {
-        os.write(reinterpret_cast<const char*>(&position_), sizeofPosition_);
+        os.write(reinterpret_cast<const char*>(&coordinates_), sizeofPosition_);
     }
 
     // Check state of Ostream
@@ -106,12 +104,12 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const particle& p)
 {
     if (os.format() == IOstream::ASCII)
     {
-        os  << p.position_
+        os  << p.coordinates_
             << token::SPACE << p.celli_
-            << token::SPACE << p.facei_
-            << token::SPACE << p.stepFraction_
             << token::SPACE << p.tetFacei_
             << token::SPACE << p.tetPti_
+            << token::SPACE << p.facei_
+            << token::SPACE << p.stepFraction_
             << token::SPACE << p.origProc_
             << token::SPACE << p.origId_;
     }
@@ -119,7 +117,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const particle& p)
     {
         os.write
         (
-            reinterpret_cast<const char*>(&p.position_),
+            reinterpret_cast<const char*>(&p.coordinates_),
             particle::sizeofFields_
         );
     }

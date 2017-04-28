@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 Foam::findCellParticle::findCellParticle
 (
     const polyMesh& mesh,
-    const vector& position,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPtI,
@@ -38,7 +38,24 @@ Foam::findCellParticle::findCellParticle
     const label data
 )
 :
-    particle(mesh, position, celli, tetFacei, tetPtI),
+    particle(mesh, coordinates, celli, tetFacei, tetPtI),
+    start_(position()),
+    end_(end),
+    data_(data)
+{}
+
+
+Foam::findCellParticle::findCellParticle
+(
+    const polyMesh& mesh,
+    const vector& position,
+    const label celli,
+    const point& end,
+    const label data
+)
+:
+    particle(mesh, position, celli),
+    start_(this->position()),
     end_(end),
     data_(data)
 {}
@@ -57,15 +74,15 @@ Foam::findCellParticle::findCellParticle
     {
         if (is.format() == IOstream::ASCII)
         {
-            is >> end_;
+            is >> start_ >> end_;
             data_ = readLabel(is);
         }
         else
         {
             is.read
             (
-                reinterpret_cast<char*>(&end_),
-                sizeof(end_) + sizeof(data_)
+                reinterpret_cast<char*>(&start_),
+                sizeof(start_) + sizeof(end_) + sizeof(data_)
             );
         }
     }
@@ -90,21 +107,13 @@ bool Foam::findCellParticle::move
     td.switchProcessor = false;
     td.keepParticle = true;
 
-    scalar tEnd = (1.0 - stepFraction())*maxTrackLen;
-    scalar dtMax = tEnd;
-
-    while (td.keepParticle && !td.switchProcessor && tEnd > SMALL)
+    while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
     {
-        // set the lagrangian time-step
-        scalar dt = min(dtMax, tEnd);
-
-        dt *= trackToFace(end_, td);
-
-        tEnd -= dt;
-        stepFraction() = 1.0 - tEnd/maxTrackLen;
+        const scalar f = 1 - stepFraction();
+        trackToFace(f*(end_ - start_), f, td);
     }
 
-    if (tEnd < SMALL || !td.keepParticle)
+    if (stepFraction() == 1 || !td.keepParticle)
     {
         // Hit endpoint or patch. If patch hit could do fancy stuff but just
         // to use the patch point is good enough for now.
@@ -214,6 +223,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const findCellParticle& p)
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const particle&>(p)
+            << token::SPACE << p.start_
             << token::SPACE << p.end_
             << token::SPACE << p.data_;
     }
@@ -222,8 +232,8 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const findCellParticle& p)
         os  << static_cast<const particle&>(p);
         os.write
         (
-            reinterpret_cast<const char*>(&p.end_),
-            sizeof(p.end_) + sizeof(p.data_)
+            reinterpret_cast<const char*>(&p.start_),
+            sizeof(p.start_) + sizeof(p.end_) + sizeof(p.data_)
         );
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,6 +64,9 @@ class trackedParticle
 {
     // Private data
 
+        //- Start point to track from
+        point start_;
+
         //- End point to track to
         point end_;
 
@@ -120,10 +123,24 @@ public:
         trackedParticle
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPtI,
+            const point& end,
+            const label level,
+            const label i,
+            const label j,
+            const label k
+        );
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
+        trackedParticle
+        (
+            const polyMesh& mesh,
+            const vector& position,
+            const label celli,
             const point& end,
             const label level,
             const label i,
@@ -169,6 +186,12 @@ public:
 
 
     // Member Functions
+
+        //- Point to track from
+        point& start()
+        {
+            return start_;
+        }
 
         //- Point to track to
         point& end()

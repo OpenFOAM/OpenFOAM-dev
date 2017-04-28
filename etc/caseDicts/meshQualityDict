@@ -33,8 +33,7 @@ minVol 1e-13;
 
 //- Minimum quality of the tet formed by the face-centre
 //  and variable base point minimum decomposition triangles and
-//  the cell centre. This has to be a positive number for tracking
-//  to work. Set to very negative number (e.g. -1E30) to
+//  the cell centre. Set to very negative number (e.g. -1E30) to
 //  disable.
 //     <0 = inside out tet,
 //      0 = flat tet

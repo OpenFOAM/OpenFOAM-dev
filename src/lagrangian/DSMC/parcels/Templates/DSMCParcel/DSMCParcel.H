@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,12 +178,24 @@ public:
         inline DSMCParcel
         (
             const polyMesh& mesh,
-            const vector& position,
-            const vector& U,
-            const scalar Ei,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti,
+            const vector& U,
+            const scalar Ei,
+            const label typeId
+        );
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
+        inline DSMCParcel
+        (
+            const polyMesh& mesh,
+            const vector& position,
+            const label celli,
+            const vector& U,
+            const scalar Ei,
             const label typeId
         );
 

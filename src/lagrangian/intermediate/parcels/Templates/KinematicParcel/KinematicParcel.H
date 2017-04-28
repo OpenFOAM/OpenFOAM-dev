@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -320,22 +320,31 @@ public:
 
     // Constructors
 
-        //- Construct from owner, position, and cloud owner
+        //- Construct from mesh, coordinates and topology
         //  Other properties initialised as null
         inline KinematicParcel
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti
+        );
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology. Other properties are initialised as null.
+        inline KinematicParcel
+        (
+            const polyMesh& mesh,
+            const vector& position,
+            const label celli
         );
 
         //- Construct from components
         inline KinematicParcel
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti,
@@ -474,9 +483,6 @@ public:
 
 
         // Helper functions
-
-            //- Return the index of the face used in the interpolation routine
-            inline label faceInterpolation() const;
 
             //- Cell owner mass
             inline scalar massCell(const label celli) const;

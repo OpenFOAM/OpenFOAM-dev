@@ -267,74 +267,50 @@ bool Foam::KinematicParcel<ParcelType>::move
     const scalarField& cellLengthScale = td.cloud().cellLengthScale();
     const scalar maxCo = td.cloud().solution().maxCo();
 
-    scalar tEnd = (1.0 - p.stepFraction())*trackTime;
-    scalar dtMax = trackTime;
-    if (td.cloud().solution().transient())
-    {
-        dtMax *= maxCo;
-    }
-
-    bool tracking = true;
-    label nTrackingStalled = 0;
-
-    while (td.keepParticle && !td.switchProcessor && tEnd > ROOTVSMALL)
+    while (td.keepParticle && !td.switchProcessor && p.stepFraction() < 1)
     {
         // Apply correction to position for reduced-D cases
-        meshTools::constrainToMeshCentre(mesh, p.position());
+        p.constrainToMeshCentre();
 
-        const point start(p.position());
-
-        // Set the Lagrangian time-step
-        scalar dt = min(dtMax, tEnd);
-
-        // Cache the parcel current cell as this will change if a face is hit
+        // Cache the current position, cell and step-fraction
+        const point start = p.position();
         const label celli = p.cell();
+        const scalar sfrac = p.stepFraction();
 
-        const scalar magU = mag(U_);
-        if (p.active() && tracking && (magU > ROOTVSMALL))
+        // Total displacement over the time-step
+        const vector s = trackTime*U_;
+
+        // Cell length scale
+        const scalar l = cellLengthScale[p.cell()];
+
+        // Fraction of the displacement to track in this loop. This is limited
+        // to ensure that the both the time and distance tracked is less than
+        // maxCo times the total value.
+        scalar f = 1 - p.stepFraction();
+        f = min(f, maxCo);
+        f = min(f, maxCo*l/max(SMALL*l, mag(s)));
+        if (p.active())
         {
-            const scalar d = dt*magU;
-            const scalar dCorr = min(d, maxCo*cellLengthScale[celli]);
-            dt *=
-                dCorr/d
-               *p.trackToFace(p.position() + dCorr*U_/magU, td);
+            // Track to the next face
+            p.trackToFace(f*s, f, td);
         }
-
-        tEnd -= dt;
-
-        scalar newStepFraction = 1.0 - tEnd/trackTime;
-
-        if (tracking)
+        else
         {
-            if
-            (
-                mag(p.stepFraction() - newStepFraction)
-              < particle::minStepFractionTol
-            )
+            // Abandon the track, and move to the end of the sub-step. If the
+            // the mesh is moving, this will implicitly move the parcel.
+            if (mesh.moving())
             {
-                nTrackingStalled++;
-
-                if (nTrackingStalled > maxTrackAttempts)
-                {
-                    tracking = false;
-                }
+                WarningInFunction
+                    << "Tracking was abandoned on a moving mesh. Parcels may "
+                    << "move unphysically as a result." << endl;
             }
-            else
-            {
-                nTrackingStalled = 0;
-            }
+            p.stepFraction() += f;
         }
 
-        p.stepFraction() = newStepFraction;
-
-        bool calcParcel = true;
-        if (!tracking && td.cloud().solution().steadyState())
-        {
-            calcParcel = false;
-        }
+        const scalar dt = (p.stepFraction() - sfrac)*trackTime;
 
         // Avoid problems with extremely small timesteps
-        if ((dt > ROOTVSMALL) && calcParcel)
+        if (!td.cloud().solution().steadyState() && dt > ROOTVSMALL)
         {
             // Update cell based properties
             p.setCellValues(td, dt, celli);
@@ -347,7 +323,7 @@ bool Foam::KinematicParcel<ParcelType>::move
             p.calc(td, dt, celli);
         }
 
-        if (p.onBoundary() && td.keepParticle)
+        if (p.onBoundaryFace() && td.keepParticle)
         {
             if (isA<processorPolyPatch>(pbMesh[p.patch(p.face())]))
             {

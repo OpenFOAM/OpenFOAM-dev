@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,8 +89,6 @@ void mapLagrangian(const meshToMesh& interp)
     const polyMesh& meshTarget = interp.tgtRegion();
     const labelListList& sourceToTarget = interp.srcToTgtCellAddr();
 
-    const pointField& targetCc = meshTarget.cellCentres();
-
     fileNameList cloudDirs
     (
         readDir
@@ -172,15 +170,17 @@ void mapLagrangian(const meshToMesh& interp)
                             new passiveParticle
                             (
                                 meshTarget,
-                                targetCc[targetCells[i]],
-                                targetCells[i]
+                                barycentric(1, 0, 0, 0),
+                                targetCells[i],
+                                meshTarget.cells()[targetCells[i]][0],
+                                1
                             )
                         );
                         passiveParticle& newP = newPtr();
 
-                        label facei = newP.track(iter().position(), td);
+                        newP.track(iter().position() - newP.position(), 0);
 
-                        if (facei < 0 && newP.cell() >= 0)
+                        if (!newP.onFace())
                         {
                             // Hit position.
                             foundCell = true;
@@ -223,11 +223,16 @@ void mapLagrangian(const meshToMesh& interp)
                         {
                             unmappedSource.erase(sourceParticleI);
                             addParticles.append(sourceParticleI);
-                            iter().cell() = targetCell;
                             targetParcels.addParticle
                             (
-                                sourceParcels.remove(&iter())
+                                new passiveParticle
+                                (
+                                    meshTarget,
+                                    iter().position(),
+                                    targetCell
+                                )
                             );
+                            sourceParcels.remove(&iter());
                         }
                     }
                     sourceParticleI++;

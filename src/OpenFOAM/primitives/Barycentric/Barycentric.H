@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::wallBoundedStreamLineParticleCloud
+    Foam::Barycentric
 
 Description
-    A Cloud of streamLine particles
+    Templated 3D Barycentric derived from VectorSpace. Has 4 components, one of
+    which is redundant.
 
 SourceFiles
-    streamLineCloud.C
+    BarycentricI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef streamLineCloud_H
-#define streamLineCloud_H
+#ifndef Barycentric_H
+#define Barycentric_H
 
-#include "Cloud.H"
-#include "wallBoundedStreamLineParticle.H"
+#include "VectorSpace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,53 +44,71 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class streamLineCloud Declaration
+                         Class Barycentric Declaration
 \*---------------------------------------------------------------------------*/
 
-class wallBoundedStreamLineParticleCloud
+template<class Cmpt>
+class Barycentric
 :
-    public Cloud<wallBoundedStreamLineParticle>
+    public VectorSpace<Barycentric<Cmpt>, Cmpt, 4>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        wallBoundedStreamLineParticleCloud
-        (
-            const wallBoundedStreamLineParticleCloud&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallBoundedStreamLineParticleCloud&);
-
-
 public:
 
-    //- Type of parcel the cloud was instantiated for
-    typedef wallBoundedStreamLineParticle parcelType;
+    //- Equivalent type of labels used for valid component indexing
+    typedef Barycentric<label> labelType;
+
+
+    // Member constants
+
+        //- Rank of Barycentric is 1
+        static const direction rank = 1;
+
+
+    //- Component labeling enumeration
+    enum components { A, B, C, D };
+
 
     // Constructors
 
-        //- Construct given mesh
-        wallBoundedStreamLineParticleCloud
+        //- Construct null
+        inline Barycentric();
+
+        //- Construct initialized to zero
+        inline Barycentric(const Foam::zero);
+
+        //- Construct given four components
+        inline Barycentric
         (
-            const polyMesh&,
-            const word& cloudName = "defaultCloud",
-            bool readFields = true
+            const Cmpt& va,
+            const Cmpt& vb,
+            const Cmpt& vc,
+            const Cmpt& vd
         );
 
-        //- Construct from mesh, cloud name, and a list of particles
-        wallBoundedStreamLineParticleCloud
-        (
-            const polyMesh& mesh,
-            const word& cloudName,
-            const IDLList<wallBoundedStreamLineParticle>& particles
-        );
+
+    // Member Functions
+
+        // Access
+
+            inline const Cmpt& a() const;
+            inline const Cmpt& b() const;
+            inline const Cmpt& c() const;
+            inline const Cmpt& d() const;
+
+            inline Cmpt& a();
+            inline Cmpt& b();
+            inline Cmpt& c();
+            inline Cmpt& d();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "BarycentricI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

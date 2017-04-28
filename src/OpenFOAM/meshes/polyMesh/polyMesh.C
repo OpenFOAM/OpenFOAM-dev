@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,6 +135,29 @@ void Foam::polyMesh::calcDirections() const
 }
 
 
+Foam::autoPtr<Foam::labelIOList> Foam::polyMesh::readTetBasePtIs() const
+{
+    IOobject io
+    (
+        "tetBasePtIs",
+        instance(),
+        meshSubDir,
+        *this,
+        IOobject::READ_IF_PRESENT,
+        IOobject::NO_WRITE
+    );
+
+    if (io.headerOk())
+    {
+        return autoPtr<labelIOList>(new labelIOList(io));
+    }
+    else
+    {
+        return autoPtr<labelIOList>(nullptr);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::polyMesh::polyMesh(const IOobject& io)
@@ -207,7 +230,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
     comm_(UPstream::worldComm),
     geometricD_(Zero),
     solutionD_(Zero),
-    tetBasePtIsPtr_(nullptr),
+    tetBasePtIsPtr_(readTetBasePtIs()),
     cellTreePtr_(nullptr),
     pointZones_
     (
@@ -401,7 +424,7 @@ Foam::polyMesh::polyMesh
     comm_(UPstream::worldComm),
     geometricD_(Zero),
     solutionD_(Zero),
-    tetBasePtIsPtr_(nullptr),
+    tetBasePtIsPtr_(readTetBasePtIs()),
     cellTreePtr_(nullptr),
     pointZones_
     (
@@ -552,7 +575,7 @@ Foam::polyMesh::polyMesh
     comm_(UPstream::worldComm),
     geometricD_(Zero),
     solutionD_(Zero),
-    tetBasePtIsPtr_(nullptr),
+    tetBasePtIsPtr_(readTetBasePtIs()),
     cellTreePtr_(nullptr),
     pointZones_
     (
@@ -815,7 +838,7 @@ Foam::label Foam::polyMesh::nSolutionD() const
 }
 
 
-const Foam::labelList& Foam::polyMesh::tetBasePtIs() const
+const Foam::labelIOList& Foam::polyMesh::tetBasePtIs() const
 {
     if (tetBasePtIsPtr_.empty())
     {
@@ -828,8 +851,17 @@ const Foam::labelList& Foam::polyMesh::tetBasePtIs() const
 
         tetBasePtIsPtr_.reset
         (
-            new labelList
+            new labelIOList
             (
+                IOobject
+                (
+                    "tetBasePtIs",
+                    instance(),
+                    meshSubDir,
+                    *this,
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::NO_WRITE
+                ),
                 polyMeshTetDecomposition::findFaceBasePts(*this)
             )
         );
@@ -1087,6 +1119,13 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
     points_.writeOpt() = IOobject::AUTO_WRITE;
     points_.instance() = time().timeName();
     points_.eventNo() = getEvent();
+
+    if (tetBasePtIsPtr_.valid())
+    {
+        tetBasePtIsPtr_().writeOpt() = IOobject::AUTO_WRITE;
+        tetBasePtIsPtr_().instance() = time().timeName();
+        tetBasePtIsPtr_().eventNo() = getEvent();
+    }
 
     tmp<scalarField> sweptVols = primitiveMesh::movePoints
     (

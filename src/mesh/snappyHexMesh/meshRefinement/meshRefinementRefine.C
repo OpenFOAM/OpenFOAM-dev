@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -350,18 +350,7 @@ void Foam::meshRefinement::markFeatureCellLevel
     {
         const point& keepPoint = keepPoints[i];
 
-        label celli = -1;
-        label tetFacei = -1;
-        label tetPtI = -1;
-
-
-        // Force construction of search tree even if processor holds no
-        // cells
-        (void)mesh_.cellTree();
-        if (mesh_.nCells())
-        {
-            mesh_.findCellFacePt(keepPoint, celli, tetFacei, tetPtI);
-        }
+        const label celli = mesh_.cellTree().findInside(keepPoint);
 
         if (celli != -1)
         {
@@ -405,8 +394,6 @@ void Foam::meshRefinement::markFeatureCellLevel
                                 mesh_,
                                 keepPoint,
                                 celli,
-                                tetFacei,
-                                tetPtI,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
                                 featI,                          // featureMesh
@@ -450,8 +437,6 @@ void Foam::meshRefinement::markFeatureCellLevel
                                 mesh_,
                                 keepPoint,
                                 celli,
-                                tetFacei,
-                                tetPtI,
                                 featureMesh.points()[pointi],   // endpos
                                 featureLevel,                   // level
                                 featI,                          // featureMesh
@@ -545,6 +530,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                 label otherPointi = e.otherVertex(pointi);
 
                 trackedParticle* tp(new trackedParticle(startTp));
+                tp->start() = tp->position();
                 tp->end() = featureMesh.points()[otherPointi];
                 tp->j() = otherPointi;
                 tp->k() = edgeI;
@@ -605,6 +591,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                     const edge& e = featureMesh.edges()[edgeI];
                     label otherPointi = e.otherVertex(pointi);
 
+                    tp.start() = tp.position();
                     tp.end() = featureMesh.points()[otherPointi];
                     tp.j() = otherPointi;
                     tp.k() = edgeI;

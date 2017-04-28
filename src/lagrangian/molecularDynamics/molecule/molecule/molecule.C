@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,18 +85,10 @@ bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
     {
         // Leapfrog tracking part
 
-        scalar tEnd = (1.0 - stepFraction())*trackTime;
-        scalar dtMax = tEnd;
-
-        while (td.keepParticle && !td.switchProcessor && tEnd > ROOTVSMALL)
+        while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
         {
-            // set the lagrangian time-step
-            scalar dt = min(dtMax, tEnd);
-
-            dt *= trackToFace(position() + dt*v_, td);
-
-            tEnd -= dt;
-            stepFraction() = 1.0 - tEnd/trackTime;
+            const scalar f = 1 - stepFraction();
+            trackToFace(f*trackTime*v_, f, td);
         }
     }
     else if (td.part() == 2)
@@ -205,7 +197,7 @@ void Foam::molecule::transformProperties(const tensor& T)
 
     rf_ = transform(T, rf_);
 
-    sitePositions_ = position_ + (T & (sitePositions_ - position_));
+    sitePositions_ = position() + (T & (sitePositions_ - position()));
 
     siteForces_ = T & siteForces_;
 }
@@ -226,7 +218,7 @@ void Foam::molecule::transformProperties(const vector& separation)
 
 void Foam::molecule::setSitePositions(const constantProperties& constProps)
 {
-    sitePositions_ = position_ + (Q_ & constProps.siteReferencePositions());
+    sitePositions_ = position() + (Q_ & constProps.siteReferencePositions());
 }
 
 

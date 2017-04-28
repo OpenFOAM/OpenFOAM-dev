@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,9 @@ class findCellParticle
 {
     // Private data
 
+        //- Start point to track from
+        point start_;
+
         //- End point to track to
         point end_;
 
@@ -119,10 +122,21 @@ public:
         findCellParticle
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPtI,
+            const point& end,
+            const label data
+        );
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
+        findCellParticle
+        (
+            const polyMesh& mesh,
+            const vector& position,
+            const label celli,
             const point& end,
             const label data
         );
@@ -166,14 +180,38 @@ public:
 
     // Member Functions
 
+        //- Point to track from
+        const point& start() const
+        {
+            return start_;
+        }
+
+        //- Point to track from
+        point& start()
+        {
+            return start_;
+        }
+
         //- Point to track to
         const point& end() const
         {
             return end_;
         }
 
+        //- Point to track to
+        point& end()
+        {
+            return end_;
+        }
+
         //- Transported label
         label data() const
+        {
+            return data_;
+        }
+
+        //- Transported label
+        label& data()
         {
             return data_;
         }

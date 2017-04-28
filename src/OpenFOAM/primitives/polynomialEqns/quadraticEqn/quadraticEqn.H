@@ -84,6 +84,9 @@ public:
         //- Evaluate at x
         inline scalar value(const scalar x) const;
 
+        //- Evaluate the derivative at x
+        inline scalar derivative(const scalar x) const;
+
         //- Estimate the error of evaluation at x
         inline scalar error(const scalar x) const;
 

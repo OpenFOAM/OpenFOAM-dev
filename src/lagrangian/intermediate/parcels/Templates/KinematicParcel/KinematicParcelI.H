@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,13 +73,13 @@ template<class ParcelType>
 inline Foam::KinematicParcel<ParcelType>::KinematicParcel
 (
     const polyMesh& owner,
-    const vector& position,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti
 )
 :
-    ParcelType(owner, position, celli, tetFacei, tetPti),
+    ParcelType(owner, coordinates, celli, tetFacei, tetPti),
     active_(true),
     typeId_(-1),
     nParticle_(0),
@@ -101,6 +101,31 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
 (
     const polyMesh& owner,
     const vector& position,
+    const label celli
+)
+:
+    ParcelType(owner, position, celli),
+    active_(true),
+    typeId_(-1),
+    nParticle_(0),
+    d_(0.0),
+    dTarget_(0.0),
+    U_(Zero),
+    rho_(0.0),
+    age_(0.0),
+    tTurb_(0.0),
+    UTurb_(Zero),
+    rhoc_(0.0),
+    Uc_(Zero),
+    muc_(0.0)
+{}
+
+
+template<class ParcelType>
+inline Foam::KinematicParcel<ParcelType>::KinematicParcel
+(
+    const polyMesh& owner,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti,
@@ -112,7 +137,7 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     const constantProperties& constProps
 )
 :
-    ParcelType(owner, position, celli, tetFacei, tetPti),
+    ParcelType(owner, coordinates, celli, tetFacei, tetPti),
     active_(true),
     typeId_(typeId),
     nParticle_(nParticle0),
@@ -331,21 +356,6 @@ template<class ParcelType>
 inline Foam::vector& Foam::KinematicParcel<ParcelType>::UTurb()
 {
     return UTurb_;
-}
-
-
-template<class ParcelType>
-inline Foam::label Foam::KinematicParcel<ParcelType>::faceInterpolation() const
-{
-    // Use volume-based interpolation if dealing with external faces
-    if (this->cloud().internalFace(this->face()))
-    {
-        return this->face();
-    }
-    else
-    {
-        return -1;
-    }
 }
 
 

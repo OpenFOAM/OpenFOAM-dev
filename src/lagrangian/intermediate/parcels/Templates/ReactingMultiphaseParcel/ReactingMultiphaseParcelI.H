@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,13 +68,13 @@ template<class ParcelType>
 inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
     const polyMesh& mesh,
-    const vector& position,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti
 )
 :
-    ParcelType(mesh, position, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
     YGas_(0),
     YLiquid_(0),
     YSolid_(0),
@@ -87,6 +87,22 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
 (
     const polyMesh& mesh,
     const vector& position,
+    const label celli
+)
+:
+    ParcelType(mesh, position, celli),
+    YGas_(0),
+    YLiquid_(0),
+    YSolid_(0),
+    canCombust_(0)
+{}
+
+
+template<class ParcelType>
+inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
+(
+    const polyMesh& mesh,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti,
@@ -108,7 +124,7 @@ inline Foam::ReactingMultiphaseParcel<ParcelType>::ReactingMultiphaseParcel
     ParcelType
     (
         mesh,
-        position,
+        coordinates,
         celli,
         tetFacei,
         tetPti,

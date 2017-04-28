@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,9 @@ class Cloud
         //- Does the cell have wall faces
         mutable autoPtr<PackedBoolList> cellWallFacesPtr_;
 
+        //- Temporary storage for the global particle positions
+        mutable autoPtr<vectorField> globalPositionsPtr_;
+
 
     // Private Member Functions
 
@@ -162,7 +165,7 @@ public:
                 return IDLList<ParticleType>::size();
             };
 
-            DynamicList<label>& labels()
+            DynamicList<label>& labels() const
             {
                 return labels_;
             }
@@ -256,8 +259,7 @@ public:
 
             //- Remap the cells of particles corresponding to the
             //  mesh topology change
-            template<class TrackData>
-            void autoMap(TrackData& td, const mapPolyMesh&);
+            void autoMap(const mapPolyMesh&);
 
 
         // Read
@@ -303,6 +305,10 @@ public:
 
             //- Write positions to \<cloudName\>_positions.obj file
             void writePositions() const;
+
+            //- Call this before a topology change. Stores the particles global
+            //  positions in the database for use during mapping.
+            void storeGlobalPositions() const;
 
 
     // Ostream Operator

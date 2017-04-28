@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,27 +65,14 @@ public:
         indexedParticle
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti,
             const label index = 0
         )
         :
-            particle(mesh, position, celli, tetFacei, tetPti),
-            index_(index)
-        {}
-
-        //- Construct from components, with searching for tetFace and tetPt
-        indexedParticle
-        (
-            const polyMesh& mesh,
-            const vector& position,
-            const label celli,
-            const label index = 0
-        )
-        :
-            particle(mesh, position, celli),
+            particle(mesh, coordinates, celli, tetFacei, tetPti),
             index_(index)
         {}
 

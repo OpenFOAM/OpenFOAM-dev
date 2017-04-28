@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,22 +69,6 @@ void Foam::polyMesh::clearGeom()
     geometricD_ = Zero;
     solutionD_ = Zero;
 
-    // Remove the stored tet base points
-    tetBasePtIsPtr_.clear();
-    // Remove the cell tree
-    cellTreePtr_.clear();
-}
-
-
-void Foam::polyMesh::clearAdditionalGeom()
-{
-    if (debug)
-    {
-        InfoInFunction << "Clearing additional geometric data" << endl;
-    }
-
-    // Remove the stored tet base points
-    tetBasePtIsPtr_.clear();
     // Remove the cell tree
     cellTreePtr_.clear();
 }
@@ -167,6 +151,17 @@ void Foam::polyMesh::clearOut()
 {
     clearGeom();
     clearAddressing();
+}
+
+
+void Foam::polyMesh::clearTetBasePtIs()
+{
+    if (debug)
+    {
+        InfoInFunction << "Clearing tet base points" << endl;
+    }
+
+    tetBasePtIsPtr_.clear();
 }
 
 

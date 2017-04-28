@@ -77,6 +77,9 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
+        // Store the particle positions
+        kinematicCloud.storeGlobalPositions();
+
         mesh.update();
 
         // Calculate absolute flux from the mapped surface velocity

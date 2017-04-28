@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,8 @@ Description
 #define particle_H
 
 #include "vector.H"
+#include "barycentric.H"
+#include "barycentricTensor.H"
 #include "Cloud.H"
 #include "IDLList.H"
 #include "pointField.H"
@@ -42,6 +44,7 @@ Description
 #include "FixedList.H"
 #include "polyMeshTetDecomposition.H"
 #include "particleMacros.H"
+#include "vectorTensorTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -130,24 +133,18 @@ public:
     };
 
 
-protected:
+private:
 
-    // Protected data
+    // Private data
 
         //- Reference to the polyMesh database
         const polyMesh& mesh_;
 
-        //- Position of particle
-        vector position_;
+        //- Coordinates of particle
+        barycentric coordinates_;
 
         //- Index of the cell it is in
         label celli_;
-
-        //- Face index if the particle is on a face otherwise -1
-        label facei_;
-
-        //- Fraction of time-step completed
-        scalar stepFraction_;
 
         //- Index of the face that owns the decomposed tet that the
         //  particle is in
@@ -158,6 +155,12 @@ protected:
         //  point.
         label tetPti_;
 
+        //- Face index if the particle is on a face otherwise -1
+        label facei_;
+
+        //- Fraction of time-step completed
+        scalar stepFraction_;
+
         //- Originating processor id
         label origProc_;
 
@@ -165,74 +168,137 @@ protected:
         label origId_;
 
 
+private:
+
     // Private Member Functions
 
-        //- Find the tet tri faces between position and tet centre
-        void findTris
-        (
-            const vector& position,
-            DynamicList<label>& faceList,
-            const tetPointRef& tet,
-            const FixedList<vector, 4>& tetAreas,
-            const FixedList<label, 4>& tetPlaneBasePtIs,
-            const scalar tol
-        ) const;
+        // Tetrahedra functions
 
-        //- Find the lambda value for the line to-from across the
-        //  given tri face, where p = from + lambda*(to - from)
-        inline scalar tetLambda
-        (
-            const vector& from,
-            const vector& to,
-            const label triI,
-            const vector& tetArea,
-            const label tetPlaneBasePtI,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const scalar tol
-        ) const;
+            //- Get indices into the current face for the face-bound vertices of
+            //  the current tet.
+            void tetFaceIndices
+            (
+                label& baseI,
+                label& vertex1I,
+                label& vertex2I
+            ) const;
 
-        //- Find the lambda value for a moving tri face
-        inline scalar movingTetLambda
-        (
-            const vector& from,
-            const vector& to,
-            const label triI,
-            const vector& tetArea,
-            const label tetPlaneBasePtI,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const scalar tol
-        ) const;
+            //- Get indices into the mesh points for the face-bound vertices of
+            //  the current tet.
+            void tetMeshIndices
+            (
+                label& baseI,
+                label& vertex1I,
+                label& vertex2I
+            ) const;
 
-        //- Modify the tet owner data by crossing triI
-        inline void tetNeighbour(label triI);
+            //- Get the vertices of the current tet
+            void tetGeometry
+            (
+                vector& centre,
+                vector& base,
+                vector& vertex1,
+                vector& vertex2
+            ) const;
 
-        //- Cross the from the given face across the given edge of the
-        //  given cell to find the resulting face and tetPti
-        inline void crossEdgeConnectedFace
-        (
-            const label& celli,
-            label& tetFacei,
-            label& tetPti,
-            const edge& e
-        );
+            //- Get the transformation associated with the current tet. This
+            //  will convert a barycentric position within the tet to a
+            //  cartesian position in the global coordinate system. The
+            //  conversion is x = A & y, where x is the cartesian position, y is
+            //  the barycentric position and A is the transformation tensor.
+            barycentricTensor tetTransform() const;
 
-        //- Hit wall faces in the current cell if the
-        //- wallImpactDistance is non-zero.  They may not be in
-        //- Different tets to the current.
-        template<class CloudType>
-        inline void hitWallFaces
-        (
-            const CloudType& td,
-            const vector& from,
-            const vector& to,
-            scalar& lambdaMin,
-            tetIndices& closestTetIs
-        );
+            //- Get the reverse transform associated with the current tet. The
+            //  conversion is detA*y = (x - centre) & T. The variables x, y and
+            //  centre have the same meaning as for the forward transform. T is
+            //  the transposed inverse of the forward transform tensor, A,
+            //  multiplied by its determinant, detA. This separation allows
+            //  the barycentric tracking algorithm to function on inverted or
+            //  degenerate tetrahedra.
+            void tetReverseTransform
+            (
+                vector& centre,
+                scalar& detA,
+                barycentricTensor& T
+            ) const;
 
+            //- Get the vertices of the current moving tet. Two values are
+            //  returned for each vertex. The first is a constant, and the
+            //  second is a linear coefficient of the track fraction.
+            void movingTetGeometry
+            (
+                const scalar endStepFraction,
+                Pair<vector>& centre,
+                Pair<vector>& base,
+                Pair<vector>& vertex1,
+                Pair<vector>& vertex2
+            ) const;
+
+            //- Get the transformation associated with the current, moving, tet.
+            //  This is of the same form as for the static case. As with the
+            //  moving geometry, a linear function of the tracking fraction is
+            //  returned for each component.
+            Pair<barycentricTensor> movingTetTransform
+            (
+                const scalar endStepFraction
+            ) const;
+
+            //- Get the reverse transformation associated with the current,
+            //  moving, tet. This is of the same form as for the static case. As
+            //  with the moving geometry, a function of the tracking fraction is
+            //  returned for each component. The functions are higher order than
+            //  for the forward transform; the determinant is cubic, and the
+            //  tensor is quadratic.
+            void movingTetReverseTransform
+            (
+                const scalar endStepFraction,
+                Pair<vector>& centre,
+                FixedList<scalar, 4>& detA,
+                FixedList<barycentricTensor, 3>& T
+            ) const;
+
+
+        // Transformations
+
+            //- Reflection transform. Corrects the coordinates when the particle
+            //  moves between two tets which share a base vertex, but for which
+            //  the other two non cell-centre vertices are reversed. All hits
+            //  which retain the same face behave this way, as do face hits.
+            void reflect();
+
+            //- Rotation transform. Corrects the coordinates when the particle
+            //  moves between two tets with different base vertices, but are
+            //  otherwise similarly oriented. Hits which change the face within
+            //  the cell make use of both this and the reflect transform.
+            void rotate(const bool direction);
+
+
+        // Topology changes
+
+            //- Change tet within a cell. Called after a triangle is hit.
+            void changeTet(const label tetTriI);
+
+            //- Change tet face within a cell. Called by changeTet.
+            void changeFace(const label tetTriI);
+
+            //- Change cell. Called when the particle hits an internal face.
+            void changeCell();
+
+
+        // Geometry changes
+
+            //- Locate the particle at the given position
+            void locate
+            (
+                const vector& position,
+                const vector* direction,
+                const label celli,
+                const bool boundaryFail,
+                const string boundaryMsg
+            );
+
+
+protected:
 
     // Patch interactions
 
@@ -315,23 +381,12 @@ public:
         //- String representation of properties
         DefinePropertyList
         (
-            "(Px Py Pz) celli facei stepFraction "
-            "tetFacei tetPti origProc origId"
+            "(Px Py Pz) celli tetFacei tetPti "
+            "facei stepFraction origProc origId"
         );
 
         //- Cumulative particle counter - used to provode unique ID
         static label particleCount_;
-
-        //- Fraction of distance to tet centre to move a particle to
-        // 'rescue' it from a tracking problem
-        static const scalar trackingCorrectionTol;
-
-        //- Fraction of the cell volume to use in determining tolerance values
-        //  for the denominator and numerator of lambda
-        static const scalar lambdaDistanceToleranceCoeff;
-
-        //- Minimum stepFraction tolerance
-        static const scalar minStepFractionTol;
 
 
     // Constructors
@@ -340,20 +395,19 @@ public:
         particle
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti
         );
 
-        //- Construct from components, tetFacei_ and tetPti_ are not
-        //  supplied so they will be deduced by a search
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
         particle
         (
             const polyMesh& mesh,
             const vector& position,
-            const label celli,
-            bool doCellFacePt = true
+            const label celli
         );
 
         //- Construct from Istream
@@ -406,26 +460,14 @@ public:
             //- Return the mesh database
             inline const polyMesh& mesh() const;
 
-            //- Return current particle position
-            inline const vector& position() const;
-
-            //- Return current particle position
-            inline vector& position();
-
-            //- Return current cell particle is in
-            inline label& cell();
+            //- Return current particle coordinates
+            inline const barycentric& coordinates() const;
 
             //- Return current cell particle is in
             inline label cell() const;
 
             //- Return current tet face particle is in
-            inline label& tetFace();
-
-            //- Return current tet face particle is in
             inline label tetFace() const;
-
-            //- Return current tet face particle is in
-            inline label& tetPt();
 
             //- Return current tet face particle is in
             inline label tetPt() const;
@@ -448,13 +490,7 @@ public:
             inline vector oldNormal() const;
 
             //- Return current face particle is on otherwise -1
-            inline label& face();
-
-            //- Return current face particle is on otherwise -1
             inline label face() const;
-
-            //- Return the impact model to be used, soft or hard (default).
-            inline bool softImpact() const;
 
             //- Return the particle current time
             inline scalar currentTime() const;
@@ -462,28 +498,23 @@ public:
 
         // Check
 
-            //- Check the stored cell value (setting if necessary) and
-            //  initialise the tetFace and tetPt values
-            inline void initCellFacePt();
+            //- Is the particle on a face?
+            inline bool onFace() const;
 
-            //- Is the particle on the boundary/(or outside the domain)?
-            inline bool onBoundary() const;
+            //- Is the particle on an internal face?
+            inline bool onInternalFace() const;
 
-            //- Is this global face an internal face?
-            inline bool internalFace(const label facei) const;
+            //- Is the particle on a boundary face?
+            inline bool onBoundaryFace() const;
 
-            //- Is this global face a boundary face?
-            inline bool boundaryFace(const label facei) const;
-
-            //- Which patch is particle on
+            //- Which patch is particle on // <-- !!!
             inline label patch(const label facei) const;
 
-            //- Which face of this patch is this particle on
-            inline label patchFace
-            (
-                const label patchi,
-                const label facei
-            ) const;
+            //- Which face of this patch is this particle on // <-- !!!
+            inline label patchFace(const label patchi, const label facei) const;
+
+            //- Return current particle position
+            inline vector position() const;
 
             //- Return the fraction of time-step completed
             inline scalar& stepFraction();
@@ -506,28 +537,57 @@ public:
 
         // Track
 
-            //- Track particle to end of trajectory
-            //  or until it hits the boundary.
-            //  On entry 'stepFraction()' should be set to the fraction of the
-            //  time-step at which the tracking starts and on exit it contains
-            //  the fraction of the time-step completed.
-            //  Returns the boundary face index if the track stops at the
-            //  boundary, -1 otherwise.
-            template<class TrackData>
-            label track(const vector& endPosition, TrackData& td);
+            //- Track along the displacement for a given fraction of the overall
+            //  step. End when the track is complete, or when a boundary is hit.
+            //  On exit, stepFraction_ will have been incremented to the current
+            //  position, and facei_ will be set to the index of the boundary
+            //  face that was hit, or -1 if the track completed within a cell.
+            //  The proportion of the displacement still to be completed is
+            //  returned.
+            scalar track
+            (
+                const vector& displacement,
+                const scalar fraction
+            );
 
-            //- Track particle to a given position and returns 1.0 if the
-            //  trajectory is completed without hitting a face otherwise
-            //  stops at the face and returns the fraction of the trajectory
-            //  completed.
-            //  on entry 'stepFraction()' should be set to the fraction of the
-            //  time-step at which the tracking starts.
-            template<class TrackData>
-            scalar trackToFace(const vector& endPosition, TrackData& td);
+            //- As particle::track, but also stops on internal faces.
+            scalar trackToFace
+            (
+                const vector& displacement,
+                const scalar fraction
+            );
 
-            //- Return the index of the face to be used in the interpolation
-            //  routine
-            inline label faceInterpolation() const;
+            //- As particle::trackToFace, but also stops on tet triangles. On
+            //  exit, tetTriI is set to the index of the tet triangle that was
+            //  hit, or -1 if the end position was reached.
+            scalar trackToStationaryTri
+            (
+                const vector& displacement,
+                const scalar fraction,
+                label& tetTriI
+            );
+
+            //- As particle::trackToTri, but for moving meshes
+            scalar trackToMovingTri
+            (
+                const vector& displacement,
+                const scalar fraction,
+                label& tetTriI
+            );
+
+            //- As non-templated particle::trackToFace, but with additional
+            //  boundary handling.
+            template<class TrackData>
+            void trackToFace
+            (
+                const vector& displacement,
+                const scalar fraction,
+                TrackData& td
+            );
+
+            //- Set the constrained components of the particle position to the
+            //  mesh centre.
+            void constrainToMeshCentre();
 
 
     // Transformations
@@ -556,6 +616,38 @@ public:
         //  and set the celli to the face-neighbour
         template<class TrackData>
         void correctAfterParallelTransfer(const label patchi, TrackData& td);
+
+
+    // Interaction list referral
+
+        //- Break the topology and store the particle position so that the
+        //  particle can be referred.
+        void prepareForInteractionListReferral
+        (
+            const vectorTensorTransform& transform
+        );
+
+        //- Correct the topology after referral. The particle may still be
+        //  outside the stored tet and therefore not track-able.
+        void correctAfterInteractionListReferral(const label celli);
+
+
+    // Decompose and reconstruct
+
+        //- Return the tet point approproate for decomposition or reconstruction
+        //  to or from the given mesh.
+        label procTetPt
+        (
+            const polyMesh& procMesh,
+            const label procCell,
+            const label procTetFace
+        ) const;
+
+
+    // Mapping
+
+        //- Map after a topology change
+        void autoMap(const vector& position, const mapPolyMesh& mapper);
 
 
     // I-O

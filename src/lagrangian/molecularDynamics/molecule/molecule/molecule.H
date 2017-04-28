@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,10 +239,28 @@ public:
         inline molecule
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti,
+            const tensor& Q,
+            const vector& v,
+            const vector& a,
+            const vector& pi,
+            const vector& tau,
+            const vector& specialPosition,
+            const constantProperties& constProps,
+            const label special,
+            const label id
+        );
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
+        inline molecule
+        (
+            const polyMesh& mesh,
+            const vector& position,
+            const label celli,
             const tensor& Q,
             const vector& v,
             const vector& a,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,24 +108,16 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 
             const point end = start-distance_*nf[patchFacei];
 
-            // Find tet for starting location
-            label celli = -1;
-            label tetFacei = -1;
-            label tetPtI = -1;
-            mesh_.findCellFacePt(start, celli, tetFacei, tetPtI);
-
-            // Add to cloud. Add originating face as passive data
+            // Add a particle to the cloud with originating face as passive data
             cloud.addParticle
             (
                 new findCellParticle
                 (
                     mesh_,
                     start,
-                    celli,
-                    tetFacei,
-                    tetPtI,
+                    -1,
                     end,
-                    globalWalls.toGlobal(nPatchFaces)    // passive data
+                    globalWalls.toGlobal(nPatchFaces) // passive data
                 )
             );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,16 +176,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
                     U += velocity;
 
-                    addNewParcel
-                    (
-                        p,
-                        U,
-                        Ei,
-                        celli,
-                        cellTetIs.face(),
-                        cellTetIs.tetPt(),
-                        typeId
-                    );
+                    addNewParcel(p, celli, U, Ei, typeId);
                 }
             }
         }
@@ -464,27 +455,13 @@ template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::addNewParcel
 (
     const vector& position,
+    const label celli,
     const vector& U,
     const scalar Ei,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
     const label typeId
 )
 {
-    ParcelType* pPtr = new ParcelType
-    (
-        mesh_,
-        position,
-        U,
-        Ei,
-        celli,
-        tetFacei,
-        tetPti,
-        typeId
-    );
-
-    this->addParticle(pPtr);
+    this->addParticle(new ParcelType(mesh_, position, celli, U, Ei, typeId));
 }
 
 
@@ -1112,9 +1089,7 @@ void Foam::DSMCCloud<ParcelType>::dumpParticlePositions() const
 template<class ParcelType>
 void Foam::DSMCCloud<ParcelType>::autoMap(const mapPolyMesh& mapper)
 {
-    typedef typename  ParcelType::trackingData tdType;
-    tdType td(*this);
-    Cloud<ParcelType>::template autoMap<tdType>(td, mapper);
+    Cloud<ParcelType>::autoMap(mapper);
 
     // Update the cell occupancy field
     cellOccupancy_.setSize(mesh_.nCells());

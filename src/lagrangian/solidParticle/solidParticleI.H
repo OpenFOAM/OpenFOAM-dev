@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ inline Foam::solidParticle::trackingData::trackingData
 inline Foam::solidParticle::solidParticle
 (
     const polyMesh& mesh,
-    const vector& position,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti,
@@ -53,7 +53,7 @@ inline Foam::solidParticle::solidParticle
     const vector& U
 )
 :
-    particle(mesh, position, celli, tetFacei, tetPti),
+    particle(mesh, coordinates, celli, tetFacei, tetPti),
     d_(d),
     U_(U)
 {}

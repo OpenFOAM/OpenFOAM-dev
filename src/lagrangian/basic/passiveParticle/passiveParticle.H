@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,26 +61,26 @@ public:
         passiveParticle
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti
         )
         :
-            particle(mesh, position, celli, tetFacei, tetPti)
+            particle(mesh, coordinates, celli, tetFacei, tetPti)
         {}
 
-        //- Construct from components, with searching for tetFace and
-        //  tetPt unless disabled by doCellFacePt = false.
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology
         passiveParticle
         (
             const polyMesh& mesh,
             const vector& position,
-            const label celli,
-            bool doCellFacePt = true
+            const label celli
         )
         :
-            particle(mesh, position, celli, doCellFacePt)
+            particle(mesh, position, celli)
         {}
 
         //- Construct from Istream

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,16 +55,34 @@ template<class ParcelType>
 inline Foam::DSMCParcel<ParcelType>::DSMCParcel
 (
     const polyMesh& mesh,
-    const vector& position,
-    const vector& U,
-    const scalar Ei,
+    const barycentric& coordinates,
     const label celli,
     const label tetFacei,
     const label tetPti,
+    const vector& U,
+    const scalar Ei,
     const label typeId
 )
 :
-    ParcelType(mesh, position, celli, tetFacei, tetPti),
+    ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
+    U_(U),
+    Ei_(Ei),
+    typeId_(typeId)
+{}
+
+
+template<class ParcelType>
+inline Foam::DSMCParcel<ParcelType>::DSMCParcel
+(
+    const polyMesh& mesh,
+    const vector& position,
+    const label celli,
+    const vector& U,
+    const scalar Ei,
+    const label typeId
+)
+:
+    ParcelType(mesh, position, celli),
     U_(U),
     Ei_(Ei),
     typeId_(typeId)

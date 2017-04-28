@@ -94,8 +94,7 @@ bool Foam::uniformSet::trackToBoundary
     const vector smallVec = tol*offset;
     const scalar smallDist = mag(smallVec);
 
-    // Alias
-    const point& trackPt = singleParticle.position();
+    point trackPt = singleParticle.position();
 
     particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
 
@@ -153,32 +152,10 @@ bool Foam::uniformSet::trackToBoundary
                 << "  to:" << samplePt << endl;
         }
 
-        point oldPos = trackPt;
-        label facei = -1;
-        do
-        {
-            singleParticle.stepFraction() = 0;
-            singleParticle.track(samplePt, trackData);
+        singleParticle.track(samplePt - trackPt, 0);
+        trackPt = singleParticle.position();
 
-            if (debug)
-            {
-                Pout<< "Result of tracking "
-                    << "  trackPt:" << trackPt
-                    << "  trackCelli:" << singleParticle.cell()
-                    << "  trackFacei:" << singleParticle.face()
-                    << "  onBoundary:" << singleParticle.onBoundary()
-                    << "  samplePt:" << samplePt
-                    << "  smallDist:" << smallDist
-                    << endl;
-            }
-        }
-        while
-        (
-            !singleParticle.onBoundary()
-         && (mag(trackPt - oldPos) < smallDist)
-        );
-
-        if (singleParticle.onBoundary())
+        if (singleParticle.onBoundaryFace())
         {
             //Pout<< "trackToBoundary : reached boundary" << endl;
             if (mag(trackPt - samplePt) < smallDist)
@@ -188,7 +165,7 @@ bool Foam::uniformSet::trackToBoundary
                 // Reached samplePt on boundary
                 samplingPts.append(trackPt);
                 samplingCells.append(singleParticle.cell());
-                samplingFaces.append(facei);
+                samplingFaces.append(singleParticle.face());
                 samplingCurveDist.append(mag(trackPt - start_));
             }
 

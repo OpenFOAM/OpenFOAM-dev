@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,29 +56,16 @@ bool Foam::polyLineSet::trackToBoundary
 {
     particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
 
-    // Alias
-    const point& trackPt = singleParticle.position();
-
     while (true)
     {
         // Local geometry info
         const vector offset = sampleCoords_[sampleI+1] - sampleCoords_[sampleI];
         const scalar smallDist = mag(tol*offset);
 
-        point oldPos = trackPt;
-        label facei = -1;
-        do
-        {
-            singleParticle.stepFraction() = 0;
-            singleParticle.track(sampleCoords_[sampleI+1], trackData);
-        }
-        while
-        (
-            !singleParticle.onBoundary()
-         && (mag(trackPt - oldPos) < smallDist)
-        );
+        singleParticle.track(offset, 0);
+        const point trackPt = singleParticle.position();
 
-        if (singleParticle.onBoundary())
+        if (singleParticle.onBoundaryFace())
         {
             //Info<< "trackToBoundary : reached boundary"
             //    << "  trackPt:" << trackPt << endl;
@@ -94,7 +81,7 @@ bool Foam::polyLineSet::trackToBoundary
                 //    << endl;
                 samplingPts.append(trackPt);
                 samplingCells.append(singleParticle.cell());
-                samplingFaces.append(facei);
+                samplingFaces.append(singleParticle.face());
 
                 // trackPt is at sampleI+1
                 samplingCurveDist.append(1.0*(sampleI+1));

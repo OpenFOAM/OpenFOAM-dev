@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,19 +41,16 @@ bool Foam::DSMCParcel<ParcelType>::move(TrackData& td, const scalar trackTime)
     const polyMesh& mesh = td.cloud().pMesh();
     const polyBoundaryMesh& pbMesh = mesh.boundaryMesh();
 
-    scalar tEnd = (1.0 - p.stepFraction())*trackTime;
-    const scalar dtMax = tEnd;
-
     // For reduced-D cases, the velocity used to track needs to be
     // constrained, but the actual U_ of the parcel must not be
     // altered or used, as it is altered by patch interactions an
     // needs to retain its 3D value for collision purposes.
     vector Utracking = U_;
 
-    while (td.keepParticle && !td.switchProcessor && tEnd > ROOTVSMALL)
+    while (td.keepParticle && !td.switchProcessor && p.stepFraction() < 1)
     {
         // Apply correction to position for reduced-D cases
-        meshTools::constrainToMeshCentre(mesh, p.position());
+        p.constrainToMeshCentre();
 
         Utracking = U_;
 
@@ -61,16 +58,10 @@ bool Foam::DSMCParcel<ParcelType>::move(TrackData& td, const scalar trackTime)
         // reduced-D cases
         meshTools::constrainDirection(mesh, mesh.solutionD(), Utracking);
 
-        // Set the Lagrangian time-step
-        scalar dt = min(dtMax, tEnd);
+        const scalar f = 1 - p.stepFraction();
+        p.trackToFace(f*trackTime*Utracking, f, td);
 
-        dt *= p.trackToFace(p.position() + dt*Utracking, td);
-
-        tEnd -= dt;
-
-        p.stepFraction() = 1.0 - tEnd/trackTime;
-
-        if (p.onBoundary() && td.keepParticle)
+        if (p.onBoundaryFace() && td.keepParticle)
         {
             if (isA<processorPolyPatch>(pbMesh[p.patch(p.face())]))
             {

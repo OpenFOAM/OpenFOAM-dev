@@ -74,6 +74,12 @@ inline Foam::scalar Foam::linearEqn::value(const scalar x) const
 }
 
 
+inline Foam::scalar Foam::linearEqn::derivative(const scalar x) const
+{
+    return a();
+}
+
+
 inline Foam::scalar Foam::linearEqn::error(const scalar x) const
 {
     return mag(SMALL*x*a());

@@ -56,13 +56,15 @@ bool Foam::faceOnlySet::trackToBoundary
 {
     particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
 
-    const point& trackPt = singleParticle.position();
+    point trackPt = singleParticle.position();
 
     while(true)
     {
         point oldPoint = trackPt;
 
-        singleParticle.trackToFace(end_, trackData);
+        singleParticle.trackToFace(end_ - start_, 0, trackData);
+
+        trackPt = singleParticle.position();
 
         if (singleParticle.face() != -1 && mag(oldPoint - trackPt) > smallDist)
         {
@@ -78,7 +80,7 @@ bool Foam::faceOnlySet::trackToBoundary
             // End reached
             return false;
         }
-        else if (singleParticle.onBoundary())
+        else if (singleParticle.onBoundaryFace())
         {
             // Boundary reached
             return true;

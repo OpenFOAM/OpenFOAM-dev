@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -280,22 +280,31 @@ public:
 
     // Constructors
 
-        //- Construct from owner, position, and cloud owner
+        //- Construct from mesh, coordinates and topology
         //  Other properties initialised as null
         inline ThermoParcel
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti
+        );
+
+        //- Construct from a position and a cell, searching for the rest of the
+        //  required topology. Other properties are initialised as null.
+        inline ThermoParcel
+        (
+            const polyMesh& mesh,
+            const vector& position,
+            const label celli
         );
 
         //- Construct from components
         inline ThermoParcel
         (
             const polyMesh& mesh,
-            const vector& position,
+            const barycentric& coordinates,
             const label celli,
             const label tetFacei,
             const label tetPti,

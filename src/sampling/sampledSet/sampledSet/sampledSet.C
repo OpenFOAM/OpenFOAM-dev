@@ -209,17 +209,25 @@ Foam::point Foam::sampledSet::pushIn
     label tetPtI;
     mesh().findTetFacePt(celli, facePt, tetFacei, tetPtI);
 
+    // This is the tolerance that was defined as a static constant of the
+    // particle class. It is no longer used by particle, following the switch to
+    // barycentric tracking. The only place in which the tolerance is now used
+    // is here. I'm not sure what the purpose of this code is, but it probably
+    // wants removing. It is doing tet-searches for a particle position. This
+    // should almost certainly be left to the particle class.
+    const scalar trackingCorrectionTol = 1e-5;
+
     if (tetFacei == -1 || tetPtI == -1)
     {
         newPosition = facePt;
 
-        label trap(1.0/particle::trackingCorrectionTol + 1);
+        label trap(1.0/trackingCorrectionTol + 1);
 
         label iterNo = 0;
 
         do
         {
-            newPosition += particle::trackingCorrectionTol*(cC - facePt);
+            newPosition += trackingCorrectionTol*(cC - facePt);
 
             mesh().findTetFacePt
             (
