@@ -388,6 +388,8 @@ void Foam::particle::changeFace(const label tetTriI)
             << "Changing face without changing cell should only happen when the"
             << " track is on triangle 1, 2 or 3."
             << exit(FatalError);
+
+        sharedEdge = edge(-1, -1);
     }
 
     // Find the face in the same cell that shares the edge, and the
