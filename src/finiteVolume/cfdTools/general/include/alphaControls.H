@@ -19,3 +19,9 @@ scalar icAlpha
 (
     alphaControls.lookupOrDefault<scalar>("icAlpha", 0)
 );
+
+// Shear compression coefficient
+scalar scAlpha
+(
+    alphaControls.lookupOrDefault<scalar>("scAlpha", 0)
+);
