@@ -127,7 +127,7 @@ Foam::surfaceTensionModels::liquidProperties::sigma() const
 }
 
 
-bool Foam::surfaceTensionModels::liquidProperties::read
+bool Foam::surfaceTensionModels::liquidProperties::readDict
 (
     const dictionary& dict
 )

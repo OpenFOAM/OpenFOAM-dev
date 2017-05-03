@@ -143,7 +143,7 @@ public:
         virtual tmp<volScalarField> sigma() const = 0;
 
         //- Update surface tension coefficient from given dictionary
-        virtual bool read(const dictionary& dict) = 0;
+        virtual bool readDict(const dictionary& dict) = 0;
 
         //- Write in dictionary format
         virtual bool writeData(Ostream& os) const = 0;

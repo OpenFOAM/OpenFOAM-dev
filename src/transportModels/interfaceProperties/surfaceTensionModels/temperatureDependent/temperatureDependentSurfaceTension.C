@@ -104,7 +104,7 @@ Foam::surfaceTensionModels::temperatureDependent::sigma() const
 }
 
 
-bool Foam::surfaceTensionModels::temperatureDependent::read
+bool Foam::surfaceTensionModels::temperatureDependent::readDict
 (
     const dictionary& dict
 )

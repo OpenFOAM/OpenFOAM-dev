@@ -239,7 +239,7 @@ void Foam::interfaceProperties::correct()
 bool Foam::interfaceProperties::read()
 {
     alpha1_.mesh().solverDict(alpha1_.name()).lookup("cAlpha") >> cAlpha_;
-    sigmaPtr_->read(transportPropertiesDict_);
+    sigmaPtr_->readDict(transportPropertiesDict_);
 
     return true;
 }

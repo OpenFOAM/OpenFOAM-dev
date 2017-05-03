@@ -83,7 +83,7 @@ Foam::surfaceTensionModels::constant::sigma() const
 }
 
 
-bool Foam::surfaceTensionModels::constant::read(const dictionary& dict)
+bool Foam::surfaceTensionModels::constant::readDict(const dictionary& dict)
 {
     // Handle sub-dictionary format as a special case
     if (dict.isDict("sigma"))
