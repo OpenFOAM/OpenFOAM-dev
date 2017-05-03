@@ -118,7 +118,7 @@ inline Foam::scalar Foam::polynomialSolidTransport<Thermo, PolySize>::alphah
     const scalar p, const scalar T
 ) const
 {
-    return kappa(p, T)/this->Cpv(p, T);
+    return kappa(p, T)/this->Cp(p, T);
 }
 
 

@@ -144,7 +144,7 @@ inline Foam::scalar Foam::sutherlandTransport<Thermo>::alphah
 ) const
 {
 
-    return kappa(p, T)/this->Cpv(p, T);
+    return kappa(p, T)/this->Cp(p, T);
 }
 
 

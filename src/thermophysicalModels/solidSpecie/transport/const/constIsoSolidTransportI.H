@@ -92,7 +92,7 @@ template<class thermo>
 inline Foam::scalar Foam::constIsoSolidTransport<thermo>::
 alphah(const scalar p, const scalar T) const
 {
-    return kappa_/this->Cpv(p, T);
+    return kappa_/this->Cp(p, T);
 }
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
