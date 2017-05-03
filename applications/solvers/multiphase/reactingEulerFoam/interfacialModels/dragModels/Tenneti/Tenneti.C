@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,15 +50,6 @@ Foam::dragModels::Tenneti::Tenneti
 )
 :
     dragModel(dict, pair, registerObject),
-    SchillerNaumann_
-    (
-        new SchillerNaumann
-        (
-            dict,
-            pair,
-            false
-        )
-    ),
     residualRe_("residualRe", dimless, dict.lookup("residualRe"))
 {}
 
@@ -83,6 +74,14 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
         max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
+    volScalarField Res(alpha2*pair_.Re());
+
+    volScalarField CdReIsolated
+    (
+        neg(Res - 1000)*24.0*(1.0 + 0.15*pow(Res, 0.687))
+      + pos(Res - 1000)*0.44*max(Res, residualRe_)
+    );
+
     volScalarField F0
     (
         5.81*alpha1/pow3(alpha2) + 0.48*pow(alpha1, 1.0/3.0)/pow4(alpha2)
@@ -90,16 +89,14 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
 
     volScalarField F1
     (
-        pow(alpha1, 3)*max(pair_.Re(), residualRe_)
-       *(0.95 + 0.61*pow3(alpha1)/sqr(alpha2))
+        pow3(alpha1)*Res*(0.95 + 0.61*pow3(alpha1)/sqr(alpha2))
     );
 
     // Tenneti et al. correlation includes the mean pressure drag.
     // This was removed here by multiplying F by alpha2 for consistency with
     // the formulation used in OpenFOAM
     return
-        SchillerNaumann_->CdRe()/(alpha2*max(pair_.Re(), residualRe_)) +
-        24.0*sqr(alpha2)*(F0 + F1);
+        CdReIsolated + 24.0*sqr(alpha2)*(F0 + F1);
 }
 
 

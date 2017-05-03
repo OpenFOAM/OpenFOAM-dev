@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,9 +68,6 @@ class Tenneti
     public dragModel
 {
     // Private data
-
-        //- SchillerNaumann drag model
-        autoPtr<SchillerNaumann> SchillerNaumann_;
 
         //- Residual Reynolds Number
         const dimensionedScalar residualRe_;
