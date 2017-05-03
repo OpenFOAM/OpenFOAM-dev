@@ -310,7 +310,7 @@ bool Foam::KinematicParcel<ParcelType>::move
         const scalar dt = (p.stepFraction() - sfrac)*trackTime;
 
         // Avoid problems with extremely small timesteps
-        if (!td.cloud().solution().steadyState() && dt > ROOTVSMALL)
+        if (dt > ROOTVSMALL)
         {
             // Update cell based properties
             p.setCellValues(td, dt, celli);
