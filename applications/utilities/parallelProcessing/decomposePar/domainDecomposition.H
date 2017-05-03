@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,7 @@ class domainDecomposition
 
     // Private Member Functions
 
-        void distributeCells();
+        void distributeCells(const fileName& dictFile);
 
         //- Mark all elements with value or -2 if occur twice
         static void mark
@@ -156,8 +156,12 @@ public:
 
     // Constructors
 
-        //- Construct from IOobject
-        domainDecomposition(const IOobject& io);
+        //- Construct from IOobject and decomposition dictionary name
+        domainDecomposition
+        (
+            const IOobject& io,
+            const fileName& dictFile
+        );
 
 
     //- Destructor
@@ -179,7 +183,7 @@ public:
         }
 
         //- Decompose mesh.
-        void decomposeMesh();
+        void decomposeMesh(const fileName& dict);
 
         //- Write decomposition
         bool writeDecomposition(const bool decomposeSets);

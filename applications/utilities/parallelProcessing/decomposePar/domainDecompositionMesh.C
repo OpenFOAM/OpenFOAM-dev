@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,10 +94,10 @@ void Foam::domainDecomposition::addInterProcFace
 }
 
 
-void Foam::domainDecomposition::decomposeMesh()
+void Foam::domainDecomposition::decomposeMesh(const fileName& dict)
 {
     // Decide which cell goes to which processor
-    distributeCells();
+    distributeCells(dict);
 
     // Distribute the cells according to the given processor label
 

@@ -74,6 +74,9 @@ Usage
         be used with caution when the underlying (serial) geometry or the
         decomposition method etc. have been changed between decompositions.
 
+      - \par -dict \<filename\>
+        Specify alternative dictionary for the decomposition.
+
 \*---------------------------------------------------------------------------*/
 
 #include "OSspecific.H"
@@ -248,6 +251,13 @@ int main(int argc, char *argv[])
         "only decompose geometry if the number of domains has changed"
     );
 
+    argList::addOption
+    (
+        "dict",
+        "dictionary file name",
+        "specify alternative decomposition dictionary"
+    );
+
     // Include explicit constant options, have zero from time range
     timeSelector::addOptions(true, false);
 
@@ -262,11 +272,32 @@ int main(int argc, char *argv[])
     bool forceOverwrite          = args.optionFound("force");
     bool ifRequiredDecomposition = args.optionFound("ifRequired");
 
+    const word dictName("decomposeParDict");
+
     // Set time from database
     #include "createTime.H"
+
+    fileName dictPath;
+
+    // Check if the dictionary is specified on the command-line
+    if (args.optionFound("dict"))
+    {
+        dictPath = args["dict"];
+
+        dictPath =
+        (
+            isDir(dictPath)
+          ? dictPath/dictName
+          : dictPath
+        );
+    }
+    else
+    {
+        dictPath = runTime.path()/"system"/dictName;
+    }
+
     // Allow override of time
     instantList times = timeSelector::selectIfPresent(runTime, args);
-
 
     wordList regionNames;
     wordList regionDirs;
@@ -337,7 +368,7 @@ int main(int argc, char *argv[])
             (
                 IOobject
                 (
-                    "decomposeParDict",
+                    dictName,
                     runTime.time().system(),
                     regionDir,          // use region if non-standard
                     runTime,
@@ -358,7 +389,7 @@ int main(int argc, char *argv[])
                     << nProcs << " domains"
                     << nl
                     << "instead of " << nDomains
-                    << " domains as specified in decomposeParDict"
+                    << " domains as specified in " << dictName
                     << nl
                     << exit(FatalError);
             }
@@ -421,13 +452,14 @@ int main(int argc, char *argv[])
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
                 false
-            )
+            ),
+            dictPath
         );
 
         // Decompose the mesh
         if (!decomposeFieldsOnly)
         {
-            mesh.decomposeMesh();
+            mesh.decomposeMesh(dictPath);
 
             mesh.writeDecomposition(decomposeSets);
 

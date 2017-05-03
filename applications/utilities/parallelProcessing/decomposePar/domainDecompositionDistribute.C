@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,13 +34,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::domainDecomposition::distributeCells()
+void Foam::domainDecomposition::distributeCells(const fileName& dict)
 {
     Info<< "\nCalculating distribution of cells" << endl;
 
     cpuTime decompositionTime;
-
-    const decompositionModel& method = decompositionModel::New(*this);
+    const decompositionModel& method = decompositionModel::New(*this, dict);
 
     scalarField cellWeights;
     if (method.found("weightField"))
