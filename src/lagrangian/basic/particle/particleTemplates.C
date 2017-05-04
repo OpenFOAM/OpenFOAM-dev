@@ -420,10 +420,12 @@ void Foam::particle::hitCyclicAMIPatch
     facei_ = tetFacei_ = receiveFacei + receiveCpp.start();
 
     // Locate the particle on the recieving side
+    vector directionT = direction;
+    cpp.reverseTransformDirection(directionT, sendFacei);
     locate
     (
         pos,
-        &direction,
+        &directionT,
         mesh_.faceOwner()[facei_],
         false,
         "Particle crossed between " + cyclicAMIPolyPatch::typeName +
