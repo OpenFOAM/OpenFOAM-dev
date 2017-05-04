@@ -284,6 +284,14 @@ public:
                 trackingData& td
             );
 
+            //- Overridable function to handle the particle hitting a cyclicAMI
+            void hitCyclicAMIPatch
+            (
+                const cyclicAMIPolyPatch&,
+                trackingData& td,
+                const vector&
+            );
+
             //- Overridable function to handle the particle hitting a
             //- processorPatch
             void hitProcessorPatch
