@@ -1,6 +1,5 @@
 {
-    volVectorField HbyA("HbyA", Uc);
-    HbyA = rAUc*UcEqn.H();
+    volVectorField HbyA(constrainHbyA(rAUc*UcEqn.H(), Uc, p));
 
     surfaceScalarField phiHbyA
     (
@@ -8,9 +7,15 @@
         (
            fvc::flux(HbyA)
          + alphacf*rAUcf*fvc::ddtCorr(Uc, phic)
-         + phicForces
         )
     );
+
+    if (p.needReference())
+    {
+        adjustPhi(phiHbyA, Uc, p);
+    }
+
+    phiHbyA += phicForces;
 
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p, Uc, phiHbyA, rAUcf);
