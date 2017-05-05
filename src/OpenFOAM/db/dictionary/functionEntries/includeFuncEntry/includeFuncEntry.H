@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,16 @@ Description
         #includeFunc components(U)
         #includeFunc mag(Ux)
         #includeFunc mag(p)
+    \endverbatim
+
+    Other dictionary entries may also be specified using named arguments, for
+    example the \c name of the \c faceZone in the \c flowRateFaceZone \c
+    functionObject configuration set and the \c orientedFields entry which
+    defaults to \c phi may also be overridden as required, e.g.
+
+    \verbatim
+        #includeFunc flowRateFaceZone(name=fZone1)
+        #includeFunc flowRateFaceZone(orientedFields=(phiAlpha),name=fZone1)
     \endverbatim
 
 See also

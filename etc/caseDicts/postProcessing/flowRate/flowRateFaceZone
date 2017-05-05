@@ -1,0 +1,19 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the flow rate through a specified patch by summing the flux on
+    patch faces.  For solvers where the flux is volumetric, the flow rate is
+    volumetric; where flux is mass flux, the flow rate is mass flow rate.
+
+\*---------------------------------------------------------------------------*/
+
+name    <faceZoneName>;
+
+#includeEtc "caseDicts/postProcessing/flowRate/flowRateFaceZone.cfg"
+
+// ************************************************************************* //
