@@ -209,6 +209,18 @@ void Foam::trackedParticle::hitCyclicPatch
 }
 
 
+void Foam::trackedParticle::hitCyclicAMIPatch
+(
+    const cyclicAMIPolyPatch&,
+    trackingData& td,
+    const vector&
+)
+{
+    // Remove particle
+    td.keepParticle = false;
+}
+
+
 void Foam::trackedParticle::hitProcessorPatch
 (
     const processorPolyPatch&,
