@@ -33,3 +33,6 @@
     );
 
     const bool frozenFlow = frozenFlowFluid[i];
+
+    bool& resReachedFluid = residualReachedFluid[i];
+    bool& residualControlUsed = residualControlUsedFluid[i];

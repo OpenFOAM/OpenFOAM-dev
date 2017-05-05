@@ -45,16 +45,16 @@
               - fvm::laplacian(rhorAUf, p_rgh)
             );
 
-            p_rghEqn.solve
+            solvPerfp_rgh = p_rghEqn.solve
             (
                 mesh.solver
                 (
                     p_rgh.select
                     (
                         (
-                           oCorr == nOuterCorr-1
-                        && corr == nCorr-1
-                        && nonOrth == nNonOrthCorr
+                            oCorr == nOuterCorr-1
+                         && corr == nCorr-1
+                         && nonOrth == nNonOrthCorr
                         )
                     )
                 )

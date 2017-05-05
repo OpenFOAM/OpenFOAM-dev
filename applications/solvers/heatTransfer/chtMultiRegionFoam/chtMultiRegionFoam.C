@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,11 +86,18 @@ int main(int argc, char *argv[])
             }
         }
 
+        bool allRegionsConverged = false;
+        bool finalIter = false;
 
         // --- PIMPLE loop
         for (int oCorr=0; oCorr<nOuterCorr; oCorr++)
         {
-            bool finalIter = oCorr == nOuterCorr-1;
+            Info<< "Pimple iteration " << oCorr << "\n";
+
+            if (oCorr == nOuterCorr-1 || allRegionsConverged)
+            {
+                finalIter = true;
+            }
 
             forAll(fluidRegions, i)
             {
@@ -98,7 +105,9 @@ int main(int argc, char *argv[])
                     << fluidRegions[i].name() << endl;
                 #include "setRegionFluidFields.H"
                 #include "readFluidMultiRegionPIMPLEControls.H"
+                #include "readFluidMultiRegionResidualControls.H"
                 #include "solveFluid.H"
+                #include "residualControlsFluid.H"
             }
 
             forAll(solidRegions, i)
@@ -107,9 +116,12 @@ int main(int argc, char *argv[])
                     << solidRegions[i].name() << endl;
                 #include "setRegionSolidFields.H"
                 #include "readSolidMultiRegionPIMPLEControls.H"
+                #include "readSolidMultiRegionResidualControls.H"
                 #include "solveSolid.H"
+                #include "residualControlsSolid.H"
             }
 
+            #include "checkResidualControls.H"
         }
 
         runTime.write();
