@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -286,8 +286,8 @@ checkNonStandardCodePatterns()
         case "$f" in
         (*.[CH])
             # Directly report the incorrect markers
-            git grep -n --color \
-                -e '> >' -e 'NULL' \
+            git grep -n --color -e '> >' \
+                --or -w -e 'NULL' \
                 $scope"$f"
         ;;
         esac
@@ -324,8 +324,8 @@ checkCopyright()
     badFiles=$(
     for f in $fileList
     do
-        startYear=`grep "Copyright.*OpenFOAM" $f | sed 's/[^0-9]*\([0-9]*\).*/\1/g'`
-        endYear=`grep "Copyright.*-.*OpenFOAM" $f | sed 's/[^-]*-\([0-9]*\).*/\1/g'`
+        startYear=`grep -m 1 "Copyright.*OpenFOAM" $f | sed 's/[^0-9]*\([0-9]*\).*/\1/g'`
+        endYear=`grep -m 1 "Copyright.*-.*OpenFOAM" $f | sed 's/[^-]*-\([0-9]*\).*/\1/g'`
         #echo "startYear=$startYear endYear=$endYear"
         if [ "$startYear" != "" ]
         then
