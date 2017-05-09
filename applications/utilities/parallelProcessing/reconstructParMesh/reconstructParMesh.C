@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,11 @@ static void renumber
 autoPtr<faceCoupleInfo> determineCoupledFaces
 (
     const bool fullMatch,
-    const label proci,
+    const label masterMeshProcStart,
+    const label masterMeshProcEnd,
     const polyMesh& masterMesh,
+    const label meshToAddProcStart,
+    const label meshToAddProcEnd,
     const polyMesh& meshToAdd,
     const scalar mergeDist
 )
@@ -109,7 +112,6 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
 
         const polyBoundaryMesh& masterPatches = masterMesh.boundaryMesh();
 
-        const string toProcString("to" + name(proci));
 
         DynamicList<label> masterFaces
         (
@@ -117,24 +119,35 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
           - masterMesh.nInternalFaces()
         );
 
+
         forAll(masterPatches, patchi)
         {
             const polyPatch& pp = masterPatches[patchi];
 
-            if
-            (
-                isA<processorPolyPatch>(pp)
-             && (
-                    pp.name().rfind(toProcString)
-                 == (pp.name().size()-toProcString.size())
-                )
-            )
+            if (isA<processorPolyPatch>(pp))
             {
-                label meshFacei = pp.start();
-                forAll(pp, i)
+                for
+                (
+                    label proci=meshToAddProcStart;
+                    proci<meshToAddProcEnd;
+                    proci++
+                )
                 {
-                    masterFaces.append(meshFacei++);
+                    const string toProcString("to" + name(proci));
+                    if (
+                        pp.name().rfind(toProcString)
+                     == (pp.name().size()-toProcString.size())
+                    )
+                    {
+                        label meshFacei = pp.start();
+                        forAll(pp, i)
+                        {
+                            masterFaces.append(meshFacei++);
+                        }
+                        break;
+                    }
                 }
+
             }
         }
         masterFaces.shrink();
@@ -159,17 +172,30 @@ autoPtr<faceCoupleInfo> determineCoupledFaces
             {
                 bool isConnected = false;
 
-                for (label mergedProci = 0; mergedProci < proci; mergedProci++)
+                for
+                (
+                    label mergedProci=masterMeshProcStart;
+                    !isConnected && (mergedProci < masterMeshProcEnd);
+                    mergedProci++
+                )
                 {
-                    const word fromProcString
+                    for
                     (
-                        processorPolyPatch::newName(proci, mergedProci)
-                    );
-
-                    if (pp.name() == fromProcString)
+                        label proci = meshToAddProcStart;
+                        proci < meshToAddProcEnd;
+                        proci++
+                    )
                     {
-                        isConnected = true;
-                        break;
+                        const word fromProcString
+                        (
+                            processorPolyPatch::newName(proci, mergedProci)
+                        );
+
+                        if (pp.name() == fromProcString)
+                        {
+                            isConnected = true;
+                            break;
+                        }
                     }
                 }
 
@@ -622,27 +648,28 @@ int main(int argc, char *argv[])
 
         {
             // Construct empty mesh.
-            Info<< "Constructing empty mesh to add to." << nl << endl;
-            fvMesh masterMesh
-            (
-                IOobject
-                (
-                    regionName,
-                    runTime.timeName(),
-                    runTime,
-                    IOobject::NO_READ
-                ),
-                xferCopy(pointField()),
-                xferCopy(faceList()),
-                xferCopy(cellList())
-            );
+            // fvMesh** masterMesh = new fvMesh*[nProcs];
+            PtrList<fvMesh> masterMesh(nProcs);
 
-            for (label proci = 0; proci < nProcs; proci++)
+            for (label proci=0; proci<nProcs; proci++)
             {
-                Info<< "Reading mesh to add from "
-                    << databases[proci].caseName()
-                    << " for time = " << databases[proci].timeName()
-                    << nl << endl;
+                masterMesh.set
+                (
+                    proci,
+                    new fvMesh
+                    (
+                        IOobject
+                        (
+                            regionName,
+                            runTime.timeName(),
+                            runTime,
+                            IOobject::NO_READ
+                        ),
+                        xferCopy(pointField()),
+                        xferCopy(faceList()),
+                        xferCopy(cellList())
+                    )
+                );
 
                 fvMesh meshToAdd
                 (
@@ -661,68 +688,154 @@ int main(int argc, char *argv[])
                 boundaryProcAddressing[proci] =
                     identity(meshToAdd.boundaryMesh().size());
 
-
                 // Find geometrically shared points/faces.
                 autoPtr<faceCoupleInfo> couples = determineCoupledFaces
                 (
                     fullMatch,
                     proci,
-                    masterMesh,
+                    proci,
+                    masterMesh[proci],
+                    proci,
+                    proci,
                     meshToAdd,
                     mergeDist
                 );
 
-
                 // Add elements to mesh
-                Info<< "Adding to master mesh" << nl << endl;
-
                 autoPtr<mapAddedPolyMesh> map = fvMeshAdder::add
                 (
-                    masterMesh,
+                    masterMesh[proci],
                     meshToAdd,
                     couples
                 );
-
-                // Update all addressing so xxProcAddressing points to correct
-                // item in masterMesh.
-
-                // Processors that were already in masterMesh
-                for (label mergedI = 0; mergedI < proci; mergedI++)
-                {
-                    renumber(map().oldCellMap(), cellProcAddressing[mergedI]);
-                    renumber(map().oldFaceMap(), faceProcAddressing[mergedI]);
-                    renumber(map().oldPointMap(), pointProcAddressing[mergedI]);
-                    // Note: boundary is special since can contain -1.
-                    renumber
-                    (
-                        map().oldPatchMap(),
-                        boundaryProcAddressing[mergedI]
-                    );
-                }
 
                 // Added processor
                 renumber(map().addedCellMap(), cellProcAddressing[proci]);
                 renumber(map().addedFaceMap(), faceProcAddressing[proci]);
                 renumber(map().addedPointMap(), pointProcAddressing[proci]);
                 renumber(map().addedPatchMap(), boundaryProcAddressing[proci]);
+            }
+            for (label step=2; step<nProcs*2; step*=2)
+            {
+                for (label proci=0; proci<nProcs; proci+=step)
+                {
+                    label next = proci + step/2;
+                    if(next >= nProcs)
+                    {
+                        continue;
+                    }
 
-                Info<< endl;
+                    Info<< "Merging mesh " << proci << " with " << next << endl;
+
+                    // Find geometrically shared points/faces.
+                    autoPtr<faceCoupleInfo> couples = determineCoupledFaces
+                    (
+                        fullMatch,
+                        proci,
+                        next,
+                        masterMesh[proci],
+                        next,
+                        proci+step,
+                        masterMesh[next],
+                        mergeDist
+                    );
+
+                    // Add elements to mesh
+                    autoPtr<mapAddedPolyMesh> map = fvMeshAdder::add
+                    (
+                        masterMesh[proci],
+                        masterMesh[next],
+                        couples
+                    );
+
+                    // Processors that were already in masterMesh
+                    for (label mergedI=proci; mergedI<next; mergedI++)
+                    {
+                        renumber
+                        (
+                            map().oldCellMap(),
+                            cellProcAddressing[mergedI]
+                        );
+
+                        renumber
+                        (
+                            map().oldFaceMap(),
+                            faceProcAddressing[mergedI]
+                        );
+
+                        renumber
+                        (
+                            map().oldPointMap(),
+                            pointProcAddressing[mergedI]
+                        );
+
+                        // Note: boundary is special since can contain -1.
+                        renumber
+                        (
+                            map().oldPatchMap(),
+                            boundaryProcAddressing[mergedI]
+                        );
+                    }
+
+                    // Added processor
+                    for
+                    (
+                        label addedI=next;
+                        addedI<min(proci+step, nProcs);
+                        addedI++
+                    )
+                    {
+                        renumber
+                        (
+                            map().addedCellMap(),
+                            cellProcAddressing[addedI]
+                        );
+
+                        renumber
+                        (
+                            map().addedFaceMap(),
+                            faceProcAddressing[addedI]
+                        );
+
+                        renumber
+                        (
+                            map().addedPointMap(),
+                            pointProcAddressing[addedI]
+                        );
+
+                        renumber
+                        (
+                            map().addedPatchMap(),
+                            boundaryProcAddressing[addedI]
+                        );
+                    }
+
+                    masterMesh.set(next, nullptr);
+                }
+            }
+
+            for (label proci=0; proci<nProcs; proci++)
+            {
+                Info<< "Reading mesh to add from "
+                    << databases[proci].caseName()
+                    << " for time = " << databases[proci].timeName()
+                    << nl << nl << endl;
             }
 
             // See if any points on the mastermesh have become connected
             // because of connections through processor meshes.
-            mergeSharedPoints(mergeDist, masterMesh, pointProcAddressing);
+            mergeSharedPoints(mergeDist, masterMesh[0], pointProcAddressing);
 
             // Save some properties on the reconstructed mesh
-            masterInternalFaces = masterMesh.nInternalFaces();
-            masterOwner = masterMesh.faceOwner();
+            masterInternalFaces = masterMesh[0].nInternalFaces();
+            masterOwner = masterMesh[0].faceOwner();
 
 
             Info<< "\nWriting merged mesh to "
                 << runTime.path()/runTime.timeName()
                 << nl << endl;
 
-            if (!masterMesh.write())
+            if (!masterMesh[0].write())
             {
                 FatalErrorInFunction
                     << "Failed writing polyMesh."
@@ -731,7 +844,12 @@ int main(int argc, char *argv[])
 
             if (writeCellDist)
             {
-                writeCellDistance(runTime, masterMesh, cellProcAddressing);
+                writeCellDistance
+                (
+                    runTime,
+                    masterMesh[0],
+                    cellProcAddressing
+                );
             }
         }
 
@@ -808,7 +926,7 @@ int main(int argc, char *argv[])
             // See reconstructPar for meaning of turning index.
             forAll(faceProcAddr, procFacei)
             {
-                label masterFacei = faceProcAddr[procFacei];
+                const label masterFacei = faceProcAddr[procFacei];
 
                 if
                 (
