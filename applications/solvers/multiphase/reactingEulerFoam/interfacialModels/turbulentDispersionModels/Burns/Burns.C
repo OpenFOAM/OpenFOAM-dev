@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,11 @@ Foam::turbulentDispersionModels::Burns::D() const
            *sqr(pair_.dispersed().d())
         )
        *pair_.continuous().rho()
-       *(1.0 + pair_.dispersed()/max(pair_.continuous(), residualAlpha_));
+       *pair_.dispersed()
+       *(
+           1.0/max(pair_.dispersed(), residualAlpha_)
+         + 1.0/max(pair_.continuous(), residualAlpha_)
+        );
 }
 
 
