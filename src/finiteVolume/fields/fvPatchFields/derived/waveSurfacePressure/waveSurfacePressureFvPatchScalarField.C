@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,26 +145,22 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
 
     const scalar dt = db().time().deltaTValue();
 
-    // retrieve non-const access to zeta field from the database
-    volVectorField& zeta =
-        const_cast<volVectorField&>
-        (
-            db().lookupObject<volVectorField>(zetaName_)
-        );
+    // Retrieve non-const access to zeta field from the database
+    volVectorField& zeta = db().lookupObjectRef<volVectorField>(zetaName_);
     vectorField& zetap = zeta.boundaryFieldRef()[patchi];
 
-    // lookup d/dt scheme from database for zeta
+    // Lookup d/dt scheme from database for zeta
     const word ddtSchemeName(zeta.mesh().ddtScheme(zeta.name()));
     ddtSchemeType ddtScheme(ddtSchemeTypeNames_[ddtSchemeName]);
 
-    // retrieve the flux field from the database
+    // Retrieve the flux field from the database
     const surfaceScalarField& phi =
         db().lookupObject<surfaceScalarField>(phiName_);
 
-    // cache the patch face-normal vectors
+    // Cache the patch face-normal vectors
     tmp<vectorField> nf(patch().nf());
 
-    // change in zeta due to flux
+    // Change in zeta due to flux
     vectorField dZetap(dt*nf()*phi.boundaryField()[patchi]/patch().magSf());
 
     if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
@@ -218,7 +214,7 @@ void Foam::waveSurfacePressureFvPatchScalarField::updateCoeffs()
     Info<< "min/max zetap = " << gMin(zetap & nf()) << ", "
         << gMax(zetap & nf()) << endl;
 
-    // update the surface pressure
+    // Update the surface pressure
     const uniformDimensionedVectorField& g =
         db().lookupObject<uniformDimensionedVectorField>("g");
 

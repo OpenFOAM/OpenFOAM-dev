@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,6 +179,10 @@ public:
             //- Lookup and return the object of the given Type
             template<class Type>
             const Type& lookupObject(const word& name) const;
+
+            //- Lookup and return the object reference of the given Type
+            template<class Type>
+            Type& lookupObjectRef(const word& name) const;
 
             //- Return new event number.
             label getEvent() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,9 +78,13 @@ protected:
         template<class ObjectType>
         bool foundObject(const word& fieldName) const;
 
-        //- Lookup field from the objectRegistry
+        //- Lookup object from the objectRegistry
         template<class ObjectType>
         const ObjectType& lookupObject(const word& fieldName) const;
+
+        //- Lookup non-const object reference from the objectRegistry
+        template<class ObjectType>
+        ObjectType& lookupObjectRef(const word& fieldName);
 
         //- Store the given field in the objectRegistry under the given name
         template<class ObjectType>

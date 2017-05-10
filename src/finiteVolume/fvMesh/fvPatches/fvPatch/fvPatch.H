@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -248,6 +248,13 @@ public:
             const typename GeometricField::Patch& patchField
             (
                 const GeometricField&
+            ) const;
+
+            //- Return the corresponding patchField reference of the named field
+            template<class GeometricField, class Type>
+            typename GeometricField::Patch& patchField
+            (
+                GeometricField&
             ) const;
 
             //- Lookup and return the patchField of the named field from the

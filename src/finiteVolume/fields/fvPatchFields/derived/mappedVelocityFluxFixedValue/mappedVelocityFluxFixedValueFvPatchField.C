@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,8 +156,8 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     const volVectorField& UField =
         nbrMesh.lookupObject<volVectorField>(fieldName);
 
-    const surfaceScalarField& phiField =
-        nbrMesh.lookupObject<surfaceScalarField>(phiName_);
+    surfaceScalarField& phiField =
+        nbrMesh.lookupObjectRef<surfaceScalarField>(phiName_);
 
     vectorField newUValues;
     scalarField newPhiValues;
@@ -215,10 +215,7 @@ void Foam::mappedVelocityFluxFixedValueFvPatchField::updateCoeffs()
     }
 
     operator==(newUValues);
-    const_cast<surfaceScalarField&>
-    (
-        phiField
-    ).boundaryFieldRef()[patch().index()] == newPhiValues;
+    phiField.boundaryFieldRef()[patch().index()] == newPhiValues;
 
     // Restore tag
     UPstream::msgType() = oldTag;

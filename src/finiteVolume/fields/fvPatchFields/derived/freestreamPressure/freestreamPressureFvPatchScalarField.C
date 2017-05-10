@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,14 +119,11 @@ void Foam::freestreamPressureFvPatchScalarField::updateCoeffs()
             patch().lookupPatchField<volVectorField, vector>(UName_)
         );
 
-    const surfaceScalarField& phi =
-        db().lookupObject<surfaceScalarField>(phiName_);
+    surfaceScalarField& phi =
+        db().lookupObjectRef<surfaceScalarField>(phiName_);
 
     fvsPatchField<scalar>& phip =
-        const_cast<fvsPatchField<scalar>&>
-        (
-            patch().patchField<surfaceScalarField, scalar>(phi)
-        );
+        patch().patchField<surfaceScalarField, scalar>(phi);
 
     if (phi.dimensions() == dimVelocity*dimArea)
     {

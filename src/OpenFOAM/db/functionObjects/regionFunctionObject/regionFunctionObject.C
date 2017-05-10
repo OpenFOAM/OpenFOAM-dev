@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,11 @@ bool Foam::functionObjects::regionFunctionObject::clearObject
 {
     if (foundObject<regIOobject>(fieldName))
     {
-        const regIOobject& resultObject = lookupObject<regIOobject>(fieldName);
+        regIOobject& resultObject = lookupObjectRef<regIOobject>(fieldName);
 
         if (resultObject.ownedByRegistry())
         {
-            return const_cast<regIOobject&>(resultObject).checkOut();
+            return resultObject.checkOut();
         }
         else
         {
