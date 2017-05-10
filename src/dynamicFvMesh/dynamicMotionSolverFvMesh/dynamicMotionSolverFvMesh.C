@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,7 @@ bool Foam::dynamicMotionSolverFvMesh::update()
 
     if (foundObject<volVectorField>("U"))
     {
-        volVectorField& U =
-            const_cast<volVectorField&>(lookupObject<volVectorField>("U"));
-        U.correctBoundaryConditions();
+        lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
     }
 
     return true;

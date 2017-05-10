@@ -117,9 +117,7 @@ bool Foam::dynamicInkJetFvMesh::update()
 
     fvMesh::movePoints(newPoints);
 
-    volVectorField& U =
-        const_cast<volVectorField&>(lookupObject<volVectorField>("U"));
-    U.correctBoundaryConditions();
+    lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
 
     return true;
 }

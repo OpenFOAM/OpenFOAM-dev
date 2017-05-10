@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,7 @@ void Foam::functionObjects::turbulenceFields::processField
 
     if (obr_.foundObject<FieldType>(scopedName))
     {
-        FieldType& fld =
-            const_cast<FieldType&>(obr_.lookupObject<FieldType>(scopedName));
-        fld == tvalue();
+        obr_.lookupObjectRef<FieldType>(scopedName) == tvalue();
     }
     else if (obr_.found(scopedName))
     {
