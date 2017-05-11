@@ -305,7 +305,7 @@ CrankNicolsonDdtScheme<Type>::CrankNicolsonDdtScheme
 
     if (firstToken.isNumber())
     {
-        const scalar ocCoeff = firstToken.scalarToken();
+        const scalar ocCoeff = firstToken.number();
         if (ocCoeff < 0 || ocCoeff > 1)
         {
             FatalIOErrorInFunction
