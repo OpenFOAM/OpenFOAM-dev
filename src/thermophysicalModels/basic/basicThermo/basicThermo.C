@@ -152,10 +152,7 @@ Foam::volScalarField& Foam::basicThermo::lookupOrConstruct
         fPtr->store(fPtr);
     }
 
-    return const_cast<volScalarField&>
-    (
-        mesh.objectRegistry::lookupObject<volScalarField>(name)
-    );
+    return mesh.objectRegistry::lookupObjectRef<volScalarField>(name);
 }
 
 

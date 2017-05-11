@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,10 +142,7 @@ bool Foam::rawTopoChangerFvMesh::update()
         Info<< "rawTopoChangerFvMesh :"
             << " recreating phi for unmapped boundary values." << endl;
         const volVectorField& U = lookupObject<volVectorField>("U");
-        surfaceScalarField& phi = const_cast<surfaceScalarField&>
-        (
-            lookupObject<surfaceScalarField>("phi")
-        );
+        surfaceScalarField& phi = lookupObjectRef<surfaceScalarField>("phi");
         setUnmappedValues
         (
             phi,

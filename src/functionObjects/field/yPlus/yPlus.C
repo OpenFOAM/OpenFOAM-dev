@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,10 +169,7 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 bool Foam::functionObjects::yPlus::execute()
 {
     volScalarField& yPlus =
-        const_cast<volScalarField&>
-        (
-            mesh_.lookupObject<volScalarField>(type())
-        );
+        mesh_.lookupObjectRef<volScalarField>(type());
 
     if (mesh_.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
     {

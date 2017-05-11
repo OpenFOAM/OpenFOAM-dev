@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,10 +91,7 @@ bool Foam::functionObjects::processorField::read(const dictionary& dict)
 
 bool Foam::functionObjects::processorField::execute()
 {
-    const volScalarField& procField =
-        mesh_.lookupObject<volScalarField>("processorID");
-
-    const_cast<volScalarField&>(procField) ==
+    mesh_.lookupObjectRef<volScalarField>("processorID") ==
         dimensionedScalar("proci", dimless, Pstream::myProcNo());
 
     return true;
@@ -103,10 +100,7 @@ bool Foam::functionObjects::processorField::execute()
 
 bool Foam::functionObjects::processorField::write()
 {
-    const volScalarField& procField =
-        mesh_.lookupObject<volScalarField>("processorID");
-
-    procField.write();
+    mesh_.lookupObject<volScalarField>("processorID").write();
 
     return true;
 }

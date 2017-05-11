@@ -172,10 +172,7 @@ CrankNicolsonDdtScheme<Type>::ddt0_
 
     DDt0Field<GeoField>& ddt0 = static_cast<DDt0Field<GeoField>&>
     (
-        const_cast<GeoField&>
-        (
-            mesh().objectRegistry::template lookupObject<GeoField>(name)
-        )
+        mesh().objectRegistry::template lookupObjectRef<GeoField>(name)
     );
 
     return ddt0;

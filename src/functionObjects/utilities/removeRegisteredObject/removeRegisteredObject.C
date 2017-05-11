@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,8 +91,8 @@ bool Foam::functionObjects::removeRegisteredObject::execute()
     {
         if (obr_.foundObject<regIOobject>(objectNames_[i]))
         {
-            const regIOobject& obj =
-                obr_.lookupObject<regIOobject>(objectNames_[i]);
+            regIOobject& obj =
+                obr_.lookupObjectRef<regIOobject>(objectNames_[i]);
 
             if (obj.ownedByRegistry())
             {
@@ -100,7 +100,7 @@ bool Foam::functionObjects::removeRegisteredObject::execute()
                     << "    removing object " << obj.name() << nl
                     << endl;
 
-                const_cast<regIOobject&>(obj).release();
+                obj.release();
                 delete &obj;
             }
         }

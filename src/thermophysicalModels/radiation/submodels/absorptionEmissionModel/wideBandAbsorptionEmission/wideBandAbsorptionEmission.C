@@ -121,10 +121,7 @@ Foam::radiation::wideBandAbsorptionEmission::wideBandAbsorptionEmission
         }
         else if (mesh.foundObject<volScalarField>(iter.key()))
         {
-            volScalarField& Y = const_cast<volScalarField&>
-                (mesh.lookupObject<volScalarField>(iter.key()));
-
-            Yj_.set(j, &Y);
+            Yj_.set(j, &mesh.lookupObjectRef<volScalarField>(iter.key()));
 
             specieIndex_[iter()] = 0.0;
             j++;

@@ -196,10 +196,8 @@ void Foam::functionObjects::fieldAverage::calculateMeanFieldType
     {
         const Type& baseField = obr_.lookupObject<Type>(fieldName);
 
-        Type& meanField = const_cast<Type&>
-        (
-            obr_.lookupObject<Type>(faItems_[fieldi].meanFieldName())
-        );
+        Type& meanField =
+            obr_.lookupObjectRef<Type>(faItems_[fieldi].meanFieldName());
 
         scalar dt = obr_.time().deltaTValue();
         scalar Dt = totalTime_[fieldi];
@@ -258,10 +256,8 @@ void Foam::functionObjects::fieldAverage::calculatePrime2MeanFieldType
         const Type1& meanField =
             obr_.lookupObject<Type1>(faItems_[fieldi].meanFieldName());
 
-        Type2& prime2MeanField = const_cast<Type2&>
-        (
-            obr_.lookupObject<Type2>(faItems_[fieldi].prime2MeanFieldName())
-        );
+        Type2& prime2MeanField =
+            obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
         scalar dt = obr_.time().deltaTValue();
         scalar Dt = totalTime_[fieldi];
@@ -328,10 +324,8 @@ void Foam::functionObjects::fieldAverage::addMeanSqrToPrime2MeanType
         const Type1& meanField =
             obr_.lookupObject<Type1>(faItems_[fieldi].meanFieldName());
 
-        Type2& prime2MeanField = const_cast<Type2&>
-        (
-            obr_.lookupObject<Type2>(faItems_[fieldi].prime2MeanFieldName())
-        );
+        Type2& prime2MeanField =
+            obr_.lookupObjectRef<Type2>(faItems_[fieldi].prime2MeanFieldName());
 
         prime2MeanField += sqr(meanField);
     }

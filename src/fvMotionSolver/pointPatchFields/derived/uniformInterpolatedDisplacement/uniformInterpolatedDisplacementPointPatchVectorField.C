@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,15 +210,8 @@ void uniformInterpolatedDisplacementPointPatchVectorField::updateCoeffs()
                     const objectRegistry&
                 >(*fieldsCacheIter());
 
-
-                pointVectorField& d = const_cast<pointVectorField&>
-                (
-                    timeCache.lookupObject<pointVectorField>
-                    (
-                        fieldName_
-                    )
-                );
-                d.correctBoundaryConditions();
+                timeCache.lookupObjectRef<pointVectorField>(fieldName_)
+                    .correctBoundaryConditions();
             }
         }
     }

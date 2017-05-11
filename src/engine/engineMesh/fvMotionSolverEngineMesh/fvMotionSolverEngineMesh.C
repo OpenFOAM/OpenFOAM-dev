@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,8 +91,7 @@ void Foam::fvMotionSolverEngineMesh::move()
     if (engineDB_.foundObject<surfaceScalarField>("phi"))
     {
         surfaceScalarField& phi =
-            const_cast<surfaceScalarField&>
-            (engineDB_.lookupObject<surfaceScalarField>("phi"));
+            engineDB_.lookupObjectRef<surfaceScalarField>("phi");
 
         const volScalarField& rho =
             engineDB_.lookupObject<volScalarField>("rho");

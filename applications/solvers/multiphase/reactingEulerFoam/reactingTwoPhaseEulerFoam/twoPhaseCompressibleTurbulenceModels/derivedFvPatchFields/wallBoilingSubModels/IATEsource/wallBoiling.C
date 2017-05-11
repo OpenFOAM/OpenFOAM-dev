@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,15 +90,12 @@ Foam::diameterModels::IATEsources::wallBoiling::R
     );
 
     const phaseCompressibleTurbulenceModel& turbulence =
-        const_cast<phaseCompressibleTurbulenceModel&>
+        phase().db().lookupObjectRef<phaseCompressibleTurbulenceModel>
         (
-            phase().db().lookupObject<phaseCompressibleTurbulenceModel>
+            IOobject::groupName
             (
-                IOobject::groupName
-                (
-                    turbulenceModel::propertiesName,
-                    otherPhase().name()
-                )
+                turbulenceModel::propertiesName,
+                otherPhase().name()
             )
         );
 

@@ -372,10 +372,11 @@ Foam::volPointInterpolation::interpolate
         // Delete any old occurences to avoid double registration
         if (db.objectRegistry::template foundObject<PointFieldType>(name))
         {
-            PointFieldType& pf = const_cast<PointFieldType&>
-            (
-                db.objectRegistry::template lookupObject<PointFieldType>(name)
-            );
+            PointFieldType& pf =
+                db.objectRegistry::template lookupObjectRef<PointFieldType>
+                (
+                    name
+                );
 
             if (pf.ownedByRegistry())
             {
@@ -417,10 +418,11 @@ Foam::volPointInterpolation::interpolate
         }
         else
         {
-            PointFieldType& pf = const_cast<PointFieldType&>
-            (
-                db.objectRegistry::template lookupObject<PointFieldType>(name)
-            );
+            PointFieldType& pf =
+                db.objectRegistry::template lookupObjectRef<PointFieldType>
+                (
+                    name
+                );
 
             if (pf.upToDate(vf))    //TBD: , vf.mesh().points()))
             {

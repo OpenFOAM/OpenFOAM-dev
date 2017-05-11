@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,12 +169,9 @@ Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
         }
 
         surfaceScalarField& limiterField =
-            const_cast<surfaceScalarField&>
+            mesh.lookupObjectRef<surfaceScalarField>
             (
-                mesh.lookupObject<surfaceScalarField>
-                (
-                    limiterFieldName
-                )
+                limiterFieldName
             );
 
         calcLimiter(phi, limiterField);
