@@ -18,7 +18,7 @@ FoamFile
 
 Documentation
 {
-    docBrowser      "firefox %f";
+    docBrowser      "firefox -file %f";
     doxyDocDirs
     (
         "$WM_PROJECT_USER_DIR/html"
