@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
     argList::addNote("manipulates dictionaries");
 
     argList::noBanner();
-    argList::validArgs.append("dictionary");
+    argList::validArgs.append("dictionary file");
     argList::addBoolOption("keywords", "list keywords");
     argList::addOption("entry", "name", "report/select the named entry");
     argList::addBoolOption
