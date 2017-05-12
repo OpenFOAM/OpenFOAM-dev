@@ -1,3 +1,5 @@
+rho = thermo.rho();
+
 volScalarField rAU(1.0/UEqn.A());
 volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
@@ -5,7 +7,7 @@ tUEqn.clear();
 
 bool closedVolume = false;
 
-surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
+surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
 volScalarField rhorAtU("rhorAtU", rho*rAtU);
@@ -23,7 +25,7 @@ if (simple.transonic())
 
     phiHbyA +=
         fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf()
-      - fvc::interpolate(p)*phid;
+      - fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
 
     HbyA -= (rAU - rAtU)*fvc::grad(p);
 
@@ -98,7 +100,7 @@ U = HbyA - rAtU*fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
-pressureControl.limit(p);
+bool pLimited = pressureControl.limit(p);
 
 // For closed-volume cases adjust the pressure and density levels
 // to obey overall mass continuity
@@ -108,9 +110,11 @@ if (closedVolume)
         /fvc::domainIntegrate(psi);
 }
 
-p.correctBoundaryConditions();
+if (pLimited || closedVolume)
+{
+    p.correctBoundaryConditions();
+}
 
-// Recalculate density from the relaxed pressure
 rho = thermo.rho();
 
 if (!simple.transonic())

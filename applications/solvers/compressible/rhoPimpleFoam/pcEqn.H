@@ -1,3 +1,5 @@
+rho = thermo.rho();
+
 volScalarField rAU(1.0/UEqn.A());
 volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
@@ -11,7 +13,7 @@ surfaceScalarField phiHbyA
 (
     "phiHbyA",
     (
-        fvc::flux(rho*HbyA)
+        fvc::interpolate(rho)*fvc::flux(HbyA)
       + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
     )
 );
@@ -33,7 +35,7 @@ if (pimple.transonic())
 
     phiHbyA +=
         fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf()
-      - fvc::interpolate(p)*phid;
+      - fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
 
     HbyA -= (rAU - rAtU)*fvc::grad(p);
 
@@ -96,9 +98,11 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
-pressureControl.limit(p);
-p.correctBoundaryConditions();
-rho = thermo.rho();
+if (pressureControl.limit(p))
+{
+    p.correctBoundaryConditions();
+    rho = thermo.rho();
+}
 
 if (!pimple.transonic())
 {

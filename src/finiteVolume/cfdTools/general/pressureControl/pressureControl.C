@@ -207,14 +207,24 @@ Foam::pressureControl::pressureControl
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::pressureControl::limit(volScalarField& p) const
+bool Foam::pressureControl::limit(volScalarField& p) const
 {
-    Info<< "pressureControl: p max/min "
-        << max(p).value() << " "
-        << min(p).value() << endl;
+    scalar pMax = max(p).value();
+    scalar pMin = min(p).value();
 
-    p = max(p, pMin_);
-    p = min(p, pMax_);
+    if (pMax > pMax_.value() || pMin < pMin_.value())
+    {
+        Info<< "pressureControl: p max/min " << pMax << " " << pMin << endl;
+
+        p = max(p, pMin_);
+        p = min(p, pMax_);
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 
