@@ -1,3 +1,5 @@
+rho = thermo.rho();
+
 volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
@@ -27,7 +29,8 @@ if (pimple.transonic())
         "phid",
         (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
     );
-    phiHbyA -= fvc::interpolate(p)*phid;
+
+    phiHbyA -= fvc::interpolate(psi*p)*phiHbyA/fvc::interpolate(rho);
 
     while (pimple.correctNonOrthogonal())
     {
@@ -86,9 +89,11 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
-pressureControl.limit(p);
-p.correctBoundaryConditions();
-rho = thermo.rho();
+if (pressureControl.limit(p))
+{
+    p.correctBoundaryConditions();
+    rho = thermo.rho();
+}
 
 if (!pimple.transonic())
 {
