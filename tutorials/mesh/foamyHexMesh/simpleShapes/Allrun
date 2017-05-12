@@ -6,18 +6,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication -s cone \
     surfaceOrient constant/triSurface/cone.stl \
-                  -inside '(0 -0.5 0)' \
-                  constant/triSurface/cone_orient.stl
+                  constant/triSurface/cone_orient.stl \
+                  -inside '(0 -0.5 0)'
 
 runApplication -s sphere \
     surfaceOrient constant/triSurface/sphere.stl \
-                  -inside '(0 -0.5 0)' \
-                  constant/triSurface/sphere_orient.stl
+                  constant/triSurface/sphere_orient.stl \
+                  -inside '(0 -0.5 0)'
 
 runApplication \
-    surfaceBooleanFeatures intersection \
-                           constant/triSurface/cone_orient.stl \
-                           constant/triSurface/sphere_orient.stl
+    surfaceBooleanFeatures \
+                  constant/triSurface/cone_orient.stl \
+                  constant/triSurface/sphere_orient.stl \
+                  intersection
 
 runApplication foamyHexMesh
 

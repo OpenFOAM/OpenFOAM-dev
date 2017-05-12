@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -395,9 +395,9 @@ void calcFeaturePoints(const pointField& points, const edgeList& edges)
 int main(int argc, char *argv[])
 {
     argList::noParallel();
+    argList::validArgs.append("surface file");
+    argList::validArgs.append("surface file");
     argList::validArgs.append("action");
-    argList::validArgs.append("surface file");
-    argList::validArgs.append("surface file");
 
     argList::addBoolOption
     (
@@ -428,7 +428,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-    word action(args.args()[1]);
+    word action(args.args()[3]);
 
     HashTable<booleanSurface::booleanOpType> validActions;
     validActions.insert("intersection", booleanSurface::INTERSECTION);
@@ -442,7 +442,7 @@ int main(int argc, char *argv[])
             << "Supported actions:" << validActions.toc() << abort(FatalError);
     }
 
-    fileName surf1Name(args.args()[2]);
+    fileName surf1Name = args[1];
     Info<< "Reading surface " << surf1Name << endl;
     triSurface surf1(surf1Name);
 
@@ -450,7 +450,7 @@ int main(int argc, char *argv[])
     surf1.writeStats(Info);
     Info<< endl;
 
-    fileName surf2Name(args[3]);
+    fileName surf2Name = args[2];
     Info<< "Reading surface " << surf2Name << endl;
     triSurface surf2(surf2Name);
 
