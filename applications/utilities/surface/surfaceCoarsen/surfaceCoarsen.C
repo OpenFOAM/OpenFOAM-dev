@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,14 +66,14 @@ int mapVertex(::List<int>& collapse_map, int a, int mx)
 int main(int argc, char *argv[])
 {
     argList::noParallel();
-    argList::validArgs.append("surfaceFile");
+    argList::validArgs.append("surface file");
+    argList::validArgs.append("output surface file");
     argList::validArgs.append("reductionFactor");
-    argList::validArgs.append("output surfaceFile");
     argList args(argc, argv);
 
     const fileName inFileName = args[1];
-    const scalar reduction = args.argRead<scalar>(2);
-    const fileName outFileName = args[3];
+    const fileName outFileName = args[2];
+    const scalar reduction = args.argRead<scalar>(3);
 
     if (reduction <= 0 || reduction > 1)
     {

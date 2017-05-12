@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,11 +130,11 @@ int main(int argc, char *argv[])
 {
     argList::noParallel();
     argList::validOptions.clear();
-    argList::validArgs.append("surfaceFile");
+    argList::validArgs.append("surface file");
+    argList::validArgs.append("output surface file");
     argList::validArgs.append("lambda (0..1)");
     argList::validArgs.append("mu (0..1)");
     argList::validArgs.append("iterations");
-    argList::validArgs.append("output surfaceFile");
     argList::addOption
     (
         "featureFile",
@@ -143,10 +143,10 @@ int main(int argc, char *argv[])
     argList args(argc, argv);
 
     const fileName surfFileName = args[1];
-    const scalar lambda = args.argRead<scalar>(2);
-    const scalar mu = args.argRead<scalar>(3);
-    const label  iters = args.argRead<label>(4);
-    const fileName outFileName = args[5];
+    const fileName outFileName = args[2];
+    const scalar lambda = args.argRead<scalar>(3);
+    const scalar mu = args.argRead<scalar>(4);
+    const label  iters = args.argRead<label>(5);
 
     if (lambda < 0 || lambda > 1)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,9 +47,9 @@ int main(int argc, char *argv[])
     );
 
     argList::noParallel();
-    argList::validArgs.append("surfaceFile");
+    argList::validArgs.append("surface file");
+    argList::validArgs.append("output surface file");
     argList::validArgs.append("visiblePoint");
-    argList::validArgs.append("output surfaceFile");
     argList::addBoolOption
     (
         "inside",
@@ -64,8 +64,8 @@ int main(int argc, char *argv[])
     argList args(argc, argv);
 
     const fileName surfFileName = args[1];
-    const point visiblePoint    = args.argRead<point>(2);
-    const fileName outFileName  = args[3];
+    const fileName outFileName  = args[2];
+    const point visiblePoint    = args.argRead<point>(3);
 
     const bool orientInside = args.optionFound("inside");
     const bool usePierceTest = args.optionFound("usePierceTest");

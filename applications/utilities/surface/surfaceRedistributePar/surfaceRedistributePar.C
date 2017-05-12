@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,8 +103,8 @@ int main(int argc, char *argv[])
         "redistribute a triSurface"
     );
 
-    argList::validArgs.append("triSurfaceMesh");
-    argList::validArgs.append("distributionType");
+    argList::validArgs.append("surface file");
+    argList::validArgs.append("distribution type");
     argList::addBoolOption
     (
         "keepNonMapped",
