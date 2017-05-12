@@ -52,7 +52,7 @@ typedef species::thermo<janafThermo<perfectGas<specie>>, absoluteEnthalpy>
 
 int main(int argc, char *argv[])
 {
-    argList::validArgs.append("controlFile");
+    argList::validArgs.append("control file");
     argList args(argc, argv);
 
     const fileName controlFileName = args[1];

@@ -45,11 +45,11 @@ int main(int argc, char *argv[])
     // Increase the precision of the output for JANAF coefficients
     Ostream::defaultPrecision(10);
 
-    argList::validArgs.append("CHEMKINFile");
-    argList::validArgs.append("CHEMKINThermodynamicsFile");
-    argList::validArgs.append("CHEMKINTransport");
-    argList::validArgs.append("FOAMChemistryFile");
-    argList::validArgs.append("FOAMThermodynamicsFile");
+    argList::validArgs.append("CHEMKIN file");
+    argList::validArgs.append("CHEMKIN thermodynamics file");
+    argList::validArgs.append("CHEMKIN transport file");
+    argList::validArgs.append("OpenFOAM chemistry file");
+    argList::validArgs.append("OpenFOAM thermodynamics file");
 
     argList::addBoolOption
     (
