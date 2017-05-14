@@ -1,0 +1,5459 @@
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     etc/config.sh/bash_completion
+#
+# Description
+#     Bash [TAB] completion file from OpenFOAM
+#     Sourced from /etc/bashrc
+#
+#------------------------------------------------------------------------------
+
+_adiabaticFlameT_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -roots|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _adiabaticFlameT_ adiabaticFlameT
+
+_adjointShapeOptimizationFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _adjointShapeOptimizationFoam_ adjointShapeOptimizationFoam
+
+_ansysToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _ansysToFoam_ ansysToFoam
+
+_applyBoundaryLayer_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -Cbl -doc -help -noFunctionObjects -parallel -roots -srcDoc -writenut -ybl"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -Cbl|-roots|-ybl)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _applyBoundaryLayer_ applyBoundaryLayer
+
+_attachMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _attachMesh_ attachMesh
+
+_autoPatch_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _autoPatch_ autoPatch
+
+_autoRefineMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _autoRefineMesh_ autoRefineMesh
+
+_blockMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-blockTopology -case -dict -doc -help -noClean -noFunctionObjects -region -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _blockMesh_ blockMesh
+
+_boundaryFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _boundaryFoam_ boundaryFoam
+
+_boxTurb_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _boxTurb_ boxTurb
+
+_buoyantBoussinesqPimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _buoyantBoussinesqPimpleFoam_ buoyantBoussinesqPimpleFoam
+
+_buoyantBoussinesqSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _buoyantBoussinesqSimpleFoam_ buoyantBoussinesqSimpleFoam
+
+_buoyantPimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _buoyantPimpleFoam_ buoyantPimpleFoam
+
+_buoyantSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _buoyantSimpleFoam_ buoyantSimpleFoam
+
+_cavitatingDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _cavitatingDyMFoam_ cavitatingDyMFoam
+
+_cavitatingFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _cavitatingFoam_ cavitatingFoam
+
+_cfx4ToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _cfx4ToFoam_ cfx4ToFoam
+
+_changeDictionary_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -dict -disablePatchGroups -doc -enableFunctionEntries -help -instance -latestTime -literalRE -newTimes -noFunctionObjects -noZero -parallel -region -roots -srcDoc -subDict -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -instance|-region|-roots|-subDict|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _changeDictionary_ changeDictionary
+
+_checkMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-allGeometry -allTopology -case -constant -doc -help -latestTime -meshQuality -newTimes -noFunctionObjects -noTopology -noZero -parallel -region -roots -srcDoc -time -writeSets"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots|-time|-writeSets)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _checkMesh_ checkMesh
+
+_chemFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -postProcess -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _chemFoam_ chemFoam
+
+_chemkinToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -newFormat -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *) opts="";;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _chemkinToFoam_ chemkinToFoam
+
+_chtMultiRegionFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _chtMultiRegionFoam_ chtMultiRegionFoam
+
+_chtMultiRegionSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _chtMultiRegionSimpleFoam_ chtMultiRegionSimpleFoam
+
+_coalChemistryFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _coalChemistryFoam_ coalChemistryFoam
+
+_coldEngineFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _coldEngineFoam_ coldEngineFoam
+
+_collapseEdges_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -collapseFaces -collapseFaceSet -constant -dict -doc -help -latestTime -newTimes -noFunctionObjects -noZero -overwrite -parallel -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -collapseFaceSet|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _collapseEdges_ collapseEdges
+
+_combinePatchFaces_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -concaveAngle -doc -help -meshQuality -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -concaveAngle|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _combinePatchFaces_ combinePatchFaces
+
+_compressibleInterDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _compressibleInterDyMFoam_ compressibleInterDyMFoam
+
+_compressibleInterFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _compressibleInterFoam_ compressibleInterFoam
+
+_compressibleMultiphaseInterFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _compressibleMultiphaseInterFoam_ compressibleMultiphaseInterFoam
+
+_createBaffles_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _createBaffles_ createBaffles
+
+_createExternalCoupledPatchGeometry_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _createExternalCoupledPatchGeometry_ createExternalCoupledPatchGeometry
+
+_createPatch_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _createPatch_ createPatch
+
+_datToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _datToFoam_ datToFoam
+
+_decomposePar_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-allRegions -case -cellDist -constant -copyUniform -copyZero -dict -doc -fields -force -help -ifRequired -latestTime -newTimes -noFunctionObjects -noSets -noZero -region -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict|-region|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _decomposePar_ decomposePar
+
+_deformedGeom_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _deformedGeom_ deformedGeom
+
+_dnsFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _dnsFoam_ dnsFoam
+
+_DPMDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _DPMDyMFoam_ DPMDyMFoam
+
+_DPMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _DPMFoam_ DPMFoam
+
+_driftFluxFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _driftFluxFoam_ driftFluxFoam
+
+_dsmcFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _dsmcFoam_ dsmcFoam
+
+_dsmcInitialise_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _dsmcInitialise_ dsmcInitialise
+
+_electrostaticFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _electrostaticFoam_ electrostaticFoam
+
+_engineCompRatio_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _engineCompRatio_ engineCompRatio
+
+_engineFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _engineFoam_ engineFoam
+
+_engineSwirl_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _engineSwirl_ engineSwirl
+
+_equilibriumCO_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _equilibriumCO_ equilibriumCO
+
+_equilibriumFlameT_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -roots|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _equilibriumFlameT_ equilibriumFlameT
+
+_extrude2DMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _extrude2DMesh_ extrude2DMesh
+
+_extrudeMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _extrudeMesh_ extrudeMesh
+
+_extrudeToRegionMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _extrudeToRegionMesh_ extrudeToRegionMesh
+
+_faceAgglomerate_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _faceAgglomerate_ faceAgglomerate
+
+_financialFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _financialFoam_ financialFoam
+
+_fireFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _fireFoam_ fireFoam
+
+_flattenMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _flattenMesh_ flattenMesh
+
+_fluent3DMeshToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cubit -doc -help -ignoreCellGroups -ignoreFaceGroups -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -ignoreCellGroups|-ignoreFaceGroups|-scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -ignoreCellGroups|-ignoreFaceGroups|-scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _fluent3DMeshToFoam_ fluent3DMeshToFoam
+
+_fluentMeshToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-2D -case -doc -help -noFunctionObjects -scale -srcDoc -writeSets -writeZones"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -2D|-scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -2D|-scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _fluentMeshToFoam_ fluentMeshToFoam
+
+_foamDataToFluent_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -latestTime -newTimes -noFunctionObjects -noZero -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamDataToFluent_ foamDataToFluent
+
+_foamDictionary_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-add -case -diff -disableFunctionEntries -doc -entry -expand -help -includes -keywords -noFunctionObjects -parallel -remove -roots -set -srcDoc -value"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -add|-diff|-entry|-roots|-set)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -add|-diff|-entry|-roots|-set|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamDictionary_ foamDictionary
+
+_foamFormatConvert_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noConstant -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamFormatConvert_ foamFormatConvert
+
+_foamHelp_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts=""
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamHelp_ foamHelp
+
+_foamList_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -compressibleTurbulenceModels -doc -functionObjects -fvOptions -help -incompressibleTurbulenceModels -noFunctionObjects -registeredSwitches -scalarBCs -srcDoc -switches -unset -vectorBCs"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scalarBCs|-vectorBCs)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamList_ foamList
+
+_foamListTimes_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFunctionObjects -noZero -processor -rm -srcDoc -time -withZero"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamListTimes_ foamListTimes
+
+_foamMeshToFluent_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamMeshToFluent_ foamMeshToFluent
+
+_foamToEnsight_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-ascii -case -cellZone -constant -doc -faceZones -fields -help -latestTime -newTimes -nodeValues -noFunctionObjects -noPatches -noZero -parallel -patches -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cellZone|-faceZones|-fields|-patches|-region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToEnsight_ foamToEnsight
+
+_foamToEnsightParts_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-ascii -case -constant -doc -help -index -latestTime -name -newTimes -noFunctionObjects -noMesh -noZero -srcDoc -time -width"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -index|-name|-time|-width)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToEnsightParts_ foamToEnsightParts
+
+_foamToGMV_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToGMV_ foamToGMV
+
+_foamToStarMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noBnd -noFunctionObjects -noZero -scale -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToStarMesh_ foamToStarMesh
+
+_foamToSurface_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFunctionObjects -noZero -scale -srcDoc -time -tri"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToSurface_ foamToSurface
+
+_foamToTetDualMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -noFunctionObjects -noZero -overwrite -parallel -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToTetDualMesh_ foamToTetDualMesh
+
+_foamToVTK_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-allPatches -ascii -case -cellSet -constant -doc -excludePatches -faceSet -fields -help -latestTime -nearCellValue -newTimes -noFaceZones -noFunctionObjects -noInternal -noLinks -noPointValues -noZero -parallel -pointSet -poly -region -roots -srcDoc -surfaceFields -time -useTimeName"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cellSet|-excludePatches|-faceSet|-fields|-pointSet|-region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamToVTK_ foamToVTK
+
+_foamUpgradeCyclics_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -enableFunctionEntries -help -latestTime -newTimes -noFunctionObjects -noZero -parallel -region -roots -srcDoc -test -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _foamUpgradeCyclics_ foamUpgradeCyclics
+
+_gambitToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _gambitToFoam_ gambitToFoam
+
+_gmshToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -keepOrientation -noFunctionObjects -region -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -region|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _gmshToFoam_ gmshToFoam
+
+_icoFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _icoFoam_ icoFoam
+
+_icoUncoupledKinematicParcelDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _icoUncoupledKinematicParcelDyMFoam_ icoUncoupledKinematicParcelDyMFoam
+
+_icoUncoupledKinematicParcelFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _icoUncoupledKinematicParcelFoam_ icoUncoupledKinematicParcelFoam
+
+_ideasUnvToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -dump -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _ideasUnvToFoam_ ideasUnvToFoam
+
+_insideCells_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _insideCells_ insideCells
+
+_interDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _interDyMFoam_ interDyMFoam
+
+_interFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _interFoam_ interFoam
+
+_interMixingFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _interMixingFoam_ interMixingFoam
+
+_interPhaseChangeDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _interPhaseChangeDyMFoam_ interPhaseChangeDyMFoam
+
+_interPhaseChangeFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _interPhaseChangeFoam_ interPhaseChangeFoam
+
+_kivaToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -file -help -noFunctionObjects -srcDoc -version -zHeadMin"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -file|-version|-zHeadMin)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _kivaToFoam_ kivaToFoam
+
+_laplacianFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _laplacianFoam_ laplacianFoam
+
+_magneticFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -HdotGradH -help -noB -noFunctionObjects -noH -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _magneticFoam_ magneticFoam
+
+_mapFields_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -consistent -doc -help -mapMethod -noFunctionObjects -parallelSource -parallelTarget -sourceRegion -sourceTime -srcDoc -subtract -targetRegion"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -mapMethod|-sourceRegion|-sourceTime|-targetRegion)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -mapMethod|-sourceRegion|-sourceTime|-targetRegion|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mapFields_ mapFields
+
+_mapFieldsPar_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -consistent -doc -fields -help -mapMethod -noFunctionObjects -noLagrangian -parallel -roots -sourceRegion -sourceTime -srcDoc -subtract -targetRegion"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -fields|-mapMethod|-roots|-sourceRegion|-sourceTime|-targetRegion)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -fields|-mapMethod|-roots|-sourceRegion|-sourceTime|-targetRegion|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mapFieldsPar_ mapFieldsPar
+
+_mdEquilibrationFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mdEquilibrationFoam_ mdEquilibrationFoam
+
+_mdFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mdFoam_ mdFoam
+
+_mdInitialise_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mdInitialise_ mdInitialise
+
+_mergeMeshes_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-addRegion -case -doc -help -masterRegion -noFunctionObjects -overwrite -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -addRegion|-masterRegion)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *) opts="";;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mergeMeshes_ mergeMeshes
+
+_mergeOrSplitBaffles_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -detectOnly -doc -help -noFunctionObjects -overwrite -parallel -region -roots -split -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mergeOrSplitBaffles_ mergeOrSplitBaffles
+
+_mhdFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mhdFoam_ mhdFoam
+
+_mirrorMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mirrorMesh_ mirrorMesh
+
+_mixtureAdiabaticFlameT_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -roots|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mixtureAdiabaticFlameT_ mixtureAdiabaticFlameT
+
+_modifyMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _modifyMesh_ modifyMesh
+
+_moveDynamicMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -checkAMI -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _moveDynamicMesh_ moveDynamicMesh
+
+_moveEngineMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _moveEngineMesh_ moveEngineMesh
+
+_moveMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _moveMesh_ moveMesh
+
+_MPPICDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _MPPICDyMFoam_ MPPICDyMFoam
+
+_MPPICFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _MPPICFoam_ MPPICFoam
+
+_mshToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -hex -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _mshToFoam_ mshToFoam
+
+_multiphaseEulerFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _multiphaseEulerFoam_ multiphaseEulerFoam
+
+_multiphaseInterDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _multiphaseInterDyMFoam_ multiphaseInterDyMFoam
+
+_multiphaseInterFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _multiphaseInterFoam_ multiphaseInterFoam
+
+_netgenNeutralToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -roots|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _netgenNeutralToFoam_ netgenNeutralToFoam
+
+_noise_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _noise_ noise
+
+_nonNewtonianIcoFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _nonNewtonianIcoFoam_ nonNewtonianIcoFoam
+
+_objToVTK_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _objToVTK_ objToVTK
+
+_orientFaceZone_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _orientFaceZone_ orientFaceZone
+
+_particleTracks_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _particleTracks_ particleTracks
+
+_patchSummary_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -expand -help -latestTime -newTimes -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _patchSummary_ patchSummary
+
+_pdfPlot_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _pdfPlot_ pdfPlot
+
+_PDRFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _PDRFoam_ PDRFoam
+
+_PDRMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _PDRMesh_ PDRMesh
+
+_pimpleDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _pimpleDyMFoam_ pimpleDyMFoam
+
+_pimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _pimpleFoam_ pimpleFoam
+
+_pisoFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _pisoFoam_ pisoFoam
+
+_plot3dToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-2D -case -doc -help -noBlank -noFunctionObjects -scale -singleBlock -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -2D|-scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -2D|-scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _plot3dToFoam_ plot3dToFoam
+
+_polyDualMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -concaveMultiCells -doc -doNotPreserveFaceZones -help -noFunctionObjects -overwrite -splitAllFaces -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _polyDualMesh_ polyDualMesh
+
+_porousSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _porousSimpleFoam_ porousSimpleFoam
+
+_postChannel_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFunctionObjects -noZero -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _postChannel_ postChannel
+
+_postProcess_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -dict -doc -field -fields -func -funcs -help -latestTime -list -newTimes -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -field|-fields|-func|-funcs|-region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _postProcess_ postProcess
+
+_potentialFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -initialiseUBCs -noFunctionObjects -parallel -pName -roots -srcDoc -withFunctionObjects -writep -writePhi"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -pName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _potentialFoam_ potentialFoam
+
+_potentialFreeSurfaceDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _potentialFreeSurfaceDyMFoam_ potentialFreeSurfaceDyMFoam
+
+_potentialFreeSurfaceFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _potentialFreeSurfaceFoam_ potentialFreeSurfaceFoam
+
+_reactingFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reactingFoam_ reactingFoam
+
+_reactingMultiphaseEulerFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reactingMultiphaseEulerFoam_ reactingMultiphaseEulerFoam
+
+_reactingParcelFilmFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reactingParcelFilmFoam_ reactingParcelFilmFoam
+
+_reactingParcelFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reactingParcelFoam_ reactingParcelFoam
+
+_reactingTwoPhaseEulerFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reactingTwoPhaseEulerFoam_ reactingTwoPhaseEulerFoam
+
+_reconstructPar_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="- -allRegions -case -constant -doc -fields -help -lagrangianFields -latestTime -newTimes -noFields -noFunctionObjects -noLagrangian -noSets -noZero -region -srcDoc -time -withZero"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -fields|-lagrangianFields|-region|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reconstructPar_ reconstructPar
+
+_reconstructParMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cellDist -constant -doc -fullMatch -help -latestTime -mergeTol -newTimes -noFunctionObjects -noZero -region -srcDoc -time -withZero"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -mergeTol|-region|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _reconstructParMesh_ reconstructParMesh
+
+_redistributePar_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -mergeTol -newTimes -noFunctionObjects -noZero -overwrite -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -mergeTol|-region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _redistributePar_ redistributePar
+
+_refineHexMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -minSet -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _refineHexMesh_ refineHexMesh
+
+_refinementLevel_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -readLevel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _refinementLevel_ refinementLevel
+
+_refineMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-all -case -dict -doc -help -noFunctionObjects -overwrite -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _refineMesh_ refineMesh
+
+_refineWallLayer_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -srcDoc -useSet"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -useSet)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _refineWallLayer_ refineWallLayer
+
+_removeFaces_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _removeFaces_ removeFaces
+
+_renumberMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -dict -doc -frontWidth -help -latestTime -noFunctionObjects -noZero -overwrite -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _renumberMesh_ renumberMesh
+
+_rhoCentralDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoCentralDyMFoam_ rhoCentralDyMFoam
+
+_rhoCentralFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoCentralFoam_ rhoCentralFoam
+
+_rhoPimpleDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoPimpleDyMFoam_ rhoPimpleDyMFoam
+
+_rhoPimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoPimpleFoam_ rhoPimpleFoam
+
+_rhoPorousSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoPorousSimpleFoam_ rhoPorousSimpleFoam
+
+_rhoReactingBuoyantFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoReactingBuoyantFoam_ rhoReactingBuoyantFoam
+
+_rhoReactingFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoReactingFoam_ rhoReactingFoam
+
+_rhoSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rhoSimpleFoam_ rhoSimpleFoam
+
+_rotateMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFunctionObjects -noZero -parallel -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _rotateMesh_ rotateMesh
+
+_sammToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sammToFoam_ sammToFoam
+
+_scalarTransportFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _scalarTransportFoam_ scalarTransportFoam
+
+_selectCells_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _selectCells_ selectCells
+
+_setFields_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _setFields_ setFields
+
+_setSet_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-batch -case -constant -doc -help -latestTime -loop -newTimes -noFunctionObjects -noSync -noVTK -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -batch)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _setSet_ setSet
+
+_setsToZones_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFlipMap -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _setsToZones_ setsToZones
+
+_shallowWaterFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _shallowWaterFoam_ shallowWaterFoam
+
+_simpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _simpleFoam_ simpleFoam
+
+_simpleReactingParcelFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _simpleReactingParcelFoam_ simpleReactingParcelFoam
+
+_singleCellMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -doc -help -latestTime -newTimes -noFunctionObjects -noZero -parallel -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _singleCellMesh_ singleCellMesh
+
+_smapToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _smapToFoam_ smapToFoam
+
+_snappyHexMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -checkGeometry -dict -doc -help -noFunctionObjects -outFile -overwrite -parallel -patches -roots -srcDoc -surfaceSimplify"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict|-outFile)
+            opts="" ; extra="-d -f" ;;
+        -patches|-roots|-surfaceSimplify)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _snappyHexMesh_ snappyHexMesh
+
+_solidDisplacementFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _solidDisplacementFoam_ solidDisplacementFoam
+
+_solidEquilibriumDisplacementFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _solidEquilibriumDisplacementFoam_ solidEquilibriumDisplacementFoam
+
+_sonicDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sonicDyMFoam_ sonicDyMFoam
+
+_sonicFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sonicFoam_ sonicFoam
+
+_sonicLiquidFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sonicLiquidFoam_ sonicLiquidFoam
+
+_splitCells_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -geometry -help -noFunctionObjects -overwrite -set -srcDoc -tol"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -set|-tol)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _splitCells_ splitCells
+
+_splitMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _splitMesh_ splitMesh
+
+_splitMeshRegions_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-blockedFaces -case -cellZones -cellZonesFileOnly -cellZonesOnly -detectOnly -doc -help -insidePoint -largestOnly -makeCellZones -noFunctionObjects -overwrite -parallel -prefixRegion -region -roots -sloppyCellZones -srcDoc -useFaceZones"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cellZonesFileOnly)
+            opts="" ; extra="-d -f" ;;
+        -blockedFaces|-insidePoint|-region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _splitMeshRegions_ splitMeshRegions
+
+_sprayDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sprayDyMFoam_ sprayDyMFoam
+
+_sprayEngineFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sprayEngineFoam_ sprayEngineFoam
+
+_sprayFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _sprayFoam_ sprayFoam
+
+_SRFPimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _SRFPimpleFoam_ SRFPimpleFoam
+
+_SRFSimpleFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _SRFSimpleFoam_ SRFSimpleFoam
+
+_star3ToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _star3ToFoam_ star3ToFoam
+
+_star4ToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-ascii -case -doc -help -noFunctionObjects -scale -solids -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _star4ToFoam_ star4ToFoam
+
+_steadyParticleTracks_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -dict -doc -help -latestTime -newTimes -noFunctionObjects -noZero -region -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _steadyParticleTracks_ steadyParticleTracks
+
+_stitchMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -partial -perfect -region -srcDoc -toleranceDict"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -toleranceDict)
+            opts="" ; extra="-d -f" ;;
+        -region)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _stitchMesh_ stitchMesh
+
+_subsetMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -overwrite -parallel -patch -region -resultTime -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -patch|-region|-resultTime|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _subsetMesh_ subsetMesh
+
+_surfaceAdd_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -mergeRegions -noFunctionObjects -points -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -points)
+            opts="" ; extra="-d -f" ;;
+       -*) ;;
+        *) opts="";;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceAdd_ surfaceAdd
+
+_surfaceAutoPatch_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceAutoPatch_ surfaceAutoPatch
+
+_surfaceBooleanFeatures_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -invertedSpace -noFunctionObjects -perturb -srcDoc -surf1Baffle -surf2Baffle"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *) opts="";;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceBooleanFeatures_ surfaceBooleanFeatures
+
+_surfaceCheck_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-blockMesh -case -checkSelfIntersection -doc -help -noFunctionObjects -splitNonManifold -srcDoc -verbose"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceCheck_ surfaceCheck
+
+_surfaceClean_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noClean -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceClean_ surfaceClean
+
+_surfaceCoarsen_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceCoarsen_ surfaceCoarsen
+
+_surfaceConvert_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -clean -doc -group -help -noFunctionObjects -scale -srcDoc -writePrecision"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale|-writePrecision)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-writePrecision|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceConvert_ surfaceConvert
+
+_surfaceFeatureConvert_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -scale -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceFeatureConvert_ surfaceFeatureConvert
+
+_surfaceFeatureExtract_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceFeatureExtract_ surfaceFeatureExtract
+
+_surfaceFind_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc -x -y -z"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -x|-y|-z)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -x|-y|-z|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceFind_ surfaceFind
+
+_surfaceHookUp_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -dict -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceHookUp_ surfaceHookUp
+
+_surfaceInertia_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -density -doc -help -noFunctionObjects -referencePoint -shellProperties -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -density|-referencePoint)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -density|-referencePoint|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceInertia_ surfaceInertia
+
+_surfaceLambdaMuSmooth_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-doc -featureFile -help -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -featureFile)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -featureFile) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceLambdaMuSmooth_ surfaceLambdaMuSmooth
+
+_surfaceMeshConvert_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -clean -dict -doc -from -help -noFunctionObjects -scaleIn -scaleOut -srcDoc -to -tri"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -from|-scaleIn|-scaleOut|-to)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -from|-scaleIn|-scaleOut|-to|-case|-dict) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceMeshConvert_ surfaceMeshConvert
+
+_surfaceMeshConvertTesting_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -clean -doc -help -noFunctionObjects -orient -scale -srcDoc -surfMesh -triFace -triSurface -unsorted"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceMeshConvertTesting_ surfaceMeshConvertTesting
+
+_surfaceMeshExport_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -clean -dict -doc -from -help -name -noFunctionObjects -scaleIn -scaleOut -srcDoc -to"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -from|-name|-scaleIn|-scaleOut|-to)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceMeshExport_ surfaceMeshExport
+
+_surfaceMeshImport_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -clean -dict -doc -from -help -name -noFunctionObjects -scaleIn -scaleOut -srcDoc -to"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -from|-name|-scaleIn|-scaleOut|-to)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -from|-name|-scaleIn|-scaleOut|-to|-case|-dict) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceMeshImport_ surfaceMeshImport
+
+_surfaceMeshInfo_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-areas -case -doc -help -noFunctionObjects -scale -srcDoc -xml"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -scale)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -scale|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceMeshInfo_ surfaceMeshInfo
+
+_surfaceMeshTriangulate_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -excludeProcPatches -faceZones -help -noFunctionObjects -parallel -patches -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -faceZones|-patches|-region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceMeshTriangulate_ surfaceMeshTriangulate
+
+_surfaceOrient_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -inside -noFunctionObjects -srcDoc -usePierceTest"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceOrient_ surfaceOrient
+
+_surfacePointMerge_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfacePointMerge_ surfacePointMerge
+
+_surfaceRedistributePar_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -keepNonMapped -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -roots|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceRedistributePar_ surfaceRedistributePar
+
+_surfaceRefineRedGreen_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceRefineRedGreen_ surfaceRefineRedGreen
+
+_surfaceSplitByPatch_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceSplitByPatch_ surfaceSplitByPatch
+
+_surfaceSplitByTopology_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-doc -help -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+       -*) ;;
+        *)
+            opts=""; extra=""
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceSplitByTopology_ surfaceSplitByTopology
+
+_surfaceSplitNonManifolds_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -debug -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceSplitNonManifolds_ surfaceSplitNonManifolds
+
+_surfaceSubset_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceSubset_ surfaceSubset
+
+_surfaceToPatch_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -faceSet -help -noFunctionObjects -srcDoc -tol"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -faceSet|-tol)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -faceSet|-tol|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceToPatch_ surfaceToPatch
+
+_surfaceTransformPoints_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -rollPitchYaw -rotate -scale -srcDoc -translate -yawPitchRoll"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -rollPitchYaw|-rotate|-scale|-translate|-yawPitchRoll)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -rollPitchYaw|-rotate|-scale|-translate|-yawPitchRoll|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _surfaceTransformPoints_ surfaceTransformPoints
+
+_temporalInterpolate_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -divisions -doc -fields -help -interpolationType -latestTime -newTimes -noFunctionObjects -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -divisions|-fields|-interpolationType|-region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _temporalInterpolate_ temporalInterpolate
+
+_tetgenToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFaceFile -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -roots|-case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _tetgenToFoam_ tetgenToFoam
+
+_thermoFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _thermoFoam_ thermoFoam
+
+_topoSet_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -constant -dict -doc -help -latestTime -newTimes -noFunctionObjects -noSync -noZero -parallel -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -dict)
+            opts="" ; extra="-d -f" ;;
+        -region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _topoSet_ topoSet
+
+_transformPoints_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -region -rollPitchYaw -roots -rotate -rotateFields -scale -srcDoc -translate -yawPitchRoll"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-rollPitchYaw|-roots|-rotate|-scale|-translate|-yawPitchRoll)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _transformPoints_ transformPoints
+
+_twoLiquidMixingFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _twoLiquidMixingFoam_ twoLiquidMixingFoam
+
+_twoPhaseEulerFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _twoPhaseEulerFoam_ twoPhaseEulerFoam
+
+_uncoupledKinematicParcelDyMFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _uncoupledKinematicParcelDyMFoam_ uncoupledKinematicParcelDyMFoam
+
+_uncoupledKinematicParcelFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cloudName -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cloudName|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _uncoupledKinematicParcelFoam_ uncoupledKinematicParcelFoam
+
+_viewFactorsGen_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _viewFactorsGen_ viewFactorsGen
+
+_vtkUnstructuredToFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra="-d -f"
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -case) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _vtkUnstructuredToFoam_ vtkUnstructuredToFoam
+
+_wallFunctionTable_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _wallFunctionTable_ wallFunctionTable
+
+_writeMeshObj_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -cell -cellSet -constant -doc -face -faceSet -help -latestTime -newTimes -noFunctionObjects -noZero -parallel -patchEdges -patchFaces -point -region -roots -srcDoc -time"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -cell|-cellSet|-face|-faceSet|-point|-region|-roots|-time)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _writeMeshObj_ writeMeshObj
+
+_XiFoam_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _XiFoam_ XiFoam
+
+_zipUpMesh_ ()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    local line=${COMP_LINE}
+    local used=$(echo $line | grep -oE "\-[a-Z]+ ")
+
+    opts="-case -doc -help -noFunctionObjects -parallel -region -roots -srcDoc"
+    for o in $used ; do opts="${opts/$o/}" ; done
+    extra=""
+
+    [ "$COMP_CWORD" = 1 ] || \
+    case "$prev" in
+        -case)
+            opts="" ; extra="-d" ;;
+        -region|-roots)
+            opts="" ; extra="" ;;
+       *) ;;
+    esac
+    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
+}
+complete -o nospace -F _zipUpMesh_ zipUpMesh
+
+#------------------------------------------------------------------------------
