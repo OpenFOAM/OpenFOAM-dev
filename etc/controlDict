@@ -18,18 +18,15 @@ FoamFile
 
 Documentation
 {
-    docBrowser      "firefox -file %f";
+    docBrowser      "firefox";
     doxyDocDirs
     (
         "$WM_PROJECT_USER_DIR/html"
         "~OpenFOAM/html"
         "$WM_PROJECT_DIR/doc/Doxygen/html"
+        "http://cpp.openfoam.org/dev"
     );
-    doxySourceFileExts
-    (
-        "App_8C.html"
-        "_8C.html"
-    );
+    doxySourceFileExt "_8C.html";
 }
 
 

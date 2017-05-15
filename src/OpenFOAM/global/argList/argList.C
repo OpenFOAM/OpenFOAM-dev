@@ -1134,48 +1134,65 @@ void Foam::argList::displayDoc(bool source) const
 {
     const dictionary& docDict = debug::controlDict().subDict("Documentation");
     List<fileName> docDirs(docDict.lookup("doxyDocDirs"));
-    List<fileName> docExts(docDict.lookup("doxySourceFileExts"));
+    fileName docExt(docDict.lookup("doxySourceFileExt"));
 
     // For source code: change foo_8C.html to foo_8C_source.html
     if (source)
     {
-        forAll(docExts, extI)
-        {
-            docExts[extI].replace(".", "_source.");
-        }
+        docExt.replace(".", "_source.");
     }
 
     fileName docFile;
+    fileName httpServer;
     bool found = false;
 
     forAll(docDirs, dirI)
     {
-        forAll(docExts, extI)
+        // An HTTP server is treated as a special case ...
+        if (docDirs[dirI].component(0) == "http:")
         {
-            docFile = docDirs[dirI]/executable_ + docExts[extI];
+            httpServer = docDirs[dirI]/executable_ + docExt;
+        }
+        else
+        {
+            // ... all other entries are treated as local directories
+
+            // Remove the optional "file://"
+            if (docDirs[dirI].component(0) == "file:")
+            {
+                docDirs[dirI].replace("file://", string::null);
+            }
+
+
+            // Expand the file name
+            docFile = docDirs[dirI]/executable_ + docExt;
             docFile.expand();
 
+            // Check the existence of the file
             if (isFile(docFile))
             {
                 found = true;
                 break;
             }
         }
-        if (found)
-        {
-            break;
-        }
     }
 
-    if (found)
+    if (found || httpServer != fileName::null)
     {
         string docBrowser = getEnv("FOAM_DOC_BROWSER");
         if (docBrowser.empty())
         {
             docDict.lookup("docBrowser") >> docBrowser;
         }
-        // Can use FOAM_DOC_BROWSER='application file://%f' if required
-        docBrowser.replaceAll("%f", docFile);
+
+        if (found)
+        {
+            docBrowser += " file://" + docFile;
+        }
+        else
+        {
+            docBrowser += " " + httpServer;
+        }
 
         Info<< "Show documentation: " << docBrowser.c_str() << endl;
 
