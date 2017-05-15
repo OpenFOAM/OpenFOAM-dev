@@ -6,7 +6,7 @@
     PtrList<volScalarField> betavSolid(solidRegions.size());
     PtrList<volSymmTensorField> aniAlphas(solidRegions.size());
 
-    List<bool> residualReachedSolid(solidRegions.size(), false);
+    List<bool> residualReachedSolid(solidRegions.size(), true);
     List<bool> residualControlUsedSolid(solidRegions.size(), false);
 
     // Populate solid field pointer lists
