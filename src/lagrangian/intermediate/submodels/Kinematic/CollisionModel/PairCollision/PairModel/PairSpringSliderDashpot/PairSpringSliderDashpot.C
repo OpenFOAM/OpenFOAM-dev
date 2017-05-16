@@ -277,8 +277,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
             else
             {
                 fT_AB =
-                    -kT*tangentialOverlapMag
-                   *tangentialOverlap_AB/tangentialOverlapMag
+                    -kT*tangentialOverlap_AB
                   - etaT*USlip_AB;
             }
 
