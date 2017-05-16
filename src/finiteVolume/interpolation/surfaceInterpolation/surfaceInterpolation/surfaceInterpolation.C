@@ -31,6 +31,8 @@ Description
 #include "surfaceFields.H"
 #include "demandDrivenData.H"
 #include "coupledFvPatch.H"
+#include "../../../fields/volFields/volFieldsFwd.H"
+#include "../../../fields/surfaceFields/surfaceFieldsFwd.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -84,6 +86,16 @@ Foam::surfaceInterpolation::weights() const
     return (*weights_);
 }
 
+const Foam::surfaceScalarField&
+Foam::surfaceInterpolation::nweights() const
+{
+    if (!nweights_)
+    {
+        makeNiranjanWeights();
+    }
+
+    return (*nweights_);
+}
 
 const Foam::surfaceScalarField&
 Foam::surfaceInterpolation::deltaCoeffs() const
@@ -199,6 +211,91 @@ void Foam::surfaceInterpolation::makeWeights() const
     }
 }
 
+void Foam::surfaceInterpolation::makeNiranjanWeights() const
+{
+    if (debug)
+    {
+        Pout<< "surfaceInterpolation::makeWeights() : "
+        << "Constructing weighting factors for face interpolation"
+        << endl;
+    }
+
+    nweights_ = new surfaceScalarField
+        (
+            IOobject
+                (
+                    "nweights",
+                    mesh_.pointsInstance(),
+                    mesh_,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    false // Do not register
+                ),
+            mesh_,
+            dimless
+        );
+    surfaceScalarField& weights = *weights_;
+
+    // Energy Eqn for a compressible
+    const surfaceScalarField& K = linearInterpolate(db().lookupObject<volScalarField>("K"));
+    const surfaceScalarField& Cp = linearInterpolate(db().lookupObject<volScalarField>("Cp"));
+    const surfaceVectorField& U = linearInterpolate(db().lookupObject<volScalarField>("U"));
+    const surfaceScalarField& rho = linearInterpolate(db().lookupObject<volScalarField>("rho"));
+
+    surfaceScalarField gamma = K/Cp;
+
+    // Set local references to mesh data
+    // (note that we should not use fvMesh sliced fields at this point yet
+    //  since this causes a loop when generating weighting factors in
+    //  coupledFvPatchField evaluation phase)
+    const labelUList& owner = mesh_.owner();
+    const labelUList& neighbour = mesh_.neighbour();
+
+    const vectorField& Cf = mesh_.faceCentres();
+    const vectorField& C = mesh_.cellCentres();
+    const vectorField& Sf = mesh_.faceAreas();
+
+    // ... and reference to the internal field of the weighting factors
+    scalarField& w = weights.internalField();
+
+    forAll(owner, facei)
+    {
+        vector d = C[neighbour[facei]] - C[owner[facei]];
+        vector Uf = U[faceI];
+        scalar Us = Uf & d;
+        scalar Pe = (rho*Us)/gamma[faceI];
+        scalar chi;
+        if (Us >= 0)
+        {
+            chi = mag(C[facei] - C[owner[facei]])/mag(d);
+            w[facei] = 1 - (exp(Pe*chi) - 1)/(exp(Pe) -1);
+        }
+        else
+        {
+            chi = mag(C[facei] - C[neighbour[facei]])/mag(d);
+            w[facei] = (exp(Pe*chi) - 1)/(exp(Pe) -1);
+        }
+
+//        scalar SfdOwn = mag(Sf[facei] & (Cf[facei] - C[owner[facei]]));
+//        scalar SfdNei = mag(Sf[facei] & (C[neighbour[facei]] - Cf[facei]));
+//        w[facei] = SfdNei/(SfdOwn + SfdNei);
+    }
+
+    forAll(mesh_.boundary(), patchi)
+    {
+        mesh_.boundary()[patchi].makeWeights
+            (
+                weights.boundaryField()[patchi]
+            );
+    }
+
+    if (debug)
+    {
+        Pout<< "surfaceInterpolation::makeWeights() : "
+        << "Finished constructing weighting factors for face interpolation"
+        << endl;
+    }
+}
 
 void Foam::surfaceInterpolation::makeDeltaCoeffs() const
 {
