@@ -13,13 +13,7 @@
             if (hTol != -1)
             {
                 residualControlUsed = true;
+                resReachedSolid = false;
             }
-        }
-
-        // Residual control used?
-        if (hTol != -1)
-        {
-            residualControlUsed = true;
-            resReachedSolid = false;
         }
     }
