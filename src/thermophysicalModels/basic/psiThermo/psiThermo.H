@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,6 +111,11 @@ public:
     // Member functions
 
         // Fields derived from thermodynamic state variables
+
+            //- Add the given density correction to the density field.
+            //  Used to update the density field following pressure solution.
+            //  For psiThermo does nothing.
+            virtual void correctRho(const volScalarField& deltaRho);
 
             //- Density [kg/m^3] - uses current value of pressure
             virtual tmp<volScalarField> rho() const;

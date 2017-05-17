@@ -42,6 +42,8 @@ volVectorField U
 
 pressureControl pressureControl(p, rho, pimple.dict(), false);
 
+mesh.setFluxRequired(p.name());
+
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence
 (
@@ -53,8 +55,6 @@ autoPtr<compressible::turbulenceModel> turbulence
         thermo
     )
 );
-
-mesh.setFluxRequired(p.name());
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

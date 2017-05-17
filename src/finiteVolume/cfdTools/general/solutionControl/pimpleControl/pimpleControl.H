@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,10 @@ protected:
             //- Current PISO corrector
             label corrPISO_;
 
+            //- Flag to indicate whether to update density in SIMPLE
+            //  rather than PISO mode
+            bool SIMPLErho_;
+
             //- Flag to indicate whether to only solve turbulence on final iter
             bool turbOnFinalIterOnly_;
 
@@ -127,6 +131,10 @@ public:
 
             //- Current PISO corrector index
             inline label corrPISO() const;
+
+            //- Flag to indicate whether to update density in SIMPLE
+            //  rather than PISO mode
+            inline bool SIMPLErho() const;
 
 
         // Solution control

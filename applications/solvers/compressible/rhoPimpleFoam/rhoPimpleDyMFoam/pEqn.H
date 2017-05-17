@@ -36,7 +36,7 @@ if (pimple.transonic())
     {
         fvScalarMatrix pEqn
         (
-            fvm::ddt(psi, p)
+            fvc::ddt(rho) + psi*correction(fvm::ddt(p))
           + fvc::div(phiHbyA)
           + fvm::div(phid, p)
           - fvm::laplacian(rhorAUf, p)
@@ -62,7 +62,7 @@ else
         // Pressure corrector
         fvScalarMatrix pEqn
         (
-            fvm::ddt(psi, p)
+            fvc::ddt(rho) + psi*correction(fvm::ddt(p))
           + fvc::div(phiHbyA)
           - fvm::laplacian(rhorAUf, p)
          ==
@@ -93,11 +93,6 @@ if (pressureControl.limit(p))
 {
     p.correctBoundaryConditions();
     rho = thermo.rho();
-}
-
-if (!pimple.transonic())
-{
-    rho.relax();
 }
 
 {

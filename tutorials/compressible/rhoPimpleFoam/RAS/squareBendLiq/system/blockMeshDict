@@ -1,0 +1,127 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 0.001;
+
+vertices
+(
+    // front-plane: z = +25mm
+    // inlet region
+    (   -50  25   25)           // pt 0
+    (     0  25   25)           // pt 1
+    (   -50  75   25)           // pt 2
+    (     0  75   25)           // pt 3
+    // outlet region
+    (  -500 -75   25)           // pt 4
+    (     0 -75   25)           // pt 5
+    (  -500 -25   25)           // pt 6
+    (     0 -25   25)           // pt 7
+    // bend mid-points
+    (    25   0   25)           // pt 8
+    (    75   0   25)           // pt 9
+    // back-plane: z = -25mm
+    // inlet region
+    (   -50  25   -25)          // pt 0 + 10
+    (     0  25   -25)          // pt 1 + 10
+    (   -50  75   -25)          // pt 2 + 10
+    (     0  75   -25)          // pt 3 + 10
+    // outlet region
+    (  -500 -75   -25)          // pt 4 + 10
+    (     0 -75   -25)          // pt 5 + 10
+    (  -500 -25   -25)          // pt 7 + 10
+    (     0 -25   -25)          // pt 8 + 10
+    // bend mid-points
+    (    25   0   -25)          // pt 8 + 10
+    (    75   0   -25)          // pt 9 + 10
+);
+
+blocks
+(
+    hex (0 1 11 10  2 3 13 12) inlet  ( 20 20 20)  simpleGrading (1 1 1)
+    hex (4 5 15 14  6 7 17 16) outlet (200 20 20)  simpleGrading (1 1 1)
+
+    hex (1 8 18 11  3 9 19 13) bend1  ( 30 20 20)  simpleGrading (1 1 1)
+    hex (5 9 19 15  7 8 18 17) bend2  ( 30 20 20)  simpleGrading (1 1 1)
+);
+
+edges
+(
+   // block 2
+   arc  1  8  ( 17.678  17.678  25)
+   arc 11 18  ( 17.678  17.678 -25)
+   arc  3  9  ( 53.033  53.033  25)
+   arc 13 19  ( 53.033  53.033 -25)
+   // block 3
+   arc  7  8  ( 17.678  -17.678  25)
+   arc 17 18  ( 17.678  -17.678 -25)
+   arc  5  9  ( 53.033  -53.033  25)
+   arc 15 19  ( 53.033  -53.033 -25)
+);
+
+boundary
+(
+        // is there no way of defining all my 'defaultFaces' to be 'wall'?
+    Default_Boundary_Region
+    {
+        type wall;
+        faces
+        (
+            // block0
+            ( 0 1 3 2 )
+            ( 11 10 12 13 )
+            ( 0 10 11 1 )
+            ( 2 3 13 12 )
+            // block1
+            ( 4 5 7 6 )
+            ( 15 14 16 17 )
+            ( 4 14 15 5 )
+            ( 6 7 17 16 )
+            // block2
+            ( 1 8 9 3 )
+            ( 18 11 13 19 )
+            ( 3 9 19 13 )
+            ( 1 11 18 8 )
+            // block3
+            ( 5 9 8 7 )
+            ( 19 15 17 18 )
+            ( 5 15 19 9 )
+            ( 7 8 18 17 )
+        );
+    }
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (0 2 12 10)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (4 6 16 14)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

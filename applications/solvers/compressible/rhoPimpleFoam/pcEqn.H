@@ -1,4 +1,11 @@
-rho = thermo.rho();
+if (!pimple.SIMPLErho())
+{
+    rho = thermo.rho();
+}
+
+// Thermodynamic density needs to be updated by psi*d(p) after the
+// pressure solution
+const volScalarField psip0(psi*p);
 
 volScalarField rAU(1.0/UEqn.A());
 volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
@@ -39,17 +46,17 @@ if (pimple.transonic())
 
     HbyA -= (rAU - rAtU)*fvc::grad(p);
 
+    fvScalarMatrix pDDtEqn
+    (
+        fvc::ddt(rho) + psi*correction(fvm::ddt(p))
+      + fvc::div(phiHbyA) + fvm::div(phid, p)
+     ==
+        fvOptions(psi, p, rho.name())
+    );
+
     while (pimple.correctNonOrthogonal())
     {
-        fvScalarMatrix pEqn
-        (
-            fvm::ddt(psi, p)
-          + fvc::div(phiHbyA)
-          + fvm::div(phid, p)
-          - fvm::laplacian(rhorAtU, p)
-         ==
-            fvOptions(psi, p, rho.name())
-        );
+        fvScalarMatrix pEqn(pDDtEqn - fvm::laplacian(rhorAtU, p));
 
         // Relax the pressure equation to ensure diagonal-dominance
         pEqn.relax();
@@ -67,16 +74,17 @@ else
     phiHbyA += fvc::interpolate(rho*(rAtU - rAU))*fvc::snGrad(p)*mesh.magSf();
     HbyA -= (rAU - rAtU)*fvc::grad(p);
 
+    fvScalarMatrix pDDtEqn
+    (
+        fvc::ddt(rho) + psi*correction(fvm::ddt(p))
+      + fvc::div(phiHbyA)
+     ==
+        fvOptions(psi, p, rho.name())
+    );
+
     while (pimple.correctNonOrthogonal())
     {
-        fvScalarMatrix pEqn
-        (
-            fvm::ddt(psi, p)
-          + fvc::div(phiHbyA)
-          - fvm::laplacian(rhorAtU, p)
-         ==
-            fvOptions(psi, p, rho.name())
-        );
+        fvScalarMatrix pEqn(pDDtEqn - fvm::laplacian(rhorAtU, p));
 
         pEqn.solve(mesh.solver(p.select(pimple.finalInnerIter())));
 
@@ -86,6 +94,9 @@ else
         }
     }
 }
+
+// Thermodynamic density update
+thermo.correctRho(psi*p - psip0);
 
 #include "rhoEqn.H"
 #include "compressibleContinuityErrs.H"
@@ -103,10 +114,9 @@ if (pressureControl.limit(p))
     p.correctBoundaryConditions();
     rho = thermo.rho();
 }
-
-if (!pimple.transonic())
+else if (pimple.SIMPLErho())
 {
-    rho.relax();
+    rho = thermo.rho();
 }
 
 if (thermo.dpdt())

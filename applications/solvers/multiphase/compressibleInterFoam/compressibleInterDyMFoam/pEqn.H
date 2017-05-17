@@ -113,8 +113,8 @@
     }
 
     // Update densities from change in p_rgh
-    rho1 += psi1*(p_rgh - p_rgh_0);
-    rho2 += psi2*(p_rgh - p_rgh_0);
+    mixture.thermo1().correctRho(psi1*(p_rgh - p_rgh_0));
+    mixture.thermo2().correctRho(psi2*(p_rgh - p_rgh_0));
 
     rho = alpha1*rho1 + alpha2*rho2;
 

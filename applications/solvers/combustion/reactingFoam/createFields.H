@@ -52,27 +52,7 @@ volScalarField& p = thermo.p();
 
 #include "compressibleCreatePhi.H"
 
-dimensionedScalar rhoMax
-(
-    dimensionedScalar::lookupOrDefault
-    (
-        "rhoMax",
-        pimple.dict(),
-        dimDensity,
-        GREAT
-    )
-);
-
-dimensionedScalar rhoMin
-(
-    dimensionedScalar::lookupOrDefault
-    (
-        "rhoMin",
-        pimple.dict(),
-        dimDensity,
-        0
-    )
-);
+pressureControl pressureControl(p, rho, pimple.dict(), false);
 
 mesh.setFluxRequired(p.name());
 

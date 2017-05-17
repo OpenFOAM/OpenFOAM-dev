@@ -38,8 +38,8 @@ volScalarField& alpha2(mixture.alpha2());
 
 Info<< "Reading thermophysical properties\n" << endl;
 
-volScalarField& rho1 = mixture.thermo1().rho();
-volScalarField& rho2 = mixture.thermo2().rho();
+const volScalarField& rho1 = mixture.thermo1().rho();
+const volScalarField& rho2 = mixture.thermo2().rho();
 
 volScalarField rho
 (

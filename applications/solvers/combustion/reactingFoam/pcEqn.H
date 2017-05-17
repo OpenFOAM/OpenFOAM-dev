@@ -1,7 +1,4 @@
 rho = thermo.rho();
-rho = max(rho, rhoMin);
-rho = min(rho, rhoMax);
-rho.relax();
 
 volScalarField rAU(1.0/UEqn.A());
 volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
@@ -109,19 +106,13 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
+if (pressureControl.limit(p))
+{
+    p.correctBoundaryConditions();
+    rho = thermo.rho();
+}
+
 if (thermo.dpdt())
 {
     dpdt = fvc::ddt(p);
 }
-
-// Recalculate density from the relaxed pressure
-rho = thermo.rho();
-rho = max(rho, rhoMin);
-rho = min(rho, rhoMax);
-
-if (!pimple.transonic())
-{
-    rho.relax();
-}
-
-Info<< "rho max/min : " << max(rho).value() << " " << min(rho).value() << endl;

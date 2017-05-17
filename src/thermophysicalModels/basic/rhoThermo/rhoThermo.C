@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,6 +170,12 @@ Foam::tmp<Foam::scalarField> Foam::rhoThermo::rho(const label patchi) const
 Foam::volScalarField& Foam::rhoThermo::rho()
 {
     return rho_;
+}
+
+
+void Foam::rhoThermo::correctRho(const Foam::volScalarField& deltaRho)
+{
+    rho_ += deltaRho;
 }
 
 

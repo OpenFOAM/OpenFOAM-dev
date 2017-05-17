@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ void Foam::pimpleControl::read()
     solveFlow_ = pimpleDict.lookupOrDefault<Switch>("solveFlow", true);
     nCorrPIMPLE_ = pimpleDict.lookupOrDefault<label>("nOuterCorrectors", 1);
     nCorrPISO_ = pimpleDict.lookupOrDefault<label>("nCorrectors", 1);
+    SIMPLErho_ = pimpleDict.lookupOrDefault<Switch>("SIMPLErho", false);
     turbOnFinalIterOnly_ =
         pimpleDict.lookupOrDefault<Switch>("turbOnFinalIterOnly", true);
 }
@@ -128,6 +129,7 @@ Foam::pimpleControl::pimpleControl(fvMesh& mesh, const word& dictName)
     nCorrPIMPLE_(0),
     nCorrPISO_(0),
     corrPISO_(0),
+    SIMPLErho_(false),
     turbOnFinalIterOnly_(true),
     converged_(false)
 {
