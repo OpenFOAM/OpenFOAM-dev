@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -272,7 +272,7 @@ void Foam::sixDoFRigidBodyMotion::updateAcceleration
     const vector& tauGlobal
 )
 {
-    static bool first = false;
+    static bool first = true;
 
     // Save the previous iteration accelerations for relaxation
     vector aPrevIter = a();
@@ -289,8 +289,10 @@ void Foam::sixDoFRigidBodyMotion::updateAcceleration
         a() = aRelax_*a() + (1 - aRelax_)*aPrevIter;
         tau() = aRelax_*tau() + (1 - aRelax_)*tauPrevIter;
     }
-
-    first = false;
+    else
+    {
+        first = false;
+    }
 }
 
 
