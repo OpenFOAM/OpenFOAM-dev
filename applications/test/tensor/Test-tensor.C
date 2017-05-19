@@ -35,9 +35,10 @@ int main()
     Info<< "Check determinant " << e.x()*e.y()*e.z() << " " << det(t6) << endl;
 
     Info<< "Check eigenvectors "
-        << (eigenVector(t6, e[0]) & t6) << e[0]*eigenVector(t6, e[0]) << " "
-        << (eigenVector(t6, e[1]) & t6) << e[1]*eigenVector(t6, e[1]) << " "
-        << (eigenVector(t6, e[2]) & t6) << e[2]*eigenVector(t6, e[2])
+        << (eigenVectors(t6, e) & t6) << " "
+        << (e.x()*eigenVectors(t6, e).x())
+        << (e.y()*eigenVectors(t6, e).y())
+        << (e.z()*eigenVectors(t6, e).z())
         << endl;
 
     Info<< "Check eigenvalues for symmTensor "
