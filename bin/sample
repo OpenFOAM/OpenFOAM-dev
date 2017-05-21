@@ -31,7 +31,7 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-echo $Script "has been superseded by the postProcess utility:"
+echo "$Script has been superseded by the postProcess utility:"
 echo "    postProcess -func $Script"
 echo
 echo "To re-use existing 'sampleDict' files simply add the following entries:"

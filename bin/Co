@@ -31,7 +31,7 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-echo $Script "has been superseded by the -postProcess solver option:"
+echo "$Script has been superseded by the -postProcess solver option:"
 echo "<solverName> -func CourantNo"
 echo "e.g."
 echo "pimpleFoam -postProcess -func CourantNo"

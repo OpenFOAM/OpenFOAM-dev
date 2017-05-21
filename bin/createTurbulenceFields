@@ -32,7 +32,7 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-echo $Script "has been superseded by the \
+echo "$Script has been superseded by the \
 '-postProcess' solver command-line option, e.g."
 
 echo "simpleFoam -postProcess -func 'turbulenceFields(R, omega)'"
