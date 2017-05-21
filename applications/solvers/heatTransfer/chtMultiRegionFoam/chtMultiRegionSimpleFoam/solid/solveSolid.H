@@ -16,7 +16,7 @@
 
         fvOptions.constrain(hEqn);
 
-        hEqn.solve();
+        solvPerfh = hEqn.solve();
 
         fvOptions.correct(h);
     }

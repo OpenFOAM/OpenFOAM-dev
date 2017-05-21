@@ -7,7 +7,7 @@ if (residualControlUsed)
 
     // Check which field is not used for control
     {
-        if (UTol == -1)
+        if (UTol == -1 || !momentumPredictor)
         {
             UConv =  true;
         }
