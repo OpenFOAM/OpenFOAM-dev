@@ -43,7 +43,7 @@
             compressible ? getRefCellValue(p_rgh, pRefCell) : pRefValue
         );
 
-        p_rghEqn.solve();
+        solvPerfp_rgh = p_rghEqn.solve();
 
         if (nonOrth == nNonOrthCorr)
         {
