@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -32,17 +32,15 @@
 #
 #------------------------------------------------------------------------------
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: ${0##*/} [OPTION] <file>
 options:
-  -h | -help            print the usage
-  -i | -idle <time>     stops if <file> unchanging for <time> sec (default = 60)
-  -l | -logscale        plots data (y-axis) on log scale, e.g. for residuals
-  -r | -refresh <time>  refreshes display every <time> sec (default = 10)
-  -y | -yrange <range>  sets data (y-axis) <range>, format "[0:1]"
+  -help     | -h         print the usage
+  -idle     | -i <time>  stops if <file> unchanging for <time> sec (default 60s)
+  -logscale | -l         plots data (y-axis) on log scale, e.g. for residuals
+  -refresh  | -r <time>  refreshes display every <time> sec (default 10s)
+  -yrange   | -y <range> sets data (y-axis) <range>, format "[0:1]"
 
 Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
 e.g. by functionObjects
@@ -52,16 +50,22 @@ Example:
   foamMonitor -l postProcessing/residuals/0/residuals.dat
 
 USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
 plotFileHeader() {
     cat<<EOF
 set term x11 1 font "helvetica,17" linewidth 1.5 persist noraise
-$LOGSCALE
-$YRANGE
+$logscale
+$yrange
 set title "Data Monitoring"
-set xlabel "$XLABEL"
+set xlabel "$xlabel"
 plot \\
 EOF
 }
@@ -69,48 +73,50 @@ EOF
 plotFileFooter() {
     cat<<EOF
 
-pause $REFRESH
+pause $refresh
 reread
 EOF
 }
 
 howMany() ( set -f; set -- $1; echo $# )
+isInteger() {
+    [ ! -z "${1##*[!0-9]*}" ] && echo "$1" && return 0
+}
 
-IDLE=60
-REFRESH=10
-LOGSCALE=""
-YRANGE=""
-GNUPLOT=$(which gnuplot)
-! [ "x$GNUPLOT" = "x" ] || usage "Gnuplot not installed"
+idle=60
+refresh=10
+logscale=""
+yrange=""
+command -v gnuplot >/dev/null 2>&1 || error "Gnuplot not installed"
 
 # parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -i | -idle)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        [ ! -z "${2##*[!0-9]*}" ] && IDLE=$2 || usage "Argument of '$1' is not an integer: '$2'"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        idle=$(isInteger "$2") || error "Argument of '$1' is not an integer: '$2'"
         shift 2
         ;;
     -l | -logscale)
-        LOGSCALE="set logscale y"
+        logscale="set logscale y"
         shift 1
         ;;
     -r | -refresh)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        [ ! -z "${2##*[!0-9]*}" ] && REFRESH=$2 || usage "Argument of '$1' is not an integer: '$2'"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        refresh=$(isInteger "$2") || error "Argument of '$1' is not an integer: '$2'"
         shift 2
         ;;
     -y | -yrange)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        YRANGE="set yrange $2"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        yrange="set yrange $2"
         shift 2
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -118,64 +124,65 @@ do
     esac
 done
 
-[ $# -eq 1 ] || usage "Incorrect arguments specified"
-[ -f $1 ]    || usage "File $1 does not exit"
-FILE=$1
+[ $# -eq 1 ] || error "Incorrect arguments specified"
+[ -f "$1" ]    || error "File $1 does not exit"
+file=$1
 
-# Get KEYS from header
-KEYS=$(grep -E '^#' $FILE | tail -1)
+# Get keys from header
+keys=$(grep -E '^#' "$file" | tail -1)
 
-[ "x$KEYS" = "x" ] && KEYS="# Step"
-NKEYS=$(howMany "$KEYS")
-NCOLS=$(tail -1 $FILE | awk '{ print NF}')
+[ "x$keys" = "x" ] && keys="# Step"
+n_keys=$(howMany "$keys")
+n_cols=$(tail -1 "$file" | awk '{ print NF }')
 
-# With full column labels, NKEYS = NCOLS + 1, since it includes "#"
+# With full column labels, n_keys = n_cols + 1, since it includes "#"
 
-# If NKEYS > NCOLS + 1, REMOVE EXCESS KEYS
-NCOLSPONE=$(expr $NCOLS + 1)
-[ "$NKEYS" -gt "$NCOLSPONE" ] && KEYS=$(echo $KEYS | cut -d" " -f1-$NCOLSPONE)
-NKEYS=$(howMany "$KEYS")
+# If n_keys > n_cols + 1, REMOVE EXCESS keys
+n_cols_pone=$(( n_cols + 1 ))
+[ "$n_keys" -gt "$n_cols_pone" ] && \
+    keys=$(echo "$keys" | cut -d" " -f1-$n_cols_pone)
+n_keys=$(howMany "$keys")
 
 i=0
-while [ "$NKEYS" -le "$NCOLS" ]
+while [ "$n_keys" -le "$n_cols" ]
 do
-    i=$(expr $i + 1)
-    KEYS="$KEYS data$i"
-    NKEYS=$(howMany "$KEYS")
+    i=$(( i + 1 ))
+    keys="$keys data$i"
+    n_keys=$(howMany "$keys")
 done
 
 # Remove # and Time keys
-XLABEL=$(echo $KEYS | cut -d " " -f2)
-KEYS=$(echo $KEYS | cut -d " " -f3-)
+xlabel=$(echo "$keys" | cut -d " " -f2)
+keys=$(echo "$keys" | cut -d " " -f3-)
 
-GPFILE=$(mktemp)
-plotFileHeader > $GPFILE
+gp_file=$(mktemp)
+plotFileHeader > "$gp_file"
 i=1
-for field in $KEYS
+for field in $keys
 do
-    i=$(expr $i + 1)
-    PLOTLINE="\"$FILE\" using 1:${i} with lines title \"$field\""
-    if [ $i -lt $NCOLS ]
+    i=$(( i + 1 ))
+    plot_line="\"$file\" using 1:${i} with lines title \"$field\""
+    if [ $i -lt "$n_cols" ]
     then
-       PLOTLINE="$PLOTLINE, \\"
+       plot_line="$plot_line, \\"
     fi
-    echo $PLOTLINE >> $GPFILE
+    echo $plot_line >> "$gp_file"
 done
-plotFileFooter >> $GPFILE
+plotFileFooter >> "$gp_file"
 
-touch $FILE
-$GNUPLOT $GPFILE &
-PID=$!
+touch "$file"
+gnuplot "$gp_file" &
+pid=$!
 
 while true
 do
-    MODTIME=$(stat --format=%Y $FILE)
-    IDLEAGO=$(expr $(date +%s) - $IDLE)
-    test "$MODTIME" -gt "$IDLEAGO" || break
-    sleep $REFRESH
+    mod_time=$(stat --format=%Y "$file")
+    idle_ago=$(( $(date +%s) - idle ))
+    test "$mod_time" -gt "$idle_ago" || break
+    sleep "$refresh"
 done
 
-kill -9 $PID
-rm $GPFILE
+kill -9 $pid
+rm "$gp_file"
 
 #------------------------------------------------------------------------------

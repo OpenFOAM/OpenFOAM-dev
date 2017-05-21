@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -35,11 +35,10 @@ siteDir=${WM_PROJECT_SITE:-${WM_PROJECT_INST_DIR:-<unknown>}/site}
 userDir=$HOME/.OpenFOAM
 
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat <<USAGE
 
-Usage: $Script [OPTIONS] <log>
+Usage: $Script [OPTIONS] <log file>
+options:
   -list             lists but does not extract
   -n                create single column files with the extracted data only
   -quiet            quiet operation
@@ -49,13 +48,13 @@ Usage: $Script [OPTIONS] <log>
 $Script - extracts xy files from OpenFOAM logs.
 
 USAGE
-    exit 1
 }
 
 #------------------------------------------------------------------------------
 
 printHelp() {
-cat <<HELP
+    usage
+    cat <<HELP
 -----------------------------------------------------------------------------
 The default is to extract for all the 'Solved for' variables the initial
 residual, the final residual and the number of iterations. Additionally, a
@@ -96,8 +95,13 @@ Option -q suppresses the default information and only prints the extracted
 variables.
 -----------------------------------------------------------------------------
 HELP
+}
 
-usage
+error () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
 }
 
 

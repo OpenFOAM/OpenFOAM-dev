@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -48,8 +48,6 @@
 #
 #------------------------------------------------------------------------------
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: ${0##*/} [OPTION] <application> ...
@@ -64,6 +62,12 @@ options:
 * run a particular OpenFOAM version of <application>
 
 USAGE
+}
+
+error () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
@@ -88,21 +92,21 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -m | -mode)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
         shift
         ;;
     -p | -prefix)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
         prefixDir="$2"
         shift
         ;;
     -v | -version)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         etcOpts="$etcOpts $1 $2"    # pass-thru to foamEtcFile
         version="$2"
         shift
@@ -112,7 +116,7 @@ do
         break
         ;;
     -*)
-        usage "invalid option '$1'"
+        error "invalid option '$1'"
         ;;
     *)
         break
@@ -139,7 +143,7 @@ sourceRc()
 }
 
 
-[ "$#" -ge 1 ] || usage "no application specified"
+[ "$#" -ge 1 ] || error "no application specified"
 
 sourceRc
 exec "$@"

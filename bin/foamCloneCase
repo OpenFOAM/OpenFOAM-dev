@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -33,38 +33,42 @@
 #
 #------------------------------------------------------------------------------
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-Usage: ${0##*/} [OPTION] <sourceCase> <targetCase>
+Usage: ${0##*/} [OPTION] <source case> <target name>
 options:
-  -l | -latestTime    clone the latest time directory
-  -h | -help          print the usage
+  -latestTime    clone the latest time directory
+  -help          print the usage
 
 Create a new <targetCase> case directory that includes time, system and constant
 directories of <sourceCase> directory.
 The time directory is the first time directory by default.
 
 USAGE
+}
+
+error () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
-TIME_OPTION="head -1"
+time_option="head -1"
 
 # parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -l | -latestTime)
-        TIME_OPTION="tail -1"
+        time_option="tail -1"
         shift 1
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -72,19 +76,18 @@ do
     esac
 done
 
-[ $# -eq 2 ] || usage "Incorrect arguments specified"
-if [ "$(foamListTimes -case $1 2>&1 >/dev/null | grep 'FOAM FATAL ERROR')" ]
-then
-    usage "$1 is not does not a valid case directory"
-fi
-! [ -e $2 ] || usage "$2 file/directory already exists, delete and re-run"
+[ $# -eq 2 ] || error "Incorrect arguments specified"
+foamListTimes -case "$1" >/dev/null 2>&1 || \
+    error "'$1' is not a valid case directory"
+
+! [ -e "$2" ] || error "'$2' file/directory already exists, delete and re-run"
 
 echo "Making $2 case directory"
-mkdir $2
+mkdir "$2"
 
-TIME_DIR="$(foamListTimes -withZero -case $1 | $TIME_OPTION)"
+time_dir="$(foamListTimes -withZero -case "$1" | $time_option)"
 
 echo "Copying case directories from $1 to $2"
-cp -r $1/system $1/constant $1/${TIME_DIR} $2
+cp -r "$1"/system "$1"/constant "$1"/"${time_dir}" "$2"
 
 #------------------------------------------------------------------------------

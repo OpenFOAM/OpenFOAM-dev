@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -46,7 +46,7 @@ do
     if [ -d "$i" ]
     then
         echo "removing all *~ files: $i"
-        find $i \( -name '*~' -o -name '.*~' \) -print | xargs -t rm 2>/dev/null
+        find $i \( -name '*~' -o -name '.*~' \) -print0 | xargs -t rm 2>/dev/null
     else
         echo "no directory: $i" 1>&2
     fi

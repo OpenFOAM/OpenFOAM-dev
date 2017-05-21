@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -33,8 +33,6 @@
 #     undefined behaviour
 #------------------------------------------------------------------------------
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: ${0##*/} [OPTION] [PARAVIEW_OPTION]
@@ -47,12 +45,17 @@ options:
   -touchAll         create .blockMesh, .OpenFOAM files (and for all regions)
   -help             print the usage
 
-
 paraview options start with a double dashes
 
 * start paraview $ParaView_VERSION with the OpenFOAM libraries
 
 USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
@@ -77,7 +80,7 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -block | -blockMesh)
         extension=blockMesh
@@ -89,12 +92,12 @@ do
         shift
         ;;
     -case)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        cd "$2" 2>/dev/null || error "directory does not exist:  '$2'"
         shift 2
         ;;
     -region)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         regionName=$2
         shift 2
         ;;
@@ -116,13 +119,13 @@ do
         break    # Stop here, treat this and balance as paraview options
         ;;
     *)
-        usage "unknown option/argument: '$*'"
+        error "unknown option/argument: '$*'"
         ;;
     esac
 done
 
 # Check that reader module has been built
-if [ $requirePV -eq 1 -a ! -f $PV_PLUGIN_PATH/libPVFoamReader_SM.so ]
+if [ $requirePV -eq 1 -a ! -f "$PV_PLUGIN_PATH/libPVFoamReader_SM.so" ]
 then
     cat<< BUILDREADER
 
@@ -153,7 +156,7 @@ hasDataArg()
     done
 }
 
-hasDataArg $@
+hasDataArg "$@"
 
 
 # Get a sensible caseName from the directory name
@@ -163,7 +166,7 @@ fvControls="system"
 
 if [ -n "$regionName" ]
 then
-    if [ ! -d constant/$regionName ]
+    if [ ! -d constant/"$regionName" ]
     then
         echo "FATAL ERROR: Region $regionName does not exist"
         exit 1
@@ -186,7 +189,7 @@ all)
     # Discover probable regions
     for region in constant/*
     do
-        if [ -d $region -a -d $region/polyMesh ]
+        if [ -d "$region" -a -d "$region"/polyMesh ]
         then
             regionName=${region##*/}
             touch "$caseName{$regionName}.$extension"
@@ -258,14 +261,14 @@ else
 
     [ -n "$warn" ] || {
         echo "Cannot locate OpenFOAM-format case files"
-        echo -n "Would you like to open ParaView anyway <Y|n>:"
+        printf "Would you like to open ParaView anyway <Y|n>:"
         read open
-        [ "$open" = "" ] || echo $open | grep -iqE "^y" && paraview
+        [ "$open" = "" ] || echo "$open" | grep -iqE "^y" && paraview
         exit
     }
 
     # Only create/remove caseFile if it didn't already exist
-    [ -e $caseFile ] || {
+    [ -e "$caseFile" ] || {
         trap "rm -f $caseFile 2>/dev/null; exit 0" EXIT TERM INT
         touch "$caseFile"
         echo "Created temporary '$caseFile'"

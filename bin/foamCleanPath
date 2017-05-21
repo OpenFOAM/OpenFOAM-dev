@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -41,7 +41,7 @@
 #       by colons or whitespace
 #------------------------------------------------------------------------------
 usage() {
-    cat <<USAGE 1>&2
+    cat <<USAGE
 Usage: ${0##*/} [OPTION] path [wildcard1] .. [wildcardN]
 options:
   -strip            remove inaccessible directories
@@ -58,6 +58,10 @@ options:
       2  initial value of 'path' is empty
 
 USAGE
+}
+
+error () {
+    usage 1>&2
     exit 1
 }
 
@@ -68,11 +72,14 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -strip)
         strip=true
         shift
+        ;;
+    -*)
+        error
         ;;
     *)
         break
@@ -81,7 +88,7 @@ do
 done
 
 
-[ "$#" -ge 1 ] || usage
+[ "$#" -ge 1 ] || error
 
 dirList="$1"
 shift

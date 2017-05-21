@@ -30,12 +30,13 @@
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
-DIR="$FOAM_ETC/codeTemplates/BC"
+dir="$FOAM_ETC/codeTemplates/BC"
 
 usage() {
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: $Script [-h | -help] <base> <type> <boundaryConditionName>
+Usage: $Script [OPTIONS] <base> <type> <boundaryConditionName>
+options:
+  -help  | -h         help
 
 * Create directory of source and compilation files for a new boundary condition
   <boundaryConditionName> (dir)
@@ -62,8 +63,14 @@ USAGE
     exit 1
 }
 
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
 cap() {
-    echo $1 | sed -e 's/^./\U&/'
+    echo "$1" | sed -e 's/^./\U&/'
 }
 
 # Implicitly covers a lone -help
@@ -71,105 +78,107 @@ cap() {
 
 case "$1" in
 (-h | -help)
-    usage
+    usage && exit 0
     ;;
 (-f | -fixedValue | fixedValue)
-    BASE=fixedValue
+    base=fixedValue
     ;;
 (-m | -mixed | mixed )
-    BASE=mixed
+    base=mixed
     ;;
 (*)
-    usage "Unknown <base> condition '$1'"
+    error "Unknown <base> condition '$1'"
     ;;
 esac
 shift
 
 case "$1" in
 (-a | -all | all | template)
-    TYPE=Type
-    UNIT='VALUE-or-(VALUE 0 0)'
+    type=Type
+    unit='VALUE-or-(VALUE 0 0)'
     ;;
 (-s | -scalar | scalar)
-    TYPE=scalar
-    UNIT=VALUE
+    type=scalar
+    unit=VALUE
     ;;
 (-v | -vector | vector)
-    TYPE=vector
-    UNIT='(VALUE 0 0)'
+    type=vector
+    unit='(VALUE 0 0)'
     ;;
 (-t | -tensor | tensor)
-    TYPE=tensor
-    UNIT='(VALUE 0 0 0 0 0 0 0 0)'
+    type=tensor
+    unit='(VALUE 0 0 0 0 0 0 0 0)'
     ;;
 (-symmTensor | symmTensor)
-    TYPE=symmTensor
-    UNIT='(VALUE 0 0 0 0 0)'
+    type=symmTensor
+    unit='(VALUE 0 0 0 0 0)'
     ;;
 (-sphericalTensor | sphericalTensor)
-    TYPE=sphericalTensor
-    UNIT=VALUE
+    type=sphericalTensor
+    unit=VALUE
     ;;
 (*)
-    usage "Unknown <type> option '$1'"
+    error "Unknown <type> option '$1'"
     ;;
 esac
 shift
-[ "$#" -eq 1 ] || usage "Wrong number of arguments"
-NAME=$1
+[ "$#" -eq 1 ] || error "Wrong number of arguments"
+name=$1
 
 # Prevents over-writing of existing directory
-[ -d $NAME ] && usage "$NAME directory already exists, aborting..."
-echo "Creating $NAME directory" && mkdir $NAME
+[ -d "$name" ] && error "$name directory already exists, aborting..."
+echo "Creating $name directory" && mkdir "$name"
 
 # Establish meta template files to copy
-FILES=$(cd ${DIR} && ls *.*)
-[ "$TYPE" = "Type" ] || FILES=$(cd ${DIR} && ls BC.[CH])
+files=$(find "${dir}" -name "*.*" -type f -exec basename {} \;)
+[ "$type" = "Type" ] || \
+    files=$(find "${dir}" -name "BC.[CH]" -type f -exec basename {} \;)
 
 # Substitutions for meta-template files
-FIELD="Field<${TYPE}>"
-[ "$TYPE" = "Type" ] || FIELD=${TYPE}Field
+field="Field<${type}>"
+[ "$type" = "Type" ] || field=${type}Field
 
-FVPATCHF=fvPatch$(cap $FIELD)
-CLASS=$NAME$(cap $FVPATCHF)
-PARENT=$BASE$(cap $FVPATCHF)
-CONSTRUCT=$(echo $CLASS | sed 's/<Type>//g')
-YEAR=$(date +%Y)
+fvpatchf=fvPatch$(cap $field)
+class=$name$(cap "$fvpatchf")
+parent=$base$(cap "$fvpatchf")
+construct=$(echo "$class" | sed 's/<Type>//g')
+year=$(date +%Y)
 
 # Create some example values for the Description
 n=0
-for N in $(echo "ZERO ONE TWO THREE FOUR")
+for N in zero one two three four
 do
-   eval $(expr $N='$(echo $UNIT | sed "s#VALUE#$n#g")')
-   n=$(( $n + 1 ))
+    eval $N="$(echo \"$unit\" | sed "s#VALUE#$n#g")"
+    n=$(( n + 1 ))
 done
 
 # Make substitutions to meta-template files
-for F in $FILES
+for f in $files
 do
-    EXT=$(echo $F | sed "s#BC##")
-    NEWFILE=${CONSTRUCT}${EXT}
-    echo "   Adding file ${NEWFILE}..."
+    ext=$(echo "$f" | sed "s#BC##")
+    new_file=${construct}${ext}
+    echo "   Adding file ${new_file}..."
 
-    # Adds readScalar function when TYPE = scalar
-    sed -e "s#TYPE#${TYPE}#g" \
-        -e "s#NAME#${NAME}#g" \
-        -e "s#BASE#${BASE}#g" \
-        -e "s#CONSTRUCT#${CONSTRUCT}#g" \
-        -e "s#YEAR#${YEAR}#g" \
-        -e "s#CLASS#${CLASS}#g" \
-        -e "s#FIELD#${FIELD}#g" \
-        -e "s#FVPATCHF#${FVPATCHF}#g" \
-        -e "s#PARENT#${PARENT}#g" \
-        -e "s#ZERO#${ZERO}#g" \
-        -e "s#ONE#${ONE}#g" \
-        -e "s#TWO#${TWO}#g" \
-        -e "s#THREE#${THREE}#g" \
-        -e "s#FOUR#${FOUR}#g" \
+    # Adds readScalar function when type = scalar
+    # shellcheck disable=SC2154
+    sed -e "s#TYPE#${type}#g" \
+        -e "s#NAME#${name}#g" \
+        -e "s#BASE#${base}#g" \
+        -e "s#CONSTRUCT#${construct}#g" \
+        -e "s#YEAR#${year}#g" \
+        -e "s#CLASS#${class}#g" \
+        -e "s#FIELD#${field}#g" \
+        -e "s#FVPATCHF#${fvpatchf}#g" \
+        -e "s#PARENT#${parent}#g" \
+        -e "s#ZERO#${zero}#g" \
+        -e "s#ONE#${one}#g" \
+        -e "s#TWO#${two}#g" \
+        -e "s#THREE#${three}#g" \
+        -e "s#FOUR#${four}#g" \
         -e 's/>>/>>/g' \
-        ${DIR}/${F} > ${NAME}/${NEWFILE}
+        "${dir}/${f}" > "${name}/${new_file}"
 
-    case $BASE in
+    case $base in
         fixedValue)
             # refValue(), refGrad(), valueFraction() removed
             # phip removed
@@ -178,7 +187,7 @@ do
                 -e '/refGrad/d' \
                 -e '/valueFraction/d' \
                 -e '/const scalarField\& phip/,/);/d' \
-                ${NAME}/${NEWFILE}
+                "${name}/${new_file}"
             ;;
         mixed)
             # evaluate() removed
@@ -186,15 +195,15 @@ do
             sed -i \
                 -e '/evaluate/d' \
                 -e 's/operator==/refValue() =/g' \
-                ${NAME}/${NEWFILE}
+                "${name}/${new_file}"
             ;;
     esac
 
-    case $TYPE in
+    case $type in
         Type)
             # Build Macro removed (in ..Fields.C)
             sed -i -e '/Build Macro/,/^}/d' \
-                ${NAME}/${NEWFILE}
+                "${name}/${new_file}"
             ;;
         *)
             # template<class Type> removed
@@ -206,13 +215,15 @@ do
                 -e 's/this->//g' \
                 -e 's/\.template[\t ]*\([a-Z]\)/\.\1/g' \
                 -e '/#ifdef NoRepository/,/\/\/ */d' \
-                ${NAME}/${NEWFILE}
+                "${name}/${new_file}"
             ;;
     esac
 done
 
-echo "Creating Make subdirectory" && cp -r ${DIR}/Make ${NAME}
-COMPILED=$(cd ${NAME} && ls -r1 *C | head -1) # ...Fields.C for template class
-sed -i -e "s#NAME#${NAME}#g" -e "s#COMPILED.*#${COMPILED}#g" ${NAME}/Make/files
+echo "Creating Make subdirectory" && cp -r "${dir}/Make" "${name}"
+
+# Get ...Fields.C for template class, otherwise ...Field.C
+compiled=$(find "${name}" -name "*.C" -exec basename {} \; | sort | tail -1)
+sed -i -e "s#NAME#${name}#g" -e "s#COMPILED.*#${compiled}#g" "${name}/Make/files"
 
 #------------------------------------------------------------------------------

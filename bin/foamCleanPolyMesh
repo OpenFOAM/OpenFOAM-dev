@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -31,8 +31,6 @@
 #
 #------------------------------------------------------------------------------
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat <<USAGE
 
 Usage: ${0##*/} [OPTION]
@@ -45,7 +43,13 @@ Remove the contents of the constant/polyMesh directory as per the
 Foam::polyMesh::removeFiles() method.
 
 USAGE
-   exit 1
+}
+
+error () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
 }
 
 unset caseDir regionName
@@ -55,21 +59,21 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -case)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        cd "$2" 2>/dev/null || error "directory does not exist:  '$2'"
         caseDir=$2
         shift 2
         ;;
     -region)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         regionName=$2
         shift 2
         ;;
     *)
-        usage "unknown option/argument: '$*'"
+        error "unknown option/argument: '$*'"
         ;;
     esac
 done
@@ -133,7 +137,7 @@ for i in \
     surfaceIndex \
 ;
 do
-    rm -rf $meshDir/$i $meshDir/$i.gz
+    rm -rf ${meshDir:?}/$i ${meshDir:?}/$i.gz
 done
 
 #------------------------------------------------------------------------------
