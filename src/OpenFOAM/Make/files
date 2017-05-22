@@ -592,6 +592,8 @@ Fields = fields/Fields
 
 $(Fields)/labelField/labelField.C
 $(Fields)/scalarField/scalarField.C
+$(Fields)/vectorField/vectorField.C
+$(Fields)/vector2DField/vector2DField.C
 $(Fields)/sphericalTensorField/sphericalTensorField.C
 $(Fields)/diagTensorField/diagTensorField.C
 $(Fields)/symmTensorField/symmTensorField.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,35 +21,23 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    Foam::vector2DField
-
-SourceFiles
-    vector2DField.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef vector2DField_H
-#define vector2DField_H
-
-#include "vector2DFieldFwd.H"
-#include "Field.H"
+#include "vector2DField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
+Foam::tmp<Foam::vector2DField> Foam::zip
+(
+    const tmp<scalarField>& x,
+    const tmp<scalarField>& y
+)
 {
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-tmp<vector2DField> zip(const tmp<scalarField>& x, const tmp<scalarField>& y);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
+    tmp<vector2DField> txy(new vector2DField(x->size()));
+    vector2DField& xy = txy.ref();
+    xy.replace(0, x);
+    xy.replace(1, y);
+    return txy;
+}
 
 // ************************************************************************* //
