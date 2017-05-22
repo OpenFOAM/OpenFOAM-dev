@@ -90,21 +90,21 @@ Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>> Foam::levelSetAverage
                     levelP[pIA]
                 };
             const cut::volumeIntegrateOp<Type>
-                positive =
-                {
+                positive = FixedList<Type, 4>
+                ({
                     positiveC[cI],
                     positiveP[pI0],
                     positiveP[pIA],
                     positiveP[pIB]
-                };
+                });
             const cut::volumeIntegrateOp<Type>
-                negative =
-                {
+                negative = FixedList<Type, 4>
+                ({
                     negativeC[cI],
                     negativeP[pI0],
                     negativeP[pIA],
                     negativeP[pIB]
-                };
+                });
 
             sum[cI] += tetCut(tet, level, positive, negative);
         }
@@ -153,19 +153,19 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     levelP[e[1]]
                 };
             const cut::areaIntegrateOp<Type>
-                positive =
-                {
+                positive = FixedList<Type, 3>
+                ({
                     positiveF[fI],
                     positiveP[e[0]],
                     positiveP[e[1]]
-                };
+                });
             const cut::areaIntegrateOp<Type>
-                negative =
-                {
+                negative = FixedList<Type, 3>
+                ({
                     negativeF[fI],
                     negativeP[e[0]],
                     negativeP[e[1]]
-                };
+                });
 
             sum[fI] += triCut(tri, level, positive, negative);
         }
