@@ -404,6 +404,7 @@ $(general)/adjustPhi/adjustPhi.C
 $(general)/bound/bound.C
 $(general)/CorrectPhi/correctUphiBCs.C
 $(general)/pressureControl/pressureControl.C
+$(general)/levelSet/levelSet.C
 
 solutionControl = $(general)/solutionControl
 $(solutionControl)/solutionControl/solutionControl.C
