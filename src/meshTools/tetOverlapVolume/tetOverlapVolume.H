@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,13 +38,13 @@ SourceFiles
 #include "FixedList.H"
 #include "labelList.H"
 #include "treeBoundBox.H"
+#include "tetPointRef.H"
 
 namespace Foam
 {
 
 class primitiveMesh;
 class polyMesh;
-class tetPoints;
 
 /*---------------------------------------------------------------------------*\
                       Class tetOverlapVolume Declaration
@@ -57,8 +57,8 @@ class tetOverlapVolume
         //- Tet overlap volume
         scalar tetTetOverlapVol
         (
-            const tetPoints& tetA,
-            const tetPoints& tetB
+            const tetPointRef& tetA,
+            const tetPointRef& tetB
         ) const;
 
         //- Return a const treeBoundBox
@@ -68,6 +68,51 @@ class tetOverlapVolume
             const face& f,
             const point& fc
         ) const;
+
+
+    // Private classes
+
+        //- A fixed list of tets which simulates a dynamic list by incrementing
+        //  a counter whenever its append method is called. This is used as an
+        //  optimisation for the tetTetOverlapVol method.
+        template<unsigned Size>
+        class cutTetList
+        :
+            public FixedList<FixedList<point, 4>, Size>
+        {
+        private:
+
+            //- The number of stored elements
+            label n_;
+
+
+        public:
+
+            //- Construct null
+            cutTetList()
+            :
+                n_(0)
+            {}
+
+            //- Clear the array
+            void clear()
+            {
+                n_ = 0;
+            }
+
+            //- Get the current size
+            label size() const
+            {
+                return n_;
+            }
+
+            //- Add a new tet to the end of the array
+            void append(const FixedList<point, 4>& t)
+            {
+                this->operator[](n_) = t;
+                ++ n_;
+            }
+        };
 
 
 public:

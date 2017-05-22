@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "cellSizeFunction.H"
 #include "triSurfaceMesh.H"
 #include "searchableBox.H"
-#include "tetrahedron.H"
+#include "tetPointRef.H"
 #include "vectorTools.H"
 #include "quaternion.H"
 

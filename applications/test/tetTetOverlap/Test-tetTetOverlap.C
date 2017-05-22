@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "tetrahedron.H"
+#include "tetPointRef.H"
 #include "OFstream.H"
 #include "meshTools.H"
+#include "cut.H"
 
 using namespace Foam;
 
@@ -41,7 +42,7 @@ void writeOBJ
 (
     Ostream& os,
     label& vertI,
-    const tetPoints& tet
+    const FixedList<point, 4>& tet
 )
 {
     forAll(tet, fp)
@@ -58,104 +59,125 @@ void writeOBJ
 }
 
 
+tetPointRef makeTetPointRef(const FixedList<point, 4>& p)
+{
+    return tetPointRef(p[0], p[1], p[2], p[3]);
+}
+
+
 int main(int argc, char *argv[])
 {
-    tetPoints A
-    (
+    // Tets to test
+    FixedList<point, 4> tetA
+    ({
         point(0, 0, 0),
         point(1, 0, 0),
         point(1, 1, 0),
         point(1, 1, 1)
-    );
-    const tetPointRef tetA = A.tet();
-
-    tetPoints B
-    (
+    });
+    FixedList<point, 4> tetB
+    ({
         point(0.1, 0.1, 0.1),
         point(1.1, 0.1, 0.1),
         point(1.1, 1.1, 0.1),
         point(1.1, 1.1, 1.1)
-    );
-    const tetPointRef tetB = B.tet();
+    });
 
 
-    tetPointRef::tetIntersectionList insideTets;
-    label nInside = 0;
-    tetPointRef::tetIntersectionList outsideTets;
-    label nOutside = 0;
+    // Do intersection
+    typedef DynamicList<FixedList<point, 4>> tetList;
+    tetList tetsIn1, tetsIn2, tetsOut;
+    cut::appendOp<tetList> tetOpIn1(tetsIn1);
+    cut::appendOp<tetList> tetOpIn2(tetsIn2);
+    cut::appendOp<tetList> tetOpOut(tetsOut);
 
-    tetA.tetOverlap
-    (
-        tetB,
-        insideTets,
-        nInside,
-        outsideTets,
-        nOutside
-    );
+    const plane p0(tetB[1], tetB[3], tetB[2]);
+    tetsIn1.clear();
+    tetCut(tetA, p0, tetOpIn1, tetOpOut);
+
+    const plane p1(tetB[0], tetB[2], tetB[3]);
+    tetsIn2.clear();
+    forAll(tetsIn1, i)
+    {
+        tetCut(tetsIn1[i], p1, tetOpIn2, tetOpOut);
+    }
+
+    const plane p2(tetB[0], tetB[3], tetB[1]);
+    tetsIn1.clear();
+    forAll(tetsIn2, i)
+    {
+        tetCut(tetsIn2[i], p2, tetOpIn1, tetOpOut);
+    }
+
+    const plane p3(tetB[0], tetB[1], tetB[2]);
+    tetsIn2.clear();
+    forAll(tetsIn1, i)
+    {
+        tetCut(tetsIn1[i], p3, tetOpIn2, tetOpOut);
+    }
+
+    const tetList& tetsIn = tetsIn2;
 
 
     // Dump to file
-    // ~~~~~~~~~~~~
-
     {
-        OFstream str("tetA.obj");
+        OFstream str("A.obj");
         Info<< "Writing A to " << str.name() << endl;
         label vertI = 0;
-        writeOBJ(str, vertI, A);
+        writeOBJ(str, vertI, tetA);
     }
     {
-        OFstream str("tetB.obj");
+        OFstream str("B.obj");
         Info<< "Writing B to " << str.name() << endl;
         label vertI = 0;
-        writeOBJ(str, vertI, B);
+        writeOBJ(str, vertI, tetB);
     }
     {
-        OFstream str("inside.obj");
-        Info<< "Writing parts of A inside B to " << str.name() << endl;
+        OFstream str("AInB.obj");
+        Info<< "Writing parts of B inside A to " << str.name() << endl;
         label vertI = 0;
-        for (label i = 0; i < nInside; ++i)
+        forAll(tetsIn, i)
         {
-            writeOBJ(str, vertI, insideTets[i]);
+            writeOBJ(str, vertI, tetsIn[i]);
         }
     }
     {
-        OFstream str("outside.obj");
-        Info<< "Writing parts of A outside B to " << str.name() << endl;
+        OFstream str("AOutB.obj");
+        Info<< "Writing parts of B inside A to " << str.name() << endl;
         label vertI = 0;
-        for (label i = 0; i < nOutside; ++i)
+        forAll(tetsOut, i)
         {
-            writeOBJ(str, vertI, outsideTets[i]);
+            writeOBJ(str, vertI, tetsOut[i]);
         }
     }
 
 
-    // Check
-    // ~~~~~
+    // Check the volumes
+    Info<< "Vol A: " << makeTetPointRef(tetA).mag() << endl;
 
-    Info<< "Vol A:" << tetA.mag() << endl;
-
-    scalar volInside = 0;
-    for (label i = 0; i < nInside; ++i)
+    scalar volIn = 0;
+    forAll(tetsIn, i)
     {
-        volInside += insideTets[i].tet().mag();
+        volIn += makeTetPointRef(tetsIn[i]).mag();
     }
-    Info<< "Vol A inside B:" << volInside << endl;
+    Info<< "Vol A inside B: " << volIn << endl;
 
-    scalar volOutside = 0;
-    for (label i = 0; i < nOutside; ++i)
+    scalar volOut = 0;
+    forAll(tetsOut, i)
     {
-        volOutside += outsideTets[i].tet().mag();
+        volOut += makeTetPointRef(tetsOut[i]).mag();
     }
-    Info<< "Vol A outside B:" << volOutside << endl;
+    Info<< "Vol A outside B: " << volOut << endl;
 
-    Info<< "Sum inside and outside:" << volInside+volOutside << endl;
+    Info<< "Sum inside and outside: " << volIn + volOut << endl;
 
-    if (mag(volInside+volOutside-tetA.mag()) > SMALL)
+    if (mag(volIn + volOut - makeTetPointRef(tetA).mag()) > SMALL)
     {
         FatalErrorInFunction
             << "Tet volumes do not sum up to input tet."
             << exit(FatalError);
     }
+
 
     return 0;
 }

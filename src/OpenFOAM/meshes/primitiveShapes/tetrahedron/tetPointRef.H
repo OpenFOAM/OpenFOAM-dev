@@ -21,9 +21,18 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+Typedef
+    Foam::tetPointRef
+
+Description
+
 \*---------------------------------------------------------------------------*/
 
-#include "zero.H"
+#ifndef tetPointRef_H
+#define tetPointRef_H
+
+#include "point.H"
+#include "tetrahedron.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -32,66 +41,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline zero operator+(const zero&, const zero&)
-{
-    return Zero;
-}
-
-template<class Type>
-inline const Type& operator+(const Type& t, const zero&)
-{
-    return t;
-}
-
-template<class Type>
-inline const Type& operator+(const zero&, const Type& t)
-{
-    return t;
-}
-
-inline zero operator-(const zero&, const zero&)
-{
-    return Zero;
-}
-
-template<class Type>
-inline const Type& operator-(const Type& t, const zero&)
-{
-    return t;
-}
-
-template<class Type>
-inline Type operator-(const zero&, const Type& t)
-{
-    return -t;
-}
-
-inline zero operator*(const zero&, const zero&)
-{
-    return Zero;
-}
-
-template<class Type>
-inline zero operator*(const Type& t, const zero&)
-{
-    return Zero;
-}
-
-template<class Type>
-inline zero operator*(const zero&, const Type& t)
-{
-    return Zero;
-}
-
-template<class Type>
-inline zero operator/(const zero&, const Type& t)
-{
-    return Zero;
-}
-
+typedef tetrahedron<point, const point&> tetPointRef;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+#endif
 
 // ************************************************************************* //

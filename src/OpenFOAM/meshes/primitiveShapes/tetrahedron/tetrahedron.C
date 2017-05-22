@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,96 +28,6 @@ License
 #include "scalarField.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Point, class PointRef>
-void Foam::tetrahedron<Point, PointRef>::tetOverlap
-(
-    const tetrahedron<Point, PointRef>& tetB,
-    tetIntersectionList& insideTets,
-    label& nInside,
-    tetIntersectionList& outsideTets,
-    label& nOutside
-) const
-{
-    // Work storage
-    tetIntersectionList cutInsideTets;
-    label nCutInside = 0;
-
-    nInside = 0;
-    storeOp inside(insideTets, nInside);
-    storeOp cutInside(cutInsideTets, nCutInside);
-
-    nOutside = 0;
-    storeOp outside(outsideTets, nOutside);
-
-
-    // Cut tetA with all inwards pointing faces of tetB. Any tets remaining
-    // in aboveTets are inside tetB.
-
-    {
-        // face0
-        plane pl0(tetB.b_, tetB.d_, tetB.c_);
-
-        // Cut and insert subtets into cutInsideTets (either by getting
-        // an index from freeSlots or by appending to insideTets) or
-        // insert into outsideTets
-        sliceWithPlane(pl0, cutInside, outside);
-    }
-
-    if (nCutInside == 0)
-    {
-        nInside = nCutInside;
-        return;
-    }
-
-    {
-        // face1
-        plane pl1(tetB.a_, tetB.c_, tetB.d_);
-
-        nInside = 0;
-
-        for (label i = 0; i < nCutInside; i++)
-        {
-            cutInsideTets[i].tet().sliceWithPlane(pl1, inside, outside);
-        }
-
-        if (nInside == 0)
-        {
-            return;
-        }
-    }
-
-    {
-        // face2
-        plane pl2(tetB.a_, tetB.d_, tetB.b_);
-
-        nCutInside = 0;
-
-        for (label i = 0; i < nInside; i++)
-        {
-            insideTets[i].tet().sliceWithPlane(pl2, cutInside, outside);
-        }
-
-        if (nCutInside == 0)
-        {
-            nInside = nCutInside;
-            return;
-        }
-    }
-
-    {
-        // face3
-        plane pl3(tetB.a_, tetB.b_, tetB.c_);
-
-        nInside = 0;
-
-        for (label i = 0; i < nCutInside; i++)
-        {
-            cutInsideTets[i].tet().sliceWithPlane(pl3, inside, outside);
-        }
-    }
-}
-
 
 template<class Point, class PointRef>
 Foam::pointHit Foam::tetrahedron<Point, PointRef>::containmentSphere
@@ -423,6 +333,18 @@ void Foam::tetrahedron<Point, PointRef>::gradNiGradNj
     buffer[3] = (1.0/9.0)*(sd * sb)/magVol;
     buffer[4] = (1.0/9.0)*(sb * sc)/magVol;
     buffer[5] = (1.0/9.0)*(sd * sc)/magVol;
+}
+
+
+template<class Point, class PointRef>
+Foam::boundBox Foam::tetrahedron<Point, PointRef>::bounds() const
+{
+    return
+        boundBox
+        (
+            min(a(), min(b(), min(c(), d()))),
+            max(a(), max(b(), max(c(), d())))
+        );
 }
 
 

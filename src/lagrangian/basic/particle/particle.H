@@ -40,7 +40,7 @@ Description
 #include "pointField.H"
 #include "faceList.H"
 #include "OFstream.H"
-#include "tetrahedron.H"
+#include "tetPointRef.H"
 #include "FixedList.H"
 #include "polyMeshTetDecomposition.H"
 #include "particleMacros.H"
