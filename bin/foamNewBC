@@ -213,7 +213,7 @@ do
             sed -i \
                 -e '/^template<class Type>$/d' \
                 -e 's/this->//g' \
-                -e 's/\.template[\t ]*\([a-Z]\)/\.\1/g' \
+                -e 's/\.template[\t ]*\([a-zA-Z]\)/\.\1/g' \
                 -e '/#ifdef NoRepository/,/\/\/ */d' \
                 "${name}/${new_file}"
             ;;
