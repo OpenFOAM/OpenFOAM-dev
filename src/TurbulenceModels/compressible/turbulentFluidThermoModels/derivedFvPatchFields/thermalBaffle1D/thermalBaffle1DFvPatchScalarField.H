@@ -49,7 +49,7 @@ Usage
         Qs              uniform 100;    // heat flux [W/m2]
 
         qr              none;
-        relaxation      1;
+        qrRelaxation    1;
 
         // Solid thermo
         specie
