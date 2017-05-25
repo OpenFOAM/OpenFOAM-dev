@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,47 +69,21 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    if (mesh().moving())
-    {
-        tmp<GeometricField<Type, fvPatchField, volMesh>> tdtdt
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    (
+        new GeometricField<Type, fvPatchField, volMesh>
         (
-            new GeometricField<Type, fvPatchField, volMesh>
+            ddtIOobject,
+            mesh(),
+            dimensioned<Type>
             (
-                ddtIOobject,
-                mesh(),
-                dimensioned<Type>
-                (
-                    "0",
-                    dt.dimensions()/dimTime,
-                    Zero
-                )
-            )
-        );
-
-        tdtdt.ref().primitiveFieldRef() =
-            rDeltaT.primitiveField()*dt.value()
-           *(1.0 - mesh().Vsc0()/mesh().Vsc());
-
-        return tdtdt;
-    }
-    else
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
-        (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                mesh(),
-                dimensioned<Type>
-                (
-                    "0",
-                    dt.dimensions()/dimTime,
-                    Zero
-                ),
-                calculatedFvPatchField<Type>::typeName
-            )
-        );
-    }
+                "0",
+                dt.dimensions()/dimTime,
+                Zero
+            ),
+            calculatedFvPatchField<Type>::typeName
+        )
+    );
 }
 
 
@@ -129,38 +103,14 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    if (mesh().moving())
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    (
+        new GeometricField<Type, fvPatchField, volMesh>
         (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()*vf.dimensions(),
-                rDeltaT.primitiveField()*
-                (
-                    vf.primitiveField()
-                  - vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
-                ),
-                rDeltaT.boundaryField()*
-                (
-                    vf.boundaryField() - vf.oldTime().boundaryField()
-                )
-            )
-        );
-    }
-    else
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
-        (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                rDeltaT*(vf - vf.oldTime())
-            )
-        );
-    }
+            ddtIOobject,
+            rDeltaT*(vf - vf.oldTime())
+        )
+    );
 }
 
 
@@ -181,38 +131,14 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    if (mesh().moving())
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    (
+        new GeometricField<Type, fvPatchField, volMesh>
         (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.primitiveField()*rho.value()*
-                (
-                    vf.primitiveField()
-                  - vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
-                ),
-                rDeltaT.boundaryField()*rho.value()*
-                (
-                    vf.boundaryField() - vf.oldTime().boundaryField()
-                )
-            )
-        );
-    }
-    else
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
-        (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                rDeltaT*rho*(vf - vf.oldTime())
-            )
-        );
-    }
+            ddtIOobject,
+            rDeltaT*rho*(vf - vf.oldTime())
+        )
+    );
 }
 
 
@@ -233,41 +159,14 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    if (mesh().moving())
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    (
+        new GeometricField<Type, fvPatchField, volMesh>
         (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.primitiveField()*
-                (
-                    rho.primitiveField()*vf.primitiveField()
-                  - rho.oldTime().primitiveField()
-                   *vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
-                ),
-                rDeltaT.boundaryField()*
-                (
-                    rho.boundaryField()*vf.boundaryField()
-                  - rho.oldTime().boundaryField()
-                   *vf.oldTime().boundaryField()
-                )
-            )
-        );
-    }
-    else
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
-        (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
-            )
-        );
-    }
+            ddtIOobject,
+            rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
+        )
+    );
 }
 
 
@@ -289,54 +188,18 @@ localEulerDdtScheme<Type>::fvcDdt
         mesh()
     );
 
-    if (mesh().moving())
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    (
+        new GeometricField<Type, fvPatchField, volMesh>
         (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                mesh(),
-                rDeltaT.dimensions()
-               *alpha.dimensions()*rho.dimensions()*vf.dimensions(),
-                rDeltaT.primitiveField()*
-                (
-                    alpha.primitiveField()
-                   *rho.primitiveField()
-                   *vf.primitiveField()
-
-                  - alpha.oldTime().primitiveField()
-                   *rho.oldTime().primitiveField()
-                   *vf.oldTime().primitiveField()*mesh().Vsc0()/mesh().Vsc()
-                ),
-                rDeltaT.boundaryField()*
-                (
-                    alpha.boundaryField()
-                   *rho.boundaryField()
-                   *vf.boundaryField()
-
-                  - alpha.oldTime().boundaryField()
-                   *rho.oldTime().boundaryField()
-                   *vf.oldTime().boundaryField()
-                )
-            )
-        );
-    }
-    else
-    {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
-        (
-            new GeometricField<Type, fvPatchField, volMesh>
-            (
-                ddtIOobject,
-                rDeltaT
-               *(
-                   alpha*rho*vf
-                 - alpha.oldTime()*rho.oldTime()*vf.oldTime()
-                )
-            )
-        );
-    }
+            ddtIOobject,
+            rDeltaT
+           *(
+               alpha*rho*vf
+             - alpha.oldTime()*rho.oldTime()*vf.oldTime()
+           )
+        )
+    );
 }
 
 
@@ -388,15 +251,7 @@ localEulerDdtScheme<Type>::fvmDdt
     const scalarField& rDeltaT = localRDeltaT();
 
     fvm.diag() = rDeltaT*mesh().Vsc();
-
-    if (mesh().moving())
-    {
-        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc0();
-    }
-    else
-    {
-        fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc();
-    }
+    fvm.source() = rDeltaT*vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -424,16 +279,8 @@ localEulerDdtScheme<Type>::fvmDdt
 
     fvm.diag() = rDeltaT*rho.value()*mesh().Vsc();
 
-    if (mesh().moving())
-    {
-        fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().primitiveField()*mesh().Vsc0();
-    }
-    else
-    {
-        fvm.source() = rDeltaT
-            *rho.value()*vf.oldTime().primitiveField()*mesh().Vsc();
-    }
+    fvm.source() =
+        rDeltaT*rho.value()*vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -461,18 +308,9 @@ localEulerDdtScheme<Type>::fvmDdt
 
     fvm.diag() = rDeltaT*rho.primitiveField()*mesh().Vsc();
 
-    if (mesh().moving())
-    {
-        fvm.source() = rDeltaT
-            *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc0();
-    }
-    else
-    {
-        fvm.source() = rDeltaT
-            *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc();
-    }
+    fvm.source() = rDeltaT
+       *rho.oldTime().primitiveField()
+       *vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
@@ -502,20 +340,10 @@ localEulerDdtScheme<Type>::fvmDdt
     fvm.diag() =
         rDeltaT*alpha.primitiveField()*rho.primitiveField()*mesh().Vsc();
 
-    if (mesh().moving())
-    {
-        fvm.source() = rDeltaT
-            *alpha.oldTime().primitiveField()
-            *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc0();
-    }
-    else
-    {
-        fvm.source() = rDeltaT
-            *alpha.oldTime().primitiveField()
-            *rho.oldTime().primitiveField()
-            *vf.oldTime().primitiveField()*mesh().Vsc();
-    }
+    fvm.source() = rDeltaT
+       *alpha.oldTime().primitiveField()
+       *rho.oldTime().primitiveField()
+       *vf.oldTime().primitiveField()*mesh().Vsc();
 
     return tfvm;
 }
