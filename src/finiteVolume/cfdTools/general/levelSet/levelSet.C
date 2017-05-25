@@ -79,7 +79,7 @@ Foam::levelSetFraction
                     levelC[cI],
                     levelP[pI0],
                     levelP[pIA],
-                    levelP[pIA]
+                    levelP[pIB]
                 };
 
             if (above)

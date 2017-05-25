@@ -87,7 +87,7 @@ Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>> Foam::levelSetAverage
                     levelC[cI],
                     levelP[pI0],
                     levelP[pIA],
-                    levelP[pIA]
+                    levelP[pIB]
                 };
             const cut::volumeIntegrateOp<Type>
                 positive = FixedList<Type, 4>
@@ -171,7 +171,7 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
         }
     }
 
-    return sum & patch.Sf()/sqr(patch.magSf());
+    return patch.Sf()/sqr(patch.magSf()) & sum;
 }
 
 
