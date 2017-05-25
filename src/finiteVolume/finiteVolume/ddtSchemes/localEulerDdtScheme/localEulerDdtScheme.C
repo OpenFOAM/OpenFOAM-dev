@@ -60,8 +60,6 @@ localEulerDdtScheme<Type>::fvcDdt
     const dimensioned<Type>& dt
 )
 {
-    const volScalarField& rDeltaT = localRDeltaT();
-
     IOobject ddtIOobject
     (
         "ddt(" + dt.name() + ')',
