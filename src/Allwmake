@@ -78,6 +78,7 @@ functionObjects/Allwmake $targetType $*
 wmake $targetType sixDoFRigidBodyMotion
 wmake $targetType rigidBodyDynamics
 wmake $targetType rigidBodyMeshMotion
+wmake $targetType waves
 
 
 #------------------------------------------------------------------------------

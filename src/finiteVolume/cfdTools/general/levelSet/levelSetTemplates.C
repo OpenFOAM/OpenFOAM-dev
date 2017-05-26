@@ -42,27 +42,29 @@ Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>> Foam::levelSetAverage
     const DimensionedField<Type, pointMesh>& negativeP
 )
 {
-    DimensionedField<Type, volMesh> sum
+    tmp<DimensionedField<Type, volMesh>> tResult
     (
-        IOobject
+        new DimensionedField<Type, volMesh>
         (
-            "levelSetIntegral",
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensioned<Type>
-        (
-            "0",
-            positiveC.dimensions()*dimVolume,
-            pTraits<Type>::zero
+            IOobject
+            (
+                positiveC.name() + ":levelSetAverage",
+                mesh.time().timeName(),
+                mesh
+            ),
+            mesh,
+            dimensioned<Type>("0", positiveC.dimensions(), Zero)
         )
     );
+    DimensionedField<Type, volMesh>& result = tResult.ref();
 
-    forAll(sum, cI)
+    forAll(result, cI)
     {
         const List<tetIndices> cellTetIs =
             polyMeshTetDecomposition::cellTetIndices(mesh, cI);
+
+        scalar v = 0;
+        Type r = Zero;
 
         forAll(cellTetIs, cellTetI)
         {
@@ -106,11 +108,15 @@ Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>> Foam::levelSetAverage
                     negativeP[pIB]
                 });
 
-            sum[cI] += tetCut(tet, level, positive, negative);
+            v += cut::volumeOp()(tet);
+
+            r += tetCut(tet, level, positive, negative);
         }
+
+        result[cI] = r/v;
     }
 
-    return sum/mesh.V();
+    return tResult;
 }
 
 
@@ -128,11 +134,15 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
 {
     typedef typename outerProduct<Type, vector>::type sumType;
 
-    Field<sumType> sum(patch.size(), pTraits<sumType>::zero);
+    tmp<Field<Type>> tResult(new Field<Type>(patch.size(), Zero));
+    Field<Type>& result = tResult.ref();
 
-    forAll(sum, fI)
+    forAll(result, fI)
     {
         const face& f = patch.patch().localFaces()[fI];
+
+        vector a = vector::zero;
+        sumType r = Zero;
 
         for(label eI = 0; eI < f.size(); ++ eI)
         {
@@ -167,11 +177,15 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
                     negativeP[e[1]]
                 });
 
-            sum[fI] += triCut(tri, level, positive, negative);
+            a += cut::areaOp()(tri);
+
+            r += triCut(tri, level, positive, negative);
         }
+
+        result[fI] = a/magSqr(a) & r;
     }
 
-    return patch.Sf()/sqr(patch.magSf()) & sum;
+    return tResult;
 }
 
 

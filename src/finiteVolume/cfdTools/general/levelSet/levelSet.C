@@ -39,22 +39,28 @@ Foam::levelSetFraction
     const bool above
 )
 {
-    DimensionedField<scalar, volMesh> sum
+    tmp<DimensionedField<scalar, volMesh>> tResult
     (
-        IOobject
+        new DimensionedField<scalar, volMesh>
         (
-            "levelSetIntegral",
-            mesh.time().timeName(),
-            mesh
-        ),
-        mesh,
-        dimensionedScalar("0", dimVolume, 0)
+            IOobject
+            (
+                "levelSetFraction",
+                mesh.time().timeName(),
+                mesh
+            ),
+            mesh,
+            dimensionedScalar("0", dimless, 0)
+        )
     );
+    DimensionedField<scalar, volMesh>& result = tResult.ref();
 
-    forAll(sum, cI)
+    forAll(result, cI)
     {
         const List<tetIndices> cellTetIs =
             polyMeshTetDecomposition::cellTetIndices(mesh, cI);
+
+        scalar v = 0, r = 0;
 
         forAll(cellTetIs, cellTetI)
         {
@@ -82,18 +88,22 @@ Foam::levelSetFraction
                     levelP[pIB]
                 };
 
+            v += cut::volumeOp()(tet);
+
             if (above)
             {
-                sum[cI] += tetCut(tet, level, cut::volumeOp(), cut::noOp());
+                r += tetCut(tet, level, cut::volumeOp(), cut::noOp());
             }
             else
             {
-                sum[cI] += tetCut(tet, level, cut::noOp(), cut::volumeOp());
+                r += tetCut(tet, level, cut::noOp(), cut::volumeOp());
             }
         }
+
+        result[cI] = r/v;
     }
 
-    return sum/mesh.V();
+    return tResult;
 }
 
 
@@ -105,11 +115,14 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
     const bool above
 )
 {
-    vectorField sum(patch.size(), vector::zero);
+    tmp<scalarField> tResult(new scalarField(patch.size(), 0));
+    scalarField& result = tResult.ref();
 
-    forAll(sum, fI)
+    forAll(result, fI)
     {
         const face& f = patch.patch().localFaces()[fI];
+
+        vector a = vector::zero, r = vector::zero;
 
         for(label eI = 0; eI < f.size(); ++ eI)
         {
@@ -130,18 +143,22 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
                     levelP[e[1]]
                 };
 
+            a += cut::areaOp()(tri);
+
             if (above)
             {
-                sum[fI] += triCut(tri, level, cut::areaOp(), cut::noOp());
+                r += triCut(tri, level, cut::areaOp(), cut::noOp());
             }
             else
             {
-                sum[fI] += triCut(tri, level, cut::noOp(), cut::areaOp());
+                r += triCut(tri, level, cut::noOp(), cut::areaOp());
             }
         }
+
+        result[fI] = a/magSqr(a) & r;
     }
 
-    return sum & patch.Sf()/sqr(patch.magSf());
+    return tResult;
 }
 
 // ************************************************************************* //
