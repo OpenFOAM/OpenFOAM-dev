@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -32,9 +32,14 @@
 #     Also removes consecutive blank lines from file.
 #
 #------------------------------------------------------------------------------
-usage() {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+usage() {
     cat<<USAGE
 
 Usage: ${0##*/} [OPTION] <file1> ... <fileN>
@@ -48,25 +53,21 @@ options:
   An alternative version can be specified with the -version option.
 
 USAGE
-    exit 1
 }
 
-#------------------------------------------------------------------------------
-
-# parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -v | -version)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         version="$2"
         shift 2
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -74,12 +75,14 @@ do
     esac
 done
 
+echo "$version" | grep -Eq '^([0-9]\.[0-9]|dev)$' || \
+    error "The version number is \"${version}\"." \
+           "The format must be MAJOR.MINOR (e.g. \"4.1\") or \"dev\""
+
 # constant width for version - default to WM_PROJECT_VERSION
-version=$(printf %-36s ${version:-$WM_PROJECT_VERSION})
+version=$(printf %-36s "${version:-$WM_PROJECT_VERSION}")
 
-[ $# -ge 1 ] || usage
-
-#------------------------------------------------------------------------------
+[ $# -ge 1 ] || error
 
 printHeader()
 {
@@ -107,7 +110,7 @@ HEADER
 #
 FoamFileAttribute()
 {
-    sed -n -e 's/[ ;]*$//' -e "s/^ *$1 *//p" $2
+    sed -n -e 's/[ ;]*$//' -e "s/^ *$1 *//p" "$2"
 }
 
 
@@ -126,10 +129,8 @@ do
         format=$(FoamFileAttribute format $tmpFile)
         class=$(FoamFileAttribute  class  $tmpFile)
         object=$(FoamFileAttribute object $tmpFile)
-        # extract note? - needs special handling
-        unset note
 
-        printHeader $format $class $object "$note" > $tmpFile
+        printHeader "$format" "$class" "$object" > $tmpFile
 
         sed '1,/}/d' $caseFile | sed '/./,/^$/!d' >> $tmpFile
 
