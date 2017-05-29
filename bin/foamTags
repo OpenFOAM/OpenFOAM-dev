@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -37,30 +37,47 @@
 #
 #------------------------------------------------------------------------------
 
-if [ $# -ne 0 ]
-then
-    echo "Usage : ${0##*/}"
-    echo ""
-    echo "Build the tags files for all the .C and .H files"
-    echo ""
-    exit 1
-fi
+usage() {
+    cat <<USAGE
+
+Usage: ${0##*/}
+options:
+  -help      | -h     help
+
+Build the tags files for all the .C and .H files
+
+USAGE
+}
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage && exit 0
+        ;;
+    *)
+        usage && exit 1
+        ;;
+    esac
+done
 
 for cmd in etags ctags-exuberant
 do
-    type $cmd >/dev/null 2>&1 || {
+    command -v $cmd >/dev/null 2>&1 || {
         echo "${0##*/} cannot build tag files: '$cmd' command not found"
         exit 1
     }
 done
 
-cd $WM_PROJECT_DIR || exit 1
+cd "$WM_PROJECT_DIR" || exit 1
 mkdir .tags 2>/dev/null
 
 #etagsCmd="etags --declarations -l c++ -o .tags/etags -"
 etagsCmd="ctags-exuberant -e --extra=+fq --file-scope=no --c-kinds=+p -o .tags/etags -L -"
 
-find -H $WM_PROJECT_DIR \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | $etagsCmd
+find -H "$WM_PROJECT_DIR" \
+     \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) | \
+    $etagsCmd
 
 #gtags -i --gtagsconf bin/tools/gtagsrc .tags
 

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -31,23 +31,40 @@
 #------------------------------------------------------------------------------
 sourcesFile=${TMPDIR:-/tmp}/sourcesFile.$$
 
-if [ $# -ne 0 ]
-then
-    echo "Usage : ${0##*/}"
-    echo ""
-    echo "Build the Ebrowse database for all the .H and .C files"
-    echo ""
-    exit 1
-fi
+usage() {
+    cat <<USAGE
+
+Usage: ${0##*/}
+options:
+  -help      | -h     help
+
+Build the Ebrowse database for all the .H and .C files
+
+USAGE
+}
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -h | -help)
+        usage && exit 0
+        ;;
+    *)
+        usage && exit 1
+        ;;
+    esac
+done
 
 # Clean up on termination and on Ctrl-C
 trap 'rm -f $sourcesFile 2>/dev/null; exit 0' EXIT TERM INT
 
-cd $WM_PROJECT_DIR
+cd "$WM_PROJECT_DIR"
 mkdir .tags 2>/dev/null
 cd .tags
 
-find -H .. \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) -print > $sourcesFile
-ebrowse --files=$sourcesFile --output-file=ebrowse
+find -H .. \
+     \( -name "*.[HC]" -o -name lnInclude -prune -o -name Doxygen -prune \) \
+     -print > "$sourcesFile"
+ebrowse --files="$sourcesFile" --output-file=ebrowse
 
 #------------------------------------------------------------------------------
