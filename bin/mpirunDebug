@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -44,10 +44,16 @@ usage()
     cat<<USAGE
 
 Usage: ${0##*/}  -np <dd> <executable> <args>
+options:
+  -help      | -h     print the usage
 
-* This will run like mpirun but with each process in an XTerm
+This application runs like mpirun but with each process in an XTerm
 
 USAGE
+}
+
+error() {
+    usage
     exit 1
 }
 
@@ -57,6 +63,9 @@ while [ "$1" != "" ]
 do
     echo "$1"
     case $1 in
+    -help | -h)
+        usage && exit 0
+        ;;
     -np)
         nProcs=$2
         shift
@@ -80,15 +89,15 @@ echo "nProcs=$nProcs"
 echo "exec=$exec"
 echo "args=$args"
 
-[ "$nProcs" ] || usage
-[ "$args" ] || usage
-[ "$exec" ] || usage
+[ "$nProcs" ] || error
+[ "$args" ] || error
+[ "$exec" ] || error
 
 exec=`which $exec`
 if [ ! -x "$exec" ]
 then
     echo "Cannot find executable $exec or is not executable"
-    usage
+    error
 fi
 
 if [ ! "$PWD" ]
@@ -107,7 +116,7 @@ case "$method" in
     # okay
     ;;
 *)
-    usage
+    error
     ;;
 esac
 
@@ -115,7 +124,7 @@ $ECHO "Run all processes local or distributed? 1)local  2)remote: \c"
 read spawn
 if [ "$spawn" -ne 1 -a "$spawn" -ne 2 ]
 then
-    usage
+    error
 fi
 
 
@@ -250,8 +259,7 @@ MPICH)
 *)
     echo
     echo "Unsupported WM_MPLIB setting : $WM_MPLIB"
-    usage
-    exit 1
+    error
 esac
 
 echo "Constructed $PWD/mpirun.schema file."
