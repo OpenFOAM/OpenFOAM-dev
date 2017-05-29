@@ -30,47 +30,53 @@
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
-DIR="$FOAM_ETC/codeTemplates/app"
+dir="$FOAM_ETC/codeTemplates/app"
 
 usage() {
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: $Script [-h | -help] <applicationName>
+Usage: $Script [OPTIONS] <application>
+options:
+  -help  | -h         help
 
-* Create directory with source and compilation files for a new application
-  <applicationName> (dir)
-  - <applicationName>.C
+Create directory with source and compilation files for a new application
+  <application> (dir)
+  - <application>.C
   - Make (dir)
     - files
     - options
-  Compiles an executable named <applicationName> in \$FOAM_USER_APPBIN:
+  Compiles an executable named <application> in \$FOAM_USER_APPBIN:
   $FOAM_USER_APPBIN
 USAGE
+}
+
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
 case "$1" in
-(-h | -help)
-    usage
+(-help | -h)
+    usage && exit 0
     ;;
 -*)
-    usage "$1 is not a valid filename"
+    error "$1 is not a valid filename"
     ;;
 esac
 
-[ "$#" -eq 1 ] || usage "Wrong number of arguments"
-[ -d "$1" ] && usage "$1 directory already exists, aborting..."
+[ "$#" -eq 1 ] || error "Wrong number of arguments"
+[ -d "$1" ] && error "$1 directory already exists, aborting..."
 
-NAME=$1
-YEAR=$(date +%Y)
+app=$1
+year=$(date +%Y)
 
-echo "Creating application code directory $NAME" && mkdir $NAME
-sed -e "s#NAME#${NAME}#g" \
-    -e "s#YEAR#${YEAR}#g" \
-    ${DIR}/app.C > $NAME/$NAME.C
+echo "Creating application code directory ${app}" && mkdir "${app}"
+sed -e "s#NAME#${app}#g" \
+    -e "s#YEAR#${year}#g" \
+    "${dir}/app.C" > "${app}/${app}.C"
 
-echo "Creating Make subdirectory" && mkdir $NAME/Make
-sed "s#NAME#${NAME}#g" ${DIR}/Make/files > $NAME/Make/files
-cp ${DIR}/Make/options $NAME/Make
+echo "Creating Make subdirectory" && mkdir "${app}/Make"
+sed "s#NAME#${app}#g" "${dir}/Make/files" > "${app}/Make/files"
+cp "${dir}/Make/options" "${app}/Make"
 
 #------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -33,54 +33,58 @@
 #     - Default directory name for VTK files is postProcessing
 #
 #------------------------------------------------------------------------------
-usage () {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
-    cat <<USAGE
+    usage
+    exit 1
+}
+
+usage() {
+        cat <<USAGE
 
 Usage: ${0##*/} [OPTIONS] ...
 options:
-  -c | -case <dir>    specify case directory (default = local dir)
-  -d | -dir <dir>     post-processing directory <dir> (default = postProcessing)
-  -h | -help          help
-  -o | -out <dir>     output links directory <dir> (default = sequencedVTK)
+options:
+  -case | -c <dir>    specify case directory (default = local dir)
+  -dir  | -d <dir>    post-processing directory <dir> (default = postProcessing)
+  -help | -h          help
+  -out  | -o <dir>    output links directory <dir> (default = sequencedVTK)
 
 Creates symbolic links to all VTK files in a post-processing directory
 Links form a sequence like name.0000.vtk, name.0001.vtk, etc.
 Paraview recognises the link names as a sequence which can be opened and played.
 The sequence of links to images can be used to create a video from the images.
 - Default directory name for VTK files is postProcessing
-
 USAGE
-    exit 1
 }
 
-DIR=postProcessing
-OUT=sequencedVTK
+dir=postProcessing
+out=sequencedVTK
 
 while [ "$#" -gt 0 ]
 do
    case "$1" in
    -c | -case)
-      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-      cd "$2" 2>/dev/null || usage "directory does not exist:  '$2'"
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      cd "$2" 2>/dev/null || error "directory does not exist:  '$2'"
       shift 2
       ;;
    -d | -dir)
-      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-      DIR=$2
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      dir=$2
       shift 2
       ;;
    -h | -help)
-      usage
+      usage && exit 0
       ;;
    -o | -out)
-      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-      OUT=$2
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      out=$2
       shift 2
       ;;
    -*)
-      usage "invalid option '$1'"
+      error "invalid option '$1'"
       ;;
    *)
       break
@@ -88,39 +92,36 @@ do
     esac
 done
 
-if [ ! -d $DIR ]; then
-    echo "Cannot find postProcessing directory, exiting."
-    exit 0
-fi
+[ ! -d "$dir" ] && error "Cannot find postProcessing directory, exiting."
 
-FILES=$(find $DIR -type f -name *vtk)
-NAMES=$(for f in $FILES; do basename $f .vtk; done | sort -u)
+files=$(find "$dir" -type f -name "*vtk")
+names=$(for f in $files; do basename "$f" .vtk; done | sort -u)
 
-if [ -d $OUT ]; then
-    echo "$OUT directory already exists.  Deleting links within it..."
-    rm -rf $OUT/*
+if [ -d "$out" ]; then
+    echo "$out directory already exists.  Deleting links within it..."
+    rm "${out:?}"/* 2>/dev/null
 else
-    echo "Creating $OUT directory..."
-    mkdir $OUT
+    echo "Creating $out directory..."
+    mkdir "$out"
 fi
 
-for N in $NAMES
+for n in $names
 do
-    echo "Sequencing all VTK files named $N.vtk"
+    echo "Sequencing all VTK files named $n.vtk"
 
     # Create list of VTK files, ordered by time step
-    FILE_LIST=$(echo $FILES | \
+    file_list=$(echo "$files" | \
         tr " " "\n" | \
-        grep $N.vtk | \
+        grep "$n.vtk" | \
         awk -F'/' '{print($(NF-1)" "$0)}' | \
         sort -k 1 -g | \
         cut -d' ' -f2)
 
     i=0
-    for F in $FILE_LIST
+    for f in $file_list
     do
-        i=$(expr $i + 1) # Relies on ordered list of $sourceFiles
-        LINK=$(printf "${N}.%04d.vtk" $i)
-        ln -s ../$F $OUT/$LINK
+        i=$(( i + 1 )) # Relies on ordered list of files
+        link=$(printf "${n}.%04d.vtk" $i)
+        ln -s "../$f" "$out/$link"
     done
 done

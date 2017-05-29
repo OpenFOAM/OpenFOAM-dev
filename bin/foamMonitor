@@ -78,7 +78,9 @@ reread
 EOF
 }
 
-howMany() ( set -f; set -- $1; echo $# )
+howMany() ( echo "$1" | awk '{ print NF }' )
+#howMany() ( echo "$1" | set -f; set -- $1; echo $# )
+
 isInteger() {
     [ ! -z "${1##*[!0-9]*}" ] && echo "$1" && return 0
 }
@@ -125,7 +127,7 @@ do
 done
 
 [ $# -eq 1 ] || error "Incorrect arguments specified"
-[ -f "$1" ]    || error "File $1 does not exit"
+[ -f "$1" ]  || error "File $1 does not exit"
 file=$1
 
 # Get keys from header
@@ -155,7 +157,7 @@ done
 xlabel=$(echo "$keys" | cut -d " " -f2)
 keys=$(echo "$keys" | cut -d " " -f3-)
 
-gp_file=$(mktemp)
+gp_file=$(mktemp /tmp/tmp.XXXXXX)
 plotFileHeader > "$gp_file"
 i=1
 for field in $keys
@@ -166,7 +168,7 @@ do
     then
        plot_line="$plot_line, \\"
     fi
-    echo $plot_line >> "$gp_file"
+    echo "$plot_line" >> "$gp_file"
 done
 plotFileFooter >> "$gp_file"
 

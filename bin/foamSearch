@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -35,56 +35,59 @@
 Script=${0##*/}
 
 usage() {
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: $Script [OPTIONS] <directory> <keyword> <file>
 
-Options:
--c | -count       prefix lines by the number of occurrences
--h | -help        help
+Usage: $Script [OPTIONS] <directory> <filename> <keyword>
+options:
+  -count | -c         prefix lines by the number of occurrences
+  -help  | -h         help
 
-* Searches the <directory> for files named <file> and extracts entries with
-  <keyword>.  Sorts result into a list of unique entries (removing repeats).
+Searches the <directory> for files named <filename> and extracts entries with
+<keyword>.  Sorts result into a list of unique entries (removing repeats).
 
-  Examples:
+Examples:
   * Default ddtSchemes entries in the fvSchemes files in all tutorials:
-      foamSearch $FOAM_TUTORIALS ddtSchemes.default fvSchemes
+      foamSearch $FOAM_TUTORIALS fvSchemes  ddtSchemes.default
   * Relaxations factors for U in fvSolutions files in all tutorials:
-      foamSearch -c $FOAM_TUTORIALS relaxationFactors.equations.U fvSolution
-
+      foamSearch -c $FOAM_TUTORIALS fvSolution  relaxationFactors.equations.U
 USAGE
+}
+
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
 case "$1" in
 (-c | -count)
-    COUNT="-c"
+    count="-c"
     shift
     ;;
 (-h | -help)
-    usage
+    usage && exit 0
     ;;
 -*)
-    usage "$1 is not a valid option/filename"
+    error "$1 is not a valid option/filename"
     ;;
 esac
 
-[ "$#" -eq 3 ] || usage "Wrong number of arguments: expected 3, found $#"
-[ -d "$1" ] || usage "$1 is not a directory"
+[ "$#" -eq 3 ] || error "Wrong number of arguments: expected 3, found $#"
+[ -d "$1" ] || error "$1 is not a directory"
 
-TEMP=temp.$$
-FILES=$(find $1 -name $3)
-[ -n "$FILES" ] || usage "No file $3 found in $1"
+tmp=$(mktemp tmp.XXXXXX)
+files=$(find "$1" -name "$3")
+[ -n "$files" ] || error "No file $3 found in $1"
 
-for F in $FILES
+for f in $files
 do
-    foamDictionary -entry $2 $F 2>/dev/null >> $TEMP
+    foamDictionary -entry "$2" "$f" 2>/dev/null >> "$tmp"
 done
 
-[ -s "$TEMP" ] && \
-    sort $TEMP | uniq $COUNT | sed '/^[\t 1-9]*$/d' || \
+[ -s "$tmp" ] && \
+    sort "$tmp" | uniq $count | sed '/^[\t 1-9]*$/d' || \
     echo "No keyword $2 found in $3 files"
 
-rm $TEMP 2>/dev/null
+rm "$tmp" 2>/dev/null
 
 #------------------------------------------------------------------------------

@@ -38,7 +38,7 @@ Usage: $Script [OPTIONS] <base> <type> <boundaryConditionName>
 options:
   -help  | -h         help
 
-* Create directory of source and compilation files for a new boundary condition
+Create directory of source and compilation files for a new boundary condition
   <boundaryConditionName> (dir)
   - .C and .H source files
   - Make (dir)

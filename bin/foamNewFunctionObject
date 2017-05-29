@@ -31,54 +31,64 @@
 #
 #------------------------------------------------------------------------------
 Script=${0##*/}
-DIR="$FOAM_ETC/codeTemplates/functionObject"
+dir="$FOAM_ETC/codeTemplates/functionObject"
+
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 usage() {
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
-    cat<<USAGE
-Usage: $Script [-h | -help] <functionObjectName>
+        cat<<USAGE
+Usage: $Script [OPTIONS] <functionObject>
+options:
+  -help  | -h         help
 
-* Create directory with source and compilation files for a new function object
-  <functionObjectName> (dir)
-  - <functionObjectName>.H
-  - <functionObjectName>.C
-  - IO<functionObjectName>.H
+Create directory with source and compilation files for a new function object
+  <functionObject> (dir)
+  - <functionObject>.H
+  - <functionObject>.C
+  - IO<functionObject>.H
   - Make (dir)
     - files
     - options
-  Compiles a library named lib<functionObjectName>FunctionObject.so in
+  Compiles a library named lib<functionObject>FunctionObject.so in
   \$FOAM_USER_LIBBIN:
   $FOAM_USER_LIBBIN
 USAGE
-    exit 1
 }
 
 case "$1" in
 (-h | -help)
-    usage
+    usage && exit 0
     ;;
 -*)
-    usage "$1 is not a valid option/filename"
+    error "$1 is not a valid option/filename"
     ;;
 esac
 
-[ "$#" -eq 1 ] || usage "Wrong number of arguments"
-[ -d "$1" ] && usage "$1 directory already exists, aborting..."
+[ "$#" -eq 1 ] || error "Wrong number of arguments"
+[ -d "$1" ] && error "$1 directory already exists, aborting..."
 
-NAME=$1
-YEAR=$(date +%Y)
+func=$1
+year=$(date +%Y)
 
-echo "Creating function object code directory $NAME" && mkdir $NAME
-for F in $(ls ${DIR}/*.*)
+echo "Creating function object code directory $func" && mkdir "${func}"
+
+tmp=$(mktemp tmp.XXXXXX)
+find "${dir}" -name '*.*' > "$tmp"
+while IFS= read -r template_file
 do
-    FILE=$(basename $F | sed "s#FUNCTIONOBJECT#${NAME}#g")
-    sed -e "s#FUNCTIONOBJECT#${NAME}#g" \
-        -e "s#YEAR#${YEAR}#g" \
-        ${F} > ${NAME}/${FILE}
-done
+    file=$(basename "$template_file" | sed "s#FUNCTIONOBJECT#${func}#g")
+    sed -e "s#FUNCTIONOBJECT#${func}#g" \
+        -e "s#YEAR#${year}#g" \
+        "$template_file" > "${func}/${file}"
+done < "$tmp"
+rm "$tmp"
 
-echo "Creating Make subdirectory" && mkdir $NAME/Make
-sed "s#FUNCTIONOBJECT#${NAME}#g" ${DIR}/Make/files > $NAME/Make/files
-cp ${DIR}/Make/options $NAME/Make
+echo "Creating Make subdirectory" && mkdir "$func/Make"
+sed "s#FUNCTIONOBJECT#${func}#g" "${dir}/Make/files" > "$func/Make/files"
+cp "${dir}/Make/options" "$func/Make"
 
 #------------------------------------------------------------------------------
