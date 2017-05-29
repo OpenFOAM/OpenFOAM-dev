@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -30,18 +30,26 @@
 #     and all its subdirectories.
 #
 #------------------------------------------------------------------------------
+Script=$PWD/${0##*/}
 
 # Normally use standard "make"
 make="make"
 
 # Source tutorial run functions
-. $WM_PROJECT_DIR/bin/tools/RunFunctions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
-thisScript=$0
-if [ "/${thisScript#/}" != "$thisScript" ]
-then
-    thisScript="$PWD/$thisScript"
-fi
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -help      | -h     help
+  -skipFirst | -s     do not execute the first Allrun script
+  -test      | -t     run test loop
+
+Helper script used by the Allrun scripts in the OpenFOAM tutorials
+USAGE
+}
 
 skipFirst=false
 
@@ -49,12 +57,15 @@ skipFirst=false
 while [ "$#" -gt 0 ]
 do
     case "$1" in
-    -t | -test)
-        passArgs="-test"
-        shift
+    -h | -help)
+        usage && exit 0
         ;;
     -s | -skipFirst)
         skipFirst=true
+        shift
+        ;;
+    -t | -test)
+        passArgs="-test"
         shift
         ;;
     *)
@@ -71,25 +82,24 @@ then
 elif [ -d system ]
 then
     # Run normal case.
-    parentDir=`dirname $PWD`
-    application=`getApplication`
+    application=$(getApplication)
     runApplication blockMesh
-    runApplication $application
+    runApplication "$application"
 else
     # Loop over sub-directories and compile any applications
     for caseName in *
     do
-        if [ -d $caseName -a -d "$caseName/Make" ]
+        if [ -d "$caseName" -a -d "$caseName/Make" ]
         then
-            ( compileApplication $caseName )
+            ( compileApplication "$caseName" )
         fi
     done
     FOAM_TARGETS=$(for d in *; do [ -d "$d" ] && echo "$d"; done | xargs)
 
     # Run all cases which have not already been run
-    $make -k -f $WM_PROJECT_DIR/bin/tools/MakefileDirs \
+    $make -k -f "$WM_PROJECT_DIR/bin/tools/MakefileDirs" \
           FOAM_TARGETS="$FOAM_TARGETS" \
-          FOAM_APP="$thisScript" FOAM_ARGS="$passArgs"
+          FOAM_APP="$Script" FOAM_ARGS="$passArgs"
 fi
 
 #------------------------------------------------------------------------------
