@@ -44,14 +44,9 @@
 #
 #-------------------------------------------------------------------------------
 usage() {
-    [ "${optQuiet:-$optSilent}" = true ] && exit 1
-
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: ${0##*/} [OPTION] fileName
-       ${0##*/} [OPTION] -list
 options:
   -all              return all files (otherwise stop after the first match)
   -list             list the directories to be searched
@@ -63,18 +58,30 @@ options:
                     in the form Maj.Min.Rev (eg, 1.7.0)
   -help             print the usage
 
-  Locate user/group/shipped file with semantics similar to the
-  ~OpenFOAM/fileName expansion.
+Searches for OpenFOAM configuration files, that are generally found in the
+installation "etc" directory, but can be located in the following locations,
+listed in order of precedence:
+- user level: \${HOME}/.OpenFOAM
+- group level: \$FOAM_INST_DIR/site
+- other level: \$WM_PROJECT_DIR/etc
 
-  The options can also be specified as a single character
-  (eg, '-q' instead of '-quiet'), but must not be grouped.
+The options can also be specified as a single character
+(eg, '-q' instead of '-quiet'), but must not be grouped.
 
-  Exit status
-      0  when the file is found. Print resolved path to stdout.
-      1  for miscellaneous errors.
-      2  when the file is not found.
+Exit status
+    0  when the file is found. Print resolved path to stdout.
+    1  for miscellaneous errors.
+    2  when the file is not found.
 
 USAGE
+}
+
+error() {
+    [ "${optQuiet:-$optSilent}" = true ] && exit 1
+
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
@@ -137,7 +144,7 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -a | -all)
         optAll=true
@@ -146,7 +153,7 @@ do
         optList=true
         ;;
     -m | -mode)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         mode="$2"
 
         # sanity check:
@@ -154,13 +161,13 @@ do
         *u* | *g* | *o* )
            ;;
         *)
-           usage "'$1' option with invalid mode '$mode'"
+           error "'$1' option with invalid mode '$mode'"
            ;;
         esac
         shift
         ;;
     -p | -prefix)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         prefixDir="$2"
         shift
         ;;
@@ -171,7 +178,7 @@ do
         optSilent=true
         ;;
     -v | -version)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         version="$2"
         # convert x.y.z -> xyz version (if installation looked like debian)
         if [ -n "$versionNum" ]
@@ -185,7 +192,7 @@ do
         break
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -248,7 +255,7 @@ if [ "$optList" = true ]
 then
 
     # list directories, or potential file locations
-    [ "$nArgs" -le 1 ] || usage
+    [ "$nArgs" -le 1 ] || error
 
     # a silly combination, but -quiet does have precedence
     [ "$optQuiet" = true ] && exit 0
@@ -265,7 +272,7 @@ then
 
 else
 
-    [ "$nArgs" -eq 1 ] || usage
+    [ "$nArgs" -eq 1 ] || error
 
     # general error, eg file not found
     exitCode=2
