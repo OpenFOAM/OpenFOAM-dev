@@ -36,7 +36,7 @@ usage() {
     cat<<USAGE
 Usage: $Script [OPTIONS] <base> <type> <boundaryConditionName>
 options:
-  -help  | -h         help
+  -help  | -h         print the usage
 
 Create directory of source and compilation files for a new boundary condition
   <boundaryConditionName> (dir)

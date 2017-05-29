@@ -40,7 +40,7 @@ usage() {
 Usage: $Script [OPTIONS] <directory> <filename> <keyword>
 options:
   -count | -c         prefix lines by the number of occurrences
-  -help  | -h         help
+  -help  | -h         print the usage
 
 Searches the <directory> for files named <filename> and extracts entries with
 <keyword>.  Sorts result into a list of unique entries (removing repeats).

@@ -36,7 +36,7 @@ usage() {
     cat<<USAGE
 Usage: $Script [OPTIONS] <application>
 options:
-  -help  | -h         help
+  -help  | -h         print the usage
 
 Create directory with source and compilation files for a new application
   <application> (dir)

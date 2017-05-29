@@ -38,7 +38,7 @@ Usage: ${0##*/} [OPTIONS] ...
 options:
   -dir   | -d <dir>   directory containing png images (default local dir)
   -fps   | -f <fps>   frames per second (default = 10)
-  -help  | -h         help
+  -help  | -h         print the usage
   -image | -i <name>  name of image sequence (default = image)
   -out   | -o <name>  name of output video file (default = video)
   -start | -s <frame> specify the start frame number for avconv

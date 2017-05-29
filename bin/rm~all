@@ -33,7 +33,7 @@ usage() {
     cat<<USAGE
 Usage: ${0##*/} [OPTIONS] [dir1] .. [dirN]
 options:
-    -help | -h         help
+    -help | -h    print the usage
 
 Remove all backup *~ files
 USAGE

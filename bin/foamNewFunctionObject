@@ -43,7 +43,7 @@ usage() {
         cat<<USAGE
 Usage: $Script [OPTIONS] <functionObject>
 options:
-  -help  | -h         help
+  -help  | -h         print the usage
 
 Create directory with source and compilation files for a new function object
   <functionObject> (dir)

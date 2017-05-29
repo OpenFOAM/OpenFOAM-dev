@@ -43,7 +43,7 @@ usage() {
 
 Usage: ${0##*/} [OPTIONS]
 options:
-  -help      | -h     help
+  -help      | -h     print the usage
   -skipFirst | -s     do not execute the first Allrun script
   -test      | -t     run test loop
 

@@ -48,7 +48,7 @@ options:
 options:
   -case | -c <dir>    specify case directory (default = local dir)
   -dir  | -d <dir>    post-processing directory <dir> (default = postProcessing)
-  -help | -h          help
+  -help | -h          print the usage
   -out  | -o <dir>    output links directory <dir> (default = sequencedVTK)
 
 Creates symbolic links to all VTK files in a post-processing directory

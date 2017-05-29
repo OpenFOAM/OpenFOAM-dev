@@ -42,7 +42,7 @@ usage() {
 
 Usage: ${0##*/}
 options:
-  -help      | -h     help
+  -help | -h     print the usage
 
 Build the tags files for all the .C and .H files
 

@@ -40,7 +40,7 @@ usage() {
 
 Usage: ${0##*/} [OPTIONS]
 options:
-  -help      | -h     help
+  -help      | -h     print the usage
 
 Helper script used by the Allclean scripts in the OpenFOAM tutorials
 USAGE
