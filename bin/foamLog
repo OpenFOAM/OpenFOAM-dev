@@ -97,7 +97,7 @@ variables.
 HELP
 }
 
-error () {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage

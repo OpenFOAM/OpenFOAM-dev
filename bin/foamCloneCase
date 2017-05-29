@@ -47,7 +47,7 @@ The time directory is the first time directory by default.
 USAGE
 }
 
-error () {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage

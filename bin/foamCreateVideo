@@ -31,7 +31,7 @@
 #
 #------------------------------------------------------------------------------
 
-usage () {
+usage() {
     cat <<USAGE
 
 Usage: ${0##*/} [OPTIONS] ...
@@ -55,7 +55,7 @@ Requires avconv or mencoder for MPEG-4 output, avconv for WebM output
 USAGE
 }
 
-error () {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     usage
