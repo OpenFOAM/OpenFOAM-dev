@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -30,33 +30,39 @@
 #
 #------------------------------------------------------------------------------
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
-Usage: ${0##*/} <type> {args}
+Usage: ${0##*/} [OPTIONS]
+options:
+    -help     | -h                   print the usage
+    -source   | -s <type> <class>    creates a class source file
+    -template | -t <type> <class> <template args> creates a class template
+                                     source file
+where <type> is (C|H|I|IO)
 
-* create a new standard OpenFOAM source or template file
-
-type:
-    -s | -source | source
-    -t | -template | template
+Create a new standard OpenFOAM class or class template source file
 
 USAGE
-    exit 1
 }
 
 
-# this implicitly covers a lone -help, but let other scripts handle the rest
-[ "$#" -gt 1 ] || usage
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 case "$1" in
+(-help | -h)
+    usage && exit 0
+    ;;
 (-s | -source | source)
     shift
-    $WM_PROJECT_DIR/etc/codeTemplates/source/foamNewSource "$@"
+    "$WM_PROJECT_DIR/etc/codeTemplates/source/foamNewSource" "$@"
     ;;
 (-t | -template | template)
     shift
-    $WM_PROJECT_DIR/etc/codeTemplates/template/foamNewTemplate "$@"
+    "$WM_PROJECT_DIR/etc/codeTemplates/template/foamNewTemplate" "$@"
     ;;
 (*)
     usage "unknown type '$1'"
