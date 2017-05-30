@@ -30,7 +30,8 @@
 #     and all its subdirectories.
 #
 #------------------------------------------------------------------------------
-Script=$PWD/${0##*/}
+Script=$0
+[ "/${Script#/}" != "$Script" ] && Script="$PWD/$Script"
 
 # Normally use standard "make"
 make="make"

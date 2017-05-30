@@ -30,7 +30,8 @@
 #     and all its subdirectories.
 #
 #------------------------------------------------------------------------------
-Script=$PWD/${0##*/}
+Script=$0
+[ "/${Script#/}" != "$Script" ] && Script="$PWD/$Script"
 
 # Source tutorial clean functions
 . "$WM_PROJECT_DIR/bin/tools/CleanFunctions"
