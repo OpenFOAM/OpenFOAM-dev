@@ -1,0 +1,63 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    location    "0";
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    left
+    {
+        type            waveVelocity;
+        origin          (0 0 0);
+        direction       (1 0 0);
+        speed           2;
+        waves
+        (
+            Airy
+            {
+                length      300;
+                amplitude   2.5;
+                phase       0;
+                angle       0;
+            }
+        );
+        scale           table ((1200 1) (1800 0));
+        crossScale      constant 1;
+    }
+    right
+    {
+        type            outletPhaseMeanVelocity;
+        Umean           2;
+        alpha           alpha.water;
+    }
+    top
+    {
+        type            pressureInletOutletVelocity;
+        value           uniform (0 0 0);
+    }
+    bottom
+    {
+        type            noSlip;
+    }
+}
+
+
+// ************************************************************************* //

@@ -1,0 +1,33 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication blockMesh
+
+cp -r 0.org 0
+
+runApplication extrudeMesh
+
+for i in 1 2
+do
+    runApplication -s $i topoSet -dict system/topoSetDict$i
+    runApplication -s $i refineMesh -dict system/refineMeshDictX -overwrite
+done
+
+for i in 3 4 5 6
+do
+    runApplication -s $i topoSet -dict system/topoSetDict$i
+    runApplication -s $i refineMesh -dict system/refineMeshDictY -overwrite
+done
+
+runApplication topoSet
+
+runApplication setWaves -alpha alpha.water
+
+runApplication decomposePar
+
+runParallel $(getApplication)
+
+runApplication reconstructPar
