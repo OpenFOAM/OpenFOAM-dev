@@ -121,8 +121,8 @@ class fvDOM
         //- List of pointers to radiative intensity rays
         PtrList<radiativeIntensityRay> IRay_;
 
-        //- Convergence criterion
-        scalar convergence_;
+        //- Convergence tolerance
+        scalar tolerance_;
 
         //- Maximum number of iterations
         label maxIter_;

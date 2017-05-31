@@ -24,7 +24,7 @@ fvDOMCoeffs
 {
     nPhi    3;          // azimuthal angles in PI/2 on X-Y.(from Y to X)
     nTheta  6;          // polar angles in PI (from Z to X-Y plane)
-    convergence 0.05;   // convergence criteria for radiation iteration
+    tolerance   0.05;   // convergence tolerance for radiation iteration
     maxIter 3;          // maximum number of iterations
 }
 

@@ -21,10 +21,10 @@ radiationModel  fvDOM;
 
 fvDOMCoeffs
 {
-    nPhi        4;          // azimuthal angles in PI/2 on X-Y.(from Y to X)
-    nTheta      0;          // polar angles in PI (from Z to X-Y plane)
-    convergence 1e-2;       // convergence criteria for radiation iteration
-    maxIter     4;          // maximum number of iterations
+    nPhi        4;      // azimuthal angles in PI/2 on X-Y.(from Y to X)
+    nTheta      0;      // polar angles in PI (from Z to X-Y plane)
+    tolerance   1e-2;   // convergence tolerance for radiation iteration
+    maxIter     4;      // maximum number of iterations
 }
 
 // Number of flow iterations per radiation iteration

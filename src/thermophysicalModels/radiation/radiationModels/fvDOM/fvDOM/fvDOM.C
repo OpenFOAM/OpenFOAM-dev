@@ -281,7 +281,12 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
     aLambda_(nLambda_),
     blackBody_(nLambda_, T),
     IRay_(0),
-    convergence_(coeffs_.lookupOrDefault<scalar>("convergence", 0.0)),
+    tolerance_
+    (
+        coeffs_.found("convergence")
+      ? readScalar(coeffs_.lookup("convergence"))
+      : coeffs_.lookupOrDefault<scalar>("tolerance", 0.0)
+    ),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
     omegaMax_(0)
 {
@@ -368,7 +373,12 @@ Foam::radiation::fvDOM::fvDOM
     aLambda_(nLambda_),
     blackBody_(nLambda_, T),
     IRay_(0),
-    convergence_(coeffs_.lookupOrDefault<scalar>("convergence", 0.0)),
+    tolerance_
+    (
+        coeffs_.found("convergence")
+      ? readScalar(coeffs_.lookup("convergence"))
+      : coeffs_.lookupOrDefault<scalar>("tolerance", 0.0)
+    ),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
     omegaMax_(0)
 {
@@ -389,7 +399,12 @@ bool Foam::radiation::fvDOM::read()
     if (radiationModel::read())
     {
         // Only reading solution parameters - not changing ray geometry
-        coeffs_.readIfPresent("convergence", convergence_);
+
+        // For backward-compatibility
+        coeffs_.readIfPresent("convergence", tolerance_);
+
+        coeffs_.readIfPresent("tolerance", tolerance_);
+
         coeffs_.readIfPresent("maxIter", maxIter_);
 
         return true;
@@ -407,7 +422,7 @@ void Foam::radiation::fvDOM::calculate()
 
     updateBlackBodyEmission();
 
-    // Set rays convergence false
+    // Set rays converged false
     List<bool> rayIdConv(nRay_, false);
 
     scalar maxResidual = 0.0;
@@ -425,14 +440,14 @@ void Foam::radiation::fvDOM::calculate()
                 scalar maxBandResidual = IRay_[rayI].correct();
                 maxResidual = max(maxBandResidual, maxResidual);
 
-                if (maxBandResidual < convergence_)
+                if (maxBandResidual < tolerance_)
                 {
                     rayIdConv[rayI] = true;
                 }
             }
         }
 
-    } while (maxResidual > convergence_ && radIter < maxIter_);
+    } while (maxResidual > tolerance_ && radIter < maxIter_);
 
     updateG();
 }
