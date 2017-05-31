@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -58,25 +58,30 @@ Script=${0##*/}
 # Source the wmake functions
 . ${0%/*}/scripts/wmakeFunctions
 
-usage() {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+usage() {
     cat<<USAGE
 
 Usage: $Script [OPTION] [dir]
        $Script [OPTION] target [dir [MakeDir]]
 
 options:
-  -s | -silent      Quiet mode (does not echo commands)
-  -a | -all         wmake all sub-directories, running Allwmake if present
-  -q | -queue       wmakeCollect all sub-directories, running Allwmake if present
-  -k or -non-stop   Compile without stopping when errors occur
+  -silent   | -s    Quiet mode (does not echo commands)
+  -all      | -a    wmake all sub-directories, running Allwmake if present
+  -queue    | -q    wmakeCollect all sub-directories, running Allwmake if present
+  -non-stop | -k    Compile without stopping when errors occur
   -j                Compile using all local cores/hyperthreads
-  -jN or -j N       Compile using N cores/hyperthreads
+  -j <N>    | -j<N> Compile using N cores/hyperthreads
   -no-scheduler     Compile without wmakeScheduler
   -update           Update lnInclude directories, dep files, remove deprecated
                     files and directories
-  -h | -help        Print the usage
+  -help     | -h    Print the usage
 
 
 A general, easy-to-use make system for multi-platform development
@@ -97,7 +102,6 @@ or a special target:
   objects           Compile but not link
 
 USAGE
-    exit 1
 }
 
 
@@ -135,7 +139,7 @@ do
     case "$1" in
         # Print help
         -h | -help)
-            usage
+            usage && exit 0
             ;;
         -s | -silent)
             export WM_QUIET=1
@@ -181,7 +185,7 @@ do
             break
             ;;
         -*)
-            usage "unknown option: '$*'"
+            error "unknown option: '$*'"
             ;;
         *)
             break
@@ -470,7 +474,7 @@ exec $make -f $WM_DIR/makefiles/general MAKE_DIR=$MakeDir \
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage useAllCores update expandPath findTarget
+unset Script usage error useAllCores update expandPath findTarget
 
 
 #------------------------------------------------------------------------------

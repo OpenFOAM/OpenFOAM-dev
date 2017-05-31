@@ -39,15 +39,20 @@ Script=${0##*/}
 # Source the wmake functions
 . ${0%/*}/scripts/wmakeFunctions
 
-usage() {
+error() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+usage() {
     cat<<USAGE
 
 Usage: $Script [OPTION] [dir]
        $Script [OPTION] target [dir [MakeDir]]
 
 options:
-  -s | -silent      Ignored - for compatibility with wmake
+  -silent | -s      Ignored - for compatibility with wmake
   -help             Print the usage
 
 Clean up the wmake control directory Make/\$WM_OPTIONS and remove the
@@ -64,7 +69,6 @@ The targets correspond to a subset of the 'wmake' special targets:
                     that refer to no-longer-existing source code.
 
 USAGE
-    exit 1
 }
 
 
@@ -76,13 +80,13 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -s | -silent)    # Ignored - for compatibility with wmake
         shift
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -277,7 +281,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage MakeDir
+unset Script usage error MakeDir
 
 
 #------------------------------------------------------------------------------

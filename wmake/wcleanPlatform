@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -48,9 +48,14 @@
 #------------------------------------------------------------------------------
 Script=${0##*/}
 
-usage() {
+error() {
     exec 1>&2
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+usage() {
     cat<<USAGE
 Usage: $Script [ -current | -all ]
        $Script <platform> [ ... <platformN> ]
@@ -67,7 +72,6 @@ Usage: $Script [ -current | -all ]
   are deleted.
 
 USAGE
-    exit 1
 }
 
 # Print help message
@@ -77,7 +81,7 @@ fi
 
 # Check the script is executed from the project top-level directory
 [ "$PWD" = "$WM_PROJECT_DIR" ] || \
-    usage "Not in the project top-level directory " $WM_PROJECT_DIR
+    error "Not in the project top-level directory " $WM_PROJECT_DIR
 
 # Get the platforms from the arguments
 platforms="$@"
@@ -121,7 +125,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script platforms
+unset Script platforms error usage
 
 
 #------------------------------------------------------------------------------

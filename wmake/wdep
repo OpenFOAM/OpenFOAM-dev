@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -41,19 +41,24 @@ Script=${0##*/}
 . ${0%/*}/scripts/wmakeFunctions
 
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: $Script <file>
+options:
+  -help             Print the usage
 
 Find the dep-file corresponding to <file> in the current directory
 and print the path.
 
 USAGE
-    exit 1
 }
 
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 #------------------------------------------------------------------------------
 # Parse arguments and options
@@ -63,10 +68,10 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -112,7 +117,7 @@ echo $objectsDir/$fileName.dep
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage
+unset Script usage error
 
 
 #------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -36,18 +36,23 @@
 Script=${0##*/}
 
 usage() {
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: $Script
+options:
+    -help | -h      Print the usage
 
     Scan current directory for directories and source files
     and construct 'Make/files' and 'Make/options'
 
 USAGE
-    exit 1
 }
 
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 #------------------------------------------------------------------------------
 # Parse arguments and options
@@ -57,10 +62,10 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)   # Provide immediate help
-        usage
+        usage && exit 0
         ;;
     -*)
-        usage "unknown option: '$*'"
+        error "unknown option: '$*'"
         ;;
     *)
         break
@@ -69,7 +74,7 @@ do
 done
 
 # No arguments
-[ "$#" -eq 0 ] || usage "unexpected arguments: '$*'"
+[ "$#" -eq 0 ] || error "unexpected arguments: '$*'"
 
 
 #------------------------------------------------------------------------------
@@ -106,7 +111,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage
+unset Script usage error
 
 
 #------------------------------------------------------------------------------

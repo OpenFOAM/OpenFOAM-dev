@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -41,16 +41,14 @@
 Script=${0##*/}
 
 usage() {
-    exec 1>&2
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: $Script [OPTION] dir
 
 options:
-  -u | -update      update
-  -s | -silent      use 'silent' mode (do not echo command)
-  -help             print the usage
+  -update | -u      update
+  -silent | -s      use 'silent' mode (do not echo command)
+  -help   | -h      print the usage
 
     Link all the source files in the <dir> into <dir>/lnInclude
 
@@ -59,9 +57,14 @@ Note
     and changes the default linking from 'ln -s' to 'ln -sf'.
 
 USAGE
-    exit 1
 }
 
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 #------------------------------------------------------------------------------
 # Parse arguments and options
@@ -79,7 +82,7 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
         -h | -help)   # Provide immediate help
-            usage
+            usage && exit 0
             ;;
         -u | -update)
             update=true
@@ -91,7 +94,7 @@ do
             shift
             ;;
         -*)
-            usage "unknown option: '$*'"
+            error "unknown option: '$*'"
             ;;
         *)
             break
@@ -103,7 +106,7 @@ if [ $# -eq 1 ]
 then
     baseDir=$1
 else
-    usage "Error: incorrect number of arguments"
+    error "Error: incorrect number of arguments"
 fi
 
 
@@ -172,7 +175,7 @@ find .. $findOpt \
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage
+unset Script usage error
 
 
 #------------------------------------------------------------------------------

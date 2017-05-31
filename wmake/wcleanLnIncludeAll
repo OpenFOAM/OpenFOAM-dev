@@ -52,7 +52,7 @@ then
     echo
     echo "    Delete all the lnInclude directories in the tree"
     echo
-    exit 1
+    exit 0
 fi
 
 

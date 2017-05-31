@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -35,19 +35,17 @@
 Script=${0##*/}
 
 usage() {
-    exec 1>&2
-
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 Usage: $Script [OPTION]
 options:
   -check          check the git head commit vs. \$WM_PROJECT_DIR/.build
                   (exit code 0 for no changes)
+  -help           print the usage
   -major          report \$WM_PROJECT_VERSION only and exit
   -update         update \$WM_PROJECT_DIR/.build from the git information
-  -pkg TAG        specify packager/release tag ('none' marks an empty packager)
+  -pkg <TAG>      specify packager/release tag ('none' marks an empty packager)
   -short          report short version information (ie, without pkg tag)
-  -version VER    specify an alternative version
+  -version <VER>  specify an alternative version
 
 Print the version used when building the project, in this order of precedence:
   * the git head commit (prefixed with \$WM_PROJECT_VERSION)
@@ -55,9 +53,14 @@ Print the version used when building the project, in this order of precedence:
   * \$WM_PROJECT_VERSION
 
 USAGE
-    exit 1
 }
 
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 #------------------------------------------------------------------------------
 # Parse arguments and options
@@ -68,7 +71,7 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     -c | -check)
         checkOnly=true
@@ -83,7 +86,7 @@ do
         shift
         ;;
     -pkg | -package)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         # Mark empty as 'none', disallow '!' in string
         package=$(echo "${2:-none}" | sed -e 's/!//g')
         shift 2
@@ -93,12 +96,12 @@ do
         shift
         ;;
     -v | -version)
-        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
         version="$2"
         shift 2
         ;;
     *)
-        usage "unknown option/argument: '$*'"
+        error "unknown option/argument: '$*'"
         ;;
     esac
 done

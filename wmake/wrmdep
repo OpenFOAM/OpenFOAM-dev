@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -84,9 +84,14 @@ Usage:
         Must be executed in the project top-level directory: $WM_PROJECT_DIR
 
 USAGE
-    exit 1
 }
 
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
 
 #------------------------------------------------------------------------------
 # Parse arguments and options
@@ -103,7 +108,7 @@ do
     case "$1" in
     # Print help
     -h | -help)
-        usage
+        usage && exit 0
         ;;
     # Non-stop compilation, ignoring errors
     -a | -all | all)
@@ -119,7 +124,7 @@ do
         shift
         ;;
     -*)
-       usage "unknown option: '$*'"
+       error "unknown option: '$*'"
        ;;
     *)
        break
@@ -229,7 +234,7 @@ esac
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage rmdepMode all
+unset Script usage error rmdepMode all
 
 
 #------------------------------------------------------------------------------

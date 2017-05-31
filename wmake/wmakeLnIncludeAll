@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #-------------------------------------------------------------------------------
 # License
@@ -36,20 +36,24 @@
 Script=${0##*/}
 
 usage() {
-    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
 Usage: $Script [OPTION] [dir1 .. dirN]
 
 options:
   -j                Compile using all local cores/hyperthreads
-  -jN or -j N       Compile using N cores/hyperthreads
-  -h | -help        Print the usage
+  -j <N> | -j<N>    Compile using N cores/hyperthreads
+  -help  | -h       Print the usage
 
 Find directories with a 'Make/files' that contains a 'LIB =' directive
 and execute 'wmakeLnInclude -update' for each one
 
 USAGE
+}
+
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
     exit 1
 }
 
@@ -68,7 +72,7 @@ while [ "$#" -gt 0 ]
 do
     case "$1" in
         -h | -help)   # Provide immediate help
-            usage
+            usage && exit 0
             ;;
         -u | -update)
             wmLnOpt="-update"
@@ -84,7 +88,7 @@ do
             nCores=${1#-j}
             ;;
         -*)
-            usage "unknown option: '$*'"
+            error "unknown option: '$*'"
             ;;
         *)
             break
@@ -164,7 +168,7 @@ fi
 # Cleanup local variables and functions
 #------------------------------------------------------------------------------
 
-unset Script usage
+unset Script usage error
 
 
 #------------------------------------------------------------------------------
