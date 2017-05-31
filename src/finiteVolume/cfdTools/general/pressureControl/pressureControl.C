@@ -38,24 +38,30 @@ Foam::pressureControl::pressureControl
 :
     refCell_(-1),
     refValue_(0),
-    pMax_("pMax", dimPressure, 0),
-    pMin_("pMin", dimPressure, GREAT)
+    pMax_("pMax", dimPressure, GREAT),
+    pMin_("pMin", dimPressure, 0),
+    limitMaxP_(false),
+    limitMinP_(false)
 {
     bool pLimits = false;
+    scalar pMax = -GREAT;
+    scalar pMin = GREAT;
 
     // Set the reference cell and value for closed domain simulations
     if (pRefRequired && setRefCell(p, dict, refCell_, refValue_))
     {
         pLimits = true;
 
-        pMax_.value() = refValue_;
-        pMin_.value() = refValue_;
+        pMax = refValue_;
+        pMin = refValue_;
     }
 
     if (dict.found("pMax") && dict.found("pMin"))
     {
         pMax_.value() = readScalar(dict.lookup("pMax"));
+        limitMaxP_ = true;
         pMin_.value() = readScalar(dict.lookup("pMin"));
+        limitMinP_ = true;
     }
     else
     {
@@ -73,8 +79,8 @@ Foam::pressureControl::pressureControl
                 pLimits = true;
                 rhoLimits = true;
 
-                pMax_.value() = max(pMax_.value(), max(pbf[patchi]));
-                pMin_.value() = min(pMin_.value(), min(pbf[patchi]));
+                pMax = max(pMax, max(pbf[patchi]));
+                pMin = min(pMin, min(pbf[patchi]));
 
                 rhoRefMax = max(rhoRefMax, max(rhobf[patchi]));
                 rhoRefMin = min(rhoRefMin, min(rhobf[patchi]));
@@ -84,8 +90,8 @@ Foam::pressureControl::pressureControl
         reduce(rhoLimits, andOp<bool>());
         if (rhoLimits)
         {
-            reduce(pMax_.value(), maxOp<scalar>());
-            reduce(pMin_.value(), minOp<scalar>());
+            reduce(pMax, maxOp<scalar>());
+            reduce(pMin, minOp<scalar>());
 
             reduce(rhoRefMax, maxOp<scalar>());
             reduce(rhoRefMin, minOp<scalar>());
@@ -94,6 +100,7 @@ Foam::pressureControl::pressureControl
         if (dict.found("pMax"))
         {
             pMax_.value() = readScalar(dict.lookup("pMax"));
+            limitMaxP_ = true;
         }
         else if (dict.found("pMaxFactor"))
         {
@@ -108,7 +115,8 @@ Foam::pressureControl::pressureControl
             }
 
             const scalar pMaxFactor(readScalar(dict.lookup("pMaxFactor")));
-            pMax_ *= pMaxFactor;
+            pMax_.value() = pMaxFactor*pMax;
+            limitMaxP_ = true;
         }
         else if (dict.found("rhoMax"))
         {
@@ -142,12 +150,14 @@ Foam::pressureControl::pressureControl
 
             dimensionedScalar rhoMax("rhoMax", dimDensity, dict);
 
-            pMax_ *= max(rhoMax.value()/rhoRefMax, 1);
+            pMax_.value() = max(rhoMax.value()/rhoRefMax, 1)*pMax;
+            limitMaxP_ = true;
         }
 
         if (dict.found("pMin"))
         {
             pMin_.value() = readScalar(dict.lookup("pMin"));
+            limitMinP_ = true;
         }
         else if (dict.found("pMinFactor"))
         {
@@ -162,7 +172,8 @@ Foam::pressureControl::pressureControl
             }
 
             const scalar pMinFactor(readScalar(dict.lookup("pMinFactor")));
-            pMin_ *= pMinFactor;
+            pMin_.value() = pMinFactor*pMin;
+            limitMinP_ = true;
         }
         else if (dict.found("rhoMin"))
         {
@@ -195,13 +206,27 @@ Foam::pressureControl::pressureControl
 
             dimensionedScalar rhoMin("rhoMin", dimDensity, dict);
 
-            pMin_ *= min(rhoMin.value()/rhoRefMin, 1);
+            pMin_.value() = min(rhoMin.value()/rhoRefMin, 1)*pMin;
+            limitMinP_ = true;
         }
     }
 
-    Info<< "pressureControl" << nl
-        << "    pMax/pMin " << pMax_.value() << " " << pMin_.value()
-        << nl << endl;
+    if (limitMaxP_ || limitMinP_)
+    {
+        Info<< "pressureControl" << nl;
+
+        if (limitMaxP_)
+        {
+            Info<< "    pMax " << pMax_.value() << nl;
+        }
+
+        if (limitMinP_)
+        {
+            Info<< "    pMin " << pMin_.value() << nl;
+        }
+
+        Info << endl;
+    }
 }
 
 
@@ -209,15 +234,29 @@ Foam::pressureControl::pressureControl
 
 bool Foam::pressureControl::limit(volScalarField& p) const
 {
-    scalar pMax = max(p).value();
-    scalar pMin = min(p).value();
-
-    if (pMax > pMax_.value() || pMin < pMin_.value())
+    if (limitMaxP_ || limitMinP_)
     {
-        Info<< "pressureControl: p max/min " << pMax << " " << pMin << endl;
+        if (limitMaxP_)
+        {
+            const scalar pMax = max(p).value();
 
-        p = max(p, pMin_);
-        p = min(p, pMax_);
+            if (pMax > pMax_.value())
+            {
+                Info<< "pressureControl: p max " << pMax << endl;
+                p = min(p, pMax_);
+            }
+        }
+
+        if (limitMinP_)
+        {
+            const scalar pMin = min(p).value();
+
+            if (pMin < pMin_.value())
+            {
+                Info<< "pressureControl: p min " << pMin << endl;
+                p = max(p, pMin_);
+            }
+        }
 
         return true;
     }

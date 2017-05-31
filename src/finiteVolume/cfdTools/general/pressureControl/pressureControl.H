@@ -66,6 +66,12 @@ class pressureControl
         //- Pressure upper-limit
         dimensionedScalar pMin_;
 
+        //- Pressure lower-limit
+        bool limitMaxP_;
+
+        //- Pressure upper-limit
+        bool limitMinP_;
+
 
 public:
 
