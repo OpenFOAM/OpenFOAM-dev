@@ -57,8 +57,12 @@ error() {
 
 usage() {
     cat<<USAGE
-Usage: $Script [ -current | -all ]
+Usage: $Script [ OPTIONS ]
        $Script <platform> [ ... <platformN> ]
+options:
+    -all         all platforms
+    -current     current platform
+    -help        print the usage
 
   Deletes the specified platforms object files directories from the
   the project top-level platforms directory $WM_PROJECT_DIR.
@@ -76,7 +80,7 @@ USAGE
 
 # Print help message
 if [ "$1" = "-h" -o "$1" = "-help" ]; then
-    usage
+    usage && exit 0
 fi
 
 # Check the script is executed from the project top-level directory
