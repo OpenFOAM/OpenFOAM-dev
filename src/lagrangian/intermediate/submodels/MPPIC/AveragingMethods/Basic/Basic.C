@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ void Foam::AveragingMethods::Basic<Type>::updateGrad()
 template<class Type>
 void Foam::AveragingMethods::Basic<Type>::add
 (
-    const point position,
+    const barycentric& coordinates,
     const tetIndices& tetIs,
     const Type& value
 )
@@ -103,7 +103,7 @@ void Foam::AveragingMethods::Basic<Type>::add
 template<class Type>
 Type Foam::AveragingMethods::Basic<Type>::interpolate
 (
-    const point position,
+    const barycentric& coordinates,
     const tetIndices& tetIs
 ) const
 {
@@ -115,7 +115,7 @@ template<class Type>
 typename Foam::AveragingMethods::Basic<Type>::TypeGrad
 Foam::AveragingMethods::Basic<Type>::interpolateGrad
 (
-    const point position,
+    const barycentric& coordinates,
     const tetIndices& tetIs
 ) const
 {

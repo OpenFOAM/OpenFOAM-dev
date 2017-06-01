@@ -142,9 +142,9 @@ Foam::vector Foam::DampingModels::Relaxation<CloudType>::velocityCorrection
     const tetIndices tetIs(p.currentTetIndices());
 
     const scalar x =
-        deltaT*oneByTimeScaleAverage_->interpolate(p.position(), tetIs);
+        deltaT*oneByTimeScaleAverage_->interpolate(p.coordinates(), tetIs);
 
-    const vector u = uAverage_->interpolate(p.position(), tetIs);
+    const vector u = uAverage_->interpolate(p.coordinates(), tetIs);
 
     return (u - p.U())*x/(x + 2.0);
 }

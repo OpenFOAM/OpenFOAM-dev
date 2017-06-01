@@ -128,21 +128,22 @@ void Foam::AveragingMethods::Moment<Type>::updateGrad()
 template<class Type>
 void Foam::AveragingMethods::Moment<Type>::add
 (
-    const point position,
+    const barycentric& coordinates,
     const tetIndices& tetIs,
     const Type& value
 )
 {
     const label celli = tetIs.cell();
+    const triFace triIs = tetIs.faceTriIs(this->mesh_);
+
+    const point delta =
+        (coordinates[0] - 1)*this->mesh_.C()[celli]
+      + coordinates[1]*this->mesh_.points()[triIs[0]]
+      + coordinates[2]*this->mesh_.points()[triIs[1]]
+      + coordinates[3]*this->mesh_.points()[triIs[2]];
 
     const Type v = value/this->mesh_.V()[celli];
-    const TypeGrad dv =
-        transform_[celli]
-      & (
-            v
-          * (position - this->mesh_.C()[celli])
-          / scale_[celli]
-        );
+    const TypeGrad dv = transform_[celli] & (v*delta/scale_[celli]);
 
     data_[celli] += v;
     dataX_[celli] += v + dv.x();
@@ -154,11 +155,18 @@ void Foam::AveragingMethods::Moment<Type>::add
 template<class Type>
 Type Foam::AveragingMethods::Moment<Type>::interpolate
 (
-    const point position,
+    const barycentric& coordinates,
     const tetIndices& tetIs
 ) const
 {
     const label celli = tetIs.cell();
+    const triFace triIs = tetIs.faceTriIs(this->mesh_);
+
+    const point delta =
+        (coordinates[0] - 1)*this->mesh_.C()[celli]
+      + coordinates[1]*this->mesh_.points()[triIs[0]]
+      + coordinates[2]*this->mesh_.points()[triIs[1]]
+      + coordinates[3]*this->mesh_.points()[triIs[2]];
 
     return
         data_[celli]
@@ -169,8 +177,7 @@ Type Foam::AveragingMethods::Moment<Type>::interpolate
                 dataY_[celli] - data_[celli],
                 dataZ_[celli] - data_[celli]
             )
-          & (position - this->mesh_.C()[celli])
-          / scale_[celli]
+          & delta/scale_[celli]
         );
 }
 
@@ -179,7 +186,7 @@ template<class Type>
 typename Foam::AveragingMethods::Moment<Type>::TypeGrad
 Foam::AveragingMethods::Moment<Type>::interpolateGrad
 (
-    const point position,
+    const barycentric& coordinates,
     const tetIndices& tetIs
 ) const
 {

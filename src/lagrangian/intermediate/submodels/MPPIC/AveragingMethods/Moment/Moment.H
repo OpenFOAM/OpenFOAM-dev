@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ public:
         //- Add point value to interpolation
         void add
         (
-            const point position,
+            const barycentric& coordinates,
             const tetIndices& tetIs,
             const Type& value
         );
@@ -146,14 +146,14 @@ public:
         //- Interpolate
         Type interpolate
         (
-            const point position,
+            const barycentric& coordinates,
             const tetIndices& tetIs
         ) const;
 
         //- Interpolate gradient
         TypeGrad interpolateGrad
         (
-            const point position,
+            const barycentric& coordinates,
             const tetIndices& tetIs
         ) const;
 

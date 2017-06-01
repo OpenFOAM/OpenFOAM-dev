@@ -339,9 +339,6 @@ Foam::vector Foam::PackingModels::Implicit<CloudType>::velocityCorrection
     // containing tetrahedron and parcel coordinates within
     const label celli = p.cell();
     const label facei = p.tetFace();
-    const tetIndices tetIs(p.currentTetIndices());
-    FixedList<scalar, 4> tetCoordinates;
-    tetIs.tet(mesh).barycentric(p.position(), tetCoordinates);
 
     // cell velocity
     const vector U = uCorrect_()[celli];
@@ -368,7 +365,7 @@ Foam::vector Foam::PackingModels::Implicit<CloudType>::velocityCorrection
     }
 
     // interpolant equal to 1 at the cell centre and 0 at the face
-    const scalar t = tetCoordinates[0];
+    const scalar t = p.coordinates()[0];
 
     // the normal component of the velocity correction is interpolated linearly
     // the tangential component is equal to that at the cell centre

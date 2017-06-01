@@ -180,10 +180,10 @@ Foam::MPPICParcel<ParcelType>::TrackingData<CloudType>::updateAverages
 
         const scalar m = p.nParticle()*p.mass();
 
-        volumeAverage_->add(p.position(), tetIs, p.nParticle()*p.volume());
-        rhoAverage_->add(p.position(), tetIs, m*p.rho());
-        uAverage_->add(p.position(), tetIs, m*p.U());
-        massAverage_->add(p.position(), tetIs, m);
+        volumeAverage_->add(p.coordinates(), tetIs, p.nParticle()*p.volume());
+        rhoAverage_->add(p.coordinates(), tetIs, m*p.rho());
+        uAverage_->add(p.coordinates(), tetIs, m*p.U());
+        massAverage_->add(p.coordinates(), tetIs, m);
     }
     volumeAverage_->average();
     massAverage_->average();
@@ -196,11 +196,11 @@ Foam::MPPICParcel<ParcelType>::TrackingData<CloudType>::updateAverages
         const typename CloudType::parcelType& p = iter();
         const tetIndices tetIs = p.currentTetIndices();
 
-        const vector u = uAverage_->interpolate(p.position(), tetIs);
+        const vector u = uAverage_->interpolate(p.coordinates(), tetIs);
 
         uSqrAverage_->add
         (
-            p.position(),
+            p.coordinates(),
             tetIs,
             p.nParticle()*p.mass()*magSqr(p.U() - u)
         );
@@ -217,7 +217,7 @@ Foam::MPPICParcel<ParcelType>::TrackingData<CloudType>::updateAverages
 
         weightAverage.add
         (
-            p.position(),
+            p.coordinates(),
             tetIs,
             p.nParticle()*pow(p.volume(), 2.0/3.0)
         );
@@ -232,15 +232,15 @@ Foam::MPPICParcel<ParcelType>::TrackingData<CloudType>::updateAverages
         const typename CloudType::parcelType& p = iter();
         const tetIndices tetIs = p.currentTetIndices();
 
-        const scalar a = volumeAverage_->interpolate(p.position(), tetIs);
-        const scalar r = radiusAverage_->interpolate(p.position(), tetIs);
-        const vector u = uAverage_->interpolate(p.position(), tetIs);
+        const scalar a = volumeAverage_->interpolate(p.coordinates(), tetIs);
+        const scalar r = radiusAverage_->interpolate(p.coordinates(), tetIs);
+        const vector u = uAverage_->interpolate(p.coordinates(), tetIs);
 
         const scalar f = 0.75*a/pow3(r)*sqr(0.5*p.d() + r)*mag(p.U() - u);
 
-        frequencyAverage_->add(p.position(), tetIs, p.nParticle()*f*f);
+        frequencyAverage_->add(p.coordinates(), tetIs, p.nParticle()*f*f);
 
-        weightAverage.add(p.position(), tetIs, p.nParticle()*f);
+        weightAverage.add(p.coordinates(), tetIs, p.nParticle()*f);
     }
     frequencyAverage_->average(weightAverage);
 }

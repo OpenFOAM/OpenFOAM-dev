@@ -147,15 +147,15 @@ Foam::vector Foam::PackingModels::Explicit<CloudType>::velocityCorrection
 
     // interpolated quantities
     const scalar alpha =
-        this->volumeAverage_->interpolate(p.position(), tetIs);
+        this->volumeAverage_->interpolate(p.coordinates(), tetIs);
     const vector alphaGrad =
-        this->volumeAverage_->interpolateGrad(p.position(), tetIs);
+        this->volumeAverage_->interpolateGrad(p.coordinates(), tetIs);
     const vector uMean =
-        this->uAverage_->interpolate(p.position(), tetIs);
+        this->uAverage_->interpolate(p.coordinates(), tetIs);
 
     // stress gradient
     const vector tauGrad =
-        stressAverage_->interpolateGrad(p.position(), tetIs);
+        stressAverage_->interpolateGrad(p.coordinates(), tetIs);
 
     // parcel relative velocity
     const vector uRelative = p.U() - uMean;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,12 +90,6 @@ private:
         //- Data on the points
         Field<Type>& dataDual_;
 
-        //- Tet vertex labels
-        mutable FixedList<label, 3> tetVertices_;
-
-        //- Tet barycentric coordinates
-        mutable FixedList<scalar, 4> tetCoordinates_;
-
 
     //- Private static member functions
 
@@ -104,13 +98,6 @@ private:
 
 
     //- Private member functions
-
-        //- Calculate indices and barycentric coordinates within a tetrahedron
-        void tetGeometry
-        (
-            const point position,
-            const tetIndices& tetIs
-        ) const;
 
         //- Sync point data over processor boundaries
         void syncDualData();
@@ -154,7 +141,7 @@ public:
         //- Add point value to interpolation
         void add
         (
-            const point position,
+            const barycentric& coordinates,
             const tetIndices& tetIs,
             const Type& value
         );
@@ -162,14 +149,14 @@ public:
         //- Interpolate
         Type interpolate
         (
-            const point position,
+            const barycentric& coordinates,
             const tetIndices& tetIs
         ) const;
 
         //- Interpolate gradient
         TypeGrad interpolateGrad
         (
-            const point position,
+            const barycentric& coordinates,
             const tetIndices& tetIs
         ) const;
 
