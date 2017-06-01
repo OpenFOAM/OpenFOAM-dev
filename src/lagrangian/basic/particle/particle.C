@@ -40,45 +40,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::particle::tetFaceIndices
-(
-    label& baseI,
-    label& vertex1I,
-    label& vertex2I
-) const
-{
-    const Foam::face& f = mesh_.faces()[tetFacei_];
-
-    baseI = max(0, mesh_.tetBasePtIs()[tetFacei_]);
-
-    vertex1I = (baseI + tetPti_) % f.size();
-
-    vertex2I = f.fcIndex(vertex1I);
-
-    if (mesh_.faceOwner()[tetFacei_] != celli_)
-    {
-        Swap(vertex1I, vertex2I);
-    }
-}
-
-
-void Foam::particle::tetMeshIndices
-(
-    label& basei,
-    label& vertex1i,
-    label& vertex2i
-) const
-{
-    const Foam::face& f = mesh_.faces()[tetFacei_];
-
-    tetFaceIndices(basei, vertex1i, vertex2i);
-
-    basei = f[basei];
-    vertex1i = f[vertex1i];
-    vertex2i = f[vertex2i];
-}
-
-
 void Foam::particle::tetGeometry
 (
     vector& centre,
@@ -87,13 +48,14 @@ void Foam::particle::tetGeometry
     vector& vertex2
 ) const
 {
-    label basei, vertex1i, vertex2i;
-    tetMeshIndices(basei, vertex1i, vertex2i);
+    const triFace triIs(currentTetIndices().faceTriIs(mesh_));
+    const vectorField& ccs = mesh_.cellCentres();
+    const pointField& pts = mesh_.points();
 
-    centre = mesh_.cellCentres()[celli_];
-    base = mesh_.points()[basei];
-    vertex1 = mesh_.points()[vertex1i];
-    vertex2 = mesh_.points()[vertex2i];
+    centre = ccs[celli_];
+    base = pts[triIs[0]];
+    vertex1 = pts[triIs[1]];
+    vertex2 = pts[triIs[2]];
 }
 
 
@@ -144,9 +106,7 @@ void Foam::particle::movingTetGeometry
     Pair<vector>& vertex2
 ) const
 {
-    label basei, vertex1i, vertex2i;
-    tetMeshIndices(basei, vertex1i, vertex2i);
-
+    const triFace triIs(currentTetIndices().faceTriIs(mesh_));
     const pointField& ptsOld = mesh_.oldPoints();
     const pointField& ptsNew = mesh_.points();
 
@@ -180,14 +140,14 @@ void Foam::particle::movingTetGeometry
     }
 
     centre[0] = ccOld + f0*(ccNew - ccOld);
-    base[0] = ptsOld[basei] + f0*(ptsNew[basei] - ptsOld[basei]);
-    vertex1[0] = ptsOld[vertex1i] + f0*(ptsNew[vertex1i] - ptsOld[vertex1i]);
-    vertex2[0] = ptsOld[vertex2i] + f0*(ptsNew[vertex2i] - ptsOld[vertex2i]);
+    base[0] = ptsOld[triIs[0]] + f0*(ptsNew[triIs[0]] - ptsOld[triIs[0]]);
+    vertex1[0] = ptsOld[triIs[1]] + f0*(ptsNew[triIs[1]] - ptsOld[triIs[1]]);
+    vertex2[0] = ptsOld[triIs[2]] + f0*(ptsNew[triIs[2]] - ptsOld[triIs[2]]);
 
     centre[1] = f1*(ccNew - ccOld);
-    base[1] = f1*(ptsNew[basei] - ptsOld[basei]);
-    vertex1[1] = f1*(ptsNew[vertex1i] - ptsOld[vertex1i]);
-    vertex2[1] = f1*(ptsNew[vertex2i] - ptsOld[vertex2i]);
+    base[1] = f1*(ptsNew[triIs[0]] - ptsOld[triIs[0]]);
+    vertex1[1] = f1*(ptsNew[triIs[1]] - ptsOld[triIs[1]]);
+    vertex2[1] = f1*(ptsNew[triIs[2]] - ptsOld[triIs[2]]);
 }
 
 
@@ -364,23 +324,22 @@ void Foam::particle::changeTet(const label tetTriI)
 
 void Foam::particle::changeFace(const label tetTriI)
 {
-    // Get the tet topology
-    label basei, vertex1i, vertex2i;
-    tetMeshIndices(basei, vertex1i, vertex2i);
+    // Get the old topology
+    const triFace triOldIs(currentTetIndices().faceTriIs(mesh_));
 
     // Get the shared edge and the pre-rotation
     edge sharedEdge;
     if (tetTriI == 1)
     {
-        sharedEdge = edge(vertex1i, vertex2i);
+        sharedEdge = edge(triOldIs[1], triOldIs[2]);
     }
     else if (tetTriI == 2)
     {
-        sharedEdge = edge(vertex2i, basei);
+        sharedEdge = edge(triOldIs[2], triOldIs[0]);
     }
     else if (tetTriI == 3)
     {
-        sharedEdge = edge(basei, vertex1i);
+        sharedEdge = edge(triOldIs[0], triOldIs[1]);
     }
     else
     {
@@ -450,27 +409,27 @@ void Foam::particle::changeFace(const label tetTriI)
     }
 
     // Pre-rotation puts the shared edge opposite the base of the tetrahedron
-    if (sharedEdge.otherVertex(vertex1i) == -1)
+    if (sharedEdge.otherVertex(triOldIs[1]) == -1)
     {
         rotate(false);
     }
-    else if (sharedEdge.otherVertex(vertex2i) == -1)
+    else if (sharedEdge.otherVertex(triOldIs[2]) == -1)
     {
         rotate(true);
     }
 
-    // Update the new tet topology
-    tetMeshIndices(basei, vertex1i, vertex2i);
+    // Get the new topology
+    const triFace triNewIs = currentTetIndices().faceTriIs(mesh_);
 
     // Reflect to account for the change of triangle orientation on the new face
     reflect();
 
     // Post rotation puts the shared edge back in the correct location
-    if (sharedEdge.otherVertex(vertex1i) == -1)
+    if (sharedEdge.otherVertex(triNewIs[1]) == -1)
     {
         rotate(true);
     }
-    else if (sharedEdge.otherVertex(vertex2i) == -1)
+    else if (sharedEdge.otherVertex(triNewIs[2]) == -1)
     {
         rotate(false);
     }

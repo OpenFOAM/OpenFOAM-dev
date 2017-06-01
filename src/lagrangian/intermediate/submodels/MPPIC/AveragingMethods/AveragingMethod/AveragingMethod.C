@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,20 +204,15 @@ bool Foam::AveragingMethod<Type>::write() const
         forAll(cellTets, tetI)
         {
             const tetIndices& tetIs = cellTets[tetI];
+            const triFace triIs = tetIs.faceTriIs(mesh_);
             const scalar v = tetIs.tet(mesh_).mag();
 
             cellValue[celli] += v*interpolate(mesh_.C()[celli], tetIs);
             cellGrad[celli] += v*interpolateGrad(mesh_.C()[celli], tetIs);
 
-            const face& f = mesh_.faces()[tetIs.face()];
-            labelList vertices(3);
-            vertices[0] = f[tetIs.faceBasePt()];
-            vertices[1] = f[tetIs.facePtA()];
-            vertices[2] = f[tetIs.facePtB()];
-
-            forAll(vertices, vertexI)
+            forAll(triIs, vertexI)
             {
-                const label pointi = vertices[vertexI];
+                const label pointi = triIs[vertexI];
 
                 pointVolume[pointi] += v;
                 pointValue[pointi] +=

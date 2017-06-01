@@ -64,28 +64,23 @@ Foam::levelSetFraction
 
         forAll(cellTetIs, cellTetI)
         {
-            const tetIndices& tetIs = cellTetIs[cellTetI];
-            const face& f = mesh.faces()[tetIs.face()];
-
-            const label pI0 = f[tetIs.faceBasePt()];
-            const label pIA = f[tetIs.facePtA()];
-            const label pIB = f[tetIs.facePtB()];
+            const triFace triIs = cellTetIs[cellTetI].faceTriIs(mesh);
 
             const FixedList<point, 4>
                 tet =
                 {
                     mesh.cellCentres()[cI],
-                    mesh.points()[pI0],
-                    mesh.points()[pIA],
-                    mesh.points()[pIB]
+                    mesh.points()[triIs[0]],
+                    mesh.points()[triIs[1]],
+                    mesh.points()[triIs[2]]
                 };
             const FixedList<scalar, 4>
                 level =
                 {
                     levelC[cI],
-                    levelP[pI0],
-                    levelP[pIA],
-                    levelP[pIB]
+                    levelP[triIs[0]],
+                    levelP[triIs[1]],
+                    levelP[triIs[2]]
                 };
 
             v += cut::volumeOp()(tet);

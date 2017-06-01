@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,16 +70,15 @@ Foam::AveragingMethods::Moment<Type>::Moment
         forAll(cellTets, tetI)
         {
             const tetIndices& tetIs = cellTets[tetI];
-            const label facei = tetIs.face();
-            const face& f = mesh.faces()[facei];
+            const triFace triIs = tetIs.faceTriIs(mesh);
 
             const tensor T
             (
                 tensor
                 (
-                    mesh.points()[f[tetIs.faceBasePt()]] - mesh.C()[celli],
-                    mesh.points()[f[tetIs.facePtA()]] - mesh.C()[celli],
-                    mesh.points()[f[tetIs.facePtB()]] - mesh.C()[celli]
+                    mesh.points()[triIs[0]] - mesh.C()[celli],
+                    mesh.points()[triIs[1]] - mesh.C()[celli],
+                    mesh.points()[triIs[2]] - mesh.C()[celli]
                 ).T()
             );
 

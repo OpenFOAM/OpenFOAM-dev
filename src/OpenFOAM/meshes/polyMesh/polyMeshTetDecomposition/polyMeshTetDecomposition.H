@@ -130,15 +130,6 @@ public:
             label cI
         );
 
-        //- Return the tet decomposition of the given triangle of the given face
-        static tetIndices triangleTetIndices
-        (
-            const polyMesh& mesh,
-            label fI,
-            label cI,
-            const label tetPtI      // offset in face
-        );
-
         //- Return the tet decomposition of the given cell, see
         //  findFacePt for the meaning of the indices
         static List<tetIndices> cellTetIndices

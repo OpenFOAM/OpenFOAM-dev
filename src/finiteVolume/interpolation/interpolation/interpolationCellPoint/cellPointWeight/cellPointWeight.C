@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,14 +55,11 @@ void Foam::cellPointWeight::findTetrahedron
         celli
     );
 
-    const faceList& pFaces = mesh.faces();
     const scalar cellVolume = mesh.cellVolumes()[celli];
 
     forAll(cellTets, tetI)
     {
         const tetIndices& tetIs = cellTets[tetI];
-
-        const face& f = pFaces[tetIs.face()];
 
         // Barycentric coordinates of the position
         scalar det = tetIs.tet(mesh).barycentric(position, weights_);
@@ -81,9 +78,8 @@ void Foam::cellPointWeight::findTetrahedron
              && (u + v + w < 1 + tol)
             )
             {
-                faceVertices_[0] = f[tetIs.faceBasePt()];
-                faceVertices_[1] = f[tetIs.facePtA()];
-                faceVertices_[2] = f[tetIs.facePtB()];
+
+                faceVertices_ = tetIs.faceTriIs(mesh);
 
                 return;
             }
@@ -124,16 +120,12 @@ void Foam::cellPointWeight::findTetrahedron
 
     const tetIndices& tetIs = cellTets[nearestTetI];
 
-    const face& f = pFaces[tetIs.face()];
-
     // Barycentric coordinates of the position, ignoring if the
     // determinant is suitable.  If not, the return from barycentric
     // to weights_ is safe.
     tetIs.tet(mesh).barycentric(position, weights_);
 
-    faceVertices_[0] = f[tetIs.faceBasePt()];
-    faceVertices_[1] = f[tetIs.facePtA()];
-    faceVertices_[2] = f[tetIs.facePtB()];
+    faceVertices_ = tetIs.faceTriIs(mesh);
 }
 
 
@@ -159,8 +151,6 @@ void Foam::cellPointWeight::findTriangle
     );
 
     const scalar faceAreaSqr = magSqr(mesh.faceAreas()[facei]);
-
-    const face& f =  mesh.faces()[facei];
 
     forAll(faceTets, tetI)
     {
@@ -189,9 +179,7 @@ void Foam::cellPointWeight::findTriangle
                 weights_[2] = triWeights[1];
                 weights_[3] = triWeights[2];
 
-                faceVertices_[0] = f[tetIs.faceBasePt()];
-                faceVertices_[1] = f[tetIs.facePtA()];
-                faceVertices_[2] = f[tetIs.facePtB()];
+                faceVertices_ = tetIs.faceTriIs(mesh);
 
                 return;
             }
@@ -244,9 +232,7 @@ void Foam::cellPointWeight::findTriangle
     weights_[2] = triWeights[1];
     weights_[3] = triWeights[2];
 
-    faceVertices_[0] = f[tetIs.faceBasePt()];
-    faceVertices_[1] = f[tetIs.facePtA()];
-    faceVertices_[2] = f[tetIs.facePtB()];
+    faceVertices_ = tetIs.faceTriIs(mesh);
 }
 
 

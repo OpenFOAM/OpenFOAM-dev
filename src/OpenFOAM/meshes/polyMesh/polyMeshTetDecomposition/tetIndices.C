@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,19 @@ License
 
 #include "tetIndices.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+const Foam::label Foam::tetIndices::maxNWarnings = 100;
+
+Foam::label Foam::tetIndices::nWarnings = 0;
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::tetIndices::tetIndices()
 :
     celli_(-1),
     facei_(-1),
-    faceBasePtI_(-1),
-    facePtAI_(-1),
-    facePtBI_(-1),
     tetPti_(-1)
 {}
 
@@ -42,59 +46,13 @@ Foam::tetIndices::tetIndices
 (
     label celli,
     label facei,
-    label faceBasePtI,
-    label facePtAI,
-    label facePtBI,
     label tetPtI
 )
 :
     celli_(celli),
     facei_(facei),
-    faceBasePtI_(faceBasePtI),
-    facePtAI_(facePtAI),
-    facePtBI_(facePtBI),
     tetPti_(tetPtI)
 {}
-
-
-Foam::tetIndices::tetIndices
-(
-    label celli,
-    label facei,
-    label tetPtI,
-    const polyMesh& mesh
-)
-:
-    celli_(celli),
-    facei_(facei),
-    faceBasePtI_(-1),
-    facePtAI_(-1),
-    facePtBI_(-1),
-    tetPti_(tetPtI)
-{
-    const faceList& pFaces = mesh.faces();
-    const labelList& pOwner = mesh.faceOwner();
-
-    const Foam::face& f = pFaces[facei_];
-
-    bool own = (pOwner[facei_] == celli_);
-
-    faceBasePtI_ = mesh.tetBasePtIs()[facei_];
-
-    label facePtI = (tetPti_ + faceBasePtI_) % f.size();
-    label otherFacePtI = f.fcIndex(facePtI);
-
-    if (own)
-    {
-        facePtAI_ = facePtI;
-        facePtBI_ = otherFacePtI;
-    }
-    else
-    {
-        facePtAI_ = otherFacePtI;
-        facePtBI_ = facePtI;
-    }
-}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -107,12 +65,7 @@ Foam::tetIndices::~tetIndices()
 
 Foam::Istream& Foam::operator>>(Istream& is, tetIndices& tI)
 {
-    is  >> tI.cell()
-        >> tI.face()
-        >> tI.faceBasePt()
-        >> tI.facePtA()
-        >> tI.facePtB()
-        >> tI.tetPt();
+    is  >> tI.cell() >> tI.face() >> tI.tetPt();
 
     // Check state of Istream
     is.check
@@ -128,9 +81,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const tetIndices& tI)
 {
     os  << tI.cell() << token::SPACE
         << tI.face() << token::SPACE
-        << tI.faceBasePt() << token::SPACE
-        << tI.facePtA() << token::SPACE
-        << tI.facePtB() << token::SPACE
         << tI.tetPt() << token::SPACE
         << endl;
 

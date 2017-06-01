@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,11 +64,11 @@ Foam::AveragingMethods::Dual<Type>::Dual
         forAll(cellTets, tetI)
         {
             const tetIndices& tetIs = cellTets[tetI];
-            const face& f = this->mesh_.faces()[tetIs.face()];
+            const triFace triIs = tetIs.faceTriIs(this->mesh_);
             const scalar v = tetIs.tet(this->mesh_).mag();
-            volumeDual_[f[tetIs.faceBasePt()]] += v;
-            volumeDual_[f[tetIs.facePtA()]] += v;
-            volumeDual_[f[tetIs.facePtB()]] += v;
+            volumeDual_[triIs[0]] += v;
+            volumeDual_[triIs[1]] += v;
+            volumeDual_[triIs[2]] += v;
         }
     }
 
@@ -113,11 +113,7 @@ void Foam::AveragingMethods::Dual<Type>::tetGeometry
     const tetIndices& tetIs
 ) const
 {
-    const face& f = this->mesh_.faces()[tetIs.face()];
-
-    tetVertices_[0] = f[tetIs.faceBasePt()];
-    tetVertices_[1] = f[tetIs.facePtA()];
-    tetVertices_[2] = f[tetIs.facePtB()];
+    tetVertices_ = tetIs.faceTriIs(this->mesh_);
 
     tetIs.tet(this->mesh_).barycentric(position, tetCoordinates_);
 

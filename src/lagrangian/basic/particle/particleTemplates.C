@@ -194,14 +194,7 @@ void Foam::particle::trackToFace
         // No action is taken for tetPti_ for tetFacei_ here. These are handled
         // by the patch interaction call or later during processor transfer.
 
-        const tetIndices faceHitTetIs =
-            polyMeshTetDecomposition::triangleTetIndices
-            (
-                mesh_,
-                tetFacei_,
-                celli_,
-                tetPti_
-            );
+        const tetIndices faceHitTetIs(celli_, tetFacei_, tetPti_);
 
         if
         (

@@ -1357,16 +1357,7 @@ bool Foam::polyMesh::pointInCell
                 for (label tetPti = 1; tetPti < f.size() - 1; tetPti++)
                 {
                     // Get tetIndices of face triangle
-                    tetIndices faceTetIs
-                    (
-                        polyMeshTetDecomposition::triangleTetIndices
-                        (
-                            *this,
-                            facei,
-                            celli,
-                            tetPti
-                        )
-                    );
+                    tetIndices faceTetIs(celli, facei, tetPti);
 
                     triPointRef faceTri = faceTetIs.faceTri(*this);
 

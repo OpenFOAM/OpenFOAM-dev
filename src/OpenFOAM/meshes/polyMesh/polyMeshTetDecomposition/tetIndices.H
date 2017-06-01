@@ -83,28 +83,25 @@ class tetIndices
 {
     // Private data
 
-    //- Cell that this is a decomposed tet of
-    label celli_;
+        //- Cell that this is a decomposed tet of
+        label celli_;
 
-    //- Face that holds this decomposed tet
-    label facei_;
+        //- Face that holds this decomposed tet
+        label facei_;
 
-    //- Base point on the face
-    label faceBasePtI_;
+        //- Point on the face, *relative to the base point*, which
+        //  characterises this tet on the face.
+        label tetPti_;
 
-    //- Point on the face such that the right-hand circulation
-    //      {faceBasePtI_, facePtAI_, facePtBI_}
-    //  forms a triangle that points out of the tet
-    label facePtAI_;
 
-    //- Point on the face such that the right-hand circulation
-    //      {faceBasePtI_, facePtAI_, facePtBI_}
-    //  forms a triangle that points out of the tet
-    label facePtBI_;
+    // Private static data
 
-    //- Point on the face, *relative to the base point*, which
-    //  characterises this tet on the face.
-    label tetPti_;
+        //- Maximum number of bad tet warnings
+        static const label maxNWarnings;
+
+        //- Current number of bad tet warnings. Warnings stop when this reaches
+        //  the maximum number.
+        static label nWarnings;
 
 
 public:
@@ -115,24 +112,7 @@ public:
         tetIndices();
 
         //- Construct from components
-        tetIndices
-        (
-            label celli,
-            label facei,
-            label faceBasePtI,
-            label facePtAI,
-            label facePtBI,
-            label tetPtI
-        );
-
-        //- Construct from cell, face, pt description of tet
-        tetIndices
-        (
-            label celli,
-            label facei,
-            label tetPtI,
-            const polyMesh& mesh
-        );
+        tetIndices(label celli, label facei, label tetPtI);
 
 
     //- Destructor
@@ -146,64 +126,35 @@ public:
             //- Return the cell
             inline label cell() const;
 
-            //- Return the face
-            inline label face() const;
-
-            //- Return the face base point
-            inline label faceBasePt() const;
-
-            //- Return face point A
-            inline label facePtA() const;
-
-            //- Return face point B
-            inline label facePtB() const;
-
-            //- Return the characterising tetPtI
-            inline label tetPt() const;
-
-            //- Return the geometry corresponding to this tet from the
-            //  supplied mesh
-            inline tetPointRef tet(const polyMesh& mesh) const;
-
-            //- Return the geometry corresponding to this tet from the
-            //  supplied mesh using the old positions
-            inline tetPointRef oldTet(const polyMesh& mesh) const;
-
-            //- Return the geometry corresponding to the tri on the
-            //  mesh face for this tet from the supplied mesh. Normal of
-            //  the tri points out of the cell.
-            inline triPointRef faceTri(const polyMesh& mesh) const;
-
-            //- Return the point indices corresponding to the tri on the mesh
-            //  face for this tet from the supplied mesh. Normal of
-            //  the tri points out of the cell.
-            inline triFace faceTriIs(const polyMesh& mesh) const;
-
-            //- Return the geometry corresponding to the tri on the
-            //  mesh face for this tet from the supplied mesh using
-            //  the old position
-            inline triPointRef oldFaceTri(const polyMesh& mesh) const;
-
-
-        // Edit
-
             //- Return non-const access to the cell
             inline label& cell();
+
+            //- Return the face
+            inline label face() const;
 
             //- Return non-const access to the face
             inline label& face();
 
-            //- Return non-const access to the face base point
-            inline label& faceBasePt();
-
-            //- Return non-const access to face point A
-            inline label& facePtA();
-
-            //- Return non-const access to face point B
-            inline label& facePtB();
+            //- Return the characterising tetPtI
+            inline label tetPt() const;
 
             //- Return non-const access to the characterising tetPtI
             inline label& tetPt();
+
+            //- Return the indices corresponding to the tri on the face for
+            //  this tet. The normal of the tri points out of the cell.
+            inline triFace faceTriIs(const polyMesh& mesh) const;
+
+            //- Return the geometry corresponding to this tet
+            inline tetPointRef tet(const polyMesh& mesh) const;
+
+            //- Return the geometry corresponding to the tri on the face for
+            //  this tet. The normal of the tri points out of the cell.
+            inline triPointRef faceTri(const polyMesh& mesh) const;
+
+            //- Return the geometry corresponding to the tri on the face for
+            //  this tet using the old positions.
+            inline triPointRef oldFaceTri(const polyMesh& mesh) const;
 
 
     // Member Operators

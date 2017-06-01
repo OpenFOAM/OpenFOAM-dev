@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,20 +83,15 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
 
     tetIs.tet(this->pMesh_).barycentric(position, weights);
 
-    const faceList& pFaces = this->pMesh_.faces();
-
-    const face& f = pFaces[tetIs.face()];
-
     // Order of weights is the same as that of the vertices of the tet, i.e.
     // cellCentre, faceBasePt, facePtA, facePtB.
 
     Type t = this->psi_[tetIs.cell()]*weights[0];
 
-    t += psip_[f[tetIs.faceBasePt()]]*weights[1];
-
-    t += psip_[f[tetIs.facePtA()]]*weights[2];
-
-    t += psip_[f[tetIs.facePtB()]]*weights[3];
+    const triFace triIs = tetIs.faceTriIs(this->pMesh_);
+    t += psip_[triIs[0]]*weights[1];
+    t += psip_[triIs[1]]*weights[2];
+    t += psip_[triIs[2]]*weights[3];
 
     return t;
 }

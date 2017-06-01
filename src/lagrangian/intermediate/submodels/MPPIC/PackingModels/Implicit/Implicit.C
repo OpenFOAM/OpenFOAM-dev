@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -339,7 +339,7 @@ Foam::vector Foam::PackingModels::Implicit<CloudType>::velocityCorrection
     // containing tetrahedron and parcel coordinates within
     const label celli = p.cell();
     const label facei = p.tetFace();
-    const tetIndices tetIs(celli, facei, p.tetPt(), mesh);
+    const tetIndices tetIs(p.currentTetIndices());
     FixedList<scalar, 4> tetCoordinates;
     tetIs.tet(mesh).barycentric(p.position(), tetCoordinates);
 

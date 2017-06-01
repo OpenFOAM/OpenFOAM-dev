@@ -74,13 +74,7 @@ inline Foam::label Foam::particle::tetPt() const
 
 inline Foam::tetIndices Foam::particle::currentTetIndices() const
 {
-    return tetIndices(celli_, tetFacei_, tetPti_, mesh_);
-}
-
-
-inline Foam::tetPointRef Foam::particle::currentTet() const
-{
-    return currentTetIndices().tet(mesh_);
+    return tetIndices(celli_, tetFacei_, tetPti_);
 }
 
 

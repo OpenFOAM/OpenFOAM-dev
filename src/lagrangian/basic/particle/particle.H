@@ -174,24 +174,6 @@ private:
 
         // Tetrahedra functions
 
-            //- Get indices into the current face for the face-bound vertices of
-            //  the current tet.
-            void tetFaceIndices
-            (
-                label& baseI,
-                label& vertex1I,
-                label& vertex2I
-            ) const;
-
-            //- Get indices into the mesh points for the face-bound vertices of
-            //  the current tet.
-            void tetMeshIndices
-            (
-                label& baseI,
-                label& vertex1I,
-                label& vertex2I
-            ) const;
-
             //- Get the vertices of the current tet
             void tetGeometry
             (
@@ -475,10 +457,6 @@ public:
             //- Return the indices of the current tet that the
             //  particle occupies.
             inline tetIndices currentTetIndices() const;
-
-            //- Return the geometry of the current tet that the
-            //  particle occupies.
-            inline tetPointRef currentTet() const;
 
             //- Return the normal of the tri on tetFacei_ for the
             //  current tet.
