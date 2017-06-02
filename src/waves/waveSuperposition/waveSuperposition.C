@@ -245,7 +245,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::ULiquid
     vectorField xyz(p.size());
     transformation(p, axes, u, xyz);
 
-    return direction_*speed_ + (velocity(t, xyz) & axes);
+    return UMean() + (velocity(t, xyz) & axes);
 }
 
 
@@ -262,7 +262,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
-    return direction_*speed_ + (velocity(t, xyz) & axes);
+    return UMean() + (velocity(t, xyz) & axes);
 }
 
 

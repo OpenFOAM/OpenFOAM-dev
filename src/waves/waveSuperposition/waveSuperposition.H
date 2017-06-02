@@ -139,6 +139,12 @@ public:
         //- Get the gas velocity at a given time and global positions
         tmp<vectorField> UGas(const scalar t, const vectorField& p) const;
 
+        //- Get the mean flow velocity
+        inline vector UMean() const
+        {
+            return direction_*speed_;
+        }
+
         //- Write
         void write(Ostream&) const;
 };

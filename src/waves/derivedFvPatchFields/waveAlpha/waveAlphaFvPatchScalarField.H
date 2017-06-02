@@ -89,12 +89,6 @@ class waveAlphaFvPatchScalarField
         const bool inletOutlet_;
 
 
-    // Private Member Functions
-
-        //- Return the current modelled phase fraction field
-        tmp<scalarField> alpha() const;
-
-
 public:
 
     //- Runtime type information
@@ -174,6 +168,9 @@ public:
 
 
         // Evaluation functions
+
+            //- Return the current modelled phase fraction field
+            tmp<scalarField> alpha() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();

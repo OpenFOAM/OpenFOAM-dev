@@ -30,30 +30,6 @@ License
 #include "surfaceFields.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alpha() const
-{
-    const scalar t = db().time().timeOutputValue();
-
-    const waveVelocityFvPatchVectorField& Up =
-        refCast<const waveVelocityFvPatchVectorField>
-        (
-            patch().lookupPatchField<volVectorField, scalar>(UName_)
-        );
-    const waveSuperposition& waves = Up.waves();
-
-    return
-        levelSetFraction
-        (
-            patch(),
-            waves.height(t, patch().Cf()),
-            waves.height(t, patch().patch().localPoints()),
-            !liquid_
-        );
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
@@ -140,6 +116,28 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::scalarField> Foam::waveAlphaFvPatchScalarField::alpha() const
+{
+    const scalar t = db().time().timeOutputValue();
+
+    const waveVelocityFvPatchVectorField& Up =
+        refCast<const waveVelocityFvPatchVectorField>
+        (
+            patch().lookupPatchField<volVectorField, scalar>(UName_)
+        );
+    const waveSuperposition& waves = Up.waves();
+
+    return
+        levelSetFraction
+        (
+            patch(),
+            waves.height(t, patch().Cf()),
+            waves.height(t, patch().patch().localPoints()),
+            !liquid_
+        );
+}
+
 
 void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
 {

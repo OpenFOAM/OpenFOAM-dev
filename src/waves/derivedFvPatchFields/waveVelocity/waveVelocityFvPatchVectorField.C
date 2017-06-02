@@ -29,26 +29,6 @@ License
 #include "surfaceFields.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::U() const
-{
-    const scalar t = db().time().timeOutputValue();
-
-    return
-        levelSetAverage
-        (
-            patch(),
-            waves_.height(t, patch().Cf()),
-            waves_.height(t, patch().patch().localPoints()),
-            waves_.UGas(t, patch().Cf())(),
-            waves_.UGas(t, patch().patch().localPoints())(),
-            waves_.ULiquid(t, patch().Cf())(),
-            waves_.ULiquid(t, patch().patch().localPoints())()
-        );
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
@@ -126,6 +106,24 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::U() const
+{
+    const scalar t = db().time().timeOutputValue();
+
+    return
+        levelSetAverage
+        (
+            patch(),
+            waves_.height(t, patch().Cf()),
+            waves_.height(t, patch().patch().localPoints()),
+            waves_.UGas(t, patch().Cf())(),
+            waves_.UGas(t, patch().patch().localPoints())(),
+            waves_.ULiquid(t, patch().Cf())(),
+            waves_.ULiquid(t, patch().patch().localPoints())()
+        );
+}
+
 
 void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
 {

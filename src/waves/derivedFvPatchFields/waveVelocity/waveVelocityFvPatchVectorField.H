@@ -104,12 +104,6 @@ class waveVelocityFvPatchVectorField
         const waveSuperposition waves_;
 
 
-    // Private Member Functions
-
-        //- Return the current modelled velocity field
-        tmp<vectorField> U() const;
-
-
 public:
 
     //- Runtime type information
@@ -189,6 +183,9 @@ public:
 
 
         // Evaluation functions
+
+            //- Return the current modelled velocity field
+            tmp<vectorField> U() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
