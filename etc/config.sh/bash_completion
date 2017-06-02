@@ -6139,11 +6139,12 @@ _rm~all_ ()
 
     opts="-help"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *) opts="";;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6158,11 +6159,12 @@ _rmcore_ ()
 
     opts="-help"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *) opts="";;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6291,11 +6293,14 @@ _wclean_ ()
 
     opts="-help -silent"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *)
+            opts=""; extra=""
+            ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6310,11 +6315,12 @@ _wcleanLnIncludeAll_ ()
 
     opts=""
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *) opts="";;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6370,13 +6376,19 @@ _wmake_ ()
 
     opts="-all -help -j -j -non-stop -no-scheduler -queue -silent -update"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
         -j)
             opts="" ; extra="" ;;
-       *) ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -j) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6391,11 +6403,14 @@ _wmakeCheckPwd_ ()
 
     opts="-help -quiet"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *)
+            opts=""; extra=""
+            ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6448,11 +6463,14 @@ _wmakeLnInclude_ ()
 
     opts="-help -silent -update"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *)
+            opts=""; extra=""
+            ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6467,13 +6485,19 @@ _wmakeLnIncludeAll_ ()
 
     opts="-help -j -j"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
         -j)
             opts="" ; extra="" ;;
-       *) ;;
+       -*) ;;
+        *)
+            case "${COMP_WORDS[COMP_CWORD-2]}" in
+                -j) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
@@ -6566,11 +6590,14 @@ _wrmo_ ()
 
     opts="-all -help"
     for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
+    extra="-d -f"
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-       *) ;;
+       -*) ;;
+        *)
+            opts=""; extra=""
+            ;;
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
