@@ -83,7 +83,7 @@ private:
     // Private Member Functions
 
         //- Source term to momentum equation
-        void addSup
+        void add
         (
             const volVectorField& alphaRhoU,
             fvMatrix<vector>& eqn,

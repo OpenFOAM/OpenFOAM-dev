@@ -45,7 +45,7 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::verticalDamping::addSup
+void Foam::fv::verticalDamping::add
 (
     const volVectorField& alphaRhoU,
     fvMatrix<vector>& eqn,
@@ -63,12 +63,18 @@ void Foam::fv::verticalDamping::addSup
     eqn.dimensions()
       - V.dimensions()*(lgg.dimensions() & alphaRhoU.dimensions());
 
+    // Calculate the force and apply it to the equation
+    vectorField force(cells_.size());
     forAll(cells_, i)
     {
         const label c = cells_[i];
-        vector f = V[c]*(lgg.value() & alphaRhoU[c]);
-        meshTools::constrainDirection(mesh_, mesh_.solutionD(), f);
-        eqn.source()[c] += f;
+        force[i] = V[c]*(lgg.value() & alphaRhoU[c]);
+    }
+    meshTools::constrainDirection(mesh_, mesh_.solutionD(), force);
+    forAll(cells_, i)
+    {
+        const label c = cells_[i];
+        eqn.source()[c] += force[i];
     }
 }
 
@@ -98,7 +104,7 @@ void Foam::fv::verticalDamping::addSup
     const label fieldi
 )
 {
-    addSup(eqn.psi(), eqn, fieldi);
+    add(eqn.psi(), eqn, fieldi);
 }
 
 
@@ -109,7 +115,7 @@ void Foam::fv::verticalDamping::addSup
     const label fieldi
 )
 {
-    addSup(rho*eqn.psi(), eqn, fieldi);
+    add(rho*eqn.psi(), eqn, fieldi);
 }
 
 
@@ -121,7 +127,7 @@ void Foam::fv::verticalDamping::addSup
     const label fieldi
 )
 {
-    addSup(alpha*rho*eqn.psi(), eqn, fieldi);
+    add(alpha*rho*eqn.psi(), eqn, fieldi);
 }
 
 
