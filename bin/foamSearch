@@ -76,12 +76,12 @@ esac
 [ -d "$1" ] || error "$1 is not a directory"
 
 tmp=$(mktemp tmp.XXXXXX)
-files=$(find "$1" -name "$3")
-[ -n "$files" ] || error "No file $3 found in $1"
+files=$(find "$1" -name "$2")
+[ -n "$files" ] || error "No file $2 found in $1"
 
 for f in $files
 do
-    foamDictionary -entry "$2" "$f" 2>/dev/null >> "$tmp"
+    foamDictionary -entry "$3" "$f" 2>/dev/null >> "$tmp"
 done
 
 [ -s "$tmp" ] && \
