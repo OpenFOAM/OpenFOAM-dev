@@ -245,33 +245,7 @@ inline Point Foam::tetrahedron<Point, PointRef>::randomPoint
     Random& rndGen
 ) const
 {
-    // Adapted from
-    // http://vcg.isti.cnr.it/activities/geometryegraphics/pointintetraedro.html
-
-    scalar s = rndGen.scalar01();
-    scalar t = rndGen.scalar01();
-    scalar u = rndGen.scalar01();
-
-    if (s + t > 1.0)
-    {
-        s = 1.0 - s;
-        t = 1.0 - t;
-    }
-
-    if (t + u > 1.0)
-    {
-        scalar tmp = u;
-        u = 1.0 - s - t;
-        t = 1.0 - tmp;
-    }
-    else if (s + t + u > 1.0)
-    {
-        scalar tmp = u;
-        u = s + t + u - 1.0;
-        s = 1.0 - t - tmp;
-    }
-
-    return (1 - s - t - u)*a_ + s*b_ + t*c_ + u*d_;
+    return barycentricToPoint(barycentric01(rndGen));
 }
 
 
@@ -281,41 +255,37 @@ inline Point Foam::tetrahedron<Point, PointRef>::randomPoint
     cachedRandom& rndGen
 ) const
 {
-    // Adapted from
-    // http://vcg.isti.cnr.it/activities/geometryegraphics/pointintetraedro.html
-
-    scalar s = rndGen.sample01<scalar>();
-    scalar t = rndGen.sample01<scalar>();
-    scalar u = rndGen.sample01<scalar>();
-
-    if (s + t > 1.0)
-    {
-        s = 1.0 - s;
-        t = 1.0 - t;
-    }
-
-    if (t + u > 1.0)
-    {
-        scalar tmp = u;
-        u = 1.0 - s - t;
-        t = 1.0 - tmp;
-    }
-    else if (s + t + u > 1.0)
-    {
-        scalar tmp = u;
-        u = s + t + u - 1.0;
-        s = 1.0 - t - tmp;
-    }
-
-    return (1 - s - t - u)*a_ + s*b_ + t*c_ + u*d_;
+    return barycentricToPoint(barycentric01(rndGen));
 }
 
 
 template<class Point, class PointRef>
-Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
+inline Point Foam::tetrahedron<Point, PointRef>::barycentricToPoint
+(
+    const barycentric& bary
+) const
+{
+    return bary[0]*a_ + bary[1]*b_ + bary[2]*c_ + bary[3]*d_;
+}
+
+
+template<class Point, class PointRef>
+inline Foam::barycentric Foam::tetrahedron<Point, PointRef>::pointToBarycentric
+(
+    const point& pt
+) const
+{
+    barycentric bary;
+    pointToBarycentric(pt, bary);
+    return bary;
+}
+
+
+template<class Point, class PointRef>
+inline Foam::scalar Foam::tetrahedron<Point, PointRef>::pointToBarycentric
 (
     const point& pt,
-    FixedList<scalar, 4>& bary
+    barycentric& bary
 ) const
 {
     // Reference:
@@ -336,9 +306,9 @@ Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
 
     if (Foam::mag(detT) < SMALL)
     {
-        // Degenerate tetrahedron, returning 1/4 barycentric coordinates.
+        // Degenerate tetrahedron, returning 1/4 barycentric coordinates
 
-        bary = List<scalar>(4, 0.25);
+        bary = barycentric(0.25, 0.25, 0.25, 0.25);
 
         return detT;
     }
@@ -348,7 +318,7 @@ Foam::scalar Foam::tetrahedron<Point, PointRef>::barycentric
     bary[0] = res.x();
     bary[1] = res.y();
     bary[2] = res.z();
-    bary[3] = (1.0 - res.x() - res.y() - res.z());
+    bary[3] = 1 - cmptSum(res);
 
     return detT;
 }

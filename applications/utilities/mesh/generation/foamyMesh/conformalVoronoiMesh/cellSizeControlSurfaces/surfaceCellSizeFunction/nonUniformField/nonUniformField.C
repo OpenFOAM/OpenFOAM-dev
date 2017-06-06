@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,8 +118,7 @@ Foam::scalar Foam::nonUniformField::interpolate
         pts[faceHitByPt[2]]
     );
 
-    FixedList<scalar, 3> bary;
-    tri.barycentric(pt, bary);
+    const barycentric2D bary = tri.pointToBarycentric(pt);
 
 //    return pointCellSize_[pMap[faceHitByPt[0]]]*bary[0]
 //         + pointCellSize_[pMap[faceHitByPt[1]]]*bary[1]

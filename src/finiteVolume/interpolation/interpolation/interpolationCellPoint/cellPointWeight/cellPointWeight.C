@@ -62,7 +62,7 @@ void Foam::cellPointWeight::findTetrahedron
         const tetIndices& tetIs = cellTets[tetI];
 
         // Barycentric coordinates of the position
-        scalar det = tetIs.tet(mesh).barycentric(position, weights_);
+        scalar det = tetIs.tet(mesh).pointToBarycentric(position, weights_);
 
         if (mag(det/cellVolume) > tol)
         {
@@ -123,7 +123,7 @@ void Foam::cellPointWeight::findTetrahedron
     // Barycentric coordinates of the position, ignoring if the
     // determinant is suitable.  If not, the return from barycentric
     // to weights_ is safe.
-    tetIs.tet(mesh).barycentric(position, weights_);
+    weights_ = tetIs.tet(mesh).pointToBarycentric(position);
 
     faceVertices_ = tetIs.faceTriIs(mesh);
 }
@@ -156,10 +156,10 @@ void Foam::cellPointWeight::findTriangle
     {
         const tetIndices& tetIs = faceTets[tetI];
 
-        FixedList<scalar, 3> triWeights;
-
         // Barycentric coordinates of the position
-        scalar det = tetIs.faceTri(mesh).barycentric(position, triWeights);
+        barycentric2D triWeights;
+        const scalar det =
+            tetIs.faceTri(mesh).pointToBarycentric(position, triWeights);
 
         if (0.25*mag(det)/faceAreaSqr > tol)
         {
@@ -222,9 +222,8 @@ void Foam::cellPointWeight::findTriangle
     // determinant is suitable.  If not, the return from barycentric
     // to triWeights is safe.
 
-    FixedList<scalar, 3> triWeights;
-
-    tetIs.faceTri(mesh).barycentric(position, triWeights);
+    const barycentric2D triWeights =
+        tetIs.faceTri(mesh).pointToBarycentric(position);
 
     // Weight[0] is for the cell centre.
     weights_[0] = 0;

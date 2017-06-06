@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,8 @@ SourceFiles
 #define cellPointWeight_H
 
 #include "vector.H"
+#include "barycentric.H"
+#include "triFace.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,11 +59,12 @@ protected:
        //- Cell index
        const label celli_;
 
-       //- Weights applied to tet vertices
-       FixedList<scalar, 4> weights_;
+       //- Weights applied to tet vertices. Equal to the barycentric coordinates
+       //  of the interpolation position.
+       barycentric weights_;
 
        //- Face vertex indices
-       FixedList<label, 3> faceVertices_;
+       triFace faceVertices_;
 
 
     // Protected Member Functions
@@ -112,13 +115,13 @@ public:
         }
 
         //- Interpolation weights
-        inline const FixedList<scalar, 4>& weights() const
+        inline const barycentric& weights() const
         {
             return weights_;
         }
 
         //- Interpolation addressing for points on face
-        inline const FixedList<label, 3>& faceVertices() const
+        inline const triFace& faceVertices() const
         {
             return faceVertices_;
         }

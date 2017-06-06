@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::scalarField Foam::cellShapeControl::cellSize
 
 Foam::scalar Foam::cellShapeControl::cellSize(const point& pt) const
 {
-    FixedList<scalar, 4> bary;
+    barycentric bary;
     cellShapeControlMesh::Cell_handle ch;
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
@@ -172,7 +172,7 @@ Foam::scalar Foam::cellShapeControl::cellSize(const point& pt) const
 
 Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
 {
-    FixedList<scalar, 4> bary;
+    barycentric bary;
     cellShapeControlMesh::Cell_handle ch;
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);
@@ -244,7 +244,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
     tensor& alignment
 ) const
 {
-    FixedList<scalar, 4> bary;
+    barycentric bary;
     cellShapeControlMesh::Cell_handle ch;
 
     shapeControlMesh_.barycentricCoords(pt, bary, ch);

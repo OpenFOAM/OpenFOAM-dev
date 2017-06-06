@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,16 +231,7 @@ inline Foam::tensor Foam::triangle<Point, PointRef>::inertia
 template<class Point, class PointRef>
 inline Point Foam::triangle<Point, PointRef>::randomPoint(Random& rndGen) const
 {
-    // Generating Random Points in Triangles
-    // by Greg Turk
-    // from "Graphics Gems", Academic Press, 1990
-    // http://tog.acm.org/GraphicsGems/gems/TriPoints.c
-
-    scalar s = rndGen.scalar01();
-
-    scalar t = sqrt(rndGen.scalar01());
-
-    return (1 - t)*a_ + (1 - s)*t*b_ + s*t*c_;
+    return barycentricToPoint(barycentric2D01(rndGen));
 }
 
 
@@ -250,24 +241,37 @@ inline Point Foam::triangle<Point, PointRef>::randomPoint
     cachedRandom& rndGen
 ) const
 {
-    // Generating Random Points in Triangles
-    // by Greg Turk
-    // from "Graphics Gems", Academic Press, 1990
-    // http://tog.acm.org/GraphicsGems/gems/TriPoints.c
-
-    scalar s = rndGen.sample01<scalar>();
-
-    scalar t = sqrt(rndGen.sample01<scalar>());
-
-    return (1 - t)*a_ + (1 - s)*t*b_ + s*t*c_;
+    return barycentricToPoint(barycentric2D01(rndGen));
 }
 
 
 template<class Point, class PointRef>
-Foam::scalar Foam::triangle<Point, PointRef>::barycentric
+inline Point Foam::triangle<Point, PointRef>::barycentricToPoint
+(
+    const barycentric2D& bary
+) const
+{
+    return bary[0]*a_ + bary[1]*b_ + bary[2]*c_;
+}
+
+
+template<class Point, class PointRef>
+inline Foam::barycentric2D Foam::triangle<Point, PointRef>::pointToBarycentric
+(
+    const point& pt
+) const
+{
+    barycentric2D bary;
+    pointToBarycentric(pt, bary);
+    return bary;
+}
+
+
+template<class Point, class PointRef>
+inline Foam::scalar Foam::triangle<Point, PointRef>::pointToBarycentric
 (
     const point& pt,
-    FixedList<scalar, 3>& bary
+    barycentric2D& bary
 ) const
 {
     // Reference:
@@ -289,7 +293,7 @@ Foam::scalar Foam::triangle<Point, PointRef>::barycentric
     {
         // Degenerate triangle, returning 1/3 barycentric coordinates.
 
-        bary = FixedList<scalar, 3>(1.0/3.0);
+        bary = barycentric2D(1.0/3.0, 1.0/3.0, 1.0/3.0);
 
         return denom;
     }

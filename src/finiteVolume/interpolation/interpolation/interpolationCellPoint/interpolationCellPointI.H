@@ -31,8 +31,8 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
     const cellPointWeight& cpw
 ) const
 {
-    const FixedList<scalar, 4>& weights = cpw.weights();
-    const FixedList<label, 3>& faceVertices = cpw.faceVertices();
+    const barycentric& weights = cpw.weights();
+    const triFace& faceVertices = cpw.faceVertices();
 
     Type t = this->psi_[cpw.cell()]*weights[0];
     t += psip_[faceVertices[0]]*weights[1];
@@ -79,9 +79,8 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
         }
     }
 
-    FixedList<scalar, 4> weights;
-
-    tetIs.tet(this->pMesh_).barycentric(position, weights);
+    const barycentric weights =
+        tetIs.tet(this->pMesh_).pointToBarycentric(position);
 
     // Order of weights is the same as that of the vertices of the tet, i.e.
     // cellCentre, faceBasePt, facePtA, facePtB.
