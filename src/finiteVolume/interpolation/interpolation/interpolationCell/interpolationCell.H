@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,19 @@ public:
             const label celli,
             const label facei = -1
         ) const;
+
+        //- Interpolate field to the given coordinates in the tetrahedron
+        //  defined by the given indices. This is an optimisation which skips
+        //  calculating the position, as cell interpolation doesn't need it.
+        inline Type interpolate
+        (
+            const barycentric& coordinates,
+            const tetIndices& tetIs,
+            const label facei = -1
+        ) const
+        {
+            return interpolate(vector::zero, tetIs.cell(), facei);
+        }
 };
 
 

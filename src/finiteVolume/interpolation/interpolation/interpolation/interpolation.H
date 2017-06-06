@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,18 +135,24 @@ public:
             const label facei = -1
         ) const = 0;
 
-        //- Interpolate field to the given point in the tetrahedron
+        //- Interpolate field to the given coordinates in the tetrahedron
         //  defined by the given indices.  Calls interpolate function
         //  above here execpt where overridden by derived
         //  interpolation types.
         virtual Type interpolate
         (
-            const vector& position,
+            const barycentric& coordinates,
             const tetIndices& tetIs,
             const label facei = -1
         ) const
         {
-            return interpolate(position, tetIs.cell(), facei);
+            return
+                interpolate
+                (
+                    tetIs.tet(pMesh_).barycentricToPoint(coordinates),
+                    tetIs.cell(),
+                    facei
+                );
         }
 };
 

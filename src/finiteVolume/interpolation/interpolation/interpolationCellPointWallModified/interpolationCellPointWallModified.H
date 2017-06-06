@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,11 +78,11 @@ public:
             const label facei = -1
         ) const;
 
-        //- Interpolate field to the given point in the tetrahedron
+        //- Interpolate field to the given coordinates in the tetrahedron
         //  defined by the given indices.
         inline Type interpolate
         (
-            const vector& position,
+            const barycentric& coordinates,
             const tetIndices& tetIs,
             const label facei = -1
         ) const;

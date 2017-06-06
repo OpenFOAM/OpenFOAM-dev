@@ -55,7 +55,6 @@ bool Foam::solidParticle::move
         }
 
 
-        const label celli = cell();
         const scalar sfrac = stepFraction();
 
         const scalar f = 1 - stepFraction();
@@ -63,10 +62,10 @@ bool Foam::solidParticle::move
 
         const scalar dt = (stepFraction() - sfrac)*trackTime;
 
-        cellPointWeight cpw(mesh(), position(), celli, face());
-        scalar rhoc = td.rhoInterp().interpolate(cpw);
-        vector Uc = td.UInterp().interpolate(cpw);
-        scalar nuc = td.nuInterp().interpolate(cpw);
+        const tetIndices tetIs = this->currentTetIndices();
+        scalar rhoc = td.rhoInterp().interpolate(this->coordinates(), tetIs);
+        vector Uc = td.UInterp().interpolate(this->coordinates(), tetIs);
+        scalar nuc = td.nuInterp().interpolate(this->coordinates(), tetIs);
 
         scalar rhop = td.cloud().rhop();
         scalar magUr = mag(Uc - U_);

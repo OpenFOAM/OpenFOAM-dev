@@ -67,7 +67,7 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
 template<class Type>
 inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
 (
-    const vector& position,
+    const barycentric& coordinates,
     const tetIndices& tetIs,
     const label facei
 ) const
@@ -101,7 +101,7 @@ inline Type Foam::interpolationCellPointWallModified<Type>::interpolate
 
     return interpolationCellPoint<Type>::interpolate
     (
-        position,
+        coordinates,
         tetIs,
         facei
     );

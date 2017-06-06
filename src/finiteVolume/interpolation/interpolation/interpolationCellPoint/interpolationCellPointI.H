@@ -58,7 +58,7 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
 template<class Type>
 inline Type Foam::interpolationCellPoint<Type>::interpolate
 (
-    const vector& position,
+    const barycentric& coordinates,
     const tetIndices& tetIs,
     const label facei
 ) const
@@ -79,20 +79,13 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
         }
     }
 
-    const barycentric weights =
-        tetIs.tet(this->pMesh_).pointToBarycentric(position);
-
-    // Order of weights is the same as that of the vertices of the tet, i.e.
-    // cellCentre, faceBasePt, facePtA, facePtB.
-
-    Type t = this->psi_[tetIs.cell()]*weights[0];
-
     const triFace triIs = tetIs.faceTriIs(this->pMesh_);
-    t += psip_[triIs[0]]*weights[1];
-    t += psip_[triIs[1]]*weights[2];
-    t += psip_[triIs[2]]*weights[3];
 
-    return t;
+    return
+        this->psi_[tetIs.cell()]*coordinates[0]
+      + psip_[triIs[0]]*coordinates[1]
+      + psip_[triIs[1]]*coordinates[2]
+      + psip_[triIs[2]]*coordinates[3];
 }
 
 

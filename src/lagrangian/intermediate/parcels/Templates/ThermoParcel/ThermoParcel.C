@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,9 @@ void Foam::ThermoParcel<ParcelType>::setCellValues
 
     tetIndices tetIs = this->currentTetIndices();
 
-    Cpc_ = td.CpInterp().interpolate(this->position(), tetIs);
+    Cpc_ = td.CpInterp().interpolate(this->coordinates(), tetIs);
 
-    Tc_ = td.TInterp().interpolate(this->position(), tetIs);
+    Tc_ = td.TInterp().interpolate(this->coordinates(), tetIs);
 
     if (Tc_ < td.cloud().constProps().TMin())
     {
@@ -124,8 +124,8 @@ void Foam::ThermoParcel<ParcelType>::calcSurfaceValues
     rhos = this->rhoc_*TRatio;
 
     tetIndices tetIs = this->currentTetIndices();
-    mus = td.muInterp().interpolate(this->position(), tetIs)/TRatio;
-    kappas = td.kappaInterp().interpolate(this->position(), tetIs)/TRatio;
+    mus = td.muInterp().interpolate(this->coordinates(), tetIs)/TRatio;
+    kappas = td.kappaInterp().interpolate(this->coordinates(), tetIs)/TRatio;
 
     Pr = Cpc_*mus/kappas;
     Pr = max(ROOTVSMALL, Pr);
@@ -286,7 +286,7 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
     if (td.cloud().radiation())
     {
         tetIndices tetIs = this->currentTetIndices();
-        const scalar Gc = td.GInterp().interpolate(this->position(), tetIs);
+        const scalar Gc = td.GInterp().interpolate(this->coordinates(), tetIs);
         const scalar sigma = physicoChemical::sigma.value();
         const scalar epsilon = td.cloud().constProps().epsilon0();
 
