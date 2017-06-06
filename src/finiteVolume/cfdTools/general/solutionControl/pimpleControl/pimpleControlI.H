@@ -92,8 +92,7 @@ inline bool Foam::pimpleControl::finalIter() const
 inline bool Foam::pimpleControl::finalInnerIter() const
 {
     return
-       finalIter()
-    && corrPISO_ == nCorrPISO_
+       corrPISO_ == nCorrPISO_
     && corrNonOrtho_ == nNonOrthCorr_ + 1;
 }
 
