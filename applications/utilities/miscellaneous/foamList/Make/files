@@ -1,3 +1,0 @@
-foamList.C
-
-EXE = $(FOAM_APPBIN)/foamList
