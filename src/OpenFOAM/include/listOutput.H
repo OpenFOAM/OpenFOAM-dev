@@ -5,7 +5,7 @@ if
     args.optionFound("listSwitches")
 )
 {
-    args.listSwitches(args.optionFound("includeUnsetSwitches"));
+    debug::listSwitches(args.optionFound("includeUnsetSwitches"));
     listOptions = true;
 }
 
@@ -14,7 +14,7 @@ if
     args.optionFound("listRegisteredSwitches")
 )
 {
-    args.listRegisteredSwitches(args.optionFound("includeUnsetSwitches"));
+    debug::listRegisteredSwitches(args.optionFound("includeUnsetSwitches"));
     listOptions = true;
 }
 
