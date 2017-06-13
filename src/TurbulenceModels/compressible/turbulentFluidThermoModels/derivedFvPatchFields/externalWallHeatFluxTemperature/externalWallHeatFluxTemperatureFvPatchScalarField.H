@@ -100,6 +100,7 @@ SourceFiles
 
 #include "mixedFvPatchFields.H"
 #include "temperatureCoupledBase.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -147,7 +148,7 @@ private:
         scalarField h_;
 
         //- Ambient temperature [K]
-        scalarField Ta_;
+        autoPtr<Function1<scalar>> Ta_;
 
         //- Relaxation for the wall temperature (thermal inertia)
         scalar relaxation_;

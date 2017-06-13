@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Constant.H"
+#include "Uniform.H"
 #include "ZeroConstant.H"
 #include "OneConstant.H"
 #include "PolynomialEntry.H"
@@ -41,6 +42,7 @@ License
 #define makeFunction1s(Type)                                                   \
     makeFunction1(Type);                                                       \
     makeFunction1Type(Constant, Type);                                         \
+    makeFunction1Type(Uniform, Type);                                          \
     makeFunction1Type(ZeroConstant, Type);                                     \
     makeFunction1Type(OneConstant, Type);                                      \
     makeFunction1Type(Polynomial, Type);                                       \
