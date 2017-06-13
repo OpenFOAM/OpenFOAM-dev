@@ -37,12 +37,15 @@ usage() {
 
 Usage: ${0##*/} [OPTION] <source case> <target name>
 options:
-  -latestTime    clone the latest time directory
   -help          print the usage
+  -latestTime    clone the latest time directory
+  -no-orig       do not copy 0.orig directory
+  -no-scripts    do not copy shell scripts
 
 Create a new <targetCase> case directory that includes time, system and constant
-directories of <sourceCase> directory.
-The time directory is the first time directory by default.
+directories, and shell scripts, of <sourceCase> directory.
+The time directory is the first time directory by default.  If no time directory
+exists, or it is 0, an exitsting 0.orig directory is copied by default.
 
 USAGE
 }
@@ -54,7 +57,13 @@ error() {
     exit 1
 }
 
+cpIfPresent() {
+    [ -e "$1" ] && echo "... ${1##*/}" && cp -r "$1" "$2"
+}
+
 time_option="head -1"
+no_orig=""
+no_scripts=""
 
 # parse options
 while [ "$#" -gt 0 ]
@@ -65,6 +74,14 @@ do
         ;;
     -l | -latestTime)
         time_option="tail -1"
+        shift 1
+        ;;
+    -no-orig)
+        no_orig="true"
+        shift 1
+        ;;
+    -no-scripts)
+        no_scripts="true"
         shift 1
         ;;
     -*)
@@ -80,14 +97,26 @@ done
 foamListTimes -case "$1" >/dev/null 2>&1 || \
     error "'$1' is not a valid case directory"
 
-! [ -e "$2" ] || error "'$2' file/directory already exists, delete and re-run"
+[ -e "$2" ] && error "'$2' file/directory already exists, delete and re-run"
 
 echo "Making $2 case directory"
 mkdir "$2"
 
-time_dir="$(foamListTimes -withZero -case "$1" | $time_option)"
+echo "Copying directories from $1 to $2:"
+cpIfPresent "$1/system" "$2"
+cpIfPresent "$1/constant" "$2"
 
-echo "Copying case directories from $1 to $2"
-cp -r "$1"/system "$1"/constant "$1"/"${time_dir}" "$2"
+time_dir="$(foamListTimes -withZero -case "$1" | $time_option)"
+cpIfPresent "$1/${time_dir}" "$2"
+
+[ "${time_dir}" = "0" -o -z "${time_dir}" ] && [ -z "$no_orig" ] && \
+cpIfPresent "$1/0.orig" "$2"
+
+[ "$no_scripts" ] || \
+    scripts="$(find "$1" -maxdepth 1 -type f -exec file {} \; | \
+               grep "shell script" | \
+               cut -d: -f1)"
+[ "$scripts" ] && echo "Copying scripts from $1 to $2:" && \
+    for s in $scripts ; do cpIfPresent "$s" "$2" ; done
 
 #------------------------------------------------------------------------------
