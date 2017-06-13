@@ -49,6 +49,9 @@ Description
     The thermal conductivity \c kappa can either be retrieved from various
     possible sources, as detailed in the class temperatureCoupledBase.
 
+    The ambient temperature Ta is specified as a Foam::Function1 of time but
+    uniform is space.
+
 Usage
     \table
     Property     | Description                 | Required | Default value
@@ -75,7 +78,7 @@ Usage
 
         mode            coefficient;
 
-        Ta              uniform 300.0;
+        Ta              constant 300.0;
         h               uniform 10.0;
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
