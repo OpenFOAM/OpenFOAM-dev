@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,13 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::~AnisothermalPhaseModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class BasePhaseModel>
+bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
+{
+    return !this->thermo().incompressible();
+}
+
 
 template<class BasePhaseModel>
 void Foam::AnisothermalPhaseModel<BasePhaseModel>::correctKinematics()
@@ -153,13 +160,6 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
     }
 
     return tEEqn;
-}
-
-
-template<class BasePhaseModel>
-bool Foam::AnisothermalPhaseModel<BasePhaseModel>::compressible() const
-{
-    return !this->thermo().incompressible();
 }
 
 

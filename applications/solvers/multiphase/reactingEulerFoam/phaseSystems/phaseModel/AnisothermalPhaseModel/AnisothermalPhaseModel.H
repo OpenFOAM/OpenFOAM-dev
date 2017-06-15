@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,6 +85,9 @@ public:
 
     // Member Functions
 
+        //- Return true if the phase is compressible otherwise false
+        virtual bool compressible() const;
+
         //- Correct the kinematics
         virtual void correctKinematics();
 
@@ -94,14 +97,8 @@ public:
         //- Return the enthalpy equation
         virtual tmp<fvScalarMatrix> heEqn();
 
-
-        // Compressibility (variable density)
-
-            //- Return true if the phase is compressible otherwise false
-            virtual bool compressible() const;
-
-            //- Return the phase kinetic energy
-            virtual const volScalarField& K() const;
+        //- Return the phase kinetic energy
+        virtual const volScalarField& K() const;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,13 @@ Foam::IsothermalPhaseModel<BasePhaseModel>::~IsothermalPhaseModel()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class BasePhaseModel>
+bool Foam::IsothermalPhaseModel<BasePhaseModel>::compressible() const
+{
+    return !this->thermo().incompressible();
+}
+
 
 template<class BasePhaseModel>
 void Foam::IsothermalPhaseModel<BasePhaseModel>::correctThermo()
