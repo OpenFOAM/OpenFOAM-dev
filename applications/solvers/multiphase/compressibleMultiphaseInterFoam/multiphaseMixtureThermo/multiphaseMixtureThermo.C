@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -951,7 +951,7 @@ Foam::multiphaseMixtureThermo::nearInterface() const
     forAllConstIter(PtrDictionary<phaseModel>, phases_, phase)
     {
         tnearInt.ref() =
-            max(tnearInt(), pos(phase() - 0.01)*pos(0.99 - phase()));
+            max(tnearInt(), pos0(phase() - 0.01)*pos0(0.99 - phase()));
     }
 
     return tnearInt;

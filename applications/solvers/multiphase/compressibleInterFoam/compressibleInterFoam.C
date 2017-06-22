@@ -105,9 +105,7 @@ int main(int argc, char *argv[])
         while (pimple.loop())
         {
             #include "alphaControls.H"
-            #include "alphaEqnSubCycle.H"
-
-            solve(fvm::ddt(rho) + fvc::div(rhoPhi));
+            #include "compressibleAlphaEqnSubCycle.H"
 
             #include "UEqn.H"
             #include "TEqn.H"

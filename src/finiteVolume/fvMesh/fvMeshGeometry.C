@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -433,7 +433,7 @@ const Foam::surfaceScalarField& Foam::fvMesh::phi() const
 
     // Set zero current time
     // mesh motion fluxes if the time has been incremented
-    if (phiPtr_->timeIndex() != time().timeIndex())
+    if (!time().subCycling() && phiPtr_->timeIndex() != time().timeIndex())
     {
         (*phiPtr_) = dimensionedScalar("0", dimVolume/dimTime, 0.0);
     }

@@ -1,20 +1,20 @@
-IOobject alphaPhiHeader
+IOobject alphaPhi10Header
 (
-    "alphaPhi",
+    "alphaPhi10",
     runTime.timeName(),
     mesh,
     IOobject::READ_IF_PRESENT,
     IOobject::AUTO_WRITE
 );
 
-const bool alphaRestart = alphaPhiHeader.headerOk();
+const bool alphaRestart = alphaPhi10Header.headerOk();
 
 // MULES flux from previous time-step
-surfaceScalarField alphaPhi
+surfaceScalarField alphaPhi10
 (
-    alphaPhiHeader,
+    alphaPhi10Header,
     phi*fvc::interpolate(alpha1)
 );
 
 // MULES Correction
-tmp<surfaceScalarField> talphaPhiCorr0;
+tmp<surfaceScalarField> talphaPhi1Corr0;

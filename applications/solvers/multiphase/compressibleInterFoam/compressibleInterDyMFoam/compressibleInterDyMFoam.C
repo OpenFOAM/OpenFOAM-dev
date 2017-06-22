@@ -146,8 +146,6 @@ int main(int argc, char *argv[])
             #include "alphaControls.H"
             #include "compressibleAlphaEqnSubCycle.H"
 
-            solve(fvm::ddt(rho) + fvc::div(rhoPhi));
-
             #include "UEqn.H"
             #include "TEqn.H"
 

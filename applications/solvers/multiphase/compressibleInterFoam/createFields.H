@@ -89,7 +89,7 @@ surfaceScalarField rhoPhi
 
 volScalarField dgdt
 (
-    pos(alpha2)*fvc::div(phi)/max(alpha2, scalar(0.0001))
+    pos0(alpha2)*fvc::div(phi)/max(alpha2, scalar(0.0001))
 );
 
 // Construct compressible turbulence model

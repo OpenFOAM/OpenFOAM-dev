@@ -104,7 +104,7 @@
             )
             {
                 phase().dgdt() =
-                    pos(phase())
+                    pos0(phase())
                   *(p_rghEqnComps[phasei] & p_rgh)/phase().thermo().rho();
             }
 

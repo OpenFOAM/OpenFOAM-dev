@@ -24,14 +24,14 @@ volScalarField::Internal Su
 
 forAll(dgdt, celli)
 {
-    if (dgdt[celli] > 0.0 && alpha1[celli] > 0.0)
+    if (dgdt[celli] > 0.0)
     {
-        Sp[celli] -= dgdt[celli]*alpha1[celli];
-        Su[celli] += dgdt[celli]*alpha1[celli];
+        Sp[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+        Su[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
     }
-    else if (dgdt[celli] < 0.0 && alpha1[celli] < 1.0)
+    else if (dgdt[celli] < 0.0)
     {
-        Sp[celli] += dgdt[celli]*(1.0 - alpha1[celli]);
+        Sp[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
     }
 }
 

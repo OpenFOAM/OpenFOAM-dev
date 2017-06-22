@@ -31,8 +31,6 @@ divSchemes
     div(phirb,alpha) Gauss linear;
 
     div(rhoPhi,U)  Gauss upwind;
-    div(phi,thermo:rho.water) Gauss upwind;
-    div(phi,thermo:rho.air) Gauss upwind;
     div(rhoPhi,T)  Gauss upwind;
     div(rhoPhi,K)  Gauss upwind;
     div(phi,p)      Gauss upwind;

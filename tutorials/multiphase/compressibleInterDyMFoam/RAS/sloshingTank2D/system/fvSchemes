@@ -31,8 +31,6 @@ divSchemes
     div(phirb,alpha) Gauss linear;
 
     div(rhoPhi,U)  Gauss vanLeerV;
-    div(phi,thermo:rho.water) Gauss linear;
-    div(phi,thermo:rho.air) Gauss linear;
     div(rhoPhi,T)  Gauss vanLeer;
     div(rhoPhi,K)  Gauss linear;
     div((phi+meshPhi),p)  Gauss linear;
