@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,9 +71,9 @@ Foam::aspectRatioModels::VakhrushevEfremov::E() const
 
     return
         neg(Ta - scalar(1))*scalar(1)
-      + pos(Ta - scalar(1))*neg(Ta - scalar(39.8))
+      + pos0(Ta - scalar(1))*neg(Ta - scalar(39.8))
        *pow3(0.81 + 0.206*tanh(1.6 - 2*log10(max(Ta, scalar(1)))))
-      + pos(Ta - scalar(39.8))*0.24;
+      + pos0(Ta - scalar(39.8))*0.24;
 }
 
 

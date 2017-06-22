@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,7 +188,7 @@ public:
         {
             return
                 blendingFactor_*this->mesh().surfaceInterpolation::weights()
-              + (1 - blendingFactor_)*pos(this->faceFlux_);
+              + (1 - blendingFactor_)*pos0(this->faceFlux_);
         }
 };
 

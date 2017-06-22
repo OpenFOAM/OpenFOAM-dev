@@ -163,7 +163,7 @@ public:
                             if (mesh_.isInternalFace(facei))
                             {
                                 // Apply upwind differencing
-                                w[facei] = pos(faceFlux_[facei]);
+                                w[facei] = pos0(faceFlux_[facei]);
                             }
                         }
                     }

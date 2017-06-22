@@ -87,7 +87,7 @@ Foam::phaseChangeTwoPhaseMixtures::Kunz::mDotP() const
     return Pair<tmp<volScalarField>>
     (
         mcCoeff_*sqr(limitedAlpha1)*(1.0 - limitedAlpha1)
-       *pos(p - pSat())/max(p - pSat(), 0.01*pSat()),
+       *pos0(p - pSat())/max(p - pSat(), 0.01*pSat()),
 
         (-mvCoeff_)*limitedAlpha1*neg(p - pSat())
     );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
             const fvPatchField<scalar>& rho =
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-            operator==(p0 - 0.5*rho*(1.0 - pos(phip))*magSqr(Up));
+            operator==(p0 - 0.5*rho*(1.0 - pos0(phip))*magSqr(Up));
         }
         else
         {
@@ -182,14 +182,14 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
                     p0
                    /pow
                     (
-                        (1.0 + 0.5*psip*gM1ByG*(1.0 - pos(phip))*magSqr(Up)),
+                        (1.0 + 0.5*psip*gM1ByG*(1.0 - pos0(phip))*magSqr(Up)),
                         1.0/gM1ByG
                     )
                 );
             }
             else
             {
-                operator==(p0/(1.0 + 0.5*psip*(1.0 - pos(phip))*magSqr(Up)));
+                operator==(p0/(1.0 + 0.5*psip*(1.0 - pos0(phip))*magSqr(Up)));
             }
         }
 
@@ -197,7 +197,7 @@ void Foam::uniformTotalPressureFvPatchScalarField::updateCoeffs
     else if (internalField().dimensions() == dimPressure/dimDensity)
     {
         // Incompressible flow
-        operator==(p0 - 0.5*(1.0 - pos(phip))*magSqr(Up));
+        operator==(p0 - 0.5*(1.0 - pos0(phip))*magSqr(Up));
     }
     else
     {

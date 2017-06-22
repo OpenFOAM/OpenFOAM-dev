@@ -86,7 +86,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::velocity
     if (shallow())
     {
         const scalar kh = k()*depth();
-        const scalarField khz((kh + kz)*pos(kh + kz));
+        const scalarField khz((kh + kz)*pos0(kh + kz));
         return wa*zip(cosh(khz)*cos(phi), sinh(khz)*sin(phi))/sinh(kh);
     }
     else

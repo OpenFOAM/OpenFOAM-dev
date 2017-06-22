@@ -140,7 +140,7 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
     const symmTensorField nnp(sqr(patch().nf()));
 
     // Fix all components if inflow, just normal if outflow
-    valueFraction() = (1 - pos(phip))*I + pos(phip)*nnp;
+    valueFraction() = (1 - pos0(phip))*I + pos0(phip)*nnp;
 
     directionMixedFvPatchVectorField::updateCoeffs();
     directionMixedFvPatchVectorField::evaluate();

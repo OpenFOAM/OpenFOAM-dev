@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ inline Type& Foam::PairCollisionRecord<Type>::collisionData()
 template<class Type>
 inline bool Foam::PairCollisionRecord<Type>::accessed() const
 {
-    return pos(origProcOfOther_);
+    return pos0(origProcOfOther_);
 }
 
 

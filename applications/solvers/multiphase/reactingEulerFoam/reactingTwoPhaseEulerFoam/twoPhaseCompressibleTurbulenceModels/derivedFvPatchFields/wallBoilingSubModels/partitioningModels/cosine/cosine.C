@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ cosine::fLiquid
 ) const
 {
     return
-        pos(alphaLiquid1_ - alphaLiquid)
+        pos0(alphaLiquid1_ - alphaLiquid)
        *(
             neg(alphaLiquid0_ - alphaLiquid)
            *(

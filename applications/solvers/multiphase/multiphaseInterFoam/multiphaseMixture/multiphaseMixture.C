@@ -550,7 +550,8 @@ Foam::multiphaseMixture::nearInterface() const
 
     forAllConstIter(PtrDictionary<phase>, phases_, iter)
     {
-        tnearInt.ref() = max(tnearInt(), pos(iter() - 0.01)*pos(0.99 - iter()));
+        tnearInt.ref() =
+            max(tnearInt(), pos0(iter() - 0.01)*pos0(0.99 - iter()));
     }
 
     return tnearInt;

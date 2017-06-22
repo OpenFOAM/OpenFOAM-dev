@@ -136,7 +136,7 @@ Foam::phaseChangeTwoPhaseMixtures::SchnerrSauer::mDotP() const
 
     return Pair<tmp<volScalarField>>
     (
-        Cc_*(1.0 - limitedAlpha1)*pos(p - pSat())*apCoeff,
+        Cc_*(1.0 - limitedAlpha1)*pos0(p - pSat())*apCoeff,
 
         (-Cv_)*(1.0 + alphaNuc() - limitedAlpha1)*neg(p - pSat())*apCoeff
     );

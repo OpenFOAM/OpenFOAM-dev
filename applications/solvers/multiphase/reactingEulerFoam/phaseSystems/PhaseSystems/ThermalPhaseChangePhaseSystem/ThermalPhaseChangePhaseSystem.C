@@ -379,8 +379,8 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
         (
             min
             (
-                (pos(iDmdt)*he2 + neg(iDmdt)*hef2)
-              - (neg(iDmdt)*he1 + pos(iDmdt)*hef1),
+                (pos0(iDmdt)*he2 + neg(iDmdt)*hef2)
+              - (neg(iDmdt)*he1 + pos0(iDmdt)*hef1),
                 0.3*mag(hef2 - hef1)
             )
         );

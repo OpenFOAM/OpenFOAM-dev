@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void diffusion<CombThermoType, ThermoType>::correct()
             this->wFuel_ ==
                 C_*this->turbulence().muEff()
                *mag(fvc::grad(YFuel) & fvc::grad(YO2))
-               *pos(YFuel)*pos(YO2);
+               *pos0(YFuel)*pos0(YO2);
         }
     }
 }

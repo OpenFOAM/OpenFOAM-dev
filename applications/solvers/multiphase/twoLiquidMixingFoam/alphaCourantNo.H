@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ if (mesh.nInternalFaces())
 {
     scalarField sumPhi
     (
-        pos(alpha1 - 0.01)*pos(0.99 - alpha1)
+        pos0(alpha1 - 0.01)*pos0(0.99 - alpha1)
        *fvc::surfaceSum(mag(phi))().primitiveField()
     );
 

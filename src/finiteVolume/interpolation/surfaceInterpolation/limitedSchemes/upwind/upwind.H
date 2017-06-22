@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ public:
         //- Return the interpolation weighting factors
         tmp<surfaceScalarField> weights() const
         {
-            return pos(this->faceFlux_);
+            return pos0(this->faceFlux_);
         }
 
         //- Return the interpolation weighting factors

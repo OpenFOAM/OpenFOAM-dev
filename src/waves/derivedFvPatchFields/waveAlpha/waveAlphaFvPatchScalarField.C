@@ -153,7 +153,7 @@ void Foam::waveAlphaFvPatchScalarField::updateCoeffs()
         const scalarField& phip =
             patch().lookupPatchField<surfaceScalarField, scalar>("phi");
 
-        valueFraction() = 1 - pos(phip);
+        valueFraction() = 1 - pos0(phip);
     }
     else
     {

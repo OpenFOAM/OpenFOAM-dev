@@ -207,7 +207,7 @@ void Foam::CLASS::updateCoeffs()
         (
             "phi"
         );
-    this->valueFraction() = 1.0 - pos(phip);
+    this->valueFraction() = 1.0 - pos0(phip);
 
     PARENT::updateCoeffs();
 }

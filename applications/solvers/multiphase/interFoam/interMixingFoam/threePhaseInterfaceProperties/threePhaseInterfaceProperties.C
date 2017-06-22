@@ -219,8 +219,8 @@ Foam::threePhaseInterfaceProperties::nearInterface() const
 {
     return max
     (
-        pos(mixture_.alpha1() - 0.01)*pos(0.99 - mixture_.alpha1()),
-        pos(mixture_.alpha2() - 0.01)*pos(0.99 - mixture_.alpha2())
+        pos0(mixture_.alpha1() - 0.01)*pos0(0.99 - mixture_.alpha1()),
+        pos0(mixture_.alpha2() - 0.01)*pos0(0.99 - mixture_.alpha2())
     );
 }
 

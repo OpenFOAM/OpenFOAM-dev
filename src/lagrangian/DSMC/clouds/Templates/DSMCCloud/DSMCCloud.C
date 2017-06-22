@@ -248,7 +248,7 @@ void Foam::DSMCCloud<ParcelType>::collisions()
                 vector relPos = p.position() - cC;
 
                 label subCell =
-                    pos(relPos.x()) + 2*pos(relPos.y()) + 4*pos(relPos.z());
+                    pos0(relPos.x()) + 2*pos0(relPos.y()) + 4*pos0(relPos.z());
 
                 subCells[subCell].append(i);
                 whichSubCell[i] = subCell;

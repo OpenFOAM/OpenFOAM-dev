@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::K
     volScalarField B
     (
         neg(alpha2 - 0.85)*(0.8*pow(alpha2, 1.28))
-      + pos(alpha2 - 0.85)*(pow(alpha2, 2.65))
+      + pos0(alpha2 - 0.85)*(pow(alpha2, 2.65))
     );
 
     volScalarField Re(max(Ur*phase1_.d()/phase2_.nu(), scalar(1.0e-3)));

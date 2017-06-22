@@ -95,7 +95,7 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
         const scalarField phi(angle(t, u, x));
         const scalarField kz(- k()*mag(z - elevation(t, u, x)));
         const scalar kh = k()*depth();
-        const scalarField khz((kh + kz)*pos(kh + kz));
+        const scalarField khz((kh + kz)*pos0(kh + kz));
         const scalar kwaa = k()*omega(u)*sqr(amplitude(t));
 
         return

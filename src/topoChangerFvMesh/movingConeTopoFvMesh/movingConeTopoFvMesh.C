@@ -350,7 +350,7 @@ bool Foam::movingConeTopoFvMesh::update()
             newPoints =
                 topoChangeMap().preMotionPoints()
               + (
-                    pos(0.5 - mag(motionMask_)) // cells above the body
+                    pos0(0.5 - mag(motionMask_)) // cells above the body
                 )*curMotionVel_*time().deltaT().value();
         }
         else
@@ -369,7 +369,7 @@ bool Foam::movingConeTopoFvMesh::update()
             newPoints =
                 points()
               + (
-                    pos(0.5 - mag(motionMask_)) // cells above the body
+                    pos0(0.5 - mag(motionMask_)) // cells above the body
                 )*curMotionVel_*time().deltaT().value();
         }
     }
@@ -380,7 +380,7 @@ bool Foam::movingConeTopoFvMesh::update()
         newPoints =
             points()
           + (
-                pos(0.5 - mag(motionMask_)) // cells above the body
+                pos0(0.5 - mag(motionMask_)) // cells above the body
            )*curMotionVel_*time().deltaT().value();
     }
 

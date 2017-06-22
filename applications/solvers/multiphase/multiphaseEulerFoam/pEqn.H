@@ -254,8 +254,8 @@
             // dgdt =
 
             // (
-            //     pos(alpha2)*(pEqnComp2 & p)/rho2
-            //   - pos(alpha1)*(pEqnComp1 & p)/rho1
+            //     pos0(alpha2)*(pEqnComp2 & p)/rho2
+            //   - pos0(alpha1)*(pEqnComp1 & p)/rho1
             // );
 
             p_rgh.relax();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,9 @@ dimensionSet magSqr(const dimensionSet&);
 dimensionSet mag(const dimensionSet&);
 dimensionSet sign(const dimensionSet&);
 dimensionSet pos(const dimensionSet&);
+dimensionSet pos0(const dimensionSet&);
 dimensionSet neg(const dimensionSet&);
+dimensionSet neg0(const dimensionSet&);
 dimensionSet posPart(const dimensionSet&);
 dimensionSet negPart(const dimensionSet&);
 dimensionSet inv(const dimensionSet&);
@@ -360,7 +362,7 @@ public:
         friend dimensionSet magSqr(const dimensionSet&);
         friend dimensionSet mag(const dimensionSet&);
         friend dimensionSet sign(const dimensionSet&);
-        friend dimensionSet pos(const dimensionSet&);
+        friend dimensionSet pos0(const dimensionSet&);
         friend dimensionSet neg(const dimensionSet&);
         friend dimensionSet inv(const dimensionSet&);
 

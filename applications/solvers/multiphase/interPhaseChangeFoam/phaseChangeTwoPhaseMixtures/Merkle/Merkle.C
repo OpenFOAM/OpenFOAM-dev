@@ -83,7 +83,7 @@ Foam::phaseChangeTwoPhaseMixtures::Merkle::mDotP() const
 
     return Pair<tmp<volScalarField>>
     (
-        mcCoeff_*(1.0 - limitedAlpha1)*pos(p - pSat()),
+        mcCoeff_*(1.0 - limitedAlpha1)*pos0(p - pSat()),
         (-mvCoeff_)*limitedAlpha1*neg(p - pSat())
     );
 }

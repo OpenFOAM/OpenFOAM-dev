@@ -179,7 +179,7 @@ while (pimple.correct())
         (
             fvc::interpolate(fvc::average(alphafs[phasei]))
         );
-        surfaceScalarField phiCorrCoeff(pos(alphafBar - 0.99));
+        surfaceScalarField phiCorrCoeff(pos0(alphafBar - 0.99));
 
         surfaceScalarField::Boundary& phiCorrCoeffBf =
             phiCorrCoeff.boundaryFieldRef();

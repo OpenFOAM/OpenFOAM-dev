@@ -107,7 +107,7 @@ bool Foam::dynamicInkJetFvMesh::update()
         stationaryPoints_.component(vector::X)*
         (
             1.0
-          + pos
+          + pos0
             (
               - (stationaryPoints_.component(vector::X))
               - refPlaneX_

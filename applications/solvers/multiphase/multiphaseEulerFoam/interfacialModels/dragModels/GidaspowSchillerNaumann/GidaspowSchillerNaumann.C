@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::GidaspowSchillerNaumann::K
     volScalarField Cds
     (
         neg(Re - 1000)*(24.0*(1.0 + 0.15*pow(Re, 0.687))/Re)
-      + pos(Re - 1000)*0.44
+      + pos0(Re - 1000)*0.44
     );
 
     return 0.75*Cds*phase2_.rho()*Ur*bp/phase1_.d();

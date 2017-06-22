@@ -145,8 +145,8 @@ while (pimple.correct())
 
     // ddtPhiCorr filter -- only apply in pure(ish) phases
     surfaceScalarField alphaf1Bar(fvc::interpolate(fvc::average(alphaf1)));
-    surfaceScalarField phiCorrCoeff1(pos(alphaf1Bar - 0.99));
-    surfaceScalarField phiCorrCoeff2(pos(0.01 - alphaf1Bar));
+    surfaceScalarField phiCorrCoeff1(pos0(alphaf1Bar - 0.99));
+    surfaceScalarField phiCorrCoeff2(pos0(0.01 - alphaf1Bar));
 
     {
         surfaceScalarField::Boundary& phiCorrCoeff1Bf =

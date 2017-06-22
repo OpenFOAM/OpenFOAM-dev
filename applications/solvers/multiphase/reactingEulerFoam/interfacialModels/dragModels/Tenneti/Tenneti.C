@@ -79,7 +79,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
     volScalarField CdReIsolated
     (
         neg(Res - 1000)*24.0*(1.0 + 0.15*pow(Res, 0.687))
-      + pos(Res - 1000)*0.44*max(Res, residualRe_)
+      + pos0(Res - 1000)*0.44*max(Res, residualRe_)
     );
 
     volScalarField F0

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ Foam::bound(volScalarField& vsf, const dimensionedScalar& lowerBound)
             (
                 vsf.primitiveField(),
                 fvc::average(max(vsf, lowerBound))().primitiveField()
-              * pos(-vsf.primitiveField())
+              * pos0(-vsf.primitiveField())
             ),
             lowerBound.value()
         );

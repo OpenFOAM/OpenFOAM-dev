@@ -73,8 +73,8 @@
         rDeltaT.ref() = max
         (
             rDeltaT(),
-            pos(alpha1Bar() - alphaSpreadMin)
-           *pos(alphaSpreadMax - alpha1Bar())
+            pos0(alpha1Bar() - alphaSpreadMin)
+           *pos0(alphaSpreadMax - alpha1Bar())
            *fvc::surfaceSum(mag(phi))()()
            /((2*maxAlphaCo)*mesh.V())
         );

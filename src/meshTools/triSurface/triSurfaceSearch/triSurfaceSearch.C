@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,10 +109,10 @@ bool Foam::triSurfaceSearch::checkUniqueHit
                             surface().faceNormals()[edgeFacei];
 
                         const label signCurrHit =
-                            pos(currHitNormal & lineVec);
+                            pos0(currHitNormal & lineVec);
 
                         const label signExistingHit =
-                            pos(existingHitNormal & lineVec);
+                            pos0(existingHitNormal & lineVec);
 
                         if (signCurrHit == signExistingHit)
                         {

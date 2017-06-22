@@ -73,7 +73,7 @@ Lavieville::fLiquid
 ) const
 {
     return
-        pos(alphaLiquid - alphaCrit_)
+        pos0(alphaLiquid - alphaCrit_)
        *(
             1 - 0.5*exp(-20*(alphaLiquid - alphaCrit_))
         )

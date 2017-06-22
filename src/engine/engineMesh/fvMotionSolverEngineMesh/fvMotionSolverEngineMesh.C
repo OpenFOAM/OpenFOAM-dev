@@ -81,7 +81,7 @@ void Foam::fvMotionSolverEngineMesh::move()
         );
 
         motionSolver_.pointMotionU().boundaryFieldRef()[linerIndex_] ==
-            pistonSpeed*pos(deckHeight_.value() - linerPoints)
+            pistonSpeed*pos0(deckHeight_.value() - linerPoints)
            *(deckHeight_.value() - linerPoints)
            /(deckHeight_.value() - pistonPlusLayers);
     }

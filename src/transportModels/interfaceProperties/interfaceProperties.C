@@ -226,7 +226,7 @@ Foam::interfaceProperties::surfaceTensionForce() const
 Foam::tmp<Foam::volScalarField>
 Foam::interfaceProperties::nearInterface() const
 {
-    return pos(alpha1_ - 0.01)*pos(0.99 - alpha1_);
+    return pos0(alpha1_ - 0.01)*pos0(0.99 - alpha1_);
 }
 
 

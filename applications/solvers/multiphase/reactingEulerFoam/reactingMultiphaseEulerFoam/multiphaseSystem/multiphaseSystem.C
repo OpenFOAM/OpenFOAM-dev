@@ -597,7 +597,7 @@ Foam::multiphaseSystem::nearInterface() const
         tnearInt.ref() = max
         (
             tnearInt(),
-            pos(phases()[phasei] - 0.01)*pos(0.99 - phases()[phasei])
+            pos0(phases()[phasei] - 0.01)*pos0(0.99 - phases()[phasei])
         );
     }
 

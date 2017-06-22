@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,9 @@ dimensionedScalar hypot(const dimensionedScalar&, const dimensionedScalar&);
 
 dimensionedScalar sign(const dimensionedScalar&);
 dimensionedScalar pos(const dimensionedScalar&);
+dimensionedScalar pos0(const dimensionedScalar&);
 dimensionedScalar neg(const dimensionedScalar&);
+dimensionedScalar neg0(const dimensionedScalar&);
 dimensionedScalar posPart(const dimensionedScalar&);
 dimensionedScalar negPart(const dimensionedScalar&);
 
