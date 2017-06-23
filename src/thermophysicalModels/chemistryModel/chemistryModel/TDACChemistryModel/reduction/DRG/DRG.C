@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -240,7 +240,7 @@ void Foam::chemistryReductionMethods::DRG<CompType, ThermoType>::reduceMechanism
         Q.push(q);
     }
 
-    // Depth first search with rAB
+    // Breadth first search with rAB
     while (!Q.empty())
     {
         label u = Q.pop();
@@ -261,7 +261,7 @@ void Foam::chemistryReductionMethods::DRG<CompType, ThermoType>::reduceMechanism
                     rAB = 1;
                 }
 
-                // Do a DFS on B only if rAB is above the tolerance and if the
+                // Include B only if rAB is above the tolerance and if the
                 // species was not searched before
                 if
                 (
