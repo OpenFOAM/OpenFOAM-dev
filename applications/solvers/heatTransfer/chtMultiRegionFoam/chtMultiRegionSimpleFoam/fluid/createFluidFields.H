@@ -17,7 +17,6 @@ List<scalar> pRefValueFluid(fluidRegions.size(), 0.0);
 List<bool> frozenFlowFluid(fluidRegions.size(), false);
 List<bool> residualReachedFluid(fluidRegions.size(), true);
 List<bool> residualControlUsedFluid(fluidRegions.size(), false);
-List<bool> momentumPredictorFluid(fluidRegions.size(), false);
 
 PtrList<dimensionedScalar> rhoMax(fluidRegions.size());
 PtrList<dimensionedScalar> rhoMin(fluidRegions.size());

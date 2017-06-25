@@ -34,7 +34,5 @@
     const volScalarField& gh = ghFluid[i];
     const surfaceScalarField& ghf = ghfFluid[i];
 
-    const bool momentumPredictor = momentumPredictorFluid[i];
-
     bool& resReachedFluid = residualReachedFluid[i];
     bool& residualControlUsed = residualControlUsedFluid[i];
