@@ -1112,6 +1112,20 @@ void Foam::GeometricField<Type, PatchField, GeoMesh>::min
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::maxMin
+(
+    const dimensioned<Type>& minDt,
+    const dimensioned<Type>& maxDt
+)
+{
+    Foam::max(primitiveFieldRef(), primitiveField(), minDt.value());
+    Foam::max(boundaryFieldRef(), boundaryField(), minDt.value());
+    Foam::min(primitiveFieldRef(), primitiveField(), maxDt.value());
+    Foam::min(boundaryFieldRef(), boundaryField(), maxDt.value());
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::GeometricField<Type, PatchField, GeoMesh>::negate()
 {
     primitiveFieldRef().negate();

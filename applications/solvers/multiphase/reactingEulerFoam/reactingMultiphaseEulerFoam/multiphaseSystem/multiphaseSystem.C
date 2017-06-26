@@ -698,6 +698,9 @@ void Foam::multiphaseSystem::solve()
     {
         phaseModel& phase = phases()[phasei];
         phase.alphaRhoPhi() = fvc::interpolate(phase.rho())*phase.alphaPhi();
+
+        // Ensure the phase-fractions are bounded
+        phase.maxMin(0, 1);
     }
 
     calcAlphas();

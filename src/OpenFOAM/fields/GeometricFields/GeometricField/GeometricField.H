@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -556,6 +556,12 @@ public:
 
         void max(const dimensioned<Type>&);
         void min(const dimensioned<Type>&);
+
+        void maxMin
+        (
+            const dimensioned<Type>& minDt,
+            const dimensioned<Type>& maxDt
+        );
 
         void max
         (
