@@ -142,7 +142,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
             he
         )
      ==
-        this->Qdot()
+        alpha*this->Qdot()
     );
 
     // Add the appropriate pressure-work term
