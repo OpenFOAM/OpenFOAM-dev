@@ -57,7 +57,7 @@ _adiabaticFlameT_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _adiabaticFlameT_ adiabaticFlameT
+complete -o filenames -o nospace -F _adiabaticFlameT_ adiabaticFlameT
 
 _adjointShapeOptimizationFoam_ ()
 {
@@ -80,7 +80,7 @@ _adjointShapeOptimizationFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _adjointShapeOptimizationFoam_ adjointShapeOptimizationFoam
+complete -o filenames -o nospace -F _adjointShapeOptimizationFoam_ adjointShapeOptimizationFoam
 
 _ansysToFoam_ ()
 {
@@ -109,7 +109,7 @@ _ansysToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _ansysToFoam_ ansysToFoam
+complete -o filenames -o nospace -F _ansysToFoam_ ansysToFoam
 
 _applyBoundaryLayer_ ()
 {
@@ -132,7 +132,7 @@ _applyBoundaryLayer_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _applyBoundaryLayer_ applyBoundaryLayer
+complete -o filenames -o nospace -F _applyBoundaryLayer_ applyBoundaryLayer
 
 _attachMesh_ ()
 {
@@ -153,7 +153,7 @@ _attachMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _attachMesh_ attachMesh
+complete -o filenames -o nospace -F _attachMesh_ attachMesh
 
 _autoPatch_ ()
 {
@@ -174,7 +174,7 @@ _autoPatch_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _autoPatch_ autoPatch
+complete -o filenames -o nospace -F _autoPatch_ autoPatch
 
 _autoRefineMesh_ ()
 {
@@ -195,7 +195,7 @@ _autoRefineMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _autoRefineMesh_ autoRefineMesh
+complete -o filenames -o nospace -F _autoRefineMesh_ autoRefineMesh
 
 _blockMesh_ ()
 {
@@ -220,7 +220,7 @@ _blockMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _blockMesh_ blockMesh
+complete -o filenames -o nospace -F _blockMesh_ blockMesh
 
 _boundaryFoam_ ()
 {
@@ -241,7 +241,7 @@ _boundaryFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _boundaryFoam_ boundaryFoam
+complete -o filenames -o nospace -F _boundaryFoam_ boundaryFoam
 
 _boxTurb_ ()
 {
@@ -262,7 +262,7 @@ _boxTurb_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _boxTurb_ boxTurb
+complete -o filenames -o nospace -F _boxTurb_ boxTurb
 
 _buoyantBoussinesqPimpleFoam_ ()
 {
@@ -285,7 +285,7 @@ _buoyantBoussinesqPimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _buoyantBoussinesqPimpleFoam_ buoyantBoussinesqPimpleFoam
+complete -o filenames -o nospace -F _buoyantBoussinesqPimpleFoam_ buoyantBoussinesqPimpleFoam
 
 _buoyantBoussinesqSimpleFoam_ ()
 {
@@ -308,7 +308,7 @@ _buoyantBoussinesqSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _buoyantBoussinesqSimpleFoam_ buoyantBoussinesqSimpleFoam
+complete -o filenames -o nospace -F _buoyantBoussinesqSimpleFoam_ buoyantBoussinesqSimpleFoam
 
 _buoyantPimpleFoam_ ()
 {
@@ -331,7 +331,7 @@ _buoyantPimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _buoyantPimpleFoam_ buoyantPimpleFoam
+complete -o filenames -o nospace -F _buoyantPimpleFoam_ buoyantPimpleFoam
 
 _buoyantSimpleFoam_ ()
 {
@@ -354,7 +354,7 @@ _buoyantSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _buoyantSimpleFoam_ buoyantSimpleFoam
+complete -o filenames -o nospace -F _buoyantSimpleFoam_ buoyantSimpleFoam
 
 _cavitatingDyMFoam_ ()
 {
@@ -377,7 +377,7 @@ _cavitatingDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _cavitatingDyMFoam_ cavitatingDyMFoam
+complete -o filenames -o nospace -F _cavitatingDyMFoam_ cavitatingDyMFoam
 
 _cavitatingFoam_ ()
 {
@@ -400,7 +400,7 @@ _cavitatingFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _cavitatingFoam_ cavitatingFoam
+complete -o filenames -o nospace -F _cavitatingFoam_ cavitatingFoam
 
 _cfx4ToFoam_ ()
 {
@@ -429,7 +429,7 @@ _cfx4ToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _cfx4ToFoam_ cfx4ToFoam
+complete -o filenames -o nospace -F _cfx4ToFoam_ cfx4ToFoam
 
 _changeDictionary_ ()
 {
@@ -454,7 +454,7 @@ _changeDictionary_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _changeDictionary_ changeDictionary
+complete -o filenames -o nospace -F _changeDictionary_ changeDictionary
 
 _checkMesh_ ()
 {
@@ -477,7 +477,7 @@ _checkMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _checkMesh_ checkMesh
+complete -o filenames -o nospace -F _checkMesh_ checkMesh
 
 _chemFoam_ ()
 {
@@ -498,7 +498,7 @@ _chemFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _chemFoam_ chemFoam
+complete -o filenames -o nospace -F _chemFoam_ chemFoam
 
 _chemkinToFoam_ ()
 {
@@ -522,7 +522,7 @@ _chemkinToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _chemkinToFoam_ chemkinToFoam
+complete -o filenames -o nospace -F _chemkinToFoam_ chemkinToFoam
 
 _chtMultiRegionFoam_ ()
 {
@@ -545,7 +545,7 @@ _chtMultiRegionFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _chtMultiRegionFoam_ chtMultiRegionFoam
+complete -o filenames -o nospace -F _chtMultiRegionFoam_ chtMultiRegionFoam
 
 _chtMultiRegionSimpleFoam_ ()
 {
@@ -568,7 +568,7 @@ _chtMultiRegionSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _chtMultiRegionSimpleFoam_ chtMultiRegionSimpleFoam
+complete -o filenames -o nospace -F _chtMultiRegionSimpleFoam_ chtMultiRegionSimpleFoam
 
 _coalChemistryFoam_ ()
 {
@@ -591,7 +591,7 @@ _coalChemistryFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _coalChemistryFoam_ coalChemistryFoam
+complete -o filenames -o nospace -F _coalChemistryFoam_ coalChemistryFoam
 
 _coldEngineFoam_ ()
 {
@@ -614,7 +614,7 @@ _coldEngineFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _coldEngineFoam_ coldEngineFoam
+complete -o filenames -o nospace -F _coldEngineFoam_ coldEngineFoam
 
 _collapseEdges_ ()
 {
@@ -639,7 +639,7 @@ _collapseEdges_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _collapseEdges_ collapseEdges
+complete -o filenames -o nospace -F _collapseEdges_ collapseEdges
 
 _combinePatchFaces_ ()
 {
@@ -662,7 +662,7 @@ _combinePatchFaces_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _combinePatchFaces_ combinePatchFaces
+complete -o filenames -o nospace -F _combinePatchFaces_ combinePatchFaces
 
 _compressibleInterDyMFoam_ ()
 {
@@ -685,7 +685,7 @@ _compressibleInterDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _compressibleInterDyMFoam_ compressibleInterDyMFoam
+complete -o filenames -o nospace -F _compressibleInterDyMFoam_ compressibleInterDyMFoam
 
 _compressibleInterFoam_ ()
 {
@@ -708,7 +708,7 @@ _compressibleInterFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _compressibleInterFoam_ compressibleInterFoam
+complete -o filenames -o nospace -F _compressibleInterFoam_ compressibleInterFoam
 
 _compressibleMultiphaseInterFoam_ ()
 {
@@ -731,7 +731,7 @@ _compressibleMultiphaseInterFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _compressibleMultiphaseInterFoam_ compressibleMultiphaseInterFoam
+complete -o filenames -o nospace -F _compressibleMultiphaseInterFoam_ compressibleMultiphaseInterFoam
 
 _createBaffles_ ()
 {
@@ -756,7 +756,7 @@ _createBaffles_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _createBaffles_ createBaffles
+complete -o filenames -o nospace -F _createBaffles_ createBaffles
 
 _createExternalCoupledPatchGeometry_ ()
 {
@@ -779,7 +779,7 @@ _createExternalCoupledPatchGeometry_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _createExternalCoupledPatchGeometry_ createExternalCoupledPatchGeometry
+complete -o filenames -o nospace -F _createExternalCoupledPatchGeometry_ createExternalCoupledPatchGeometry
 
 _createPatch_ ()
 {
@@ -804,7 +804,7 @@ _createPatch_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _createPatch_ createPatch
+complete -o filenames -o nospace -F _createPatch_ createPatch
 
 _datToFoam_ ()
 {
@@ -831,7 +831,7 @@ _datToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _datToFoam_ datToFoam
+complete -o filenames -o nospace -F _datToFoam_ datToFoam
 
 _decomposePar_ ()
 {
@@ -854,7 +854,7 @@ _decomposePar_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _decomposePar_ decomposePar
+complete -o filenames -o nospace -F _decomposePar_ decomposePar
 
 _deformedGeom_ ()
 {
@@ -877,7 +877,7 @@ _deformedGeom_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _deformedGeom_ deformedGeom
+complete -o filenames -o nospace -F _deformedGeom_ deformedGeom
 
 _dnsFoam_ ()
 {
@@ -900,7 +900,7 @@ _dnsFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _dnsFoam_ dnsFoam
+complete -o filenames -o nospace -F _dnsFoam_ dnsFoam
 
 _DPMDyMFoam_ ()
 {
@@ -923,7 +923,7 @@ _DPMDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _DPMDyMFoam_ DPMDyMFoam
+complete -o filenames -o nospace -F _DPMDyMFoam_ DPMDyMFoam
 
 _DPMFoam_ ()
 {
@@ -946,7 +946,7 @@ _DPMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _DPMFoam_ DPMFoam
+complete -o filenames -o nospace -F _DPMFoam_ DPMFoam
 
 _driftFluxFoam_ ()
 {
@@ -969,7 +969,7 @@ _driftFluxFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _driftFluxFoam_ driftFluxFoam
+complete -o filenames -o nospace -F _driftFluxFoam_ driftFluxFoam
 
 _dsmcFoam_ ()
 {
@@ -992,7 +992,7 @@ _dsmcFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _dsmcFoam_ dsmcFoam
+complete -o filenames -o nospace -F _dsmcFoam_ dsmcFoam
 
 _dsmcInitialise_ ()
 {
@@ -1015,7 +1015,7 @@ _dsmcInitialise_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _dsmcInitialise_ dsmcInitialise
+complete -o filenames -o nospace -F _dsmcInitialise_ dsmcInitialise
 
 _electrostaticFoam_ ()
 {
@@ -1038,7 +1038,7 @@ _electrostaticFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _electrostaticFoam_ electrostaticFoam
+complete -o filenames -o nospace -F _electrostaticFoam_ electrostaticFoam
 
 _engineCompRatio_ ()
 {
@@ -1061,7 +1061,7 @@ _engineCompRatio_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _engineCompRatio_ engineCompRatio
+complete -o filenames -o nospace -F _engineCompRatio_ engineCompRatio
 
 _engineFoam_ ()
 {
@@ -1084,7 +1084,7 @@ _engineFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _engineFoam_ engineFoam
+complete -o filenames -o nospace -F _engineFoam_ engineFoam
 
 _engineSwirl_ ()
 {
@@ -1107,7 +1107,7 @@ _engineSwirl_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _engineSwirl_ engineSwirl
+complete -o filenames -o nospace -F _engineSwirl_ engineSwirl
 
 _equilibriumCO_ ()
 {
@@ -1130,7 +1130,7 @@ _equilibriumCO_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _equilibriumCO_ equilibriumCO
+complete -o filenames -o nospace -F _equilibriumCO_ equilibriumCO
 
 _equilibriumFlameT_ ()
 {
@@ -1159,7 +1159,7 @@ _equilibriumFlameT_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _equilibriumFlameT_ equilibriumFlameT
+complete -o filenames -o nospace -F _equilibriumFlameT_ equilibriumFlameT
 
 _extrude2DMesh_ ()
 {
@@ -1182,7 +1182,7 @@ _extrude2DMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _extrude2DMesh_ extrude2DMesh
+complete -o filenames -o nospace -F _extrude2DMesh_ extrude2DMesh
 
 _extrudeMesh_ ()
 {
@@ -1205,7 +1205,7 @@ _extrudeMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _extrudeMesh_ extrudeMesh
+complete -o filenames -o nospace -F _extrudeMesh_ extrudeMesh
 
 _extrudeToRegionMesh_ ()
 {
@@ -1230,7 +1230,7 @@ _extrudeToRegionMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _extrudeToRegionMesh_ extrudeToRegionMesh
+complete -o filenames -o nospace -F _extrudeToRegionMesh_ extrudeToRegionMesh
 
 _faceAgglomerate_ ()
 {
@@ -1255,7 +1255,7 @@ _faceAgglomerate_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _faceAgglomerate_ faceAgglomerate
+complete -o filenames -o nospace -F _faceAgglomerate_ faceAgglomerate
 
 _financialFoam_ ()
 {
@@ -1278,7 +1278,7 @@ _financialFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _financialFoam_ financialFoam
+complete -o filenames -o nospace -F _financialFoam_ financialFoam
 
 _fireFoam_ ()
 {
@@ -1301,7 +1301,7 @@ _fireFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _fireFoam_ fireFoam
+complete -o filenames -o nospace -F _fireFoam_ fireFoam
 
 _flattenMesh_ ()
 {
@@ -1324,7 +1324,7 @@ _flattenMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _flattenMesh_ flattenMesh
+complete -o filenames -o nospace -F _flattenMesh_ flattenMesh
 
 _fluent3DMeshToFoam_ ()
 {
@@ -1353,7 +1353,7 @@ _fluent3DMeshToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _fluent3DMeshToFoam_ fluent3DMeshToFoam
+complete -o filenames -o nospace -F _fluent3DMeshToFoam_ fluent3DMeshToFoam
 
 _fluentMeshToFoam_ ()
 {
@@ -1382,7 +1382,7 @@ _fluentMeshToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _fluentMeshToFoam_ fluentMeshToFoam
+complete -o filenames -o nospace -F _fluentMeshToFoam_ fluentMeshToFoam
 
 _foamDataToFluent_ ()
 {
@@ -1405,7 +1405,7 @@ _foamDataToFluent_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamDataToFluent_ foamDataToFluent
+complete -o filenames -o nospace -F _foamDataToFluent_ foamDataToFluent
 
 _foamDictionary_ ()
 {
@@ -1434,7 +1434,7 @@ _foamDictionary_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamDictionary_ foamDictionary
+complete -o filenames -o nospace -F _foamDictionary_ foamDictionary
 
 _foamFormatConvert_ ()
 {
@@ -1457,7 +1457,7 @@ _foamFormatConvert_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamFormatConvert_ foamFormatConvert
+complete -o filenames -o nospace -F _foamFormatConvert_ foamFormatConvert
 
 _foamHelp_ ()
 {
@@ -1476,7 +1476,7 @@ _foamHelp_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamHelp_ foamHelp
+complete -o filenames -o nospace -F _foamHelp_ foamHelp
 
 _foamListTimes_ ()
 {
@@ -1499,7 +1499,7 @@ _foamListTimes_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamListTimes_ foamListTimes
+complete -o filenames -o nospace -F _foamListTimes_ foamListTimes
 
 _foamMeshToFluent_ ()
 {
@@ -1520,7 +1520,7 @@ _foamMeshToFluent_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamMeshToFluent_ foamMeshToFluent
+complete -o filenames -o nospace -F _foamMeshToFluent_ foamMeshToFluent
 
 _foamToEnsight_ ()
 {
@@ -1543,7 +1543,7 @@ _foamToEnsight_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToEnsight_ foamToEnsight
+complete -o filenames -o nospace -F _foamToEnsight_ foamToEnsight
 
 _foamToEnsightParts_ ()
 {
@@ -1566,7 +1566,7 @@ _foamToEnsightParts_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToEnsightParts_ foamToEnsightParts
+complete -o filenames -o nospace -F _foamToEnsightParts_ foamToEnsightParts
 
 _foamToGMV_ ()
 {
@@ -1589,7 +1589,7 @@ _foamToGMV_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToGMV_ foamToGMV
+complete -o filenames -o nospace -F _foamToGMV_ foamToGMV
 
 _foamToStarMesh_ ()
 {
@@ -1612,7 +1612,7 @@ _foamToStarMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToStarMesh_ foamToStarMesh
+complete -o filenames -o nospace -F _foamToStarMesh_ foamToStarMesh
 
 _foamToSurface_ ()
 {
@@ -1635,7 +1635,7 @@ _foamToSurface_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToSurface_ foamToSurface
+complete -o filenames -o nospace -F _foamToSurface_ foamToSurface
 
 _foamToTetDualMesh_ ()
 {
@@ -1658,7 +1658,7 @@ _foamToTetDualMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToTetDualMesh_ foamToTetDualMesh
+complete -o filenames -o nospace -F _foamToTetDualMesh_ foamToTetDualMesh
 
 _foamToVTK_ ()
 {
@@ -1681,7 +1681,7 @@ _foamToVTK_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamToVTK_ foamToVTK
+complete -o filenames -o nospace -F _foamToVTK_ foamToVTK
 
 _foamUpgradeCyclics_ ()
 {
@@ -1704,7 +1704,7 @@ _foamUpgradeCyclics_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamUpgradeCyclics_ foamUpgradeCyclics
+complete -o filenames -o nospace -F _foamUpgradeCyclics_ foamUpgradeCyclics
 
 _gambitToFoam_ ()
 {
@@ -1733,7 +1733,7 @@ _gambitToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _gambitToFoam_ gambitToFoam
+complete -o filenames -o nospace -F _gambitToFoam_ gambitToFoam
 
 _gmshToFoam_ ()
 {
@@ -1762,7 +1762,7 @@ _gmshToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _gmshToFoam_ gmshToFoam
+complete -o filenames -o nospace -F _gmshToFoam_ gmshToFoam
 
 _icoFoam_ ()
 {
@@ -1785,7 +1785,7 @@ _icoFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _icoFoam_ icoFoam
+complete -o filenames -o nospace -F _icoFoam_ icoFoam
 
 _icoUncoupledKinematicParcelDyMFoam_ ()
 {
@@ -1808,7 +1808,7 @@ _icoUncoupledKinematicParcelDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _icoUncoupledKinematicParcelDyMFoam_ icoUncoupledKinematicParcelDyMFoam
+complete -o filenames -o nospace -F _icoUncoupledKinematicParcelDyMFoam_ icoUncoupledKinematicParcelDyMFoam
 
 _icoUncoupledKinematicParcelFoam_ ()
 {
@@ -1831,7 +1831,7 @@ _icoUncoupledKinematicParcelFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _icoUncoupledKinematicParcelFoam_ icoUncoupledKinematicParcelFoam
+complete -o filenames -o nospace -F _icoUncoupledKinematicParcelFoam_ icoUncoupledKinematicParcelFoam
 
 _ideasUnvToFoam_ ()
 {
@@ -1858,7 +1858,7 @@ _ideasUnvToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _ideasUnvToFoam_ ideasUnvToFoam
+complete -o filenames -o nospace -F _ideasUnvToFoam_ ideasUnvToFoam
 
 _insideCells_ ()
 {
@@ -1885,7 +1885,7 @@ _insideCells_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _insideCells_ insideCells
+complete -o filenames -o nospace -F _insideCells_ insideCells
 
 _interDyMFoam_ ()
 {
@@ -1908,7 +1908,7 @@ _interDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _interDyMFoam_ interDyMFoam
+complete -o filenames -o nospace -F _interDyMFoam_ interDyMFoam
 
 _interFoam_ ()
 {
@@ -1931,7 +1931,7 @@ _interFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _interFoam_ interFoam
+complete -o filenames -o nospace -F _interFoam_ interFoam
 
 _interMixingFoam_ ()
 {
@@ -1954,7 +1954,7 @@ _interMixingFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _interMixingFoam_ interMixingFoam
+complete -o filenames -o nospace -F _interMixingFoam_ interMixingFoam
 
 _interPhaseChangeDyMFoam_ ()
 {
@@ -1977,7 +1977,7 @@ _interPhaseChangeDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _interPhaseChangeDyMFoam_ interPhaseChangeDyMFoam
+complete -o filenames -o nospace -F _interPhaseChangeDyMFoam_ interPhaseChangeDyMFoam
 
 _interPhaseChangeFoam_ ()
 {
@@ -2000,7 +2000,7 @@ _interPhaseChangeFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _interPhaseChangeFoam_ interPhaseChangeFoam
+complete -o filenames -o nospace -F _interPhaseChangeFoam_ interPhaseChangeFoam
 
 _kivaToFoam_ ()
 {
@@ -2023,7 +2023,7 @@ _kivaToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _kivaToFoam_ kivaToFoam
+complete -o filenames -o nospace -F _kivaToFoam_ kivaToFoam
 
 _laplacianFoam_ ()
 {
@@ -2046,7 +2046,7 @@ _laplacianFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _laplacianFoam_ laplacianFoam
+complete -o filenames -o nospace -F _laplacianFoam_ laplacianFoam
 
 _magneticFoam_ ()
 {
@@ -2069,7 +2069,7 @@ _magneticFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _magneticFoam_ magneticFoam
+complete -o filenames -o nospace -F _magneticFoam_ magneticFoam
 
 _mapFields_ ()
 {
@@ -2098,7 +2098,7 @@ _mapFields_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mapFields_ mapFields
+complete -o filenames -o nospace -F _mapFields_ mapFields
 
 _mapFieldsPar_ ()
 {
@@ -2127,7 +2127,7 @@ _mapFieldsPar_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mapFieldsPar_ mapFieldsPar
+complete -o filenames -o nospace -F _mapFieldsPar_ mapFieldsPar
 
 _mdEquilibrationFoam_ ()
 {
@@ -2150,7 +2150,7 @@ _mdEquilibrationFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mdEquilibrationFoam_ mdEquilibrationFoam
+complete -o filenames -o nospace -F _mdEquilibrationFoam_ mdEquilibrationFoam
 
 _mdFoam_ ()
 {
@@ -2173,7 +2173,7 @@ _mdFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mdFoam_ mdFoam
+complete -o filenames -o nospace -F _mdFoam_ mdFoam
 
 _mdInitialise_ ()
 {
@@ -2196,7 +2196,7 @@ _mdInitialise_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mdInitialise_ mdInitialise
+complete -o filenames -o nospace -F _mdInitialise_ mdInitialise
 
 _mergeMeshes_ ()
 {
@@ -2220,7 +2220,7 @@ _mergeMeshes_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mergeMeshes_ mergeMeshes
+complete -o filenames -o nospace -F _mergeMeshes_ mergeMeshes
 
 _mergeOrSplitBaffles_ ()
 {
@@ -2243,7 +2243,7 @@ _mergeOrSplitBaffles_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mergeOrSplitBaffles_ mergeOrSplitBaffles
+complete -o filenames -o nospace -F _mergeOrSplitBaffles_ mergeOrSplitBaffles
 
 _mhdFoam_ ()
 {
@@ -2266,7 +2266,7 @@ _mhdFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mhdFoam_ mhdFoam
+complete -o filenames -o nospace -F _mhdFoam_ mhdFoam
 
 _mirrorMesh_ ()
 {
@@ -2289,7 +2289,7 @@ _mirrorMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mirrorMesh_ mirrorMesh
+complete -o filenames -o nospace -F _mirrorMesh_ mirrorMesh
 
 _mixtureAdiabaticFlameT_ ()
 {
@@ -2318,7 +2318,7 @@ _mixtureAdiabaticFlameT_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mixtureAdiabaticFlameT_ mixtureAdiabaticFlameT
+complete -o filenames -o nospace -F _mixtureAdiabaticFlameT_ mixtureAdiabaticFlameT
 
 _modifyMesh_ ()
 {
@@ -2341,7 +2341,7 @@ _modifyMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _modifyMesh_ modifyMesh
+complete -o filenames -o nospace -F _modifyMesh_ modifyMesh
 
 _moveDynamicMesh_ ()
 {
@@ -2364,7 +2364,7 @@ _moveDynamicMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _moveDynamicMesh_ moveDynamicMesh
+complete -o filenames -o nospace -F _moveDynamicMesh_ moveDynamicMesh
 
 _moveEngineMesh_ ()
 {
@@ -2387,7 +2387,7 @@ _moveEngineMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _moveEngineMesh_ moveEngineMesh
+complete -o filenames -o nospace -F _moveEngineMesh_ moveEngineMesh
 
 _moveMesh_ ()
 {
@@ -2410,7 +2410,7 @@ _moveMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _moveMesh_ moveMesh
+complete -o filenames -o nospace -F _moveMesh_ moveMesh
 
 _MPPICDyMFoam_ ()
 {
@@ -2433,7 +2433,7 @@ _MPPICDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _MPPICDyMFoam_ MPPICDyMFoam
+complete -o filenames -o nospace -F _MPPICDyMFoam_ MPPICDyMFoam
 
 _MPPICFoam_ ()
 {
@@ -2456,7 +2456,7 @@ _MPPICFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _MPPICFoam_ MPPICFoam
+complete -o filenames -o nospace -F _MPPICFoam_ MPPICFoam
 
 _mshToFoam_ ()
 {
@@ -2483,7 +2483,7 @@ _mshToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mshToFoam_ mshToFoam
+complete -o filenames -o nospace -F _mshToFoam_ mshToFoam
 
 _multiphaseEulerFoam_ ()
 {
@@ -2506,7 +2506,7 @@ _multiphaseEulerFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _multiphaseEulerFoam_ multiphaseEulerFoam
+complete -o filenames -o nospace -F _multiphaseEulerFoam_ multiphaseEulerFoam
 
 _multiphaseInterDyMFoam_ ()
 {
@@ -2529,7 +2529,7 @@ _multiphaseInterDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _multiphaseInterDyMFoam_ multiphaseInterDyMFoam
+complete -o filenames -o nospace -F _multiphaseInterDyMFoam_ multiphaseInterDyMFoam
 
 _multiphaseInterFoam_ ()
 {
@@ -2552,7 +2552,7 @@ _multiphaseInterFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _multiphaseInterFoam_ multiphaseInterFoam
+complete -o filenames -o nospace -F _multiphaseInterFoam_ multiphaseInterFoam
 
 _netgenNeutralToFoam_ ()
 {
@@ -2581,7 +2581,7 @@ _netgenNeutralToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _netgenNeutralToFoam_ netgenNeutralToFoam
+complete -o filenames -o nospace -F _netgenNeutralToFoam_ netgenNeutralToFoam
 
 _noise_ ()
 {
@@ -2604,7 +2604,7 @@ _noise_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _noise_ noise
+complete -o filenames -o nospace -F _noise_ noise
 
 _nonNewtonianIcoFoam_ ()
 {
@@ -2627,7 +2627,7 @@ _nonNewtonianIcoFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _nonNewtonianIcoFoam_ nonNewtonianIcoFoam
+complete -o filenames -o nospace -F _nonNewtonianIcoFoam_ nonNewtonianIcoFoam
 
 _objToVTK_ ()
 {
@@ -2654,7 +2654,7 @@ _objToVTK_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _objToVTK_ objToVTK
+complete -o filenames -o nospace -F _objToVTK_ objToVTK
 
 _orientFaceZone_ ()
 {
@@ -2677,7 +2677,7 @@ _orientFaceZone_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _orientFaceZone_ orientFaceZone
+complete -o filenames -o nospace -F _orientFaceZone_ orientFaceZone
 
 _particleTracks_ ()
 {
@@ -2700,7 +2700,7 @@ _particleTracks_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _particleTracks_ particleTracks
+complete -o filenames -o nospace -F _particleTracks_ particleTracks
 
 _patchSummary_ ()
 {
@@ -2723,7 +2723,7 @@ _patchSummary_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _patchSummary_ patchSummary
+complete -o filenames -o nospace -F _patchSummary_ patchSummary
 
 _pdfPlot_ ()
 {
@@ -2746,7 +2746,7 @@ _pdfPlot_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _pdfPlot_ pdfPlot
+complete -o filenames -o nospace -F _pdfPlot_ pdfPlot
 
 _PDRFoam_ ()
 {
@@ -2769,7 +2769,7 @@ _PDRFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _PDRFoam_ PDRFoam
+complete -o filenames -o nospace -F _PDRFoam_ PDRFoam
 
 _PDRMesh_ ()
 {
@@ -2792,7 +2792,7 @@ _PDRMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _PDRMesh_ PDRMesh
+complete -o filenames -o nospace -F _PDRMesh_ PDRMesh
 
 _pimpleDyMFoam_ ()
 {
@@ -2815,7 +2815,7 @@ _pimpleDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _pimpleDyMFoam_ pimpleDyMFoam
+complete -o filenames -o nospace -F _pimpleDyMFoam_ pimpleDyMFoam
 
 _pimpleFoam_ ()
 {
@@ -2838,7 +2838,7 @@ _pimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _pimpleFoam_ pimpleFoam
+complete -o filenames -o nospace -F _pimpleFoam_ pimpleFoam
 
 _pisoFoam_ ()
 {
@@ -2861,7 +2861,7 @@ _pisoFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _pisoFoam_ pisoFoam
+complete -o filenames -o nospace -F _pisoFoam_ pisoFoam
 
 _plot3dToFoam_ ()
 {
@@ -2890,7 +2890,7 @@ _plot3dToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _plot3dToFoam_ plot3dToFoam
+complete -o filenames -o nospace -F _plot3dToFoam_ plot3dToFoam
 
 _polyDualMesh_ ()
 {
@@ -2911,7 +2911,7 @@ _polyDualMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _polyDualMesh_ polyDualMesh
+complete -o filenames -o nospace -F _polyDualMesh_ polyDualMesh
 
 _porousSimpleFoam_ ()
 {
@@ -2934,7 +2934,7 @@ _porousSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _porousSimpleFoam_ porousSimpleFoam
+complete -o filenames -o nospace -F _porousSimpleFoam_ porousSimpleFoam
 
 _postChannel_ ()
 {
@@ -2957,7 +2957,7 @@ _postChannel_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _postChannel_ postChannel
+complete -o filenames -o nospace -F _postChannel_ postChannel
 
 _postProcess_ ()
 {
@@ -2982,7 +2982,7 @@ _postProcess_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _postProcess_ postProcess
+complete -o filenames -o nospace -F _postProcess_ postProcess
 
 _potentialFoam_ ()
 {
@@ -3005,7 +3005,7 @@ _potentialFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _potentialFoam_ potentialFoam
+complete -o filenames -o nospace -F _potentialFoam_ potentialFoam
 
 _potentialFreeSurfaceDyMFoam_ ()
 {
@@ -3028,7 +3028,7 @@ _potentialFreeSurfaceDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _potentialFreeSurfaceDyMFoam_ potentialFreeSurfaceDyMFoam
+complete -o filenames -o nospace -F _potentialFreeSurfaceDyMFoam_ potentialFreeSurfaceDyMFoam
 
 _potentialFreeSurfaceFoam_ ()
 {
@@ -3051,7 +3051,7 @@ _potentialFreeSurfaceFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _potentialFreeSurfaceFoam_ potentialFreeSurfaceFoam
+complete -o filenames -o nospace -F _potentialFreeSurfaceFoam_ potentialFreeSurfaceFoam
 
 _reactingFoam_ ()
 {
@@ -3074,7 +3074,7 @@ _reactingFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reactingFoam_ reactingFoam
+complete -o filenames -o nospace -F _reactingFoam_ reactingFoam
 
 _reactingMultiphaseEulerFoam_ ()
 {
@@ -3097,7 +3097,7 @@ _reactingMultiphaseEulerFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reactingMultiphaseEulerFoam_ reactingMultiphaseEulerFoam
+complete -o filenames -o nospace -F _reactingMultiphaseEulerFoam_ reactingMultiphaseEulerFoam
 
 _reactingParcelFilmFoam_ ()
 {
@@ -3120,7 +3120,7 @@ _reactingParcelFilmFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reactingParcelFilmFoam_ reactingParcelFilmFoam
+complete -o filenames -o nospace -F _reactingParcelFilmFoam_ reactingParcelFilmFoam
 
 _reactingParcelFoam_ ()
 {
@@ -3143,7 +3143,7 @@ _reactingParcelFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reactingParcelFoam_ reactingParcelFoam
+complete -o filenames -o nospace -F _reactingParcelFoam_ reactingParcelFoam
 
 _reactingTwoPhaseEulerFoam_ ()
 {
@@ -3166,7 +3166,7 @@ _reactingTwoPhaseEulerFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reactingTwoPhaseEulerFoam_ reactingTwoPhaseEulerFoam
+complete -o filenames -o nospace -F _reactingTwoPhaseEulerFoam_ reactingTwoPhaseEulerFoam
 
 _reconstructPar_ ()
 {
@@ -3189,7 +3189,7 @@ _reconstructPar_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reconstructPar_ reconstructPar
+complete -o filenames -o nospace -F _reconstructPar_ reconstructPar
 
 _reconstructParMesh_ ()
 {
@@ -3212,7 +3212,7 @@ _reconstructParMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _reconstructParMesh_ reconstructParMesh
+complete -o filenames -o nospace -F _reconstructParMesh_ reconstructParMesh
 
 _redistributePar_ ()
 {
@@ -3235,7 +3235,7 @@ _redistributePar_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _redistributePar_ redistributePar
+complete -o filenames -o nospace -F _redistributePar_ redistributePar
 
 _refineHexMesh_ ()
 {
@@ -3258,7 +3258,7 @@ _refineHexMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _refineHexMesh_ refineHexMesh
+complete -o filenames -o nospace -F _refineHexMesh_ refineHexMesh
 
 _refinementLevel_ ()
 {
@@ -3281,7 +3281,7 @@ _refinementLevel_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _refinementLevel_ refinementLevel
+complete -o filenames -o nospace -F _refinementLevel_ refinementLevel
 
 _refineMesh_ ()
 {
@@ -3306,7 +3306,7 @@ _refineMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _refineMesh_ refineMesh
+complete -o filenames -o nospace -F _refineMesh_ refineMesh
 
 _refineWallLayer_ ()
 {
@@ -3329,7 +3329,7 @@ _refineWallLayer_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _refineWallLayer_ refineWallLayer
+complete -o filenames -o nospace -F _refineWallLayer_ refineWallLayer
 
 _removeFaces_ ()
 {
@@ -3352,7 +3352,7 @@ _removeFaces_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _removeFaces_ removeFaces
+complete -o filenames -o nospace -F _removeFaces_ removeFaces
 
 _renumberMesh_ ()
 {
@@ -3377,7 +3377,7 @@ _renumberMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _renumberMesh_ renumberMesh
+complete -o filenames -o nospace -F _renumberMesh_ renumberMesh
 
 _rhoCentralDyMFoam_ ()
 {
@@ -3400,7 +3400,7 @@ _rhoCentralDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoCentralDyMFoam_ rhoCentralDyMFoam
+complete -o filenames -o nospace -F _rhoCentralDyMFoam_ rhoCentralDyMFoam
 
 _rhoCentralFoam_ ()
 {
@@ -3423,7 +3423,7 @@ _rhoCentralFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoCentralFoam_ rhoCentralFoam
+complete -o filenames -o nospace -F _rhoCentralFoam_ rhoCentralFoam
 
 _rhoPimpleDyMFoam_ ()
 {
@@ -3446,7 +3446,7 @@ _rhoPimpleDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoPimpleDyMFoam_ rhoPimpleDyMFoam
+complete -o filenames -o nospace -F _rhoPimpleDyMFoam_ rhoPimpleDyMFoam
 
 _rhoPimpleFoam_ ()
 {
@@ -3469,7 +3469,7 @@ _rhoPimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoPimpleFoam_ rhoPimpleFoam
+complete -o filenames -o nospace -F _rhoPimpleFoam_ rhoPimpleFoam
 
 _rhoPorousSimpleFoam_ ()
 {
@@ -3492,7 +3492,7 @@ _rhoPorousSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoPorousSimpleFoam_ rhoPorousSimpleFoam
+complete -o filenames -o nospace -F _rhoPorousSimpleFoam_ rhoPorousSimpleFoam
 
 _rhoReactingBuoyantFoam_ ()
 {
@@ -3515,7 +3515,7 @@ _rhoReactingBuoyantFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoReactingBuoyantFoam_ rhoReactingBuoyantFoam
+complete -o filenames -o nospace -F _rhoReactingBuoyantFoam_ rhoReactingBuoyantFoam
 
 _rhoReactingFoam_ ()
 {
@@ -3538,7 +3538,7 @@ _rhoReactingFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoReactingFoam_ rhoReactingFoam
+complete -o filenames -o nospace -F _rhoReactingFoam_ rhoReactingFoam
 
 _rhoSimpleFoam_ ()
 {
@@ -3561,7 +3561,7 @@ _rhoSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rhoSimpleFoam_ rhoSimpleFoam
+complete -o filenames -o nospace -F _rhoSimpleFoam_ rhoSimpleFoam
 
 _rotateMesh_ ()
 {
@@ -3584,7 +3584,7 @@ _rotateMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rotateMesh_ rotateMesh
+complete -o filenames -o nospace -F _rotateMesh_ rotateMesh
 
 _sammToFoam_ ()
 {
@@ -3607,7 +3607,7 @@ _sammToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sammToFoam_ sammToFoam
+complete -o filenames -o nospace -F _sammToFoam_ sammToFoam
 
 _scalarTransportFoam_ ()
 {
@@ -3630,7 +3630,7 @@ _scalarTransportFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _scalarTransportFoam_ scalarTransportFoam
+complete -o filenames -o nospace -F _scalarTransportFoam_ scalarTransportFoam
 
 _selectCells_ ()
 {
@@ -3651,7 +3651,7 @@ _selectCells_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _selectCells_ selectCells
+complete -o filenames -o nospace -F _selectCells_ selectCells
 
 _setFields_ ()
 {
@@ -3676,7 +3676,7 @@ _setFields_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _setFields_ setFields
+complete -o filenames -o nospace -F _setFields_ setFields
 
 _setSet_ ()
 {
@@ -3701,7 +3701,7 @@ _setSet_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _setSet_ setSet
+complete -o filenames -o nospace -F _setSet_ setSet
 
 _setsToZones_ ()
 {
@@ -3724,7 +3724,7 @@ _setsToZones_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _setsToZones_ setsToZones
+complete -o filenames -o nospace -F _setsToZones_ setsToZones
 
 _setWaves_ ()
 {
@@ -3747,7 +3747,7 @@ _setWaves_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _setWaves_ setWaves
+complete -o filenames -o nospace -F _setWaves_ setWaves
 
 _shallowWaterFoam_ ()
 {
@@ -3770,7 +3770,7 @@ _shallowWaterFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _shallowWaterFoam_ shallowWaterFoam
+complete -o filenames -o nospace -F _shallowWaterFoam_ shallowWaterFoam
 
 _simpleFoam_ ()
 {
@@ -3793,7 +3793,7 @@ _simpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _simpleFoam_ simpleFoam
+complete -o filenames -o nospace -F _simpleFoam_ simpleFoam
 
 _simpleReactingParcelFoam_ ()
 {
@@ -3816,7 +3816,7 @@ _simpleReactingParcelFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _simpleReactingParcelFoam_ simpleReactingParcelFoam
+complete -o filenames -o nospace -F _simpleReactingParcelFoam_ simpleReactingParcelFoam
 
 _singleCellMesh_ ()
 {
@@ -3839,7 +3839,7 @@ _singleCellMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _singleCellMesh_ singleCellMesh
+complete -o filenames -o nospace -F _singleCellMesh_ singleCellMesh
 
 _smapToFoam_ ()
 {
@@ -3866,7 +3866,7 @@ _smapToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _smapToFoam_ smapToFoam
+complete -o filenames -o nospace -F _smapToFoam_ smapToFoam
 
 _snappyHexMesh_ ()
 {
@@ -3891,7 +3891,7 @@ _snappyHexMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _snappyHexMesh_ snappyHexMesh
+complete -o filenames -o nospace -F _snappyHexMesh_ snappyHexMesh
 
 _solidDisplacementFoam_ ()
 {
@@ -3914,7 +3914,7 @@ _solidDisplacementFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _solidDisplacementFoam_ solidDisplacementFoam
+complete -o filenames -o nospace -F _solidDisplacementFoam_ solidDisplacementFoam
 
 _solidEquilibriumDisplacementFoam_ ()
 {
@@ -3937,7 +3937,7 @@ _solidEquilibriumDisplacementFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _solidEquilibriumDisplacementFoam_ solidEquilibriumDisplacementFoam
+complete -o filenames -o nospace -F _solidEquilibriumDisplacementFoam_ solidEquilibriumDisplacementFoam
 
 _sonicDyMFoam_ ()
 {
@@ -3960,7 +3960,7 @@ _sonicDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sonicDyMFoam_ sonicDyMFoam
+complete -o filenames -o nospace -F _sonicDyMFoam_ sonicDyMFoam
 
 _sonicFoam_ ()
 {
@@ -3983,7 +3983,7 @@ _sonicFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sonicFoam_ sonicFoam
+complete -o filenames -o nospace -F _sonicFoam_ sonicFoam
 
 _sonicLiquidFoam_ ()
 {
@@ -4006,7 +4006,7 @@ _sonicLiquidFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sonicLiquidFoam_ sonicLiquidFoam
+complete -o filenames -o nospace -F _sonicLiquidFoam_ sonicLiquidFoam
 
 _splitCells_ ()
 {
@@ -4029,7 +4029,7 @@ _splitCells_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _splitCells_ splitCells
+complete -o filenames -o nospace -F _splitCells_ splitCells
 
 _splitMesh_ ()
 {
@@ -4050,7 +4050,7 @@ _splitMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _splitMesh_ splitMesh
+complete -o filenames -o nospace -F _splitMesh_ splitMesh
 
 _splitMeshRegions_ ()
 {
@@ -4075,7 +4075,7 @@ _splitMeshRegions_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _splitMeshRegions_ splitMeshRegions
+complete -o filenames -o nospace -F _splitMeshRegions_ splitMeshRegions
 
 _sprayDyMFoam_ ()
 {
@@ -4098,7 +4098,7 @@ _sprayDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sprayDyMFoam_ sprayDyMFoam
+complete -o filenames -o nospace -F _sprayDyMFoam_ sprayDyMFoam
 
 _sprayEngineFoam_ ()
 {
@@ -4121,7 +4121,7 @@ _sprayEngineFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sprayEngineFoam_ sprayEngineFoam
+complete -o filenames -o nospace -F _sprayEngineFoam_ sprayEngineFoam
 
 _sprayFoam_ ()
 {
@@ -4144,7 +4144,7 @@ _sprayFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sprayFoam_ sprayFoam
+complete -o filenames -o nospace -F _sprayFoam_ sprayFoam
 
 _SRFPimpleFoam_ ()
 {
@@ -4167,7 +4167,7 @@ _SRFPimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _SRFPimpleFoam_ SRFPimpleFoam
+complete -o filenames -o nospace -F _SRFPimpleFoam_ SRFPimpleFoam
 
 _SRFSimpleFoam_ ()
 {
@@ -4190,7 +4190,7 @@ _SRFSimpleFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _SRFSimpleFoam_ SRFSimpleFoam
+complete -o filenames -o nospace -F _SRFSimpleFoam_ SRFSimpleFoam
 
 _star3ToFoam_ ()
 {
@@ -4213,7 +4213,7 @@ _star3ToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _star3ToFoam_ star3ToFoam
+complete -o filenames -o nospace -F _star3ToFoam_ star3ToFoam
 
 _star4ToFoam_ ()
 {
@@ -4236,7 +4236,7 @@ _star4ToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _star4ToFoam_ star4ToFoam
+complete -o filenames -o nospace -F _star4ToFoam_ star4ToFoam
 
 _steadyParticleTracks_ ()
 {
@@ -4261,7 +4261,7 @@ _steadyParticleTracks_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _steadyParticleTracks_ steadyParticleTracks
+complete -o filenames -o nospace -F _steadyParticleTracks_ steadyParticleTracks
 
 _stitchMesh_ ()
 {
@@ -4286,7 +4286,7 @@ _stitchMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _stitchMesh_ stitchMesh
+complete -o filenames -o nospace -F _stitchMesh_ stitchMesh
 
 _subsetMesh_ ()
 {
@@ -4309,7 +4309,7 @@ _subsetMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _subsetMesh_ subsetMesh
+complete -o filenames -o nospace -F _subsetMesh_ subsetMesh
 
 _surfaceAdd_ ()
 {
@@ -4333,7 +4333,7 @@ _surfaceAdd_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceAdd_ surfaceAdd
+complete -o filenames -o nospace -F _surfaceAdd_ surfaceAdd
 
 _surfaceAutoPatch_ ()
 {
@@ -4360,7 +4360,7 @@ _surfaceAutoPatch_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceAutoPatch_ surfaceAutoPatch
+complete -o filenames -o nospace -F _surfaceAutoPatch_ surfaceAutoPatch
 
 _surfaceBooleanFeatures_ ()
 {
@@ -4382,7 +4382,7 @@ _surfaceBooleanFeatures_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceBooleanFeatures_ surfaceBooleanFeatures
+complete -o filenames -o nospace -F _surfaceBooleanFeatures_ surfaceBooleanFeatures
 
 _surfaceCheck_ ()
 {
@@ -4409,7 +4409,7 @@ _surfaceCheck_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceCheck_ surfaceCheck
+complete -o filenames -o nospace -F _surfaceCheck_ surfaceCheck
 
 _surfaceClean_ ()
 {
@@ -4436,7 +4436,7 @@ _surfaceClean_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceClean_ surfaceClean
+complete -o filenames -o nospace -F _surfaceClean_ surfaceClean
 
 _surfaceCoarsen_ ()
 {
@@ -4463,7 +4463,7 @@ _surfaceCoarsen_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceCoarsen_ surfaceCoarsen
+complete -o filenames -o nospace -F _surfaceCoarsen_ surfaceCoarsen
 
 _surfaceConvert_ ()
 {
@@ -4492,7 +4492,7 @@ _surfaceConvert_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceConvert_ surfaceConvert
+complete -o filenames -o nospace -F _surfaceConvert_ surfaceConvert
 
 _surfaceFeatureConvert_ ()
 {
@@ -4521,7 +4521,7 @@ _surfaceFeatureConvert_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceFeatureConvert_ surfaceFeatureConvert
+complete -o filenames -o nospace -F _surfaceFeatureConvert_ surfaceFeatureConvert
 
 _surfaceFeatureExtract_ ()
 {
@@ -4544,7 +4544,7 @@ _surfaceFeatureExtract_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceFeatureExtract_ surfaceFeatureExtract
+complete -o filenames -o nospace -F _surfaceFeatureExtract_ surfaceFeatureExtract
 
 _surfaceFind_ ()
 {
@@ -4573,7 +4573,7 @@ _surfaceFind_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceFind_ surfaceFind
+complete -o filenames -o nospace -F _surfaceFind_ surfaceFind
 
 _surfaceHookUp_ ()
 {
@@ -4596,7 +4596,7 @@ _surfaceHookUp_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceHookUp_ surfaceHookUp
+complete -o filenames -o nospace -F _surfaceHookUp_ surfaceHookUp
 
 _surfaceInertia_ ()
 {
@@ -4625,7 +4625,7 @@ _surfaceInertia_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceInertia_ surfaceInertia
+complete -o filenames -o nospace -F _surfaceInertia_ surfaceInertia
 
 _surfaceLambdaMuSmooth_ ()
 {
@@ -4652,7 +4652,7 @@ _surfaceLambdaMuSmooth_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceLambdaMuSmooth_ surfaceLambdaMuSmooth
+complete -o filenames -o nospace -F _surfaceLambdaMuSmooth_ surfaceLambdaMuSmooth
 
 _surfaceMeshConvert_ ()
 {
@@ -4683,7 +4683,7 @@ _surfaceMeshConvert_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceMeshConvert_ surfaceMeshConvert
+complete -o filenames -o nospace -F _surfaceMeshConvert_ surfaceMeshConvert
 
 _surfaceMeshConvertTesting_ ()
 {
@@ -4712,7 +4712,7 @@ _surfaceMeshConvertTesting_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceMeshConvertTesting_ surfaceMeshConvertTesting
+complete -o filenames -o nospace -F _surfaceMeshConvertTesting_ surfaceMeshConvertTesting
 
 _surfaceMeshExport_ ()
 {
@@ -4737,7 +4737,7 @@ _surfaceMeshExport_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceMeshExport_ surfaceMeshExport
+complete -o filenames -o nospace -F _surfaceMeshExport_ surfaceMeshExport
 
 _surfaceMeshImport_ ()
 {
@@ -4768,7 +4768,7 @@ _surfaceMeshImport_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceMeshImport_ surfaceMeshImport
+complete -o filenames -o nospace -F _surfaceMeshImport_ surfaceMeshImport
 
 _surfaceMeshInfo_ ()
 {
@@ -4797,7 +4797,7 @@ _surfaceMeshInfo_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceMeshInfo_ surfaceMeshInfo
+complete -o filenames -o nospace -F _surfaceMeshInfo_ surfaceMeshInfo
 
 _surfaceMeshTriangulate_ ()
 {
@@ -4820,7 +4820,7 @@ _surfaceMeshTriangulate_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceMeshTriangulate_ surfaceMeshTriangulate
+complete -o filenames -o nospace -F _surfaceMeshTriangulate_ surfaceMeshTriangulate
 
 _surfaceOrient_ ()
 {
@@ -4847,7 +4847,7 @@ _surfaceOrient_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceOrient_ surfaceOrient
+complete -o filenames -o nospace -F _surfaceOrient_ surfaceOrient
 
 _surfacePointMerge_ ()
 {
@@ -4874,7 +4874,7 @@ _surfacePointMerge_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfacePointMerge_ surfacePointMerge
+complete -o filenames -o nospace -F _surfacePointMerge_ surfacePointMerge
 
 _surfaceRedistributePar_ ()
 {
@@ -4903,7 +4903,7 @@ _surfaceRedistributePar_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceRedistributePar_ surfaceRedistributePar
+complete -o filenames -o nospace -F _surfaceRedistributePar_ surfaceRedistributePar
 
 _surfaceRefineRedGreen_ ()
 {
@@ -4930,7 +4930,7 @@ _surfaceRefineRedGreen_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceRefineRedGreen_ surfaceRefineRedGreen
+complete -o filenames -o nospace -F _surfaceRefineRedGreen_ surfaceRefineRedGreen
 
 _surfaceSplitByPatch_ ()
 {
@@ -4957,7 +4957,7 @@ _surfaceSplitByPatch_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceSplitByPatch_ surfaceSplitByPatch
+complete -o filenames -o nospace -F _surfaceSplitByPatch_ surfaceSplitByPatch
 
 _surfaceSplitByTopology_ ()
 {
@@ -4979,7 +4979,7 @@ _surfaceSplitByTopology_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceSplitByTopology_ surfaceSplitByTopology
+complete -o filenames -o nospace -F _surfaceSplitByTopology_ surfaceSplitByTopology
 
 _surfaceSplitNonManifolds_ ()
 {
@@ -5006,7 +5006,7 @@ _surfaceSplitNonManifolds_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceSplitNonManifolds_ surfaceSplitNonManifolds
+complete -o filenames -o nospace -F _surfaceSplitNonManifolds_ surfaceSplitNonManifolds
 
 _surfaceSubset_ ()
 {
@@ -5033,7 +5033,7 @@ _surfaceSubset_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceSubset_ surfaceSubset
+complete -o filenames -o nospace -F _surfaceSubset_ surfaceSubset
 
 _surfaceToPatch_ ()
 {
@@ -5062,7 +5062,7 @@ _surfaceToPatch_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceToPatch_ surfaceToPatch
+complete -o filenames -o nospace -F _surfaceToPatch_ surfaceToPatch
 
 _surfaceTransformPoints_ ()
 {
@@ -5091,7 +5091,7 @@ _surfaceTransformPoints_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _surfaceTransformPoints_ surfaceTransformPoints
+complete -o filenames -o nospace -F _surfaceTransformPoints_ surfaceTransformPoints
 
 _temporalInterpolate_ ()
 {
@@ -5114,7 +5114,7 @@ _temporalInterpolate_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _temporalInterpolate_ temporalInterpolate
+complete -o filenames -o nospace -F _temporalInterpolate_ temporalInterpolate
 
 _tetgenToFoam_ ()
 {
@@ -5137,7 +5137,7 @@ _tetgenToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _tetgenToFoam_ tetgenToFoam
+complete -o filenames -o nospace -F _tetgenToFoam_ tetgenToFoam
 
 _thermoFoam_ ()
 {
@@ -5160,7 +5160,7 @@ _thermoFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _thermoFoam_ thermoFoam
+complete -o filenames -o nospace -F _thermoFoam_ thermoFoam
 
 _topoSet_ ()
 {
@@ -5185,7 +5185,7 @@ _topoSet_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _topoSet_ topoSet
+complete -o filenames -o nospace -F _topoSet_ topoSet
 
 _transformPoints_ ()
 {
@@ -5208,7 +5208,7 @@ _transformPoints_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _transformPoints_ transformPoints
+complete -o filenames -o nospace -F _transformPoints_ transformPoints
 
 _twoLiquidMixingFoam_ ()
 {
@@ -5231,7 +5231,7 @@ _twoLiquidMixingFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _twoLiquidMixingFoam_ twoLiquidMixingFoam
+complete -o filenames -o nospace -F _twoLiquidMixingFoam_ twoLiquidMixingFoam
 
 _twoPhaseEulerFoam_ ()
 {
@@ -5254,7 +5254,7 @@ _twoPhaseEulerFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _twoPhaseEulerFoam_ twoPhaseEulerFoam
+complete -o filenames -o nospace -F _twoPhaseEulerFoam_ twoPhaseEulerFoam
 
 _uncoupledKinematicParcelDyMFoam_ ()
 {
@@ -5277,7 +5277,7 @@ _uncoupledKinematicParcelDyMFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _uncoupledKinematicParcelDyMFoam_ uncoupledKinematicParcelDyMFoam
+complete -o filenames -o nospace -F _uncoupledKinematicParcelDyMFoam_ uncoupledKinematicParcelDyMFoam
 
 _uncoupledKinematicParcelFoam_ ()
 {
@@ -5300,7 +5300,7 @@ _uncoupledKinematicParcelFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _uncoupledKinematicParcelFoam_ uncoupledKinematicParcelFoam
+complete -o filenames -o nospace -F _uncoupledKinematicParcelFoam_ uncoupledKinematicParcelFoam
 
 _viewFactorsGen_ ()
 {
@@ -5323,7 +5323,7 @@ _viewFactorsGen_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _viewFactorsGen_ viewFactorsGen
+complete -o filenames -o nospace -F _viewFactorsGen_ viewFactorsGen
 
 _vtkUnstructuredToFoam_ ()
 {
@@ -5350,7 +5350,7 @@ _vtkUnstructuredToFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _vtkUnstructuredToFoam_ vtkUnstructuredToFoam
+complete -o filenames -o nospace -F _vtkUnstructuredToFoam_ vtkUnstructuredToFoam
 
 _wallFunctionTable_ ()
 {
@@ -5373,7 +5373,7 @@ _wallFunctionTable_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wallFunctionTable_ wallFunctionTable
+complete -o filenames -o nospace -F _wallFunctionTable_ wallFunctionTable
 
 _writeMeshObj_ ()
 {
@@ -5396,7 +5396,7 @@ _writeMeshObj_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _writeMeshObj_ writeMeshObj
+complete -o filenames -o nospace -F _writeMeshObj_ writeMeshObj
 
 _XiFoam_ ()
 {
@@ -5419,7 +5419,7 @@ _XiFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _XiFoam_ XiFoam
+complete -o filenames -o nospace -F _XiFoam_ XiFoam
 
 _zipUpMesh_ ()
 {
@@ -5442,7 +5442,7 @@ _zipUpMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _zipUpMesh_ zipUpMesh
+complete -o filenames -o nospace -F _zipUpMesh_ zipUpMesh
 
 _Co_ ()
 {
@@ -5461,7 +5461,7 @@ _Co_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _Co_ Co
+complete -o filenames -o nospace -F _Co_ Co
 
 _createTurbulenceFields_ ()
 {
@@ -5480,7 +5480,7 @@ _createTurbulenceFields_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _createTurbulenceFields_ createTurbulenceFields
+complete -o filenames -o nospace -F _createTurbulenceFields_ createTurbulenceFields
 
 _execFlowFunctionObjects_ ()
 {
@@ -5505,7 +5505,7 @@ _execFlowFunctionObjects_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _execFlowFunctionObjects_ execFlowFunctionObjects
+complete -o filenames -o nospace -F _execFlowFunctionObjects_ execFlowFunctionObjects
 
 _foamCalc_ ()
 {
@@ -5530,7 +5530,7 @@ _foamCalc_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamCalc_ foamCalc
+complete -o filenames -o nospace -F _foamCalc_ foamCalc
 
 _foamCleanPath_ ()
 {
@@ -5549,7 +5549,7 @@ _foamCleanPath_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamCleanPath_ foamCleanPath
+complete -o filenames -o nospace -F _foamCleanPath_ foamCleanPath
 
 _foamCleanPolyMesh_ ()
 {
@@ -5572,7 +5572,7 @@ _foamCleanPolyMesh_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamCleanPolyMesh_ foamCleanPolyMesh
+complete -o filenames -o nospace -F _foamCleanPolyMesh_ foamCleanPolyMesh
 
 _foamCleanTutorials_ ()
 {
@@ -5591,7 +5591,7 @@ _foamCleanTutorials_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamCleanTutorials_ foamCleanTutorials
+complete -o filenames -o nospace -F _foamCleanTutorials_ foamCleanTutorials
 
 _foamCloneCase_ ()
 {
@@ -5613,7 +5613,7 @@ _foamCloneCase_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamCloneCase_ foamCloneCase
+complete -o filenames -o nospace -F _foamCloneCase_ foamCloneCase
 
 _foamCreateVideo_ ()
 {
@@ -5636,26 +5636,7 @@ _foamCreateVideo_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamCreateVideo_ foamCreateVideo
-
-_foamDebugSwitches_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o nospace -F _foamDebugSwitches_ foamDebugSwitches
+complete -o filenames -o nospace -F _foamCreateVideo_ foamCreateVideo
 
 _foamEbrowse_ ()
 {
@@ -5674,7 +5655,7 @@ _foamEbrowse_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamEbrowse_ foamEbrowse
+complete -o filenames -o nospace -F _foamEbrowse_ foamEbrowse
 
 _foamEtcFile_ ()
 {
@@ -5697,7 +5678,7 @@ _foamEtcFile_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamEtcFile_ foamEtcFile
+complete -o filenames -o nospace -F _foamEtcFile_ foamEtcFile
 
 _foamExec_ ()
 {
@@ -5720,7 +5701,7 @@ _foamExec_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamExec_ foamExec
+complete -o filenames -o nospace -F _foamExec_ foamExec
 
 _foamJob_ ()
 {
@@ -5743,7 +5724,7 @@ _foamJob_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamJob_ foamJob
+complete -o filenames -o nospace -F _foamJob_ foamJob
 
 _foamLog_ ()
 {
@@ -5765,7 +5746,7 @@ _foamLog_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamLog_ foamLog
+complete -o filenames -o nospace -F _foamLog_ foamLog
 
 _foamMonitor_ ()
 {
@@ -5792,7 +5773,7 @@ _foamMonitor_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamMonitor_ foamMonitor
+complete -o filenames -o nospace -F _foamMonitor_ foamMonitor
 
 _foamNew_ ()
 {
@@ -5813,7 +5794,7 @@ _foamNew_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamNew_ foamNew
+complete -o filenames -o nospace -F _foamNew_ foamNew
 
 _foamNewApp_ ()
 {
@@ -5832,7 +5813,7 @@ _foamNewApp_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamNewApp_ foamNewApp
+complete -o filenames -o nospace -F _foamNewApp_ foamNewApp
 
 _foamNewBC_ ()
 {
@@ -5851,7 +5832,7 @@ _foamNewBC_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamNewBC_ foamNewBC
+complete -o filenames -o nospace -F _foamNewBC_ foamNewBC
 
 _foamNewFunctionObject_ ()
 {
@@ -5870,7 +5851,7 @@ _foamNewFunctionObject_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamNewFunctionObject_ foamNewFunctionObject
+complete -o filenames -o nospace -F _foamNewFunctionObject_ foamNewFunctionObject
 
 _foamRunTutorials_ ()
 {
@@ -5889,7 +5870,7 @@ _foamRunTutorials_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamRunTutorials_ foamRunTutorials
+complete -o filenames -o nospace -F _foamRunTutorials_ foamRunTutorials
 
 _foamSearch_ ()
 {
@@ -5911,7 +5892,7 @@ _foamSearch_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamSearch_ foamSearch
+complete -o filenames -o nospace -F _foamSearch_ foamSearch
 
 _foamSequenceVTKFiles_ ()
 {
@@ -5932,7 +5913,7 @@ _foamSequenceVTKFiles_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamSequenceVTKFiles_ foamSequenceVTKFiles
+complete -o filenames -o nospace -F _foamSequenceVTKFiles_ foamSequenceVTKFiles
 
 _foamTags_ ()
 {
@@ -5951,7 +5932,7 @@ _foamTags_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamTags_ foamTags
+complete -o filenames -o nospace -F _foamTags_ foamTags
 
 _foamUpdateCaseFileHeader_ ()
 {
@@ -5972,7 +5953,7 @@ _foamUpdateCaseFileHeader_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _foamUpdateCaseFileHeader_ foamUpdateCaseFileHeader
+complete -o filenames -o nospace -F _foamUpdateCaseFileHeader_ foamUpdateCaseFileHeader
 
 _Mach_ ()
 {
@@ -5991,7 +5972,7 @@ _Mach_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _Mach_ Mach
+complete -o filenames -o nospace -F _Mach_ Mach
 
 _mpirunDebug_ ()
 {
@@ -6010,7 +5991,7 @@ _mpirunDebug_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _mpirunDebug_ mpirunDebug
+complete -o filenames -o nospace -F _mpirunDebug_ mpirunDebug
 
 _paraFoam_ ()
 {
@@ -6033,7 +6014,7 @@ _paraFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _paraFoam_ paraFoam
+complete -o filenames -o nospace -F _paraFoam_ paraFoam
 
 _patchAverage_ ()
 {
@@ -6052,7 +6033,7 @@ _patchAverage_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _patchAverage_ patchAverage
+complete -o filenames -o nospace -F _patchAverage_ patchAverage
 
 _patchIntegrate_ ()
 {
@@ -6071,7 +6052,7 @@ _patchIntegrate_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _patchIntegrate_ patchIntegrate
+complete -o filenames -o nospace -F _patchIntegrate_ patchIntegrate
 
 _Pe_ ()
 {
@@ -6090,7 +6071,7 @@ _Pe_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _Pe_ Pe
+complete -o filenames -o nospace -F _Pe_ Pe
 
 _probeLocations_ ()
 {
@@ -6109,7 +6090,7 @@ _probeLocations_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _probeLocations_ probeLocations
+complete -o filenames -o nospace -F _probeLocations_ probeLocations
 
 _ptot_ ()
 {
@@ -6128,7 +6109,7 @@ _ptot_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _ptot_ ptot
+complete -o filenames -o nospace -F _ptot_ ptot
 
 _rm~all_ ()
 {
@@ -6148,7 +6129,7 @@ _rm~all_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rm~all_ rm~all
+complete -o filenames -o nospace -F _rm~all_ rm~all
 
 _rmcore_ ()
 {
@@ -6168,7 +6149,7 @@ _rmcore_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _rmcore_ rmcore
+complete -o filenames -o nospace -F _rmcore_ rmcore
 
 _sample_ ()
 {
@@ -6187,7 +6168,7 @@ _sample_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _sample_ sample
+complete -o filenames -o nospace -F _sample_ sample
 
 _stressComponents_ ()
 {
@@ -6206,7 +6187,7 @@ _stressComponents_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _stressComponents_ stressComponents
+complete -o filenames -o nospace -F _stressComponents_ stressComponents
 
 _supersededByPostProcess_ ()
 {
@@ -6225,7 +6206,7 @@ _supersededByPostProcess_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _supersededByPostProcess_ supersededByPostProcess
+complete -o filenames -o nospace -F _supersededByPostProcess_ supersededByPostProcess
 
 _supersededByPostProcessOption_ ()
 {
@@ -6244,7 +6225,7 @@ _supersededByPostProcessOption_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _supersededByPostProcessOption_ supersededByPostProcessOption
+complete -o filenames -o nospace -F _supersededByPostProcessOption_ supersededByPostProcessOption
 
 _wallGradU_ ()
 {
@@ -6263,7 +6244,7 @@ _wallGradU_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wallGradU_ wallGradU
+complete -o filenames -o nospace -F _wallGradU_ wallGradU
 
 _wdot_ ()
 {
@@ -6282,7 +6263,7 @@ _wdot_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wdot_ wdot
+complete -o filenames -o nospace -F _wdot_ wdot
 
 _wclean_ ()
 {
@@ -6304,7 +6285,7 @@ _wclean_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wclean_ wclean
+complete -o filenames -o nospace -F _wclean_ wclean
 
 _wcleanLnIncludeAll_ ()
 {
@@ -6324,7 +6305,7 @@ _wcleanLnIncludeAll_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wcleanLnIncludeAll_ wcleanLnIncludeAll
+complete -o filenames -o nospace -F _wcleanLnIncludeAll_ wcleanLnIncludeAll
 
 _wcleanPlatform_ ()
 {
@@ -6343,7 +6324,7 @@ _wcleanPlatform_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wcleanPlatform_ wcleanPlatform
+complete -o filenames -o nospace -F _wcleanPlatform_ wcleanPlatform
 
 _wdep_ ()
 {
@@ -6365,7 +6346,7 @@ _wdep_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wdep_ wdep
+complete -o filenames -o nospace -F _wdep_ wdep
 
 _wmake_ ()
 {
@@ -6392,7 +6373,7 @@ _wmake_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmake_ wmake
+complete -o filenames -o nospace -F _wmake_ wmake
 
 _wmakeCheckPwd_ ()
 {
@@ -6414,7 +6395,7 @@ _wmakeCheckPwd_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeCheckPwd_ wmakeCheckPwd
+complete -o filenames -o nospace -F _wmakeCheckPwd_ wmakeCheckPwd
 
 _wmakeCollect_ ()
 {
@@ -6433,7 +6414,7 @@ _wmakeCollect_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeCollect_ wmakeCollect
+complete -o filenames -o nospace -F _wmakeCollect_ wmakeCollect
 
 _wmakeFilesAndOptions_ ()
 {
@@ -6452,7 +6433,7 @@ _wmakeFilesAndOptions_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeFilesAndOptions_ wmakeFilesAndOptions
+complete -o filenames -o nospace -F _wmakeFilesAndOptions_ wmakeFilesAndOptions
 
 _wmakeLnInclude_ ()
 {
@@ -6474,7 +6455,7 @@ _wmakeLnInclude_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeLnInclude_ wmakeLnInclude
+complete -o filenames -o nospace -F _wmakeLnInclude_ wmakeLnInclude
 
 _wmakeLnIncludeAll_ ()
 {
@@ -6501,7 +6482,7 @@ _wmakeLnIncludeAll_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeLnIncludeAll_ wmakeLnIncludeAll
+complete -o filenames -o nospace -F _wmakeLnIncludeAll_ wmakeLnIncludeAll
 
 _wmakePrintBuild_ ()
 {
@@ -6522,7 +6503,7 @@ _wmakePrintBuild_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakePrintBuild_ wmakePrintBuild
+complete -o filenames -o nospace -F _wmakePrintBuild_ wmakePrintBuild
 
 _wmakeScheduler_ ()
 {
@@ -6541,7 +6522,7 @@ _wmakeScheduler_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeScheduler_ wmakeScheduler
+complete -o filenames -o nospace -F _wmakeScheduler_ wmakeScheduler
 
 _wmakeSchedulerUptime_ ()
 {
@@ -6560,7 +6541,7 @@ _wmakeSchedulerUptime_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wmakeSchedulerUptime_ wmakeSchedulerUptime
+complete -o filenames -o nospace -F _wmakeSchedulerUptime_ wmakeSchedulerUptime
 
 _wrmdep_ ()
 {
@@ -6579,7 +6560,7 @@ _wrmdep_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wrmdep_ wrmdep
+complete -o filenames -o nospace -F _wrmdep_ wrmdep
 
 _wrmo_ ()
 {
@@ -6601,6 +6582,6 @@ _wrmo_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o nospace -F _wrmo_ wrmo
+complete -o filenames -o nospace -F _wrmo_ wrmo
 
 #------------------------------------------------------------------------------
