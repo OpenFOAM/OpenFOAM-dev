@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -428,245 +428,266 @@ int main(int argc, char *argv[])
         FatalErrorInFunction
             << "No times selected." << exit(FatalError);
     }
-    runTime.setTime(times[0], 0);
-    word instance = args.optionLookupOrDefault("instance", runTime.timeName());
 
-    #include "createNamedMesh.H"
-
-    const bool literalRE = args.optionFound("literalRE");
-    if (literalRE)
+    forAll(times, timei)
     {
-        Info<< "Not interpreting any regular expressions (RE)"
-            << " in the changeDictionaryDict." << endl
-            << "Instead they are handled as any other entry, i.e. added if"
-            << " not present." << endl;
-    }
-
-    const bool enableEntries = args.optionFound("enableFunctionEntries");
-    if (enableEntries)
-    {
-        Info<< "Allowing dictionary preprocessing ('#include', '#codeStream')."
-            << endl;
-    }
-
-    int oldFlag = entry::disableFunctionEntries;
-    if (!enableEntries)
-    {
-        // By default disable dictionary expansion for fields
-        entry::disableFunctionEntries = 1;
-    }
-
-
-    const bool disablePatchGroups = args.optionFound("disablePatchGroups");
-    if (disablePatchGroups)
-    {
-        Info<< "Not interpreting any keys in the changeDictionary"
-            << " as patchGroups"
-            << endl;
-    }
-
-
-    fileName regionPrefix = "";
-    if (regionName != fvMesh::defaultRegion)
-    {
-        regionPrefix = regionName;
-    }
-
-
-    // Make sure we do not use the master-only reading since we read
-    // fields (different per processor) as dictionaries.
-    regIOobject::fileModificationChecking = regIOobject::timeStamp;
-
-
-    // Get the replacement rules from a dictionary
-
-    const word dictName("changeDictionaryDict");
-    #include "setSystemMeshDictionaryIO.H"
-    IOdictionary dict(dictIO);
-
-    const dictionary* replaceDictsPtr = &dict;
-
-    if (args.optionFound("subDict"))
-    {
-        word subDictName(args.optionLookup("subDict")());
-        replaceDictsPtr = &dict.subDict(subDictName);
-    }
-
-    const dictionary& replaceDicts = *replaceDictsPtr;
-
-    Info<< "Read dictionary " << dict.name()
-        << " with replacements for dictionaries "
-        << replaceDicts.toc() << endl;
-
-
-
-    // Always read boundary to get patch groups
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    Info<< "Reading polyMesh/boundary file to extract patch names"
-        << endl;
-
-    // Read PtrList of dictionary as dictionary.
-    const word oldTypeName = IOPtrList<entry>::typeName;
-    const_cast<word&>(IOPtrList<entry>::typeName) = word::null;
-    IOPtrList<entry> dictList
-    (
-        IOobject
-        (
-            "boundary",
-            runTime.findInstance
-            (
-                regionPrefix/polyMesh::meshSubDir,
-                "boundary",
-                IOobject::READ_IF_PRESENT
-            ),
-            polyMesh::meshSubDir,
-            mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
-    const_cast<word&>(IOPtrList<entry>::typeName) = oldTypeName;
-
-    // Fake type back to what was in field
-    const_cast<word&>(dictList.type()) = dictList.headerClassName();
-
-    // Temporary convert to dictionary
-    dictionary fieldDict;
-    forAll(dictList, i)
-    {
-        fieldDict.add(dictList[i].keyword(), dictList[i].dict());
-    }
-
-    if (dictList.size())
-    {
-        Info<< "Loaded dictionary " << dictList.name()
-            << " with entries " << fieldDict.toc() << endl;
-    }
-
-    // Extract any patchGroups information (= shortcut for set of
-    // patches)
-    HashTable<wordList, word> patchGroups;
-    if (!disablePatchGroups)
-    {
-        patchGroups = extractPatchGroups(fieldDict);
-        if (patchGroups.size())
+        word instance;
+        if (args.optionFound("instance"))
         {
-            Info<< "Extracted patch groups:" << endl;
-            wordList groups(patchGroups.sortedToc());
-            forAll(groups, i)
+            if (times.size() > 1)
             {
-                Info<< "    group " << groups[i] << " with patches "
-                    << patchGroups[groups[i]] << endl;
-            }
-        }
-    }
-
-
-    // Every replacement is a dictionary name and a keyword in this
-
-    forAllConstIter(dictionary, replaceDicts, fieldIter)
-    {
-        const word& fieldName = fieldIter().keyword();
-        Info<< "Replacing entries in dictionary " << fieldName << endl;
-
-        // Handle 'boundary' specially:
-        // - is PtrList of dictionaries
-        // - is in polyMesh/
-        if (fieldName == "boundary")
-        {
-            Info<< "Special handling of " << fieldName
-                << " as polyMesh/boundary file." << endl;
-
-            // Get the replacement dictionary for the field
-            const dictionary& replaceDict = fieldIter().dict();
-            Info<< "Merging entries from " << replaceDict.toc() << endl;
-
-            // Merge the replacements in
-            merge(fieldDict, replaceDict, literalRE, patchGroups);
-
-            Info<< "fieldDict:" << fieldDict << endl;
-
-            // Convert back into dictList
-            wordList doneKeys(dictList.size());
-
-            label nEntries = fieldDict.size();
-
-            forAll(dictList, i)
-            {
-                doneKeys[i] = dictList[i].keyword();
-                dictList.set
-                (
-                    i,
-                    fieldDict.lookupEntry
-                    (
-                        doneKeys[i],
-                        false,
-                        true
-                    ).clone()
-                );
-                fieldDict.remove(doneKeys[i]);
+                FatalErrorInFunction
+                    << "Multiple times selected with 'instance' option"
+                    << exit(FatalError);
             }
 
-            // Add remaining entries
-            label sz = dictList.size();
-            dictList.setSize(nEntries);
-            forAllConstIter(dictionary, fieldDict, iter)
-            {
-                dictList.set(sz++, iter().clone());
-            }
-
-            Info<< "Writing modified " << fieldName << endl;
-            dictList.writeObject
-            (
-                runTime.writeFormat(),
-                runTime.writeFormat(),
-                IOstream::UNCOMPRESSED
-            );
+            args.optionLookup("instance")() >> instance;
         }
         else
         {
-            // Read dictionary. (disable class type checking so we can load
-            // field)
-            Info<< "Loading dictionary " << fieldName << endl;
-            const word oldTypeName = IOdictionary::typeName;
-            const_cast<word&>(IOdictionary::typeName) = word::null;
-
-            IOdictionary fieldDict
-            (
-                IOobject
-                (
-                    fieldName,
-                    instance,
-                    mesh,
-                    IOobject::MUST_READ_IF_MODIFIED,
-                    IOobject::NO_WRITE,
-                    false
-                )
-            );
-
-            const_cast<word&>(IOdictionary::typeName) = oldTypeName;
-
-            // Fake type back to what was in field
-            const_cast<word&>(fieldDict.type()) = fieldDict.headerClassName();
-
-            Info<< "Loaded dictionary " << fieldName
-                << " with entries " << fieldDict.toc() << endl;
-
-            // Get the replacement dictionary for the field
-            const dictionary& replaceDict = fieldIter().dict();
-            Info<< "Merging entries from " << replaceDict.toc() << endl;
-
-            // Merge the replacements in
-            merge(fieldDict, replaceDict, literalRE, patchGroups);
-
-            Info<< "Writing modified fieldDict " << fieldName << endl;
-            fieldDict.regIOobject::write();
+            runTime.setTime(times[timei], timei);
+            instance = runTime.timeName();
         }
-    }
 
-    entry::disableFunctionEntries = oldFlag;
+        #include "createNamedMesh.H"
+
+        const bool literalRE = args.optionFound("literalRE");
+        if (literalRE)
+        {
+            Info<< "Not interpreting any regular expressions (RE)"
+                << " in the changeDictionaryDict." << endl
+                << "Instead they are handled as any other entry, i.e. added if"
+                << " not present." << endl;
+        }
+
+        const bool enableEntries = args.optionFound("enableFunctionEntries");
+        if (enableEntries)
+        {
+            Info<< "Allowing dictionary preprocessing "
+                   "('#include', '#codeStream')."
+                << endl;
+        }
+
+        int oldFlag = entry::disableFunctionEntries;
+        if (!enableEntries)
+        {
+            // By default disable dictionary expansion for fields
+            entry::disableFunctionEntries = 1;
+        }
+
+
+        const bool disablePatchGroups = args.optionFound("disablePatchGroups");
+        if (disablePatchGroups)
+        {
+            Info<< "Not interpreting any keys in the changeDictionary"
+                << " as patchGroups"
+                << endl;
+        }
+
+
+        fileName regionPrefix = "";
+        if (regionName != fvMesh::defaultRegion)
+        {
+            regionPrefix = regionName;
+        }
+
+
+        // Make sure we do not use the master-only reading since we read
+        // fields (different per processor) as dictionaries.
+        regIOobject::fileModificationChecking = regIOobject::timeStamp;
+
+
+        // Get the replacement rules from a dictionary
+
+        const word dictName("changeDictionaryDict");
+        #include "setSystemMeshDictionaryIO.H"
+        IOdictionary dict(dictIO);
+
+        const dictionary* replaceDictsPtr = &dict;
+
+        if (args.optionFound("subDict"))
+        {
+            word subDictName(args.optionLookup("subDict")());
+            replaceDictsPtr = &dict.subDict(subDictName);
+        }
+
+        const dictionary& replaceDicts = *replaceDictsPtr;
+
+        Info<< "Read dictionary " << dict.name()
+            << " with replacements for dictionaries "
+            << replaceDicts.toc() << endl;
+
+
+
+        // Always read boundary to get patch groups
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        Info<< "Reading polyMesh/boundary file to extract patch names"
+            << endl;
+
+        // Read PtrList of dictionary as dictionary.
+        const word oldTypeName = IOPtrList<entry>::typeName;
+        const_cast<word&>(IOPtrList<entry>::typeName) = word::null;
+        IOPtrList<entry> dictList
+        (
+            IOobject
+            (
+                "boundary",
+                runTime.findInstance
+                (
+                    regionPrefix/polyMesh::meshSubDir,
+                    "boundary",
+                    IOobject::READ_IF_PRESENT
+                ),
+                polyMesh::meshSubDir,
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
+        const_cast<word&>(IOPtrList<entry>::typeName) = oldTypeName;
+
+        // Fake type back to what was in field
+        const_cast<word&>(dictList.type()) = dictList.headerClassName();
+
+        // Temporary convert to dictionary
+        dictionary fieldDict;
+        forAll(dictList, i)
+        {
+            fieldDict.add(dictList[i].keyword(), dictList[i].dict());
+        }
+
+        if (dictList.size())
+        {
+            Info<< "Loaded dictionary " << dictList.name()
+                << " with entries " << fieldDict.toc() << endl;
+        }
+
+        // Extract any patchGroups information (= shortcut for set of
+        // patches)
+        HashTable<wordList, word> patchGroups;
+        if (!disablePatchGroups)
+        {
+            patchGroups = extractPatchGroups(fieldDict);
+            if (patchGroups.size())
+            {
+                Info<< "Extracted patch groups:" << endl;
+                wordList groups(patchGroups.sortedToc());
+                forAll(groups, i)
+                {
+                    Info<< "    group " << groups[i] << " with patches "
+                        << patchGroups[groups[i]] << endl;
+                }
+            }
+        }
+
+
+        // Every replacement is a dictionary name and a keyword in this
+
+        forAllConstIter(dictionary, replaceDicts, fieldIter)
+        {
+            const word& fieldName = fieldIter().keyword();
+            Info<< "Replacing entries in dictionary " << fieldName << endl;
+
+            // Handle 'boundary' specially:
+            // - is PtrList of dictionaries
+            // - is in polyMesh/
+            if (fieldName == "boundary")
+            {
+                Info<< "Special handling of " << fieldName
+                    << " as polyMesh/boundary file." << endl;
+
+                // Get the replacement dictionary for the field
+                const dictionary& replaceDict = fieldIter().dict();
+                Info<< "Merging entries from " << replaceDict.toc() << endl;
+
+                // Merge the replacements in
+                merge(fieldDict, replaceDict, literalRE, patchGroups);
+
+                Info<< "fieldDict:" << fieldDict << endl;
+
+                // Convert back into dictList
+                wordList doneKeys(dictList.size());
+
+                label nEntries = fieldDict.size();
+
+                forAll(dictList, i)
+                {
+                    doneKeys[i] = dictList[i].keyword();
+                    dictList.set
+                    (
+                        i,
+                        fieldDict.lookupEntry
+                        (
+                            doneKeys[i],
+                            false,
+                            true
+                        ).clone()
+                    );
+                    fieldDict.remove(doneKeys[i]);
+                }
+
+                // Add remaining entries
+                label sz = dictList.size();
+                dictList.setSize(nEntries);
+                forAllConstIter(dictionary, fieldDict, iter)
+                {
+                    dictList.set(sz++, iter().clone());
+                }
+
+                Info<< "Writing modified " << fieldName << endl;
+                dictList.writeObject
+                (
+                    runTime.writeFormat(),
+                    runTime.writeFormat(),
+                    IOstream::UNCOMPRESSED
+                );
+            }
+            else
+            {
+                // Read dictionary. (disable class type checking so we can load
+                // field)
+                Info<< "Loading dictionary " << fieldName << endl;
+                const word oldTypeName = IOdictionary::typeName;
+                const_cast<word&>(IOdictionary::typeName) = word::null;
+
+                IOdictionary fieldDict
+                (
+                    IOobject
+                    (
+                        fieldName,
+                        instance,
+                        mesh,
+                        IOobject::MUST_READ_IF_MODIFIED,
+                        IOobject::NO_WRITE,
+                        false
+                    )
+                );
+
+                const_cast<word&>(IOdictionary::typeName) = oldTypeName;
+
+                // Fake type back to what was in field
+                const_cast<word&>(fieldDict.type()) =
+                    fieldDict.headerClassName();
+
+                Info<< "Loaded dictionary " << fieldName
+                    << " with entries " << fieldDict.toc() << endl;
+
+                // Get the replacement dictionary for the field
+                const dictionary& replaceDict = fieldIter().dict();
+                Info<< "Merging entries from " << replaceDict.toc() << endl;
+
+                // Merge the replacements in
+                merge(fieldDict, replaceDict, literalRE, patchGroups);
+
+                Info<< "Writing modified fieldDict " << fieldName << endl;
+                fieldDict.regIOobject::write();
+            }
+        }
+
+        entry::disableFunctionEntries = oldFlag;
+    }
 
     Info<< "\nEnd\n" << endl;
 
