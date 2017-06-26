@@ -123,6 +123,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
     if (tabulation_->log())
     {
         cpuAddFile_ = logFile("cpu_add.out");
+        cpuGrowFile_ = logFile("cpu_grow.out");
         cpuRetrieveFile_ = logFile("cpu_retrieve.out");
     }
 
@@ -613,6 +614,7 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
     clockTime_.timeIncrement();
     scalar reduceMechCpuTime_ = 0;
     scalar addNewLeafCpuTime_ = 0;
+    scalar growCpuTime_ = 0;
     scalar solveChemistryCpuTime_ = 0;
     scalar searchISATCpuTime_ = 0;
 
@@ -703,16 +705,19 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
         // (it will either expand the current data or add a new stored point).
         else
         {
-            clockTime_.timeIncrement();
+            // Store total time waiting to attribute to add or grow
+            scalar timeTmp = clockTime_.timeIncrement();
+
             if (reduced)
             {
                 // Reduce mechanism change the number of species (only active)
                 mechRed_->reduceMechanism(c, Ti, pi);
                 nActiveSpecies += mechRed_->NsSimp();
                 nAvg++;
+                scalar timeIncr = clockTime_.timeIncrement();
+                reduceMechCpuTime_ += timeIncr;
+                timeTmp += timeIncr;
             }
-
-            reduceMechCpuTime_ += clockTime_.timeIncrement();
 
             // Calculate the chemical source terms
             while (timeLeft > SMALL)
@@ -742,7 +747,11 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
                 timeLeft -= dt;
             }
 
-            solveChemistryCpuTime_ += clockTime_.timeIncrement();
+            {
+                scalar timeIncr = clockTime_.timeIncrement();
+                solveChemistryCpuTime_ += timeIncr;
+                timeTmp += timeIncr;
+            }
 
             // If tabulation is used, we add the information computed here to
             // the stored points (either expand or add)
@@ -768,13 +777,14 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
                 if (growOrAdd)
                 {
                     this->setTabulationResultsAdd(celli);
+                    addNewLeafCpuTime_ += clockTime_.timeIncrement() + timeTmp;
                 }
                 else
                 {
                     this->setTabulationResultsGrow(celli);
+                    growCpuTime_ += clockTime_.timeIncrement() + timeTmp;
                 }
             }
-            addNewLeafCpuTime_ += clockTime_.timeIncrement();
 
             // When operations are done and if mechanism reduction is active,
             // the number of species (which also affects nEqns) is set back
@@ -821,6 +831,10 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
             cpuRetrieveFile_()
                 << this->time().timeOutputValue()
                 << "    " << searchISATCpuTime_ << endl;
+
+            cpuGrowFile_()
+                << this->time().timeOutputValue()
+                << "    " << growCpuTime_ << endl;
 
             cpuAddFile_()
                 << this->time().timeOutputValue()

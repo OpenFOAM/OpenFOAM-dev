@@ -111,6 +111,9 @@ class TDACChemistryModel
         //- Log file for the average time spent adding tabulated data
         autoPtr<OFstream> cpuAddFile_;
 
+        //- Log file for the average time spent growing tabulated data
+        autoPtr<OFstream> cpuGrowFile_;
+
         //- Log file for the average time spent retrieving tabulated data
         autoPtr<OFstream> cpuRetrieveFile_;
 
