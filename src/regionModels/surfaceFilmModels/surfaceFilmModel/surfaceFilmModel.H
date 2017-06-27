@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,6 +93,9 @@ public:
 
     //- Runtime type information
     TypeName("surfaceFilmModel");
+
+    //- Reference temperature for enthalpy
+    static const dimensionedScalar Tref;
 
 
     // Declare runtime constructor selection table
@@ -191,6 +194,9 @@ public:
 
             //- Return the film wall temperature [K]
             virtual const volScalarField& Tw() const = 0;
+
+            //- Return the film surface temperature [J/kg]
+            virtual const volScalarField& hs() const = 0;
 
             //- Return the film specific heat capacity [J/kg/K]
             virtual const volScalarField& Cp() const = 0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ SourceFiles
 #include "fvMatrices.H"
 
 #include "injectionModelList.H"
+#include "transferModelList.H"
 #include "forceList.H"
 #include "filmTurbulenceModel.H"
 
@@ -108,37 +109,37 @@ protected:
 
             // Fields
 
-                //- Density / [kg/m3]
+                //- Density [kg/m3]
                 volScalarField rho_;
 
-                //- Dynamic viscosity / [Pa.s]
+                //- Dynamic viscosity [Pa.s]
                 volScalarField mu_;
 
-                //- Surface tension / [m/s2]
+                //- Surface tension [m/s2]
                 volScalarField sigma_;
 
 
         // Fields
 
-            //- Film thickness / [m]
+            //- Film thickness [m]
             volScalarField delta_;
 
-            //- Film coverage indicator, 1 = covered, 0 = uncovered / []
+            //- Film coverage indicator, 1 = covered, 0 = uncovered []
             volScalarField alpha_;
 
-            //- Velocity - mean / [m/s]
+            //- Velocity - mean [m/s]
             volVectorField U_;
 
-            //- Velocity - surface / [m/s]
+            //- Velocity - surface [m/s]
             volVectorField Us_;
 
-            //- Velocity - wall / [m/s]
+            //- Velocity - wall [m/s]
             volVectorField Uw_;
 
-            //- Film thickness*density (helper field) / [kg/m2]
+            //- Film thickness*density (helper field) [kg/m2]
             volScalarField deltaRho_;
 
-            //- Mass flux (includes film thickness) / [kg.m/s]
+            //- Mass flux (includes film thickness) [kg.m/s]
             surfaceScalarField phi_;
 
 
@@ -160,42 +161,42 @@ protected:
             // Note: need boundary value mapped from primary region, and then
             // pushed into the patch internal field
 
-                //- Momementum / [kg/m/s2]
+                //- Momementum [kg/m/s2]
                 volVectorField USp_;
 
-                //- Pressure / [Pa]
+                //- Pressure [Pa]
                 volScalarField pSp_;
 
-                //- Mass / [kg/m2/s]
+                //- Mass [kg/m2/s]
                 volScalarField rhoSp_;
 
 
             // Primary region - registered to the primary region mesh
             // Internal use only - not read-in
 
-                //- Momementum / [kg/m/s2]
+                //- Momementum [kg/m/s2]
                 volVectorField USpPrimary_;
 
-                //- Pressure / [Pa]
+                //- Pressure [Pa]
                 volScalarField pSpPrimary_;
 
-                //- Mass / [kg/m2/s]
+                //- Mass [kg/m2/s]
                 volScalarField rhoSpPrimary_;
 
 
         // Fields mapped from primary region - registered to the film region
         // Note: need both boundary AND patch internal fields to be mapped
 
-            //- Velocity / [m/s]
+            //- Velocity [m/s]
             volVectorField UPrimary_;
 
-            //- Pressure / [Pa]
+            //- Pressure [Pa]
             volScalarField pPrimary_;
 
-            //- Density / [kg/m3]
+            //- Density [kg/m3]
             volScalarField rhoPrimary_;
 
-            //- Viscosity / [Pa.s]
+            //- Viscosity [Pa.s]
             volScalarField muPrimary_;
 
 
@@ -209,6 +210,9 @@ protected:
 
             //- Cloud injection
             injectionModelList injection_;
+
+            //- Transfer with the continuous phase
+            transferModelList transfer_;
 
             //- Turbulence model
             autoPtr<filmTurbulenceModel> turbulence_;
@@ -337,19 +341,19 @@ public:
 
         // Thermo properties
 
-            //- Return const access to the dynamic viscosity / [Pa.s]
+            //- Return const access to the dynamic viscosity [Pa.s]
             inline const volScalarField& mu() const;
 
-            //- Return const access to the surface tension / [kg/s2]
+            //- Return const access to the surface tension [kg/s2]
             inline const volScalarField& sigma() const;
 
 
         // Fields
 
-            //- Return const access to the film thickness / [m]
+            //- Return const access to the film thickness [m]
             inline const volScalarField& delta() const;
 
-            //- Return the film coverage, 1 = covered, 0 = uncovered / []
+            //- Return the film coverage, 1 = covered, 0 = uncovered []
             inline const volScalarField& alpha() const;
 
             //- Return the film velocity [m/s]
@@ -378,6 +382,9 @@ public:
 
             //- Return the film wall temperature [K]
             virtual const volScalarField& Tw() const;
+
+            //- Return the film surface enthalpy [J/kg]
+            virtual const volScalarField& hs() const;
 
             //- Return the film specific heat capacity [J/kg/K]
             virtual const volScalarField& Cp() const;
@@ -416,49 +423,49 @@ public:
 
             // Primary region
 
-                //- Momementum / [kg/m/s2]
+                //- Momementum [kg/m/s2]
                 inline volVectorField& USpPrimary();
 
-                //- Pressure / [Pa]
+                //- Pressure [Pa]
                 inline volScalarField& pSpPrimary();
 
-                //- Mass / [kg/m2/s]
+                //- Mass [kg/m2/s]
                 inline volScalarField& rhoSpPrimary();
 
 
             // Film region
 
-                //- Momentum / [kg/m/s2]
+                //- Momentum [kg/m/s2]
                 inline volVectorField& USp();
 
-                //- Pressure / [Pa]
+                //- Pressure [Pa]
                 inline volScalarField& pSp();
 
-                //- Mass / [kg/m2/s]
+                //- Mass [kg/m2/s]
                 inline volScalarField& rhoSp();
 
-                //- Momentum / [kg/m/s2]
+                //- Momentum [kg/m/s2]
                 inline const volVectorField& USp() const;
 
-                //- Pressure / [Pa]
+                //- Pressure [Pa]
                 inline const volScalarField& pSp() const;
 
-                //- Mass / [kg/m2/s]
+                //- Mass [kg/m2/s]
                 inline const volScalarField& rhoSp() const;
 
 
         // Fields mapped from primary region
 
-            //- Velocity / [m/s]
+            //- Velocity [m/s]
             inline const volVectorField& UPrimary() const;
 
-            //- Pressure / [Pa]
+            //- Pressure [Pa]
             inline const volScalarField& pPrimary() const;
 
-            //- Density / [kg/m3]
+            //- Density [kg/m3]
             inline const volScalarField& rhoPrimary() const;
 
-            //- Viscosity / [Pa.s]
+            //- Viscosity [Pa.s]
             inline const volScalarField& muPrimary() const;
 
 
@@ -469,6 +476,9 @@ public:
 
             //- Injection
             inline injectionModelList& injection();
+
+            //- Transfer
+            inline transferModelList& transfer();
 
             //- Turbulence
             inline const filmTurbulenceModel& turbulence() const;

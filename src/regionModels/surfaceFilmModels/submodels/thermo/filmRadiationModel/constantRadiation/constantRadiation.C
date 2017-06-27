@@ -85,7 +85,7 @@ constantRadiation::constantRadiation
     timeStart_(readScalar(coeffDict_.lookup("timeStart"))),
     duration_(readScalar(coeffDict_.lookup("duration")))
 {
-    mask_ = pos(mask_);
+    mask_ = pos0(mask_);
 }
 
 

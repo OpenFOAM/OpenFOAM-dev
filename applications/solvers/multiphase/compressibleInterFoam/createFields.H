@@ -87,10 +87,7 @@ surfaceScalarField rhoPhi
     fvc::interpolate(rho)*phi
 );
 
-volScalarField dgdt
-(
-    pos0(alpha2)*fvc::div(phi)/max(alpha2, scalar(0.0001))
-);
+volScalarField dgdt(alpha1*fvc::div(phi));
 
 // Construct compressible turbulence model
 autoPtr<compressible::turbulenceModel> turbulence

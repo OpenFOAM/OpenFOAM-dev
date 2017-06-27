@@ -173,6 +173,15 @@ const volScalarField& noFilm::Tw() const
 }
 
 
+const volScalarField& noFilm::hs() const
+{
+    FatalErrorInFunction
+        << "hs field not available for " << type() << abort(FatalError);
+
+    return volScalarField::null();
+}
+
+
 const volScalarField& noFilm::Cp() const
 {
     FatalErrorInFunction

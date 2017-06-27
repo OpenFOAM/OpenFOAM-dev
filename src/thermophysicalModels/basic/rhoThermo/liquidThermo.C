@@ -62,6 +62,35 @@ addToRunTimeSelectionTable
 );
 
 
+defineTemplateTypeNameAndDebugWithName
+(
+    heRhoThermopureMixtureEnthalpyliquidProperties,
+    "heRhoThermo<pureMixture<liquid,sensibleEnthalpy>>",
+    0
+);
+
+addToRunTimeSelectionTable
+(
+    basicThermo,
+    heRhoThermopureMixtureEnthalpyliquidProperties,
+    fvMesh
+);
+
+addToRunTimeSelectionTable
+(
+    fluidThermo,
+    heRhoThermopureMixtureEnthalpyliquidProperties,
+    fvMesh
+);
+
+addToRunTimeSelectionTable
+(
+    rhoThermo,
+    heRhoThermopureMixtureEnthalpyliquidProperties,
+    fvMesh
+);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam

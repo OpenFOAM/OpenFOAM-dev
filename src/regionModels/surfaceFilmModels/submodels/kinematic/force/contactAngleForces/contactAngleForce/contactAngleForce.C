@@ -85,7 +85,7 @@ void contactAngleForce::initialise()
         );
         dist.correct(y);
 
-        mask_ = pos(y - dimensionedScalar("dLim", dimLength, dLim));
+        mask_ = pos0(y - dimensionedScalar("dLim", dimLength, dLim));
     }
 }
 

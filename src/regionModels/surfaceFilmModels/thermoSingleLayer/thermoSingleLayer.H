@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,9 @@ Description
 
     Note: defining enthalpy as Cp(T - Tstd) - when using liquids from the
     thermophysical library, their enthalpies are calculated similarly, where
-    Tstd = 298.15 K
+    Tstd = 298.15K.  This is clearly non-conservative unless the heat-capacity
+    is constant and should be rewritten to use the standard thermodynamics
+    packages.
 
 SourceFiles
     thermoSingleLayer.C
@@ -89,32 +91,29 @@ protected:
 
             // Fields
 
-                //- Specific heat capacity / [J/kg/K]
+                //- Specific heat capacity [J/kg/K]
                 volScalarField Cp_;
 
-                //- Thermal conductivity / [W/m/K]
+                //- Thermal conductivity [W/m/K]
                 volScalarField kappa_;
 
-                //- Temperature - mean / [K]
+                //- Temperature - mean [K]
                 volScalarField T_;
 
-                //- Temperature - surface / [K]
+                //- Temperature - surface [K]
                 volScalarField Ts_;
 
-                //- Temperature - wall / [K]
+                //- Temperature - wall [K]
                 volScalarField Tw_;
 
-                //- Sensible enthalpy / [J/kg]
+                //- Sensible enthalpy [J/kg]
                 volScalarField hs_;
 
 
             // Transfer fields - to the primary region
 
-                //- Film mass evolved via phase change
-                volScalarField primaryMassPCTrans_;
-
-                //- Film energy evolved via phase change
-                volScalarField primaryEnergyPCTrans_;
+                //- Film energy transfer
+                volScalarField primaryEnergyTrans_;
 
 
         //- Threshold film thickness beyond which the film is considered 'wet'
@@ -141,24 +140,24 @@ protected:
             // Note: need boundary value mapped from primary region, and then
             // pushed into the patch internal field
 
-                //- Energy / [J/m2/s]
+                //- Energy [J/m2/s]
                 volScalarField hsSp_;
 
 
             // Primary region - registered to the primary region mesh
             // Internal use only - not read-in
 
-                //- Energy / [J/m2/s]
+                //- Energy [J/m2/s]
                 volScalarField hsSpPrimary_;
 
 
         // Fields mapped from primary region - registered to the film region
         // Note: need both boundary AND patch internal fields to be mapped
 
-            //- Temperature / [K]
+            //- Temperature [K]
             volScalarField TPrimary_;
 
-            //- List of specie mass fractions / [0-1]
+            //- List of specie mass fractions [0-1]
             PtrList<volScalarField> YPrimary_;
 
 
@@ -281,13 +280,6 @@ public:
                 virtual const volScalarField& hs() const;
 
 
-
-            // Transfer fields - to the primary region
-
-                //- Return mass transfer source - Eulerian phase only
-                virtual tmp<volScalarField> primaryMassTrans() const;
-
-
             // Helper functions
 
                 //- Return sensible enthalpy as a function of temperature
@@ -329,22 +321,22 @@ public:
 
             // Film region
 
-                //- Energy / [J/m2/s]
+                //- Energy [J/m2/s]
                 inline const volScalarField& hsSp() const;
 
 
             // Primary region
 
-                //- Energy / [J/m2/s]
+                //- Energy [J/m2/s]
                 inline const volScalarField& hsSpPrimary() const;
 
 
         // Fields mapped from the primary region
 
-            //- Temperature / [K]
+            //- Temperature [K]
             inline const volScalarField& TPrimary() const;
 
-            //- Specie mass fractions / [0-1]
+            //- Specie mass fractions [0-1]
             inline const PtrList<volScalarField>& YPrimary() const;
 
 

@@ -63,8 +63,8 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
     thermo1_ = rhoThermo::New(U.mesh(), phase1Name());
     thermo2_ = rhoThermo::New(U.mesh(), phase2Name());
 
-    thermo1_->validate(phase1Name(), "e");
-    thermo2_->validate(phase2Name(), "e");
+    // thermo1_->validate(phase1Name(), "e");
+    // thermo2_->validate(phase2Name(), "e");
 
     correct();
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "surfaceFilmModel.H"
-#include "fvMesh.H"
+#include "transferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,82 +36,74 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(surfaceFilmModel, 0);
-defineRunTimeSelectionTable(surfaceFilmModel, mesh);
-
-const dimensionedScalar surfaceFilmModel::Tref("Tref", dimTemperature, 298.15);
+defineTypeNameAndDebug(transferModel, 0);
+defineRunTimeSelectionTable(transferModel, dictionary);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-bool surfaceFilmModel::read()
+void transferModel::addToTransferredMass(const scalar dMass)
 {
-    if (singleLayerRegion::read())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    transferredMass_ += dMass;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-surfaceFilmModel::surfaceFilmModel
+transferModel::transferModel(surfaceFilmModel& film)
+:
+    filmSubModelBase(film),
+    transferredMass_(0.0)
+{}
+
+
+transferModel::transferModel
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const dimensionedVector& g,
-    const word& regionType
+    surfaceFilmModel& film,
+    const dictionary& dict
 )
 :
-    singleLayerRegion(mesh, regionType, modelType),
-    g_(g)
-{
-    if (active_)
-    {
-        read();
-    }
-}
+    filmSubModelBase(film, dict, typeName, modelType),
+    transferredMass_(0)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-surfaceFilmModel::~surfaceFilmModel()
+transferModel::~transferModel()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::scalar surfaceFilmModel::CourantNumber() const
+void transferModel::correct()
 {
-    return ROOTVSMALL;
+    if (writeTime())
+    {
+        scalar transferredMass0 = getModelProperty<scalar>("transferredMass");
+        transferredMass0 += returnReduce(transferredMass_, sumOp<scalar>());
+        setModelProperty<scalar>("transferredMass", transferredMass0);
+        transferredMass_ = 0.0;
+    }
 }
 
-
-tmp<volScalarField::Internal> surfaceFilmModel::Srho() const
+void transferModel::correct
+(
+    scalarField& availableMass,
+    scalarField& massToTransfer,
+    scalarField& energyToTransfer
+)
 {
-    NotImplemented;
-
-    return tmp<volScalarField::Internal>(nullptr);
+    scalarField massToTransfer0(massToTransfer.size(), scalar(0));
+    correct(availableMass, massToTransfer0);
+    massToTransfer += massToTransfer0;
+    energyToTransfer += massToTransfer0*film().hs();
 }
 
-
-tmp<volScalarField::Internal>
-surfaceFilmModel::Srho(const label) const
+scalar transferModel::transferredMassTotal() const
 {
-    NotImplemented;
-
-    return tmp<volScalarField::Internal>(nullptr);
-}
-
-
-tmp<volScalarField::Internal> surfaceFilmModel::Sh() const
-{
-    NotImplemented;
-
-    return tmp<volScalarField::Internal>(nullptr);
+    scalar transferredMass0 = getModelProperty<scalar>("transferredMass");
+    return transferredMass0 + returnReduce(transferredMass_, sumOp<scalar>());
 }
 
 

@@ -1,0 +1,4 @@
+VoFPatchTransfer/VoFPatchTransfer.C
+compressibleInterFilmFoam.C
+
+EXE = $(FOAM_APPBIN)/compressibleInterFilmFoam

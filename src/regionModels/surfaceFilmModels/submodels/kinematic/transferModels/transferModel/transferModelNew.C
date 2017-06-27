@@ -23,52 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoThermo.H"
-#include "heRhoThermo.H"
-#include "pureMixture.H"
-#include "thermo.H"
-#include "sensibleInternalEnergy.H"
-#include "sensibleEnthalpy.H"
-#include "thermophysicalPropertiesSelector.H"
-#include "liquidProperties.H"
+#include "transferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace regionModels
+{
+namespace surfaceFilmModels
+{
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-typedef heRhoThermo
-<
-    rhoThermo,
-    pureMixture
-    <
-        species::thermo
-        <
-            thermophysicalPropertiesSelector<liquidProperties>,
-            sensibleInternalEnergy
-        >
-    >
-> heRhoThermopureMixtureliquidProperties;
+autoPtr<transferModel> transferModel::New
+(
+    surfaceFilmModel& model,
+    const dictionary& dict,
+    const word& modelType
+)
+{
+    Info<< "        " << modelType << endl;
 
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(modelType);
 
-typedef heRhoThermo
-<
-    rhoThermo,
-    pureMixture
-    <
-        species::thermo
-        <
-            thermophysicalPropertiesSelector<liquidProperties>,
-            sensibleEnthalpy
-        >
-    >
-> heRhoThermopureMixtureEnthalpyliquidProperties;
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown transferModel type " << modelType
+            << nl << nl << "Valid transferModel types are:" << nl
+            << dictionaryConstructorTablePtr_->toc()
+            << exit(FatalError);
+    }
+
+    return autoPtr<transferModel>(cstrIter()(model, dict));
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace surfaceFilmModels
+} // End namespace regionModels
 } // End namespace Foam
 
 // ************************************************************************* //
