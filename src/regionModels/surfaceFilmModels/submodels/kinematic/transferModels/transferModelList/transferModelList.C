@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,10 @@ transferModelList::transferModelList
     ),
     massTransferred_(film.intCoupledPatchIDs().size(), 0.0)
 {
-    const wordList activeModels(dict.lookup("transferModels"));
+    const wordList activeModels
+    (
+        dict.lookupOrDefault("transferModels", wordList::null())
+    );
 
     wordHashSet models;
     forAll(activeModels, i)
