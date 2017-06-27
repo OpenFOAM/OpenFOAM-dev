@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
         u, v, w  = global cartesian velocity components [m/s]
         d        = diameter [m]
         rho      = density [kg/m3]
-        mDot     = mass flow rate [kg/m3]
+        mDot     = mass flow rate [kg/s]
         T        = temperature [K]
         cp       = specific heat capacity [J/kg/K]
         Y(3)     = total mass fraction of gas (Y0), liquid (Y1), solid (Y3)
