@@ -1059,23 +1059,7 @@ const volScalarField& kinematicSingleLayer::kappa() const
 
 tmp<volScalarField> kinematicSingleLayer::primaryMassTrans() const
 {
-    return tmp<volScalarField>
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                typeName + ":primaryMassTrans",
-                time().timeName(),
-                primaryMesh(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
-            primaryMesh(),
-            dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
-        )
-    );
+    return primaryMassTrans_;
 }
 
 
