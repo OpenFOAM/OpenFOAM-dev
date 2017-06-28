@@ -72,7 +72,10 @@ VoFPatchTransfer::VoFPatchTransfer
     )
 {
     const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
-    patchIDs_.setSize(pbm.size());
+    patchIDs_.setSize
+    (
+        pbm.size() - film.regionMesh().globalData().processorPatches().size()
+    );
 
     if (coeffDict_.found("patches"))
     {
@@ -100,7 +103,7 @@ VoFPatchTransfer::VoFPatchTransfer
             patchIDs_[patchi] = patchi;
         }
 
-        patchTransferredMasses_.setSize(pbm.size(), 0);
+        patchTransferredMasses_.setSize(patchIDs_.size(), 0);
     }
 
     if (!patchIDs_.size())

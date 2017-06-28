@@ -158,7 +158,11 @@ void transferModelList::info(Ostream& os)
     const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
 
     scalar transferredMass = 0;
-    scalarField patchTransferredMasses(pbm.size(), 0);
+    scalarField patchTransferredMasses
+    (
+        pbm.size() - film().regionMesh().globalData().processorPatches().size(),
+        0
+    );
 
     forAll(*this, i)
     {
@@ -169,7 +173,7 @@ void transferModelList::info(Ostream& os)
 
     os  << indent << "transferred mass      = " << transferredMass << nl;
 
-    forAll(pbm, patchi)
+    forAll(patchTransferredMasses, patchi)
     {
         if (mag(patchTransferredMasses[patchi]) > VSMALL)
         {
@@ -178,7 +182,7 @@ void transferModelList::info(Ostream& os)
         }
     }
 
-    scalarField mass0(massTransferred_.size(), 0.0);
+    scalarField mass0(massTransferred_.size(), 0);
     this->getBaseProperty("massTransferred", mass0);
 
     scalarField mass(massTransferred_);

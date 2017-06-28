@@ -52,7 +52,10 @@ patchInjection::patchInjection
     deltaStable_(coeffDict_.lookupOrDefault<scalar>("deltaStable", 0.0))
 {
     const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
-    patchIDs_.setSize(pbm.size());
+    patchIDs_.setSize
+    (
+        pbm.size() - film.regionMesh().globalData().processorPatches().size()
+    );
 
     if (coeffDict_.found("patches"))
     {
@@ -80,7 +83,7 @@ patchInjection::patchInjection
             patchIDs_[patchi] = patchi;
         }
 
-        patchInjectedMasses_.setSize(pbm.size(), 0);
+        patchInjectedMasses_.setSize(patchIDs_.size(), 0);
     }
 
     if (!patchIDs_.size())
