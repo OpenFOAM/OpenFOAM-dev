@@ -1,0 +1,24 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Reports the height of the interface above a set of locations. For each
+    location, it writes the distance from the boundary to the interface,
+    intersecting the location. It uses an integral approach, which computes an
+    average where for multiple interfaces above or below a location.
+
+\*---------------------------------------------------------------------------*/
+
+#includeEtc "caseDicts/postProcessing/probes/interfaceHeight.cfg"
+
+alpha      alpha.water;
+locations
+(
+    (0 0 0)
+);
+
+// ************************************************************************* //
