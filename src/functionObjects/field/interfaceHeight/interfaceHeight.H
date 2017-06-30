@@ -26,10 +26,11 @@ Class
 
 Description
     This function object reports the height of the interface above a set of
-    locations. It writes the height above the location, above the boundary,
-    and the point on the interface. It uses an integral approach, so if there
-    are multiple interfaces above or below a location, this method will return
-    an average height.
+    locations. For each location, it writes the vertical distance of the
+    interface above both the location and the lowest boundary. It also writes
+    the point on the interface from which these heights are computed. It uses
+    an integral approach, so if there are multiple interfaces above or below a
+    location then this method will generate average values.
 
     Example of function object specification:
     \verbatim
