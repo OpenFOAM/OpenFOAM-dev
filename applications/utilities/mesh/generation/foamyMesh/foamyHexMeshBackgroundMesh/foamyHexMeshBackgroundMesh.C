@@ -2,7 +2,7 @@
  =========                   |
  \\      /   F ield          | OpenFOAM: The Open Source CFD Toolbox
   \\    /    O peration      |
-   \\  /     A nd            | Copyright (C) 2012-2016 OpenFOAM Foundation
+   \\  /     A nd            | Copyright (C) 2012-2017 OpenFOAM Foundation
     \\/      M anipulation   |
 -------------------------------------------------------------------------------
 License
@@ -311,7 +311,7 @@ tmp<scalarField> signedDistance
 )
 {
     tmp<scalarField> tfld(new scalarField(points.size(), Foam::sqr(GREAT)));
-    scalarField& fld = tfld();
+    scalarField& fld = tfld.ref();
 
     // Find nearest
     List<pointIndexHit> nearest;
@@ -647,7 +647,8 @@ int main(int argc, char *argv[])
             forAll(fvm.C().boundaryField(), patchi)
             {
                 const pointField& cc = fvm.C().boundaryField()[patchi];
-                fvPatchScalarField& fld = cellDistance.boundaryField()[patchi];
+                fvPatchScalarField& fld =
+                    cellDistance.boundaryFieldRef()[patchi];
                 scalarField patchDistSqr
                 (
                     fld.patch().patchInternalField(distSqr)
