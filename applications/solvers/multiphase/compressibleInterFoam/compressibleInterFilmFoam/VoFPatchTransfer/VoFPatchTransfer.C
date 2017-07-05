@@ -237,7 +237,6 @@ void VoFPatchTransfer::correct
                 if
                 (
                     alphap[facei] > 0
-                 && delta[celli] > 0
                  && delta[celli] < 2*deltaFactorToFilm_/deltaCoeffs[facei]
                  && alphap[facei] < alphaToFilm_
                 )
