@@ -183,6 +183,27 @@ Foam::fileOperations::collatedFileOperation::collatedFileOperation
         Info<< "I/O    : " << typeName
             << " (maxThreadFileBufferSize " << maxThreadFileBufferSize
             << ')' << endl;
+
+        if (maxThreadFileBufferSize == 0)
+        {
+            Info<< "         Threading not activated "
+                   "since maxThreadFileBufferSize = 0." << nl
+                << "         Writing may run slowly for large file sizes."
+                << endl;
+        }
+        else
+        {
+            Info<< "         Threading activated "
+                   "since maxThreadFileBufferSize > 0." << nl
+                << "         Requires thread support enabled in MPI, "
+                   "otherwise the simulation" << nl
+                << "         may \"hang\".  If thread support cannot be "
+                   "enabled, deactivate threading" << nl
+                << "         by setting maxThreadFileBufferSize to 0 in "
+                   "$FOAM_ETC/controlDict"
+                << endl;
+        }
+
         if
         (
             regIOobject::fileModificationChecking
@@ -192,6 +213,7 @@ Foam::fileOperations::collatedFileOperation::collatedFileOperation
             WarningInFunction
                 << "Resetting fileModificationChecking to inotify" << endl;
         }
+
         if
         (
             regIOobject::fileModificationChecking
