@@ -5,5 +5,6 @@ wclean libso twoPhaseMixtureThermo
 wclean libso surfaceTensionModels
 wclean
 wclean compressibleInterDyMFoam
+wclean compressibleInterFilmFoam
 
 #------------------------------------------------------------------------------
