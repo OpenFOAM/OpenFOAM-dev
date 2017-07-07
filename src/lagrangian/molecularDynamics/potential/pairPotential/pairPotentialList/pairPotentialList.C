@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,19 +116,26 @@ void Foam::pairPotentialList::readPairPotentialDict
 
             if ((*this)[pairPotentialIndex(a, b)].writeTables())
             {
-                OFstream ppTabFile(mesh.time().path()/pairPotentialName);
+                fileHandler().mkDir(mesh.time().path());
+                autoPtr<Ostream> ppTabFile
+                (
+                    fileHandler().NewOFstream
+                    (
+                        mesh.time().path()/pairPotentialName
+                    )
+                );
 
                 if
                 (
                     !(*this)[pairPotentialIndex(a, b)].writeEnergyAndForceTables
                     (
-                        ppTabFile
+                        ppTabFile()
                     )
                 )
                 {
                     FatalErrorInFunction
                         << "Failed writing to "
-                        << ppTabFile.name() << nl
+                        << ppTabFile().name() << nl
                         << abort(FatalError);
                 }
             }
@@ -155,13 +162,20 @@ void Foam::pairPotentialList::readPairPotentialDict
 
     if (electrostaticPotential_->writeTables())
     {
-        OFstream ppTabFile(mesh.time().path()/"electrostatic");
+        fileHandler().mkDir(mesh.time().path());
+        autoPtr<Ostream> ppTabFile
+        (
+            fileHandler().NewOFstream
+            (
+                mesh.time().path()/"electrostatic"
+            )
+        );
 
-        if (!electrostaticPotential_->writeEnergyAndForceTables(ppTabFile))
+        if (!electrostaticPotential_->writeEnergyAndForceTables(ppTabFile()))
         {
             FatalErrorInFunction
                 << "Failed writing to "
-                << ppTabFile.name() << nl
+                << ppTabFile().name() << nl
                 << abort(FatalError);
         }
     }

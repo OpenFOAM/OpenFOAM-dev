@@ -28,7 +28,7 @@ int USERD_set_filenames
         // remove the last '/' from rootDir
         if (the_path[lRoot-1] == '/')
         {
-            the_path[lRoot-1] = char(NULL);
+            the_path[lRoot-1] = '\0';
         }
         else
         {
@@ -171,7 +171,7 @@ int USERD_set_filenames
         false
     );
 
-    if (sprayHeader.headerOk())
+    if (sprayHeader.typeHeaderOk<Cloud<passiveParticle>>(false))
     {
         Info<< "[Found lagrangian]" << endl;
 

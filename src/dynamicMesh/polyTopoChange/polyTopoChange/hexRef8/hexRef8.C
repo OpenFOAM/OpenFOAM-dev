@@ -5747,16 +5747,16 @@ void Foam::hexRef8::setUnrefinement
 
 
 // Write refinement to polyMesh directory.
-bool Foam::hexRef8::write() const
+bool Foam::hexRef8::write(const bool valid) const
 {
     bool writeOk =
-        cellLevel_.write()
-     && pointLevel_.write()
-     && level0Edge_.write();
+        cellLevel_.write(valid)
+     && pointLevel_.write(valid)
+     && level0Edge_.write(valid);
 
     if (history_.active())
     {
-        writeOk = writeOk && history_.write();
+        writeOk = writeOk && history_.write(valid);
     }
 
     return writeOk;

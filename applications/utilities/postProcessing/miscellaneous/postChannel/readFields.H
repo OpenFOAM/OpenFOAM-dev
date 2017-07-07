@@ -6,7 +6,7 @@
         IOobject::MUST_READ
     );
 
-    if (!UMeanHeader.headerOk())
+    if (!UMeanHeader.typeHeaderOk<volVectorField>(true))
     {
         Info<< "    No UMean field" << endl;
         continue;

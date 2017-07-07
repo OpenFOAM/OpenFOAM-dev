@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,9 +80,9 @@ public:
         //- Inherit readData from regIOobject
         using regIOobject::readData;
 
-        virtual void readData(CloudType& c, bool checkClass);
+        virtual void readData(Istream&, CloudType&);
 
-        virtual bool write() const;
+        virtual bool write(const bool valid = true) const;
 
         virtual bool writeData(Ostream& os) const;
 };

@@ -13,6 +13,6 @@ if (timeDirs.size() > 1)
             polyMesh::meshSubDir,
             mesh,
             IOobject::NO_READ
-        ).headerOk();
+        ).typeHeaderOk<pointIOField>(true);
     }
 }

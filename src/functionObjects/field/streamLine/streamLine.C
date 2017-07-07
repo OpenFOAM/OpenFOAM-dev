@@ -533,7 +533,7 @@ bool Foam::functionObjects::streamLine::write()
             vtkPath = vtkPath/mesh_.name();
         }
         vtkPath = vtkPath/mesh_.time().timeName();
-
+        vtkPath.clean();
         mkDir(vtkPath);
 
         // Convert track positions

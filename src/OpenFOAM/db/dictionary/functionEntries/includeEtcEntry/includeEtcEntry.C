@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,10 @@ License
 
 #include "includeEtcEntry.H"
 #include "etcFiles.H"
-#include "IFstream.H"
 #include "stringOps.H"
 #include "addToMemberFunctionSelectionTable.H"
+#include "IOstreams.H"
+#include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -104,7 +105,10 @@ bool Foam::functionEntries::includeEtcEntry::execute
     (
         includeEtcFileName(rawFName, parentDict)
     );
-    IFstream ifs(fName);
+
+    //IFstream ifs(fName);
+    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+    ISstream& ifs = ifsPtr();
 
     if (ifs)
     {
@@ -142,7 +146,10 @@ bool Foam::functionEntries::includeEtcEntry::execute
     (
         includeEtcFileName(rawFName, parentDict)
     );
-    IFstream ifs(fName);
+
+    //IFstream ifs(fName);
+    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+    ISstream& ifs = ifsPtr();
 
     if (ifs)
     {

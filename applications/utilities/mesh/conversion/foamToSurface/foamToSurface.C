@@ -44,7 +44,7 @@ Usage
 #include "timeSelector.H"
 #include "Time.H"
 #include "polyMesh.H"
-
+#include "IOdictionary.H"
 #include "MeshedSurfaces.H"
 
 using namespace Foam;

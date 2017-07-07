@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,8 @@ int main(int argc, char *argv[])
         (
             format,
             IOstream::currentVersion,
-            IOstream::UNCOMPRESSED
+            IOstream::UNCOMPRESSED,
+            true
         );
 
         Info<< "Written old format faceList in = "
@@ -149,7 +150,8 @@ int main(int argc, char *argv[])
         (
             format,
             IOstream::currentVersion,
-            IOstream::UNCOMPRESSED
+            IOstream::UNCOMPRESSED,
+            true
         );
 
         Info<< "Written new format faceList in = "

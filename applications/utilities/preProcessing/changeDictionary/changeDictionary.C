@@ -428,7 +428,6 @@ int main(int argc, char *argv[])
         FatalErrorInFunction
             << "No times selected." << exit(FatalError);
     }
-
     forAll(times, timei)
     {
         word instance;
@@ -641,7 +640,8 @@ int main(int argc, char *argv[])
                 (
                     runTime.writeFormat(),
                     runTime.writeFormat(),
-                    IOstream::UNCOMPRESSED
+                    IOstream::UNCOMPRESSED,
+                    true
                 );
             }
             else

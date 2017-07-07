@@ -176,7 +176,7 @@ Foam::extendedEdgeMesh::classifyFeaturePoint
     label ptI
 ) const
 {
-    labelList ptEds(pointEdges()[ptI]);
+    const labelList& ptEds(pointEdges()[ptI]);
 
     label nPtEds = ptEds.size();
     label nExternal = 0;
@@ -287,10 +287,7 @@ Foam::extendedEdgeMesh::extendedEdgeMesh()
 {}
 
 
-Foam::extendedEdgeMesh::extendedEdgeMesh
-(
-    const extendedEdgeMesh& fem
-)
+Foam::extendedEdgeMesh::extendedEdgeMesh(const extendedEdgeMesh& fem)
 :
     edgeMesh(fem),
     concaveStart_(fem.concaveStart()),

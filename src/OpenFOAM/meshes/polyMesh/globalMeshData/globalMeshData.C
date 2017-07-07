@@ -1866,7 +1866,7 @@ const Foam::labelList& Foam::globalMeshData::sharedPointGlobalLabels() const
             IOobject::MUST_READ
         );
 
-        if (addrHeader.headerOk())
+        if (addrHeader.typeHeaderOk<labelIOList>(true))
         {
             // There is a pointProcAddressing file so use it to get labels
             // on the original mesh

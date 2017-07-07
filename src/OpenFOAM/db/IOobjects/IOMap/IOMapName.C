@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,13 @@ License
 namespace Foam
 {
     defineTemplateTypeNameAndDebug(IOMap<dictionary>, 0);
+
+    //- Template specialisation for obtaining filePath
+    template<>
+    fileName typeFilePath<IOMap<dictionary>>(const IOobject& io)
+    {
+        return io.globalFilePath(IOMap<dictionary>::typeName);
+    }
 }
 
 // ************************************************************************* //

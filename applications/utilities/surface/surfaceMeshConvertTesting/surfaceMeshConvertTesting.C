@@ -315,7 +315,9 @@ int main(int argc, char *argv[])
 
 
             Info<< "writing surfMesh as obj = oldSurfIn.obj" << endl;
-            surfIn.write("oldSurfIn.obj");
+
+            using Foam::surfMesh;
+            surfIn.write(fileName("oldSurfIn.obj"));
 
 
             Info<< "runTime.instance() = " << runTime.instance() << endl;
@@ -368,7 +370,7 @@ int main(int argc, char *argv[])
             surfOut.write();
 
             // write directly
-            surfOut.write("someName.ofs");
+            surfOut.surfMesh::write(fileName("someName.ofs"));
 
 #if 1
             const surfZoneList& zones = surfOut.surfZones();

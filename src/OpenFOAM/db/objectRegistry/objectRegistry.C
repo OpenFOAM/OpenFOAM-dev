@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -343,7 +343,8 @@ bool Foam::objectRegistry::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     bool ok = true;
@@ -363,7 +364,7 @@ bool Foam::objectRegistry::writeObject
 
         if (iter()->writeOpt() != NO_WRITE)
         {
-            ok = iter()->writeObject(fmt, ver, cmp) && ok;
+            ok = iter()->writeObject(fmt, ver, cmp, valid) && ok;
         }
     }
 

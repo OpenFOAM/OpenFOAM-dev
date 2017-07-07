@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,6 +213,8 @@ Foam::label Foam::probes::prepare()
         {
             probeDir = mesh_.time().path()/probeSubDir;
         }
+        // Remove ".."
+        probeDir.clean();
 
         // ignore known fields, close streams for fields that no longer exist
         forAllIter(HashPtrTable<OFstream>, probeFilePtrs_, iter)

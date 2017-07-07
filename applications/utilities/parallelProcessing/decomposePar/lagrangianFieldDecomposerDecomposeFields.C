@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,11 +188,12 @@ void Foam::lagrangianFieldDecomposer::decomposeFields
     const PtrList<GeoField>& fields
 ) const
 {
-    if (particleIndices_.size())
+    //if (particleIndices_.size())
     {
+        bool valid = particleIndices_.size() > 0;
         forAll(fields, fieldi)
         {
-            decomposeField(cloudName, fields[fieldi])().write();
+            decomposeField(cloudName, fields[fieldi])().write(valid);
         }
     }
 }
@@ -205,11 +206,12 @@ void Foam::lagrangianFieldDecomposer::decomposeFieldFields
     const PtrList<GeoField>& fields
 ) const
 {
-    if (particleIndices_.size())
+    //if (particleIndices_.size())
     {
+        bool valid = particleIndices_.size() > 0;
         forAll(fields, fieldi)
         {
-            decomposeFieldField(cloudName, fields[fieldi])().write();
+            decomposeFieldField(cloudName, fields[fieldi])().write(valid);
         }
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ Description
 #include "cellZoneSet.H"
 #include "faceZoneSet.H"
 #include "pointZoneSet.H"
+#include "IOdictionary.H"
+#include "collatedFileOperation.H"
 
 using namespace Foam;
 
@@ -191,6 +193,11 @@ polyMesh::readUpdateState meshReadUpdate(polyMesh& mesh)
 
 int main(int argc, char *argv[])
 {
+    // Specific to topoSet/setSet: quite often we want to block upon writing
+    // a set so we can immediately re-read it. So avoid use of threading
+    // for set writing.
+    fileOperations::collatedFileOperation::maxThreadFileBufferSize = 0;
+
     timeSelector::addOptions(true, false);
     #include "addDictOption.H"
     #include "addRegionOption.H"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -387,7 +387,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        Triangulation::number_of_vertices()
+        label(Triangulation::number_of_vertices())
     );
 
     labelIOField processorIndices
@@ -401,7 +401,7 @@ Foam::DelaunayMesh<Triangulation>::createMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        Triangulation::number_of_vertices()
+        label(Triangulation::number_of_vertices())
     );
 
     for

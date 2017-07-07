@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,12 +174,43 @@ int main(int argc, char *argv[])
     const bool allRegions = args.optionFound("allRegions");
 
 
-    // determine the processor count directly
-    label nProcs = 0;
-    while (isDir(args.path()/(word("processor") + name(nProcs))))
+    wordList regionNames;
+    wordList regionDirs;
+    if (allRegions)
     {
-        ++nProcs;
+        Info<< "Reconstructing for all regions in regionProperties" << nl
+            << endl;
+        regionProperties rp(runTime);
+        forAllConstIter(HashTable<wordList>, rp, iter)
+        {
+            const wordList& regions = iter();
+            forAll(regions, i)
+            {
+                if (findIndex(regionNames, regions[i]) == -1)
+                {
+                    regionNames.append(regions[i]);
+                }
+            }
+        }
+        regionDirs = regionNames;
     }
+    else
+    {
+        word regionName;
+        if (args.optionReadIfPresent("region", regionName))
+        {
+            regionNames = wordList(1, regionName);
+            regionDirs = regionNames;
+        }
+        else
+        {
+            regionNames = wordList(1, fvMesh::defaultRegion);
+            regionDirs = wordList(1, word::null);
+        }
+    }
+
+    // Determine the processor count
+    label nProcs = fileHandler().nProcs(args.path(), regionDirs[0]);
 
     if (!nProcs)
     {
@@ -222,9 +253,8 @@ int main(int argc, char *argv[])
 
     if (timeDirs.empty())
     {
-        FatalErrorInFunction
-            << "No times selected"
-            << exit(FatalError);
+        WarningInFunction << "No times selected";
+        exit(1);
     }
 
 
@@ -245,42 +275,6 @@ int main(int argc, char *argv[])
     forAll(databases, proci)
     {
         databases[proci].setTime(runTime);
-    }
-
-
-    wordList regionNames;
-    wordList regionDirs;
-    if (allRegions)
-    {
-        Info<< "Reconstructing for all regions in regionProperties" << nl
-            << endl;
-        regionProperties rp(runTime);
-        forAllConstIter(HashTable<wordList>, rp, iter)
-        {
-            const wordList& regions = iter();
-            forAll(regions, i)
-            {
-                if (findIndex(regionNames, regions[i]) == -1)
-                {
-                    regionNames.append(regions[i]);
-                }
-            }
-        }
-        regionDirs = regionNames;
-    }
-    else
-    {
-        word regionName;
-        if (args.optionReadIfPresent("region", regionName))
-        {
-            regionNames = wordList(1, regionName);
-            regionDirs = regionNames;
-        }
-        else
-        {
-            regionNames = wordList(1, fvMesh::defaultRegion);
-            regionDirs = wordList(1, word::null);
-        }
     }
 
 
@@ -550,16 +544,25 @@ int main(int argc, char *argv[])
 
                 forAll(databases, proci)
                 {
-                    fileNameList cloudDirs
+                    fileName lagrangianDir
                     (
-                        readDir
+                        fileHandler().filePath
                         (
                             databases[proci].timePath()
                           / regionDir
-                          / cloud::prefix,
-                            fileName::DIRECTORY
+                          / cloud::prefix
                         )
                     );
+
+                    fileNameList cloudDirs;
+                    if (!lagrangianDir.empty())
+                    {
+                        cloudDirs = fileHandler().readDir
+                        (
+                            lagrangianDir,
+                            fileName::DIRECTORY
+                        );
+                    }
 
                     forAll(cloudDirs, i)
                     {
@@ -995,12 +998,15 @@ int main(int argc, char *argv[])
             {
                 fileName uniformDir0
                 (
-                    databases[0].timePath()/regionDir/"uniform"
+                    fileHandler().filePath
+                    (
+                        databases[0].timePath()/regionDir/"uniform"
+                    )
                 );
 
-                if (isDir(uniformDir0))
+                if (!uniformDir0.empty() && fileHandler().isDir(uniformDir0))
                 {
-                    cp(uniformDir0, runTime.timePath()/regionDir);
+                    fileHandler().cp(uniformDir0, runTime.timePath()/regionDir);
                 }
             }
 
@@ -1010,12 +1016,15 @@ int main(int argc, char *argv[])
             {
                 fileName uniformDir0
                 (
-                    databases[0].timePath()/"uniform"
+                    fileHandler().filePath
+                    (
+                        databases[0].timePath()/"uniform"
+                    )
                 );
 
-                if (isDir(uniformDir0))
+                if (!uniformDir0.empty() && fileHandler().isDir(uniformDir0))
                 {
-                    cp(uniformDir0, runTime.timePath());
+                    fileHandler().cp(uniformDir0, runTime.timePath());
                 }
             }
         }

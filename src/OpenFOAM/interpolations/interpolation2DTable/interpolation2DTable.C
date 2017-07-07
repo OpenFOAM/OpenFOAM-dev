@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IFstream.H"
+//#include "IFstream.H"
 #include "openFoamTableReader.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //

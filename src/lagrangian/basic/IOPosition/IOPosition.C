@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,16 +48,9 @@ Foam::IOPosition<CloudType>::IOPosition(const CloudType& c)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::IOPosition<CloudType>::write() const
+bool Foam::IOPosition<CloudType>::write(const bool valid) const
 {
-    if (cloud_.size())
-    {
-        return regIOobject::write();
-    }
-    else
-    {
-        return true;
-    }
+    return regIOobject::write(cloud_.size());
 }
 
 
@@ -79,11 +72,9 @@ bool Foam::IOPosition<CloudType>::writeData(Ostream& os) const
 
 
 template<class CloudType>
-void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
+void Foam::IOPosition<CloudType>::readData(Istream& is, CloudType& c)
 {
     const polyMesh& mesh = c.pMesh();
-
-    Istream& is = readStream(checkClass ? typeName : "");
 
     token firstToken(is);
 
@@ -92,7 +83,10 @@ void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
         label s = firstToken.labelToken();
 
         // Read beginning of contents
-        is.readBeginList("IOPosition<CloudType>::readData(CloudType, bool)");
+        is.readBeginList
+        (
+            "IOPosition<CloudType>::readData(Istream&, CloudType&)"
+        );
 
         for (label i=0; i<s; i++)
         {
@@ -101,7 +95,7 @@ void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
         }
 
         // Read end of contents
-        is.readEndList("IOPosition<CloudType>::readData(CloudType, bool)");
+        is.readEndList("IOPosition<CloudType>::readData(Istream&, CloudType&)");
     }
     else if (firstToken.isPunctuation())
     {
@@ -125,7 +119,7 @@ void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
         {
             is.putBack(lastToken);
 
-            // Write position only
+            // Read position only
             c.append(new typename CloudType::particleType(mesh, is, false));
             is  >> lastToken;
         }
@@ -142,7 +136,7 @@ void Foam::IOPosition<CloudType>::readData(CloudType& c, bool checkClass)
     // Check state of IOstream
     is.check
     (
-        "void IOPosition<CloudType>::readData(CloudType&, bool)"
+        "void IOPosition<CloudType>::readData(Istream&, CloudType&)"
     );
 }
 

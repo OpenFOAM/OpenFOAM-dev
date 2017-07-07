@@ -19,7 +19,7 @@
             false
         );
 
-        if (io.headerOk())
+        if (io.typeHeaderOk<IOdictionary>(true))
         {
             IOdictionary timeObject
             (

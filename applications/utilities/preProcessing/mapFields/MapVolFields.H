@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,15 +44,12 @@ void MapVolFields
     const CombineOp& cop
 )
 {
+    typedef GeometricField<Type, fvPatchField, volMesh> fieldType;
+
     const fvMesh& meshSource = meshToMesh0Interp.fromMesh();
     const fvMesh& meshTarget = meshToMesh0Interp.toMesh();
 
-    word fieldClassName
-    (
-        GeometricField<Type, fvPatchField, volMesh>::typeName
-    );
-
-    IOobjectList fields = objects.lookupClass(fieldClassName);
+    IOobjectList fields = objects.lookupClass(fieldType::typeName);
 
     forAllIter(IOobjectList, fields, fieldIter)
     {
@@ -65,20 +62,15 @@ void MapVolFields
             IOobject::AUTO_WRITE
         );
 
-        if (fieldTargetIOobject.headerOk())
+        if (fieldTargetIOobject.typeHeaderOk<fieldType>(true))
         {
-            Info<< "    interpolating " << fieldIter()->name()
-                << endl;
+            Info<< "    interpolating " << fieldIter()->name() << endl;
 
             // Read field fieldSource
-            GeometricField<Type, fvPatchField, volMesh> fieldSource
-            (
-                *fieldIter(),
-                meshSource
-            );
+            fieldType fieldSource(*fieldIter(), meshSource);
 
             // Read fieldTarget
-            GeometricField<Type, fvPatchField, volMesh> fieldTarget
+            fieldType fieldTarget
             (
                 fieldTargetIOobject,
                 meshTarget

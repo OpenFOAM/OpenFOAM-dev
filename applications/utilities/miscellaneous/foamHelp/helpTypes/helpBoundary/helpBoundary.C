@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,7 +127,8 @@ void Foam::helpTypes::helpBoundary::execute
             IOobject::MUST_READ
         );
 
-        if (fieldHeader.headerOk())
+        // Check for any type of volField
+        if (fieldHeader.typeHeaderOk<volScalarField>(false))
         {
             if (args.optionFound("fixedValue"))
             {

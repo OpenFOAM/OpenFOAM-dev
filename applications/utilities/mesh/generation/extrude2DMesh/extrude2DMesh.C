@@ -44,6 +44,7 @@ Note
 #include "addPatchCellLayer.H"
 #include "patchToPoly2DMesh.H"
 #include "globalIndex.H"
+#include "IOdictionary.H"
 
 using namespace Foam;
 

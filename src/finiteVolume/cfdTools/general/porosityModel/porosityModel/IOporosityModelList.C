@@ -43,7 +43,7 @@ Foam::IOobject Foam::IOporosityModelList::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.headerOk())
+    if (io.typeHeaderOk<IOdictionary>(true))
     {
         Info<< "Creating porosity model list from " << io.name() << nl << endl;
 

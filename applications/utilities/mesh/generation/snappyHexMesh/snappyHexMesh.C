@@ -525,6 +525,7 @@ void extractSurface
           ? runTime.path()/".."/outFileName
           : runTime.path()/outFileName
         );
+        globalCasePath.clean();
 
         Info<< "Writing merged surface to " << globalCasePath << endl;
 

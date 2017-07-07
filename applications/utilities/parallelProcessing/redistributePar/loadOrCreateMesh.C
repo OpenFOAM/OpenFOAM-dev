@@ -115,7 +115,10 @@ Foam::autoPtr<Foam::fvMesh> Foam::loadOrCreateMesh
 
 
     // Check who has a mesh
-    const bool haveMesh = isDir(io.time().path()/io.instance()/meshSubDir);
+    const bool haveMesh = fileHandler().isDir
+    (
+        fileHandler().filePath(io.time().path()/io.instance()/meshSubDir)
+    );
 
     if (!haveMesh)
     {

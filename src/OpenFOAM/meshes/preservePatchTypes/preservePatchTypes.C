@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "preservePatchTypes.H"
 #include "polyBoundaryMeshEntries.H"
+#include "polyBoundaryMesh.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
@@ -56,7 +57,7 @@ void Foam::preservePatchTypes
             false
         );
 
-        if (patchEntriesHeader.headerOk())
+        if (patchEntriesHeader.typeHeaderOk<polyBoundaryMesh>(true))
         {
             // Create a list of entries from the boundary file.
             polyBoundaryMeshEntries patchEntries(patchEntriesHeader);

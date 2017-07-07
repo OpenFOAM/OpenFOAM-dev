@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,38 +93,40 @@ Foam::molecule::molecule
 
 void Foam::molecule::readFields(Cloud<molecule>& mC)
 {
-    if (!mC.size())
-    {
-        return;
-    }
+    bool valid = mC.size();
 
     particle::readFields(mC);
 
-    IOField<tensor> Q(mC.fieldIOobject("Q", IOobject::MUST_READ));
+    IOField<tensor> Q(mC.fieldIOobject("Q", IOobject::MUST_READ), valid);
     mC.checkFieldIOobject(mC, Q);
 
-    IOField<vector> v(mC.fieldIOobject("v", IOobject::MUST_READ));
+    IOField<vector> v(mC.fieldIOobject("v", IOobject::MUST_READ), valid);
     mC.checkFieldIOobject(mC, v);
 
-    IOField<vector> a(mC.fieldIOobject("a", IOobject::MUST_READ));
+    IOField<vector> a(mC.fieldIOobject("a", IOobject::MUST_READ), valid);
     mC.checkFieldIOobject(mC, a);
 
-    IOField<vector> pi(mC.fieldIOobject("pi", IOobject::MUST_READ));
+    IOField<vector> pi(mC.fieldIOobject("pi", IOobject::MUST_READ), valid);
     mC.checkFieldIOobject(mC, pi);
 
-    IOField<vector> tau(mC.fieldIOobject("tau", IOobject::MUST_READ));
+    IOField<vector> tau(mC.fieldIOobject("tau", IOobject::MUST_READ), valid);
     mC.checkFieldIOobject(mC, tau);
 
     IOField<vector> specialPosition
     (
-        mC.fieldIOobject("specialPosition", IOobject::MUST_READ)
+        mC.fieldIOobject("specialPosition", IOobject::MUST_READ),
+        valid
     );
     mC.checkFieldIOobject(mC, specialPosition);
 
-    IOField<label> special(mC.fieldIOobject("special", IOobject::MUST_READ));
+    IOField<label> special
+    (
+        mC.fieldIOobject("special", IOobject::MUST_READ),
+        valid
+    );
     mC.checkFieldIOobject(mC, special);
 
-    IOField<label> id(mC.fieldIOobject("id", IOobject::MUST_READ));
+    IOField<label> id(mC.fieldIOobject("id", IOobject::MUST_READ), valid);
     mC.checkFieldIOobject(mC, id);
 
     label i = 0;
@@ -220,21 +222,23 @@ void Foam::molecule::writeFields(const Cloud<molecule>& mC)
         i++;
     }
 
-    Q.write();
-    v.write();
-    a.write();
-    pi.write();
-    tau.write();
-    specialPosition.write();
-    special.write();
-    id.write();
+    const bool valid = np > 0;
 
-    piGlobal.write();
-    tauGlobal.write();
+    Q.write(valid);
+    v.write(valid);
+    a.write(valid);
+    pi.write(valid);
+    tau.write(valid);
+    specialPosition.write(valid);
+    special.write(valid);
+    id.write(valid);
 
-    orientation1.write();
-    orientation2.write();
-    orientation3.write();
+    piGlobal.write(valid);
+    tauGlobal.write(valid);
+
+    orientation1.write(valid);
+    orientation2.write(valid);
+    orientation3.write(valid);
 
     Info<< "writeFields " << mC.name() << endl;
 

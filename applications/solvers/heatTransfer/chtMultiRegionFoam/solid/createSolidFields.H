@@ -79,7 +79,7 @@
             IOobject::AUTO_WRITE
         );
 
-        if (betavSolidIO.headerOk())
+        if (betavSolidIO.typeHeaderOk<volScalarField>(true))
         {
             betavSolid.set
             (

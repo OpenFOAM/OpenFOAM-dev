@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,11 @@ Foam::dlLibraryTable::~dlLibraryTable()
                     << "Closing " << libNames_[i]
                     << " with handle " << uintptr_t(libPtrs_[i]) << endl;
             }
-            dlClose(libPtrs_[i]);
+            if (!dlClose(libPtrs_[i]))
+            {
+                WarningInFunction<< "Failed closing " << libNames_[i]
+                    << " with handle " << uintptr_t(libPtrs_[i]) << endl;
+            }
         }
     }
 }

@@ -49,6 +49,7 @@ Description
 #include "polyTopoChange.H"
 #include "polyModifyFace.H"
 #include "wordReList.H"
+#include "IOdictionary.H"
 
 using namespace Foam;
 

@@ -24,7 +24,7 @@
             false
         );
 
-        if (io.headerOk())
+        if (io.typeHeaderOk<IOdictionary>(true))
         {
             io.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
             IOdictionary timeObject(io);

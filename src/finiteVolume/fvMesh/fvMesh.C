@@ -269,7 +269,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
 
     // Check the existence of the cell volumes and read if present
     // and set the storage of V00
-    if (isFile(time().timePath()/"V0"))
+    if (fileHandler().isFile(time().timePath()/"V0"))
     {
         V0Ptr_ = new DimensionedField<scalar, volMesh>
         (
@@ -290,7 +290,7 @@ Foam::fvMesh::fvMesh(const IOobject& io)
 
     // Check the existence of the mesh fluxes, read if present and set the
     // mesh to be moving
-    if (isFile(time().timePath()/"meshPhi"))
+    if (fileHandler().isFile(time().timePath()/"meshPhi"))
     {
         phiPtr_ = new surfaceScalarField
         (
@@ -860,22 +860,23 @@ bool Foam::fvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     bool ok = true;
     if (phiPtr_)
     {
-        ok = phiPtr_->write();
+        ok = phiPtr_->write(valid);
     }
 
-    return ok && polyMesh::writeObject(fmt, ver, cmp);
+    return ok && polyMesh::writeObject(fmt, ver, cmp, valid);
 }
 
 
-bool Foam::fvMesh::write() const
+bool Foam::fvMesh::write(const bool valid) const
 {
-    return polyMesh::write();
+    return polyMesh::write(valid);
 }
 
 

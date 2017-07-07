@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,7 +143,7 @@ public:
             //- Return the number of (groups)
             inline int ngroups() const
             {
-                return preg_ ? preg_->re_nsub : 0;
+                return int(preg_ ? preg_->re_nsub : 0);
             }
 
 

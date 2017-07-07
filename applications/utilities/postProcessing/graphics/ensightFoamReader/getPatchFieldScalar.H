@@ -13,7 +13,7 @@ IOobject fieldObjectPtr
     IOobject::NO_READ
 );
 
-if (!fieldObjectPtr.headerOk())
+if (!fieldObjectPtr.typeHeaderOk<volScalarField>(true))
 {
     return Z_UNDEF;
 }

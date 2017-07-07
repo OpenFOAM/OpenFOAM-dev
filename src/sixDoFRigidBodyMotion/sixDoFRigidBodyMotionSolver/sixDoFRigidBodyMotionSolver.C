@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::sixDoFRigidBodyMotionSolver::sixDoFRigidBodyMotionSolver
             mesh.time().timeName(),
             "uniform",
             mesh
-        ).headerOk()
+        ).typeHeaderOk<IOdictionary>(true)
       ? IOdictionary
         (
             IOobject
@@ -256,7 +256,8 @@ bool Foam::sixDoFRigidBodyMotionSolver::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     IOdictionary dict

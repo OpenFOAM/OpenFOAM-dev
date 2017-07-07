@@ -325,7 +325,12 @@ Foam::instantList Foam::timeSelector::select
         forAll(timeDirs, timeI)
         {
             selectTimes[timeI] =
-                !exists(runTime.path()/timeDirs[timeI].name()/fName);
+               !fileHandler().exists
+                (
+                    runTime.path()
+                   /timeDirs[timeI].name()
+                   /fName
+                );
         }
 
         return subset(selectTimes, timeDirs);

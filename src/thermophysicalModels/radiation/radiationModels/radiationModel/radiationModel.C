@@ -59,7 +59,7 @@ Foam::IOobject Foam::radiation::radiationModel::createIOobject
         IOobject::NO_WRITE
     );
 
-    if (io.headerOk())
+    if (io.typeHeaderOk<IOdictionary>(true))
     {
         io.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
         return io;

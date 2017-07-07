@@ -40,7 +40,9 @@ Foam::Function1Types::TableFile<Type>::TableFile
     dict.lookup("file") >> fName_;
 
     fileName expandedFile(fName_);
-    IFstream is(expandedFile.expand());
+    //IFstream is(expandedFile.expand());
+    autoPtr<ISstream> isPtr(fileHandler().NewIFstream(expandedFile.expand()));
+    ISstream& is = isPtr();
 
     if (!is.good())
     {

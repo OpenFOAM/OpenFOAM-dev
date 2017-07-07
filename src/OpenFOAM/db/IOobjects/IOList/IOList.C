@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,15 +32,9 @@ Foam::IOList<T>::IOList(const IOobject& io)
 :
     regIOobject(io)
 {
-    // Temporary warning
-    if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
-    {
-        WarningInFunction
-            << "IOList " << name()
-            << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOList does not support automatic rereading."
-            << endl;
-    }
+    // Check for MUST_READ_IF_MODIFIED
+    warnNoRereading<IOList<T>>();
+
     if
     (
         (
@@ -61,15 +55,9 @@ Foam::IOList<T>::IOList(const IOobject& io, const label size)
 :
     regIOobject(io)
 {
-    // Temporary warning
-    if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
-    {
-        WarningInFunction
-            << "IOList " << name()
-            << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOList does not support automatic rereading."
-            << endl;
-    }
+    // Check for MUST_READ_IF_MODIFIED
+    warnNoRereading<IOList<T>>();
+
     if
     (
         (
@@ -94,15 +82,8 @@ Foam::IOList<T>::IOList(const IOobject& io, const List<T>& list)
 :
     regIOobject(io)
 {
-    // Temporary warning
-    if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
-    {
-        WarningInFunction
-            << "IOList " << name()
-            << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOList does not support automatic rereading."
-            << endl;
-    }
+    // Check for MUST_READ_IF_MODIFIED
+    warnNoRereading<IOList<T>>();
 
     if
     (
@@ -128,15 +109,8 @@ Foam::IOList<T>::IOList(const IOobject& io, const Xfer<List<T>>& list)
 :
     regIOobject(io)
 {
-    // Temporary warning
-    if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
-    {
-        WarningInFunction
-            << "IOList " << name()
-            << " constructed with IOobject::MUST_READ_IF_MODIFIED"
-            " but IOList does not support automatic rereading."
-            << endl;
-    }
+    // Check for MUST_READ_IF_MODIFIED
+    warnNoRereading<IOList<T>>();
 
     List<T>::transfer(list());
 

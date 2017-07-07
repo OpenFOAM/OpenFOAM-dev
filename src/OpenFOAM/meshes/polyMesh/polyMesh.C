@@ -147,7 +147,7 @@ Foam::autoPtr<Foam::labelIOList> Foam::polyMesh::readTetBasePtIs() const
         IOobject::NO_WRITE
     );
 
-    if (io.headerOk())
+    if (io.typeHeaderOk<labelIOList>())
     {
         return autoPtr<labelIOList>(new labelIOList(io));
     }
@@ -292,7 +292,7 @@ Foam::polyMesh::polyMesh(const IOobject& io)
     curMotionTimeIndex_(time().timeIndex()),
     oldPointsPtr_(nullptr)
 {
-    if (exists(owner_.objectPath()))
+    if (!owner_.headerClassName().empty())
     {
         initMesh();
     }

@@ -11,7 +11,13 @@
 
     autoPtr<uniformDimensionedVectorField> linearAccelerationPtr;
 
-    if (linearAccelerationHeader.headerOk())
+    if
+    (
+        linearAccelerationHeader.typeHeaderOk<uniformDimensionedVectorField>
+        (
+            true
+        )
+    )
     {
         Info<< "    Reading " << linearAccelerationHeader.name() << endl;
 
@@ -33,7 +39,7 @@
 
     autoPtr<uniformDimensionedVectorField> angularVelocityPtr;
 
-    if (angularVelocityHeader.headerOk())
+    if (angularVelocityHeader.typeHeaderOk<uniformDimensionedVectorField>(true))
     {
         Info<< "    Reading " << angularVelocityHeader.name() << endl;
 
@@ -55,7 +61,13 @@
 
     autoPtr<uniformDimensionedVectorField> angularAccelerationPtr;
 
-    if (angularAccelerationHeader.headerOk())
+    if
+    (
+        angularAccelerationHeader.typeHeaderOk<uniformDimensionedVectorField>
+        (
+            true
+        )
+    )
     {
         Info<< "    Reading " << angularAccelerationHeader.name() << endl;
 
@@ -77,7 +89,13 @@
 
     autoPtr<uniformDimensionedVectorField> centreOfRotationPtr;
 
-    if (centreOfRotationHeader.headerOk())
+    if
+    (
+        centreOfRotationHeader.typeHeaderOk<uniformDimensionedVectorField>
+        (
+            true
+        )
+    )
     {
         Info<< "    Reading " << centreOfRotationHeader.name() << endl;
 

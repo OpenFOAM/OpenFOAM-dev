@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,12 @@ Foam::fileStat::fileStat()
 {}
 
 
-Foam::fileStat::fileStat(const fileName& fName, const unsigned int maxTime)
+Foam::fileStat::fileStat
+(
+    const fileName& fName,
+    const bool followLink,
+    const unsigned int maxTime
+)
 {
     // Work on volatile
     volatile bool locIsValid = false;
@@ -47,13 +52,27 @@ Foam::fileStat::fileStat(const fileName& fName, const unsigned int maxTime)
 
     if (!timedOut(myTimer))
     {
-        if (::stat(fName.c_str(), &status_) != 0)
+        if (followLink)
         {
-            locIsValid = false;
+            if (::stat(fName.c_str(), &status_) != 0)
+            {
+                locIsValid = false;
+            }
+            else
+            {
+                locIsValid = true;
+            }
         }
         else
         {
-            locIsValid = true;
+            if (::lstat(fName.c_str(), &status_) != 0)
+            {
+                locIsValid = false;
+            }
+            else
+            {
+                locIsValid = true;
+            }
         }
     }
 

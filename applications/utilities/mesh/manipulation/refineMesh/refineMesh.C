@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,7 @@ Description
 #include "wedgePolyPatch.H"
 #include "plane.H"
 #include "SubField.H"
+#include "IOdictionary.H"
 
 using namespace Foam;
 
@@ -187,7 +188,7 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ
         );
 
-        if (!dictIO.headerOk())
+        if (!dictIO.typeHeaderOk<IOdictionary>(true))
         {
             FatalErrorInFunction
                 << "Cannot open specified refinement dictionary "
@@ -209,7 +210,7 @@ int main(int argc, char *argv[])
             IOobject::MUST_READ
         );
 
-        if (dictIO.headerOk())
+        if (dictIO.typeHeaderOk<IOdictionary>(true))
         {
             Info<< "Refining according to " << dictName << nl << endl;
 

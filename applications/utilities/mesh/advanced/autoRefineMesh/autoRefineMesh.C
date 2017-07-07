@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,7 @@ Description
 #include "emptyPolyPatch.H"
 #include "removeCells.H"
 #include "meshSearch.H"
+#include "IOdictionary.H"
 
 using namespace Foam;
 
@@ -650,7 +651,7 @@ int main(int argc, char *argv[])
     // corrector for mesh motion
     twoDPointCorrector* correct2DPtr = nullptr;
 
-    if (motionObj.headerOk())
+    if (motionObj.typeHeaderOk<IOdictionary>(true))
     {
         Info<< "Reading " << runTime.constant() / "motionProperties"
             << endl << endl;

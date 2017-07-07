@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,7 @@ Usage
 #include "globalMeshData.H"
 #include "surfaceWriter.H"
 #include "vtkSetWriter.H"
+#include "IOdictionary.H"
 
 #include "checkTools.H"
 #include "checkTopology.H"

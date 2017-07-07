@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ bool Foam::IOobject::writeHeader(Ostream& os, const word& type) const
         << "    object      " << name() << ";\n"
         << "}" << nl;
 
-    writeDivider(os) << endl;
+    writeDivider(os) << nl;
 
     return true;
 }

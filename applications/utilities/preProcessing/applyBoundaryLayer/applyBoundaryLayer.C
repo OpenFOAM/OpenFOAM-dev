@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
             false
         );
 
-        if (omegaHeader.headerOk())
+        if (omegaHeader.typeHeaderOk<volScalarField>(true))
         {
             volScalarField omega(omegaHeader, mesh);
             dimensionedScalar k0("VSMALL", k.dimensions(), VSMALL);
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
             false
         );
 
-        if (nuTildaHeader.headerOk())
+        if (nuTildaHeader.typeHeaderOk<volScalarField>(true))
         {
             volScalarField nuTilda(nuTildaHeader, mesh);
             nuTilda = nut;

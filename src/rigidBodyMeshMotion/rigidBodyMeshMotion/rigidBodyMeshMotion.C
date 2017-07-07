@@ -97,7 +97,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
             mesh.time().timeName(),
             "uniform",
             mesh
-        ).headerOk()
+        ).typeHeaderOk<IOdictionary>(true)
       ? IOdictionary
         (
             IOobject
@@ -338,7 +338,8 @@ bool Foam::rigidBodyMeshMotion::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     IOdictionary dict

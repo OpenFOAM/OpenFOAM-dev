@@ -47,13 +47,8 @@ Foam::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh(const IOobject& io)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
-        if (readOpt() == IOobject::MUST_READ_IF_MODIFIED)
-        {
-            WarningInFunction
-                << "Specified IOobject::MUST_READ_IF_MODIFIED but class"
-                << " does not support automatic rereading."
-                << endl;
-        }
+        // Warn for MUST_READ_IF_MODIFIED
+        warnNoRereading<extendedFeatureEdgeMesh>();
 
         readStream(typeName) >> *this;
         close();

@@ -49,6 +49,7 @@ SourceFiles
 #include "InjectionModel.H"
 #include "distributionModel.H"
 #include "volFieldsFwd.H"
+#include "GlobalIOField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,7 +85,7 @@ class FieldActivatedInjection
             const word positionsFile_;
 
             //- Field of injector (x,y,z) positions
-            vectorIOField positions_;
+            GlobalIOField<vector> positions_;
 
             //- List of cell labels corresponding to injector positions
             labelList injectorCells_;

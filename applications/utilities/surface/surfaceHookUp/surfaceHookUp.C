@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ Usage
 #include "PackedBoolList.H"
 #include "unitConversion.H"
 #include "searchableSurfaces.H"
+#include "IOdictionary.H"
 
 using namespace Foam;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "csvTableReader.H"
-#include "IFstream.H"
+#include "fileOperation.H"
 #include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -108,7 +108,9 @@ void Foam::csvTableReader<Type>::operator()
     List<Tuple2<scalar, Type>>& data
 )
 {
-    IFstream in(fName);
+    //IFstream in(fName);
+    autoPtr<ISstream> inPtr(fileHandler().NewIFstream(fName));
+    ISstream& in = inPtr();
 
     DynamicList<Tuple2<scalar, Type>> values;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,8 @@ void rewriteBoundary
     HashTable<word>& nbrNames
 )
 {
-    Info<< "Reading boundary from " << io.filePath() << endl;
+    Info<< "Reading boundary from " << typeFilePath<IOPtrList<entry>>(io)
+        << endl;
 
     // Read PtrList of dictionary.
     const word oldTypeName = IOPtrList<entry>::typeName;
@@ -446,7 +447,7 @@ int main(int argc, char *argv[])
         false
     );
 
-    if (io.headerOk())
+    if (io.typeHeaderOk<IOPtrList<entry>>(false))
     {
         rewriteBoundary
         (
@@ -480,7 +481,7 @@ int main(int argc, char *argv[])
             false
         );
 
-        if (io.headerOk())
+        if (io.typeHeaderOk<IOPtrList<entry>>(false))
         {
             rewriteBoundary
             (

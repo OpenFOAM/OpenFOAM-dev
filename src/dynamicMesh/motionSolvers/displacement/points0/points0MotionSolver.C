@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ Foam::IOobject Foam::points0MotionSolver::points0IO
             false
         );
 
-        if (io.headerOk())
+        if (io.typeHeaderOk<pointIOField>())
         {
             return io;
         }
@@ -122,16 +122,19 @@ Foam::points0MotionSolver::points0MotionSolver
             << "Number of points in mesh " << mesh.nPoints()
             << " differs from number of points " << points0_.size()
             << " read from file "
-            <<  IOobject
+            <<  typeFilePath<pointIOField>
                 (
-                    "points",
-                    time().constant(),
-                    polyMesh::meshSubDir,
-                    mesh,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    false
-                ).filePath()
+                    IOobject
+                    (
+                        "points",
+                        time().constant(),
+                        polyMesh::meshSubDir,
+                        mesh,
+                        IOobject::MUST_READ,
+                        IOobject::NO_WRITE,
+                        false
+                    )
+                )
             << exit(FatalError);
     }
 }

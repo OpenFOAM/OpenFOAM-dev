@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,19 @@ public:
         }
 
         bool writeData(Ostream&) const;
+
+        //- Is object global
+        virtual bool global() const
+        {
+            return true;
+        }
+
+        //- Return complete path + object name if the file exists
+        //  either in the case/processor or case otherwise null
+        virtual fileName filePath() const
+        {
+            return globalFilePath(type());
+        }
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ class CompactIOField
     // Private Member Functions
 
         //- Read according to header type
-        void readFromStream();
+        void readFromStream(const bool valid = true);
 
 public:
 
@@ -87,6 +87,9 @@ public:
 
         //- Construct from IOobject
         CompactIOField(const IOobject&);
+
+        //- Construct from IOobject; does local processor require reading?
+        CompactIOField(const IOobject&, const bool valid);
 
         //- Construct from IOobject and size
         CompactIOField(const IOobject&, const label);
@@ -109,7 +112,8 @@ public:
         (
             IOstream::streamFormat,
             IOstream::versionNumber,
-            IOstream::compressionType
+            IOstream::compressionType,
+            const bool valid
         ) const;
 
         virtual bool writeData(Ostream&) const;

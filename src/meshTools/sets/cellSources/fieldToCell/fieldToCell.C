@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,9 @@ void Foam::fieldToCell::applyToSet
         false
     );
 
-    if (!fieldObject.headerOk())
+    // Note: should check for volScalarField but that introduces depencendy
+    //       on volMesh so just use another type with processor-local scope
+    if (!fieldObject.typeHeaderOk<labelIOList>(false))
     {
         WarningInFunction
             << "Cannot read field " << fieldName_
@@ -198,7 +200,7 @@ void Foam::fieldToCell::applyToSet
     }
     else if (fieldObject.headerClassName() == "volScalarField")
     {
-        IFstream str(fieldObject.filePath());
+        IFstream str(typeFilePath<labelIOList>(fieldObject));
 
         // Read dictionary
         fieldDictionary fieldDict(fieldObject, fieldObject.headerClassName());
@@ -209,7 +211,7 @@ void Foam::fieldToCell::applyToSet
     }
     else if (fieldObject.headerClassName() == "volVectorField")
     {
-        IFstream str(fieldObject.filePath());
+        IFstream str(typeFilePath<labelIOList>(fieldObject));
 
         // Read dictionary
         fieldDictionary fieldDict(fieldObject, fieldObject.headerClassName());

@@ -1399,7 +1399,8 @@ bool Foam::dynamicRefineFvMesh::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     // Force refinement data to go to the current time directory.
@@ -1407,8 +1408,8 @@ bool Foam::dynamicRefineFvMesh::writeObject
 
     bool writeOk =
     (
-        dynamicFvMesh::writeObject(fmt, ver, cmp)
-     && meshCutter_.write()
+        dynamicFvMesh::writeObject(fmt, ver, cmp, valid)
+     && meshCutter_.write(valid)
     );
 
     if (dumpLevel_)

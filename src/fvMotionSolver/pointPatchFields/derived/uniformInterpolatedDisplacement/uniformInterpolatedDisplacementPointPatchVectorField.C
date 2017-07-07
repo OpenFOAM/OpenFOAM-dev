@@ -82,7 +82,7 @@ uniformInterpolatedDisplacementPointPatchVectorField
             IOobject::NO_WRITE,
             false
         );
-        if (io.headerOk())
+        if (io.typeHeaderOk<pointVectorField>(false))
         {
             names.append(allTimes[i].name());
             values.append(allTimes[i].value());

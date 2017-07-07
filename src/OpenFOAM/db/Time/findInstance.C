@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,52 @@ Description
 
 #include "Time.H"
 #include "IOobject.H"
+#include "IOList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+bool Foam::Time::exists(IOobject& io)
+{
+    // Generate filename for object
+    fileName objPath(fileHandler().objectPath(io, word::null));
+
+    // Test for either directory or a (valid) file & IOobject
+    bool ok;
+    if (io.name().empty())
+    {
+        ok = fileHandler().isDir(objPath);
+    }
+    else
+    {
+        ok =
+            fileHandler().isFile(objPath)
+         && io.typeHeaderOk<IOList<label>>(false);// object with local scope
+    }
+
+    if (!ok)
+    {
+        // Re-test with raw objectPath. This is for backwards
+        // compatibility
+        fileName originalPath(io.objectPath());
+        if (originalPath != objPath)
+        {
+            // Test for either directory or a (valid) file & IOobject
+            if (io.name().empty())
+            {
+                ok = fileHandler().isDir(originalPath);
+            }
+            else
+            {
+                ok =
+                    fileHandler().isFile(originalPath)
+                 && io.typeHeaderOk<IOList<label>>(false);
+            }
+        }
+    }
+
+    return ok;
+}
+
 
 Foam::word Foam::Time::findInstance
 (
@@ -42,33 +86,33 @@ Foam::word Foam::Time::findInstance
     const word& stopInstance
 ) const
 {
-    // Note: if name is empty, just check the directory itself
+    // Note: - if name is empty, just check the directory itself
+    //       - check both for isFile and headerOk since the latter does a
+    //         filePath so searches for the file.
+    //       - check for an object with local file scope (so no looking up in
+    //         parent directory in case of parallel)
 
-
-    const fileName tPath(path());
-    const fileName dirPath(tPath/timeName()/dir);
-
-    // check the current time directory
-    if
-    (
-        name.empty()
-      ? isDir(dirPath)
-      :
-        (
-            isFile(dirPath/name)
-         && IOobject(name, timeName(), dir, *this).headerOk()
-        )
-    )
     {
-        if (debug)
-        {
-            InfoInFunction
-                << "Found \"" << name
-                << "\" in " << timeName()/dir
-                << endl;
-        }
+        IOobject io
+        (
+            name,           // name might be empty!
+            timeName(),
+            dir,
+            *this
+        );
 
-        return timeName();
+        if (exists(io))
+        {
+            if (debug)
+            {
+                InfoInFunction
+                    << "Found exact match for \"" << name
+                    << "\" in " << timeName()/dir
+                    << endl;
+            }
+
+            return timeName();
+        }
     }
 
     // Search back through the time directories to find the time
@@ -88,21 +132,20 @@ Foam::word Foam::Time::findInstance
     // continue searching from here
     for (; instanceI >= 0; --instanceI)
     {
-        if
+        IOobject io
         (
-            name.empty()
-          ? isDir(tPath/ts[instanceI].name()/dir)
-          :
-            (
-                isFile(tPath/ts[instanceI].name()/dir/name)
-             && IOobject(name, ts[instanceI].name(), dir, *this).headerOk()
-            )
-        )
+            name,           // name might be empty!
+            ts[instanceI].name(),
+            dir,
+            *this
+        );
+
+        if (exists(io))
         {
             if (debug)
             {
                 InfoInFunction
-                    << "Found \"" << name
+                    << "Found instance match for \"" << name
                     << "\" in " << ts[instanceI].name()/dir
                     << endl;
             }
@@ -115,7 +158,8 @@ Foam::word Foam::Time::findInstance
         {
             if (debug)
             {
-                InfoInFunction
+                //InfoInFunction
+                Pout<< "findInstance : "
                     << "Hit stopInstance " << stopInstance
                     << endl;
             }
@@ -155,21 +199,20 @@ Foam::word Foam::Time::findInstance
     // constant function of the time, because the latter points to
     // the case constant directory in parallel cases
 
-    if
+    IOobject io
     (
-        name.empty()
-      ? isDir(tPath/constant()/dir)
-      :
-        (
-            isFile(tPath/constant()/dir/name)
-         && IOobject(name, constant(), dir, *this).headerOk()
-        )
-    )
+        name,
+        constant(),
+        dir,
+        *this
+    );
+
+    if (exists(io))
     {
         if (debug)
         {
             InfoInFunction
-                << "Found \"" << name
+                << "Found constant match for \"" << name
                 << "\" in " << constant()/dir
                 << endl;
         }

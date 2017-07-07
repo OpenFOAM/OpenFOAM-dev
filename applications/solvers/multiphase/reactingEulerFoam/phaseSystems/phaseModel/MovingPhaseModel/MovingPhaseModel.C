@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
         IOobject::NO_READ
     );
 
-    if (phiHeader.headerOk())
+    if (phiHeader.typeHeaderOk<surfaceScalarField>(true))
     {
         Info<< "Reading face flux field " << phiName << endl;
 

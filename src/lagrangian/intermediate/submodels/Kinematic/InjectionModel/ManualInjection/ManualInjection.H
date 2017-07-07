@@ -47,6 +47,7 @@ SourceFiles
 #include "InjectionModel.H"
 #include "distributionModel.H"
 #include "Switch.H"
+#include "GlobalIOField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,7 +69,7 @@ class ManualInjection
         const word positionsFile_;
 
         //- Field of parcel positions
-        vectorIOField positions_;
+        GlobalIOField<vector> positions_;
 
         //- Field of parcel diameters
         scalarList diameters_;

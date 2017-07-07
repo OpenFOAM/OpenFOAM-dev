@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,8 @@ License
 #include "IFstream.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
+#include "IOstreams.H"
+#include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -127,7 +129,10 @@ bool Foam::functionEntries::includeEntry::execute
     (
         includeFileName(is.name().path(), rawFName, parentDict)
     );
-    IFstream ifs(fName);
+
+    //IFstream ifs(fName);
+    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+    ISstream& ifs = ifsPtr();
 
     if (ifs)
     {
@@ -165,7 +170,10 @@ bool Foam::functionEntries::includeEntry::execute
     (
         includeFileName(is.name().path(), rawFName, parentDict)
     );
-    IFstream ifs(fName);
+
+    //IFstream ifs(fName);
+    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+    ISstream& ifs = ifsPtr();
 
     if (ifs)
     {

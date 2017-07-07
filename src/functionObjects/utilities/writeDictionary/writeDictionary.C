@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "Time.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
+#include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -65,7 +66,7 @@ bool Foam::functionObjects::writeDictionary::tryDirectory
         false
     );
 
-    if (dictIO.headerOk())
+    if (dictIO.typeHeaderOk<IOdictionary>(true))
     {
         IOdictionary dict(dictIO);
 

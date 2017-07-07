@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "Time.H"
 #include "Tuple2.H"
 #include "DynamicField.H"
+#include "featureEdgeMesh.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -56,7 +57,7 @@ void Foam::refinementFeatures::read
             false
         );
 
-        const fileName fName(extFeatObj.filePath());
+        const fileName fName(typeFilePath<extendedFeatureEdgeMesh>(extFeatObj));
 
         if (!fName.empty() && extendedEdgeMesh::canRead(fName))
         {
@@ -87,7 +88,7 @@ void Foam::refinementFeatures::read
                 false
             );
 
-            const fileName fName(featObj.filePath());
+            const fileName fName(typeFilePath<featureEdgeMesh>(featObj));
 
             if (fName.empty())
             {

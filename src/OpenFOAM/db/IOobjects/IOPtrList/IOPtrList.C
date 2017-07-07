@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,9 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const INew& inewt)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         PtrList<T>::read(readStream(typeName), inewt);
         close();
     }
@@ -62,6 +65,9 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         PtrList<T>::read(readStream(typeName), INew<T>());
         close();
     }
@@ -97,6 +103,9 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const PtrList<T>& list)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         PtrList<T>::read(readStream(typeName), INew<T>());
         close();
     }
@@ -123,6 +132,9 @@ Foam::IOPtrList<T>::IOPtrList(const IOobject& io, const Xfer<PtrList<T>>& list)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         PtrList<T>::read(readStream(typeName), INew<T>());
         close();
     }

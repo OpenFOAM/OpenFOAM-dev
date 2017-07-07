@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,9 @@ Foam::IOMap<T>::IOMap(const IOobject& io)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         readStream(typeName) >> *this;
         close();
     }
@@ -60,6 +63,9 @@ Foam::IOMap<T>::IOMap(const IOobject& io, const label size)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         readStream(typeName) >> *this;
         close();
     }
@@ -84,6 +90,9 @@ Foam::IOMap<T>::IOMap(const IOobject& io, const Map<T>& map)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         readStream(typeName) >> *this;
         close();
     }
@@ -110,6 +119,9 @@ Foam::IOMap<T>::IOMap(const IOobject& io, const Xfer<Map<T>>& map)
      || (io.readOpt() == IOobject::READ_IF_PRESENT && headerOk())
     )
     {
+        // For if MUST_READ_IF_MODIFIED
+        addWatch();
+
         readStream(typeName) >> *this;
         close();
     }

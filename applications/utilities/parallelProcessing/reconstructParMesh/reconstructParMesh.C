@@ -548,20 +548,7 @@ int main(int argc, char *argv[])
     bool writeCellDist = args.optionFound("cellDist");
 
 
-    int nProcs = 0;
-
-    while
-    (
-        isDir
-        (
-            args.rootPath()
-          / args.caseName()
-          / fileName(word("processor") + name(nProcs))
-        )
-    )
-    {
-        nProcs++;
-    }
+    label nProcs = fileHandler().nProcs(args.path());
 
     Info<< "Found " << nProcs << " processor directories" << nl << endl;
 
@@ -609,13 +596,21 @@ int main(int argc, char *argv[])
             databases[proci].setTime(timeDirs[timeI], timeI);
         }
 
-        const fileName meshPath =
-            databases[0].path()
-           /databases[0].timeName()
-           /regionDir
-           /polyMesh::meshSubDir;
+        IOobject facesIO
+        (
+            "faces",
+            databases[0].timeName(),
+            regionDir/polyMesh::meshSubDir,
+            databases[0],
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        );
 
-        if (!isFile(meshPath/"faces"))
+
+        // Problem: faceCompactIOList recognises both 'faceList' and
+        //          'faceCompactList' so we should be lenient when doing
+        //          typeHeaderOk
+        if (!facesIO.typeHeaderOk<faceCompactIOList>(false))
         {
             Info<< "No mesh." << nl << endl;
             continue;

@@ -17,7 +17,7 @@ if (Times.size() > 1)
                 mesh,
                 IOobject::NO_READ
             );
-            if (io.headerOk())
+            if (io.typeHeaderOk<pointIOField>(true))
             {
                 meshMoving = true;
                 break;

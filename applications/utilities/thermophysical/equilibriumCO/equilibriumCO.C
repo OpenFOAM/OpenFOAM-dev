@@ -43,6 +43,7 @@ Description
 #include "absoluteEnthalpy.H"
 
 #include "SLPtrList.H"
+#include "IOdictionary.H"
 
 using namespace Foam;
 

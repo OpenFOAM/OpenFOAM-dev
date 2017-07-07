@@ -7,7 +7,7 @@ IOobject alphaPhi10Header
     IOobject::AUTO_WRITE
 );
 
-const bool alphaRestart = alphaPhi10Header.headerOk();
+const bool alphaRestart = alphaPhi10Header.typeHeaderOk<surfaceScalarField>();
 
 // MULES flux from previous time-step
 surfaceScalarField alphaPhi10

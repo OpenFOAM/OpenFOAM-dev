@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ Class
 
 Description
     A Map of objects of type \<T\> with automated input and output.
+    Is a global object; i.e. can be read from undecomposed case.
 
 SourceFiles
     IOMap.C
@@ -83,6 +84,18 @@ public:
 
         bool writeData(Ostream&) const;
 
+        //- Is object global
+        virtual bool global() const
+        {
+            return true;
+        }
+
+        //- Return complete path + object name if the file exists
+        //  either in the case/processor or case otherwise null
+        virtual fileName filePath() const
+        {
+            return globalFilePath(type());
+        }
 
     // Member operators
 

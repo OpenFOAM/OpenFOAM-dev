@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
         }
 
 
-        if (!ioPtr->headerOk())
+        if (!ioPtr->typeHeaderOk<coordinateSystems>(false))
         {
             FatalErrorInFunction
                 << ioPtr->objectPath() << nl

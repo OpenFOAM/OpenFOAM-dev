@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,30 +29,33 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class T, class BaseType>
-void Foam::CompactIOField<T, BaseType>::readFromStream()
+void Foam::CompactIOField<T, BaseType>::readFromStream(const bool valid)
 {
-    Istream& is = readStream(word::null);
+    Istream& is = readStream(word::null, valid);
 
-    if (headerClassName() == IOField<T>::typeName)
+    if (valid)
     {
-        is >> static_cast<Field<T>&>(*this);
-        close();
-    }
-    else if (headerClassName() == typeName)
-    {
-        is >> *this;
-        close();
-    }
-    else
-    {
-        FatalIOErrorInFunction
-        (
-            is
-        )   << "unexpected class name " << headerClassName()
-            << " expected " << typeName << " or " << IOField<T>::typeName
-            << endl
-            << "    while reading object " << name()
-            << exit(FatalIOError);
+        if (headerClassName() == IOField<T>::typeName)
+        {
+            is >> static_cast<Field<T>&>(*this);
+            close();
+        }
+        else if (headerClassName() == typeName)
+        {
+            is >> *this;
+            close();
+        }
+        else
+        {
+            FatalIOErrorInFunction
+            (
+                is
+            )   << "unexpected class name " << headerClassName()
+                << " expected " << typeName << " or " << IOField<T>::typeName
+                << endl
+                << "    while reading object " << name()
+                << exit(FatalIOError);
+        }
     }
 }
 
@@ -71,6 +74,27 @@ Foam::CompactIOField<T, BaseType>::CompactIOField(const IOobject& io)
     )
     {
         readFromStream();
+    }
+}
+
+
+template<class T, class BaseType>
+Foam::CompactIOField<T, BaseType>::CompactIOField
+(
+    const IOobject& io,
+    const bool valid
+)
+:
+    regIOobject(io)
+{
+    if (io.readOpt() == IOobject::MUST_READ)
+    {
+        readFromStream(valid);
+    }
+    else if (io.readOpt() == IOobject::READ_IF_PRESENT)
+    {
+        bool haveFile = headerOk();
+        readFromStream(valid && haveFile);
     }
 }
 
@@ -160,7 +184,8 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     if (fmt == IOstream::ASCII)
@@ -170,7 +195,7 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
 
         const_cast<word&>(typeName) = IOField<T>::typeName;
 
-        bool good = regIOobject::writeObject(fmt, ver, cmp);
+        bool good = regIOobject::writeObject(fmt, ver, cmp, valid);
 
         // Change type back
         const_cast<word&>(typeName) = oldTypeName;
@@ -179,7 +204,7 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
     }
     else
     {
-        return regIOobject::writeObject(fmt, ver, cmp);
+        return regIOobject::writeObject(fmt, ver, cmp, valid);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,17 +65,14 @@ Foam::solidParticle::solidParticle
 
 void Foam::solidParticle::readFields(Cloud<solidParticle>& c)
 {
-    if (!c.size())
-    {
-        return;
-    }
+    bool valid = c.size();
 
     particle::readFields(c);
 
-    IOField<scalar> d(c.fieldIOobject("d", IOobject::MUST_READ));
+    IOField<scalar> d(c.fieldIOobject("d", IOobject::MUST_READ), valid);
     c.checkFieldIOobject(c, d);
 
-    IOField<vector> U(c.fieldIOobject("U", IOobject::MUST_READ));
+    IOField<vector> U(c.fieldIOobject("U", IOobject::MUST_READ), valid);
     c.checkFieldIOobject(c, U);
 
     label i = 0;
@@ -109,8 +106,8 @@ void Foam::solidParticle::writeFields(const Cloud<solidParticle>& c)
         i++;
     }
 
-    d.write();
-    U.write();
+    d.write(np > 0);
+    U.write(np > 0);
 }
 
 

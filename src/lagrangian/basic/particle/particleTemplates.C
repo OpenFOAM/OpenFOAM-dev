@@ -103,29 +103,29 @@ void Foam::particle::correctAfterParallelTransfer
 template<class CloudType>
 void Foam::particle::readFields(CloudType& c)
 {
-    if (!c.size())
-    {
-        return;
-    }
+    bool valid = c.size();
 
     IOobject procIO(c.fieldIOobject("origProcId", IOobject::MUST_READ));
 
-    if (procIO.headerOk())
+    bool haveFile = procIO.typeHeaderOk<IOField<label>>(true);
+
+    IOField<label> origProcId(procIO, valid && haveFile);
+    c.checkFieldIOobject(c, origProcId);
+    IOField<label> origId
+    (
+        c.fieldIOobject("origId", IOobject::MUST_READ),
+        valid && haveFile
+    );
+    c.checkFieldIOobject(c, origId);
+
+    label i = 0;
+    forAllIter(typename CloudType, c, iter)
     {
-        IOField<label> origProcId(procIO);
-        c.checkFieldIOobject(c, origProcId);
-        IOField<label> origId(c.fieldIOobject("origId", IOobject::MUST_READ));
-        c.checkFieldIOobject(c, origId);
+        particle& p = iter();
 
-        label i = 0;
-        forAllIter(typename CloudType, c, iter)
-        {
-            particle& p = iter();
-
-            p.origProc_ = origProcId[i];
-            p.origId_ = origId[i];
-            i++;
-        }
+        p.origProc_ = origProcId[i];
+        p.origId_ = origId[i];
+        i++;
     }
 }
 
@@ -133,10 +133,11 @@ void Foam::particle::readFields(CloudType& c)
 template<class CloudType>
 void Foam::particle::writeFields(const CloudType& c)
 {
-    IOPosition<CloudType> ioP(c);
-    ioP.write();
-
     label np = c.size();
+
+    IOPosition<CloudType> ioP(c);
+    ioP.write(np > 0);
+
     IOField<label> origProc
     (
         c.fieldIOobject("origProcId", IOobject::NO_READ),
@@ -156,8 +157,8 @@ void Foam::particle::writeFields(const CloudType& c)
         i++;
     }
 
-    origProc.write();
-    origId.write();
+    origProc.write(np > 0);
+    origId.write(np > 0);
 }
 
 

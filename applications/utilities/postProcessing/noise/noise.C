@@ -82,6 +82,7 @@ See also
 #include "argList.H"
 #include "Time.H"
 #include "CSV.H"
+#include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

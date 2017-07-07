@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,8 +70,49 @@ Foam::dlLibraryTable& Foam::functionEntries::codeStream::libs
     const dictionary& dict
 )
 {
-    const IOdictionary& d = static_cast<const IOdictionary&>(dict.topDict());
+    const baseIOdictionary& d = static_cast<const baseIOdictionary&>
+    (
+        dict.topDict()
+    );
     return const_cast<Time&>(d.time()).libs();
+}
+
+
+bool Foam::functionEntries::codeStream::doingMasterOnlyReading
+(
+    const dictionary& dict
+)
+{
+    const dictionary& topDict = dict.topDict();
+
+    if (isA<baseIOdictionary>(topDict))
+    {
+        const baseIOdictionary& d = static_cast<const baseIOdictionary&>
+        (
+            topDict
+        );
+
+        if (debug)
+        {
+            Pout<< "codeStream : baseIOdictionary:" << dict.name()
+                << " master-only-reading:" << d.globalObject()
+                << endl;
+        }
+
+        return d.globalObject();
+    }
+    else
+    {
+        if (debug)
+        {
+            Pout<< "codeStream : not a baseIOdictionary:" << dict.name()
+                << " master-only-reading:" << regIOobject::masterOnlyReading
+                << endl;
+        }
+
+        // Fall back to regIOobject::masterOnlyReading
+        return regIOobject::masterOnlyReading;
+    }
 }
 
 
@@ -96,7 +137,9 @@ Foam::functionEntries::codeStream::getFunction
 
     // see if library is loaded
     void* lib = nullptr;
-    if (isA<IOdictionary>(parentDict.topDict()))
+
+    const dictionary& topDict = parentDict.topDict();
+    if (isA<baseIOdictionary>(topDict))
     {
         lib = libs(parentDict).findLibrary(libPath);
     }
@@ -111,7 +154,7 @@ Foam::functionEntries::codeStream::getFunction
     // avoid compilation if possible by loading an existing library
     if (!lib)
     {
-        if (isA<IOdictionary>(parentDict.topDict()))
+        if (isA<baseIOdictionary>(topDict))
         {
             // Cached access to dl libs. Guarantees clean up upon destruction
             // of Time.
@@ -178,10 +221,10 @@ Foam::functionEntries::codeStream::getFunction
         }
 
         //- Only block if we're not doing master-only reading. (flag set by
-        //  regIOobject::read, IOdictionary constructor)
+        //  regIOobject::read, baseIOdictionary constructor)
         if
         (
-           !regIOobject::masterOnlyReading
+           !doingMasterOnlyReading(topDict)
          && regIOobject::fileModificationSkew > 0
         )
         {
@@ -246,7 +289,7 @@ Foam::functionEntries::codeStream::getFunction
             }
         }
 
-        if (isA<IOdictionary>(parentDict.topDict()))
+        if (isA<baseIOdictionary>(topDict))
         {
             // Cached access to dl libs. Guarantees clean up upon destruction
             // of Time.
@@ -282,7 +325,7 @@ Foam::functionEntries::codeStream::getFunction
     }
 
     bool haveLib = lib;
-    if (!regIOobject::masterOnlyReading)
+    if (!doingMasterOnlyReading(topDict))
     {
         reduce(haveLib, andOp<bool>());
     }

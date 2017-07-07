@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,17 +81,14 @@ template<class ParcelType>
 template<class CloudType>
 void Foam::ThermoParcel<ParcelType>::readFields(CloudType& c)
 {
-    if (!c.size())
-    {
-        return;
-    }
+    bool valid = c.size();
 
     ParcelType::readFields(c);
 
-    IOField<scalar> T(c.fieldIOobject("T", IOobject::MUST_READ));
+    IOField<scalar> T(c.fieldIOobject("T", IOobject::MUST_READ), valid);
     c.checkFieldIOobject(c, T);
 
-    IOField<scalar> Cp(c.fieldIOobject("Cp", IOobject::MUST_READ));
+    IOField<scalar> Cp(c.fieldIOobject("Cp", IOobject::MUST_READ), valid);
     c.checkFieldIOobject(c, Cp);
 
 
@@ -128,8 +125,8 @@ void Foam::ThermoParcel<ParcelType>::writeFields(const CloudType& c)
         i++;
     }
 
-    T.write();
-    Cp.write();
+    T.write(np > 0);
+    Cp.write(np > 0);
 }
 
 

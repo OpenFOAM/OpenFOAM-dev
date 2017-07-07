@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "openFoamTableReader.H"
-#include "IFstream.H"
+#include "fileOperation.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -52,7 +52,7 @@ void Foam::openFoamTableReader<Type>::operator()
 )
 {
     // Read data from file
-    IFstream(fName)() >> data;
+    fileHandler().NewIFstream(fName)()() >> data;
 }
 
 
@@ -64,7 +64,7 @@ void Foam::openFoamTableReader<Type>::operator()
 )
 {
     // Read data from file
-    IFstream(fName)() >> data;
+    fileHandler().NewIFstream(fName)()() >> data;
 }
 
 

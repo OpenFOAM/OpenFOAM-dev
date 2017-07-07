@@ -58,6 +58,12 @@ inline Foam::string::string(const char c)
 {}
 
 
+inline Foam::string::string(const size_type len, const char c)
+:
+    std::string(len, c)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class String>

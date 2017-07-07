@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,15 +88,15 @@ inline Foam::label& Foam::regIOobject::eventNo()
 }
 
 
-inline Foam::label Foam::regIOobject::watchIndex() const
+inline const Foam::labelList& Foam::regIOobject::watchIndices() const
 {
-    return watchIndex_;
+    return watchIndices_;
 }
 
 
-inline Foam::label& Foam::regIOobject::watchIndex()
+inline Foam::labelList& Foam::regIOobject::watchIndices()
 {
-    return watchIndex_;
+    return watchIndices_;
 }
 
 

@@ -265,9 +265,8 @@ public:
             const Xfer<edgeList>&
         );
 
-        //- Construct given a surface with selected edges,point
-        //  (surfaceFeatures), an objectRegistry and a
-        //  fileName to write to.
+        //- Construct given a surface with selected edges,points
+        //  (surfaceFeatures)
         //  Extracts, classifies and reorders the data from surfaceFeatures.
         extendedEdgeMesh
         (

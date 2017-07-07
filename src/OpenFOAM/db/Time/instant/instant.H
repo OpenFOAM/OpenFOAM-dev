@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,8 @@ class instant;
 
 bool operator==(const instant&, const instant&);
 bool operator!=(const instant&, const instant&);
+bool operator<(const instant&, const instant&);
+bool operator>(const instant&, const instant&);
 
 // IOstream Operators
 
@@ -141,6 +143,8 @@ public:
 
         friend bool operator==(const instant&, const instant&);
         friend bool operator!=(const instant&, const instant&);
+        friend bool operator<(const instant&, const instant&);
+        friend bool operator>(const instant&, const instant&);
 
 
     // IOstream Operators

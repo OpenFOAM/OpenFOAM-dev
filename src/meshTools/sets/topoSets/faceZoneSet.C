@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -463,13 +463,14 @@ bool faceZoneSet::writeObject
 (
     IOstream::streamFormat s,
     IOstream::versionNumber v,
-    IOstream::compressionType c
+    IOstream::compressionType c,
+    const bool valid
 ) const
 {
     // Write shadow faceSet
     word oldTypeName = typeName;
     const_cast<word&>(type()) = faceSet::typeName;
-    bool ok = faceSet::writeObject(s, v, c);
+    bool ok = faceSet::writeObject(s, v, c, valid);
     const_cast<word&>(type()) = oldTypeName;
 
     // Modify faceZone
@@ -500,7 +501,7 @@ bool faceZoneSet::writeObject
     }
     faceZones.clearAddressing();
 
-    return ok && faceZones.write();
+    return ok && faceZones.write(valid);
 }
 
 

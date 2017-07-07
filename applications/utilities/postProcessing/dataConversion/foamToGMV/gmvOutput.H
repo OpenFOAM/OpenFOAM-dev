@@ -71,7 +71,13 @@ for (label i=0; i < nTypes; i++)
             IOobject::NO_READ
         );
 
-        if (lagrangianHeader.headerOk())
+        if
+        (
+            lagrangianHeader.typeHeaderOk<IOPosition<Cloud<passiveParticle>>>
+            (
+                false
+            )
+        )
         {
             Cloud<passiveParticle> particles(mesh, cloud::defaultName);
 

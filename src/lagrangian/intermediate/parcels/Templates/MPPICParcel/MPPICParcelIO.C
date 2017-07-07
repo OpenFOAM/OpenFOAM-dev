@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,14 +77,15 @@ template<class ParcelType>
 template<class CloudType>
 void Foam::MPPICParcel<ParcelType>::readFields(CloudType& c)
 {
-    if (!c.size())
-    {
-        return;
-    }
+    bool valid = c.size();
 
     ParcelType::readFields(c);
 
-    IOField<vector> UCorrect(c.fieldIOobject("UCorrect", IOobject::MUST_READ));
+    IOField<vector> UCorrect
+    (
+        c.fieldIOobject("UCorrect", IOobject::MUST_READ),
+        valid
+    );
     c.checkFieldIOobject(c, UCorrect);
 
     label i = 0;
@@ -106,7 +107,7 @@ void Foam::MPPICParcel<ParcelType>::writeFields(const CloudType& c)
 {
     ParcelType::writeFields(c);
 
-    label np =  c.size();
+    label np = c.size();
 
     IOField<vector>
         UCorrect(c.fieldIOobject("UCorrect", IOobject::NO_READ), np);
@@ -122,7 +123,7 @@ void Foam::MPPICParcel<ParcelType>::writeFields(const CloudType& c)
         i++;
     }
 
-    UCorrect.write();
+    UCorrect.write(np > 0);
 }
 
 

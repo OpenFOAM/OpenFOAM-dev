@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,11 +91,6 @@ template<class ParcelType>
 template<class CloudType>
 void Foam::ReactingMultiphaseParcel<ParcelType>::readFields(CloudType& c)
 {
-    if (!c.size())
-    {
-        return;
-    }
-
     ParcelType::readFields(c);
 }
 
@@ -108,10 +103,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
     const CompositionType& compModel
 )
 {
-    if (!c.size())
-    {
-        return;
-    }
+    bool valid = c.size();
 
     ParcelType::readFields(c, compModel);
 
@@ -142,7 +134,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
             (
                 "Y" + gasNames[j] + stateLabels[idGas],
                 IOobject::MUST_READ
-            )
+            ),
+            valid
         );
 
         label i = 0;
@@ -166,7 +159,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
             (
                 "Y" + liquidNames[j] + stateLabels[idLiquid],
                  IOobject::MUST_READ
-            )
+            ),
+            valid
         );
 
         label i = 0;
@@ -190,7 +184,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::readFields
             (
                 "Y" + solidNames[j] + stateLabels[idSolid],
                 IOobject::MUST_READ
-            )
+            ),
+            valid
         );
 
         label i = 0;
@@ -229,7 +224,6 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
     label np = c.size();
 
     // Write the composition fractions
-    if (np > 0)
     {
         const wordList& stateLabels = compModel.stateLabels();
 
@@ -259,7 +253,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
                 YGas[i++] = p0.YGas()[j]*p0.Y()[GAS];
             }
 
-            YGas.write();
+            YGas.write(np > 0);
         }
 
         const label idLiquid = compModel.idLiquid();
@@ -288,7 +282,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
                 YLiquid[i++] = p0.YLiquid()[j]*p0.Y()[LIQ];
             }
 
-            YLiquid.write();
+            YLiquid.write(np > 0);
         }
 
         const label idSolid = compModel.idSolid();
@@ -317,7 +311,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::writeFields
                 YSolid[i++] = p0.YSolid()[j]*p0.Y()[SLD];
             }
 
-            YSolid.write();
+            YSolid.write(np > 0);
         }
     }
 }

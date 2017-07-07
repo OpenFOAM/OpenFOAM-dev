@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ public:
         explicit zonesEntries(const IOobject& io)
         :
             regIOobject(io),
-            PtrList<entry>(readStream("regIOobject"))
+            PtrList<entry>(readStream(word("regIOobject")))
         {
             close();
         }
@@ -124,7 +124,7 @@ Foam::wordList Foam::vtkPV3Foam::getZoneNames(const word& zoneType) const
         false
     );
 
-    if (ioObj.headerOk())
+    if (ioObj.typeHeaderOk<cellZoneMesh>(false))
     {
         zonesEntries zones(ioObj);
 
@@ -333,7 +333,7 @@ void Foam::vtkPV3Foam::updateInfoPatches
         );
 
         // this should only ever fail if the mesh region doesn't exist
-        if (ioObj.headerOk())
+        if (ioObj.typeHeaderOk<polyBoundaryMesh>(true))
         {
             polyBoundaryMeshEntries patchEntries(ioObj);
 

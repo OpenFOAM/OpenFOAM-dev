@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,8 @@ namespace Foam
 Foam::OFstreamAllocator::OFstreamAllocator
 (
     const fileName& pathname,
-    IOstream::compressionType compression
+    IOstream::compressionType compression,
+    const bool append
 )
 :
     ofPtr_(nullptr)
@@ -52,26 +53,48 @@ Foam::OFstreamAllocator::OFstreamAllocator
             InfoInFunction << "Cannot open null file " << endl;
         }
     }
+    ofstream::openmode mode(ofstream::out);
+    if (append)
+    {
+        mode |= ofstream::app;
+    }
 
     if (compression == IOstream::COMPRESSED)
     {
-        // get identically named uncompressed version out of the way
-        if (isFile(pathname, false))
+        // Get identically named uncompressed version out of the way
+        fileName::Type pathType = Foam::type(pathname, false);
+        if (pathType == fileName::FILE || pathType == fileName::LINK)
         {
             rm(pathname);
         }
+        fileName gzPathName(pathname + ".gz");
 
-        ofPtr_ = new ogzstream((pathname + ".gz").c_str());
+        if (!append && Foam::type(gzPathName) == fileName::LINK)
+        {
+            // Disallow writing into softlink to avoid any problems with
+            // e.g. softlinked initial fields
+            rm(gzPathName);
+        }
+
+        ofPtr_ = new ogzstream(gzPathName.c_str(), mode);
     }
     else
     {
         // get identically named compressed version out of the way
-        if (isFile(pathname + ".gz", false))
+        fileName gzPathName(pathname + ".gz");
+        fileName::Type gzType = Foam::type(gzPathName, false);
+        if (gzType == fileName::FILE || gzType == fileName::LINK)
         {
-            rm(pathname + ".gz");
+            rm(gzPathName);
+        }
+        if (!append && Foam::type(pathname, false) == fileName::LINK)
+        {
+            // Disallow writing into softlink to avoid any problems with
+            // e.g. softlinked initial fields
+            rm(pathname);
         }
 
-        ofPtr_ = new ofstream(pathname.c_str());
+        ofPtr_ = new ofstream(pathname.c_str(), mode);
     }
 }
 
@@ -89,10 +112,11 @@ Foam::OFstream::OFstream
     const fileName& pathname,
     streamFormat format,
     versionNumber version,
-    compressionType compression
+    compressionType compression,
+    const bool append
 )
 :
-    OFstreamAllocator(pathname, compression),
+    OFstreamAllocator(pathname, compression, append),
     OSstream(*ofPtr_, "OFstream.sinkFile_", format, version, compression),
     pathname_(pathname)
 {

@@ -362,22 +362,25 @@ void Foam::streamLineParticle::hitPatch
 
 void Foam::streamLineParticle::readFields(Cloud<streamLineParticle>& c)
 {
-    if (!c.size())
-    {
-        return;
-    }
+//    if (!c.size())
+//    {
+//        return;
+//    }
+    bool valid = c.size();
 
     particle::readFields(c);
 
     IOField<label> lifeTime
     (
-        c.fieldIOobject("lifeTime", IOobject::MUST_READ)
+        c.fieldIOobject("lifeTime", IOobject::MUST_READ),
+        valid
     );
     c.checkFieldIOobject(c, lifeTime);
 
     vectorFieldIOField sampledPositions
     (
-        c.fieldIOobject("sampledPositions", IOobject::MUST_READ)
+        c.fieldIOobject("sampledPositions", IOobject::MUST_READ),
+        valid
     );
     c.checkFieldIOobject(c, sampledPositions);
 
@@ -395,7 +398,7 @@ void Foam::streamLineParticle::writeFields(const Cloud<streamLineParticle>& c)
 {
     particle::writeFields(c);
 
-    label np =  c.size();
+    label np = c.size();
 
     IOField<label> lifeTime
     (
@@ -416,8 +419,8 @@ void Foam::streamLineParticle::writeFields(const Cloud<streamLineParticle>& c)
         i++;
     }
 
-    lifeTime.write();
-    sampledPositions.write();
+    lifeTime.write(np > 0);
+    sampledPositions.write(np > 0);
 }
 
 

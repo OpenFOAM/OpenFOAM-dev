@@ -100,7 +100,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
 
             // Check if the species file is provided, if not set inactive
             // and NO_WRITE
-            if (!header.headerOk())
+            if (!header.typeHeaderOk<volScalarField>(true))
             {
                 composition.setInactive(i);
                 this->Y()[i].writeOpt() = IOobject::NO_WRITE;

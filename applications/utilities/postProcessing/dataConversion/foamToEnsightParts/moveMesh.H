@@ -7,7 +7,7 @@
         mesh
     );
 
-    if (io.headerOk())
+    if (io.typeHeaderOk<pointIOField>(true))
     {
         // Read new points
         io.readOpt() = IOobject::MUST_READ;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,23 @@ void Foam::CompactIOList<T, BaseType>::readFromStream()
             << "    while reading object " << name()
             << exit(FatalIOError);
     }
+}
+
+
+template<class T, class BaseType>
+bool Foam::CompactIOList<T, BaseType>::overflows() const
+{
+    label size = 0;
+    forAll(*this, i)
+    {
+        label oldSize = size;
+        size += this->operator[](i).size();
+        if (size < oldSize)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -160,7 +177,8 @@ bool Foam::CompactIOList<T, BaseType>::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
-    IOstream::compressionType cmp
+    IOstream::compressionType cmp,
+    const bool valid
 ) const
 {
     if (fmt == IOstream::ASCII)
@@ -170,7 +188,26 @@ bool Foam::CompactIOList<T, BaseType>::writeObject
 
         const_cast<word&>(typeName) = IOList<T>::typeName;
 
-        bool good = regIOobject::writeObject(fmt, ver, cmp);
+        bool good = regIOobject::writeObject(fmt, ver, cmp, valid);
+
+        // Change type back
+        const_cast<word&>(typeName) = oldTypeName;
+
+        return good;
+    }
+    else if (overflows())
+    {
+        WarningInFunction
+            << "Overall number of elements of CompactIOList of size "
+            << this->size() << " overflows the representation of a label"
+            << endl << "    Switching to ascii writing" << endl;
+
+        // Change type to be non-compact format type
+        const word oldTypeName = typeName;
+
+        const_cast<word&>(typeName) = IOList<T>::typeName;
+
+        bool good = regIOobject::writeObject(IOstream::ASCII, ver, cmp, valid);
 
         // Change type back
         const_cast<word&>(typeName) = oldTypeName;
@@ -179,7 +216,7 @@ bool Foam::CompactIOList<T, BaseType>::writeObject
     }
     else
     {
-        return regIOobject::writeObject(fmt, ver, cmp);
+        return regIOobject::writeObject(fmt, ver, cmp, valid);
     }
 }
 
@@ -263,7 +300,18 @@ Foam::Ostream& Foam::operator<<
         start[0] = 0;
         for (label i = 1; i < start.size(); i++)
         {
-            start[i] = start[i-1]+L[i-1].size();
+            label prev = start[i-1];
+            start[i] = prev+L[i-1].size();
+
+            if (start[i] < prev)
+            {
+                FatalIOErrorInFunction(os)
+                    << "Overall number of elements " << start[i]
+                    << " of CompactIOList of size "
+                    << L.size() << " overflows the representation of a label"
+                    << endl << "Please recompile with a larger representation"
+                    << " for label" << exit(FatalIOError);
+            }
         }
 
         List<BaseType> elems(start[start.size()-1]);

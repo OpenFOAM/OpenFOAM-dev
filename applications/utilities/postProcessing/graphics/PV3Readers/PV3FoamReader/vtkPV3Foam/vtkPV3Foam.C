@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "fvMesh.H"
 #include "Time.H"
 #include "patchZones.H"
+#include "collatedFileOperation.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -248,6 +249,12 @@ Foam::vtkPV3Foam::vtkPV3Foam
         Info<< "Foam::vtkPV3Foam::vtkPV3Foam - " << FileName << endl;
         printMemory();
     }
+
+    // Make sure not to use the threaded version - it does not like
+    // being loaded as a shared library - static cleanup order is problematic.
+    // For now just disable the threaded writer.
+    fileOperations::collatedFileOperation::maxThreadFileBufferSize = 0;
+
 
     // avoid argList and get rootPath/caseName directly from the file
     fileName fullCasePath(fileName(FileName).path());
@@ -567,7 +574,13 @@ double* Foam::vtkPV3Foam::findTimes(int& nTimeSteps)
             if
             (
                 isFile(runTime.path()/timeName/meshDir_/"points")
-             && IOobject("points", timeName, meshDir_, runTime).headerOk()
+             && IOobject
+                (
+                    "points",
+                    timeName,
+                    meshDir_,
+                    runTime
+                ).typeHeaderOk<pointIOField>(true)
             )
             {
                 break;

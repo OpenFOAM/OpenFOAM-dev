@@ -5,7 +5,23 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication blockMesh
+
+# Serial
 runApplication snappyHexMesh -overwrite
 runApplication `getApplication`
+
+## Parallel
+#runApplication decomposePar -fileHandler collated
+#runParallel snappyHexMesh -overwrite -fileHandler collated
+## Remove any include files from the field dictionaries
+#(   mkdir -p processors/0 && \
+#    cd 0 && \
+#    for f in *; do [ -f "$f" ] && \
+#    foamDictionary "$f" > "../processors/0/$f"; done \
+#)
+#
+#runParallel `getApplication` -fileHandler collated
+#runApplication reconstructParMesh -constant  -mergeTol 1e-6
+#runApplication reconstructPar
 
 #------------------------------------------------------------------------------

@@ -149,7 +149,7 @@ void MapVolFields
                 IOobject::MUST_READ
             );
 
-            if (targetIO.headerOk())
+            if (targetIO.typeHeaderOk<fieldType>(true))
             {
                 Info<< "    interpolating onto existing field "
                     << fieldName << endl;

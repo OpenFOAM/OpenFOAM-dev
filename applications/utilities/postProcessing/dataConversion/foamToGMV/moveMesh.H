@@ -6,7 +6,7 @@ IOobject ioPoints
     mesh
 );
 
-if (ioPoints.headerOk())
+if (ioPoints.typeHeaderOk<pointIOField>(true))
 {
     Info<< "new points available" << endl;
     // Reading new points

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,11 @@ namespace functionEntries
 {
     class codeStream;
 }
+namespace fileOperations
+{
+    class uncollatedFileOperation;
+    class masterUncollatedFileOperation;
+}
 
 /*---------------------------------------------------------------------------*\
                          Class regIOobject Declaration
@@ -62,22 +67,13 @@ class regIOobject
 :
     public IOobject
 {
-
-public:
-
-    //- Types of communications
-    enum fileCheckTypes
-    {
-        timeStamp,
-        timeStampMaster,
-        inotify,
-        inotifyMaster
-    };
-
-    static const NamedEnum<fileCheckTypes, 4> fileCheckTypesNames;
-
-
 protected:
+        //- Helper: check readOpt flags and read if necessary
+        bool readHeaderOk
+        (
+            const IOstream::streamFormat PstreamFormat,
+            const word& typeName
+        );
 
         //- To flag master-only reading of objects
         static bool masterOnlyReading;
@@ -93,20 +89,20 @@ private:
         //- Is this object owned by the registry
         bool ownedByRegistry_;
 
-        //- Modification watch index
-        mutable label watchIndex_;
+        //- List of modification watch indices
+        mutable labelList watchIndices_;
 
         //- eventNo of last update
         label eventNo_;
 
         //- Istream for reading
-        Istream* isPtr_;
+        autoPtr<ISstream> isPtr_;
 
 
     // Private Member Functions
 
         //- Return Istream
-        Istream& readStream();
+        Istream& readStream(const bool valid = true);
 
         //- Dissallow assignment
         void operator=(const regIOobject&);
@@ -117,6 +113,8 @@ public:
         //- Declare friendship with any classes that need access to
         //  masterOnlyReading
         friend class functionEntries::codeStream;
+        friend class fileOperations::uncollatedFileOperation;
+        friend class fileOperations::masterUncollatedFileOperation;
 
 
     // Static data
@@ -125,8 +123,6 @@ public:
         TypeName("regIOobject");
 
         static float fileModificationSkew;
-
-        static fileCheckTypes fileModificationChecking;
 
 
     // Constructors
@@ -163,6 +159,9 @@ public:
 
             //- Remove object from registry
             bool checkOut();
+
+            //- Add file watch on object (if registered and READ_IF_MODIFIED)
+            virtual void addWatch();
 
             //- Is this object owned by the registry?
             inline bool ownedByRegistry() const;
@@ -235,8 +234,17 @@ public:
 
         // Reading
 
+            //- Return complete path + object name if the file exists
+            //  in the case directory otherwise null. Does not search
+            //  up if parallel. Can be overridden to provide this functionality
+            //  (e.g. IOdictionary)
+            virtual fileName filePath() const;
+
+            //- Read and check header info
+            bool headerOk();
+
             //- Return Istream and check object type against that given
-            Istream& readStream(const word&);
+            Istream& readStream(const word&, const bool valid = true);
 
             //- Close Istream
             void close();
@@ -249,11 +257,15 @@ public:
             //- Read object
             virtual bool read();
 
-            //- Return file-monitoring handle
-            inline label watchIndex() const;
+            //- Add file watch for fileName on object if not yet watched. Return
+            //  index of watch
+            virtual label addWatch(const fileName&);
 
-            //- Return file-monitoring handle
-            inline label& watchIndex();
+            //- Return file-monitoring handles
+            inline const labelList& watchIndices() const;
+
+            //- Return file-monitoring handles
+            inline labelList& watchIndices();
 
             //- Return true if the object's file (or files for objectRegistry)
             //  have been modified. (modified state is cached by Time)
@@ -274,11 +286,21 @@ public:
             (
                 IOstream::streamFormat,
                 IOstream::versionNumber,
-                IOstream::compressionType
+                IOstream::compressionType,
+                const bool valid
             ) const;
 
             //- Write using setting from DB
-            virtual bool write() const;
+            virtual bool write(const bool valid = true) const;
+
+
+        // Other
+
+            //- Is object global
+            virtual bool global() const
+            {
+                return false;
+            }
 
 
     // Member operators

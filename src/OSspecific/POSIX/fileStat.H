@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,8 +79,15 @@ public:
         //- Empty constructor
         fileStat();
 
-        //- Construct from components
-        fileStat(const fileName& fName, const unsigned int maxTime=0);
+        //- Construct from components.
+        //  followLink : in case of link get status of pointed-to file
+        //  maxTime    : time out
+        fileStat
+        (
+            const fileName& fName,
+            const bool followLink = true,
+            const unsigned int maxTime = 0
+        );
 
         //- Construct from Istream
         fileStat(Istream&);

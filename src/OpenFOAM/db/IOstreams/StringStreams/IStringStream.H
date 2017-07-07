@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,25 @@ public:
             (
                 *(new std::istringstream(buffer)),
                 "IStringStream.sourceFile",
+                format,
+                version
+            )
+        {}
+
+
+        //- Construct from string and name
+        IStringStream
+        (
+            const string& name,
+            const string& buffer,
+            streamFormat format=ASCII,
+            versionNumber version=currentVersion
+        )
+        :
+            ISstream
+            (
+                *(new std::istringstream(buffer)),
+                name,
                 format,
                 version
             )

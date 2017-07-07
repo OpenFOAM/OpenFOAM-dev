@@ -31,21 +31,18 @@ Description
 
 Note
     - best decomposition option is hierarchGeomDecomp since
-    guarantees square decompositions.
+      guarantees square decompositions.
     - triangles might be present on multiple processors.
     - merging uses geometric tolerance so take care with writing precision.
 
 \*---------------------------------------------------------------------------*/
 
-#include "treeBoundBox.H"
-#include "FixedList.H"
 #include "argList.H"
 #include "Time.H"
 #include "polyMesh.H"
 #include "distributedTriSurfaceMesh.H"
 #include "mapDistribute.H"
-#include "triSurfaceFields.H"
-#include "Pair.H"
+#include "localIOdictionary.H"
 
 using namespace Foam;
 
@@ -172,10 +169,11 @@ int main(int argc, char *argv[])
         "triSurface",         // local
         runTime,              // registry
         IOobject::MUST_READ,
-        IOobject::NO_WRITE
+        IOobject::AUTO_WRITE
     );
 
-    const fileName actualPath(io.filePath());
+    // Look for file (using searchableSurface rules)
+    const fileName actualPath(typeFilePath<searchableSurface>(io));
     fileName localPath(actualPath);
     localPath.replace(runTime.rootPath() + '/', "");
 
@@ -197,7 +195,7 @@ int main(int argc, char *argv[])
         dict.add("distributionType", distType);
         dict.add("mergeDistance", SMALL);
 
-        IOdictionary ioDict
+        localIOdictionary ioDict
         (
             IOobject
             (
@@ -215,11 +213,13 @@ int main(int argc, char *argv[])
         Info<< "Writing dummy bounds dictionary to " << ioDict.name()
             << nl << endl;
 
+        // Force writing in ascii
         ioDict.regIOobject::writeObject
         (
             IOstream::ASCII,
             IOstream::currentVersion,
-            ioDict.time().writeCompression()
+            ioDict.time().writeCompression(),
+            true
         );
     }
 
@@ -239,23 +239,17 @@ int main(int argc, char *argv[])
             (
                 IOobject
                 (
-                    surfMesh.searchableSurface::name(),     // name
-                    surfMesh.searchableSurface::instance(), // instance
-                    surfMesh.searchableSurface::local(),    // local
+                    "faceCentres",                                  // name
+                    surfMesh.searchableSurface::time().timeName(),  // instance
                     surfMesh,
                     IOobject::NO_READ,
                     IOobject::AUTO_WRITE
                 ),
                 surfMesh,
-                dimLength
+                dimLength,
+                s.faceCentres()
             )
         );
-        triSurfaceVectorField& fc = fcPtr();
-
-        forAll(fc, triI)
-        {
-            fc[triI] = s[triI].centre(s.points());
-        }
 
         // Steal pointer and store object on surfMesh
         fcPtr.ptr()->store();
@@ -290,7 +284,7 @@ int main(int argc, char *argv[])
 
 
     Info<< "Writing surface." << nl << endl;
-    surfMesh.searchableSurface::write();
+    surfMesh.objectRegistry::write();
 
     Info<< "End\n" << endl;
 

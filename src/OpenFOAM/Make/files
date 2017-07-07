@@ -5,6 +5,14 @@ global/argList/argList.C
 global/clock/clock.C
 global/etcFiles/etcFiles.C
 
+fileOps = global/fileOperations
+$(fileOps)/fileOperation/fileOperation.C
+$(fileOps)/uncollatedFileOperation/uncollatedFileOperation.C
+$(fileOps)/masterUncollatedFileOperation/masterUncollatedFileOperation.C
+$(fileOps)/collatedFileOperation/collatedFileOperation.C
+$(fileOps)/collatedFileOperation/threadedCollatedOFstream.C
+$(fileOps)/collatedFileOperation/OFstreamCollator.C
+
 bools = primitives/bools
 $(bools)/bool/bool.C
 $(bools)/bool/boolIO.C
@@ -161,6 +169,7 @@ $(gzstream)/gzstream.C
 Fstreams = $(Streams)/Fstreams
 $(Fstreams)/IFstream.C
 $(Fstreams)/OFstream.C
+$(Fstreams)/masterOFstream.C
 
 Tstreams = $(Streams)/Tstreams
 $(Tstreams)/ITstream.C
@@ -210,10 +219,16 @@ $(functionEntries)/inputModeEntry/inputModeEntry.C
 $(functionEntries)/removeEntry/removeEntry.C
 
 IOdictionary = db/IOobjects/IOdictionary
+$(IOdictionary)/baseIOdictionary.C
+$(IOdictionary)/baseIOdictionaryIO.C
 $(IOdictionary)/IOdictionary.C
-$(IOdictionary)/IOdictionaryIO.C
+$(IOdictionary)/localIOdictionary.C
+$(IOdictionary)/unwatchedIOdictionary.C
 
 db/IOobjects/IOMap/IOMapName.C
+db/IOobjects/decomposedBlockData/decomposedBlockData.C
+db/IOobjects/GlobalIOField/GlobalIOFields.C
+
 
 IOobject = db/IOobject
 $(IOobject)/IOobject.C
