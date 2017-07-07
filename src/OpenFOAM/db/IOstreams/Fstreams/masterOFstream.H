@@ -36,7 +36,6 @@ SourceFiles
 #define masterOFstream_H
 
 #include "OStringStream.H"
-//#include "tmpNrc.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +65,7 @@ class masterOFstream
     // Private Member Functions
 
         //- Open file with checking
-        void write(const fileName& fName, const string& str);
+        void checkWrite(const fileName& fName, const string& str);
 
 
 public:

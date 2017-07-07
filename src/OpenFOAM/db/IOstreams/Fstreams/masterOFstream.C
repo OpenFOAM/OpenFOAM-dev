@@ -32,7 +32,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::masterOFstream::write
+void Foam::masterOFstream::checkWrite
 (
     const fileName& fName,
     const string& str
@@ -43,11 +43,12 @@ void Foam::masterOFstream::write
     OFstream os
     (
         fName,
-        IOstream::BINARY,   //format(),
+        IOstream::BINARY,
         version(),
         compression_,
         append_
     );
+
     if (!os.good())
     {
         FatalIOErrorInFunction(os)
@@ -107,7 +108,7 @@ Foam::masterOFstream::~masterOFstream()
         {
             if (Pstream::master() && valid_)
             {
-                write(pathName_, str());
+                checkWrite(pathName_, str());
             }
             return;
         }
@@ -136,7 +137,7 @@ Foam::masterOFstream::~masterOFstream()
             {
                 if (valid[Pstream::myProcNo()])
                 {
-                    write(filePaths[Pstream::myProcNo()], str());
+                    checkWrite(filePaths[Pstream::myProcNo()], str());
                 }
             }
 
@@ -149,14 +150,18 @@ Foam::masterOFstream::~masterOFstream()
 
                 if (valid[proci])
                 {
-                    write(filePaths[proci], string(buf.begin(), buf.size()));
+                    checkWrite
+                    (
+                        filePaths[proci],
+                        string(buf.begin(), buf.size())
+                    );
                 }
             }
         }
     }
     else
     {
-        write(pathName_, str());
+        checkWrite(pathName_, str());
     }
 }
 
