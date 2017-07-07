@@ -366,10 +366,10 @@ protected:
             const instant& t
         );
 
-        //- Search for object; return info on how was found
+        //- Search for object; return info on how it was found
         //    checkGlobal : also check undecomposed case
         //    isFile      : true:check for file  false:check for directory
-        fileName filePath
+        fileName filePathInfo
         (
             const bool checkGlobal,
             const bool isFile,

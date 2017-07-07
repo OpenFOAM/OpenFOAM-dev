@@ -90,7 +90,7 @@ Foam::fileOperations::masterUncollatedFileOperation::findInstancePath
 }
 
 
-Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePath
+Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePathInfo
 (
     const bool checkGlobal,
     const bool isFile,
@@ -707,7 +707,14 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePath
     word newInstancePath;
     if (Pstream::master())
     {
-        objPath = filePath(checkGlobal, true, io, searchType, newInstancePath);
+        objPath = filePathInfo
+        (
+            checkGlobal,
+            true,
+            io,
+            searchType,
+            newInstancePath
+        );
     }
     {
         label masterType(searchType);
@@ -777,7 +784,14 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::dirPath
     word newInstancePath;
     if (Pstream::master())
     {
-        objPath = filePath(checkGlobal, false, io, searchType, newInstancePath);
+        objPath = filePathInfo
+        (
+            checkGlobal,
+            false,
+            io,
+            searchType,
+            newInstancePath
+        );
     }
     {
         label masterType(searchType);
