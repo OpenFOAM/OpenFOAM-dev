@@ -51,7 +51,7 @@ case SYSTEMOPENMPI:
     breaksw
 
 case OPENMPI:
-    setenv FOAM_MPI openmpi-2.0.2
+    setenv FOAM_MPI openmpi-2.1.1
     # Optional configuration tweaks:
     _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/openmpi`
 
