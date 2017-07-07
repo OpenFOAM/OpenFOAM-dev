@@ -408,18 +408,26 @@ int main(int argc, char *argv[])
                 Info<< "Removing " << nProcs
                     << " existing processor directories" << endl;
 
-                fileHandler().rmDir(runTime.path()/word("processors"));
+                // Remove existing processors directory
+                const fileName procDir(runTime.path()/word("processors"));
+                if (fileHandler().exists(procDir))
+                {
+                    fileHandler().rmDir(procDir);
+                }
 
-                // remove existing processor dirs
+                // Remove existing processor directories
                 // reverse order to avoid gaps if someone interrupts the process
                 for (label proci = nProcs-1; proci >= 0; --proci)
                 {
-                    fileName procDir
+                    const fileName procDir
                     (
                         runTime.path()/(word("processor") + name(proci))
                     );
 
-                    fileHandler().rmDir(procDir);
+                    if (fileHandler().exists(procDir))
+                    {
+                        fileHandler().rmDir(procDir);
+                    }
                 }
 
                 procDirsProblem = false;
