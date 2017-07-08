@@ -410,7 +410,7 @@ _cavitatingDyMFoam_ ()
 complete -o filenames -o nospace -F _cavitatingDyMFoam_ cavitatingDyMFoam
 
 _cavitatingFoam_ ()
-{surface
+{
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
     local line=${COMP_LINE}
