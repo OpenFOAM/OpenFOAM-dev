@@ -290,9 +290,6 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
     const point& p2
 ) const
 {
-    label dummyNearType = -1;
-    label dummyNearLabel = -1;
-
     forAll(faces_, facei)
     {
         const label facePoint0 = faces_[facei][0];
@@ -311,23 +308,30 @@ void Foam::ParticleCollector<CloudType>::collectParcelPolygon
         // Intersection point
         const point pIntersect = p1 + (d1/(d1 - d2))*(p2 - p1);
 
-        const List<face>& tris = faceTris_[facei];
-
-        // Identify if point is within poly bounds
-        forAll(tris, triI)
+        // Identify if point is within the bounds of the face. Create triangles
+        // between the intersection point and each edge of the face. If all the
+        // triangle normals point in the same direction as the face normal, then
+        // the particle is within the face. Note that testing for pointHits on
+        // the face's decomposed triangles does not work due to ambiguity along
+        // the diagonals.
+        const face& f = faces_[facei];
+        const vector n = f.normal(points_);
+        bool inside = true;
+        for (label i = 0; i < f.size(); ++ i)
         {
-            const face& tri = tris[triI];
-            triPointRef t
-            (
-                points_[tri[0]],
-                points_[tri[1]],
-                points_[tri[2]]
-            );
-
-            if (t.classify(pIntersect, dummyNearType, dummyNearLabel))
+            const label j = f.fcIndex(i);
+            const triPointRef t(pIntersect, points_[f[i]], points_[f[j]]);
+            if ((n & t.normal()) < 0)
             {
-                hitFaceIDs_.append(facei);
+                inside = false;
+                break;
             }
+        }
+
+        // Add to the list of hits
+        if (inside)
+        {
+            hitFaceIDs_.append(facei);
         }
     }
 }
@@ -654,27 +658,23 @@ void Foam::ParticleCollector<CloudType>::postMove
         return;
     }
 
-    // Slightly extend end position to avoid falling within tracking tolerances
-    const point position1 = position0 + 1.0001*(p.position() - position0);
-
     hitFaceIDs_.clear();
 
     switch (mode_)
     {
         case mtPolygon:
         {
-            collectParcelPolygon(position0, position1);
+            collectParcelPolygon(position0, p.position());
             break;
         }
         case mtConcentricCircle:
         {
-            collectParcelConcentricCircles(position0, position1);
+            collectParcelConcentricCircles(position0, p.position());
             break;
         }
         default:
         {}
     }
-
 
     forAll(hitFaceIDs_, i)
     {
