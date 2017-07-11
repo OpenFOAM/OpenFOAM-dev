@@ -459,7 +459,8 @@ masterUncollatedFileOperation
     if (verbose)
     {
         Info<< "I/O    : " << typeName
-            << " (maxMasterFileBufferSize " << maxMasterFileBufferSize << ')' << endl;
+            << " (maxMasterFileBufferSize " << maxMasterFileBufferSize << ')'
+            << endl;
     }
 
     if (regIOobject::fileModificationChecking == regIOobject::timeStampMaster)
@@ -703,8 +704,9 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePath
     // Determine master filePath and scatter
 
     fileName objPath;
-    pathType searchType;
+    pathType searchType = NOTFOUND;
     word newInstancePath;
+
     if (Pstream::master())
     {
         objPath = filePathInfo
@@ -716,11 +718,13 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::filePath
             newInstancePath
         );
     }
+
     {
         label masterType(searchType);
         Pstream::scatter(masterType);
         searchType = pathType(masterType);
     }
+
     Pstream::scatter(newInstancePath);
 
 
@@ -780,8 +784,9 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::dirPath
     // Determine master dirPath and scatter
 
     fileName objPath;
-    pathType searchType;
+    pathType searchType = NOTFOUND;
     word newInstancePath;
+
     if (Pstream::master())
     {
         objPath = filePathInfo
@@ -793,6 +798,7 @@ Foam::fileName Foam::fileOperations::masterUncollatedFileOperation::dirPath
             newInstancePath
         );
     }
+
     {
         label masterType(searchType);
         Pstream::scatter(masterType);

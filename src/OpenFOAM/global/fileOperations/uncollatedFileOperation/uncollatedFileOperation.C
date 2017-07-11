@@ -46,7 +46,7 @@ namespace fileOperations
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::fileName Foam::fileOperations::uncollatedFileOperation::doFilePath
+Foam::fileName Foam::fileOperations::uncollatedFileOperation::filePathInfo
 (
     const bool checkGlobal,
     const bool isFile,
@@ -357,7 +357,7 @@ Foam::fileName Foam::fileOperations::uncollatedFileOperation::filePath
             << " checkGlobal:" << checkGlobal << endl;
     }
 
-    fileName objPath(doFilePath(checkGlobal, true, io));
+    fileName objPath(filePathInfo(checkGlobal, true, io));
 
     if (debug)
     {
@@ -383,7 +383,7 @@ Foam::fileName Foam::fileOperations::uncollatedFileOperation::dirPath
             << " checkGlobal:" << checkGlobal << endl;
     }
 
-    fileName objPath(doFilePath(checkGlobal, false, io));
+    fileName objPath(filePathInfo(checkGlobal, false, io));
 
     if (debug)
     {

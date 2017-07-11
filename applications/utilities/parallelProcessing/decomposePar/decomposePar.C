@@ -526,7 +526,8 @@ int main(int argc, char *argv[])
                     << endl;
             }
 
-            fileOperations::collatedFileOperation::maxThreadFileBufferSize = bufSz;
+            fileOperations::collatedFileOperation::maxThreadFileBufferSize =
+                bufSz;
         }
 
 

@@ -55,7 +55,7 @@ class uncollatedFileOperation
         //- Search for an object.
         //    checkGlobal : also check undecomposed case
         //    isFile      : true:check for file  false:check for directory
-        fileName doFilePath
+        fileName filePathInfo
         (
             const bool checkGlobal,
             const bool isFile,
