@@ -121,6 +121,7 @@ void solidification::correctModel
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
     const scalarField& T = film.T();
+    const scalarField& hs = film.hs();
     const scalarField& alpha = film.alpha();
 
     const scalar rateLimiter = min
@@ -145,6 +146,7 @@ void solidification::correctModel
 
                 // Heat is assumed to be removed by heat-transfer to the wall
                 // so the energy remains unchanged by the phase-change.
+                dEnergy[celli] += dm*hs[celli];
             }
         }
     }
