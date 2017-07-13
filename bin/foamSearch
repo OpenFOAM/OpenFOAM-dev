@@ -86,7 +86,7 @@ done
 
 [ -s "$tmp" ] && \
     sort "$tmp" | uniq $count | sed '/^[\t 1-9]*$/d' || \
-    echo "No keyword $2 found in $3 files"
+    echo "No keyword $3 found in $2 files"
 
 rm "$tmp" 2>/dev/null
 
