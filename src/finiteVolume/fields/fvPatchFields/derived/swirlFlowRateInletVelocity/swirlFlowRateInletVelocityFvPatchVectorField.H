@@ -42,8 +42,8 @@ Usage
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
         rho          | density field name      | no          | rho
-        origin       | origin of rotation in Cartesian co-ordinates | no |
-        axis         | axis of rotation        | no          |
+        origin       | origin of rotation      | no          | patch centre
+        axis         | axis of rotation        | no          | -patch normal
         flowRate     | flow rate profile       | yes         |
         rpm          | rotational speed profile | yes        |
     \endtable
