@@ -22,10 +22,10 @@ addLayers       off;
 
 geometry
 {
-    sloshingCylinder.obj
+    sloshingCylinder
     {
         type closedTriSurfaceMesh;
-        name sloshingCylinder;
+        file "sloshingCylinder.obj";
     }
 };
 

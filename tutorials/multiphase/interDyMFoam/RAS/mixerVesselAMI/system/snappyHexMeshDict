@@ -21,10 +21,11 @@ addLayers       false;
 
 geometry
 {
-    vessel.stl
+    vessel
     {
-        name vessel;
         type triSurfaceMesh;
+        file "vessel.stl";
+
         regions
         {
             vessel
@@ -34,10 +35,11 @@ geometry
         }
     }
 
-    gasInlet.stl
+    gasInlet
     {
-        name gasInlet;
         type triSurfaceMesh;
+        file "gasInlet.stl";
+
         regions
         {
             gasInlet
@@ -47,10 +49,11 @@ geometry
         }
     }
 
-    outlet.stl
+    outlet
     {
-        name outlet;
         type triSurfaceMesh;
+        file "outlet.stl";
+
         regions
         {
             outlet
@@ -60,10 +63,11 @@ geometry
         }
     }
 
-    shaftRotating.stl
+    shaftRotating
     {
-        name shaftRotating;
         type triSurfaceMesh;
+        file "shaftRotating.stl";
+
         regions
         {
             shaftRotating
@@ -73,10 +77,11 @@ geometry
         }
     }
 
-    shaft.stl
+    shaft
     {
-        name shaft;
         type triSurfaceMesh;
+        file "shaft.stl";
+
         regions
         {
             shaft
@@ -86,10 +91,11 @@ geometry
         }
     }
 
-    sparger.stl
+    sparger
     {
-        name sparger;
         type triSurfaceMesh;
+        file "sparger.stl";
+
         regions
         {
             sparger
@@ -99,10 +105,11 @@ geometry
         }
     }
 
-    stirrer.stl
+    stirrer
     {
-        name stirrer;
         type triSurfaceMesh;
+        file "stirrer.stl";
+
         regions
         {
             stirrer
@@ -112,10 +119,11 @@ geometry
         }
     }
 
-    baffles.stl
+    baffles
     {
-        name baffles;
         type triSurfaceMesh;
+        file "baffles.stl";
+
         regions
         {
             baffles
@@ -125,10 +133,10 @@ geometry
         }
     }
 
-    rotating.stl
+    rotating
     {
-        name rotating;
         type triSurfaceMesh;
+        file "rotating.stl";
     }
 };
 

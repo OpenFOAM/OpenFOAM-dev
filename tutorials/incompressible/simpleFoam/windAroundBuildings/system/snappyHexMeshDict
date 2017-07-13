@@ -22,10 +22,10 @@ addLayers       off;
 
 geometry
 {
-    buildings.obj
+    buildings
     {
         type triSurfaceMesh;
-        name buildings;
+        file "buildings.obj";
     }
 
     refinementBox

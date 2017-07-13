@@ -28,10 +28,10 @@ addLayers       false;
 // - to 'snap' the mesh boundary to the surface
 geometry
 {
-    innerCylinder.obj
+    innerCylinder
     {
         type        triSurfaceMesh;
-        name        innerCylinder;
+        file        "innerCylinder.obj";
         regions
         {
             ascii
@@ -40,10 +40,10 @@ geometry
             }
         }
     }
-    innerCylinderSmall.obj
+    innerCylinderSmall
     {
         type        triSurfaceMesh;
-        name        innerCylinderSmall;
+        file        "innerCylinderSmall.obj";
         regions
         {
             ascii
@@ -52,10 +52,10 @@ geometry
             }
         }
     }
-    outerCylinder.obj
+    outerCylinder
     {
         type        triSurfaceMesh;
-        name        outerCylinder;
+        file        "outerCylinder.obj";
         regions
         {
             ascii
@@ -64,10 +64,10 @@ geometry
             }
         }
     }
-    propellerTip.obj.gz
+    propellerTip
     {
         type        triSurfaceMesh;
-        name        propellerTip;
+        file        "propellerTip.obj";
         regions
         {
             ascii
@@ -76,10 +76,10 @@ geometry
             }
         }
     }
-    propellerStem1.obj
+    propellerStem1
     {
         type        triSurfaceMesh;
-        name        propellerStem1;
+        file        "propellerStem1.obj";
         regions
         {
             ascii
@@ -88,10 +88,10 @@ geometry
             }
         }
     }
-    propellerStem2.obj
+    propellerStem2
     {
         type        triSurfaceMesh;
-        name        propellerStem2;
+        file        "propellerStem2.obj";
         regions
         {
             ascii
@@ -100,10 +100,10 @@ geometry
             }
         }
     }
-    propellerStem3.obj
+    propellerStem3
     {
         type        triSurfaceMesh;
-        name        propellerStem3;
+        file        "propellerStem3.obj";
         regions
         {
             ascii

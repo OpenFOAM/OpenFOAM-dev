@@ -29,10 +29,10 @@ addLayers       false;
 // - to 'snap' the mesh boundary to the surface
 geometry
 {
-    cyclone.stl
+    walls
     {
         type triSurfaceMesh;
-        name walls;
+        file "cyclone.stl";
     }
 };
 

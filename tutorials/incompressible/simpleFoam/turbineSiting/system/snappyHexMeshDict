@@ -43,10 +43,10 @@ geometry
         max (581771 4785671 1079);
     }
 
-    terrain.stl
+    terrain
     {
         type triSurfaceMesh;
-        name terrain;
+        file "terrain.stl";
     }
 };
 

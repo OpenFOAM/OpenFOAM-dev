@@ -29,10 +29,10 @@ addLayers       true;
 // - to 'snap' the mesh boundary to the surface
 geometry
 {
-    DTC-scaled.stl
+    hull
     {
         type triSurfaceMesh;
-        name hull;
+        file "DTC-scaled.stl";
 
         patchInfo
         {

@@ -29,34 +29,34 @@ addLayers       false;
 // - to 'snap' the mesh boundary to the surface
 geometry
 {
-    bottomAir.stl
+    bottomAir
     {
         type triSurfaceMesh;
-        name bottomAir;
+        file "bottomAir.stl";
     }
 
-    topAir.stl
+    topAir
     {
         type triSurfaceMesh;
-        name topAir;
+        file "topAir.stl";
     }
 
-    leftSolid.stl
+    leftSolid
     {
         type triSurfaceMesh;
-        name leftSolid;
+        file "leftSolid.stl";
     }
 
-    rightSolid.stl
+    rightSolid
     {
         type triSurfaceMesh;
-        name rightSolid;
+        file "rightSolid.stl";
     }
 
-    heater.stl
+    heater
     {
         type triSurfaceMesh;
-        name heater;
+        file "heater.stl";
     }
 };
 

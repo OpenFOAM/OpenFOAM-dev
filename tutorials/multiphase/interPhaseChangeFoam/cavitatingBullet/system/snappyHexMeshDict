@@ -29,10 +29,10 @@ addLayers       true;
 // - to 'snap' the mesh boundary to the surface
 geometry
 {
-    bullet.stl
+    bullet
     {
         type triSurfaceMesh;
-        name bullet;
+        file "bullet.stl";
 
         regions
         {

@@ -22,10 +22,10 @@ addLayers       off;
 
 geometry
 {
-    fixed.obj
+    fixed
     {
         type triSurfaceMesh;
-        name fixed;
+        file "fixed.obj";
         regions
         {
             patch0 { name slipWall; }
@@ -33,10 +33,10 @@ geometry
             patch2 { name inlet; }
         }
     }
-    rotatingZone.obj
+    rotatingZone
     {
         type triSurfaceMesh;
-        name rotatingZone;
+        file "rotatingZone.obj";
     }
 };
 

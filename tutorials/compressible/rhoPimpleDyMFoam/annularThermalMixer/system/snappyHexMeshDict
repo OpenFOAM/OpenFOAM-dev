@@ -20,58 +20,58 @@ addLayers       false;
 
 geometry
 {
-    AMI.obj
+    AMI
     {
         type        triSurfaceMesh;
-        name        AMI;
+        file        "AMI.obj";
     }
 
-    innerInlet.obj
+    innerInlet
     {
         type        triSurfaceMesh;
-        name        innerInlet;
+        file        "innerInlet.obj";
     }
 
-    outerInlet.obj
+    outerInlet
     {
         type        triSurfaceMesh;
-        name        outerInlet;
+        file        "outerInlet.obj";
     }
 
-    innerOutlet.obj
+    innerOutlet
     {
         type        triSurfaceMesh;
-        name        innerOutlet;
+        file        "innerOutlet.obj";
     }
 
-    outerOutlet.obj
+    outerOutlet
     {
         type        triSurfaceMesh;
-        name        outerOutlet;
+        file        "outerOutlet.obj";
     }
 
-    rotorBlades.obj
+    rotorBlades
     {
         type        triSurfaceMesh;
-        name        rotorBlades;
+        file        "rotorBlades.obj";
     }
 
-    shaft.obj
+    shaft
     {
         type        triSurfaceMesh;
-        name        shaft;
+        file        "shaft.obj";
     }
 
-    statorBlades.obj
+    statorBlades
     {
         type        triSurfaceMesh;
-        name        statorBlades;
+        file        "statorBlades.obj";
     }
 
-    wall.obj
+    walls
     {
         type        triSurfaceMesh;
-        name        walls;
+        file        "wall.obj";
     }
 };
 

@@ -28,10 +28,10 @@ addLayers       true;
 // - to 'snap' the mesh boundary to the surface
 geometry
 {
-//    motorBike.obj
+//    motorBike
 //    {
 //        type triSurfaceMesh;
-//        name motorBike;
+//        file "motorBike.obj";
 //    }
 //
 //    refinementBox
