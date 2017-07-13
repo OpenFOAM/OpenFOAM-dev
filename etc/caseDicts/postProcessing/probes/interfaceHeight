@@ -6,17 +6,16 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes the height of an interface above a set of locations; for each
-    location, it writes the vertical distance of the interface above both
-    the location and the lowest boundary.
+    Reports the height of the interface above a set of locations. For each
+    location, it writes the vertical distance of the interface above both the
+    location and the lowest boundary. It also writes the point on the interface
+    from which these heights are computed. It uses an integral approach, so if
+    there are multiple interfaces above or below a location then this method
+    will generate average values.
 
 \*---------------------------------------------------------------------------*/
 
-type              interfaceHeight;
-libs              ("libfieldFunctionObjects.so");
-
-executionControl  writeTime;
-writeControl      writeTime;
+#includeEtc "caseDicts/postProcessing/probes/interfaceHeight.cfg"
 
 alpha      alpha.water;
 locations
