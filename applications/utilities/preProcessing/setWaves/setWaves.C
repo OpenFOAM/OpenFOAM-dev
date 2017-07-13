@@ -25,6 +25,8 @@ Application
     setWaves
 
 Description
+    Applies wave models to the entire domain for case initialisation using
+    level sets for second-order accuracy.
 
 \*---------------------------------------------------------------------------*/
 
