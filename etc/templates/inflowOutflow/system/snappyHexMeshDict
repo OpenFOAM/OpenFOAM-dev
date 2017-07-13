@@ -22,10 +22,10 @@ addLayers       off;
 
 geometry
 {
-    CAD.obj
+    CAD
     {
         type triSurfaceMesh;
-        name CAD;
+        file "CAD.obj";
         regions
         {
             <inletPatch>  { name inlet; }

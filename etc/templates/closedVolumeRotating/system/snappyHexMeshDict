@@ -22,20 +22,20 @@ addLayers       off;
 
 geometry
 {
-    fixed.obj
+    fixed
     {
         type triSurfaceMesh;
-        name fixed;
+        file "fixed.obj";
     }
-    rotating.obj
+    rotating
     {
         type triSurfaceMesh;
-        name rotating;
+        file "rotating.obj";
     }
-    rotatingZone.obj
+    rotatingZone
     {
         type triSurfaceMesh;
-        name rotatingZone;
+        file "rotatingZone.obj";
     }
 };
 
