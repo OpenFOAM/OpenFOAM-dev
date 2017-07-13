@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         axis         | axis of rotation        | yes         |
-        centre       | centre of rotation      | yes         |
+        origin       | origin of rotation      | yes         |
         axialVelocity | axial velocity profile [m/s] | yes    |
         radialVelocity | radial velocity profile [m/s] | yes  |
         rpm          | rotational speed (revolutions per minute) | yes|
@@ -48,7 +48,7 @@ Usage
     {
         type            cylindricalInletVelocity;
         axis            (0 0 1);
-        centre          (0 0 0);
+        origin          (0 0 0);
         axialVelocity   constant 30;
         radialVelocity  constant -10;
         rpm             constant 100;
@@ -89,10 +89,10 @@ class cylindricalInletVelocityFvPatchVectorField
 {
     // Private data
 
-        //- Central point
-        const vector centre_;
+        //- Origin of the rotation
+        const vector origin_;
 
-        //- Axis
+        //- Axis of the rotation
         const vector axis_;
 
         //- Axial velocity
