@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,42 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(p, iF),
     phiName_("phi"),
     rhoName_("rho"),
+    origin_(),
+    axis_(Zero),
     flowRate_(),
     rpm_()
+{}
+
+
+Foam::swirlFlowRateInletVelocityFvPatchVectorField::
+swirlFlowRateInletVelocityFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<vector>(p, iF, dict),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    origin_
+    (
+        dict.lookupOrDefault
+        (
+            "origin",
+            gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
+        )
+    ),
+    axis_
+    (
+        dict.lookupOrDefault
+        (
+            "axis",
+            -gSum(patch().Sf())/gSum(patch().magSf())
+        )
+    ),
+    flowRate_(Function1<scalar>::New("flowRate", dict)),
+    rpm_(Function1<scalar>::New("rpm", dict))
 {}
 
 
@@ -59,24 +93,10 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
     flowRate_(ptf.flowRate_, false),
     rpm_(ptf.rpm_, false)
-{}
-
-
-Foam::swirlFlowRateInletVelocityFvPatchVectorField::
-swirlFlowRateInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<vector>(p, iF, dict),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    flowRate_(Function1<scalar>::New("flowRate", dict)),
-    rpm_(Function1<scalar>::New("rpm", dict))
 {}
 
 
@@ -89,6 +109,8 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
     flowRate_(ptf.flowRate_, false),
     rpm_(ptf.rpm_, false)
 {}
@@ -104,6 +126,8 @@ swirlFlowRateInletVelocityFvPatchVectorField
     fixedValueFvPatchField<vector>(ptf, iF),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
+    origin_(ptf.origin_),
+    axis_(ptf.axis_),
     flowRate_(ptf.flowRate_, false),
     rpm_(ptf.rpm_, false)
 {}
@@ -122,18 +146,16 @@ void Foam::swirlFlowRateInletVelocityFvPatchVectorField::updateCoeffs()
     const scalar flowRate = flowRate_->value(t);
     const scalar rpm = rpm_->value(t);
 
-    const scalar totArea   = gSum(patch().magSf());
+    const scalar totArea = gSum(patch().magSf());
     const scalar avgU = -flowRate/totArea;
 
-    const vector avgCenter = gSum(patch().Cf()*patch().magSf())/totArea;
-    const vector avgNormal = gSum(patch().Sf())/totArea;
+    const vector axisHat = axis_/mag(axis_);
 
     // Update angular velocity - convert [rpm] to [rad/s]
     tmp<vectorField> tangentialVelocity
-        (
-            (rpm*constant::mathematical::pi/30.0)
-          * (patch().Cf() - avgCenter) ^ avgNormal
-        );
+    (
+        axisHat ^ (rpm*constant::mathematical::pi/30.0)*(patch().Cf() - origin_)
+    );
 
     tmp<vectorField> n = patch().nf();
 
@@ -175,6 +197,8 @@ void Foam::swirlFlowRateInletVelocityFvPatchVectorField::write
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
+    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
+    os.writeKeyword("axis") << axis_ << token::END_STATEMENT << nl;
     flowRate_->writeData(os);
     rpm_->writeData(os);
     writeEntry("value", os);
