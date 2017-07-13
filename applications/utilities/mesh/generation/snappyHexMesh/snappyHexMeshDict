@@ -46,9 +46,10 @@ geometry
         max (3.5 2 0.5);
     }
 
-    sphere.stl
+    sphere
     {
         type triSurfaceMesh;
+        file "sphere.stl"
 
         //tolerance   1E-5;   // optional:non-default tolerance on intersections
         //maxTreeDepth 10;    // optional:depth of octree. Decrease only in case
@@ -146,7 +147,7 @@ castellatedMeshControls
 
     refinementSurfaces
     {
-        sphere.stl
+        sphere
         {
             // Surface-wise min and max refinement level
             level (2 2);
@@ -242,7 +243,7 @@ castellatedMeshControls
             mode inside;
             levels ((1.0 4));
         }
-        //sphere.stl
+        //sphere
         //{
         //    mode distance;
         //    levels ((1.0 5) (2.0 3));
@@ -365,7 +366,7 @@ addLayersControls
     //          - angle to nearest surface < slipFeatureAngle (see below)
     layers
     {
-        sphere.stl_firstSolid
+        sphere_firstSolid
         {
             nSurfaceLayers 1;
 
