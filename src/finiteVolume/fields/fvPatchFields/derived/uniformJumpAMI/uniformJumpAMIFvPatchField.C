@@ -35,7 +35,7 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 )
 :
     fixedJumpAMIFvPatchField<Type>(p, iF),
-    jumpTable_(0)
+    jumpTable_()
 {}
 
 
@@ -62,7 +62,7 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 )
 :
     fixedJumpAMIFvPatchField<Type>(p, iF),
-    jumpTable_(new Function1<Type>("jumpTable"))
+    jumpTable_()
 {
     if (this->cyclicAMIPatch().owner())
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -335,6 +335,33 @@ SlicedGeometricField
 {
     // Set the internalField to the supplied internal field
     UList<Type>::shallowCopy(gf.primitiveField());
+}
+
+
+template
+<
+    class Type,
+    template<class> class PatchField,
+    template<class> class SlicedPatchField,
+    class GeoMesh
+>
+Foam::tmp
+<
+    Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+>
+Foam::SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>::
+clone() const
+{
+    return tmp
+    <
+        SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+    >
+    (
+        new SlicedGeometricField<Type, PatchField, SlicedPatchField, GeoMesh>
+        (
+            *this
+        )
+    );
 }
 
 

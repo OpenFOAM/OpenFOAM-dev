@@ -714,6 +714,17 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
 #endif
 
 
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
+Foam::GeometricField<Type, PatchField, GeoMesh>::clone() const
+{
+    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    (
+        new GeometricField<Type, PatchField, GeoMesh>(*this)
+    );
+}
+
+
 // * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //
 
 template<class Type, template<class> class PatchField, class GeoMesh>

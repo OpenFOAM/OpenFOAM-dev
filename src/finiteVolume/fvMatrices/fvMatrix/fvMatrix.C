@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -450,6 +450,18 @@ Foam::fvMatrix<Type>::fvMatrix
 
 }
 
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::fvMatrix<Type>::clone() const
+{
+    return tmp<fvMatrix<Type>>
+    (
+        new fvMatrix<Type>(*this)
+    );
+}
+
+
+// * * * * * * * * * * * * * * * Destructor * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::fvMatrix<Type>::~fvMatrix()

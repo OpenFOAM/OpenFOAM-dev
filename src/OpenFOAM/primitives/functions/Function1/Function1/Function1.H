@@ -105,10 +105,7 @@ public:
         Function1(const Function1<Type>& de);
 
         //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const
-        {
-            return tmp<Function1<Type>>(new Function1<Type>(*this));
-        }
+        virtual tmp<Function1<Type>> clone() const = 0;
 
 
     //- Selector
