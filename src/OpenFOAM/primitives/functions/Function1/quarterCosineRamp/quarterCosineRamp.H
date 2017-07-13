@@ -77,6 +77,12 @@ public:
             const dictionary& dict
         );
 
+        //- Construct and return a clone
+        virtual tmp<Function1<scalar>> clone() const
+        {
+            return tmp<Function1<scalar>>(new quarterCosineRamp(*this));
+        }
+
 
     //- Destructor
     virtual ~quarterCosineRamp();
