@@ -63,7 +63,7 @@ bool Foam::DSMCParcel<ParcelType>::move(TrackData& td, const scalar trackTime)
 
         if (p.onBoundaryFace() && td.keepParticle)
         {
-            if (isA<processorPolyPatch>(pbMesh[p.patch(p.face())]))
+            if (isA<processorPolyPatch>(pbMesh[p.patch()]))
             {
                 td.switchProcessor = true;
             }

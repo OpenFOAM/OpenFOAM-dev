@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ bool Foam::Rebound<CloudType>::correct
     vector nw;
     vector Up;
 
-    this->owner().patchData(p, pp, trackFraction, tetIs, nw, Up);
+    this->owner().patchData(p, pp, nw, Up);
 
     // Calculate motion relative to patch velocity
     U -= Up;

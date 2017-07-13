@@ -40,7 +40,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::particle::tetGeometry
+void Foam::particle::stationaryTetGeometry
 (
     vector& centre,
     vector& base,
@@ -59,23 +59,23 @@ void Foam::particle::tetGeometry
 }
 
 
-Foam::barycentricTensor Foam::particle::tetTransform() const
+Foam::barycentricTensor Foam::particle::stationaryTetTransform() const
 {
     vector centre, base, vertex1, vertex2;
-    tetGeometry(centre, base, vertex1, vertex2);
+    stationaryTetGeometry(centre, base, vertex1, vertex2);
 
     return barycentricTensor(centre, base, vertex1, vertex2);
 }
 
 
-void Foam::particle::tetReverseTransform
+void Foam::particle::stationaryTetReverseTransform
 (
     vector& centre,
     scalar& detA,
     barycentricTensor& T
 ) const
 {
-    barycentricTensor A = tetTransform();
+    barycentricTensor A = stationaryTetTransform();
 
     const vector ab = A.b() - A.a();
     const vector ac = A.c() - A.a();
@@ -117,27 +117,11 @@ void Foam::particle::movingTetGeometry
     const vector ccOld = mesh_.cells()[celli_].centre(ptsOld, mesh_.faces());
     const vector ccNew = mesh_.cells()[celli_].centre(ptsNew, mesh_.faces());
 
-    scalar f0 = stepFraction_, f1 = fraction;
-
     // Old and new points and cell centres are not sub-cycled. If we are sub-
     // cycling, then we have to account for the timestep change here by
     // modifying the fractions that we take of the old and new geometry.
-    if (mesh_.time().subCycling())
-    {
-        const TimeState& tsNew = mesh_.time();
-        const TimeState& tsOld = mesh_.time().prevTimeState();
-
-        const scalar tFrac =
-        (
-            (tsNew.value() - tsNew.deltaTValue())
-          - (tsOld.value() - tsOld.deltaTValue())
-        )/tsOld.deltaTValue();
-
-        const scalar dtFrac = tsNew.deltaTValue()/tsOld.deltaTValue();
-
-        f0 = tFrac + dtFrac*f0;
-        f1 = dtFrac*f1;
-    }
+    const Pair<scalar> s = stepFractionSpan();
+    const scalar f0 = s[0] + stepFraction_*s[1], f1 = fraction*s[1];
 
     centre[0] = ccOld + f0*(ccNew - ccOld);
     base[0] = ptsOld[triIs[0]] + f0*(ptsNew[triIs[0]] - ptsOld[triIs[0]]);
@@ -497,8 +481,8 @@ void Foam::particle::locate
 
         if (direction == nullptr)
         {
-            const polyPatch& p = mesh_.boundaryMesh()[patch(facei_)];
-            direction = &p.faceNormals()[patchFace(patch(facei_), facei_)];
+            const polyPatch& p = mesh_.boundaryMesh()[patch()];
+            direction = &p.faceNormals()[p.whichFace(facei_)];
         }
 
         const vector n = *direction/mag(*direction);
@@ -646,14 +630,7 @@ Foam::scalar Foam::particle::trackToFace
 
     while (true)
     {
-        if (mesh_.moving())
-        {
-            f *= trackToMovingTri(f*displacement, f*fraction, tetTriI);
-        }
-        else
-        {
-            f *= trackToStationaryTri(f*displacement, f*fraction, tetTriI);
-        }
+        f *= trackToTri(f*displacement, f*fraction, tetTriI);
 
         if (tetTriI == -1)
         {
@@ -688,19 +665,20 @@ Foam::scalar Foam::particle::trackToStationaryTri
 
     if (debug)
     {
-        Info<< "Tracking from " << x0 << " to " << x0 + x1 << endl;
+        Info<< "Particle " << origId() << endl
+            << "Tracking from " << x0 << " to " << x0 + x1 << endl;
     }
 
     // Get the tet geometry
     vector centre;
     scalar detA;
     barycentricTensor T;
-    tetReverseTransform(centre, detA, T);
+    stationaryTetReverseTransform(centre, detA, T);
 
     if (debug)
     {
         vector o, b, v1, v2;
-        tetGeometry(o, b, v1, v2);
+        stationaryTetGeometry(o, b, v1, v2);
         Info<< "Tet points o=" << o << ", b=" << b
             << ", v1=" << v1 << ", v2=" << v2 << endl
             << "Tet determinant = " << detA << endl
@@ -717,7 +695,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
 
     // Calculate the hit fraction
     label iH = -1;
-    scalar muH = detA == 0 ? VGREAT : mag(1/detA);
+    scalar muH = std::isnormal(detA) && detA <= 0 ? VGREAT : 1/detA;
     for (label i = 0; i < 4; ++ i)
     {
         if (std::isnormal(Tx1[i]) && Tx1[i] < 0)
@@ -778,7 +756,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
     // Set the proportion of the track that has been completed
     stepFraction_ += fraction*muH*detA;
 
-    return 1 - muH*detA;
+    return iH != -1 ? 1 - muH*detA : 0;
 }
 
 
@@ -795,7 +773,8 @@ Foam::scalar Foam::particle::trackToMovingTri
 
     if (debug)
     {
-        Info<< "Tracking from " << x0 << " to " << x0 + x1 << endl;
+        Info<< "Particle " << origId() << endl
+            << "Tracking from " << x0 << " to " << x0 + x1 << endl;
     }
 
     // Get the tet geometry
@@ -823,7 +802,7 @@ Foam::scalar Foam::particle::trackToMovingTri
 
     // Calculate the hit fraction
     label iH = -1;
-    scalar muH = detA[0] == 0 ? VGREAT : mag(1/detA[0]);
+    scalar muH = std::isnormal(detA[0]) && detA[0] <= 0 ? VGREAT : 1/detA[0];
     for (label i = 0; i < 4; ++ i)
     {
         const Roots<3> mu = hitEqn[i].roots();
@@ -899,7 +878,25 @@ Foam::scalar Foam::particle::trackToMovingTri
             << "End global coordinates = " << position() << endl;
     }
 
-    return 1 - muH*detA[0];
+    return iH != -1 ? 1 - muH*detA[0] : 0;
+}
+
+
+Foam::scalar Foam::particle::trackToTri
+(
+    const vector& displacement,
+    const scalar fraction,
+    label& tetTriI
+)
+{
+    if (mesh_.moving())
+    {
+        return trackToMovingTri(displacement, fraction, tetTriI);
+    }
+    else
+    {
+        return trackToStationaryTri(displacement, fraction, tetTriI);
+    }
 }
 
 
@@ -922,6 +919,47 @@ void Foam::particle::constrainToMeshCentre()
         vector pos = position();
         meshTools::constrainToMeshCentre(mesh_, pos);
         track(pos - position(), 0);
+    }
+}
+
+
+void Foam::particle::patchData(vector& n, vector& U) const
+{
+    if (!onBoundaryFace())
+    {
+        FatalErrorInFunction
+            << "Patch data was requested for a particle that isn't on a patch"
+            << exit(FatalError);
+    }
+
+    if (mesh_.moving())
+    {
+        Pair<vector> centre, base, vertex1, vertex2;
+        movingTetGeometry(1, centre, base, vertex1, vertex2);
+
+        n = triPointRef(base[0], vertex1[0], vertex2[0]).normal();
+        n /= mag(n);
+
+        // Interpolate the motion of the three face vertices to the current
+        // coordinates
+        U =
+            coordinates_.b()*base[1]
+          + coordinates_.c()*vertex1[1]
+          + coordinates_.d()*vertex2[1];
+
+        // The movingTetGeometry method gives the motion as a displacement
+        // across the time-step, so we divide by the time-step to get velocity
+        U /= mesh_.time().deltaTValue();
+    }
+    else
+    {
+        vector centre, base, vertex1, vertex2;
+        stationaryTetGeometry(centre, base, vertex1, vertex2);
+
+        n = triPointRef(base, vertex1, vertex2).normal();
+        n /= mag(n);
+
+        U = Zero;
     }
 }
 
@@ -983,17 +1021,22 @@ void Foam::particle::correctAfterInteractionListReferral(const label celli)
     // position method is called. A referred particle should never be tracked,
     // so this approximate topology is good enough. By using the nearby cell we
     // minimise the error associated with the incorrect topology.
+    coordinates_ = barycentric(1, 0, 0, 0);
     if (mesh_.moving())
     {
-        NotImplemented;
+        Pair<vector> centre;
+        FixedList<scalar, 4> detA;
+        FixedList<barycentricTensor, 3> T;
+        movingTetReverseTransform(0, centre, detA, T);
+        coordinates_ += (pos - centre[0]) & T[0]/detA[0];
     }
     else
     {
         vector centre;
         scalar detA;
         barycentricTensor T;
-        tetReverseTransform(centre, detA, T);
-        coordinates_ = barycentric(1, 0, 0, 0) + ((pos - centre) & T/detA);
+        stationaryTetReverseTransform(centre, detA, T);
+        coordinates_ += (pos - centre) & T/detA;
     }
 }
 

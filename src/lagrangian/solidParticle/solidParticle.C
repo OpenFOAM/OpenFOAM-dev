@@ -84,7 +84,7 @@ bool Foam::solidParticle::move
 
         if (onBoundaryFace() && td.keepParticle)
         {
-            if (isA<processorPolyPatch>(pbMesh[patch(face())]))
+            if (isA<processorPolyPatch>(pbMesh[patch()]))
             {
                 td.switchProcessor = true;
             }

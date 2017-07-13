@@ -296,16 +296,14 @@ bool Foam::KinematicParcel<ParcelType>::move
         }
         else
         {
-            // Abandon the track, and move to the end of the sub-step. If the
-            // the mesh is moving, this will implicitly move the parcel.
-            if (mesh.moving())
-            {
-                WarningInFunction
-                    << "Tracking was abandoned on a moving mesh. Parcels may "
-                    << "move unphysically as a result." << endl;
-            }
+            // At present the only thing that sets active_ to false is a stick
+            // wall interaction. We want the position of the particle to remain
+            // the same relative to the face that it is on. The local
+            // coordinates therefore do not change. We still advance in time and
+            // perform the relevant interactions with the fixed particle.
             p.stepFraction() += f;
         }
+
 
         const scalar dt = (p.stepFraction() - sfrac)*trackTime;
 
@@ -325,7 +323,7 @@ bool Foam::KinematicParcel<ParcelType>::move
 
         if (p.onBoundaryFace() && td.keepParticle)
         {
-            if (isA<processorPolyPatch>(pbMesh[p.patch(p.face())]))
+            if (isA<processorPolyPatch>(pbMesh[p.patch()]))
             {
                 td.switchProcessor = true;
             }

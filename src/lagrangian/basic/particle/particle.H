@@ -175,7 +175,7 @@ private:
         // Tetrahedra functions
 
             //- Get the vertices of the current tet
-            void tetGeometry
+            void stationaryTetGeometry
             (
                 vector& centre,
                 vector& base,
@@ -188,7 +188,7 @@ private:
             //  cartesian position in the global coordinate system. The
             //  conversion is x = A & y, where x is the cartesian position, y is
             //  the barycentric position and A is the transformation tensor.
-            barycentricTensor tetTransform() const;
+            barycentricTensor stationaryTetTransform() const;
 
             //- Get the reverse transform associated with the current tet. The
             //  conversion is detA*y = (x - centre) & T. The variables x, y and
@@ -197,7 +197,7 @@ private:
             //  multiplied by its determinant, detA. This separation allows
             //  the barycentric tracking algorithm to function on inverted or
             //  degenerate tetrahedra.
-            void tetReverseTransform
+            void stationaryTetReverseTransform
             (
                 vector& centre,
                 scalar& detA,
@@ -454,9 +454,47 @@ public:
             //- Return current tet face particle is in
             inline label tetPt() const;
 
+            //- Return current face particle is on otherwise -1
+            inline label face() const;
+
+            //- Return the fraction of time-step completed
+            inline scalar stepFraction() const;
+
+            //- Return the fraction of time-step completed
+            inline scalar& stepFraction();
+
+            //- Return the originating processor ID
+            inline label origProc() const;
+
+            //- Return the originating processor ID
+            inline label& origProc();
+
+            //- Return the particle ID on the originating processor
+            inline label origId() const;
+
+            //- Return the particle ID on the originating processor
+            inline label& origId();
+
+
+        // Check
+
+            //- Return the step fraction change within the overall time-step.
+            //  Returns the start value and the change as a scalar pair. Always
+            //  return Pair<scalar>(0, 1), unless sub-cycling is in effect, in
+            //  which case the values will reflect the span of the sub-cycle
+            //  within the time-step.
+            inline Pair<scalar> stepFractionSpan() const;
+
+            //- Return the current fraction within the timestep. This differs
+            //  from the stored step fraction due to sub-cycling.
+            inline scalar currentTimeFraction() const;
+
             //- Return the indices of the current tet that the
             //  particle occupies.
             inline tetIndices currentTetIndices() const;
+
+            //- Return the current tet transformation tensor
+            inline barycentricTensor currentTetTransform() const;
 
             //- Return the normal of the tri on tetFacei_ for the
             //  current tet.
@@ -467,15 +505,6 @@ public:
             //  on oldPoints
             inline vector oldNormal() const;
 
-            //- Return current face particle is on otherwise -1
-            inline label face() const;
-
-            //- Return the particle current time
-            inline scalar currentTime() const;
-
-
-        // Check
-
             //- Is the particle on a face?
             inline bool onFace() const;
 
@@ -485,87 +514,80 @@ public:
             //- Is the particle on a boundary face?
             inline bool onBoundaryFace() const;
 
-            //- Which patch is particle on // <-- !!!
-            inline label patch(const label facei) const;
-
-            //- Which face of this patch is this particle on // <-- !!!
-            inline label patchFace(const label patchi, const label facei) const;
+            //- Return the index of patch that the particle is on
+            inline label patch() const;
 
             //- Return current particle position
             inline vector position() const;
 
-            //- Return the fraction of time-step completed
-            inline scalar& stepFraction();
 
-            //-  Return the fraction of time-step completed
-            inline scalar stepFraction() const;
+    // Track
 
-            //- Return const access to the originating processor id
-            inline label origProc() const;
+        //- Track along the displacement for a given fraction of the overall
+        //  step. End when the track is complete, or when a boundary is hit.
+        //  On exit, stepFraction_ will have been incremented to the current
+        //  position, and facei_ will be set to the index of the boundary
+        //  face that was hit, or -1 if the track completed within a cell.
+        //  The proportion of the displacement still to be completed is
+        //  returned.
+        scalar track
+        (
+            const vector& displacement,
+            const scalar fraction
+        );
 
-            //- Return the originating processor id for manipulation
-            inline label& origProc();
+        //- As particle::track, but also stops on internal faces.
+        scalar trackToFace
+        (
+            const vector& displacement,
+            const scalar fraction
+        );
 
-            //- Return const access to  the particle id on originating processor
-            inline label origId() const;
+        //- As particle::trackToFace, but also stops on tet triangles. On
+        //  exit, tetTriI is set to the index of the tet triangle that was
+        //  hit, or -1 if the end position was reached.
+        scalar trackToTri
+        (
+            const vector& displacement,
+            const scalar fraction,
+            label& tetTriI
+        );
 
-            //- Return the particle id on originating processor for manipulation
-            inline label& origId();
+        //- As particle::trackToTri, but for stationary meshes
+        scalar trackToStationaryTri
+        (
+            const vector& displacement,
+            const scalar fraction,
+            label& tetTriI
+        );
+
+        //- As particle::trackToTri, but for moving meshes
+        scalar trackToMovingTri
+        (
+            const vector& displacement,
+            const scalar fraction,
+            label& tetTriI
+        );
+
+        //- As non-templated particle::trackToFace, but with additional
+        //  boundary handling.
+        template<class TrackData>
+        void trackToFace
+        (
+            const vector& displacement,
+            const scalar fraction,
+            TrackData& td
+        );
+
+        //- Set the constrained components of the particle position to the
+        //  mesh centre.
+        void constrainToMeshCentre();
 
 
-        // Track
+    // Patch data
 
-            //- Track along the displacement for a given fraction of the overall
-            //  step. End when the track is complete, or when a boundary is hit.
-            //  On exit, stepFraction_ will have been incremented to the current
-            //  position, and facei_ will be set to the index of the boundary
-            //  face that was hit, or -1 if the track completed within a cell.
-            //  The proportion of the displacement still to be completed is
-            //  returned.
-            scalar track
-            (
-                const vector& displacement,
-                const scalar fraction
-            );
-
-            //- As particle::track, but also stops on internal faces.
-            scalar trackToFace
-            (
-                const vector& displacement,
-                const scalar fraction
-            );
-
-            //- As particle::trackToFace, but also stops on tet triangles. On
-            //  exit, tetTriI is set to the index of the tet triangle that was
-            //  hit, or -1 if the end position was reached.
-            scalar trackToStationaryTri
-            (
-                const vector& displacement,
-                const scalar fraction,
-                label& tetTriI
-            );
-
-            //- As particle::trackToTri, but for moving meshes
-            scalar trackToMovingTri
-            (
-                const vector& displacement,
-                const scalar fraction,
-                label& tetTriI
-            );
-
-            //- As non-templated particle::trackToFace, but with additional
-            //  boundary handling.
-            template<class TrackData>
-            void trackToFace
-            (
-                const vector& displacement,
-                const scalar fraction,
-                TrackData& td
-            );
-
-            //- Set the constrained components of the particle position to the
-            //  mesh centre.
-            void constrainToMeshCentre();
+        //- Get the normal and velocity of the current patch location
+        void patchData(vector& n, vector& U) const;
 
 
     // Transformations

@@ -72,68 +72,19 @@ inline Foam::label Foam::particle::tetPt() const
 }
 
 
-inline Foam::tetIndices Foam::particle::currentTetIndices() const
-{
-    return tetIndices(celli_, tetFacei_, tetPti_);
-}
-
-
-inline Foam::vector Foam::particle::normal() const
-{
-    return currentTetIndices().faceTri(mesh_).normal();
-}
-
-
-inline Foam::vector Foam::particle::oldNormal() const
-{
-    return currentTetIndices().oldFaceTri(mesh_).normal();
-}
-
-
 inline Foam::label Foam::particle::face() const
 {
     return facei_;
 }
 
 
-inline bool Foam::particle::onFace() const
-{
-    return facei_ >= 0;
-}
-
-
-inline bool Foam::particle::onInternalFace() const
-{
-    return onFace() && mesh_.isInternalFace(facei_);
-}
-
-
-inline bool Foam::particle::onBoundaryFace() const
-{
-    return onFace() && !mesh_.isInternalFace(facei_);
-}
-
-
-inline Foam::vector Foam::particle::position() const
-{
-    if (mesh_.moving())
-    {
-        return movingTetTransform(0)[0] & coordinates_;
-    }
-    else
-    {
-        return tetTransform() & coordinates_;
-    }
-}
-
-
-inline Foam::scalar& Foam::particle::stepFraction()
+inline Foam::scalar Foam::particle::stepFraction() const
 {
     return stepFraction_;
 }
 
 
-inline Foam::scalar Foam::particle::stepFraction() const
+inline Foam::scalar& Foam::particle::stepFraction()
 {
     return stepFraction_;
 }
@@ -163,25 +114,96 @@ inline Foam::label& Foam::particle::origId()
 }
 
 
-inline Foam::scalar Foam::particle::currentTime() const
+inline Foam::Pair<Foam::scalar> Foam::particle::stepFractionSpan() const
 {
-    return mesh_.time().value() + stepFraction_*mesh_.time().deltaTValue();
+    if (mesh_.time().subCycling())
+    {
+        const TimeState& tsNew = mesh_.time();
+        const TimeState& tsOld = mesh_.time().prevTimeState();
+
+        const scalar tFrac =
+        (
+            (tsNew.value() - tsNew.deltaTValue())
+          - (tsOld.value() - tsOld.deltaTValue())
+        )/tsOld.deltaTValue();
+
+        const scalar dtFrac = tsNew.deltaTValue()/tsOld.deltaTValue();
+
+        return Pair<scalar>(tFrac, dtFrac);
+    }
+    else
+    {
+        return Pair<scalar>(0, 1);
+    }
 }
 
 
-inline Foam::label Foam::particle::patch(const label facei) const
+inline Foam::scalar Foam::particle::currentTimeFraction() const
 {
-    return mesh_.boundaryMesh().whichPatch(facei);
+    const Pair<scalar> s = stepFractionSpan();
+
+    return s[0] + stepFraction_*s[1];
 }
 
 
-inline Foam::label Foam::particle::patchFace
-(
-    const label patchi,
-    const label facei
-) const
+inline Foam::tetIndices Foam::particle::currentTetIndices() const
 {
-    return mesh_.boundaryMesh()[patchi].whichFace(facei);
+    return tetIndices(celli_, tetFacei_, tetPti_);
+}
+
+
+inline Foam::barycentricTensor Foam::particle::currentTetTransform() const
+{
+    if (mesh_.moving())
+    {
+        return movingTetTransform(0)[0];
+    }
+    else
+    {
+        return stationaryTetTransform();
+    }
+}
+
+
+inline Foam::vector Foam::particle::normal() const
+{
+    return currentTetIndices().faceTri(mesh_).normal();
+}
+
+
+inline Foam::vector Foam::particle::oldNormal() const
+{
+    return currentTetIndices().oldFaceTri(mesh_).normal();
+}
+
+
+inline bool Foam::particle::onFace() const
+{
+    return facei_ >= 0;
+}
+
+
+inline bool Foam::particle::onInternalFace() const
+{
+    return onFace() && mesh_.isInternalFace(facei_);
+}
+
+
+inline bool Foam::particle::onBoundaryFace() const
+{
+    return onFace() && !mesh_.isInternalFace(facei_);
+}
+
+
+inline Foam::label Foam::particle::patch() const
+{
+    return mesh_.boundaryMesh().whichPatch(facei_);
+}
+
+
+inline Foam::vector Foam::particle::position() const
+{
+    return currentTetTransform() & coordinates_;
 }
 
 
