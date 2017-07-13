@@ -318,7 +318,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
         const scalar epsilon = 0.993 - theta*(1.76 - theta*(1.56 - theta*0.49));
 
         // Update parcel velocity
-        U = -epsilon*(Un) + 5/7*(Ut);
+        U = -epsilon*(Un) + 5.0/7.0*(Ut);
 
         keepParticle = true;
         return;
