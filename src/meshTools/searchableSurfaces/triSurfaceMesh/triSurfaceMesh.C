@@ -64,6 +64,31 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
 }
 
 
+Foam::fileName Foam::triSurfaceMesh::relativeFilePath
+(
+    const regIOobject& io,
+    const fileName& f,
+    const bool isGlobal
+)
+{
+    fileName fName(f);
+    fName.expand();
+    if (!fName.isAbsolute())
+    {
+        // Is the specified file:
+        // - local to the cwd?
+        // - local to the case dir?
+        // - or just another name?
+        fName = fileHandler().filePath
+        (
+            isGlobal,
+            IOobject(io, fName),
+            word::null
+        );
+    }
+    return fName;
+}
+
 Foam::fileName Foam::triSurfaceMesh::checkFile
 (
     const regIOobject& io,
@@ -74,11 +99,8 @@ Foam::fileName Foam::triSurfaceMesh::checkFile
     fileName fName;
     if (dict.readIfPresent("file", fName, false, false))
     {
-        fName.expand();
-        if (!fName.isAbsolute())
-        {
-            fName = io.objectPath().path()/fName;
-        }
+        fName = relativeFilePath(io, fName, isGlobal);
+
         if (!exists(fName))
         {
             FatalErrorInFunction
@@ -295,7 +317,15 @@ Foam::triSurfaceMesh::triSurfaceMesh
     surfaceClosed_(-1)
 {
     // Reading from supplied file name instead of objectPath/filePath
-    dict.readIfPresent("file", fName_, false, false);
+    if (dict.readIfPresent("file", fName_, false, false))
+    {
+        fName_ = relativeFilePath
+        (
+            static_cast<const searchableSurface&>(*this),
+            fName_,
+            true
+        );
+    }
 
     scalar scaleFactor = 0;
 
@@ -385,7 +415,15 @@ Foam::triSurfaceMesh::triSurfaceMesh
     surfaceClosed_(-1)
 {
     // Reading from supplied file name instead of objectPath/filePath
-    dict.readIfPresent("file", fName_, false, false);
+    if (dict.readIfPresent("file", fName_, false, false))
+    {
+        fName_ = relativeFilePath
+        (
+            static_cast<const searchableSurface&>(*this),
+            fName_,
+            isGlobal
+        );
+    }
 
     scalar scaleFactor = 0;
 
