@@ -47,6 +47,7 @@ Usage
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |
         volumetricFlowRate | volumetric flow rate [m3/s]| no |
+        rho          | density field name      | no          | rho
         rhoInlet     | inlet density           | no          |
         extrapolateProfile | Extrapolate velocity profile | no | false
     \endtable
@@ -63,7 +64,7 @@ Usage
     \endverbatim
 
     Example of the boundary condition specification for a mass flow rate:
-    \verbatim
+     \verbatim
     <patchName>
     {
         type                flowRateInletVelocity;

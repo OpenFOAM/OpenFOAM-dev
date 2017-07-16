@@ -148,7 +148,7 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
 {
     const scalar t = db().time().timeOutputValue();
 
-    const vectorField n = patch().nf();
+    const vectorField n(patch().nf());
 
     // Extrapolate patch velocity
     vectorField Up(this->patchInternalField());

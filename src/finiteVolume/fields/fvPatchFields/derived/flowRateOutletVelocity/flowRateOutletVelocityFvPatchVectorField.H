@@ -46,7 +46,8 @@ Usage
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |
         volumetricFlowRate | volumetric flow rate [m^3/s]| no |
-        rhoOutlet     | outlet density           | no          |
+        rho          | density field name      | no          | rho
+        rhoOutlet    | outlet density          | no          |
     \endtable
 
     Example of the boundary condition specification for a volumetric flow rate:
