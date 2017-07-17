@@ -41,6 +41,11 @@ while (pimple.correctNonOrthogonal())
       - fvm::laplacian(rhorAUf, p_rgh)
     );
 
+    if (thermo.incompressible())
+    {
+        p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
+    }
+
     p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
 
     if (pimple.finalNonOrthogonalIter())
