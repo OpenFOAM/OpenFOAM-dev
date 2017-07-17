@@ -127,9 +127,9 @@ void Foam::swirlInletVelocityFvPatchVectorField::updateCoeffs()
     const scalarField magr(mag(r));
     const vectorField rHat(r/magr);
 
-    const scalarField axialVelocity = axialVelocity_->value(magr);
-    const scalarField radialVelocity = radialVelocity_->value(magr);
-    const scalarField tangentialVelocity = tangentialVelocity_->value(magr);
+    const scalarField axialVelocity(axialVelocity_->value(magr));
+    const scalarField radialVelocity(radialVelocity_->value(magr));
+    const scalarField tangentialVelocity(tangentialVelocity_->value(magr));
 
     operator==
     (

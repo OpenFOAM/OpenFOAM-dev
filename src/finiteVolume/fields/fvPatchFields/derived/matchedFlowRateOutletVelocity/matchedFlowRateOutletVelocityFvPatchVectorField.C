@@ -136,7 +136,7 @@ void Foam::matchedFlowRateOutletVelocityFvPatchVectorField::updateValues
     const fvPatch& p = patch();
     const fvPatch& inletPatch = p.boundaryMesh()[inletPatchID];
 
-    const vectorField n = p.nf();
+    const vectorField n(p.nf());
 
     // Extrapolate patch velocity
     vectorField Up(patchInternalField());
