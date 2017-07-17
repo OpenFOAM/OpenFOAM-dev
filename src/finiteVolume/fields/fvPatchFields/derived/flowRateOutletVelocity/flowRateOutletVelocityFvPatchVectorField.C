@@ -160,7 +160,7 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
     Up -= nUp*n;
 
     // Remove any reverse flow
-    nUp = max(nUp, 0.0);
+    nUp = max(nUp, scalar(0));
 
     const scalar flowRate = flowRate_->value(t);
     const scalar estimatedFlowRate = gSum(rho*(this->patch().magSf()*nUp));
