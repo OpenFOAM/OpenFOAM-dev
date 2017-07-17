@@ -160,10 +160,10 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
     Up -= nUp*n;
 
     // Remove any reverse flow
-    nUp = min(nUp, 0.0);
+    nUp = max(nUp, 0.0);
 
     const scalar flowRate = flowRate_->value(t);
-    const scalar estimatedFlowRate = -gSum(rho*(this->patch().magSf()*nUp));
+    const scalar estimatedFlowRate = gSum(rho*(this->patch().magSf()*nUp));
 
     if (estimatedFlowRate/flowRate > 0.5)
     {
@@ -171,7 +171,7 @@ void Foam::flowRateOutletVelocityFvPatchVectorField::updateValues
     }
     else
     {
-        nUp -= ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
+        nUp += ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
     }
 
     // Add the corrected normal component of velocity to the patch velocity

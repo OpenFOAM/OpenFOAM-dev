@@ -156,31 +156,43 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
 {
     const scalar t = db().time().timeOutputValue();
 
-    tmp<vectorField> n = patch().nf();
+    const vectorField n(patch().nf());
 
     if (extrapolateProfile_)
     {
-        vectorField newValues(this->patchInternalField());
+        vectorField Up(this->patchInternalField());
 
-        scalar flowRate = flowRate_->value(t);
-        scalar estimatedFlowRate = -gSum(rho*(this->patch().Sf() & newValues));
+        // Patch normal extrapolated velocity
+        scalarField nUp(n & Up);
+
+        // Remove the normal component of the extrapolate patch velocity
+        Up -= nUp*n;
+
+        // Remove any reverse flow
+        nUp = min(nUp, 0.0);
+
+        const scalar flowRate = flowRate_->value(t);
+        const scalar estimatedFlowRate = -gSum(rho*(this->patch().magSf()*nUp));
 
         if (estimatedFlowRate/flowRate > 0.5)
         {
-            newValues *= (mag(flowRate)/mag(estimatedFlowRate));
+            nUp *= (mag(flowRate)/mag(estimatedFlowRate));
         }
         else
         {
-            newValues -=
-                ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()))*n;
+            nUp -= ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
         }
 
-        this->operator==(newValues);
+        // Add the corrected normal component of velocity to the patch velocity
+        Up += nUp*n;
+
+        // Correct the patch velocity
+        this->operator==(Up);
     }
     else
     {
         const scalar avgU = -flowRate_->value(t)/gSum(rho*patch().magSf());
-        operator==(n*avgU);
+        operator==(avgU*n);
     }
 }
 
