@@ -30,6 +30,8 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+const Foam::scalar Foam::particle::negativeSpaceDisplacementFactor = 1.01;
+
 Foam::label Foam::particle::particleCount_ = 0;
 
 namespace Foam
@@ -685,8 +687,11 @@ Foam::scalar Foam::particle::trackToStationaryTri
             << "Start local coordinates = " << y0 << endl;
     }
 
+    // Get the factor by which the displacement is increased
+    const scalar f = detA >= 0 ? 1 : negativeSpaceDisplacementFactor;
+
     // Calculate the local tracking displacement
-    barycentric Tx1(x1 & T);
+    barycentric Tx1(f*x1 & T);
 
     if (debug)
     {
@@ -783,16 +788,22 @@ Foam::scalar Foam::particle::trackToMovingTri
     FixedList<barycentricTensor, 3> T;
     movingTetReverseTransform(fraction, centre, detA, T);
 
+    // Get the factor by which the displacement is increased
+    const scalar f = detA[0] >= 0 ? 1 : negativeSpaceDisplacementFactor;
+
+    // Get the relative global position
     const vector x0Rel = x0 - centre[0];
-    const vector x1Rel = x1 - centre[1];
+    const vector x1Rel = f*x1 - centre[1];
 
     // Form the determinant and hit equations
     cubicEqn detAEqn(sqr(detA[0])*detA[3], detA[0]*detA[2], detA[1], 1);
     const barycentric yC(1, 0, 0, 0);
-    const barycentric hitEqnA = ((x1Rel & T[2]) + detA[3]*yC)*sqr(detA[0]);
+    const barycentric hitEqnA =
+        ((x1Rel & T[2])                  + detA[3]*yC)*sqr(detA[0]);
     const barycentric hitEqnB =
         ((x1Rel & T[1]) + (x0Rel & T[2]) + detA[2]*yC)*detA[0];
-    const barycentric hitEqnC = (x1Rel & T[0]) + (x0Rel & T[1]) + detA[1]*yC;
+    const barycentric hitEqnC =
+        ((x1Rel & T[0]) + (x0Rel & T[1]) + detA[1]*yC);
     const barycentric hitEqnD = y0;
     FixedList<cubicEqn, 4> hitEqn;
     forAll(hitEqn, i)
