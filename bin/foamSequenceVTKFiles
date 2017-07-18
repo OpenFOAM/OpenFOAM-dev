@@ -112,9 +112,9 @@ do
     # Create list of VTK files, ordered by time step
     file_list=$(echo "$files" | \
         tr " " "\n" | \
-        grep "$n.vtk" | \
+        grep -w "$n\.vtk" | \
         awk -F'/' '{print($(NF-1)" "$0)}' | \
-        sort -k 1 -g | \
+        LC_ALL=C  sort -k 1 -g | \
         cut -d' ' -f2)
 
     i=0
