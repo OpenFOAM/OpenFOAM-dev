@@ -152,11 +152,6 @@ int Foam::vtkPVFoam::setTime(int nRequest, const double requestTimes[])
         {
             meshChanged_ = true;
         }
-
-        reader_->UpdateProgress(0.05);
-
-        // this seems to be needed for catching Lagrangian fields
-        updateInfo();
     }
 
     if (debug)
@@ -525,10 +520,6 @@ void Foam::vtkPVFoam::Update
         reader_->UpdateProgress(0.7);
     }
 
-#ifdef VTKPVFOAM_DUALPORT
-    // restart port1 at block=0
-    blockNo = 0;
-#endif
     convertMeshLagrangian(lagrangianOutput, blockNo);
 
     reader_->UpdateProgress(0.8);

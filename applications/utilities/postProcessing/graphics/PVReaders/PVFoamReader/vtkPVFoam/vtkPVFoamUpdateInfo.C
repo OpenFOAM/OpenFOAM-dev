@@ -188,26 +188,30 @@ void Foam::vtkPVFoam::updateInfoLagrangian
         lagrangianPrefix = meshRegion_/cloud::prefix;
     }
 
-    // Search for list of lagrangian objects for this time
-    fileNameList cloudDirs
-    (
-        readDir(dbPtr_->timePath()/lagrangianPrefix, fileName::DIRECTORY)
-    );
-
     arrayRangeLagrangian_.reset(arraySelection->GetNumberOfArrays());
 
-    int nClouds = 0;
-    forAll(cloudDirs, cloudI)
+    // Generate a list of lagrangian clouds across all times
+    HashSet<fileName> cloudDirs;
+    instantList times = dbPtr_().times();
+    forAll(times, timei)
     {
-        // Add cloud to GUI list
+        cloudDirs +=
+            readDir
+            (
+                dbPtr_->path()/times[timei].name()/lagrangianPrefix,
+                fileName::DIRECTORY
+            );
+    }
+
+    forAllConstIter(HashSet<fileName>, cloudDirs, cloudIter)
+    {
         arraySelection->AddArray
         (
-            (cloudDirs[cloudI] + " - lagrangian").c_str()
+            (cloudIter.key() + " - lagrangian").c_str()
         );
-
-        ++nClouds;
     }
-    arrayRangeLagrangian_ += nClouds;
+
+    arrayRangeLagrangian_ += cloudDirs.size();
 
     if (debug)
     {
@@ -650,19 +654,6 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
     stringList enabledEntries = getSelectedArrayEntries(fieldSelection);
     fieldSelection->RemoveAllArrays();
 
-    // TODO - currently only get fields from ONE cloud
-    // have to decide if the second set of fields get mixed in
-    // or dealt with separately
-
-    const arrayRange& range = arrayRangeLagrangian_;
-    if (range.empty())
-    {
-        return;
-    }
-
-    int partId = range.start();
-    word cloudName = getPartName(partId);
-
     // use the db directly since this might be called without a mesh,
     // but the region must get added back in
     fileName lagrangianPrefix(cloud::prefix);
@@ -671,52 +662,38 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
         lagrangianPrefix = meshRegion_/cloud::prefix;
     }
 
-    IOobjectList objects
-    (
-        dbPtr_(),
-        dbPtr_().timeName(),
-        lagrangianPrefix/cloudName
-    );
+    // Add the available fields from all clouds and all time directories.
+    // Differing sets of fields from multiple clouds get combined into a single
+    // set. ParaView will display "(partial)" after field names that only apply
+    // to some of the clouds.
+    const arrayRange& range = arrayRangeLagrangian_;
+    for (label partId = range.start(); partId < range.end(); ++ partId)
+    {
+        const instantList times = dbPtr_().times();
+        forAll(times, timei)
+        {
+            IOobjectList objects
+            (
+                dbPtr_(),
+                times[timei].name(),
+                lagrangianPrefix/getPartName(partId)
+            );
 
-    addToSelection<IOField<label>>
-    (
-        fieldSelection,
-        objects
-    );
-    addToSelection<IOField<scalar>>
-    (
-        fieldSelection,
-        objects
-    );
-    addToSelection<IOField<vector>>
-    (
-        fieldSelection,
-        objects
-    );
-    addToSelection<IOField<sphericalTensor>>
-    (
-        fieldSelection,
-
-        objects
-    );
-    addToSelection<IOField<symmTensor>>
-    (
-        fieldSelection,
-        objects
-    );
-    addToSelection<IOField<tensor>>
-    (
-        fieldSelection,
-        objects
-    );
+            addToSelection<IOField<label>>(fieldSelection, objects);
+            addToSelection<IOField<scalar>>(fieldSelection, objects);
+            addToSelection<IOField<vector>>(fieldSelection, objects);
+            addToSelection<IOField<sphericalTensor>>(fieldSelection, objects);
+            addToSelection<IOField<symmTensor>>(fieldSelection, objects);
+            addToSelection<IOField<tensor>>(fieldSelection, objects);
+        }
+    }
 
     // restore the enabled selections
     setSelectedArrayEntries(fieldSelection, enabledEntries);
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::updateInfoLagrangianFields - "
-            << "lagrangian objects.size() = " << objects.size() << endl;
+        Info<< "<end> Foam::vtkPVFoam::updateInfoLagrangianFields" << endl;
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,17 +84,12 @@ public:
 
     // Description:
     // OpenFOAM refresh times/fields
-    virtual void SetRefresh(int);
+    virtual void SetRefresh();
 
     // Description:
     // OpenFOAM skip/include the 0/ time directory
     vtkSetMacro(SkipZeroTime, int);
     vtkGetMacro(SkipZeroTime, int);
-
-    // Description:
-    // GUI update control
-    vtkSetMacro(UpdateGUI, int);
-    vtkGetMacro(UpdateGUI, int);
 
     // Description:
     // OpenFOAM extrapolate internal values onto the patches
@@ -238,9 +233,6 @@ private:
     int ShowPatchNames;
     int ShowGroupsOnly;
     int InterpolateVolFields;
-
-    //- Dummy variable/switch to invoke a reader update
-    int UpdateGUI;
 
     vtkDataArraySelection* PartSelection;
     vtkDataArraySelection* VolFieldSelection;

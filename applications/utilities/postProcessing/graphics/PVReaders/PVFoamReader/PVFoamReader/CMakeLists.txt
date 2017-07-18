@@ -1,12 +1,4 @@
-# create a plugin that adds a reader to the ParaView GUI
-# it is added in the file dialog when doing opens/saves.
-
-# The qrc file is processed by Qt's resource compiler (rcc)
-# the qrc file must have a resource prefix of "/ParaViewResources"
-# and ParaView will read anything contained under that prefix
-# the pqReader.xml file contains xml defining readers with their
-# file extensions and descriptions.
-
+# Set up the environment
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 FIND_PACKAGE(ParaView REQUIRED)
@@ -30,6 +22,7 @@ ADD_DEFINITIONS(
     -DWM_LABEL_SIZE=$ENV{WM_LABEL_SIZE}
 )
 
+
 # Set output library destination to plugin directory
 SET(
     LIBRARY_OUTPUT_PATH $ENV{PV_PLUGIN_PATH}
@@ -37,44 +30,26 @@ SET(
     "Single output directory for building all libraries."
 )
 
-
-#
-# Defined combined plugin
-#
-
-# Extend the auto-generated panel
-QT4_WRAP_CPP(MOC_SRCS pqPVFoamReaderPanel.h)
-
-ADD_PARAVIEW_OBJECT_PANEL(IFACES IFACE_SRCS
-  CLASS_NAME pqPVFoamReaderPanel
-  XML_NAME  PVFoamReader  # name of SourceProxy in *SM.xml
-  XML_GROUP sources
-)
-
+# Add the plugin. ParaView-4.0.? requires a GUI_RESOURCE_FILES XML file. As of
+# version 4.1.? this is no longer needed.
 IF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
-
-    # Special build options, specifically for ParaView 4.0.*
-    # Because as of 4.1.0, GUI_RESOURCE_FILES is no longer used.
     ADD_PARAVIEW_PLUGIN(
-        PVFoamReader_SM "1.0"
+        PVFoamReader_SM
+        "1.0"
         SERVER_MANAGER_XML PVFoamReader_SM.xml
         SERVER_MANAGER_SOURCES vtkPVFoamReader.cxx
-        GUI_INTERFACES ${IFACES}
-        GUI_SOURCES pqPVFoamReaderPanel.cxx
-        ${MOC_SRCS} ${UI_SRCS} ${IFACE_SRCS}
         GUI_RESOURCE_FILES PVFoamReader.xml
     )
-ELSE("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
+ELSE()
     ADD_PARAVIEW_PLUGIN(
-        PVFoamReader_SM "1.0"
+        PVFoamReader_SM
+        "1.0"
         SERVER_MANAGER_XML PVFoamReader_SM.xml
         SERVER_MANAGER_SOURCES vtkPVFoamReader.cxx
-        GUI_INTERFACES ${IFACES}
-        GUI_SOURCES pqPVFoamReaderPanel.cxx
-        ${MOC_SRCS} ${UI_SRCS} ${IFACE_SRCS}
     )
-ENDIF("${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR}" EQUAL 4.0)
+ENDIF()
 
+# Build the client-side plugin
 TARGET_LINK_LIBRARIES(
     PVFoamReader_SM
     LINK_PUBLIC

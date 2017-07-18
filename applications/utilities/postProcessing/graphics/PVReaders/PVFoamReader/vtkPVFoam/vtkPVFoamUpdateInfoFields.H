@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,35 +69,39 @@ void Foam::vtkPVFoam::updateInfoFields
         regionPrefix = meshRegion_;
     }
 
-    // Search for list of objects for this time and mesh region
-    IOobjectList objects(dbPtr_(), dbPtr_().timeName(), regionPrefix);
+    instantList times = dbPtr_().times();
+    forAll(times, timei)
+    {
+        // Search for list of objects for this time and mesh region
+        IOobjectList objects(dbPtr_(), times[timei].name(), regionPrefix);
 
-    //- Add volume fields to GUI
-    addToSelection<GeometricField<scalar, patchType, meshType>>
-    (
-        select,
-        objects
-    );
-    addToSelection<GeometricField<vector, patchType, meshType>>
-    (
-        select,
-        objects
-    );
-    addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
-    (
-        select,
-        objects
-    );
-    addToSelection<GeometricField<symmTensor, patchType, meshType>>
-    (
-        select,
-        objects
-    );
-    addToSelection<GeometricField<tensor, patchType, meshType>>
-    (
-        select,
-        objects
-    );
+        //- Add volume fields to GUI
+        addToSelection<GeometricField<scalar, patchType, meshType>>
+        (
+            select,
+            objects
+        );
+        addToSelection<GeometricField<vector, patchType, meshType>>
+        (
+            select,
+            objects
+        );
+        addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
+        (
+            select,
+            objects
+        );
+        addToSelection<GeometricField<symmTensor, patchType, meshType>>
+        (
+            select,
+            objects
+        );
+        addToSelection<GeometricField<tensor, patchType, meshType>>
+        (
+            select,
+            objects
+        );
+    }
 
     // restore the enabled selections
     setSelectedArrayEntries(select, enabledEntries);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,7 +218,7 @@ int vtkPVblockMeshReader::RequestData
 }
 
 
-void vtkPVblockMeshReader::SetRefresh(int val)
+void vtkPVblockMeshReader::SetRefresh()
 {
     // Delete the current blockMesh to force re-read and update
     if (foamData_)

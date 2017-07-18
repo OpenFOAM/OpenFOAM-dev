@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,6 @@ License
 // OpenFOAM includes
 #include "vtkPVFoam.H"
 
-#undef EXPERIMENTAL_TIME_CACHING
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 vtkStandardNewMacro(vtkPVFoamReader);
@@ -63,16 +61,6 @@ vtkPVFoamReader::vtkPVFoamReader()
 
     output0_  = nullptr;
 
-#ifdef VTKPVFOAM_DUALPORT
-    // Add second output for the Lagrangian
-    this->SetNumberOfOutputPorts(2);
-    vtkMultiBlockDataSet *lagrangian = vtkMultiBlockDataSet::New();
-    lagrangian->ReleaseData();
-
-    this->GetExecutive()->SetOutputData(1, lagrangian);
-    lagrangian->Delete();
-#endif
-
     TimeStepRange[0] = 0;
     TimeStepRange[1] = 0;
 
@@ -87,8 +75,6 @@ vtkPVFoamReader::vtkPVFoamReader()
     ShowPatchNames = 0;
     ShowGroupsOnly = 0;
     InterpolateVolFields = 1;
-
-    UpdateGUI = 0;
 
     PartSelection = vtkDataArraySelection::New();
     VolFieldSelection = vtkDataArraySelection::New();
@@ -283,7 +269,6 @@ int vtkPVFoamReader::RequestData
         return 0;
     }
 
-    // catch previous error
     if (!foamData_)
     {
         vtkErrorMacro("Reader failed - perhaps no mesh?");
@@ -315,17 +300,22 @@ int vtkPVFoamReader::RequestData
     {
         vtkInformation *outInfo = outputVector->GetInformationObject(infoI);
 
-        if
-        (
-            outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP())
-         && outInfo->Length(vtkStreamingDemandDrivenPipeline::TIME_STEPS()) > 0
-        )
+        if (outInfo->Has(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()))
         {
+            int nTimes =
+                outInfo->Length(vtkStreamingDemandDrivenPipeline::TIME_STEPS());
+
             requestTime[nRequestTime++] =
-                outInfo->Get
+                nTimes == 1
+              ? outInfo->Get
                 (
-                    vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()
-                );
+                    vtkStreamingDemandDrivenPipeline::TIME_STEPS(),
+                    0
+                )
+              : outInfo->Get
+              (
+                  vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEP()
+              );
         }
     }
 
@@ -348,67 +338,9 @@ int vtkPVFoamReader::RequestData
             << output->GetNumberOfBlocks() << " blocks\n";
     }
 
-
-#ifdef EXPERIMENTAL_TIME_CACHING
-    bool needsUpdate = false;
-
-    if (!output0_)
-    {
-        output0_ = vtkMultiBlockDataSet::New();
-        needsUpdate = true;
-    }
-
-    // This experimental bit of code seems to work for the geometry,
-    // but trashes the fields and still triggers the GeometryFilter
-    if (needsUpdate)
-    {
-        foamData_->Update(output);
-        output0_->ShallowCopy(output);
-    }
-    else
-    {
-        output->ShallowCopy(output0_);
-    }
-
-    if (Foam::vtkPVFoam::debug)
-    {
-        if (needsUpdate)
-        {
-            cout<< "full UPDATE ---------\n";
-        }
-        else
-        {
-            cout<< "cached UPDATE ---------\n";
-        }
-
-        cout<< "UPDATED output: ";
-        output->Print(cout);
-
-        cout<< "UPDATED output0_: ";
-        output0_->Print(cout);
-    }
-
-#else
-
-#ifdef VTKPVFOAM_DUALPORT
-    foamData_->Update
-    (
-        output,
-        vtkMultiBlockDataSet::SafeDownCast
-        (
-            outputVector->GetInformationObject(1)->Get
-            (
-                vtkMultiBlockDataSet::DATA_OBJECT()
-            )
-        );
-    );
-#else
     foamData_->Update(output, output);
-#endif
 
     updatePatchNamesView(ShowPatchNames);
-
-#endif
 
     // Do any cleanup on the OpenFOAM side
     foamData_->CleanUp();
@@ -417,7 +349,7 @@ int vtkPVFoamReader::RequestData
 }
 
 
-void vtkPVFoamReader::SetRefresh(int val)
+void vtkPVFoamReader::SetRefresh()
 {
     Modified();
 }
