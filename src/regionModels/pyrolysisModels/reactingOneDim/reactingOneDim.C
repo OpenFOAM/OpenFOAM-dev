@@ -714,9 +714,9 @@ void reactingOneDim::evolveRegion()
     solidThermo_.correct();
 
     Info<< "pyrolysis min/max(T) = "
-        << min(solidThermo_.T().primitiveField())
+        << gMin(solidThermo_.T().primitiveField())
         << ", "
-        << max(solidThermo_.T().primitiveField())
+        << gMax(solidThermo_.T().primitiveField())
         << endl;
 }
 
