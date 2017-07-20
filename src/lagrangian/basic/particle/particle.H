@@ -91,6 +91,16 @@ class particle
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
 
+        //- The factor by which the displacement is increased when passing
+        //  through negative space. This should be slightly bigger than one.
+        //  This is needed as a straight trajectory can form a closed loop
+        //  through regions of overlapping positive and negative space, leading
+        //  to a track which never ends. By increasing the rate of displacement
+        //  through negative regions, the change in track fraction over this
+        //  part of the loop no longer exactly cancels the change over the
+        //  positive part, and the track therefore terminates.
+        static const scalar negativeSpaceDisplacementFactor;
+
 
 public:
 
