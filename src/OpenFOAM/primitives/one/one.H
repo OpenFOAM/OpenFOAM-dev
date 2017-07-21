@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::one
 
 Description
-    A class representing the concept of 1 (scalar(1.0)) used to avoid
+    A class representing the concept of 1 (scalar(1)) used to avoid
     unnecessary manipulations for objects which are known to be one at
     compile-time.
 

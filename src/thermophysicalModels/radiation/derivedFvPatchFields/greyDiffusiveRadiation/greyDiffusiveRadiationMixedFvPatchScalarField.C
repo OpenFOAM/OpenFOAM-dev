@@ -212,7 +212,7 @@ updateCoeffs()
             valueFraction()[facei] = 1.0;
             refValue()[facei] =
                 (
-                    Ir[facei]*(scalar(1.0) - temissivity[facei])
+                    Ir[facei]*(scalar(1) - temissivity[facei])
                   + temissivity[facei]*physicoChemical::sigma.value()
                   * pow4(Tp[facei])
                 )/pi;

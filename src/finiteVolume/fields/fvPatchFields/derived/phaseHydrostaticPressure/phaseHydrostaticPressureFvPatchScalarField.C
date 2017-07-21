@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::updateCoeffs()
     // scalar rhor = 1000;
     // scalarField alphap1 = max(min(alphap, 1.0), 0.0);
     // valueFraction() = alphap1/(alphap1 + rhor*(1.0 - alphap1));
-    valueFraction() = max(min(alphap, scalar(1.0)), scalar(0.0));
+    valueFraction() = max(min(alphap, scalar(1)), scalar(0));
 
     refValue() =
         pRefValue_

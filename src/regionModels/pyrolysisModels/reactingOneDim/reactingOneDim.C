@@ -108,7 +108,7 @@ void reactingOneDim::updateqr()
 
         // qr is positive going in the solid
         // If the surface is emitting the radiative flux is set to zero
-        qrBf[patchi] = max(qrBf[patchi], scalar(0.0));
+        qrBf[patchi] = max(qrBf[patchi], scalar(0));
     }
 
     const vectorField& cellC = regionMesh().cellCentres();

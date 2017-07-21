@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
                 ),
                 mesh.C()/magSqr(mesh.C())
             );
-            radialDirection.replace(vector::Z, scalar(0.0));
+            radialDirection.replace(vector::Z, scalar(0));
             radialDirection /= sqrt(magSqr(radialDirection));
             radialDirection.write();
 
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
                 ),
                 transform2Tangencial & mesh.C()
             );
-            angularDirection.replace(vector::Z, scalar(0.0));
+            angularDirection.replace(vector::Z, scalar(0));
             angularDirection /= sqrt(magSqr(angularDirection));
             angularDirection.write();
 

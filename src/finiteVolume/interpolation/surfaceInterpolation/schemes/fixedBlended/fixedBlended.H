@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,7 +173,7 @@ public:
         {
             return
                 blendingFactor_*tScheme1_().weights(vf)
-              + (scalar(1.0) - blendingFactor_)*tScheme2_().weights(vf);
+              + (scalar(1) - blendingFactor_)*tScheme2_().weights(vf);
         }
 
 
@@ -187,7 +187,7 @@ public:
         {
             return
                 blendingFactor_*tScheme1_().interpolate(vf)
-              + (scalar(1.0) - blendingFactor_)*tScheme2_().interpolate(vf);
+              + (scalar(1) - blendingFactor_)*tScheme2_().interpolate(vf);
         }
 
 
@@ -214,7 +214,7 @@ public:
                     (
                         blendingFactor_
                       * tScheme1_().correction(vf)
-                      + (scalar(1.0) - blendingFactor_)
+                      + (scalar(1) - blendingFactor_)
                       * tScheme2_().correction(vf)
                     );
                 }
@@ -231,7 +231,7 @@ public:
             {
                 return
                 (
-                    (scalar(1.0) - blendingFactor_)
+                    (scalar(1) - blendingFactor_)
                   * tScheme2_().correction(vf)
                 );
             }

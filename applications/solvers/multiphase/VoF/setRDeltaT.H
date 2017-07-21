@@ -126,7 +126,7 @@
         rDeltaT = max
         (
             rDeltaT,
-            (scalar(1.0) - rDeltaTDampingCoeff)*rDeltaT0
+            (scalar(1) - rDeltaTDampingCoeff)*rDeltaT0
         );
 
         Info<< "Damped flow time scale min/max = "

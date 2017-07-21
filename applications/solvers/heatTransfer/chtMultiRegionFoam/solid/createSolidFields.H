@@ -103,7 +103,7 @@
                         IOobject::NO_WRITE
                     ),
                     solidRegions[i],
-                    dimensionedScalar("1", dimless, scalar(1.0))
+                    dimensionedScalar("1", dimless, scalar(1))
                 )
             );
         }

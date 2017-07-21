@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,11 +144,11 @@ void Foam::singleStepReactingMixture<ThermoType>::fresCorrect()
         const label speciei = reaction.lhs()[i].index;
         if (speciei == fuelIndex_)
         {
-            fres_[speciei] =  max(YFuel - YO2/s_, scalar(0.0));
+            fres_[speciei] =  max(YFuel - YO2/s_, scalar(0));
         }
         else if (speciei == O2Index)
         {
-            fres_[speciei] =  max(YO2 - YFuel*s_, scalar(0.0));
+            fres_[speciei] =  max(YO2 - YFuel*s_, scalar(0));
         }
     }
 

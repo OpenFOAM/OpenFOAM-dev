@@ -336,9 +336,9 @@ void filmPyrolysisRadiativeCoupledMixedFvPatchScalarField::updateCoeffs()
             max
             (
                 (filmDelta - filmDeltaDry_)/(filmDeltaWet_ - filmDeltaDry_),
-                scalar(0.0)
+                scalar(0)
             ),
-            scalar(1.0)
+            scalar(1)
         )
      );
 

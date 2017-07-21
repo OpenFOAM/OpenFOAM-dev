@@ -212,7 +212,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
         volCosAngle.write();
     }
 
-    return max(min(cosAngle, scalar(1.0)), scalar(-1.0));
+    return max(min(cosAngle, scalar(1)), scalar(-1));
 }
 
 

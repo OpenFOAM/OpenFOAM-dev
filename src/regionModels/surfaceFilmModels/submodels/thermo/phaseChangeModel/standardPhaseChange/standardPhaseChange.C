@@ -117,7 +117,7 @@ void standardPhaseChange::correctModel
     const vectorField dU(film.UPrimary() - film.Us());
     const scalarField limMass
     (
-        max(scalar(0.0), availableMass - deltaMin_*rho*magSf)
+        max(scalar(0), availableMass - deltaMin_*rho*magSf)
     );
 
     forAll(dMass, celli)

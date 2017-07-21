@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -578,7 +578,7 @@ void Foam::polyMeshFilter::checkMeshEdgesAndRelaxEdges
         }
     }
 
-    syncTools::syncEdgeList(mesh_, minEdgeLen_, minEqOp<scalar>(), scalar(0.0));
+    syncTools::syncEdgeList(mesh_, minEdgeLen_, minEqOp<scalar>(), scalar(0));
 
     for (label smoothIter = 0; smoothIter < maxSmoothIters(); ++smoothIter)
     {
@@ -614,7 +614,7 @@ void Foam::polyMeshFilter::checkMeshEdgesAndRelaxEdges
             mesh_,
             minEdgeLen_,
             minEqOp<scalar>(),
-            scalar(0.0)
+            scalar(0)
         );
     }
 }
@@ -824,7 +824,7 @@ void Foam::polyMeshFilter::mapOldMeshEdgeFieldToNewMesh
         newMesh,
         newMeshMinEdgeLen,
         maxEqOp<scalar>(),
-        scalar(0.0)
+        scalar(0)
     );
 }
 
