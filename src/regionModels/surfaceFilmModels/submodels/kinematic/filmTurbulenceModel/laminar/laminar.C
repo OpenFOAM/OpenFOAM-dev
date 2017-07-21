@@ -136,7 +136,7 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
 
     // employ simple coeff-based model
     volScalarField Cs("Cs", Cf_*rhop*mag(Up - U));
-    volScalarField Cw("Cw", mu/(0.3333*(delta + film.deltaSmall())));
+    volScalarField Cw("Cw", mu/((1.0/3.0)*(delta + film.deltaSmall())));
     Cw.min(5000.0);
 
     return
