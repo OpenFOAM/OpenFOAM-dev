@@ -91,15 +91,15 @@ inline const Foam::volScalarField& Foam::radiation::fvDOM::qr() const
     return qr_;
 }
 
-inline const Foam::volScalarField& Foam::radiation::fvDOM::Qin() const
+inline const Foam::volScalarField& Foam::radiation::fvDOM::qin() const
 {
-    return Qin_;
+    return qin_;
 }
 
 
-inline const Foam::volScalarField& Foam::radiation::fvDOM::Qem() const
+inline const Foam::volScalarField& Foam::radiation::fvDOM::qem() const
 {
-    return Qem_;
+    return qem_;
 }
 
 

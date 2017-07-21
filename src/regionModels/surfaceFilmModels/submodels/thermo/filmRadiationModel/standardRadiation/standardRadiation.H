@@ -60,7 +60,7 @@ private:
     // Private data
 
         //- Radiative incident flux mapped from  the primary region / [kg/s3]
-        volScalarField QinPrimary_;
+        volScalarField qinPrimary_;
 
         //- Remaining radiative flux after removing local contribution
         volScalarField qrNet_;

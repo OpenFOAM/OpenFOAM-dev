@@ -235,31 +235,31 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
         mesh_,
         dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
     ),
-    Qem_
+    qem_
     (
         IOobject
         (
-            "Qem",
+            "qem",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qem", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qem", dimMass/pow3(dimTime), 0.0)
     ),
-    Qin_
+    qin_
     (
         IOobject
         (
-            "Qin",
+            "qin",
             mesh_.time().timeName(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qin", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qin", dimMass/pow3(dimTime), 0.0)
     ),
     a_
     (
@@ -327,31 +327,31 @@ Foam::radiation::fvDOM::fvDOM
         mesh_,
         dimensionedScalar("qr", dimMass/pow3(dimTime), 0.0)
     ),
-    Qem_
+    qem_
     (
         IOobject
         (
-            "Qem",
+            "qem",
             mesh_.time().timeName(),
             mesh_,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qem", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qem", dimMass/pow3(dimTime), 0.0)
     ),
-    Qin_
+    qin_
     (
         IOobject
         (
-            "Qin",
+            "qin",
             mesh_.time().timeName(),
             mesh_,
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         mesh_,
-        dimensionedScalar("Qin", dimMass/pow3(dimTime), 0.0)
+        dimensionedScalar("qin", dimMass/pow3(dimTime), 0.0)
     ),
     a_
     (
@@ -506,16 +506,16 @@ void Foam::radiation::fvDOM::updateG()
 {
     G_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
     qr_ = dimensionedScalar("zero",dimMass/pow3(dimTime), 0.0);
-    Qem_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
-    Qin_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
+    qem_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
+    qin_ = dimensionedScalar("zero", dimMass/pow3(dimTime), 0.0);
 
     forAll(IRay_, rayI)
     {
         IRay_[rayI].addIntensity();
         G_ += IRay_[rayI].I()*IRay_[rayI].omega();
         qr_.boundaryFieldRef() += IRay_[rayI].qr().boundaryField();
-        Qem_.boundaryFieldRef() += IRay_[rayI].Qem().boundaryField();
-        Qin_.boundaryFieldRef() += IRay_[rayI].Qin().boundaryField();
+        qem_.boundaryFieldRef() += IRay_[rayI].qem().boundaryField();
+        qin_.boundaryFieldRef() += IRay_[rayI].qin().boundaryField();
     }
 }
 

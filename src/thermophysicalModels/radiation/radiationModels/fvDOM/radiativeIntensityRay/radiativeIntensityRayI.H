@@ -43,28 +43,28 @@ inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::qr()
 }
 
 inline const Foam::volScalarField& Foam::radiation::
-radiativeIntensityRay::Qin() const
+radiativeIntensityRay::qin() const
 {
-    return Qin_;
+    return qin_;
 }
 
 
-inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::Qin()
+inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::qin()
 {
-    return Qin_;
+    return qin_;
 }
 
 
 inline const Foam::volScalarField& Foam::radiation::
-radiativeIntensityRay::Qem() const
+radiativeIntensityRay::qem() const
 {
-    return Qem_;
+    return qem_;
 }
 
 
-inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::Qem()
+inline Foam::volScalarField& Foam::radiation::radiativeIntensityRay::qem()
 {
-    return Qem_;
+    return qem_;
 }
 
 

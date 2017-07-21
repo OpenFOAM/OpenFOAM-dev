@@ -61,7 +61,7 @@ private:
     // Private data
 
         //- Incident radiative flux mapped from  the primary region / [kg/s3]
-        volScalarField QinPrimary_;
+        volScalarField qinPrimary_;
 
 
     // Private member functions
