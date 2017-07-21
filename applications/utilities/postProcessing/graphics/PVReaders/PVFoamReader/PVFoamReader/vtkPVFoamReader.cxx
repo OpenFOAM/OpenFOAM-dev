@@ -352,6 +352,8 @@ int vtkPVFoamReader::RequestData
 void vtkPVFoamReader::SetRefresh()
 {
     Modified();
+
+    pqApplicationCore::instance()->render();
 }
 
 
