@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ License
 #include "polyAddPoint.H"
 #include "polyAddFace.H"
 #include "polyAddCell.H"
+#include "syncTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -536,13 +537,47 @@ void Foam::meshCutter::setRefinement
     addedPoints_.clear();
     addedPoints_.resize(cuts.nLoops());
 
-    if (cuts.nLoops() == 0)
+    if (returnReduce(cuts.nLoops(), sumOp<label>()) == 0)
     {
         return;
     }
 
     const labelListList& anchorPts = cuts.cellAnchorPoints();
     const labelListList& cellLoops = cuts.cellLoops();
+
+    if (debug)
+    {
+        // Check that any edge is cut only if any cell using it is cut
+        boolList edgeOnCutCell(mesh().nEdges(), false);
+        forAll(cuts.cellLoops(), celli)
+        {
+            if (cuts.cellLoops()[celli].size())
+            {
+                const labelList& cEdges = mesh().cellEdges(celli);
+                forAll(cEdges, i)
+                {
+                    edgeOnCutCell[cEdges[i]] = true;
+                }
+            }
+        }
+        syncTools::syncEdgeList(mesh(), edgeOnCutCell, orEqOp<bool>(), false);
+
+        forAll(cuts.edgeIsCut(), edgeI)
+        {
+            if (cuts.edgeIsCut()[edgeI] && !edgeOnCutCell[edgeI])
+            {
+                const edge& e = mesh().edges()[edgeI];
+
+                WarningInFunction
+                    << "Problem: cut edge but none of the cells using"
+                    << " it is cut\n"
+                    << "edge:" << edgeI << " verts:" << e
+                    << " at:" << e.line(mesh().points())
+                    << endl;    //abort(FatalError);
+            }
+        }
+    }
+
 
     //
     // Add new points along cut edges.
@@ -553,15 +588,6 @@ void Foam::meshCutter::setRefinement
         if (cuts.edgeIsCut()[edgeI])
         {
             const edge& e = mesh().edges()[edgeI];
-
-            // Check if there is any cell using this edge.
-            if (debug && findCutCell(cuts, mesh().edgeCells()[edgeI]) == -1)
-            {
-                FatalErrorInFunction
-                    << "Problem: cut edge but none of the cells using it is\n"
-                    << "edge:" << edgeI << " verts:" << e
-                    << abort(FatalError);
-            }
 
             // One of the edge end points should be master point of nbCelli.
             label masterPointi = e.start();

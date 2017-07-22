@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,7 +257,11 @@ Foam::vectorField Foam::directions::propagateDirection
         }
     }
 
-    Pout<< "Calculated local coords for " << defaultDir
+    reduce(nGeom, sumOp<label>());
+    reduce(nTopo, sumOp<label>());
+    reduce(nUnset, sumOp<label>());
+
+    Info<< "Calculated local coords for " << defaultDir
         << endl
         << "    Geometric cut cells   : " << nGeom << endl
         << "    Topological cut cells : " << nTopo << endl
@@ -322,7 +326,7 @@ Foam::directions::directions
         vector normal = tan1 ^ tan2;
         normal /= mag(normal);
 
-        Pout<< "Global Coordinate system:" << endl
+        Info<< "Global Coordinate system:" << endl
             << "     normal : " << normal << endl
             << "     tan1   : " << tan1 << endl
             << "     tan2   : " << tan2

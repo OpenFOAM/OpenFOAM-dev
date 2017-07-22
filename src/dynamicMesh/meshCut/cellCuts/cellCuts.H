@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ class cellCuts
 
             //- Cuts per existing face (includes those along edge of face)
             //  Cuts in no particular order.
-            mutable labelListList* faceCutsPtr_;
+            mutable autoPtr<labelListList> faceCutsPtr_;
 
             //- Per face : cut across edge (so not along existing edge)
             //  (can only be one per face)
@@ -418,6 +418,10 @@ class cellCuts
                 const List<scalarField>& cellLoopWeights
             );
 
+            //- Update basic cut information to be consistent across
+            //  coupled boundaries.
+            void syncProc();
+
             //- Cut cells and update basic cut information from cellLoops.
             //  Checks each loop for consistency with existing cut pattern.
             void setFromCellCutter
@@ -557,11 +561,11 @@ public:
             //  Cuts in no particular order
             const labelListList& faceCuts() const
             {
-                if (!faceCutsPtr_)
+                if (!faceCutsPtr_.valid())
                 {
                     calcFaceCuts();
                 }
-                return *faceCutsPtr_;
+                return faceCutsPtr_();
             }
 
             //- Gives for split face the two cuts that split the face into two.

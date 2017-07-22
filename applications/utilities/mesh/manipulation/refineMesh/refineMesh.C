@@ -40,18 +40,11 @@ Description
 #include "argList.H"
 #include "polyMesh.H"
 #include "Time.H"
-#include "undoableMeshCutter.H"
-#include "hexCellLooper.H"
 #include "cellSet.H"
-#include "twoDPointCorrector.H"
-#include "directions.H"
-#include "OFstream.H"
 #include "multiDirRefinement.H"
 #include "labelIOList.H"
-#include "wedgePolyPatch.H"
-#include "plane.H"
-#include "SubField.H"
 #include "IOdictionary.H"
+#include "syncTools.H"
 
 using namespace Foam;
 
@@ -62,7 +55,7 @@ static const scalar edgeTol = 1e-3;
 
 
 // Print edge statistics on mesh.
-void printEdgeStats(const primitiveMesh& mesh)
+void printEdgeStats(const polyMesh& mesh)
 {
     label nX = 0;
     label nY = 0;
@@ -70,66 +63,90 @@ void printEdgeStats(const primitiveMesh& mesh)
 
     scalar minX = GREAT;
     scalar maxX = -GREAT;
-    vector x(1, 0, 0);
+    static const vector x(1, 0, 0);
 
     scalar minY = GREAT;
     scalar maxY = -GREAT;
-    vector y(0, 1, 0);
+    static const vector y(0, 1, 0);
 
     scalar minZ = GREAT;
     scalar maxZ = -GREAT;
-    vector z(0, 0, 1);
+    static const vector z(0, 0, 1);
 
     scalar minOther = GREAT;
     scalar maxOther = -GREAT;
+
+    PackedBoolList isMasterEdge(syncTools::getMasterEdges(mesh));
 
     const edgeList& edges = mesh.edges();
 
     forAll(edges, edgeI)
     {
-        const edge& e = edges[edgeI];
-
-        vector eVec(e.vec(mesh.points()));
-
-        scalar eMag = mag(eVec);
-
-        eVec /= eMag;
-
-        if (mag(eVec & x) > 1-edgeTol)
+        if (isMasterEdge[edgeI])
         {
-            minX = min(minX, eMag);
-            maxX = max(maxX, eMag);
-            nX++;
-        }
-        else if (mag(eVec & y) > 1-edgeTol)
-        {
-            minY = min(minY, eMag);
-            maxY = max(maxY, eMag);
-            nY++;
-        }
-        else if (mag(eVec & z) > 1-edgeTol)
-        {
-            minZ = min(minZ, eMag);
-            maxZ = max(maxZ, eMag);
-            nZ++;
-        }
-        else
-        {
-            minOther = min(minOther, eMag);
-            maxOther = max(maxOther, eMag);
+            const edge& e = edges[edgeI];
+
+            vector eVec(e.vec(mesh.points()));
+
+            scalar eMag = mag(eVec);
+
+            eVec /= eMag;
+
+            if (mag(eVec & x) > 1-edgeTol)
+            {
+                minX = min(minX, eMag);
+                maxX = max(maxX, eMag);
+                nX++;
+            }
+            else if (mag(eVec & y) > 1-edgeTol)
+            {
+                minY = min(minY, eMag);
+                maxY = max(maxY, eMag);
+                nY++;
+            }
+            else if (mag(eVec & z) > 1-edgeTol)
+            {
+                minZ = min(minZ, eMag);
+                maxZ = max(maxZ, eMag);
+                nZ++;
+            }
+            else
+            {
+                minOther = min(minOther, eMag);
+                maxOther = max(maxOther, eMag);
+            }
         }
     }
 
-    Pout<< "Mesh edge statistics:" << endl
+    label nEdges = mesh.nEdges();
+    reduce(nEdges, sumOp<label>());
+    reduce(nX, sumOp<label>());
+    reduce(nY, sumOp<label>());
+    reduce(nZ, sumOp<label>());
+
+    reduce(minX, minOp<scalar>());
+    reduce(maxX, maxOp<scalar>());
+
+    reduce(minY, minOp<scalar>());
+    reduce(maxY, maxOp<scalar>());
+
+    reduce(minZ, minOp<scalar>());
+    reduce(maxZ, maxOp<scalar>());
+
+    reduce(minOther, minOp<scalar>());
+    reduce(maxOther, maxOp<scalar>());
+
+
+    Info<< "Mesh edge statistics:" << nl
         << "    x aligned :  number:" << nX << "\tminLen:" << minX
-        << "\tmaxLen:" << maxX << endl
+        << "\tmaxLen:" << maxX << nl
         << "    y aligned :  number:" << nY << "\tminLen:" << minY
-        << "\tmaxLen:" << maxY << endl
+        << "\tmaxLen:" << maxY << nl
         << "    z aligned :  number:" << nZ << "\tminLen:" << minZ
-        << "\tmaxLen:" << maxZ << endl
-        << "    other     :  number:" << mesh.nEdges() - nX - nY - nZ
+        << "\tmaxLen:" << maxZ << nl
+        << "    other     :  number:" << nEdges - nX - nY - nZ
         << "\tminLen:" << minOther
-        << "\tmaxLen:" << maxOther << endl << endl;
+        << "\tmaxLen:" << maxOther << nl << endl;
 }
 
 
@@ -228,7 +245,8 @@ int main(int argc, char *argv[])
 
         cellSet cells(mesh, setName);
 
-        Pout<< "Read " << cells.size() << " cells from cellSet "
+        Info<< "Read " << returnReduce(cells.size(), sumOp<label>())
+            << " cells from cellSet "
             << cells.instance()/cells.local()/cells.name()
             << endl << endl;
 
@@ -239,12 +257,7 @@ int main(int argc, char *argv[])
         Info<< "Refining all cells" << nl << endl;
 
         // Select all cells
-        refCells.setSize(mesh.nCells());
-
-        forAll(mesh.cells(), celli)
-        {
-            refCells[celli] = celli;
-        }
+        refCells = identity(mesh.nCells());
 
         if (mesh.nGeometricD() == 3)
         {
@@ -340,12 +353,13 @@ int main(int argc, char *argv[])
         }
     }
 
-    Pout<< "Writing refined cells (" << newCells.size() << ") to cellSet "
+    Info<< "Writing refined cells ("
+        << returnReduce(newCells.size(), sumOp<label>())
+        << ") to cellSet "
         << newCells.instance()/newCells.local()/newCells.name()
         << endl << endl;
 
     newCells.write();
-
 
 
 

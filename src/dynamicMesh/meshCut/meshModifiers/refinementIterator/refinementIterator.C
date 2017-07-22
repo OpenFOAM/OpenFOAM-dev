@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,7 +270,7 @@ Foam::Map<Foam::label> Foam::refinementIterator::setRefinement
     while (!stop);
 
 
-    if (nRefCells == oldRefCells)
+    if (returnReduce((nRefCells == oldRefCells), andOp<bool>()))
     {
         WarningInFunction
             << "stopped refining."
