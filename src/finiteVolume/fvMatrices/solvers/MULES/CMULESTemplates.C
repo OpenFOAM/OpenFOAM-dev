@@ -202,8 +202,8 @@ void Foam::MULES::limiterCorr
     scalarField psiMaxn(psiIf.size(), psiMin);
     scalarField psiMinn(psiIf.size(), psiMax);
 
-    scalarField sumPhip(psiIf.size(), VSMALL);
-    scalarField mSumPhim(psiIf.size(), VSMALL);
+    scalarField sumPhip(psiIf.size(), 0.0);
+    scalarField mSumPhim(psiIf.size(), 0.0);
 
     forAll(phiCorrIf, facei)
     {
@@ -371,7 +371,7 @@ void Foam::MULES::limiterCorr
                 max(min
                 (
                     (sumlPhip[celli] + psiMaxn[celli])
-                   /(mSumPhim[celli] - SMALL),
+                   /(mSumPhim[celli] + ROOTVSMALL),
                     1.0), 0.0
                 );
 
@@ -379,7 +379,7 @@ void Foam::MULES::limiterCorr
                 max(min
                 (
                     (mSumlPhim[celli] + psiMinn[celli])
-                   /(sumPhip[celli] + SMALL),
+                   /(sumPhip[celli] + ROOTVSMALL),
                     1.0), 0.0
                 );
         }
