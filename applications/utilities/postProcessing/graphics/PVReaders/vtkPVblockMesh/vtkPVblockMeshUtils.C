@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,24 +26,14 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "vtkPVReaders.H"
-
-// OpenFOAM includes
-#include "IFstream.H"
+#include "vtkPVblockMesh.H"
+#include "vtkPVblockMeshReader.h"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
 #include "vtkDataSet.h"
 #include "vtkMultiBlockDataSet.h"
 #include "vtkInformation.h"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-defineTypeNameAndDebug(vtkPVReaders, 0);
-}
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -73,18 +63,19 @@ namespace Foam
 } // End namespace Foam
 
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::vtkPVReaders::AddToBlock
+void Foam::vtkPVblockMesh::AddToBlock
 (
     vtkMultiBlockDataSet* output,
     vtkDataSet* dataset,
-    const partInfo& selector,
+    const arrayRange& range,
     const label datasetNo,
     const std::string& datasetName
 )
 {
-    const int blockNo = selector.block();
+    const int blockNo = range.block();
 
     vtkDataObject* blockDO = output->GetBlock(blockNo);
     vtkMultiBlockDataSet* block = vtkMultiBlockDataSet::SafeDownCast(blockDO);
@@ -120,7 +111,7 @@ void Foam::vtkPVReaders::AddToBlock
         output->GetMetaData(blockNo)->Set
         (
             vtkCompositeDataSet::NAME(),
-            selector.name()
+            range.name()
         );
     }
 
@@ -135,14 +126,14 @@ void Foam::vtkPVReaders::AddToBlock
 }
 
 
-vtkDataSet* Foam::vtkPVReaders::GetDataSetFromBlock
+vtkDataSet* Foam::vtkPVblockMesh::GetDataSetFromBlock
 (
     vtkMultiBlockDataSet* output,
-    const partInfo& selector,
+    const arrayRange& range,
     const label datasetNo
 )
 {
-    const int blockNo = selector.block();
+    const int blockNo = range.block();
 
     vtkDataObject* blockDO = output->GetBlock(blockNo);
     vtkMultiBlockDataSet* block = vtkMultiBlockDataSet::SafeDownCast(blockDO);
@@ -157,13 +148,13 @@ vtkDataSet* Foam::vtkPVReaders::GetDataSetFromBlock
 
 
 // ununsed at the moment
-Foam::label Foam::vtkPVReaders::GetNumberOfDataSets
+Foam::label Foam::vtkPVblockMesh::GetNumberOfDataSets
 (
     vtkMultiBlockDataSet* output,
-    const partInfo& selector
+    const arrayRange& range
 )
 {
-    const int blockNo = selector.block();
+    const int blockNo = range.block();
 
     vtkDataObject* blockDO = output->GetBlock(blockNo);
     vtkMultiBlockDataSet* block = vtkMultiBlockDataSet::SafeDownCast(blockDO);
@@ -176,13 +167,7 @@ Foam::label Foam::vtkPVReaders::GetNumberOfDataSets
 }
 
 
-// Foam::word Foam::vtkPVReaders::getPartName(int partId)
-// {
-//     return getFirstWord(reader_->GetPartArrayName(partId));
-// }
-
-
-Foam::wordHashSet Foam::vtkPVReaders::getSelected
+Foam::wordHashSet Foam::vtkPVblockMesh::getSelected
 (
     vtkDataArraySelection* select
 )
@@ -202,16 +187,16 @@ Foam::wordHashSet Foam::vtkPVReaders::getSelected
 }
 
 
-Foam::wordHashSet Foam::vtkPVReaders::getSelected
+Foam::wordHashSet Foam::vtkPVblockMesh::getSelected
 (
     vtkDataArraySelection* select,
-    const partInfo& selector
+    const arrayRange& range
 )
 {
     int nElem = select->GetNumberOfArrays();
     wordHashSet selections(2*nElem);
 
-    for (int elemI = selector.start(); elemI < selector.end(); ++elemI)
+    for (int elemI = range.start(); elemI < range.end(); ++elemI)
     {
         if (select->GetArraySetting(elemI))
         {
@@ -223,7 +208,7 @@ Foam::wordHashSet Foam::vtkPVReaders::getSelected
 }
 
 
-Foam::stringList Foam::vtkPVReaders::getSelectedArrayEntries
+Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
 (
     vtkDataArraySelection* select
 )
@@ -262,16 +247,16 @@ Foam::stringList Foam::vtkPVReaders::getSelectedArrayEntries
 }
 
 
-Foam::stringList Foam::vtkPVReaders::getSelectedArrayEntries
+Foam::stringList Foam::vtkPVblockMesh::getSelectedArrayEntries
 (
     vtkDataArraySelection* select,
-    const partInfo& selector
+    const arrayRange& range
 )
 {
-    stringList selections(selector.size());
+    stringList selections(range.size());
     label nElem = 0;
 
-    for (int elemI = selector.start(); elemI < selector.end(); ++elemI)
+    for (int elemI = range.start(); elemI < range.end(); ++elemI)
     {
         if (select->GetArraySetting(elemI))
         {
@@ -284,7 +269,7 @@ Foam::stringList Foam::vtkPVReaders::getSelectedArrayEntries
     if (debug)
     {
         Info<< "available(";
-        for (int elemI = selector.start(); elemI < selector.end(); ++elemI)
+        for (int elemI = range.start(); elemI < range.end(); ++elemI)
         {
             Info<< " \"" << select->GetArrayName(elemI) << "\"";
         }
@@ -301,7 +286,7 @@ Foam::stringList Foam::vtkPVReaders::getSelectedArrayEntries
 }
 
 
-void Foam::vtkPVReaders::setSelectedArrayEntries
+void Foam::vtkPVblockMesh::setSelectedArrayEntries
 (
     vtkDataArraySelection* select,
     const stringList& selections
@@ -325,6 +310,45 @@ void Foam::vtkPVReaders::setSelectedArrayEntries
         }
     }
 }
+
+
+void Foam::vtkPVblockMesh::updateBoolListStatus
+(
+    boolList& status,
+    vtkDataArraySelection* selection
+)
+{
+    if (debug)
+    {
+        Info<< "<beg> Foam::vtkPVblockMesh::updateBoolListStatus" << endl;
+    }
+
+    const label nElem = selection->GetNumberOfArrays();
+    if (status.size() != nElem)
+    {
+        status.setSize(nElem);
+        status = false;
+    }
+
+    forAll(status, elemI)
+    {
+        const int setting = selection->GetArraySetting(elemI);
+
+        status[elemI] = setting;
+
+        if (debug)
+        {
+            Info<< "  part[" << elemI << "] = "
+                << status[elemI]
+                << " : " << selection->GetArrayName(elemI) << endl;
+        }
+    }
+    if (debug)
+    {
+        Info<< "<end> Foam::vtkPVblockMesh::updateBoolListStatus" << endl;
+    }
+}
+
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

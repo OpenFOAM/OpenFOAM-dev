@@ -5,7 +5,6 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
-    -I../../vtkPVReaders/lnInclude \
     -I../PVFoamReader \
     -I$(ParaView_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
@@ -18,5 +17,5 @@ LIB_LIBS = \
     -ldynamicMesh \
     -lgenericPatchFields \
     -llagrangian \
-    -L$(FOAM_LIBBIN) -lvtkPVReaders \
+    -L$(FOAM_LIBBIN) \
     $(GLIBS)

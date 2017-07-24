@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,10 @@ License
 #include "vtkPVFoam.H"
 
 // OpenFOAM includes
-#include "polyPatch.H"
-#include "primitivePatch.H"
+#include "Cloud.H"
+#include "fvMesh.H"
+#include "IOobjectList.H"
+#include "passiveParticle.H"
 #include "vtkOpenFOAMPoints.H"
 
 // VTK includes
@@ -37,58 +39,66 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class PatchType>
-vtkPolyData* Foam::vtkPVFoam::patchVTKMesh
+vtkPolyData* Foam::vtkPVFoam::lagrangianVTKMesh
 (
-    const word& name,
-    const PatchType& p
+    const fvMesh& mesh,
+    const word& cloudName
 )
 {
-    vtkPolyData* vtkmesh = vtkPolyData::New();
+    vtkPolyData* vtkmesh = nullptr;
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::patchVTKMesh - " << name << endl;
+        Info<< "<beg> Foam::vtkPVFoam::lagrangianVTKMesh - timePath "
+            << mesh.time().timePath()/cloud::prefix/cloudName << endl;
         printMemory();
     }
 
-    // Convert OpenFOAM mesh vertices to VTK
-    const Foam::pointField& points = p.localPoints();
 
-    vtkPoints* vtkpoints = vtkPoints::New();
-    vtkpoints->Allocate(points.size());
-    forAll(points, i)
+    // the region name is already in the mesh db
+    IOobjectList sprayObjs
+    (
+        mesh,
+        mesh.time().timeName(),
+        cloud::prefix/cloudName
+    );
+
+    IOobject* positionsPtr = sprayObjs.lookup(word("positions"));
+    if (positionsPtr)
     {
-        vtkInsertNextOpenFOAMPoint(vtkpoints, points[i]);
-    }
+        Cloud<passiveParticle> parcels(mesh, cloudName, false);
 
-    vtkmesh->SetPoints(vtkpoints);
-    vtkpoints->Delete();
-
-
-    // Add faces as polygons
-    const faceList& faces = p.localFaces();
-
-    vtkCellArray* vtkcells = vtkCellArray::New();
-    vtkcells->Allocate(faces.size());
-    forAll(faces, facei)
-    {
-        const face& f = faces[facei];
-        vtkIdType nodeIds[f.size()];
-
-        forAll(f, fp)
+        if (debug)
         {
-            nodeIds[fp] = f[fp];
+            Info<< "cloud with " << parcels.size() << " parcels" << endl;
         }
-        vtkcells->InsertNextCell(f.size(), nodeIds);
-    }
 
-    vtkmesh->SetPolys(vtkcells);
-    vtkcells->Delete();
+        vtkmesh = vtkPolyData::New();
+        vtkPoints* vtkpoints = vtkPoints::New();
+        vtkCellArray* vtkcells = vtkCellArray::New();
+
+        vtkpoints->Allocate(parcels.size());
+        vtkcells->Allocate(parcels.size());
+
+        vtkIdType particleId = 0;
+        forAllConstIter(Cloud<passiveParticle>, parcels, iter)
+        {
+            vtkInsertNextOpenFOAMPoint(vtkpoints, iter().position());
+
+            vtkcells->InsertNextCell(1, &particleId);
+            particleId++;
+        }
+
+        vtkmesh->SetPoints(vtkpoints);
+        vtkpoints->Delete();
+
+        vtkmesh->SetVerts(vtkcells);
+        vtkcells->Delete();
+    }
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::patchVTKMesh - " << name << endl;
+        Info<< "<end> Foam::vtkPVFoam::lagrangianVTKMesh" << endl;
         printMemory();
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,59 +21,55 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InClass
-    vtkPVFoam
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef vtkOpenFOAMPoints_H
-#define vtkOpenFOAMPoints_H
+#include "vtkPVFoam.H"
+
+// OpenFOAM includes
+#include "vtkOpenFOAMPoints.H"
 
 // VTK includes
 #include "vtkPoints.h"
+#include "vtkPolyData.h"
+#include "vtkCellArray.h"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline void vtkInsertNextOpenFOAMPoint
+vtkPolyData* Foam::vtkPVFoam::pointZoneVTKMesh
 (
-    vtkPoints *points,
-    const Foam::point& p
+    const fvMesh& mesh,
+    const labelList& pointLabels
 )
 {
-    points->InsertNextPoint(p.x(), p.y(), p.z());
-}
+    vtkPolyData* vtkmesh = vtkPolyData::New();
 
-#if 0
-// this should be faster, but didn't get it working ...
-inline void vtkSetOpenFOAMPoint
-(
-    vtkPoints *points,
-    const Foam::label id,
-    const Foam::point& p
-)
-{
-    points->SetPoint(id, p.x(), p.y(), p.z());
-}
-
-
-// Convert OpenFOAM mesh vertices to VTK
-inline vtkPoints* vtkSetOpenFOAMPoints(const Foam::pointField& points)
-{
-    vtkPoints *vtkpoints = vtkPoints::New();
-    vtkpoints->SetNumberOfPoints(points.size());
-    forAll(points, i)
+    if (debug)
     {
-        const Foam::point& p = points[i];
-        vtkpoints->SetPoint(i, p.x(), p.y(), p.z());
+        Info<< "<beg> Foam::vtkPVFoam::pointZoneVTKMesh" << endl;
+        printMemory();
     }
 
-    return vtkpoints;
+    const pointField& meshPoints = mesh.points();
+
+    vtkPoints* vtkpoints = vtkPoints::New();
+    vtkpoints->Allocate(pointLabels.size());
+
+    forAll(pointLabels, pointi)
+    {
+        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[pointLabels[pointi]]);
+    }
+
+    vtkmesh->SetPoints(vtkpoints);
+    vtkpoints->Delete();
+
+    if (debug)
+    {
+        Info<< "<beg> Foam::vtkPVFoam::pointZoneVTKMesh" << endl;
+        printMemory();
+    }
+
+    return vtkmesh;
 }
 
-#endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

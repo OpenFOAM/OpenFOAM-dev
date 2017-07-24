@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,31 +26,51 @@ InClass
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef vtkOpenFOAMTupleRemap_H
-#define vtkOpenFOAMTupleRemap_H
+#ifndef vtkOpenFOAMPoints_H
+#define vtkOpenFOAMPoints_H
 
-// OpenFOAM includes
-#include "Swap.H"
+// VTK includes
+#include "vtkPoints.h"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-inline void vtkOpenFOAMTupleRemap(float vec[]);
-
-
-// Template specialization for symmTensor
-template<>
-inline void vtkOpenFOAMTupleRemap<Foam::symmTensor>(float vec[])
+inline void vtkInsertNextOpenFOAMPoint
+(
+    vtkPoints *points,
+    const Foam::point& p
+)
 {
-    Foam::Swap(vec[1], vec[3]);   // swap XY <-> YY
-    Foam::Swap(vec[2], vec[5]);   // swap XZ <-> ZZ
+    points->InsertNextPoint(p.x(), p.y(), p.z());
+}
+
+#if 0
+// this should be faster, but didn't get it working ...
+inline void vtkSetOpenFOAMPoint
+(
+    vtkPoints *points,
+    const Foam::label id,
+    const Foam::point& p
+)
+{
+    points->SetPoint(id, p.x(), p.y(), p.z());
 }
 
 
-template<class Type>
-inline void vtkOpenFOAMTupleRemap(float vec[])
-{}
+// Convert OpenFOAM mesh vertices to VTK
+inline vtkPoints* vtkSetOpenFOAMPoints(const Foam::pointField& points)
+{
+    vtkPoints *vtkpoints = vtkPoints::New();
+    vtkpoints->SetNumberOfPoints(points.size());
+    forAll(points, i)
+    {
+        const Foam::point& p = points[i];
+        vtkpoints->SetPoint(i, p.x(), p.y(), p.z());
+    }
 
+    return vtkpoints;
+}
+
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

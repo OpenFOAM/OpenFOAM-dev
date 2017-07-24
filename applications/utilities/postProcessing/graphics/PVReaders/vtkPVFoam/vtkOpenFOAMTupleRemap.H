@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,55 +21,39 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InClass
+    vtkPVFoam
+
 \*---------------------------------------------------------------------------*/
 
-#include "vtkPVFoam.H"
+#ifndef vtkOpenFOAMTupleRemap_H
+#define vtkOpenFOAMTupleRemap_H
 
 // OpenFOAM includes
-#include "vtkOpenFOAMPoints.H"
+#include "Swap.H"
 
-// VTK includes
-#include "vtkPoints.h"
-#include "vtkPolyData.h"
-#include "vtkCellArray.h"
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+template<class Type>
+inline void vtkOpenFOAMTupleRemap(float vec[]);
 
-vtkPolyData* Foam::vtkPVFoam::pointZoneVTKMesh
-(
-    const fvMesh& mesh,
-    const labelList& pointLabels
-)
+
+// Template specialization for symmTensor
+template<>
+inline void vtkOpenFOAMTupleRemap<Foam::symmTensor>(float vec[])
 {
-    vtkPolyData* vtkmesh = vtkPolyData::New();
-
-    if (debug)
-    {
-        Info<< "<beg> Foam::vtkPVFoam::pointZoneVTKMesh" << endl;
-        printMemory();
-    }
-
-    const pointField& meshPoints = mesh.points();
-
-    vtkPoints* vtkpoints = vtkPoints::New();
-    vtkpoints->Allocate(pointLabels.size());
-
-    forAll(pointLabels, pointi)
-    {
-        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[pointLabels[pointi]]);
-    }
-
-    vtkmesh->SetPoints(vtkpoints);
-    vtkpoints->Delete();
-
-    if (debug)
-    {
-        Info<< "<beg> Foam::vtkPVFoam::pointZoneVTKMesh" << endl;
-        printMemory();
-    }
-
-    return vtkmesh;
+    Foam::Swap(vec[1], vec[3]);   // swap XY <-> YY
+    Foam::Swap(vec[2], vec[5]);   // swap XZ <-> ZZ
 }
 
+
+template<class Type>
+inline void vtkOpenFOAMTupleRemap(float vec[])
+{}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

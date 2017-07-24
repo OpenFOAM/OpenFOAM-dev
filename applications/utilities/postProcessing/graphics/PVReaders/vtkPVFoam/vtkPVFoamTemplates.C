@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,47 +26,34 @@ License
 #include "vtkPVFoam.H"
 
 // OpenFOAM includes
-#include "faceSet.H"
-#include "pointSet.H"
+#include "polyPatch.H"
+#include "primitivePatch.H"
 #include "vtkOpenFOAMPoints.H"
 
 // VTK includes
+#include "vtkCellArray.h"
 #include "vtkPoints.h"
 #include "vtkPolyData.h"
-#include "vtkCellArray.h"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
+template<class PatchType>
+vtkPolyData* Foam::vtkPVFoam::patchVTKMesh
 (
-    const fvMesh& mesh,
-    const faceSet& fSet
+    const word& name,
+    const PatchType& p
 )
 {
     vtkPolyData* vtkmesh = vtkPolyData::New();
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::faceSetVTKMesh" << endl;
+        Info<< "<beg> Foam::vtkPVFoam::patchVTKMesh - " << name << endl;
         printMemory();
     }
 
-    // Construct primitivePatch of faces in fSet.
-
-    const faceList& meshFaces = mesh.faces();
-    faceList patchFaces(fSet.size());
-    label facei = 0;
-    forAllConstIter(faceSet, fSet, iter)
-    {
-        patchFaces[facei++] = meshFaces[iter.key()];
-    }
-    primitiveFacePatch p(patchFaces, mesh.points());
-
-
-    // The balance of this routine should be identical to patchVTKMesh
-
     // Convert OpenFOAM mesh vertices to VTK
-    const pointField& points = p.localPoints();
+    const Foam::pointField& points = p.localPoints();
 
     vtkPoints* vtkpoints = vtkPoints::New();
     vtkpoints->Allocate(points.size());
@@ -74,15 +61,16 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
     {
         vtkInsertNextOpenFOAMPoint(vtkpoints, points[i]);
     }
+
     vtkmesh->SetPoints(vtkpoints);
     vtkpoints->Delete();
+
 
     // Add faces as polygons
     const faceList& faces = p.localFaces();
 
     vtkCellArray* vtkcells = vtkCellArray::New();
     vtkcells->Allocate(faces.size());
-
     forAll(faces, facei)
     {
         const face& f = faces[facei];
@@ -100,44 +88,7 @@ vtkPolyData* Foam::vtkPVFoam::faceSetVTKMesh
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::faceSetVTKMesh" << endl;
-        printMemory();
-    }
-
-    return vtkmesh;
-}
-
-
-vtkPolyData* Foam::vtkPVFoam::pointSetVTKMesh
-(
-    const fvMesh& mesh,
-    const pointSet& pSet
-)
-{
-    vtkPolyData* vtkmesh = vtkPolyData::New();
-
-    if (debug)
-    {
-        Info<< "<beg> Foam::vtkPVFoam::pointSetVTKMesh" << endl;
-        printMemory();
-    }
-
-    const pointField& meshPoints = mesh.points();
-
-    vtkPoints* vtkpoints = vtkPoints::New();
-    vtkpoints->Allocate(pSet.size());
-
-    forAllConstIter(pointSet, pSet, iter)
-    {
-        vtkInsertNextOpenFOAMPoint(vtkpoints, meshPoints[iter.key()]);
-    }
-
-    vtkmesh->SetPoints(vtkpoints);
-    vtkpoints->Delete();
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVFoam::pointSetVTKMesh" << endl;
+        Info<< "<end> Foam::vtkPVFoam::patchVTKMesh - " << name << endl;
         printMemory();
     }
 

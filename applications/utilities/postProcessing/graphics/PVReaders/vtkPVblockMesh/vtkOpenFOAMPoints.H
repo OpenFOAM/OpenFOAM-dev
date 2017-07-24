@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,51 +21,42 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
+InClass
+    vtkPVblockMesh
+
 \*---------------------------------------------------------------------------*/
 
-#ifndef vtkPVFoamAddToSelection_H
-#define vtkPVFoamAddToSelection_H
-
-// OpenFOAM includes
-#include "IOobjectList.H"
-#include "SortableList.H"
+#ifndef vtkOpenFOAMPoints_H
+#define vtkOpenFOAMPoints_H
 
 // VTK includes
-#include "vtkDataArraySelection.h"
+#include "vtkPoints.h"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::label Foam::vtkPVFoam::addToSelection
+inline void vtkInsertNextOpenFOAMPoint
 (
-    vtkDataArraySelection *select,
-    const IOobjectList& objectLst,
-    const string& suffix
+    vtkPoints *points,
+    const Foam::point& p
 )
 {
-    SortableList<word> names(objectLst.names(Type::typeName));
-
-    forAll(names, nameI)
-    {
-        if (suffix.size())
-        {
-            select->AddArray
-            (
-                (names[nameI] + suffix).c_str()
-            );
-        }
-        else
-        {
-            select->AddArray
-            (
-                (names[nameI]).c_str()
-            );
-        }
-    }
-
-    return names.size();
+    points->InsertNextPoint(p.x(), p.y(), p.z());
 }
 
+inline void vtkInsertNextOpenFOAMPoint
+(
+    vtkPoints *points,
+    const Foam::point& p,
+    const Foam::scalar scaleFactor
+)
+{
+    points->InsertNextPoint
+    (
+        p.x()*scaleFactor,
+        p.y()*scaleFactor,
+        p.z()*scaleFactor
+    );
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

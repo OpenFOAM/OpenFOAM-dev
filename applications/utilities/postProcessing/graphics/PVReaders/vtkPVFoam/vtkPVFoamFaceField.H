@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,14 +26,13 @@ InClass
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef vtkPVFoamPatchField_H
-#define vtkPVFoamPatchField_H
+#ifndef vtkPVFoamFaceField_H
+#define vtkPVFoamFaceField_H
 
 // VTK includes
 #include "vtkCellData.h"
 #include "vtkFloatArray.h"
 #include "vtkMultiBlockDataSet.h"
-#include "vtkPointData.h"
 #include "vtkPolyData.h"
 
 #include "vtkOpenFOAMTupleRemap.H"
@@ -41,35 +40,65 @@ InClass
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::vtkPVFoam::convertPatchField
+void Foam::vtkPVFoam::convertFaceField
 (
-    const word& name,
-    const Field<Type>& ptf,
+    const GeometricField<Type, fvPatchField, volMesh>& tf,
     vtkMultiBlockDataSet* output,
     const arrayRange& range,
-    const label datasetNo
+    const label datasetNo,
+    const fvMesh& mesh,
+    const labelList& faceLabels
 )
 {
     const label nComp = pTraits<Type>::nComponents;
+    const label nInternalFaces = mesh.nInternalFaces();
+    const labelList& faceOwner = mesh.faceOwner();
+    const labelList& faceNeigh = mesh.faceNeighbour();
 
     vtkFloatArray* cellData = vtkFloatArray::New();
-    cellData->SetNumberOfTuples(ptf.size());
+    cellData->SetNumberOfTuples(faceLabels.size());
     cellData->SetNumberOfComponents(nComp);
-    cellData->Allocate(nComp*ptf.size());
-    cellData->SetName(name.c_str());
+    cellData->Allocate(nComp*faceLabels.size());
+    cellData->SetName(tf.name().c_str());
+
+    if (debug)
+    {
+        Info<< "convert convertFaceField: "
+            << tf.name()
+            << " size = " << tf.size()
+            << " nComp=" << nComp
+            << " nTuples = " << faceLabels.size() <<  endl;
+    }
 
     float vec[nComp];
-    forAll(ptf, i)
+
+    // for interior faces: average owner/neighbour
+    // for boundary faces: owner
+    forAll(faceLabels, facei)
     {
-        const Type& t = ptf[i];
-        for (direction d=0; d<nComp; ++d)
+        const label faceNo = faceLabels[facei];
+        if (faceNo < nInternalFaces)
         {
-            vec[d] = component(t, d);
+            Type t = 0.5*(tf[faceOwner[faceNo]] + tf[faceNeigh[faceNo]]);
+
+            for (direction d=0; d<nComp; ++d)
+            {
+                vec[d] = component(t, d);
+            }
+        }
+        else
+        {
+            const Type& t = tf[faceOwner[faceNo]];
+            for (direction d=0; d<nComp; ++d)
+            {
+                vec[d] = component(t, d);
+            }
         }
         vtkOpenFOAMTupleRemap<Type>(vec);
 
-        cellData->InsertTuple(i, vec);
+        cellData->InsertTuple(facei, vec);
     }
+
 
     vtkPolyData::SafeDownCast
     (
@@ -80,47 +109,6 @@ void Foam::vtkPVFoam::convertPatchField
     cellData->Delete();
 }
 
-
-// as above, but with PointData()
-template<class Type>
-void Foam::vtkPVFoam::convertPatchPointField
-(
-    const word& name,
-    const Field<Type>& pptf,
-    vtkMultiBlockDataSet* output,
-    const arrayRange& range,
-    const label datasetNo
-)
-{
-    const label nComp = pTraits<Type>::nComponents;
-
-    vtkFloatArray* pointData = vtkFloatArray::New();
-    pointData->SetNumberOfTuples(pptf.size());
-    pointData->SetNumberOfComponents(nComp);
-    pointData->Allocate(nComp*pptf.size());
-    pointData->SetName(name.c_str());
-
-    float vec[nComp];
-    forAll(pptf, i)
-    {
-        const Type& t = pptf[i];
-        for (direction d=0; d<nComp; ++d)
-        {
-            vec[d] = component(t, d);
-        }
-        vtkOpenFOAMTupleRemap<Type>(vec);
-
-        pointData->InsertTuple(i, vec);
-    }
-
-    vtkPolyData::SafeDownCast
-    (
-        GetDataSetFromBlock(output, range, datasetNo)
-    )   ->GetPointData()
-        ->AddArray(pointData);
-
-    pointData->Delete();
-}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
