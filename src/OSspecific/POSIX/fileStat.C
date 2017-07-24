@@ -29,6 +29,7 @@ License
 
 #include <signal.h>
 #include <unistd.h>
+#include <sys/sysmacros.h>
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
