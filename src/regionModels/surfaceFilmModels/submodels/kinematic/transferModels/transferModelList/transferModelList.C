@@ -62,7 +62,7 @@ transferModelList::transferModelList
 {
     const wordList activeModels
     (
-        dict.lookupOrDefault("transferModels", wordList::null())
+        dict.lookupOrDefault("transferModels", wordList())
     );
 
     wordHashSet models;
