@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::filmViscosityModel
+    Foam::regionModels::surfaceFilmModels::filmViscosityModel
 
 Description
     Base class for surface film viscosity models

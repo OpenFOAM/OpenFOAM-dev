@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thixotropicViscosity
+    Foam::regionModels::surfaceFilmModels::thixotropicViscosity
 
 Description
     Thixotropic viscosity model based on the evolution of the structural

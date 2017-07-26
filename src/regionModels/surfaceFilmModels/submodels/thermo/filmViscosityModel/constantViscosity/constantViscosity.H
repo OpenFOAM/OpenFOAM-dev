@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::constantViscosity
+    Foam::regionModels::surfaceFilmModels::constantViscosity
 
 Description
     Constant viscosity model

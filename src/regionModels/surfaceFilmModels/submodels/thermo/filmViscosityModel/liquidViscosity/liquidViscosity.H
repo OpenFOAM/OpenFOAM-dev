@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::liquidViscosity
+    Foam::regionModels::surfaceFilmModels::liquidViscosity
 
 Description
     liquidViscosity viscosity model

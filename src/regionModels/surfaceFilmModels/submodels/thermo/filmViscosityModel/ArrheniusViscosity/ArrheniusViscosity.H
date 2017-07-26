@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ArrheniusViscosity
+    Foam::regionModels::surfaceFilmModels::ArrheniusViscosity
 
 Description
     The Arrhenius temperature-dependent viscosity model multiplies the viscosity
