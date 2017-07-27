@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Airy.H"
+#include "solitary.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,136 +33,132 @@ namespace Foam
 {
 namespace waveModels
 {
-    defineTypeNameAndDebug(Airy, 0);
-    addToRunTimeSelectionTable(waveModel, Airy, objectRegistry);
+    defineTypeNameAndDebug(solitary, 0);
+    addToRunTimeSelectionTable(waveModel, solitary, objectRegistry);
 }
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::scalar Foam::waveModels::Airy::k() const
+Foam::scalar Foam::waveModels::solitary::k(const scalar t) const
 {
-    return 2*Foam::constant::mathematical::pi/length_;
+    return sqrt(0.75*amplitude(t)/pow3(depth()));
 }
 
 
-Foam::scalar Foam::waveModels::Airy::celerity() const
+Foam::scalar Foam::waveModels::solitary::alpha(const scalar t) const
 {
-    return sqrt(g()/k()*tanh(k()*depth()));
+    return amplitude(t)/depth();
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::angle
+Foam::scalar Foam::waveModels::solitary::celerity(const scalar t) const
+{
+    return sqrt(g()*depth()/(1 - alpha(t)));
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::parameter
 (
     const scalar t,
     const scalar u,
     const scalarField& x
 ) const
 {
-    return phase_ + k()*(x - (u + celerity())*t);
+    return k(t)*(x - offset_ - (u + celerity(t))*t);
 }
 
 
-bool Foam::waveModels::Airy::deep() const
-{
-    return k()*depth() > log(GREAT);
-}
-
-
-Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
+Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::Pi
 (
-    const label i,
     const scalar t,
     const scalar u,
-    const vector2DField& xz
+    const scalarField& x
 ) const
 {
-    const scalarField x(xz.component(0));
-    const scalarField z(xz.component(1));
+    const scalar clip = log(GREAT);
 
-    const scalarField phi(angle(t, u, x));
-    const scalarField kz(- k()*z);
-
-    if (deep())
-    {
-        return i*exp(- mag(kz))*zip(cos(i*phi), sin(i*phi));
-    }
-    else
-    {
-        const scalar kd = k()*depth();
-        const scalarField kdz(max(0.0, kd - mag(kz)));
-        return i*zip(cosh(i*kdz)*cos(i*phi), sinh(i*kdz)*sin(i*phi))/sinh(kd);
-    }
+    return 1/sqr(cosh(max(- clip, min(clip, parameter(t, u, x)))));
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::waveModels::Airy::Airy(const Airy& wave)
+Foam::waveModels::solitary::solitary(const solitary& wave)
 :
     waveModel(wave),
-    length_(wave.length_),
-    phase_(wave.phase_),
+    offset_(wave.offset_),
     depth_(wave.depth_)
 {}
 
 
-Foam::waveModels::Airy::Airy
+Foam::waveModels::solitary::solitary
 (
     const objectRegistry& db,
     const dictionary& dict
 )
 :
     waveModel(db, dict),
-    length_(readScalar(dict.lookup("length"))),
-    phase_(readScalar(dict.lookup("phase"))),
-    depth_(dict.lookupOrDefault<scalar>("depth", log(2*GREAT)/k()))
+    offset_(readScalar(dict.lookup("offset"))),
+    depth_(readScalar(dict.lookup("depth")))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::waveModels::Airy::~Airy()
+Foam::waveModels::solitary::~solitary()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::elevation
+Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::elevation
 (
     const scalar t,
     const scalar u,
     const scalarField& x
 ) const
 {
-    return amplitude(t)*cos(angle(t, u, x));
+    return amplitude(t)*Pi(t, u, x);
 }
 
 
-Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::velocity
+Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
 (
     const scalar t,
     const scalar u,
     const vector2DField& xz
 ) const
 {
-    const scalar ka = k()*amplitude(t);
+    const scalar A = alpha(t);
+    const scalarField Z(max(0.0, 1 - mag(xz.component(1)/depth())));
+    const scalarField P(Pi(t, u, xz.component(0)));
 
-    return celerity()*ka*vi(1, t, u, xz);
+    return
+        celerity(t)
+       *zip
+        (
+            A/4
+           *(
+                (4 + 2*A - 6*A*sqr(Z))*P
+              + (- 7*A + 9*A*sqr(Z))*sqr(P)
+            ),
+          - A*Z*depth()*k(t)*tanh(parameter(t, u, xz.component(0)))
+           *(
+                (2 + A - A*sqr(Z))*P
+              + (- 7*A + 3*A*sqr(Z))*sqr(P)
+            )
+        );
 }
 
 
-void Foam::waveModels::Airy::write(Ostream& os) const
+void Foam::waveModels::solitary::write(Ostream& os) const
 {
     waveModel::write(os);
 
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
-    os.writeKeyword("phase") << phase_ << token::END_STATEMENT << nl;
-    if (!deep())
-    {
-        os.writeKeyword("depth") << depth_ << token::END_STATEMENT << nl;
-    }
+    os.writeKeyword("offset") << offset_ << token::END_STATEMENT << nl;
+    os.writeKeyword("depth") << depth_ << token::END_STATEMENT << nl;
 }
 
 

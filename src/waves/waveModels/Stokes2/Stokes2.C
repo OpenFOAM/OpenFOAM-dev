@@ -65,18 +65,20 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes2::elevation
     const scalarField& x
 ) const
 {
-    const scalar kh = k()*depth();
-    const scalarField correction(k()*sqr(amplitude(t))*cos(2*angle(t, u, x))/2);
+    const scalar kd = k()*depth(), ka = k()*amplitude(t);
 
-    if (shallow())
+    const scalar T = deep() ? 1 : tanh(kd);
+
+    const scalar B22 = (3/sqr(T) - 1)/T/4;
+
+    if (debug)
     {
-        const scalar factor((3/sqr(tanh(kh)) - 1)/tanh(kh)/2);
-        return Airy::elevation(t, u, x) + factor*correction;
+        Info<< "B22 = " << B22 << endl;
     }
-    else
-    {
-        return Airy::elevation(t, u, x) + correction;
-    }
+
+    return
+        Airy::elevation(t, u, x)
+      + (1/k())*sqr(ka)*B22*cos(2*angle(t, u, x));
 }
 
 
@@ -87,29 +89,19 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
     const vector2DField& xz
 ) const
 {
-    if (shallow())
-    {
-        const scalarField x(xz.component(0));
-        const scalarField z(xz.component(1));
+    const scalar kd = k()*depth(), ka = k()*amplitude(t);
 
-        const scalarField phi(angle(t, u, x));
-        const scalarField kz(- k()*mag(z - elevation(t, u, x)));
-        const scalar kh = k()*depth();
-        const scalarField khz((kh + kz)*pos0(kh + kz));
-        const scalar kwaa = k()*omega(u)*sqr(amplitude(t));
+    const scalar A22ByA11 = deep() ? 0 : 0.375/pow3(sinh(kd));
 
-        return
-            Airy::velocity(t, u, xz)
-          + 6*kwaa*zip
-            (
-                cosh(2*khz)*cos(2*phi),
-                sinh(2*khz)*sin(2*phi)
-            )/pow4(sinh(kh));
-    }
-    else
+    if (debug)
     {
-        return Airy::velocity(t, u, xz);
+        const scalar A11 = 1/sinh(kd);
+        Info<< "A22 = " << A22ByA11*A11 << endl;
     }
+
+    return
+        Airy::velocity(t, u, xz)
+      + celerity()*sqr(ka)*A22ByA11*vi(2, t, u, xz);
 }
 
 
