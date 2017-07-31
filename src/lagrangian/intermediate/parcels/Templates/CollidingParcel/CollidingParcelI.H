@@ -123,7 +123,7 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
         nParticle0,
         d0,
         dTarget0,
-        torque0,
+        U0,
         constProps
     ),
     f_(f0),
