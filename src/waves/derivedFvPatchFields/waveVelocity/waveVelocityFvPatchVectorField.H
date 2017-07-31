@@ -42,6 +42,7 @@ Usage
         waves       | list of wave models to superimpose     | yes    |
         scale       | scale factor along the mean flow direction | no | None
         crossScale  | scale factor across the mean flow direction | no | None
+        phi         | Name of the flux field                 | no     | phi
     \endtable
 
     Example of the boundary condition specification:
@@ -99,6 +100,9 @@ class waveVelocityFvPatchVectorField
     public directionMixedFvPatchVectorField
 {
     // Private data
+
+        //- Name of the flux field
+        const word phiName_;
 
         //- Wave superposition
         const waveSuperposition waves_;
