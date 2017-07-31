@@ -272,6 +272,7 @@ Type Foam::interpolationTable<Type>::rateOfChange(const scalar value) const
                     << "    Zero rate of change."
                     << endl;
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case interpolationTable::CLAMP:
             {
@@ -305,6 +306,7 @@ Type Foam::interpolationTable<Type>::rateOfChange(const scalar value) const
                     << "    Zero rate of change."
                     << endl;
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case interpolationTable::CLAMP:
             {
@@ -414,6 +416,7 @@ Foam::interpolationTable<Type>::operator[](const label i) const
                     << "    Continuing with the first entry"
                     << endl;
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case interpolationTable::CLAMP:
             {
@@ -448,6 +451,7 @@ Foam::interpolationTable<Type>::operator[](const label i) const
                     << "    Continuing with the last entry"
                     << endl;
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case interpolationTable::CLAMP:
             {
@@ -501,6 +505,7 @@ Type Foam::interpolationTable<Type>::operator()(const scalar value) const
                     << "    Continuing with the first entry"
                     << endl;
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case interpolationTable::CLAMP:
             {
@@ -534,6 +539,7 @@ Type Foam::interpolationTable<Type>::operator()(const scalar value) const
                     << "    Continuing with the last entry"
                     << endl;
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case interpolationTable::CLAMP:
             {

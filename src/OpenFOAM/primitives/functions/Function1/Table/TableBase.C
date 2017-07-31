@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,6 +239,7 @@ bool Foam::Function1Types::TableBase<Type>::checkMinBounds
                     << endl;
 
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case CLAMP:
             {
@@ -289,6 +290,7 @@ bool Foam::Function1Types::TableBase<Type>::checkMaxBounds
                     << endl;
 
                 // fall-through to 'CLAMP'
+                [[fallthrough]];
             }
             case CLAMP:
             {
