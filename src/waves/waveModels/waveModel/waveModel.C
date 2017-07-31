@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waveModel.H"
-#include "mathematicalConstants.H"
 #include "Time.H"
 #include "uniformDimensionedFields.H"
 
@@ -37,65 +36,23 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-Foam::scalar Foam::waveModel::k() const
-{
-    return 2*Foam::constant::mathematical::pi/length_;
-}
-
-
-Foam::scalar Foam::waveModel::sigma() const
-{
-    const uniformDimensionedVectorField& g =
-        db_.lookupObject<uniformDimensionedVectorField>("g");
-
-    return sqrt(mag(g.value())*k()*tanh(k()*depth()));
-}
-
-
-Foam::scalar Foam::waveModel::omega(const scalar u) const
-{
-    return sigma() + k()*u;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::waveModel::angle
-(
-    const scalar t,
-    const scalar u,
-    const scalarField& x
-) const
-{
-    return k()*x - omega(u)*t;
-}
-
-
-bool Foam::waveModel::shallow() const
-{
-    return k()*depth() < log(GREAT);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::waveModel::waveModel(const waveModel& wave)
 :
     db_(wave.db_),
-    length_(wave.length_),
-    amplitude_(wave.amplitude_, false),
-    phase_(wave.phase_),
-    depth_(wave.depth_)
+    amplitude_(wave.amplitude_, false)
 {}
 
 
-Foam::waveModel::waveModel(const objectRegistry& db, const dictionary& dict)
+Foam::waveModel::waveModel
+(
+    const objectRegistry& db,
+    const dictionary& dict
+)
 :
     db_(db),
-    length_(readScalar(dict.lookup("length"))),
-    amplitude_(Function1<scalar>::New("amplitude", dict)),
-    phase_(readScalar(dict.lookup("phase"))),
-    depth_(dict.lookupOrDefault<scalar>("depth", GREAT))
+    amplitude_(Function1<scalar>::New("amplitude", dict))
 {}
 
 
@@ -107,12 +64,15 @@ Foam::waveModel::~waveModel()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::scalar Foam::waveModel::g() const
+{
+    return mag(db_.lookupObject<uniformDimensionedVectorField>("g").value());
+}
+
+
 void Foam::waveModel::write(Ostream& os) const
 {
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
     amplitude_->writeData(os);
-    os.writeKeyword("phase") << phase_ << token::END_STATEMENT << nl;
-    os.writeKeyword("depth") << depth_ << token::END_STATEMENT << nl;
 }
 
 

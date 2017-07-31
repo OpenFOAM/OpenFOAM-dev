@@ -22,28 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::waveModels::Airy
+    Foam::waveModels::Stokes5
 
 Description
-    First-order wave model.
+    Fifth-order wave model.
 
     Reference:
     \verbatim
-        "On the Theory of Oscillatory Waves"
-        G G Stokes
-        Transactions of the Cambridge Philosophical Society (1847), Volume 8,
-        Pages 441-455, Equations 18 and 19 (leading terms only)
+        "A Fifth Order Stokes Theory for Steady Waves"
+        J D Fenton
+        Journal of Waterway, Port, Coastal, and Ocean Engineering (1985),
+        Volume 111, Issue 2, Pages 216-234
     \endverbatim
 
 SourceFiles
-    Airy.C
+    Stokes5.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Airy_H
-#define Airy_H
+#ifndef Stokes5_H
+#define Stokes5_H
 
-#include "waveModel.H"
+#include "Stokes2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,102 +53,36 @@ namespace waveModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Airy Declaration
+                           Class Stokes5 Declaration
 \*---------------------------------------------------------------------------*/
 
-class Airy
+class Stokes5
 :
-    public waveModel
+    public Stokes2
 {
-    //- Private data
-
-        //- Peak-to-peak length [m]
-        const scalar length_;
-
-        //- Phase offset [rad]
-        const scalar phase_;
-
-        //- Depth [m]
-        const scalar depth_;
-
-
-protected:
-
-    // Protected Member Functions
-
-        //- The angular wavenumber [rad/m]
-        scalar k() const;
-
-        //- The wave celerity [m/s]
-        scalar celerity() const;
-
-        //- Angle of the oscillation [rad]
-        tmp<scalarField> angle
-        (
-            const scalar t,
-            const scalar u,
-            const scalarField& x
-        ) const;
-
-        //- Return whether shallow and intermdiate effects are to be omitted
-        bool deep() const;
-
-        //- Return the non-dimensionalised i-th harmonic of the velocity
-        tmp<vector2DField> vi
-        (
-            const label i,
-            const scalar t,
-            const scalar u,
-            const vector2DField& xz
-        ) const;
-
-
 public:
 
-    //- Runtime type information
-    TypeName("Airy");
+   //- Runtime type information
+    TypeName("Stokes5");
 
 
     // Constructors
 
-        //- Construct a copy
-        Airy(const Airy& wave);
-
         //- Construct from a database and a dictionary
-        Airy(const objectRegistry& db, const dictionary& dict);
+        Stokes5(const objectRegistry& db, const dictionary& dict);
 
         //- Construct a clone
         virtual autoPtr<waveModel> clone() const
         {
-            return autoPtr<waveModel>(new Airy(*this));
+            return autoPtr<waveModel>(new Stokes5(*this));
         }
 
 
     //- Destructor
-    virtual ~Airy();
+    virtual ~Stokes5();
 
 
     // Member Functions
-
-        // Access
-
-            //- Get the length
-            scalar length() const
-            {
-                return length_;
-            }
-
-            //- Get the phase
-            scalar phase() const
-            {
-                return phase_;
-            }
-
-            //- Get the depth
-            scalar depth() const
-            {
-                return depth_;
-            }
 
         //- Get the wave elevation at a given time, mean velocity and local
         //  coordinates. Local x is aligned with the mean velocity.
@@ -168,16 +102,13 @@ public:
             const scalar u,
             const vector2DField& xz
         ) const;
-
-        //- Write
-        virtual void write(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace waveModels
 } // End namespace Foam
+} // End namespace waveModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

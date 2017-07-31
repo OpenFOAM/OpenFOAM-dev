@@ -22,26 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::waveModels::Airy
+    Foam::waveModels::solitary
 
 Description
-    First-order wave model.
+    Solitary wave model.
 
     Reference:
     \verbatim
-        "On the Theory of Oscillatory Waves"
-        G G Stokes
-        Transactions of the Cambridge Philosophical Society (1847), Volume 8,
-        Pages 441-455, Equations 18 and 19 (leading terms only)
+        "Water Wave Mechanics For Engineers And Scientists"
+        R G Dean and R A Dalrymple
+        Pages 314-317
     \endverbatim
 
 SourceFiles
-    Airy.C
+    solitary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Airy_H
-#define Airy_H
+#ifndef solitary_H
+#define solitary_H
 
 #include "waveModel.H"
 
@@ -53,95 +52,84 @@ namespace waveModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Airy Declaration
+                           Class solitary Declaration
 \*---------------------------------------------------------------------------*/
 
-class Airy
+class solitary
 :
     public waveModel
 {
     //- Private data
 
-        //- Peak-to-peak length [m]
-        const scalar length_;
-
-        //- Phase offset [rad]
-        const scalar phase_;
+        //- Offset [m]
+        const scalar offset_;
 
         //- Depth [m]
         const scalar depth_;
 
 
-protected:
+    // Private Member Functions
 
-    // Protected Member Functions
+        //- The wavenumber [1/m]
+        scalar k(const scalar t) const;
 
-        //- The angular wavenumber [rad/m]
-        scalar k() const;
+        //- The dimensionless amplitude [1]
+        scalar alpha(const scalar t) const;
 
         //- The wave celerity [m/s]
-        scalar celerity() const;
+        scalar celerity(const scalar t) const;
 
-        //- Angle of the oscillation [rad]
-        tmp<scalarField> angle
+        //- The evolution parameter [1]
+        //  This is analogous to the oscillation angle of a periodic wave
+        tmp<scalarField> parameter
         (
             const scalar t,
             const scalar u,
             const scalarField& x
         ) const;
 
-        //- Return whether shallow and intermdiate effects are to be omitted
-        bool deep() const;
-
-        //- Return the non-dimensionalised i-th harmonic of the velocity
-        tmp<vector2DField> vi
+        //- The dimensionless elevation [1]
+        tmp<scalarField> Pi
         (
-            const label i,
             const scalar t,
             const scalar u,
-            const vector2DField& xz
+            const scalarField& x
         ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("Airy");
+    TypeName("solitary");
 
 
     // Constructors
 
         //- Construct a copy
-        Airy(const Airy& wave);
+        solitary(const solitary& wave);
 
         //- Construct from a database and a dictionary
-        Airy(const objectRegistry& db, const dictionary& dict);
+        solitary(const objectRegistry& db, const dictionary& dict);
 
         //- Construct a clone
         virtual autoPtr<waveModel> clone() const
         {
-            return autoPtr<waveModel>(new Airy(*this));
+            return autoPtr<waveModel>(new solitary(*this));
         }
 
 
     //- Destructor
-    virtual ~Airy();
+    virtual ~solitary();
 
 
     // Member Functions
 
         // Access
 
-            //- Get the length
-            scalar length() const
+            //- Get the offset
+            scalar offset() const
             {
-                return length_;
-            }
-
-            //- Get the phase
-            scalar phase() const
-            {
-                return phase_;
+                return offset_;
             }
 
             //- Get the depth
