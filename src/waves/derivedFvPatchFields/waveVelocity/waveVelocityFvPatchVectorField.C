@@ -142,7 +142,7 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
     const scalarField& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const scalarField out = pos0(phip);
+    const scalarField out(pos0(phip));
 
     // Where inflow, fix all velocity components to values specified by the
     // wave model.
@@ -154,7 +154,7 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
     // specified by the wave model. Tangential components are extrapolated.
     const scalar QPhip = gSum(out*phip);
     const scalar QWave = gSum(out*(UWave & patch().Sf()));
-    const vectorField nBySf = patch().Sf()/sqr(patch().magSf());
+    const vectorField nBySf(patch().Sf()/sqr(patch().magSf()));
     if (QPhip > VSMALL)
     {
         refValue() += out*(QWave/QPhip)*phip*nBySf;
