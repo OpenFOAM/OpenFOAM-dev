@@ -352,7 +352,7 @@ public:
             const scalar nParticle0,
             const scalar d0,
             const scalar dTarget0,
-            const vector& torque0,
+            const vector& U0,
             const constantProperties& constProps
         );
 
