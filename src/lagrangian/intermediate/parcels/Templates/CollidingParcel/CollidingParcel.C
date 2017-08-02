@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,7 @@ bool Foam::CollidingParcel<ParcelType>::move
             p.angularMomentum() += 0.5*trackTime*p.torque();
 
             td.keepParticle = true;
+            td.switchProcessor = false;
 
             break;
         }
