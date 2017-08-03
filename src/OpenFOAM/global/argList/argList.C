@@ -72,6 +72,13 @@ Foam::argList::initValidTables::initValidTables()
         "do not execute functionObjects"
     );
 
+    argList::addOption
+    (
+        "fileHandler",
+        "handler",
+        "override the fileHandler"
+     );
+
     Pstream::addValidParOptions(validParOptions);
 }
 
