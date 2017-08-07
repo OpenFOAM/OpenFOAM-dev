@@ -282,7 +282,8 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
     const scalar As = this->areaS(d);
 
     scalar ap = Tc_ + Sh/(As*htc);
-    scalar bp = 6.0*(Sh/As + htc*(Tc_ - T_));
+    const scalar bp = 6.0*htc/max(rho*d*Cp_, ROOTVSMALL);
+
     if (td.cloud().radiation())
     {
         tetIndices tetIs = this->currentTetIndices();
@@ -294,9 +295,7 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
         scalar s = epsilon*(Gc/4.0 - sigma*pow4(T_));
 
         ap += s/htc;
-        bp += 6.0*s;
     }
-    bp /= rho*d*Cp_*(ap - T_) + ROOTVSMALL;
 
     // Integrate to find the new parcel temperature
     IntegrationScheme<scalar>::integrationResult Tres =
