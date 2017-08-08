@@ -55,7 +55,7 @@ template<class Type> class Function1;
 template<class Type> Ostream& operator<<(Ostream&, const Function1<Type>&);
 
 /*---------------------------------------------------------------------------*\
-                         Class Function1 Declaration
+                          Class Function1 Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -79,6 +79,8 @@ protected:
 
 public:
 
+    typedef Type returnType;
+
     //- Runtime type information
     TypeName("Function1")
 
@@ -96,13 +98,13 @@ public:
     );
 
 
-    // Constructor
+    // Constructors
 
         //- Construct from entry name
         Function1(const word& entryName);
 
         //- Copy constructor
-        Function1(const Function1<Type>& de);
+        Function1(const Function1<Type>& f1);
 
         //- Construct and return a clone
         virtual tmp<Function1<Type>> clone() const = 0;
@@ -140,7 +142,7 @@ public:
             virtual Type value(const scalar x) const;
 
             //- Return value as a function of (scalar) independent variable
-            virtual tmp<Field<Type>> value(const scalarField& x) const;
+            virtual tmp<Field<Type>> value(const scalarField& x) const = 0;
 
             //- Integrate between two (scalar) values
             virtual Type integrate(const scalar x1, const scalar x2) const;
@@ -150,7 +152,7 @@ public:
             (
                 const scalarField& x1,
                 const scalarField& x2
-            ) const;
+            ) const = 0;
 
 
         // I/O
@@ -164,6 +166,51 @@ public:
 
             //- Write in dictionary format
             virtual void writeData(Ostream& os) const;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                        Class FieldFunction1 Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Function1Type>
+class FieldFunction1
+:
+    public Function1Type
+{
+
+public:
+
+    typedef typename Function1Type::returnType Type;
+
+
+    // Constructors
+
+        //- Construct from entry name and dictionary
+        FieldFunction1(const word& entryName, const dictionary& dict);
+
+        //- Construct and return a clone
+        virtual tmp<Function1<Type>> clone() const;
+
+
+    //- Destructor
+    virtual ~FieldFunction1()
+    {}
+
+
+    // Member Functions
+
+        // Evaluation
+
+            //- Return value as a function of (scalar) independent variable
+            virtual tmp<Field<Type>> value(const scalarField& x) const;
+
+            //- Integrate between two (scalar) values
+            virtual tmp<Field<Type>> integrate
+            (
+                const scalarField& x1,
+                const scalarField& x2
+            ) const;
 };
 
 
@@ -188,7 +235,8 @@ public:
                                                                                \
     defineNamedTemplateTypeNameAndDebug(Function1Types::SS<Type>, 0);          \
                                                                                \
-    Function1<Type>::adddictionaryConstructorToTable<Function1Types::SS<Type>> \
+    Function1<Type>::adddictionaryConstructorToTable                           \
+        <FieldFunction1<Function1Types::SS<Type>>>                             \
         add##SS##Type##ConstructorToTable_;
 
 
@@ -196,7 +244,7 @@ public:
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
                                                                                \
-    Function1<scalar>::adddictionaryConstructorToTable<SS>                     \
+    Function1<scalar>::adddictionaryConstructorToTable<FieldFunction1<SS>>     \
         add##SS##ConstructorToTable_;
 
 

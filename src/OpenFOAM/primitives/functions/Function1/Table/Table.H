@@ -86,12 +86,6 @@ public:
         //- Copy constructor
         Table(const Table<Type>& tbl);
 
-        //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const
-        {
-            return tmp<Function1<Type>>(new Table<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Table();

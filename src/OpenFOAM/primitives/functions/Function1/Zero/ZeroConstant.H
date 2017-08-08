@@ -75,12 +75,6 @@ public:
         //- Construct from entry name and dictionary
         ZeroConstant(const word& entryName, const dictionary& dict);
 
-        //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const
-        {
-            return tmp<Function1<Type>>(new ZeroConstant<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~ZeroConstant();
@@ -89,10 +83,10 @@ public:
     // Member Functions
 
         //- Return constant value
-        Type value(const scalar) const;
+        virtual inline Type value(const scalar) const;
 
         //- Integrate between two values
-        Type integrate(const scalar x1, const scalar x2) const;
+        virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -105,6 +99,8 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "ZeroConstantI.H"
 
 #ifdef NoRepository
     #include "ZeroConstant.C"

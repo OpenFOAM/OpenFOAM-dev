@@ -77,12 +77,6 @@ public:
 
         //- Construct from entry name and dictionary
         Uniform(const word& entryName, const dictionary& dict);
-
-        //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const
-        {
-            return tmp<Function1<Type>>(new Uniform<Type>(*this));
-        }
 };
 
 

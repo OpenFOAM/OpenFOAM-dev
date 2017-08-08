@@ -24,34 +24,17 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "halfCosineRamp.H"
+#include "mathematicalConstants.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace Function1Types
-{
-    makeScalarFunction1(halfCosineRamp);
-}
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::halfCosineRamp
+inline Foam::scalar Foam::Function1Types::halfCosineRamp::value
 (
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    ramp(entryName, dict)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::~halfCosineRamp()
-{}
+    const scalar t
+) const
+{
+    return 0.5*(1 - cos(constant::mathematical::pi*linearRamp(t)));
+}
 
 
 // ************************************************************************* //

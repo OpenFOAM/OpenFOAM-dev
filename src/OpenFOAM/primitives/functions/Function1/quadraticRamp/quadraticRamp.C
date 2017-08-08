@@ -54,12 +54,4 @@ Foam::Function1Types::quadraticRamp::~quadraticRamp()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalar Foam::Function1Types::quadraticRamp::value(const scalar t) const
-{
-    return sqr(linearRamp(t));
-}
-
-
 // ************************************************************************* //

@@ -145,12 +145,6 @@ public:
         //- Copy constructor
         Square(const Square<Type>& se);
 
-        //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const
-        {
-            return tmp<Function1<Type>>(new Square<Type>(*this));
-        }
-
 
     //- Destructor
     virtual ~Square();
@@ -159,7 +153,7 @@ public:
     // Member Functions
 
         //- Return value for time t
-        Type value(const scalar t) const;
+        virtual inline Type value(const scalar t) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -172,6 +166,8 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "SquareI.H"
 
 #ifdef NoRepository
     #include "Square.C"

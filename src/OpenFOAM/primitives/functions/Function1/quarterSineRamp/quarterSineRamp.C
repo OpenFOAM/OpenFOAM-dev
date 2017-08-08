@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "quarterSineRamp.H"
-#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -53,14 +52,6 @@ Foam::Function1Types::quarterSineRamp::quarterSineRamp
 
 Foam::Function1Types::quarterSineRamp::~quarterSineRamp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalar Foam::Function1Types::quarterSineRamp::value(const scalar t) const
-{
-    return sin(0.5*constant::mathematical::pi*linearRamp(t));
-}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,8 +82,9 @@ Type Foam::Function1<Type>::integrate(const scalar x1, const scalar x2) const
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1<Type>::value
+template<class Function1Type>
+Foam::tmp<Foam::Field<typename Function1Type::returnType>>
+Foam::FieldFunction1<Function1Type>::value
 (
     const scalarField& x
 ) const
@@ -93,14 +94,37 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1<Type>::value
 
     forAll(x, i)
     {
-        fld[i] = this->value(x[i]);
+        fld[i] = Function1Type::value(x[i]);
     }
     return tfld;
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1<Type>::integrate
+template<class Function1Type>
+Foam::FieldFunction1<Function1Type>::FieldFunction1
+(
+    const word& entryName,
+    const dictionary& dict
+)
+:
+    Function1Type(entryName, dict)
+{}
+
+
+template<class Function1Type>
+Foam::tmp<Foam::Function1<typename Function1Type::returnType>>
+Foam::FieldFunction1<Function1Type>::clone() const
+{
+    return tmp<Function1<Type>>
+    (
+        new FieldFunction1<Function1Type>(*this)
+    );
+}
+
+
+template<class Function1Type>
+Foam::tmp<Foam::Field<typename Function1Type::returnType>>
+Foam::FieldFunction1<Function1Type>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
@@ -111,8 +135,9 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1<Type>::integrate
 
     forAll(x1, i)
     {
-        fld[i] = this->integrate(x1[i], x2[i]);
+        fld[i] = Function1Type::integrate(x1[i], x2[i]);
     }
+
     return tfld;
 }
 

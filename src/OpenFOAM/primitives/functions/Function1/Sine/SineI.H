@@ -23,35 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "halfCosineRamp.H"
+#include "Sine.H"
+#include "mathematicalConstants.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
+template<class Type>
+inline Type Foam::Function1Types::Sine<Type>::value(const scalar t) const
 {
-namespace Function1Types
-{
-    makeScalarFunction1(halfCosineRamp);
+    return
+        amplitude_->value(t)
+       *sin(constant::mathematical::twoPi*frequency_->value(t)*(t - t0_))
+       *scale_->value(t)
+      + level_->value(t);
 }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::halfCosineRamp
-(
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    ramp(entryName, dict)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::~halfCosineRamp()
-{}
 
 
 // ************************************************************************* //

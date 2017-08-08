@@ -48,24 +48,6 @@ Foam::Function1Types::ZeroConstant<Type>::~ZeroConstant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::Function1Types::ZeroConstant<Type>::value(const scalar x) const
-{
-    return pTraits<Type>::zero;
-}
-
-
-template<class Type>
-Type Foam::Function1Types::ZeroConstant<Type>::integrate
-(
-    const scalar x1,
-    const scalar x2
-) const
-{
-    return pTraits<Type>::zero;
-}
-
-
-template<class Type>
 void Foam::Function1Types::ZeroConstant<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);

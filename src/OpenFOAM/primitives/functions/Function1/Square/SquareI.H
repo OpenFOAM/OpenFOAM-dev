@@ -23,35 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "halfCosineRamp.H"
+#include "Square.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
+template<class Type>
+inline Type Foam::Function1Types::Square<Type>::value(const scalar t) const
 {
-namespace Function1Types
-{
-    makeScalarFunction1(halfCosineRamp);
+    // Number of waves including fractions
+    scalar waves = frequency_->value(t)*(t - t0_);
+
+    // Number of complete waves
+    scalar nWaves;
+
+    // Fraction of last incomplete wave
+    scalar waveFrac = std::modf(waves, &nWaves);
+
+    // Mark fraction of a wave
+    scalar markFrac = markSpace_/(1.0 + markSpace_);
+
+    return
+        amplitude_->value(t)
+       *(waveFrac < markFrac ? 1 : -1)
+       *scale_->value(t)
+      + level_->value(t);
 }
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::halfCosineRamp
-(
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    ramp(entryName, dict)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::~halfCosineRamp()
-{}
 
 
 // ************************************************************************* //

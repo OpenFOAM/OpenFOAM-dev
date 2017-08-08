@@ -54,12 +54,4 @@ Foam::Function1Types::linearRamp::~linearRamp()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalar Foam::Function1Types::linearRamp::value(const scalar t) const
-{
-    return ramp::linearRamp(t);
-}
-
-
 // ************************************************************************* //

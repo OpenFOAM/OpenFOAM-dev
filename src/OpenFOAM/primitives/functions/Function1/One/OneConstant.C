@@ -55,17 +55,20 @@ Foam::Function1Types::OneConstant<Type>::~OneConstant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::Function1Types::OneConstant<Type>::value(const scalar x) const
+Foam::tmp<Foam::Field<Type>> Foam::Function1Types::OneConstant<Type>::value
+(
+    const scalarField& x
+) const
 {
-    return pTraits<Type>::one;
+    return tmp<Field<Type>>(new Field<Type>(x.size(), pTraits<Type>::one));
 }
 
 
 template<class Type>
-Type Foam::Function1Types::OneConstant<Type>::integrate
+Foam::tmp<Foam::Field<Type>> Foam::Function1Types::OneConstant<Type>::integrate
 (
-    const scalar x1,
-    const scalar x2
+    const scalarField& x1,
+    const scalarField& x2
 ) const
 {
     return (x2 - x1)*pTraits<Type>::one;

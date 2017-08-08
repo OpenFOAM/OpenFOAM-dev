@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "quarterCosineRamp.H"
-#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -53,17 +52,6 @@ Foam::Function1Types::quarterCosineRamp::quarterCosineRamp
 
 Foam::Function1Types::quarterCosineRamp::~quarterCosineRamp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-Foam::scalar Foam::Function1Types::quarterCosineRamp::value
-(
-    const scalar t
-) const
-{
-    return 1 - cos(0.5*constant::mathematical::pi*linearRamp(t));
-}
 
 
 // ************************************************************************* //

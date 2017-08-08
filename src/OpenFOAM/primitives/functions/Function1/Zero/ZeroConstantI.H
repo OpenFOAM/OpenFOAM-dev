@@ -23,35 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "halfCosineRamp.H"
+#include "ZeroConstant.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace Function1Types
-{
-    makeScalarFunction1(halfCosineRamp);
-}
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::halfCosineRamp
+template<class Type>
+inline Type Foam::Function1Types::ZeroConstant<Type>::value
 (
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    ramp(entryName, dict)
-{}
+    const scalar x
+) const
+{
+    return pTraits<Type>::zero;
+}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::Function1Types::halfCosineRamp::~halfCosineRamp()
-{}
+template<class Type>
+inline Type Foam::Function1Types::ZeroConstant<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
+{
+    return pTraits<Type>::zero;
+}
 
 
 // ************************************************************************* //
