@@ -58,7 +58,7 @@ bool Foam::solidParticle::move
         const scalar sfrac = stepFraction();
 
         const scalar f = 1 - stepFraction();
-        trackToFace(f*trackTime*U_, f, td);
+        trackToAndHitFace(f*trackTime*U_, f, td);
 
         const scalar dt = (stepFraction() - sfrac)*trackTime;
 

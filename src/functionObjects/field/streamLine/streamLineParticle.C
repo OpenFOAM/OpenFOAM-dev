@@ -203,7 +203,7 @@ bool Foam::streamLineParticle::move
                 dt = maxDt;
             }
 
-            trackToFace(dt*U, 0, td);
+            trackToAndHitFace(dt*U, 0, td);
 
             if
             (

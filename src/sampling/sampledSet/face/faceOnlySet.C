@@ -62,7 +62,7 @@ bool Foam::faceOnlySet::trackToBoundary
     {
         point oldPoint = trackPt;
 
-        singleParticle.trackToFace(end_ - start_, 0, trackData);
+        singleParticle.trackToAndHitFace(end_ - start_, 0, trackData);
 
         trackPt = singleParticle.position();
 
