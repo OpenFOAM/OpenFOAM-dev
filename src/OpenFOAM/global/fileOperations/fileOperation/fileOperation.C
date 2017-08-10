@@ -591,14 +591,7 @@ Foam::label Foam::fileOperation::nProcs
     label nProcs = 0;
     while
     (
-        isDir
-        (
-            dir
-           /(word("processor") + name(nProcs))
-           /"constant"
-           /local
-           /polyMesh::meshSubDir
-        )
+        isDir(dir/(word("processor") + name(nProcs)))
     )
     {
         ++nProcs;

@@ -403,6 +403,12 @@ int main(int argc, char *argv[])
                 Info<< "Using existing processor directories" << nl;
             }
 
+            if (args.optionFound("region"))
+            {
+                procDirsProblem = false;
+                forceOverwrite = false;
+            }
+
             if (forceOverwrite)
             {
                 Info<< "Removing " << nProcs

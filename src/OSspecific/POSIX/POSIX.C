@@ -827,6 +827,32 @@ bool Foam::cp(const fileName& src, const fileName& dest, const bool followLink)
             return false;
         }
 
+        char* realSrcPath = realpath(src.c_str(), nullptr);
+        char* realDestPath = realpath(destFile.c_str(), nullptr);
+        const bool samePath = strcmp(realSrcPath, realDestPath) == 0;
+
+        if (POSIX::debug && samePath)
+        {
+            InfoInFunction
+                << "Attempt to copy " << realSrcPath << " to itself" << endl;
+        }
+
+        if (realSrcPath)
+        {
+            free(realSrcPath);
+        }
+
+        if (realDestPath)
+        {
+            free(realDestPath);
+        }
+
+        // Do not copy over self when src is actually a link to dest
+        if (samePath)
+        {
+            return false;
+        }
+
         // Copy files
         fileNameList contents = readDir(src, fileName::FILE, false, followLink);
         forAll(contents, i)
