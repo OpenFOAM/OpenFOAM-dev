@@ -110,7 +110,7 @@ bool Foam::findCellParticle::move
     while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
     {
         const scalar f = 1 - stepFraction();
-        trackToFace(f*(end_ - start_), f, td);
+        trackToAndHitFace(f*(end_ - start_), f, td);
     }
 
     if (stepFraction() == 1 || !td.keepParticle)

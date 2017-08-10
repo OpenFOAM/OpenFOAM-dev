@@ -344,6 +344,7 @@ void Foam::particle::changeFace(const label tetTriI)
     {
         const label newFaceI = mesh_.cells()[celli_][cellFaceI];
         const class face& newFace = mesh_.faces()[newFaceI];
+        const label newOwner = mesh_.faceOwner()[newFaceI];
 
         // Exclude the current face
         if (tetFacei_ == newFaceI)
@@ -351,21 +352,21 @@ void Foam::particle::changeFace(const label tetTriI)
             continue;
         }
 
-        // Loop over the edges, looking for the shared one
-        label edgeComp = 0;
+        // Loop over the edges, looking for the shared one. Note that we have to
+        // match the direction of the edge as well as the end points in order to
+        // avoid false positives when dealing with coincident ACMI faces.
+        const label edgeComp = newOwner == celli_ ? -1 : +1;
         label edgeI = 0;
-        for (; edgeI < newFace.size(); ++ edgeI)
-        {
-            edgeComp = edge::compare(sharedEdge, newFace.faceEdge(edgeI));
-
-            if (edgeComp != 0)
-            {
-                break;
-            }
-        }
+        for
+        (
+            ;
+            edgeI < newFace.size()
+         && edge::compare(sharedEdge, newFace.faceEdge(edgeI)) != edgeComp;
+            ++ edgeI
+        );
 
         // If the face does not contain the edge, then move on to the next face
-        if (edgeComp == 0)
+        if (edgeI >= newFace.size())
         {
             continue;
         }
@@ -643,6 +644,17 @@ Foam::scalar Foam::particle::trackToFace
         {
             // The track has hit a face, so set the current face and return
             facei_ = tetFacei_;
+
+            /*
+            if (!mesh_.isInternalFace(facei_))
+            {
+                const label patchi = mesh_.boundaryMesh().whichPatch(facei_);
+                const polyPatch& patch = mesh_.boundaryMesh()[patchi];
+                Info<< "Tet face is on " << patch.type() << " patch #" << patchi
+                    << endl << endl;
+            }
+            */
+
             return f;
         }
         else
@@ -667,8 +679,8 @@ Foam::scalar Foam::particle::trackToStationaryTri
 
     if (debug)
     {
-        Info<< "Particle " << origId() << endl
-            << "Tracking from " << x0 << " to " << x0 + x1 << endl;
+        Info<< "Particle " << origId() << endl << "Tracking from " << x0
+            << " along " << x1 << " to " << x0 + x1 << endl;
     }
 
     // Get the tet geometry
@@ -778,8 +790,8 @@ Foam::scalar Foam::particle::trackToMovingTri
 
     if (debug)
     {
-        Info<< "Particle " << origId() << endl
-            << "Tracking from " << x0 << " to " << x0 + x1 << endl;
+        Info<< "Particle " << origId() << endl << "Tracking from " << x0
+            << " along " << x1 << " to " << x0 + x1 << endl;
     }
 
     // Get the tet geometry

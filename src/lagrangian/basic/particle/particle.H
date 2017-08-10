@@ -57,6 +57,8 @@ class particle;
 class polyPatch;
 
 class cyclicPolyPatch;
+class cyclicAMIPolyPatch;
+class cyclicACMIPolyPatch;
 class processorPolyPatch;
 class symmetryPlanePolyPatch;
 class symmetryPolyPatch;
@@ -294,10 +296,6 @@ protected:
 
     // Patch interactions
 
-        //- Overridable function to handle the particle hitting a face
-        template<class TrackData>
-        void hitFace(TrackData& td);
-
         //- Overridable function to handle the particle hitting a
         //  patch.  Executed before other patch-hitting functions.
         //  trackFraction is passed in to allow mesh motion to
@@ -339,6 +337,16 @@ protected:
         void hitCyclicAMIPatch
         (
             const cyclicAMIPolyPatch&,
+            TrackData& td,
+            const vector& direction
+        );
+
+        //- Overridable function to handle the particle hitting a
+        //  cyclicACMIPatch
+        template<class TrackData>
+        void hitCyclicACMIPatch
+        (
+            const cyclicACMIPolyPatch&,
             TrackData& td,
             const vector& direction
         );
@@ -579,12 +587,21 @@ public:
             label& tetTriI
         );
 
-        //- As non-templated particle::trackToFace, but with additional
-        //  boundary handling.
+        //- Hit the current face. If the current face is internal than this
+        //  crosses into the next cell. If it is a boundary face then this will
+        //  interact the particle with the relevant patch.
         template<class TrackData>
-        void trackToFace
+        void hitFace
         (
-            const vector& displacement,
+            const vector& direction,
+            TrackData& td
+        );
+
+        //- Convenience function. Cobines trackToFace and hitFace
+        template<class TrackData>
+        void trackToAndHitFace
+        (
+            const vector& direction,
             const scalar fraction,
             TrackData& td
         );

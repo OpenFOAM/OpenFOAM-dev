@@ -88,7 +88,7 @@ bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
         while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
         {
             const scalar f = 1 - stepFraction();
-            trackToFace(f*trackTime*v_, f, td);
+            trackToAndHitFace(f*trackTime*v_, f, td);
         }
     }
     else if (td.part() == 2)

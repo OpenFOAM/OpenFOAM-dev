@@ -144,7 +144,8 @@ bool Foam::trackedParticle::move
             td.maxLevel_[cell()] = max(td.maxLevel_[cell()], level_);
 
             const scalar f = 1 - stepFraction();
-            trackToFace(f*(end_ - start_), f, td);
+            const vector s = end_ - start_;
+            trackToAndHitFace(f*s, f, td);
         }
     }
 
