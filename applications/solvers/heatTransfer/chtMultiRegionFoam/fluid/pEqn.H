@@ -70,11 +70,11 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
         }
     }
 
+    p = p_rgh + rho*gh;
+
     // Thermodynamic density update
     thermo.correctRho(psi*p - psip0);
 }
-
-p = p_rgh + rho*gh;
 
 // Update pressure time derivative if needed
 if (thermo.dpdt())
