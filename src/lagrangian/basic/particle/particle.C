@@ -435,6 +435,40 @@ void Foam::particle::changeCell()
 }
 
 
+void Foam::particle::changeToMasterPatch()
+{
+    label thisPatch = patch();
+
+    forAll(mesh_.cells()[celli_], cellFaceI)
+    {
+        // Skip the current face and any internal faces
+        const label otherFaceI = mesh_.cells()[celli_][cellFaceI];
+        if (facei_ == otherFaceI || mesh_.isInternalFace(otherFaceI))
+        {
+            continue;
+        }
+
+        // Compare the two faces. If they are the same, chose the one with the
+        // lower patch index. In the case of an ACMI-wall pair, this will be
+        // the ACMI, which is what we want.
+        const class face& thisFace = mesh_.faces()[facei_];
+        const class face& otherFace = mesh_.faces()[otherFaceI];
+        if (face::compare(thisFace, otherFace) != 0)
+        {
+            const label otherPatch =
+                mesh_.boundaryMesh().whichPatch(otherFaceI);
+            if (thisPatch > otherPatch)
+            {
+                facei_ = otherFaceI;
+                thisPatch = otherPatch;
+            }
+        }
+    }
+
+    tetFacei_ = facei_;
+}
+
+
 void Foam::particle::locate
 (
     const vector& position,

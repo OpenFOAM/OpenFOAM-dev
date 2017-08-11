@@ -278,6 +278,13 @@ private:
             //- Change cell. Called when the particle hits an internal face.
             void changeCell();
 
+            //- Put the particle on the lowest indexed patch for the current set
+            //  of coincident faces. In the case of an ACMI-wall pair, this will
+            //  move the particle from the wall face to the ACMI face, because
+            //  ACMI patches are always listed before their associated non-
+            //  overlapping patch.
+            void changeToMasterPatch();
+
 
         // Geometry changes
 

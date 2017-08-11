@@ -183,32 +183,21 @@ void Foam::particle::hitFace
         typename TrackData::cloudType::particleType& p =
             static_cast<typename TrackData::cloudType::particleType&>(*this);
 
-        // No action is taken for tetPti_ for tetFacei_ here. These are handled
-        // by the patch interaction call or later during processor transfer.
-
-        const label origFacei = facei_;
-        label patchi = mesh_.boundaryMesh().whichPatch(facei_);
         const tetIndices faceHitTetIs(celli_, tetFacei_, tetPti_);
 
         if
         (
            !p.hitPatch
             (
-                mesh_.boundaryMesh()[patchi],
+                mesh_.boundaryMesh()[patch()],
                 td,
-                patchi,
+                patch(),
                 stepFraction(),
                 faceHitTetIs
             )
         )
         {
-            // Did patch interaction model switch patches?
-            if (facei_ != origFacei)
-            {
-                patchi = mesh_.boundaryMesh().whichPatch(facei_);
-            }
-
-            const polyPatch& patch = mesh_.boundaryMesh()[patchi];
+            const polyPatch& patch = mesh_.boundaryMesh()[this->patch()];
 
             if (isA<wedgePolyPatch>(patch))
             {
@@ -288,6 +277,12 @@ void Foam::particle::trackToAndHitFace
 )
 {
     trackToFace(direction, fraction);
+
+    if (onBoundaryFace())
+    {
+        changeToMasterPatch();
+    }
+
     hitFace(direction, td);
 }
 
