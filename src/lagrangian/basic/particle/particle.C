@@ -644,17 +644,6 @@ Foam::scalar Foam::particle::trackToFace
         {
             // The track has hit a face, so set the current face and return
             facei_ = tetFacei_;
-
-            /*
-            if (!mesh_.isInternalFace(facei_))
-            {
-                const label patchi = mesh_.boundaryMesh().whichPatch(facei_);
-                const polyPatch& patch = mesh_.boundaryMesh()[patchi];
-                Info<< "Tet face is on " << patch.type() << " patch #" << patchi
-                    << endl << endl;
-            }
-            */
-
             return f;
         }
         else
