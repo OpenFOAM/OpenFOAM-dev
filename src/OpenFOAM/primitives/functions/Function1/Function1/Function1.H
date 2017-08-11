@@ -202,6 +202,9 @@ public:
 
         // Evaluation
 
+            using Function1Type::value;
+            using Function1Type::integrate;
+
             //- Return value as a function of (scalar) independent variable
             virtual tmp<Field<Type>> value(const scalarField& x) const;
 
