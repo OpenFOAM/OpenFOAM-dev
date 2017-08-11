@@ -272,6 +272,7 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
 
+    bool region                  = args.optionFound("region");
     bool allRegions              = args.optionFound("allRegions");
     bool writeCellDist           = args.optionFound("cellDist");
     bool copyZero                = args.optionFound("copyZero");
@@ -403,7 +404,7 @@ int main(int argc, char *argv[])
                 Info<< "Using existing processor directories" << nl;
             }
 
-            if (args.optionFound("region"))
+            if (region || allRegions)
             {
                 procDirsProblem = false;
                 forceOverwrite = false;
