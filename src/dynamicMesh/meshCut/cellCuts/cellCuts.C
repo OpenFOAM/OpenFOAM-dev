@@ -169,7 +169,7 @@ void Foam::cellCuts::syncProc()
         {
             const polyPatch& pp = pbm[patchi];
 
-            if (pp.coupled())
+            if (isA<processorPolyPatch>(pp) || isA<cyclicPolyPatch>(pp))
             {
                 forAll(pp, i)
                 {
@@ -217,7 +217,7 @@ void Foam::cellCuts::syncProc()
         {
             const polyPatch& pp = pbm[patchi];
 
-            if (pp.coupled())
+            if (isA<processorPolyPatch>(pp) || isA<cyclicPolyPatch>(pp))
             {
                 forAll(pp, i)
                 {
