@@ -291,8 +291,8 @@ bool Foam::KinematicParcel<ParcelType>::move
         f = min(f, maxCo*l/max(SMALL*l, mag(s)));
         if (p.active())
         {
-            // Track to and hit the next face
-            p.trackToAndHitFace(f*s, f, td);
+            // Track to the next face
+            p.trackToFace(f*s, f);
         }
         else
         {
@@ -318,6 +318,11 @@ bool Foam::KinematicParcel<ParcelType>::move
             }
 
             p.calc(td, dt, celli);
+        }
+
+        if (p.onFace() && td.keepParticle)
+        {
+            p.hitFace(s, td);
         }
 
         if (p.onBoundaryFace() && td.keepParticle)
