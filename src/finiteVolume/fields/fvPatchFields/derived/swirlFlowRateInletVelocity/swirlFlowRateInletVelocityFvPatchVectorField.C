@@ -65,7 +65,9 @@ swirlFlowRateInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "origin",
-            gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
+            patch().size()
+          ? gSum(patch().Cf()*patch().magSf())/gSum(patch().magSf())
+          : Zero
         )
     ),
     axis_
@@ -73,7 +75,9 @@ swirlFlowRateInletVelocityFvPatchVectorField
         dict.lookupOrDefault
         (
             "axis",
-            -gSum(patch().Sf())/gSum(patch().magSf())
+            patch().size()
+          ? -gSum(patch().Sf())/gSum(patch().magSf())
+          : Zero
         )
     ),
     flowRate_(Function1<scalar>::New("flowRate", dict)),
