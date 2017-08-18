@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,8 @@ Ostream& operator<<(Ostream& os, const MRFZoneList& models);
 
 class MRFZoneList
 :
-    PtrList<MRFZone>
+    public PtrList<MRFZone>
 {
-private:
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -185,6 +183,9 @@ public:
             const volVectorField& U,
             surfaceScalarField& phi
         ) const;
+
+        //- Update MRFZone faces if the mesh topology changes
+        void update();
 
 
         // I-O

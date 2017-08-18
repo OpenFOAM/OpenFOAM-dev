@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,87 +180,85 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return const access to the MRF region name
+        inline const word& name() const;
 
-            //- Return const access to the MRF region name
-            inline const word& name() const;
+        //- Return const access to the MRF active flag
+        inline bool active() const;
 
-            //- Return const access to the MRF active flag
-            inline bool active() const;
+        //- Return the current Omega vector
+        vector Omega() const;
 
-            //- Return the current Omega vector
-            vector Omega() const;
+        //- Update the mesh corresponding to given map
+        void updateMesh(const mapPolyMesh& mpm)
+        {
+            // Only updates face addressing
+            setMRFFaces();
+        }
 
+        //- Add the Coriolis force contribution to the acceleration field
+        void addCoriolis
+        (
+            const volVectorField& U,
+            volVectorField& ddtU
+        ) const;
 
-        // Evaluation
+        //- Add the Coriolis force contribution to the momentum equation
+        //  Adds to the lhs of the equation; optionally add to rhs
+        void addCoriolis
+        (
+            fvVectorMatrix& UEqn,
+            const bool rhs = false
+        ) const;
 
-            //- Update the mesh corresponding to given map
-            void updateMesh(const mapPolyMesh& mpm)
-            {
-                // Only updates face addressing
-                setMRFFaces();
-            }
+        //- Add the Coriolis force contribution to the momentum equation
+        //  Adds to the lhs of the equation; optionally add to rhs
+        void addCoriolis
+        (
+            const volScalarField& rho,
+            fvVectorMatrix& UEqn,
+            const bool rhs = false
+        ) const;
 
-            //- Add the Coriolis force contribution to the acceleration field
-            void addCoriolis
-            (
-                const volVectorField& U,
-                volVectorField& ddtU
-            ) const;
+        //- Make the given absolute velocity relative within the MRF region
+        void makeRelative(volVectorField& U) const;
 
-            //- Add the Coriolis force contribution to the momentum equation
-            //  Adds to the lhs of the equation; optionally add to rhs
-            void addCoriolis
-            (
-                fvVectorMatrix& UEqn,
-                const bool rhs = false
-            ) const;
+        //- Make the given absolute flux relative within the MRF region
+        void makeRelative(surfaceScalarField& phi) const;
 
-            //- Add the Coriolis force contribution to the momentum equation
-            //  Adds to the lhs of the equation; optionally add to rhs
-            void addCoriolis
-            (
-                const volScalarField& rho,
-                fvVectorMatrix& UEqn,
-                const bool rhs = false
-            ) const;
+        //- Make the given absolute boundary flux relative
+        //  within the MRF region
+        void makeRelative(FieldField<fvsPatchField, scalar>& phi) const;
 
-            //- Make the given absolute velocity relative within the MRF region
-            void makeRelative(volVectorField& U) const;
+        //- Make the given absolute patch flux relative
+        //  within the MRF region
+        void makeRelative(Field<scalar>& phi, const label patchi) const;
 
-            //- Make the given absolute flux relative within the MRF region
-            void makeRelative(surfaceScalarField& phi) const;
+        //- Make the given absolute mass-flux relative within the MRF region
+        void makeRelative
+        (
+            const surfaceScalarField& rho,
+            surfaceScalarField& phi
+        ) const;
 
-            //- Make the given absolute boundary flux relative
-            //  within the MRF region
-            void makeRelative(FieldField<fvsPatchField, scalar>& phi) const;
+        //- Make the given relative velocity absolute within the MRF region
+        void makeAbsolute(volVectorField& U) const;
 
-            //- Make the given absolute patch flux relative
-            //  within the MRF region
-            void makeRelative(Field<scalar>& phi, const label patchi) const;
+        //- Make the given relative flux absolute within the MRF region
+        void makeAbsolute(surfaceScalarField& phi) const;
 
-            //- Make the given absolute mass-flux relative within the MRF region
-            void makeRelative
-            (
-                const surfaceScalarField& rho,
-                surfaceScalarField& phi
-            ) const;
+        //- Make the given relative mass-flux absolute within the MRF region
+        void makeAbsolute
+        (
+            const surfaceScalarField& rho,
+            surfaceScalarField& phi
+        ) const;
 
-            //- Make the given relative velocity absolute within the MRF region
-            void makeAbsolute(volVectorField& U) const;
+        //- Correct the boundary velocity for the rotation of the MRF region
+        void correctBoundaryVelocity(volVectorField& U) const;
 
-            //- Make the given relative flux absolute within the MRF region
-            void makeAbsolute(surfaceScalarField& phi) const;
-
-            //- Make the given relative mass-flux absolute within the MRF region
-            void makeAbsolute
-            (
-                const surfaceScalarField& rho,
-                surfaceScalarField& phi
-            ) const;
-
-            //- Correct the boundary velocity for the rotation of the MRF region
-            void correctBoundaryVelocity(volVectorField& U) const;
+        //- Update MRFZone faces if the mesh topology changes
+        void update();
 
 
     // I-O

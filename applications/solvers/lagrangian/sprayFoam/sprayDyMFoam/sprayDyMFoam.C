@@ -94,21 +94,26 @@ int main(int argc, char *argv[])
             // Do any mesh changes
             mesh.update();
 
-            if (mesh.changing() && correctPhi)
+            if (mesh.changing())
             {
-                // Calculate absolute flux from the mapped surface velocity
-                phi = mesh.Sf() & rhoUf;
+                MRF.update();
 
-                #include "correctPhi.H"
+                if (correctPhi)
+                {
+                    // Calculate absolute flux from the mapped surface velocity
+                    phi = mesh.Sf() & rhoUf;
 
-                // Make the fluxes relative to the mesh-motion
-                fvc::makeRelative(phi, rho, U);
+                    #include "correctPhi.H"
+
+                    // Make the fluxes relative to the mesh-motion
+                    fvc::makeRelative(phi, rho, U);
+                }
+
+                if (checkMeshCourantNo)
+                {
+                    #include "meshCourantNo.H"
+                }
             }
-        }
-
-        if (mesh.changing() && checkMeshCourantNo)
-        {
-            #include "meshCourantNo.H"
         }
 
         parcels.evolve();

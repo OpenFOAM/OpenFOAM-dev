@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -409,6 +409,18 @@ void Foam::MRFZoneList::correctBoundaryFlux
         )
         {
             phibf[patchi] == Uf[patchi];
+        }
+    }
+}
+
+
+void Foam::MRFZoneList::update()
+{
+    if (mesh_.topoChanging())
+    {
+        forAll(*this, i)
+        {
+            operator[](i).update();
         }
     }
 }

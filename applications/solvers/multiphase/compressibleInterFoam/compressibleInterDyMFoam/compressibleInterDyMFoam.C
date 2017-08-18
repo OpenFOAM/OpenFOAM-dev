@@ -116,30 +116,34 @@ int main(int argc, char *argv[])
 
                 if (mesh.changing())
                 {
+
+                    MRF.update();
+
                     Info<< "Execution time for mesh.update() = "
                         << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
                         << " s" << endl;
 
                     gh = (g & mesh.C()) - ghRef;
                     ghf = (g & mesh.Cf()) - ghRef;
-                }
 
-                if (mesh.changing() && correctPhi)
-                {
-                    // Calculate absolute flux from the mapped surface velocity
-                    phi = mesh.Sf() & Uf;
+                    if (correctPhi)
+                    {
+                        // Calculate absolute flux
+                        // from the mapped surface velocity
+                        phi = mesh.Sf() & Uf;
 
-                    #include "correctPhi.H"
+                        #include "correctPhi.H"
 
-                    // Make the fluxes relative to the mesh motion
-                    fvc::makeRelative(phi, U);
+                        // Make the fluxes relative to the mesh motion
+                        fvc::makeRelative(phi, U);
 
-                    mixture.correct();
-                }
+                        mixture.correct();
+                    }
 
-                if (mesh.changing() && checkMeshCourantNo)
-                {
-                    #include "meshCourantNo.H"
+                    if (checkMeshCourantNo)
+                    {
+                        #include "meshCourantNo.H"
+                    }
                 }
             }
 

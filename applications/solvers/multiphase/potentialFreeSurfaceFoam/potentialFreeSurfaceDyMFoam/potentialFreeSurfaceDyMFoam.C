@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,22 +109,25 @@ int main(int argc, char *argv[])
                     Info<< "Execution time for mesh.update() = "
                         << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
                         << " s" << endl;
-                }
 
-                if (mesh.changing() && correctPhi)
-                {
-                    // Calculate absolute flux from the mapped surface velocity
-                    phi = mesh.Sf() & Uf;
+                    MRF.update();
 
-                    #include "correctPhi.H"
+                    if (correctPhi)
+                    {
+                        // Calculate absolute flux
+                        // from the mapped surface velocity
+                        phi = mesh.Sf() & Uf;
 
-                    // Make the flux relative to the mesh motion
-                    fvc::makeRelative(phi, U);
-                }
+                        #include "correctPhi.H"
 
-                if (mesh.changing() && checkMeshCourantNo)
-                {
-                    #include "meshCourantNo.H"
+                        // Make the flux relative to the mesh motion
+                        fvc::makeRelative(phi, U);
+                    }
+
+                    if (checkMeshCourantNo)
+                    {
+                        #include "meshCourantNo.H"
+                    }
                 }
             }
 
