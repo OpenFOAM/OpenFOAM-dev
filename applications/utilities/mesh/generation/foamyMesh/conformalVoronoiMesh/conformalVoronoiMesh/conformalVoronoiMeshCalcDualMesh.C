@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1291,9 +1291,9 @@ void Foam::conformalVoronoiMesh::indexDualVertices
         }
     }
 
-    OBJstream snapping1("snapToSurface1.obj");
-    OBJstream snapping2("snapToSurface2.obj");
-    OFstream tetToSnapTo("tetsToSnapTo.obj");
+    //OBJstream snapping1("snapToSurface1.obj");
+    //OBJstream snapping2("snapToSurface2.obj");
+    //OFstream tetToSnapTo("tetsToSnapTo.obj");
 
     for
     (
