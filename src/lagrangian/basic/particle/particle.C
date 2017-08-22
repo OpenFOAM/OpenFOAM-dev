@@ -745,7 +745,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
             if (debug)
             {
                 Info<< "Hit on tet face " << i << " at local coordinate "
-                    << y0 + mu*Tx1 << ", " << mu*detA*100 << "\% of the "
+                    << y0 + mu*Tx1 << ", " << mu*detA*100 << "% of the "
                     << "way along the track" << endl;
             }
 
@@ -789,7 +789,7 @@ Foam::scalar Foam::particle::trackToStationaryTri
         Info<< "End local coordinates = " << yH << endl
             << "End global coordinates = " << position() << endl
             << "Tracking displacement = " << position() - x0 << endl
-            << muH*detA*100 << "\% of the step from " << stepFraction_ << " to "
+            << muH*detA*100 << "% of the step from " << stepFraction_ << " to "
             << stepFraction_ + fraction << " completed" << endl << endl;
     }
 
