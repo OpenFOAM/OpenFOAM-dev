@@ -36,6 +36,7 @@ namespace Foam
 
 bool Foam::solidParticle::move
 (
+    solidParticleCloud& cloud,
     trackingData& td,
     const scalar trackTime
 )
@@ -58,7 +59,7 @@ bool Foam::solidParticle::move
         const scalar sfrac = stepFraction();
 
         const scalar f = 1 - stepFraction();
-        trackToAndHitFace(f*trackTime*U_, f, td);
+        trackToAndHitFace(f*trackTime*U_, f, cloud, td);
 
         const scalar dt = (stepFraction() - sfrac)*trackTime;
 
@@ -67,7 +68,7 @@ bool Foam::solidParticle::move
         vector Uc = td.UInterp().interpolate(this->coordinates(), tetIs);
         scalar nuc = td.nuInterp().interpolate(this->coordinates(), tetIs);
 
-        scalar rhop = td.cloud().rhop();
+        scalar rhop = cloud.rhop();
         scalar magUr = mag(Uc - U_);
 
         scalar ReFunc = 1.0;
@@ -98,6 +99,7 @@ bool Foam::solidParticle::move
 bool Foam::solidParticle::hitPatch
 (
     const polyPatch&,
+    solidParticleCloud& cloud,
     trackingData&,
     const label,
     const scalar,
@@ -111,6 +113,7 @@ bool Foam::solidParticle::hitPatch
 void Foam::solidParticle::hitProcessorPatch
 (
     const processorPolyPatch&,
+    solidParticleCloud& cloud,
     trackingData& td
 )
 {
@@ -121,6 +124,7 @@ void Foam::solidParticle::hitProcessorPatch
 void Foam::solidParticle::hitWallPatch
 (
     const wallPolyPatch& wpp,
+    solidParticleCloud& cloud,
     trackingData& td,
     const tetIndices& tetIs
 )
@@ -133,16 +137,17 @@ void Foam::solidParticle::hitWallPatch
 
     if (Un > 0)
     {
-        U_ -= (1.0 + td.cloud().e())*Un*nw;
+        U_ -= (1.0 + cloud.e())*Un*nw;
     }
 
-    U_ -= td.cloud().mu()*Ut;
+    U_ -= cloud.mu()*Ut;
 }
 
 
 void Foam::solidParticle::hitPatch
 (
     const polyPatch&,
+    solidParticleCloud& cloud,
     trackingData& td
 )
 {

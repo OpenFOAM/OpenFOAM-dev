@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>
-template<class CloudType>
-inline Foam::ReactingParcel<ParcelType>::TrackingData<CloudType>::TrackingData
+template<class TrackCloudType>
+inline Foam::ReactingParcel<ParcelType>::trackingData::trackingData
 (
-    CloudType& cloud,
+    const TrackCloudType& cloud,
     trackPart part
 )
 :
-    ParcelType::template TrackingData<CloudType>(cloud, part),
+    ParcelType::trackingData(cloud, part),
     pInterp_
     (
         interpolation<scalar>::New
@@ -44,9 +44,8 @@ inline Foam::ReactingParcel<ParcelType>::TrackingData<CloudType>::TrackingData
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::interpolation<Foam::scalar>&
-Foam::ReactingParcel<ParcelType>::TrackingData<CloudType>::pInterp() const
+Foam::ReactingParcel<ParcelType>::trackingData::pInterp() const
 {
     return pInterp_();
 }

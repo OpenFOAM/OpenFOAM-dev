@@ -483,7 +483,7 @@ void Foam::meshRefinement::markFeatureCellLevel
             << " particles over distance " << maxTrackLen
             << " to find the starting cell" << endl;
     }
-    startPointCloud.move(td, maxTrackLen);
+    startPointCloud.move(startPointCloud, td, maxTrackLen);
 
 
     // Reset levels
@@ -561,7 +561,7 @@ void Foam::meshRefinement::markFeatureCellLevel
                 << " particles over distance " << maxTrackLen
                 << " to mark cells" << endl;
         }
-        cloud.move(td, maxTrackLen);
+        cloud.move(cloud, td, maxTrackLen);
 
         // Make particle follow edge.
         forAllIter(Cloud<trackedParticle>, cloud, iter)

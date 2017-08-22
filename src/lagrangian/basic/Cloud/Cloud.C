@@ -181,8 +181,13 @@ void Foam::Cloud<ParticleType>::cloudReset(const Cloud<ParticleType>& c)
 
 
 template<class ParticleType>
-template<class TrackData>
-void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
+template<class TrackCloudType>
+void Foam::Cloud<ParticleType>::move
+(
+    TrackCloudType& cloud,
+    typename ParticleType::trackingData& td,
+    const scalar trackTime
+)
 {
     const polyBoundaryMesh& pbm = pMesh().boundaryMesh();
     const globalMeshData& pData = polyMesh_.globalData();
@@ -253,7 +258,7 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
             ParticleType& p = pIter();
 
             // Move the particle
-            bool keepParticle = p.move(td, trackTime);
+            bool keepParticle = p.move(cloud, td, trackTime);
 
             // If the particle is to be kept
             // (i.e. it hasn't passed through an inlet or outlet)
@@ -282,7 +287,7 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
                             ).neighbProcNo()
                         ];
 
-                        p.prepareForParallelTransfer(patchi, td);
+                        p.prepareForParallelTransfer(patchi, cloud, td);
 
                         particleTransferLists[n].append(this->remove(&p));
 
@@ -375,7 +380,7 @@ void Foam::Cloud<ParticleType>::move(TrackData& td, const scalar trackTime)
 
                     label patchi = procPatches[receivePatchIndex[pI++]];
 
-                    newp.correctAfterParallelTransfer(patchi, td);
+                    newp.correctAfterParallelTransfer(patchi, cloud, td);
 
                     addParticle(newParticles.remove(&newp));
                 }

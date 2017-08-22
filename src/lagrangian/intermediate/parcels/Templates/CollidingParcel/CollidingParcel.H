@@ -119,6 +119,10 @@ public:
     };
 
 
+    //- Use base tracking data
+    typedef typename ParcelType::trackingData trackingData;
+
+
 protected:
 
     // Protected data
@@ -286,8 +290,13 @@ public:
         // Tracking
 
             //- Move the parcel
-            template<class TrackData>
-            bool move(TrackData& td, const scalar trackTime);
+            template<class TrackCloudType>
+            bool move
+            (
+                TrackCloudType& cloud,
+                trackingData& td,
+                const scalar trackTime
+            );
 
             //- Transform the physical properties of the particle
             //  according to the given transformation tensor

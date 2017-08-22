@@ -54,8 +54,6 @@ bool Foam::polyLineSet::trackToBoundary
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
-
     while (true)
     {
         // Local geometry info

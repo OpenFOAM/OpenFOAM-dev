@@ -272,7 +272,7 @@ void Foam::functionObjects::streamLine::track()
     const scalar trackTime = Foam::sqrt(GREAT);
 
     // Track
-    particles.move(td, trackTime);
+    particles.move(particles, td, trackTime);
 }
 
 

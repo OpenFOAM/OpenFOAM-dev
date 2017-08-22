@@ -165,7 +165,7 @@ public:
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
     :
-        public particle::TrackingData<moleculeCloud>
+        public particle::trackingData
     {
         // label specifying which part of the integration algorithm is taking
         label part_;
@@ -177,7 +177,7 @@ public:
 
             trackingData(moleculeCloud& cloud, label part)
             :
-                particle::TrackingData<moleculeCloud>(cloud),
+                particle::trackingData(cloud),
                 part_(part)
             {}
 
@@ -310,7 +310,7 @@ public:
 
         // Tracking
 
-            bool move(trackingData&, const scalar trackTime);
+            bool move(moleculeCloud&, trackingData&, const scalar trackTime);
 
             virtual void transformProperties(const tensor& T);
 
@@ -367,6 +367,7 @@ public:
         bool hitPatch
         (
             const polyPatch&,
+            moleculeCloud& cloud,
             trackingData& td,
             const label patchi,
             const scalar trackFraction,
@@ -377,6 +378,7 @@ public:
         void hitProcessorPatch
         (
             const processorPolyPatch&,
+            moleculeCloud& cloud,
             trackingData& td
         );
 
@@ -384,6 +386,7 @@ public:
         void hitWallPatch
         (
             const wallPolyPatch&,
+            moleculeCloud& cloud,
             trackingData& td,
             const tetIndices&
         );
@@ -392,6 +395,7 @@ public:
         void hitPatch
         (
             const polyPatch&,
+            moleculeCloud& cloud,
             trackingData& td
         );
 

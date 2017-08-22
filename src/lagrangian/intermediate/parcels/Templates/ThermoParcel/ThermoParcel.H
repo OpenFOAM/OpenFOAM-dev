@@ -146,10 +146,9 @@ public:
     };
 
 
-    template<class CloudType>
-    class TrackingData
+    class trackingData
     :
-        public ParcelType::template TrackingData<CloudType>
+        public ParcelType::trackingData
     {
     private:
 
@@ -181,17 +180,16 @@ public:
 
     public:
 
-        typedef typename ParcelType::template TrackingData<CloudType>::trackPart
-            trackPart;
+        typedef typename ParcelType::trackingData::trackPart trackPart;
 
         // Constructors
 
             //- Construct from components
-            inline TrackingData
+            template <class TrackCloudType>
+            inline trackingData
             (
-                CloudType& cloud,
-                trackPart part = ParcelType::template
-                    TrackingData<CloudType>::tpLinearTrack
+                const TrackCloudType& cloud,
+                trackPart part = ParcelType::trackingData::tpLinearTrack
             );
 
 
@@ -246,10 +244,11 @@ protected:
     // Protected Member Functions
 
         //- Calculate new particle temperature
-        template<class TrackData>
+        template<class TrackCloudType>
         scalar calcHeatTransfer
         (
-            TrackData& td,
+            TrackCloudType& cloud,
+            trackingData& td,
             const scalar dt,           // timestep
             const label celli,         // owner cell
             const scalar Re,           // Reynolds number
@@ -400,28 +399,31 @@ public:
         // Main calculation loop
 
             //- Set cell values
-            template<class TrackData>
+            template<class TrackCloudType>
             void setCellValues
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Correct cell values using latest transfer information
-            template<class TrackData>
+            template<class TrackCloudType>
             void cellValueSourceCorrection
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Calculate surface thermo properties
-            template<class TrackData>
+            template<class TrackCloudType>
             void calcSurfaceValues
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const label celli,
                 const scalar T,
                 scalar& Ts,
@@ -432,10 +434,11 @@ public:
             ) const;
 
             //- Update parcel properties over the time interval
-            template<class TrackData>
+            template<class TrackCloudType>
             void calc
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );

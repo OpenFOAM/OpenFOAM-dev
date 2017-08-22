@@ -127,24 +127,8 @@ public:
     };
 
 
-    //- Class used to pass kinematic tracking data to the trackToFace function
-    class trackingData
-    :
-        public particle::TrackingData<DSMCCloud<DSMCParcel<ParcelType>>>
-    {
-    public:
-
-        // Constructors
-
-            //- Construct from components
-            trackingData(DSMCCloud<DSMCParcel<ParcelType>>& cloud)
-            :
-                particle::TrackingData<DSMCCloud<DSMCParcel<ParcelType>>>
-                (
-                    cloud
-                )
-            {}
-    };
+    //- Use base tracking data
+    typedef typename ParcelType::trackingData trackingData;
 
 
 protected:
@@ -264,19 +248,25 @@ public:
             // Tracking
 
                 //- Move the parcel
-                template<class TrackData>
-                bool move(TrackData& td, const scalar trackTime);
+                template<class TrackCloudType>
+                bool move
+                (
+                    TrackCloudType& cloud,
+                    trackingData& td,
+                    const scalar trackTime
+                );
 
 
         // Patch interactions
 
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
-            template<class TrackData>
+            template<class TrackCloudType>
             bool hitPatch
             (
                 const polyPatch&,
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const label patchi,
                 const scalar trackFraction,
                 const tetIndices& tetIs
@@ -284,28 +274,31 @@ public:
 
             //- Overridable function to handle the particle hitting a
             //  processorPatch
-            template<class TrackData>
+            template<class TrackCloudType>
             void hitProcessorPatch
             (
                 const processorPolyPatch&,
-                TrackData& td
+                TrackCloudType& cloud,
+                trackingData& td
             );
 
             //- Overridable function to handle the particle hitting a wallPatch
-            template<class TrackData>
+            template<class TrackCloudType>
             void hitWallPatch
             (
                 const wallPolyPatch&,
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const tetIndices&
             );
 
             //- Overridable function to handle the particle hitting a polyPatch
-            template<class TrackData>
+            template<class TrackCloudType>
             void hitPatch
             (
                 const polyPatch&,
-                TrackData& td
+                TrackCloudType& cloud,
+                trackingData& td
             );
 
             //- Transform the physical properties of the particle

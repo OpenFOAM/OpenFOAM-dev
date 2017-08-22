@@ -100,6 +100,7 @@ Foam::findCellParticle::findCellParticle
 
 bool Foam::findCellParticle::move
 (
+    Cloud<findCellParticle>& cloud,
     trackingData& td,
     const scalar maxTrackLen
 )
@@ -110,7 +111,7 @@ bool Foam::findCellParticle::move
     while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
     {
         const scalar f = 1 - stepFraction();
-        trackToAndHitFace(f*(end_ - start_), f, td);
+        trackToAndHitFace(f*(end_ - start_), f, cloud, td);
     }
 
     if (stepFraction() == 1 || !td.keepParticle)
@@ -128,6 +129,7 @@ bool Foam::findCellParticle::move
 bool Foam::findCellParticle::hitPatch
 (
     const polyPatch&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td,
     const label patchi,
     const scalar trackFraction,
@@ -141,6 +143,7 @@ bool Foam::findCellParticle::hitPatch
 void Foam::findCellParticle::hitWedgePatch
 (
     const wedgePolyPatch&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -152,6 +155,7 @@ void Foam::findCellParticle::hitWedgePatch
 void Foam::findCellParticle::hitSymmetryPlanePatch
 (
     const symmetryPlanePolyPatch&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -163,6 +167,7 @@ void Foam::findCellParticle::hitSymmetryPlanePatch
 void Foam::findCellParticle::hitSymmetryPatch
 (
     const symmetryPolyPatch&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -174,6 +179,7 @@ void Foam::findCellParticle::hitSymmetryPatch
 void Foam::findCellParticle::hitCyclicPatch
 (
     const cyclicPolyPatch&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -185,6 +191,7 @@ void Foam::findCellParticle::hitCyclicPatch
 void Foam::findCellParticle::hitProcessorPatch
 (
     const processorPolyPatch&,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {
@@ -196,6 +203,7 @@ void Foam::findCellParticle::hitProcessorPatch
 void Foam::findCellParticle::hitWallPatch
 (
     const wallPolyPatch& wpp,
+    Cloud<findCellParticle>& cloud,
     trackingData& td,
     const tetIndices&
 )
@@ -208,6 +216,7 @@ void Foam::findCellParticle::hitWallPatch
 void Foam::findCellParticle::hitPatch
 (
     const polyPatch& wpp,
+    Cloud<findCellParticle>& cloud,
     trackingData& td
 )
 {

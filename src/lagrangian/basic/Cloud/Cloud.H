@@ -253,9 +253,13 @@ public:
             void cloudReset(const Cloud<ParticleType>& c);
 
             //- Move the particles
-            //  passing the TrackingData to the track function
-            template<class TrackData>
-            void move(TrackData& td, const scalar trackTime);
+            template<class TrackCloudType>
+            void move
+            (
+                TrackCloudType& cloud,
+                typename ParticleType::trackingData& td,
+                const scalar trackTime
+            );
 
             //- Remap the cells of particles corresponding to the
             //  mesh topology change

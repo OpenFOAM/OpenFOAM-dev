@@ -87,41 +87,45 @@ void Foam::KinematicCloud<CloudType>::setModels()
 
 
 template<class CloudType>
-template<class TrackData>
-void Foam::KinematicCloud<CloudType>::solve(TrackData& td)
+template<class TrackCloudType>
+void Foam::KinematicCloud<CloudType>::solve
+(
+    TrackCloudType& cloud,
+    typename parcelType::trackingData& td
+)
 {
     if (solution_.steadyState())
     {
-        td.cloud().storeState();
+        cloud.storeState();
 
-        td.cloud().preEvolve();
+        cloud.preEvolve();
 
-        evolveCloud(td);
+        evolveCloud(cloud, td);
 
         if (solution_.coupled())
         {
-            td.cloud().relaxSources(td.cloud().cloudCopy());
+            cloud.relaxSources(cloud.cloudCopy());
         }
     }
     else
     {
-        td.cloud().preEvolve();
+        cloud.preEvolve();
 
-        evolveCloud(td);
+        evolveCloud(cloud, td);
 
         if (solution_.coupled())
         {
-            td.cloud().scaleSources();
+            cloud.scaleSources();
         }
     }
 
-    td.cloud().info();
+    cloud.info();
 
-    td.cloud().postEvolve();
+    cloud.postEvolve();
 
     if (solution_.steadyState())
     {
-        td.cloud().restoreState();
+        cloud.restoreState();
     }
 }
 
@@ -172,19 +176,23 @@ void Foam::KinematicCloud<CloudType>::updateCellOccupancy()
 
 
 template<class CloudType>
-template<class TrackData>
-void Foam::KinematicCloud<CloudType>::evolveCloud(TrackData& td)
+template<class TrackCloudType>
+void Foam::KinematicCloud<CloudType>::evolveCloud
+(
+    TrackCloudType& cloud,
+    typename parcelType::trackingData& td
+)
 {
     if (solution_.coupled())
     {
-        td.cloud().resetSourceTerms();
+        cloud.resetSourceTerms();
     }
 
     if (solution_.transient())
     {
         label preInjectionSize = this->size();
 
-        this->surfaceFilm().inject(td);
+        this->surfaceFilm().inject(cloud);
 
         // Update the cellOccupancy if the size of the cloud has changed
         // during the injection.
@@ -194,23 +202,23 @@ void Foam::KinematicCloud<CloudType>::evolveCloud(TrackData& td)
             preInjectionSize = this->size();
         }
 
-        injectors_.inject(td);
+        injectors_.inject(cloud, td);
 
 
         // Assume that motion will update the cellOccupancy as necessary
         // before it is required.
-        td.cloud().motion(td);
+        cloud.motion(cloud, td);
 
         stochasticCollision().update(solution_.trackTime());
     }
     else
     {
-//        this->surfaceFilm().injectSteadyState(td);
+//        this->surfaceFilm().injectSteadyState(cloud);
 
-        injectors_.injectSteadyState(td, solution_.trackTime());
+        injectors_.injectSteadyState(cloud, td, solution_.trackTime());
 
-        td.part() = TrackData::tpLinearTrack;
-        CloudType::move(td,  solution_.trackTime());
+        td.part() = parcelType::trackingData::tpLinearTrack;
+        CloudType::move(cloud, td, solution_.trackTime());
     }
 }
 
@@ -679,20 +687,23 @@ void Foam::KinematicCloud<CloudType>::evolve()
 {
     if (solution_.canEvolve())
     {
-        typename parcelType::template
-            TrackingData<KinematicCloud<CloudType>> td(*this);
+        typename parcelType::trackingData td(*this);
 
-        solve(td);
+        solve(*this, td);
     }
 }
 
 
 template<class CloudType>
-template<class TrackData>
-void Foam::KinematicCloud<CloudType>::motion(TrackData& td)
+template<class TrackCloudType>
+void Foam::KinematicCloud<CloudType>::motion
+(
+    TrackCloudType& cloud,
+    typename parcelType::trackingData& td
+)
 {
-    td.part() = TrackData::tpLinearTrack;
-    CloudType::move(td,  solution_.trackTime());
+    td.part() = parcelType::trackingData::tpLinearTrack;
+    CloudType::move(cloud, td, solution_.trackTime());
 
     updateCellOccupancy();
 }

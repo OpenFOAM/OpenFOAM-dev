@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>
-template<class CloudType>
-inline Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::TrackingData
+template<class TrackCloudType>
+inline Foam::ThermoParcel<ParcelType>::trackingData::trackingData
 (
-    CloudType& cloud,
+    const TrackCloudType& cloud,
     trackPart part
 )
 :
-    ParcelType::template TrackingData<CloudType>(cloud, part),
+    ParcelType::trackingData(cloud, part),
     Cp_(cloud.thermo().thermo().Cp()),
     kappa_(cloud.thermo().thermo().kappa()),
     TInterp_
@@ -76,54 +76,48 @@ inline Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::TrackingData
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::volScalarField&
-Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::Cp() const
+Foam::ThermoParcel<ParcelType>::trackingData::Cp() const
 {
     return Cp_;
 }
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::volScalarField&
-Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::kappa() const
+Foam::ThermoParcel<ParcelType>::trackingData::kappa() const
 {
     return kappa_;
 }
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::interpolation<Foam::scalar>&
-Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::TInterp() const
+Foam::ThermoParcel<ParcelType>::trackingData::TInterp() const
 {
     return TInterp_();
 }
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::interpolation<Foam::scalar>&
-Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::CpInterp() const
+Foam::ThermoParcel<ParcelType>::trackingData::CpInterp() const
 {
     return CpInterp_();
 }
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::interpolation<Foam::scalar>&
-Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::kappaInterp() const
+Foam::ThermoParcel<ParcelType>::trackingData::kappaInterp() const
 {
     return kappaInterp_();
 }
 
 
 template<class ParcelType>
-template<class CloudType>
 inline const Foam::interpolation<Foam::scalar>&
-Foam::ThermoParcel<ParcelType>::TrackingData<CloudType>::GInterp() const
+Foam::ThermoParcel<ParcelType>::trackingData::GInterp() const
 {
     if (!GInterp_.valid())
     {

@@ -212,8 +212,8 @@ public:
             ) = 0;
 
             //- Inject parcels into the cloud
-            template<class TrackData>
-            void inject(TrackData& td);
+            template<class TrackCloudType>
+            void inject(TrackCloudType& cloud);
 
 
         // I-O

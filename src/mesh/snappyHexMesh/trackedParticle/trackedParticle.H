@@ -90,7 +90,7 @@ public:
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
     :
-        public particle::TrackingData<Cloud<trackedParticle>>
+        public particle::trackingData
     {
     public:
 
@@ -108,7 +108,7 @@ public:
                 List<PackedBoolList>& featureEdgeVisited
             )
             :
-                particle::TrackingData<Cloud<trackedParticle>>(cloud),
+                particle::trackingData(cloud),
                 maxLevel_(maxLevel),
                 featureEdgeVisited_(featureEdgeVisited)
             {}
@@ -240,7 +240,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(trackingData&, const scalar);
+            bool move(Cloud<trackedParticle>&, trackingData&, const scalar);
 
 
             //- Overridable function to handle the particle hitting a patch
@@ -248,6 +248,7 @@ public:
             bool hitPatch
             (
                 const polyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td,
                 const label patchi,
                 const scalar trackFraction,
@@ -258,6 +259,7 @@ public:
             void hitWedgePatch
             (
                 const wedgePolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td
             );
 
@@ -266,6 +268,7 @@ public:
             void hitSymmetryPlanePatch
             (
                 const symmetryPlanePolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td
             );
 
@@ -274,6 +277,7 @@ public:
             void hitSymmetryPatch
             (
                 const symmetryPolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td
             );
 
@@ -281,6 +285,7 @@ public:
             void hitCyclicPatch
             (
                 const cyclicPolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td
             );
 
@@ -288,6 +293,7 @@ public:
             void hitCyclicAMIPatch
             (
                 const cyclicAMIPolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td,
                 const vector&
             );
@@ -297,6 +303,7 @@ public:
             void hitProcessorPatch
             (
                 const processorPolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td
             );
 
@@ -304,6 +311,7 @@ public:
             void hitWallPatch
             (
                 const wallPolyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td,
                 const tetIndices&
             );
@@ -312,12 +320,18 @@ public:
             void hitPatch
             (
                 const polyPatch&,
+                Cloud<trackedParticle>& cloud,
                 trackingData& td
             );
 
             //- Convert processor patch addressing to the global equivalents
             //  and set the celli to the face-neighbour
-            void correctAfterParallelTransfer(const label, trackingData&);
+            void correctAfterParallelTransfer
+            (
+                const label,
+                Cloud<trackedParticle>& cloud,
+                trackingData& td
+            );
 
 
     // Ostream Operator

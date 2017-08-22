@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,24 +164,27 @@ void Foam::MPPICCloud<CloudType>::evolve()
 {
     if (this->solution().canEvolve())
     {
-        typename parcelType::template
-            TrackingData<MPPICCloud<CloudType>> td(*this);
+        typename parcelType::trackingData td(*this);
 
-        this->solve(td);
+        this->solve(*this, td);
     }
 }
 
 
 template<class CloudType>
-template<class TrackData>
-void Foam::MPPICCloud<CloudType>::motion(TrackData& td)
+template<class TrackCloudType>
+void Foam::MPPICCloud<CloudType>::motion
+(
+    TrackCloudType& cloud,
+    typename parcelType::trackingData& td
+)
 {
     // Kinematic
     // ~~~~~~~~~
 
     // force calculation and tracking
-    td.part() = TrackData::tpLinearTrack;
-    CloudType::move(td, this->db().time().deltaTValue());
+    td.part() = parcelType::trackingData::tpLinearTrack;
+    CloudType::move(cloud, td, this->db().time().deltaTValue());
 
 
     // Preliminary
@@ -198,18 +201,18 @@ void Foam::MPPICCloud<CloudType>::motion(TrackData& td)
     if (dampingModel_->active())
     {
         // update averages
-        td.updateAverages(*this);
+        td.updateAverages(cloud);
 
         // memory allocation and eulerian calculations
         dampingModel_->cacheFields(true);
 
         // calculate the damping velocity corrections without moving the parcels
-        td.part() = TrackData::tpDampingNoTrack;
-        CloudType::move(td, this->db().time().deltaTValue());
+        td.part() = parcelType::trackingData::tpDampingNoTrack;
+        CloudType::move(cloud, td, this->db().time().deltaTValue());
 
         // correct the parcel positions and velocities
-        td.part() = TrackData::tpCorrectTrack;
-        CloudType::move(td, this->db().time().deltaTValue());
+        td.part() = parcelType::trackingData::tpCorrectTrack;
+        CloudType::move(cloud, td, this->db().time().deltaTValue());
 
         // finalise and free memory
         dampingModel_->cacheFields(false);
@@ -222,12 +225,12 @@ void Foam::MPPICCloud<CloudType>::motion(TrackData& td)
     if (packingModel_->active())
     {
         // same procedure as for damping
-        td.updateAverages(*this);
+        td.updateAverages(cloud);
         packingModel_->cacheFields(true);
-        td.part() = TrackData::tpPackingNoTrack;
-        CloudType::move(td, this->db().time().deltaTValue());
-        td.part() = TrackData::tpCorrectTrack;
-        CloudType::move(td, this->db().time().deltaTValue());
+        td.part() = parcelType::trackingData::tpPackingNoTrack;
+        CloudType::move(cloud, td, this->db().time().deltaTValue());
+        td.part() = parcelType::trackingData::tpCorrectTrack;
+        CloudType::move(cloud, td, this->db().time().deltaTValue());
         packingModel_->cacheFields(false);
     }
 
@@ -238,7 +241,7 @@ void Foam::MPPICCloud<CloudType>::motion(TrackData& td)
     if (isotropyModel_->active())
     {
         // update averages
-        td.updateAverages(*this);
+        td.updateAverages(cloud);
 
         // apply isotropy model
         isotropyModel_->calculate();

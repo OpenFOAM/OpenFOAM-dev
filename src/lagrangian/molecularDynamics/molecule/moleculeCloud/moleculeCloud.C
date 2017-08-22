@@ -1119,18 +1119,18 @@ Foam::moleculeCloud::moleculeCloud
 void Foam::moleculeCloud::evolve()
 {
     molecule::trackingData td0(*this, 0);
-    Cloud<molecule>::move(td0, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td0, mesh_.time().deltaTValue());
 
     molecule::trackingData td1(*this, 1);
-    Cloud<molecule>::move(td1, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td1, mesh_.time().deltaTValue());
 
     molecule::trackingData td2(*this, 2);
-    Cloud<molecule>::move(td2, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td2, mesh_.time().deltaTValue());
 
     calculateForce();
 
     molecule::trackingData td3(*this, 3);
-    Cloud<molecule>::move(td3, mesh_.time().deltaTValue());
+    Cloud<molecule>::move(*this, td3, mesh_.time().deltaTValue());
 }
 
 

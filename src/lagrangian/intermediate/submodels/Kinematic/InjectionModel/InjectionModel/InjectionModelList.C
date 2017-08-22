@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,27 +179,32 @@ void Foam::InjectionModelList<CloudType>::updateMesh()
 
 
 template<class CloudType>
-template<class TrackData>
-void Foam::InjectionModelList<CloudType>::inject(TrackData& td)
+template<class TrackCloudType>
+void Foam::InjectionModelList<CloudType>::inject
+(
+    TrackCloudType& cloud,
+    typename CloudType::parcelType::trackingData& td
+)
 {
     forAll(*this, i)
     {
-        this->operator[](i).inject(td);
+        this->operator[](i).inject(cloud, td);
     }
 }
 
 
 template<class CloudType>
-template<class TrackData>
+template<class TrackCloudType>
 void Foam::InjectionModelList<CloudType>::injectSteadyState
 (
-    TrackData& td,
+    TrackCloudType& cloud,
+    typename CloudType::parcelType::trackingData& td,
     const scalar trackTime
 )
 {
     forAll(*this, i)
     {
-        this->operator[](i).injectSteadyState(td, trackTime);
+        this->operator[](i).injectSteadyState(cloud, td, trackTime);
     }
 }
 

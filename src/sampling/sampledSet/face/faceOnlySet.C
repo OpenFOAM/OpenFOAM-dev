@@ -54,7 +54,7 @@ bool Foam::faceOnlySet::trackToBoundary
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
-    particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
+    particle::trackingData td(particleCloud);
 
     point trackPt = singleParticle.position();
 
@@ -62,7 +62,7 @@ bool Foam::faceOnlySet::trackToBoundary
     {
         point oldPoint = trackPt;
 
-        singleParticle.trackToAndHitFace(end_ - start_, 0, trackData);
+        singleParticle.trackToAndHitFace(end_ - start_, 0, particleCloud, td);
 
         trackPt = singleParticle.position();
 

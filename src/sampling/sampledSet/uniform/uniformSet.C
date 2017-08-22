@@ -96,8 +96,6 @@ bool Foam::uniformSet::trackToBoundary
 
     point trackPt = singleParticle.position();
 
-    particle::TrackingData<passiveParticleCloud> trackData(particleCloud);
-
     while(true)
     {
         // Find next samplePt on/after trackPt. Update samplePt, sampleI

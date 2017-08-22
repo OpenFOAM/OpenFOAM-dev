@@ -243,8 +243,12 @@ protected:
         // Cloud evolution functions
 
             //- Solve the cloud - calls all evolution functions
-            template<class TrackData>
-            void solve(TrackData& td);
+            template<class TrackCloudType>
+            void solve
+            (
+                TrackCloudType& cloud,
+                typename parcelType::trackingData& td
+            );
 
             //- Build the cellOccupancy
             void buildCellOccupancy();
@@ -254,8 +258,12 @@ protected:
             void updateCellOccupancy();
 
             //- Evolve the cloud
-            template<class TrackData>
-            void evolveCloud(TrackData& td);
+            template<class TrackCloudType>
+            void evolveCloud
+            (
+                TrackCloudType& cloud,
+                typename parcelType::trackingData& td
+            );
 
             //- Post-evolve
             void postEvolve();
@@ -579,8 +587,12 @@ public:
             void evolve();
 
             //- Particle motion
-            template<class TrackData>
-            void motion(TrackData& td);
+            template<class TrackCloudType>
+            void motion
+            (
+                TrackCloudType& cloud,
+                typename parcelType::trackingData& td
+            );
 
             //- Calculate the patch normal and velocity to interact with,
             //  accounting for patch motion if required.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,8 +217,12 @@ public:
             void evolve();
 
             //- Particle motion
-            template<class TrackData>
-            void motion(TrackData& td);
+            template<class TrackCloudType>
+            void motion
+            (
+                TrackCloudType& cloud,
+                typename parcelType::trackingData& td
+            );
 
 
         //- I-O

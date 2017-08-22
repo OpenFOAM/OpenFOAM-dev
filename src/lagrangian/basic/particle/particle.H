@@ -106,20 +106,11 @@ class particle
 
 public:
 
-    template<class CloudType>
-    class TrackingData
+    class trackingData
     {
-        // Private data
-
-            //- Reference to the cloud containing (this) particle
-            CloudType& cloud_;
-
-
     public:
 
         // Public data
-
-            typedef CloudType cloudType;
 
             //- Flag to switch processor
             bool switchProcessor;
@@ -129,19 +120,9 @@ public:
 
 
         // Constructor
-        TrackingData(CloudType& cloud)
-        :
-            cloud_(cloud)
+        template <class TrackCloudType>
+        trackingData(const TrackCloudType& cloud)
         {}
-
-
-        // Member functions
-
-            //- Return a reference to the cloud
-            CloudType& cloud()
-            {
-                return cloud_;
-            }
     };
 
 
@@ -307,75 +288,105 @@ protected:
         //  patch.  Executed before other patch-hitting functions.
         //  trackFraction is passed in to allow mesh motion to
         //  interpolate in time to the correct face state.
-        template<class TrackData>
+        template<class TrackCloudType>
         bool hitPatch
         (
             const polyPatch&,
-            TrackData& td,
+            TrackCloudType& cloud,
+            trackingData& td,
             const label patchi,
             const scalar trackFraction,
             const tetIndices& tetIs
         );
 
         //- Overridable function to handle the particle hitting a wedgePatch
-        template<class TrackData>
-        void hitWedgePatch(const wedgePolyPatch&, TrackData& td);
+        template<class TrackCloudType>
+        void hitWedgePatch
+        (
+            const wedgePolyPatch&,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
         //- Overridable function to handle the particle hitting a
         //  symmetryPlanePatch
-        template<class TrackData>
+        template<class TrackCloudType>
         void hitSymmetryPlanePatch
         (
             const symmetryPlanePolyPatch&,
-            TrackData& td
+            TrackCloudType& cloud,
+            trackingData& td
         );
 
         //- Overridable function to handle the particle hitting a
         //  symmetryPatch
-        template<class TrackData>
-        void hitSymmetryPatch(const symmetryPolyPatch&, TrackData& td);
+        template<class TrackCloudType>
+        void hitSymmetryPatch
+        (
+            const symmetryPolyPatch&,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
         //- Overridable function to handle the particle hitting a cyclicPatch
-        template<class TrackData>
-        void hitCyclicPatch(const cyclicPolyPatch&, TrackData& td);
+        template<class TrackCloudType>
+        void hitCyclicPatch
+        (
+            const cyclicPolyPatch&,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
         //- Overridable function to handle the particle hitting a cyclicAMIPatch
-        template<class TrackData>
+        template<class TrackCloudType>
         void hitCyclicAMIPatch
         (
             const cyclicAMIPolyPatch&,
-            TrackData& td,
+            TrackCloudType& cloud,
+            trackingData& td,
             const vector& direction
         );
 
         //- Overridable function to handle the particle hitting a
         //  cyclicACMIPatch
-        template<class TrackData>
+        template<class TrackCloudType>
         void hitCyclicACMIPatch
         (
             const cyclicACMIPolyPatch&,
-            TrackData& td,
+            TrackCloudType& cloud,
+            trackingData& td,
             const vector& direction
         );
 
         //- Overridable function to handle the particle hitting a
         //  processorPatch
-        template<class TrackData>
-        void hitProcessorPatch(const processorPolyPatch&, TrackData& td);
+        template<class TrackCloudType>
+        void hitProcessorPatch
+        (
+            const processorPolyPatch&,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
         //- Overridable function to handle the particle hitting a wallPatch
-        template<class TrackData>
+        template<class TrackCloudType>
         void hitWallPatch
         (
             const wallPolyPatch&,
-            TrackData& td,
+            TrackCloudType& cloud,
+            trackingData& td,
             const tetIndices& tetIs
         );
 
         //- Overridable function to handle the particle hitting a
         //  general patch
-        template<class TrackData>
-        void hitPatch(const polyPatch&, TrackData& td);
+        template<class TrackCloudType>
+        void hitPatch
+        (
+            const polyPatch&,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
 
 public:
@@ -597,20 +608,22 @@ public:
         //- Hit the current face. If the current face is internal than this
         //  crosses into the next cell. If it is a boundary face then this will
         //  interact the particle with the relevant patch.
-        template<class TrackData>
+        template<class TrackCloudType>
         void hitFace
         (
             const vector& direction,
-            TrackData& td
+            TrackCloudType& cloud,
+            trackingData& td
         );
 
         //- Convenience function. Cobines trackToFace and hitFace
-        template<class TrackData>
+        template<class TrackCloudType>
         void trackToAndHitFace
         (
             const vector& direction,
             const scalar fraction,
-            TrackData& td
+            TrackCloudType& cloud,
+            trackingData& td
         );
 
         //- Set the constrained components of the particle position to the
@@ -643,13 +656,23 @@ public:
 
         //- Convert global addressing to the processor patch
         //  local equivalents
-        template<class TrackData>
-        void prepareForParallelTransfer(const label patchi, TrackData& td);
+        template<class TrackCloudType>
+        void prepareForParallelTransfer
+        (
+            const label patchi,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
         //- Convert processor patch addressing to the global equivalents
         //  and set the celli to the face-neighbour
-        template<class TrackData>
-        void correctAfterParallelTransfer(const label patchi, TrackData& td);
+        template<class TrackCloudType>
+        void correctAfterParallelTransfer
+        (
+            const label patchi,
+            TrackCloudType& cloud,
+            trackingData& td
+        );
 
 
     // Interaction list referral
@@ -687,12 +710,12 @@ public:
     // I-O
 
         //- Read the fields associated with the owner cloud
-        template<class CloudType>
-        static void readFields(CloudType& c);
+        template<class TrackCloudType>
+        static void readFields(TrackCloudType& c);
 
         //- Write the fields associated with the owner cloud
-        template<class CloudType>
-        static void writeFields(const CloudType& c);
+        template<class TrackCloudType>
+        static void writeFields(const TrackCloudType& c);
 
         //- Write the particle position and cell
         void writePosition(Ostream&) const;

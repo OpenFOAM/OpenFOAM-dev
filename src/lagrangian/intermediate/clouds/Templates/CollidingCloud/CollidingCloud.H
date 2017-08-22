@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,8 +117,13 @@ protected:
         // Cloud evolution functions
 
             //- Move-collide particles
-            template<class TrackData>
-            void moveCollide(TrackData& td, const scalar deltaT);
+            template<class TrackCloudType>
+            void moveCollide
+            (
+                TrackCloudType& cloud,
+                typename parcelType::trackingData& td,
+                const scalar deltaT
+            );
 
             //- Reset state of cloud
             void cloudReset(CollidingCloud<CloudType>& c);
@@ -224,8 +229,12 @@ public:
             void evolve();
 
             //- Particle motion
-            template<class TrackData>
-            void motion(TrackData& td);
+            template<class TrackCloudType>
+            void motion
+            (
+                TrackCloudType& cloud,
+                typename parcelType::trackingData& td
+            );
 
 
         // I-O

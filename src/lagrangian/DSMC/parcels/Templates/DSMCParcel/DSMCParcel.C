@@ -29,16 +29,21 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParcelType>
-template<class TrackData>
-bool Foam::DSMCParcel<ParcelType>::move(TrackData& td, const scalar trackTime)
+template<class TrackCloudType>
+bool Foam::DSMCParcel<ParcelType>::move
+(
+    TrackCloudType& cloud,
+    trackingData& td,
+    const scalar trackTime
+)
 {
-    typename TrackData::cloudType::parcelType& p =
-        static_cast<typename TrackData::cloudType::parcelType&>(*this);
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
 
     td.switchProcessor = false;
     td.keepParticle = true;
 
-    const polyMesh& mesh = td.cloud().pMesh();
+    const polyMesh& mesh = cloud.pMesh();
     const polyBoundaryMesh& pbMesh = mesh.boundaryMesh();
 
     // For reduced-D cases, the velocity used to track needs to be
@@ -59,7 +64,7 @@ bool Foam::DSMCParcel<ParcelType>::move(TrackData& td, const scalar trackTime)
         meshTools::constrainDirection(mesh, mesh.solutionD(), Utracking);
 
         const scalar f = 1 - p.stepFraction();
-        p.trackToAndHitFace(f*trackTime*Utracking, f, td);
+        p.trackToAndHitFace(f*trackTime*Utracking, f, cloud, td);
 
         if (p.onBoundaryFace() && td.keepParticle)
         {
@@ -75,11 +80,12 @@ bool Foam::DSMCParcel<ParcelType>::move(TrackData& td, const scalar trackTime)
 
 
 template<class ParcelType>
-template<class TrackData>
+template<class TrackCloudType>
 bool Foam::DSMCParcel<ParcelType>::hitPatch
 (
     const polyPatch&,
-    TrackData& td,
+    TrackCloudType& cloud,
+    trackingData& td,
     const label,
     const scalar,
     const tetIndices&
@@ -90,11 +96,12 @@ bool Foam::DSMCParcel<ParcelType>::hitPatch
 
 
 template<class ParcelType>
-template<class TrackData>
+template<class TrackCloudType>
 void Foam::DSMCParcel<ParcelType>::hitProcessorPatch
 (
     const processorPolyPatch&,
-    TrackData& td
+    TrackCloudType& cloud,
+    trackingData& td
 )
 {
     td.switchProcessor = true;
@@ -102,11 +109,12 @@ void Foam::DSMCParcel<ParcelType>::hitProcessorPatch
 
 
 template<class ParcelType>
-template<class TrackData>
+template<class TrackCloudType>
 void Foam::DSMCParcel<ParcelType>::hitWallPatch
 (
     const wallPolyPatch& wpp,
-    TrackData& td,
+    TrackCloudType& cloud,
+    trackingData& td,
     const tetIndices& tetIs
 )
 {
@@ -116,9 +124,9 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     const scalar fA = mag(wpp.faceAreas()[wppLocalFace]);
 
-    const scalar deltaT = td.cloud().pMesh().time().deltaTValue();
+    const scalar deltaT = cloud.pMesh().time().deltaTValue();
 
-    const constantProperties& constProps(td.cloud().constProps(typeId_));
+    const constantProperties& constProps(cloud.constProps(typeId_));
 
     scalar m = constProps.mass();
 
@@ -131,19 +139,19 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     scalar invMagUnfA = 1/max(mag(U_dot_nw)*fA, VSMALL);
 
-    td.cloud().rhoNBF()[wppIndex][wppLocalFace] += invMagUnfA;
+    cloud.rhoNBF()[wppIndex][wppLocalFace] += invMagUnfA;
 
-    td.cloud().rhoMBF()[wppIndex][wppLocalFace] += m*invMagUnfA;
+    cloud.rhoMBF()[wppIndex][wppLocalFace] += m*invMagUnfA;
 
-    td.cloud().linearKEBF()[wppIndex][wppLocalFace] +=
+    cloud.linearKEBF()[wppIndex][wppLocalFace] +=
         0.5*m*(U_ & U_)*invMagUnfA;
 
-    td.cloud().internalEBF()[wppIndex][wppLocalFace] += Ei_*invMagUnfA;
+    cloud.internalEBF()[wppIndex][wppLocalFace] += Ei_*invMagUnfA;
 
-    td.cloud().iDofBF()[wppIndex][wppLocalFace] +=
+    cloud.iDofBF()[wppIndex][wppLocalFace] +=
         constProps.internalDegreesOfFreedom()*invMagUnfA;
 
-    td.cloud().momentumBF()[wppIndex][wppLocalFace] += m*Ut*invMagUnfA;
+    cloud.momentumBF()[wppIndex][wppLocalFace] += m*Ut*invMagUnfA;
 
     // pre-interaction energy
     scalar preIE = 0.5*m*(U_ & U_) + Ei_;
@@ -151,7 +159,7 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
     // pre-interaction momentum
     vector preIMom = m*U_;
 
-    td.cloud().wallInteraction().correct
+    cloud.wallInteraction().correct
     (
         static_cast<DSMCParcel<ParcelType> &>(*this),
         wpp
@@ -163,19 +171,19 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     invMagUnfA = 1/max(mag(U_dot_nw)*fA, VSMALL);
 
-    td.cloud().rhoNBF()[wppIndex][wppLocalFace] += invMagUnfA;
+    cloud.rhoNBF()[wppIndex][wppLocalFace] += invMagUnfA;
 
-    td.cloud().rhoMBF()[wppIndex][wppLocalFace] += m*invMagUnfA;
+    cloud.rhoMBF()[wppIndex][wppLocalFace] += m*invMagUnfA;
 
-    td.cloud().linearKEBF()[wppIndex][wppLocalFace] +=
+    cloud.linearKEBF()[wppIndex][wppLocalFace] +=
         0.5*m*(U_ & U_)*invMagUnfA;
 
-    td.cloud().internalEBF()[wppIndex][wppLocalFace] += Ei_*invMagUnfA;
+    cloud.internalEBF()[wppIndex][wppLocalFace] += Ei_*invMagUnfA;
 
-    td.cloud().iDofBF()[wppIndex][wppLocalFace] +=
+    cloud.iDofBF()[wppIndex][wppLocalFace] +=
         constProps.internalDegreesOfFreedom()*invMagUnfA;
 
-    td.cloud().momentumBF()[wppIndex][wppLocalFace] += m*Ut*invMagUnfA;
+    cloud.momentumBF()[wppIndex][wppLocalFace] += m*Ut*invMagUnfA;
 
     // post-interaction energy
     scalar postIE = 0.5*m*(U_ & U_) + Ei_;
@@ -183,20 +191,25 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
     // post-interaction momentum
     vector postIMom = m*U_;
 
-    scalar deltaQ = td.cloud().nParticle()*(preIE - postIE)/(deltaT*fA);
+    scalar deltaQ = cloud.nParticle()*(preIE - postIE)/(deltaT*fA);
 
-    vector deltaFD = td.cloud().nParticle()*(preIMom - postIMom)/(deltaT*fA);
+    vector deltaFD = cloud.nParticle()*(preIMom - postIMom)/(deltaT*fA);
 
-    td.cloud().qBF()[wppIndex][wppLocalFace] += deltaQ;
+    cloud.qBF()[wppIndex][wppLocalFace] += deltaQ;
 
-    td.cloud().fDBF()[wppIndex][wppLocalFace] += deltaFD;
+    cloud.fDBF()[wppIndex][wppLocalFace] += deltaFD;
 
 }
 
 
 template<class ParcelType>
-template<class TrackData>
-void Foam::DSMCParcel<ParcelType>::hitPatch(const polyPatch&, TrackData& td)
+template<class TrackCloudType>
+void Foam::DSMCParcel<ParcelType>::hitPatch
+(
+    const polyPatch&,
+    TrackCloudType& cloud,
+    trackingData& td
+)
 {
     td.keepParticle = false;
 }

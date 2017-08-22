@@ -65,12 +65,17 @@ Foam::tensor Foam::molecule::rotationTensorZ(scalar phi) const
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
+bool Foam::molecule::move
+(
+    moleculeCloud& cloud,
+    trackingData& td,
+    const scalar trackTime
+)
 {
     td.switchProcessor = false;
     td.keepParticle = true;
 
-    const constantProperties& constProps(td.cloud().constProps(id_));
+    const constantProperties& constProps(cloud.constProps(id_));
 
     if (td.part() == 0)
     {
@@ -88,7 +93,7 @@ bool Foam::molecule::move(molecule::trackingData& td, const scalar trackTime)
         while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
         {
             const scalar f = 1 - stepFraction();
-            trackToAndHitFace(f*trackTime*v_, f, td);
+            trackToAndHitFace(f*trackTime*v_, f, cloud, td);
         }
     }
     else if (td.part() == 2)
@@ -233,6 +238,7 @@ void Foam::molecule::setSiteSizes(label size)
 bool Foam::molecule::hitPatch
 (
     const polyPatch&,
+    moleculeCloud&,
     trackingData&,
     const label,
     const scalar,
@@ -246,6 +252,7 @@ bool Foam::molecule::hitPatch
 void Foam::molecule::hitProcessorPatch
 (
     const processorPolyPatch&,
+    moleculeCloud&,
     trackingData& td
 )
 {
@@ -256,6 +263,7 @@ void Foam::molecule::hitProcessorPatch
 void Foam::molecule::hitWallPatch
 (
     const wallPolyPatch& wpp,
+    moleculeCloud& cloud,
     trackingData& td,
     const tetIndices& tetIs
 )
@@ -278,6 +286,7 @@ void Foam::molecule::hitWallPatch
 void Foam::molecule::hitPatch
 (
     const polyPatch&,
+    moleculeCloud&,
     trackingData& td
 )
 {

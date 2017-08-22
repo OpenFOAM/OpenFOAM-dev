@@ -100,8 +100,8 @@ Foam::SurfaceFilmModel<CloudType>::~SurfaceFilmModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-template<class TrackData>
-void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
+template<class TrackCloudType>
+void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
 {
     if (!this->active())
     {
@@ -159,18 +159,18 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
                     new parcelType(this->owner().pMesh(), pos, celli);
 
                 // Check/set new parcel thermo properties
-                td.cloud().setParcelThermoProperties(*pPtr, 0.0);
+                cloud.setParcelThermoProperties(*pPtr, 0.0);
 
                 setParcelProperties(*pPtr, j);
 
                 if (pPtr->nParticle() > 0.001)
                 {
                     // Check new parcel properties
-    //                td.cloud().checkParcelProperties(*pPtr, 0.0, true);
-                    td.cloud().checkParcelProperties(*pPtr, 0.0, false);
+    //                cloud.checkParcelProperties(*pPtr, 0.0, true);
+                    cloud.checkParcelProperties(*pPtr, 0.0, false);
 
                     // Add the new parcel to the cloud
-                    td.cloud().addParticle(pPtr);
+                    cloud.addParticle(pPtr);
 
                     nParcelsInjected_++;
                 }

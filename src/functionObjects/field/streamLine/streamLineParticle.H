@@ -49,6 +49,7 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 class streamLineParticle;
+class streamLineParticleCloud;
 
 Ostream& operator<<(Ostream&, const streamLineParticle&);
 
@@ -64,7 +65,7 @@ public:
 
     class trackingData
     :
-        public particle::TrackingData<Cloud<streamLineParticle>>
+        public particle::trackingData
     {
     public:
 
@@ -94,7 +95,7 @@ public:
             //- Construct from components
             trackingData
             (
-                Cloud<streamLineParticle>& cloud,
+                streamLineParticleCloud& cloud,
                 const PtrList<interpolation<scalar>>& vsInterp,
                 const PtrList<interpolation<vector>>& vvInterp,
                 const label UIndex,
@@ -106,7 +107,7 @@ public:
                 List<DynamicList<vectorList>>& allVectors
             )
             :
-                particle::TrackingData<Cloud<streamLineParticle>>(cloud),
+                particle::trackingData(cloud),
                 vsInterp_(vsInterp),
                 vvInterp_(vvInterp),
                 UIndex_(UIndex),
@@ -206,13 +207,19 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(trackingData&, const scalar);
+            bool move
+            (
+                streamLineParticleCloud& cloud,
+                trackingData&,
+                const scalar
+            );
 
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
             bool hitPatch
             (
                 const polyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td,
                 const label patchi,
                 const scalar trackFraction,
@@ -223,6 +230,7 @@ public:
             void hitWedgePatch
             (
                 const wedgePolyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td
             );
 
@@ -231,6 +239,7 @@ public:
             void hitSymmetryPlanePatch
             (
                 const symmetryPlanePolyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td
             );
 
@@ -239,6 +248,7 @@ public:
             void hitSymmetryPatch
             (
                 const symmetryPolyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td
             );
 
@@ -246,6 +256,7 @@ public:
             void hitCyclicPatch
             (
                 const cyclicPolyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td
             );
 
@@ -254,6 +265,7 @@ public:
             void hitProcessorPatch
             (
                 const processorPolyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td
             );
 
@@ -261,6 +273,7 @@ public:
             void hitWallPatch
             (
                 const wallPolyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td,
                 const tetIndices&
             );
@@ -269,6 +282,7 @@ public:
             void hitPatch
             (
                 const polyPatch&,
+                streamLineParticleCloud& cloud,
                 trackingData& td
             );
 

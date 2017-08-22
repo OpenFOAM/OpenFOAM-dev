@@ -53,45 +53,46 @@ Foam::MPPICParcel<ParcelType>::MPPICParcel
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ParcelType>
-template<class TrackData>
+template<class TrackCloudType>
 bool Foam::MPPICParcel<ParcelType>::move
 (
-    TrackData& td,
+    TrackCloudType& cloud,
+    trackingData& td,
     const scalar trackTime
 )
 {
-    typename TrackData::cloudType::parcelType& p =
-        static_cast<typename TrackData::cloudType::parcelType&>(*this);
+    typename TrackCloudType::parcelType& p =
+        static_cast<typename TrackCloudType::parcelType&>(*this);
 
     switch (td.part())
     {
-        case TrackData::tpLinearTrack:
+        case trackingData::tpLinearTrack:
         {
-            ParcelType::move(td, trackTime);
+            ParcelType::move(cloud, td, trackTime);
 
             break;
         }
-        case TrackData::tpDampingNoTrack:
+        case trackingData::tpDampingNoTrack:
         {
             p.UCorrect() =
-                td.cloud().dampingModel().velocityCorrection(p, trackTime);
+                cloud.dampingModel().velocityCorrection(p, trackTime);
 
             td.keepParticle = true;
             td.switchProcessor = false;
 
             break;
         }
-        case TrackData::tpPackingNoTrack:
+        case trackingData::tpPackingNoTrack:
         {
             p.UCorrect() =
-                td.cloud().packingModel().velocityCorrection(p, trackTime);
+                cloud.packingModel().velocityCorrection(p, trackTime);
 
             td.keepParticle = true;
             td.switchProcessor = false;
 
             break;
         }
-        case TrackData::tpCorrectTrack:
+        case trackingData::tpCorrectTrack:
         {
             vector U = p.U();
 
@@ -101,7 +102,7 @@ bool Foam::MPPICParcel<ParcelType>::move
 
             p.U() = (1.0 - f)*p.UCorrect();
 
-            ParcelType::move(td, trackTime);
+            ParcelType::move(cloud, td, trackTime);
 
             p.U() = U + (p.stepFraction() - f)*p.UCorrect();
 

@@ -127,6 +127,10 @@ public:
     };
 
 
+    //- Use base tracking data
+    typedef typename ParcelType::trackingData trackingData;
+
+
 protected:
 
     // Protected data
@@ -378,46 +382,51 @@ public:
         // Main calculation loop
 
             //- Set cell values
-            template<class TrackData>
+            template<class TrackCloudType>
             void setCellValues
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Correct parcel properties according to atomization model
-            template<class TrackData>
+            template<class TrackCloudType>
             void calcAtomization
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Correct parcel properties according to breakup model
-            template<class TrackData>
+            template<class TrackCloudType>
             void calcBreakup
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Correct cell values using latest transfer information
-            template<class TrackData>
+            template<class TrackCloudType>
             void cellValueSourceCorrection
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Correct surface values due to emitted species
-            template<class TrackData>
+            template<class TrackCloudType>
             void correctSurfaceValues
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const label celli,
                 const scalar T,
                 const scalarField& Cs,
@@ -428,28 +437,31 @@ public:
             );
 
             //- Update parcel properties over the time interval
-            template<class TrackData>
+            template<class TrackCloudType>
             void calc
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt,
                 const label celli
             );
 
             //- Calculate the chi-factor for flash-boiling for the
             //  atomization model
-            template<class TrackData>
+            template<class TrackCloudType>
             scalar chi
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalarField& X
             ) const;
 
             //- Solve the TAB equation
-            template<class TrackData>
+            template<class TrackCloudType>
             void solveTABEq
             (
-                TrackData& td,
+                TrackCloudType& cloud,
+                trackingData& td,
                 const scalar dt
             );
 

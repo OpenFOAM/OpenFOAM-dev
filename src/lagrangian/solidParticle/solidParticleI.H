@@ -27,14 +27,14 @@ License
 
 inline Foam::solidParticle::trackingData::trackingData
 (
-    solidParticleCloud& spc,
+    const solidParticleCloud& spc,
     const interpolationCellPoint<scalar>& rhoInterp,
     const interpolationCellPoint<vector>& UInterp,
     const interpolationCellPoint<scalar>& nuInterp,
     const vector& g
 )
 :
-    particle::TrackingData<solidParticleCloud>(spc),
+    particle::trackingData(spc),
     rhoInterp_(rhoInterp),
     UInterp_(UInterp),
     nuInterp_(nuInterp),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,12 +106,21 @@ public:
         // Per-injection event functions
 
             //- Main injection loop
-            template<class TrackData>
-            void inject(TrackData& td);
+            template<class TrackCloudType>
+            void inject
+            (
+                TrackCloudType& cloud,
+                typename CloudType::parcelType::trackingData& td
+            );
 
             //- Main injection loop - steady-state
-            template<class TrackData>
-            void injectSteadyState(TrackData& td, const scalar trackTime);
+            template<class TrackCloudType>
+            void injectSteadyState
+            (
+                TrackCloudType& cloud,
+                typename CloudType::parcelType::trackingData& td,
+                const scalar trackTime
+            );
 
 
         // I-O

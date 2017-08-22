@@ -80,7 +80,7 @@ public:
     //- Class used to pass tracking data to the trackToFace function
     class trackingData
     :
-        public particle::TrackingData<Cloud<findCellParticle>>
+        public particle::trackingData
     {
         labelListList& cellToData_;
         List<List<point>>& cellToEnd_;
@@ -96,7 +96,7 @@ public:
                 List<List<point>>& cellToEnd
             )
             :
-                particle::TrackingData<Cloud<findCellParticle>>(cloud),
+                particle::trackingData(cloud),
                 cellToData_(cellToData),
                 cellToEnd_(cellToEnd)
             {}
@@ -220,7 +220,7 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move(trackingData&, const scalar);
+            bool move(Cloud<findCellParticle>&, trackingData&, const scalar);
 
 
             //- Overridable function to handle the particle hitting a patch
@@ -228,6 +228,7 @@ public:
             bool hitPatch
             (
                 const polyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td,
                 const label patchi,
                 const scalar trackFraction,
@@ -238,6 +239,7 @@ public:
             void hitWedgePatch
             (
                 const wedgePolyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td
             );
 
@@ -246,6 +248,7 @@ public:
             void hitSymmetryPlanePatch
             (
                 const symmetryPlanePolyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td
             );
 
@@ -254,6 +257,7 @@ public:
             void hitSymmetryPatch
             (
                 const symmetryPolyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td
             );
 
@@ -261,6 +265,7 @@ public:
             void hitCyclicPatch
             (
                 const cyclicPolyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td
             );
 
@@ -269,6 +274,7 @@ public:
             void hitProcessorPatch
             (
                 const processorPolyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td
             );
 
@@ -276,6 +282,7 @@ public:
             void hitWallPatch
             (
                 const wallPolyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td,
                 const tetIndices&
             );
@@ -284,6 +291,7 @@ public:
             void hitPatch
             (
                 const polyPatch&,
+                Cloud<findCellParticle>&,
                 trackingData& td
             );
 
