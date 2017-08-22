@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "cloudSolution.H"
 #include "Time.H"
+#include "localEulerDdtScheme.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -107,7 +108,31 @@ Foam::cloudSolution::~cloudSolution()
 
 void Foam::cloudSolution::read()
 {
-    dict_.lookup("transient") >> transient_;
+    // For transient runs the Lagrangian tracking may be transient or steady
+    transient_ = dict_.lookupOrDefault("transient", false);
+
+    // For LTS and steady-state runs the Lagrangian tracking cannot be transient
+    if (transient_)
+    {
+        if (fv::localEulerDdt::enabled(mesh_))
+        {
+            IOWarningInFunction(dict_)
+                << "Transient tracking is not supported for LTS"
+                   " simulations, switching to steady state tracking."
+                << endl;
+            transient_ = false;
+        }
+
+        if (mesh_.steady())
+        {
+            IOWarningInFunction(dict_)
+                << "Transient tracking is not supported for steady-state"
+                   " simulations, switching to steady state tracking."
+                << endl;
+            transient_ = false;
+        }
+    }
+
     dict_.lookup("coupled") >> coupled_;
     dict_.lookup("cellValueSourceCorrection") >> cellValueSourceCorrection_;
     dict_.readIfPresent("maxCo", maxCo_);

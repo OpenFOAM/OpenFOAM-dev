@@ -19,7 +19,6 @@ solution
 {
     active          yes;
 
-    transient       no; // yes;
     calcFrequency   10;
     maxTrackTime    5.0;
     maxCo           0.3;
