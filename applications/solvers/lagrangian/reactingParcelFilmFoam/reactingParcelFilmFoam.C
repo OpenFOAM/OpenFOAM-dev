@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ Description
 #include "SLGThermo.H"
 #include "fvOptions.H"
 #include "pimpleControl.H"
+#include "localEulerDdtScheme.H"
+#include "fvcSmooth.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,11 +56,15 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "createFvOptions.H"
-    #include "compressibleCourantNo.H"
-    #include "setInitialDeltaT.H"
     #include "initContinuityErrs.H"
 
     turbulence->validate();
+
+    if (!LTS)
+    {
+        #include "compressibleCourantNo.H"
+        #include "setInitialDeltaT.H"
+    }
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,17 +73,25 @@ int main(int argc, char *argv[])
     while (runTime.run())
     {
         #include "readTimeControls.H"
-        #include "compressibleCourantNo.H"
-        #include "setMultiRegionDeltaT.H"
-        #include "setDeltaT.H"
+
+        if (!LTS)
+        {
+            #include "compressibleCourantNo.H"
+            #include "setMultiRegionDeltaT.H"
+            #include "setDeltaT.H"
+        }
 
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
         parcels.evolve();
-
         surfaceFilm.evolve();
+
+        if (LTS)
+        {
+            #include "setRDeltaT.H"
+        }
 
         if (solvePrimaryRegion)
         {

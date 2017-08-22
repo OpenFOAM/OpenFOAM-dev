@@ -1,3 +1,5 @@
+#include "createRDeltaT.H"
+
 Info<< "Creating combustion model\n" << endl;
 
 autoPtr<combustionModels::psiCombustionModel> combustion
