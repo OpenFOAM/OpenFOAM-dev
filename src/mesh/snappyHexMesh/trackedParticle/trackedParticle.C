@@ -269,11 +269,10 @@ void Foam::trackedParticle::hitPatch
 void Foam::trackedParticle::correctAfterParallelTransfer
 (
     const label patchi,
-    Cloud<trackedParticle>& cloud,
     trackingData& td
 )
 {
-    particle::correctAfterParallelTransfer(patchi, cloud, td);
+    particle::correctAfterParallelTransfer(patchi, td);
 
     label edgeI = k();
     if (edgeI != -1)

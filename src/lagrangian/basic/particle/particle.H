@@ -654,25 +654,12 @@ public:
 
     // Parallel transfer
 
-        //- Convert global addressing to the processor patch
-        //  local equivalents
-        template<class TrackCloudType>
-        void prepareForParallelTransfer
-        (
-            const label patchi,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        //- Convert global addressing to the processor patch local equivalents
+        void prepareForParallelTransfer();
 
         //- Convert processor patch addressing to the global equivalents
         //  and set the celli to the face-neighbour
-        template<class TrackCloudType>
-        void correctAfterParallelTransfer
-        (
-            const label patchi,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void correctAfterParallelTransfer(const label patchi, trackingData& td);
 
 
     // Interaction list referral

@@ -326,12 +326,7 @@ public:
 
             //- Convert processor patch addressing to the global equivalents
             //  and set the celli to the face-neighbour
-            void correctAfterParallelTransfer
-            (
-                const label,
-                Cloud<trackedParticle>& cloud,
-                trackingData& td
-            );
+            void correctAfterParallelTransfer(const label, trackingData& td);
 
 
     // Ostream Operator

@@ -264,38 +264,41 @@ void Foam::Cloud<ParticleType>::move
             // (i.e. it hasn't passed through an inlet or outlet)
             if (keepParticle)
             {
-                // If we are running in parallel and the particle is on a
-                // boundary face
-                if
-                (
-                    Pstream::parRun()
-                 && td.switchProcessor
-                 && p.face() >= pMesh().nInternalFaces()
-                )
+                if (td.switchProcessor)
                 {
-                    label patchi = pbm.whichPatch(p.face());
-
-                    // ... and the face is on a processor patch
-                    // prepare it for transfer
-                    if (procPatchIndices[patchi] != -1)
+                    #ifdef FULLDEBUG
+                    if
+                    (
+                        !Pstream::parRun()
+                     || !p.onBoundaryFace()
+                     || procPatchIndices[p.patch()] < 0
+                    )
                     {
-                        label n = neighbourProcIndices
-                        [
-                            refCast<const processorPolyPatch>
-                            (
-                                pbm[patchi]
-                            ).neighbProcNo()
-                        ];
-
-                        p.prepareForParallelTransfer(patchi, cloud, td);
-
-                        particleTransferLists[n].append(this->remove(&p));
-
-                        patchIndexTransferLists[n].append
-                        (
-                            procPatchNeighbours[patchi]
-                        );
+                        FatalErrorInFunction
+                            << "Switch processor flag is true when no parallel "
+                            << "transfer is possible. This is a bug."
+                            << exit(FatalError);
                     }
+                    #endif
+
+                    const label patchi = p.patch();
+
+                    const label n = neighbourProcIndices
+                    [
+                        refCast<const processorPolyPatch>
+                        (
+                            pbm[patchi]
+                        ).neighbProcNo()
+                    ];
+
+                    p.prepareForParallelTransfer();
+
+                    particleTransferLists[n].append(this->remove(&p));
+
+                    patchIndexTransferLists[n].append
+                    (
+                        procPatchNeighbours[patchi]
+                    );
                 }
             }
             else
@@ -380,7 +383,7 @@ void Foam::Cloud<ParticleType>::move
 
                     label patchi = procPatches[receivePatchIndex[pI++]];
 
-                    newp.correctAfterParallelTransfer(patchi, cloud, td);
+                    newp.correctAfterParallelTransfer(patchi, td);
 
                     addParticle(newParticles.remove(&newp));
                 }
