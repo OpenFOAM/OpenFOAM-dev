@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,7 @@ Foam::SpecularReflection<CloudType>::~SpecularReflection()
 template<class CloudType>
 void Foam::SpecularReflection<CloudType>::correct
 (
-    typename CloudType::parcelType& p,
-    const wallPolyPatch& wpp
+    typename CloudType::parcelType& p
 )
 {
     vector& U = p.U();

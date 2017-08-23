@@ -364,28 +364,13 @@ public:
 
         //- Overridable function to handle the particle hitting a patch
         //  Executed before other patch-hitting functions
-        bool hitPatch
-        (
-            const polyPatch&,
-            moleculeCloud& cloud,
-            trackingData& td
-        );
+        bool hitPatch(moleculeCloud& cloud, trackingData& td);
 
         //- Overridable function to handle the particle hitting a processorPatch
-        void hitProcessorPatch
-        (
-            const processorPolyPatch&,
-            moleculeCloud& cloud,
-            trackingData& td
-        );
+        void hitProcessorPatch(moleculeCloud& cloud, trackingData& td);
 
         //- Overridable function to handle the particle hitting a wallPatch
-        void hitWallPatch
-        (
-            const wallPolyPatch&,
-            moleculeCloud& cloud,
-            trackingData& td
-        );
+        void hitWallPatch(moleculeCloud& cloud, trackingData& td);
 
 
     // I-O

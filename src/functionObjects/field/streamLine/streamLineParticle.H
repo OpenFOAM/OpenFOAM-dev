@@ -207,63 +207,32 @@ public:
         // Tracking
 
             //- Track all particles to their end point
-            bool move
-            (
-                streamLineParticleCloud& cloud,
-                trackingData&,
-                const scalar
-            );
+            bool move(streamLineParticleCloud&, trackingData&, const scalar);
 
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
-            bool hitPatch
-            (
-                const polyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            bool hitPatch(streamLineParticleCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
-            void hitWedgePatch
-            (
-                const wedgePolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitWedgePatch(streamLineParticleCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  symmetry plane
-            void hitSymmetryPlanePatch
-            (
-                const symmetryPlanePolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitSymmetryPlanePatch(streamLineParticleCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  symmetry patch
-            void hitSymmetryPatch
-            (
-                const symmetryPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitSymmetryPatch(streamLineParticleCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a cyclic
-            void hitCyclicPatch
-            (
-                const cyclicPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitCyclicPatch(streamLineParticleCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  cyclicAMIPatch
             void hitCyclicAMIPatch
             (
-                const cyclicAMIPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td,
+                streamLineParticleCloud&,
+                trackingData&,
                 const vector& direction
             );
 
@@ -271,28 +240,17 @@ public:
             //  cyclicACMIPatch
             void hitCyclicACMIPatch
             (
-                const cyclicACMIPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td,
+                streamLineParticleCloud&,
+                trackingData&,
                 const vector& direction
             );
 
             //- Overridable function to handle the particle hitting a
             //- processorPatch
-            void hitProcessorPatch
-            (
-                const processorPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitProcessorPatch(streamLineParticleCloud&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch
-            (
-                const wallPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitWallPatch(streamLineParticleCloud&, trackingData&);
 
 
         // I-O

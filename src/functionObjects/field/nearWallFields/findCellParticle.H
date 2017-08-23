@@ -222,84 +222,46 @@ public:
             //- Track all particles to their end point
             bool move(Cloud<findCellParticle>&, trackingData&, const scalar);
 
-
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
-            bool hitPatch
-            (
-                const polyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            bool hitPatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wedge
-            void hitWedgePatch
-            (
-                const wedgePolyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            void hitWedgePatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  symmetry plane
-            void hitSymmetryPlanePatch
-            (
-                const symmetryPlanePolyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            void hitSymmetryPlanePatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a
             //  symmetry patch
-            void hitSymmetryPatch
-            (
-                const symmetryPolyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            void hitSymmetryPatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a cyclic
-            void hitCyclicPatch
-            (
-                const cyclicPolyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            void hitCyclicPatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a cyclicAMI
             void hitCyclicAMIPatch
             (
-                const cyclicAMIPolyPatch&,
-                Cloud<findCellParticle>& cloud,
-                trackingData& td,
+                Cloud<findCellParticle>&,
+                trackingData&,
                 const vector&
             );
 
             //- Overridable function to handle the particle hitting a cyclicACMI
             void hitCyclicACMIPatch
             (
-                const cyclicACMIPolyPatch&,
-                Cloud<findCellParticle>& cloud,
-                trackingData& td,
+                Cloud<findCellParticle>&,
+                trackingData&,
                 const vector&
             );
 
             //- Overridable function to handle the particle hitting a
             //- processorPatch
-            void hitProcessorPatch
-            (
-                const processorPolyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            void hitProcessorPatch(Cloud<findCellParticle>&, trackingData&);
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch
-            (
-                const wallPolyPatch&,
-                Cloud<findCellParticle>&,
-                trackingData& td
-            );
+            void hitWallPatch(Cloud<findCellParticle>&, trackingData&);
 
 
     // Ostream Operator

@@ -284,93 +284,44 @@ protected:
 
     // Patch interactions
 
-        //- Overridable function to handle the particle hitting a
-        //  patch.  Executed before other patch-hitting functions.
+        //- Overridable function to handle the particle hitting a patch.
+        //  Executed before other patch-hitting functions.
         template<class TrackCloudType>
-        bool hitPatch
-        (
-            const polyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        bool hitPatch(TrackCloudType&, trackingData&);
 
         //- Overridable function to handle the particle hitting a wedgePatch
         template<class TrackCloudType>
-        void hitWedgePatch
-        (
-            const wedgePolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void hitWedgePatch(TrackCloudType&, trackingData&);
 
         //- Overridable function to handle the particle hitting a
         //  symmetryPlanePatch
         template<class TrackCloudType>
-        void hitSymmetryPlanePatch
-        (
-            const symmetryPlanePolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void hitSymmetryPlanePatch(TrackCloudType&, trackingData&);
 
-        //- Overridable function to handle the particle hitting a
-        //  symmetryPatch
+        //- Overridable function to handle the particle hitting a symmetryPatch
         template<class TrackCloudType>
-        void hitSymmetryPatch
-        (
-            const symmetryPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void hitSymmetryPatch(TrackCloudType&, trackingData&);
 
         //- Overridable function to handle the particle hitting a cyclicPatch
         template<class TrackCloudType>
-        void hitCyclicPatch
-        (
-            const cyclicPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void hitCyclicPatch(TrackCloudType&, trackingData&);
 
         //- Overridable function to handle the particle hitting a cyclicAMIPatch
         template<class TrackCloudType>
-        void hitCyclicAMIPatch
-        (
-            const cyclicAMIPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td,
-            const vector& direction
-        );
+        void hitCyclicAMIPatch(TrackCloudType&, trackingData&, const vector&);
 
         //- Overridable function to handle the particle hitting a
         //  cyclicACMIPatch
         template<class TrackCloudType>
-        void hitCyclicACMIPatch
-        (
-            const cyclicACMIPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td,
-            const vector& direction
-        );
+        void hitCyclicACMIPatch(TrackCloudType&, trackingData&, const vector&);
 
-        //- Overridable function to handle the particle hitting a
-        //  processorPatch
+        //- Overridable function to handle the particle hitting a processorPatch
         template<class TrackCloudType>
-        void hitProcessorPatch
-        (
-            const processorPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void hitProcessorPatch(TrackCloudType&, trackingData&);
 
         //- Overridable function to handle the particle hitting a wallPatch
         template<class TrackCloudType>
-        void hitWallPatch
-        (
-            const wallPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td
-        );
+        void hitWallPatch(TrackCloudType&, trackingData&);
 
 
 public:

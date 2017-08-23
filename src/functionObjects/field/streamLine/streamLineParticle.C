@@ -270,12 +270,7 @@ bool Foam::streamLineParticle::move
 }
 
 
-bool Foam::streamLineParticle::hitPatch
-(
-    const polyPatch&,
-    streamLineParticleCloud& cloud,
-    trackingData& td
-)
+bool Foam::streamLineParticle::hitPatch(streamLineParticleCloud&, trackingData&)
 {
     // Disable generic patch interaction
     return false;
@@ -284,8 +279,7 @@ bool Foam::streamLineParticle::hitPatch
 
 void Foam::streamLineParticle::hitWedgePatch
 (
-    const wedgePolyPatch& pp,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td
 )
 {
@@ -296,8 +290,7 @@ void Foam::streamLineParticle::hitWedgePatch
 
 void Foam::streamLineParticle::hitSymmetryPlanePatch
 (
-    const symmetryPlanePolyPatch& pp,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td
 )
 {
@@ -308,8 +301,7 @@ void Foam::streamLineParticle::hitSymmetryPlanePatch
 
 void Foam::streamLineParticle::hitSymmetryPatch
 (
-    const symmetryPolyPatch& pp,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td
 )
 {
@@ -320,8 +312,7 @@ void Foam::streamLineParticle::hitSymmetryPatch
 
 void Foam::streamLineParticle::hitCyclicPatch
 (
-    const cyclicPolyPatch& pp,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td
 )
 {
@@ -332,8 +323,7 @@ void Foam::streamLineParticle::hitCyclicPatch
 
 void Foam::streamLineParticle::hitCyclicAMIPatch
 (
-    const cyclicAMIPolyPatch&,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td,
     const vector&
 )
@@ -345,8 +335,7 @@ void Foam::streamLineParticle::hitCyclicAMIPatch
 
 void Foam::streamLineParticle::hitCyclicACMIPatch
 (
-    const cyclicACMIPolyPatch&,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td,
     const vector&
 )
@@ -358,8 +347,7 @@ void Foam::streamLineParticle::hitCyclicACMIPatch
 
 void Foam::streamLineParticle::hitProcessorPatch
 (
-    const processorPolyPatch&,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td
 )
 {
@@ -370,8 +358,7 @@ void Foam::streamLineParticle::hitProcessorPatch
 
 void Foam::streamLineParticle::hitWallPatch
 (
-    const wallPolyPatch& wpp,
-    streamLineParticleCloud& cloud,
+    streamLineParticleCloud&,
     trackingData& td
 )
 {

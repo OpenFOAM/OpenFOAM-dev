@@ -235,34 +235,19 @@ void Foam::molecule::setSiteSizes(label size)
 }
 
 
-bool Foam::molecule::hitPatch
-(
-    const polyPatch&,
-    moleculeCloud&,
-    trackingData&
-)
+bool Foam::molecule::hitPatch(moleculeCloud&, trackingData&)
 {
     return false;
 }
 
 
-void Foam::molecule::hitProcessorPatch
-(
-    const processorPolyPatch&,
-    moleculeCloud&,
-    trackingData& td
-)
+void Foam::molecule::hitProcessorPatch(moleculeCloud&, trackingData& td)
 {
     td.switchProcessor = true;
 }
 
 
-void Foam::molecule::hitWallPatch
-(
-    const wallPolyPatch& wpp,
-    moleculeCloud& cloud,
-    trackingData& td
-)
+void Foam::molecule::hitWallPatch(moleculeCloud&, trackingData&)
 {
     vector nw = normal();
     nw /= mag(nw);

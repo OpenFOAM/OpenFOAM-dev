@@ -154,12 +154,7 @@ bool Foam::trackedParticle::move
 }
 
 
-bool Foam::trackedParticle::hitPatch
-(
-    const polyPatch&,
-    Cloud<trackedParticle>& cloud,
-    trackingData& td
-)
+bool Foam::trackedParticle::hitPatch(Cloud<trackedParticle>&, trackingData&)
 {
     return false;
 }
@@ -167,8 +162,7 @@ bool Foam::trackedParticle::hitPatch
 
 void Foam::trackedParticle::hitWedgePatch
 (
-    const wedgePolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -179,8 +173,7 @@ void Foam::trackedParticle::hitWedgePatch
 
 void Foam::trackedParticle::hitSymmetryPlanePatch
 (
-    const symmetryPlanePolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -191,8 +184,7 @@ void Foam::trackedParticle::hitSymmetryPlanePatch
 
 void Foam::trackedParticle::hitSymmetryPatch
 (
-    const symmetryPolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -203,8 +195,7 @@ void Foam::trackedParticle::hitSymmetryPatch
 
 void Foam::trackedParticle::hitCyclicPatch
 (
-    const cyclicPolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -215,10 +206,9 @@ void Foam::trackedParticle::hitCyclicPatch
 
 void Foam::trackedParticle::hitCyclicAMIPatch
 (
-    const cyclicAMIPolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td,
-    const vector&
+    const vector& direction
 )
 {
     // Remove particle
@@ -228,8 +218,7 @@ void Foam::trackedParticle::hitCyclicAMIPatch
 
 void Foam::trackedParticle::hitCyclicACMIPatch
 (
-    const cyclicACMIPolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td,
     const vector&
 )
@@ -241,8 +230,7 @@ void Foam::trackedParticle::hitCyclicACMIPatch
 
 void Foam::trackedParticle::hitProcessorPatch
 (
-    const processorPolyPatch&,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td
 )
 {
@@ -253,8 +241,7 @@ void Foam::trackedParticle::hitProcessorPatch
 
 void Foam::trackedParticle::hitWallPatch
 (
-    const wallPolyPatch& wpp,
-    Cloud<trackedParticle>& cloud,
+    Cloud<trackedParticle>&,
     trackingData& td
 )
 {

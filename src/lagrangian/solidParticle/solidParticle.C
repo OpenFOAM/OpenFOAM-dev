@@ -96,12 +96,7 @@ bool Foam::solidParticle::move
 }
 
 
-bool Foam::solidParticle::hitPatch
-(
-    const polyPatch&,
-    solidParticleCloud& cloud,
-    trackingData&
-)
+bool Foam::solidParticle::hitPatch(solidParticleCloud&, trackingData&)
 {
     return false;
 }
@@ -109,8 +104,7 @@ bool Foam::solidParticle::hitPatch
 
 void Foam::solidParticle::hitProcessorPatch
 (
-    const processorPolyPatch&,
-    solidParticleCloud& cloud,
+    solidParticleCloud&,
     trackingData& td
 )
 {
@@ -118,12 +112,7 @@ void Foam::solidParticle::hitProcessorPatch
 }
 
 
-void Foam::solidParticle::hitWallPatch
-(
-    const wallPolyPatch& wpp,
-    solidParticleCloud& cloud,
-    trackingData& td
-)
+void Foam::solidParticle::hitWallPatch(solidParticleCloud& cloud, trackingData&)
 {
     vector nw = normal();
     nw /= mag(nw);
@@ -140,7 +129,7 @@ void Foam::solidParticle::hitWallPatch
 }
 
 
-void Foam::solidParticle::transformProperties (const tensor& T)
+void Foam::solidParticle::transformProperties(const tensor& T)
 {
     particle::transformProperties(T);
     U_ = transform(T, U_);

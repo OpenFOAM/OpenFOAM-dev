@@ -81,12 +81,7 @@ bool Foam::DSMCParcel<ParcelType>::move
 
 template<class ParcelType>
 template<class TrackCloudType>
-bool Foam::DSMCParcel<ParcelType>::hitPatch
-(
-    const polyPatch&,
-    TrackCloudType& cloud,
-    trackingData& td
-)
+bool Foam::DSMCParcel<ParcelType>::hitPatch(TrackCloudType&, trackingData&)
 {
     return false;
 }
@@ -96,8 +91,7 @@ template<class ParcelType>
 template<class TrackCloudType>
 void Foam::DSMCParcel<ParcelType>::hitProcessorPatch
 (
-    const processorPolyPatch&,
-    TrackCloudType& cloud,
+    TrackCloudType&,
     trackingData& td
 )
 {
@@ -109,14 +103,19 @@ template<class ParcelType>
 template<class TrackCloudType>
 void Foam::DSMCParcel<ParcelType>::hitWallPatch
 (
-    const wallPolyPatch& wpp,
     TrackCloudType& cloud,
-    trackingData& td
+    trackingData&
 )
 {
-    label wppIndex = wpp.index();
+    const label wppIndex = this->patch();
 
-    label wppLocalFace = wpp.whichFace(this->face());
+    const wallPolyPatch& wpp =
+        static_cast<const wallPolyPatch&>
+        (
+            this->mesh().boundaryMesh()[wppIndex]
+        );
+
+    const label wppLocalFace = wpp.whichFace(this->face());
 
     const scalar fA = mag(wpp.faceAreas()[wppLocalFace]);
 
@@ -155,11 +154,7 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
     // pre-interaction momentum
     vector preIMom = m*U_;
 
-    cloud.wallInteraction().correct
-    (
-        static_cast<DSMCParcel<ParcelType> &>(*this),
-        wpp
-    );
+    cloud.wallInteraction().correct(*this);
 
     U_dot_nw = U_ & nw;
 
@@ -194,7 +189,6 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
     cloud.qBF()[wppIndex][wppLocalFace] += deltaQ;
 
     cloud.fDBF()[wppIndex][wppLocalFace] += deltaFD;
-
 }
 
 

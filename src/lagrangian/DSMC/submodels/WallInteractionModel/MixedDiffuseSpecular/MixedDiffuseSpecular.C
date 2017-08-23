@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,7 @@ Foam::MixedDiffuseSpecular<CloudType>::~MixedDiffuseSpecular()
 template<class CloudType>
 void Foam::MixedDiffuseSpecular<CloudType>::correct
 (
-    typename CloudType::parcelType& p,
-    const wallPolyPatch& wpp
+    typename CloudType::parcelType& p
 )
 {
     vector& U = p.U();
@@ -61,7 +60,9 @@ void Foam::MixedDiffuseSpecular<CloudType>::correct
 
     label typeId = p.typeId();
 
-    label wppIndex = wpp.index();
+    const label wppIndex = p.patch();
+
+    const polyPatch& wpp = p.mesh().boundaryMesh()[wppIndex];
 
     label wppLocalFace = wpp.whichFace(p.face());
 

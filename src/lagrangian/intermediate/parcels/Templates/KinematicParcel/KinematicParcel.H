@@ -585,31 +585,16 @@ public:
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
             template<class TrackCloudType>
-            bool hitPatch
-            (
-                const polyPatch& p,
-                TrackCloudType& cloud,
-                trackingData& td
-            );
+            bool hitPatch(TrackCloudType& cloud, trackingData& td);
 
             //- Overridable function to handle the particle hitting a
             //  processorPatch
             template<class TrackCloudType>
-            void hitProcessorPatch
-            (
-                const processorPolyPatch&,
-                TrackCloudType& cloud,
-                trackingData& td
-            );
+            void hitProcessorPatch(TrackCloudType& cloud, trackingData& td);
 
             //- Overridable function to handle the particle hitting a wallPatch
             template<class TrackCloudType>
-            void hitWallPatch
-            (
-                const wallPolyPatch&,
-                TrackCloudType& cloud,
-                trackingData& td
-            );
+            void hitWallPatch(TrackCloudType& cloud, trackingData& td);
 
             //- Transform the physical properties of the particle
             //  according to the given transformation tensor

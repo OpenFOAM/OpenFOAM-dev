@@ -196,29 +196,14 @@ public:
 
             //- Overridable function to handle the particle hitting a patch
             //  Executed before other patch-hitting functions
-            bool hitPatch
-            (
-                const polyPatch&,
-                solidParticleCloud& cloud,
-                trackingData& td
-            );
+            bool hitPatch(solidParticleCloud& cloud, trackingData& td);
 
             //- Overridable function to handle the particle hitting a
             //  processorPatch
-            void hitProcessorPatch
-            (
-                const processorPolyPatch&,
-                solidParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitProcessorPatch(solidParticleCloud& cloud, trackingData& td);
 
             //- Overridable function to handle the particle hitting a wallPatch
-            void hitWallPatch
-            (
-                const wallPolyPatch&,
-                solidParticleCloud& cloud,
-                trackingData& td
-            );
+            void hitWallPatch(solidParticleCloud& cloud, trackingData& td);
 
             //- Transform the physical properties of the particle
             //  according to the given transformation tensor
