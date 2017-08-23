@@ -65,14 +65,6 @@ bool Foam::DSMCParcel<ParcelType>::move
 
         const scalar f = 1 - p.stepFraction();
         p.trackToAndHitFace(f*trackTime*Utracking, f, cloud, td);
-
-        if (p.onBoundaryFace() && td.keepParticle)
-        {
-            if (isA<processorPolyPatch>(pbMesh[p.patch()]))
-            {
-                td.switchProcessor = true;
-            }
-        }
     }
 
     return td.keepParticle;

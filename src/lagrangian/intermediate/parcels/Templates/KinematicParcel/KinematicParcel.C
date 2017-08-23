@@ -334,14 +334,6 @@ bool Foam::KinematicParcel<ParcelType>::move
         {
             p.hitFace(s, cloud, ttd);
         }
-
-        if (p.onBoundaryFace() && ttd.keepParticle)
-        {
-            if (isA<processorPolyPatch>(pbMesh[p.patch()]))
-            {
-                ttd.switchProcessor = true;
-            }
-        }
     }
 
     return ttd.keepParticle;

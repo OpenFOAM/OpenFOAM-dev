@@ -82,14 +82,6 @@ bool Foam::solidParticle::move
         scalar Dc = (24.0*nuc/d_)*ReFunc*(3.0/4.0)*(rhoc/(d_*rhop));
 
         U_ = (U_ + dt*(Dc*Uc + (1.0 - rhoc/rhop)*td.g()))/(1.0 + dt*Dc);
-
-        if (onBoundaryFace() && td.keepParticle)
-        {
-            if (isA<processorPolyPatch>(pbMesh[patch()]))
-            {
-                td.switchProcessor = true;
-            }
-        }
     }
 
     return td.keepParticle;
