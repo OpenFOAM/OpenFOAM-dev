@@ -249,10 +249,7 @@ public:
             (
                 const polyPatch&,
                 Cloud<trackedParticle>& cloud,
-                trackingData& td,
-                const label patchi,
-                const scalar trackFraction,
-                const tetIndices& tetIs
+                trackingData& td
             );
 
             //- Overridable function to handle the particle hitting a wedge
@@ -298,6 +295,15 @@ public:
                 const vector&
             );
 
+            //- Overridable function to handle the particle hitting a cyclicACMI
+            void hitCyclicACMIPatch
+            (
+                const cyclicACMIPolyPatch&,
+                Cloud<trackedParticle>& cloud,
+                trackingData& td,
+                const vector&
+            );
+
             //- Overridable function to handle the particle hitting a
             //- processorPatch
             void hitProcessorPatch
@@ -311,15 +317,6 @@ public:
             void hitWallPatch
             (
                 const wallPolyPatch&,
-                Cloud<trackedParticle>& cloud,
-                trackingData& td,
-                const tetIndices&
-            );
-
-            //- Overridable function to handle the particle hitting a polyPatch
-            void hitPatch
-            (
-                const polyPatch&,
                 Cloud<trackedParticle>& cloud,
                 trackingData& td
             );

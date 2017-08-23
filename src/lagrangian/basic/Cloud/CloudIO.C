@@ -150,7 +150,6 @@ Foam::Cloud<ParticleType>::Cloud
     cloud(pMesh, cloudName),
     polyMesh_(pMesh),
     labels_(),
-    nTrackingRescues_(),
     cellWallFacesPtr_()
 {
     checkPatches();

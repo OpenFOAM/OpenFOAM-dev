@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -362,12 +362,7 @@ Foam::FacePostProcessing<CloudType>::~FacePostProcessing()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::FacePostProcessing<CloudType>::postFace
-(
-    const parcelType& p,
-    const label facei,
-    bool&
-)
+void Foam::FacePostProcessing<CloudType>::postFace(const parcelType& p, bool&)
 {
     if
     (
@@ -384,7 +379,7 @@ void Foam::FacePostProcessing<CloudType>::postFace
             label faceId = -1;
             forAll(fz, j)
             {
-                if (fz[j] == facei)
+                if (fz[j] == p.face())
                 {
                     faceId = j;
                     break;

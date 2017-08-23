@@ -197,7 +197,7 @@ inline bool Foam::particle::onBoundaryFace() const
 
 inline Foam::label Foam::particle::patch() const
 {
-    return mesh_.boundaryMesh().whichPatch(facei_);
+    return onFace() ? mesh_.boundaryMesh().whichPatch(facei_) : -1;
 }
 
 

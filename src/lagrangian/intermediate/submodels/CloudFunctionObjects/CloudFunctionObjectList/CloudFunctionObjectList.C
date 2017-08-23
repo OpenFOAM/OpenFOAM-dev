@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,6 @@ template<class CloudType>
 void Foam::CloudFunctionObjectList<CloudType>::postMove
 (
     typename CloudType::parcelType& p,
-    const label celli,
     const scalar dt,
     const point& position0,
     bool& keepParticle
@@ -145,12 +144,12 @@ void Foam::CloudFunctionObjectList<CloudType>::postMove
 {
     forAll(*this, i)
     {
-        this->operator[](i).postMove(p, celli, dt, position0, keepParticle);
-
         if (!keepParticle)
         {
             return;
         }
+
+        this->operator[](i).postMove(p, dt, position0, keepParticle);
     }
 }
 
@@ -160,26 +159,17 @@ void Foam::CloudFunctionObjectList<CloudType>::postPatch
 (
     const typename CloudType::parcelType& p,
     const polyPatch& pp,
-    const scalar trackFraction,
-    const tetIndices& tetIs,
     bool& keepParticle
 )
 {
     forAll(*this, i)
     {
-        this->operator[](i).postPatch
-        (
-            p,
-            pp,
-            trackFraction,
-            tetIs,
-            keepParticle
-        );
-
         if (!keepParticle)
         {
             return;
         }
+
+        this->operator[](i).postPatch(p, pp, keepParticle);
     }
 }
 
@@ -188,18 +178,17 @@ template<class CloudType>
 void Foam::CloudFunctionObjectList<CloudType>::postFace
 (
     const typename CloudType::parcelType& p,
-    const label facei,
     bool& keepParticle
 )
 {
     forAll(*this, i)
     {
-        this->operator[](i).postFace(p, facei, keepParticle);
-
         if (!keepParticle)
         {
             return;
         }
+
+        this->operator[](i).postFace(p, keepParticle);
     }
 }
 

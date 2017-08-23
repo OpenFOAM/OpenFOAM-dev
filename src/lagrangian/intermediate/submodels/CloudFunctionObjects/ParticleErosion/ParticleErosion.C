@@ -162,8 +162,6 @@ void Foam::ParticleErosion<CloudType>::postPatch
 (
     const parcelType& p,
     const polyPatch& pp,
-    const scalar trackFraction,
-    const tetIndices& tetIs,
     bool&
 )
 {

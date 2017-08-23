@@ -100,10 +100,7 @@ bool Foam::solidParticle::hitPatch
 (
     const polyPatch&,
     solidParticleCloud& cloud,
-    trackingData&,
-    const label,
-    const scalar,
-    const tetIndices&
+    trackingData&
 )
 {
     return false;
@@ -125,11 +122,10 @@ void Foam::solidParticle::hitWallPatch
 (
     const wallPolyPatch& wpp,
     solidParticleCloud& cloud,
-    trackingData& td,
-    const tetIndices& tetIs
+    trackingData& td
 )
 {
-    vector nw = tetIs.faceTri(mesh()).normal();
+    vector nw = normal();
     nw /= mag(nw);
 
     scalar Un = U_ & nw;
@@ -141,17 +137,6 @@ void Foam::solidParticle::hitWallPatch
     }
 
     U_ -= cloud.mu()*Ut;
-}
-
-
-void Foam::solidParticle::hitPatch
-(
-    const polyPatch&,
-    solidParticleCloud& cloud,
-    trackingData& td
-)
-{
-    td.keepParticle = false;
 }
 
 

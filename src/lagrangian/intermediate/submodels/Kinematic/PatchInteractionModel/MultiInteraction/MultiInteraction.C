@@ -136,9 +136,7 @@ bool Foam::MultiInteraction<CloudType>::correct
 (
     typename CloudType::parcelType& p,
     const polyPatch& pp,
-    bool& keepParticle,
-    const scalar trackFraction,
-    const tetIndices& tetIs
+    bool& keepParticle
 )
 {
     label origFacei = p.face();
@@ -152,9 +150,7 @@ bool Foam::MultiInteraction<CloudType>::correct
         (
             p,
             this->owner().pMesh().boundaryMesh()[patchi],
-            keepParticle,
-            trackFraction,
-            tetIs
+            keepParticle
         );
 
         if (myInteracted && oneInteractionOnly_)

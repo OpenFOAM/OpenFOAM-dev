@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,9 +69,7 @@ bool Foam::NoInteraction<CloudType>::correct
 (
     typename CloudType::parcelType& p,
     const polyPatch&,
-    bool&,
-    const scalar,
-    const tetIndices&
+    bool&
 )
 {
     return false;

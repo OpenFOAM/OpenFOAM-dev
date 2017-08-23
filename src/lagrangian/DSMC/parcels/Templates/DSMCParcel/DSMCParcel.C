@@ -85,10 +85,7 @@ bool Foam::DSMCParcel<ParcelType>::hitPatch
 (
     const polyPatch&,
     TrackCloudType& cloud,
-    trackingData& td,
-    const label,
-    const scalar,
-    const tetIndices&
+    trackingData& td
 )
 {
     return false;
@@ -114,8 +111,7 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 (
     const wallPolyPatch& wpp,
     TrackCloudType& cloud,
-    trackingData& td,
-    const tetIndices& tetIs
+    trackingData& td
 )
 {
     label wppIndex = wpp.index();
@@ -199,19 +195,6 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     cloud.fDBF()[wppIndex][wppLocalFace] += deltaFD;
 
-}
-
-
-template<class ParcelType>
-template<class TrackCloudType>
-void Foam::DSMCParcel<ParcelType>::hitPatch
-(
-    const polyPatch&,
-    TrackCloudType& cloud,
-    trackingData& td
-)
-{
-    td.keepParticle = false;
 }
 
 

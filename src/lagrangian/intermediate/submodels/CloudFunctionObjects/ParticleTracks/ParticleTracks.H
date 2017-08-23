@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,12 +145,7 @@ public:
             virtual void preEvolve();
 
             //- Post-face hook
-            virtual void postFace
-            (
-                const parcelType& p,
-                const label facei,
-                bool& keepParticle
-            );
+            virtual void postFace(const parcelType& p, bool& keepParticle);
 };
 
 

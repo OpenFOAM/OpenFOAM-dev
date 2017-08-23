@@ -63,12 +63,6 @@ Foam::solidParticleCloud::solidParticleCloud
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::solidParticleCloud::hasWallImpactDistance() const
-{
-    return true;
-}
-
-
 void Foam::solidParticleCloud::move(const dimensionedVector& g)
 {
     const volScalarField& rho = mesh_.lookupObject<const volScalarField>("rho");

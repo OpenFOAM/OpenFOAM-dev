@@ -241,7 +241,6 @@ protected:
             TrackCloudType& cloud,
             trackingData& td,
             const scalar dt,           // timestep
-            const label celli,         // owner cell
             const scalar d,            // diameter
             const scalar T,            // temperature
             const scalar mass,         // mass
@@ -418,8 +417,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Correct cell values using latest transfer information
@@ -428,8 +426,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Update parcel properties over the time interval
@@ -438,8 +435,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
 

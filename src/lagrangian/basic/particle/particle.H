@@ -286,17 +286,12 @@ protected:
 
         //- Overridable function to handle the particle hitting a
         //  patch.  Executed before other patch-hitting functions.
-        //  trackFraction is passed in to allow mesh motion to
-        //  interpolate in time to the correct face state.
         template<class TrackCloudType>
         bool hitPatch
         (
             const polyPatch&,
             TrackCloudType& cloud,
-            trackingData& td,
-            const label patchi,
-            const scalar trackFraction,
-            const tetIndices& tetIs
+            trackingData& td
         );
 
         //- Overridable function to handle the particle hitting a wedgePatch
@@ -373,17 +368,6 @@ protected:
         void hitWallPatch
         (
             const wallPolyPatch&,
-            TrackCloudType& cloud,
-            trackingData& td,
-            const tetIndices& tetIs
-        );
-
-        //- Overridable function to handle the particle hitting a
-        //  general patch
-        template<class TrackCloudType>
-        void hitPatch
-        (
-            const polyPatch&,
             TrackCloudType& cloud,
             trackingData& td
         );

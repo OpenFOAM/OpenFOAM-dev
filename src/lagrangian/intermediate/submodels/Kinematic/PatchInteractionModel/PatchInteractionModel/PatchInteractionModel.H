@@ -154,9 +154,7 @@ public:
         (
             typename CloudType::parcelType& p,
             const polyPatch& pp,
-            bool& keepParticle,
-            const scalar trackFraction,
-            const tetIndices& tetIs
+            bool& keepParticle
         ) = 0;
 
 

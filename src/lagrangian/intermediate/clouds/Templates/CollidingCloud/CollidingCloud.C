@@ -156,13 +156,6 @@ Foam::CollidingCloud<CloudType>::~CollidingCloud()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::CollidingCloud<CloudType>::hasWallImpactDistance() const
-{
-    return !collision().controlsWallInteraction();
-}
-
-
-template<class CloudType>
 void Foam::CollidingCloud<CloudType>::storeState()
 {
     cloudCopyPtr_.reset

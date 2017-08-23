@@ -194,13 +194,6 @@ public:
                 constProps() const;
 
 
-            //- If the collision model controls the wall interaction,
-            //  then the wall impact distance should be zero.
-            //  Otherwise, it should be allowed to be the value from
-            //  the Parcel.
-            bool hasWallImpactDistance() const;
-
-
             // Sub-models
 
                 //- Return const access to the collision model

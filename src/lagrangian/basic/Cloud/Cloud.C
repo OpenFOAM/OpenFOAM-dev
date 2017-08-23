@@ -64,32 +64,6 @@ void Foam::Cloud<ParticleType>::checkPatches() const
 }
 
 
-template<class ParticleType>
-void Foam::Cloud<ParticleType>::calcCellWallFaces() const
-{
-    cellWallFacesPtr_.reset(new PackedBoolList(pMesh().nCells(), false));
-
-    PackedBoolList& cellWallFaces = cellWallFacesPtr_();
-
-    const polyBoundaryMesh& patches = polyMesh_.boundaryMesh();
-
-    forAll(patches, patchi)
-    {
-        if (isA<wallPolyPatch>(patches[patchi]))
-        {
-            const polyPatch& patch = patches[patchi];
-
-            const labelList& pFaceCells = patch.faceCells();
-
-            forAll(pFaceCells, pFCI)
-            {
-                cellWallFaces[pFaceCells[pFCI]] = true;
-            }
-        }
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ParticleType>
@@ -104,8 +78,6 @@ Foam::Cloud<ParticleType>::Cloud
     IDLList<ParticleType>(),
     polyMesh_(pMesh),
     labels_(),
-    nTrackingRescues_(),
-    cellWallFacesPtr_(),
     globalPositionsPtr_()
 {
     checkPatches();
@@ -123,19 +95,6 @@ Foam::Cloud<ParticleType>::Cloud
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ParticleType>
-const Foam::PackedBoolList& Foam::Cloud<ParticleType>::cellHasWallFaces()
-const
-{
-    if (!cellWallFacesPtr_.valid())
-    {
-        calcCellWallFaces();
-    }
-
-    return cellWallFacesPtr_();
-}
-
 
 template<class ParticleType>
 void Foam::Cloud<ParticleType>::addParticle(ParticleType* pPtr)
@@ -195,9 +154,6 @@ void Foam::Cloud<ParticleType>::move
     // Which patches are processor patches
     const labelList& procPatches = pData.processorPatches();
 
-    // Indexing of patches into the procPatches list
-    const labelList& procPatchIndices = pData.processorPatchIndices();
-
     // Indexing of equivalent patch on neighbour processor into the
     // procPatches list on the neighbour
     const labelList& procPatchNeighbours = pData.processorPatchNeighbours();
@@ -218,10 +174,6 @@ void Foam::Cloud<ParticleType>::move
     {
         pIter().stepFraction() = 0;
     }
-
-    // Reset nTrackingRescues
-    nTrackingRescues_ = 0;
-
 
     // List of lists of particles to be transfered for all of the
     // neighbour processors
@@ -271,7 +223,7 @@ void Foam::Cloud<ParticleType>::move
                     (
                         !Pstream::parRun()
                      || !p.onBoundaryFace()
-                     || procPatchIndices[p.patch()] < 0
+                     || procPatchNeighbours[p.patch()] < 0
                     )
                     {
                         FatalErrorInFunction
@@ -388,16 +340,6 @@ void Foam::Cloud<ParticleType>::move
                     addParticle(newParticles.remove(&newp));
                 }
             }
-        }
-    }
-
-    if (cloud::debug)
-    {
-        reduce(nTrackingRescues_, sumOp<label>());
-
-        if (nTrackingRescues_ > 0)
-        {
-            Info<< nTrackingRescues_ << " tracking rescue corrections" << endl;
         }
     }
 }

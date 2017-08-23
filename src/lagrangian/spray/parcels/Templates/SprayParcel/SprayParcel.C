@@ -35,11 +35,10 @@ void Foam::SprayParcel<ParcelType>::setCellValues
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
-    ParcelType::setCellValues(cloud, td, dt, celli);
+    ParcelType::setCellValues(cloud, td, dt);
 }
 
 
@@ -49,11 +48,10 @@ void Foam::SprayParcel<ParcelType>::cellValueSourceCorrection
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
-    ParcelType::cellValueSourceCorrection(cloud, td, dt, celli);
+    ParcelType::cellValueSourceCorrection(cloud, td, dt);
 }
 
 
@@ -63,8 +61,7 @@ void Foam::SprayParcel<ParcelType>::calc
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
     typedef typename TrackCloudType::reactingCloudType reactingCloudType;
@@ -102,7 +99,7 @@ void Foam::SprayParcel<ParcelType>::calc
     const scalar mass0 = this->mass();
     mu_ = composition.liquids().mu(pc0, T0, X0);
 
-    ParcelType::calc(cloud,td, dt, celli);
+    ParcelType::calc(cloud,td, dt);
 
     if (td.keepParticle)
     {
@@ -129,7 +126,7 @@ void Foam::SprayParcel<ParcelType>::calc
 
         if (liquidCore() > 0.5)
         {
-            calcAtomization(cloud, td, dt, celli);
+            calcAtomization(cloud, td, dt);
 
             // Preserve the total mass/volume by increasing the number of
             // particles in parcels due to breakup
@@ -138,7 +135,7 @@ void Foam::SprayParcel<ParcelType>::calc
         }
         else
         {
-            calcBreakup(cloud, td, dt, celli);
+            calcBreakup(cloud, td, dt);
         }
     }
 
@@ -153,8 +150,7 @@ void Foam::SprayParcel<ParcelType>::calcAtomization
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
     typedef typename TrackCloudType::reactingCloudType reactingCloudType;
@@ -221,8 +217,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
     typedef typename TrackCloudType::parcelType parcelType;
@@ -311,7 +306,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
         child->injector() = this->injector();
         child->tMom() = massChild/(Fcp.Sp() + Fncp.Sp());
         child->user() = 0.0;
-        child->setCellValues(cloud, td, dt, celli);
+        child->setCellValues(cloud, td, dt);
 
         cloud.addParticle(child);
     }

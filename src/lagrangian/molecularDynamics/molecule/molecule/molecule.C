@@ -239,10 +239,7 @@ bool Foam::molecule::hitPatch
 (
     const polyPatch&,
     moleculeCloud&,
-    trackingData&,
-    const label,
-    const scalar,
-    const tetIndices&
+    trackingData&
 )
 {
     return false;
@@ -264,12 +261,9 @@ void Foam::molecule::hitWallPatch
 (
     const wallPolyPatch& wpp,
     moleculeCloud& cloud,
-    trackingData& td,
-    const tetIndices& tetIs
+    trackingData& td
 )
 {
-    // Use of the normal from tetIs is not required as
-    // hasWallImpactDistance for a moleculeCloud is false.
     vector nw = normal();
     nw /= mag(nw);
 
@@ -280,17 +274,6 @@ void Foam::molecule::hitWallPatch
     {
         v_ -= 2*vn*nw;
     }
-}
-
-
-void Foam::molecule::hitPatch
-(
-    const polyPatch&,
-    moleculeCloud&,
-    trackingData& td
-)
-{
-    td.keepParticle = false;
 }
 
 

@@ -260,7 +260,6 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                         U.boundaryField()[patchi][patchFacei]
                     );
 
-                    bool particleHit = false;
                     if (normalAlignment > cosPhiMinFlatWall)
                     {
                         // Guard against a flat interaction being
@@ -285,8 +284,6 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                             );
 
                             flatSiteData.append(wSD);
-
-                            particleHit = true;
                         }
                     }
                     else
@@ -296,23 +293,7 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                         otherSiteDistances.append(nearest.distance());
 
                         otherSiteData.append(wSD);
-
-                        particleHit = true;
                     }
-
-                    if (particleHit)
-                    {
-                        bool keep = true;
-                        this->owner().functions().postFace(p, realFacei, keep);
-                        this->owner().functions().postPatch
-                        (
-                            p,
-                            mesh.boundaryMesh()[patchi],
-                            1.0,
-                            p.currentTetIndices(),
-                            keep
-                        );
-                     }
                 }
             }
 
@@ -352,7 +333,6 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                         il_.referredWallData()[refWallFacei]
                     );
 
-                    bool particleHit = false;
                     if (normalAlignment > cosPhiMinFlatWall)
                     {
                         // Guard against a flat interaction being
@@ -377,8 +357,6 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                             );
 
                             flatSiteData.append(wSD);
-
-                            particleHit = false;
                         }
                     }
                     else
@@ -388,14 +366,6 @@ void Foam::PairCollision<CloudType>::wallInteraction()
                         otherSiteDistances.append(nearest.distance());
 
                         otherSiteData.append(wSD);
-
-                        particleHit = false;
-                    }
-
-                    if (particleHit)
-                    {
-                        // TODO: call cloud function objects for referred
-                        //       wall particle interactions
                     }
                 }
             }

@@ -158,10 +158,7 @@ bool Foam::trackedParticle::hitPatch
 (
     const polyPatch&,
     Cloud<trackedParticle>& cloud,
-    trackingData& td,
-    const label patchi,
-    const scalar trackFraction,
-    const tetIndices& tetIs
+    trackingData& td
 )
 {
     return false;
@@ -229,6 +226,19 @@ void Foam::trackedParticle::hitCyclicAMIPatch
 }
 
 
+void Foam::trackedParticle::hitCyclicACMIPatch
+(
+    const cyclicACMIPolyPatch&,
+    Cloud<trackedParticle>& cloud,
+    trackingData& td,
+    const vector&
+)
+{
+    // Remove particle
+    td.keepParticle = false;
+}
+
+
 void Foam::trackedParticle::hitProcessorPatch
 (
     const processorPolyPatch&,
@@ -244,19 +254,6 @@ void Foam::trackedParticle::hitProcessorPatch
 void Foam::trackedParticle::hitWallPatch
 (
     const wallPolyPatch& wpp,
-    Cloud<trackedParticle>& cloud,
-    trackingData& td,
-    const tetIndices&
-)
-{
-    // Remove particle
-    td.keepParticle = false;
-}
-
-
-void Foam::trackedParticle::hitPatch
-(
-    const polyPatch& wpp,
     Cloud<trackedParticle>& cloud,
     trackingData& td
 )

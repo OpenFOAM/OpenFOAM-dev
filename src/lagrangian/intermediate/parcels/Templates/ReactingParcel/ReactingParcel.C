@@ -40,7 +40,6 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     TrackCloudType& cloud,
     trackingData& td,
     const scalar dt,
-    const label celli,
     const scalar Re,
     const scalar Pr,
     const scalar Ts,
@@ -87,7 +86,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     phaseChange.calculate
     (
         dt,
-        celli,
+        this->cell(),
         Re,
         Pr,
         d,
@@ -207,11 +206,10 @@ void Foam::ReactingParcel<ParcelType>::setCellValues
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
-    ParcelType::setCellValues(cloud, td, dt, celli);
+    ParcelType::setCellValues(cloud, td, dt);
 
     pc_ = td.pInterp().interpolate
     (
@@ -224,8 +222,8 @@ void Foam::ReactingParcel<ParcelType>::setCellValues
         if (debug)
         {
             WarningInFunction
-                << "Limiting observed pressure in cell " << celli << " to "
-                << cloud.constProps().pMin() <<  nl << endl;
+                << "Limiting observed pressure in cell " << this->cell()
+                << " to " << cloud.constProps().pMin() <<  nl << endl;
         }
 
         pc_ = cloud.constProps().pMin();
@@ -239,15 +237,14 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
     scalar addedMass = 0.0;
     scalar maxMassI = 0.0;
     forAll(cloud.rhoTrans(), i)
     {
-        scalar dm = cloud.rhoTrans(i)[celli];
+        scalar dm = cloud.rhoTrans(i)[this->cell()];
         maxMassI = max(maxMassI, mag(dm));
         addedMass += dm;
     }
@@ -257,17 +254,17 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
         return;
     }
 
-    const scalar massCell = this->massCell(celli);
+    const scalar massCell = this->massCell(this->cell());
 
-    this->rhoc_ += addedMass/cloud.pMesh().cellVolumes()[celli];
+    this->rhoc_ += addedMass/cloud.pMesh().cellVolumes()[this->cell()];
 
     const scalar massCellNew = massCell + addedMass;
-    this->Uc_ = (this->Uc_*massCell + cloud.UTrans()[celli])/massCellNew;
+    this->Uc_ = (this->Uc_*massCell + cloud.UTrans()[this->cell()])/massCellNew;
 
     scalar CpEff = 0.0;
     forAll(cloud.rhoTrans(), i)
     {
-        scalar Y = cloud.rhoTrans(i)[celli]/addedMass;
+        scalar Y = cloud.rhoTrans(i)[this->cell()]/addedMass;
         CpEff += Y*cloud.composition().carrier().Cp
         (
             i,
@@ -276,18 +273,18 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
         );
     }
 
-    const scalar Cpc = td.CpInterp().psi()[celli];
+    const scalar Cpc = td.CpInterp().psi()[this->cell()];
     this->Cpc_ = (massCell*Cpc + addedMass*CpEff)/massCellNew;
 
-    this->Tc_ += cloud.hsTrans()[celli]/(this->Cpc_*massCellNew);
+    this->Tc_ += cloud.hsTrans()[this->cell()]/(this->Cpc_*massCellNew);
 
     if (this->Tc_ < cloud.constProps().TMin())
     {
         if (debug)
         {
             WarningInFunction
-                << "Limiting observed temperature in cell " << celli << " to "
-                << cloud.constProps().TMin() <<  nl << endl;
+                << "Limiting observed temperature in cell " << this->cell()
+                << " to " << cloud.constProps().TMin() <<  nl << endl;
         }
 
         this->Tc_ = cloud.constProps().TMin();
@@ -301,7 +298,6 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const label celli,
     const scalar T,
     const scalarField& Cs,
     scalar& rhos,
@@ -323,7 +319,7 @@ void Foam::ReactingParcel<ParcelType>::correctSurfaceValues
 
     forAll(Xinf, i)
     {
-        Xinf[i] = thermo.carrier().Y(i)[celli]/thermo.carrier().W(i);
+        Xinf[i] = thermo.carrier().Y(i)[this->cell()]/thermo.carrier().W(i);
     }
     Xinf /= sum(Xinf);
 
@@ -394,8 +390,7 @@ void Foam::ReactingParcel<ParcelType>::calc
 (
     TrackCloudType& cloud,
     trackingData& td,
-    const scalar dt,
-    const label celli
+    const scalar dt
 )
 {
     typedef typename TrackCloudType::reactingCloudType reactingCloudType;
@@ -415,7 +410,7 @@ void Foam::ReactingParcel<ParcelType>::calc
 
     // Calc surface values
     scalar Ts, rhos, mus, Prs, kappas;
-    this->calcSurfaceValues(cloud, td, celli, T0, Ts, rhos, mus, Prs, kappas);
+    this->calcSurfaceValues(cloud, td, T0, Ts, rhos, mus, Prs, kappas);
     scalar Res = this->Re(U0, d0, rhos, mus);
 
 
@@ -465,7 +460,6 @@ void Foam::ReactingParcel<ParcelType>::calc
         cloud,
         td,
         dt,
-        celli,
         Res,
         Prs,
         Ts,
@@ -518,10 +512,10 @@ void Foam::ReactingParcel<ParcelType>::calc
                 label gid = composition.localToCarrierId(0, i);
                 scalar hs = composition.carrier().Hs(gid, pc_, T0);
 
-                cloud.rhoTrans(gid)[celli] += dmi;
-                cloud.hsTrans()[celli] += dmi*hs;
+                cloud.rhoTrans(gid)[this->cell()] += dmi;
+                cloud.hsTrans()[this->cell()] += dmi*hs;
             }
-            cloud.UTrans()[celli] += dm*U0;
+            cloud.UTrans()[this->cell()] += dm*U0;
 
             cloud.phaseChange().addToPhaseChangeMass(np0*mass1);
         }
@@ -530,7 +524,7 @@ void Foam::ReactingParcel<ParcelType>::calc
     }
 
     // Correct surface values due to emitted species
-    correctSurfaceValues(cloud, td, celli, Ts, Cs, rhos, mus, Prs, kappas);
+    correctSurfaceValues(cloud, td, Ts, Cs, rhos, mus, Prs, kappas);
     Res = this->Re(U0, this->d_, rhos, mus);
 
 
@@ -547,7 +541,6 @@ void Foam::ReactingParcel<ParcelType>::calc
             cloud,
             td,
             dt,
-            celli,
             Res,
             Prs,
             kappas,
@@ -565,19 +558,7 @@ void Foam::ReactingParcel<ParcelType>::calc
 
     // Calculate new particle velocity
     this->U_ =
-        this->calcVelocity
-        (
-            cloud,
-            td,
-            dt,
-            celli,
-            Res,
-            mus,
-            mass1,
-            Su,
-            dUTrans,
-            Spu
-        );
+        this->calcVelocity(cloud, td, dt, Res, mus, mass1, Su, dUTrans, Spu);
 
 
     // 4. Accumulate carrier phase source terms
@@ -592,27 +573,27 @@ void Foam::ReactingParcel<ParcelType>::calc
             label gid = composition.localToCarrierId(0, i);
             scalar hs = composition.carrier().Hs(gid, pc_, T0);
 
-            cloud.rhoTrans(gid)[celli] += dm;
-            cloud.UTrans()[celli] += dm*U0;
-            cloud.hsTrans()[celli] += dm*hs;
+            cloud.rhoTrans(gid)[this->cell()] += dm;
+            cloud.UTrans()[this->cell()] += dm*U0;
+            cloud.hsTrans()[this->cell()] += dm*hs;
         }
 
         // Update momentum transfer
-        cloud.UTrans()[celli] += np0*dUTrans;
-        cloud.UCoeff()[celli] += np0*Spu;
+        cloud.UTrans()[this->cell()] += np0*dUTrans;
+        cloud.UCoeff()[this->cell()] += np0*Spu;
 
         // Update sensible enthalpy transfer
-        cloud.hsTrans()[celli] += np0*dhsTrans;
-        cloud.hsCoeff()[celli] += np0*Sph;
+        cloud.hsTrans()[this->cell()] += np0*dhsTrans;
+        cloud.hsCoeff()[this->cell()] += np0*Sph;
 
         // Update radiation fields
         if (cloud.radiation())
         {
             const scalar ap = this->areaP();
             const scalar T4 = pow4(T0);
-            cloud.radAreaP()[celli] += dt*np0*ap;
-            cloud.radT4()[celli] += dt*np0*T4;
-            cloud.radAreaPT4()[celli] += dt*np0*ap*T4;
+            cloud.radAreaP()[this->cell()] += dt*np0*ap;
+            cloud.radT4()[this->cell()] += dt*np0*T4;
+            cloud.radAreaPT4()[this->cell()] += dt*np0*ap*T4;
         }
     }
 }

@@ -387,8 +387,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Correct parcel properties according to atomization model
@@ -397,8 +396,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Correct parcel properties according to breakup model
@@ -407,8 +405,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Correct cell values using latest transfer information
@@ -417,8 +414,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Correct surface values due to emitted species
@@ -427,7 +423,6 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const label celli,
                 const scalar T,
                 const scalarField& Cs,
                 scalar& rhos,
@@ -442,8 +437,7 @@ public:
             (
                 TrackCloudType& cloud,
                 trackingData& td,
-                const scalar dt,
-                const label celli
+                const scalar dt
             );
 
             //- Calculate the chi-factor for flash-boiling for the

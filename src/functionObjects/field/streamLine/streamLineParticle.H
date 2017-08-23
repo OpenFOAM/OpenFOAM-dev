@@ -220,10 +220,7 @@ public:
             (
                 const polyPatch&,
                 streamLineParticleCloud& cloud,
-                trackingData& td,
-                const label patchi,
-                const scalar trackFraction,
-                const tetIndices& tetIs
+                trackingData& td
             );
 
             //- Overridable function to handle the particle hitting a wedge
@@ -261,6 +258,26 @@ public:
             );
 
             //- Overridable function to handle the particle hitting a
+            //  cyclicAMIPatch
+            void hitCyclicAMIPatch
+            (
+                const cyclicAMIPolyPatch&,
+                streamLineParticleCloud& cloud,
+                trackingData& td,
+                const vector& direction
+            );
+
+            //- Overridable function to handle the particle hitting a
+            //  cyclicACMIPatch
+            void hitCyclicACMIPatch
+            (
+                const cyclicACMIPolyPatch&,
+                streamLineParticleCloud& cloud,
+                trackingData& td,
+                const vector& direction
+            );
+
+            //- Overridable function to handle the particle hitting a
             //- processorPatch
             void hitProcessorPatch
             (
@@ -273,15 +290,6 @@ public:
             void hitWallPatch
             (
                 const wallPolyPatch&,
-                streamLineParticleCloud& cloud,
-                trackingData& td,
-                const tetIndices&
-            );
-
-            //- Overridable function to handle the particle hitting a polyPatch
-            void hitPatch
-            (
-                const polyPatch&,
                 streamLineParticleCloud& cloud,
                 trackingData& td
             );

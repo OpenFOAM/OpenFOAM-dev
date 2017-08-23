@@ -103,9 +103,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
 (
     typename CloudType::parcelType& p,
     const polyPatch& pp,
-    bool& keepParticle,
-    const scalar trackFraction,
-    const tetIndices& tetIs
+    bool& keepParticle
 )
 {
     vector& U = p.U();

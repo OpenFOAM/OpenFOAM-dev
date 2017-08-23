@@ -552,13 +552,6 @@ Foam::KinematicCloud<CloudType>::~KinematicCloud()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::KinematicCloud<CloudType>::hasWallImpactDistance() const
-{
-    return true;
-}
-
-
-template<class CloudType>
 void Foam::KinematicCloud<CloudType>::setParcelThermoProperties
 (
     parcelType& parcel,

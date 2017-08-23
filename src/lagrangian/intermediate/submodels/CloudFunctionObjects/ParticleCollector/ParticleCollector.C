@@ -647,7 +647,6 @@ template<class CloudType>
 void Foam::ParticleCollector<CloudType>::postMove
 (
     parcelType& p,
-    const label celli,
     const scalar dt,
     const point& position0,
     bool& keepParticle
