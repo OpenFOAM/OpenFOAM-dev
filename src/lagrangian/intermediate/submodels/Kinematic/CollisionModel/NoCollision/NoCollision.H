@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,10 +89,6 @@ public:
 
         //- Flag to indicate whether model activates collision model
         virtual bool active() const;
-
-        //- Indicates whether model determines wall collisions or not,
-        //  used to determine what value to use for wallImpactDistance
-        virtual bool controlsWallInteraction() const;
 
         // Collision function
         virtual void collide();

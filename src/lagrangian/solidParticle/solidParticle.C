@@ -134,10 +134,4 @@ void Foam::solidParticle::transformProperties(const vector& separation)
 }
 
 
-Foam::scalar Foam::solidParticle::wallImpactDistance(const vector&) const
-{
-    return 0.5*d_;
-}
-
-
 // ************************************************************************* //

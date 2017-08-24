@@ -1018,12 +1018,6 @@ void Foam::particle::transformProperties(const vector&)
 {}
 
 
-Foam::scalar Foam::particle::wallImpactDistance(const vector&) const
-{
-    return 0.0;
-}
-
-
 void Foam::particle::prepareForParallelTransfer()
 {
     // Convert the face index to be local to the processor patch

@@ -418,16 +418,6 @@ void Foam::KinematicParcel<ParcelType>::transformProperties
 }
 
 
-template<class ParcelType>
-Foam::scalar Foam::KinematicParcel<ParcelType>::wallImpactDistance
-(
-    const vector&
-) const
-{
-    return 0.5*d_;
-}
-
-
 // * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
 
 #include "KinematicParcelIO.C"

@@ -604,10 +604,6 @@ public:
             //  according to the given separation vector
             virtual void transformProperties(const vector& separation);
 
-            //- The nearest distance to a wall that the particle can be
-            //  in the n direction
-            virtual scalar wallImpactDistance(const vector& n) const;
-
 
         // I-O
 
