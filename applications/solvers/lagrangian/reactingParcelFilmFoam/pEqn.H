@@ -1,5 +1,9 @@
 rho = thermo.rho();
 
+// Thermodynamic density needs to be updated by psi*d(p) after the
+// pressure solution
+const volScalarField psip0(psi*p);
+
 volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
@@ -21,18 +25,22 @@ MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 // Update the pressure BCs to ensure flux consistency
 constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
 
+fvScalarMatrix p_rghDDtEqn
+(
+    fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
+  + fvc::div(phiHbyA)
+ ==
+    parcels.Srho()
+  + surfaceFilm.Srho()
+  + fvOptions(psi, p_rgh, rho.name())
+);
+
 while (pimple.correctNonOrthogonal())
 {
     fvScalarMatrix p_rghEqn
     (
-        fvc::ddt(psi, rho)*gh
-      + fvc::div(phiHbyA)
-      + fvm::ddt(psi, p_rgh)
+        p_rghDDtEqn
       - fvm::laplacian(rhorAUf, p_rgh)
-     ==
-        parcels.Srho()
-      + surfaceFilm.Srho()
-      + fvOptions(psi, p_rgh, rho.name())
     );
 
     p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
@@ -48,12 +56,15 @@ while (pimple.correctNonOrthogonal())
 
 p = p_rgh + rho*gh;
 
-#include "rhoEqn.H"
-#include "compressibleContinuityErrs.H"
-
-K = 0.5*magSqr(U);
+// Thermodynamic density update
+thermo.correctRho(psi*p - psip0);
 
 if (thermo.dpdt())
 {
     dpdt = fvc::ddt(p);
 }
+
+#include "rhoEqn.H"
+#include "compressibleContinuityErrs.H"
+
+K = 0.5*magSqr(U);

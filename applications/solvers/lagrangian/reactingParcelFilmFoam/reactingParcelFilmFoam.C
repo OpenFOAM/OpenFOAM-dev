@@ -34,7 +34,7 @@ Description
 #include "turbulentFluidThermoModel.H"
 #include "basicReactingCloud.H"
 #include "surfaceFilmModel.H"
-#include "psiCombustionModel.H"
+#include "rhoCombustionModel.H"
 #include "radiationModel.H"
 #include "SLGThermo.H"
 #include "fvOptions.H"
