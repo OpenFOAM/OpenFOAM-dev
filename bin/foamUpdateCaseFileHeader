@@ -75,9 +75,9 @@ do
     esac
 done
 
-echo "$version" | grep -Eq '^([0-9]\.[0-9]|dev)$' || \
+echo "$version" | grep -Eq '^([0-9]\.[0-9x]|dev)$' || \
     error "The version number is \"${version}\"." \
-           "The format must be MAJOR.MINOR (e.g. \"4.1\") or \"dev\""
+    "The format must be MAJOR.MINOR (e.g. \"$WM_PROJECT_VERSION\" or \"dev\")"
 
 # constant width for version - default to WM_PROJECT_VERSION
 version=$(printf %-36s "${version:-$WM_PROJECT_VERSION}")
