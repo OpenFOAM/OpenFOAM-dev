@@ -28,7 +28,7 @@ License
 #include "volFields.H"
 #include "turbulentFluidThermoModel.H"
 #include "addToRunTimeSelectionTable.H"
-#include "surfaceFilmModel.H"
+#include "surfaceFilmRegionModel.H"
 #include "mappedWallPolyPatch.H"
 #include "mapDistribute.H"
 
@@ -51,7 +51,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
     tmp<scalarField> tuTau(new scalarField(patch().size(), 0.0));
     scalarField& uTau = tuTau.ref();
 
-    typedef regionModels::surfaceFilmModels::surfaceFilmModel modelType;
+    typedef regionModels::surfaceFilmModels::surfaceFilmRegionModel modelType;
 
     bool foundFilm =
         db().time().foundObject<modelType>("surfaceFilmProperties");

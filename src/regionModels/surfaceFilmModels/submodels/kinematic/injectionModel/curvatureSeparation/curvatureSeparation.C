@@ -220,7 +220,7 @@ tmp<scalarField> curvatureSeparation::calcCosAngle
 
 curvatureSeparation::curvatureSeparation
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

@@ -49,7 +49,7 @@ void injectionModel::addToInjectedMass(const scalar dMass)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-injectionModel::injectionModel(surfaceFilmModel& film)
+injectionModel::injectionModel(surfaceFilmRegionModel& film)
 :
     filmSubModelBase(film),
     injectedMass_(0.0)
@@ -59,7 +59,7 @@ injectionModel::injectionModel(surfaceFilmModel& film)
 injectionModel::injectionModel
 (
     const word& modelType,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

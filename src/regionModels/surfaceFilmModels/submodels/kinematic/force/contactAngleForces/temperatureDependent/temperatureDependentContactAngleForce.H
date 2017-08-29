@@ -97,7 +97,7 @@ public:
         //- Construct from surface film model
         temperatureDependentContactAngleForce
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

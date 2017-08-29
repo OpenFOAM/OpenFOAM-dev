@@ -98,7 +98,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        VoFPatchTransfer(surfaceFilmModel& film, const dictionary& dict);
+        VoFPatchTransfer(surfaceFilmRegionModel& film, const dictionary& dict);
 
 
     //- Destructor

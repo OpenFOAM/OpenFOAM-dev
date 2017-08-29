@@ -83,7 +83,7 @@ public:
         //- Construct from surface film model
         constantViscosity
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict,
             volScalarField& mu
         );

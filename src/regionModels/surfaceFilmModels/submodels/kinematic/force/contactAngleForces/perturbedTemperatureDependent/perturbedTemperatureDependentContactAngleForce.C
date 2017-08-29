@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 perturbedTemperatureDependentContactAngleForce::
 perturbedTemperatureDependentContactAngleForce
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

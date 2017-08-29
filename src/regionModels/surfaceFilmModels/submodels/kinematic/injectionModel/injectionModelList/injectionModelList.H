@@ -79,12 +79,12 @@ public:
     // Constructors
 
         //- Construct null
-        injectionModelList(surfaceFilmModel& film);
+        injectionModelList(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
         injectionModelList
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

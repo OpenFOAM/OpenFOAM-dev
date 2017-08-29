@@ -34,13 +34,13 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const surfaceFilmModel& filmSubModelBase::film() const
+inline const surfaceFilmRegionModel& filmSubModelBase::film() const
 {
     return filmModel_;
 }
 
 
-inline surfaceFilmModel& filmSubModelBase::film()
+inline surfaceFilmRegionModel& filmSubModelBase::film()
 {
     return filmModel_;
 }

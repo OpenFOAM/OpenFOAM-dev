@@ -81,7 +81,7 @@ public:
              filmThermoModel,
              dictionary,
              (
-                 surfaceFilmModel& film,
+                 surfaceFilmRegionModel& film,
                  const dictionary& dict
              ),
              (film, dict)
@@ -90,13 +90,13 @@ public:
     // Constructors
 
         //- Construct null
-        filmThermoModel(surfaceFilmModel& film);
+        filmThermoModel(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
         filmThermoModel
         (
             const word& modelType,
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 
@@ -106,7 +106,7 @@ public:
         //- Return a reference to the selected phase change model
         static autoPtr<filmThermoModel> New
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

@@ -35,7 +35,7 @@ SourceFiles
 #ifndef kinematicSingleLayer_H
 #define kinematicSingleLayer_H
 
-#include "surfaceFilmModel.H"
+#include "surfaceFilmRegionModel.H"
 #include "fvMesh.H"
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -64,7 +64,7 @@ class filmThermoModel;
 
 class kinematicSingleLayer
 :
-    public surfaceFilmModel
+    public surfaceFilmRegionModel
 {
 private:
 

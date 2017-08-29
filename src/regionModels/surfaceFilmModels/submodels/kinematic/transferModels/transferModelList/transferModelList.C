@@ -36,7 +36,7 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-transferModelList::transferModelList(surfaceFilmModel& film)
+transferModelList::transferModelList(surfaceFilmRegionModel& film)
 :
     PtrList<transferModel>(),
     filmSubModelBase(film)
@@ -45,7 +45,7 @@ transferModelList::transferModelList(surfaceFilmModel& film)
 
 transferModelList::transferModelList
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

@@ -44,7 +44,7 @@ addToRunTimeSelectionTable(phaseChangeModel, noPhaseChange, dictionary);
 
 noPhaseChange::noPhaseChange
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary&
 )
 :

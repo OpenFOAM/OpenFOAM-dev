@@ -80,7 +80,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        laminar(surfaceFilmModel& film, const dictionary& dict);
+        laminar(surfaceFilmRegionModel& film, const dictionary& dict);
 
 
     //- Destructor

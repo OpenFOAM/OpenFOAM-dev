@@ -36,7 +36,7 @@ SourceFiles
 #ifndef filmSubModelBase_H
 #define filmSubModelBase_H
 
-#include "surfaceFilmModel.H"
+#include "surfaceFilmRegionModel.H"
 #include "subModelBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -61,7 +61,7 @@ protected:
     // Protected data
 
         //- Reference to the film surface film model
-        surfaceFilmModel& filmModel_;
+        surfaceFilmRegionModel& filmModel_;
 
 
 public:
@@ -69,12 +69,12 @@ public:
     // Constructors
 
         //- Construct null
-        filmSubModelBase(surfaceFilmModel& film);
+        filmSubModelBase(surfaceFilmRegionModel& film);
 
         //- Construct from film film wihout name
         filmSubModelBase
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict,
             const word& baseName,
             const word& modelType,
@@ -85,7 +85,7 @@ public:
         filmSubModelBase
         (
             const word& modelName,
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict,
             const word& baseName,
             const word& modelType
@@ -104,10 +104,10 @@ public:
             virtual bool writeTime() const;
 
             //- Return const access to the film surface film model
-            inline const surfaceFilmModel& film() const;
+            inline const surfaceFilmRegionModel& film() const;
 
             //- Return the reference to the film surface film model
-            inline surfaceFilmModel& film();
+            inline surfaceFilmRegionModel& film();
 
             template<class FilmType>
             inline const FilmType& filmType() const;

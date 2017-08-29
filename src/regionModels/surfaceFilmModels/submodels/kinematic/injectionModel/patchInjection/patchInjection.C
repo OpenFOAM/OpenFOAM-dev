@@ -44,7 +44,7 @@ addToRunTimeSelectionTable(injectionModel, patchInjection, dictionary);
 
 patchInjection::patchInjection
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

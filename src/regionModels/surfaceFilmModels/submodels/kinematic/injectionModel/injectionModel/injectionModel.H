@@ -98,7 +98,7 @@ public:
              injectionModel,
              dictionary,
              (
-                surfaceFilmModel& film,
+                surfaceFilmRegionModel& film,
                 const dictionary& dict
              ),
              (film, dict)
@@ -108,13 +108,13 @@ public:
     // Constructors
 
         //- Construct null
-        injectionModel(surfaceFilmModel& film);
+        injectionModel(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
         injectionModel
         (
             const word& modelType,
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 
@@ -124,7 +124,7 @@ public:
         //- Return a reference to the selected injection model
         static autoPtr<injectionModel> New
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict,
             const word& mdoelType
         );

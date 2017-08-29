@@ -118,7 +118,7 @@ public:
         //- Construct from surface film model
         BrunDrippingInjection
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

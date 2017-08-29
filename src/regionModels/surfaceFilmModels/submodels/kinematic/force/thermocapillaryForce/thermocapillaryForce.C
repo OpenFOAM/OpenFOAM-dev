@@ -45,7 +45,7 @@ addToRunTimeSelectionTable(force, thermocapillaryForce, dictionary);
 
 thermocapillaryForce::thermocapillaryForce
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

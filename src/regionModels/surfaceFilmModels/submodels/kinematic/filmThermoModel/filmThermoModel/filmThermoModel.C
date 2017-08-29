@@ -43,7 +43,7 @@ defineRunTimeSelectionTable(filmThermoModel, dictionary);
 
 filmThermoModel::filmThermoModel
 (
-    surfaceFilmModel& film
+    surfaceFilmRegionModel& film
 )
 :
     filmSubModelBase(film)
@@ -53,7 +53,7 @@ filmThermoModel::filmThermoModel
 filmThermoModel::filmThermoModel
 (
     const word& modelType,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

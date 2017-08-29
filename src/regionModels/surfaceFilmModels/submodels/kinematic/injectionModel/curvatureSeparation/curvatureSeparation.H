@@ -121,7 +121,7 @@ public:
         //- Construct from surface film model
         curvatureSeparation
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

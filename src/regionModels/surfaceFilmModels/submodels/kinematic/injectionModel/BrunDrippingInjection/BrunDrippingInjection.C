@@ -45,7 +45,7 @@ addToRunTimeSelectionTable(injectionModel, BrunDrippingInjection, dictionary);
 
 BrunDrippingInjection::BrunDrippingInjection
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

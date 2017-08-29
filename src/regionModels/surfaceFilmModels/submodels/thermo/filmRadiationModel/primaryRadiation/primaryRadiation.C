@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 primaryRadiation::primaryRadiation
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

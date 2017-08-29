@@ -76,7 +76,7 @@ public:
         //- Construct from surface film model
         thermocapillaryForce
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

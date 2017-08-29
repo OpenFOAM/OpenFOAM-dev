@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SurfaceFilmModel.H"
-#include "surfaceFilmModel.H"
+#include "surfaceFilmRegionModel.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam::constant;
@@ -109,9 +109,9 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackData& td)
     }
 
     // Retrieve the film model from the owner database
-    const regionModels::surfaceFilmModels::surfaceFilmModel& filmModel =
+    const regionModels::surfaceFilmModels::surfaceFilmRegionModel& filmModel =
         this->owner().mesh().time().objectRegistry::template lookupObject
-        <regionModels::surfaceFilmModels::surfaceFilmModel>
+        <regionModels::surfaceFilmModels::surfaceFilmRegionModel>
         (
             "surfaceFilmProperties"
         );
@@ -190,7 +190,7 @@ void Foam::SurfaceFilmModel<CloudType>::cacheFilmFields
 (
     const label filmPatchi,
     const label primaryPatchi,
-    const regionModels::surfaceFilmModels::surfaceFilmModel& filmModel
+    const regionModels::surfaceFilmModels::surfaceFilmRegionModel& filmModel
 )
 {
     massParcelPatch_ = filmModel.cloudMassTrans().boundaryField()[filmPatchi];

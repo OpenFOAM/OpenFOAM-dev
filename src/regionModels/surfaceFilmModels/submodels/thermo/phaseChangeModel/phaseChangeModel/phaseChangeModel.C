@@ -43,7 +43,7 @@ defineRunTimeSelectionTable(phaseChangeModel, dictionary);
 
 phaseChangeModel::phaseChangeModel
 (
-    surfaceFilmModel& film
+    surfaceFilmRegionModel& film
 )
 :
     filmSubModelBase(film),
@@ -55,7 +55,7 @@ phaseChangeModel::phaseChangeModel
 phaseChangeModel::phaseChangeModel
 (
     const word& modelType,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

@@ -105,7 +105,7 @@ public:
         //- Construct from surface film model
         drippingInjection
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

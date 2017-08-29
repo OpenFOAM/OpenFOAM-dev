@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,16 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFilmModel.H"
-#include "fvMesh.H"
-#include "Time.H"
+#include "noFilm.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 namespace regionModels
-{
-namespace surfaceFilmModels
 {
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
@@ -48,20 +45,29 @@ autoPtr<surfaceFilmModel> surfaceFilmModel::New
     word modelType;
 
     {
-        IOdictionary surfaceFilmPropertiesDict
+        IOobject surfaceFilmPropertiesDictHeader
         (
-            IOobject
-            (
-                regionType + "Properties",
-                mesh.time().constant(),
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE,
-                false
-            )
+            regionType + "Properties",
+            mesh.time().constant(),
+            mesh,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
         );
 
-        surfaceFilmPropertiesDict.lookup("surfaceFilmModel") >> modelType;
+        if (surfaceFilmPropertiesDictHeader.typeHeaderOk<IOdictionary>())
+        {
+            IOdictionary surfaceFilmPropertiesDict
+            (
+                surfaceFilmPropertiesDictHeader
+            );
+
+            surfaceFilmPropertiesDict.lookup("surfaceFilmModel") >> modelType;
+        }
+        else
+        {
+            modelType = surfaceFilmModels::noFilm::typeName;
+        }
     }
 
     Info<< "Selecting surfaceFilmModel " << modelType << endl;
@@ -93,7 +99,6 @@ autoPtr<surfaceFilmModel> surfaceFilmModel::New
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
 } // End namespace regionModels
 } // End namespace Foam
 

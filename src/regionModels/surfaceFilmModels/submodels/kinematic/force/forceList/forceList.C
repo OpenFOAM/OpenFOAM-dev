@@ -36,7 +36,7 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-forceList::forceList(surfaceFilmModel& film)
+forceList::forceList(surfaceFilmRegionModel& film)
 :
     PtrList<force>()
 {}
@@ -44,7 +44,7 @@ forceList::forceList(surfaceFilmModel& film)
 
 forceList::forceList
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

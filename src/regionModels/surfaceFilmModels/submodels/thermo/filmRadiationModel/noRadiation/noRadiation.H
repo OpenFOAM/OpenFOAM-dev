@@ -77,7 +77,7 @@ public:
         //- Construct from surface film model and dictionary
         noRadiation
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

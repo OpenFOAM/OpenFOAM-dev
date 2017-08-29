@@ -50,7 +50,7 @@ addToRunTimeSelectionTable(injectionModel, drippingInjection, dictionary);
 
 drippingInjection::drippingInjection
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

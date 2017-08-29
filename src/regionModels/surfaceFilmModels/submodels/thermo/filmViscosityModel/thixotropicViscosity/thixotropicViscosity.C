@@ -57,7 +57,7 @@ addToRunTimeSelectionTable
 
 thixotropicViscosity::thixotropicViscosity
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict,
     volScalarField& mu
 )

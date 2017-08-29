@@ -23,17 +23,22 @@ boundaryField
 {
     fuel
     {
-        type            zeroGradient;
+        type            calculated;
+        value           $internalField;
     }
+
     air
     {
-        type            zeroGradient;
+        type            calculated;
+        value           $internalField;
     }
+
     outlet
     {
-        type            totalPressure;
-        p0              $internalField;
+        type            calculated;
+        value           $internalField;
     }
+
     frontAndBack
     {
         type            empty;

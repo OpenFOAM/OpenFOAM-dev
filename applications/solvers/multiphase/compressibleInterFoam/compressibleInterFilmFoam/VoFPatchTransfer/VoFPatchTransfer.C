@@ -45,7 +45,7 @@ addToRunTimeSelectionTable(transferModel, VoFPatchTransfer, dictionary);
 
 VoFPatchTransfer::VoFPatchTransfer
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

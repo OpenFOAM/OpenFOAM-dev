@@ -74,7 +74,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        noPhaseChange(surfaceFilmModel& film, const dictionary& dict);
+        noPhaseChange(surfaceFilmRegionModel& film, const dictionary& dict);
 
 
     //- Destructor

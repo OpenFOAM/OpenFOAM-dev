@@ -140,7 +140,7 @@ public:
         //- Construct from surface film model
         thixotropicViscosity
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict,
             volScalarField& mu
         );

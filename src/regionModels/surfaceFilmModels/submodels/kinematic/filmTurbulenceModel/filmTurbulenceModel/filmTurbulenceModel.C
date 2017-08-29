@@ -41,7 +41,7 @@ defineRunTimeSelectionTable(filmTurbulenceModel, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-filmTurbulenceModel::filmTurbulenceModel(surfaceFilmModel& film)
+filmTurbulenceModel::filmTurbulenceModel(surfaceFilmRegionModel& film)
 :
     filmSubModelBase(film)
 {}
@@ -50,7 +50,7 @@ filmTurbulenceModel::filmTurbulenceModel(surfaceFilmModel& film)
 filmTurbulenceModel::filmTurbulenceModel
 (
     const word& modelType,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

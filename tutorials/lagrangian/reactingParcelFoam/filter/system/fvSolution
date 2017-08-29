@@ -47,7 +47,7 @@ solvers
         relTol          0;
     }
 
-    p
+    p_rgh
     {
         solver          GAMG;
         tolerance       0;
@@ -55,9 +55,9 @@ solvers
         smoother        GaussSeidel;
     }
 
-    pFinal
+    p_rghFinal
     {
-        $p;
+        $p_rgh;
         tolerance       1e-06;
         relTol          0;
     }

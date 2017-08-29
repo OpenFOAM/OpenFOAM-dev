@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 solidification::solidification
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

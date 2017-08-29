@@ -86,7 +86,7 @@ public:
     // Constructors
 
         //- Construct from surface film model
-        patchInjection(surfaceFilmModel& film, const dictionary& dict);
+        patchInjection(surfaceFilmRegionModel& film, const dictionary& dict);
 
 
     //- Destructor

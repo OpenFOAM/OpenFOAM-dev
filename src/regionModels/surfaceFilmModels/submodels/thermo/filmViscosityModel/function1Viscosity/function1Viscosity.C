@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 function1Viscosity::function1Viscosity
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict,
     volScalarField& mu
 )

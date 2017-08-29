@@ -38,7 +38,7 @@ namespace surfaceFilmModels
 
 autoPtr<transferModel> transferModel::New
 (
-    surfaceFilmModel& model,
+    surfaceFilmRegionModel& model,
     const dictionary& dict,
     const word& modelType
 )

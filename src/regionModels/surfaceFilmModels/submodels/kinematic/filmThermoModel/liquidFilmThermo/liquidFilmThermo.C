@@ -103,7 +103,7 @@ void liquidFilmThermo::initLiquid(const dictionary& dict)
 
 liquidFilmThermo::liquidFilmThermo
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

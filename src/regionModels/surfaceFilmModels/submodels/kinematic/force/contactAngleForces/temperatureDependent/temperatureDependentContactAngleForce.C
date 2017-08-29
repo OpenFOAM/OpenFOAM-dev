@@ -50,7 +50,7 @@ addToRunTimeSelectionTable
 
 temperatureDependentContactAngleForce::temperatureDependentContactAngleForce
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

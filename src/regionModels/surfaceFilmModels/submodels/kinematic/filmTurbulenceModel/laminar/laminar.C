@@ -51,7 +51,7 @@ addToRunTimeSelectionTable(filmTurbulenceModel, laminar, dictionary);
 
 laminar::laminar
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

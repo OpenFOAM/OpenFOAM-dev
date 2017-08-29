@@ -45,7 +45,7 @@ addToRunTimeSelectionTable(force, distributionContactAngleForce, dictionary);
 
 distributionContactAngleForce::distributionContactAngleForce
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

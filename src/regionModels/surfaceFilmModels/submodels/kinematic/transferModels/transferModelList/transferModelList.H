@@ -77,12 +77,12 @@ public:
     // Constructors
 
         //- Construct null
-        transferModelList(surfaceFilmModel& film);
+        transferModelList(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
         transferModelList
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

@@ -1,3 +1,5 @@
+const label inertIndex(composition.species()[inertSpecie]);
+
 const volScalarField& T = thermo.T();
 const volScalarField& psi = thermo.psi();
-const label inertIndex(composition.species()[inertSpecie]);
+regionModels::surfaceFilmModel& surfaceFilm = tsurfaceFilm();

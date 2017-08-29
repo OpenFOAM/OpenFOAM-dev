@@ -22,27 +22,28 @@ solvers
         solver          PCG;
         preconditioner  DIC;
         tolerance       0;
-        relTol          0.1;
+        relTol          0;
     }
 
-    p
+    p_rgh
     {
         solver           GAMG;
-
-        tolerance        0;
-        relTol           0.05;
-
         smoother         DICGaussSeidel;
 
-
+        tolerance        1e-6;
+        relTol           0.05;
 
         maxIter          50;
     };
 
-    pFinal
+    p_rghFinal
     {
-        $p;
-        tolerance        1e-4;
+        $p_rgh;
+    }
+
+    Phi
+    {
+        $p_rgh;
     }
 
     "(U|Yi|h|k|omega|.*Final)"
@@ -55,14 +56,21 @@ solvers
     }
 }
 
+potentialFlow
+{
+    // Used for potentialFoam initialisation
+    nNonOrthogonalCorrectors 5;
+}
+
 PIMPLE
 {
-    nOuterCorrectors 1;
-    nCorrectors     2;
+    nOuterCorrectors    1;
+    nCorrectors         2;
     nNonOrthogonalCorrectors 0;
-    momentumPredictor yes;
-    rhoMin          0.1;
-    rhoMax          1.5;
+    momentumPredictor   yes;
+
+    pMaxFactor          1.5;
+    pMinFactor          0.9;
 
     maxCo           2.5;
     rDeltaTSmoothingCoeff 0.5;

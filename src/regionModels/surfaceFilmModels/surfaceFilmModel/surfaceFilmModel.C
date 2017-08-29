@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFilmModel.H"
-#include "fvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -32,49 +31,24 @@ namespace Foam
 {
 namespace regionModels
 {
-namespace surfaceFilmModels
-{
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(surfaceFilmModel, 0);
 defineRunTimeSelectionTable(surfaceFilmModel, mesh);
 
-const dimensionedScalar surfaceFilmModel::Tref("Tref", dimTemperature, 298.15);
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-bool surfaceFilmModel::read()
-{
-    if (singleLayerRegion::read())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
+const dimensionedScalar surfaceFilmModel::Tref
+(
+    "Tref",
+    dimTemperature,
+    298.15
+);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-surfaceFilmModel::surfaceFilmModel
-(
-    const word& modelType,
-    const fvMesh& mesh,
-    const dimensionedVector& g,
-    const word& regionType
-)
-:
-    singleLayerRegion(mesh, regionType, modelType),
-    g_(g)
-{
-    if (active_)
-    {
-        read();
-    }
-}
+surfaceFilmModel::surfaceFilmModel()
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -83,42 +57,8 @@ surfaceFilmModel::~surfaceFilmModel()
 {}
 
 
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::scalar surfaceFilmModel::CourantNumber() const
-{
-    return ROOTVSMALL;
-}
-
-
-tmp<volScalarField::Internal> surfaceFilmModel::Srho() const
-{
-    NotImplemented;
-
-    return tmp<volScalarField::Internal>(nullptr);
-}
-
-
-tmp<volScalarField::Internal>
-surfaceFilmModel::Srho(const label) const
-{
-    NotImplemented;
-
-    return tmp<volScalarField::Internal>(nullptr);
-}
-
-
-tmp<volScalarField::Internal> surfaceFilmModel::Sh() const
-{
-    NotImplemented;
-
-    return tmp<volScalarField::Internal>(nullptr);
-}
-
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
 } // End namespace regionModels
 } // End namespace Foam
 

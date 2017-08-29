@@ -140,7 +140,7 @@ public:
         //- Construct from surface film model and dictionary
         constantFilmThermo
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

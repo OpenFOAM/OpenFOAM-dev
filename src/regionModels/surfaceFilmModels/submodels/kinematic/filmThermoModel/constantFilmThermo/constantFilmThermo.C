@@ -61,7 +61,7 @@ void constantFilmThermo::init(thermoData& td)
 
 constantFilmThermo::constantFilmThermo
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

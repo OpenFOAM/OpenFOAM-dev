@@ -9,6 +9,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
     )
 );
 
+
 {
     combustion->correct();
     Qdot = combustion->Qdot();
@@ -24,11 +25,12 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(turbulence->muEff(), Yi)
-             ==
+              - fvm::laplacian(turbulence->alphaEff(), Yi)
+              ==
                 parcels.SYi(i, Yi)
-              + combustion->R(Yi)
               + fvOptions(rho, Yi)
+              + combustion->R(Yi)
+              + surfaceFilm.Srho(i)
             );
 
             YEqn.relax();

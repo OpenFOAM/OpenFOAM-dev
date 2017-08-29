@@ -50,7 +50,7 @@ addToRunTimeSelectionTable
 
 constantViscosity::constantViscosity
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict,
     volScalarField& mu
 )

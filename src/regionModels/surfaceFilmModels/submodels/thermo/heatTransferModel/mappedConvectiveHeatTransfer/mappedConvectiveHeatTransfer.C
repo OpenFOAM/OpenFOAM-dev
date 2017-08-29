@@ -52,7 +52,7 @@ addToRunTimeSelectionTable
 
 mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

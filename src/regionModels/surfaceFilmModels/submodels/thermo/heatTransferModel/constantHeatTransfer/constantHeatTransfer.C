@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 constantHeatTransfer::constantHeatTransfer
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

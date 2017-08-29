@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
     const volScalarField& psi1 = mixture.thermo1().psi();
     const volScalarField& psi2 = mixture.thermo2().psi();
 
-    filmModelType& surfaceFilm = tsurfaceFilm();
+    regionModels::surfaceFilmModel& surfaceFilm = tsurfaceFilm();
 
     turbulence->validate();
 

@@ -36,7 +36,7 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-injectionModelList::injectionModelList(surfaceFilmModel& film)
+injectionModelList::injectionModelList(surfaceFilmRegionModel& film)
 :
     PtrList<injectionModel>(),
     filmSubModelBase(film)
@@ -45,7 +45,7 @@ injectionModelList::injectionModelList(surfaceFilmModel& film)
 
 injectionModelList::injectionModelList
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

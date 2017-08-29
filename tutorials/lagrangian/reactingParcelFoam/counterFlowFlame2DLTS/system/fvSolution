@@ -22,7 +22,7 @@ solvers
         solver          diagonal;
     }
 
-    p
+    p_rgh
     {
         solver          GAMG;
         tolerance       1e-6;
@@ -30,9 +30,9 @@ solvers
         smoother        GaussSeidel;
     }
 
-    pFinal
+    p_rghFinal
     {
-        $p;
+        $p_rgh;
         relTol           0;
     }
 

@@ -82,7 +82,7 @@ public:
              force,
              dictionary,
              (
-                surfaceFilmModel& film,
+                surfaceFilmRegionModel& film,
                 const dictionary& dict
              ),
              (film, dict)
@@ -91,13 +91,13 @@ public:
     // Constructors
 
         //- Construct null
-        force(surfaceFilmModel& film);
+        force(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
         force
         (
             const word& modelType,
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 
@@ -107,7 +107,7 @@ public:
         //- Return a reference to the selected force model
         static autoPtr<force> New
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict,
             const word& modelType
         );

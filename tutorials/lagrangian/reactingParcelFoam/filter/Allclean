@@ -12,7 +12,4 @@ rm -rf 0
 # remove post-processing directory
 rm -rf postProcessing
 
-# copy 0.orig to 0
-cp -r 0.orig 0
-
 #------------------------------------------------------------------------------

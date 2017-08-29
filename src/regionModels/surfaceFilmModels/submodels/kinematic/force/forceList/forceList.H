@@ -60,12 +60,12 @@ public:
     // Constructors
 
         //- Construct null
-        forceList(surfaceFilmModel& film);
+        forceList(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
         forceList
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

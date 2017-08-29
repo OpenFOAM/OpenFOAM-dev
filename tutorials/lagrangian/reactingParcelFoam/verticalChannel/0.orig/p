@@ -31,20 +31,23 @@ boundaryField
     }
     inletCentral
     {
-        type            zeroGradient;
+        type            calculated;
+        value           $internalField;
     }
     inletSides
     {
-        type            zeroGradient;
+        type            calculated;
+        value           $internalField;
     }
     outlet
     {
-        type            fixedValue;
-        value           uniform 100000;
+        type            calculated;
+        value           $internalField;
     }
     walls
     {
-        type            zeroGradient;
+        type            calculated;
+        value           $internalField;
     }
 }
 

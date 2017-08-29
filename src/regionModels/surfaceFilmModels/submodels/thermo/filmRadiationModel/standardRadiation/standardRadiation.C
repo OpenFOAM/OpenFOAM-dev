@@ -52,7 +52,7 @@ addToRunTimeSelectionTable
 
 standardRadiation::standardRadiation
 (
-     surfaceFilmModel& film,
+     surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

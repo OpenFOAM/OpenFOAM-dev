@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 constantRadiation::constantRadiation
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

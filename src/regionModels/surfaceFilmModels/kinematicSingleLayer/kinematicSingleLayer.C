@@ -49,13 +49,13 @@ namespace surfaceFilmModels
 
 defineTypeNameAndDebug(kinematicSingleLayer, 0);
 
-addToRunTimeSelectionTable(surfaceFilmModel, kinematicSingleLayer, mesh);
+addToRunTimeSelectionTable(surfaceFilmRegionModel, kinematicSingleLayer, mesh);
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 bool kinematicSingleLayer::read()
 {
-    if (surfaceFilmModel::read())
+    if (surfaceFilmRegionModel::read())
     {
         const dictionary& solution = this->solution().subDict("PISO");
         solution.lookup("momentumPredictor") >> momentumPredictor_;
@@ -451,7 +451,7 @@ kinematicSingleLayer::kinematicSingleLayer
     const bool readFields
 )
 :
-    surfaceFilmModel(modelType, mesh, g, regionType),
+    surfaceFilmRegionModel(modelType, mesh, g, regionType),
 
     momentumPredictor_(solution().subDict("PISO").lookup("momentumPredictor")),
     nOuterCorr_(solution().subDict("PISO").lookupOrDefault("nOuterCorr", 1)),
@@ -873,7 +873,7 @@ void kinematicSingleLayer::preEvolveRegion()
         InfoInFunction << endl;
     }
 
-    surfaceFilmModel::preEvolveRegion();
+    surfaceFilmRegionModel::preEvolveRegion();
 
     transferPrimaryRegionThermoFields();
 

@@ -44,7 +44,7 @@ defineRunTimeSelectionTable(filmViscosityModel, dictionary);
 filmViscosityModel::filmViscosityModel
 (
     const word& modelType,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict,
     volScalarField& mu
 )

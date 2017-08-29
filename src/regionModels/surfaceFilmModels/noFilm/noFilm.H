@@ -22,10 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::noFilm
+    Foam::regionModels::surfaceFilmModels::noFilm
 
 Description
-    Dummy surface film model for 'none'
+    Dummy surfaceFilmModel to allow solvers supporting film simulations to be
+    run without a film region.
 
 SourceFiles
     noFilm.C
@@ -54,7 +55,11 @@ class noFilm
 :
     public surfaceFilmModel
 {
-private:
+    // Private member data
+
+        //- Reference to the mesh
+        const fvMesh& mesh_;
+
 
     // Private member functions
 
@@ -63,14 +68,6 @@ private:
 
         //- Disallow default bitwise assignment
         void operator=(const noFilm&);
-
-
-protected:
-
-    // Protected member functions
-
-        //- Read control parameters from dictionary
-        virtual bool read();
 
 
 public:
@@ -97,89 +94,31 @@ public:
 
     // Member Functions
 
-        // Access
+        // Solution parameters
 
-            //- External hook to add sources to the film
-            virtual void addSources
+            //- Courant number evaluation
+            virtual scalar CourantNumber() const;
+
+
+        // Primary region source fields
+
+            //- Return total mass source - Eulerian phase only
+            virtual tmp<volScalarField::Internal> Srho() const;
+
+            //- Return mass source for specie i - Eulerian phase only
+            virtual tmp<volScalarField::Internal> Srho
             (
-                const label patchi,
-                const label facei,
-                const scalar massSource,
-                const vector& momentumSource,
-                const scalar pressureSource,
-                const scalar energySource
-            );
+                const label i
+            ) const;
+
+            //- Return enthalpy source - Eulerian phase only
+            virtual tmp<volScalarField::Internal> Sh() const;
 
 
-        // Fields
+        // Evolution
 
-            //- Return the film thickness [m]
-            virtual const volScalarField& delta() const;
-
-            //- Return the film coverage, 1 = covered, 0 = uncovered / []
-            virtual const volScalarField& alpha() const;
-
-            //- Return the film velocity [m/s]
-            virtual const volVectorField& U() const;
-
-            //- Return the film density [kg/m3]
-            virtual const volScalarField& rho() const;
-
-            //- Return the film surface velocity [m/s]
-            virtual const volVectorField& Us() const;
-
-            //- Return the film wall velocity [m/s]
-            virtual const volVectorField& Uw() const;
-
-            //- Return the film mean temperature [K]
-            virtual const volScalarField& T() const;
-
-            //- Return the film surface temperature [K]
-            virtual const volScalarField& Ts() const;
-
-            //- Return the film wall temperature [K]
-            virtual const volScalarField& Tw() const;
-
-            //- Return the film surface enthalpy [J/kg]
-            virtual const volScalarField& hs() const;
-
-            //- Return the film specific heat capacity [J/kg/K]
-            virtual const volScalarField& Cp() const;
-
-            //- Return the film thermal conductivity [W/m/K]
-            virtual const volScalarField& kappa() const;
-
-            //- Return const access to the surface tension / [m/s2]
-            inline const volScalarField& sigma() const;
-
-
-            // Transfer fields - to the primary region
-
-                //- Return mass transfer source - Eulerian phase only
-                virtual tmp<volScalarField> primaryMassTrans() const;
-
-                //- Return the film mass available for transfer
-                virtual const volScalarField& cloudMassTrans() const;
-
-                //- Return the parcel diameters originating from film
-                virtual const volScalarField& cloudDiameterTrans() const;
-
-
-        // Source fields
-
-            // Mapped into primary region
-
-                //- Return total mass source - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Srho() const;
-
-                //- Return mass source for specie i - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Srho
-                (
-                    const label i
-                ) const;
-
-                //- Return enthalpy source - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Sh() const;
+            //- Main driver routing to evolve the region - calls other evolves
+            virtual void evolve();
 };
 
 

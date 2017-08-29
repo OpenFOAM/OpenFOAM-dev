@@ -70,7 +70,7 @@ scalar standardPhaseChange::Sh
 
 standardPhaseChange::standardPhaseChange
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

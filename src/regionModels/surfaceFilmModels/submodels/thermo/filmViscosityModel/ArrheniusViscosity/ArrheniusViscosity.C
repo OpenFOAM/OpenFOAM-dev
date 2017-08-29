@@ -51,7 +51,7 @@ addToRunTimeSelectionTable
 
 ArrheniusViscosity::ArrheniusViscosity
 (
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict,
     volScalarField& mu
 )

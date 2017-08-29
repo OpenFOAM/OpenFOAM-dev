@@ -95,7 +95,7 @@ void contactAngleForce::initialise()
 contactAngleForce::contactAngleForce
 (
     const word& typeName,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

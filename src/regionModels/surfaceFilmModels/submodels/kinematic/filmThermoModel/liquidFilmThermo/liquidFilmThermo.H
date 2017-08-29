@@ -107,7 +107,7 @@ public:
         //- Construct from surface film model and dictionary
         liquidFilmThermo
         (
-            surfaceFilmModel& film,
+            surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 

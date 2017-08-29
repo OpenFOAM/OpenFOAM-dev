@@ -49,7 +49,7 @@ void transferModel::addToTransferredMass(const scalar dMass)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-transferModel::transferModel(surfaceFilmModel& film)
+transferModel::transferModel(surfaceFilmRegionModel& film)
 :
     filmSubModelBase(film),
     transferredMass_(0.0)
@@ -59,7 +59,7 @@ transferModel::transferModel(surfaceFilmModel& film)
 transferModel::transferModel
 (
     const word& modelType,
-    surfaceFilmModel& film,
+    surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :

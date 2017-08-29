@@ -1,7 +1,5 @@
 #include "createRDeltaT.H"
 
-#include "readGravitationalAcceleration.H"
-
 Info<< "Creating combustion model\n" << endl;
 
 autoPtr<combustionModels::rhoCombustionModel> combustion
@@ -26,8 +24,7 @@ if (!composition.species().found(inertSpecie))
         << exit(FatalIOError);
 }
 
-volScalarField& p = thermo.p();
-
+Info<< "Creating field rho\n" << endl;
 volScalarField rho
 (
     IOobject
@@ -40,6 +37,8 @@ volScalarField rho
     ),
     thermo.rho()
 );
+
+volScalarField& p = thermo.p();
 
 Info<< "\nReading field U\n" << endl;
 volVectorField U
@@ -56,30 +55,6 @@ volVectorField U
 );
 
 #include "compressibleCreatePhi.H"
-
-mesh.setFluxRequired(p.name());
-
-dimensionedScalar rhoMax
-(
-    dimensionedScalar::lookupOrDefault
-    (
-        "rhoMax",
-        pimple.dict(),
-        dimDensity,
-        GREAT
-    )
-);
-
-dimensionedScalar rhoMin
-(
-    dimensionedScalar::lookupOrDefault
-    (
-        "rhoMin",
-        pimple.dict(),
-        dimDensity,
-        0
-    )
-);
 
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence
@@ -112,7 +87,32 @@ volScalarField dpdt
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
 
-Info<< "Creating multi-variate interpolation scheme\n" << endl;
+
+#include "readGravitationalAcceleration.H"
+#include "readhRef.H"
+#include "gh.H"
+
+
+volScalarField p_rgh
+(
+    IOobject
+    (
+        "p_rgh",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
+
+// Force p_rgh to be consistent with p
+p_rgh = p - rho*gh;
+
+pressureControl pressureControl(p, rho, pimple.dict(), false);
+
+mesh.setFluxRequired(p_rgh.name());
+
 multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields;
 
 forAll(Y, i)
@@ -120,6 +120,11 @@ forAll(Y, i)
     fields.add(Y[i]);
 }
 fields.add(thermo.he());
+
+Switch solvePrimaryRegion
+(
+    pimple.dict().lookupOrDefault<Switch>("solvePrimaryRegion", true)
+);
 
 volScalarField Qdot
 (
@@ -138,3 +143,4 @@ volScalarField Qdot
 #include "createMRF.H"
 #include "createRadiationModel.H"
 #include "createClouds.H"
+#include "createSurfaceFilmModel.H"
