@@ -106,6 +106,8 @@
                 phase().dgdt() =
                     pos0(phase())
                   *(p_rghEqnComps[phasei] & p_rgh)/phase().thermo().rho();
+
+                phasei++;
             }
 
             phi = phiHbyA + p_rghEqnIncomp.flux();
