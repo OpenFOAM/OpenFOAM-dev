@@ -246,6 +246,15 @@ public:
 
     // Member functions
 
+        // Access
+
+            //- Allow manipulation of the boundary values
+            virtual bool fixesValue() const
+            {
+                return false;
+            }
+
+
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
