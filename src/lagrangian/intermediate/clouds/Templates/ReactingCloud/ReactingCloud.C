@@ -221,7 +221,6 @@ void Foam::ReactingCloud<CloudType>::setParcelThermoProperties
 {
     CloudType::setParcelThermoProperties(parcel, lagrangianDt);
 
-    parcel.pc() = this->thermo().thermo().p()[parcel.cell()];
     parcel.Y() = composition().YMixture0();
 }
 

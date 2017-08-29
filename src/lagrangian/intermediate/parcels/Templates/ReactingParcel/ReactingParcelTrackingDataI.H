@@ -39,7 +39,8 @@ inline Foam::ReactingParcel<ParcelType>::trackingData::trackingData
             cloud.solution().interpolationSchemes(),
             cloud.p()
         )
-    )
+    ),
+    pc_(Zero)
 {}
 
 
@@ -48,6 +49,20 @@ inline const Foam::interpolation<Foam::scalar>&
 Foam::ReactingParcel<ParcelType>::trackingData::pInterp() const
 {
     return pInterp_();
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::ReactingParcel<ParcelType>::trackingData::pc() const
+{
+    return pc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar& Foam::ReactingParcel<ParcelType>::trackingData::pc()
+{
+    return pc_;
 }
 
 

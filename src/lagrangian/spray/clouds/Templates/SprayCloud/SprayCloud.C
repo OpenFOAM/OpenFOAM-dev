@@ -162,12 +162,13 @@ void Foam::SprayCloud<CloudType>::setParcelThermoProperties
 
     const scalarField& Y(parcel.Y());
     scalarField X(liqMix.X(Y));
+    const scalar pc = this->p()[parcel.cell()];
 
     // override rho and Cp from constantProperties
-    parcel.Cp() = liqMix.Cp(parcel.pc(), parcel.T(), X);
-    parcel.rho() = liqMix.rho(parcel.pc(), parcel.T(), X);
-    parcel.sigma() = liqMix.sigma(parcel.pc(), parcel.T(), X);
-    parcel.mu() = liqMix.mu(parcel.pc(), parcel.T(), X);
+    parcel.Cp() = liqMix.Cp(pc, parcel.T(), X);
+    parcel.rho() = liqMix.rho(pc, parcel.T(), X);
+    parcel.sigma() = liqMix.sigma(pc, parcel.T(), X);
+    parcel.mu() = liqMix.mu(pc, parcel.T(), X);
 }
 
 

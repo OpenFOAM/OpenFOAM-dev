@@ -573,7 +573,12 @@ public:
 
             //- Set cell values
             template<class TrackCloudType>
-            void setCellValues
+            void setCellValues(TrackCloudType& cloud, trackingData& td);
+
+            //- Apply dispersion to the carrier phase velocity and update
+            //  parcel turbulence parameters
+            template<class TrackCloudType>
+            void calcDispersion
             (
                 TrackCloudType& cloud,
                 trackingData& td,

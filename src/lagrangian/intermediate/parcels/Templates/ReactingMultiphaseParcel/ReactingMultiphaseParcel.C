@@ -137,11 +137,10 @@ template<class TrackCloudType>
 void Foam::ReactingMultiphaseParcel<ParcelType>::setCellValues
 (
     TrackCloudType& cloud,
-    trackingData& td,
-    const scalar dt
+    trackingData& td
 )
 {
-    ParcelType::setCellValues(cloud, td, dt);
+    ParcelType::setCellValues(cloud, td);
 }
 
 
@@ -182,7 +181,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
     const scalar T0 = this->T_;
     const scalar mass0 = this->mass();
 
-    const scalar pc = this->pc_;
+    const scalar pc = td.pc();
 
     const scalarField& YMix = this->Y_;
     const label idG = composition.idGas();
@@ -568,8 +567,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     if (cloud.heatTransfer().BirdCorrection())
     {
         // Molar average molecular weight of carrier mix
-        const scalar Wc =
-            max(SMALL, td.rhoc()*RR*this->Tc_/this->pc_);
+        const scalar Wc = max(SMALL, td.rhoc()*RR*td.Tc()/td.pc());
 
         // Note: hardcoded gaseous diffusivities for now
         // TODO: add to carrier thermo
@@ -578,7 +576,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
         forAll(dMassDV, i)
         {
             const label id = composition.localToCarrierId(GAS, i);
-            const scalar Cp = composition.carrier().Cp(id, this->pc_, Ts);
+            const scalar Cp = composition.carrier().Cp(id, td.pc(), Ts);
             const scalar W = composition.carrier().W(id);
             const scalar Ni = dMassDV[i]/(this->areaS(d)*dt*W);
 
@@ -586,7 +584,7 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
             const scalar Dab =
                 3.6059e-3*(pow(1.8*Ts, 1.75))
                *sqrt(1.0/W + 1.0/Wc)
-               /(this->pc_*beta);
+               /(td.pc()*beta);
 
             N += Ni;
             NCpW += Ni*Cp*W;
@@ -644,8 +642,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcSurfaceReactions
         this->cell(),
         d,
         T,
-        this->Tc_,
-        this->pc_,
+        td.Tc(),
+        td.pc(),
         td.rhoc(),
         mass,
         YGas,

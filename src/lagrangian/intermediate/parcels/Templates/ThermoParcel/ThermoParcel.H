@@ -178,6 +178,15 @@ public:
                 autoPtr<interpolation<scalar>> GInterp_;
 
 
+            // Cached continuous phase properties
+
+                //- Temperature [K]
+                scalar Tc_;
+
+                //- Specific heat capacity [J/(kg.K)]
+                scalar Cpc_;
+
+
     public:
 
         typedef typename ParcelType::trackingData::trackPart trackPart;
@@ -216,6 +225,18 @@ public:
             //- Return const access to the interpolator for continuous
             //  radiation field
             inline const interpolation<scalar>& GInterp() const;
+
+            //- Return the continuous phase temperature
+            inline scalar Tc() const;
+
+            //- Access the continuous phase temperature
+            inline scalar& Tc();
+
+            //- Return the continuous phase specific heat capacity
+            inline scalar Cpc() const;
+
+            //- Access the continuous phase specific heat capacity
+            inline scalar& Cpc();
     };
 
 
@@ -230,15 +251,6 @@ protected:
 
             //- Specific heat capacity [J/(kg.K)]
             scalar Cp_;
-
-
-        // Cell-based quantities
-
-            //- Temperature [K]
-            scalar Tc_;
-
-            //- Specific heat capacity [J/(kg.K)]
-            scalar Cpc_;
 
 
     // Protected Member Functions
@@ -379,12 +391,6 @@ public:
             //- Return the parcel sensible enthalpy
             inline scalar hs() const;
 
-            //- Return const access to carrier temperature
-            inline scalar Tc() const;
-
-            //- Return const access to carrier specific heat capacity
-            inline scalar Cpc() const;
-
 
         // Edit
 
@@ -399,12 +405,7 @@ public:
 
             //- Set cell values
             template<class TrackCloudType>
-            void setCellValues
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar dt
-            );
+            void setCellValues(TrackCloudType& cloud, trackingData& td);
 
             //- Correct cell values using latest transfer information
             template<class TrackCloudType>

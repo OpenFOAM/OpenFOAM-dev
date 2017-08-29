@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,9 +28,13 @@ License
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::TrajectoryCollision<CloudType>::collide(const scalar dt)
+void Foam::TrajectoryCollision<CloudType>::collide
+(
+    typename CloudType::parcelType::trackingData& td,
+    const scalar dt
+)
 {
-    ORourkeCollision<CloudType>::collide(dt);
+    ORourkeCollision<CloudType>::collide(td, dt);
 }
 
 

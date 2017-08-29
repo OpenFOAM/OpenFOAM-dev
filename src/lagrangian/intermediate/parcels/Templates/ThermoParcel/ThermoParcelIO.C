@@ -35,7 +35,7 @@ Foam::string Foam::ThermoParcel<ParcelType>::propertyList_ =
 template<class ParcelType>
 const std::size_t Foam::ThermoParcel<ParcelType>::sizeofFields_
 (
-    offsetof(ThermoParcel<ParcelType>, Tc_)
+    sizeof(ThermoParcel<ParcelType>)
   - offsetof(ThermoParcel<ParcelType>, T_)
 );
 
@@ -52,9 +52,7 @@ Foam::ThermoParcel<ParcelType>::ThermoParcel
 :
     ParcelType(mesh, is, readFields),
     T_(0.0),
-    Cp_(0.0),
-    Tc_(0.0),
-    Cpc_(0.0)
+    Cp_(0.0)
 {
     if (readFields)
     {

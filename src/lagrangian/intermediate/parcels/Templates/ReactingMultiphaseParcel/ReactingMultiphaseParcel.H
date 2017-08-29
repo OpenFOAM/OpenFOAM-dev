@@ -413,12 +413,7 @@ public:
 
             //- Set cell values
             template<class TrackCloudType>
-            void setCellValues
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar dt
-            );
+            void setCellValues(TrackCloudType& cloud, trackingData& td);
 
             //- Correct cell values using latest transfer information
             template<class TrackCloudType>

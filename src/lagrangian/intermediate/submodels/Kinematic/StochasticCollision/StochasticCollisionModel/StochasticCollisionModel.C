@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,11 +69,15 @@ Foam::StochasticCollisionModel<CloudType>::~StochasticCollisionModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::StochasticCollisionModel<CloudType>::update(const scalar dt)
+void Foam::StochasticCollisionModel<CloudType>::update
+(
+    typename CloudType::parcelType::trackingData& td,
+    const scalar dt
+)
 {
     if (this->active())
     {
-        this->collide(dt);
+        this->collide(td, dt);
     }
 }
 

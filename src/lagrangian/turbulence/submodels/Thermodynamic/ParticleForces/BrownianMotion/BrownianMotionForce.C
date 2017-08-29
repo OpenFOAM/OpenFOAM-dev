@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,6 +160,7 @@ template<class CloudType>
 Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
     const scalar Re,
@@ -169,7 +170,7 @@ Foam::forceSuSp Foam::BrownianMotionForce<CloudType>::calcCoupled
     forceSuSp value(Zero, 0.0);
 
     const scalar dp = p.d();
-    const scalar Tc = p.Tc();
+    const scalar Tc = td.Tc();
 
     const scalar alpha = 2.0*lambda_/dp;
     const scalar cc = 1.0 + alpha*(1.257 + 0.4*exp(-1.1/alpha));

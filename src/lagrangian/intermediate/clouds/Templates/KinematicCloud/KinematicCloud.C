@@ -209,7 +209,7 @@ void Foam::KinematicCloud<CloudType>::evolveCloud
         // before it is required.
         cloud.motion(cloud, td);
 
-        stochasticCollision().update(solution_.trackTime());
+        stochasticCollision().update(td, solution_.trackTime());
     }
     else
     {

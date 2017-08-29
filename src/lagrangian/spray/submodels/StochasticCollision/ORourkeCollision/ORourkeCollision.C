@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,11 @@ using namespace Foam::constant::mathematical;
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::ORourkeCollision<CloudType>::collide(const scalar dt)
+void Foam::ORourkeCollision<CloudType>::collide
+(
+    typename CloudType::parcelType::trackingData& td,
+    const scalar dt
+)
 {
     // Create the occupancy list for the cells
     labelList occupancy(this->owner().mesh().nCells(), 0);
@@ -77,20 +81,22 @@ void Foam::ORourkeCollision<CloudType>::collide(const scalar dt)
                         if (m1 > ROOTVSMALL)
                         {
                             const scalarField X(liquids_.X(p1.Y()));
-                            p1.rho() = liquids_.rho(p1.pc(), p1.T(), X);
-                            p1.Cp() = liquids_.Cp(p1.pc(), p1.T(), X);
-                            p1.sigma() = liquids_.sigma(p1.pc(), p1.T(), X);
-                            p1.mu() = liquids_.mu(p1.pc(), p1.T(), X);
+                            p1.setCellValues(this->owner(), td);
+                            p1.rho() = liquids_.rho(td.pc(), p1.T(), X);
+                            p1.Cp() = liquids_.Cp(td.pc(), p1.T(), X);
+                            p1.sigma() = liquids_.sigma(td.pc(), p1.T(), X);
+                            p1.mu() = liquids_.mu(td.pc(), p1.T(), X);
                             p1.d() = cbrt(6.0*m1/(p1.nParticle()*p1.rho()*pi));
                         }
 
                         if (m2 > ROOTVSMALL)
                         {
                             const scalarField X(liquids_.X(p2.Y()));
-                            p2.rho() = liquids_.rho(p2.pc(), p2.T(), X);
-                            p2.Cp() = liquids_.Cp(p2.pc(), p2.T(), X);
-                            p2.sigma() = liquids_.sigma(p2.pc(), p2.T(), X);
-                            p2.mu() = liquids_.mu(p2.pc(), p2.T(), X);
+                            p2.setCellValues(this->owner(), td);
+                            p2.rho() = liquids_.rho(td.pc(), p2.T(), X);
+                            p2.Cp() = liquids_.Cp(td.pc(), p2.T(), X);
+                            p2.sigma() = liquids_.sigma(td.pc(), p2.T(), X);
+                            p2.mu() = liquids_.mu(td.pc(), p2.T(), X);
                             p2.d() = cbrt(6.0*m2/(p2.nParticle()*p2.rho()*pi));
                         }
                     }

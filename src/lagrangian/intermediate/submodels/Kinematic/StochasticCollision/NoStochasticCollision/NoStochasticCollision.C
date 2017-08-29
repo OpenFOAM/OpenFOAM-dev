@@ -28,7 +28,11 @@ License
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::NoStochasticCollision<CloudType>::collide(const scalar)
+void Foam::NoStochasticCollision<CloudType>::collide
+(
+    typename CloudType::parcelType::trackingData&,
+    const scalar
+)
 {}
 
 

@@ -58,7 +58,9 @@ inline Foam::ThermoParcel<ParcelType>::trackingData::trackingData
             kappa_
         )
     ),
-    GInterp_(nullptr)
+    GInterp_(nullptr),
+    Tc_(Zero),
+    Cpc_(Zero)
 {
     if (cloud.radiation())
     {
@@ -127,6 +129,34 @@ Foam::ThermoParcel<ParcelType>::trackingData::GInterp() const
     }
 
     return GInterp_();
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::ThermoParcel<ParcelType>::trackingData::Tc() const
+{
+    return Tc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar& Foam::ThermoParcel<ParcelType>::trackingData::Tc()
+{
+    return Tc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::ThermoParcel<ParcelType>::trackingData::Cpc() const
+{
+    return Cpc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar& Foam::ThermoParcel<ParcelType>::trackingData::Cpc()
+{
+    return Cpc_;
 }
 
 

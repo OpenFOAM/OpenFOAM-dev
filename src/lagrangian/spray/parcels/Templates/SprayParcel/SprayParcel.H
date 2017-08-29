@@ -383,12 +383,7 @@ public:
 
             //- Set cell values
             template<class TrackCloudType>
-            void setCellValues
-            (
-                TrackCloudType& cloud,
-                trackingData& td,
-                const scalar dt
-            );
+            void setCellValues(TrackCloudType& cloud, trackingData& td);
 
             //- Correct parcel properties according to atomization model
             template<class TrackCloudType>

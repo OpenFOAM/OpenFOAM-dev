@@ -82,9 +82,7 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
 :
     ParcelType(mesh, coordinates, celli, tetFacei, tetPti),
     T_(0.0),
-    Cp_(0.0),
-    Tc_(0.0),
-    Cpc_(0.0)
+    Cp_(0.0)
 {}
 
 
@@ -98,9 +96,7 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
 :
     ParcelType(mesh, position, celli),
     T_(0.0),
-    Cp_(0.0),
-    Tc_(0.0),
-    Cpc_(0.0)
+    Cp_(0.0)
 {}
 
 
@@ -141,9 +137,7 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
         constProps
     ),
     T_(constProps.T0()),
-    Cp_(constProps.Cp0()),
-    Tc_(0.0),
-    Cpc_(0.0)
+    Cp_(constProps.Cp0())
 {}
 
 
@@ -225,20 +219,6 @@ template<class ParcelType>
 inline Foam::scalar Foam::ThermoParcel<ParcelType>::hs() const
 {
     return Cp_*(T_ - 298.15);
-}
-
-
-template<class ParcelType>
-inline Foam::scalar Foam::ThermoParcel<ParcelType>::Tc() const
-{
-    return Tc_;
-}
-
-
-template<class ParcelType>
-inline Foam::scalar Foam::ThermoParcel<ParcelType>::Cpc() const
-{
-    return Cpc_;
 }
 
 

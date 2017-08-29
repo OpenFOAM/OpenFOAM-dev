@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,11 @@ protected:
     // Protected Member Functions
 
         //- Main collision routine
-        virtual void collide(const scalar dt);
+        virtual void collide
+        (
+            typename CloudType::parcelType::trackingData& td,
+            const scalar dt
+        );
 
         //- Collide parcels and return true if mass has changed
         virtual bool collideParcels

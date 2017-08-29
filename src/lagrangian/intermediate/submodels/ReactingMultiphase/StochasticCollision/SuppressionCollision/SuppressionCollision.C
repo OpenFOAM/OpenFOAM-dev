@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,11 @@ License
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class CloudType>
-void Foam::SuppressionCollision<CloudType>::collide(const scalar dt)
+void Foam::SuppressionCollision<CloudType>::collide
+(
+    typename CloudType::parcelType::trackingData& td,
+    const scalar dt
+)
 {
     const kinematicCloud& sc =
         this->owner().mesh().template
