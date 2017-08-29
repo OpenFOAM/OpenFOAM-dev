@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,6 +148,7 @@ template<class CloudType>
 Foam::forceSuSp Foam::ParticleForceList<CloudType>::calcCoupled
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
     const scalar Re,
@@ -160,7 +161,7 @@ Foam::forceSuSp Foam::ParticleForceList<CloudType>::calcCoupled
     {
         forAll(*this, i)
         {
-            value += this->operator[](i).calcCoupled(p, dt, mass, Re, muc);
+            value += this->operator[](i).calcCoupled(p, td, dt, mass, Re, muc);
         }
     }
 
@@ -172,6 +173,7 @@ template<class CloudType>
 Foam::forceSuSp Foam::ParticleForceList<CloudType>::calcNonCoupled
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
     const scalar Re,
@@ -184,7 +186,8 @@ Foam::forceSuSp Foam::ParticleForceList<CloudType>::calcNonCoupled
     {
         forAll(*this, i)
         {
-            value += this->operator[](i).calcNonCoupled(p, dt, mass, Re, muc);
+            value +=
+                this->operator[](i).calcNonCoupled(p, td, dt, mass, Re, muc);
         }
     }
 
@@ -196,13 +199,14 @@ template<class CloudType>
 Foam::scalar Foam::ParticleForceList<CloudType>::massEff
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar mass
 ) const
 {
     scalar massEff = mass;
     forAll(*this, i)
     {
-        massEff += this->operator[](i).massAdd(p, mass);
+        massEff += this->operator[](i).massAdd(p, td, mass);
     }
 
     return massEff;

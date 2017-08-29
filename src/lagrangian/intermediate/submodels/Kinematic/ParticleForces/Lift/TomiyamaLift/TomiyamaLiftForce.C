@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ template<class CloudType>
 Foam::scalar Foam::TomiyamaLiftForce<CloudType>::TomiyamaLiftForce::Cl
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const vector& curlUc,
     const scalar Re,
     const scalar muc
@@ -38,9 +39,9 @@ Foam::scalar Foam::TomiyamaLiftForce<CloudType>::TomiyamaLiftForce::Cl
 {
     const vector& g = this->owner().g().value();
 
-    scalar Eo = p.Eo(g, p.d(), sigma_);
+    scalar Eo = p.Eo(td, sigma_);
     scalar dH = p.d()*cbrt(1.0 + 0.163*pow(Eo, 0.757));
-    scalar Eod = p.Eo(g, dH, sigma_);
+    scalar Eod = p.Eo(g, p.rho(), td.rhoc(), p.U(), dH, sigma_);
     scalar f = 0.00105*pow3(Eod) - 0.0159*sqr(Eod) - 0.0204*Eod + 0.474;
 
     if (Eod <= 4)

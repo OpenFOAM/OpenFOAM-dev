@@ -70,10 +70,10 @@ void Foam::ThermoParcel<ParcelType>::cellValueSourceCorrection
     const scalar dt
 )
 {
-    this->Uc_ += cloud.UTrans()[this->cell()]/this->massCell(this->cell());
+    td.Uc() += cloud.UTrans()[this->cell()]/this->massCell(td);
 
     const scalar CpMean = td.CpInterp().psi()[this->cell()];
-    Tc_ += cloud.hsTrans()[this->cell()]/(CpMean*this->massCell(this->cell()));
+    Tc_ += cloud.hsTrans()[this->cell()]/(CpMean*this->massCell(td));
 
     if (Tc_ < cloud.constProps().TMin())
     {
@@ -121,7 +121,7 @@ void Foam::ThermoParcel<ParcelType>::calcSurfaceValues
     // Assuming thermo props vary linearly with T for small d(T)
     const scalar TRatio = Tc_/Ts;
 
-    rhos = this->rhoc_*TRatio;
+    rhos = td.rhoc()*TRatio;
 
     tetIndices tetIs = this->currentTetIndices();
     mus = td.muInterp().interpolate(this->coordinates(), tetIs)/TRatio;
@@ -156,7 +156,7 @@ void Foam::ThermoParcel<ParcelType>::calc
     calcSurfaceValues(cloud, td, this->T_, Ts, rhos, mus, Pr, kappas);
 
     // Reynolds number
-    scalar Re = this->Re(this->U_, this->d_, rhos, mus);
+    scalar Re = this->Re(rhos, this->U_, td.Uc(), this->d_, mus);
 
 
     // Sources

@@ -120,7 +120,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     if (cloud.heatTransfer().BirdCorrection())
     {
         // Average molecular weight of carrier mix - assumes perfect gas
-        const scalar Wc = this->rhoc_*RR*this->Tc_/this->pc_;
+        const scalar Wc = td.rhoc()*RR*this->Tc_/this->pc_;
 
         forAll(dMassPC, i)
         {
@@ -254,12 +254,12 @@ void Foam::ReactingParcel<ParcelType>::cellValueSourceCorrection
         return;
     }
 
-    const scalar massCell = this->massCell(this->cell());
+    const scalar massCell = this->massCell(td);
 
-    this->rhoc_ += addedMass/cloud.pMesh().cellVolumes()[this->cell()];
+    td.rhoc() += addedMass/cloud.pMesh().cellVolumes()[this->cell()];
 
     const scalar massCellNew = massCell + addedMass;
-    this->Uc_ = (this->Uc_*massCell + cloud.UTrans()[this->cell()])/massCellNew;
+    td.Uc() = (td.Uc()*massCell + cloud.UTrans()[this->cell()])/massCellNew;
 
     scalar CpEff = 0.0;
     forAll(cloud.rhoTrans(), i)
@@ -411,7 +411,7 @@ void Foam::ReactingParcel<ParcelType>::calc
     // Calc surface values
     scalar Ts, rhos, mus, Prs, kappas;
     this->calcSurfaceValues(cloud, td, T0, Ts, rhos, mus, Prs, kappas);
-    scalar Res = this->Re(U0, d0, rhos, mus);
+    scalar Res = this->Re(rhos, U0, td.Uc(), d0, mus);
 
 
     // Sources
@@ -525,7 +525,7 @@ void Foam::ReactingParcel<ParcelType>::calc
 
     // Correct surface values due to emitted species
     correctSurfaceValues(cloud, td, Ts, Cs, rhos, mus, Prs, kappas);
-    Res = this->Re(U0, this->d_, rhos, mus);
+    Res = this->Re(rhos, U0, td.Uc(), this->d(), mus);
 
 
     // 3. Compute heat- and momentum transfers

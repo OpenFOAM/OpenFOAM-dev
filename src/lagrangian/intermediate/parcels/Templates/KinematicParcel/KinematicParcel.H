@@ -181,6 +181,18 @@ public:
                 autoPtr<interpolation<scalar>> muInterp_;
 
 
+            // Cached continuous phase properties
+
+                //- Density [kg/m3]
+                scalar rhoc_;
+
+                //- Velocity [m/s]
+                vector Uc_;
+
+                //- Viscosity [Pa.s]
+                scalar muc_;
+
+
             //- Local gravitational or other body-force acceleration
             const vector& g_;
 
@@ -215,6 +227,24 @@ public:
             //- Return conat access to the interpolator for continuous
             //  phase dynamic viscosity field
             inline const interpolation<scalar>& muInterp() const;
+
+            //- Return the continuous phase density
+            inline scalar rhoc() const;
+
+            //- Access the continuous phase density
+            inline scalar& rhoc();
+
+            //- Return the continuous phase velocity
+            inline const vector& Uc() const;
+
+            //- Access the continuous phase velocity
+            inline vector& Uc();
+
+            //- Return the continuous phase viscosity
+            inline scalar muc() const;
+
+            //- Access the continuous phase viscosity
+            inline scalar& muc();
 
             // Return const access to the gravitational acceleration vector
             inline const vector& g() const;
@@ -262,18 +292,6 @@ protected:
 
             //- Turbulent velocity fluctuation [m/s]
             vector UTurb_;
-
-
-        // Cell-based quantities
-
-            //- Density [kg/m3]
-            scalar rhoc_;
-
-            //- Velocity [m/s]
-            vector Uc_;
-
-            //- Viscosity [Pa.s]
-            scalar muc_;
 
 
     // Protected Member Functions
@@ -439,15 +457,6 @@ public:
             //- Return const access to turbulent velocity fluctuation
             inline const vector& UTurb() const;
 
-            //- Return const access to carrier density [kg/m3]
-            inline scalar rhoc() const;
-
-            //- Return const access to carrier velocity [m/s]
-            inline const vector& Uc() const;
-
-            //- Return const access to carrier viscosity [Pa.s]
-            inline scalar muc() const;
-
 
         // Edit
 
@@ -485,7 +494,7 @@ public:
         // Helper functions
 
             //- Cell owner mass
-            inline scalar massCell(const label celli) const;
+            inline scalar massCell(const trackingData& td) const;
 
             //- Particle mass
             inline scalar mass() const;
@@ -512,30 +521,52 @@ public:
             inline static scalar areaS(const scalar d);
 
             //- Reynolds number
-            inline scalar Re
+            inline scalar Re(const trackingData& td) const;
+
+            //- Reynolds number for given conditions
+            inline static scalar Re
             (
-                const vector& U,        // particle velocity
-                const scalar d,         // particle diameter
-                const scalar rhoc,      // carrier density
-                const scalar muc        // carrier dynamic viscosity
-            ) const;
+                const scalar rhoc,
+                const vector& U,
+                const vector& Uc,
+                const scalar d,
+                const scalar muc
+            );
 
             //- Weber number
             inline scalar We
             (
-                const vector& U,        // particle velocity
-                const scalar d,         // particle diameter
-                const scalar rhoc,      // carrier density
-                const scalar sigma      // particle surface tension
+                const trackingData& td,
+                const scalar sigma
             ) const;
+
+            //- Weber number for given conditions
+            inline static scalar We
+            (
+                const scalar rhoc,
+                const vector& U,
+                const vector& Uc,
+                const scalar d,
+                const scalar sigma
+            );
 
             //- Eotvos number
             inline scalar Eo
             (
-                const vector& a,        // acceleration
-                const scalar d,         // particle diameter
-                const scalar sigma      // particle surface tension
+                const trackingData& td,
+                const scalar sigma
             ) const;
+
+            //- Eotvos number for given conditions
+            inline static scalar Eo
+            (
+                const vector& g,
+                const scalar rho,
+                const scalar rhoc,
+                const vector& U,
+                const scalar d,
+                const scalar sigma
+            );
 
 
         // Main calculation loop

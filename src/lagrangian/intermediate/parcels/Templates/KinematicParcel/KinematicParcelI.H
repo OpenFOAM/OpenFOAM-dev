@@ -89,10 +89,7 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     rho_(0.0),
     age_(0.0),
     tTurb_(0.0),
-    UTurb_(Zero),
-    rhoc_(0.0),
-    Uc_(Zero),
-    muc_(0.0)
+    UTurb_(Zero)
 {}
 
 
@@ -114,10 +111,7 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     rho_(0.0),
     age_(0.0),
     tTurb_(0.0),
-    UTurb_(Zero),
-    rhoc_(0.0),
-    Uc_(Zero),
-    muc_(0.0)
+    UTurb_(Zero)
 {}
 
 
@@ -147,10 +141,7 @@ inline Foam::KinematicParcel<ParcelType>::KinematicParcel
     rho_(constProps.rho0()),
     age_(0.0),
     tTurb_(0.0),
-    UTurb_(Zero),
-    rhoc_(0.0),
-    Uc_(Zero),
-    muc_(0.0)
+    UTurb_(Zero)
 {}
 
 
@@ -269,27 +260,6 @@ inline const Foam::vector& Foam::KinematicParcel<ParcelType>::UTurb() const
 
 
 template<class ParcelType>
-inline Foam::scalar Foam::KinematicParcel<ParcelType>::rhoc() const
-{
-    return rhoc_;
-}
-
-
-template<class ParcelType>
-inline const Foam::vector& Foam::KinematicParcel<ParcelType>::Uc() const
-{
-    return Uc_;
-}
-
-
-template<class ParcelType>
-inline Foam::scalar Foam::KinematicParcel<ParcelType>::muc() const
-{
-    return muc_;
-}
-
-
-template<class ParcelType>
 inline bool& Foam::KinematicParcel<ParcelType>::active()
 {
     return active_;
@@ -362,10 +332,10 @@ inline Foam::vector& Foam::KinematicParcel<ParcelType>::UTurb()
 template<class ParcelType>
 inline Foam::scalar Foam::KinematicParcel<ParcelType>::massCell
 (
-    const label celli
+    const trackingData& td
 ) const
 {
-    return rhoc_*this->mesh().cellVolumes()[celli];
+    return td.rhoc()*this->mesh().cellVolumes()[this->cell()];
 }
 
 
@@ -428,39 +398,76 @@ inline Foam::scalar Foam::KinematicParcel<ParcelType>::areaS(const scalar d)
 template<class ParcelType>
 inline Foam::scalar Foam::KinematicParcel<ParcelType>::Re
 (
-    const vector& U,
-    const scalar d,
-    const scalar rhoc,
-    const scalar muc
+    const trackingData& td
 ) const
 {
-    return rhoc*mag(U - Uc_)*d/(muc + ROOTVSMALL);
+    return Re(td.rhoc(), U_, td.Uc(), d_, td.muc());
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::KinematicParcel<ParcelType>::Re
+(
+    const scalar rhoc,
+    const vector& U,
+    const vector& Uc,
+    const scalar d,
+    const scalar muc
+)
+{
+    return rhoc*mag(U - Uc)*d/max(muc, ROOTVSMALL);
 }
 
 
 template<class ParcelType>
 inline Foam::scalar Foam::KinematicParcel<ParcelType>::We
 (
-    const vector& U,
-    const scalar d,
-    const scalar rhoc,
+    const trackingData& td,
     const scalar sigma
 ) const
 {
-    return rhoc*magSqr(U - Uc_)*d/(sigma + ROOTVSMALL);
+    return We(td.rhoc(), U_, td.Uc(), d_, sigma);
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::KinematicParcel<ParcelType>::We
+(
+    const scalar rhoc,
+    const vector& U,
+    const vector& Uc,
+    const scalar d,
+    const scalar sigma
+)
+{
+    return rhoc*magSqr(U - Uc)*d/max(sigma, ROOTVSMALL);
 }
 
 
 template<class ParcelType>
 inline Foam::scalar Foam::KinematicParcel<ParcelType>::Eo
 (
-    const vector& a,
-    const scalar d,
+    const trackingData& td,
     const scalar sigma
 ) const
 {
-    vector dir = U_/(mag(U_) + ROOTVSMALL);
-    return mag(a & dir)*(rho_ - rhoc_)*sqr(d)/(sigma + ROOTVSMALL);
+    return Eo(td.g(), rho_, td.rhoc(), U_, d_, sigma);
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::KinematicParcel<ParcelType>::Eo
+(
+    const vector& g,
+    const scalar rho,
+    const scalar rhoc,
+    const vector& U,
+    const scalar d,
+    const scalar sigma
+)
+{
+    const vector dir = U/max(mag(U), ROOTVSMALL);
+    return mag(g & dir)*(rho - rhoc)*sqr(d)/max(sigma, ROOTVSMALL);
 }
 
 

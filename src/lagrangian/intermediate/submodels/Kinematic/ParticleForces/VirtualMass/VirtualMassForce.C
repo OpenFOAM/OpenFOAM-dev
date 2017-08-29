@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,7 @@ template<class CloudType>
 Foam::forceSuSp Foam::VirtualMassForce<CloudType>::calcCoupled
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
     const scalar Re,
@@ -79,7 +80,7 @@ Foam::forceSuSp Foam::VirtualMassForce<CloudType>::calcCoupled
 ) const
 {
     forceSuSp value =
-        PressureGradientForce<CloudType>::calcCoupled(p, dt, mass, Re, muc);
+        PressureGradientForce<CloudType>::calcCoupled(p, td, dt, mass, Re, muc);
 
     value.Su() *= Cvm_;
 
@@ -91,10 +92,11 @@ template<class CloudType>
 Foam::scalar Foam::VirtualMassForce<CloudType>::massAdd
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar mass
 ) const
 {
-    return mass*p.rhoc()/p.rho()*Cvm_;
+    return mass*td.rhoc()/p.rho()*Cvm_;
 }
 
 

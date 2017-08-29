@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,6 +116,7 @@ public:
             virtual forceSuSp calcCoupled
             (
                 const typename CloudType::parcelType& p,
+                const typename CloudType::parcelType::trackingData& td,
                 const scalar dt,
                 const scalar mass,
                 const scalar Re,
@@ -126,6 +127,7 @@ public:
             virtual scalar massAdd
             (
                 const typename CloudType::parcelType& p,
+                const typename CloudType::parcelType::trackingData& td,
                 const scalar mass
             ) const;
 };

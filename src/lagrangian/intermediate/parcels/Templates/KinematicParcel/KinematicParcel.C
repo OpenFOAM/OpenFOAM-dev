@@ -47,9 +47,9 @@ void Foam::KinematicParcel<ParcelType>::setCellValues
 {
     tetIndices tetIs = this->currentTetIndices();
 
-    rhoc_ = td.rhoInterp().interpolate(this->coordinates(), tetIs);
+    td.rhoc() = td.rhoInterp().interpolate(this->coordinates(), tetIs);
 
-    if (rhoc_ < cloud.constProps().rhoMin())
+    if (td.rhoc() < cloud.constProps().rhoMin())
     {
         if (debug)
         {
@@ -58,20 +58,20 @@ void Foam::KinematicParcel<ParcelType>::setCellValues
                 << " to " << cloud.constProps().rhoMin() <<  nl << endl;
         }
 
-        rhoc_ = cloud.constProps().rhoMin();
+        td.rhoc() = cloud.constProps().rhoMin();
     }
 
-    Uc_ = td.UInterp().interpolate(this->coordinates(), tetIs);
+    td.Uc() = td.UInterp().interpolate(this->coordinates(), tetIs);
 
-    muc_ = td.muInterp().interpolate(this->coordinates(), tetIs);
+    td.muc() = td.muInterp().interpolate(this->coordinates(), tetIs);
 
     // Apply dispersion components to carrier phase velocity
-    Uc_ = cloud.dispersion().update
+    td.Uc() = cloud.dispersion().update
     (
         dt,
         this->cell(),
         U_,
-        Uc_,
+        td.Uc(),
         UTurb_,
         tTurb_
     );
@@ -87,7 +87,7 @@ void Foam::KinematicParcel<ParcelType>::cellValueSourceCorrection
     const scalar dt
 )
 {
-    Uc_ += cloud.UTrans()[this->cell()]/massCell(this->cell());
+    td.Uc() += cloud.UTrans()[this->cell()]/massCell(td);
 }
 
 
@@ -106,7 +106,7 @@ void Foam::KinematicParcel<ParcelType>::calc
     const scalar mass0 = mass();
 
     // Reynolds number
-    const scalar Re = this->Re(U_, d_, rhoc_, muc_);
+    const scalar Re = this->Re(td);
 
 
     // Sources
@@ -126,7 +126,8 @@ void Foam::KinematicParcel<ParcelType>::calc
     // ~~~~~~
 
     // Calculate new particle velocity
-    this->U_ = calcVelocity(cloud, td, dt, Re, muc_, mass0, Su, dUTrans, Spu);
+    this->U_ =
+        calcVelocity(cloud, td, dt, Re, td.muc(), mass0, Su, dUTrans, Spu);
 
 
     // Accumulate carrier phase source terms
@@ -157,24 +158,25 @@ const Foam::vector Foam::KinematicParcel<ParcelType>::calcVelocity
     scalar& Spu
 ) const
 {
-    typedef typename TrackCloudType::parcelType parcelType;
-    typedef typename TrackCloudType::forceType forceType;
+    const typename TrackCloudType::parcelType& p =
+        static_cast<const typename TrackCloudType::parcelType&>(*this);
+    typename TrackCloudType::parcelType::trackingData& ttd =
+        static_cast<typename TrackCloudType::parcelType::trackingData&>(td);
 
-    const forceType& forces = cloud.forces();
+    const typename TrackCloudType::forceType& forces = cloud.forces();
 
     // Momentum source due to particle forces
-    const parcelType& p = static_cast<const parcelType&>(*this);
-    const forceSuSp Fcp = forces.calcCoupled(p, dt, mass, Re, mu);
-    const forceSuSp Fncp = forces.calcNonCoupled(p, dt, mass, Re, mu);
+    const forceSuSp Fcp = forces.calcCoupled(p, ttd, dt, mass, Re, mu);
+    const forceSuSp Fncp = forces.calcNonCoupled(p, ttd, dt, mass, Re, mu);
     const forceSuSp Feff = Fcp + Fncp;
-    const scalar massEff = forces.massEff(p, mass);
+    const scalar massEff = forces.massEff(p, ttd, mass);
 
 
     // New particle velocity
     //~~~~~~~~~~~~~~~~~~~~~~
 
     // Update velocity - treat as 3-D
-    const vector abp = (Feff.Sp()*Uc_ + (Feff.Su() + Su))/massEff;
+    const vector abp = (Feff.Sp()*td.Uc() + (Feff.Su() + Su))/massEff;
     const scalar bp = Feff.Sp()/massEff;
 
     Spu = dt*Feff.Sp();
@@ -185,7 +187,7 @@ const Foam::vector Foam::KinematicParcel<ParcelType>::calcVelocity
     vector Unew = Ures.value();
 
     // note: Feff.Sp() and Fc.Sp() must be the same
-    dUTrans += dt*(Feff.Sp()*(Ures.average() - Uc_) - Fcp.Su());
+    dUTrans += dt*(Feff.Sp()*(Ures.average() - td.Uc()) - Fcp.Su());
 
     // Apply correction to velocity and dUTrans for reduced-D cases
     const polyMesh& mesh = cloud.pMesh();
@@ -214,10 +216,7 @@ Foam::KinematicParcel<ParcelType>::KinematicParcel
     rho_(p.rho_),
     age_(p.age_),
     tTurb_(p.tTurb_),
-    UTurb_(p.UTurb_),
-    rhoc_(p.rhoc_),
-    Uc_(p.Uc_),
-    muc_(p.muc_)
+    UTurb_(p.UTurb_)
 {}
 
 
@@ -238,10 +237,7 @@ Foam::KinematicParcel<ParcelType>::KinematicParcel
     rho_(p.rho_),
     age_(p.age_),
     tTurb_(p.tTurb_),
-    UTurb_(p.UTurb_),
-    rhoc_(p.rhoc_),
-    Uc_(p.Uc_),
-    muc_(p.muc_)
+    UTurb_(p.UTurb_)
 {}
 
 
@@ -258,14 +254,12 @@ bool Foam::KinematicParcel<ParcelType>::move
 {
     typename TrackCloudType::parcelType& p =
         static_cast<typename TrackCloudType::parcelType&>(*this);
-    typename TrackCloudType::particleType::trackingData& ttd =
-        static_cast<typename TrackCloudType::particleType::trackingData&>(td);
+    typename TrackCloudType::parcelType::trackingData& ttd =
+        static_cast<typename TrackCloudType::parcelType::trackingData&>(td);
 
     ttd.switchProcessor = false;
     ttd.keepParticle = true;
 
-    const polyMesh& mesh = cloud.pMesh();
-    const polyBoundaryMesh& pbMesh = mesh.boundaryMesh();
     const scalarField& cellLengthScale = cloud.cellLengthScale();
     const scalar maxCo = cloud.solution().maxCo();
 

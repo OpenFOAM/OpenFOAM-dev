@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,7 @@ protected:
         virtual scalar Cl
         (
             const typename CloudType::parcelType& p,
+            const typename CloudType::parcelType::trackingData& td,
             const vector& curlUc,
             const scalar Re,
             const scalar muc

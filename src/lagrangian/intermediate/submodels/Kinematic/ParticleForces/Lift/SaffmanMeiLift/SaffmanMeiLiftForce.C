@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,12 +34,13 @@ template<class CloudType>
 Foam::scalar Foam::SaffmanMeiLiftForce<CloudType>::SaffmanMeiLiftForce::Cl
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const vector& curlUc,
     const scalar Re,
     const scalar muc
 ) const
 {
-    scalar Rew = p.rhoc()*mag(curlUc)*sqr(p.d())/(muc + ROOTVSMALL);
+    scalar Rew = td.rhoc()*mag(curlUc)*sqr(p.d())/(muc + ROOTVSMALL);
     scalar beta = 0.5*(Rew/(Re + ROOTVSMALL));
     scalar alpha = 0.3314*sqrt(beta);
     scalar f = (1.0 - alpha)*exp(-0.1*Re) + alpha;

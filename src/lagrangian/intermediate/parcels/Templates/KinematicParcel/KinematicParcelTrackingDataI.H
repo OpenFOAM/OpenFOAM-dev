@@ -56,6 +56,9 @@ inline Foam::KinematicParcel<ParcelType>::trackingData::trackingData
             cloud.mu()
         )
     ),
+    rhoc_(Zero),
+    Uc_(Zero),
+    muc_(Zero),
     g_(cloud.g().value()),
     part_(part)
 {}
@@ -90,6 +93,50 @@ inline const Foam::vector&
 Foam::KinematicParcel<ParcelType>::trackingData::g() const
 {
     return g_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar
+Foam::KinematicParcel<ParcelType>::trackingData::rhoc() const
+{
+    return rhoc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar& Foam::KinematicParcel<ParcelType>::trackingData::rhoc()
+{
+    return rhoc_;
+}
+
+
+template<class ParcelType>
+inline const Foam::vector&
+Foam::KinematicParcel<ParcelType>::trackingData::Uc() const
+{
+    return Uc_;
+}
+
+
+template<class ParcelType>
+inline Foam::vector& Foam::KinematicParcel<ParcelType>::trackingData::Uc()
+{
+    return Uc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar Foam::KinematicParcel<ParcelType>::trackingData::muc() const
+{
+    return muc_;
+}
+
+
+template<class ParcelType>
+inline Foam::scalar& Foam::KinematicParcel<ParcelType>::trackingData::muc()
+{
+    return muc_;
 }
 
 

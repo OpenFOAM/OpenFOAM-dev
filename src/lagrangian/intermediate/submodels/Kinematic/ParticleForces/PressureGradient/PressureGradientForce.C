@@ -119,6 +119,7 @@ template<class CloudType>
 Foam::forceSuSp Foam::PressureGradientForce<CloudType>::calcCoupled
 (
     const typename CloudType::parcelType& p,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar dt,
     const scalar mass,
     const scalar Re,
@@ -130,7 +131,7 @@ Foam::forceSuSp Foam::PressureGradientForce<CloudType>::calcCoupled
     vector DUcDt =
         DUcDtInterp().interpolate(p.coordinates(), p.currentTetIndices());
 
-    value.Su() = mass*p.rhoc()/p.rho()*DUcDt;
+    value.Su() = mass*td.rhoc()/p.rho()*DUcDt;
 
     return value;
 }
@@ -140,6 +141,7 @@ template<class CloudType>
 Foam::scalar Foam::PressureGradientForce<CloudType>::massAdd
 (
     const typename CloudType::parcelType&,
+    const typename CloudType::parcelType::trackingData& td,
     const scalar
 ) const
 {
