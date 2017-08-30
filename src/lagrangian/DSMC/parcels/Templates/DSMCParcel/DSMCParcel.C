@@ -44,7 +44,6 @@ bool Foam::DSMCParcel<ParcelType>::move
     td.keepParticle = true;
 
     const polyMesh& mesh = cloud.pMesh();
-    const polyBoundaryMesh& pbMesh = mesh.boundaryMesh();
 
     // For reduced-D cases, the velocity used to track needs to be
     // constrained, but the actual U_ of the parcel must not be
