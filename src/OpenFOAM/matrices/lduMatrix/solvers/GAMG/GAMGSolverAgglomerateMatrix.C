@@ -433,13 +433,7 @@ void Foam::GAMGSolver::procAgglomerateMatrix
         interfaceLevelsIntCoeffs_[levelI];
     const lduMesh& coarsestMesh = coarsestMatrix.mesh();
 
-
     label coarseComm = coarsestMesh.comm();
-
-    label oldWarn = UPstream::warnComm;
-    UPstream::warnComm = coarseComm;
-
-
 
     // Gather all matrix coefficients onto agglomProcIDs[0]
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -731,7 +725,6 @@ void Foam::GAMGSolver::procAgglomerateMatrix
         //    }
         //}
     }
-    UPstream::warnComm = oldWarn;
 }
 
 

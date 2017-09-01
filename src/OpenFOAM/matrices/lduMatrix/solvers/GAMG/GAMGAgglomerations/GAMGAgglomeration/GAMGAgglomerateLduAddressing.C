@@ -374,10 +374,6 @@ void Foam::GAMGAgglomeration::procAgglomerateLduAddressing
     const lduMesh& myMesh = meshLevels_[levelIndex-1];
 
 
-    label oldWarn = UPstream::warnComm;
-    UPstream::warnComm = meshComm;
-
-
     procAgglomMap_.set(levelIndex, new labelList(procAgglomMap));
     agglomProcIDs_.set(levelIndex, new labelList(procIDs));
     procCommunicator_[levelIndex] = allMeshComm;
@@ -435,8 +431,6 @@ void Foam::GAMGAgglomeration::procAgglomerateLduAddressing
     {
         clearLevel(levelIndex);
     }
-
-    UPstream::warnComm = oldWarn;
 }
 
 

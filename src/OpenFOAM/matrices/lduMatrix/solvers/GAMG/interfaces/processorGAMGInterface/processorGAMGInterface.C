@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,12 +195,7 @@ void Foam::processorGAMGInterface::initInternalFieldTransfer
     const labelUList& iF
 ) const
 {
-    label oldWarn = UPstream::warnComm;
-    UPstream::warnComm = comm();
-
     send(commsType, interfaceInternalField(iF)());
-
-    UPstream::warnComm = oldWarn;
 }
 
 
@@ -210,12 +205,7 @@ Foam::tmp<Foam::labelField> Foam::processorGAMGInterface::internalFieldTransfer
     const labelUList& iF
 ) const
 {
-    label oldWarn = UPstream::warnComm;
-    UPstream::warnComm = comm();
-
     tmp<Field<label>> tfld(receive<label>(commsType, this->size()));
-
-    UPstream::warnComm = oldWarn;
 
     return tfld;
 }

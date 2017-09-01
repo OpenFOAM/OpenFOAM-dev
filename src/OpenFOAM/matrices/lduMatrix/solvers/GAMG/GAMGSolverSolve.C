@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -556,8 +556,6 @@ void Foam::GAMGSolver::solveCoarsestLevel
     const label coarsestLevel = matrixLevels_.size() - 1;
 
     label coarseComm = matrixLevels_[coarsestLevel].mesh().comm();
-    label oldWarn = UPstream::warnComm;
-    UPstream::warnComm = coarseComm;
 
     if (directSolveCoarsest_)
     {
@@ -595,9 +593,6 @@ void Foam::GAMGSolver::solveCoarsestLevel
     //    //solverPerformance coarseSolverPerf;
     //
     //    label solveComm = agglomeration_.procCommunicator(coarsestLevel);
-    //    label oldWarn = UPstream::warnComm;
-    //    UPstream::warnComm = solveComm;
-    //
     //
     //    coarsestCorrField = 0;
     //    solverPerformance coarseSolverPerf;
@@ -645,7 +640,6 @@ void Foam::GAMGSolver::solveCoarsestLevel
     //        }
     //    }
     //
-    //    UPstream::warnComm = oldWarn;
     //    Pout<< "done master solve." << endl;
     //
     //    //// Scatter to all processors
@@ -709,8 +703,6 @@ void Foam::GAMGSolver::solveCoarsestLevel
             coarseSolverPerf.print(Info.masterStream(coarseComm));
         }
     }
-
-    UPstream::warnComm = oldWarn;
 }
 
 
