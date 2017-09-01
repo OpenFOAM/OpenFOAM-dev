@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,8 +229,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
 
         vector USlip_AB =
             U_AB - (U_AB & rHat_AB)*rHat_AB
-          + (pA.omega() ^ (dAEff/2*-rHat_AB))
-          - (pB.omega() ^ (dBEff/2*rHat_AB));
+          - ((dAEff/2*pA.omega() + dBEff/2*pB.omega()) ^ rHat_AB);
 
         scalar deltaT = this->owner().mesh().time().deltaTValue();
 
@@ -276,10 +275,7 @@ void Foam::PairSpringSliderDashpot<CloudType>::evaluatePair
             }
             else
             {
-                fT_AB =
-                    -kT*tangentialOverlapMag
-                   *tangentialOverlap_AB/tangentialOverlapMag
-                  - etaT*USlip_AB;
+                fT_AB = - kT*tangentialOverlap_AB - etaT*USlip_AB;
             }
 
             pA.f() += fT_AB;
