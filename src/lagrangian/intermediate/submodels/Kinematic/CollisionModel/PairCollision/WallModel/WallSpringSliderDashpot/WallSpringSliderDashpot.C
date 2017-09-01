@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,10 +142,7 @@ void Foam::WallSpringSliderDashpot<CloudType>::evaluateWall
         }
         else
         {
-            fT_PW =
-                -kT*tangentialOverlapMag
-               *tangentialOverlap_PW/tangentialOverlapMag
-              - etaT*USlip_PW;
+            fT_PW = - kT*tangentialOverlap_PW - etaT*USlip_PW;
         }
 
         p.f() += fT_PW;
