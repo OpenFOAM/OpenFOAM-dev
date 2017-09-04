@@ -1,9 +1,9 @@
 #include "createMeshes.H"
 
-if (!fluidRegions.size())
+if (!fluidRegions.size() && !solidRegions.size())
 {
     FatalErrorIn(args.executable())
-        << "No fluid meshes present" << exit(FatalError);
+        << "No region meshes present" << exit(FatalError);
 }
 
-fvMesh& mesh = fluidRegions[0];
+fvMesh& mesh = fluidRegions.size() ? fluidRegions[0] : solidRegions[0];
