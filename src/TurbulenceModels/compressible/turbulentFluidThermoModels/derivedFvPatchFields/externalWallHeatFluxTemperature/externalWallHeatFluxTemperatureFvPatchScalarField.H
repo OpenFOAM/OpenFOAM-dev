@@ -98,8 +98,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidWallHeatFluxTemperatureFvPatchScalarField_H
-#define solidWallHeatFluxTemperatureFvPatchScalarField_H
+#ifndef externalWallHeatFluxTemperatureFvPatchScalarField_H
+#define externalWallHeatFluxTemperatureFvPatchScalarField_H
 
 #include "mixedFvPatchFields.H"
 #include "temperatureCoupledBase.H"
