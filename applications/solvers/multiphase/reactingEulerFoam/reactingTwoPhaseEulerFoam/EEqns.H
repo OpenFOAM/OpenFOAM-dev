@@ -25,6 +25,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             E1Eqn->relax();
             fvOptions.constrain(E1Eqn.ref());
             E1Eqn->solve();
+            fvOptions.correct(phase1.thermo().he());
         }
     }
 
@@ -45,6 +46,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             E2Eqn->relax();
             fvOptions.constrain(E2Eqn.ref());
             E2Eqn->solve();
+            fvOptions.correct(phase2.thermo().he());
         }
     }
 

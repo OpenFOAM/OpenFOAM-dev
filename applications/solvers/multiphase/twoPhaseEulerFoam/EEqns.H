@@ -75,9 +75,11 @@
 
     fvOptions.constrain(E1Eqn);
     E1Eqn.solve();
+    fvOptions.correct(he1);
 
     fvOptions.constrain(E2Eqn);
     E2Eqn.solve();
+    fvOptions.correct(he2);
 
     thermo1.correct();
     Info<< "min " << thermo1.T().name()

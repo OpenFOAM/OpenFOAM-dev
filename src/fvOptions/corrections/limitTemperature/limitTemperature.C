@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,16 @@ Foam::fv::limitTemperature::limitTemperature
 :
     cellSetOption(name, modelType, dict, mesh),
     Tmin_(readScalar(coeffs_.lookup("min"))),
-    Tmax_(readScalar(coeffs_.lookup("max")))
+    Tmax_(readScalar(coeffs_.lookup("max"))),
+    phase_(coeffs_.lookupOrDefault<word>("phase", word::null))
 {
     // Set the field name to that of the energy field from which the temperature
     // is obtained
-
     const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
+        mesh_.lookupObject<basicThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phase_)
+        );
 
     fieldNames_.setSize(1, thermo.he().name());
 
@@ -92,7 +95,10 @@ bool Foam::fv::limitTemperature::read(const dictionary& dict)
 void Foam::fv::limitTemperature::correct(volScalarField& he)
 {
     const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
+        mesh_.lookupObject<basicThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phase_)
+        );
 
     scalarField Tmin(cells_.size(), Tmin_);
     scalarField Tmax(cells_.size(), Tmax_);

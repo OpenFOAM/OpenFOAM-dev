@@ -31,6 +31,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
             EEqn->relax();
             fvOptions.constrain(EEqn.ref());
             EEqn->solve();
+            fvOptions.correct(phase.thermo().he());
         }
     }
 
