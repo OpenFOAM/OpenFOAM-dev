@@ -400,7 +400,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     }
 
     // Incident kinetic energy [J]
-    const scalar EKIn = 0.5*m*magSqr(Urel);
+    const scalar EKIn = 0.5*m*magSqr(Un);
 
     // Incident surface energy [J]
     const scalar ESigmaIn = np*sigma*p.areaS(d);
