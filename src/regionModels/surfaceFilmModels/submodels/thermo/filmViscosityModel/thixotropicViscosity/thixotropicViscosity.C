@@ -69,7 +69,7 @@ thixotropicViscosity::thixotropicViscosity
     c_("c", pow(dimTime, d_.value() - scalar(1)), coeffDict_),
     mu0_("mu0", dimPressure*dimTime, coeffDict_),
     muInf_("muInf", mu0_.dimensions(), coeffDict_),
-    K_(1.0 - Foam::sqrt(muInf_/mu0_)),
+    K_(1 - sqrt(muInf_/mu0_)),
     lambda_
     (
         IOobject
@@ -83,8 +83,8 @@ thixotropicViscosity::thixotropicViscosity
         film.regionMesh()
     )
 {
-    lambda_.min(1.0);
-    lambda_.max(0.0);
+    lambda_.min(1);
+    lambda_.max(0);
 
     // Initialise viscosity to inf value because it cannot be evaluated yet
     mu_ = muInf_;
@@ -108,7 +108,6 @@ void thixotropicViscosity::correct
 {
     const kinematicSingleLayer& film = filmType<kinematicSingleLayer>();
 
-    // references to film fields
     const volVectorField& U = film.U();
     const volVectorField& Uw = film.Uw();
     const volScalarField& delta = film.delta();
@@ -118,31 +117,28 @@ void thixotropicViscosity::correct
     const Time& runTime = this->film().regionMesh().time();
 
     // Shear rate
-    volScalarField gDot("gDot", alpha*mag(U - Uw)/(delta + film.deltaSmall()));
+    const volScalarField gDot
+    (
+        "gDot",
+        alpha*mag(U - Uw)/(delta + film.deltaSmall())
+    );
 
     if (debug && runTime.writeTime())
     {
         gDot.write();
     }
 
-    dimensionedScalar deltaRho0("deltaRho0", deltaRho.dimensions(), ROOTVSMALL);
-    surfaceScalarField phiU(phi/fvc::interpolate(deltaRho + deltaRho0));
-
-    dimensionedScalar c0("c0", dimless/dimTime, ROOTVSMALL);
-    volScalarField coeff("coeff", -c_*pow(gDot, d_) + c0);
-
-    // Limit the filmMass and deltaMass to calculate the effect of the added
-    // droplets with lambda = 0 to the film
-    const volScalarField filmMass
+    const dimensionedScalar deltaRho0
     (
-        "thixotropicViscosity:filmMass",
-        film.netMass() + dimensionedScalar("SMALL", dimMass, ROOTVSMALL)
+        "deltaRho0",
+        deltaRho.dimensions(),
+        ROOTVSMALL
     );
-    const volScalarField deltaMass
-    (
-        "thixotropicViscosity:deltaMass",
-        max(dimensionedScalar("zero", dimMass, 0), film.deltaMass())
-    );
+
+    const surfaceScalarField phiU(phi/fvc::interpolate(deltaRho + deltaRho0));
+
+    const dimensionedScalar c0("c0", dimless/dimTime, ROOTVSMALL);
+    const volScalarField coeff("coeff", -c_*pow(gDot, d_) + c0);
 
     fvScalarMatrix lambdaEqn
     (
@@ -150,18 +146,28 @@ void thixotropicViscosity::correct
       + fvm::div(phiU, lambda_)
       - fvm::Sp(fvc::div(phiU), lambda_)
       ==
-        a_*pow((1.0 - lambda_), b_)
+        a_*pow((1 - lambda_), b_)
       + fvm::SuSp(coeff, lambda_)
-      - fvm::Sp(deltaMass/(runTime.deltaT()*filmMass), lambda_)
+
+        // Include the effect of the impinging droplets added with lambda = 0
+      - fvm::Sp
+        (
+            max
+            (
+                film.rhoSp(),
+                dimensionedScalar("zero", film.rhoSp().dimensions(), 0)
+            )/(deltaRho + deltaRho0),
+            lambda_
+        )
     );
 
     lambdaEqn.relax();
     lambdaEqn.solve();
 
-    lambda_.min(1.0);
-    lambda_.max(0.0);
+    lambda_.min(1);
+    lambda_.max(0);
 
-    mu_ = muInf_/(sqr(1.0 - K_*lambda_) + ROOTVSMALL);
+    mu_ = muInf_/(sqr(1 - K_*lambda_) + ROOTVSMALL);
     mu_.correctBoundaryConditions();
 }
 

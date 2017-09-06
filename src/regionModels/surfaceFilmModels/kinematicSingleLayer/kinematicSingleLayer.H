@@ -489,9 +489,6 @@ public:
             //- Return the current film mass
             inline tmp<volScalarField> mass() const;
 
-            //- Return the net film mass available over the next integration
-            inline tmp<volScalarField> netMass() const;
-
             //- Return the change in film mass due to sources/sinks
             inline tmp<volScalarField> deltaMass() const;
 
