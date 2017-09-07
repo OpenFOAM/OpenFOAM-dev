@@ -1,0 +1,20 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Tracks a cloud of parcels driven by the flow of the continuous phase.
+
+    The cloud is specifed by a kinematicCloudProperties file in the constant
+    directory.  A template file is provided in:
+    $FOAM_ETC/caseDicts/solvers/lagrangian
+
+\*---------------------------------------------------------------------------*/
+
+type    icoUncoupledKinematicCloud;
+libs    ("liblagrangianFunctionObjects.so");
+
+// ************************************************************************* //
