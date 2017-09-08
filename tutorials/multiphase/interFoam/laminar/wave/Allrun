@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1
 
 runApplication blockMesh
 
-cp -r 0.org 0
+cp -r 0.orig 0
 
 runApplication extrudeMesh
 

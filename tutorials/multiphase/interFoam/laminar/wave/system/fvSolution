@@ -19,15 +19,13 @@ solvers
 {
     "alpha.water.*"
     {
-        nAlphaCorr      3;
+        nAlphaCorr      2;
         nAlphaSubCycles 1;
         cAlpha          1;
         icAlpha         0;
 
-        alphaOuterCorrectors yes;
-
         MULESCorr       yes;
-        nLimiterIter    25;
+        nLimiterIter    3;
         alphaApplyPrevCorr yes;
 
         solver          smoothSolver;
