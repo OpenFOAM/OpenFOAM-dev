@@ -225,10 +225,10 @@ bool Foam::functionObjects::yPlus::write()
 
                 writeTime(file());
                 file()
-                    << token::TAB << patch.name()
-                    << token::TAB << minYplus
-                    << token::TAB << maxYplus
-                    << token::TAB << avgYplus
+                    << tab << patch.name()
+                    << tab << minYplus
+                    << tab << maxYplus
+                    << tab << avgYplus
                     << endl;
             }
         }

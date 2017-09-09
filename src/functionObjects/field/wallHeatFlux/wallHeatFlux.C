@@ -273,10 +273,10 @@ bool Foam::functionObjects::wallHeatFlux::write()
         {
             file()
                 << mesh_.time().value()
-                << token::TAB << pp.name()
-                << token::TAB << minHfp
-                << token::TAB << maxHfp
-                << token::TAB << integralHfp
+                << tab << pp.name()
+                << tab << minHfp
+                << tab << maxHfp
+                << tab << integralHfp
                 << endl;
         }
 

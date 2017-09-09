@@ -51,20 +51,20 @@ void Foam::functionObjects::fieldMinMax::output
 
         writeTabbed(file, fieldName);
 
-        file<< token::TAB << minValue
-            << token::TAB << minC;
+        file<< tab << minValue
+            << tab << minC;
 
         if (Pstream::parRun())
         {
-            file<< token::TAB << minProci;
+            file<< tab << minProci;
         }
 
-        file<< token::TAB << maxValue
-            << token::TAB << maxC;
+        file<< tab << maxValue
+            << tab << maxC;
 
         if (Pstream::parRun())
         {
-            file<< token::TAB << maxProci;
+            file<< tab << maxProci;
         }
 
         file<< endl;
@@ -89,7 +89,7 @@ void Foam::functionObjects::fieldMinMax::output
     }
     else
     {
-        file<< token::TAB << minValue << token::TAB << maxValue;
+        file<< tab << minValue << tab << maxValue;
 
         Log << "    min/max(" << outputName << ") = "
             << minValue << ' ' << maxValue;

@@ -83,13 +83,13 @@ void Foam::functionObjects::residuals::writeResidual(const word& fieldName)
             {
                 if (component(validComponents, cmpt) != -1)
                 {
-                    file() << token::TAB << component(residual, cmpt);
+                    file() << tab << component(residual, cmpt);
                 }
             }
         }
         else
         {
-            file() << token::TAB << "N/A";
+            file() << tab << "N/A";
         }
     }
 }

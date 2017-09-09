@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,8 +133,8 @@ bool Foam::functionObjects::cloudInfo::write()
         {
             writeTime(file(i));
             file(i)
-                << token::TAB
-                << nParcels << token::TAB
+                << tab
+                << nParcels << tab
                 << massInSystem << endl;
         }
     }

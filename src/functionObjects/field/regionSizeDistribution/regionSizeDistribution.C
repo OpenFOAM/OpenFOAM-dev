@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -534,10 +534,10 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
     if (debug)
     {
-        Info<< "    " << token::TAB << "Region"
-            << token::TAB << "Volume(mesh)"
-            << token::TAB << "Volume(" << alpha.name() << "):"
-            << token::TAB << "nCells"
+        Info<< "    " << tab << "Region"
+            << tab << "Volume(mesh)"
+            << tab << "Volume(" << alpha.name() << "):"
+            << tab << "nCells"
             << endl;
         scalar meshSumVol = 0.0;
         scalar alphaSumVol = 0.0;
@@ -554,20 +554,20 @@ bool Foam::functionObjects::regionSizeDistribution::write()
             ++vIter, ++aIter, ++numIter
         )
         {
-            Info<< "    " << token::TAB << vIter.key()
-                << token::TAB << vIter()
-                << token::TAB << aIter()
-                << token::TAB << numIter()
+            Info<< "    " << tab << vIter.key()
+                << tab << vIter()
+                << tab << aIter()
+                << tab << numIter()
                 << endl;
 
             meshSumVol += vIter();
             alphaSumVol += aIter();
             nCells += numIter();
         }
-        Info<< "    " << token::TAB << "Total:"
-            << token::TAB << meshSumVol
-            << token::TAB << alphaSumVol
-            << token::TAB << nCells
+        Info<< "    " << tab << "Total:"
+            << tab << meshSumVol
+            << tab << alphaSumVol
+            << tab << nCells
             << endl;
         Info<< endl;
     }
@@ -577,16 +577,16 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
     {
         Info<< "    Patch connected regions (liquid core):" << endl;
-        Info<< token::TAB << "    Region"
-            << token::TAB << "Volume(mesh)"
-            << token::TAB << "Volume(" << alpha.name() << "):"
+        Info<< tab << "    Region"
+            << tab << "Volume(mesh)"
+            << tab << "Volume(" << alpha.name() << "):"
             << endl;
         forAllConstIter(Map<label>, patchRegions, iter)
         {
             label regionI = iter.key();
-            Info<< "    " << token::TAB << iter.key()
-                << token::TAB << allRegionVolume[regionI]
-                << token::TAB << allRegionAlphaVolume[regionI] << endl;
+            Info<< "    " << tab << iter.key()
+                << tab << allRegionVolume[regionI]
+                << tab << allRegionAlphaVolume[regionI] << endl;
 
         }
         Info<< endl;
@@ -594,9 +594,9 @@ bool Foam::functionObjects::regionSizeDistribution::write()
 
     {
         Info<< "    Background regions:" << endl;
-        Info<< "    " << token::TAB << "Region"
-            << token::TAB << "Volume(mesh)"
-            << token::TAB << "Volume(" << alpha.name() << "):"
+        Info<< "    " << tab << "Region"
+            << tab << "Volume(mesh)"
+            << tab << "Volume(" << alpha.name() << "):"
             << endl;
         Map<scalar>::const_iterator vIter = allRegionVolume.begin();
         Map<scalar>::const_iterator aIter = allRegionAlphaVolume.begin();
@@ -615,9 +615,9 @@ bool Foam::functionObjects::regionSizeDistribution::write()
              && vIter() >= maxDropletVol
             )
             {
-                Info<< "    " << token::TAB << vIter.key()
-                    << token::TAB << vIter()
-                    << token::TAB << aIter() << endl;
+                Info<< "    " << tab << vIter.key()
+                    << tab << vIter()
+                    << tab << aIter() << endl;
             }
         }
         Info<< endl;
@@ -716,17 +716,17 @@ bool Foam::functionObjects::regionSizeDistribution::write()
         // Write to log
         {
             Info<< "    Bins:" << endl;
-            Info<< "    " << token::TAB << "Bin"
-                << token::TAB << "Min diameter"
-                << token::TAB << "Count:"
+            Info<< "    " << tab << "Bin"
+                << tab << "Min diameter"
+                << tab << "Count:"
                 << endl;
 
             scalar diam = 0.0;
             forAll(binCount, binI)
             {
-                Info<< "    " << token::TAB << binI
-                    << token::TAB << diam
-                    << token::TAB << binCount[binI] << endl;
+                Info<< "    " << tab << binI
+                    << tab << diam
+                    << tab << binCount[binI] << endl;
                 diam += delta;
             }
             Info<< endl;
