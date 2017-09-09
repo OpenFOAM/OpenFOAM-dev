@@ -158,6 +158,13 @@ Foam::sixDoFRigidBodyMotionSolver::~sixDoFRigidBodyMotionSolver()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::sixDoFRigidBodyMotion&
+Foam::sixDoFRigidBodyMotionSolver::motion() const
+{
+    return motion_;
+}
+
+
 Foam::tmp<Foam::pointField>
 Foam::sixDoFRigidBodyMotionSolver::curPoints() const
 {

@@ -59,6 +59,12 @@ Foam::dynamicMotionSolverFvMesh::~dynamicMotionSolverFvMesh()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::motionSolver& Foam::dynamicMotionSolverFvMesh::motion() const
+{
+    return motionPtr_();
+}
+
+
 bool Foam::dynamicMotionSolverFvMesh::update()
 {
     fvMesh::movePoints(motionPtr_->newPoints());
