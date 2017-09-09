@@ -10,22 +10,58 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      createPatchDict;
+    object      fvSolution;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Do a synchronisation of coupled points after creation of any patches.
-// Note: this does not work with points that are on multiple coupled patches
-//       with transformations (i.e. cyclics).
-pointSync false;
+solvers
+{
+    p
+    {
+        solver          GAMG;
+        smoother        DIC;
+        tolerance       1e-6;
+        relTol          0.05;
+    }
 
-// Optional: Write cyclic matches into .obj format; defaults to false.
-writeCyclicMatch  false;
+    "(U|sigma)"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-6;
+        relTol          0.1;
+    }
 
-// Patches to create.
-patches
-(
-);
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    "(U|sigma)Final"
+    {
+        $U;
+        relTol          0;
+    }
+}
+
+PIMPLE
+{
+    momentumPredictor   off;
+    nOuterCorrectors    15;
+    nCorrectors         3;
+    nNonOrthogonalCorrectors 0;
+    pRefCell            0;
+    pRefValue           0;
+    turbOnFinalIterOnly no;
+}
+
+relaxationFactors
+{
+    equations
+    {
+        ".*"   1;
+    }
+}
 
 // ************************************************************************* //

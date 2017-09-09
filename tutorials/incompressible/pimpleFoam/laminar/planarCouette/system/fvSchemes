@@ -10,22 +10,45 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      createPatchDict;
+    object      fvSchemes;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Do a synchronisation of coupled points after creation of any patches.
-// Note: this does not work with points that are on multiple coupled patches
-//       with transformations (i.e. cyclics).
-pointSync false;
+ddtSchemes
+{
+    default         backward;
+}
 
-// Optional: Write cyclic matches into .obj format; defaults to false.
-writeCyclicMatch  false;
+gradSchemes
+{
+    default         Gauss linear;
+}
 
-// Patches to create.
-patches
-(
-);
+divSchemes
+{
+    default         none;
+
+    div(phi,U)      Gauss linearUpwind grad(U);
+    div(phi,sigma)  Gauss vanAlbada;
+
+    div(sigma)                  Gauss linear;
+    div((nu*dev2(T(grad(U)))))  Gauss linear;
+    div((nuM*grad(U)))          Gauss linear;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
+}
 
 // ************************************************************************* //

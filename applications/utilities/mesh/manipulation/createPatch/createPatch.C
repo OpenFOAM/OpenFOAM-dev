@@ -195,8 +195,8 @@ void filterPatches(polyMesh& mesh, const HashSet<word>& addedPatchNames)
 }
 
 
-// Dump for all patches the current match
-void dumpCyclicMatch(const fileName& prefix, const polyMesh& mesh)
+// Write current match for all patches the as OBJ files
+void writeCyclicMatchObjs(const fileName& prefix, const polyMesh& mesh)
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
@@ -211,10 +211,10 @@ void dumpCyclicMatch(const fileName& prefix, const polyMesh& mesh)
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(patches[patchi]);
 
-            // Dump patches
+            // Write patches
             {
-                OFstream str(prefix+cycPatch.name()+".obj");
-                Pout<< "Dumping " << cycPatch.name()
+                OFstream str(prefix+cycPatch.name() + ".obj");
+                Pout<< "Writing " << cycPatch.name()
                     << " faces to " << str.name() << endl;
                 meshTools::writeOBJ
                 (
@@ -227,7 +227,7 @@ void dumpCyclicMatch(const fileName& prefix, const polyMesh& mesh)
             const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
             {
                 OFstream str(prefix+nbrPatch.name()+".obj");
-                Pout<< "Dumping " << nbrPatch.name()
+                Pout<< "Writing " << nbrPatch.name()
                     << " faces to " << str.name() << endl;
                 meshTools::writeOBJ
                 (
@@ -242,7 +242,7 @@ void dumpCyclicMatch(const fileName& prefix, const polyMesh& mesh)
             OFstream str(prefix+cycPatch.name()+nbrPatch.name()+"_match.obj");
             label vertI = 0;
 
-            Pout<< "Dumping cyclic match as lines between face centres to "
+            Pout<< "Writing cyclic match as lines between face centres to "
                 << str.name() << endl;
 
             forAll(cycPatch, facei)
@@ -532,6 +532,12 @@ int main(int argc, char *argv[])
     // Whether to synchronise points
     const Switch pointSync(dict.lookup("pointSync"));
 
+    // Whether to write cyclic matches to .OBJ files
+    const Switch writeCyclicMatch
+    (
+        dict.lookupOrDefault("writeCyclicMatch", false)
+    );
+
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
@@ -539,7 +545,10 @@ int main(int argc, char *argv[])
     patches.checkParallelSync(true);
 
 
-    dumpCyclicMatch("initial_", mesh);
+    if (writeCyclicMatch)
+    {
+        writeCyclicMatchObjs("initial_", mesh);
+    }
 
     // Read patch construct info from dictionary
     PtrList<dictionary> patchSources(dict.lookup("patches"));
@@ -758,7 +767,10 @@ int main(int argc, char *argv[])
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh, true);
     mesh.movePoints(map().preMotionPoints());
 
-    dumpCyclicMatch("coupled_", mesh);
+    if (writeCyclicMatch)
+    {
+        writeCyclicMatchObjs("coupled_", mesh);
+    }
 
     // Synchronise points.
     if (!pointSync)
@@ -869,7 +881,10 @@ int main(int argc, char *argv[])
     filterPatches(mesh, addedPatchNames);
 
 
-    dumpCyclicMatch("final_", mesh);
+    if (writeCyclicMatch)
+    {
+        writeCyclicMatchObjs("final_", mesh);
+    }
 
 
     // Set the precision of the points data to 10

@@ -21,6 +21,7 @@ FoamFile
 // - always: order faces on coupled patches such that they are opposite. This
 //   is done for all coupled faces, not just for any patches created.
 // - optional: synchronise points on coupled patches.
+// - always: remove zero-sized (non-coupled) patches (that were not added)
 
 // 1. Create cyclic:
 // - specify where the faces should come from
@@ -39,19 +40,57 @@ FoamFile
 //      - or change patch type from 'cyclic' to 'patch'
 //        and regenerate cyclic as above
 
-
 // Do a synchronisation of coupled points after creation of any patches.
 // Note: this does not work with points that are on multiple coupled patches
 //       with transformations (i.e. cyclics).
-pointSync false;
+pointSync true;
 
 // Optional: Write cyclic matches into .obj format; defaults to false.
-writeCyclicMatch  false;
+// writeCyclicMatch  false;
 
 // Patches to create.
 patches
 (
-    // none
+    {
+        // Name of new patch
+        name cyc_half0;
+
+        // Dictionary to construct new patch from
+        patchInfo
+        {
+            type cyclic;
+            neighbourPatch cyc_half1;
+        }
+
+        // How to construct: either from 'patches' or 'set'
+        constructFrom patches;
+
+        // If constructFrom = patches : names of patches. Wildcards allowed.
+        patches (left);
+
+        // If constructFrom = set : name of faceSet
+        set f0;
+    }
+    {
+        // Name of new patch
+        name cyc_half1;
+
+        // Dictionary to construct new patch from
+        patchInfo
+        {
+            type cyclic;
+            neighbourPatch cyc_half0;
+        }
+
+        // How to construct: either from 'patches' or 'set'
+        constructFrom patches;
+
+        // If constructFrom = patches : names of patches. Wildcards allowed.
+        patches (right);
+
+        // If constructFrom = set : name of faceSet
+        set f0;
+    }
 );
 
 // ************************************************************************* //

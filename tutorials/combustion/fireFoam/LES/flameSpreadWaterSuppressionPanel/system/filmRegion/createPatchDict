@@ -12,9 +12,8 @@ FoamFile
     class       dictionary;
     object      createPatchDict;
 }
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-matchTolerance 1E-3;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 pointSync false;
 

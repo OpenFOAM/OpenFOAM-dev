@@ -10,22 +10,23 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      createPatchDict;
+    object      turbulenceProperties;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Do a synchronisation of coupled points after creation of any patches.
-// Note: this does not work with points that are on multiple coupled patches
-//       with transformations (i.e. cyclics).
-pointSync false;
+simulationType laminar;
 
-// Optional: Write cyclic matches into .obj format; defaults to false.
-writeCyclicMatch  false;
+laminar
+{
+    laminarModel        Maxwell;
 
-// Patches to create.
-patches
-(
-);
+    MaxwellCoeffs
+    {
+        nuM             1;
+        lambda          5;
+    }
+
+    printCoeffs         on;
+}
 
 // ************************************************************************* //
