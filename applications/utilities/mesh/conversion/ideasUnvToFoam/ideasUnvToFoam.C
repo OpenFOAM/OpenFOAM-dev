@@ -226,8 +226,6 @@ void readPoints
             (
                 is
             )   << "Points not in order starting at point " << pointi
-                //<< " at line " << is.lineNumber()
-                //<< abort(FatalError);
                 << endl;
         }
 
@@ -478,6 +476,13 @@ void readCells
 
     Info<< "Read " << cellVerts.size() << " cells"
         << " and " << boundaryFaces.size() << " boundary faces." << endl;
+
+    if (!cellVerts.size())
+    {
+        WarningInFunction
+            << "There are no cells in the mesh." << endl
+            << "    Note: 2D meshes are not supported."<< endl;
+    }
 }
 
 
