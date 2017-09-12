@@ -53,17 +53,17 @@ bool Foam::DSMCParcel<ParcelType>::move
 
     while (td.keepParticle && !td.switchProcessor && p.stepFraction() < 1)
     {
-        // Apply correction to position for reduced-D cases
-        p.constrainToMeshCentre();
-
         Utracking = U_;
 
         // Apply correction to velocity to constrain tracking for
         // reduced-D cases
         meshTools::constrainDirection(mesh, mesh.solutionD(), Utracking);
 
+        // Deviation from the mesh centre for reduced-D cases
+        const vector d = p.deviationFromMeshCentre();
+
         const scalar f = 1 - p.stepFraction();
-        p.trackToAndHitFace(f*trackTime*Utracking, f, cloud, td);
+        p.trackToAndHitFace(f*trackTime*Utracking - d, f, cloud, td);
     }
 
     return td.keepParticle;

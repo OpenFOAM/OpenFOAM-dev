@@ -946,25 +946,17 @@ Foam::scalar Foam::particle::trackToTri
 }
 
 
-void Foam::particle::constrainToMeshCentre()
+Foam::vector Foam::particle::deviationFromMeshCentre() const
 {
-    const Vector<label>& dirs = mesh_.geometricD();
-
-    bool isConstrained = false;
-    forAll(dirs, dirI)
+    if (cmptMin(mesh_.geometricD()) == -1)
     {
-        if (dirs[dirI] == -1)
-        {
-            isConstrained = true;
-            break;
-        }
+        vector pos = position(), posC = pos;
+        meshTools::constrainToMeshCentre(mesh_, posC);
+        return pos - posC;
     }
-
-    if (isConstrained)
+    else
     {
-        vector pos = position();
-        meshTools::constrainToMeshCentre(mesh_, pos);
-        track(pos - position(), 0);
+        return vector::zero;
     }
 }
 

@@ -561,9 +561,10 @@ public:
             trackingData& td
         );
 
-        //- Set the constrained components of the particle position to the
-        //  mesh centre.
-        void constrainToMeshCentre();
+        //- Get the displacement from the mesh centre. Used to correct the
+        //  particle position in cases with reduced dimensionality. Returns a
+        //  zero vector for three-dimensional cases.
+        vector deviationFromMeshCentre() const;
 
 
     // Patch data

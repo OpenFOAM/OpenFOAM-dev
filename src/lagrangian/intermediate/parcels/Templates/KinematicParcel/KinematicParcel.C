@@ -274,9 +274,6 @@ bool Foam::KinematicParcel<ParcelType>::move
 
     while (ttd.keepParticle && !ttd.switchProcessor && p.stepFraction() < 1)
     {
-        // Apply correction to position for reduced-D cases
-        p.constrainToMeshCentre();
-
         // Cache the current position, cell and step-fraction
         const point start = p.position();
         const scalar sfrac = p.stepFraction();
@@ -287,6 +284,9 @@ bool Foam::KinematicParcel<ParcelType>::move
         // Cell length scale
         const scalar l = cellLengthScale[p.cell()];
 
+        // Deviation from the mesh centre for reduced-D cases
+        const vector d = p.deviationFromMeshCentre();
+
         // Fraction of the displacement to track in this loop. This is limited
         // to ensure that the both the time and distance tracked is less than
         // maxCo times the total value.
@@ -296,7 +296,7 @@ bool Foam::KinematicParcel<ParcelType>::move
         if (p.active())
         {
             // Track to the next face
-            p.trackToFace(f*s, f);
+            p.trackToFace(f*s - d, f);
         }
         else
         {
