@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,8 +65,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef variableHeightFlowRateFvPatchScalarField_H
-#define variableHeightFlowRateFvPatchScalarField_H
+#ifndef variableHeightFlowRateFvPatchField_H
+#define variableHeightFlowRateFvPatchField_H
 
 #include "mixedFvPatchFields.H"
 

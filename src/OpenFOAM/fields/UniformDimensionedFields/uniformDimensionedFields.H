@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef UniformDimensionedFields_H
-#define UniformDimensionedFields_H
+#ifndef uniformDimensionedFields_H
+#define uniformDimensionedFields_H
 
 #include "UniformDimensionedField.H"
 #include "fieldTypes.H"

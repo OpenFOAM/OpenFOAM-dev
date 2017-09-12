@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef SCOPE_H
-#define SCOPE_H
+#ifndef SCOPELaminarFlameSpeed_H
+#define SCOPELaminarFlameSpeed_H
 
 #include "laminarFlameSpeed.H"
 

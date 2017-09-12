@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef freestreamPressureFvPatchScalarFields_H
-#define freestreamPressureFvPatchScalarFields_H
+#ifndef freestreamPressureFvPatchScalarField_H
+#define freestreamPressureFvPatchScalarField_H
 
 #include "fvPatchFields.H"
 #include "zeroGradientFvPatchFields.H"

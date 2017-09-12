@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MapConsistentVolFields_H
-#define MapConsistentVolFields_H
+#ifndef MapVolFields_H
+#define MapVolFields_H
 
 #include "GeometricField.H"
 #include "meshToMesh.H"

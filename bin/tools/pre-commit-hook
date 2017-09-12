@@ -314,6 +314,43 @@ MESSAGE
 
 
 #
+# check that header files respect the policy of file names matching the
+# #ifndef/#define bounds
+#
+checkHeaderIfndefNames()
+{
+    echo "$hookName: check header files #ifndef/#define names ..." 1>&2
+
+    badFiles=$(
+    for f in $fileList
+    do
+        # limit to *.H files
+        case "$f" in
+        (*.H)
+            fileName=$(basename $f)
+            correctMangledName=$(basename $f | sed 's=\.=_=')
+
+            if grep -q "#ifndef.*_H" $f
+            then
+              if ! grep "#ifndef.*_H" $f | grep -q $correctMangledName
+              then
+                echo "$(grep -H "#ifndef" $f | sed 's=#=\n\t#=') --> $correctMangledName"
+
+                currentMangled=$(grep "#ifndef.*_H" $f | sed 's=#ifndef\s*==')
+
+                sed -i -e 's='$currentMangled'='$correctMangledName'=' $f
+              fi
+            fi
+        ;;
+        esac
+    done
+    )
+
+    dieOnBadFiles "Some header files were automatically updated to respect #ifndef naming convention; Please check these before pushing"
+}
+
+
+#
 # check that OpenFOAM Foundation copyright is current
 #
 checkCopyright()
@@ -370,6 +407,9 @@ checkLineLengthNonDirective
 
 # check for non-standard code patterns
 checkNonStandardCodePatterns
+
+# check if #ifndef/#define bounds are named correctly
+checkHeaderIfndefNames
 
 checkCopyright
 

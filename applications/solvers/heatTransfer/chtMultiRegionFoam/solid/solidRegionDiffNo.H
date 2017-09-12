@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidRegionDiff_H
-#define solidRegionDiff_H
+#ifndef solidRegionDiffNo_H
+#define solidRegionDiffNo_H
 
 #include "fvMesh.H"
 

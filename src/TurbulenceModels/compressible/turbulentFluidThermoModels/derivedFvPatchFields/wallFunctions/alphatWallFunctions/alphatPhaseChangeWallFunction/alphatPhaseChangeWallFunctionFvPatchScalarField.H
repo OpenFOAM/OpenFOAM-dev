@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressibleAlphatPhaseChangeWallFunctionFvPatchScalarField_H
-#define compressibleAlphatPhaseChangeWallFunctionFvPatchScalarField_H
+#ifndef alphatPhaseChangeWallFunctionFvPatchScalarField_H
+#define alphatPhaseChangeWallFunctionFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
 

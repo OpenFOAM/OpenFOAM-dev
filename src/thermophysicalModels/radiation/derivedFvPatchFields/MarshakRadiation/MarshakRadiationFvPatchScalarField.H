@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef MarshakRadiationMixedFvPatchField_H
-#define MarshakRadiationMixedFvPatchField_H
+#ifndef MarshakRadiationFvPatchScalarField_H
+#define MarshakRadiationFvPatchScalarField_H
 
 #include "mixedFvPatchFields.H"
 #include "radiationCoupledBase.H"

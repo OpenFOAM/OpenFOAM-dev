@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,8 +41,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compressibleAlphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField_H
-#define compressibleAlphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField_H
+#ifndef alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField_H
+#define alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField_H
 
 #include "alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.H"
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedFluxExtrapolatedPressureFvPatchScalarFields_H
-#define fixedFluxExtrapolatedPressureFvPatchScalarFields_H
+#ifndef fixedFluxExtrapolatedPressureFvPatchScalarField_H
+#define fixedFluxExtrapolatedPressureFvPatchScalarField_H
 
 #include "fixedFluxPressureFvPatchScalarField.H"
 

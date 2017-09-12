@@ -29,8 +29,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef HashSignedLabel_H
-#define HashSignedLabel_H
+#ifndef hashSignedLabel_H
+#define hashSignedLabel_H
 
 #include "List.H"
 #include "word.H"

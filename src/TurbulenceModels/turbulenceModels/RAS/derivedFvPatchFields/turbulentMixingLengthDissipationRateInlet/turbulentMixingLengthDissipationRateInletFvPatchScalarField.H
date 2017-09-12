@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef turbulentMixingLengthDissipationRateInlet_H
-#define turbulentMixingLengthDissipationRateInlet_H
+#ifndef turbulentMixingLengthDissipationRateInletFvPatchScalarField_H
+#define turbulentMixingLengthDissipationRateInletFvPatchScalarField_H
 
 #include "inletOutletFvPatchFields.H"
 

@@ -28,8 +28,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef chemistryTabulationMethod_none_H
-#define chemistryTabulationMethod_none_H
+#ifndef noChemistryTabulation_H
+#define noChemistryTabulation_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

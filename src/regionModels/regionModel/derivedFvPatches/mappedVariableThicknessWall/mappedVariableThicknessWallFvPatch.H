@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,8 +37,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mappedWallFvPatch_H
-#define mappedWallFvPatch_H
+#ifndef mappedVariableThicknessWallFvPatch_H
+#define mappedVariableThicknessWallFvPatch_H
 
 #include "wallFvPatch.H"
 #include "mappedVariableThicknessWallPolyPatch.H"

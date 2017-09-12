@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,8 +30,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef radiationAbsorptionEmissionModel_H
-#define radiationAbsorptionEmissionModel_H
+#ifndef absorptionEmissionModel_H
+#define absorptionEmissionModel_H
 
 #include "IOdictionary.H"
 #include "autoPtr.H"

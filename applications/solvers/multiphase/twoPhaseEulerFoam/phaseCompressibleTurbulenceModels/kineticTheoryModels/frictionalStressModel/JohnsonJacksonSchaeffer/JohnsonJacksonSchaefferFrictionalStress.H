@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef JohnsonJacksonSchaeffer_H
-#define JohnsonJacksonSchaeffer_H
+#ifndef JohnsonJacksonSchaefferFrictionalStress_H
+#define JohnsonJacksonSchaefferFrictionalStress_H
 
 #include "frictionalStressModel.H"
 

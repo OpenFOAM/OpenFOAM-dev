@@ -32,8 +32,8 @@ SourceFile
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef BINARY_NODE_H
-#define BINARY_NODE_H
+#ifndef binaryNode_H
+#define binaryNode_H
 
 #include "chemPointISAT.H"
 

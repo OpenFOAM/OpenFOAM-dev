@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef smoluchowskiJumpTFvPatchScalarFields_H
-#define smoluchowskiJumpTFvPatchScalarFields_H
+#ifndef smoluchowskiJumpTFvPatchScalarField_H
+#define smoluchowskiJumpTFvPatchScalarField_H
 
 #include "mixedFvPatchFields.H"
 
