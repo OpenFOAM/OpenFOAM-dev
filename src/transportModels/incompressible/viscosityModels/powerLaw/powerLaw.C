@@ -61,7 +61,7 @@ Foam::viscosityModels::powerLaw::calcNu() const
                 max
                 (
                     dimensionedScalar("one", dimTime, 1.0)*strainRate(),
-                    dimensionedScalar("VSMALL", dimless, VSMALL)
+                    dimensionedScalar("SMALL", dimless, SMALL)
                 ),
                 n_.value() - scalar(1)
             )
