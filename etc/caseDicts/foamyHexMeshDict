@@ -70,6 +70,8 @@ motionControl
 {
     maxSmoothingIterations      100;
 
+    maxRefinementIterations     0;
+
     cellAspectRatioControl
     {
         aspectRatio             1.0;
