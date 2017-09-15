@@ -13,7 +13,7 @@ intersectSurfaces()
     outputName2=${outputName2%.*}
 
     runApplication -s $outputName1:$outputName2 \
-        surfaceBooleanFeatures intersection "$@"
+        surfaceBooleanFeatures "$@" intersection
 }
 
 # Set application name
