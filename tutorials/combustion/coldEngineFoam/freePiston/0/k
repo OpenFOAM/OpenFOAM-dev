@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM:.khe Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      binary;
+    class       volScalarField;
+    location    "0";
+    object      k;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "include/caseSettings"
+
+dimensions      [0 2 -2 0 0 0 0];
+
+internalField   uniform $:internalField.k;
+
+boundaryField
+{
+    back
+    {
+        type            wedge;
+    }
+
+    front
+    {
+        $back;
+    }
+
+    liner
+    {
+        $:wall.k;
+    }
+
+    cylinderHead
+    {
+        $liner;
+    }
+
+    piston
+    {
+        $liner;
+    }
+}
+
+
+// ************************************************************************* //

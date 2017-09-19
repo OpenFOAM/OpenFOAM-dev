@@ -1,0 +1,3 @@
+XiEngineFoam.C
+
+EXE = $(FOAM_APPBIN)/XiEngineFoam

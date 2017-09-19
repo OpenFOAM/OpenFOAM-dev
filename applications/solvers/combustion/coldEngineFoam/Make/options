@@ -1,6 +1,6 @@
 EXE_INC = \
     -I. \
-    -I../engineFoam \
+    -I../XiFoam/XiEngineFoam \
     -I../XiFoam \
     -I../../compressible/rhoPimpleFoam \
     -I$(LIB_SRC)/engine/lnInclude \
