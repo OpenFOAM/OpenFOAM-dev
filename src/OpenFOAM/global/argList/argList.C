@@ -33,8 +33,7 @@ License
 #include "labelList.H"
 #include "regIOobject.H"
 #include "dynamicCode.H"
-#include "uncollatedFileOperation.H"
-#include "masterUncollatedFileOperation.H"
+#include "fileOperation.H"
 
 #include <cctype>
 

@@ -103,6 +103,7 @@ namespace Foam
 class argList
 {
     // Private data
+
         static bool bannerEnabled;
 
         //- Switch on/off parallel mode. Has to be first to be constructed
