@@ -1,8 +1,13 @@
-    Info<< "Create engine time\n" << endl;
+Info<< "Create engine time\n" << endl;
 
-    engineTime runTime
+autoPtr<engineTime> runTimePtr
+(
+    engineTime::New
     (
         Time::controlDictName,
         args.rootPath(),
         args.caseName()
-    );
+    )
+);
+
+engineTime& runTime = runTimePtr();

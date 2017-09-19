@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,12 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::engineTime
+    Foam::crankConRod
 
 Description
     Manage time in terms of engine RPM and crank-angle.
 
-    When engineTime is in effect, the userTime is reported in degrees
+    When crankConRod is in effect, the userTime is reported in degrees
     crank-angle instead of in seconds. The RPM to be used is specified in
     \c constant/engineGeometry. If only a time conversion is required,
     the geometric engine parameters can be dropped or set to zero.
@@ -42,19 +42,16 @@ Description
         clearance       clearance     [0 1 0 0 0] 0.0;
     \endverbatim
 
-Note
-   The engineTime can currently only be selected at compile-time.
-
 SourceFiles
-    engineTime.C
+    crankConRod.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef engineTime_H
-#define engineTime_H
+#ifndef crankConRod_H
+#define crankConRod_H
 
-#include "Time.H"
-#include "IOdictionary.H"
+#include "engineTime.H"
+#include "dictionary.H"
 #include "dimensionedScalar.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -63,16 +60,14 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class engineTime Declaration
+                        Class crankConRod Declaration
 \*---------------------------------------------------------------------------*/
 
-class engineTime
+class crankConRod
 :
-    public Time
+    public engineTime
 {
     // Private data
-
-        IOdictionary dict_;
 
         //- RPM is required
         dimensionedScalar rpm_;
@@ -87,20 +82,24 @@ class engineTime
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
-        engineTime(const engineTime&);
+        crankConRod(const crankConRod&);
 
         //- Disallow default bitwise assignment
-        void operator=(const engineTime&);
+        void operator=(const crankConRod&);
 
         //- Adjust read time values
         void timeAdjustment();
 
 public:
 
+    //- Runtime type information
+    TypeName("crankConRod");
+
+
     // Constructors
 
         //- Construct from objectRegistry arguments
-        engineTime
+        crankConRod
         (
             const word& name,
             const fileName& rootPath,
@@ -111,7 +110,7 @@ public:
         );
 
     //- Destructor
-    virtual ~engineTime()
+    virtual ~crankConRod()
     {}
 
 
@@ -131,12 +130,6 @@ public:
 
 
         // Access
-
-            //- Return the engine geometry dictionary
-            const IOdictionary& engineDict() const
-            {
-                return dict_;
-            }
 
             //- Return the engines current operating RPM
             const dimensionedScalar& rpm() const
@@ -170,23 +163,17 @@ public:
 
 
             //- Return current crank-angle
-            scalar theta() const;
+            virtual scalar theta() const;
+
+            //- Return time unit
+            virtual word unit() const;
 
             //- Return current crank-angle translated to a single revolution
             //  (value between -180 and 180 with 0 = top dead centre)
             scalar thetaRevolution() const;
 
             //- Return crank-angle increment
-            scalar deltaTheta() const;
-
-            //- Return current piston position
-            dimensionedScalar pistonPosition() const;
-
-            //- Return piston displacement for current time step
-            dimensionedScalar pistonDisplacement() const;
-
-            //- Return piston speed for current time step
-            dimensionedScalar pistonSpeed() const;
+            virtual scalar deltaTheta() const;
 
 
         // Member functions overriding the virtual functions in time

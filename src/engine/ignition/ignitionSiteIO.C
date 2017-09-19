@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,14 +80,14 @@ Foam::ignitionSite::ignitionSite
     (
         db_.userTimeToTime
         (
-            edb.degToTime(readScalar(ignitionSiteDict_.lookup("start")))
+            edb.userTimeToTime(readScalar(ignitionSiteDict_.lookup("start")))
         )
     ),
     duration_
     (
         db_.userTimeToTime
         (
-            edb.degToTime(readScalar(ignitionSiteDict_.lookup("duration")))
+            edb.userTimeToTime(readScalar(ignitionSiteDict_.lookup("duration")))
         )
     ),
     strength_(readScalar(ignitionSiteDict_.lookup("strength"))),

@@ -1,4 +1,8 @@
-engineTime/engineTime.C
+engineTime/engineTime/engineTime.C
+engineTime/engineTime/engineTimeNew.C
+engineTime/freePiston/freePiston.C
+engineTime/crankConRod/crankConRod.C
+
 ignition/ignition.C
 ignition/ignitionIO.C
 ignition/ignitionSite.C
