@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    sprayEngineFoam
+    engineFoam
 
 Description
     Transient solver for compressible, turbulent engine flow with a spray

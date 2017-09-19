@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    engineFoam
+    XiEngineFoam
 
 Description
     Solver for internal combustion engines.
