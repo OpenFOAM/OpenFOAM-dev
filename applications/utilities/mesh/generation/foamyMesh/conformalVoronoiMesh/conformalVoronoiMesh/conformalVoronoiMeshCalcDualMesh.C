@@ -2250,47 +2250,52 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
                 }
                 else
                 {
-//                    if
-//                    (
-//                        ptPairs_.isPointPair(vA, vB)
-//                     || ftPtConformer_.featurePointPairs().isPointPair(vA, vB)
-//                    )
-//                    {
-                        patchIndex = geometryToConformTo_.findPatch(ptA, ptB);
-//                    }
-
-                    if (patchIndex != -1)
+                    if
+                    (
+                        !vA->boundaryPoint()
+                     || !vB->boundaryPoint()
+                     || ptPairs_.isPointPair(vA, vB)
+                     || ftPtConformer_.featurePointPairs().isPointPair(vA, vB)
+                    )
                     {
-//                        if
-//                        (
-//                            vA->boundaryPoint() && vB->boundaryPoint()
-//                         && !ptPairs_.isPointPair(vA, vB)
-//                        )
-//                        {
-//                            indirectPatchFace[patchIndex].append(true);
-//                        }
-//                        else
-//                        {
-//                            indirectPatchFace[patchIndex].append(false);
-//                        }
-//                        patchFaces[patchIndex].append(newDualFace);
-//                        patchOwners[patchIndex].append(own);
-//                        indirectPatchFace[patchIndex].append(false);
-//
-//                        if
-//                        (
-//                            labelPair(vB->index(), vB->procIndex())
-//                          < labelPair(vA->index(), vA->procIndex())
-//                        )
-//                        {
-//                            patchPPSlaves[patchIndex].append(vB->index());
-//                        }
-//                        else
-//                        {
-//                            patchPPSlaves[patchIndex].append(vA->index());
-//                        }
+                        patchIndex = geometryToConformTo_.findPatch(ptA, ptB);
                     }
-//                    else
+
+                    if
+                    (
+                        patchIndex != -1
+                     && geometryToConformTo_.patchInfo().set(patchIndex)
+                    )
+                    {
+                        // baffle faces
+
+                        patchFaces[patchIndex].append(newDualFace);
+                        patchOwners[patchIndex].append(own);
+                        indirectPatchFace[patchIndex].append(false);
+
+                        reverse(newDualFace);
+
+                        patchFaces[patchIndex].append(newDualFace);
+                        patchOwners[patchIndex].append(nei);
+                        indirectPatchFace[patchIndex].append(false);
+
+                        if
+                        (
+                            labelPair(vB->index(), vB->procIndex())
+                          < labelPair(vA->index(), vA->procIndex())
+                        )
+                        {
+                            patchPPSlaves[patchIndex].append(vB->index());
+                            patchPPSlaves[patchIndex].append(vB->index());
+                        }
+                        else
+                        {
+                            patchPPSlaves[patchIndex].append(vA->index());
+                            patchPPSlaves[patchIndex].append(vA->index());
+                        }
+
+                    }
+                    else
                     {
                         // internal face
                         faces[dualFacei] = newDualFace;
