@@ -1,9 +1,0 @@
-#!/bin/sh
-cd ${0%/*} || exit 1    # Run from this directory
-
-# fix permissions (NB: '+X' and not '+x'!)
-chmod a+rX $WM_PROJECT_DIR $WM_PROJECT_DIR/doc Doxygen
-
-Doxygen/Allwmake
-
-#------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ usage() {
     while [ "$#" -ge 1 ]; do echo "$1"; shift; done
     cat<<USAGE
 
-usage: ${0##*/} [OPTION]
+usage: ${0##*/} [OPTION] <path-1> <path-2> ...
 options:
   -online    use the links to the Github repositories instead of the local source code
   -help
@@ -54,8 +54,12 @@ do
         defineURL
         shift
         ;;
-    *)
+    -*)
         usage "unknown option/argument: '$*'"
+        ;;
+    *)
+        inputDirs+=("$1")
+        shift
         ;;
     esac
 done
@@ -68,9 +72,12 @@ rm -rf latex man
 mv html html-stagedRemove$$ 2> /dev/null
 rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
 
+# format the input directories
+[ ${#inputDirs[@]} -ne 0 ] && inputDirs=("INPUT=" "${inputDirs[@]}")
+
 # ensure that created files are readable by everyone
 umask 22
-doxygen
+( cat Doxyfile ; echo "${inputDirs[@]}" ) | doxygen -
 
 # fix permissions (NB: '+X' and not '+x'!)
 chmod -R a+rX html latex man 2>/dev/null
