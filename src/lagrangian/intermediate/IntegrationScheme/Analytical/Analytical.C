@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,59 +28,27 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Analytical<Type>::Analytical
-(
-    const word& phiName,
-    const dictionary& dict
-)
-:
-    IntegrationScheme<Type>(phiName, dict)
-{}
-
-
-template<class Type>
-Foam::Analytical<Type>::Analytical(const Analytical& is)
-:
-    IntegrationScheme<Type>(is)
+Foam::integrationSchemes::Analytical<Type>::Analytical()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Analytical<Type>::~Analytical()
+Foam::integrationSchemes::Analytical<Type>::~Analytical()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-typename Foam::IntegrationScheme<Type>::integrationResult
-Foam::Analytical<Type>::integrate
+Foam::scalar Foam::integrationSchemes::Analytical<Type>::factor
 (
-    const Type& phi,
     const scalar dt,
-    const Type& alphaBeta,
-    const scalar beta
+    const scalar Beta
 ) const
 {
-    typename IntegrationScheme<Type>::integrationResult retValue;
-
-    const scalar expTerm = exp(min(50, -beta*dt));
-
-    if (beta > ROOTVSMALL)
-    {
-        const Type alpha = alphaBeta/beta;
-        retValue.average() = alpha + (phi - alpha)*(1 - expTerm)/(beta*dt);
-        retValue.value() =  alpha + (phi - alpha)*expTerm;
-    }
-    else
-    {
-        retValue.value() = phi + alphaBeta*dt;
-        retValue.average() = 0.5*(phi + retValue.value());
-    }
-
-    return retValue;
+    return mag(Beta*dt) > SMALL ? (1 - exp(- Beta*dt))/Beta : dt;
 }
 
 

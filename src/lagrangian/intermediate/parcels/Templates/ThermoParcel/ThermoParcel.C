@@ -263,57 +263,41 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
 
     const scalar d = this->d();
     const scalar rho = this->rho();
+    const scalar As = this->areaS(d);
+    const scalar V = this->volume(d);
+    const scalar m = rho*V;
 
     // Calc heat transfer coefficient
     scalar htc = cloud.heatTransfer().htc(d, Re, Pr, kappa, NCpW);
 
-    if (mag(htc) < ROOTVSMALL && !cloud.radiation())
-    {
-        return
-            max
-            (
-                T_ + dt*Sh/(this->volume(d)*rho*Cp_),
-                cloud.constProps().TMin()
-            );
-    }
-
-    htc = max(htc, ROOTVSMALL);
-    const scalar As = this->areaS(d);
-
-    scalar ap = td.Tc() + Sh/(As*htc);
-    const scalar bp = 6.0*htc/max(rho*d*Cp_, ROOTVSMALL);
-
+    // Calculate the integration coefficients
+    const scalar bcp = htc*As/(m*Cp_);
+    const scalar acp = bcp*td.Tc();
+    scalar ancp = Sh;
     if (cloud.radiation())
     {
-        tetIndices tetIs = this->currentTetIndices();
+        const tetIndices tetIs = this->currentTetIndices();
         const scalar Gc = td.GInterp().interpolate(this->coordinates(), tetIs);
         const scalar sigma = physicoChemical::sigma.value();
         const scalar epsilon = cloud.constProps().epsilon0();
 
-        // Assume constant source
-        scalar s = epsilon*(Gc/4.0 - sigma*pow4(T_));
-
-        ap += s/htc;
+        ancp += As*epsilon*(Gc/4.0 - sigma*pow4(T_));
     }
+    ancp /= m*Cp_;
 
     // Integrate to find the new parcel temperature
-    IntegrationScheme<scalar>::integrationResult Tres =
-        cloud.TIntegrator().integrate(T_, dt, ap*bp, bp);
+    const scalar deltaTcp =
+        cloud.TIntegrator().delta(T_, dt, bcp, acp, bcp);
+    const scalar deltaTncp =
+        cloud.TIntegrator().delta(T_, dt, bcp, ancp, 0);
 
-    scalar Tnew =
-        min
-        (
-            max
-            (
-                Tres.value(),
-                cloud.constProps().TMin()
-            ),
-            cloud.constProps().TMax()
-        );
+    // Calculate the new temperature and the transfer terms
+    scalar Tnew = T_ + deltaTcp + deltaTncp;
+    Tnew = min(max(Tnew, cloud.constProps().TMin()), cloud.constProps().TMax());
 
-    Sph = dt*htc*As;
+    Sph = dt*m*Cp_*bcp;
 
-    dhsTrans += Sph*(Tres.average() - td.Tc());
+    dhsTrans -= m*Cp_*deltaTcp;
 
     return Tnew;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,20 +41,20 @@ Foam::IntegrationScheme<Type>::New
     Info<< "Selecting " << phiName << " integration scheme "
         << schemeName << endl;
 
-    typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(schemeName);
+    typename wordConstructorTable::iterator cstrIter =
+        wordConstructorTablePtr_->find(schemeName);
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    if (cstrIter == wordConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown integration scheme type "
             << schemeName << nl << nl
             << "Valid integration scheme types are:" << nl
-            << dictionaryConstructorTablePtr_->sortedToc() << nl
+            << wordConstructorTablePtr_->sortedToc() << nl
             << exit(FatalError);
     }
 
-    return autoPtr<IntegrationScheme<Type>>(cstrIter()(phiName, dict));
+    return autoPtr<IntegrationScheme<Type>>(cstrIter()());
 }
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,11 @@ Class
     Foam::Euler
 
 Description
-    Euler-implicit integration
+    Euler-implicit integration scheme.
+
+    \f[
+        \Delta \phi = (A - B \phi^n) \frac{\Delta t}{1 + B \Delta t}
+    \f]
 
 \*---------------------------------------------------------------------------*/
 
@@ -37,6 +41,8 @@ Description
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace integrationSchemes
 {
 
 /*---------------------------------------------------------------------------*\
@@ -56,11 +62,8 @@ public:
 
     // Constructors
 
-        //- Construct from components
-        Euler(const word& phiName, const dictionary& dict);
-
-        //- Copy constructor
-        Euler(const Euler& is);
+        //- Construct
+        Euler();
 
         //- Construct and return clone
         virtual autoPtr<IntegrationScheme<Type>> clone() const
@@ -75,19 +78,14 @@ public:
 
     // Member Functions
 
-        //- Perform the integration
-        virtual typename IntegrationScheme<Type>::integrationResult integrate
-        (
-            const Type& phi,
-            const scalar dt,
-            const Type& alphaBeta,
-            const scalar beta
-        ) const;
+        //- Return the integration factor
+        virtual scalar factor(const scalar dt, const scalar Beta) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace integrationSchemes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,47 +28,27 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Euler<Type>::Euler
-(
-    const word& phiName,
-    const dictionary& dict
-)
-:
-    IntegrationScheme<Type>(phiName, dict)
-{}
-
-
-template<class Type>
-Foam::Euler<Type>::Euler(const Euler& is)
-:
-    IntegrationScheme<Type>(is)
+Foam::integrationSchemes::Euler<Type>::Euler()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Euler<Type>::~Euler()
+Foam::integrationSchemes::Euler<Type>::~Euler()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-typename Foam::IntegrationScheme<Type>::integrationResult
-Foam::Euler<Type>::integrate
+Foam::scalar Foam::integrationSchemes::Euler<Type>::factor
 (
-    const Type& phi,
     const scalar dt,
-    const Type& alphaBeta,
-    const scalar beta
+    const scalar Beta
 ) const
 {
-    typename IntegrationScheme<Type>::integrationResult retValue;
-    retValue.value() = (phi + alphaBeta*dt)/(1.0 + beta*dt);
-    retValue.average() = 0.5*(phi + retValue.value());
-
-    return retValue;
+    return dt/(1 + Beta*dt);
 }
 
 

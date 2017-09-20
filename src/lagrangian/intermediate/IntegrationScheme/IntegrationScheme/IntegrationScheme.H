@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,35 @@ Class
     Foam::IntegrationScheme
 
 Description
-    Top level model for Integration schemes
+    Base for a set of schemes which integrate simple ODEs which arise from
+    semi-implcit rate expressions.
+
+        \f[
+            \frac{d \phi}{d t} = A - B \phi
+        \f]
+
+    The methods are defined in terms of the factor \f$f\f$ by which the result
+    of a trivial explicit integration is multipled.
+
+        \f[
+            \Delta \phi = (A - B \phi^n) f(\Delta t, B)
+        \f]
+
+    This class also facilitates integration in stages. If the explicit and
+    implicit coefficients, \f$A\f$ and \f$B\f$, are a summation of differing
+    contributions, \f$\sum \alpha_i\f$ and \f$\sum \beta_i\f$, then the
+    integration can be split up to detemine the effect of each contribution.
+
+        \f[
+            \frac{d \phi}{d t} = \left( \sum \alpha_i \right) -
+            \left( \sum \beta_i \right) \phi
+        \f]
+        \f[
+            \Delta \phi_i = (\alpha_i - \beta_i \phi^n) f(\Delta t, B)
+        \f]
+
+    Note that the sum of implicit coefficients \f$B\f$ is needed for each stage
+    of the integral, whilst the sum of explicit coefficients \f$A\f$ is not.
 
 SourceFiles
     IntegrationScheme.C
@@ -51,79 +79,6 @@ namespace Foam
 template<class Type>
 class IntegrationScheme
 {
-
-public:
-
-    //- Helper class to supply results of integration
-    class integrationResult
-    {
-        //- Integration value
-        Type value_;
-
-        //- Average value across integration step
-        Type average_;
-
-
-    public:
-
-        //- Constructor
-        integrationResult()
-        :
-            value_(Zero),
-            average_(Zero)
-        {}
-
-
-        // Member functions
-
-            // Access
-
-                //- Return const access to the value
-                Type value() const
-                {
-                    return value_;
-                }
-
-                //- Return const access to the average
-                Type average() const
-                {
-                    return average_;
-                }
-
-
-            // Edit
-
-                //- Return access to the value for changing
-                Type& value()
-                {
-                    return value_;
-                }
-
-                //- Return access to the average for changing
-                Type& average()
-                {
-                    return average_;
-                }
-        };
-
-
-private:
-
-    // Private data
-
-        //- Name of the Integration variable
-        const word& phiName_;
-
-        //- Reference to the dictionary
-        const dictionary& dict_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const IntegrationScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -136,22 +91,16 @@ public:
          (
              autoPtr,
              IntegrationScheme,
-             dictionary,
-             (
-                 const word& phiName,
-                 const dictionary& dict
-             ),
-             (phiName, dict)
+             word,
+             (),
+             ()
          );
 
 
     // Constructors
 
-        //- Construct from components
-        IntegrationScheme(const word& phiName, const dictionary& dict);
-
-        //- Copy constructor
-        IntegrationScheme(const IntegrationScheme& is);
+        //- Construct
+        IntegrationScheme();
 
         //- Construct and return clone
         virtual autoPtr<IntegrationScheme<Type>> clone() const = 0;
@@ -159,7 +108,7 @@ public:
 
     // Selectors
 
-        //- Return a reference to the selected radiation model
+        //- Select an integration scheme
         static autoPtr<IntegrationScheme> New
         (
             const word& phiName,
@@ -173,14 +122,27 @@ public:
 
     // Member Functions
 
-        //- Perform the Integration
-        virtual integrationResult integrate
+        //- Perform the full integration
+        Type delta
         (
             const Type& phi,
             const scalar dt,
-            const Type& alphaBeta,
+            const Type& Alpha,
+            const scalar Beta
+        ) const;
+
+        //- Perform a stage of the integration
+        Type delta
+        (
+            const Type& phi,
+            const scalar dt,
+            const scalar Beta,
+            const Type& alpha,
             const scalar beta
-        ) const = 0;
+        ) const;
+
+        //- Return the factor
+        virtual scalar factor(const scalar dt, const scalar Beta) const = 0;
 };
 
 
@@ -197,7 +159,7 @@ public:
     defineTemplateRunTimeSelectionTable                                        \
     (                                                                          \
         IntegrationScheme<Type>,                                               \
-        dictionary                                                             \
+        word                                                                   \
     );
 
 
@@ -205,7 +167,7 @@ public:
                                                                                \
     defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
                                                                                \
-    IntegrationScheme<Type>::adddictionaryConstructorToTable<SS<Type>>         \
+    IntegrationScheme<Type>::addwordConstructorToTable<SS<Type>>               \
         add##SS##Type##ConstructorToTable_;
 
 

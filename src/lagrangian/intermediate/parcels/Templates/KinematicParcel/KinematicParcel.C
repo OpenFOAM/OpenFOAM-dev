@@ -177,26 +177,27 @@ const Foam::vector Foam::KinematicParcel<ParcelType>::calcVelocity
     // Momentum source due to particle forces
     const forceSuSp Fcp = forces.calcCoupled(p, ttd, dt, mass, Re, mu);
     const forceSuSp Fncp = forces.calcNonCoupled(p, ttd, dt, mass, Re, mu);
-    const forceSuSp Feff = Fcp + Fncp;
     const scalar massEff = forces.massEff(p, ttd, mass);
 
 
     // New particle velocity
     //~~~~~~~~~~~~~~~~~~~~~~
 
-    // Update velocity - treat as 3-D
-    const vector abp = (Feff.Sp()*td.Uc() + (Feff.Su() + Su))/massEff;
-    const scalar bp = Feff.Sp()/massEff;
+    const vector acp = (Fcp.Sp()*td.Uc() + Fcp.Su())/massEff;
+    const vector ancp = (Fncp.Sp()*td.Uc() + Fncp.Su() + Su)/massEff;
+    const scalar bcp = Fcp.Sp()/massEff;
+    const scalar bncp = Fncp.Sp()/massEff;
 
-    Spu = dt*Feff.Sp();
+    const vector deltaUcp =
+        cloud.UIntegrator().delta(U_, dt, bcp + bncp, acp, bcp);
+    const vector deltaUncp =
+        cloud.UIntegrator().delta(U_, dt, bcp + bncp, ancp, bncp);
 
-    IntegrationScheme<vector>::integrationResult Ures =
-        cloud.UIntegrator().integrate(U_, dt, abp, bp);
+    vector Unew = U_ + deltaUcp + deltaUncp;
 
-    vector Unew = Ures.value();
+    dUTrans -= massEff*deltaUcp;
 
-    // note: Feff.Sp() and Fc.Sp() must be the same
-    dUTrans += dt*(Feff.Sp()*(Ures.average() - td.Uc()) - Fcp.Su());
+    Spu = dt*Fcp.Sp();
 
     // Apply correction to velocity and dUTrans for reduced-D cases
     const polyMesh& mesh = cloud.pMesh();

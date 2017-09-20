@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,22 +28,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::IntegrationScheme<Type>::IntegrationScheme
-(
-    const word& phiName,
-    const dictionary& dict
-)
-:
-   phiName_(phiName),
-   dict_(dict)
-{}
-
-
-template<class Type>
-Foam::IntegrationScheme<Type>::IntegrationScheme(const IntegrationScheme& is)
-:
-    phiName_(is.phiName_),
-    dict_(is.dict_)
+Foam::IntegrationScheme<Type>::IntegrationScheme()
 {}
 
 
@@ -52,6 +37,35 @@ Foam::IntegrationScheme<Type>::IntegrationScheme(const IntegrationScheme& is)
 template<class Type>
 Foam::IntegrationScheme<Type>::~IntegrationScheme()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+Type Foam::IntegrationScheme<Type>::delta
+(
+    const Type& phi,
+    const scalar dt,
+    const Type& Alpha,
+    const scalar Beta
+) const
+{
+    return delta(phi, dt, Beta, Alpha, Beta);
+}
+
+
+template<class Type>
+Type Foam::IntegrationScheme<Type>::delta
+(
+    const Type& phi,
+    const scalar dt,
+    const scalar Beta,
+    const Type& alpha,
+    const scalar beta
+) const
+{
+    return (alpha - beta*phi)*factor(dt, Beta);
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
