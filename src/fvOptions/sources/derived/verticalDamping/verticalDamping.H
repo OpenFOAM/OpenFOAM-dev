@@ -32,9 +32,10 @@ Description
 
     Damping is achieved by applying a force to the momentum equation
     proportional to the momentum of the flow in the direction of gravity. The
-    constant of proportionality is given by a coefficient, lambda, which has
-    units of inverse-time. In the absence of any other forces this would
+    constant of proportionality is given by a coefficient \f$\lambda\f$ which
+    has units of inverse-time. In the absence of any other forces this would
     generate an exponential decay of the vertical velocity.
+
         \f[
             \frac{d (m u_z)}{d t} = - \lambda m u_z
         \f]
@@ -42,11 +43,12 @@ Description
             u_z = u_{z0} e^{- \lambda t}
         \f]
 
-    Lambda should be set based on the desired level of damping and the residence
-    time of a perturbation through the damping zone. For example, if waves
-    moving at 2 [m/s] are travelling through a damping zone 8 [m] in length,
-    then the residence time is 4 [s]. If it is deemed necessary to damp for 5
-    time-scales, then lambda should be set to equal 5/(4 [s]) = 1.2 [1/s].
+    The coefficient \f$\lambda\f$ should be set based on the desired level of
+    damping and the residence time of a perturbation through the damping zone.
+    For example, if waves moving at 2 [m/s] are travelling through a damping
+    zone 8 [m] in length, then the residence time is 4 [s]. If it is deemed
+    necessary to damp for 5 time-scales, then \f$\lambda\f$ should be set to
+    equal 5/(4 [s]) = 1.2 [1/s].
 
 Usage
     Example usage:
