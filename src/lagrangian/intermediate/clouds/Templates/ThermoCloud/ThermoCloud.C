@@ -44,7 +44,7 @@ void Foam::ThermoCloud<CloudType>::setModels()
 
     TIntegrator_.reset
     (
-        scalarIntegrationScheme::New
+        integrationScheme::New
         (
             "T",
             this->solution().integrationSchemes()

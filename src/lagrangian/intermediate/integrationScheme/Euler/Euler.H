@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Analytical
+    Foam::Euler
 
 Description
-    Analytical integration scheme
+    Euler-implicit integration scheme.
 
     \f[
-        \Delta \phi = (A - B \phi^n) \frac{1}{B} (1 - e^{- B \Delta t})
+        \Delta \phi = (A - B \phi^n) \frac{\Delta t}{1 + B \Delta t}
     \f]
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Analytical_H
-#define Analytical_H
+#ifndef Euler_H
+#define Euler_H
 
-#include "IntegrationScheme.H"
+#include "integrationScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,43 +46,39 @@ namespace integrationSchemes
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Analytical Declaration
+                           Class Euler Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class Analytical
+class Euler
 :
-    public IntegrationScheme<Type>
+    public integrationScheme
 {
 public:
 
     //- Runtime type information
-    TypeName("analytical");
+    TypeName("Euler");
 
 
     // Constructors
 
         //- Construct
-        Analytical();
+        Euler();
 
         //- Construct and return clone
-        virtual autoPtr<IntegrationScheme<Type>> clone() const
+        virtual autoPtr<integrationScheme> clone() const
         {
-            return autoPtr<IntegrationScheme<Type>>
-            (
-                new Analytical<Type>(*this)
-            );
+            return autoPtr<integrationScheme>(new Euler(*this));
         }
 
 
     //- Destructor
-    virtual ~Analytical();
+    virtual ~Euler();
 
 
     // Member Functions
 
-        //- Return the integration factor
-        virtual scalar factor(const scalar dt, const scalar Beta) const;
+        //- Return the integration effective time step
+        virtual scalar dtEff(const scalar dt, const scalar Beta) const;
 };
 
 
@@ -90,12 +86,6 @@ public:
 
 } // End namespace integrationSchemes
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "Analytical.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

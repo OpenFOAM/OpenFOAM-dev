@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "KinematicCloud.H"
-#include "IntegrationScheme.H"
+#include "integrationScheme.H"
 #include "interpolation.H"
 #include "subCycleTime.H"
 
@@ -77,7 +77,7 @@ void Foam::KinematicCloud<CloudType>::setModels()
 
     UIntegrator_.reset
     (
-        vectorIntegrationScheme::New
+        integrationScheme::New
         (
             "U",
             solution_.integrationSchemes()

@@ -23,33 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Analytical.H"
+#include "error.H"
+#include "integrationScheme.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::integrationSchemes::Analytical<Type>::Analytical()
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::integrationSchemes::Analytical<Type>::~Analytical()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-Foam::scalar Foam::integrationSchemes::Analytical<Type>::factor
+Foam::autoPtr<Foam::integrationScheme> Foam::integrationScheme::New
 (
-    const scalar dt,
-    const scalar Beta
-) const
+    const word& phiName,
+    const dictionary& dict
+)
 {
-    return mag(Beta*dt) > SMALL ? (1 - exp(- Beta*dt))/Beta : dt;
-}
+    const word schemeName(dict.lookup(phiName));
 
+    Info<< "Selecting " << phiName << " integration scheme "
+        << schemeName << endl;
+
+    typename wordConstructorTable::iterator cstrIter =
+        wordConstructorTablePtr_->find(schemeName);
+
+    if (cstrIter == wordConstructorTablePtr_->end())
+    {
+        FatalErrorInFunction
+            << "Unknown integration scheme type "
+            << schemeName << nl << nl
+            << "Valid integration scheme types are:" << nl
+            << wordConstructorTablePtr_->sortedToc() << nl
+            << exit(FatalError);
+    }
+
+    return autoPtr<integrationScheme>(cstrIter()());
+}
 
 // ************************************************************************* //

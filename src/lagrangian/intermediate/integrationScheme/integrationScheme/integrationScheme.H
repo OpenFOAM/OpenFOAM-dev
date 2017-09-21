@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::IntegrationScheme
+    Foam::integrationScheme
 
 Description
     Base for a set of schemes which integrate simple ODEs which arise from
@@ -32,11 +32,15 @@ Description
             \frac{d \phi}{d t} = A - B \phi
         \f]
 
-    The methods are defined in terms of the factor \f$f\f$ by which the result
-    of a trivial explicit integration is multipled.
+    The methods are defined in terms of the effective time-step \f$\Delta
+    t_e\f$ by which the explicit rate is multipled. The effective time-step is
+    a function of the actual time step and the implicit coefficient.
 
         \f[
-            \Delta \phi = (A - B \phi^n) f(\Delta t, B)
+            \Delta t_e = f(\Delta t, B)
+        \f]
+        \f[
+            \Delta \phi = (A - B \phi^n) \Delta t_e
         \f]
 
     This class also facilitates integration in stages. If the explicit and
@@ -49,19 +53,18 @@ Description
             \left( \sum \beta_i \right) \phi
         \f]
         \f[
-            \Delta \phi_i = (\alpha_i - \beta_i \phi^n) f(\Delta t, B)
+            \Delta \phi_i = (\alpha_i - \beta_i \phi^n) \Delta t_e
         \f]
 
-    Note that the sum of implicit coefficients \f$B\f$ is needed for each stage
-    of the integral, whilst the sum of explicit coefficients \f$A\f$ is not.
+    Note that the effective time step \f$\Delta t_e\f$ is not split up.
 
 SourceFiles
-    IntegrationScheme.C
+    integrationScheme.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IntegrationScheme_H
-#define IntegrationScheme_H
+#ifndef integrationScheme_H
+#define integrationScheme_H
 
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
@@ -73,11 +76,10 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class IntegrationScheme Declaration
+                     Class integrationScheme Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class IntegrationScheme
+class integrationScheme
 {
 public:
 
@@ -90,7 +92,7 @@ public:
          declareRunTimeSelectionTable
          (
              autoPtr,
-             IntegrationScheme,
+             integrationScheme,
              word,
              (),
              ()
@@ -100,16 +102,16 @@ public:
     // Constructors
 
         //- Construct
-        IntegrationScheme();
+        integrationScheme();
 
         //- Construct and return clone
-        virtual autoPtr<IntegrationScheme<Type>> clone() const = 0;
+        virtual autoPtr<integrationScheme> clone() const = 0;
 
 
     // Selectors
 
         //- Select an integration scheme
-        static autoPtr<IntegrationScheme> New
+        static autoPtr<integrationScheme> New
         (
             const word& phiName,
             const dictionary& dict
@@ -117,13 +119,14 @@ public:
 
 
     //- Destructor
-    virtual ~IntegrationScheme();
+    virtual ~integrationScheme();
 
 
     // Member Functions
 
         //- Perform the full integration
-        Type delta
+        template<class Type>
+        Type Delta
         (
             const Type& phi,
             const scalar dt,
@@ -132,17 +135,17 @@ public:
         ) const;
 
         //- Perform a stage of the integration
-        Type delta
+        template<class Type>
+        static Type delta
         (
             const Type& phi,
-            const scalar dt,
-            const scalar Beta,
+            const scalar dtEff,
             const Type& alpha,
             const scalar beta
-        ) const;
+        );
 
-        //- Return the factor
-        virtual scalar factor(const scalar dt, const scalar Beta) const = 0;
+        //- Return the integration effective time step
+        virtual scalar dtEff(const scalar dt, const scalar Beta) const = 0;
 };
 
 
@@ -152,29 +155,8 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeIntegrationScheme(Type)                                            \
-                                                                               \
-    defineNamedTemplateTypeNameAndDebug(IntegrationScheme<Type>, 0);           \
-                                                                               \
-    defineTemplateRunTimeSelectionTable                                        \
-    (                                                                          \
-        IntegrationScheme<Type>,                                               \
-        word                                                                   \
-    );
-
-
-#define makeIntegrationSchemeType(SS, Type)                                    \
-                                                                               \
-    defineNamedTemplateTypeNameAndDebug(SS<Type>, 0);                          \
-                                                                               \
-    IntegrationScheme<Type>::addwordConstructorToTable<SS<Type>>               \
-        add##SS##Type##ConstructorToTable_;
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #ifdef NoRepository
-    #include "IntegrationScheme.C"
+    #include "integrationSchemeTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

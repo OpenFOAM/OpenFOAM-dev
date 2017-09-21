@@ -99,7 +99,10 @@ $(MPPICTIMESCALE)/isotropic/isotropic.C
 
 
 /* integration schemes */
-IntegrationScheme/makeIntegrationSchemes.C
+integrationScheme/integrationScheme/integrationScheme.C
+integrationScheme/integrationScheme/integrationSchemeNew.C
+integrationScheme/Euler/Euler.C
+integrationScheme/analytical/analytical.C
 
 
 /* phase properties */

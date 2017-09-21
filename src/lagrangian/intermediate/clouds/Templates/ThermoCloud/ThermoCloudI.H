@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::ThermoCloud<CloudType>::heatTransfer() const
 
 
 template<class CloudType>
-inline const Foam::scalarIntegrationScheme&
+inline const Foam::integrationScheme&
 Foam::ThermoCloud<CloudType>::TIntegrator() const
 {
     return TIntegrator_;

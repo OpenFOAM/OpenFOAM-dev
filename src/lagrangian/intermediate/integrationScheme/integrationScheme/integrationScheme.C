@@ -23,53 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IntegrationScheme.H"
+#include "integrationScheme.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(integrationScheme, 0);
+    defineRunTimeSelectionTable(integrationScheme, word);
+}
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::IntegrationScheme<Type>::IntegrationScheme()
+Foam::integrationScheme::integrationScheme()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor    * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::IntegrationScheme<Type>::~IntegrationScheme()
+Foam::integrationScheme::~integrationScheme()
 {}
 
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-Type Foam::IntegrationScheme<Type>::delta
-(
-    const Type& phi,
-    const scalar dt,
-    const Type& Alpha,
-    const scalar Beta
-) const
-{
-    return delta(phi, dt, Beta, Alpha, Beta);
-}
-
-
-template<class Type>
-Type Foam::IntegrationScheme<Type>::delta
-(
-    const Type& phi,
-    const scalar dt,
-    const scalar Beta,
-    const Type& alpha,
-    const scalar beta
-) const
-{
-    return (alpha - beta*phi)*factor(dt, Beta);
-}
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "IntegrationSchemeNew.C"
 
 // ************************************************************************* //

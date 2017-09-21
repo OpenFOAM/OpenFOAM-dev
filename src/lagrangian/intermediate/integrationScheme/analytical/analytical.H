@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,41 +21,70 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::scalarIntegrationScheme
+Class
+    Foam::integrationSchemes::analytical
 
 Description
-    Foam::scalarIntegrationScheme
+    Analytical integration scheme
 
-Typedef
-    Foam::vectorIntegrationScheme;
-
-Description
-    Foam::vectorIntegrationScheme;
-
-SourceFiles
-    IntegrationScheme.C
+    \f[
+        \Delta \phi = (A - B \phi^n) \frac{1}{B} (1 - e^{- B \Delta t})
+    \f]
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef IntegrationSchemesFwd_H
-#define IntegrationSchemesFwd_H
+#ifndef analytical_H
+#define analytical_H
+
+#include "integrationScheme.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace integrationSchemes
+{
+
+/*---------------------------------------------------------------------------*\
+                         Class analytical Declaration
+\*---------------------------------------------------------------------------*/
+
+class analytical
+:
+    public integrationScheme
+{
+public:
+
+    //- Runtime type information
+    TypeName("analytical");
+
+
+    // Constructors
+
+        //- Construct
+        analytical();
+
+        //- Construct and return clone
+        virtual autoPtr<integrationScheme> clone() const
+        {
+            return autoPtr<integrationScheme>(new analytical(*this));
+        }
+
+
+    //- Destructor
+    virtual ~analytical();
+
+
+    // Member Functions
+
+        //- Return the integration effective time step
+        virtual scalar dtEff(const scalar dt, const scalar Beta) const;
+};
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-class IntegrationScheme;
-
-typedef IntegrationScheme<scalar> scalarIntegrationScheme;
-typedef IntegrationScheme<vector> vectorIntegrationScheme;
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
+} // End namespace integrationSchemes
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

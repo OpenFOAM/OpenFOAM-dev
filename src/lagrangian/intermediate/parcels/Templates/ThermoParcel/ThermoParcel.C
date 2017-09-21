@@ -286,18 +286,17 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
     ancp /= m*Cp_;
 
     // Integrate to find the new parcel temperature
-    const scalar deltaTcp =
-        cloud.TIntegrator().delta(T_, dt, bcp, acp, bcp);
-    const scalar deltaTncp =
-        cloud.TIntegrator().delta(T_, dt, bcp, ancp, 0);
+    const scalar dtEff = cloud.TIntegrator().dtEff(dt, bcp);
+    const scalar deltaTcp = integrationScheme::delta(T_, dtEff, acp, bcp);
+    const scalar deltaTncp = integrationScheme::delta(T_, dtEff, ancp, 0);
 
-    // Calculate the new temperature and the transfer terms
+    // Calculate the new temperature and the enthalpy transfer terms
     scalar Tnew = T_ + deltaTcp + deltaTncp;
     Tnew = min(max(Tnew, cloud.constProps().TMin()), cloud.constProps().TMax());
 
-    Sph = dt*m*Cp_*bcp;
-
     dhsTrans -= m*Cp_*deltaTcp;
+
+    Sph = dt*m*Cp_*bcp;
 
     return Tnew;
 }

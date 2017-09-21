@@ -60,7 +60,6 @@ SourceFiles
 #include "fvMesh.H"
 #include "volFields.H"
 #include "fvMatrices.H"
-#include "IntegrationSchemesFwd.H"
 #include "cloudSolution.H"
 
 #include "ParticleForceList.H"
@@ -72,6 +71,8 @@ namespace Foam
 {
 
 // Forward declaration of classes
+
+class integrationScheme;
 
 template<class CloudType>
 class InjectionModelList;
@@ -222,7 +223,7 @@ protected:
         // Reference to the particle integration schemes
 
             //- Velocity integration
-            autoPtr<vectorIntegrationScheme> UIntegrator_;
+            autoPtr<integrationScheme> UIntegrator_;
 
 
         // Sources
@@ -460,7 +461,7 @@ public:
             // Integration schemes
 
                 //-Return reference to velocity integration
-                inline const vectorIntegrationScheme& UIntegrator() const;
+                inline const integrationScheme& UIntegrator() const;
 
 
             // Sources

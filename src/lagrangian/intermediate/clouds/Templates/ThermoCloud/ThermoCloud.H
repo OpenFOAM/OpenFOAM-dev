@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ protected:
         // Reference to the particle integration schemes
 
             //- Temperature integration
-            autoPtr<scalarIntegrationScheme> TIntegrator_;
+            autoPtr<integrationScheme> TIntegrator_;
 
 
         // Modelling options
@@ -248,7 +248,7 @@ public:
             // Integration schemes
 
                 //-Return reference to velocity integration
-                inline const scalarIntegrationScheme& TIntegrator() const;
+                inline const integrationScheme& TIntegrator() const;
 
 
             // Modelling options

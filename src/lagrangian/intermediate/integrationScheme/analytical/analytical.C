@@ -23,24 +23,41 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "IntegrationScheme.H"
-#include "Euler.H"
-#include "Analytical.H"
+#include "analytical.H"
+#include "addToRunTimeSelectionTable.H"
 
-#include "scalar.H"
-#include "vector.H"
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    using namespace integrationSchemes;
+namespace integrationSchemes
+{
+    defineTypeNameAndDebug(analytical, 0);
+    addToRunTimeSelectionTable(integrationScheme, analytical, word);
+}
+}
 
-    makeIntegrationScheme(scalar);
-    makeIntegrationSchemeType(Euler, scalar);
-    makeIntegrationSchemeType(Analytical, scalar);
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-    makeIntegrationScheme(vector);
-    makeIntegrationSchemeType(Euler, vector);
-    makeIntegrationSchemeType(Analytical, vector);
+Foam::integrationSchemes::analytical::analytical()
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::integrationSchemes::analytical::~analytical()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::scalar Foam::integrationSchemes::analytical::dtEff
+(
+    const scalar dt,
+    const scalar Beta
+) const
+{
+    return mag(Beta*dt) > SMALL ? (1 - exp(- Beta*dt))/Beta : dt;
 }
 
 

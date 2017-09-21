@@ -24,25 +24,34 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Euler.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace integrationSchemes
+{
+    defineTypeNameAndDebug(Euler, 0);
+    addToRunTimeSelectionTable(integrationScheme, Euler, word);
+}
+}
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::integrationSchemes::Euler<Type>::Euler()
+Foam::integrationSchemes::Euler::Euler()
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::integrationSchemes::Euler<Type>::~Euler()
+Foam::integrationSchemes::Euler::~Euler()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::scalar Foam::integrationSchemes::Euler<Type>::factor
+Foam::scalar Foam::integrationSchemes::Euler::dtEff
 (
     const scalar dt,
     const scalar Beta

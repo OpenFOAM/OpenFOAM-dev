@@ -25,7 +25,7 @@ License
 
 #include "KinematicParcel.H"
 #include "forceSuSp.H"
-#include "IntegrationScheme.H"
+#include "integrationScheme.H"
 #include "meshTools.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -179,20 +179,18 @@ const Foam::vector Foam::KinematicParcel<ParcelType>::calcVelocity
     const forceSuSp Fncp = forces.calcNonCoupled(p, ttd, dt, mass, Re, mu);
     const scalar massEff = forces.massEff(p, ttd, mass);
 
-
-    // New particle velocity
-    //~~~~~~~~~~~~~~~~~~~~~~
-
+    // Calculate the integration coefficients
     const vector acp = (Fcp.Sp()*td.Uc() + Fcp.Su())/massEff;
     const vector ancp = (Fncp.Sp()*td.Uc() + Fncp.Su() + Su)/massEff;
     const scalar bcp = Fcp.Sp()/massEff;
     const scalar bncp = Fncp.Sp()/massEff;
 
-    const vector deltaUcp =
-        cloud.UIntegrator().delta(U_, dt, bcp + bncp, acp, bcp);
-    const vector deltaUncp =
-        cloud.UIntegrator().delta(U_, dt, bcp + bncp, ancp, bncp);
+    // Integrate to find the new parcel velocity
+    const scalar dtEff = cloud.UIntegrator().dtEff(dt, bcp + bncp);
+    const vector deltaUcp = integrationScheme::delta(U_, dtEff, acp, bcp);
+    const vector deltaUncp = integrationScheme::delta(U_, dtEff, ancp, bncp);
 
+    // Calculate the new velocity and the momentum transfer terms
     vector Unew = U_ + deltaUcp + deltaUncp;
 
     dUTrans -= massEff*deltaUcp;

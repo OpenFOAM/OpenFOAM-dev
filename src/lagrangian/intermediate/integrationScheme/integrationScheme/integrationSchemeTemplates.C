@@ -23,38 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "error.H"
-#include "IntegrationScheme.H"
+#include "integrationScheme.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::autoPtr<Foam::IntegrationScheme<Type>>
-Foam::IntegrationScheme<Type>::New
+inline Type Foam::integrationScheme::Delta
 (
-    const word& phiName,
-    const dictionary& dict
+    const Type& phi,
+    const scalar dt,
+    const Type& Alpha,
+    const scalar Beta
+) const
+{
+    return delta(phi, dtEff(dt, Beta), Alpha, Beta);
+}
+
+
+template<class Type>
+inline Type Foam::integrationScheme::delta
+(
+    const Type& phi,
+    const scalar dtEff,
+    const Type& alpha,
+    const scalar beta
 )
 {
-    const word schemeName(dict.lookup(phiName));
-
-    Info<< "Selecting " << phiName << " integration scheme "
-        << schemeName << endl;
-
-    typename wordConstructorTable::iterator cstrIter =
-        wordConstructorTablePtr_->find(schemeName);
-
-    if (cstrIter == wordConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown integration scheme type "
-            << schemeName << nl << nl
-            << "Valid integration scheme types are:" << nl
-            << wordConstructorTablePtr_->sortedToc() << nl
-            << exit(FatalError);
-    }
-
-    return autoPtr<IntegrationScheme<Type>>(cstrIter()());
+    return (alpha - beta*phi)*dtEff;
 }
+
 
 // ************************************************************************* //
