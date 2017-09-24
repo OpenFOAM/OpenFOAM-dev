@@ -58,7 +58,7 @@ do
         usage "unknown option/argument: '$*'"
         ;;
     *)
-        inputDirs+=("$1")
+        inputDirs="$inputDirs $1"
         shift
         ;;
     esac
@@ -73,11 +73,11 @@ mv html html-stagedRemove$$ 2> /dev/null
 rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
 
 # format the input directories
-[ ${#inputDirs[@]} -ne 0 ] && inputDirs=("INPUT=" "${inputDirs[@]}")
+[ -z "$inputDirs" ] || inputDirs="INPUT=$inputDirs"
 
 # ensure that created files are readable by everyone
 umask 22
-( cat Doxyfile ; echo "${inputDirs[@]}" ) | doxygen -
+(cat Doxyfile; echo "$inputDirs") | doxygen -
 
 # fix permissions (NB: '+X' and not '+x'!)
 chmod -R a+rX html latex man 2>/dev/null
