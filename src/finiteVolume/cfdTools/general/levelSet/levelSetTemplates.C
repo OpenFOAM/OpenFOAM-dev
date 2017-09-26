@@ -31,32 +31,19 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::DimensionedField<Type, Foam::volMesh>> Foam::levelSetAverage
+Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
 (
     const fvMesh& mesh,
     const scalarField& levelC,
     const scalarField& levelP,
-    const DimensionedField<Type, volMesh>& positiveC,
-    const DimensionedField<Type, pointMesh>& positiveP,
-    const DimensionedField<Type, volMesh>& negativeC,
-    const DimensionedField<Type, pointMesh>& negativeP
+    const Field<Type>& positiveC,
+    const Field<Type>& positiveP,
+    const Field<Type>& negativeC,
+    const Field<Type>& negativeP
 )
 {
-    tmp<DimensionedField<Type, volMesh>> tResult
-    (
-        new DimensionedField<Type, volMesh>
-        (
-            IOobject
-            (
-                positiveC.name() + ":levelSetAverage",
-                mesh.time().timeName(),
-                mesh
-            ),
-            mesh,
-            dimensioned<Type>("0", positiveC.dimensions(), Zero)
-        )
-    );
-    DimensionedField<Type, volMesh>& result = tResult.ref();
+    tmp<Field<Type>> tResult(new Field<Type>(mesh.nCells(), Zero));
+    Field<Type>& result = tResult.ref();
 
     forAll(result, cI)
     {
@@ -178,6 +165,67 @@ Foam::tmp<Foam::Field<Type>> Foam::levelSetAverage
         }
 
         result[fI] = a/magSqr(a) & r;
+    }
+
+    return tResult;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::GeometricField<Type, Foam::fvPatchField, Foam::volMesh>>
+Foam::levelSetAverage
+(
+    const volScalarField& levelC,
+    const pointScalarField& levelP,
+    const GeometricField<Type, fvPatchField, volMesh>& positiveC,
+    const GeometricField<Type, pointPatchField, pointMesh>& positiveP,
+    const GeometricField<Type, fvPatchField, volMesh>& negativeC,
+    const GeometricField<Type, pointPatchField, pointMesh>& negativeP
+)
+{
+    const fvMesh& mesh = levelC.mesh();
+
+    tmp<GeometricField<Type, fvPatchField, volMesh>> tResult
+    (
+        new GeometricField<Type, fvPatchField, volMesh>
+        (
+            IOobject
+            (
+                positiveC.name() + ":levelSetAverage",
+                mesh.time().timeName(),
+                mesh
+            ),
+            mesh,
+            dimensioned<Type>("0", positiveC.dimensions(), Zero)
+        )
+    );
+    GeometricField<Type, fvPatchField, volMesh>& result = tResult.ref();
+
+    result.primitiveFieldRef() =
+        levelSetAverage
+        (
+            mesh,
+            levelC.primitiveField(),
+            levelP.primitiveField(),
+            positiveC.primitiveField(),
+            positiveP.primitiveField(),
+            negativeC.primitiveField(),
+            negativeP.primitiveField()
+        );
+
+    forAll(mesh.boundary(), patchi)
+    {
+        result.boundaryField()[patchi] =
+            levelSetAverage
+            (
+                mesh.boundary()[patchi],
+                levelC.boundaryField()[patchi],
+                levelP.boundaryField()[patchi].patchInternalField()(),
+                positiveC.boundaryField()[patchi],
+                negativeP.boundaryField()[patchi].patchInternalField()(),
+                positiveC.boundaryField()[patchi],
+                negativeP.boundaryField()[patchi].patchInternalField()()
+            );
     }
 
     return tResult;

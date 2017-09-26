@@ -30,8 +30,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::levelSetFraction
+Foam::tmp<Foam::scalarField> Foam::levelSetFraction
 (
     const fvMesh& mesh,
     const scalarField& levelC,
@@ -39,21 +38,8 @@ Foam::levelSetFraction
     const bool above
 )
 {
-    tmp<DimensionedField<scalar, volMesh>> tResult
-    (
-        new DimensionedField<scalar, volMesh>
-        (
-            IOobject
-            (
-                "levelSetFraction",
-                mesh.time().timeName(),
-                mesh
-            ),
-            mesh,
-            dimensionedScalar("0", dimless, 0)
-        )
-    );
-    DimensionedField<scalar, volMesh>& result = tResult.ref();
+    tmp<scalarField> tResult(new scalarField(mesh.nCells(), Zero));
+    scalarField& result = tResult.ref();
 
     forAll(result, cI)
     {
@@ -155,5 +141,56 @@ Foam::tmp<Foam::scalarField> Foam::levelSetFraction
 
     return tResult;
 }
+
+
+Foam::tmp<Foam::volScalarField> Foam::levelSetFraction
+(
+    const volScalarField& levelC,
+    const pointScalarField& levelP,
+    const bool above
+)
+{
+    const fvMesh& mesh = levelC.mesh();
+
+    tmp<volScalarField> tResult
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "levelSetFraction",
+                mesh.time().timeName(),
+                mesh
+            ),
+            mesh,
+            dimensionedScalar("0", dimless, 0)
+        )
+    );
+    volScalarField& result = tResult.ref();
+
+    result.primitiveFieldRef() =
+        levelSetFraction
+        (
+            mesh,
+            levelC.primitiveField(),
+            levelP.primitiveField(),
+            above
+        );
+
+    forAll(mesh.boundary(), patchi)
+    {
+        result.boundaryFieldRef()[patchi] =
+            levelSetFraction
+            (
+                mesh.boundary()[patchi],
+                levelC.boundaryField()[patchi],
+                levelP.boundaryField()[patchi].patchInternalField()(),
+                above
+            );
+    }
+
+    return tResult;
+}
+
 
 // ************************************************************************* //

@@ -34,10 +34,8 @@ SourceFiles:
 #ifndef levelSet_H
 #define levelSet_H
 
-#include "DimensionedField.H"
-#include "fvMesh.H"
-#include "pointMesh.H"
-#include "volMesh.H"
+#include "volFields.H"
+#include "pointFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,15 +47,15 @@ namespace Foam
 //- Calculate the average value of two fields, one on each side of a level set
 //  The level set and the fields are given both on the points and cell-centres.
 template<class Type>
-tmp<DimensionedField<Type, volMesh>> levelSetAverage
+tmp<Field<Type>> levelSetAverage
 (
     const fvMesh& mesh,
     const scalarField& levelC,
     const scalarField& levelP,
-    const DimensionedField<Type, volMesh>& positiveC,
-    const DimensionedField<Type, pointMesh>& positiveP,
-    const DimensionedField<Type, volMesh>& negativeC,
-    const DimensionedField<Type, pointMesh>& negativeP
+    const Field<Type>& positiveC,
+    const Field<Type>& positiveP,
+    const Field<Type>& negativeC,
+    const Field<Type>& negativeP
 );
 
 //- As the above overload, but on the faces of a patch
@@ -73,10 +71,22 @@ tmp<Field<Type>> levelSetAverage
     const Field<Type>& negativeP
 );
 
+//- As the above oveload, but both in cells and on patch faces
+template<class Type>
+tmp<GeometricField<Type, fvPatchField, volMesh>> levelSetAverage
+(
+    const volScalarField& levelC,
+    const pointScalarField& levelP,
+    const GeometricField<Type, fvPatchField, volMesh>& positiveC,
+    const GeometricField<Type, pointPatchField, pointMesh>& positiveP,
+    const GeometricField<Type, fvPatchField, volMesh>& negativeC,
+    const GeometricField<Type, pointPatchField, pointMesh>& negativeP
+);
+
 //- Calculate the volume-fraction that a level set occupies. This gives the the
 //  same result as levelSetAverage if the fields passed to the latter are
 //  uniformly 0 and 1. The above flag flips the direction.
-tmp<DimensionedField<scalar, volMesh>> levelSetFraction
+tmp<scalarField> levelSetFraction
 (
     const fvMesh& mesh,
     const scalarField& levelC,
@@ -90,6 +100,14 @@ tmp<scalarField> levelSetFraction
     const fvPatch& patch,
     const scalarField& levelF,
     const scalarField& levelP,
+    const bool above
+);
+
+//- As the above oveload, but both in cells and on patch faces
+tmp<volScalarField> levelSetFraction
+(
+    const volScalarField& levelC,
+    const pointScalarField& levelP,
     const bool above
 );
 

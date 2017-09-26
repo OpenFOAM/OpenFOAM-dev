@@ -102,15 +102,15 @@ int main(int argc, char *argv[])
         );
 
         // Create modelled fields on both cells and points
-        volScalarField height
+        volScalarField h
         (
-            IOobject("height", runTime.timeName(), mesh),
+            IOobject("h", runTime.timeName(), mesh),
             mesh,
             dimensionedScalar("0", dimLength, 0)
         );
-        pointScalarField heightp
+        pointScalarField hp
         (
-            IOobject("heightp", runTime.timeName(), mesh),
+            IOobject("hp", runTime.timeName(), mesh),
             pMesh,
             dimensionedScalar("0", dimLength, 0)
         );
@@ -126,15 +126,15 @@ int main(int argc, char *argv[])
             pMesh,
             dimensionedVector("0", dimLength, vector::zero)
         );
-        volVectorField uLiquid
+        volVectorField uLiq
         (
-            IOobject("uLiquid", runTime.timeName(), mesh),
+            IOobject("uLiq", runTime.timeName(), mesh),
             mesh,
             dimensionedVector("0", dimVelocity, vector::zero)
         );
-        pointVectorField uLiquidp
+        pointVectorField uLiqp
         (
-            IOobject("uLiquidp", runTime.timeName(), mesh),
+            IOobject("uLiqp", runTime.timeName(), mesh),
             pMesh,
             dimensionedVector("0", dimLength, vector::zero)
         );
@@ -144,9 +144,6 @@ int main(int argc, char *argv[])
 
         // Whether the alpha conditions refer to the liquid phase
         bool liquid = false;
-
-        // The mean velocity of one of the wave patches
-        vector UMeanp = vector::zero;
 
         // Loop the patches, averaging and superimposing wave model data
         forAll(mesh.boundary(), patchi)
@@ -179,8 +176,6 @@ int main(int argc, char *argv[])
             const waveSuperposition& waves =
                 refCast<waveVelocityFvPatchVectorField>(Up).waves();
 
-            UMeanp = waves.UMean();
-
             const bool liquidp =
                 refCast<waveAlphaFvPatchScalarField>(alphap).liquid();
             if (nWaves > 0 && liquidp != liquid)
@@ -198,35 +193,25 @@ int main(int argc, char *argv[])
             const pointField& pts = mesh.points();
 
             // Internal field superposition
-            height.primitiveFieldRef() += waves.height(t, ccs);
-            heightp.primitiveFieldRef() += waves.height(t, pts);
-            uGas.primitiveFieldRef() += waves.UGas(t, ccs) - UMeanp;
-            uGasp.primitiveFieldRef() += waves.UGas(t, pts) - UMeanp;
-            uLiquid.primitiveFieldRef() += waves.ULiquid(t, ccs) - UMeanp;
-            uLiquidp.primitiveFieldRef() += waves.ULiquid(t, pts) - UMeanp;
+            h.primitiveFieldRef() += waves.height(t, ccs);
+            hp.primitiveFieldRef() += waves.height(t, pts);
+            uGas.primitiveFieldRef() += waves.UGas(t, ccs) - waves.UMean();
+            uGasp.primitiveFieldRef() += waves.UGas(t, pts) - waves.UMean();
+            uLiq.primitiveFieldRef() += waves.ULiquid(t, ccs) - waves.UMean();
+            uLiqp.primitiveFieldRef() += waves.ULiquid(t, pts) - waves.UMean();
 
             // Boundary field superposition
             forAll(mesh.boundary(), patchj)
             {
                 const pointField& fcs = mesh.boundary()[patchj].Cf();
-                height.boundaryFieldRef()[patchj] += waves.height(t, fcs);
-                uGas.boundaryFieldRef()[patchj] += waves.UGas(t, fcs) - UMeanp;
-                uLiquid.boundaryFieldRef()[patchj] +=
-                    waves.ULiquid(t, fcs) - UMeanp;
+                h.boundaryFieldRef()[patchj] += waves.height(t, fcs);
+                uGas.boundaryFieldRef()[patchj] +=
+                    waves.UGas(t, fcs) - waves.UMean();
+                uLiq.boundaryFieldRef()[patchj] +=
+                    waves.ULiquid(t, fcs) - waves.UMean();
             }
 
             ++ nWaves;
-        }
-
-        // Warn and skip to the next time if no wave patches were found
-        if (nWaves == 0)
-        {
-            WarningInFunction
-                << "No " << waveAlphaFvPatchScalarField::typeName << " or "
-                << waveVelocityFvPatchVectorField::typeName << " patch fields "
-                << "were found. No waves have been set." << endl;
-
-            continue;
         }
 
         // Create the mean velocity field
@@ -234,11 +219,40 @@ int main(int argc, char *argv[])
         (
             IOobject("UMean", runTime.timeName(), mesh),
             mesh,
-            dimensionedVector("UMean", dimVelocity, UMeanp)
+            dimensionedVector("UMean", dimVelocity, Zero)
         );
 
-        if (nWaves > 1)
+        if (nWaves == 0)
         {
+            // Warn and skip to the next time if there are no wave patches
+            WarningInFunction
+                << "No " << waveAlphaFvPatchScalarField::typeName << " or "
+                << waveVelocityFvPatchVectorField::typeName << " patch fields "
+                << "were found. No waves have been set." << endl;
+
+            continue;
+        }
+        else if (nWaves == 1)
+        {
+            // Set a mean velocity equal to that on the only wave patch
+            forAll(mesh.boundary(), patchi)
+            {
+                const fvPatchVectorField& Up = U.boundaryField()[patchi];
+                if (!isA<waveVelocityFvPatchVectorField>(Up))
+                {
+                    continue;
+                }
+
+                const waveSuperposition& waves =
+                    refCast<const waveVelocityFvPatchVectorField>(Up).waves();
+
+                UMean == dimensionedVector("UMean", dimVelocity, waves.UMean());
+            }
+        }
+        else if (nWaves > 1)
+        {
+            // Set the mean velocity by distance weighting from the wave patches
+
             // Create weighted average fields for the mean velocity
             volScalarField weight
             (
@@ -256,20 +270,14 @@ int main(int argc, char *argv[])
             // Loop the patches, inverse-distance weighting the mean velocities
             forAll(mesh.boundary(), patchi)
             {
-                fvPatchScalarField& alphap = alpha.boundaryFieldRef()[patchi];
-                fvPatchVectorField& Up = U.boundaryFieldRef()[patchi];
-
-                const bool isWave = isA<waveAlphaFvPatchScalarField>(alphap);
-
-                if (!isWave)
+                const fvPatchVectorField& Up = U.boundaryField()[patchi];
+                if (!isA<waveVelocityFvPatchVectorField>(Up))
                 {
                     continue;
                 }
 
                 const waveSuperposition& waves =
-                    refCast<waveVelocityFvPatchVectorField>(Up).waves();
-
-                UMeanp = waves.UMean();
+                    refCast<const waveVelocityFvPatchVectorField>(Up).waves();
 
                 const volScalarField w
                 (
@@ -279,62 +287,26 @@ int main(int argc, char *argv[])
                      + dimensionedScalar("ySmall", dimLength, SMALL)
                     )
                 );
+
                 weight += w;
                 weightUMean +=
-                    w*dimensionedVector("UMeanp", dimVelocity, UMeanp);
+                    w*dimensionedVector("wUMean", dimVelocity, waves.UMean());
             }
 
             // Complete the average for the mean velocity
             UMean = weightUMean/weight;
         }
 
-        // Set the internal fields
-        alpha.ref() = levelSetFraction(mesh, height, heightp, !liquid);
-        U.ref() =
-            UMean
-          + levelSetAverage
-            (
-                mesh,
-                height,
-                heightp,
-                uGas,
-                uGasp,
-                uLiquid,
-                uLiquidp
-            );
+        // Set the fields
+        alpha == levelSetFraction(h, hp, !liquid);
+        U == UMean + levelSetAverage(mesh, h, hp, uGas, uGasp, uLiq, uLiqp);
 
         // Set the boundary fields
         forAll(mesh.boundary(), patchi)
         {
             fvPatchScalarField& alphap = alpha.boundaryFieldRef()[patchi];
             fvPatchVectorField& Up = U.boundaryFieldRef()[patchi];
-
-            const bool isWave = isA<waveAlphaFvPatchScalarField>(alphap);
-
-            if (!isWave)
-            {
-                alphap ==
-                    levelSetFraction
-                    (
-                        mesh.boundary()[patchi],
-                        height.boundaryField()[patchi],
-                        heightp.boundaryField()[patchi].patchInternalField(),
-                        !liquid
-                    );
-                Up ==
-                    UMean.boundaryField()[patchi]
-                  + levelSetAverage
-                    (
-                        mesh.boundary()[patchi],
-                        height.boundaryField()[patchi],
-                        heightp.boundaryField()[patchi].patchInternalField()(),
-                        uGas.boundaryField()[patchi],
-                        uGasp.boundaryField()[patchi].patchInternalField()(),
-                        uLiquid.boundaryField()[patchi],
-                        uLiquidp.boundaryField()[patchi].patchInternalField()()
-                    );
-            }
-            else
+            if (isA<waveAlphaFvPatchScalarField>(alphap))
             {
                 alphap == refCast<waveAlphaFvPatchScalarField>(alphap).alpha();
                 Up == refCast<waveVelocityFvPatchVectorField>(Up).U();
