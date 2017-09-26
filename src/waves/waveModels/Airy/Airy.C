@@ -153,6 +153,20 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::velocity
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::waveModels::Airy::pressure
+(
+    const scalar t,
+    const scalar u,
+    const vector2DField& xz
+) const
+{
+    // It is a fluke of the formulation that the time derivative of the velocity
+    // potential equals the x-derivative multipled by the celerity. This allows
+    // for this shortcut in evaluating the unsteady pressure.
+    return celerity()*velocity(t, u, xz)->component(0);
+}
+
+
 void Foam::waveModels::Airy::write(Ostream& os) const
 {
     waveModel::write(os);

@@ -108,6 +108,38 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::velocity
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pressure
+(
+    const scalar t,
+    const vectorField& xyz
+) const
+{
+    scalarField result(xyz.size(), 0);
+
+    forAll(waveModels_, wavei)
+    {
+        const vector2D d(cos(waveAngles_[wavei]), sin(waveAngles_[wavei]));
+        const vector2DField xz
+        (
+            zip
+            (
+                d & zip(xyz.component(0), xyz.component(1)),
+                tmp<scalarField>(xyz.component(2))
+            )
+        );
+        const vector2DField uw
+        (
+            waveModels_[wavei].velocity(t, d.x()*speed_, xz)
+        );
+        result += waveModels_[wavei].pressure(t, d.x()*speed_, xz);
+    }
+
+    tmp<scalarField> s = scale(zip(xyz.component(0), xyz.component(1)));
+
+    return s*result;
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::waveSuperposition::scale
 (
     const vector2DField& xy
@@ -263,6 +295,31 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
     return UMean() + (velocity(t, xyz) & axes);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pLiquid
+(
+    const scalar t,
+    const vectorField& p
+) const
+{
+    tensor axes;
+    scalar u;
+    vectorField xyz(p.size());
+    transformation(p, axes, u, xyz);
+
+    return pressure(t, xyz);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pGas
+(
+    const scalar t,
+    const vectorField& p
+) const
+{
+    return - pLiquid(t, p);
 }
 
 

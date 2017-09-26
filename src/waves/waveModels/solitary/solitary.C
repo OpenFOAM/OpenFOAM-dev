@@ -153,6 +153,18 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::solitary::velocity
 }
 
 
+Foam::tmp<Foam::scalarField> Foam::waveModels::solitary::pressure
+(
+    const scalar t,
+    const scalar u,
+    const vector2DField& xz
+) const
+{
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
+}
+
+
 void Foam::waveModels::solitary::write(Ostream& os) const
 {
     waveModel::write(os);

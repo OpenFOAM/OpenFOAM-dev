@@ -147,6 +147,16 @@ public:
             const vector2DField& xz
         ) const = 0;
 
+        //- Get the wave pressure at a given time, mean velocity and local
+        //  coordinates. Local x is aligned with the mean velocity, and z with
+        //  negative gravity.
+        virtual tmp<scalarField> pressure
+        (
+            const scalar t,
+            const scalar u,
+            const vector2DField& xz
+        ) const = 0;
+
         //- Write
         virtual void write(Ostream& os) const;
 };
