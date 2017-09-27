@@ -9,6 +9,5 @@ wmake $targetType forces
 wmake $targetType lagrangian
 wmake $targetType utilities
 wmake $targetType solvers
-wmake $targetType sixDoFRigidBodyState
 
 #------------------------------------------------------------------------------

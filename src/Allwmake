@@ -76,6 +76,7 @@ wmake $targetType regionCoupled
 functionObjects/Allwmake $targetType $*
 
 wmake $targetType sixDoFRigidBodyMotion
+wmake $targetType sixDoFRigidBodyState
 wmake $targetType rigidBodyDynamics
 wmake $targetType rigidBodyMeshMotion
 wmake $targetType waves
