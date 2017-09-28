@@ -585,9 +585,9 @@ void Foam::fvMeshSubset::setCellSubset
         globalPointMap[pointMap_[pointi]] = pointi;
     }
 
-    Pout<< "Number of cells in new mesh: " << nCellsInSet << endl;
-    Pout<< "Number of faces in new mesh: " << globalFaceMap.size() << endl;
-    Pout<< "Number of points in new mesh: " << globalPointMap.size() << endl;
+    //Pout<< "Number of cells in new mesh: " << nCellsInSet << endl;
+    //Pout<< "Number of faces in new mesh: " << globalFaceMap.size() << endl;
+    //Pout<< "Number of points in new mesh: " << globalPointMap.size() << endl;
 
     // Make a new mesh
     pointField newPoints(globalPointMap.size());
