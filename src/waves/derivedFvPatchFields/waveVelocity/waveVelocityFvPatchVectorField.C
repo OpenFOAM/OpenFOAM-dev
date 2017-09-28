@@ -24,10 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waveVelocityFvPatchVectorField.H"
+#include "wavePressureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "levelSet.H"
-#include "surfaceFields.H"
 #include "volFields.H"
+#include "fvMeshSubset.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,7 +40,10 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(p, iF),
     phiName_("phi"),
-    waves_(db())
+    pName_(word::null),
+    waves_(db()),
+    faceCellSubset_(nullptr),
+    faceCellSubsetTimeIndex_(-1)
 {
     refValue() = Zero;
     refGrad() = Zero;
@@ -56,7 +60,10 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(p, iF),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    waves_(db(), dict)
+    pName_(dict.lookupOrDefault<word>("p", word::null)),
+    waves_(db(), dict),
+    faceCellSubset_(nullptr),
+    faceCellSubsetTimeIndex_(-1)
 {
     if (dict.found("value"))
     {
@@ -83,7 +90,10 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
-    waves_(ptf.waves_)
+    pName_(ptf.pName_),
+    waves_(ptf.waves_),
+    faceCellSubset_(nullptr),
+    faceCellSubsetTimeIndex_(-1)
 {}
 
 
@@ -94,7 +104,10 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(ptf),
     phiName_(ptf.phiName_),
-    waves_(ptf.waves_)
+    pName_(ptf.pName_),
+    waves_(ptf.waves_),
+    faceCellSubset_(nullptr),
+    faceCellSubsetTimeIndex_(-1)
 {}
 
 
@@ -106,11 +119,40 @@ Foam::waveVelocityFvPatchVectorField::waveVelocityFvPatchVectorField
 :
     directionMixedFvPatchVectorField(ptf, iF),
     phiName_(ptf.phiName_),
-    waves_(ptf.waves_)
+    pName_(ptf.pName_),
+    waves_(ptf.waves_),
+    faceCellSubset_(nullptr),
+    faceCellSubsetTimeIndex_(-1)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::fvMeshSubset&
+Foam::waveVelocityFvPatchVectorField::faceCellSubset() const
+{
+    const fvMesh& mesh = patch().boundaryMesh().mesh();
+    const label timeIndex = mesh.time().timeIndex();
+
+    if
+    (
+        !faceCellSubset_.valid()
+     || (mesh.changing() && faceCellSubsetTimeIndex_ != timeIndex)
+    )
+    {
+        faceCellSubset_.reset(new fvMeshSubset(mesh));
+        faceCellSubset_->setCellSubset(patch().faceCells());
+        faceCellSubsetTimeIndex_ = timeIndex;
+
+        // Ask for the tetBasePtIs to trigger all processors to build them.
+        // Without this, processors that do not contain this patch will
+        // generate a comms mismatch.
+        faceCellSubset_->subMesh().tetBasePtIs();
+    }
+
+    return faceCellSubset_();
+}
+
 
 Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::U() const
 {
@@ -130,6 +172,45 @@ Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::U() const
 }
 
 
+Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::Un() const
+{
+    const scalar t = db().time().timeOutputValue();
+
+    const fvMeshSubset& subset = faceCellSubset();
+    const fvMesh& meshs = subset.subMesh();
+    const label patchis = findIndex(subset.patchMap(), patch().index());
+
+    const vectorField Us =
+        levelSetAverage
+        (
+            meshs,
+            waves_.height(t, meshs.cellCentres())(),
+            waves_.height(t, meshs.points())(),
+            waves_.UGas(t, meshs.cellCentres())(),
+            waves_.UGas(t, meshs.points())(),
+            waves_.ULiquid(t, meshs.cellCentres())(),
+            waves_.ULiquid(t, meshs.points())()
+        );
+
+    tmp<vectorField> tResult(new vectorField(patch().size()));
+    vectorField& result = tResult.ref();
+
+    if (patchis != -1)
+    {
+        forAll(meshs.boundary()[patchis], is)
+        {
+            const label fs = is + meshs.boundary()[patchis].patch().start();
+            const label cs = meshs.boundary()[patchis].faceCells()[is];
+            const label f = subset.faceMap()[fs];
+            const label i = patch().patch().whichFace(f);
+            result[i] = Us[cs];
+        }
+    }
+
+    return tResult;
+}
+
+
 void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
 {
     if (updated())
@@ -137,33 +218,60 @@ void Foam::waveVelocityFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const vectorField UWave(U());
-
-    const scalarField& phip =
-        patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
-
-    const scalarField out(pos0(phip));
-
-    // Where inflow, fix all velocity components to values specified by the
-    // wave model.
-    refValue() = (1 - out)*UWave;
-    valueFraction() = (1 - out)*symmTensor::I;
-
-    // Where outflow, set the normal component of the velocity to a value
-    // consistent with phi, but scale it to get the volumentic flow rate
-    // specified by the wave model. Tangential components are extrapolated.
-    const scalar QPhip = gSum(out*phip);
-    const scalar QWave = gSum(out*(UWave & patch().Sf()));
-    const vectorField nBySf(patch().Sf()/sqr(patch().magSf()));
-    if (QPhip > VSMALL)
+    if (pName_ != word::null)
     {
-        refValue() += out*(QWave/QPhip)*phip*nBySf;
+        const fvPatchScalarField& pp =
+            patch().lookupPatchField<volScalarField, scalar>(pName_);
+
+        if (!isA<wavePressureFvPatchScalarField>(pp))
+        {
+            FatalErrorInFunction
+                << "The corresponding pressure condition for the pressure "
+                << "field " << pName_ << " on patch " << patch().name()
+                << " is not of type "
+                << wavePressureFvPatchScalarField::typeName
+                << exit(FatalError);
+        }
+
+        const vectorField U(this->U()), Un(this->Un());
+        const scalarField out(pos0(U & patch().Sf()));
+
+        // Where inflow, set all velocity components to values specified by the
+        // wave model. Where outflow, set the tangential values and the normal
+        // gradient.
+        valueFraction() = symmTensor::I - out*sqr(patch().nf());
+        refValue() = U;
+        refGrad() = (U - Un)*patch().deltaCoeffs();
     }
     else
     {
-        refValue() += out*QWave*nBySf;
+        const scalarField& phip =
+            patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
+
+        const vectorField U(this->U());
+        const scalarField out(pos0(phip));
+
+        // Where inflow, fix all velocity components to values specified by the
+        // wave model.
+        refValue() = (1 - out)*U;
+        valueFraction() = (1 - out)*symmTensor::I;
+
+        // Where outflow, set the normal component of the velocity to a value
+        // consistent with phi, but scale it to get the volumentic flow rate
+        // specified by the wave model. Tangential components are extrapolated.
+        const scalar QPhip = gSum(out*phip);
+        const scalar QWave = gSum(out*(U & patch().Sf()));
+        const vectorField nBySf(patch().Sf()/sqr(patch().magSf()));
+        if (QPhip > VSMALL)
+        {
+            refValue() += out*(QWave/QPhip)*phip*nBySf;
+        }
+        else
+        {
+            refValue() += out*QWave*nBySf;
+        }
+        valueFraction() += out*sqr(patch().nf());
     }
-    valueFraction() += out*sqr(patch().nf());
 
     directionMixedFvPatchVectorField::updateCoeffs();
     directionMixedFvPatchVectorField::evaluate();
@@ -177,6 +285,7 @@ void Foam::waveVelocityFvPatchVectorField::write
 {
     directionMixedFvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "p", word::null, pName_);
     waves_.write(os);
 }
 

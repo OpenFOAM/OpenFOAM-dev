@@ -33,6 +33,26 @@ Description
     corresponding phase fraction condition looks this condition up and re-uses
     the wave modelling.
 
+    Flow reversal will occur in the event that the amplitude of the velocity
+    oscillation is greater than the mean flow. This triggers special handling,
+    the form of which depends on whether a pressure field has been specified or
+    not.
+
+    If a pressure field is not specified, then the proportion of the patch over
+    which the flow is reversed functions in a manner similar to the
+    flowRateOutletVelocity condition; i.e., the velocity is extrapolated and
+    then scaled to match the required outlet flow rate. Numerically, this is
+    still a fixedValue constraint on the normal velocity, just one which tends
+    to avoid instability. The corresponding pressure condition should be
+    fixedFluxPressure.
+
+    If a pressure field is specified, then the normal velocity condition becomes
+    fixedGradient on outlet faces. This gradient is calculated numerically by
+    evaluating the wave model on both the patch face and the adjacent cell. The
+    pressure boundary in this case should be a wavePressure condition. This will
+    do the opposite; it will fix the pressure value on outlet faces, and the
+    gradient otherwise.
+
 Usage
     \table
         Property    | Description                            | Req'd? | Default
@@ -43,6 +63,7 @@ Usage
         scale       | scale factor along the mean flow direction | no | None
         crossScale  | scale factor across the mean flow direction | no | None
         phi         | Name of the flux field                 | no     | phi
+        p           | Name of the pressure field             | no     |
     \endtable
 
     Example of the boundary condition specification:
@@ -91,6 +112,8 @@ SourceFiles
 namespace Foam
 {
 
+class fvMeshSubset;
+
 /*---------------------------------------------------------------------------*\
                 Class waveVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
@@ -104,8 +127,17 @@ class waveVelocityFvPatchVectorField
         //- Name of the flux field
         const word phiName_;
 
+        //- Name of the pressure field
+        const word pName_;
+
         //- Wave superposition
         const waveSuperposition waves_;
+
+        //- Mesh subset corresponding to the patch adjacent cells
+        mutable autoPtr<fvMeshSubset> faceCellSubset_;
+
+        //- Time index for keeping the subset up to date
+        mutable label faceCellSubsetTimeIndex_;
 
 
 public:
@@ -179,17 +211,29 @@ public:
 
         // Access
 
+            //- Access the name of the pressure field
+            const word& pName() const
+            {
+                return pName_;
+            }
+
             //- Access the wave models
             const waveSuperposition& waves() const
             {
                 return waves_;
             }
 
+            //- Access the face-cell subset
+            const fvMeshSubset& faceCellSubset() const;
+
 
         // Evaluation functions
 
-            //- Return the current modelled velocity field
+            //- Return the current modelled velocity field on the patch faces
             tmp<vectorField> U() const;
+
+            //- Return the current modelled velocity field in the neighbour cell
+            tmp<vectorField> Un() const;
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
