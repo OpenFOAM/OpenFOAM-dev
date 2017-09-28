@@ -215,7 +215,7 @@ Foam::levelSetAverage
 
     forAll(mesh.boundary(), patchi)
     {
-        result.boundaryField()[patchi] =
+        result.boundaryFieldRef()[patchi] =
             levelSetAverage
             (
                 mesh.boundary()[patchi],

@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
 
         // Set the fields
         alpha == levelSetFraction(h, hp, !liquid);
-        U == UMean + levelSetAverage(mesh, h, hp, uGas, uGasp, uLiq, uLiqp);
+        U == UMean + levelSetAverage(h, hp, uGas, uGasp, uLiq, uLiqp);
 
         // Set the boundary fields
         forAll(mesh.boundary(), patchi)
