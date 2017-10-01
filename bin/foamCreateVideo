@@ -128,7 +128,7 @@ if [ "$fmt" = "webm" ] ; then
         error "Please install avconv"
     fi
 else
-    if ! command -v avconv >/dev/null 2>&1 ; then
+    if command -v avconv >/dev/null 2>&1 ; then
         echo "Creating image with avconv..."
         avconv \
             -framerate "$fps" \
