@@ -46,16 +46,23 @@ void Foam::vtkPVFoam::updateInfoFields
     }
 
     stringList enabledEntries;
-    // enable 'p' and 'U' on the first call
+
     if (select->GetNumberOfArrays() == 0 && !meshPtr_)
     {
-        enabledEntries.setSize(2);
-        enabledEntries[0] = "p";
-        enabledEntries[1] = "U";
+        wordList defaultFields
+        (
+            configDict_.lookupOrDefault("defaultFields", wordList{"p", "U"})
+        );
+
+        enabledEntries.setSize(defaultFields.size());
+        forAll(defaultFields, i)
+        {
+            enabledEntries[i] = defaultFields[i];
+        }
     }
     else
     {
-        // preserve the enabled selections
+        // Preserve the enabled selections
         enabledEntries = getSelectedArrayEntries(select);
     }
 

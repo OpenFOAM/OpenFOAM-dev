@@ -250,6 +250,9 @@ class vtkPVFoam
         //- OpenFOAM time control
         autoPtr<Time> dbPtr_;
 
+        //- Configuration dictionary
+        dictionary configDict_;
+
         //- OpenFOAM mesh
         fvMesh* meshPtr_;
 
