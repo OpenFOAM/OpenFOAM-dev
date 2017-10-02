@@ -151,7 +151,8 @@ Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::pn() const
     const fvMesh& meshs = subset.subMesh();
     const label patchis = findIndex(subset.patchMap(), patch().index());
 
-    const scalarField ps =
+    const scalarField ps
+    (
         levelSetAverage
         (
             meshs,
@@ -161,7 +162,8 @@ Foam::tmp<Foam::scalarField> Foam::wavePressureFvPatchScalarField::pn() const
             Up.waves().pGas(t, meshs.points())(),
             Up.waves().pLiquid(t, meshs.cellCentres())(),
             Up.waves().pLiquid(t, meshs.points())()
-        );
+        )
+    );
 
     tmp<scalarField> tResult(new scalarField(patch().size()));
     scalarField& result = tResult.ref();

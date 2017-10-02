@@ -180,7 +180,8 @@ Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::Un() const
     const fvMesh& meshs = subset.subMesh();
     const label patchis = findIndex(subset.patchMap(), patch().index());
 
-    const vectorField Us =
+    const vectorField Us
+    (
         levelSetAverage
         (
             meshs,
@@ -190,7 +191,8 @@ Foam::tmp<Foam::vectorField> Foam::waveVelocityFvPatchVectorField::Un() const
             waves_.UGas(t, meshs.points())(),
             waves_.ULiquid(t, meshs.cellCentres())(),
             waves_.ULiquid(t, meshs.points())()
-        );
+        )
+    );
 
     tmp<vectorField> tResult(new vectorField(patch().size()));
     vectorField& result = tResult.ref();
