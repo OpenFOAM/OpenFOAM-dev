@@ -168,7 +168,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn
       - fvm::laplacian
         (
             fvc::interpolate(alpha)
-           *fvc::interpolate(this->turbulence().nut()*rho/Sc_),
+           *fvc::interpolate(this->turbulence().muEff()/Sc_),
             Yi
         )
      ==
