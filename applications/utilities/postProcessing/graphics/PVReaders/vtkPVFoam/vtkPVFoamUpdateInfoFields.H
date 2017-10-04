@@ -45,19 +45,51 @@ void Foam::vtkPVFoam::updateInfoFields
             << endl;
     }
 
+    // Use the db directly since this might be called without a mesh,
+    // but the region must get added back in
+    word regionPrefix;
+    if (meshRegion_ != polyMesh::defaultRegion)
+    {
+        regionPrefix = meshRegion_;
+    }
+
+    const instantList times = dbPtr_().times();
+
     stringList enabledEntries;
 
     if (select->GetNumberOfArrays() == 0 && !meshPtr_)
     {
-        wordList defaultFields
+        const wordReList defaultFieldRes
         (
-            configDict_.lookupOrDefault("defaultFields", wordList{"p", "U"})
+            configDict_.lookupOrDefault
+            (
+                "defaultFields",
+                wordReList(wordList{"p", "U"})
+            )
+        );
+
+        wordHashSet objectNameSet;
+        forAll(times, timei)
+        {
+            // Search for list of objects for this time and mesh region
+            IOobjectList objects(dbPtr_(), times[timei].name(), regionPrefix);
+
+            forAllConstIter(IOobjectList, objects, iter)
+            {
+                objectNameSet.insert(iter.key());
+            }
+        }
+
+        const wordList objectNames(objectNameSet.toc());
+        const labelList defaultFields
+        (
+            findStrings(defaultFieldRes, objectNames)
         );
 
         enabledEntries.setSize(defaultFields.size());
         forAll(defaultFields, i)
         {
-            enabledEntries[i] = defaultFields[i];
+            enabledEntries[i] = objectNames[defaultFields[i]];
         }
     }
     else
@@ -68,15 +100,6 @@ void Foam::vtkPVFoam::updateInfoFields
 
     select->RemoveAllArrays();
 
-    // use the db directly since this might be called without a mesh,
-    // but the region must get added back in
-    word regionPrefix;
-    if (meshRegion_ != polyMesh::defaultRegion)
-    {
-        regionPrefix = meshRegion_;
-    }
-
-    instantList times = dbPtr_().times();
     forAll(times, timei)
     {
         // Search for list of objects for this time and mesh region
@@ -110,7 +133,7 @@ void Foam::vtkPVFoam::updateInfoFields
         );
     }
 
-    // restore the enabled selections
+    // Restore the enabled selections
     setSelectedArrayEntries(select, enabledEntries);
 
     if (debug)

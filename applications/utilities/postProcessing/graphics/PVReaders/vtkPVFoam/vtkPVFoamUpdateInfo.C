@@ -451,12 +451,12 @@ void Foam::vtkPVFoam::updateInfoPatches
 
             if (!reader_->GetShowGroupsOnly())
             {
-                wordReList defaultPatchTypes
+                const wordReList defaultPatchTypes
                 (
                     configDict_.lookupOrDefault
                     (
                         "defaultPatchTypes",
-                        wordReList{"patch", "wall"}
+                        wordReList(wordList({"patch", "wall"}))
                     )
                 );
 
