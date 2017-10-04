@@ -226,7 +226,8 @@ void Foam::vtkPVFoam::updateInfoLagrangian
 void Foam::vtkPVFoam::updateInfoPatches
 (
     vtkDataArraySelection* arraySelection,
-    stringList& enabledEntries
+    stringList& enabledEntries,
+    const bool first
 )
 {
     if (debug)
@@ -284,7 +285,11 @@ void Foam::vtkPVFoam::updateInfoPatches
                             const polyPatch& pp = patches[patchIDs[i]];
                             if (pp.size())
                             {
-                                string vtkPatchName = pp.name() + " - patch";
+                                string vtkPatchName
+                                (
+                                    pp.name() + " - " + pp.type()
+                                );
+
                                 enabledEntriesSet.insert(vtkPatchName);
                             }
                         }
@@ -305,11 +310,10 @@ void Foam::vtkPVFoam::updateInfoPatches
 
                 if (pp.size())
                 {
+                    const string vtkPatchName = pp.name() + " - " + pp.type();
+
                     // Add patch to GUI list
-                    arraySelection->AddArray
-                    (
-                        (pp.name() + " - patch").c_str()
-                    );
+                    arraySelection->AddArray(vtkPatchName.c_str());
 
                     ++nPatches;
                 }
@@ -420,8 +424,19 @@ void Foam::vtkPVFoam::updateInfoPatches
                             {
                                 if (sizes[patchIDs[i]])
                                 {
-                                    string vtkPatchName =
-                                        names[patchIDs[i]] + " - patch";
+                                    const word patchType
+                                    (
+                                        patchEntries[patchIDs[i]].dict().lookup
+                                        (
+                                            "type"
+                                        )
+                                    );
+
+                                    string vtkPatchName
+                                    (
+                                        names[patchIDs[i]] + " - " + patchType
+                                    );
+
                                     enabledEntriesSet.insert(vtkPatchName);
                                 }
                             }
@@ -436,15 +451,39 @@ void Foam::vtkPVFoam::updateInfoPatches
 
             if (!reader_->GetShowGroupsOnly())
             {
+                wordReList defaultPatchTypes
+                (
+                    configDict_.lookupOrDefault
+                    (
+                        "defaultPatchTypes",
+                        wordReList{"patch", "wall"}
+                    )
+                );
+
                 forAll(names, patchi)
                 {
                     // Valid patch if nFace > 0 - add patch to GUI list
                     if (sizes[patchi])
                     {
-                        arraySelection->AddArray
+                        const word patchType
                         (
-                            (names[patchi] + " - patch").c_str()
+                            patchEntries[patchi].dict().lookup("type")
                         );
+
+                        const string vtkPatchName
+                        (
+                            names[patchi] + " - " + patchType
+                        );
+
+                        arraySelection->AddArray(vtkPatchName.c_str());
+
+                        if (first)
+                        {
+                            if (findStrings(defaultPatchTypes, patchType))
+                            {
+                                enabledEntriesSet.insert(vtkPatchName);
+                            }
+                        }
 
                         ++nPatches;
                     }

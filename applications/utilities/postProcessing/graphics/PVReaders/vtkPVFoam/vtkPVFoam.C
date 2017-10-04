@@ -374,7 +374,8 @@ void Foam::vtkPVFoam::updateInfo()
     // enable 'internalMesh' on the first call
     // or preserve the enabled selections
     stringList enabledEntries;
-    if (!partSelection->GetNumberOfArrays() && !meshPtr_)
+    bool first = !partSelection->GetNumberOfArrays() && !meshPtr_;
+    if (first)
     {
         enabledEntries.setSize(1);
         enabledEntries[0] = "internalMesh";
@@ -389,7 +390,7 @@ void Foam::vtkPVFoam::updateInfo()
 
     // Update mesh parts list - add Lagrangian at the bottom
     updateInfoInternalMesh(partSelection);
-    updateInfoPatches(partSelection, enabledEntries);
+    updateInfoPatches(partSelection, enabledEntries, first);
     updateInfoSets(partSelection);
     updateInfoZones(partSelection);
     updateInfoLagrangian(partSelection);

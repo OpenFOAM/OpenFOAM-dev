@@ -17,4 +17,6 @@ FoamFile
 
 defaultFields (U p p_rgh T alpha.water alpha.air);
 
+defaultPatchTypes (patch wall);
+
 // ************************************************************************* //

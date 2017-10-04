@@ -348,7 +348,12 @@ class vtkPVFoam
             void updateInfoLagrangian(vtkDataArraySelection*);
 
             //- Patch info
-            void updateInfoPatches(vtkDataArraySelection*, stringList&);
+            void updateInfoPatches
+            (
+                vtkDataArraySelection*,
+                stringList&,
+                const bool
+            );
 
             //- Set info
             void updateInfoSets(vtkDataArraySelection*);
