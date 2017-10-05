@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,18 +27,18 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Enum, int nEnum>
+template<class Enum, unsigned int nEnum>
 Foam::NamedEnum<Enum, nEnum>::NamedEnum()
 :
-    HashTable<int>(2*nEnum)
+    HashTable<unsigned int>(2*nEnum)
 {
-    for (int enumI = 0; enumI < nEnum; ++enumI)
+    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
     {
         if (!names[enumI] || names[enumI][0] == '\0')
         {
             stringList goodNames(enumI);
 
-            for (int i = 0; i < enumI; ++i)
+            for (unsigned int i = 0; i < enumI; ++i)
             {
                 goodNames[i] = names[i];
             }
@@ -57,14 +57,14 @@ Foam::NamedEnum<Enum, nEnum>::NamedEnum()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Enum, int nEnum>
+template<class Enum, unsigned int nEnum>
 Enum Foam::NamedEnum<Enum, nEnum>::read(Istream& is) const
 {
     const word name(is);
 
-    HashTable<int>::const_iterator iter = find(name);
+    HashTable<unsigned int>::const_iterator iter = find(name);
 
-    if (iter == HashTable<int>::end())
+    if (iter == HashTable<unsigned int>::end())
     {
         FatalIOErrorInFunction(is)
             << name << " is not in enumeration: "
@@ -75,20 +75,20 @@ Enum Foam::NamedEnum<Enum, nEnum>::read(Istream& is) const
 }
 
 
-template<class Enum, int nEnum>
+template<class Enum, unsigned int nEnum>
 void Foam::NamedEnum<Enum, nEnum>::write(const Enum e, Ostream& os) const
 {
     os  << operator[](e);
 }
 
 
-template<class Enum, int nEnum>
+template<class Enum, unsigned int nEnum>
 Foam::stringList Foam::NamedEnum<Enum, nEnum>::strings()
 {
     stringList lst(nEnum);
 
     label nElem = 0;
-    for (int enumI = 0; enumI < nEnum; ++enumI)
+    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
     {
         if (names[enumI] && names[enumI][0])
         {
@@ -101,13 +101,13 @@ Foam::stringList Foam::NamedEnum<Enum, nEnum>::strings()
 }
 
 
-template<class Enum, int nEnum>
+template<class Enum, unsigned int nEnum>
 Foam::wordList Foam::NamedEnum<Enum, nEnum>::words()
 {
     wordList lst(nEnum);
 
     label nElem = 0;
-    for (int enumI = 0; enumI < nEnum; ++enumI)
+    for (unsigned int enumI = 0; enumI < nEnum; ++enumI)
     {
         if (names[enumI] && names[enumI][0])
         {

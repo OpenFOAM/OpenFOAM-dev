@@ -48,7 +48,7 @@ void Foam::DelaunayMeshTools::writeOBJ
 
     forAllConstIter
     (
-        HashTable<int>,
+        HashTable<unsigned int>,
         indexedVertexEnum::vertexTypeNames_,
         iter
     )

@@ -49,14 +49,11 @@ namespace Foam
                           Class NamedEnum Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Enum, int nEnum>
+template<class Enum, unsigned int nEnum>
 class NamedEnum
 :
-    public HashTable<int>
+    public HashTable<unsigned int>
 {
-    //- nEnum must be positive (non-zero)
-    static_assert(nEnum > 0, "nEnum must be positive (non-zero)");
-
     // Private Member Functions
 
         //- Disallow default bitwise copy construct
@@ -101,19 +98,19 @@ public:
         //- Return the enumeration element corresponding to the given name
         const Enum operator[](const char* name) const
         {
-            return Enum(HashTable<int>::operator[](name));
+            return Enum(HashTable<unsigned int>::operator[](name));
         }
 
         //- Return the enumeration element corresponding to the given name
         const Enum operator[](const word& name) const
         {
-            return Enum(HashTable<int>::operator[](name));
+            return Enum(HashTable<unsigned int>::operator[](name));
         }
 
         //- Return the name of the given enumeration element
         const char* operator[](const Enum e) const
         {
-            return names[int(e)];
+            return names[unsigned(e)];
         }
 };
 
