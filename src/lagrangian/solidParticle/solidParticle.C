@@ -44,8 +44,6 @@ bool Foam::solidParticle::move
     td.switchProcessor = false;
     td.keepParticle = true;
 
-    const polyBoundaryMesh& pbMesh = mesh().boundaryMesh();
-
     while (td.keepParticle && !td.switchProcessor && stepFraction() < 1)
     {
         if (debug)
