@@ -4,6 +4,7 @@
 # Editor and misc backup files - anywhere
 *~
 .*~
+.*.swp
 *.bak
 *.bak[0-9][0-9]
 \#*\#

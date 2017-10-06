@@ -15,16 +15,16 @@ then
         ./Allrun $*
     )
     (
+        cd flange || exit
+        ./Allrun $*
+    )
+    (
         cd simpleShapes || exit
         ./Allrun $*
     )
 
     if ! isTest $@
     then
-        (
-            cd flange || exit
-            ./Allrun $*
-        )
         (
             cd mixerVessel || exit
             ./Allrun $*
