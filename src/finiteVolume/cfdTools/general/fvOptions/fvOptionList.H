@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,15 @@ protected:
 
         //- Check that all sources have been applied
         void checkApplied() const;
+
+        //- Return source for equation with specified name and dimensions
+        template<class Type>
+        tmp<fvMatrix<Type>> source
+        (
+            GeometricField<Type, fvPatchField, volMesh>& field,
+            const word& fieldName,
+            const dimensionSet& ds
+        );
 
         //- Disallow default bitwise copy construct
         optionList(const optionList&);
@@ -199,6 +208,21 @@ public:
                 const geometricOneField& alpha,
                 const geometricOneField& rho,
                 GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation with second time derivative
+            template<class Type>
+            tmp<fvMatrix<Type>> d2dt2
+            (
+                GeometricField<Type, fvPatchField, volMesh>& field
+            );
+
+            //- Return source for equation with second time derivative
+            template<class Type>
+            tmp<fvMatrix<Type>> d2dt2
+            (
+                GeometricField<Type, fvPatchField, volMesh>& field,
+                const word& fieldName
             );
 
 

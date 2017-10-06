@@ -96,6 +96,13 @@ public:
 
         // Evaluate
 
+            //- Add explicit contribution to incompressible momentum equation
+            virtual void addSup
+            (
+                fvMatrix<vector>& eqn,
+                const label fieldi
+            );
+
             //- Add explicit contribution to compressible momentum equation
             virtual void addSup
             (
