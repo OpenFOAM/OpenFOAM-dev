@@ -134,14 +134,7 @@ public:
 
             forAll(mesh.boundary(), patchi)
             {
-                if (rlwbf[patchi].coupled())
-                {
-                    rlwbf[patchi] = 1.0 - cdWeights.boundaryField()[patchi];
-                }
-                else
-                {
-                    rlwbf[patchi] = cdWeights.boundaryField()[patchi];
-                }
+                rlwbf[patchi] = 1.0 - cdWeights.boundaryField()[patchi];
             }
 
             return treverseLinearWeights;
