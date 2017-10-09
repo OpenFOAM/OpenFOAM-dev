@@ -241,7 +241,7 @@ Foam::solverPerformance Foam::PBiCGStab::solve
         } while
         (
             (
-                solverPerf.nIterations()++ < maxIter_
+              ++solverPerf.nIterations() < maxIter_
             && !solverPerf.checkConvergence(tolerance_, relTol_)
             )
          || solverPerf.nIterations() < minIter_
