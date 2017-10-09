@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,9 @@ class blockMesh
 
         //- Switch for verbose output
         bool verboseOutput;
+
+        //- Switch checking face consistency (defaults to true)
+        bool checkFaceCorrespondence_;
 
         //- Optional searchable geometry to project face-points to
         searchableSurfaces geometry_;

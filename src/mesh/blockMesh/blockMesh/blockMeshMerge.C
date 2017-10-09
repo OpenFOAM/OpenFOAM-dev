@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,11 @@ void Foam::blockMesh::calcMergeInfo()
         const List<FixedList<label, 4>>& blockNfaceFaces =
             blocks[blockNlabel].boundaryPatches()[blockNfaceLabel];
 
-        if (blockPfaceFaces.size() != blockNfaceFaces.size())
+        if
+        (
+            checkFaceCorrespondence_
+         && blockPfaceFaces.size() != blockNfaceFaces.size()
+        )
         {
             FatalErrorInFunction
                 << "Inconsistent number of faces between block pair "
