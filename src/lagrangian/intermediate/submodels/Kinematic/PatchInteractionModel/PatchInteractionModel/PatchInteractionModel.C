@@ -35,7 +35,7 @@ Foam::wordList Foam::PatchInteractionModel<CloudType>::interactionTypeNames_
 (
     IStringStream
     (
-        "(rebound stick escape)"
+        "(none rebound stick escape)"
     )()
 );
 
