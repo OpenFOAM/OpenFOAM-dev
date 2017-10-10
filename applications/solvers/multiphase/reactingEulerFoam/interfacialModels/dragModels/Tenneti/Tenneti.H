@@ -35,7 +35,7 @@ Description
         Drag law for monodisperse gas–solid systems using particle-resolved
         direct numerical simulation of flow past fixed assemblies of spheres.
         International Journal of Multiphase Flow, 37(9), 1072–1092.
-    \verbatim
+    \endverbatim
 
 SourceFiles
     Tenneti.C
