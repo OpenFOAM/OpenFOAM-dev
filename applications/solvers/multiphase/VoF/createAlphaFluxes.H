@@ -1,6 +1,6 @@
 IOobject alphaPhi10Header
 (
-    "alphaPhi10",
+    IOobject::groupName("alphaPhi0", alpha1.group()),
     runTime.timeName(),
     mesh,
     IOobject::READ_IF_PRESENT,

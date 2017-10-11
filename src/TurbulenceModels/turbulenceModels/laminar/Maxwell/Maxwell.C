@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Maxwell<BasicTurbulenceModel>::Maxwell
     (
         IOobject
         (
-            IOobject::groupName("sigma", U.group()),
+            IOobject::groupName("sigma", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

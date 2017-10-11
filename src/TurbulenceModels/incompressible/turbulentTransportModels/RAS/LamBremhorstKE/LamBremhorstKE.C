@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ LamBremhorstKE::LamBremhorstKE
     (
         IOobject
         (
-            IOobject::groupName("k", U.group()),
+            IOobject::groupName("k", alphaRhoPhi.group()),
             runTime_.timeName(),
             mesh_,
             IOobject::MUST_READ,
@@ -164,7 +164,7 @@ LamBremhorstKE::LamBremhorstKE
     (
         IOobject
         (
-            IOobject::groupName("epsilon", U.group()),
+            IOobject::groupName("epsilon", alphaRhoPhi.group()),
             runTime_.timeName(),
             mesh_,
             IOobject::MUST_READ,

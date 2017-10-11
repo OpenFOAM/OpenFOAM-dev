@@ -131,7 +131,7 @@ Foam::RASModel<BasicTurbulenceModel>::New
         (
             IOobject
             (
-                IOobject::groupName(propertiesName, U.group()),
+                IOobject::groupName(propertiesName, alphaRhoPhi.group()),
                 U.time().constant(),
                 U.db(),
                 IOobject::MUST_READ_IF_MODIFIED,

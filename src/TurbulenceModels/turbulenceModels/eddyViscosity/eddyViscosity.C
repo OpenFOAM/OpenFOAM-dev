@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Foam::eddyViscosity<BasicTurbulenceModel>::eddyViscosity
     (
         IOobject
         (
-            IOobject::groupName("nut", U.group()),
+            IOobject::groupName("nut", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

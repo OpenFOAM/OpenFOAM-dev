@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ kOmega<BasicTurbulenceModel>::kOmega
     (
         IOobject
         (
-            IOobject::groupName("k", U.group()),
+            IOobject::groupName("k", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -136,7 +136,7 @@ kOmega<BasicTurbulenceModel>::kOmega
     (
         IOobject
         (
-            IOobject::groupName("omega", U.group()),
+            IOobject::groupName("omega", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

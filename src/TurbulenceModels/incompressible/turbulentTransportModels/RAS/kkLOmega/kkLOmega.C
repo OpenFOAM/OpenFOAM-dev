@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -490,7 +490,7 @@ kkLOmega::kkLOmega
     (
         IOobject
         (
-            IOobject::groupName("kt", U.group()),
+            IOobject::groupName("kt", alphaRhoPhi.group()),
             runTime_.timeName(),
             mesh_,
             IOobject::MUST_READ,
@@ -502,7 +502,7 @@ kkLOmega::kkLOmega
     (
         IOobject
         (
-            IOobject::groupName("kl", U.group()),
+            IOobject::groupName("kl", alphaRhoPhi.group()),
             runTime_.timeName(),
             mesh_,
             IOobject::MUST_READ,
@@ -514,7 +514,7 @@ kkLOmega::kkLOmega
     (
         IOobject
         (
-            IOobject::groupName("omega", U.group()),
+            IOobject::groupName("omega", alphaRhoPhi.group()),
             runTime_.timeName(),
             mesh_,
             IOobject::MUST_READ,

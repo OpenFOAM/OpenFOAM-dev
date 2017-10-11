@@ -106,7 +106,7 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
     (
         LESdelta::New
         (
-            IOobject::groupName("delta", U.group()),
+            IOobject::groupName("delta", alphaRhoPhi.group()),
             *this,
             LESDict_
         )
@@ -141,7 +141,7 @@ Foam::LESModel<BasicTurbulenceModel>::New
         (
             IOobject
             (
-                IOobject::groupName(propertiesName, U.group()),
+                IOobject::groupName(propertiesName, alphaRhoPhi.group()),
                 U.time().constant(),
                 U.db(),
                 IOobject::MUST_READ_IF_MODIFIED,

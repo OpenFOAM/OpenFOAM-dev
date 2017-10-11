@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ continuousGasKEpsilon<BasicTurbulenceModel>::continuousGasKEpsilon
     (
         IOobject
         (
-            IOobject::groupName("nutEff", U.group()),
+            IOobject::groupName("nutEff", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::READ_IF_PRESENT,

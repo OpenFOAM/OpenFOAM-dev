@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -444,7 +444,7 @@ kOmegaSSTLM<BasicTurbulenceModel>::kOmegaSSTLM
     (
         IOobject
         (
-            IOobject::groupName("ReThetat", U.group()),
+            IOobject::groupName("ReThetat", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -457,7 +457,7 @@ kOmegaSSTLM<BasicTurbulenceModel>::kOmegaSSTLM
     (
         IOobject
         (
-            IOobject::groupName("gammaInt", U.group()),
+            IOobject::groupName("gammaInt", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -470,7 +470,7 @@ kOmegaSSTLM<BasicTurbulenceModel>::kOmegaSSTLM
     (
         IOobject
         (
-            IOobject::groupName("gammaIntEff", U.group()),
+            IOobject::groupName("gammaIntEff", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_
         ),

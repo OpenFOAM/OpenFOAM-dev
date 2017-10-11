@@ -357,7 +357,7 @@ kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::kOmegaSST
     (
         IOobject
         (
-            IOobject::groupName("k", U.group()),
+            IOobject::groupName("k", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -369,7 +369,7 @@ kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::kOmegaSST
     (
         IOobject
         (
-            IOobject::groupName("omega", U.group()),
+            IOobject::groupName("omega", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

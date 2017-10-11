@@ -181,7 +181,7 @@ RNGkEpsilon<BasicTurbulenceModel>::RNGkEpsilon
     (
         IOobject
         (
-            IOobject::groupName("k", U.group()),
+            IOobject::groupName("k", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -193,7 +193,7 @@ RNGkEpsilon<BasicTurbulenceModel>::RNGkEpsilon
     (
         IOobject
         (
-            IOobject::groupName("epsilon", U.group()),
+            IOobject::groupName("epsilon", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
