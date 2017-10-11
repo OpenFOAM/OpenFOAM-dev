@@ -87,7 +87,7 @@ dynamicLagrangian<BasicTurbulenceModel>::dynamicLagrangian
     (
         IOobject
         (
-            IOobject::groupName("flm", this->U_.group()),
+            IOobject::groupName("flm", this->alphaRhoPhi_.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -99,7 +99,7 @@ dynamicLagrangian<BasicTurbulenceModel>::dynamicLagrangian
     (
         IOobject
         (
-            IOobject::groupName("fmm", this->U_.group()),
+            IOobject::groupName("fmm", this->alphaRhoPhi_.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

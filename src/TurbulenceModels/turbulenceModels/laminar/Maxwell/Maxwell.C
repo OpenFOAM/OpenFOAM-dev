@@ -135,7 +135,7 @@ Maxwell<BasicTurbulenceModel>::devRhoReff() const
         (
             IOobject
             (
-                IOobject::groupName("devRhoReff", this->U_.group()),
+                IOobject::groupName("devRhoReff", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,

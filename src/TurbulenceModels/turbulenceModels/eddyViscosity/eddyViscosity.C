@@ -107,7 +107,7 @@ Foam::eddyViscosity<BasicTurbulenceModel>::R() const
         (
             IOobject
             (
-                IOobject::groupName("R", this->U_.group()),
+                IOobject::groupName("R", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,

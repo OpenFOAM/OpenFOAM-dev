@@ -189,7 +189,7 @@ continuousGasKEpsilon<BasicTurbulenceModel>::nuEff() const
     (
         new volScalarField
         (
-            IOobject::groupName("nuEff", this->U_.group()),
+            IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
             blend*this->nut_
           + (1.0 - blend)*rhoEff()*nutEff_/this->transport().rho()
           + this->nu()
@@ -210,7 +210,7 @@ continuousGasKEpsilon<BasicTurbulenceModel>::rhoEff() const
     (
         new volScalarField
         (
-            IOobject::groupName("rhoEff", this->U_.group()),
+            IOobject::groupName("rhoEff", this->alphaRhoPhi_.group()),
             gas.rho() + (fluid.virtualMass(gas).Cvm() + 3.0/20.0)*liquid.rho()
         )
     );
@@ -278,7 +278,7 @@ continuousGasKEpsilon<BasicTurbulenceModel>::R() const
         (
             IOobject
             (
-                IOobject::groupName("R", this->U_.group()),
+                IOobject::groupName("R", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,

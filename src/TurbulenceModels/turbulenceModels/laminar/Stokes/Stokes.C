@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ Stokes<BasicTurbulenceModel>::nut() const
         (
             IOobject
             (
-                IOobject::groupName("nut", this->U_.group()),
+                IOobject::groupName("nut", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
@@ -128,7 +128,7 @@ Stokes<BasicTurbulenceModel>::nuEff() const
     (
         new volScalarField
         (
-            IOobject::groupName("nuEff", this->U_.group()), this->nu()
+            IOobject::groupName("nuEff", this->alphaRhoPhi_.group()), this->nu()
         )
     );
 }
@@ -155,7 +155,7 @@ Stokes<BasicTurbulenceModel>::k() const
         (
             IOobject
             (
-                IOobject::groupName("k", this->U_.group()),
+                IOobject::groupName("k", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
@@ -179,7 +179,7 @@ Stokes<BasicTurbulenceModel>::epsilon() const
         (
             IOobject
             (
-                IOobject::groupName("epsilon", this->U_.group()),
+                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,
@@ -206,7 +206,7 @@ Stokes<BasicTurbulenceModel>::R() const
         (
             IOobject
             (
-                IOobject::groupName("R", this->U_.group()),
+                IOobject::groupName("R", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_,
                 IOobject::NO_READ,

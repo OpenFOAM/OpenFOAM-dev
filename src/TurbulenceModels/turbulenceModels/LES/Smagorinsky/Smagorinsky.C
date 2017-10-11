@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::k
         (
             IOobject
             (
-                IOobject::groupName("k", this->U_.group()),
+                IOobject::groupName("k", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_
             ),
@@ -149,7 +149,7 @@ tmp<volScalarField> Smagorinsky<BasicTurbulenceModel>::epsilon() const
         (
             IOobject
             (
-                IOobject::groupName("epsilon", this->U_.group()),
+                IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
                 this->runTime_.timeName(),
                 this->mesh_
             ),
