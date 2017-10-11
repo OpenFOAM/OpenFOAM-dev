@@ -28,7 +28,7 @@ divSchemes
 {
     default         none;
 
-    div(alphaPhic,U.air)    Gauss linearUpwindV unlimited;
+    div(alphaPhi.air,U.air)    Gauss linearUpwindV unlimited;
     div(((alpha.air*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
 
     div(phiGByA,kinematicCloud:alpha) Gauss linear;

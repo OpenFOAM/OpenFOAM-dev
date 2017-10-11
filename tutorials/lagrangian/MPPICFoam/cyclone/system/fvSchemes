@@ -27,11 +27,11 @@ gradSchemes
 divSchemes
 {
     default         none;
-    div(alphaPhic,U.air) Gauss linearUpwindV unlimited;
+    div(alphaPhi.air,U.air) Gauss linearUpwindV unlimited;
     div(((alpha.air*nuEff.air)*dev2(T(grad(U.air))))) Gauss linear;
     div(phiGByA,kinematicCloud:alpha) Gauss linear;
-    div(alphaPhic,epsilon.air) Gauss limitedLinear 1;
-    div(alphaPhic,k.air) Gauss limitedLinear 1;
+    div(alphaPhi.air,epsilon.air) Gauss limitedLinear 1;
+    div(alphaPhi.air,k.air) Gauss limitedLinear 1;
 }
 
 laplacianSchemes

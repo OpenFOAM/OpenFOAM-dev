@@ -151,7 +151,16 @@ alphac = max(1.0 - kinematicCloud.theta(), alphacMin);
 alphac.correctBoundaryConditions();
 
 surfaceScalarField alphacf("alphacf", fvc::interpolate(alphac));
-surfaceScalarField alphaPhic("alphaPhic", alphacf*phic);
+
+surfaceScalarField alphaPhic
+(
+    IOobject::groupName
+    (
+        "alphaPhi",
+        continuousPhaseName
+    ),
+    alphacf*phic
+);
 
 autoPtr<PhaseIncompressibleTurbulenceModel<singlePhaseTransportModel>>
 continuousPhaseTurbulence
