@@ -72,6 +72,7 @@ constantFilmThermo::constantFilmThermo
     sigma0_("sigma0"),
     Cp0_("Cp0"),
     kappa0_("kappa0"),
+    D0_("D0"),
     hl0_("hl0"),
     pv0_("pv0"),
     W0_("W0"),
@@ -82,6 +83,7 @@ constantFilmThermo::constantFilmThermo
     init(sigma0_);
     init(Cp0_);
     init(kappa0_);
+    init(D0_);
     init(hl0_);
     init(pv0_);
     init(W0_);
