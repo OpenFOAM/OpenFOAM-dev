@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -419,14 +419,14 @@ void Foam::functionObjects::forces::writeForces()
         << endl;
 
     writeTime(file(MAIN_FILE));
+
     file(MAIN_FILE) << tab << setw(1) << '('
         << sum(force_[0]) << setw(1) << ' '
         << sum(force_[1]) << setw(1) << ' '
         << sum(force_[2]) << setw(3) << ") ("
         << sum(moment_[0]) << setw(1) << ' '
         << sum(moment_[1]) << setw(1) << ' '
-        << sum(moment_[2]) << setw(1) << ')'
-        << endl;
+        << sum(moment_[2]) << setw(1) << ')';
 
     if (localSystem_)
     {
@@ -437,16 +437,16 @@ void Foam::functionObjects::forces::writeForces()
         vectorField localMomentT(coordSys_.localVector(moment_[1]));
         vectorField localMomentP(coordSys_.localVector(moment_[2]));
 
-        writeTime(file(MAIN_FILE));
         file(MAIN_FILE) << tab << setw(1) << '('
             << sum(localForceN) << setw(1) << ' '
             << sum(localForceT) << setw(1) << ' '
             << sum(localForceP) << setw(3) << ") ("
             << sum(localMomentN) << setw(1) << ' '
             << sum(localMomentT) << setw(1) << ' '
-            << sum(localMomentP) << setw(1) << ')'
-            << endl;
+            << sum(localMomentP) << setw(1) << ')';
     }
+
+    file(MAIN_FILE) << endl;
 }
 
 
