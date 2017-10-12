@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,7 @@ private:
         void doCoupledPatches
         (
             const bool syncPar,
+            Map<label>& facesToSubset,
             labelList& nCellsUsingFace
         ) const;
 
@@ -161,7 +162,8 @@ public:
             void setCellSubset
             (
                 const labelHashSet& globalCellMap,
-                const label patchID = -1
+                const label patchID = -1,
+                const bool syncPar = true
             );
 
             //- Set the subset from all cells with region == currentRegion.

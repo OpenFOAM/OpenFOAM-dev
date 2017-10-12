@@ -93,10 +93,11 @@ void Foam::fvMeshSubset::markPoints
 void Foam::fvMeshSubset::doCoupledPatches
 (
     const bool syncPar,
+    Map<label>& facesToSubset,
     labelList& nCellsUsingFace
 ) const
 {
-    // Synchronize nCellsUsingFace on both sides of coupled patches.
+    // Synchronize facesToSubset on both sides of coupled patches.
     // Marks faces that become 'uncoupled' with 3.
 
     const polyBoundaryMesh& oldPatches = baseMesh().boundaryMesh();
@@ -119,8 +120,31 @@ void Foam::fvMeshSubset::doCoupledPatches
 
                 UOPstream toNeighbour(procPatch.neighbProcNo(), pBufs);
 
-                toNeighbour
-                    << SubList<label>(nCellsUsingFace, pp.size(), pp.start());
+                if (!facesToSubset.empty())
+                {
+                    DynamicList<label> patchFacesToSubset;
+                    forAll(pp, i)
+                    {
+                        if
+                        (
+                            facesToSubset.found(pp.start()+i)
+                         && facesToSubset[pp.start()+i] == 1
+                        )
+                        {
+                            patchFacesToSubset.append(i);
+                        }
+                    }
+                    toNeighbour << patchFacesToSubset;
+                }
+                else if (!nCellsUsingFace.empty())
+                {
+                    toNeighbour <<
+                        SubList<label>(nCellsUsingFace, pp.size(), pp.start());
+                }
+                else
+                {
+                    toNeighbour << labelList();
+                }
             }
         }
 
@@ -138,22 +162,49 @@ void Foam::fvMeshSubset::doCoupledPatches
 
                 UIPstream fromNeighbour(procPatch.neighbProcNo(), pBufs);
 
-                labelList nbrCellsUsingFace(fromNeighbour);
+                const labelList nbrList(fromNeighbour);
 
                 // Combine with this side.
 
-                forAll(pp, i)
+                if (!facesToSubset.empty())
                 {
-                    if
-                    (
-                        nCellsUsingFace[pp.start()+i] == 1
-                     && nbrCellsUsingFace[i] == 0
-                    )
+                    const labelHashSet nbrPatchFacesToSubset(nbrList);
+
+                    forAll(pp, i)
                     {
-                        // Face's neighbour is no longer there. Mark face off
-                        // as coupled
-                        nCellsUsingFace[pp.start()+i] = 3;
-                        nUncoupled++;
+                        if
+                        (
+                            facesToSubset.found(pp.start()+i)
+                         && facesToSubset[pp.start()+i] == 1
+                         && !nbrPatchFacesToSubset.found(i)
+                        )
+                        {
+                            // Face's neighbour is no longer there. Mark face
+                            // off as coupled
+                            facesToSubset[pp.start()+i] = 3;
+                            nUncoupled++;
+                        }
+                    }
+                }
+                else if (!nCellsUsingFace.empty())
+                {
+                    const labelList& nbrCellsUsingFace(nbrList);
+
+                    // Combine with this side.
+
+                    forAll(pp, i)
+                    {
+                        if
+                        (
+                            nCellsUsingFace[pp.start()+i] == 1
+                         && nbrCellsUsingFace[i] == 0
+                        )
+                        {
+                            // Face's neighbour is no longer there. Mark face
+                            // off as coupled
+                            nCellsUsingFace[pp.start()+i] = 3;
+                            nUncoupled++;
+                        }
                     }
                 }
             }
@@ -170,19 +221,41 @@ void Foam::fvMeshSubset::doCoupledPatches
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(pp);
 
-            forAll(cycPatch, i)
+            if (!facesToSubset.empty())
             {
-                label thisFacei = cycPatch.start() + i;
-                label otherFacei = cycPatch.transformGlobalFace(thisFacei);
-
-                if
-                (
-                    nCellsUsingFace[thisFacei] == 1
-                 && nCellsUsingFace[otherFacei] == 0
-                )
+                forAll(cycPatch, i)
                 {
-                    nCellsUsingFace[thisFacei] = 3;
-                    nUncoupled++;
+                    label thisFacei = cycPatch.start() + i;
+                    label otherFacei = cycPatch.transformGlobalFace(thisFacei);
+
+                    if
+                    (
+                        facesToSubset.found(thisFacei)
+                     && facesToSubset[thisFacei] == 1
+                     && !facesToSubset.found(otherFacei)
+                    )
+                    {
+                        facesToSubset[thisFacei] = 3;
+                        nUncoupled++;
+                    }
+                }
+            }
+            else if (!nCellsUsingFace.empty())
+            {
+                forAll(cycPatch, i)
+                {
+                    label thisFacei = cycPatch.start() + i;
+                    label otherFacei = cycPatch.transformGlobalFace(thisFacei);
+
+                    if
+                    (
+                        nCellsUsingFace[thisFacei] == 1
+                     && nCellsUsingFace[otherFacei] == 0
+                    )
+                    {
+                        nCellsUsingFace[thisFacei] = 3;
+                        nUncoupled++;
+                    }
                 }
             }
         }
@@ -409,7 +482,8 @@ Foam::fvMeshSubset::fvMeshSubset(const fvMesh& baseMesh)
 void Foam::fvMeshSubset::setCellSubset
 (
     const labelHashSet& globalCellMap,
-    const label patchID
+    const label patchID,
+    const bool syncPar
 )
 {
     // Initial check on patches before doing anything time consuming.
@@ -475,6 +549,10 @@ void Foam::fvMeshSubset::setCellSubset
         }
     }
 
+    // Handle coupled faces. Modifies patch faces to be uncoupled to 3.
+    labelList empty;
+    doCoupledPatches(syncPar, facesToSubset, empty);
+
     // Mark all used points and make a global-to-local face map
     Map<label> globalFaceMap(facesToSubset.size());
 
@@ -538,13 +616,19 @@ void Foam::fvMeshSubset::setCellSubset
         }
     }
 
-    // 3. old internal faces
+    // 3. old internal faces and uncoupled faces
     forAll(facesToc, intFacei)
     {
         if
         (
-            baseMesh().isInternalFace(facesToc[intFacei])
-         && facesToSubset[facesToc[intFacei]] == 1
+            (
+                baseMesh().isInternalFace(facesToc[intFacei])
+             && facesToSubset[facesToc[intFacei]] == 1
+            )
+         || (
+                !baseMesh().isInternalFace(facesToc[intFacei])
+             && facesToSubset[facesToc[intFacei]] == 3
+            )
         )
         {
             // Mark face and increment number of points in set
@@ -667,6 +751,11 @@ void Foam::fvMeshSubset::setCellSubset
             // Update count for patch
             boundaryPatchSizes[oldInternalPatchID]++;
         }
+        else if (facesToSubset[oldFacei] == 3)
+        {
+            // Uncoupled face. Increment the old patch.
+            boundaryPatchSizes[oldInternalPatchID]++;
+        }
         else
         {
             // Boundary face. Increment the appropriate patch
@@ -737,6 +826,7 @@ void Foam::fvMeshSubset::setCellSubset
     patchMap_.setSize(nbSize);
     label nNewPatches = 0;
     label patchStart = nInternalFaces;
+
 
     forAll(oldPatches, patchi)
     {
@@ -892,7 +982,8 @@ void Foam::fvMeshSubset::setLargeCellSubset
     faceMap_.setSize(nFacesInSet);
 
     // Handle coupled faces. Modifies patch faces to be uncoupled to 3.
-    doCoupledPatches(syncPar, nCellsUsingFace);
+    Map<label> empty;
+    doCoupledPatches(syncPar, empty, nCellsUsingFace);
 
 
     // See which patch to use for exposed internal faces.
