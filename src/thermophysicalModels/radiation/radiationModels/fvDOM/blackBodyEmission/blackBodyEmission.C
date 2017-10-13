@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,9 +173,9 @@ Foam::radiation::blackBodyEmission::blackBodyEmission
                     IOobject::NO_WRITE
                 ),
                 physicoChemical::sigma*pow4(T)
+
             )
         );
-
     }
 }
 
@@ -193,7 +193,7 @@ Foam::scalar Foam::radiation::blackBodyEmission::fLambdaT
     const scalar lambdaT
 ) const
 {
-    return  table_(lambdaT*1.0e6);
+    return table_(1e6*lambdaT);
 }
 
 
@@ -231,9 +231,30 @@ Foam::radiation::blackBodyEmission::EbDeltaLambdaT
 
         forAll(T, i)
         {
-            scalar T1 = fLambdaT(band[1]*T[i]);
-            scalar T2 = fLambdaT(band[0]*T[i]);
+            const scalar T1 = fLambdaT(band[1]*T[i]);
+            const scalar T2 = fLambdaT(band[0]*T[i]);
+
             Ebif[i] *= T1 - T2;
+        }
+
+        volScalarField::Boundary& EbBf = Eb.ref().boundaryFieldRef();
+
+        forAll(EbBf, patchi)
+        {
+            fvPatchScalarField& EbPf = EbBf[patchi];
+
+            if (!EbPf.coupled())
+            {
+                const scalarField& Tpf = T.boundaryField()[patchi];
+
+                forAll(EbPf, facei)
+                {
+                    const scalar T1 = fLambdaT(band[1]*Tpf[facei]);
+                    const scalar T2 = fLambdaT(band[0]*Tpf[facei]);
+
+                    EbPf[facei] *= T1 - T2;
+                }
+            }
         }
 
         return Eb;
