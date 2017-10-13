@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,16 +31,19 @@ Description
     For a given block, the correspondence between the ordering of vertex labels
     and face labels is shown below.  For vertex numbering in the sequence 0 to 7
     (block, centre): faces 0 (f0) and 1 are left and right, respectively; faces
-    2 and 3 are front the back; and faces 4 and 5 are bottom and top:
+    2 and 3 are front and back; and faces 4 and 5 are bottom and top:
     \verbatim
-             7 ---- 6
-        f5   |\     |\   f3
-         |   | 4 ---- 5    \
-         |   3 |--- 2 |     \
-         |    \|     \|      f2
-        f4     0 ---- 1
+                   7 ---- 6
+              f5   |\     |\   f3
+               |   | 4 ---- 5    \
+               |   3 |--- 2 |     \
+               |    \|     \|      f2
+              f4     0 ---- 1
 
-             f0 ----- f1
+         Z         f0 ----- f1
+         |  Y
+         | /
+         O --- X
      \endverbatim
 
 SourceFiles
