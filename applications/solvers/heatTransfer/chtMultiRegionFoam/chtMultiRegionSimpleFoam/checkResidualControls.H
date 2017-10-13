@@ -63,6 +63,6 @@ else if (runTime.run() && resControlUsed && allRegionsConverged)
     Info<< "\nRegions converged after " << runTime.timeName()
         << " iterations" << endl;
 
-    // Leave SIMPLE loop
-    break;
+    // Save converged time step and end the run
+    runTime.writeAndEnd();
 }
