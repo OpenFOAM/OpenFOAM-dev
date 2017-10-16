@@ -192,12 +192,14 @@ externalWallHeatFluxTemperatureFvPatchScalarField
         }
         case fixedHeatFlux:
         {
+            q_.setSize(mapper.size());
             q_.map(ptf.q_, mapper);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
+            h_.setSize(mapper.size());
             h_.map(ptf.h_, mapper);
 
             break;
@@ -206,6 +208,7 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 
     if (qrName_ != "none")
     {
+        qrPrevious_.setSize(mapper.size());
         qrPrevious_.map(ptf.qrPrevious_, mapper);
     }
 }
