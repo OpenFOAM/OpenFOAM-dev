@@ -206,7 +206,9 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
         }
         else
         {
-            sfbf[pi] = vf.boundaryField()[pi];
+            sfbf[pi] =
+                pLambda*vf.boundaryField()[pi]
+              + pY*vf.boundaryField()[pi].patchInternalField();
         }
     }
 
@@ -305,7 +307,12 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
         }
         else
         {
-            psf = pSf & vf.boundaryField()[pi];
+            psf =
+                pSf
+              & (
+                    pLambda*vf.boundaryField()[pi]
+                  + (1.0 - pLambda)*vf.boundaryField()[pi].patchInternalField()
+                );
         }
     }
 
