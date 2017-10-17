@@ -26,7 +26,6 @@ License
 #include "wallHeatFlux.H"
 #include "turbulentFluidThermoModel.H"
 #include "solidThermo.H"
-#include "surfaceInterpolate.H"
 #include "fvcSnGrad.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
@@ -65,20 +64,23 @@ void Foam::functionObjects::wallHeatFlux::calcHeatFlux
     volScalarField& wallHeatFlux
 )
 {
-    surfaceScalarField heatFlux
+    surfaceScalarField snGradHe
     (
-        fvc::interpolate(alpha)*fvc::snGrad(he)
+        fvc::snGrad(he)
     );
 
+    const surfaceScalarField::Boundary& snGradHeBf =
+        snGradHe.boundaryField();
+   
+    const volScalarField::Boundary& alphaBf =
+        alpha.boundaryField();
+        
     volScalarField::Boundary& wallHeatFluxBf =
         wallHeatFlux.boundaryFieldRef();
-
-    const surfaceScalarField::Boundary& heatFluxBf =
-        heatFlux.boundaryField();
-
+    
     forAll(wallHeatFluxBf, patchi)
     {
-        wallHeatFluxBf[patchi] = heatFluxBf[patchi];
+        wallHeatFluxBf[patchi] = alphaBf[patchi]*snGradHeBf[patchi];
     }
 
     if (foundObject<volScalarField>("qr"))
