@@ -38,6 +38,7 @@ $(derivedSources)/buoyancyForce/buoyancyForceIO.C
 $(derivedSources)/buoyancyEnergy/buoyancyEnergy.C
 $(derivedSources)/buoyancyEnergy/buoyancyEnergyIO.C
 $(derivedSources)/verticalDamping/verticalDamping.C
+$(derivedSources)/phaseLimitStabilization/phaseLimitStabilization.C
 
 interRegion = sources/interRegion
 $(interRegion)/interRegionHeatTransfer/interRegionHeatTransferModel/interRegionHeatTransferModel.C

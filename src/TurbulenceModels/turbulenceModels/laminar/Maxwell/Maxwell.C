@@ -25,6 +25,7 @@ License
 
 #include "Maxwell.H"
 #include "fvOptions.H"
+#include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -205,7 +206,17 @@ void Maxwell<BasicTurbulenceModel>::correct()
 
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volTensorField& gradU = tgradU();
-    dimensionedScalar rLambda = 1.0/(lambda_);
+
+    uniformDimensionedScalarField rLambda
+    (
+        IOobject
+        (
+            IOobject::groupName("rLambda", this->alphaRhoPhi_.group()),
+            this->runTime_.constant(),
+            this->mesh_
+        ),
+        1.0/(lambda_)
+    );
 
     // Note sigma is positive on lhs of momentum eqn
     volSymmTensorField P
@@ -220,7 +231,7 @@ void Maxwell<BasicTurbulenceModel>::correct()
         fvm::ddt(alpha, rho, sigma)
       + fvm::div(alphaRhoPhi, sigma)
       + fvm::Sp(alpha*rho*rLambda, sigma)
-      ==
+     ==
         alpha*rho*P
       + fvOptions(alpha, rho, sigma)
     );
