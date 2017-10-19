@@ -79,11 +79,24 @@ protected:
         //  Used to set max limit on temperature to Tb*TbFactor
         const scalar TbFactor_;
 
+        //- Switch to treat YInf as zero
+        Switch YInfZero_;
+
 
     // Protected member functions
 
         //- Return Sherwood number as a function of Reynolds and Schmidt numbers
         scalar Sh(const scalar Re, const scalar Sc) const;
+
+        template<class YInfType>
+        void correctModel
+        (
+            const scalar dt,
+            scalarField& availableMass,
+            scalarField& dMass,
+            scalarField& dEnergy,
+            YInfType YInf
+        );
 
 
 public:
