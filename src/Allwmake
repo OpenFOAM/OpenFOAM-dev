@@ -80,6 +80,7 @@ wmake $targetType sixDoFRigidBodyState
 wmake $targetType rigidBodyDynamics
 wmake $targetType rigidBodyMeshMotion
 wmake $targetType waves
+wmake $targetType semiPermeableBaffle
 
 
 #------------------------------------------------------------------------------
