@@ -1,0 +1,65 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    "0";
+    object      N2;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "include"
+
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 1;
+
+boundaryField
+{
+    inletSleeve
+    {
+        type            fixedValue;
+        value           uniform $:sleeve.N2;
+    }
+    inletPipe
+    {
+        type            fixedValue;
+        value           uniform $:pipe.N2;
+    }
+    outletSleeve
+    {
+        type            inletOutlet;
+        inletValue      uniform $:sleeve.N2;
+        value           uniform $:sleeve.N2;
+    }
+    outletPipe
+    {
+        type            inletOutlet;
+        inletValue      uniform $:pipe.N2;
+        value           uniform $:pipe.N2;
+    }
+    wall
+    {
+        type            zeroGradient;
+    }
+    membraneSleeve
+    {
+        type            semiPermeableBaffleMassFraction;
+        value           uniform $:sleeve.N2;
+    }
+    membranePipe
+    {
+        type            semiPermeableBaffleMassFraction;
+        value           uniform $:pipe.N2;
+    }
+}
+
+
+// ************************************************************************* //

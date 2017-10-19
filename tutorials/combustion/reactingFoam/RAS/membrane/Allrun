@@ -1,0 +1,20 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1 cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+cp \
+    $FOAM_TUTORIALS/resources/geometry/membrane-boundaries.stl.gz \
+    $FOAM_TUTORIALS/resources/geometry/membrane-membrane.stl.gz \
+    constant/triSurface
+
+runApplication blockMesh
+runApplication snappyHexMesh -overwrite
+runApplication createBaffles -overwrite
+
+cp -r 0.orig 0
+
+runApplication setFields
+
+runApplication reactingFoam

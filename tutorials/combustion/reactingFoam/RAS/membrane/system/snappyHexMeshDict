@@ -1,0 +1,168 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh true;
+snap            true;
+addLayers       false;
+
+geometry
+{
+    boundaries
+    {
+        type triSurfaceMesh;
+        file "membrane-boundaries.stl";
+
+        regions
+        {
+            inletSleeve
+            {
+                name inletSleeve;
+            }
+            inletPipe
+            {
+                name inletPipe;
+            }
+            outletSleeve
+            {
+                name outletSleeve;
+            }
+            outletPipe
+            {
+                name outletPipe;
+            }
+            wallSleeve
+            {
+                name wallSleeve;
+            }
+            wallPipe
+            {
+                name wallPipe;
+            }
+        }
+    }
+    membrane
+    {
+        type triSurfaceMesh;
+        file "membrane-membrane.stl";
+    }
+};
+
+castellatedMeshControls
+{
+    features ();
+
+    refinementSurfaces
+    {
+        boundaries
+        {
+            level (0 0);
+
+            regions
+            {
+                inletSleeve
+                {
+                    level (0 0);
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (inlet);
+                    }
+                }
+                inletPipe
+                {
+                    level (0 0);
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (inlet);
+                    }
+                }
+                outletSleeve
+                {
+                    level (0 0);
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (outlet);
+                    }
+                }
+                outletPipe
+                {
+                    level (0 0);
+                    patchInfo
+                    {
+                        type patch;
+                        inGroups (outlet);
+                    }
+                }
+                wallSleeve
+                {
+                    level (0 0);
+                    patchInfo
+                    {
+                        type wall;
+                        inGroups (wall);
+                    }
+                }
+                wallPipe
+                {
+                    level (0 0);
+                    patchInfo
+                    {
+                        type wall;
+                        inGroups (wall);
+                    }
+                }
+            }
+        }
+        membrane
+        {
+            level (0 0);
+            cellZone pipe;
+            faceZone membrane;
+            cellZoneInside insidePoint;
+            insidePoint (0 0 0);
+        }
+    }
+
+    refinementRegions {}
+
+    locationInMesh (0 0 0);
+}
+
+snapControls
+{
+    implicitFeatureSnap true;
+}
+
+addLayersControls
+{
+    relativeSizes true;
+    minThickness 0.25;
+    finalLayerThickness 0.3;
+    expansionRatio 1.0;
+    layers {}
+}
+
+meshQualityControls
+{
+    #includeEtc "caseDicts/mesh/generation/meshQualityDict.cfg"
+}
+
+// ************************************************************************* //
