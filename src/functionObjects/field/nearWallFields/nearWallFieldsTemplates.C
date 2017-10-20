@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,12 +56,21 @@ void Foam::functionObjects::nearWallFields::createFields
                 label sz = sflds.size();
                 sflds.setSize(sz+1);
 
-                IOobject io(fld);
-                io.readOpt() = IOobject::NO_READ;
-                io.writeOpt() = IOobject::NO_WRITE;
-                io.rename(sampleFldName);
-
-                sflds.set(sz, new VolFieldType(io, fld));
+                sflds.set
+                (
+                    sz,
+                    new VolFieldType
+                    (
+                        IOobject
+                        (
+                            sampleFldName,
+                            time_.timeName(),
+                            mesh_
+                        ),
+                        fld,
+                        calculatedFvPatchScalarField::typeName
+                    )
+                );
 
                 Log << "    created " << sflds[sz].name()
                     << " to sample " << fld.name() << endl;
