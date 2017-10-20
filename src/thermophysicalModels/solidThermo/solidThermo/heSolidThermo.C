@@ -134,6 +134,8 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
             }
         }
     }
+    
+    this->alpha_.correctBoundaryConditions();
 }
 
 
