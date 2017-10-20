@@ -52,7 +52,8 @@ Foam::semiPermeableBaffleVelocityFvPatchVectorField::composition() const
         FatalErrorInFunction
             << "Could not find a multi-component thermodynamic model."
             << exit(FatalError);
-        return *static_cast<basicSpecieMixture*>(nullptr);
+
+        return NullObjectRef<basicSpecieMixture>();
     }
 }
 
