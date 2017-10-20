@@ -79,17 +79,14 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 
         forAll(patch, patchFacei)
         {
-            const point& start = patch.Cf()[patchFacei];
-            const point end = start - distance_*nf[patchFacei];
-
             cloud.addParticle
             (
                 new findCellParticle
                 (
                     mesh_,
-                    start,
+                    patch.Cf()[patchFacei],
                     patch.faceCells()[patchFacei],
-                    end,
+                    - distance_*nf[patchFacei],
                     globalWalls.toGlobal(nPatchFaces) // passive data
                 )
             );
@@ -112,8 +109,8 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
 
         forAllConstIter(Cloud<findCellParticle>, cloud, iter)
         {
-            const findCellParticle& tp = iter();
-            str.write(linePointRef(tp.position(), tp.end()));
+            const vector p = iter().position();
+            str.write(linePointRef(p, p + iter().displacement()));
         }
     }
 

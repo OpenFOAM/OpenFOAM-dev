@@ -63,11 +63,8 @@ class findCellParticle
 {
     // Private data
 
-        //- Start point to track from
-        point start_;
-
-        //- End point to track to
-        point end_;
+        //- Displacement over which to track
+        vector displacement_;
 
         //- Passive data
         label data_;
@@ -126,7 +123,7 @@ public:
             const label celli,
             const label tetFacei,
             const label tetPtI,
-            const point& end,
+            const vector& displacement,
             const label data
         );
 
@@ -137,7 +134,7 @@ public:
             const polyMesh& mesh,
             const vector& position,
             const label celli,
-            const point& end,
+            const vector& displacement,
             const label data
         );
 
@@ -180,28 +177,16 @@ public:
 
     // Member Functions
 
-        //- Point to track from
-        const point& start() const
+        //- Displacement over which to track
+        const vector& displacement() const
         {
-            return start_;
+            return displacement_;
         }
 
-        //- Point to track from
-        point& start()
+        //- Displacement over which to track
+        vector& displacement()
         {
-            return start_;
-        }
-
-        //- Point to track to
-        const point& end() const
-        {
-            return end_;
-        }
-
-        //- Point to track to
-        point& end()
-        {
-            return end_;
+            return displacement_;
         }
 
         //- Transported label
