@@ -76,46 +76,19 @@ void Foam::functionObjects::nearWallFields::calcAddressing()
         const fvPatch& patch = mesh_.boundary()[patchi];
 
         vectorField nf(patch.nf());
-        vectorField faceCellCentres(patch.patch().faceCellCentres());
 
         forAll(patch, patchFacei)
         {
-            label meshFacei = patch.start()+patchFacei;
+            const point& start = patch.Cf()[patchFacei];
+            const point end = start - distance_*nf[patchFacei];
 
-            // Find starting point on face (since faceCentre might not
-            // be on face-diagonal decomposition)
-            pointIndexHit startInfo
-            (
-                mappedPatchBase::facePoint
-                (
-                    mesh_,
-                    meshFacei,
-                    polyMesh::FACE_DIAG_TRIS
-                )
-            );
-
-
-            point start;
-            if (startInfo.hit())
-            {
-                start = startInfo.hitPoint();
-            }
-            else
-            {
-                // Fallback: start tracking from neighbouring cell centre
-                start = faceCellCentres[patchFacei];
-            }
-
-            const point end = start-distance_*nf[patchFacei];
-
-            // Add a particle to the cloud with originating face as passive data
             cloud.addParticle
             (
                 new findCellParticle
                 (
                     mesh_,
                     start,
-                    -1,
+                    patch.faceCells()[patchFacei],
                     end,
                     globalWalls.toGlobal(nPatchFaces) // passive data
                 )
