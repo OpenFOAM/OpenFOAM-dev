@@ -1,7 +1,7 @@
 const dictionary& residualControl =
     mesh.solutionDict().subDict("SIMPLE").subOrEmptyDict("residualControl");
 
-scalar hTol = -1.;
+scalar hTol = -1;
 
 if (!residualControl.empty())
 {
