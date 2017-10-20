@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
         // --- PIMPLE loop
         for (int oCorr=0; oCorr<nOuterCorr; oCorr++)
         {
-            Info<< "Pimple iteration " << oCorr << "\n";
+            Info<< nl << "Pimple iteration " << oCorr;
 
             if (oCorr == nOuterCorr-1 || allRegionsConverged)
             {

@@ -109,10 +109,10 @@ forAll(solidRegions, i)
         );
     }
 
-    const dictionary& pimpleDict =
-        solidRegions[i].solutionDict().subDict("PIMPLE");
+    const dictionary& simpleDict =
+        solidRegions[i].solutionDict().subDict("SIMPLE");
 
-    if (pimpleDict.isDict("residualControl"))
+    if (simpleDict.isDict("residualControl"))
     {
         Info<< "    Reading residual controls\n" << endl;
 

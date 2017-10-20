@@ -17,6 +17,7 @@ List<scalar> initialMassFluid(fluidRegions.size());
 List<bool> frozenFlowFluid(fluidRegions.size(), false);
 List<bool> residualReachedFluid(fluidRegions.size(), true);
 List<bool> residualControlUsedFluid(fluidRegions.size(), false);
+List<bool> firstIterationFluid(fluidRegions.size(), true);
 
 PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
 PtrList<fv::options> fluidFvOptions(fluidRegions.size());
@@ -250,4 +251,16 @@ forAll(fluidRegions, i)
     );
 
     turbulence[i].validate();
+
+    if (pimpleDict.isDict("residualControl"))
+    {
+        Info<< "    Reading residual controls\n" << endl;
+
+        bool& residualControlUsed = residualControlUsedFluid[i];
+        bool& resReachedFluid = residualReachedFluid[i];
+        bool& firstIteration = firstIterationFluid[i];
+        const fvMesh& mesh = fluidRegions[i];
+
+        #include "readFluidMultiRegionResidualControls.H"
+    }
 }

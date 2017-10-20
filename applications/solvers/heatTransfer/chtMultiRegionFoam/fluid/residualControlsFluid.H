@@ -1,9 +1,8 @@
-// Residual control used
 if (residualControlUsed)
 {
     bool UConv = false;
     bool p_rghConv = false;
-    bool EConv = false;
+    bool heConv = false;
 
     // Check which field is not used for control
     {
@@ -17,9 +16,9 @@ if (residualControlUsed)
             p_rghConv = true;
         }
 
-        if (ETol == -1)
+        if (heTol == -1)
         {
-            EConv = true;
+            heConv = true;
         }
     }
 
@@ -40,16 +39,16 @@ if (residualControlUsed)
         }
     }
 
-    if (!EConv)
+    if (!heConv)
     {
-        if (ETol > solvPerfE.initialResidual())
+        if (heTol > solvPerfhe.initialResidual())
         {
-            EConv = true;
+            heConv = true;
         }
     }
 
     // Check if each field is converged
-    if (UConv && p_rghConv && EConv)
+    if (UConv && p_rghConv && heConv)
     {
         resReachedFluid = true;
     }

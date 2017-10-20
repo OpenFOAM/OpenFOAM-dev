@@ -26,7 +26,7 @@
 
     fvOptions.constrain(EEqn);
 
-    solvPerfE = EEqn.solve(mesh.solver(he.select(finalIter)));
+    solvPerfhe = EEqn.solve(mesh.solver(he.select(finalIter)));
 
     fvOptions.correct(he);
 

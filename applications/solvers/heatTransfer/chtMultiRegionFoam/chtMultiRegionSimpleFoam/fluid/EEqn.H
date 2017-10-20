@@ -20,7 +20,7 @@
 
     fvOptions.constrain(EEqn);
 
-    solvPerfE = EEqn.solve();
+    solvPerfh = EEqn.solve();
 
     fvOptions.correct(he);
 

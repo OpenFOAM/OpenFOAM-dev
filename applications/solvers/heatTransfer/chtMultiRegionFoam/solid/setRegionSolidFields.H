@@ -33,3 +33,4 @@ fv::options& fvOptions = solidHeatSources[i];
 
 bool& resReachedSolid = residualReachedSolid[i];
 bool& residualControlUsed = residualControlUsedSolid[i];
+bool& firstIteration = firstIterationSolid[i];
