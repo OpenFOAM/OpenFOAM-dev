@@ -58,8 +58,8 @@ Foam::waveAlphaFvPatchScalarField::waveAlphaFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     UName_(dict.lookupOrDefault<word>("U", "U")),
-    liquid_(dict.lookupOrDefault<bool>("liquid", true)),
-    inletOutlet_(dict.lookupOrDefault<bool>("inletOutlet", true))
+    liquid_(dict.lookupOrDefault<Switch>("liquid", true)),
+    inletOutlet_(dict.lookupOrDefault<Switch>("inletOutlet", true))
 {
     if (dict.found("value"))
     {
@@ -171,7 +171,8 @@ void Foam::waveAlphaFvPatchScalarField::write
 {
     mixedFvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntryIfDifferent<bool>(os, "inletOutlet", true, inletOutlet_);
+    writeEntryIfDifferent<Switch>(os, "inletOutlet", true, inletOutlet_);
+    writeEntryIfDifferent<Switch>(os, "liquid", true, liquid_);
 }
 
 

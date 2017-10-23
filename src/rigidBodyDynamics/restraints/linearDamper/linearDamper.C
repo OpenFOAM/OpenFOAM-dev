@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::RBD::restraints::linearDamper::restrain
     }
 
     // Accumulate the force for the restrained body
-    fx[bodyIndex_] += spatialVector(Zero, force);
+    fx[bodyIndex_] += model_.X0(bodyID_).T() & spatialVector(Zero, force);
 }
 
 

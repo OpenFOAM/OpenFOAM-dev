@@ -79,14 +79,14 @@ class waveAlphaFvPatchScalarField
         word UName_;
 
         //- Is this alpha field that of the liquid under the wave?
-        const bool liquid_;
+        const Switch liquid_;
 
         //- Act as an inlet/outlet patch? If false, the alpha field will be set
         //  by the wave model even during outflow. This may apply the wave model
         //  more accurately, but it might also be unstable. If true, the alpha
         //  boundary condition will be zero gradient when the flow reverses, as
         //  is usual.
-        const bool inletOutlet_;
+        const Switch inletOutlet_;
 
 
 public:
