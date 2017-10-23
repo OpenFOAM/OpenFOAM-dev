@@ -79,8 +79,6 @@ Foam::IOobject Foam::fv::options::createIOobject
         }
         else
         {
-            Info<< "No finite volume options present" << nl << endl;
-
             io.readOpt() = IOobject::NO_READ;
             return io;
         }
