@@ -61,7 +61,6 @@ int main(int argc, char *argv[])
     #include "createDyMControls.H"
     #include "createFields.H"
     #include "createAlphaFluxes.H"
-    #include "createFvOptions.H"
 
     volScalarField rAU
     (

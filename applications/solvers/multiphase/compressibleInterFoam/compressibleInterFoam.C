@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createFields.H"
     #include "createAlphaFluxes.H"
-    #include "createFvOptions.H"
 
     volScalarField& p = mixture.p();
     volScalarField& T = mixture.T();

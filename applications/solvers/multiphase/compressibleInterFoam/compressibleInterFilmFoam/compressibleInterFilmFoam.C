@@ -65,7 +65,6 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createAlphaFluxes.H"
     #include "createSurfaceFilmModel.H"
-    #include "createFvOptions.H"
 
     volScalarField& p = mixture.p();
     volScalarField& T = mixture.T();

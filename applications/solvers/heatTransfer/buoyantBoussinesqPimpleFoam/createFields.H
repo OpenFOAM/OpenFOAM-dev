@@ -123,3 +123,4 @@ mesh.setFluxRequired(p_rgh.name());
 
 #include "createMRF.H"
 #include "createIncompressibleRadiationModel.H"
+#include "createFvOptions.H"

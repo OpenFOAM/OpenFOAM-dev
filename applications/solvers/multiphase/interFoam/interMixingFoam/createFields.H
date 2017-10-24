@@ -125,3 +125,4 @@ mesh.setFluxRequired(p_rgh.name());
 mesh.setFluxRequired(alpha2.name());
 
 #include "createMRF.H"
+#include "createFvOptions.H"

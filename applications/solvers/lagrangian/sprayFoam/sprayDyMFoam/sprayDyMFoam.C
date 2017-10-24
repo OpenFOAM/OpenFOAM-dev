@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "createRhoUf.H"
-    #include "createFvOptions.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
     #include "initContinuityErrs.H"

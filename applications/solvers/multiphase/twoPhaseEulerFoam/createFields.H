@@ -82,3 +82,4 @@ volScalarField K1(IOobject::groupName("K", phase1.name()), 0.5*magSqr(U1));
 volScalarField K2(IOobject::groupName("K", phase2.name()), 0.5*magSqr(U2));
 
 #include "createMRF.H"
+#include "createFvOptions.H"

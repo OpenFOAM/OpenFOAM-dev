@@ -49,7 +49,6 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createControl.H"
     #include "createFields.H"
-    #include "createFvOptions.H"
     #include "createZones.H"
     #include "initContinuityErrs.H"
 

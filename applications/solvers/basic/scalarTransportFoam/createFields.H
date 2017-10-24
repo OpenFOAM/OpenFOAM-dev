@@ -1,55 +1,57 @@
-    Info<< "Reading field T\n" << endl;
+Info<< "Reading field T\n" << endl;
 
-    volScalarField T
+volScalarField T
+(
+    IOobject
     (
-        IOobject
-        (
-            "T",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "T",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 
-    Info<< "Reading field U\n" << endl;
+Info<< "Reading field U\n" << endl;
 
-    volVectorField U
+volVectorField U
+(
+    IOobject
     (
-        IOobject
-        (
-            "U",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
+        "U",
+        runTime.timeName(),
+        mesh,
+        IOobject::MUST_READ,
+        IOobject::AUTO_WRITE
+    ),
+    mesh
+);
 
 
-    Info<< "Reading transportProperties\n" << endl;
+Info<< "Reading transportProperties\n" << endl;
 
-    IOdictionary transportProperties
+IOdictionary transportProperties
+(
+    IOobject
     (
-        IOobject
-        (
-            "transportProperties",
-            runTime.constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    );
+        "transportProperties",
+        runTime.constant(),
+        mesh,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE
+    )
+);
 
 
-    Info<< "Reading diffusivity DT\n" << endl;
+Info<< "Reading diffusivity DT\n" << endl;
 
-    dimensionedScalar DT
-    (
-        transportProperties.lookup("DT")
-    );
+dimensionedScalar DT
+(
+    transportProperties.lookup("DT")
+);
 
-    #include "createPhi.H"
+#include "createPhi.H"
+
+#include "createFvOptions.H"
