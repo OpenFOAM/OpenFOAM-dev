@@ -42,10 +42,10 @@ Foam::cloudSolution::cloudSolution
     calcFrequency_(1),
     maxCo_(0.3),
     iter_(1),
-    trackTime_(0.0),
+    trackTime_(0),
     coupled_(false),
     cellValueSourceCorrection_(false),
-    maxTrackTime_(0.0),
+    maxTrackTime_(0),
     resetSourcesOnStartup_(true),
     schemes_()
 {
@@ -89,10 +89,10 @@ Foam::cloudSolution::cloudSolution
     calcFrequency_(0),
     maxCo_(GREAT),
     iter_(0),
-    trackTime_(0.0),
+    trackTime_(0),
     coupled_(false),
     cellValueSourceCorrection_(false),
-    maxTrackTime_(0.0),
+    maxTrackTime_(0),
     resetSourcesOnStartup_(false),
     schemes_()
 {}
@@ -200,7 +200,7 @@ Foam::scalar Foam::cloudSolution::relaxCoeff(const word& fieldName) const
         << "Field name " << fieldName << " not found in schemes"
         << abort(FatalError);
 
-    return 1.0;
+    return 1;
 }
 
 
@@ -224,12 +224,7 @@ bool Foam::cloudSolution::semiImplicit(const word& fieldName) const
 
 bool Foam::cloudSolution::solveThisStep() const
 {
-    return
-        active_
-     && (
-            mesh_.time().writeTime()
-         || (mesh_.time().timeIndex() % calcFrequency_ == 0)
-        );
+    return active_ && (mesh_.time().timeIndex() % calcFrequency_ == 0);
 }
 
 
