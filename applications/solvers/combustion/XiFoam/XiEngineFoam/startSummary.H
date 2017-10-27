@@ -1,11 +1,16 @@
 Info<< "Total cylinder mass: " << fvc::domainIntegrate(rho).value() << endl;
-//Info<< "Total fuel mass: "
-//    << fvc::domainIntegrate(rho*compostion.ft()).value() << endl;
 
-OFstream logSummaryFile
-(
-    runTime.path()/("logSummary." + runTime.timeName() + ".dat")
-);
+autoPtr<OFstream> logSummaryFile;
 
-logSummaryFile
-    << "# CA" << "      p" << "        T" << "       u'" << endl;
+if (Pstream::master())
+{
+    logSummaryFile = new OFstream
+    (
+        runTime.rootPath()/runTime.globalCaseName()
+       /("logSummary." + runTime.timeName() + ".dat")
+    );
+
+    logSummaryFile()
+        << "# CA" << "      p" << "        T" << "       u'" << "        c"
+        << endl;
+}
