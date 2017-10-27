@@ -309,6 +309,29 @@ void Foam::hexRef8Data::sync(const IOobject& io)
 }
 
 
+void Foam::hexRef8Data::updateMesh(const mapPolyMesh& map)
+{
+    if (cellLevelPtr_.valid())
+    {
+        cellLevelPtr_() = labelList(cellLevelPtr_(), map.cellMap());
+        cellLevelPtr_().instance() = map.mesh().facesInstance();
+    }
+    if (pointLevelPtr_.valid())
+    {
+        pointLevelPtr_() = labelList(pointLevelPtr_(), map.pointMap());
+        pointLevelPtr_().instance() = map.mesh().facesInstance();
+    }
+
+    // No need to distribute the level0Edge
+
+    if (refHistoryPtr_.valid() && refHistoryPtr_().active())
+    {
+        refHistoryPtr_().updateMesh(map);
+        refHistoryPtr_().instance() = map.mesh().facesInstance();
+    }
+}
+
+
 void Foam::hexRef8Data::distribute(const mapDistributePolyMesh& map)
 {
     if (cellLevelPtr_.valid())

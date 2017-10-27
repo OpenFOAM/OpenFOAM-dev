@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,6 +116,9 @@ public:
         //- Parallel synchronise. This enforces valid objects on all processors
         //  (even if they don't have a mesh). Used by redistributePar.
         void sync(const IOobject& io);
+
+        //- In-place update for topology changes
+        void updateMesh(const mapPolyMesh&);
 
         //- In-place distribute
         void distribute(const mapDistributePolyMesh&);

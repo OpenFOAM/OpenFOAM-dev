@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,24 +90,27 @@ Foam::mapPolyMesh::mapPolyMesh
     oldPatchNMeshPoints_(oldPatchNMeshPoints),
     oldCellVolumesPtr_(oldCellVolumesPtr)
 {
-    // Calculate old patch sizes
-    for (label patchi = 0; patchi < oldPatchStarts_.size() - 1; patchi++)
+    if (oldPatchStarts_.size())
     {
-        oldPatchSizes_[patchi] =
-            oldPatchStarts_[patchi + 1] - oldPatchStarts_[patchi];
-    }
-
-    // Set the last one by hand
-    const label lastPatchID = oldPatchStarts_.size() - 1;
-
-    oldPatchSizes_[lastPatchID] = nOldFaces_ - oldPatchStarts_[lastPatchID];
-
-    if (polyMesh::debug)
-    {
-        if (min(oldPatchSizes_) < 0)
+        // Calculate old patch sizes
+        for (label patchi = 0; patchi < oldPatchStarts_.size() - 1; patchi++)
         {
-            FatalErrorInFunction
-                << abort(FatalError);
+            oldPatchSizes_[patchi] =
+                oldPatchStarts_[patchi + 1] - oldPatchStarts_[patchi];
+        }
+
+        // Set the last one by hand
+        const label lastPatchID = oldPatchStarts_.size() - 1;
+
+        oldPatchSizes_[lastPatchID] = nOldFaces_ - oldPatchStarts_[lastPatchID];
+
+        if (polyMesh::debug)
+        {
+            if (min(oldPatchSizes_) < 0)
+            {
+                FatalErrorInFunction
+                    << abort(FatalError);
+            }
         }
     }
 }

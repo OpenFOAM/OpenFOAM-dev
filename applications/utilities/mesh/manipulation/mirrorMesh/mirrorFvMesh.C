@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,7 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
-    ),
-    mirrorMeshPtr_(nullptr)
+    )
 {
     plane mirrorPlane(mirrorMeshDict_);
 
@@ -107,6 +106,21 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     // Reset the size of the point list
     Info<< " New points: " << nNewPoints << endl;
     newPoints.setSize(nNewPoints);
+
+    // Construct new to old map
+    pointMapPtr_.reset(new labelList(newPoints.size()));
+    labelList& pointMap = pointMapPtr_();
+    // Insert old points
+    forAll(oldPoints, oldPointi)
+    {
+        pointMap[oldPointi] = oldPointi;
+    }
+    forAll(mirrorPointLookup, oldPointi)
+    {
+        pointMap[mirrorPointLookup[oldPointi]] = oldPointi;
+    }
+
+
 
     Info<< "Mirroring faces. Old faces: " << oldFaces.size();
 
@@ -329,6 +343,10 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     cellList newCells(2*oldCells.size());
     label nNewCells = 0;
 
+    // Construct new to old cell map
+    cellMapPtr_.reset(new labelList(newCells.size()));
+    labelList& cellMap = cellMapPtr_();
+
     // Grab the original cells.  Take care of face renumbering.
     forAll(oldCells, celli)
     {
@@ -341,6 +359,8 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
         {
             nc[i] = masterFaceLookup[oc[i]];
         }
+
+        cellMap[nNewCells] = celli;
 
         nNewCells++;
     }
@@ -358,6 +378,8 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
             nc[i] = mirrorFaceLookup[oc[i]];
         }
 
+        cellMap[nNewCells] = celli;
+
         nNewCells++;
     }
 
@@ -365,15 +387,18 @@ Foam::mirrorFvMesh::mirrorFvMesh(const IOobject& io)
     Info<< "Mirroring cell shapes." << endl;
 
     Info<< nl << "Creating new mesh" << endl;
-    mirrorMeshPtr_ = new fvMesh
+    mirrorMeshPtr_.reset
     (
-        io,
-        xferMove(newPoints),
-        xferMove(newFaces),
-        xferMove(newCells)
+        new fvMesh
+        (
+            io,
+            xferMove(newPoints),
+            xferMove(newFaces),
+            xferMove(newCells)
+        )
     );
 
-    fvMesh& pMesh = *mirrorMeshPtr_;
+    fvMesh& pMesh = mirrorMeshPtr_();
 
     // Add the boundary patches
     List<polyPatch*> p(newPatchSizes.size());
