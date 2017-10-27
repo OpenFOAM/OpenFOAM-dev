@@ -25,11 +25,7 @@ License
 
 #include "OFstreamCollator.H"
 #include "OFstream.H"
-#include "OSspecific.H"
-#include "IOstreams.H"
-#include "Pstream.H"
 #include "decomposedBlockData.H"
-#include "PstreamReduceOps.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -46,7 +42,10 @@ bool Foam::OFstreamCollator::writeFile
     const label comm,
     const word& typeName,
     const fileName& fName,
-    const string& s,
+    const string& masterData,
+    const labelUList& recvSizes,
+    const bool haveSlaveData,           // does master have slaveData
+    const UList<char>& slaveData,       // on master: slave data
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
@@ -55,7 +54,7 @@ bool Foam::OFstreamCollator::writeFile
 {
     if (debug)
     {
-        Pout<< "OFstreamCollator : Writing " << s.size()
+        Pout<< "OFstreamCollator : Writing " << masterData.size()
             << " bytes to " << fName
             << " using comm " << comm << endl;
     }
@@ -90,11 +89,17 @@ bool Foam::OFstreamCollator::writeFile
         );
     }
 
-    UList<char> slice(const_cast<char*>(s.data()), label(s.size()));
 
-    // Assuming threaded writing hides any slowness so we might
-    // as well use scheduled communication to send the data to
-    // the master processor in order.
+    UList<char> slice
+    (
+        const_cast<char*>(masterData.data()),
+        label(masterData.size())
+    );
+
+    // Assuming threaded writing hides any slowness so we
+    // can use scheduled communication to send the data to
+    // the master processor in order. However can be unstable
+    // for some mpi so default is non-blocking.
 
     List<std::streamoff> start;
     decomposedBlockData::writeBlocks
@@ -103,7 +108,10 @@ bool Foam::OFstreamCollator::writeFile
         osPtr,
         start,
         slice,
-        UPstream::commsTypes::scheduled,
+        recvSizes,
+        haveSlaveData,
+        slaveData,
+        UPstream::commsTypes::nonBlocking,  //scheduled,
         false       // do not reduce return state
     );
 
@@ -115,8 +123,18 @@ bool Foam::OFstreamCollator::writeFile
 
     if (debug)
     {
-        Pout<< "OFstreamCollator : Finished writing " << s.size()
-            << " bytes to " << fName
+        Pout<< "OFstreamCollator : Finished writing " << masterData.size()
+            << " bytes";
+        if (UPstream::master(comm))
+        {
+            off_t sum = 0;
+            forAll(recvSizes, i)
+            {
+                sum += recvSizes[i];
+            }
+            Pout<< " (overall " << sum << ")";
+        }
+        Pout<< " to " << fName
             << " using comm " << comm << endl;
     }
 
@@ -133,14 +151,11 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
     {
         writeData* ptr = nullptr;
 
-        //pthread_mutex_lock(&handler.mutex_);
         lockMutex(handler.mutex_);
-
         if (handler.objects_.size())
         {
             ptr = handler.objects_.pop();
         }
-        //pthread_mutex_unlock(&handler.mutex_);
         unlockMutex(handler.mutex_);
 
         if (!ptr)
@@ -151,10 +166,14 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
         {
             bool ok = writeFile
             (
-                handler.comm_,
+                ptr->comm_,
                 ptr->typeName_,
                 ptr->pathName_,
                 ptr->data_,
+                ptr->sizes_,
+                ptr->haveSlaveData_,
+                ptr->slaveData_,
+
                 ptr->format_,
                 ptr->version_,
                 ptr->compression_,
@@ -177,13 +196,46 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
         Pout<< "OFstreamCollator : Exiting write thread " << endl;
     }
 
-    //pthread_mutex_lock(&handler.mutex_);
     lockMutex(handler.mutex_);
     handler.threadRunning_ = false;
-    //pthread_mutex_unlock(&handler.mutex_);
     unlockMutex(handler.mutex_);
 
     return nullptr;
+}
+
+
+void Foam::OFstreamCollator::waitForBufferSpace(const off_t wantedSize) const
+{
+    while (true)
+    {
+        // Count files to be written
+        off_t totalSize = 0;
+
+        lockMutex(mutex_);
+        forAllConstIter(FIFOStack<writeData*>, objects_, iter)
+        {
+            totalSize += iter()->size();
+        }
+        unlockMutex(mutex_);
+
+        if (totalSize == 0 || (totalSize+wantedSize) <= maxBufferSize_)
+        {
+            break;
+        }
+
+        if (debug)
+        {
+            lockMutex(mutex_);
+            Pout<< "OFstreamCollator : Waiting for buffer space."
+                << " Currently in use:" << totalSize
+                << " limit:" << maxBufferSize_
+                << " files:" << objects_.size()
+                << endl;
+            unlockMutex(mutex_);
+        }
+
+        sleep(5);
+    }
 }
 
 
@@ -192,7 +244,6 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
 Foam::OFstreamCollator::OFstreamCollator(const off_t maxBufferSize)
 :
     maxBufferSize_(maxBufferSize),
-    //mutex_(PTHREAD_MUTEX_INITIALIZER),
     mutex_
     (
         maxBufferSize_ > 0
@@ -228,7 +279,6 @@ Foam::OFstreamCollator::~OFstreamCollator()
             Pout<< "~OFstreamCollator : Waiting for write thread" << endl;
         }
 
-        //pthread_join(thread_, nullptr);
         joinThread(thread_);
     }
     if (thread_ != -1)
@@ -259,56 +309,163 @@ bool Foam::OFstreamCollator::write
     const bool append
 )
 {
-    if (maxBufferSize_ > 0)
+    // Determine (on master) sizes to receive. Note: do NOT use thread
+    // communicator
+    labelList recvSizes;
+    decomposedBlockData::gather(Pstream::worldComm, data.size(), recvSizes);
+    off_t totalSize = 0;
+    label maxLocalSize = 0;
     {
-        while (true)
+        for (label proci = 0; proci < recvSizes.size(); proci++)
         {
-            // Count files to be written
-            off_t totalSize = 0;
-            //pthread_mutex_lock(&mutex_);
-            lockMutex(mutex_);
-            forAllConstIter(FIFOStack<writeData*>, objects_, iter)
-            {
-                totalSize += iter()->data_.size();
-            }
-            //pthread_mutex_unlock(&mutex_);
-            unlockMutex(mutex_);
-
-            if
-            (
-                totalSize == 0
-             || (totalSize+off_t(data.size()) < maxBufferSize_)
-            )
-            {
-                break;
-            }
-
-            if (debug)
-            {
-                Pout<< "OFstreamCollator : Waiting for buffer space."
-                    << " Currently in use:" << totalSize
-                    << " limit:" << maxBufferSize_
-                    << endl;
-            }
-
-            sleep(5);
+            totalSize += recvSizes[proci];
+            maxLocalSize = max(maxLocalSize, recvSizes[proci]);
         }
+        Pstream::scatter(totalSize, Pstream::msgType(), Pstream::worldComm);
+        Pstream::scatter(maxLocalSize, Pstream::msgType(), Pstream::worldComm);
+    }
+
+    if (maxBufferSize_ == 0 || maxLocalSize > maxBufferSize_)
+    {
+        if (debug)
+        {
+            Pout<< "OFstreamCollator : non-thread gather and write of " << fName
+                << " using worldComm" << endl;
+        }
+        // Direct collating and writing (so master blocks until all written!)
+        const List<char> dummySlaveData;
+        return writeFile
+        (
+            UPstream::worldComm,
+            typeName,
+            fName,
+            data,
+            recvSizes,
+            false,              // no slave data provided yet
+            dummySlaveData,
+            fmt,
+            ver,
+            cmp,
+            append
+        );
+    }
+    else if (totalSize <= maxBufferSize_)
+    {
+        // Total size can be stored locally so receive all data now and only
+        // do the writing in the thread
 
         if (debug)
         {
-            Pout<< "OFstreamCollator : relaying write of " << fName
-                << " to thread " << endl;
+            Pout<< "OFstreamCollator : non-thread gather; thread write of "
+                << fName << endl;
         }
-        //pthread_mutex_lock(&mutex_);
-        lockMutex(mutex_);
-        objects_.push
+
+        if (Pstream::master())
+        {
+            waitForBufferSpace(totalSize);
+        }
+
+        // Allocate local buffer for all collated data
+        autoPtr<writeData> fileAndDataPtr
         (
-            new writeData(typeName, fName, data, fmt, ver, cmp, append)
+            new writeData
+            (
+                comm_,      // Note: comm not actually used anymore
+                typeName,
+                fName,
+                data,
+                recvSizes,
+                true,       // have slave data (collected below)
+                fmt,
+                ver,
+                cmp,
+                append
+            )
         );
-        //pthread_mutex_unlock(&mutex_);
+        writeData& fileAndData = fileAndDataPtr();
+
+        // Gather the slave data and insert into fileAndData
+        UList<char> slice(const_cast<char*>(data.data()), label(data.size()));
+        List<int> slaveOffsets;
+        decomposedBlockData::gatherSlaveData
+        (
+            Pstream::worldComm,         // Note: using simulation thread
+            slice,
+            recvSizes,
+
+            1,                          // startProc,
+            Pstream::nProcs()-1,        // n procs
+
+            slaveOffsets,
+            fileAndData.slaveData_
+        );
+
+        // Append to thread buffer
+        lockMutex(mutex_);
+        objects_.push(fileAndDataPtr.ptr());
         unlockMutex(mutex_);
 
-        //pthread_mutex_lock(&mutex_);
+        // Start thread if not running
+        lockMutex(mutex_);
+        if (!threadRunning_)
+        {
+            createThread(thread_, writeAll, this);
+            if (debug)
+            {
+                Pout<< "OFstreamCollator : Started write thread "
+                    << thread_ << endl;
+            }
+            threadRunning_ = true;
+        }
+        unlockMutex(mutex_);
+
+        return true;
+    }
+    else
+    {
+        if (debug)
+        {
+            Pout<< "OFstreamCollator : thread gather and write of " << fName
+                << " in thread " << thread_
+                << " using communicator " << comm_ << endl;
+        }
+
+        if (!UPstream::haveThreads)
+        {
+            FatalErrorInFunction
+                << "mpi does not seem to have thread support."
+                << "Please increase the buffer size 'maxThreadFileBufferSize'"
+                << " to at least " << totalSize
+                << " to be able to do the collating before threading."
+                << exit(FatalError);
+        }
+
+        if (Pstream::master())
+        {
+            waitForBufferSpace(data.size());
+        }
+
+        lockMutex(mutex_);
+        // Push all file info on buffer. Note that no slave data provided
+        // so it will trigger communication inside the thread
+        objects_.push
+        (
+            new writeData
+            (
+                comm_,
+                typeName,
+                fName,
+                data,
+                recvSizes,
+                false,          // Have no slave data; collect in thread
+                fmt,
+                ver,
+                cmp,
+                append
+            )
+        );
+        unlockMutex(mutex_);
+
         lockMutex(mutex_);
         if (!threadRunning_)
         {
@@ -319,15 +476,9 @@ bool Foam::OFstreamCollator::write
             }
             threadRunning_ = true;
         }
-        //pthread_mutex_unlock(&mutex_);
         unlockMutex(mutex_);
 
         return true;
-    }
-    else
-    {
-        // Immediate writing
-        return writeFile(comm_, typeName, fName, data, fmt, ver, cmp, append);
     }
 }
 

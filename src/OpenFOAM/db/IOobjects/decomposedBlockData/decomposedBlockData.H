@@ -169,6 +169,32 @@ public:
             const UPstream::commsTypes commsType
         );
 
+        //- Helper: gather single label. Note: using native Pstream.
+        //  datas sized with num procs but undefined contents on
+        //  slaves
+        static void gather
+        (
+            const label comm,
+            const label data,
+            labelList& datas
+        );
+
+        //- Helper: gather data from (subset of) slaves. Returns
+        //  recvData : received data
+        //  recvOffsets : offset in data. recvOffsets is nProcs+1
+        static void gatherSlaveData
+        (
+            const label comm,
+            const UList<char>& data,
+            const labelUList& recvSizes,
+
+            const label startProc,
+            const label nProcs,
+
+            List<int>& recvOffsets,
+            List<char>& recvData
+        );
+
         //- Write *this. Ostream only valid on master. Returns starts of
         //  processor blocks
         static bool writeBlocks
@@ -177,6 +203,12 @@ public:
             autoPtr<OSstream>& osPtr,
             List<std::streamoff>& start,
             const UList<char>&,
+
+            const labelUList& recvSizes,
+
+            const bool haveSlaveData,       // does master have slaveData
+            const List<char>& slaveData,    // optional slave data (on master)
+
             const UPstream::commsTypes,
             const bool syncReturnState = true
         );

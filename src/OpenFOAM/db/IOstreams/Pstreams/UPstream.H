@@ -184,6 +184,9 @@ private:
         //- By default this is not a parallel run
         static bool parRun_;
 
+        //- Have support for threads?
+        static bool haveThreads_;
+
         //- Standard transfer message type
         static int msgType_;
 
@@ -211,7 +214,7 @@ private:
     // Private Member Functions
 
         //- Set data for parallel running
-        static void setParRun(const label nProcs);
+        static void setParRun(const label nProcs, const bool haveThreads);
 
         //- Calculate linear communication schedule
         static List<commsStruct> calcLinearComm(const label nProcs);
@@ -397,6 +400,12 @@ public:
             return parRun_;
         }
 
+        //- Have support for threads
+        static bool haveThreads()
+        {
+            return haveThreads_;
+        }
+
         //- Number of processes in parallel run
         static label nProcs(const label communicator = 0)
         {
@@ -497,6 +506,47 @@ public:
         (
             const labelUList& sendData,
             labelUList& recvData,
+            const label communicator = 0
+        );
+
+        //- Exchange data with all processors (in the communicator)
+        //  sendSizes, sendOffsets give (per processor) the slice of
+        //  sendData to send, similarly recvSizes, recvOffsets give the slice
+        //  of recvData to receive
+        static void allToAll
+        (
+            const char* sendData,
+            const UList<int>& sendSizes,
+            const UList<int>& sendOffsets,
+
+            char* recvData,
+            const UList<int>& recvSizes,
+            const UList<int>& recvOffsets,
+
+            const label communicator = 0
+        );
+
+        //- Receive data from all processors on the master
+        static void gather
+        (
+            const char* sendData,
+            int sendSize,
+
+            char* recvData,
+            const UList<int>& recvSizes,
+            const UList<int>& recvOffsets,
+            const label communicator = 0
+        );
+
+        //- Send data to all processors from the root of the communicator
+        static void scatter
+        (
+            const char* sendData,
+            const UList<int>& sendSizes,
+            const UList<int>& sendOffsets,
+
+            char* recvData,
+            int recvSize,
             const label communicator = 0
         );
 };

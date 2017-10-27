@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,6 +89,36 @@ void Foam::UPstream::allToAll
 )
 {
     recvData.deepCopy(sendData);
+}
+
+
+void Foam::UPstream::gather
+(
+    const char* sendData,
+    int sendSize,
+
+    char* recvData,
+    const UList<int>& recvSizes,
+    const UList<int>& recvOffsets,
+    const label communicator
+)
+{
+    memmove(recvData, sendData, sendSize);
+}
+
+
+void Foam::UPstream::scatter
+(
+    const char* sendData,
+    const UList<int>& sendSizes,
+    const UList<int>& sendOffsets,
+
+    char* recvData,
+    int recvSize,
+    const label communicator
+)
+{
+    memmove(recvData, sendData, recvSize);
 }
 
 

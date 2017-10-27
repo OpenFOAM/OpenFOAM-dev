@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,11 +55,13 @@ const Foam::NamedEnum<Foam::UPstream::commsTypes, 3>
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::UPstream::setParRun(const label nProcs)
+void Foam::UPstream::setParRun(const label nProcs, const bool haveThreads)
 {
     if (nProcs == 0)
     {
         parRun_ = false;
+        haveThreads_ = haveThreads;
+
         freeCommunicator(UPstream::worldComm);
         label comm = allocateCommunicator(-1, labelList(1, label(0)), false);
         if (comm != UPstream::worldComm)
@@ -76,6 +78,7 @@ void Foam::UPstream::setParRun(const label nProcs)
     else
     {
         parRun_ = true;
+        haveThreads_ = haveThreads;
 
         // Redo worldComm communicator (this has been created at static
         // initialisation time)
@@ -400,6 +403,8 @@ Foam::label Foam::UPstream::procNo
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 bool Foam::UPstream::parRun_(false);
+
+bool Foam::UPstream::haveThreads_(false);
 
 Foam::LIFOStack<Foam::label> Foam::UPstream::freeComms_;
 

@@ -27,6 +27,22 @@ Class
 Description
     Threaded file writer.
 
+    Collects all data from all processors and writes as single
+    'decomposedBlockData' file. The operation is determined by the
+    buffer size (maxThreadFileBufferSize setting):
+    - local size of data is larger than buffer: receive and write processor
+    by processor (i.e. 'scheduled'). Does not use a thread, no file size
+    limit.
+    - total size of data is larger than buffer (but local is not):
+    thread does all the collecting and writing of the processors. No file
+    size limit.
+    - total size of data is less than buffer:
+    collecting is done locally; the thread only does the writing
+    (since the data has already been collected)
+
+
+Operation determine
+
 SourceFiles
     OFstreamCollator.C
 
@@ -36,7 +52,7 @@ SourceFiles
 #define OFstreamCollator_H
 
 #include "IOstream.H"
-#include "List.H"
+#include "labelList.H"
 #include "FIFOStack.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,9 +72,15 @@ class OFstreamCollator
         {
         public:
 
+            const label comm_;
             const word typeName_;
             const fileName pathName_;
             const string data_;
+            const labelList sizes_;
+
+            const bool haveSlaveData_;
+            List<char> slaveData_;
+
             const IOstream::streamFormat format_;
             const IOstream::versionNumber version_;
             const IOstream::compressionType compression_;
@@ -66,23 +88,36 @@ class OFstreamCollator
 
             writeData
             (
+                const label comm,
                 const word& typeName,
                 const fileName& pathName,
                 const string& data,
+                const labelList& sizes,
+                const bool haveSlaveData,
                 IOstream::streamFormat format,
                 IOstream::versionNumber version,
                 IOstream::compressionType compression,
                 const bool append
             )
             :
+                comm_(comm),
                 typeName_(typeName),
                 pathName_(pathName),
                 data_(data),
+                sizes_(sizes),
+                haveSlaveData_(haveSlaveData),
+                slaveData_(0),
                 format_(format),
                 version_(version),
                 compression_(compression),
                 append_(append)
             {}
+
+            //- (approximate) size of master + any optional slave data
+            off_t size() const
+            {
+                return data_.size() + slaveData_.size();
+            }
         };
 
 
@@ -112,7 +147,10 @@ class OFstreamCollator
             const label comm,
             const word& typeName,
             const fileName& fName,
-            const string& data,
+            const string& masterData,
+            const labelUList& recvSizes,
+            const bool haveSlaveData,       // (does master) have slave data
+            const UList<char>& slaveData,   // (on master) all slave data
             IOstream::streamFormat fmt,
             IOstream::versionNumber ver,
             IOstream::compressionType cmp,
@@ -121,6 +159,10 @@ class OFstreamCollator
 
         //- Write all files in stack
         static void* writeAll(void *threadarg);
+
+        //- Wait for total size of objects_ (master + optional slave data)
+        //  to be wantedSize less than overall maxBufferSize.
+        void waitForBufferSpace(const off_t wantedSize) const;
 
 
 public:
