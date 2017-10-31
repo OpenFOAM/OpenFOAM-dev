@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,29 +64,6 @@ inline Foam::faceAreaIntersect::triPoints Foam::faceAreaIntersect::getTriPoints
     }
 
     return result;
-}
-
-
-inline void Foam::faceAreaIntersect::triangleFan
-(
-    const face& f,
-    DynamicList<face>& faces
-) const
-{
-    if (f.size() > 2)
-    {
-        const label v0 = 0;
-
-        labelList indices(3);
-
-        for (label i = 1; i < f.size() - 1; i++)
-        {
-            indices[0] = f[v0];
-            indices[1] = f[i];
-            indices[2] = f[i + 1];
-            faces.append(face(indices));
-        }
-    }
 }
 
 

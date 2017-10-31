@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,14 @@ public:
         static interpolationMethod wordTointerpolationMethod
         (
             const word& method
+        );
+
+        //- Calculate the patch face magnitudes for the given tri-mode
+        template<class Patch>
+        static tmp<scalarField> patchMagSf
+        (
+            const Patch& patch,
+            const faceAreaIntersect::triangulationMode triMode
         );
 
 
