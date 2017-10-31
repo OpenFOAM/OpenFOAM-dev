@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,6 +151,9 @@ protected:
                 const DynamicList<label>& visitedFaces,
                 DynamicList<label>& faceIDs
             ) const;
+
+            //- The maximum edge angle that the walk will cross
+            virtual scalar maxWalkAngle() const;
 
 
 public:
