@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,6 +118,9 @@ protected:
 
 
         // Evaluation
+
+            //- The minimum weight below which connections are discarded
+            virtual scalar minWeight() const;
 
             //- Area of intersection between source and target faces
             virtual scalar interArea
