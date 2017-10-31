@@ -10,5 +10,6 @@ wmake $targetType surfaceTensionModels
 wmake $targetType
 wmake $targetType compressibleInterDyMFoam
 wmake $targetType compressibleInterFilmFoam
+compressibleInterPhaseTransportFoam/Allwmake $targetType $*
 
 #------------------------------------------------------------------------------
