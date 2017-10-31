@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,25 +65,25 @@ inline Foam::CompactSpatialTensorT<Cmpt>::CompactSpatialTensorT
     this->v_[1] = t01;
     this->v_[2] = t02;
 
-    this->v_[6 + 0] = t10;
-    this->v_[6 + 1] = t11;
-    this->v_[6 + 2] = t12;
+    this->v_[3 + 0] = t10;
+    this->v_[3 + 1] = t11;
+    this->v_[3 + 2] = t12;
 
-    this->v_[12 + 0] = t20;
-    this->v_[12 + 1] = t21;
-    this->v_[12 + 2] = t22;
+    this->v_[6 + 0] = t20;
+    this->v_[6 + 1] = t21;
+    this->v_[6 + 2] = t22;
 
-    this->v_[18 + 0] = t30;
-    this->v_[18 + 1] = t31;
-    this->v_[18 + 2] = t32;
+    this->v_[9 + 0] = t30;
+    this->v_[9 + 1] = t31;
+    this->v_[9 + 2] = t32;
 
-    this->v_[24 + 0] = t40;
-    this->v_[24 + 1] = t41;
-    this->v_[24 + 2] = t42;
+    this->v_[12 + 0] = t40;
+    this->v_[12 + 1] = t41;
+    this->v_[12 + 2] = t42;
 
-    this->v_[30 + 0] = t50;
-    this->v_[30 + 1] = t51;
-    this->v_[30 + 2] = t52;
+    this->v_[15 + 0] = t50;
+    this->v_[15 + 1] = t51;
+    this->v_[15 + 2] = t52;
 }
 
 
