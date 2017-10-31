@@ -89,7 +89,8 @@ public:
             imDirect,
             imMapNearest,
             imFaceAreaWeight,
-            imPartialFaceAreaWeight
+            imPartialFaceAreaWeight,
+            imSweptFaceAreaWeight
         };
 
         //- Convert interpolationMethod to word representation

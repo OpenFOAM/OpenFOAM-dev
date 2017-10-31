@@ -62,6 +62,11 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::interpolationMethodToWord
             method = "partialFaceAreaWeightAMI";
             break;
         }
+        case imSweptFaceAreaWeight:
+        {
+            method = "sweptFaceAreaWeightAMI";
+            break;
+        }
         default:
         {
             FatalErrorInFunction
@@ -91,7 +96,8 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::wordTointerpolationMethod
                 "directAMI "
                 "mapNearestAMI "
                 "faceAreaWeightAMI "
-                "partialFaceAreaWeightAMI"
+                "partialFaceAreaWeightAMI "
+                "sweptFaceAreaWeightAMI"
             ")"
         )()
     );
@@ -111,6 +117,10 @@ Foam::AMIInterpolation<SourcePatch, TargetPatch>::wordTointerpolationMethod
     else if (im == "partialFaceAreaWeightAMI")
     {
         method = imPartialFaceAreaWeight;
+    }
+    else if (im == "sweptFaceAreaWeightAMI")
+    {
+        method = imSweptFaceAreaWeight;
     }
     else
     {
