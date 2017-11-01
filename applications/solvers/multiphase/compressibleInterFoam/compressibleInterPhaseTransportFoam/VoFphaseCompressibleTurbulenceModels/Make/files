@@ -1,3 +1,3 @@
 VoFphaseCompressibleTurbulenceModels.C
 
-LIB = $(FOAM_USER_LIBBIN)/libVoFphaseCompressibleTurbulenceModels
+LIB = $(FOAM_LIBBIN)/libVoFphaseCompressibleTurbulenceModels
