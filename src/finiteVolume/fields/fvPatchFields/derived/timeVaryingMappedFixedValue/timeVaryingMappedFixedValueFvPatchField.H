@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,21 @@ Description
     This boundary conditions interpolates the values from a set of supplied
     points in space and time.
 
-    Supplied data should be specified in constant/boundaryData/\<patchname\>/
+    By default the data files should be provide in
+    constant/boundaryData/\<patch name\>/ directory:
       - points             : pointField of locations
       - \<time\>/\<field\> : field of values at time \<time\>
+
+    Alternatively the names and locations of the points and field files may be
+    specified explicitly via the optional dictionary entries:
+      - dataDir \<optional top-level directory of the points and field data>;
+      - points \<optional path including name of points file relative to
+                 dataDir\>;
+      - sample \<optional name of the sub-directory in the time directories
+                containing the fields\>;
+    This is particularly useful when mapping data from another case for which
+    the \c sample \c functionObject is used to obtain the patch field data for
+    mapping.
 
     The default mode of operation (mapMethod planarInterpolation) is to project
     the points onto a plane (constructed from the first threee points) and
@@ -53,12 +65,28 @@ Usage
         fieldTableName | Alternative field name to sample | no| this field name
         mapMethod    | Type of mapping            | no | planarInterpolation
         offset       | Offset to mapped values    | no | Zero
+        dataDir      | Top-level directory of the points and field data \\
+                         | no | constant/boundaryData/\<patch name\>
+        points       | Path including name of points file relative to dataDir \\
+                         | no | points
+        sample       | Name of the sub-directory in the time directories \\
+                         containing the fields | no | ""
     \endtable
 
     \verbatim
-    <patchName>
+    <patch name>
     {
         type            timeVaryingMappedFixedValue;
+    }
+    \endverbatim
+
+    \verbatim
+    <patch name>
+    {
+        type            timeVaryingMappedFixedValue;
+        dataDir         "../<source case name>/postProcessing/sample";
+        points          "0/<sample name>/faceCentres";
+        sample          <sample name>;
     }
     \endverbatim
 
@@ -99,6 +127,17 @@ class timeVaryingMappedFixedValueFvPatchField
         //- Name of the field data table, defaults to the name of the field
         word fieldTableName_;
 
+        //- Optional name of the data directory,
+        //  defaults to "constant/boundaryData/<patch name>"
+        fileName dataDir_;
+
+        //- Optional name of the points file, defaults to "points"
+        fileName pointsName_;
+
+        //- Optional name of the sample sub-directory from which the field are
+        //  read, defaults to ""
+        fileName sampleName_;
+
         //- If true adjust the mapped field to maintain average value
         Switch setAverage_;
 
@@ -134,6 +173,12 @@ class timeVaryingMappedFixedValueFvPatchField
 
         //- Time varying offset values to interpolated data
         autoPtr<Function1<Type>> offset_;
+
+        //- Helper function to find the field files
+        fileName findFieldFile(const word& timeName) const;
+
+        //- Find boundary data inbetween current time and interpolate
+        void checkTable();
 
 
 public:
@@ -229,12 +274,6 @@ public:
                 const fvPatchField<Type>&,
                 const labelList&
             );
-
-
-        // Utility functions
-
-            //- Find boundary data inbetween current time and interpolate
-            void checkTable();
 
 
         // Evaluation functions
