@@ -283,7 +283,7 @@ void Foam::AMIInterpolation<SourcePatch, TargetPatch>::normaliseWeights
                 << " sum(weights) min/max/average = "
                 << gMin(wghtSum) << ", "
                 << gMax(wghtSum) << ", "
-                << gAverage(wghtSum) << endl;
+                << gSum(wghtSum*patchAreas)/gSum(patchAreas) << endl;
 
             const label nLow = returnReduce(nLowWeight, sumOp<label>());
 
