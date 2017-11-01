@@ -36,14 +36,14 @@ divSchemes
     div(phi,p)      Gauss upwind;
     div(rhoPhi,K)   Gauss upwind;
 
-    div(alphaRhoPhi.water,sigma.water) Gauss linearUpwind grad(sigma);
+    div(alphaRhoPhi.fluid,sigma.fluid) Gauss linearUpwind grad(sigma);
 
-    div(((alpha.water*thermo:rho.water)*sigma.water))   Gauss linear;
-    div((((alpha.water*thermo:rho.water)*nuM)*grad(U)))   Gauss linear;
-    div((((alpha.water*thermo:rho.water)*(thermo:mu.water|thermo:rho.water))*dev2(T(grad(U))))) Gauss linear;
+    div(((alpha.fluid*thermo:rho.fluid)*sigma.fluid))   Gauss linear;
+    div((((alpha.fluid*thermo:rho.fluid)*nuM)*grad(U)))   Gauss linear;
+    div((((alpha.fluid*thermo:rho.fluid)*(thermo:mu.fluid|thermo:rho.fluid))*dev2(T(grad(U))))) Gauss linear;
 
     div((((alpha.air*thermo:rho.air)*nuEff.air)*dev2(T(grad(U))))) Gauss linear;
-    div((((alpha.water*thermo:rho.water)*nuEff.water)*dev2(T(grad(U))))) Gauss linear;
+    div((((alpha.fluid*thermo:rho.fluid)*nuEff.fluid)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes

@@ -9,14 +9,14 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volSymmTensorField;
-    object      sigma;
+    class       volScalarField;
+    object      alpha.fluid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform (0 0 0 0 0 0);
+internalField   uniform 0;
 
 boundaryField
 {
@@ -33,6 +33,5 @@ boundaryField
 
     #includeEtc "caseDicts/setConstraintTypes"
 }
-
 
 // ************************************************************************* //

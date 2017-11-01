@@ -19,8 +19,8 @@ stabilization
 {
     type            symmTensorPhaseLimitStabilization;
 
-    field           sigma.water;
-    rate            rLambda.water;
+    field           sigma.fluid;
+    rate            rLambda.fluid;
     residualAlpha   1e-3;
 }
 
