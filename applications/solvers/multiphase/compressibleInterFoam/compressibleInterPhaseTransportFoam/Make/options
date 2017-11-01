@@ -25,8 +25,7 @@ EXE_LIBS = \
     -linterfaceProperties \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
-    -lphaseCompressibleTurbulenceModels \
-    -L$(FOAM_USER_LIBBIN) -lVoFphaseCompressibleTurbulenceModels \
+    -lVoFphaseCompressibleTurbulenceModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools
