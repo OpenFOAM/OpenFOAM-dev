@@ -600,8 +600,8 @@ void Foam::decomposedBlockData::gather
 
     char* data0Ptr = reinterpret_cast<char*>(datas.begin());
 
-    labelList recvOffsets;
-    labelList recvSizes;
+    List<int> recvOffsets;
+    List<int> recvSizes;
     if (UPstream::master())
     {
         recvOffsets.setSize(nProcs);
