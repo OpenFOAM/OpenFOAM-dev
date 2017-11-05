@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the Eulerian time derivative of a field.
+
+\*---------------------------------------------------------------------------*/
+
+type            ddt;
+libs            ("libfieldFunctionObjects.so");
+
+field           <fieldName>;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

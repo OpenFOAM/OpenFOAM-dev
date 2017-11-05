@@ -32,6 +32,7 @@ components/components.C
 randomise/randomise.C
 div/div.C
 grad/grad.C
+ddt/ddt.C
 mag/mag.C
 magSqr/magSqr.C
 vorticity/vorticity.C
