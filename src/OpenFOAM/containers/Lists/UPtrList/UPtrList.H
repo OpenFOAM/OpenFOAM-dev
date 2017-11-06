@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,62 +53,6 @@ template<class T> class PtrList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UPtrList;
-
-template<class T>
-inline typename UPtrList<T>::iterator operator+
-(
-    const typename UPtrList<T>::iterator&,
-    label
-);
-
-template<class T>
-inline typename UPtrList<T>::iterator operator+
-(
-    label,
-    const typename UPtrList<T>::iterator&
-);
-
-template<class T>
-inline typename UPtrList<T>::iterator operator-
-(
-    const typename UPtrList<T>::iterator&,
-    label
-);
-
-template<class T>
-inline label operator-
-(
-    const typename UPtrList<T>::iterator&,
-    const typename UPtrList<T>::iterator&
-);
-
-template<class T>
-inline typename UPtrList<T>::const_iterator operator+
-(
-    const typename UPtrList<T>::const_iterator&,
-    label
-);
-
-template<class T>
-inline typename UPtrList<T>::const_iterator operator+
-(
-    label,
-    const typename UPtrList<T>::const_iterator&
-);
-
-template<class T>
-inline typename UPtrList<T>::const_iterator operator-
-(
-    const typename UPtrList<T>::const_iterator&,
-    label
-);
-
-template<class T>
-inline label operator-
-(
-    const typename UPtrList<T>::const_iterator&,
-    const typename UPtrList<T>::const_iterator&
-);
 
 template<class T>
 Istream& operator>>(Istream&, UPtrList<T>&);
@@ -239,6 +183,7 @@ public:
     // Random access iterator for traversing UPtrList
 
         class iterator;
+        class const_iterator;
         friend class iterator;
 
         //- An STL iterator
@@ -247,6 +192,8 @@ public:
             T** ptr_;
 
         public:
+
+            friend class const_iterator;
 
             //- Construct for a given UPtrList entry
             inline iterator(T**);
@@ -260,27 +207,20 @@ public:
                 inline T& operator()();
 
                 inline iterator operator++();
-                inline iterator operator++(int);
+                inline iterator operator++(const int);
 
                 inline iterator operator--();
-                inline iterator operator--(int);
+                inline iterator operator--(const int);
 
-                inline iterator operator+=(label);
+                inline iterator operator+=(const label);
+                inline iterator operator-=(const label);
 
-                friend iterator operator+ <T>(const iterator&, label);
-                friend iterator operator+ <T>(label, const iterator&);
+                inline iterator operator+(const label) const;
+                inline iterator operator-(const label) const;
 
-                inline iterator operator-=(label);
+                inline label operator-(const iterator&) const;
 
-                friend iterator operator- <T>(const iterator&, label);
-
-                friend label operator- <T>
-                (
-                    const iterator&,
-                    const iterator&
-                );
-
-                inline T& operator[](label);
+                inline T& operator[](const label);
 
                 inline bool operator<(const iterator&) const;
                 inline bool operator>(const iterator&) const;
@@ -323,39 +263,20 @@ public:
                 inline Tref operator()();
 
                 inline const_iterator operator++();
-                inline const_iterator operator++(int);
+                inline const_iterator operator++(const int);
 
                 inline const_iterator operator--();
-                inline const_iterator operator--(int);
+                inline const_iterator operator--(const int);
 
-                inline const_iterator operator+=(label);
+                inline const_iterator operator+=(const label);
+                inline const_iterator operator-=(const label);
 
-                friend const_iterator operator+ <T>
-                (
-                    const const_iterator&,
-                    label
-                );
-                friend const_iterator operator+ <T>
-                (
-                    label,
-                    const const_iterator&
-                );
+                inline const_iterator operator+(const label) const;
+                inline const_iterator operator-(const label) const;
 
-                inline const_iterator operator-=(label);
+                inline label operator-(const const_iterator&) const;
 
-                friend const_iterator operator- <T>
-                (
-                    const const_iterator&,
-                    label
-                );
-
-                friend label operator- <T>
-                (
-                    const const_iterator&,
-                    const const_iterator&
-                );
-
-                inline const T& operator[](label);
+                inline const T& operator[](const label);
 
                 inline bool operator<(const const_iterator&) const;
                 inline bool operator>(const const_iterator&) const;
