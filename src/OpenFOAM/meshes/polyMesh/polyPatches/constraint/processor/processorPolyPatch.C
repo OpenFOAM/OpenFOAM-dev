@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -788,6 +788,12 @@ bool Foam::processorPolyPatch::order
     }
     else
     {
+        // Calculate the absolute matching tolerance
+        scalarField tols
+        (
+            matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
+        );
+
         if (transform() == COINCIDENTFULLMATCH)
         {
             vectorField masterPts;
@@ -808,7 +814,7 @@ bool Foam::processorPolyPatch::order
                 const face& localFace = localFaces[lFacei];
                 label faceRotation = -1;
 
-                const scalar absTolSqr = sqr(SMALL);
+                const scalar absTolSqr = sqr(tols[lFacei]);
 
                 scalar closestMatchDistSqr = sqr(GREAT);
                 scalar matchDistSqr = sqr(GREAT);
@@ -847,7 +853,11 @@ bool Foam::processorPolyPatch::order
                     }
                 }
 
-                if (closestFaceRotation != -1 && closestMatchDistSqr == 0)
+                if
+                (
+                    closestFaceRotation != -1
+                 && closestMatchDistSqr < absTolSqr
+                )
                 {
                     faceMap[lFacei] = closestFaceMatch;
 
@@ -893,12 +903,6 @@ bool Foam::processorPolyPatch::order
                 fromNeighbour >> masterCtrs >> masterNormals
                               >> masterAnchors >> masterFacePointAverages;
             }
-
-            // Calculate typical distance from face centre
-            scalarField tols
-            (
-                matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
-            );
 
             if (debug || masterCtrs.size() != pp.size())
             {
