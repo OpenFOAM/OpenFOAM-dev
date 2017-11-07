@@ -620,23 +620,6 @@ void Foam::conformalVoronoiMesh::reorderProcessorPatches
     );
     const fvMesh& sortMesh = sortMeshPtr();
 
-    // Change the transform type on processors to coincident full match.
-//    forAll(sortMesh.boundaryMesh(), patchi)
-//    {
-//        const polyPatch& patch = sortMesh.boundaryMesh()[patchi];
-//
-//        if (isA<processorPolyPatch>(patch))
-//        {
-//            const processorPolyPatch& cpPatch
-//                = refCast<const processorPolyPatch>(patch);
-//
-//            processorPolyPatch& pPatch
-//                = const_cast<processorPolyPatch&>(cpPatch);
-//
-//            pPatch.transform() = coupledPolyPatch::COINCIDENTFULLMATCH;
-//        }
-//    }
-
     // Rotation on new faces.
     labelList rotation(faces.size(), label(0));
     labelList faceMap(faces.size(), label(-1));
@@ -856,8 +839,7 @@ void Foam::conformalVoronoiMesh::writeMesh
             const_cast<dictionary&>(patchDicts[p]).set
             (
                 "transform",
-                "noOrdering"
-                //"coincidentFullMatch"
+                "coincidentFullMatch"
             );
 
             // Do not create empty processor patches
