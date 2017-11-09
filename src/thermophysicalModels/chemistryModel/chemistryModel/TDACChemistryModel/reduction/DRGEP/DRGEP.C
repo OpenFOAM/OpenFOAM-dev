@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::DRGEP
     dictionary initSet = this->coeffsDict_.subDict("initialSet");
     for (label i=0; i<chemistry.nSpecie(); i++)
     {
-        if (initSet.found(chemistry.Y()[i].name()))
+        if (initSet.found(chemistry.Y()[i].member()))
         {
             searchInitSet_[j++]=i;
         }
@@ -651,8 +651,8 @@ reduceMechanism
                         {
                             Info<< "Badly Conditioned rAB : " << rAB
                             << "species involved : "
-                            <<this->chemistry_.Y()[u].name() << ","
-                            << this->chemistry_.Y()[otherSpec].name()
+                            <<this->chemistry_.Y()[u].member() << ","
+                            << this->chemistry_.Y()[otherSpec].member()
                             << endl;
                             rAB=1.0;
                         }

@@ -54,7 +54,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
     (
         IOobject
         (
-            "TabulationResults",
+            IOobject::groupName("TabulationResults", phaseName),
             this->time().timeName(),
             this->mesh(),
             IOobject::NO_READ,
@@ -75,7 +75,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
 
     forAll(specieComp_, i)
     {
-        specieComp_[i] = specComp[this->Y()[i].name()];
+        specieComp_[i] = specComp[this->Y()[i].member()];
     }
 
     mechRed_ = chemistryReductionMethod<CompType, ThermoType>::New

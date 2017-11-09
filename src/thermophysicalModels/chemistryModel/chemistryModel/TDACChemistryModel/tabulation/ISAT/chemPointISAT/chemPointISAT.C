@@ -512,7 +512,7 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
             }
             else
             {
-                propName = chemistry_.Y()[maxIndex].name();
+                propName = chemistry_.Y()[maxIndex].member();
             }
             Info<< "Direction maximum impact to error in ellipsoid: "
                 << propName << endl;

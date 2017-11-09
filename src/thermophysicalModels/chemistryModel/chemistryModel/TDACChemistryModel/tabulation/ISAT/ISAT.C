@@ -84,7 +84,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
         scalar otherScaleFactor = readScalar(scaleDict.lookup("otherSpecies"));
         for (label i=0; i<Ysize; i++)
         {
-            if (!scaleDict.found(this->chemistry_.Y()[i].name()))
+            if (!scaleDict.found(this->chemistry_.Y()[i].member()))
             {
                 scaleFactor_[i] = otherScaleFactor;
             }
@@ -93,7 +93,7 @@ Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::ISAT
                 scaleFactor_[i] =
                     readScalar
                     (
-                        scaleDict.lookup(this->chemistry_.Y()[i].name())
+                        scaleDict.lookup(this->chemistry_.Y()[i].member())
                     );
             }
         }

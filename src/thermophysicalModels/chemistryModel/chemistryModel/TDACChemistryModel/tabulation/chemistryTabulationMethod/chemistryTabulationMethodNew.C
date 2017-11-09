@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Foam::chemistryTabulationMethod<CompType, ThermoType>::New
     (
          IOobject
          (
-              "thermophysicalProperties",
+              IOobject::groupName("thermophysicalProperties",dict.group()),
               dict.db().time().constant(),
               dict.db(),
               IOobject::MUST_READ_IF_MODIFIED,
