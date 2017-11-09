@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -283,10 +283,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
 
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
-void Foam::cyclicAMIPolyPatch::resetAMI
-(
-    const AMIPatchToPatchInterpolation::interpolationMethod& AMIMethod
-) const
+void Foam::cyclicAMIPolyPatch::resetAMI() const
 {
     if (owner())
     {
@@ -338,7 +335,7 @@ void Foam::cyclicAMIPolyPatch::resetAMI
                 surfPtr(),
                 faceAreaIntersect::tmMesh,
                 AMIRequireMatch_,
-                AMIMethod,
+                AMIMethod_,
                 AMILowWeightCorrection_,
                 AMIReverse_
             )
@@ -477,7 +474,9 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType transform
+    const transformType transform,
+    const bool AMIRequireMatch,
+    const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, transform),
@@ -490,8 +489,9 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     separationVector_(Zero),
     AMIPtr_(nullptr),
     AMIReverse_(false),
-    AMIRequireMatch_(true),
+    AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(-1.0),
+    AMIMethod_(AMIMethod),
     surfPtr_(nullptr),
     surfDict_(fileName("surface"))
 {
@@ -506,7 +506,9 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const dictionary& dict,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType
+    const word& patchType,
+    const bool AMIRequireMatch,
+    const AMIPatchToPatchInterpolation::interpolationMethod AMIMethod
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
@@ -520,8 +522,17 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     separationVector_(Zero),
     AMIPtr_(nullptr),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
-    AMIRequireMatch_(true),
+    AMIRequireMatch_(AMIRequireMatch),
     AMILowWeightCorrection_(dict.lookupOrDefault("lowWeightCorrection", -1.0)),
+    AMIMethod_
+    (
+        dict.found("method")
+      ? AMIPatchToPatchInterpolation::wordTointerpolationMethod
+        (
+            dict.lookup("method")
+        )
+      : AMIMethod
+    ),
     surfPtr_(nullptr),
     surfDict_(dict.subOrEmptyDict("surface"))
 {
@@ -611,6 +622,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
+    AMIMethod_(pp.AMIMethod_),
     surfPtr_(nullptr),
     surfDict_(pp.surfDict_)
 {
@@ -642,6 +654,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
+    AMIMethod_(pp.AMIMethod_),
     surfPtr_(nullptr),
     surfDict_(pp.surfDict_)
 {
@@ -680,6 +693,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     AMIReverse_(pp.AMIReverse_),
     AMIRequireMatch_(pp.AMIRequireMatch_),
     AMILowWeightCorrection_(pp.AMILowWeightCorrection_),
+    AMIMethod_(pp.AMIMethod_),
     surfPtr_(nullptr),
     surfDict_(pp.surfDict_)
 {}
@@ -1085,6 +1099,10 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
         os.writeKeyword("lowWeightCorrection") << AMILowWeightCorrection_
             << token::END_STATEMENT << nl;
     }
+
+    os.writeKeyword("method")
+        << AMIPatchToPatchInterpolation::interpolationMethodToWord(AMIMethod_)
+        << token::END_STATEMENT << nl;
 
     if (!surfDict_.empty())
     {
