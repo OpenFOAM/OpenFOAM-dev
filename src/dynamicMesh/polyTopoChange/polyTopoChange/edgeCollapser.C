@@ -854,7 +854,6 @@ void Foam::edgeCollapser::checkBoundaryPointMergeEdges
 
 Foam::label Foam::edgeCollapser::breakStringsAtEdges
 (
-    const PackedBoolList& markedEdges,
     PackedBoolList& collapseEdge,
     List<pointEdgeCollapse>& allPointInfo
 ) const
@@ -866,44 +865,32 @@ Foam::label Foam::edgeCollapser::breakStringsAtEdges
 
     forAll(edges, eI)
     {
-        if (markedEdges[eI])
+        const edge& e = edges[eI];
+
+        const label startCollapseIndex
+            = allPointInfo[e.start()].collapseIndex();
+
+        if (startCollapseIndex != -1 && startCollapseIndex != -2)
         {
-            const edge& e = edges[eI];
+            const label endCollapseIndex
+                = allPointInfo[e.end()].collapseIndex();
 
-            const label startCollapseIndex
-                = allPointInfo[e.start()].collapseIndex();
-
-            if (startCollapseIndex != -1 && startCollapseIndex != -2)
+            if (!collapseEdge[eI] && startCollapseIndex == endCollapseIndex)
             {
-                const label endCollapseIndex
-                    = allPointInfo[e.end()].collapseIndex();
+                const labelList& ptEdgesStart = pointEdges[e.start()];
 
-                if
-                (
-                    !collapseEdge[eI]
-                 && startCollapseIndex == endCollapseIndex
-                )
+                forAll(ptEdgesStart, ptEdgeI)
                 {
-                    const labelList& ptEdgesStart = pointEdges[e.start()];
+                    const label edgeI = ptEdgesStart[ptEdgeI];
 
-                    forAll(ptEdgesStart, ptEdgeI)
+                    const label nbrPointi = edges[edgeI].otherVertex(e.start());
+                    const label nbrIndex =
+                        allPointInfo[nbrPointi].collapseIndex();
+
+                    if (collapseEdge[edgeI] && nbrIndex == startCollapseIndex)
                     {
-                        const label edgeI = ptEdgesStart[ptEdgeI];
-
-                        const label nbrPointi
-                            = edges[edgeI].otherVertex(e.start());
-                        const label nbrIndex
-                            = allPointInfo[nbrPointi].collapseIndex();
-
-                        if
-                        (
-                            collapseEdge[edgeI]
-                         && nbrIndex == startCollapseIndex
-                        )
-                        {
-                            collapseEdge[edgeI] = false;
-                            nUncollapsed++;
-                        }
+                        collapseEdge[edgeI] = false;
+                        nUncollapsed++;
                     }
                 }
             }
@@ -1736,8 +1723,6 @@ void Foam::edgeCollapser::consistentCollapse
             }
         }
 
-        PackedBoolList markedEdges(mesh_.nEdges());
-
         if (!allowCellCollapse)
         {
             // Check collapsed cells
@@ -1775,13 +1760,12 @@ void Foam::edgeCollapser::consistentCollapse
                                 collapseEdge[edgeI] = false;
                                 nUncollapsed++;
                             }
-
-                            markedEdges[edgeI] = true;
                         }
+
+                        nFaces += isCollapsedFace[facei] ? 1 : 0;
 
                         // Uncollapsed this face.
                         isCollapsedFace[facei] = false;
-                        nFaces++;
                     }
                 }
 
@@ -1796,20 +1780,7 @@ void Foam::edgeCollapser::consistentCollapse
             }
         }
 
-        syncTools::syncEdgeList
-        (
-            mesh_,
-            markedEdges,
-            orEqOp<unsigned int>(),
-            0
-        );
-
-        nUncollapsed += breakStringsAtEdges
-        (
-            markedEdges,
-            collapseEdge,
-            allPointInfo
-        );
+        nUncollapsed += breakStringsAtEdges(collapseEdge, allPointInfo);
 
         reduce(nUncollapsed, sumOp<label>());
 

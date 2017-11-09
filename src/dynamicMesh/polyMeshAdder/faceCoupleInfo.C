@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1475,12 +1475,13 @@ void Foam::faceCoupleInfo::perfectPointMatch
         // Faces do not have to be ordered (but all have
         // to match). Note: Faces will be already ordered if we enter here from
         // construct from meshes.
+
         matchedAllFaces = matchPoints
         (
             calcFaceCentres<List>
             (
                 cutFaces(),
-                cutPoints_,
+                cutFaces().points(),
                 0,
                 cutFaces().size()
             ),
@@ -1492,9 +1493,43 @@ void Foam::faceCoupleInfo::perfectPointMatch
                 slavePatch().size()
             ),
             scalarField(slavePatch().size(), absTol),
-            true,
+            false,
             cutToSlaveFaces_
         );
+
+        // If some of the face centres did not match, then try to match the
+        // point averages instead. There is no division by the face area in
+        // calculating the point average, so this is more stable when faces
+        // collapse onto a line or point.
+        if (!matchedAllFaces)
+        {
+            labelList cutToSlaveFacesTemp(cutToSlaveFaces_.size(), -1);
+
+            matchPoints
+            (
+                calcFacePointAverages<List>
+                (
+                    cutFaces(),
+                    cutFaces().points(),
+                    0,
+                    cutFaces().size()
+                ),
+                calcFacePointAverages<IndirectList>
+                (
+                    slavePatch(),
+                    slavePatch().points(),
+                    0,
+                    slavePatch().size()
+                ),
+                scalarField(slavePatch().size(), absTol),
+                true,
+                cutToSlaveFacesTemp
+            );
+
+            cutToSlaveFaces_ = max(cutToSlaveFaces_, cutToSlaveFacesTemp);
+
+            matchedAllFaces = min(cutToSlaveFaces_) != -1;
+        }
     }
 
 
