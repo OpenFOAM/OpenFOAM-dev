@@ -42,10 +42,7 @@ const Foam::scalar Foam::cyclicACMIPolyPatch::tolerance_ = 1e-10;
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::cyclicACMIPolyPatch::resetAMI
-(
-    const AMIPatchToPatchInterpolation::interpolationMethod&
-) const
+void Foam::cyclicACMIPolyPatch::resetAMI() const
 {
     if (owner())
     {
