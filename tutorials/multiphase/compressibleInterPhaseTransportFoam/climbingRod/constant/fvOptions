@@ -21,7 +21,7 @@ stabilization
 
     field           sigma.liquid;
     rate            rLambda.liquid;
-    residualAlpha   1e-3;
+    residualAlpha   5e-3;
 }
 
 
