@@ -825,8 +825,8 @@ bool Foam::decomposedBlockData::writeBlocks
             labelPair masterData(startAndSize);
             if (UPstream::master(comm))
             {
-                label totalSize = 0;
-                label proci = masterData[0];
+                label totalSize = recvSizes[masterData[0]];
+                label proci = masterData[0]+1;
                 while
                 (
                     proci < nProcs
@@ -844,7 +844,6 @@ bool Foam::decomposedBlockData::writeBlocks
                 masterData[1] = proci-masterData[0];
             }
 
-
             // Scatter masterData
             UPstream::scatter
             (
@@ -856,7 +855,7 @@ bool Foam::decomposedBlockData::writeBlocks
                 comm
             );
 
-            if (startAndSize[1] == 0)
+            if (startAndSize[0] == nProcs || startAndSize[1] == 0)
             {
                 break;
             }
