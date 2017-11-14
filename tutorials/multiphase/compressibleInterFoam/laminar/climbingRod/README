@@ -5,9 +5,10 @@ Reference:
     A two-phase solver for complex fluids: Studies of the Weissenberg effect.
     International Journal of Multiphase Flow, 84, 98-115.
 
-In compressibleInterPhaseTransportFoam, separate stress models
-(laminar, non-Newtonian, LES or RAS) are instantiated for each of the
-two phases allowing for different modeling for the phases.
+In compressibleInterFoam with turbulenceProperties simulationType set to
+twoPhaseTransport separate stress models (laminar, non-Newtonian, LES or RAS)
+are instantiated for each of the two phases allowing for different modeling for
+the phases.
 
 This example case uses:
 - phases "air" and "liquid"
@@ -35,6 +36,6 @@ Liquid phase properties were calculated from the relations given in the paper:
 => mu_{s} = 14.6/10 = 1.46 Pa.s
 => nu_{p} = nuM = (9/10)*14.6/890 = 0.01476 m^2/s
 
-compressibleInterPhaseTransportFoam solves the energy equation, despite not
-being needed in this example.  The case is simply initialised at a uniform
-temperature of 300K throughout the domain and at the atmosphere boundary.
+compressibleInterFoam solves the energy equation, despite not being needed in
+this example.  The case is simply initialised at a uniform temperature of 300K
+throughout the domain and at the atmosphere boundary.

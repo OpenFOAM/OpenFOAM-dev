@@ -44,9 +44,7 @@ Description
 #include "localEulerDdtScheme.H"
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
-#include "twoPhaseMixture.H"
-#include "twoPhaseMixtureThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "compressibleInterPhaseTransportModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"
@@ -64,7 +62,6 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"
     #include "createControl.H"
     #include "createFields.H"
-    #include "createAlphaFluxes.H"
     #include "createUf.H"
     #include "createControls.H"
     #include "CourantNo.H"
@@ -74,8 +71,6 @@ int main(int argc, char *argv[])
     volScalarField& T = mixture.T();
     const volScalarField& psi1 = mixture.thermo1().psi();
     const volScalarField& psi2 = mixture.thermo2().psi();
-
-    turbulence->validate();
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     Info<< "\nStarting time loop\n" << endl;
@@ -149,6 +144,8 @@ int main(int argc, char *argv[])
             #include "alphaControls.H"
             #include "compressibleAlphaEqnSubCycle.H"
 
+            turbulence.correctPhasePhi();
+
             #include "UEqn.H"
             #include "TEqn.H"
 
@@ -160,7 +157,7 @@ int main(int argc, char *argv[])
 
             if (pimple.turbCorr())
             {
-                turbulence->correct();
+                turbulence.correct();
             }
         }
 

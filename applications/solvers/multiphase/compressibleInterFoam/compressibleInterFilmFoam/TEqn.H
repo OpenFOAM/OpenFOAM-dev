@@ -3,7 +3,7 @@
     (
         fvm::ddt(rho, T) + fvm::div(rhoPhi, T)
       - fvm::Sp(contErr, T)
-      - fvm::laplacian(mixture.alphaEff(turbulence->mut()), T)
+      - fvm::laplacian(turbulence.alphaEff(), T)
       + (
             (
                 fvc::div(fvc::absolute(phi, U), p)

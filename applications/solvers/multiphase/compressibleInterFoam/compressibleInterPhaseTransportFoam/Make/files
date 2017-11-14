@@ -1,3 +1,0 @@
-compressibleInterPhaseTransportFoam.C
-
-EXE = $(FOAM_APPBIN)/compressibleInterPhaseTransportFoam

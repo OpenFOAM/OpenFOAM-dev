@@ -89,10 +89,17 @@ surfaceScalarField rhoPhi
 
 volScalarField dgdt(alpha1*fvc::div(phi));
 
+#include "createAlphaFluxes.H"
+
 // Construct compressible turbulence model
-autoPtr<compressible::turbulenceModel> turbulence
+compressibleInterPhaseTransportModel turbulence
 (
-    compressible::turbulenceModel::New(rho, U, rhoPhi, mixture)
+    rho,
+    U,
+    phi,
+    rhoPhi,
+    alphaPhi10,
+    mixture
 );
 
 Info<< "Creating field kinetic energy K\n" << endl;

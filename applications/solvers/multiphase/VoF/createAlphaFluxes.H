@@ -9,6 +9,11 @@ IOobject alphaPhi10Header
 
 const bool alphaRestart = alphaPhi10Header.typeHeaderOk<surfaceScalarField>();
 
+if (alphaRestart)
+{
+    Info << "Restarting alpha" << endl;
+}
+
 // MULES flux from previous time-step
 surfaceScalarField alphaPhi10
 (

@@ -8,6 +8,8 @@ EXE_INC = \
     -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
+    -IVoFphaseCompressibleTurbulenceModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
@@ -22,6 +24,7 @@ EXE_LIBS = \
     -linterfaceProperties \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
+    -lVoFphaseCompressibleTurbulenceModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools

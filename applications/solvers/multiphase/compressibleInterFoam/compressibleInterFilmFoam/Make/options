@@ -3,12 +3,14 @@ EXE_INC = \
     -I.. \
     -I../../VoF \
     -I../twoPhaseMixtureThermo \
+    -I../VoFphaseCompressibleTurbulenceModels/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalFunctions/lnInclude \
@@ -34,6 +36,7 @@ EXE_LIBS = \
     -linterfaceProperties \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
+    -lVoFphaseCompressibleTurbulenceModels \
     -lSLGThermo \
     -lsurfaceFilmModels \
     -lsurfaceFilmDerivedFvPatchFields \

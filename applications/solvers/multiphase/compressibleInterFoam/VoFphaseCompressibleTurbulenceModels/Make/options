@@ -1,22 +1,17 @@
 EXE_INC = \
-    -I. \
-    -I$(FOAM_SOLVERS)/multiphase/VoF \
-    -I$(FOAM_SOLVERS)/multiphase/compressibleInterFoam/twoPhaseMixtureThermo \
-    -I$(FOAM_SOLVERS)/multiphase/compressibleInterFoam \
+    -I../twoPhaseMixtureThermo \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
-    -IVoFphaseCompressibleTurbulenceModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
-EXE_LIBS = \
+LIB_LIBS = \
     -ltwoPhaseMixtureThermo \
-    -ltwoPhaseSurfaceTension \
     -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
@@ -25,7 +20,6 @@ EXE_LIBS = \
     -linterfaceProperties \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
-    -lVoFphaseCompressibleTurbulenceModels \
+    -lincompressibleTransportModels \
     -lfiniteVolume \
-    -lfvOptions \
     -lmeshTools
