@@ -634,6 +634,9 @@ void thermoSingleLayer::evolveRegion()
     // Update film wall and surface temperatures
     updateSurfaceTemperatures();
 
+    // Solve continuity for deltaRho_
+    solveContinuity();
+
     // Update sub-models to provide updated source contributions
     updateSubmodels();
 
