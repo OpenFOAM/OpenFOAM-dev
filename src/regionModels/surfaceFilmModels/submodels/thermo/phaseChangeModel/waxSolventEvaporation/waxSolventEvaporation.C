@@ -316,6 +316,15 @@ void waxSolventEvaporation::correctModel
         ROOTVSMALL/dt
     );
 
+    volScalarField::Internal impingementRate
+    (
+        max
+        (
+           -film.rhoSp()(),
+            dimensionedScalar("zero", film.rhoSp().dimensions(), 0)
+        )
+    );
+
     if (filmPresent)
     {
         // Solve for the solvent mass fraction
@@ -325,17 +334,21 @@ void waxSolventEvaporation::correctModel
           + fvm::div(phi, Ysolvent_)
          ==
             deltaRho0Bydt*Ysolvent_()
+
           + evapRateInf
 
             // Include the effect of the impinging droplets
             // added with Ysolvent = Ysolvent0
-          + max
-            (
-                film.rhoSp()(),
-                dimensionedScalar("zero", film.rhoSp().dimensions(), 0)
-            )*Ysolvent0_
+          + impingementRate*Ysolvent0_
 
-          - fvm::Sp(deltaRho0Bydt + evapRateCoeff, Ysolvent_)
+          - fvm::Sp
+            (
+                deltaRho0Bydt
+              + evapRateCoeff
+              + film.rhoSp()()
+              + impingementRate,
+                Ysolvent_
+            )
         );
 
         YsolventEqn.relax();
