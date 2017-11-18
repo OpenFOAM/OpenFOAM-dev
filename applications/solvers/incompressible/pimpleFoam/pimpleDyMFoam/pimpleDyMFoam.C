@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
 
         mesh.update();
 
+        #include "updateUf.H"
+
         if (mesh.changing())
         {
             MRF.update();

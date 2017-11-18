@@ -4,7 +4,7 @@ surfaceScalarField phiHbyA
 (
     "phiHbyA",
     fvc::flux(HbyA)
-  + fvc::interpolate(rAU)*fvc::ddtCorr(U, Uf)
+  + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi, Uf)
 );
 
 MRF.makeRelative(phiHbyA);
@@ -61,11 +61,8 @@ U = HbyA - rAtU*fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
-{
-    Uf = fvc::interpolate(U);
-    surfaceVectorField n(mesh.Sf()/mesh.magSf());
-    Uf += n*(phi/mesh.magSf() - (n & Uf));
-}
+// Correct Uf if the mesh is moving
+fvc::correctUf(Uf, U, phi);
 
 // Make the fluxes relative to the mesh motion
 fvc::makeRelative(phi, U);

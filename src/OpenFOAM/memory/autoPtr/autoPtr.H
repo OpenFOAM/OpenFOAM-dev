@@ -116,6 +116,12 @@ public:
             //- Return const reference to the object data
             inline const T& operator()() const;
 
+            //- Return reference to the object data
+            inline T& operator*();
+
+            //- Return const reference to the object data
+            inline const T& operator*() const;
+
             //- Const cast to the underlying type reference
             inline operator const T&() const;
 

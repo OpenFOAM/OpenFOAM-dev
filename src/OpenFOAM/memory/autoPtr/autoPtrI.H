@@ -162,6 +162,36 @@ inline const T& Foam::autoPtr<T>::operator()() const
 
 
 template<class T>
+inline T& Foam::autoPtr<T>::operator*()
+{
+    if (!ptr_)
+    {
+        FatalErrorInFunction
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
+            << abort(FatalError);
+    }
+
+    return *ptr_;
+}
+
+
+template<class T>
+inline const T& Foam::autoPtr<T>::operator*() const
+{
+    if (!ptr_)
+    {
+        FatalErrorInFunction
+            << "object of type " << typeid(T).name()
+            << " is not allocated"
+            << abort(FatalError);
+    }
+
+    return *ptr_;
+}
+
+
+template<class T>
 inline Foam::autoPtr<T>::operator const T&() const
 {
     return operator()();

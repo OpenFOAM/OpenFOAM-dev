@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,6 +198,31 @@ ddtCorr
         U.mesh(),
         U.mesh().ddtScheme("ddt(" + U.name() + ')')
     ).ref().fvcDdtPhiCorr(U, phi);
+}
+
+
+template<class Type>
+tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
+ddtCorr
+(
+    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const GeometricField
+    <
+        typename flux<Type>::type,
+        fvsPatchField,
+        surfaceMesh
+    >& phi,
+    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+)
+{
+    if (U.mesh().changing())
+    {
+        return ddtCorr(U, Uf);
+    }
+    else
+    {
+        return ddtCorr(U, phi);
+    }
 }
 
 

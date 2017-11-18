@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "dynamicFvMesh.H"
-#include "Time.H"
-#include "dlLibraryTable.H"
+#include "staticFvMesh.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -36,52 +34,58 @@ Foam::autoPtr<Foam::dynamicFvMesh> Foam::dynamicFvMesh::New(const IOobject& io)
     // - defaultRegion (region0) gets loaded from constant, other ones
     //   get loaded from constant/<regionname>. Normally we'd use
     //   polyMesh::dbDir() but we haven't got a polyMesh yet ...
-    IOdictionary dict
+    IOobject dictHeader
     (
-        IOobject
+        "dynamicMeshDict",
+        io.time().constant(),
+        (io.name() == polyMesh::defaultRegion ? "" : io.name()),
+        io.db(),
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE,
+        false
+    );
+
+    if (dictHeader.typeHeaderOk<IOdictionary>(true))
+    {
+        IOdictionary dict(dictHeader);
+
+        const word dynamicFvMeshTypeName(dict.lookup("dynamicFvMesh"));
+
+        Info<< "Selecting dynamicFvMesh " << dynamicFvMeshTypeName << endl;
+
+        const_cast<Time&>(io.time()).libs().open
         (
-            "dynamicMeshDict",
-            io.time().constant(),
-            (io.name() == polyMesh::defaultRegion ? "" : io.name()),
-            io.db(),
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE,
-            false
-        )
-    );
+            dict,
+            "dynamicFvMeshLibs",
+            IOobjectConstructorTablePtr_
+        );
 
-    const word dynamicFvMeshTypeName(dict.lookup("dynamicFvMesh"));
+        if (!IOobjectConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "dynamicFvMesh table is empty"
+                << exit(FatalError);
+        }
 
-    Info<< "Selecting dynamicFvMesh " << dynamicFvMeshTypeName << endl;
+        IOobjectConstructorTable::iterator cstrIter =
+            IOobjectConstructorTablePtr_->find(dynamicFvMeshTypeName);
 
-    const_cast<Time&>(io.time()).libs().open
-    (
-        dict,
-        "dynamicFvMeshLibs",
-        IOobjectConstructorTablePtr_
-    );
+        if (cstrIter == IOobjectConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown dynamicFvMesh type "
+                << dynamicFvMeshTypeName << nl << nl
+                << "Valid dynamicFvMesh types are :" << endl
+                << IOobjectConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
+        }
 
-    if (!IOobjectConstructorTablePtr_)
-    {
-        FatalErrorInFunction
-            << "dynamicFvMesh table is empty"
-            << exit(FatalError);
+        return autoPtr<dynamicFvMesh>(cstrIter()(io));
     }
-
-    IOobjectConstructorTable::iterator cstrIter =
-        IOobjectConstructorTablePtr_->find(dynamicFvMeshTypeName);
-
-    if (cstrIter == IOobjectConstructorTablePtr_->end())
+    else
     {
-        FatalErrorInFunction
-            << "Unknown dynamicFvMesh type "
-            << dynamicFvMeshTypeName << nl << nl
-            << "Valid dynamicFvMesh types are :" << endl
-            << IOobjectConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
+        return autoPtr<dynamicFvMesh>(new staticFvMesh(io));
     }
-
-    return autoPtr<dynamicFvMesh>(cstrIter()(io));
 }
 
 
