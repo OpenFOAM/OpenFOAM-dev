@@ -40,7 +40,7 @@ inline Foam::autoPtr<T>::autoPtr(const autoPtr<T>& ap)
 :
     ptr_(ap.ptr_)
 {
-    ap.ptr_ = 0;
+    ap.ptr_ = nullptr;
 }
 
 
@@ -50,7 +50,7 @@ inline Foam::autoPtr<T>::autoPtr(const autoPtr<T>& ap, const bool reuse)
     if (reuse)
     {
         ptr_ = ap.ptr_;
-        ap.ptr_ = 0;
+        ap.ptr_ = nullptr;
     }
     else if (ap.valid())
     {
@@ -90,7 +90,7 @@ template<class T>
 inline T* Foam::autoPtr<T>::ptr()
 {
     T* ptr = ptr_;
-    ptr_ = 0;
+    ptr_ = nullptr;
     return ptr;
 }
 
@@ -125,7 +125,7 @@ inline void Foam::autoPtr<T>::reset(T* p)
 template<class T>
 inline void Foam::autoPtr<T>::clear()
 {
-    reset(0);
+    reset(nullptr);
 }
 
 

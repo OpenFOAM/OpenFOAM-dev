@@ -64,7 +64,7 @@ public:
     // Constructors
 
         //- Store object pointer
-        inline explicit autoPtr(T* = 0);
+        inline explicit autoPtr(T* = nullptr);
 
         //- Construct as copy by transferring pointer to this autoPtr and
         //  setting the arguments pointer to nullptr
@@ -101,7 +101,7 @@ public:
 
             //- If object pointer already set, delete object and set to given
             //  pointer
-            inline void reset(T* = 0);
+            inline void reset(T* = nullptr);
 
             //- Delete object (if the pointer is valid) and set pointer to
             //  nullptr
