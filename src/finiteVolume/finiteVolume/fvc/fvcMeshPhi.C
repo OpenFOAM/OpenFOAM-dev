@@ -221,7 +221,7 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::absolute
 
 void Foam::fvc::correctUf
 (
-    surfaceVectorField& Uf,
+    autoPtr<surfaceVectorField>& Uf,
     const volVectorField& U,
     const surfaceScalarField& phi
 )
@@ -230,9 +230,9 @@ void Foam::fvc::correctUf
 
     if (phi.mesh().changing())
     {
-        Uf = fvc::interpolate(U);
+        Uf() = fvc::interpolate(U);
         surfaceVectorField n(mesh.Sf()/mesh.magSf());
-        Uf += n*(phi/mesh.magSf() - (n & Uf));
+        Uf() += n*(phi/mesh.magSf() - (n & Uf()));
     }
 }
 

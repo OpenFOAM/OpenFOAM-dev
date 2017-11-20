@@ -31,7 +31,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-autoPtr<surfaceVectorField> UfPtr;
+autoPtr<surfaceVectorField> Uf;
 
 IOobject UfHeader
 (
@@ -45,7 +45,7 @@ IOobject UfHeader
 if (UfHeader.typeHeaderOk<surfaceVectorField>(true))
 {
     Info<< "Reading face velocity Uf\n" << endl;
-    UfPtr = new surfaceVectorField(UfHeader, mesh);
+    Uf = new surfaceVectorField(UfHeader, mesh);
 }
 
 // ************************************************************************* //

@@ -33,11 +33,11 @@ Description
 
 if (mesh.changing())
 {
-    if (!UfPtr.valid())
+    if (!Uf.valid())
     {
         Info<< "Constructing face velocity Uf" << endl;
 
-        UfPtr = new surfaceVectorField
+        Uf = new surfaceVectorField
         (
             IOobject
             (
@@ -51,7 +51,5 @@ if (mesh.changing())
         );
     }
 }
-
-surfaceVectorField& Uf = *UfPtr;
 
 // ************************************************************************* //

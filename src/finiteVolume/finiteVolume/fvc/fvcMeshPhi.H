@@ -150,7 +150,7 @@ namespace fvc
 
     void correctUf
     (
-        surfaceVectorField& Uf,
+        autoPtr<surfaceVectorField>& Uf,
         const volVectorField& U,
         const surfaceScalarField& phi
     );

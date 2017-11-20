@@ -212,12 +212,12 @@ ddtCorr
         fvsPatchField,
         surfaceMesh
     >& phi,
-    const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+    const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
 )
 {
     if (U.mesh().changing())
     {
-        return ddtCorr(U, Uf);
+        return ddtCorr(U, Uf());
     }
     else
     {

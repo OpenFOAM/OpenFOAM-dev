@@ -173,7 +173,7 @@ namespace fvc
             fvsPatchField,
             surfaceMesh
         >& phi,
-        const GeometricField<Type, fvsPatchField, surfaceMesh>& Uf
+        const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
     );
 
     template<class Type>
