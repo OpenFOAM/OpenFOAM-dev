@@ -97,7 +97,7 @@ void waxSolventViscosity::correctMu()
         Ysolvent0*Wsolvent/((1 - Ysolvent0)*Wwax + Ysolvent0*Wsolvent)
     );
 
-    mu_ = pow(muWax_/muSolvent_, (1 - Ysolvent)/(1 - Ysolvent0))*muSolvent_;
+    mu_ = pow(muWax_/muSolvent_, (1 - Xsolvent)/(1 - Xsolvent0))*muSolvent_;
     mu_.correctBoundaryConditions();
 }
 
