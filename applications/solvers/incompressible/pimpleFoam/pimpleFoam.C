@@ -53,6 +53,8 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createFields.H"
     #include "initContinuityErrs.H"
+    #include "CourantNo.H"
+    #include "setInitialDeltaT.H"
 
     turbulence->validate();
 
