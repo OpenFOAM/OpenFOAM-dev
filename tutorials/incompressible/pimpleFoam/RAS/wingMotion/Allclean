@@ -11,6 +11,6 @@ cd ../wingMotion2D_simpleFoam
 cleanCase
 rm -rf 0
 
-cd ../wingMotion2D_pimpleDyMFoam
+cd ../wingMotion2D_pimpleFoam
 cleanCase
 rm -rf 0
