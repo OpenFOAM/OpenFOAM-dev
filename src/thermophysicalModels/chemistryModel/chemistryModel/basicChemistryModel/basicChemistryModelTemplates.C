@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,11 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 
         Info<< "Selecting chemistry type " << chemistryTypeDict << endl;
 
-        const int nCmpt = 7;
+        const int nCmpt = 8;
         const char* cmptNames[nCmpt] =
         {
             "chemistrySolver",
+            "chemistryModel",
             "chemistryThermo",
             "transport",
             "thermo",
@@ -131,7 +132,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
             FatalErrorInFunction
                 << "Unknown " << ChemistryModel::typeName << " type " << nl
                 << "chemistryType" << chemistryTypeDict << nl << nl
-                << "Valid " << ChemistryModel ::typeName << " types are:"
+                << "Valid " << ChemistryModel::typeName << " types are:"
                 << nl << nl;
 
             // Get the list of all the suitable chemistry packages available
