@@ -14,4 +14,3 @@ rm -rf 0
 cd ../wingMotion2D_pimpleDyMFoam
 cleanCase
 rm -rf 0
-

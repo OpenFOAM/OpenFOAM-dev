@@ -154,6 +154,14 @@ namespace fvc
         const volVectorField& U,
         const surfaceScalarField& phi
     );
+
+    void correctRhoUf
+    (
+        autoPtr<surfaceVectorField>& rhoUf,
+        const volScalarField& rho,
+        const volVectorField& U,
+        const surfaceScalarField& phi
+    );
 }
 
 

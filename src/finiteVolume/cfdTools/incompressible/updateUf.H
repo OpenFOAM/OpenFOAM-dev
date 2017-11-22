@@ -25,7 +25,7 @@ Global
     updateUf
 
 Description
-    Constructs the velocity field Uf if not already constructed.
+    Constructs the face velocity field Uf if not already constructed.
 
 \*---------------------------------------------------------------------------*/
 

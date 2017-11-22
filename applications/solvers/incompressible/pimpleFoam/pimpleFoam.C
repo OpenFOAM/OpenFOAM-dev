@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    pimpleFoam
+    pimpleDyMFoam.C
 
 Description
-    Large time-step transient solver for incompressible, turbulent flow, using
-    the PIMPLE (merged PISO-SIMPLE) algorithm.
+    Transient solver for incompressible, turbulent flow of Newtonian fluids
+    on a moving mesh.
 
-    Sub-models include:
-    - turbulence modelling, i.e. laminar, RAS or LES
-    - run-time selectable MRF and finite volume options, e.g. explicit porosity
+    Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "singlePhaseTransportModel.H"
 #include "turbulentTransportModel.H"
 #include "pimpleControl.H"
+#include "CorrectPhi.H"
 #include "fvOptions.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,11 +48,11 @@ int main(int argc, char *argv[])
 
     #include "setRootCase.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
-    #include "createFields.H"
+    #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
+    #include "createControls.H"
+    #include "createFields.H"
+    #include "createUfIfPresent.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
 
@@ -64,13 +64,38 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readControls.H"
         #include "CourantNo.H"
         #include "setDeltaT.H"
 
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
+
+        mesh.update();
+
+        #include "updateUf.H"
+
+        if (mesh.changing())
+        {
+            MRF.update();
+
+            if (correctPhi)
+            {
+                // Calculate absolute flux from the mapped surface velocity
+                phi = mesh.Sf() & Uf();
+
+                #include "correctPhi.H"
+
+                // Make the flux relative to the mesh motion
+                fvc::makeRelative(phi, U);
+            }
+
+            if (checkMeshCourantNo)
+            {
+                #include "meshCourantNo.H"
+            }
+        }
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())

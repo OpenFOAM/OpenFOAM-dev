@@ -265,6 +265,32 @@ ddtCorr
 }
 
 
+template<class Type>
+tmp<GeometricField<typename flux<Type>::type, fvsPatchField, surfaceMesh>>
+ddtCorr
+(
+    const volScalarField& rho,
+    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const GeometricField
+    <
+        typename flux<Type>::type,
+        fvsPatchField,
+        surfaceMesh
+    >& phi,
+    const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
+)
+{
+    if (U.mesh().changing())
+    {
+        return ddtCorr(rho, U, Uf());
+    }
+    else
+    {
+        return ddtCorr(rho, U, phi);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace fvc
