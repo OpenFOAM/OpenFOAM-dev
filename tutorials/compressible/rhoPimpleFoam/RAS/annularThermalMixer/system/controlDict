@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     rhoPimpleDyMFoam;
+application     rhoPimpleFoam;
 
 startFrom       latestTime;
 

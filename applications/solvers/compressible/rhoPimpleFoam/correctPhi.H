@@ -6,6 +6,6 @@ CorrectPhi
     rho,
     psi,
     dimensionedScalar("rAUf", dimTime, 1),
-    divrhoU,
+    divrhoU(),
     pimple
 );

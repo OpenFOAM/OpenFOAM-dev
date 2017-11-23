@@ -1,6 +1,6 @@
 EXE_INC = \
     -I.. \
-    -I../../rhoPimpleFoam/rhoPimpleDyMFoam \
+    -I../../rhoPimpleFoam \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \

@@ -1,3 +1,5 @@
+InfoInFunction << "consistent" << endl;
+
 if (!pimple.SIMPLErho())
 {
     rho = thermo.rho();
@@ -21,10 +23,11 @@ surfaceScalarField phiHbyA
     "phiHbyA",
     (
         fvc::interpolate(rho)*fvc::flux(HbyA)
-      + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi)
+      + fvc::interpolate(rho*rAU)*fvc::ddtCorr(rho, U, phi, rhoUf)
     )
 );
 
+fvc::makeRelative(phiHbyA, rho, U);
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
 volScalarField rhorAtU("rhorAtU", rho*rAtU);
@@ -119,7 +122,15 @@ else if (pimple.SIMPLErho())
     rho = thermo.rho();
 }
 
+// Correct rhoUf if the mesh is moving
+fvc::correctRhoUf(rhoUf, rho, U, phi);
+
 if (thermo.dpdt())
 {
     dpdt = fvc::ddt(p);
+
+    if (mesh.moving())
+    {
+        dpdt -= fvc::div(fvc::meshPhi(rho, U), p);
+    }
 }
