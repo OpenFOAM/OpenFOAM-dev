@@ -87,9 +87,9 @@ public:
         PaSR
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            typename Type::reactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         );
 
 

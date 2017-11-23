@@ -32,12 +32,12 @@ template<class CombThermoType>
 Foam::combustionModels::noCombustion<CombThermoType>::noCombustion
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename CombThermoType::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
-    CombThermoType(modelType, mesh, phaseName)
+    CombThermoType(modelType, thermo, turb)
 {}
 
 
@@ -81,7 +81,7 @@ Foam::combustionModels::noCombustion<CombThermoType>::Qdot() const
         (
             IOobject
             (
-                IOobject::groupName(typeName + ":Qdot", this->phaseName_),
+                this->thermo().phasePropertyName(typeName + ":Qdot"),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,

@@ -33,11 +33,10 @@ License
 template<class CompType, class ThermoType>
 Foam::chemistryModel<CompType, ThermoType>::chemistryModel
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    typename CompType::reactionThermo& thermo
 )
 :
-    CompType(mesh, phaseName),
+    CompType(thermo),
     ODESystem(),
     Y_(this->thermo().composition().Y()),
     reactions_
@@ -68,12 +67,12 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
                 IOobject
                 (
                     "RR." + Y_[fieldi].name(),
-                    mesh.time().timeName(),
-                    mesh,
+                    this->mesh().time().timeName(),
+                    this->mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                thermo.p().mesh(),
                 dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
             )
         );

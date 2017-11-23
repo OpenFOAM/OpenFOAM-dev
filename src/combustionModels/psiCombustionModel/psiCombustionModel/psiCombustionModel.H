@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,8 @@ class psiCombustionModel
 
 public:
 
-    typedef psiReactionThermo ReactionThermo;
+    //- Thermo type
+    typedef psiReactionThermo reactionThermo;
 
 
     //- Runtime type information
@@ -83,11 +84,11 @@ public:
         dictionary,
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            psiReactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         ),
-        (modelType, mesh, combustionProperties, phaseName)
+        (modelType, thermo, turb, combustionProperties)
     );
 
 
@@ -97,18 +98,18 @@ public:
         psiCombustionModel
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            psiReactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         );
 
 
         //- Selector
         static autoPtr<psiCombustionModel> New
         (
-            const fvMesh& mesh,
-            const word& combustionProperties=combustionPropertiesName,
-            const word& phaseName=word::null
+            psiReactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties=combustionPropertiesName
         );
 
 

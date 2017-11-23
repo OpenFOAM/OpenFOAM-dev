@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,9 +90,9 @@ public:
         zoneCombustion
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            typename Type::reactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         );
 
 
@@ -103,10 +103,10 @@ public:
     // Member Functions
 
         //- Return access to the thermo package
-        virtual typename Type::ReactionThermo& thermo();
+        virtual typename Type::reactionThermo& thermo();
 
         //- Return const access to the thermo package
-        virtual const typename Type::ReactionThermo& thermo() const;
+        virtual const typename Type::reactionThermo& thermo() const;
 
         //- Correct combustion rate
         virtual void correct();

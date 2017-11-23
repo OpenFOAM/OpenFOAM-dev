@@ -31,12 +31,12 @@ template<class Type>
 Foam::combustionModels::EDC<Type>::EDC
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename Type::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
-    laminar<Type>(modelType, mesh, combustionProperties, phaseName),
+    laminar<Type>(modelType, thermo, turb, combustionProperties),
     version_
     (
         EDCversionNames
@@ -58,13 +58,13 @@ Foam::combustionModels::EDC<Type>::EDC
     (
         IOobject
         (
-            IOobject::groupName(typeName + ":kappa", phaseName),
-            mesh.time().timeName(),
-            mesh,
+            this->thermo().phasePropertyName(typeName + ":kappa"),
+            this->mesh().time().timeName(),
+            this->mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh,
+        this->mesh(),
         dimensionedScalar("kappa", dimless, 0)
     )
 {}
@@ -192,7 +192,7 @@ Foam::combustionModels::EDC<Type>::Qdot() const
         (
             IOobject
             (
-                IOobject::groupName(typeName + ":Qdot", this->phaseName_),
+                this->thermo().phasePropertyName(typeName + ":Qdot"),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,

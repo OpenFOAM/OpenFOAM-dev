@@ -23,13 +23,13 @@
 
     #include "createBaseFields.H"
 
-    Info<< nl << "Reading thermophysicalProperties" << endl;
-    autoPtr<psiChemistryModel> pChemistry(psiChemistryModel::New(mesh));
-
-    psiChemistryModel& chemistry = pChemistry();
-
-    psiReactionThermo& thermo = chemistry.thermo();
+    Info<< "Reading thermophysical properties\n" << endl;
+    autoPtr<psiReactionThermo> pThermo(psiReactionThermo::New(mesh));
+    psiReactionThermo& thermo = pThermo();
     thermo.validate(args.executable(), "h");
+
+    autoPtr<psiChemistryModel> pChemistry(psiChemistryModel::New(thermo));
+    psiChemistryModel& chemistry = pChemistry();
 
     volScalarField rho
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,19 +32,18 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(basicSolidChemistryModel, 0);
-    defineRunTimeSelectionTable(basicSolidChemistryModel, fvMesh);
+    defineRunTimeSelectionTable(basicSolidChemistryModel, thermo);
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::basicSolidChemistryModel::basicSolidChemistryModel
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    solidReactionThermo& thermo
 )
 :
-    basicChemistryModel(mesh, phaseName),
-    solidThermo_(solidReactionThermo::New(mesh, phaseName))
+    basicChemistryModel(thermo),
+    solidThermo_(thermo)
 {}
 
 

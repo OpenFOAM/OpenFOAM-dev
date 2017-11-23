@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,10 +62,7 @@ protected:
     // Protected data
 
         //- Thermophysical model
-        autoPtr<ThermoType> thermoPtr_;
-
-        //- Thermophysical model
-        ThermoType* thermo_;
+        autoPtr<ThermoType> thermo_;
 
 
 public:
@@ -76,8 +73,7 @@ public:
         (
             const phaseSystem& fluid,
             const word& phaseName,
-            const label index,
-            const bool createThermo = true
+            const label index
         );
 
 

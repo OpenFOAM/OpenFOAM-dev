@@ -79,6 +79,7 @@ protected:
 
     typedef ThermoType thermoType;
 
+
     // Protected data
 
         //- Reference to the field of specie mass fractions
@@ -124,8 +125,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        chemistryModel(const fvMesh& mesh, const word& phaseName);
+        //- Construct from thermo
+        chemistryModel(typename CompType::reactionThermo& thermo);
 
 
     //- Destructor

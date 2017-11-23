@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,8 +71,8 @@ protected:
 
     // Protected data
 
-        //- Thermo package
-        autoPtr<psiReactionThermo> thermo_;
+        //- Thermo
+        psiReactionThermo& thermo_;
 
 
 public:
@@ -81,29 +81,29 @@ public:
     TypeName("psi");
 
 
+    //- Thermo type
+    typedef psiReactionThermo reactionThermo;
+
+
     //- Declare run-time constructor selection tables
     declareRunTimeSelectionTable
     (
         autoPtr,
         psiChemistryModel,
-        fvMesh,
-        (const fvMesh& mesh, const word& phaseName),
-        (mesh, phaseName)
+        thermo,
+        (psiReactionThermo& thermo),
+        (thermo)
     );
 
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        psiChemistryModel(const fvMesh& mesh, const word& phaseName);
+        //- Construct from thermo
+        psiChemistryModel(psiReactionThermo& thermo);
 
 
     //- Selector
-    static autoPtr<psiChemistryModel> New
-    (
-        const fvMesh& mesh,
-        const word& phaseName=word::null
-    );
+    static autoPtr<psiChemistryModel> New(psiReactionThermo& thermo);
 
 
     //- Destructor

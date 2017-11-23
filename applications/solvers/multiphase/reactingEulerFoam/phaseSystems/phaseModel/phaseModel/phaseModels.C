@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,13 +45,13 @@ License
 namespace Foam
 {
     typedef
-        MovingPhaseModel
+        AnisothermalPhaseModel
         <
-            AnisothermalPhaseModel
+            PurePhaseModel
             <
-                PurePhaseModel
+                InertPhaseModel
                 <
-                    InertPhaseModel
+                    MovingPhaseModel
                     <
                         ThermoPhaseModel<phaseModel, rhoThermo>
                     >
@@ -69,13 +69,13 @@ namespace Foam
     );
 
     typedef
-        MovingPhaseModel
+        IsothermalPhaseModel
         <
-            IsothermalPhaseModel
+            PurePhaseModel
             <
-                PurePhaseModel
+                InertPhaseModel
                 <
-                    InertPhaseModel
+                    MovingPhaseModel
                     <
                         ThermoPhaseModel<phaseModel, rhoThermo>
                     >
@@ -93,13 +93,13 @@ namespace Foam
     );
 
     typedef
-        MovingPhaseModel
+        AnisothermalPhaseModel
         <
-            AnisothermalPhaseModel
+            MultiComponentPhaseModel
             <
-                MultiComponentPhaseModel
+                InertPhaseModel
                 <
-                    InertPhaseModel
+                    MovingPhaseModel
                     <
                         ThermoPhaseModel<phaseModel, rhoReactionThermo>
                     >
@@ -117,17 +117,17 @@ namespace Foam
     );
 
     typedef
-        MovingPhaseModel
+        AnisothermalPhaseModel
         <
-            AnisothermalPhaseModel
+            MultiComponentPhaseModel
             <
-                MultiComponentPhaseModel
+                ReactingPhaseModel
                 <
-                    ReactingPhaseModel
+                    MovingPhaseModel
                     <
-                        ThermoPhaseModel<phaseModel, rhoReactionThermo>,
-                        combustionModels::rhoCombustionModel
-                    >
+                        ThermoPhaseModel<phaseModel, rhoReactionThermo>
+                    >,
+                    combustionModels::rhoCombustionModel
                 >
             >
         >

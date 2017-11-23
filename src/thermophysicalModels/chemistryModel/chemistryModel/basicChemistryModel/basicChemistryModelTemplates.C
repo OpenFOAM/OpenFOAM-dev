@@ -31,17 +31,16 @@ License
 template<class ChemistryModel>
 Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    typename ChemistryModel::reactionThermo& thermo
 )
 {
     IOdictionary chemistryDict
     (
         IOobject
         (
-            IOobject::groupName("chemistryProperties", phaseName),
-            mesh.time().constant(),
-            mesh,
+            thermo.phasePropertyName("chemistryProperties"),
+            thermo.db().time().constant(),
+            thermo.db(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE,
             false
@@ -76,9 +75,9 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
         (
             IOobject
             (
-                IOobject::groupName(basicThermo::dictName, phaseName),
-                mesh.time().constant(),
-                mesh,
+                thermo.phasePropertyName(basicThermo::dictName),
+                thermo.db().time().constant(),
+                thermo.db(),
                 IOobject::MUST_READ_IF_MODIFIED,
                 IOobject::NO_WRITE,
                 false
@@ -124,10 +123,10 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
               + thermoTypeName + ">>";
         }
 
-        typename ChemistryModel::fvMeshConstructorTable::iterator cstrIter =
-            ChemistryModel::fvMeshConstructorTablePtr_->find(chemistryTypeName);
+        typename ChemistryModel::thermoConstructorTable::iterator cstrIter =
+            ChemistryModel::thermoConstructorTablePtr_->find(chemistryTypeName);
 
-        if (cstrIter == ChemistryModel::fvMeshConstructorTablePtr_->end())
+        if (cstrIter == ChemistryModel::thermoConstructorTablePtr_->end())
         {
             FatalErrorInFunction
                 << "Unknown " << ChemistryModel::typeName << " type " << nl
@@ -138,7 +137,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
             // Get the list of all the suitable chemistry packages available
             wordList validChemistryTypeNames
             (
-                ChemistryModel::fvMeshConstructorTablePtr_->sortedToc()
+                ChemistryModel::thermoConstructorTablePtr_->sortedToc()
             );
 
             // Build a table of the thermo packages constituent parts
@@ -171,7 +170,7 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
             FatalError<< exit(FatalError);
         }
 
-        return autoPtr<ChemistryModel>(cstrIter()(mesh, phaseName));
+        return autoPtr<ChemistryModel>(cstrIter()(thermo));
     }
     else
     {
@@ -180,20 +179,20 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
 
         Info<< "Selecting chemistry type " << chemistryTypeName << endl;
 
-        typename ChemistryModel::fvMeshConstructorTable::iterator cstrIter =
-            ChemistryModel::fvMeshConstructorTablePtr_->find(chemistryTypeName);
+        typename ChemistryModel::thermoConstructorTable::iterator cstrIter =
+            ChemistryModel::thermoConstructorTablePtr_->find(chemistryTypeName);
 
-        if (cstrIter == ChemistryModel::fvMeshConstructorTablePtr_->end())
+        if (cstrIter == ChemistryModel::thermoConstructorTablePtr_->end())
         {
             FatalErrorInFunction
                 << "Unknown " << ChemistryModel::typeName << " type "
                 << chemistryTypeName << nl << nl
                 << "Valid ChemistryModel types are:" << nl
-                << ChemistryModel::fvMeshConstructorTablePtr_->sortedToc() << nl
+                << ChemistryModel::thermoConstructorTablePtr_->sortedToc() << nl
                 << exit(FatalError);
         }
 
-        return autoPtr<ChemistryModel>(cstrIter()(mesh, phaseName));
+        return autoPtr<ChemistryModel>(cstrIter()(thermo));
     }
 }
 

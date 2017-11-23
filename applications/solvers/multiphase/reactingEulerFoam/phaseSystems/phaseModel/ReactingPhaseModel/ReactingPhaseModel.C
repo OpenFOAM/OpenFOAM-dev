@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,26 +37,9 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::ReactingPhaseModel
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, index, false),
-    reaction_
-    (
-        ReactionType::New
-        (
-            fluid.mesh(),
-            combustionModel::combustionPropertiesName,
-            this->name()
-        )
-    )
-{
-    this->thermo_ = &reaction_->thermo();
-
-    this->thermo_->validate
-    (
-        IOobject::groupName(phaseModel::typeName, this->name()),
-        "h",
-        "e"
-    );
-}
+    BasePhaseModel(fluid, phaseName, index),
+    reaction_(ReactionType::New(this->thermo_(), this->turbulence_()))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -71,21 +54,6 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::~ReactingPhaseModel()
 template<class BasePhaseModel, class ReactionType>
 void Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::correctThermo()
 {
-    reaction_->setTurbulence
-    (
-        const_cast<compressibleTurbulenceModel&>
-        (
-            this->mesh().template lookupObject<compressibleTurbulenceModel>
-            (
-                IOobject::groupName
-                (
-                    turbulenceModel::propertiesName,
-                    this->name()
-                )
-            )
-        )
-    );
-
     BasePhaseModel::correctThermo();
 
     reaction_->correct();

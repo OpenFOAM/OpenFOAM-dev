@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,8 +67,8 @@ protected:
 
     // Protected data
 
-        //- Pointer to chemistry model
-        autoPtr<psiReactionThermo> thermoPtr_;
+        //- Thermo
+        psiReactionThermo& thermo_;
 
 
 public:
@@ -79,8 +79,8 @@ public:
         psiThermoCombustion
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& phaseName
+            psiReactionThermo& thermo,
+            const compressibleTurbulenceModel& turb
         );
 
 

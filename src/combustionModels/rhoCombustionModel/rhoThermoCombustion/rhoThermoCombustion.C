@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,12 +30,12 @@ License
 Foam::combustionModels::rhoThermoCombustion::rhoThermoCombustion
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& phaseName
+    rhoReactionThermo& thermo,
+    const compressibleTurbulenceModel& turb
 )
 :
-    rhoCombustionModel(modelType, mesh, combustionPropertiesName, phaseName),
-    thermoPtr_(rhoReactionThermo::New(mesh, phaseName))
+    rhoCombustionModel(modelType, thermo, turb, combustionPropertiesName),
+    thermo_(thermo)
 {}
 
 
@@ -50,14 +50,14 @@ Foam::combustionModels::rhoThermoCombustion::~rhoThermoCombustion()
 Foam::rhoReactionThermo&
 Foam::combustionModels::rhoThermoCombustion::thermo()
 {
-    return thermoPtr_();
+    return thermo_;
 }
 
 
 const Foam::rhoReactionThermo&
 Foam::combustionModels::rhoThermoCombustion::thermo() const
 {
-    return thermoPtr_();
+    return thermo_;
 }
 
 

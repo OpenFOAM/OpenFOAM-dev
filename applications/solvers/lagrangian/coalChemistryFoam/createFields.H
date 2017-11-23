@@ -2,14 +2,9 @@
 
 #include "readGravitationalAcceleration.H"
 
-Info<< "Creating combustion model\n" << endl;
-
-autoPtr<combustionModels::psiCombustionModel> combustion
-(
-    combustionModels::psiCombustionModel::New(mesh)
-);
-
-psiReactionThermo& thermo = combustion->thermo();
+Info<< "Reading thermophysical properties\n" << endl;
+autoPtr<psiReactionThermo> pThermo(psiReactionThermo::New(mesh));
+psiReactionThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
 SLGThermo slgThermo(mesh, thermo);
@@ -112,8 +107,11 @@ autoPtr<compressible::turbulenceModel> turbulence
     )
 );
 
-// Set the turbulence into the combustion model
-combustion->setTurbulence(turbulence());
+Info<< "Creating combustion model\n" << endl;
+autoPtr<combustionModels::psiCombustionModel> combustion
+(
+    combustionModels::psiCombustionModel::New(thermo, turbulence())
+);
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

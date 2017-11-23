@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,18 +37,18 @@ template<class CombThermoType, class ThermoType>
 singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename CombThermoType::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
-    CombThermoType(modelType, mesh, phaseName),
+    CombThermoType(modelType, thermo, turb),
     singleMixturePtr_(nullptr),
     wFuel_
     (
         IOobject
         (
-            IOobject::groupName("wFuel", phaseName),
+            this->thermo().phasePropertyName("wFuel"),
             this->mesh().time().timeName(),
             this->mesh(),
             IOobject::NO_READ,
@@ -103,7 +103,7 @@ tmp<fvScalarMatrix> singleStepCombustion<CombThermoType, ThermoType>::R
 ) const
 {
     const label specieI =
-        this->thermoPtr_->composition().species()[Y.member()];
+        this->thermo().composition().species()[Y.member()];
 
     volScalarField wSpecie
     (
@@ -131,7 +131,7 @@ singleStepCombustion<CombThermoType, ThermoType>::Qdot() const
 {
     const label fuelI = singleMixturePtr_->fuelIndex();
     volScalarField& YFuel =
-        const_cast<volScalarField&>(this->thermoPtr_->composition().Y(fuelI));
+        const_cast<volScalarField&>(this->thermo().composition().Y(fuelI));
 
     return -singleMixturePtr_->qFuel()*(R(YFuel) & YFuel);
 }

@@ -33,12 +33,12 @@ template<class Type>
 Foam::combustionModels::laminar<Type>::laminar
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename Type::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
-    Type(modelType, mesh, combustionProperties, phaseName),
+    Type(modelType, thermo, turb, combustionProperties),
     integrateReactionRate_
     (
         this->coeffs().lookupOrDefault("integrateReactionRate", true)
@@ -144,7 +144,7 @@ Foam::combustionModels::laminar<Type>::Qdot() const
         (
             IOobject
             (
-                IOobject::groupName(typeName + ":Qdot", this->phaseName_),
+                this->thermo().phasePropertyName(typeName + ":Qdot"),
                 this->mesh().time().timeName(),
                 this->mesh(),
                 IOobject::NO_READ,

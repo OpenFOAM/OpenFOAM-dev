@@ -33,11 +33,10 @@ template<class CompType, class SolidThermo, class GasThermo>
 Foam::pyrolysisChemistryModel<CompType, SolidThermo, GasThermo>::
 pyrolysisChemistryModel
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    typename CompType::reactionThermo& thermo
 )
 :
-    solidChemistryModel<CompType, SolidThermo>(mesh, phaseName),
+    solidChemistryModel<CompType, SolidThermo>(thermo),
     pyrolisisGases_(this->reactions_[0].gasSpecies()),
     gasThermo_(pyrolisisGases_.size()),
     nGases_(pyrolisisGases_.size()),
@@ -52,8 +51,8 @@ pyrolysisChemistryModel
         IOobject header
         (
             this->Ys_[fieldi].name() + "0",
-            mesh.time().timeName(),
-            mesh,
+            this->mesh().time().timeName(),
+            this->mesh(),
             IOobject::NO_READ
         );
 
@@ -68,12 +67,12 @@ pyrolysisChemistryModel
                     IOobject
                     (
                         this->Ys_[fieldi].name() + "0",
-                        mesh.time().timeName(),
-                        mesh,
+                        this->mesh().time().timeName(),
+                        this->mesh(),
                         IOobject::MUST_READ,
                         IOobject::AUTO_WRITE
                     ),
-                    mesh
+                    this->mesh()
                 )
             );
         }
@@ -84,12 +83,12 @@ pyrolysisChemistryModel
                 IOobject
                 (
                     "Y0Default",
-                    mesh.time().timeName(),
-                    mesh,
+                    this->mesh().time().timeName(),
+                    this->mesh(),
                     IOobject::MUST_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh
+                this->mesh()
             );
 
             Ys0_.set
@@ -100,8 +99,8 @@ pyrolysisChemistryModel
                     IOobject
                     (
                         this->Ys_[fieldi].name() + "0",
-                        mesh.time().timeName(),
-                        mesh,
+                        this->mesh().time().timeName(),
+                        this->mesh(),
                         IOobject::NO_READ,
                         IOobject::AUTO_WRITE
                     ),
@@ -112,7 +111,7 @@ pyrolysisChemistryModel
             // Calculate inital values of Ysi0 = rho*delta*Yi
             Ys0_[fieldi].primitiveFieldRef() =
                 this->solidThermo().rho()
-               *max(this->Ys_[fieldi], scalar(0.001))*mesh.V();
+               *max(this->Ys_[fieldi], scalar(0.001))*this->mesh().V();
         }
     }
 
@@ -126,12 +125,12 @@ pyrolysisChemistryModel
                 IOobject
                 (
                     "RRg." + pyrolisisGases_[fieldi],
-                    mesh.time().timeName(),
-                    mesh,
+                    this->mesh().time().timeName(),
+                    this->mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                this->mesh(),
                 dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
             )
         );
@@ -140,7 +139,7 @@ pyrolysisChemistryModel
     forAll(gasThermo_, gasI)
     {
         dictionary thermoDict =
-            mesh.lookupObject<dictionary>
+            this->mesh().template lookupObject<dictionary>
             (
                 basicThermo::dictName
             ).subDict(pyrolisisGases_[gasI]);
