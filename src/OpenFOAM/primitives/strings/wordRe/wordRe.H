@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,8 +96,8 @@ public:
         enum compOption
         {
             LITERAL = 0, //!< treat as a string literal
-            DETECT  = 1, //!< treat as regular expression
-            REGEXP  = 2, //!< detect if the string contains meta-characters
+            DETECT = 1,  //!< detect if the string contains meta-characters
+            REGEXP = 2,  //!< treat as regular expression
             NOCASE  = 4, //!< ignore case in regular expression
             DETECT_NOCASE = DETECT | NOCASE,
             REGEXP_NOCASE = REGEXP | NOCASE
