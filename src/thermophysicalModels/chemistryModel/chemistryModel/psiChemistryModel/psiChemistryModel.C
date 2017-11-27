@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,20 +31,16 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(psiChemistryModel, 0);
-    defineRunTimeSelectionTable(psiChemistryModel, fvMesh);
+    defineRunTimeSelectionTable(psiChemistryModel, thermo);
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::psiChemistryModel::psiChemistryModel
-(
-    const fvMesh& mesh,
-    const word& phaseName
-)
+Foam::psiChemistryModel::psiChemistryModel(psiReactionThermo& thermo)
 :
-    basicChemistryModel(mesh, phaseName),
-    thermo_(psiReactionThermo::New(mesh, phaseName))
+    basicChemistryModel(thermo),
+    thermo_(thermo)
 {}
 
 
@@ -52,11 +48,10 @@ Foam::psiChemistryModel::psiChemistryModel
 
 Foam::autoPtr<Foam::psiChemistryModel> Foam::psiChemistryModel::New
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    psiReactionThermo& thermo
 )
 {
-    return basicChemistryModel::New<psiChemistryModel>(mesh, phaseName);
+    return basicChemistryModel::New<psiChemistryModel>(thermo);
 }
 
 

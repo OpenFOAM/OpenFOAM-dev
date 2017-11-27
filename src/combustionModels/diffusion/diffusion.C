@@ -37,17 +37,17 @@ template<class CombThermoType, class ThermoType>
 diffusion<CombThermoType, ThermoType>::diffusion
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename CombThermoType::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
     singleStepCombustion<CombThermoType, ThermoType>
     (
         modelType,
-        mesh,
-        combustionProperties,
-        phaseName
+        thermo,
+        turb,
+        combustionProperties
     ),
     C_(readScalar(this->coeffs().lookup("C"))),
     oxidantName_(this->coeffs().template lookupOrDefault<word>("oxidant", "O2"))
@@ -76,12 +76,12 @@ void diffusion<CombThermoType, ThermoType>::correct()
         const label fuelI = this->singleMixturePtr_->fuelIndex();
 
         const volScalarField& YFuel =
-            this->thermoPtr_->composition().Y()[fuelI];
+            this->thermo().composition().Y()[fuelI];
 
-        if (this->thermoPtr_->composition().contains(oxidantName_))
+        if (this->thermo().composition().contains(oxidantName_))
         {
             const volScalarField& YO2 =
-                this->thermoPtr_->composition().Y(oxidantName_);
+                this->thermo().composition().Y(oxidantName_);
 
             this->wFuel_ ==
                 C_*this->turbulence().muEff()

@@ -61,8 +61,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        noChemistrySolver(const fvMesh& mesh, const word& phaseName);
+        //- Construct from thermo
+        noChemistrySolver(typename ChemistryModel::reactionThermo& thermo);
 
 
     //- Destructor

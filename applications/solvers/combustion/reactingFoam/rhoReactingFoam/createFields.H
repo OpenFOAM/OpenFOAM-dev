@@ -1,13 +1,8 @@
 #include "createRDeltaT.H"
 
-Info<< "Creating reaction model\n" << endl;
-
-autoPtr<combustionModels::rhoCombustionModel> reaction
-(
-    combustionModels::rhoCombustionModel::New(mesh)
-);
-
-rhoReactionThermo& thermo = reaction->thermo();
+Info<< "Reading thermophysical properties\n" << endl;
+autoPtr<rhoReactionThermo> pThermo(rhoReactionThermo::New(mesh));
+rhoReactionThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
 basicMultiComponentMixture& composition = thermo.composition();
@@ -69,8 +64,11 @@ autoPtr<compressible::turbulenceModel> turbulence
     )
 );
 
-// Set the turbulence into the reaction model
-reaction->setTurbulence(turbulence());
+Info<< "Creating reaction model\n" << endl;
+autoPtr<combustionModels::rhoCombustionModel> reaction
+(
+    combustionModels::rhoCombustionModel::New(thermo, turbulence())
+);
 
 
 Info<< "Creating field dpdt\n" << endl;

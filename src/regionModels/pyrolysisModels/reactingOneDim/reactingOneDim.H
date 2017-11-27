@@ -75,11 +75,11 @@ protected:
 
     // Protected data
 
+        //- Reference to solid thermo
+        autoPtr<solidReactionThermo> solidThermo_;
+
         //- Reference to the solid chemistry model
         autoPtr<basicSolidChemistryModel> solidChemistry_;
-
-        //- Reference to solid thermo
-        solidReactionThermo& solidThermo_;
 
         //- Pointer to radiation model
         autoPtr<radiation::radiationModel> radiation_;

@@ -170,9 +170,9 @@ public:
         EDC
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            typename Type::reactionThermo& type,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         );
 
 

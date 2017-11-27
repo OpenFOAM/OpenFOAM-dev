@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 #include "Switch.H"
 #include "scalarField.H"
 #include "volFields.H"
+#include "basicThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,15 +102,18 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        basicChemistryModel(const fvMesh& mesh, const word& phaseName);
+        //- Construct from thermo
+        basicChemistryModel(basicThermo& thermo);
 
 
     // Selectors
 
         //- Generic New for each of the related chemistry model
-        template<class Thermo>
-        static autoPtr<Thermo> New(const fvMesh& mesh, const word& phaseName);
+        template<class ChemistryModel>
+        static autoPtr<ChemistryModel> New
+        (
+            typename ChemistryModel::reactionThermo& thermo
+        );
 
 
     //- Destructor

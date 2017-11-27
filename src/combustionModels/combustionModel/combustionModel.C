@@ -43,40 +43,34 @@ const Foam::word Foam::combustionModel::combustionPropertiesName
 Foam::combustionModel::combustionModel
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    basicThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
     IOdictionary
     (
         IOobject
         (
-            IOobject::groupName(combustionProperties, phaseName),
-            mesh.time().constant(),
-            mesh,
+            thermo.phasePropertyName(combustionProperties),
+            thermo.db().time().constant(),
+            thermo.db(),
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     ),
-    turbulencePtr_(),
-    mesh_(mesh),
+    mesh_(thermo.p().mesh()),
+    turb_(turb),
     active_(lookupOrDefault<Switch>("active", true)),
     coeffs_(optionalSubDict(modelType + "Coeffs")),
-    modelType_(modelType),
-    phaseName_(phaseName)
+    modelType_(modelType)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::combustionModel::~combustionModel()
-{
-    if (turbulencePtr_)
-    {
-        turbulencePtr_ = 0;
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

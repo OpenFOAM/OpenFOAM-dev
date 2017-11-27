@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,9 @@ class MovingPhaseModel
 :
     public BasePhaseModel
 {
-    // Private data
+protected:
+
+    // Protected data
 
         //- Velocity field
         volVectorField U_;
@@ -93,6 +95,8 @@ class MovingPhaseModel
         //  Used for implicit treatment of the phase pressure and dispersion
         tmp<surfaceScalarField> DbyA_;
 
+
+private:
 
     // Private static member functions
 

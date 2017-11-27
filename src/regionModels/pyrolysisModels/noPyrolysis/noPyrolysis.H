@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,11 +81,11 @@ protected:
         //- Reset solidChemistryModel and solidThermo pointers
         void constructThermoChemistry();
 
-        //- Reference to the solid chemistry model
-        autoPtr<basicSolidChemistryModel> solidChemistry_;
-
         //- Reference to solid thermo
         autoPtr<solidReactionThermo> solidThermo_;
+
+        //- Reference to the solid chemistry model
+        autoPtr<basicSolidChemistryModel> solidChemistry_;
 
          //- Pointer to radiation model
         autoPtr<radiation::radiationModel> radiation_;

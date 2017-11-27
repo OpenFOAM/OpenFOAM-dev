@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,14 +29,12 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CompType, class SolidThermo>
-Foam::solidChemistryModel<CompType, SolidThermo>::
-solidChemistryModel
+Foam::solidChemistryModel<CompType, SolidThermo>::solidChemistryModel
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    typename CompType::reactionThermo& thermo
 )
 :
-    CompType(mesh, phaseName),
+    CompType(thermo),
     ODESystem(),
     Ys_(this->solidThermo().composition().Y()),
     reactions_
@@ -56,7 +54,7 @@ solidChemistryModel
     nSolids_(Ys_.size()),
     nReaction_(reactions_.size()),
     RRs_(nSolids_),
-    reactingCells_(mesh.nCells(), true)
+    reactingCells_(this->mesh().nCells(), true)
 {
     // create the fields for the chemistry sources
     forAll(RRs_, fieldi)
@@ -69,12 +67,12 @@ solidChemistryModel
                 IOobject
                 (
                     "RRs." + Ys_[fieldi].name(),
-                    mesh.time().timeName(),
-                    mesh,
+                    this->mesh().time().timeName(),
+                    this->mesh(),
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
                 ),
-                mesh,
+                this->mesh(),
                 dimensionedScalar("zero", dimMass/dimVolume/dimTime, 0.0)
             )
         );

@@ -31,24 +31,24 @@ template<class Type>
 Foam::combustionModels::PaSR<Type>::PaSR
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename Type::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
-    laminar<Type>(modelType, mesh, combustionProperties, phaseName),
+    laminar<Type>(modelType, thermo, turb, combustionProperties),
     Cmix_(readScalar(this->coeffs().lookup("Cmix"))),
     kappa_
     (
         IOobject
         (
-            IOobject::groupName(typeName + ":kappa", phaseName),
-            mesh.time().timeName(),
-            mesh,
+            thermo.phasePropertyName(typeName + ":kappa"),
+            this->mesh().time().timeName(),
+            this->mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh,
+        this->mesh(),
         dimensionedScalar("kappa", dimless, 0)
     )
 {}
@@ -116,7 +116,7 @@ Foam::combustionModels::PaSR<Type>::Qdot() const
     (
         new volScalarField
         (
-            IOobject::groupName(typeName + ":Qdot", this->phaseName_),
+            this->thermo().phasePropertyName(typeName + ":Qdot"),
             kappa_*laminar<Type>::Qdot()
         )
     );

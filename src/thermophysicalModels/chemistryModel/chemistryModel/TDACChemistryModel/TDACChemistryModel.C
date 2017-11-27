@@ -33,15 +33,18 @@ License
 template<class CompType, class ThermoType>
 Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
 (
-    const fvMesh& mesh,
-    const word& phaseName
+    typename CompType::reactionThermo& thermo
 )
 :
-    chemistryModel<CompType, ThermoType>(mesh, phaseName),
+    chemistryModel<CompType, ThermoType>(thermo),
     variableTimeStep_
     (
-        mesh.time().controlDict().lookupOrDefault("adjustTimeStep", false)
-     || fv::localEulerDdt::enabled(mesh)
+        this->mesh().time().controlDict().lookupOrDefault
+        (
+            "adjustTimeStep",
+            false
+        )
+     || fv::localEulerDdt::enabled(this->mesh())
     ),
     timeSteps_(0),
     NsDAC_(this->nSpecie_),
@@ -54,13 +57,13 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
     (
         IOobject
         (
-            IOobject::groupName("TabulationResults", phaseName),
+            thermo.phasePropertyName("TabulationResults"),
             this->time().timeName(),
             this->mesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        mesh,
+        this->mesh(),
         scalar(0)
     )
 {
@@ -93,8 +96,8 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
             IOobject header
             (
                 this->Y()[i].name(),
-                mesh.time().timeName(),
-                mesh,
+                this->mesh().time().timeName(),
+                this->mesh(),
                 IOobject::NO_READ
             );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,8 @@ class rhoCombustionModel
 
 public:
 
-    typedef rhoReactionThermo ReactionThermo;
+    //- Thermo type
+    typedef rhoReactionThermo reactionThermo;
 
 
     //- Runtime type information
@@ -84,11 +85,11 @@ public:
         dictionary,
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            rhoReactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         ),
-        (modelType, mesh, combustionProperties, phaseName)
+        (modelType, thermo, turb, combustionProperties)
     );
 
 
@@ -99,9 +100,9 @@ public:
         rhoCombustionModel
         (
             const word& modelType,
-            const fvMesh& mesh,
-            const word& combustionProperties,
-            const word& phaseName
+            rhoReactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
         );
 
 
@@ -109,9 +110,9 @@ public:
     //- Selector
     static autoPtr<rhoCombustionModel> New
     (
-        const fvMesh& mesh,
-        const word& combustionProperties=combustionPropertiesName,
-        const word& phaseName=word::null
+        rhoReactionThermo& thermo,
+        const compressibleTurbulenceModel& turb,
+        const word& combustionProperties=combustionPropertiesName
     );
 
 

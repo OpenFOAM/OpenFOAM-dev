@@ -150,12 +150,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh
-        TDACChemistryModel
-        (
-            const fvMesh& mesh,
-            const word& phaseName
-        );
+        //- Construct from thermo
+        TDACChemistryModel(typename CompType::reactionThermo& thermo);
 
 
     //- Destructor

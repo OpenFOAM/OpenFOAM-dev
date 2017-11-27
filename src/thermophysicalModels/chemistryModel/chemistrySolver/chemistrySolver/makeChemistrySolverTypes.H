@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ License
     (                                                                          \
         Comp,                                                                  \
         SS##Comp##Thermo,                                                      \
-        fvMesh                                                                 \
+        thermo                                                                 \
     );                                                                         \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
@@ -69,7 +69,7 @@ License
     (                                                                          \
         Comp,                                                                  \
         TDAC##SS##Comp##Thermo,                                                \
-        fvMesh                                                                 \
+        thermo                                                                 \
     );
 
 

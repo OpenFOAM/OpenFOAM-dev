@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,16 +34,7 @@ inline const Foam::fvMesh& Foam::combustionModel::mesh() const
 inline const Foam::compressibleTurbulenceModel&
 Foam::combustionModel::turbulence() const
 {
-    if (!turbulencePtr_)
-    {
-        FatalErrorInFunction
-            << "turbulencePtr_ is empty. Please use "
-            << "combustionModel::setTurbulence "
-            << "(compressibleTurbulenceModel& )"
-            << abort(FatalError);
-    }
-
-    return *turbulencePtr_;
+    return turb_;
 }
 
 
@@ -62,15 +53,6 @@ inline Foam::tmp<Foam::surfaceScalarField> Foam::combustionModel::phi() const
 inline const Foam::Switch& Foam::combustionModel::active() const
 {
     return active_;
-}
-
-
-inline void Foam::combustionModel::setTurbulence
-(
-    compressibleTurbulenceModel& turbModel
-)
-{
-    turbulencePtr_ = &turbModel;
 }
 
 

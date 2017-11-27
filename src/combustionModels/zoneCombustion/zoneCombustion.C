@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,21 +104,13 @@ template<class Type>
 Foam::combustionModels::zoneCombustion<Type>::zoneCombustion
 (
     const word& modelType,
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    typename Type::reactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 :
-    Type(modelType, mesh, combustionProperties, phaseName),
-    combustionModelPtr_
-    (
-        Type::New
-        (
-            mesh,
-            "zoneCombustionProperties",
-            phaseName
-        )
-    ),
+    Type(modelType, thermo, turb, combustionProperties),
+    combustionModelPtr_(Type::New(thermo, turb, "zoneCombustionProperties")),
     zoneNames_(this->coeffs().lookup("zones"))
 {}
 
@@ -133,7 +125,7 @@ Foam::combustionModels::zoneCombustion<Type>::~zoneCombustion()
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class Type>
-typename Type::ReactionThermo&
+typename Type::reactionThermo&
 Foam::combustionModels::zoneCombustion<Type>::thermo()
 {
     return combustionModelPtr_->thermo();
@@ -141,7 +133,7 @@ Foam::combustionModels::zoneCombustion<Type>::thermo()
 
 
 template<class Type>
-const typename Type::ReactionThermo&
+const typename Type::reactionThermo&
 Foam::combustionModels::zoneCombustion<Type>::thermo() const
 {
     return combustionModelPtr_->thermo();

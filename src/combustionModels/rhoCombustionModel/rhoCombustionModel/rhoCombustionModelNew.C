@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,9 @@ License
 Foam::autoPtr<Foam::combustionModels::rhoCombustionModel>
 Foam::combustionModels::rhoCombustionModel::New
 (
-    const fvMesh& mesh,
-    const word& combustionProperties,
-    const word& phaseName
+    rhoReactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 {
     const word combTypeName
@@ -41,9 +41,9 @@ Foam::combustionModels::rhoCombustionModel::New
         (
             IOobject
             (
-                IOobject::groupName(combustionProperties, phaseName),
-                mesh.time().constant(),
-                mesh,
+                thermo.phasePropertyName(combustionProperties),
+                thermo.db().time().constant(),
+                thermo.db(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false
@@ -72,7 +72,7 @@ Foam::combustionModels::rhoCombustionModel::New
 
     return autoPtr<rhoCombustionModel>
     (
-        cstrIter()(className, mesh, combustionProperties, phaseName)
+        cstrIter()(className, thermo, turb, combustionProperties)
     );
 }
 
