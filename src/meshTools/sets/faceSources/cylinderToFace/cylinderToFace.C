@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nearestToCell.H"
+#include "cylinderToFace.H"
 #include "polyMesh.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -31,75 +31,99 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(nearestToCell, 0);
-    addToRunTimeSelectionTable(topoSetSource, nearestToCell, word);
-    addToRunTimeSelectionTable(topoSetSource, nearestToCell, istream);
+    defineTypeNameAndDebug(cylinderToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, cylinderToFace, word);
+    addToRunTimeSelectionTable(topoSetSource, cylinderToFace, istream);
 }
 
 
-Foam::topoSetSource::addToUsageTable Foam::nearestToCell::usage_
+Foam::topoSetSource::addToUsageTable Foam::cylinderToFace::usage_
 (
-    nearestToCell::typeName,
-    "\n    Usage: nearestToCell (pt0 .. ptn)\n\n"
-    "    Select the nearest cell for each of the points pt0 ..ptn\n\n"
+    cylinderToFace::typeName,
+    "\n    Usage: cylinderToFace (p1X p1Y p1Z) (p2X p2Y p2Z) radius\n\n"
+    "    Select all faces with face centre within bounding cylinder\n\n"
 );
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::nearestToCell::combine(topoSet& set, const bool add) const
+void Foam::cylinderToFace::combine(topoSet& set, const bool add) const
 {
-    forAll(points_, pointi)
+    const vector axis = p2_ - p1_;
+    const scalar rad2 = sqr(radius_);
+    const scalar magAxis2 = magSqr(axis);
+
+    const pointField& ctrs = mesh_.faceCentres();
+
+    forAll(ctrs, facei)
     {
-        addOrDelete(set, mesh_.findNearestCell(points_[pointi]), add);
+        vector d = ctrs[facei] - p1_;
+        scalar magD = d & axis;
+
+        if ((magD > 0) && (magD < magAxis2))
+        {
+            scalar d2 = (d & d) - sqr(magD)/magAxis2;
+            if (d2 < rad2)
+            {
+                addOrDelete(set, facei, add);
+            }
+        }
     }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::nearestToCell::nearestToCell
+Foam::cylinderToFace::cylinderToFace
 (
     const polyMesh& mesh,
-    const pointField& points
+    const vector& p1,
+    const vector& p2,
+    const scalar radius
 )
 :
     topoSetSource(mesh),
-    points_(points)
+    p1_(p1),
+    p2_(p2),
+    radius_(radius)
 {}
 
 
-Foam::nearestToCell::nearestToCell
+Foam::cylinderToFace::cylinderToFace
 (
     const polyMesh& mesh,
     const dictionary& dict
 )
 :
     topoSetSource(mesh),
-    points_(dict.lookup("points"))
+    p1_(dict.lookup("p1")),
+    p2_(dict.lookup("p2")),
+    radius_(readScalar(dict.lookup("radius")))
 {}
 
 
-Foam::nearestToCell::nearestToCell
+Foam::cylinderToFace::cylinderToFace
 (
     const polyMesh& mesh,
     Istream& is
 )
 :
     topoSetSource(mesh),
-    points_(checkIs(is))
+    p1_(checkIs(is)),
+    p2_(checkIs(is)),
+    radius_(readScalar(checkIs(is)))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::nearestToCell::~nearestToCell()
+Foam::cylinderToFace::~cylinderToFace()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::nearestToCell::applyToSet
+void Foam::cylinderToFace::applyToSet
 (
     const topoSetSource::setAction action,
     topoSet& set
@@ -107,13 +131,15 @@ void Foam::nearestToCell::applyToSet
 {
     if ((action == topoSetSource::NEW) || (action == topoSetSource::ADD))
     {
-        Info<< "    Adding cells nearest to " << points_ << endl;
+        Info<< "    Adding faces with centre within cylinder, with p1 = "
+            << p1_ << ", p2 = " << p2_ << " and radius = " << radius_ << endl;
 
         combine(set, true);
     }
     else if (action == topoSetSource::DELETE)
     {
-        Info<< "    Removing cells nearest to " << points_ << endl;
+        Info<< "    Removing faces with centre within cylinder, with p1 = "
+            << p1_ << ", p2 = " << p2_ << " and radius = " << radius_ << endl;
 
         combine(set, false);
     }

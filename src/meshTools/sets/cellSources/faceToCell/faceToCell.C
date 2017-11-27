@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "faceToCell.H"
 #include "polyMesh.H"
 #include "faceSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -152,7 +151,6 @@ void Foam::faceToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::faceToCell::faceToCell
 (
     const polyMesh& mesh,
@@ -166,7 +164,6 @@ Foam::faceToCell::faceToCell
 {}
 
 
-// Construct from dictionary
 Foam::faceToCell::faceToCell
 (
     const polyMesh& mesh,
@@ -179,7 +176,6 @@ Foam::faceToCell::faceToCell
 {}
 
 
-// Construct from Istream
 Foam::faceToCell::faceToCell
 (
     const polyMesh& mesh,

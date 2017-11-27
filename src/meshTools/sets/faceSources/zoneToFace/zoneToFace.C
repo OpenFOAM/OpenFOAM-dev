@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "zoneToFace.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(zoneToFace, 0);
-
-addToRunTimeSelectionTable(topoSetSource, zoneToFace, word);
-
-addToRunTimeSelectionTable(topoSetSource, zoneToFace, istream);
-
+    defineTypeNameAndDebug(zoneToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, zoneToFace, word);
+    addToRunTimeSelectionTable(topoSetSource, zoneToFace, istream);
 }
 
 
@@ -92,7 +87,6 @@ void Foam::zoneToFace::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::zoneToFace::zoneToFace
 (
     const polyMesh& mesh,
@@ -104,7 +98,6 @@ Foam::zoneToFace::zoneToFace
 {}
 
 
-// Construct from dictionary
 Foam::zoneToFace::zoneToFace
 (
     const polyMesh& mesh,
@@ -116,7 +109,6 @@ Foam::zoneToFace::zoneToFace
 {}
 
 
-// Construct from Istream
 Foam::zoneToFace::zoneToFace
 (
     const polyMesh& mesh,

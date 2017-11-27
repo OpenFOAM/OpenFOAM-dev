@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "rotatedBoxToCell.H"
 #include "polyMesh.H"
 #include "cellModeller.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(rotatedBoxToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, rotatedBoxToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, rotatedBoxToCell, istream);
-
+    defineTypeNameAndDebug(rotatedBoxToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, rotatedBoxToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, rotatedBoxToCell, istream);
 }
 
 
@@ -117,7 +112,6 @@ void Foam::rotatedBoxToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::rotatedBoxToCell::rotatedBoxToCell
 (
     const polyMesh& mesh,
@@ -135,7 +129,6 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
 {}
 
 
-// Construct from dictionary
 Foam::rotatedBoxToCell::rotatedBoxToCell
 (
     const polyMesh& mesh,
@@ -150,7 +143,6 @@ Foam::rotatedBoxToCell::rotatedBoxToCell
 {}
 
 
-// Construct from Istream
 Foam::rotatedBoxToCell::rotatedBoxToCell(const polyMesh& mesh, Istream& is)
 :
     topoSetSource(mesh),

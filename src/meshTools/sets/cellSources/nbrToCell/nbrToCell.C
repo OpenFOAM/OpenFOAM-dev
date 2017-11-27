@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "nbrToCell.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(nbrToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, nbrToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, nbrToCell, istream);
-
+    defineTypeNameAndDebug(nbrToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, nbrToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, nbrToCell, istream);
 }
 
 
@@ -104,7 +99,6 @@ void Foam::nbrToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::nbrToCell::nbrToCell
 (
     const polyMesh& mesh,
@@ -116,7 +110,6 @@ Foam::nbrToCell::nbrToCell
 {}
 
 
-// Construct from dictionary
 Foam::nbrToCell::nbrToCell
 (
     const polyMesh& mesh,
@@ -128,7 +121,6 @@ Foam::nbrToCell::nbrToCell
 {}
 
 
-// Construct from Istream
 Foam::nbrToCell::nbrToCell
 (
     const polyMesh& mesh,

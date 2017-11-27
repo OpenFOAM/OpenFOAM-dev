@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "setToCellZone.H"
 #include "polyMesh.H"
 #include "cellZoneSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(setToCellZone, 0);
-
-addToRunTimeSelectionTable(topoSetSource, setToCellZone, word);
-
-addToRunTimeSelectionTable(topoSetSource, setToCellZone, istream);
-
+    defineTypeNameAndDebug(setToCellZone, 0);
+    addToRunTimeSelectionTable(topoSetSource, setToCellZone, word);
+    addToRunTimeSelectionTable(topoSetSource, setToCellZone, istream);
 }
 
 
@@ -53,7 +48,6 @@ Foam::topoSetSource::addToUsageTable Foam::setToCellZone::usage_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::setToCellZone::setToCellZone
 (
     const polyMesh& mesh,
@@ -65,7 +59,6 @@ Foam::setToCellZone::setToCellZone
 {}
 
 
-// Construct from dictionary
 Foam::setToCellZone::setToCellZone
 (
     const polyMesh& mesh,
@@ -77,7 +70,6 @@ Foam::setToCellZone::setToCellZone
 {}
 
 
-// Construct from Istream
 Foam::setToCellZone::setToCellZone
 (
     const polyMesh& mesh,

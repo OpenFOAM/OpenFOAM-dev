@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "setToPointZone.H"
 #include "polyMesh.H"
 #include "pointZoneSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(setToPointZone, 0);
-
-addToRunTimeSelectionTable(topoSetSource, setToPointZone, word);
-
-addToRunTimeSelectionTable(topoSetSource, setToPointZone, istream);
-
+    defineTypeNameAndDebug(setToPointZone, 0);
+    addToRunTimeSelectionTable(topoSetSource, setToPointZone, word);
+    addToRunTimeSelectionTable(topoSetSource, setToPointZone, istream);
 }
 
 
@@ -53,7 +48,6 @@ Foam::topoSetSource::addToUsageTable Foam::setToPointZone::usage_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::setToPointZone::setToPointZone
 (
     const polyMesh& mesh,
@@ -65,7 +59,6 @@ Foam::setToPointZone::setToPointZone
 {}
 
 
-// Construct from dictionary
 Foam::setToPointZone::setToPointZone
 (
     const polyMesh& mesh,
@@ -77,7 +70,6 @@ Foam::setToPointZone::setToPointZone
 {}
 
 
-// Construct from Istream
 Foam::setToPointZone::setToPointZone
 (
     const polyMesh& mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "boxToCell.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(boxToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, boxToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, boxToCell, istream);
-
+    defineTypeNameAndDebug(boxToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, boxToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, boxToCell, istream);
 }
 
 
@@ -72,7 +67,6 @@ void Foam::boxToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::boxToCell::boxToCell
 (
     const polyMesh& mesh,
@@ -84,7 +78,6 @@ Foam::boxToCell::boxToCell
 {}
 
 
-// Construct from dictionary
 Foam::boxToCell::boxToCell
 (
     const polyMesh& mesh,
@@ -101,7 +94,6 @@ Foam::boxToCell::boxToCell
 {}
 
 
-// Construct from Istream
 Foam::boxToCell::boxToCell
 (
     const polyMesh& mesh,
@@ -111,6 +103,7 @@ Foam::boxToCell::boxToCell
     topoSetSource(mesh),
     bbs_(1, treeBoundBox(checkIs(is)))
 {}
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 

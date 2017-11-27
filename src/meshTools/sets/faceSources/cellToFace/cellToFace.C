@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,6 @@ void Foam::cellToFace::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from componenta
 Foam::cellToFace::cellToFace
 (
     const polyMesh& mesh,
@@ -168,7 +167,6 @@ Foam::cellToFace::cellToFace
 {}
 
 
-// Construct from dictionary
 Foam::cellToFace::cellToFace
 (
     const polyMesh& mesh,
@@ -181,7 +179,6 @@ Foam::cellToFace::cellToFace
 {}
 
 
-// Construct from Istream
 Foam::cellToFace::cellToFace
 (
     const polyMesh& mesh,

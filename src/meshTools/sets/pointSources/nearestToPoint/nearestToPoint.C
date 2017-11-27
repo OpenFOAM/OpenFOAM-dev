@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,9 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(nearestToPoint, 0);
-
-addToRunTimeSelectionTable(topoSetSource, nearestToPoint, word);
-
-addToRunTimeSelectionTable(topoSetSource, nearestToPoint, istream);
-
+    defineTypeNameAndDebug(nearestToPoint, 0);
+    addToRunTimeSelectionTable(topoSetSource, nearestToPoint, word);
+    addToRunTimeSelectionTable(topoSetSource, nearestToPoint, istream);
 }
 
 
@@ -83,7 +79,6 @@ void Foam::nearestToPoint::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::nearestToPoint::nearestToPoint
 (
     const polyMesh& mesh,
@@ -95,7 +90,6 @@ Foam::nearestToPoint::nearestToPoint
 {}
 
 
-// Construct from dictionary
 Foam::nearestToPoint::nearestToPoint
 (
     const polyMesh& mesh,
@@ -107,7 +101,6 @@ Foam::nearestToPoint::nearestToPoint
 {}
 
 
-// Construct from Istream
 Foam::nearestToPoint::nearestToPoint
 (
     const polyMesh& mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "labelToCell.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(labelToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, labelToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, labelToCell, istream);
-
+    defineTypeNameAndDebug(labelToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, labelToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, labelToCell, istream);
 }
 
 
@@ -63,7 +58,6 @@ void Foam::labelToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::labelToCell::labelToCell
 (
     const polyMesh& mesh,
@@ -75,7 +69,6 @@ Foam::labelToCell::labelToCell
 {}
 
 
-// Construct from dictionary
 Foam::labelToCell::labelToCell
 (
     const polyMesh& mesh,
@@ -87,7 +80,6 @@ Foam::labelToCell::labelToCell
 {}
 
 
-// Construct from Istream
 Foam::labelToCell::labelToCell
 (
     const polyMesh& mesh,

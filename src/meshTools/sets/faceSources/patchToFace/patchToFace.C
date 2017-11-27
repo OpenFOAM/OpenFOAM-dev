@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "patchToFace.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(patchToFace, 0);
-
-addToRunTimeSelectionTable(topoSetSource, patchToFace, word);
-
-addToRunTimeSelectionTable(topoSetSource, patchToFace, istream);
-
+    defineTypeNameAndDebug(patchToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, patchToFace, word);
+    addToRunTimeSelectionTable(topoSetSource, patchToFace, istream);
 }
 
 
@@ -92,7 +87,6 @@ void Foam::patchToFace::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::patchToFace::patchToFace
 (
     const polyMesh& mesh,
@@ -104,7 +98,6 @@ Foam::patchToFace::patchToFace
 {}
 
 
-// Construct from dictionary
 Foam::patchToFace::patchToFace
 (
     const polyMesh& mesh,
@@ -116,7 +109,6 @@ Foam::patchToFace::patchToFace
 {}
 
 
-// Construct from Istream
 Foam::patchToFace::patchToFace
 (
     const polyMesh& mesh,

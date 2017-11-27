@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "boxToPoint.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(boxToPoint, 0);
-
-addToRunTimeSelectionTable(topoSetSource, boxToPoint, word);
-
-addToRunTimeSelectionTable(topoSetSource, boxToPoint, istream);
-
+    defineTypeNameAndDebug(boxToPoint, 0);
+    addToRunTimeSelectionTable(topoSetSource, boxToPoint, word);
+    addToRunTimeSelectionTable(topoSetSource, boxToPoint, istream);
 }
 
 
@@ -71,7 +66,6 @@ void Foam::boxToPoint::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::boxToPoint::boxToPoint
 (
     const polyMesh& mesh,
@@ -83,7 +77,6 @@ Foam::boxToPoint::boxToPoint
 {}
 
 
-// Construct from dictionary
 Foam::boxToPoint::boxToPoint
 (
     const polyMesh& mesh,
@@ -100,7 +93,6 @@ Foam::boxToPoint::boxToPoint
 {}
 
 
-// Construct from Istream
 Foam::boxToPoint::boxToPoint
 (
     const polyMesh& mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "faceToFace.H"
 #include "polyMesh.H"
 #include "faceSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(faceToFace, 0);
-
-addToRunTimeSelectionTable(topoSetSource, faceToFace, word);
-
-addToRunTimeSelectionTable(topoSetSource, faceToFace, istream);
-
+    defineTypeNameAndDebug(faceToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, faceToFace, word);
+    addToRunTimeSelectionTable(topoSetSource, faceToFace, istream);
 }
 
 
@@ -53,7 +48,6 @@ Foam::topoSetSource::addToUsageTable Foam::faceToFace::usage_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::faceToFace::faceToFace
 (
     const polyMesh& mesh,
@@ -65,7 +59,6 @@ Foam::faceToFace::faceToFace
 {}
 
 
-// Construct from dictionary
 Foam::faceToFace::faceToFace
 (
     const polyMesh& mesh,
@@ -77,7 +70,6 @@ Foam::faceToFace::faceToFace
 {}
 
 
-// Construct from Istream
 Foam::faceToFace::faceToFace
 (
     const polyMesh& mesh,

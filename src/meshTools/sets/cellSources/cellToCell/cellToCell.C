@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "cellToCell.H"
 #include "polyMesh.H"
 #include "cellSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(cellToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, cellToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, cellToCell, istream);
-
+    defineTypeNameAndDebug(cellToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, cellToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, cellToCell, istream);
 }
 
 
@@ -53,7 +48,6 @@ Foam::topoSetSource::addToUsageTable Foam::cellToCell::usage_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::cellToCell::cellToCell
 (
     const polyMesh& mesh,
@@ -65,7 +59,6 @@ Foam::cellToCell::cellToCell
 {}
 
 
-// Construct from dictionary
 Foam::cellToCell::cellToCell
 (
     const polyMesh& mesh,
@@ -77,7 +70,6 @@ Foam::cellToCell::cellToCell
 {}
 
 
-// Construct from Istream
 Foam::cellToCell::cellToCell
 (
     const polyMesh& mesh,

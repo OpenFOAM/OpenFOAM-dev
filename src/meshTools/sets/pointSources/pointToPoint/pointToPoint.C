@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "pointToPoint.H"
 #include "polyMesh.H"
 #include "pointSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(pointToPoint, 0);
-
-addToRunTimeSelectionTable(topoSetSource, pointToPoint, word);
-
-addToRunTimeSelectionTable(topoSetSource, pointToPoint, istream);
-
+    defineTypeNameAndDebug(pointToPoint, 0);
+    addToRunTimeSelectionTable(topoSetSource, pointToPoint, word);
+    addToRunTimeSelectionTable(topoSetSource, pointToPoint, istream);
 }
 
 
@@ -53,7 +48,6 @@ Foam::topoSetSource::addToUsageTable Foam::pointToPoint::usage_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::pointToPoint::pointToPoint
 (
     const polyMesh& mesh,
@@ -65,7 +59,6 @@ Foam::pointToPoint::pointToPoint
 {}
 
 
-// Construct from dictionary
 Foam::pointToPoint::pointToPoint
 (
     const polyMesh& mesh,
@@ -77,7 +70,6 @@ Foam::pointToPoint::pointToPoint
 {}
 
 
-// Construct from Istream
 Foam::pointToPoint::pointToPoint
 (
     const polyMesh& mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,20 +25,15 @@ License
 
 #include "labelToPoint.H"
 #include "polyMesh.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(labelToPoint, 0);
-
-addToRunTimeSelectionTable(topoSetSource, labelToPoint, word);
-
-addToRunTimeSelectionTable(topoSetSource, labelToPoint, istream);
-
+    defineTypeNameAndDebug(labelToPoint, 0);
+    addToRunTimeSelectionTable(topoSetSource, labelToPoint, word);
+    addToRunTimeSelectionTable(topoSetSource, labelToPoint, istream);
 }
 
 
@@ -63,7 +58,6 @@ void Foam::labelToPoint::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::labelToPoint::labelToPoint
 (
     const polyMesh& mesh,
@@ -75,7 +69,6 @@ Foam::labelToPoint::labelToPoint
 {}
 
 
-// Construct from dictionary
 Foam::labelToPoint::labelToPoint
 (
     const polyMesh& mesh,
@@ -87,7 +80,6 @@ Foam::labelToPoint::labelToPoint
 {}
 
 
-// Construct from Istream
 Foam::labelToPoint::labelToPoint
 (
     const polyMesh& mesh,

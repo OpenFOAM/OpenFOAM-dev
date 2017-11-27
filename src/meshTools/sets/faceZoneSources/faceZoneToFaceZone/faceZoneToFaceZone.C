@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "faceZoneToFaceZone.H"
 #include "polyMesh.H"
 #include "faceZoneSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(faceZoneToFaceZone, 0);
-
-addToRunTimeSelectionTable(topoSetSource, faceZoneToFaceZone, word);
-
-addToRunTimeSelectionTable(topoSetSource, faceZoneToFaceZone, istream);
-
+    defineTypeNameAndDebug(faceZoneToFaceZone, 0);
+    addToRunTimeSelectionTable(topoSetSource, faceZoneToFaceZone, word);
+    addToRunTimeSelectionTable(topoSetSource, faceZoneToFaceZone, istream);
 }
 
 
@@ -53,7 +48,6 @@ Foam::topoSetSource::addToUsageTable Foam::faceZoneToFaceZone::usage_
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::faceZoneToFaceZone::faceZoneToFaceZone
 (
     const polyMesh& mesh,
@@ -65,7 +59,6 @@ Foam::faceZoneToFaceZone::faceZoneToFaceZone
 {}
 
 
-// Construct from dictionary
 Foam::faceZoneToFaceZone::faceZoneToFaceZone
 (
     const polyMesh& mesh,
@@ -77,7 +70,6 @@ Foam::faceZoneToFaceZone::faceZoneToFaceZone
 {}
 
 
-// Construct from Istream
 Foam::faceZoneToFaceZone::faceZoneToFaceZone
 (
     const polyMesh& mesh,

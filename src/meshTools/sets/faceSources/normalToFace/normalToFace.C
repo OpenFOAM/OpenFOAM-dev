@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,20 +26,15 @@ License
 #include "normalToFace.H"
 #include "polyMesh.H"
 #include "faceSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(normalToFace, 0);
-
-addToRunTimeSelectionTable(topoSetSource, normalToFace, word);
-
-addToRunTimeSelectionTable(topoSetSource, normalToFace, istream);
-
+    defineTypeNameAndDebug(normalToFace, 0);
+    addToRunTimeSelectionTable(topoSetSource, normalToFace, word);
+    addToRunTimeSelectionTable(topoSetSource, normalToFace, istream);
 }
 
 
@@ -71,7 +66,6 @@ void Foam::normalToFace::setNormal()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::normalToFace::normalToFace
 (
     const polyMesh& mesh,
@@ -87,7 +81,6 @@ Foam::normalToFace::normalToFace
 }
 
 
-// Construct from dictionary
 Foam::normalToFace::normalToFace(const polyMesh& mesh, const dictionary& dict)
 :
     topoSetSource(mesh),
@@ -98,7 +91,6 @@ Foam::normalToFace::normalToFace(const polyMesh& mesh, const dictionary& dict)
 }
 
 
-// Construct from Istream
 Foam::normalToFace::normalToFace(const polyMesh& mesh, Istream& is)
 :
     topoSetSource(mesh),

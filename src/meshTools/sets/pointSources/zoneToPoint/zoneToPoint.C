@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,9 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(zoneToPoint, 0);
-
-addToRunTimeSelectionTable(topoSetSource, zoneToPoint, word);
-
-addToRunTimeSelectionTable(topoSetSource, zoneToPoint, istream);
-
+    defineTypeNameAndDebug(zoneToPoint, 0);
+    addToRunTimeSelectionTable(topoSetSource, zoneToPoint, word);
+    addToRunTimeSelectionTable(topoSetSource, zoneToPoint, istream);
 }
 
 
@@ -92,7 +88,6 @@ void Foam::zoneToPoint::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::zoneToPoint::zoneToPoint
 (
     const polyMesh& mesh,
@@ -104,7 +99,6 @@ Foam::zoneToPoint::zoneToPoint
 {}
 
 
-// Construct from dictionary
 Foam::zoneToPoint::zoneToPoint
 (
     const polyMesh& mesh,
@@ -116,7 +110,6 @@ Foam::zoneToPoint::zoneToPoint
 {}
 
 
-// Construct from Istream
 Foam::zoneToPoint::zoneToPoint
 (
     const polyMesh& mesh,

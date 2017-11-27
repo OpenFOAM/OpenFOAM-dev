@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,20 +28,15 @@ License
 #include "globalMeshData.H"
 #include "plane.H"
 #include "cellSet.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(targetVolumeToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, targetVolumeToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, targetVolumeToCell, istream);
-
+    defineTypeNameAndDebug(targetVolumeToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, targetVolumeToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, targetVolumeToCell, istream);
 }
 
 
@@ -268,7 +263,6 @@ void Foam::targetVolumeToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::targetVolumeToCell::targetVolumeToCell
 (
     const polyMesh& mesh,
@@ -282,7 +276,6 @@ Foam::targetVolumeToCell::targetVolumeToCell
 {}
 
 
-// Construct from dictionary
 Foam::targetVolumeToCell::targetVolumeToCell
 (
     const polyMesh& mesh,
@@ -296,7 +289,6 @@ Foam::targetVolumeToCell::targetVolumeToCell
 {}
 
 
-// Construct from Istream
 Foam::targetVolumeToCell::targetVolumeToCell
 (
     const polyMesh& mesh,

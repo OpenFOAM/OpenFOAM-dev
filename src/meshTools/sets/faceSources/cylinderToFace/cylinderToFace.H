@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boxToCell
+    Foam::cylinderToFace
 
 Description
-    A topoSetSource to select cells based on cell centres inside box(es).
+    A topoSetSource to select faces based on face centres inside a cylinder.
 
 SourceFiles
-    boxToCell.C
+    cylinderToFace.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boxToCell_H
-#define boxToCell_H
+#ifndef cylinderToFace_H
+#define cylinderToFace_H
 
 #include "topoSetSource.H"
-#include "treeBoundBoxList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,20 +43,27 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class boxToCell Declaration
+                       Class cylinderToFace Declaration
 \*---------------------------------------------------------------------------*/
 
-class boxToCell
+class cylinderToFace
 :
     public topoSetSource
 {
+
     // Private data
 
         //- Add usage string
         static addToUsageTable usage_;
 
-        //- Bounding box.
-        treeBoundBoxList bbs_;
+        //- First point on cylinder axis
+        vector p1_;
+
+        //- Second point on cylinder axis
+        vector p2_;
+
+        //- Radius
+        scalar radius_;
 
 
     // Private Member Functions
@@ -68,26 +74,29 @@ class boxToCell
 public:
 
     //- Runtime type information
-    TypeName("boxToCell");
+    TypeName("cylinderToFace");
+
 
     // Constructors
 
         //- Construct from components
-        boxToCell
+        cylinderToFace
         (
             const polyMesh& mesh,
-            const treeBoundBoxList& bbs
+            const vector& p1,
+            const vector& p2,
+            const scalar radius
         );
 
         //- Construct from dictionary
-        boxToCell
+        cylinderToFace
         (
             const polyMesh& mesh,
             const dictionary& dict
         );
 
         //- Construct from Istream
-        boxToCell
+        cylinderToFace
         (
             const polyMesh& mesh,
             Istream&
@@ -95,7 +104,7 @@ public:
 
 
     //- Destructor
-    virtual ~boxToCell();
+    virtual ~cylinderToFace();
 
 
     // Member Functions

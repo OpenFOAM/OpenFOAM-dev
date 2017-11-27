@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,13 +34,9 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(regionToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, regionToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, regionToCell, istream);
-
+    defineTypeNameAndDebug(regionToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, regionToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, regionToCell, istream);
 }
 
 
@@ -385,7 +381,6 @@ void Foam::regionToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::regionToCell::regionToCell
 (
     const polyMesh& mesh,
@@ -401,7 +396,6 @@ Foam::regionToCell::regionToCell
 {}
 
 
-// Construct from dictionary
 Foam::regionToCell::regionToCell
 (
     const polyMesh& mesh,
@@ -420,7 +414,6 @@ Foam::regionToCell::regionToCell
 {}
 
 
-// Construct from Istream
 Foam::regionToCell::regionToCell
 (
     const polyMesh& mesh,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,20 +28,15 @@ License
 #include "unitConversion.H"
 #include "hexMatcher.H"
 #include "cellFeatures.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(shapeToCell, 0);
-
-addToRunTimeSelectionTable(topoSetSource, shapeToCell, word);
-
-addToRunTimeSelectionTable(topoSetSource, shapeToCell, istream);
-
+    defineTypeNameAndDebug(shapeToCell, 0);
+    addToRunTimeSelectionTable(topoSetSource, shapeToCell, word);
+    addToRunTimeSelectionTable(topoSetSource, shapeToCell, istream);
 }
 
 
@@ -93,7 +88,6 @@ void Foam::shapeToCell::combine(topoSet& set, const bool add) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::shapeToCell::shapeToCell
 (
     const polyMesh& mesh,
@@ -111,7 +105,6 @@ Foam::shapeToCell::shapeToCell
 }
 
 
-// Construct from dictionary
 Foam::shapeToCell::shapeToCell
 (
     const polyMesh& mesh,
@@ -129,7 +122,6 @@ Foam::shapeToCell::shapeToCell
 }
 
 
-// Construct from Istream
 Foam::shapeToCell::shapeToCell
 (
     const polyMesh& mesh,

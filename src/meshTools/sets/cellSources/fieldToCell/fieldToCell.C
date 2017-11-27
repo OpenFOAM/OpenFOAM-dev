@@ -93,7 +93,6 @@ void Foam::fieldToCell::applyToSet
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::fieldToCell::fieldToCell
 (
     const polyMesh& mesh,
@@ -109,7 +108,6 @@ Foam::fieldToCell::fieldToCell
 {}
 
 
-// Construct from dictionary
 Foam::fieldToCell::fieldToCell
 (
     const polyMesh& mesh,
@@ -123,7 +121,6 @@ Foam::fieldToCell::fieldToCell
 {}
 
 
-// Construct from Istream
 Foam::fieldToCell::fieldToCell
 (
     const polyMesh& mesh,
@@ -151,34 +148,6 @@ void Foam::fieldToCell::applyToSet
     topoSet& set
 ) const
 {
-
-//    // Construct temporary fvMesh from polyMesh
-//    fvMesh fMesh
-//    (
-//        mesh(), // IOobject
-//        mesh().points(),
-//        mesh().faces(),
-//        mesh().cells()
-//    );
-//
-//    const polyBoundaryMesh& patches = mesh().boundaryMesh();
-//
-//    List<polyPatch*> newPatches(patches.size());
-//    forAll(patches, patchi)
-//    {
-//        const polyPatch& pp = patches[patchi];
-//
-//        newPatches[patchi] =
-//            patches[patchi].clone
-//            (
-//                fMesh.boundaryMesh(),
-//                patchi,
-//                pp.size(),
-//                pp.start()
-//            ).ptr();
-//    }
-//    fMesh.addFvPatches(newPatches);
-
     // Try to load field
     IOobject fieldObject
     (
