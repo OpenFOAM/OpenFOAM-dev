@@ -28,15 +28,15 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::integrationScheme::Delta
+inline Type Foam::integrationScheme::explicitDelta
 (
     const Type& phi,
-    const scalar dt,
+    const scalar dtEff,
     const Type& Alpha,
     const scalar Beta
-) const
+)
 {
-    return delta(phi, dtEff(dt, Beta), Alpha, Beta);
+    return (Alpha - Beta*phi)*dtEff;
 }
 
 
@@ -44,12 +44,29 @@ template<class Type>
 inline Type Foam::integrationScheme::delta
 (
     const Type& phi,
-    const scalar dtEff,
-    const Type& alpha,
-    const scalar beta
-)
+    const scalar dt,
+    const Type& Alpha,
+    const scalar Beta
+) const
 {
-    return (alpha - beta*phi)*dtEff;
+    return explicitDelta(phi, dtEff(dt, Beta), Alpha, Beta);
+}
+
+
+template<class Type>
+inline Type Foam::integrationScheme::partialDelta
+(
+    const Type& phi,
+    const scalar dt,
+    const Type& Alpha,
+    const scalar Beta,
+    const Type& alphai,
+    const scalar betai
+) const
+{
+    return
+        explicitDelta(phi, dt, alphai, betai)
+      - explicitDelta(phi, sumDtEff(dt, Beta), Alpha, Beta)*betai;
 }
 
 

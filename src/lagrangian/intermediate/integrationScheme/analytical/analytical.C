@@ -57,7 +57,23 @@ Foam::scalar Foam::integrationSchemes::analytical::dtEff
     const scalar Beta
 ) const
 {
-    return mag(Beta*dt) > SMALL ? (1 - exp(- Beta*dt))/Beta : dt;
+    return
+        mag(Beta*dt) > SMALL
+      ? (1 - exp(- Beta*dt))/Beta
+      : dt;
+}
+
+
+Foam::scalar Foam::integrationSchemes::analytical::sumDtEff
+(
+    const scalar dt,
+    const scalar Beta
+) const
+{
+    return
+        mag(Beta*dt) > SMALL
+      ? dt/Beta - (1 - exp(- Beta*dt))/sqr(Beta)
+      : sqr(dt);
 }
 
 
