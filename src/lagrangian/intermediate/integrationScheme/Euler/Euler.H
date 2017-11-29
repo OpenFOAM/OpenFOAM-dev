@@ -79,6 +79,10 @@ public:
 
         //- Return the integration effective time step
         virtual scalar dtEff(const scalar dt, const scalar Beta) const;
+
+        //- Return the integral of the effective time step (using an Euler
+        //  integration method)
+        virtual scalar sumDtEff(const scalar dt, const scalar Beta) const;
 };
 
 

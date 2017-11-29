@@ -61,4 +61,14 @@ Foam::scalar Foam::integrationSchemes::Euler::dtEff
 }
 
 
+Foam::scalar Foam::integrationSchemes::Euler::sumDtEff
+(
+    const scalar dt,
+    const scalar Beta
+) const
+{
+    return sqr(dt)/(1 + Beta*dt);
+}
+
+
 // ************************************************************************* //

@@ -34,7 +34,8 @@ Description
 
     The methods are defined in terms of the effective time-step \f$\Delta
     t_e\f$ by which the explicit rate is multipled. The effective time-step is
-    a function of the actual time step and the implicit coefficient.
+    a function of the actual time step and the implicit coefficient, which must
+    be implemented in each derived scheme.
 
         \f[
             \Delta t_e = f(\Delta t, B)
@@ -49,14 +50,20 @@ Description
     integration can be split up to detemine the effect of each contribution.
 
         \f[
-            \frac{d \phi}{d t} = \left( \sum \alpha_i \right) -
-            \left( \sum \beta_i \right) \phi
+            \frac{d \phi_i}{d t} = \alpha_i - \beta_i \phi
         \f]
         \f[
-            \Delta \phi_i = (\alpha_i - \beta_i \phi^n) \Delta t_e
+            \Delta \phi_i = \alpha_i \Delta t -
+            \beta_i \int_0^{\Delta t} \phi d t
+        \f]
+        \f[
+            \Delta \phi_i = (\alpha_i - \beta_i \phi^n) \Delta t -
+            (A - B \phi^n) \int_0^{\Delta t} t_e dt
         \f]
 
-    Note that the effective time step \f$\Delta t_e\f$ is not split up.
+    These partial calculations are defined in terms of the integral of the
+    effective time-step, \f$\int_0^{\Delta t} t_e dt\f$, which is also
+    implemented in every derivation.
 
 SourceFiles
     integrationScheme.C
@@ -124,9 +131,19 @@ public:
 
     // Member Functions
 
-        //- Perform the full integration
+        //- Perform the integration explicitly
         template<class Type>
-        Type Delta
+        static Type explicitDelta
+        (
+            const Type& phi,
+            const scalar dtEff,
+            const Type& Alpha,
+            const scalar Beta
+        );
+
+        //- Perform the integration
+        template<class Type>
+        Type delta
         (
             const Type& phi,
             const scalar dt,
@@ -134,18 +151,23 @@ public:
             const scalar Beta
         ) const;
 
-        //- Perform a stage of the integration
+        //- Perform a part of the integration
         template<class Type>
-        static Type delta
+        Type partialDelta
         (
             const Type& phi,
-            const scalar dtEff,
-            const Type& alpha,
-            const scalar beta
-        );
+            const scalar dt,
+            const Type& Alpha,
+            const scalar Beta,
+            const Type& alphai,
+            const scalar betai
+        ) const;
 
         //- Return the integration effective time step
         virtual scalar dtEff(const scalar dt, const scalar Beta) const = 0;
+
+        //- Return the integral of the effective time step
+        virtual scalar sumDtEff(const scalar dt, const scalar Beta) const = 0;
 };
 
 
