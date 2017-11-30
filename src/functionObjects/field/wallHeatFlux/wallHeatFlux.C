@@ -76,7 +76,10 @@ void Foam::functionObjects::wallHeatFlux::calcHeatFlux
 
     forAll(wallHeatFluxBf, patchi)
     {
-        wallHeatFluxBf[patchi] = alphaBf[patchi]*heBf[patchi].snGrad();
+        if (!wallHeatFluxBf[patchi].coupled())
+        {
+            wallHeatFluxBf[patchi] = alphaBf[patchi]*heBf[patchi].snGrad();
+        }
     }
 
     if (foundObject<volScalarField>("qr"))
@@ -88,7 +91,10 @@ void Foam::functionObjects::wallHeatFlux::calcHeatFlux
 
         forAll(wallHeatFluxBf, patchi)
         {
-            wallHeatFluxBf[patchi] -= radHeatFluxBf[patchi];
+            if (!wallHeatFluxBf[patchi].coupled())
+            {
+                wallHeatFluxBf[patchi] -= radHeatFluxBf[patchi];
+            }
         }
     }
 }
