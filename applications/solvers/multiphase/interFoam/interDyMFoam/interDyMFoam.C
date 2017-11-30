@@ -56,28 +56,31 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
     #include "createDyMControls.H"
     #include "createFields.H"
     #include "createAlphaFluxes.H"
 
-    volScalarField rAU
+    tmp<volScalarField> rAU;
+
+    if (correctPhi)
     (
-        IOobject
+        rAU = new volScalarField
         (
-            "rAU",
-            runTime.timeName(),
+            IOobject
+            (
+                "rAU",
+                runTime.timeName(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
             mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar("rAUf", dimTime/rho.dimensions(), 1.0)
+            dimensionedScalar("rAU", dimTime/dimDensity, 1)
+        )
     );
 
     #include "correctPhi.H"
-    #include "createUf.H"
+    #include "createUfIfPresent.H"
 
     turbulence->validate();
 
@@ -92,7 +95,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readControls.H"
+        #include "readDyMControls.H"
 
         if (LTS)
         {
@@ -114,16 +117,10 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstIter() || moveMeshOuterCorrectors)
             {
-                scalar timeBeforeMeshUpdate = runTime.elapsedCpuTime();
-
                 mesh.update();
 
                 if (mesh.changing())
                 {
-                    Info<< "Execution time for mesh.update() = "
-                        << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
-                        << " s" << endl;
-
                     // Do not apply previous time-step mesh compression flux
                     // if the mesh topology changed
                     if (mesh.topoChanging())
@@ -140,7 +137,7 @@ int main(int argc, char *argv[])
                     {
                         // Calculate absolute flux
                         // from the mapped surface velocity
-                        phi = mesh.Sf() & Uf;
+                        phi = mesh.Sf() & Uf();
 
                         #include "correctPhi.H"
 

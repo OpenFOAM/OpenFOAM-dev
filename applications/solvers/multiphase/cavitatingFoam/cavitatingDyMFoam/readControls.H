@@ -1,4 +1,3 @@
-#include "readTimeControls.H"
+#include "readDyMControls.H"
 
 maxAcousticCo = readScalar(runTime.controlDict().lookup("maxAcousticCo"));
-correctPhi = pimple.dict().lookupOrDefault<Switch>("correctPhi", true);

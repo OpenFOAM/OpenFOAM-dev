@@ -121,6 +121,12 @@ public:
 
     // Member Functions
 
+        //- Is mesh dynamic
+        virtual bool dynamic() const
+        {
+            return true;
+        }
+
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
 };
@@ -128,10 +134,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "staticFvMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

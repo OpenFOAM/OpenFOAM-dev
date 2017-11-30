@@ -61,9 +61,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
-    #include "../interFoam/interDyMFoam/createDyMControls.H"
+    #include "createDyMControls.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
 
@@ -93,7 +91,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "../interFoam/interDyMFoam/readControls.H"
+        #include "readDyMControls.H"
 
         // Store divU from the previous mesh so that it can be mapped
         // and used in correctPhi to ensure the corrected phi has the

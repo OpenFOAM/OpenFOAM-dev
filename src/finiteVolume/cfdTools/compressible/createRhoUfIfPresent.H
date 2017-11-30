@@ -25,7 +25,7 @@ Global
     createRhoUf
 
 Description
-    Creates and initialises the velocity field rhoUf if present.
+    Creates and initialises the velocity field rhoUf if required.
 
 \*---------------------------------------------------------------------------*/
 
@@ -33,19 +33,22 @@ Description
 
 autoPtr<surfaceVectorField> rhoUf;
 
-IOobject rhoUfHeader
-(
-    "rhoUf",
-    runTime.timeName(),
-    mesh,
-    IOobject::MUST_READ,
-    IOobject::AUTO_WRITE
-);
-
-if (rhoUfHeader.typeHeaderOk<surfaceVectorField>(true))
+if (mesh.dynamic())
 {
-    Info<< "Reading face momentum rhoUf\n" << endl;
-    rhoUf = new surfaceVectorField(rhoUfHeader, mesh);
+    Info<< "Constructing face momentum rhoUf" << endl;
+
+    rhoUf = new surfaceVectorField
+    (
+        IOobject
+        (
+            "rhoUf",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        fvc::interpolate(rho*U)
+    );
 }
 
 // ************************************************************************* //

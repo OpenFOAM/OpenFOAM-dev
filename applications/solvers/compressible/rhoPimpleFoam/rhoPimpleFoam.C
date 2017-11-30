@@ -54,12 +54,11 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "createControl.H"
+    #include "createDyMControls.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
     #include "createRhoUfIfPresent.H"
-    #include "createTimeControls.H"
 
     turbulence->validate();
 
@@ -75,78 +74,78 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readControls.H"
+        #include "readDyMControls.H"
 
+        // Store divrhoU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        autoPtr<volScalarField> divrhoU;
+        if (correctPhi)
         {
-            // Store divrhoU from the previous mesh so that it can be mapped
-            // and used in correctPhi to ensure the corrected phi has the
-            // same divergence
-            autoPtr<volScalarField> divrhoU;
-            if (correctPhi)
-            {
-                divrhoU = new volScalarField
-                (
-                    "divrhoU",
-                    fvc::div(fvc::absolute(phi, rho, U))
-                );
-            }
-
-            if (LTS)
-            {
-                #include "setRDeltaT.H"
-            }
-            else
-            {
-                #include "compressibleCourantNo.H"
-                #include "setDeltaT.H"
-            }
-
-            runTime++;
-
-            Info<< "Time = " << runTime.timeName() << nl << endl;
-
-            // Store momentum to set rhoUf for introduced faces.
-            autoPtr<volVectorField> rhoU;
-            if (rhoUf.valid())
-            {
-                rhoU = new volVectorField("rhoU", rho*U);
-            }
-
-            // Do any mesh changes
-            mesh.update();
-
-            #include "updateRhoUf.H"
-
-            if (mesh.changing())
-            {
-                MRF.update();
-
-                if (correctPhi)
-                {
-                    // Calculate absolute flux from the mapped surface velocity
-                    phi = mesh.Sf() & rhoUf();
-
-                    #include "correctPhi.H"
-
-                    // Make the fluxes relative to the mesh-motion
-                    fvc::makeRelative(phi, rho, U);
-                }
-
-                if (checkMeshCourantNo)
-                {
-                    #include "meshCourantNo.H"
-                }
-            }
+            divrhoU = new volScalarField
+            (
+                "divrhoU",
+                fvc::div(fvc::absolute(phi, rho, U))
+            );
         }
 
-        if (pimple.nCorrPIMPLE() <= 1)
+        if (LTS)
         {
-            #include "rhoEqn.H"
+            #include "setRDeltaT.H"
         }
+        else
+        {
+            #include "compressibleCourantNo.H"
+            #include "setDeltaT.H"
+        }
+
+        runTime++;
+
+        Info<< "Time = " << runTime.timeName() << nl << endl;
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
+            if (pimple.firstIter() || moveMeshOuterCorrectors)
+            {
+                // Store momentum to set rhoUf for introduced faces.
+                autoPtr<volVectorField> rhoU;
+                if (rhoUf.valid())
+                {
+                    rhoU = new volVectorField("rhoU", rho*U);
+                }
+
+                // Do any mesh changes
+                mesh.update();
+
+                if (mesh.changing())
+                {
+                    MRF.update();
+
+                    if (correctPhi)
+                    {
+                        // Calculate absolute flux
+                        // from the mapped surface velocity
+                        phi = mesh.Sf() & rhoUf();
+
+                        #include "correctPhi.H"
+
+                        // Make the fluxes relative to the mesh-motion
+                        fvc::makeRelative(phi, rho, U);
+                    }
+
+                    if (checkMeshCourantNo)
+                    {
+                        #include "meshCourantNo.H"
+                    }
+                }
+            }
+
+            if (pimple.nCorrPIMPLE() <= 1)
+            {
+                #include "rhoEqn.H"
+            }
+
             #include "UEqn.H"
             #include "EEqn.H"
 

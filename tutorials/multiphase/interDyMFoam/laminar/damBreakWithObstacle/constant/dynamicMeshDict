@@ -47,7 +47,7 @@ correctFluxes
     (phi none)
     (nHatf none)
     (rhoPhi none)
-    (alphaPhi none)
+    (alphaPhi0.water none)
     (ghf none)
 );
 

@@ -51,27 +51,31 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "initContinuityErrs.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
     #include "createDyMControls.H"
     #include "createFields.H"
 
-    volScalarField rAU
+    tmp<volScalarField> rAU;
+
+    if (correctPhi)
     (
-        IOobject
+        rAU = new volScalarField
         (
-            "rAU",
-            runTime.timeName(),
+            IOobject
+            (
+                "rAU",
+                runTime.timeName(),
+                mesh,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
             mesh,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar("rAUf", dimTime/rho.dimensions(), 1.0)
+            dimensionedScalar("rAU", dimTime/dimDensity, 1)
+        )
     );
 
     #include "correctPhi.H"
-    #include "createUf.H"
+    #include "createUfIfPresent.H"
+
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
 
@@ -85,7 +89,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readControls.H"
+        #include "readDyMControls.H"
         #include "CourantNo.H"
         #include "alphaCourantNo.H"
 
@@ -117,7 +121,7 @@ int main(int argc, char *argv[])
                 if (mesh.changing() && correctPhi)
                 {
                     // Calculate absolute flux from the mapped surface velocity
-                    phi = mesh.Sf() & Uf;
+                    phi = mesh.Sf() & Uf();
 
                     #include "correctPhi.H"
 

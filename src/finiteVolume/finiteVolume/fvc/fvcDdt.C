@@ -215,7 +215,7 @@ ddtCorr
     const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
 )
 {
-    if (U.mesh().changing())
+    if (U.mesh().dynamic())
     {
         return ddtCorr(U, Uf());
     }
@@ -280,7 +280,7 @@ ddtCorr
     const autoPtr<GeometricField<Type, fvsPatchField, surfaceMesh>>& Uf
 )
 {
-    if (U.mesh().changing())
+    if (U.mesh().dynamic())
     {
         return ddtCorr(rho, U, Uf());
     }

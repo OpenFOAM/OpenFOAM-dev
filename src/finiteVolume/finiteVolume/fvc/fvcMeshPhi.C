@@ -228,7 +228,7 @@ void Foam::fvc::correctUf
 {
     const fvMesh& mesh = U.mesh();
 
-    if (mesh.changing())
+    if (mesh.dynamic())
     {
         Uf() = fvc::interpolate(U);
         surfaceVectorField n(mesh.Sf()/mesh.magSf());
@@ -247,7 +247,7 @@ void Foam::fvc::correctRhoUf
 {
     const fvMesh& mesh = U.mesh();
 
-    if (mesh.changing())
+    if (mesh.dynamic())
     {
         rhoUf() = fvc::interpolate(rho*U);
         surfaceVectorField n(mesh.Sf()/mesh.magSf());

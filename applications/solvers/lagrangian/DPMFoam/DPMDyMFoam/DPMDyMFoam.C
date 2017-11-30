@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
-    #include "createControls.H"
+    #include "createDyMControls.H"
     #include "createFields.H"
     #include "createUcf.H"
     #include "initContinuityErrs.H"
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readControls.H"
+        #include "readDyMControls.H"
         #include "CourantNo.H"
         #include "setDeltaT.H"
 

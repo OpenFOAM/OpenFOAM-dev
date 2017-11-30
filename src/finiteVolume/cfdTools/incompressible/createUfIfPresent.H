@@ -25,7 +25,7 @@ Global
     createUf
 
 Description
-    Creates and initialises the velocity field Uf if present.
+    Creates and initialises the velocity field Uf if required.
 
 \*---------------------------------------------------------------------------*/
 
@@ -33,19 +33,22 @@ Description
 
 autoPtr<surfaceVectorField> Uf;
 
-IOobject UfHeader
-(
-    "Uf",
-    runTime.timeName(),
-    mesh,
-    IOobject::MUST_READ,
-    IOobject::AUTO_WRITE
-);
-
-if (UfHeader.typeHeaderOk<surfaceVectorField>(true))
+if (mesh.dynamic())
 {
-    Info<< "Reading face velocity Uf\n" << endl;
-    Uf = new surfaceVectorField(UfHeader, mesh);
+    Info<< "Constructing face velocity Uf\n" << endl;
+
+    Uf = new surfaceVectorField
+    (
+        IOobject
+        (
+            "Uf",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        fvc::interpolate(U)
+    );
 }
 
 // ************************************************************************* //
