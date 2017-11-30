@@ -3,7 +3,7 @@ CorrectPhi
     U,
     phi,
     p_rgh,
-    dimensionedScalar("rAUf", dimTime/rho.dimensions(), 1),
+    surfaceScalarField("rAUf", fvc::interpolate(rAU())),
     geometricZeroField(),
     pimple
 );

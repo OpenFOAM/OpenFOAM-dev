@@ -1,17 +1,29 @@
 {
-    volScalarField rAU("rAU", 1.0/UEqn.A());
-    surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
+    if (correctPhi)
+    {
+        rAU.ref() = 1.0/UEqn.A();
+    }
+    else
+    {
+        rAU = 1.0/UEqn.A();
+    }
 
-    volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
-
+    surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU()));
+    volVectorField HbyA(constrainHbyA(rAU()*UEqn.H(), U, p_rgh));
     surfaceScalarField phiHbyA
     (
         "phiHbyA",
         fvc::flux(HbyA)
-      + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, phi)
+      + fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf)
     );
     MRF.makeRelative(phiHbyA);
-    adjustPhi(phiHbyA, U, p_rgh);
+
+    if (p_rgh.needReference())
+    {
+        fvc::makeRelative(phiHbyA, U);
+        adjustPhi(phiHbyA, U, p_rgh);
+        fvc::makeAbsolute(phiHbyA, U);
+    }
 
     surfaceScalarField phig
     (
@@ -43,13 +55,19 @@
 
             p_rgh.relax();
 
-            U = HbyA + rAU*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
+            U = HbyA + rAU()*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
             U.correctBoundaryConditions();
             fvOptions.correct(U);
         }
     }
 
     #include "continuityErrs.H"
+
+    // Correct Uf if the mesh is moving
+    fvc::correctUf(Uf, U, phi);
+
+    // Make the fluxes relative to the mesh motion
+    fvc::makeRelative(phi, U);
 
     p == p_rgh + rho*gh;
 
@@ -62,5 +80,10 @@
             pRefValue - getRefCellValue(p, pRefCell)
         );
         p_rgh = p - rho*gh;
+    }
+
+    if (!correctPhi)
+    {
+        rAU.clear();
     }
 }
