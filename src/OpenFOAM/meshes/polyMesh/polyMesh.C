@@ -878,7 +878,7 @@ Foam::polyMesh::cellTree() const
     {
         treeBoundBox overallBb(points());
 
-        Random rndGen(261782);
+        static Random rndGen(261782);
 
         overallBb = overallBb.extend(rndGen, 1e-4);
         overallBb.min() -= point(ROOTVSMALL, ROOTVSMALL, ROOTVSMALL);
