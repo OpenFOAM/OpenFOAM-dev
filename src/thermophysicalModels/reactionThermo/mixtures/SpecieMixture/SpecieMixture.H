@@ -210,6 +210,9 @@ public:
             //- Heat capacity at constant volume [J/kg/K]
             virtual tmp<volScalarField> Cv() const = 0;
 
+            //- Molecular weight of the given specie [kg/kmol]
+            virtual tmp<volScalarField> W() const = 0;
+
             //- Thermal diffusivity for temperature
             //  of mixture for patch [J/m/s/K]
             virtual tmp<scalarField> kappa
