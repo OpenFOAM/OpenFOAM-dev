@@ -45,6 +45,7 @@ License
 #include "multiComponentMixture.H"
 #include "reactingMixture.H"
 #include "singleStepReactingMixture.H"
+#include "singleComponentMixture.H"
 
 #include "thermoPhysicsTypes.H"
 
@@ -212,6 +213,7 @@ makeReactionThermo
     specie
 );
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Multi-component thermo for internal energy
 
@@ -261,7 +263,7 @@ makeReactionMixtureThermo
 );
 
 
-// Multi-component reaction thermo
+// Reaction thermo for internal energy
 
 makeReactionMixtureThermo
 (
@@ -308,6 +310,9 @@ makeReactionMixtureThermo
     icoPoly8EThermoPhysics
 );
 
+
+// Single-step reaction thermo for internal energy
+
 makeReactionMixtureThermo
 (
     rhoThermo,
@@ -315,6 +320,54 @@ makeReactionMixtureThermo
     heRhoThermo,
     singleStepReactingMixture,
     gasEThermoPhysics
+);
+
+
+// Single-component thermo for internal energy
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constGasEThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    gasEThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constIncompressibleGasEThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    incompressibleGasEThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    icoPoly8EThermoPhysics
 );
 
 
@@ -366,7 +419,7 @@ makeReactionMixtureThermo
 );
 
 
-// Multi-component reaction thermo
+// Reaction thermo for sensible enthalpy
 
 makeReactionMixtureThermo
 (
@@ -413,6 +466,9 @@ makeReactionMixtureThermo
     icoPoly8HThermoPhysics
 );
 
+
+// Single-step reaction thermo for sensible enthalpy
+
 makeReactionMixtureThermo
 (
     rhoThermo,
@@ -422,6 +478,53 @@ makeReactionMixtureThermo
     gasHThermoPhysics
 );
 
+
+// Single-component thermo for sensible enthalpy
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constGasHThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    gasHThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constIncompressibleGasHThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    incompressibleGasHThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    icoPoly8HThermoPhysics
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

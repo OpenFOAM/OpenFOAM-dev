@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ License
 #include "multiComponentMixture.H"
 #include "reactingMixture.H"
 #include "singleStepReactingMixture.H"
+#include "singleComponentMixture.H"
 
 #include "thermoPhysicsTypes.H"
 
@@ -178,6 +179,7 @@ makeReactionThermo
     specie
 );
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // Multi-component thermo for sensible enthalpy
 
@@ -221,7 +223,7 @@ makeReactionMixtureThermo
 );
 
 
-// Multi-component reaction thermo for sensible enthalpy
+// Reaction thermo for sensible enthalpy
 
 makeReactionMixtureThermo
 (
@@ -241,6 +243,9 @@ makeReactionMixtureThermo
     gasHThermoPhysics
 );
 
+
+// Single-step reaction thermo for sensible enthalpy
+
 makeReactionMixtureThermo
 (
     psiThermo,
@@ -251,7 +256,7 @@ makeReactionMixtureThermo
 );
 
 
-// Multi-component reaction thermo for internal energy
+// Reaction thermo for internal energy
 
 makeReactionMixtureThermo
 (
@@ -271,12 +276,57 @@ makeReactionMixtureThermo
     gasEThermoPhysics
 );
 
+
+// Single-step reaction thermo for internal energy
+
 makeReactionMixtureThermo
 (
     psiThermo,
     psiReactionThermo,
     hePsiThermo,
     singleStepReactingMixture,
+    gasEThermoPhysics
+);
+
+
+// Single-component thermo for sensible enthalpy
+
+makeReactionMixtureThermo
+(
+    psiThermo,
+    psiReactionThermo,
+    hePsiThermo,
+    singleComponentMixture,
+    constGasHThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    psiThermo,
+    psiReactionThermo,
+    hePsiThermo,
+    singleComponentMixture,
+    gasHThermoPhysics
+);
+
+
+// Single-component thermo for internal energy
+
+makeReactionMixtureThermo
+(
+    psiThermo,
+    psiReactionThermo,
+    hePsiThermo,
+    singleComponentMixture,
+    constGasEThermoPhysics
+);
+
+makeReactionMixtureThermo
+(
+    psiThermo,
+    psiReactionThermo,
+    hePsiThermo,
+    singleComponentMixture,
     gasEThermoPhysics
 );
 
