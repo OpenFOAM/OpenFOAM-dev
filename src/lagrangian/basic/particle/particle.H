@@ -334,8 +334,8 @@ public:
         //- String representation of properties
         DefinePropertyList
         (
-            "(Px Py Pz) celli tetFacei tetPti "
-            "facei stepFraction origProc origId"
+            "(coordinatesa coordinatesb coordinatesc coordinatesd) "
+            "celli tetFacei tetPti facei stepFraction origProc origId"
         );
 
         //- Cumulative particle counter - used to provode unique ID
