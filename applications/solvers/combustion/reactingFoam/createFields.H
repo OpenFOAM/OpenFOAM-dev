@@ -5,7 +5,7 @@ autoPtr<psiReactionThermo> pThermo(psiReactionThermo::New(mesh));
 psiReactionThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
-basicMultiComponentMixture& composition = thermo.composition();
+basicSpecieMixture& composition = thermo.composition();
 PtrList<volScalarField>& Y = composition.Y();
 
 const word inertSpecie(thermo.lookup("inertSpecie"));

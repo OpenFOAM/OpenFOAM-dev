@@ -3,6 +3,6 @@ scalar dtChem = refCast<const BasicChemistryModel<psiReactionThermo>>
 (
     chemistry
 ).deltaTChem()[0];
-basicMultiComponentMixture& composition = thermo.composition();
+basicSpecieMixture& composition = thermo.composition();
 PtrList<volScalarField>& Y = composition.Y();
 volScalarField& p = thermo.p();

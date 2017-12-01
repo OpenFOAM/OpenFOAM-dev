@@ -67,7 +67,7 @@ Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
         scalar(0)
     )
 {
-    basicMultiComponentMixture& composition = this->thermo().composition();
+    basicSpecieMixture& composition = this->thermo().composition();
 
     // Store the species composition according to the species index
     speciesTable speciesTab = composition.species();
@@ -610,7 +610,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
 
     label nAdditionalEqn = (tabulation_->variableTimeStep() ? 1 : 0);
 
-    basicMultiComponentMixture& composition = this->thermo().composition();
+    basicSpecieMixture& composition = this->thermo().composition();
 
     // CPU time analysis
     const clockTime clockTime_= clockTime();

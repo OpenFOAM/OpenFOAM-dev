@@ -5,7 +5,7 @@ thermo.validate(args.executable(), "h", "e");
 
 SLGThermo slgThermo(mesh, thermo);
 
-basicMultiComponentMixture& composition = thermo.composition();
+basicSpecieMixture& composition = thermo.composition();
 PtrList<volScalarField>& Y = composition.Y();
 
 const word inertSpecie(thermo.lookup("inertSpecie"));
