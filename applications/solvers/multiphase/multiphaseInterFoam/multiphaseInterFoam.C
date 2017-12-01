@@ -48,15 +48,16 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    #include "createControl.H"
     #include "initContinuityErrs.H"
+    #include "createDyMControls.H"
     #include "createFields.H"
-    #include "createTimeControls.H"
-    #include "correctPhi.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
+    #include "initCorrectPhi.H"
+    #include "createUfIfPresent.H"
 
     turbulence->validate();
+
+    #include "CourantNo.H"
+    #include "setInitialDeltaT.H"
 
     const surfaceScalarField& rhoPhi(mixture.rhoPhi());
 
@@ -66,7 +67,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
         #include "CourantNo.H"
         #include "alphaCourantNo.H"
         #include "setDeltaT.H"

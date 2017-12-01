@@ -50,11 +50,11 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
     #include "initContinuityErrs.H"
+    #include "createDyMControls.H"
     #include "createFields.H"
-    #include "correctPhi.H"
+    #include "initCorrectPhi.H"
+    #include "createUfIfPresent.H"
 
     turbulence->validate();
 
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
 
         if (LTS)
         {
