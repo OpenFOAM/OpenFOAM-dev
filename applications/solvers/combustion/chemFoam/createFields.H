@@ -29,7 +29,6 @@
     thermo.validate(args.executable(), "h");
 
     autoPtr<psiChemistryModel> pChemistry(psiChemistryModel::New(thermo));
-    psiChemistryModel& chemistry = pChemistry();
 
     volScalarField rho
     (
