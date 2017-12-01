@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,40 +45,6 @@ Foam::basicSpecieMixture::basicSpecieMixture
 :
     basicMultiComponentMixture(thermoDict, specieNames, mesh, phaseName)
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::basicSpecieMixture::W() const
-{
-    const PtrList<volScalarField>& Y(basicMultiComponentMixture::Y());
-
-    tmp<volScalarField> trW
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                IOobject::groupName("W", Y[0].group()),
-                Y[0].time().timeName(),
-                Y[0].mesh()
-            ),
-            Y[0].mesh(),
-            dimensionedScalar("zero", dimless, 0)
-        )
-    );
-
-    volScalarField& rW = trW.ref();
-
-    forAll(Y, i)
-    {
-        rW += Y[i]/W(i);
-    }
-
-    rW = 1.0/rW;
-
-    return trW;
-}
 
 
 // ************************************************************************* //

@@ -275,6 +275,12 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::CpByCpv
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::W() const
+{
+    return alpha1()*thermo1_->W() + alpha2()*thermo1_->W();
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::nu() const
 {
     return mu()/(alpha1()*thermo1_->rho() + alpha2()*thermo2_->rho());

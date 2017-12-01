@@ -32,10 +32,14 @@ Foam::tmp<Foam::volScalarField>
 Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::
 wRatioByP() const
 {
-    return
+    const dimensionedScalar Wi
+    (
+        "W",
+        dimMass/dimMoles,
         this->thermo_.composition().W(saturatedIndex_)
-       /this->thermo_.composition().W()
-       /this->thermo_.p();
+    );
+
+    return Wi/this->thermo_.W()/this->thermo_.p();
 }
 
 

@@ -521,6 +521,21 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::CpByCpv
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::W() const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    tmp<volScalarField> tW(phasei()*phasei().thermo().W());
+
+    for (++phasei; phasei != phases_.end(); ++phasei)
+    {
+        tW.ref() += phasei()*phasei().thermo().W();
+    }
+
+    return tW;
+}
+
+
 Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::nu() const
 {
     return mu()/rho();
