@@ -253,11 +253,8 @@ void Foam::chemistryReductionMethods::DRG<CompType, ThermoType>::reduceMechanism
                 label otherSpec = rABOtherSpec(u, v);
                 scalar rAB = rABNum(u, v)/Den;
 
-                if (rAB>1)
+                if (rAB > 1)
                 {
-                    Info<< "Badly Conditioned rAB : " << rAB
-                        << "species involved : " << u << "," << otherSpec
-                        << endl;
                     rAB = 1;
                 }
 

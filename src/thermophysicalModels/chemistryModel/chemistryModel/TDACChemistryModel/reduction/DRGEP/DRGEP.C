@@ -442,11 +442,9 @@ reduceMechanism
             {
                 label otherSpec = rABOtherSpec(u, v);
                 scalar rAB = mag(rABNum(u, v))/Den;
-                if (rAB>1)
+                if (rAB > 1)
                 {
-                    Info<< "Badly Conditioned rAB : " << rAB
-                    << "species involved : "<<u << "," << otherSpec << endl;
-                    rAB=1.0;
+                    rAB = 1;
                 }
 
                 scalar Rtemp = Rvalue[u]*rAB;
@@ -647,14 +645,9 @@ reduceMechanism
                     if (!disabledSpecies[otherSpec])
                     {
                         scalar rAB = mag(rABNum(u, v))/Den;
-                        if (rAB>1.0)
+                        if (rAB > 1)
                         {
-                            Info<< "Badly Conditioned rAB : " << rAB
-                            << "species involved : "
-                            <<this->chemistry_.Y()[u].member() << ","
-                            << this->chemistry_.Y()[otherSpec].member()
-                            << endl;
-                            rAB=1.0;
+                            rAB = 1;
                         }
 
                         scalar Rtemp = Rvalue[u]*rAB;

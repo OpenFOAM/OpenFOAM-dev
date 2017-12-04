@@ -642,17 +642,15 @@ void Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::reduceMechanism
     {
         label u = Q.pop();
         scalar Den = max(PA[u],CA[u]);
-        if (Den!=0.0)
+        if (Den != 0)
         {
             for (label v=0; v<NbrABInit[u]; v++)
             {
                 label otherSpec = rABOtherSpec(u, v);
                 scalar rAB = mag(rABNum(u, v))/Den;
-                if (rAB>1)
+                if (rAB > 1)
                 {
-                    Info<< "Badly Conditioned rAB : " << rAB
-                        << "species involved : "<<u << "," << otherSpec << endl;
-                    rAB=1.0;
+                    rAB = 1;
                 }
                 // The direct link is weaker than the user-defined tolerance
                 if (rAB >= this->tolerance())
