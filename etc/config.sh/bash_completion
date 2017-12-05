@@ -6638,46 +6638,6 @@ _ptot_ ()
 }
 complete -o filenames -o nospace -F _ptot_ ptot
 
-_rm~all_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-help"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra="-d"
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       -*) ;;
-        *) opts="";;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _rm~all_ rm~all
-
-_rmcore_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-help"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra="-d"
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       -*) ;;
-        *) opts="";;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _rmcore_ rmcore
-
 _sample_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
