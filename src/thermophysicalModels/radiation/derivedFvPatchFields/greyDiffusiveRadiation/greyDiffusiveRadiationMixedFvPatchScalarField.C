@@ -192,7 +192,7 @@ updateCoeffs()
     scalarField& qem = ray.qem().boundaryFieldRef()[patchi];
     scalarField& qin = ray.qin().boundaryFieldRef()[patchi];
 
-    const vector& myRayId = dom.IRay(rayId).d();
+    const vector& myRayId = dom.IRay(rayId).dAve();
 
     // Use updated Ir while iterating over rays
     // avoids to used lagged qin

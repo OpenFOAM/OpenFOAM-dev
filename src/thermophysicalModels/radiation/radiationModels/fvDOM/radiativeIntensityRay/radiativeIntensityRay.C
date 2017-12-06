@@ -137,6 +137,42 @@ Foam::radiation::radiativeIntensityRay::radiativeIntensityRay
         0.5*deltaPhi*Foam::sin(2.0*theta)*Foam::sin(deltaTheta)
     );
 
+    // Transform directions so that they fall inside the bounds of reduced
+    // dimension cases
+    if (mesh_.nSolutionD() == 2)
+    {
+        vector meshDir(vector::zero);
+        for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
+        {
+            if (mesh_.geometricD()[cmpt] == -1)
+            {
+                meshDir[cmpt] = 1;
+            }
+        }
+        const vector normal(vector(0, 0, 1));
+
+        const tensor coordRot = rotationTensor(normal, meshDir);
+
+        dAve_ = coordRot & dAve_;
+        d_ = coordRot & d_;
+    }
+    else if (mesh_.nSolutionD() == 1)
+    {
+        vector meshDir(vector::zero);
+        for (direction cmpt=0; cmpt<vector::nComponents; cmpt++)
+        {
+            if (mesh_.geometricD()[cmpt] == 1)
+            {
+                meshDir[cmpt] = 1;
+            }
+        }
+        const vector normal(vector(1, 0, 0));
+
+        dAve_ = (dAve_ & normal)*meshDir;
+        d_ = (d_ & normal)*meshDir;
+    }
+
+
     autoPtr<volScalarField> IDefaultPtr;
 
     forAll(ILambda_, lambdaI)
@@ -210,11 +246,11 @@ Foam::scalar Foam::radiation::radiativeIntensityRay::correct()
 
     scalar maxResidual = -GREAT;
 
+    const surfaceScalarField Ji(dAve_ & mesh_.Sf());
+
     forAll(ILambda_, lambdaI)
     {
         const volScalarField& k = dom_.aLambda(lambdaI);
-
-        const surfaceScalarField Ji(dAve_ & mesh_.Sf());
 
         fvScalarMatrix IiEq
         (
