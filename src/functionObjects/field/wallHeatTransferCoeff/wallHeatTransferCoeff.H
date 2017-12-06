@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,41 +22,51 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::wallHeatFlux
+    Foam::functionObjects::wallHeatTransferCoeff
 
 Group
     grpFieldFunctionObjects
 
 Description
-    Calculates and write the heat-flux at wall patches as the
-    volScalarField field 'wallHeatFlux'.
+    Calculates and write the estimated incompressible flow heat transfer
+    coefficient at wall patches as the volScalarField field
+    'wallHeatTransferCoeff'.
 
     All wall patches are included by default; to restrict the calculation to
     certain patches, use the optional 'patches' entry.
 
     Example of function object specification:
     \verbatim
-    wallHeatFlux1
+    wallHeatTransferCoeff1
     {
-        type        wallHeatFlux;
+        type        wallHeatTransferCoeff;
         libs        ("libfieldFunctionObjects.so");
         ...
         region      fluid;
         patches     (".*Wall");
+        rho         1.225;
+        Cp          1005;
+        Prl         0.707;
+        Prt         0.9;
     }
     \endverbatim
 
 Usage
     \table
-        Property | Description                | Required   | Default value
-        type     | type name: wallHeatFlux    | yes        |
-        patches  | list of patches to process | no         | all wall patches
-        region   | region to be evaluated     | no         | default region
+        Property | Description                   | Required | Default value
+        type     | Type name: wallHeatTransferCoeff | yes   |
+        patches  | List of patches to process    | no       | all wall patches
+        region   | Region to be evaluated        | no       | default region
+        rho      | Fluid density                 | yes      |
+        Cp       | Fluid heat capacity           | yes      |
+        Prl      | Fluid laminar Prandtl number  | yes      |
+        Prt      | Fluid turbulent Prandtl number| yes      |
     \endtable
 
 Note
-    Writing field 'wallHeatFlux' is done by default, but it can be overridden by
-    defining an empty \c objects list. For details see writeLocalObjects.
+    Writing field 'wallHeatTransferCoeff' is done by default, but it can be
+    overridden by defining an empty \c objects list. For details see
+    writeLocalObjects.
 
 See also
     Foam::functionObject
@@ -66,12 +76,12 @@ See also
     Foam::functionObjects::timeControl
 
 SourceFiles
-    wallHeatFlux.C
+    wallHeatTransferCoeff.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_wallHeatFlux_H
-#define functionObjects_wallHeatFlux_H
+#ifndef functionObjects_wallHeatTransferCoeff_H
+#define functionObjects_wallHeatTransferCoeff_H
 
 #include "fvMeshFunctionObject.H"
 #include "logFiles.H"
@@ -87,10 +97,10 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class wallHeatFlux Declaration
+                       Class wallHeatTransferCoeff Declaration
 \*---------------------------------------------------------------------------*/
 
-class wallHeatFlux
+class wallHeatTransferCoeff
 :
     public fvMeshFunctionObject,
     public logFiles,
@@ -104,18 +114,30 @@ protected:
         //- Optional list of patches to process
         labelHashSet patchSet_;
 
+        //- Fluid density
+        scalar rho_;
+
+        //- Fluid heat capacity
+        scalar Cp_;
+
+        //- Fluid laminar Prandtl number
+        scalar Prl_;
+
+        //- Fluid turbulent Prandtl number
+        scalar Prt_;
+
 
     // Protected Member Functions
 
         //- File header information
         virtual void writeFileHeader(const label i);
 
-        //- Calculate the heat-flux
-        void calcHeatFlux
+        //- Calculate the heat transfer coefficient
+        void calcHeatTransferCoeff
         (
-            const volScalarField& alpha,
-            const volScalarField& he,
-            volScalarField& wallHeatFlux
+            const volScalarField& nu,
+            const volScalarField& nut,
+            volScalarField& wallHeatTransferCoeff
         );
 
 
@@ -124,22 +146,22 @@ private:
     // Private member functions
 
         //- Disallow default bitwise copy construct
-        wallHeatFlux(const wallHeatFlux&);
+        wallHeatTransferCoeff(const wallHeatTransferCoeff&);
 
         //- Disallow default bitwise assignment
-        void operator=(const wallHeatFlux&);
+        void operator=(const wallHeatTransferCoeff&);
 
 
 public:
 
     //- Runtime type information
-    TypeName("wallHeatFlux");
+    TypeName("wallHeatTransferCoeff");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        wallHeatFlux
+        wallHeatTransferCoeff
         (
             const word& name,
             const Time& runTime,
@@ -148,18 +170,18 @@ public:
 
 
     //- Destructor
-    virtual ~wallHeatFlux();
+    virtual ~wallHeatTransferCoeff();
 
 
     // Member Functions
 
-        //- Read the wallHeatFlux data
+        //- Read the wallHeatTransferCoeff data
         virtual bool read(const dictionary&);
 
-        //- Calculate the wall heat-flux
+        //- Calculate the wall heat transfer coefficient
         virtual bool execute();
 
-        //- Write the wall heat-flux
+        //- Write the wall heat transfer coefficient
         virtual bool write();
 };
 
