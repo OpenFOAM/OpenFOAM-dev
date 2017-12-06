@@ -87,14 +87,6 @@ void Foam::radiation::fvDOM::initialise()
     // 2D
     else if (mesh_.nSolutionD() == 2)
     {
-        // Currently 2D solution is limited to the x-y plane
-        if (mesh_.solutionD()[vector::Z] != -1)
-        {
-            FatalErrorInFunction
-                << "Currently 2D solution is limited to the x-y plane"
-                << exit(FatalError);
-        }
-
         scalar thetai = piByTwo;
         scalar deltaTheta = pi;
         nRay_ = 4*nPhi_;
@@ -127,14 +119,6 @@ void Foam::radiation::fvDOM::initialise()
     // 1D
     else
     {
-        // Currently 1D solution is limited to the x-direction
-        if (mesh_.solutionD()[vector::X] != 1)
-        {
-            FatalErrorInFunction
-                << "Currently 1D solution is limited to the x-direction"
-                << exit(FatalError);
-        }
-
         scalar thetai = piByTwo;
         scalar deltaTheta = pi;
         nRay_ = 2;
@@ -187,20 +171,28 @@ void Foam::radiation::fvDOM::initialise()
         );
     }
 
-    Info<< "fvDOM : Allocated " << IRay_.size()
-        << " rays with average orientation:" << nl;
 
+    // Calculate the maximum solid angle
     forAll(IRay_, rayId)
     {
         if (omegaMax_ <  IRay_[rayId].omega())
         {
             omegaMax_ = IRay_[rayId].omega();
         }
-        Info<< '\t' << IRay_[rayId].I().name() << " : " << "omega : "
-            << '\t' << IRay_[rayId].omega() << nl;
     }
 
-    Info<< endl;
+
+    Info<< typeName << ": Created " << IRay_.size() << " rays with average "
+        << "directions (dAve) and solid angles (omega)" << endl;
+    Info<< incrIndent;
+    forAll(IRay_, rayId)
+    {
+        Info<< indent
+            << "Ray " << IRay_[rayId].I().name() << ": "
+            << "dAve = " << IRay_[rayId].dAve() << ", "
+            << "omega = " << IRay_[rayId].omega() << endl;
+    }
+    Info<< decrIndent << endl;
 }
 
 
@@ -242,8 +234,8 @@ Foam::radiation::fvDOM::fvDOM(const volScalarField& T)
             "qem",
             mesh_.time().timeName(),
             mesh_,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
         ),
         mesh_,
         dimensionedScalar("qem", dimMass/pow3(dimTime), 0.0)
