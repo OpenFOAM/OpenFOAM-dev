@@ -68,12 +68,13 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    writeInfoHeader = false;
+
     argList::addNote
     (
         "information about surface meshes"
     );
 
-    argList::noBanner();
     argList::noParallel();
     argList::validArgs.append("surface file");
 

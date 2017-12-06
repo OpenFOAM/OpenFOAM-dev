@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,5 +254,6 @@ Foam::messageStream Foam::Warning
 
 Foam::messageStream Foam::Info("", messageStream::INFO);
 
+bool Foam::writeInfoHeader = true;
 
 // ************************************************************************* //

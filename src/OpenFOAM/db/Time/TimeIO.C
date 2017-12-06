@@ -48,7 +48,8 @@ void Foam::Time::readDict()
     // Debug switches
     if (controlDict_.found("DebugSwitches"))
     {
-        Info<< "Overriding DebugSwitches according to " << controlDict_.name()
+        InfoHeader
+            << "Overriding DebugSwitches according to " << controlDict_.name()
             << endl;
 
         simpleObjectRegistry& objects = debug::debugObjects();
@@ -61,7 +62,7 @@ void Foam::Time::readDict()
 
             if (objPtr)
             {
-                Info<< "    " << iter() << endl;
+                InfoHeader << "    " << iter() << endl;
 
                 const List<simpleRegIOobject*>& objects = *objPtr;
 
@@ -89,7 +90,8 @@ void Foam::Time::readDict()
     // Optimisation Switches
     if (controlDict_.found("OptimisationSwitches"))
     {
-        Info<< "Overriding OptimisationSwitches according to "
+        InfoHeader
+            << "Overriding OptimisationSwitches according to "
             << controlDict_.name() << endl;
 
         simpleObjectRegistry& objects = debug::optimisationObjects();
@@ -105,7 +107,7 @@ void Foam::Time::readDict()
 
             if (objPtr)
             {
-                Info<< "    " << iter() << endl;
+                InfoHeader << "    " << iter() << endl;
 
                 const List<simpleRegIOobject*>& objects = *objPtr;
 
@@ -150,7 +152,8 @@ void Foam::Time::readDict()
             controlDict_.watchIndices().clear();
 
             // Installing the new handler
-            Info<< "Overriding fileHandler to " << fileHandlerName << endl;
+            InfoHeader
+                << "Overriding fileHandler to " << fileHandlerName << endl;
 
             autoPtr<fileOperation> handler
             (
@@ -172,7 +175,8 @@ void Foam::Time::readDict()
     // the 'unitSet' might be changed and the individual values
     if (controlDict_.found("DimensionedConstants"))
     {
-        Info<< "Overriding DimensionedConstants according to "
+        InfoHeader
+            << "Overriding DimensionedConstants according to "
             << controlDict_.name() << endl;
 
         // Change in-memory
@@ -194,9 +198,13 @@ void Foam::Time::readDict()
             {
                 objects[i]->readData(dummyIs);
 
-                Info<< "    ";
-                objects[i]->writeData(Info);
-                Info<< endl;
+                if (writeInfoHeader)
+                {
+
+                    Info<< "    ";
+                    objects[i]->writeData(Info);
+                    Info<< endl;
+                }
             }
         }
     }
@@ -205,7 +213,8 @@ void Foam::Time::readDict()
     // Dimension sets
     if (controlDict_.found("DimensionSets"))
     {
-        Info<< "Overriding DimensionSets according to "
+        InfoHeader
+            << "Overriding DimensionSets according to "
             << controlDict_.name() << endl;
 
         dictionary dict(Foam::dimensionSystems());
@@ -217,7 +226,7 @@ void Foam::Time::readDict()
 
         if (objPtr)
         {
-            Info<< controlDict_.subDict("DimensionSets") << endl;
+            InfoHeader << controlDict_.subDict("DimensionSets") << endl;
 
             const List<simpleRegIOobject*>& objects = *objPtr;
 

@@ -26,7 +26,6 @@ Application
 
 Description
 
-
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
@@ -62,7 +61,8 @@ void printCleaning(fileName& pathName)
 
 int main(int argc, char *argv[])
 {
-    argList::noBanner();
+    writeInfoHeader = false;
+
     argList::noParallel();
     argList::validArgs.insert("fileName .. fileNameN");
     argList::addOption("istream", "file", "test Istream values");

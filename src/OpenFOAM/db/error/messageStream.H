@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,6 +206,7 @@ public:
 extern messageStream SeriousError;
 extern messageStream Warning;
 extern messageStream Info;
+extern bool writeInfoHeader;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -280,6 +281,10 @@ extern messageStream Info;
 //- Report an information message using Foam::Info
 //  for FUNCTION_NAME in file __FILE__ at line __LINE__
 #define InfoInFunction InfoIn(FUNCTION_NAME)
+
+//- Report write to Foam::Info if the local log switch is true
+#define InfoHeader                                                             \
+    if (::Foam::writeInfoHeader) Info
 
 //- Report write to Foam::Info if the local log switch is true
 #define Log                                                                    \
