@@ -25,7 +25,7 @@ Class
     Foam::TDACChemistryModel
 
 Description
-    Extends chemistryModel by adding the TDAC method.
+    Extends StandardChemistryModel by adding the TDAC method.
 
     References:
     \verbatim
@@ -64,7 +64,7 @@ SourceFiles
 #ifndef TDACChemistryModel_H
 #define TDACChemistryModel_H
 
-#include "chemistryModel.H"
+#include "StandardChemistryModel.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
 #include "OFstream.H"
@@ -78,10 +78,10 @@ namespace Foam
                       Class TDACChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 class TDACChemistryModel
 :
-    public chemistryModel<CompType, ThermoType>
+    public StandardChemistryModel<ReactionThermo, ThermoType>
 {
     // Private member data
 
@@ -97,10 +97,12 @@ class TDACChemistryModel
         List<List<specieElement>> specieComp_;
         Field<label> completeToSimplifiedIndex_;
         DynamicList<label> simplifiedToCompleteIndex_;
-        autoPtr<chemistryReductionMethod<CompType, ThermoType>> mechRed_;
+        autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType>>
+            mechRed_;
 
         // Tabulation
-        autoPtr<chemistryTabulationMethod<CompType, ThermoType>> tabulation_;
+        autoPtr<chemistryTabulationMethod<ReactionThermo, ThermoType>>
+            tabulation_;
 
         // Log file for the average time spent reducing the chemistry
         autoPtr<OFstream> cpuReduceFile_;
@@ -145,13 +147,13 @@ class TDACChemistryModel
 public:
 
     //- Runtime type information
-    TypeName("TDACChemistryModel");
+    TypeName("TDAC");
 
 
     // Constructors
 
         //- Construct from thermo
-        TDACChemistryModel(typename CompType::reactionThermo& thermo);
+        TDACChemistryModel(ReactionThermo& thermo);
 
 
     //- Destructor
@@ -198,7 +200,7 @@ public:
 
 
         // Chemistry model functions (overriding functions in
-        // chemistryModel to use the private solve function)
+        // StandardChemistryModel to use the private solve function)
 
             //- Solve the reaction system for the given time step
             //  and return the characteristic time
@@ -209,8 +211,8 @@ public:
             virtual scalar solve(const scalarField& deltaT);
 
 
-        // ODE functions (overriding functions in chemistryModel to take into
-        // account the variable number of species)
+        // ODE functions (overriding functions in StandardChemistryModel to take
+        // into account the variable number of species)
 
             virtual void derivatives
             (
@@ -269,7 +271,8 @@ public:
 
             inline List<List<specieElement>>& specieComp();
 
-            inline autoPtr<chemistryReductionMethod<CompType, ThermoType>>&
+            inline
+                autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType>>&
                 mechRed();
 
             tmp<volScalarField> tabulationResults() const

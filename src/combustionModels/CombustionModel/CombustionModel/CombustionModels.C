@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,42 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoThermoCombustion.H"
+#include "makeCombustionTypes.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+#include "ChemistryCombustion.H"
+#include "ThermoCombustion.H"
 
-Foam::combustionModels::rhoThermoCombustion::rhoThermoCombustion
-(
-    const word& modelType,
-    rhoReactionThermo& thermo,
-    const compressibleTurbulenceModel& turb
-)
-:
-    rhoCombustionModel(modelType, thermo, turb, combustionPropertiesName),
-    thermo_(thermo)
-{}
+#include "rhoReactionThermo.H"
+#include "psiReactionThermo.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::combustionModels::rhoThermoCombustion::~rhoThermoCombustion()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::rhoReactionThermo&
-Foam::combustionModels::rhoThermoCombustion::thermo()
-{
-    return thermo_;
-}
-
-
-const Foam::rhoReactionThermo&
-Foam::combustionModels::rhoThermoCombustion::thermo() const
-{
-    return thermo_;
-}
+makeCombustion(psiReactionThermo);
+makeCombustion(rhoReactionThermo);
 
 
 // ************************************************************************* //

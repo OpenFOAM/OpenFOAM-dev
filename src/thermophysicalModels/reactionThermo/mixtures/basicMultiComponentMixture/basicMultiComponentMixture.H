@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 
 #include "volFields.H"
 #include "PtrList.H"
+#include "basicMixture.H"
 #include "speciesTable.H"
 #include "typeInfo.H"
 
@@ -53,6 +54,8 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class basicMultiComponentMixture
+:
+    public basicMixture
 {
 
 protected:

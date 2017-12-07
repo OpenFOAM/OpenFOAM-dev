@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "chemistryModel.H"
+#include "StandardChemistryModel.H"
 #include "reactingMixture.H"
 #include "UniformField.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryModel<CompType, ThermoType>::chemistryModel
+template<class ReactionThermo, class ThermoType>
+Foam::StandardChemistryModel<ReactionThermo, ThermoType>::StandardChemistryModel
 (
-    typename CompType::reactionThermo& thermo
+    ReactionThermo& thermo
 )
 :
-    CompType(thermo),
+    BasicChemistryModel<ReactionThermo>(thermo),
     ODESystem(),
     Y_(this->thermo().composition().Y()),
     reactions_
@@ -51,7 +51,14 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
 
     nSpecie_(Y_.size()),
     nReaction_(reactions_.size()),
-    Treact_(CompType::template lookupOrDefault<scalar>("Treact", 0.0)),
+    Treact_
+    (
+        BasicChemistryModel<ReactionThermo>::template lookupOrDefault<scalar>
+        (
+            "Treact",
+            0.0
+        )
+    ),
     RR_(nSpecie_),
     c_(nSpecie_),
     dcdt_(nSpecie_)
@@ -78,22 +85,23 @@ Foam::chemistryModel<CompType, ThermoType>::chemistryModel
         );
     }
 
-    Info<< "chemistryModel: Number of species = " << nSpecie_
+    Info<< "StandardChemistryModel: Number of species = " << nSpecie_
         << " and reactions = " << nReaction_ << endl;
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryModel<CompType, ThermoType>::~chemistryModel()
+template<class ReactionThermo, class ThermoType>
+Foam::StandardChemistryModel<ReactionThermo, ThermoType>::
+~StandardChemistryModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-void Foam::chemistryModel<CompType, ThermoType>::omega
+template<class ReactionThermo, class ThermoType>
+void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
 (
     const scalarField& c,
     const scalar T,
@@ -132,8 +140,8 @@ void Foam::chemistryModel<CompType, ThermoType>::omega
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::chemistryModel<CompType, ThermoType>::omegaI
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omegaI
 (
     const label index,
     const scalarField& c,
@@ -153,8 +161,8 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::omegaI
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::chemistryModel<CompType, ThermoType>::omega
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omega
 (
     const Reaction<ThermoType>& R,
     const scalarField& c,
@@ -265,8 +273,8 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::omega
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemistryModel<CompType, ThermoType>::derivatives
+template<class ReactionThermo, class ThermoType>
+void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::derivatives
 (
     const scalar time,
     const scalarField& c,
@@ -315,8 +323,8 @@ void Foam::chemistryModel<CompType, ThermoType>::derivatives
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemistryModel<CompType, ThermoType>::jacobian
+template<class ReactionThermo, class ThermoType>
+void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
 (
     const scalar t,
     const scalarField& c,
@@ -457,9 +465,9 @@ void Foam::chemistryModel<CompType, ThermoType>::jacobian
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::chemistryModel<CompType, ThermoType>::tc() const
+Foam::StandardChemistryModel<ReactionThermo, ThermoType>::tc() const
 {
     tmp<volScalarField> ttc
     (
@@ -531,9 +539,9 @@ Foam::chemistryModel<CompType, ThermoType>::tc() const
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::chemistryModel<CompType, ThermoType>::Qdot() const
+Foam::StandardChemistryModel<ReactionThermo, ThermoType>::Qdot() const
 {
     tmp<volScalarField> tQdot
     (
@@ -571,9 +579,9 @@ Foam::chemistryModel<CompType, ThermoType>::Qdot() const
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::chemistryModel<CompType, ThermoType>::calculateRR
+Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculateRR
 (
     const label ri,
     const label si
@@ -640,8 +648,8 @@ Foam::chemistryModel<CompType, ThermoType>::calculateRR
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemistryModel<CompType, ThermoType>::calculate()
+template<class ReactionThermo, class ThermoType>
+void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::calculate()
 {
     if (!this->chemistry_)
     {
@@ -676,14 +684,14 @@ void Foam::chemistryModel<CompType, ThermoType>::calculate()
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 template<class DeltaTType>
-Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
+Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::solve
 (
     const DeltaTType& deltaT
 )
 {
-    CompType::correct();
+    BasicChemistryModel<ReactionThermo>::correct();
 
     scalar deltaTMin = GREAT;
 
@@ -747,8 +755,8 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::solve
 (
     const scalar deltaT
 )
@@ -762,8 +770,8 @@ Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::chemistryModel<CompType, ThermoType>::solve
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::solve
 (
     const scalarField& deltaT
 )

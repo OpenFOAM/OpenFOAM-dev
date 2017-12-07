@@ -128,10 +128,10 @@ const scalar EDCexp2[] = {3, 3, 2, 2};
                             Class EDC Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class ReactionThermo>
 class EDC
 :
-    public laminar<Type>
+    public laminar<ReactionThermo>
 {
     // Private data
 
@@ -170,7 +170,7 @@ public:
         EDC
         (
             const word& modelType,
-            typename Type::reactionThermo& type,
+            ReactionThermo& type,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );

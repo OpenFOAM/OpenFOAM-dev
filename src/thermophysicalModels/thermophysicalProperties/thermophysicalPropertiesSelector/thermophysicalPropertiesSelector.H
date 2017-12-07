@@ -80,6 +80,15 @@ public:
 
     // Member Functions
 
+        //- Return the instantiated type name
+        static word typeName()
+        {
+            return
+                "thermophysicalPropertiesSelector<"
+              + ThermophysicalProperties::typeName
+              + '>';
+        }
+
         //- Return reference to the selected physical properties class
         inline const ThermophysicalProperties& properties() const;
 

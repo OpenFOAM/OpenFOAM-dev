@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,43 +23,39 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoChemistryCombustion.H"
+#include "BasicChemistryModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::combustionModels::rhoChemistryCombustion::rhoChemistryCombustion
+template<class ReactionThermo>
+Foam::BasicChemistryModel<ReactionThermo>::BasicChemistryModel
 (
-    const word& modelType,
-    rhoReactionThermo& thermo,
-    const compressibleTurbulenceModel& turb,
-    const word& combustionProperties
+    ReactionThermo& thermo
 )
 :
-    rhoCombustionModel(modelType, thermo, turb, combustionProperties),
-    chemistryPtr_(rhoChemistryModel::New(thermo))
+    basicChemistryModel(thermo),
+    thermo_(thermo)
 {}
+
+
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
+template<class ReactionThermo>
+Foam::autoPtr<Foam::BasicChemistryModel<ReactionThermo>>
+Foam::BasicChemistryModel<ReactionThermo>::New(ReactionThermo& thermo)
+{
+    return basicChemistryModel::New<BasicChemistryModel<ReactionThermo>>
+    (
+        thermo
+    );
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::combustionModels::rhoChemistryCombustion::~rhoChemistryCombustion()
+template<class ReactionThermo>
+Foam::BasicChemistryModel<ReactionThermo>::~BasicChemistryModel()
 {}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-Foam::rhoReactionThermo&
-Foam::combustionModels::rhoChemistryCombustion::thermo()
-{
-    return chemistryPtr_->thermo();
-}
-
-
-const Foam::rhoReactionThermo&
-Foam::combustionModels::rhoChemistryCombustion::thermo() const
-{
-    return chemistryPtr_->thermo();
-}
 
 
 // ************************************************************************* //

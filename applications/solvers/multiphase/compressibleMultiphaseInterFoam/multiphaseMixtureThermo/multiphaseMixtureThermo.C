@@ -152,6 +152,21 @@ void Foam::multiphaseMixtureThermo::correctRho(const volScalarField& dp)
 }
 
 
+Foam::word Foam::multiphaseMixtureThermo::thermoName() const
+{
+    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
+
+    word name = phasei().thermo().thermoName();
+
+    for (++ phasei; phasei != phases_.end(); ++ phasei)
+    {
+        name += ',' + phasei().thermo().thermoName();
+    }
+
+    return name;
+}
+
+
 bool Foam::multiphaseMixtureThermo::incompressible() const
 {
     bool ico = true;

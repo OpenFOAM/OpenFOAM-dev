@@ -57,7 +57,9 @@ License
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         chemistryTabulationMethod##CompChemModel##Thermo,                      \
-        "chemistryTabulationMethod<"#CompChemModel","#Thermo">",               \
+        (word(chemistryTabulationMethod##CompChemModel##Thermo::typeName_()) + \
+        '<' + word(CompChemModel::typeName_()) + "," + Thermo::typeName() + '>'\
+        ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \

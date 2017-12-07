@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::chemistryModel
+    Foam::StandardChemistryModel
 
 Description
     Extends base chemistry model by adding a thermo package, and ODE functions.
@@ -30,14 +30,15 @@ Description
     terms.
 
 SourceFiles
-    chemistryModelI.H
-    chemistryModel.C
+    StandardChemistryModelI.H
+    StandardChemistryModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef chemistryModel_H
-#define chemistryModel_H
+#ifndef StandardChemistryModel_H
+#define StandardChemistryModel_H
 
+#include "BasicChemistryModel.H"
 #include "Reaction.H"
 #include "ODESystem.H"
 #include "volFields.H"
@@ -52,13 +53,13 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                      Class chemistryModel Declaration
+                      Class StandardChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
-class chemistryModel
+template<class ReactionThermo, class ThermoType>
+class StandardChemistryModel
 :
-    public CompType,
+    public BasicChemistryModel<ReactionThermo>,
     public ODESystem
 {
     // Private Member Functions
@@ -69,10 +70,10 @@ class chemistryModel
         scalar solve(const DeltaTType& deltaT);
 
         //- Disallow copy constructor
-        chemistryModel(const chemistryModel&);
+        StandardChemistryModel(const StandardChemistryModel&);
 
         //- Disallow default bitwise assignment
-        void operator=(const chemistryModel&);
+        void operator=(const StandardChemistryModel&);
 
 
 protected:
@@ -120,17 +121,17 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("chemistryModel");
+    TypeName("standard");
 
 
     // Constructors
 
         //- Construct from thermo
-        chemistryModel(typename CompType::reactionThermo& thermo);
+        StandardChemistryModel(ReactionThermo& thermo);
 
 
     //- Destructor
-    virtual ~chemistryModel();
+    virtual ~StandardChemistryModel();
 
 
     // Member Functions
@@ -273,12 +274,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "chemistryModelI.H"
+#include "StandardChemistryModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "chemistryModel.C"
+    #include "StandardChemistryModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -36,11 +36,15 @@ SourceFiles
 #define EulerImplicit_H
 
 #include "chemistrySolver.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+template <class Type>
+class simpleMatrix;
 
 /*---------------------------------------------------------------------------*\
                        Class EulerImplicit Declaration

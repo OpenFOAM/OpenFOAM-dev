@@ -26,6 +26,7 @@ License
 #include "EulerImplicit.H"
 #include "addToRunTimeSelectionTable.H"
 #include "simpleMatrix.H"
+#include "Reaction.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

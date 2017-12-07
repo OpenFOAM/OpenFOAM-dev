@@ -35,6 +35,8 @@ SourceFiles
 #ifndef noCombustion_H
 #define noCombustion_H
 
+#include "ThermoCombustion.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -46,10 +48,10 @@ namespace combustionModels
                         Class noCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CombThermoType>
+template<class ReactionThermo>
 class noCombustion
 :
-    public CombThermoType
+    public ThermoCombustion<ReactionThermo>
 {
 
     //- Disallow copy construct
@@ -62,7 +64,7 @@ class noCombustion
 public:
 
     //- Runtime type information
-    TypeName("noCombustion");
+    TypeName("none");
 
 
     // Constructors
@@ -71,7 +73,7 @@ public:
         noCombustion
         (
             const word& modelType,
-            typename CombThermoType::reactionThermo& thermo,
+            ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );

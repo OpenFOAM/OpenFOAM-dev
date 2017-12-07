@@ -23,51 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rhoCombustionModel.H"
+#include "BasicChemistryModel.H"
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-namespace Foam
+template<class ReactionThermo>
+inline ReactionThermo& Foam::BasicChemistryModel<ReactionThermo>::thermo()
 {
-namespace combustionModels
-{
-    defineTypeNameAndDebug(rhoCombustionModel, 0);
-    defineRunTimeSelectionTable(rhoCombustionModel, dictionary);
-}
+    return thermo_;
 }
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::combustionModels::rhoCombustionModel::rhoCombustionModel
-(
-    const word& modelType,
-    rhoReactionThermo& thermo,
-    const compressibleTurbulenceModel& turb,
-    const word& combustionProperties
-)
-:
-    combustionModel(modelType, thermo, turb, combustionProperties)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::combustionModels::rhoCombustionModel::~rhoCombustionModel()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-bool Foam::combustionModels::rhoCombustionModel::read()
+template<class ReactionThermo>
+inline const ReactionThermo&
+Foam::BasicChemistryModel<ReactionThermo>::thermo() const
 {
-    if (combustionModel::read())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return thermo_;
 }
 
 

@@ -36,16 +36,16 @@ namespace combustionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CombThermoType, class ThermoType>
-FSD<CombThermoType, ThermoType>::FSD
+template<class ReactionThermo, class ThermoType>
+FSD<ReactionThermo, ThermoType>::FSD
 (
     const word& modelType,
-    typename CombThermoType::reactionThermo& thermo,
+    ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
 :
-    singleStepCombustion<CombThermoType, ThermoType>
+    singleStepCombustion<ReactionThermo, ThermoType>
     (
         modelType,
         thermo,
@@ -87,15 +87,15 @@ FSD<CombThermoType, ThermoType>::FSD
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CombThermoType, class ThermoType>
-FSD<CombThermoType, ThermoType>::~FSD()
+template<class ReactionThermo, class ThermoType>
+FSD<ReactionThermo, ThermoType>::~FSD()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class CombThermoType, class ThermoType>
-void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
+template<class ReactionThermo, class ThermoType>
+void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
 {
     this->singleMixturePtr_->fresCorrect();
 
@@ -335,8 +335,8 @@ void FSD<CombThermoType, ThermoType>::calculateSourceNorm()
 }
 
 
-template<class CombThermoType, class ThermoType>
-void FSD<CombThermoType, ThermoType>::correct()
+template<class ReactionThermo, class ThermoType>
+void FSD<ReactionThermo, ThermoType>::correct()
 {
     this->wFuel_ ==
         dimensionedScalar("zero", dimMass/pow3(dimLength)/dimTime, 0.0);
@@ -348,10 +348,10 @@ void FSD<CombThermoType, ThermoType>::correct()
 }
 
 
-template<class CombThermoType, class ThermoType>
-bool FSD<CombThermoType, ThermoType>::read()
+template<class ReactionThermo, class ThermoType>
+bool FSD<ReactionThermo, ThermoType>::read()
 {
-    if (singleStepCombustion<CombThermoType, ThermoType>::read())
+    if (singleStepCombustion<ReactionThermo, ThermoType>::read())
     {
         this->coeffs().lookup("Cv") >> Cv_ ;
         this->coeffs().lookup("ftVarMin") >> ftVarMin_;

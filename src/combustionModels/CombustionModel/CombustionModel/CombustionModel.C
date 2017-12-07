@@ -23,42 +23,65 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "psiChemistryModel.H"
-#include "fvMesh.H"
-
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
-
-namespace Foam
-{
-    defineTypeNameAndDebug(psiChemistryModel, 0);
-    defineRunTimeSelectionTable(psiChemistryModel, thermo);
-}
-
+#include "CombustionModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::psiChemistryModel::psiChemistryModel(psiReactionThermo& thermo)
+template<class ReactionThermo>
+Foam::combustionModels::CombustionModel<ReactionThermo>::CombustionModel
+(
+    const word& modelType,
+    ReactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
+)
 :
-    basicChemistryModel(thermo),
-    thermo_(thermo)
+    combustionModel(modelType, thermo, turb, combustionProperties)
 {}
 
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::psiChemistryModel> Foam::psiChemistryModel::New
+template<class ReactionThermo>
+Foam::autoPtr<Foam::combustionModels::CombustionModel<ReactionThermo>>
+Foam::combustionModels::CombustionModel<ReactionThermo>::New
 (
-    psiReactionThermo& thermo
+    ReactionThermo& thermo,
+    const compressibleTurbulenceModel& turb,
+    const word& combustionProperties
 )
 {
-    return basicChemistryModel::New<psiChemistryModel>(thermo);
+    return
+        combustionModel::New<CombustionModel<ReactionThermo>>
+        (
+            thermo,
+            turb,
+            combustionProperties
+        );
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::psiChemistryModel::~psiChemistryModel()
+template<class ReactionThermo>
+Foam::combustionModels::CombustionModel<ReactionThermo>::~CombustionModel()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class ReactionThermo>
+bool Foam::combustionModels::CombustionModel<ReactionThermo>::read()
+{
+    if (combustionModel::read())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 // ************************************************************************* //

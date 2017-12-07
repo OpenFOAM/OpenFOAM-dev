@@ -98,6 +98,12 @@ void Foam::twoPhaseMixtureThermo::correct()
 }
 
 
+Foam::word Foam::twoPhaseMixtureThermo::thermoName() const
+{
+    return thermo1_->thermoName() + ',' + thermo2_->thermoName();
+}
+
+
 bool Foam::twoPhaseMixtureThermo::incompressible() const
 {
     return thermo1_->incompressible() && thermo2_->incompressible();

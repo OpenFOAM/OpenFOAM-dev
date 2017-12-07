@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-combustionModel  noCombustion<psiThermoCombustion>;
+combustionModel  none;
 
 
 // ************************************************************************* //

@@ -38,7 +38,8 @@ Description
 #include "radiationModel.H"
 #include "SLGThermo.H"
 #include "solidChemistryModel.H"
-#include "psiCombustionModel.H"
+#include "psiReactionThermo.H"
+#include "CombustionModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
 

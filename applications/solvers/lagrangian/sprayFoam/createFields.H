@@ -87,9 +87,13 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 Info<< "Creating combustion model\n" << endl;
-autoPtr<combustionModels::psiCombustionModel> combustion
+autoPtr<combustionModels::CombustionModel<psiReactionThermo>> combustion
 (
-    combustionModels::psiCombustionModel::New(thermo, turbulence())
+    combustionModels::CombustionModel<psiReactionThermo>::New
+    (
+        thermo,
+        turbulence()
+    )
 );
 
 Info<< "Creating field dpdt\n" << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,10 +26,8 @@ License
 #include "makeCombustionTypes.H"
 
 #include "thermoPhysicsTypes.H"
-#include "psiCombustionModel.H"
-#include "psiThermoCombustion.H"
-#include "rhoCombustionModel.H"
-#include "rhoThermoCombustion.H"
+#include "psiReactionThermo.H"
+#include "rhoReactionThermo.H"
 #include "FSD.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -38,66 +36,58 @@ License
 makeCombustionTypesThermo
 (
     FSD,
-    psiThermoCombustion,
-    gasHThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    gasHThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     FSD,
-    psiThermoCombustion,
-    constGasHThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    constGasHThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     FSD,
-    rhoThermoCombustion,
-    gasHThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    gasHThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     FSD,
-    rhoThermoCombustion,
-    constGasHThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    constGasHThermoPhysics
 );
 
 // Combustion models based on sensibleInternalEnergy
 makeCombustionTypesThermo
 (
     FSD,
-    psiThermoCombustion,
-    gasEThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    gasEThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     FSD,
-    psiThermoCombustion,
-    constGasEThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    constGasEThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     FSD,
-    rhoThermoCombustion,
-    gasEThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    gasEThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     FSD,
-    rhoThermoCombustion,
-    constGasEThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    constGasEThermoPhysics
 );
 
 

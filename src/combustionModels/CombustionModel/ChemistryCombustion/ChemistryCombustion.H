@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::psiCombustionModel
+    Foam::ChemistryCombustion
 
 Description
-    Combustion models for compressibility-based thermodynamics
+    Chemistry model wrapper for combustion models
 
 SourceFiles
-    psiCombustionModelI.H
-    psiCombustionModel.C
-    psiCombustionModelNew.C
+    ChemistryCombustion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef psiCombustionModel_H
-#define psiCombustionModel_H
+#ifndef ChemistryCombustion_H
+#define ChemistryCombustion_H
 
-#include "combustionModel.H"
 #include "autoPtr.H"
-#include "runTimeSelectionTables.H"
-#include "psiReactionThermo.H"
+#include "CombustionModel.H"
+#include "BasicChemistryModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,86 +47,47 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     class psiCombustionModel Declaration
+                    class ChemistryCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-class psiCombustionModel
+template<class ReactionThermo>
+class ChemistryCombustion
 :
-    public combustionModel
+    public CombustionModel<ReactionThermo>
 {
-    // Private Member Functions
+protected:
 
-        //- Construct as copy (not implemented)
-        psiCombustionModel(const psiCombustionModel&);
+    // Protected data
 
-        //- Disallow default bitwise assignment
-        void operator=(const psiCombustionModel&);
+        //- Pointer to chemistry model
+        autoPtr<BasicChemistryModel<ReactionThermo>> chemistryPtr_;
 
 
 public:
 
-    //- Thermo type
-    typedef psiReactionThermo reactionThermo;
-
-
-    //- Runtime type information
-    TypeName("psiCombustionModel");
-
-
-    //- Declare run-time constructor selection tables
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        psiCombustionModel,
-        dictionary,
-        (
-            const word& modelType,
-            psiReactionThermo& thermo,
-            const compressibleTurbulenceModel& turb,
-            const word& combustionProperties
-        ),
-        (modelType, thermo, turb, combustionProperties)
-    );
-
-
     // Constructors
 
-        //- Construct from components
-        psiCombustionModel
+        //- Construct from components and thermo
+        ChemistryCombustion
         (
             const word& modelType,
-            psiReactionThermo& thermo,
+            ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
-        );
-
-
-        //- Selector
-        static autoPtr<psiCombustionModel> New
-        (
-            psiReactionThermo& thermo,
-            const compressibleTurbulenceModel& turb,
-            const word& combustionProperties=combustionPropertiesName
         );
 
 
     //- Destructor
-    virtual ~psiCombustionModel();
+    virtual ~ChemistryCombustion();
 
 
     // Member Functions
 
         //- Return access to the thermo package
-        virtual psiReactionThermo& thermo() = 0;
+        virtual ReactionThermo& thermo();
 
         //- Return const access to the thermo package
-        virtual const psiReactionThermo& thermo() const = 0;
-
-
-    // IO
-
-        //- Update properties from given dictionary
-        virtual bool read();
+        virtual const ReactionThermo& thermo() const;
 };
 
 
@@ -137,6 +95,12 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "ChemistryCombustion.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

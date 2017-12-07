@@ -28,36 +28,36 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CombThermoType>
-Foam::combustionModels::noCombustion<CombThermoType>::noCombustion
+template<class ReactionThermo>
+Foam::combustionModels::noCombustion<ReactionThermo>::noCombustion
 (
     const word& modelType,
-    typename CombThermoType::reactionThermo& thermo,
+    ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
 :
-    CombThermoType(modelType, thermo, turb)
+    ThermoCombustion<ReactionThermo>(modelType, thermo, turb)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CombThermoType>
-Foam::combustionModels::noCombustion<CombThermoType>::~noCombustion()
+template<class ReactionThermo>
+Foam::combustionModels::noCombustion<ReactionThermo>::~noCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class CombThermoType>
-void Foam::combustionModels::noCombustion<CombThermoType>::correct()
+template<class ReactionThermo>
+void Foam::combustionModels::noCombustion<ReactionThermo>::correct()
 {}
 
 
-template<class CombThermoType>
+template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::noCombustion<CombThermoType>::R
+Foam::combustionModels::noCombustion<ReactionThermo>::R
 (
     volScalarField& Y
 ) const
@@ -71,9 +71,9 @@ Foam::combustionModels::noCombustion<CombThermoType>::R
 }
 
 
-template<class CombThermoType>
+template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::noCombustion<CombThermoType>::Qdot() const
+Foam::combustionModels::noCombustion<ReactionThermo>::Qdot() const
 {
     tmp<volScalarField> tQdot
     (
@@ -97,10 +97,10 @@ Foam::combustionModels::noCombustion<CombThermoType>::Qdot() const
 }
 
 
-template<class CombThermoType>
-bool Foam::combustionModels::noCombustion<CombThermoType>::read()
+template<class ReactionThermo>
+bool Foam::combustionModels::noCombustion<ReactionThermo>::read()
 {
-    if (CombThermoType::read())
+    if (ThermoCombustion<ReactionThermo>::read())
     {
         return true;
     }

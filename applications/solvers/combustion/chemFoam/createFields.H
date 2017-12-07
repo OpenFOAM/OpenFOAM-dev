@@ -28,7 +28,10 @@
     psiReactionThermo& thermo = pThermo();
     thermo.validate(args.executable(), "h");
 
-    autoPtr<psiChemistryModel> pChemistry(psiChemistryModel::New(thermo));
+    autoPtr<BasicChemistryModel<psiReactionThermo>> pChemistry
+    (
+        BasicChemistryModel<psiReactionThermo>::New(thermo)
+    );
 
     volScalarField rho
     (

@@ -30,13 +30,13 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
+template<class ReactionThermo, class ThermoType>
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::TDACChemistryModel
 (
-    typename CompType::reactionThermo& thermo
+    ReactionThermo& thermo
 )
 :
-    chemistryModel<CompType, ThermoType>(thermo),
+    StandardChemistryModel<ReactionThermo, ThermoType>(thermo),
     variableTimeStep_
     (
         this->mesh().time().controlDict().lookupOrDefault
@@ -81,7 +81,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
         specieComp_[i] = specComp[this->Y()[i].member()];
     }
 
-    mechRed_ = chemistryReductionMethod<CompType, ThermoType>::New
+    mechRed_ = chemistryReductionMethod<ReactionThermo, ThermoType>::New
     (
         *this,
         *this
@@ -111,7 +111,7 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
         }
     }
 
-    tabulation_ = chemistryTabulationMethod<CompType, ThermoType>::New
+    tabulation_ = chemistryTabulationMethod<ReactionThermo, ThermoType>::New
     (
         *this,
         *this
@@ -139,15 +139,15 @@ Foam::TDACChemistryModel<CompType, ThermoType>::TDACChemistryModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::TDACChemistryModel<CompType, ThermoType>::~TDACChemistryModel()
+template<class ReactionThermo, class ThermoType>
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::~TDACChemistryModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::omega
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
 (
     const scalarField& c, // Contains all species even when mechRed is active
     const scalar T,
@@ -200,8 +200,8 @@ void Foam::TDACChemistryModel<CompType, ThermoType>::omega
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::omega
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::omega
 (
     const Reaction<ThermoType>& R,
     const scalarField& c, // Contains all species even when mechRed is active
@@ -309,8 +309,8 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::omega
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::derivatives
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
 (
     const scalar time,
     const scalarField& c,
@@ -393,8 +393,8 @@ void Foam::TDACChemistryModel<CompType, ThermoType>::derivatives
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::jacobian
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
 (
     const scalar t,
     const scalarField& c,
@@ -577,8 +577,8 @@ void Foam::TDACChemistryModel<CompType, ThermoType>::jacobian
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::jacobian
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
 (
     const scalar t,
     const scalarField& c,
@@ -596,9 +596,9 @@ void Foam::TDACChemistryModel<CompType, ThermoType>::jacobian
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 template<class DeltaTType>
-Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
+Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
 (
     const DeltaTType& deltaT
 )
@@ -627,7 +627,7 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
     scalar nActiveSpecies = 0;
     scalar nAvg = 0;
 
-    CompType::correct();
+    BasicChemistryModel<ReactionThermo>::correct();
 
     scalar deltaTMin = GREAT;
 
@@ -880,8 +880,8 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
 (
     const scalar deltaT
 )
@@ -895,8 +895,8 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
+template<class ReactionThermo, class ThermoType>
+Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
 (
     const scalarField& deltaT
 )
@@ -905,8 +905,9 @@ Foam::scalar Foam::TDACChemistryModel<CompType, ThermoType>::solve
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::setTabulationResultsAdd
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+setTabulationResultsAdd
 (
     const label celli
 )
@@ -915,18 +916,16 @@ void Foam::TDACChemistryModel<CompType, ThermoType>::setTabulationResultsAdd
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::setTabulationResultsGrow
-(
-    const label celli
-)
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+setTabulationResultsGrow(const label celli)
 {
     tabulationResults_[celli] = 1.0;
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
 setTabulationResultsRetrieve
 (
     const label celli

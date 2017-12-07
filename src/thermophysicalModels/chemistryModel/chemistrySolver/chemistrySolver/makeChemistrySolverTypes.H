@@ -28,7 +28,7 @@ License
 
 #include "chemistrySolver.H"
 
-#include "chemistryModel.H"
+#include "StandardChemistryModel.H"
 #include "TDACChemistryModel.H"
 
 #include "noChemistrySolver.H"
@@ -39,60 +39,57 @@ License
 
 #define makeChemistrySolverType(SS, Comp, Thermo)                              \
                                                                                \
-    typedef SS<chemistryModel<Comp, Thermo>> SS##Comp##Thermo;                 \
+    typedef SS<StandardChemistryModel<Comp, Thermo>> SS##Comp##Thermo;         \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        SS##Comp##Thermo,                                                      \
+        (#SS"<" + word(StandardChemistryModel<Comp, Thermo>::typeName_()) + "<"\
+        + word(Comp::typeName_()) + "," + Thermo::typeName() + ">>").c_str(),  \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    BasicChemistryModel<Comp>::                                                \
+        add##thermo##ConstructorToTable<SS##Comp##Thermo>                      \
+        add##SS##Comp##Thermo##thermo##ConstructorTo##BasicChemistryModel##Comp\
+##Table_; \
+                                                                               \
     typedef SS<TDACChemistryModel<Comp, Thermo>> TDAC##SS##Comp##Thermo;       \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        SS##Comp##Thermo,                                                      \
-        (#SS"<chemistryModel<" + word(Comp::typeName_())                       \
-      + "," + Thermo::typeName() + ">>").c_str(),                              \
+        TDAC##SS##Comp##Thermo,                                                \
+        (#SS"<" + word(TDACChemistryModel<Comp, Thermo>::typeName_()) + "<"    \
+        + word(Comp::typeName_()) + "," + Thermo::typeName() + ">>").c_str(),  \
         0                                                                      \
     );                                                                         \
                                                                                \
-    addToRunTimeSelectionTable                                                 \
-    (                                                                          \
-        Comp,                                                                  \
-        SS##Comp##Thermo,                                                      \
-        thermo                                                                 \
-    );                                                                         \
-                                                                               \
-    defineTemplateTypeNameAndDebugWithName                                     \
-    (                                                                          \
-        TDAC##SS##Comp##Thermo,                                                \
-        (#SS"<TDACChemistryModel<" + word(Comp::typeName_())                   \
-      + "," + Thermo::typeName() + ">>").c_str(),                              \
-        0                                                                      \
-    );                                                                         \
-                                                                               \
-    addToRunTimeSelectionTable                                                 \
-    (                                                                          \
-        Comp,                                                                  \
-        TDAC##SS##Comp##Thermo,                                                \
-        thermo                                                                 \
-    );
+    BasicChemistryModel<Comp>::                                                \
+        add##thermo##ConstructorToTable<TDAC##SS##Comp##Thermo>                \
+        add##TDAC##SS##Comp##Thermo##thermo##ConstructorTo##BasicChemistryModel\
+##Comp##Table_;
 
 
-#define makeChemistrySolverTypes(CompChemModel,Thermo)                         \
+#define makeChemistrySolverTypes(Comp, Thermo)                                 \
                                                                                \
     makeChemistrySolverType                                                    \
     (                                                                          \
         noChemistrySolver,                                                     \
-        CompChemModel,                                                         \
+        Comp,                                                                  \
         Thermo                                                                 \
     );                                                                         \
                                                                                \
     makeChemistrySolverType                                                    \
     (                                                                          \
         EulerImplicit,                                                         \
-        CompChemModel,                                                         \
+        Comp,                                                                  \
         Thermo                                                                 \
     );                                                                         \
                                                                                \
     makeChemistrySolverType                                                    \
     (                                                                          \
         ode,                                                                   \
-        CompChemModel,                                                         \
+        Comp,                                                                  \
         Thermo                                                                 \
     );                                                                         \
 

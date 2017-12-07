@@ -47,153 +47,127 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
         )
     );
 
-    word chemistryTypeName;
-
-    if (chemistryDict.isDict("chemistryType"))
+    if (!chemistryDict.isDict("chemistryType"))
     {
-        const dictionary& chemistryTypeDict
+        FatalErrorInFunction
+            << "Template paramater based chemistry solver selection is no "
+            << "longer supported. Please create a chemistryType dictionary"
+            << "instead." << endl << endl << "For example, the entry:" << endl
+            << "    chemistrySolver ode<StandardChemistryModel<"
+            << "rhoChemistryModel,sutherlandspecie<janaf<perfectGas>,"
+            << "sensibleInternalEnergy>>" << endl << endl << "becomes:" << endl
+            << "    chemistryType" << endl << "    {" << endl
+            << "        solver ode;" << endl << "        method standard;"
+            << endl << "    }" << exit(FatalError);
+    }
+
+    const dictionary& chemistryTypeDict =
+        chemistryDict.subDict("chemistryType");
+
+    const word& solverName
+    (
+        chemistryTypeDict.found("solver")
+      ? chemistryTypeDict.lookup("solver")
+      : chemistryTypeDict.found("chemistrySolver")
+      ? chemistryTypeDict.lookup("chemistrySolver")
+      : chemistryTypeDict.lookup("solver") // error if neither entry is found
+    );
+
+    const word& methodName
+    (
+        chemistryTypeDict.lookupOrDefault<word>
         (
-            chemistryDict.subDict("chemistryType")
-        );
+            "method",
+            chemistryTypeDict.lookupOrDefault<bool>("TDAC", false)
+          ? "TDAC"
+          : "standard"
+        )
+    );
 
-        Info<< "Selecting chemistry type " << chemistryTypeDict << endl;
+    dictionary chemistryTypeDictNew;
+    chemistryTypeDictNew.add("solver", solverName);
+    chemistryTypeDictNew.add("method", methodName);
 
-        const int nCmpt = 8;
-        const char* cmptNames[nCmpt] =
+    Info<< "Selecting chemistry solver " << chemistryTypeDictNew << endl;
+
+    typedef typename ChemistryModel::thermoConstructorTable cstrTableType;
+    cstrTableType* cstrTable = ChemistryModel::thermoConstructorTablePtr_;
+
+    const word chemSolverCompThermoName =
+        solverName + '<' + methodName + '<'
+      + ChemistryModel::reactionThermo::typeName + ','
+      + thermo.thermoName() + ">>";
+
+    typename cstrTableType::iterator cstrIter =
+        cstrTable->find(chemSolverCompThermoName);
+
+    if (cstrIter == cstrTable->end())
+    {
+        FatalErrorInFunction
+            << "Unknown " << typeName_() << " type " << solverName << endl
+            << endl;
+
+        const wordList names(cstrTable->toc());
+
+        wordList thisCmpts;
+        thisCmpts.append(word::null);
+        thisCmpts.append(word::null);
+        thisCmpts.append(ChemistryModel::reactionThermo::typeName);
+        thisCmpts.append(basicThermo::splitThermoName(thermo.thermoName(), 5));
+
+        List<wordList> validNames;
+        validNames.append(wordList(2, word::null));
+        validNames[0][0] = "solver";
+        validNames[0][1] = "method";
+        forAll(names, i)
         {
-            "chemistrySolver",
-            "chemistryModel",
-            "chemistryThermo",
-            "transport",
-            "thermo",
-            "equationOfState",
-            "specie",
-            "energy"
-        };
+            const wordList cmpts(basicThermo::splitThermoName(names[i], 8));
 
-        IOdictionary thermoDict
-        (
-            IOobject
-            (
-                thermo.phasePropertyName(basicThermo::dictName),
-                thermo.db().time().constant(),
-                thermo.db(),
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        );
-
-        word thermoTypeName;
-
-        if (thermoDict.isDict("thermoType"))
-        {
-            const dictionary& thermoTypeDict(thermoDict.subDict("thermoType"));
-            thermoTypeName =
-                word(thermoTypeDict.lookup("transport")) + '<'
-              + word(thermoTypeDict.lookup("thermo")) + '<'
-              + word(thermoTypeDict.lookup("equationOfState")) + '<'
-              + word(thermoTypeDict.lookup("specie")) + ">>,"
-              + word(thermoTypeDict.lookup("energy")) + ">";
-        }
-        else
-        {
-            FatalIOErrorInFunction(thermoDict)
-                << "thermoType is in the old format and must be upgraded"
-                << exit(FatalIOError);
-        }
-
-        Switch isTDAC(chemistryTypeDict.lookupOrDefault("TDAC", false));
-
-        // Construct the name of the chemistry type from the components
-        if (isTDAC)
-        {
-            chemistryTypeName =
-                word(chemistryTypeDict.lookup("chemistrySolver")) + '<'
-              + "TDACChemistryModel<"
-              + word(chemistryTypeDict.lookup("chemistryThermo")) + ','
-              + thermoTypeName + ">>";
-        }
-        else
-        {
-            chemistryTypeName =
-                word(chemistryTypeDict.lookup("chemistrySolver")) + '<'
-              + "chemistryModel<"
-              + word(chemistryTypeDict.lookup("chemistryThermo")) + ','
-              + thermoTypeName + ">>";
-        }
-
-        typename ChemistryModel::thermoConstructorTable::iterator cstrIter =
-            ChemistryModel::thermoConstructorTablePtr_->find(chemistryTypeName);
-
-        if (cstrIter == ChemistryModel::thermoConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown " << ChemistryModel::typeName << " type " << nl
-                << "chemistryType" << chemistryTypeDict << nl << nl
-                << "Valid " << ChemistryModel::typeName << " types are:"
-                << nl << nl;
-
-            // Get the list of all the suitable chemistry packages available
-            wordList validChemistryTypeNames
-            (
-                ChemistryModel::thermoConstructorTablePtr_->sortedToc()
-            );
-
-            // Build a table of the thermo packages constituent parts
-            // Note: row-0 contains the names of constituent parts
-            List<wordList> validChemistryTypeNameCmpts
-            (
-                validChemistryTypeNames.size() + 1
-            );
-
-            validChemistryTypeNameCmpts[0].setSize(nCmpt);
-            forAll(validChemistryTypeNameCmpts[0], j)
+            bool isValid = true;
+            for (label i = 2; i < cmpts.size() && isValid; ++ i)
             {
-                validChemistryTypeNameCmpts[0][j] = cmptNames[j];
+                isValid = isValid && cmpts[i] == thisCmpts[i];
             }
 
-            // Split the thermo package names into their constituent parts
-            forAll(validChemistryTypeNames, i)
+            if (isValid)
             {
-                validChemistryTypeNameCmpts[i+1] = basicThermo::splitThermoName
-                (
-                    validChemistryTypeNames[i],
-                    nCmpt
-                );
+                validNames.append(SubList<word>(cmpts, 2));
             }
-
-            // Print the table of available packages
-            // in terms of their constituent parts
-            printTable(validChemistryTypeNameCmpts, FatalError);
-
-            FatalError<< exit(FatalError);
         }
 
-        return autoPtr<ChemistryModel>(cstrIter()(thermo));
-    }
-    else
-    {
-        chemistryTypeName =
-            word(chemistryDict.lookup("chemistryType"));
+        FatalErrorInFunction
+            << "All " << validNames[0][0] << '/' << validNames[0][1]
+            << "combinations for this thermodynamic model are:"
+            << endl << endl;
+        printTable(validNames, FatalErrorInFunction);
 
-        Info<< "Selecting chemistry type " << chemistryTypeName << endl;
+        FatalErrorInFunction << endl;
 
-        typename ChemistryModel::thermoConstructorTable::iterator cstrIter =
-            ChemistryModel::thermoConstructorTablePtr_->find(chemistryTypeName);
-
-        if (cstrIter == ChemistryModel::thermoConstructorTablePtr_->end())
+        List<wordList> validCmpts;
+        validCmpts.append(wordList(8, word::null));
+        validCmpts[0][0] = "solver";
+        validCmpts[0][1] = "method";
+        validCmpts[0][2] = "reactionThermo";
+        validCmpts[0][3] = "transport";
+        validCmpts[0][4] = "thermo";
+        validCmpts[0][5] = "equationOfState";
+        validCmpts[0][6] = "specie";
+        validCmpts[0][7] = "energy";
+        forAll(names, i)
         {
-            FatalErrorInFunction
-                << "Unknown " << ChemistryModel::typeName << " type "
-                << chemistryTypeName << nl << nl
-                << "Valid ChemistryModel types are:" << nl
-                << ChemistryModel::thermoConstructorTablePtr_->sortedToc() << nl
-                << exit(FatalError);
+            validCmpts.append(basicThermo::splitThermoName(names[i], 8));
         }
 
-        return autoPtr<ChemistryModel>(cstrIter()(thermo));
+        FatalErrorInFunction
+            << "All " << validCmpts[0][0] << '/' << validCmpts[0][1] << '/'
+            << validCmpts[0][2] << "/thermoPhysics combinations are:"
+            << endl << endl;
+        printTable(validCmpts, FatalErrorInFunction);
+
+        FatalErrorInFunction << exit(FatalError);
     }
+
+    return autoPtr<ChemistryModel>(cstrIter()(thermo));
 }
 
 // ************************************************************************* //

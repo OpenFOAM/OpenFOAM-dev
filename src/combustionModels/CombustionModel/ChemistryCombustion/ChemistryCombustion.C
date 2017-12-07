@@ -23,46 +23,51 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "psiChemistryCombustion.H"
+#include "ChemistryCombustion.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::combustionModels::psiChemistryCombustion::psiChemistryCombustion
+template<class ReactionThermo>
+Foam::combustionModels::ChemistryCombustion<ReactionThermo>::ChemistryCombustion
 (
     const word& modelType,
-    psiReactionThermo& thermo,
+    ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
 :
-    psiCombustionModel
+    CombustionModel<ReactionThermo>
     (
         modelType,
         thermo,
         turb,
         combustionProperties
     ),
-    chemistryPtr_(psiChemistryModel::New(thermo))
+    chemistryPtr_(BasicChemistryModel<ReactionThermo>::New(thermo))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::combustionModels::psiChemistryCombustion::~psiChemistryCombustion()
+template<class ReactionThermo>
+Foam::combustionModels::ChemistryCombustion<ReactionThermo>::
+~ChemistryCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::psiReactionThermo&
-Foam::combustionModels::psiChemistryCombustion::thermo()
+template<class ReactionThermo>
+ReactionThermo&
+Foam::combustionModels::ChemistryCombustion<ReactionThermo>::thermo()
 {
     return chemistryPtr_->thermo();
 }
 
 
-const Foam::psiReactionThermo&
-Foam::combustionModels::psiChemistryCombustion::thermo() const
+template<class ReactionThermo>
+const ReactionThermo&
+Foam::combustionModels::ChemistryCombustion<ReactionThermo>::thermo() const
 {
     return chemistryPtr_->thermo();
 }

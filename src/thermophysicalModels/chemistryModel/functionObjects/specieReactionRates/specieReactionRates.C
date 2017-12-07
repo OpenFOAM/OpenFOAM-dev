@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,12 +175,20 @@ bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::write()
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 #include "addToRunTimeSelectionTable.H"
-#include "rhoChemistryModel.H"
-#include "psiChemistryModel.H"
+#include "BasicChemistryModel.H"
+#include "psiReactionThermo.H"
+#include "rhoReactionThermo.H"
 
 namespace Foam
 {
-    typedef functionObjects::specieReactionRates<psiChemistryModel>
+    typedef
+        functionObjects::specieReactionRates
+        <
+            BasicChemistryModel
+            <
+                psiReactionThermo
+            >
+        >
         psiSpecieReactionRates;
 
     defineTemplateTypeNameAndDebugWithName
@@ -198,7 +206,14 @@ namespace Foam
     );
 
 
-    typedef functionObjects::specieReactionRates<rhoChemistryModel>
+    typedef
+        functionObjects::specieReactionRates
+        <
+            BasicChemistryModel
+            <
+                rhoReactionThermo
+            >
+        >
         rhoSpecieReactionRates;
 
     defineTemplateTypeNameAndDebugWithName

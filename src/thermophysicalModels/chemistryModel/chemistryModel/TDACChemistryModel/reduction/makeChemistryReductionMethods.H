@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ License
         add##chemistryReductionMethods##SS##Comp##Thermo##ConstructorToTable_;
 
 
-#define makeChemistryReductionMethods(CompChemModel, Thermo)                    \
+#define makeChemistryReductionMethods(CompChemModel, Thermo)                   \
                                                                                \
     typedef chemistryReductionMethod<CompChemModel, Thermo>                    \
         chemistryReductionMethod##CompChemModel##Thermo;                       \
@@ -62,7 +62,9 @@ License
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         chemistryReductionMethod##CompChemModel##Thermo,                       \
-        "chemistryReductionMethod<"#CompChemModel","#Thermo">",                \
+        (word(chemistryReductionMethod##CompChemModel##Thermo::typeName_()) +  \
+        '<' + word(CompChemModel::typeName_()) + "," + Thermo::typeName() + '>'\
+        ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \

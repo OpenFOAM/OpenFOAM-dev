@@ -25,25 +25,26 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline bool
-Foam::TDACChemistryModel<CompType, ThermoType>::variableTimeStep() const
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::variableTimeStep() const
 {
     return variableTimeStep_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::label
-Foam::TDACChemistryModel<CompType, ThermoType>::timeSteps() const
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::timeSteps() const
 {
     return timeSteps_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::autoPtr<Foam::OFstream>
-Foam::TDACChemistryModel<CompType, ThermoType>::logFile(const word& name) const
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+logFile(const word& name) const
 {
     mkDir(this->mesh().time().path()/"TDAC"/this->group());
     return autoPtr<OFstream>
@@ -56,24 +57,25 @@ Foam::TDACChemistryModel<CompType, ThermoType>::logFile(const word& name) const
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::PtrList<Foam::volScalarField>&
-Foam::TDACChemistryModel<CompType, ThermoType>::Y()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::Y()
 {
     return this->Y_;
 }
 
 
-template<class CompType, class ThermoType>
-inline Foam::autoPtr<Foam::chemistryReductionMethod<CompType, ThermoType>>&
-Foam::TDACChemistryModel<CompType, ThermoType>::mechRed()
+template<class ReactionThermo, class ThermoType>
+inline
+Foam::autoPtr<Foam::chemistryReductionMethod<ReactionThermo, ThermoType>>&
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::mechRed()
 {
     return mechRed_;
 }
 
 
-template<class CompType, class ThermoType>
-inline void Foam::TDACChemistryModel<CompType, ThermoType>::setActive
+template<class ReactionThermo, class ThermoType>
+inline void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::setActive
 (
     const label i
 )
@@ -82,8 +84,8 @@ inline void Foam::TDACChemistryModel<CompType, ThermoType>::setActive
 }
 
 
-template<class CompType, class ThermoType>
-inline bool Foam::TDACChemistryModel<CompType, ThermoType>::active
+template<class ReactionThermo, class ThermoType>
+inline bool Foam::TDACChemistryModel<ReactionThermo, ThermoType>::active
 (
     const label i
 ) const
@@ -92,81 +94,84 @@ inline bool Foam::TDACChemistryModel<CompType, ThermoType>::active
 }
 
 
-template<class CompType, class ThermoType>
-inline void
-Foam::TDACChemistryModel<CompType, ThermoType>::setNsDAC(const label newNsDAC)
+template<class ReactionThermo, class ThermoType>
+inline void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+setNsDAC(const label newNsDAC)
 {
     NsDAC_ = newNsDAC;
 }
 
 
-template<class CompType, class ThermoType>
-inline void
-Foam::TDACChemistryModel<CompType, ThermoType>::setNSpecie(const label newNs)
+template<class ReactionThermo, class ThermoType>
+inline void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+setNSpecie(const label newNs)
 {
     this->nSpecie_ = newNs;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::DynamicList<Foam::label>&
-Foam::TDACChemistryModel<CompType, ThermoType>::simplifiedToCompleteIndex()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+simplifiedToCompleteIndex()
 {
     return simplifiedToCompleteIndex_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::Field<Foam::label>&
-Foam::TDACChemistryModel<CompType, ThermoType>::completeToSimplifiedIndex()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+completeToSimplifiedIndex()
 {
     return completeToSimplifiedIndex_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline const Foam::Field<Foam::label>&
-Foam::TDACChemistryModel<CompType, ThermoType>::
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
 completeToSimplifiedIndex() const
 {
     return completeToSimplifiedIndex_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::Field<bool>&
-Foam::TDACChemistryModel<CompType, ThermoType>::reactionsDisabled()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::reactionsDisabled()
 {
     return reactionsDisabled_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::scalarField&
-Foam::TDACChemistryModel<CompType, ThermoType>::completeC()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::completeC()
 {
     return completeC_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::scalarField&
-Foam::TDACChemistryModel<CompType, ThermoType>::simplifiedC()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::simplifiedC()
 {
     return simplifiedC_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 inline Foam::List<Foam::List<Foam::specieElement>>&
-Foam::TDACChemistryModel<CompType, ThermoType>::specieComp()
+Foam::TDACChemistryModel<ReactionThermo, ThermoType>::specieComp()
 {
     return specieComp_;
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::TDACChemistryModel<CompType, ThermoType>::resetTabulationResults()
+template<class ReactionThermo, class ThermoType>
+void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::
+resetTabulationResults()
 {
     forAll(tabulationResults_, tabi)
     {

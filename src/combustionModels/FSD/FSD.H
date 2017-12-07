@@ -77,10 +77,10 @@ namespace combustionModels
                           Class FSD Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CombThermoType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 class FSD
 :
-    public singleStepCombustion <CombThermoType, ThermoType>
+    public singleStepCombustion <ReactionThermo, ThermoType>
 {
     // Private data
 
@@ -139,7 +139,7 @@ public:
         FSD
         (
             const word& modelType,
-            typename CombThermoType::reactionThermo& thermo,
+            ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );

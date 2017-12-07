@@ -1,10 +1,5 @@
 chemistryModel/basicChemistryModel/basicChemistryModel.C
-
-chemistryModel/psiChemistryModel/psiChemistryModel.C
-chemistryModel/psiChemistryModel/psiChemistryModels.C
-
-chemistryModel/rhoChemistryModel/rhoChemistryModel.C
-chemistryModel/rhoChemistryModel/rhoChemistryModels.C
+chemistryModel/BasicChemistryModel/BasicChemistryModels.C
 
 chemistryModel/TDACChemistryModel/reduction/makeChemistryReductionMethods.C
 chemistryModel/TDACChemistryModel/tabulation/makeChemistryTabulationMethods.C

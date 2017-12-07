@@ -120,6 +120,12 @@ public:
             return *this;
         }
 
+        //- Return the name of the thermo physics
+        virtual word thermoName() const
+        {
+            return MixtureType::thermoType::typeName();
+        }
+
         //- Return true if the equation of state is incompressible
         //  i.e. rho != f(p)
         virtual bool incompressible() const

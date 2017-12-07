@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,86 +22,108 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::psiThermoCombustion
+    Foam::BasicChemistryModel
 
 Description
-    Compressibility-based thermo model wrapper for combustion models
+    Basic chemistry model templated on thermodynamics
 
 SourceFiles
-    psiThermoCombustion.C
+    BasicChemistryModelI.H
+    BasicChemistryModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef psiThermoCombustion_H
-#define psiThermoCombustion_H
+#ifndef BasicChemistryModel_H
+#define BasicChemistryModel_H
 
+#include "basicChemistryModel.H"
 #include "autoPtr.H"
-#include "psiCombustionModel.H"
-#include "psiReactionThermo.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace combustionModels
-{
+
+// Forward declaration of classes
+class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                    class psiThermoCombustion Declaration
+                     class BasicChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class psiThermoCombustion
+template<class ReactionThermo>
+class BasicChemistryModel
 :
-    public psiCombustionModel
+    public basicChemistryModel
 {
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        psiThermoCombustion(const psiThermoCombustion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const psiThermoCombustion&);
-
-
 protected:
 
     // Protected data
 
         //- Thermo
-        psiReactionThermo& thermo_;
+        ReactionThermo& thermo_;
 
 
 public:
 
+    //- Runtime type information
+    TypeName("BasicChemistryModel");
+
+
+    //- Thermo type
+    typedef ReactionThermo reactionThermo;
+
+
+    //- Declare run-time constructor selection tables
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        BasicChemistryModel,
+        thermo,
+        (ReactionThermo& thermo),
+        (thermo)
+    );
+
+
     // Constructors
 
-        //- Construct from components
-        psiThermoCombustion
-        (
-            const word& modelType,
-            psiReactionThermo& thermo,
-            const compressibleTurbulenceModel& turb
-        );
+        //- Construct from thermo
+        BasicChemistryModel(ReactionThermo& thermo);
+
+
+    //- Selector
+    static autoPtr<BasicChemistryModel<ReactionThermo>> New
+    (
+        ReactionThermo& thermo
+    );
 
 
     //- Destructor
-    virtual ~psiThermoCombustion();
+    virtual ~BasicChemistryModel();
 
 
     // Member Functions
 
         //- Return access to the thermo package
-        virtual psiReactionThermo& thermo();
+        inline ReactionThermo& thermo();
 
         //- Return const access to the thermo package
-        virtual const psiReactionThermo& thermo() const;
+        inline const ReactionThermo& thermo() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace combustionModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "BasicChemistryModel.C"
+#endif
+
+#include "BasicChemistryModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

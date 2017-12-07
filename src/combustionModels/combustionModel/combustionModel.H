@@ -101,6 +101,18 @@ public:
         );
 
 
+    // Selectors
+
+        //- Generic New for each of the related chemistry model
+        template<class CombustionModel>
+        static autoPtr<CombustionModel> New
+        (
+            typename CombustionModel::reactionThermo& thermo,
+            const compressibleTurbulenceModel& turb,
+            const word& combustionProperties
+        );
+
+
     //- Destructor
     virtual ~combustionModel();
 
@@ -146,6 +158,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "combustionModelI.H"
+
+#ifdef NoRepository
+    #include "combustionModelTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

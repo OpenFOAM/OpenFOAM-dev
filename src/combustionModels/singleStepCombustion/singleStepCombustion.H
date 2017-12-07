@@ -36,6 +36,7 @@ SourceFiles
 #define singleStepCombustion_H
 
 #include "singleStepReactingMixture.H"
+#include "ThermoCombustion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,10 +49,10 @@ namespace combustionModels
                     Class singleStepCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CombThermoType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 class singleStepCombustion
 :
-    public CombThermoType
+    public ThermoCombustion<ReactionThermo>
 {
     // Private Member Functions
 
@@ -84,7 +85,7 @@ public:
         singleStepCombustion
         (
             const word& modelType,
-            typename CombThermoType::reactionThermo& thermo,
+            ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );

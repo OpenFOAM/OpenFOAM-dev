@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,8 @@ License
 #include "makeCombustionTypes.H"
 
 #include "thermoPhysicsTypes.H"
-#include "psiThermoCombustion.H"
-#include "rhoThermoCombustion.H"
+#include "psiReactionThermo.H"
+#include "rhoReactionThermo.H"
 #include "infinitelyFastChemistry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,33 +37,29 @@ License
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    psiThermoCombustion,
-    gasHThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    gasHThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    psiThermoCombustion,
-    constGasHThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    constGasHThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    rhoThermoCombustion,
-    gasHThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    gasHThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    rhoThermoCombustion,
-    constGasHThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    constGasHThermoPhysics
 );
 
 // Combustion models based on sensibleInternalEnergy
@@ -71,33 +67,29 @@ makeCombustionTypesThermo
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    psiThermoCombustion,
-    gasEThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    gasEThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    psiThermoCombustion,
-    constGasEThermoPhysics,
-    psiCombustionModel
+    psiReactionThermo,
+    constGasEThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    rhoThermoCombustion,
-    gasEThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    gasEThermoPhysics
 );
 
 makeCombustionTypesThermo
 (
     infinitelyFastChemistry,
-    rhoThermoCombustion,
-    constGasEThermoPhysics,
-    rhoCombustionModel
+    rhoReactionThermo,
+    constGasEThermoPhysics
 );
 
 

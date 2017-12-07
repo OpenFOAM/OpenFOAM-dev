@@ -38,6 +38,8 @@ SourceFiles
 #ifndef zoneCombustion_H
 #define zoneCombustion_H
 
+#include "CombustionModel.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -49,15 +51,15 @@ namespace combustionModels
                             Class zoneCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class ReactionThermo>
 class zoneCombustion
 :
-    public Type
+    public CombustionModel<ReactionThermo>
 {
     // Private data
 
         //- The combustion model to be zone-filtered
-        autoPtr<Type> combustionModelPtr_;
+        autoPtr<CombustionModel<ReactionThermo>> combustionModelPtr_;
 
         //- List of zone names in which the reactions are active
         wordList zoneNames_;
@@ -90,7 +92,7 @@ public:
         zoneCombustion
         (
             const word& modelType,
-            typename Type::reactionThermo& thermo,
+            ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
@@ -103,10 +105,10 @@ public:
     // Member Functions
 
         //- Return access to the thermo package
-        virtual typename Type::reactionThermo& thermo();
+        virtual ReactionThermo& thermo();
 
         //- Return const access to the thermo package
-        virtual const typename Type::reactionThermo& thermo() const;
+        virtual const ReactionThermo& thermo() const;
 
         //- Correct combustion rate
         virtual void correct();

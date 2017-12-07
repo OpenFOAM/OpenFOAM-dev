@@ -27,16 +27,16 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::combustionModels::EDC<Type>::EDC
+template<class ReactionThermo>
+Foam::combustionModels::EDC<ReactionThermo>::EDC
 (
     const word& modelType,
-    typename Type::reactionThermo& thermo,
+    ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
 :
-    laminar<Type>(modelType, thermo, turb, combustionProperties),
+    laminar<ReactionThermo>(modelType, thermo, turb, combustionProperties),
     version_
     (
         EDCversionNames
@@ -72,15 +72,15 @@ Foam::combustionModels::EDC<Type>::EDC
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::combustionModels::EDC<Type>::~EDC()
+template<class ReactionThermo>
+Foam::combustionModels::EDC<ReactionThermo>::~EDC()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::combustionModels::EDC<Type>::correct()
+template<class ReactionThermo>
+void Foam::combustionModels::EDC<ReactionThermo>::correct()
 {
     if (this->active())
     {
@@ -174,17 +174,17 @@ void Foam::combustionModels::EDC<Type>::correct()
 }
 
 
-template<class Type>
+template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::EDC<Type>::R(volScalarField& Y) const
+Foam::combustionModels::EDC<ReactionThermo>::R(volScalarField& Y) const
 {
-    return kappa_*laminar<Type>::R(Y);
+    return kappa_*laminar<ReactionThermo>::R(Y);
 }
 
 
-template<class Type>
+template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::EDC<Type>::Qdot() const
+Foam::combustionModels::EDC<ReactionThermo>::Qdot() const
 {
     tmp<volScalarField> tQdot
     (
@@ -213,10 +213,10 @@ Foam::combustionModels::EDC<Type>::Qdot() const
 }
 
 
-template<class Type>
-bool Foam::combustionModels::EDC<Type>::read()
+template<class ReactionThermo>
+bool Foam::combustionModels::EDC<ReactionThermo>::read()
 {
-    if (Type::read())
+    if (laminar<ReactionThermo>::read())
     {
         version_ =
         (

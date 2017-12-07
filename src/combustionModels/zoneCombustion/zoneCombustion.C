@@ -27,9 +27,9 @@ License
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template<class Type>
+template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::zoneCombustion<Type>::filter
+Foam::combustionModels::zoneCombustion<ReactionThermo>::filter
 (
     const tmp<fvScalarMatrix>& tR
 ) const
@@ -72,9 +72,9 @@ Foam::combustionModels::zoneCombustion<Type>::filter
 }
 
 
-template<class Type>
+template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::zoneCombustion<Type>::filter
+Foam::combustionModels::zoneCombustion<ReactionThermo>::filter
 (
     const tmp<volScalarField>& tS
 ) const
@@ -100,73 +100,89 @@ Foam::combustionModels::zoneCombustion<Type>::filter
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::combustionModels::zoneCombustion<Type>::zoneCombustion
+template<class ReactionThermo>
+Foam::combustionModels::zoneCombustion<ReactionThermo>::zoneCombustion
 (
     const word& modelType,
-    typename Type::reactionThermo& thermo,
+    ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
 :
-    Type(modelType, thermo, turb, combustionProperties),
-    combustionModelPtr_(Type::New(thermo, turb, "zoneCombustionProperties")),
+    CombustionModel<ReactionThermo>
+    (
+        modelType,
+        thermo,
+        turb,
+        combustionProperties
+    ),
+    combustionModelPtr_
+    (
+        CombustionModel<ReactionThermo>::New
+        (
+            thermo,
+            turb,
+            "zoneCombustionProperties"
+        )
+    ),
     zoneNames_(this->coeffs().lookup("zones"))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::combustionModels::zoneCombustion<Type>::~zoneCombustion()
+template<class ReactionThermo>
+Foam::combustionModels::zoneCombustion<ReactionThermo>::~zoneCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Type>
-typename Type::reactionThermo&
-Foam::combustionModels::zoneCombustion<Type>::thermo()
+template<class ReactionThermo>
+ReactionThermo& Foam::combustionModels::zoneCombustion<ReactionThermo>::thermo()
 {
     return combustionModelPtr_->thermo();
 }
 
 
-template<class Type>
-const typename Type::reactionThermo&
-Foam::combustionModels::zoneCombustion<Type>::thermo() const
+template<class ReactionThermo>
+const ReactionThermo&
+Foam::combustionModels::zoneCombustion<ReactionThermo>::thermo() const
 {
     return combustionModelPtr_->thermo();
 }
 
 
-template<class Type>
-void Foam::combustionModels::zoneCombustion<Type>::correct()
+template<class ReactionThermo>
+void Foam::combustionModels::zoneCombustion<ReactionThermo>::correct()
 {
     combustionModelPtr_->correct();
 }
 
 
-template<class Type>
+template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::zoneCombustion<Type>::R(volScalarField& Y) const
+Foam::combustionModels::zoneCombustion<ReactionThermo>::R
+(
+    volScalarField& Y
+) const
 {
     return filter(combustionModelPtr_->R(Y));
 }
 
 
-template<class Type>
+template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::zoneCombustion<Type>::Qdot() const
+Foam::combustionModels::zoneCombustion<ReactionThermo>::Qdot() const
 {
     return filter(combustionModelPtr_->Qdot());
 }
 
 
-template<class Type>
-bool Foam::combustionModels::zoneCombustion<Type>::read()
+template<class ReactionThermo>
+bool Foam::combustionModels::zoneCombustion<ReactionThermo>::read()
 {
-    if (Type::read())
+    if (CombustionModel<ReactionThermo>::read())
     {
         combustionModelPtr_->read();
         return true;

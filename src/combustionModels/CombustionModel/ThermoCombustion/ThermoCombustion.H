@@ -22,22 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::rhoThermoCombustion
+    Foam::ThermoCombustion
 
 Description
-    Density-based thermo model wrapper for combustion models
+    Thermo model wrapper for combustion models
 
 SourceFiles
-    rhoThermoCombustion.C
+    ThermoCombustion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef rhoThermoCombustion_H
-#define rhoThermoCombustion_H
+#ifndef ThermoCombustion_H
+#define ThermoCombustion_H
 
 #include "autoPtr.H"
-#include "rhoCombustionModel.H"
-#include "rhoChemistryModel.H"
+#include "CombustionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,28 +46,20 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    class rhoThermoCombustion Declaration
+                    class ThermoCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-class rhoThermoCombustion
+template<class ReactionThermo>
+class ThermoCombustion
 :
-    public rhoCombustionModel
+    public CombustionModel<ReactionThermo>
 {
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        rhoThermoCombustion(const rhoThermoCombustion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const rhoThermoCombustion&);
-
-
 protected:
 
     // Protected data
 
         //- Thermo
-        rhoReactionThermo& thermo_;
+        ReactionThermo& thermo_;
 
 
 public:
@@ -76,25 +67,25 @@ public:
     // Constructors
 
         //- Construct from components
-        rhoThermoCombustion
+        ThermoCombustion
         (
             const word& modelType,
-            rhoReactionThermo& thermo,
+            ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb
         );
 
 
     //- Destructor
-    virtual ~rhoThermoCombustion();
+    virtual ~ThermoCombustion();
 
 
     // Member Functions
 
         //- Return access to the thermo package
-        virtual rhoReactionThermo& thermo();
+        virtual ReactionThermo& thermo();
 
         //- Return const access to the thermo package
-        virtual const rhoReactionThermo& thermo() const;
+        virtual const ReactionThermo& thermo() const;
 };
 
 
@@ -102,6 +93,12 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "ThermoCombustion.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

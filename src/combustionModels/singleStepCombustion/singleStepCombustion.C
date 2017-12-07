@@ -33,16 +33,16 @@ namespace combustionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CombThermoType, class ThermoType>
-singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
+template<class ReactionThermo, class ThermoType>
+singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
 (
     const word& modelType,
-    typename CombThermoType::reactionThermo& thermo,
+    ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
 :
-    CombThermoType(modelType, thermo, turb),
+    ThermoCombustion<ReactionThermo>(modelType, thermo, turb),
     singleMixturePtr_(nullptr),
     wFuel_
     (
@@ -89,15 +89,15 @@ singleStepCombustion<CombThermoType, ThermoType>::singleStepCombustion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CombThermoType, class ThermoType>
-singleStepCombustion<CombThermoType, ThermoType>::~singleStepCombustion()
+template<class ReactionThermo, class ThermoType>
+singleStepCombustion<ReactionThermo, ThermoType>::~singleStepCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class CombThermoType, class ThermoType>
-tmp<fvScalarMatrix> singleStepCombustion<CombThermoType, ThermoType>::R
+template<class ReactionThermo, class ThermoType>
+tmp<fvScalarMatrix> singleStepCombustion<ReactionThermo, ThermoType>::R
 (
     volScalarField& Y
 ) const
@@ -125,9 +125,9 @@ tmp<fvScalarMatrix> singleStepCombustion<CombThermoType, ThermoType>::R
 }
 
 
-template<class CombThermoType, class ThermoType>
+template<class ReactionThermo, class ThermoType>
 tmp<volScalarField>
-singleStepCombustion<CombThermoType, ThermoType>::Qdot() const
+singleStepCombustion<ReactionThermo, ThermoType>::Qdot() const
 {
     const label fuelI = singleMixturePtr_->fuelIndex();
     volScalarField& YFuel =
@@ -137,10 +137,10 @@ singleStepCombustion<CombThermoType, ThermoType>::Qdot() const
 }
 
 
-template<class CombThermoType, class ThermoType>
-bool singleStepCombustion<CombThermoType, ThermoType>::read()
+template<class ReactionThermo, class ThermoType>
+bool singleStepCombustion<ReactionThermo, ThermoType>::read()
 {
-    if (CombThermoType::read())
+    if (ThermoCombustion<ReactionThermo>::read())
     {
         return true;
     }
