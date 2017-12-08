@@ -1,5 +1,3 @@
-InfoInFunction << "consistent" << endl;
-
 if (!pimple.SIMPLErho())
 {
     rho = thermo.rho();
