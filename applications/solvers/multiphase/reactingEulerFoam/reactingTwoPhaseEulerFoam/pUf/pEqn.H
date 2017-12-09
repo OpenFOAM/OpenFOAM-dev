@@ -241,7 +241,6 @@ while (pimple.correct())
                     )
                 );
 
-            deleteDemandDrivenData(pEqnComp1.ref().faceFluxCorrectionPtr());
             pEqnComp1.ref().relax();
         }
         else
@@ -283,7 +282,6 @@ while (pimple.correct())
                     )
                 );
 
-            deleteDemandDrivenData(pEqnComp2.ref().faceFluxCorrectionPtr());
             pEqnComp2.ref().relax();
         }
         else
