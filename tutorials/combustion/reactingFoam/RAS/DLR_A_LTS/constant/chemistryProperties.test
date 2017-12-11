@@ -17,9 +17,8 @@ FoamFile
 
 chemistryType
 {
-    chemistrySolver   ode;
-    chemistryThermo   psi;
-    TDAC              on;
+    solver            ode;
+    method            TDAC;
 }
 
 chemistry           on;

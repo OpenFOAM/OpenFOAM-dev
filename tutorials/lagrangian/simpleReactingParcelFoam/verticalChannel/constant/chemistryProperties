@@ -17,8 +17,7 @@ FoamFile
 
 chemistryType
 {
-    chemistrySolver   noChemistrySolver;
-    chemistryThermo   rho;
+    solver            noChemistrySolver;
 }
 
 chemistry       off;

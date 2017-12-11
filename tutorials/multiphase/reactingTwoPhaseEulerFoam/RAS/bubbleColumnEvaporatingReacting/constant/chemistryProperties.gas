@@ -17,8 +17,7 @@ FoamFile
 
 chemistryType
 {
-    chemistrySolver   EulerImplicit;
-    chemistryThermo   rho;
+    solver            EulerImplicit;
 }
 
 chemistry           on;
