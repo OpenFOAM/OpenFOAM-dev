@@ -87,13 +87,9 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 Info<< "Creating combustion model\n" << endl;
-autoPtr<combustionModels::CombustionModel<rhoReactionThermo>> combustion
+autoPtr<CombustionModel<rhoReactionThermo>> combustion
 (
-    combustionModels::CombustionModel<rhoReactionThermo>::New
-    (
-        thermo,
-        turbulence()
-    )
+    CombustionModel<rhoReactionThermo>::New(thermo, turbulence())
 );
 
 Info<< "Creating multi-variate interpolation scheme\n" << endl;

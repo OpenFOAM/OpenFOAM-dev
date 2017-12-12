@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::combustionModels::ThermoCombustion<ReactionThermo>::ThermoCombustion
+Foam::ThermoCombustion<ReactionThermo>::ThermoCombustion
 (
     const word& modelType,
     ReactionThermo& thermo,
@@ -49,7 +49,7 @@ Foam::combustionModels::ThermoCombustion<ReactionThermo>::ThermoCombustion
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::combustionModels::ThermoCombustion<ReactionThermo>::~ThermoCombustion()
+Foam::ThermoCombustion<ReactionThermo>::~ThermoCombustion()
 {}
 
 
@@ -57,7 +57,7 @@ Foam::combustionModels::ThermoCombustion<ReactionThermo>::~ThermoCombustion()
 
 template<class ReactionThermo>
 ReactionThermo&
-Foam::combustionModels::ThermoCombustion<ReactionThermo>::thermo()
+Foam::ThermoCombustion<ReactionThermo>::thermo()
 {
     return thermo_;
 }
@@ -65,7 +65,7 @@ Foam::combustionModels::ThermoCombustion<ReactionThermo>::thermo()
 
 template<class ReactionThermo>
 const ReactionThermo&
-Foam::combustionModels::ThermoCombustion<ReactionThermo>::thermo() const
+Foam::ThermoCombustion<ReactionThermo>::thermo() const
 {
     return thermo_;
 }

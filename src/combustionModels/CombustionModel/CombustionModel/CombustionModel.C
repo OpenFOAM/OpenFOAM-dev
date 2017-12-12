@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::combustionModels::CombustionModel<ReactionThermo>::CombustionModel
+Foam::CombustionModel<ReactionThermo>::CombustionModel
 (
     const word& modelType,
     ReactionThermo& thermo,
@@ -43,8 +43,8 @@ Foam::combustionModels::CombustionModel<ReactionThermo>::CombustionModel
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::autoPtr<Foam::combustionModels::CombustionModel<ReactionThermo>>
-Foam::combustionModels::CombustionModel<ReactionThermo>::New
+Foam::autoPtr<Foam::CombustionModel<ReactionThermo>>
+Foam::CombustionModel<ReactionThermo>::New
 (
     ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
@@ -64,14 +64,14 @@ Foam::combustionModels::CombustionModel<ReactionThermo>::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::combustionModels::CombustionModel<ReactionThermo>::~CombustionModel()
+Foam::CombustionModel<ReactionThermo>::~CombustionModel()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-bool Foam::combustionModels::CombustionModel<ReactionThermo>::read()
+bool Foam::CombustionModel<ReactionThermo>::read()
 {
     if (combustionModel::read())
     {

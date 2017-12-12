@@ -33,8 +33,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
 makeCombustion(psiReactionThermo);
 makeCombustion(rhoReactionThermo);
 
+}
 
 // ************************************************************************* //

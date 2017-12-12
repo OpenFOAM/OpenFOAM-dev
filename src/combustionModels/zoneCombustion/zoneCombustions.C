@@ -31,7 +31,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
 makeCombustionTypes(zoneCombustion, psiReactionThermo);
 makeCombustionTypes(zoneCombustion, rhoReactionThermo);
+
+}
 
 // ************************************************************************* //

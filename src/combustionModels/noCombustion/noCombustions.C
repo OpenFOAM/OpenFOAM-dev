@@ -27,13 +27,16 @@ License
 
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
-
 #include "noCombustion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
 makeCombustionTypes(noCombustion, psiReactionThermo);
 makeCombustionTypes(noCombustion, rhoReactionThermo);
 
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -55,7 +55,12 @@ Foam::combustionModels::EDCdefaultVersion
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
 makeCombustionTypes(EDC, psiReactionThermo);
 makeCombustionTypes(EDC, rhoReactionThermo);
+
+}
 
 // ************************************************************************* //

@@ -45,8 +45,6 @@ SourceFiles
 
 namespace Foam
 {
-namespace combustionModels
-{
 
 /*---------------------------------------------------------------------------*\
                      class CombustionModel Declaration
@@ -126,7 +124,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace combustionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

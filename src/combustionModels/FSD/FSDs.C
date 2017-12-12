@@ -32,6 +32,9 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
 // Combustion models based on sensibleEnthalpy
 makeCombustionTypesThermo
 (
@@ -90,5 +93,6 @@ makeCombustionTypesThermo
     constGasEThermoPhysics
 );
 
+}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

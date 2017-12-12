@@ -63,13 +63,9 @@ autoPtr<compressible::turbulenceModel> turbulence
 );
 
 Info<< "Creating reaction model\n" << endl;
-autoPtr<combustionModels::CombustionModel<rhoReactionThermo>> reaction
+autoPtr<CombustionModel<rhoReactionThermo>> reaction
 (
-    combustionModels::CombustionModel<rhoReactionThermo>::New
-    (
-        thermo,
-        turbulence()
-    )
+    CombustionModel<rhoReactionThermo>::New(thermo, turbulence())
 );
 
 #include "readGravitationalAcceleration.H"

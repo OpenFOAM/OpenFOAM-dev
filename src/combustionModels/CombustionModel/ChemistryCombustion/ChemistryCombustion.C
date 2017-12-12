@@ -28,7 +28,7 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::combustionModels::ChemistryCombustion<ReactionThermo>::ChemistryCombustion
+Foam::ChemistryCombustion<ReactionThermo>::ChemistryCombustion
 (
     const word& modelType,
     ReactionThermo& thermo,
@@ -50,7 +50,7 @@ Foam::combustionModels::ChemistryCombustion<ReactionThermo>::ChemistryCombustion
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::combustionModels::ChemistryCombustion<ReactionThermo>::
+Foam::ChemistryCombustion<ReactionThermo>::
 ~ChemistryCombustion()
 {}
 
@@ -59,7 +59,7 @@ Foam::combustionModels::ChemistryCombustion<ReactionThermo>::
 
 template<class ReactionThermo>
 ReactionThermo&
-Foam::combustionModels::ChemistryCombustion<ReactionThermo>::thermo()
+Foam::ChemistryCombustion<ReactionThermo>::thermo()
 {
     return chemistryPtr_->thermo();
 }
@@ -67,7 +67,7 @@ Foam::combustionModels::ChemistryCombustion<ReactionThermo>::thermo()
 
 template<class ReactionThermo>
 const ReactionThermo&
-Foam::combustionModels::ChemistryCombustion<ReactionThermo>::thermo() const
+Foam::ChemistryCombustion<ReactionThermo>::thermo() const
 {
     return chemistryPtr_->thermo();
 }

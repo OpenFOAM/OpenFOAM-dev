@@ -30,15 +30,22 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 #define makeCombustion(Comp)                                                   \
                                                                                \
-    typedef typename Foam::combustionModels::CombustionModel<Foam::Comp>       \
-        CombustionModel##Comp;                                                 \
+    typedef CombustionModel<Comp> CombustionModel##Comp;                       \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         CombustionModel##Comp,                                                 \
-        "CombustionModel<"#Comp">",                                            \
+        (                                                                      \
+            word(CombustionModel##Comp::typeName_()) + "<" + Comp::typeName    \
+          + ">"                                                                \
+        ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
@@ -51,20 +58,20 @@ License
 
 #define makeCombustionTypesThermo(CombModel, Comp, Thermo)                     \
                                                                                \
-    typedef Foam::combustionModels::CombModel<Foam::Comp, Foam::Thermo>        \
+    typedef combustionModels::CombModel<Comp, Thermo>                          \
         CombModel##Comp##Thermo;                                               \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         CombModel##Comp##Thermo,                                               \
         (                                                                      \
-            Foam::word(CombModel##Comp##Thermo::typeName_()) + "<"#Comp","     \
-          + Foam::Thermo::typeName() + ">"                                     \
+            word(CombModel##Comp##Thermo::typeName_()) + "<" + Comp::typeName  \
+          + "," + Thermo::typeName() + ">"                                     \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    Foam::combustionModels::CombustionModel<Foam::Comp>::                      \
+    CombustionModel<Comp>::                                                    \
         add##dictionary##ConstructorToTable<CombModel##Comp##Thermo>           \
         add##CombModel##Comp##Thermo##dictionary##ConstructorTo##\
 CombustionModel##Comp##Table_;
@@ -72,21 +79,26 @@ CombustionModel##Comp##Table_;
 
 #define makeCombustionTypes(CombModel, Comp)                                   \
                                                                                \
-    typedef Foam::combustionModels::CombModel<Foam::Comp>                      \
-        CombModel##Comp;                                                       \
+    typedef combustionModels::CombModel<Comp> CombModel##Comp;                 \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         CombModel##Comp,                                                       \
-        (Foam::word(CombModel##Comp::typeName_()) + "<"#Comp">").c_str(),      \
+        (                                                                      \
+            word(CombModel##Comp::typeName_()) + "<" + Comp::typeName + ">"    \
+        ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    Foam::combustionModels::CombustionModel<Foam::Comp>::                      \
+    CombustionModel<Comp>::                                                    \
         add##dictionary##ConstructorToTable<CombModel##Comp>                   \
         add##CombModel##Comp##dictionary##ConstructorTo##CombustionModel##Comp\
 ##Table_;
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

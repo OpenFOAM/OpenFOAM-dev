@@ -42,8 +42,6 @@ SourceFiles
 
 namespace Foam
 {
-namespace combustionModels
-{
 
 /*---------------------------------------------------------------------------*\
                     class ThermoCombustion Declaration
@@ -91,7 +89,6 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace combustionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

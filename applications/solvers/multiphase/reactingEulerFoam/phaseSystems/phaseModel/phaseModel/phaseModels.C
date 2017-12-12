@@ -127,7 +127,7 @@ namespace Foam
                     <
                         ThermoPhaseModel<phaseModel, rhoReactionThermo>
                     >,
-                    combustionModels::CombustionModel<rhoReactionThermo>
+                    CombustionModel<rhoReactionThermo>
                 >
             >
         >
