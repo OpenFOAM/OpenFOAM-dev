@@ -59,6 +59,13 @@ class combustionModel
         //- Disallow default bitwise assignment
         void operator=(const combustionModel&);
 
+        //- Construct the base IO object
+        IOobject createIOobject
+        (
+            basicThermo& thermo,
+            const word& combustionProperties
+        ) const;
+
 
 protected:
 

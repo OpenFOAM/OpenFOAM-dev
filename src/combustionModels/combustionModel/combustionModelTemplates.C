@@ -33,21 +33,30 @@ Foam::autoPtr<CombustionModel> Foam::combustionModel::New
     const word& combustionProperties
 )
 {
-    word combModelName
+    IOobject combIO
     (
-        IOdictionary
+        IOobject
         (
-            IOobject
-            (
-                thermo.phasePropertyName(combustionProperties),
-                thermo.db().time().constant(),
-                thermo.db(),
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE,
-                false
-            )
-        ).lookup("combustionModel")
+            thermo.phasePropertyName(combustionProperties),
+            thermo.db().time().constant(),
+            thermo.db(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
     );
+
+    word combModelName("none");
+    if (combIO.typeHeaderOk<IOdictionary>(false))
+    {
+        IOdictionary(combIO).lookup("combustionModel") >> combModelName;
+    }
+    else
+    {
+        Info<< "Combustion model not active: "
+            << thermo.phasePropertyName(combustionProperties)
+            << " not found" << endl;
+    }
 
     Info<< "Selecting combustion model " << combModelName << endl;
 
