@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,34 +39,6 @@ Description
 #include "pimpleControl.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
-
-namespace Foam
-{
-    tmp<volScalarField> byDt(const volScalarField& vf)
-    {
-        if (fv::localEulerDdt::enabled(vf.mesh()))
-        {
-            return fv::localEulerDdt::localRDeltaT(vf.mesh())*vf;
-        }
-        else
-        {
-            return vf/vf.mesh().time().deltaT();
-        }
-    }
-
-    tmp<surfaceScalarField> byDt(const surfaceScalarField& sf)
-    {
-        if (fv::localEulerDdt::enabled(sf.mesh()))
-        {
-            return fv::localEulerDdt::localRDeltaTf(sf.mesh())*sf;
-        }
-        else
-        {
-            return sf/sf.mesh().time().deltaT();
-        }
-    }
-}
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

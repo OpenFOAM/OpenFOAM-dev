@@ -374,6 +374,11 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+tmp<volScalarField> byDt(const volScalarField& vf);
+tmp<surfaceScalarField> byDt(const surfaceScalarField& sf);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

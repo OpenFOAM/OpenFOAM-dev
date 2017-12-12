@@ -32,8 +32,8 @@ forAll(phases, phasei)
             IOobject::groupName("rAUf", phase.name()),
             1.0
            /(
-                fvc::interpolate(UEqns[phasei].A())
-              + (alphaRho0fs[phasei] + fluid.Vmf(phase))/runTime.deltaT()
+                byDt(alphaRho0fs[phasei] + fluid.Vmf(phase))
+              + fvc::interpolate(UEqns[phasei].A())
               + fluid.Kdf(phase)
             )
         )
@@ -176,7 +176,7 @@ while (pimple.correct())
                *(
                     fvc::flux(UEqns[phasei].H())
                   + alphaRho0fs[phasei]
-                   *MRF.absolute(phase.phi().oldTime())/runTime.deltaT()
+                   *byDt(MRF.absolute(phase.phi().oldTime()))
                 )
               - phigFs[phasei]
             )
@@ -231,8 +231,7 @@ while (pimple.correct())
                     phiHbyAs[phasei] +=
                         rAUfs[phasei]
                        *(
-                            Vmf*MRF.absolute(phase1->phi()().oldTime())
-                           /runTime.deltaT()
+                            Vmf*byDt(MRF.absolute(phase1->phi()().oldTime()))
                           + Vmf*ddtPhis[phase2->index()]
                         );
                 }

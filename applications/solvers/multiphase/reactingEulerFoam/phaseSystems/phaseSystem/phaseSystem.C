@@ -28,6 +28,7 @@ License
 #include "aspectRatioModel.H"
 #include "surfaceInterpolate.H"
 #include "fvcDdt.H"
+#include "localEulerDdtScheme.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -355,6 +356,32 @@ bool Foam::phaseSystem::read()
     else
     {
         return false;
+    }
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::byDt(const volScalarField& vf)
+{
+    if (fv::localEulerDdt::enabled(vf.mesh()))
+    {
+        return fv::localEulerDdt::localRDeltaT(vf.mesh())*vf;
+    }
+    else
+    {
+        return vf/vf.mesh().time().deltaT();
+    }
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::byDt(const surfaceScalarField& sf)
+{
+    if (fv::localEulerDdt::enabled(sf.mesh()))
+    {
+        return fv::localEulerDdt::localRDeltaTf(sf.mesh())*sf;
+    }
+    else
+    {
+        return sf/sf.mesh().time().deltaT();
     }
 }
 
