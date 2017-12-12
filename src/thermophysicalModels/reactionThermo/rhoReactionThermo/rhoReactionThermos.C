@@ -35,6 +35,10 @@ License
 #include "janafThermo.H"
 #include "sensibleEnthalpy.H"
 #include "thermo.H"
+#include "rhoConst.H"
+#include "perfectFluid.H"
+#include "adiabaticPerfectFluid.H"
+#include "Boussinesq.H"
 
 #include "constTransport.H"
 #include "sutherlandTransport.H"
@@ -370,6 +374,72 @@ makeReactionMixtureThermo
     icoPoly8EThermoPhysics
 );
 
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    rhoConst,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    perfectFluid,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    adiabaticPerfectFluid,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    hConstThermo,
+    Boussinesq,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    sutherlandTransport,
+    sensibleInternalEnergy,
+    janafThermo,
+    Boussinesq,
+    specie
+);
+
+
 
 // Multi-component thermo for sensible enthalpy
 
@@ -524,6 +594,71 @@ makeReactionMixtureThermo
     heRhoThermo,
     singleComponentMixture,
     icoPoly8HThermoPhysics
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleEnthalpy,
+    hConstThermo,
+    rhoConst,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleEnthalpy,
+    hConstThermo,
+    perfectFluid,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleEnthalpy,
+    hConstThermo,
+    adiabaticPerfectFluid,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    constTransport,
+    sensibleEnthalpy,
+    hConstThermo,
+    Boussinesq,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    sutherlandTransport,
+    sensibleEnthalpy,
+    janafThermo,
+    Boussinesq,
+    specie
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
