@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,14 @@ private:
         //- Drag coefficients
         phaseSystem::KdTable Kds_;
 
+        //- Face drag coefficients
+        phaseSystem::KdfTable Kdfs_;
+
         //- Virtual mass coefficients
         phaseSystem::VmTable Vms_;
+
+        //- Face virtual mass coefficients
+        phaseSystem::VmfTable Vmfs_;
 
         // Sub Models
 
@@ -138,6 +144,13 @@ private:
             volVectorField& setF
             (
                 PtrList<volVectorField>& Fs, const label phasei
+            ) const;
+
+            //- Construct element phasei of Ffs if not set and return
+            //  Used by Ffs()
+            surfaceScalarField& setFf
+            (
+                PtrList<surfaceScalarField>& Ffs, const label phasei
             ) const;
 
             //- Construct element phasei of phiDs if not set and return
@@ -168,6 +181,24 @@ public:
             return Kds_;
         }
 
+        //- Constant access to face drag coefficients
+        virtual const phaseSystem::KdfTable& Kdfs() const
+        {
+            return Kdfs_;
+        }
+
+        //- Constant access to virtual mass force coefficients
+        virtual const phaseSystem::VmTable& Vms() const
+        {
+            return Vms_;
+        }
+
+        //- Constant access to virtual mass force coefficients
+        virtual const phaseSystem::VmfTable& Vmfs() const
+        {
+            return Vmfs_;
+        }
+
         //- Return the drag coefficient
         virtual tmp<volScalarField> Kd(const phasePairKey& key) const;
 
@@ -177,11 +208,17 @@ public:
         //- Return the drag coefficient for phase
         virtual tmp<volScalarField> Kd(const phaseModel& phase) const;
 
+        //- Return the face drag coefficient for phase
+        virtual tmp<surfaceScalarField> Kdf(const phaseModel& phase) const;
+
         //- Return the virtual mass coefficient
         virtual tmp<volScalarField> Vm(const phasePairKey& key) const;
 
         //- Return the face virtual mass coefficient
         virtual tmp<surfaceScalarField> Vmf(const phasePairKey& key) const;
+
+        //- Return the face virtual mass force coefficient for phase
+        virtual tmp<surfaceScalarField> Vmf(const phaseModel& phase) const;
 
         //- Return the combined force (lift + wall-lubrication)
         virtual tmp<volVectorField> F(const phasePairKey& key) const;
@@ -189,10 +226,19 @@ public:
         //- Return the combined force (lift + wall-lubrication)
         virtual autoPtr<PtrList<volVectorField>> Fs() const;
 
+        //- Return the combined force (lift + wall-lubrication)
+        virtual autoPtr<PtrList<surfaceScalarField>> Ffs() const;
+
         //- Return the turbulent dispersion force on faces for phase pair
         virtual autoPtr<PtrList<surfaceScalarField>> phiDs
         (
             const PtrList<volScalarField>& rAUs
+        ) const;
+
+        //- Return the face based turbulent dispersion force for phase pair
+        virtual autoPtr<PtrList<surfaceScalarField>> phiDfs
+        (
+            const PtrList<surfaceScalarField>& rAUfs
         ) const;
 
         //- Return the combined face-force (lift + wall-lubrication)

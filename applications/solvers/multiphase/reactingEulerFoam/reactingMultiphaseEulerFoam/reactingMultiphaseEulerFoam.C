@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Description
 
 #include "fvCFD.H"
 #include "multiphaseSystem.H"
+#include "phaseCompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
@@ -59,10 +60,10 @@ int main(int argc, char *argv[])
         #include "setInitialDeltaT.H"
     }
 
-    // Switch faceMomentum
-    // (
-    //     pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
-    // );
+    Switch faceMomentum
+    (
+        pimple.dict().lookupOrDefault<Switch>("faceMomentum", false)
+    );
 
     // Switch implicitPhasePressure
     // (
@@ -72,7 +73,7 @@ int main(int argc, char *argv[])
     //     )
     // );
 
-    //#include "pUf/createDDtU.H"
+    #include "pUf/createDDtU.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -108,14 +109,14 @@ int main(int argc, char *argv[])
 
             #include "YEqns.H"
 
-            // if (faceMomentum)
-            // {
-            //     #include "pUf/UEqns.H"
-            //     #include "EEqns.H"
-            //     #include "pUf/pEqn.H"
-            //     #include "pUf/DDtU.H"
-            // }
-            // else
+            if (faceMomentum)
+            {
+                #include "pUf/UEqns.H"
+                #include "EEqns.H"
+                #include "pUf/pEqn.H"
+                #include "pUf/DDtU.H"
+            }
+            else
             {
                 #include "pU/UEqns.H"
                 #include "EEqns.H"

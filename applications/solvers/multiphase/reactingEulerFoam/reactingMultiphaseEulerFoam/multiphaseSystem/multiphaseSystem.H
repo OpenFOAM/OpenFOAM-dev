@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,16 +163,42 @@ public:
         //- Return the drag coefficient for all phase-pairs
         virtual const phaseSystem::KdTable& Kds() const = 0;
 
+        //- Return the face drag coefficient for all phase-pairs
+        virtual const phaseSystem::KdfTable& Kdfs() const = 0;
+
+        //- Return the virtual mass force coefficient for all phase-pairs
+        virtual const phaseSystem::VmTable& Vms() const = 0;
+
+        //- Return the face based virtual mass force coefficient
+        //  for all phase-pairs
+        virtual const phaseSystem::VmfTable& Vmfs() const = 0;
+
         //- Return the drag coefficient for phase
         virtual tmp<volScalarField> Kd(const phaseModel& phase) const = 0;
 
+        //- Return the face based drag coefficient for phase
+        virtual tmp<surfaceScalarField> Kdf(const phaseModel& phase) const = 0;
+
+        //- Return the face based virtual mass force coefficient for phase
+        virtual tmp<surfaceScalarField> Vmf(const phaseModel& phase) const = 0;
+
         //- Return the combined force (lift + wall-lubrication) for phase pair
         virtual autoPtr<PtrList<Foam::volVectorField>> Fs() const = 0;
+
+        //- Return the combined face force (lift + wall-lubrication)
+        virtual autoPtr<PtrList<Foam::surfaceScalarField>> Ffs() const = 0;
 
         //- Return the turbulent dispersion force on faces for phase pair
         virtual autoPtr<PtrList<Foam::surfaceScalarField>> phiDs
         (
             const PtrList<volScalarField>& rAUs
+        ) const = 0;
+
+        //- Return the face based turbulent dispersion force on faces
+        //  for phase pair
+        virtual autoPtr<PtrList<Foam::surfaceScalarField>> phiDfs
+        (
+            const PtrList<surfaceScalarField>& rAUfs
         ) const = 0;
 
         //- Return true if there is mass transfer for phase

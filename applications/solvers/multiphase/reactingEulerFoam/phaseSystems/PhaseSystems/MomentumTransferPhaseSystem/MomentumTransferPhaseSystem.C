@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,6 +100,16 @@ MomentumTransferPhaseSystem
                 dragModelIter()->K()
             )
         );
+
+        Kdfs_.insert
+        (
+            pair,
+            new surfaceScalarField
+            (
+                IOobject::groupName("Kdf", pair.name()),
+                dragModelIter()->Kf()
+            )
+        );
     }
 
     forAllConstIter
@@ -118,6 +128,16 @@ MomentumTransferPhaseSystem
             (
                 IOobject::groupName("Vm", pair.name()),
                 virtualMassModelIter()->K()
+            )
+        );
+
+        Vmfs_.insert
+        (
+            pair,
+            new surfaceScalarField
+            (
+                IOobject::groupName("Vmf", pair.name()),
+                virtualMassModelIter()->Kf()
             )
         );
     }
@@ -213,6 +233,62 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kd
 
 
 template<class BasePhaseSystem>
+Foam::tmp<Foam::surfaceScalarField>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Kdf
+(
+    const Foam::phaseModel& phase
+) const
+{
+    tmp<surfaceScalarField> tKdf
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("Kdf", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar
+            (
+                IOobject::groupName("Kdf", phase.name()),
+                dimensionSet(1, -3, -1, 0, 0),
+                0
+            )
+        )
+    );
+
+    forAllConstIter
+    (
+        phaseSystem::KdfTable,
+        Kdfs_,
+        KdfIter
+    )
+    {
+        const surfaceScalarField& Kf(*KdfIter());
+
+        const phasePair& pair(this->phasePairs_[KdfIter.key()]);
+
+        const phaseModel* phase1 = &pair.phase1();
+        const phaseModel* phase2 = &pair.phase2();
+
+        forAllConstIter(phasePair, pair, iter)
+        {
+            if (phase1 == &phase)
+            {
+                tKdf.ref() += Kf;
+            }
+
+            Swap(phase1, phase2);
+        }
+    }
+
+    return tKdf;
+}
+
+
+template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vm
 (
@@ -277,6 +353,62 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vmf
             )
         );
     }
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::surfaceScalarField>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Vmf
+(
+    const Foam::phaseModel& phase
+) const
+{
+    tmp<surfaceScalarField> tVmf
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("Vmf", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar
+            (
+                IOobject::groupName("Vmf", phase.name()),
+                virtualMassModel::dimK,
+                0
+            )
+        )
+    );
+
+    forAllConstIter
+    (
+        phaseSystem::VmfTable,
+        Vmfs_,
+        VmfIter
+    )
+    {
+        const surfaceScalarField& Vmf(*VmfIter());
+
+        const phasePair& pair(this->phasePairs_[VmfIter.key()]);
+
+        const phaseModel* phase1 = &pair.phase1();
+        const phaseModel* phase2 = &pair.phase2();
+
+        forAllConstIter(phasePair, pair, iter)
+        {
+            if (phase1 == &phase)
+            {
+                tVmf.ref() += Vmf;
+            }
+
+            Swap(phase1, phase2);
+        }
+    }
+
+    return tVmf;
 }
 
 
@@ -434,6 +566,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
     )
     {
         *Kds_[dragModelIter.key()] = dragModelIter()->K();
+        *Kdfs_[dragModelIter.key()] = dragModelIter()->Kf();
     }
 
     // Add the implicit part of the drag force
@@ -470,6 +603,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
     )
     {
         *Vms_[virtualMassModelIter.key()] = virtualMassModelIter()->K();
+        *Vmfs_[virtualMassModelIter.key()] = virtualMassModelIter()->Kf();
     }
 
     // Add the virtual mass force
@@ -543,6 +677,39 @@ Foam::volVectorField& Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setF
 
 
 template<class BasePhaseSystem>
+Foam::surfaceScalarField&
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::setFf
+(
+    PtrList<surfaceScalarField>& Ffs, const label phasei
+) const
+{
+    if (!Ffs.set(phasei))
+    {
+        Ffs.set
+        (
+            phasei,
+            new surfaceScalarField
+            (
+                IOobject
+                (
+                    liftModel::typeName + ":Ff",
+                    this->mesh_.time().timeName(),
+                    this->mesh_,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE,
+                    false
+                ),
+                this->mesh_,
+                dimensionedScalar("zero", dimArea*liftModel::dimF, Zero)
+            )
+        );
+    }
+
+    return Ffs[phasei];
+}
+
+
+template<class BasePhaseSystem>
 Foam::autoPtr<Foam::PtrList<Foam::volVectorField>>
 Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
 {
@@ -586,6 +753,53 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Fs() const
     }
 
     return tFs;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::Ffs() const
+{
+    autoPtr<PtrList<surfaceScalarField>> tFfs
+    (
+        new PtrList<surfaceScalarField>(this->phases().size())
+    );
+    PtrList<surfaceScalarField>& Ffs = tFfs();
+
+    // Add the lift force
+    forAllConstIter
+    (
+        liftModelTable,
+        liftModels_,
+        liftModelIter
+    )
+    {
+        const surfaceScalarField Ff(liftModelIter()->Ff());
+
+        const phasePair& pair(this->phasePairs_[liftModelIter.key()]);
+
+        setFf(Ffs, pair.phase1().index()) += Ff;
+        setFf(Ffs, pair.phase2().index()) -= Ff;
+    }
+
+    // Add the wall lubrication force
+    forAllConstIter
+    (
+        wallLubricationModelTable,
+        wallLubricationModels_,
+        wallLubricationModelIter
+    )
+    {
+        const surfaceScalarField Ff(wallLubricationModelIter()->Ff());
+
+        const phasePair&
+            pair(this->phasePairs_[wallLubricationModelIter.key()]);
+
+        setFf(Ffs, pair.phase1().index()) += Ff;
+        setFf(Ffs, pair.phase2().index()) -= Ff;
+    }
+
+    return tFfs;
 }
 
 
@@ -664,6 +878,49 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDs
     }
 
     return tphiDs;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::PtrList<Foam::surfaceScalarField>>
+Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiDfs
+(
+    const PtrList<surfaceScalarField>& rAUfs
+) const
+{
+    autoPtr<PtrList<surfaceScalarField>> tphiDfs
+    (
+        new PtrList<surfaceScalarField>(this->phases().size())
+    );
+    PtrList<surfaceScalarField>& phiDfs = tphiDfs();
+
+    // Add the face based turbulent dispersion force
+    forAllConstIter
+    (
+        turbulentDispersionModelTable,
+        turbulentDispersionModels_,
+        turbulentDispersionModelIter
+    )
+    {
+        const phasePair&
+            pair(this->phasePairs_[turbulentDispersionModelIter.key()]);
+
+        const surfaceScalarField Df
+        (
+            fvc::interpolate(turbulentDispersionModelIter()->D())
+        );
+        const surfaceScalarField snGradAlpha1
+        (
+            fvc::snGrad(pair.phase1())*this->mesh_.magSf()
+        );
+
+        setPhiD(phiDfs, pair.phase1().index()) +=
+            rAUfs[pair.phase1().index()]*Df*snGradAlpha1;
+        setPhiD(phiDfs, pair.phase2().index()) -=
+            rAUfs[pair.phase2().index()]*Df*snGradAlpha1;
+    }
+
+    return tphiDfs;
 }
 
 
