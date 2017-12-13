@@ -1,0 +1,25 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the estimated incompressible flow heat transfer coefficient at
+    wall patches, outputting the data as a volScalarField.
+
+\*---------------------------------------------------------------------------*/
+
+type            wallHeatTransferCoeff;
+libs            ("libfieldFunctionObjects.so");
+
+rho             1.225;
+Cp              1005;
+Prl             0.707;
+Prt             0.9;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //
