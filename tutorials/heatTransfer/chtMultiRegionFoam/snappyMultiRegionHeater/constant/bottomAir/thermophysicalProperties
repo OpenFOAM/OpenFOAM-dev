@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         pureMixture;
+    mixture         singleComponentMixture;
     transport       const;
     thermo          hConst;
     equationOfState perfectGas;

@@ -34,8 +34,9 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "rhoThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "rhoReactionThermo.H"
+#include "CombustionModel.H"
 #include "fixedGradientFvPatchFields.H"
 #include "regionProperties.H"
 #include "compressibleCourantNo.H"

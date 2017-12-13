@@ -15,6 +15,7 @@ else
     }
 
     #include "UEqn.H"
+    #include "YEqn.H"
     #include "EEqn.H"
 
     // --- PISO loop
@@ -23,7 +24,7 @@ else
         #include "pEqn.H"
     }
 
-    turb.correct();
+    turbulence.correct();
 
     rho = thermo.rho();
 }

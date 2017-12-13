@@ -15,10 +15,11 @@
             )
           : -dpdt
         )
-      - fvm::laplacian(turb.alphaEff(), he)
+      - fvm::laplacian(turbulence.alphaEff(), he)
      ==
         rho*(U&g)
       + rad.Sh(thermo, he)
+      + Qdot
       + fvOptions(rho, he)
     );
 

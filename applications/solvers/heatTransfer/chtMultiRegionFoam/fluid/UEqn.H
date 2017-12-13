@@ -6,7 +6,7 @@
     (
         fvm::ddt(rho, U) + fvm::div(phi, U)
       + MRF.DDt(rho, U)
-      + turb.divDevRhoReff(U)
+      + turbulence.divDevRhoReff(U)
      ==
         fvOptions(rho, U)
     );

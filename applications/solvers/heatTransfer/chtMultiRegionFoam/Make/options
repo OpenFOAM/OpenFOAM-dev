@@ -1,4 +1,3 @@
-
 EXE_INC = \
     -I. \
     -I./fluid \
@@ -12,7 +11,11 @@ EXE_INC = \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
+    -I$(LIB_SRC)/ODE/lnInclude \
+    -I$(LIB_SRC)/combustionModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/radiation/lnInclude \
@@ -22,8 +25,12 @@ EXE_INC = \
 EXE_LIBS = \
     -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
-    -lsolidThermo \
     -lspecie \
+    -lreactionThermophysicalModels \
+    -lsolidThermo \
+    -lchemistryModel \
+    -lODE \
+    -lcombustionModels \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
     -lmeshTools \
