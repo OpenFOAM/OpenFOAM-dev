@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,9 @@ class rigidBodyModelState
         //- Joint acceleration
         scalarField qDdot_;
 
+        //- The time
+        scalar t_;
+
         //- The time-step used to integrate to this state
         scalar deltaT_;
 
@@ -102,13 +105,14 @@ public:
             //- Return access to the joint position and orientation
             inline const scalarField& q() const;
 
-            //- Return access to the joint quaternion
-
             //- Return access to the joint velocity
             inline const scalarField& qDot() const;
 
             //- Return access to the joint acceleration
             inline const scalarField& qDdot() const;
+
+            //- Return access to the time
+            inline scalar t() const;
 
             //- Return access to the time-step
             inline scalar deltaT() const;
@@ -119,13 +123,14 @@ public:
             //- Return access to the joint position and orientation
             inline scalarField& q();
 
-            //- Return access to the joint quaternion
-
             //- Return access to the joint velocity
             inline scalarField& qDot();
 
             //- Return access to the joint acceleration
             inline scalarField& qDdot();
+
+            //- Return access to the time
+            inline scalar& t();
 
             //- Return access to the time-step
             inline scalar& deltaT();

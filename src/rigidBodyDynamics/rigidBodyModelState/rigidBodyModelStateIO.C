@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ void Foam::RBD::rigidBodyModelState::write(dictionary& dict) const
     dict.add("q", q_);
     dict.add("qDot", qDot_);
     dict.add("qDdot", qDdot_);
+    dict.add("t", t_);
     dict.add("deltaT", deltaT_);
 }
 
@@ -42,6 +43,7 @@ void Foam::RBD::rigidBodyModelState::write(Ostream& os) const
     os.writeKeyword("q") << q_ << token::END_STATEMENT << nl;
     os.writeKeyword("qDot") << qDot_ << token::END_STATEMENT << nl;
     os.writeKeyword("qDdot") << qDdot_ << token::END_STATEMENT << nl;
+    os.writeKeyword("t") << t_ << token::END_STATEMENT << nl;
     os.writeKeyword("deltaT") << deltaT_ << token::END_STATEMENT << nl;
 }
 
@@ -57,6 +59,7 @@ Foam::Istream& Foam::RBD::operator>>
     is  >> state.q_
         >> state.qDot_
         >> state.qDdot_
+        >> state.t_
         >> state.deltaT_;
 
     // Check state of Istream
@@ -79,6 +82,7 @@ Foam::Ostream& Foam::RBD::operator<<
     os  << state.q_
         << token::SPACE << state.qDot_
         << token::SPACE << state.qDdot_
+        << token::SPACE << state.t_
         << token::SPACE << state.deltaT_;
 
     // Check state of Ostream

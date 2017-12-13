@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -169,10 +169,11 @@ public:
             ) const;
 
             //- Integrate velocities, orientation and position
-            //  for the given time-step
+            //  for the given time and time-step
             void solve
             (
-                scalar deltaT,
+                const scalar t,
+                const scalar deltaT,
                 const scalarField& tau,
                 const Field<spatialVector>& fx
             );

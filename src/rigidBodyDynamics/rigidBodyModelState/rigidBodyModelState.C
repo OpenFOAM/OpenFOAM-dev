@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Foam::RBD::rigidBodyModelState::rigidBodyModelState
     q_(model.nDoF(), Zero),
     qDot_(model.nDoF(), Zero),
     qDdot_(model.nDoF(), Zero),
+    t_(-1),
     deltaT_(0)
 {}
 
@@ -48,6 +49,7 @@ Foam::RBD::rigidBodyModelState::rigidBodyModelState
     q_(dict.lookupOrDefault("q", scalarField(model.nDoF(), Zero))),
     qDot_(dict.lookupOrDefault("qDot", scalarField(model.nDoF(), Zero))),
     qDdot_(dict.lookupOrDefault("qDdot", scalarField(model.nDoF(), Zero))),
+    t_(dict.lookupOrDefault<scalar>("t", -1)),
     deltaT_(dict.lookupOrDefault<scalar>("deltaT", 0))
 {}
 
