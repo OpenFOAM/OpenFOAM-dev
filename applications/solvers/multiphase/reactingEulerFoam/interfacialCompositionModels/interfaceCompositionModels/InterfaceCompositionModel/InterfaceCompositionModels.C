@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,43 +51,6 @@ License
 #include "rhoThermo.H"
 #include "rhoReactionThermo.H"
 #include "heRhoThermo.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    typedef
-        constTransport
-        <
-            species::thermo
-            <
-                hConstThermo
-                <
-                    perfectFluid<specie>
-                >,
-                sensibleInternalEnergy
-            >
-        > constFluidEThermoPhysics;
-};
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    // multi-component liquid
-    makeReactionThermo
-    (
-        rhoThermo,
-        rhoReactionThermo,
-        heRhoThermo,
-        multiComponentMixture,
-        constTransport,
-        sensibleInternalEnergy,
-        hConstThermo,
-        perfectFluid,
-        specie
-    );
-}
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

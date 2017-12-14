@@ -54,7 +54,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * h-hu-Thermos * * * * * * * * * * * * * * * //
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -67,7 +67,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -80,7 +80,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -93,7 +93,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -107,7 +107,7 @@ makeReactionThermo
 );
 
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -120,7 +120,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -133,7 +133,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -146,7 +146,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -159,7 +159,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -173,7 +173,7 @@ makeReactionThermo
 );
 
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -186,7 +186,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -199,7 +199,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,
@@ -212,7 +212,7 @@ makeReactionThermo
     specie
 );
 
-makeReactionThermo
+makeReactionThermos
 (
     psiThermo,
     psiuReactionThermo,

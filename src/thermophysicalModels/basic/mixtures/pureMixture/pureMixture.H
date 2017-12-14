@@ -73,6 +73,12 @@ public:
 
     // Member functions
 
+        //- Return the instantiated type name
+        static word typeName()
+        {
+            return "pureMixture<" + ThermoType::typeName() + '>';
+        }
+
         const ThermoType& mixture() const
         {
             return mixture_;

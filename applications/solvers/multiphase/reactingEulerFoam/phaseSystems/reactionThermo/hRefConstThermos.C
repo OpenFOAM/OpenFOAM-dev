@@ -214,7 +214,7 @@ makeThermo
 
 // multiComponentMixture, sensibleInternalEnergy:
 
-makeReactionMixtureThermo
+makeReactionMixtureThermos
 (
     rhoThermo,
     rhoReactionThermo,
@@ -223,7 +223,7 @@ makeReactionMixtureThermo
     constRefGasEThermoPhysics
 );
 
-makeReactionMixtureThermo
+makeReactionMixtureThermos
 (
     rhoThermo,
     rhoReactionThermo,
@@ -232,7 +232,7 @@ makeReactionMixtureThermo
     constRefFluidEThermoPhysics
 );
 
-makeReactionMixtureThermo
+makeReactionMixtureThermos
 (
     rhoThermo,
     rhoReactionThermo,
@@ -244,7 +244,7 @@ makeReactionMixtureThermo
 
 // multiComponentMixture, sensibleEnthalpy:
 
-makeReactionMixtureThermo
+makeReactionMixtureThermos
 (
     rhoThermo,
     rhoReactionThermo,
@@ -253,7 +253,7 @@ makeReactionMixtureThermo
     constRefRhoConstHThermoPhysics
 );
 
-makeReactionMixtureThermo
+makeReactionMixtureThermos
 (
     rhoThermo,
     rhoReactionThermo,
@@ -262,7 +262,7 @@ makeReactionMixtureThermo
     constRefFluidHThermoPhysics
 );
 
-makeReactionMixtureThermo
+makeReactionMixtureThermos
 (
     rhoThermo,
     rhoReactionThermo,

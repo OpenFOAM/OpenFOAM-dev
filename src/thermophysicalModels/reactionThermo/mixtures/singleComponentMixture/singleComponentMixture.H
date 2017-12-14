@@ -75,6 +75,14 @@ public:
 
     // Member Functions
 
+        //- Return the instantiated type name
+        //  Note: This defines the same name as pureMixture so that
+        //  non-reacting and reacting solvers are compatable
+        static word typeName()
+        {
+            return "pureMixture<" + ThermoType::typeName() + '>';
+        }
+
         //- Get the mixture for the given cell
         const ThermoType& cellMixture(const label celli) const
         {

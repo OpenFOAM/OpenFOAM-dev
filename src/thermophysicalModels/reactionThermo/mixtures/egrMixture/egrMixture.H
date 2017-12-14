@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,6 +95,12 @@ public:
 
 
     // Member functions
+
+        //- Return the instantiated type name
+        static word typeName()
+        {
+            return "egrMixture<" + ThermoType::typeName() + '>';
+        }
 
         const dimensionedScalar& stoicRatio() const
         {
