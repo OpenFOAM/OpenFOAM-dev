@@ -23,13 +23,6 @@ geometry
         point2 (0 4 0);
         radius 0.7;
     }
-    cylinder3
-    {
-        type searchableCylinder;
-        point1 (-10 0.4 0);
-        point2 (10 0.4 0);
-        radius 0.5;
-    }
     cylinder2
     {
         type    searchableExtrudedCircle;
@@ -139,6 +132,9 @@ faces
 (
     // Common face
     project (v0 v4 v7 v3) cylinder
+
+    project (v4 v5 v6 v7) cylinder
+    project (v0 v1 v2 v3) cylinder
 
     project (v8 v0 v4 v10) cylinder2
     project (v10 v4 v7 v11) cylinder2
