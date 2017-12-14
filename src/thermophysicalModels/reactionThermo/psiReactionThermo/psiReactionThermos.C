@@ -183,7 +183,7 @@ makeReactionThermos
 
 // Multi-component thermo for sensible enthalpy
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -192,7 +192,7 @@ makeReactionMixtureThermos
     constGasHThermoPhysics
 );
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -204,7 +204,7 @@ makeReactionMixtureThermos
 
 // Multi-component thermo for internal energy
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -213,7 +213,7 @@ makeReactionMixtureThermos
     constGasEThermoPhysics
 );
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -225,7 +225,7 @@ makeReactionMixtureThermos
 
 // Reaction thermo for sensible enthalpy
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -234,7 +234,7 @@ makeReactionMixtureThermos
     constGasHThermoPhysics
 );
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -246,7 +246,7 @@ makeReactionMixtureThermos
 
 // Single-step reaction thermo for sensible enthalpy
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -258,7 +258,7 @@ makeReactionMixtureThermos
 
 // Reaction thermo for internal energy
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -267,7 +267,7 @@ makeReactionMixtureThermos
     constGasEThermoPhysics
 );
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -279,7 +279,7 @@ makeReactionMixtureThermos
 
 // Single-step reaction thermo for internal energy
 
-makeReactionMixtureThermos
+makeThermoPhysicsReactionThermos
 (
     psiThermo,
     psiReactionThermo,
@@ -291,7 +291,7 @@ makeReactionMixtureThermos
 
 // Single-component thermo for sensible enthalpy
 
-makeReactionMixtureThermo
+makeThermoPhysicsReactionThermo
 (
     psiReactionThermo,
     hePsiThermo,
@@ -299,7 +299,7 @@ makeReactionMixtureThermo
     constGasHThermoPhysics
 );
 
-makeReactionMixtureThermo
+makeThermoPhysicsReactionThermo
 (
     psiReactionThermo,
     hePsiThermo,
@@ -310,7 +310,7 @@ makeReactionMixtureThermo
 
 // Single-component thermo for internal energy
 
-makeReactionMixtureThermo
+makeThermoPhysicsReactionThermo
 (
     psiReactionThermo,
     hePsiThermo,
@@ -318,7 +318,7 @@ makeReactionMixtureThermo
     constGasEThermoPhysics
 );
 
-makeReactionMixtureThermo
+makeThermoPhysicsReactionThermo
 (
     psiReactionThermo,
     hePsiThermo,
