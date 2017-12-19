@@ -114,7 +114,12 @@ Foam::functionObjects::wallHeatTransferCoeff::wallHeatTransferCoeff
                 IOobject::NO_WRITE
             ),
             mesh_,
-            dimensionedScalar("0", dimMass/pow3(dimTime)/dimTemperature, 0)
+            dimensionedScalar
+            (
+                "0",
+                dimMass/pow3(dimTime)/(dimTemperature/dimLength),
+                0
+            )
         )
     );
 
