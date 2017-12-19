@@ -397,8 +397,10 @@ int main(int argc, char *argv[])
         {
             Info<< nl << "Detected cyclic patches; ordering boundary faces"
                 << endl;
+            const word oldInstance = mesh.instance();
             polyTopoChange meshMod(mesh);
             meshMod.changeMesh(mesh, false);
+            mesh.setInstance(oldInstance);
         }
     }
 
