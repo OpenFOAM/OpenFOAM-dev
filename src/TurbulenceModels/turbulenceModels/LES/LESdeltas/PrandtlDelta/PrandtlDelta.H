@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Apply Prandtl mixing-length based damping function to the specified
-    geometric delta to improve near-wall behavior or LES models.
+    geometric delta to improve near-wall behavior or LES SGS models.
 
     \verbatim
         delta = min(geometricDelta, (kappa/Cdelta)*y)

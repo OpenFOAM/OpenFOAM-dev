@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ Class
     Foam::vanDriestDelta
 
 Description
-    Simple cube-root of cell volume delta used in incompressible LES models.
+    Apply van Driest damping function to the specified geometric delta to
+    improve near-wall behavior or LES SGS models.
 
 SourceFiles
     vanDriestDelta.C
