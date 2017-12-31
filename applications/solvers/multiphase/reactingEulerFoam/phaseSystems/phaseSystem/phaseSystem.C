@@ -283,6 +283,30 @@ void Foam::phaseSystem::solve()
 {}
 
 
+Foam::tmp<Foam::volScalarField> Foam::phaseSystem::dmdt
+(
+const Foam::phaseModel& phase
+) const
+{
+    tmp<volScalarField> tDmdt
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("dmdt", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
+
+    return tDmdt;
+}
+
+
 void Foam::phaseSystem::correct()
 {
     forAll(phaseModels_, phasei)

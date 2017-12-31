@@ -7,5 +7,6 @@ wclean libso interfacialCompositionModels
 wclean libso derivedFvPatchFields
 reactingTwoPhaseEulerFoam/Allwclean
 reactingMultiphaseEulerFoam/Allwclean
+wclean libso functionObjects
 
 #------------------------------------------------------------------------------

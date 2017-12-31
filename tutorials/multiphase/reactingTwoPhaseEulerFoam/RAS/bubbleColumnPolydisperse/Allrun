@@ -1,0 +1,16 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set application name
+application=`getApplication`
+
+cp 0/alpha.air.orig 0/alpha.air
+cp 0/f.air.bubbles.orig 0/f.air.bubbles
+
+runApplication blockMesh
+runApplication topoSet
+runApplication setFields
+runApplication $application

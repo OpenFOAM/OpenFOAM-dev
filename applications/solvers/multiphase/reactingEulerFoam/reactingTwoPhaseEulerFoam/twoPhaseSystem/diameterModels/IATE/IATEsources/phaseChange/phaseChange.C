@@ -56,7 +56,7 @@ Foam::diameterModels::IATEsources::phaseChange::phaseChange
 :
     IATEsource(iate),
     pairName_(dict.lookup("pairName")),
-    iDmdtPtr_(nullPtr)
+    iDmdtPtr_(nullptr)
 {}
 
 

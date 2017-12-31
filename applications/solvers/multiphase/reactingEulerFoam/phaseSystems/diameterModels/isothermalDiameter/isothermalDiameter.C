@@ -54,7 +54,20 @@ Foam::diameterModels::isothermal::isothermal
 :
     diameterModel(diameterProperties, phase),
     d0_("d0", dimLength, diameterProperties_),
-    p0_("p0", dimPressure, diameterProperties_)
+    p0_("p0", dimPressure, diameterProperties_),
+    d_
+    (
+        IOobject
+        (
+            IOobject::groupName("d", phase.name()),
+            phase_.time().timeName(),
+            phase_.mesh(),
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        phase_.mesh(),
+        dimensionedScalar("d", dimLength, 0.0)
+    )
 {}
 
 
@@ -74,6 +87,12 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::isothermal::d() const
     );
 
     return d0_*pow(p0_/p, 1.0/3.0);
+}
+
+
+void Foam::diameterModels::isothermal::correct()
+{
+    d_ = d();
 }
 
 

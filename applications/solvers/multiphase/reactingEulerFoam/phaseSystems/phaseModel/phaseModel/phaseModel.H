@@ -180,6 +180,9 @@ public:
         //- Return the Sauter-mean diameter
         tmp<volScalarField> d() const;
 
+        //- Return const-reference to diameterModel of the phase
+        const autoPtr<diameterModel>& dPtr() const;
+
         //- Correct the phase properties
         virtual void correct();
 

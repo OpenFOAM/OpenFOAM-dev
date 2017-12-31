@@ -14,5 +14,6 @@ wmakeLnInclude reactingTwoPhaseEulerFoam/twoPhaseCompressibleTurbulenceModels
 wmakeLnInclude reactingMultiphaseEulerFoam/multiphaseCompressibleTurbulenceModels
 reactingTwoPhaseEulerFoam/Allwmake $targetType $*
 reactingMultiphaseEulerFoam/Allwmake $targetType $*
+wmake $targetType functionObjects
 
 #------------------------------------------------------------------------------

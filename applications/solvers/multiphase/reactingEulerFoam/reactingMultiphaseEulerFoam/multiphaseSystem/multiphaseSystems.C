@@ -30,6 +30,7 @@ License
 #include "MomentumTransferPhaseSystem.H"
 #include "HeatTransferPhaseSystem.H"
 #include "HeatAndMassTransferPhaseSystem.H"
+#include "PopulationBalancePhaseSystem.H"
 #include "InterfaceCompositionPhaseChangePhaseSystem.H"
 #include "ThermalPhaseChangePhaseSystem.H"
 
@@ -102,6 +103,29 @@ namespace Foam
         dictionary,
         thermalPhaseChangeMultiphaseSystem
     );
+
+    typedef
+
+        PopulationBalancePhaseSystem
+        <
+            HeatAndMassTransferPhaseSystem
+            <
+                MomentumTransferPhaseSystem<multiphaseSystem>
+            >
+        >
+        populationBalanceMultiphaseSystem;
+
+    addNamedToRunTimeSelectionTable
+    (
+        multiphaseSystem,
+        populationBalanceMultiphaseSystem,
+        dictionary,
+        populationBalanceMultiphaseSystem
+    );
+
+
+
+
 }
 
 

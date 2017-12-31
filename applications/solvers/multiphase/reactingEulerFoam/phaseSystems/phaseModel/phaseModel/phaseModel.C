@@ -131,6 +131,12 @@ Foam::tmp<Foam::volScalarField> Foam::phaseModel::d() const
 }
 
 
+const Foam::autoPtr<Foam::diameterModel>& Foam::phaseModel::dPtr() const
+{
+    return diameterModel_;
+}
+
+
 void Foam::phaseModel::correct()
 {
     diameterModel_->correct();
