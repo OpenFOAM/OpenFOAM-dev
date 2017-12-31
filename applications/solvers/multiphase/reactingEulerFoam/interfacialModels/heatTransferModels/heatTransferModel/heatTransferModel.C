@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,9 @@ Foam::heatTransferModel::heatTransferModel
         dict.lookupOrDefault<scalar>
         (
             "residualAlpha",
-            pair_.dispersed().residualAlpha().value()
+            pair_.ordered()
+          ? pair_.dispersed().residualAlpha().value()
+          : pair_.phase1().residualAlpha().value()
         )
     )
 {}

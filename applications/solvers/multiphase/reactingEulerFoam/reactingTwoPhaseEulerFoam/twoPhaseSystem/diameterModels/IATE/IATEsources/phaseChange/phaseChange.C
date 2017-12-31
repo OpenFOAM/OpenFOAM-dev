@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,9 @@ Foam::diameterModels::IATEsources::phaseChange::phaseChange
     const dictionary& dict
 )
 :
-    IATEsource(iate)
+    IATEsource(iate),
+    pairName_(dict.lookup("pairName")),
+    iDmdtPtr_(nullPtr)
 {}
 
 
@@ -67,24 +69,21 @@ Foam::diameterModels::IATEsources::phaseChange::R
     volScalarField& kappai
 ) const
 {
-    const ThermalPhaseChangePhaseSystem
-    <
-        MomentumTransferPhaseSystem
-        <
-            twoPhaseSystem
-        >
-    >& phaseChangeFluid = refCast
-    <
-        const ThermalPhaseChangePhaseSystem
-        <
-            MomentumTransferPhaseSystem<twoPhaseSystem>
-        >
-    >(fluid());
+
+    if (!iDmdtPtr_)
+    {
+        iDmdtPtr_ = &alphai.mesh().lookupObject<volScalarField>
+            (
+                IOobject::groupName("iDmdt",pairName_)
+            );
+    }
+
+    const volScalarField& iDmdt = *iDmdtPtr_;
 
     return -fvm::SuSp
     (
         (1.0/3.0)
-       *phaseChangeFluid.iDmdt(phase())()()
+       *iDmdt()
        /(alphai()*phase().rho()()),
         kappai
     );

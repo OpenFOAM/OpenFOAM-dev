@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,9 +46,13 @@ namespace saturationModels
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::saturationModels::constantSaturationConditions::
-constantSaturationConditions(const dictionary& dict)
+constantSaturationConditions
+(
+    const dictionary& dict,
+    const objectRegistry& db
+)
 :
-    saturationModel(),
+    saturationModel(db),
     pSat_("pSat", dimPressure, dict),
     Tsat_("Tsat", dimTemperature, dict)
 {}

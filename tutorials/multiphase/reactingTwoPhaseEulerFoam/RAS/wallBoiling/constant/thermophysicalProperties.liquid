@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         multiComponentMixture;
+    mixture         pureMixture;
     transport       const;
     thermo          hRefConst;
     equationOfState rhoConst;
@@ -28,14 +28,7 @@ thermoType
 
 dpdt no;
 
-species
-(
-    water
-);
-
-inertSpecie water;
-
-"(mixture|H2O|water)"
+mixture
 {
     specie
     {

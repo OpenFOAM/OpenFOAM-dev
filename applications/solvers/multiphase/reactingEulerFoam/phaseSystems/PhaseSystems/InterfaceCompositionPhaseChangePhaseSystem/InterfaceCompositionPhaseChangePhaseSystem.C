@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,13 +36,63 @@ InterfaceCompositionPhaseChangePhaseSystem
     const fvMesh& mesh
 )
 :
-    HeatAndMassTransferPhaseSystem<BasePhaseSystem>(mesh)
+    BasePhaseSystem(mesh)
 {
     this->generatePairsAndSubModels
     (
         "interfaceComposition",
         interfaceCompositionModels_
     );
+
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        // Initially assume no mass transfer
+        iDmdt_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("iDmdt", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh(),
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh(),
+                dimensionedScalar("zero", dimDensity/dimTime, 0)
+            )
+        );
+
+        iDmdtExplicit_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("iDmdtExplicit", pair.name()),
+                    this->mesh().time().timeName(),
+                    this->mesh()
+                ),
+                this->mesh(),
+                dimensionedScalar("zero", dimDensity/dimTime, 0)
+            )
+        );
+    }
 }
 
 
@@ -57,33 +107,240 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
+(
+    const phasePairKey& key
+) const
+{
+    const scalar dmdtSign(Pair<word>::compare(iDmdt_.find(key).key(), key));
+
+    return dmdtSign**iDmdt_[key];
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
+(
+    const Foam::phaseModel& phase
+) const
+{
+    tmp<volScalarField> tiDmdt
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("iDmdt", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
+
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        const phaseModel* phase1 = &pair.phase1();
+        const phaseModel* phase2 = &pair.phase2();
+
+        forAllConstIter(phasePair, pair, iter)
+        {
+            if (phase1 == &phase)
+            {
+                tiDmdt.ref() += this->iDmdt
+                (
+                    phasePairKey(phase1->name(), phase2->name(),false)
+                );
+            }
+
+            Swap(phase1, phase2);
+        }
+    }
+
+    return tiDmdt;
+}
+
+
+template<class BasePhaseSystem>
+Foam::tmp<Foam::volScalarField>
+Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
+(
+    const Foam::phaseModel& phase
+) const
+{
+    tmp<volScalarField> tDmdt
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("dmdt", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
+
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        const phaseModel* phase1 = &pair.phase1();
+        const phaseModel* phase2 = &pair.phase2();
+
+        forAllConstIter(phasePair, pair, iter)
+        {
+            if (phase1 == &phase)
+            {
+                tDmdt.ref() += this->dmdt
+                (
+                    phasePairKey(phase1->name(), phase2->name(),false)
+                );
+            }
+
+            Swap(phase1, phase2);
+        }
+    }
+    return tDmdt;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
+momentumTransfer() const
+{
+    autoPtr<phaseSystem::momentumTransferTable>
+        eqnsPtr(BasePhaseSystem::momentumTransfer());
+
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
+
+    // Source term due to mass transfer
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        const phasePair& pair(phasePairIter());
+
+        if (pair.ordered())
+        {
+            continue;
+        }
+
+        const volVectorField& U1(pair.phase1().U());
+        const volVectorField& U2(pair.phase2().U());
+
+        const volScalarField dmdt(this->iDmdt(pair));
+        const volScalarField dmdt21(posPart(dmdt));
+        const volScalarField dmdt12(negPart(dmdt));
+
+        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
+        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
+    }
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
+Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
+heatTransfer() const
+{
+    autoPtr<phaseSystem::heatTransferTable> eqnsPtr =
+        BasePhaseSystem::heatTransfer();
+
+    phaseSystem::heatTransferTable& eqns = eqnsPtr();
+
+    // Source term due to mass transfer
+    forAllConstIter
+    (
+        phaseSystem::phasePairTable,
+        this->phasePairs_,
+        phasePairIter
+    )
+    {
+        if
+        (
+            this->heatTransferModels_.found(phasePairIter.key())
+        )
+        {
+            const phasePair& pair(phasePairIter());
+
+            if (pair.ordered())
+            {
+                continue;
+            }
+
+            const phaseModel& phase1 = pair.phase1();
+            const phaseModel& phase2 = pair.phase2();
+
+            const volScalarField& he1(phase1.thermo().he());
+            const volScalarField& he2(phase2.thermo().he());
+
+            const volScalarField& K1(phase1.K());
+            const volScalarField& K2(phase2.K());
+
+            const volScalarField dmdt(this->dmdt(pair));
+            const volScalarField dmdt21(posPart(dmdt));
+            const volScalarField dmdt12(negPart(dmdt));
+            const volScalarField& Tf(*this->Tf_[pair]);
+
+            *eqns[phase1.name()] +=
+                dmdt21*(phase1.thermo().he(phase1.thermo().p(), Tf))
+              - fvm::Sp(dmdt21, he1)
+              + dmdt21*(K2 - K1);
+
+            *eqns[phase2.name()] -=
+                dmdt12*(phase2.thermo().he(phase2.thermo().p(), Tf))
+              - fvm::Sp(dmdt12, he2)
+              + dmdt12*(K1 - K2);
+        }
+    }
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::massTransferTable>
 Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
 massTransfer() const
 {
-    // Create a mass transfer matrix for each species of each phase
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr
-    (
-        new phaseSystem::massTransferTable()
-    );
+    autoPtr<phaseSystem::massTransferTable> eqnsPtr =
+        BasePhaseSystem::massTransfer();
 
     phaseSystem::massTransferTable& eqns = eqnsPtr();
-
-    forAll(this->phaseModels_, phasei)
-    {
-        const phaseModel& phase = this->phaseModels_[phasei];
-
-        const PtrList<volScalarField>& Yi = phase.Y();
-
-        forAll(Yi, i)
-        {
-            eqns.insert
-            (
-                Yi[i].name(),
-                new fvScalarMatrix(Yi[i], dimMass/dimTime)
-            );
-        }
-    }
 
     // Reset the interfacial mass flow rates
     forAllConstIter
@@ -100,10 +357,10 @@ massTransfer() const
             continue;
         }
 
-        *this->dmdt_[pair] =
-            *this->dmdtExplicit_[pair];
+        *this->iDmdt_[pair] =
+            *this->iDmdtExplicit_[pair];
 
-        *this->dmdtExplicit_[pair] =
+        *this->iDmdtExplicit_[pair] =
             dimensionedScalar("zero", dimDensity/dimTime, 0);
     }
 
@@ -130,10 +387,10 @@ massTransfer() const
 
         const volScalarField& Tf(*this->Tf_[key]);
 
-        volScalarField& dmdtExplicit(*this->dmdtExplicit_[key]);
-        volScalarField& dmdt(*this->dmdt_[key]);
+        volScalarField& iDmdtExplicit_(*this->iDmdtExplicit_[key]);
+        volScalarField& iDmdt_(*this->iDmdt_[key]);
 
-        scalar dmdtSign(Pair<word>::compare(this->dmdt_.find(key).key(), key));
+        scalar dmdtSign(Pair<word>::compare(this->iDmdt_.find(key).key(), key));
 
         const volScalarField K
         (
@@ -175,8 +432,8 @@ massTransfer() const
               - fvm::Sp(phase.rho()*KD, eqns[name]->psi());
 
             // Sum the mass transfer rate
-            dmdtExplicit += dmdtSign*phase.rho()*KD*Yf;
-            dmdt -= dmdtSign*phase.rho()*KD*eqns[name]->psi();
+            iDmdtExplicit_ += dmdtSign*phase.rho()*KD*Yf;
+            iDmdt_ -= dmdtSign*phase.rho()*KD*eqns[name]->psi();
 
             // Explicit transport out of the other phase
             if (eqns.found(otherName))
@@ -195,7 +452,7 @@ template<class BasePhaseSystem>
 void Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
 correctThermo()
 {
-    BasePhaseSystem::correctThermo();
+    phaseSystem::correctThermo();
 
     // This loop solves for the interface temperatures, Tf, and updates the
     // interface composition models.

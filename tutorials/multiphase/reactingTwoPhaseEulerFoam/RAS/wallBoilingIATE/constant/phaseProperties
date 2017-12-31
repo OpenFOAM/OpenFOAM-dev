@@ -19,13 +19,11 @@ type    thermalPhaseChangeTwoPhaseSystem;
 
 phases (gas liquid);
 
-volatile    "water";
-
 massTransfer on;
 
 gas
 {
-    type            multiComponentPhaseModel;
+    type            purePhaseModel;
     diameterModel   IATE;
 
     IATECoeffs
@@ -55,7 +53,9 @@ gas
             }
 
             phaseChange
-            {}
+            {
+                pairName gasAndLiquid;
+            }
 
             wallBoiling
             {}
@@ -80,7 +80,7 @@ gas
 
 liquid
 {
-    type            multiComponentPhaseModel;
+    type            purePhaseModel;
     diameterModel   constant;
     constantCoeffs
     {
@@ -95,32 +95,8 @@ blending
 {
     default
     {
-        type            linear;
+        type            none;
         continuousPhase liquid;
-        minFullyContinuousAlpha.gas 0.7;
-        minPartlyContinuousAlpha.gas 0.5;
-        minFullyContinuousAlpha.liquid 0.7;
-        minPartlyContinuousAlpha.liquid 0.5;
-    }
-
-    heatTransfer
-    {
-        type            linear;
-        continuousPhase liquid;
-        minFullyContinuousAlpha.gas 1;
-        minPartlyContinuousAlpha.gas 0;
-        minFullyContinuousAlpha.liquid 1;
-        minPartlyContinuousAlpha.liquid 0;
-    }
-
-    massTransfer
-    {
-        type            linear;
-        continuousPhase liquid;
-        minFullyContinuousAlpha.gas 1;
-        minPartlyContinuousAlpha.gas 0;
-        minFullyContinuousAlpha.liquid 1;
-        minPartlyContinuousAlpha.liquid 0;
     }
 }
 
@@ -135,29 +111,15 @@ surfaceTension
 
 saturationModel
 {
-    type polynomial;
-    C<8>
-    (
-        308.0422
-        0.0015096
-        -1.61589e-8
-        1.114106e-13
-        -4.52216e-19
-        1.05192e-24
-        -1.2953e-30
-        6.5365e-37
-    );
+    type constant;
+
+    Tsat 373;
+    pSat 1e5;
 };
 
 aspectRatio
 (
     (gas in liquid)
-    {
-        type            constant;
-        E0              1.0;
-    }
-
-    (liquid in gas)
     {
         type            constant;
         E0              1.0;
@@ -175,27 +137,11 @@ drag
             type        none;
         }
     }
-
-    (liquid in gas)
-    {
-        type            SchillerNaumann;
-        residualRe      1e-3;
-        swarmCorrection
-        {
-            type        none;
-        }
-    }
 );
 
 virtualMass
 (
     (gas in liquid)
-    {
-        type            constantCoefficient;
-        Cvm             0.5;
-    }
-
-    (liquid in gas)
     {
         type            constantCoefficient;
         Cvm             0.5;
@@ -212,12 +158,6 @@ heatTransfer.gas
         type spherical;
         residualAlpha 1e-3;
     }
-
-    (liquid in gas)
-    {
-        type RanzMarshall;
-        residualAlpha 1e-3;
-    }
 );
 
 heatTransfer.liquid
@@ -225,12 +165,6 @@ heatTransfer.liquid
     (gas in liquid)
     {
         type RanzMarshall;
-        residualAlpha 1e-3;
-    }
-
-    (liquid in gas)
-    {
-        type spherical;
         residualAlpha 1e-3;
     }
 );
@@ -245,17 +179,7 @@ lift
 ();
 
 wallLubrication
-(
-    (gas in liquid)
-    {
-        type            Antal;
-        Cw1             -0.01;
-        Cw2             0.05;
-        Cwc             10.0;
-        Cwd             6.8;
-        p               1.7;
-    }
-);
+();
 
 turbulentDispersion
 (

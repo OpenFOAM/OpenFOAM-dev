@@ -4,6 +4,7 @@ diameterModels/IATE/IATEsources/wakeEntrainmentCoalescence/wakeEntrainmentCoales
 diameterModels/IATE/IATEsources/turbulentBreakUp/turbulentBreakUp.C
 diameterModels/IATE/IATEsources/randomCoalescence/randomCoalescence.C
 diameterModels/IATE/IATEsources/phaseChange/phaseChange.C
+diameterModels/IATE/IATEsources/wallBoiling/wallBoiling.C
 
 twoPhaseSystem.C
 newTwoPhaseSystem.C

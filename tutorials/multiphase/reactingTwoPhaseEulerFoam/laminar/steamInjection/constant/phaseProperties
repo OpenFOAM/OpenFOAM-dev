@@ -19,13 +19,11 @@ type thermalPhaseChangeTwoPhaseSystem;
 
 phases (steam water);
 
-volatile    "water";
-
 massTransfer on;
 
 steam
 {
-    type            multiComponentPhaseModel;
+    type            purePhaseModel;
     diameterModel   isothermal;
     isothermalCoeffs
     {
@@ -39,7 +37,7 @@ steam
 
 water
 {
-    type            multiComponentPhaseModel;
+    type            purePhaseModel;
     diameterModel   constant;
     constantCoeffs
     {
@@ -109,15 +107,6 @@ virtualMass
 
 interfaceComposition
 ();
-
-heatTransfer
-(
-    (steam in water)
-    {
-        type spherical;
-        residualAlpha 1e-4;
-    }
-);
 
 heatTransfer.steam
 (

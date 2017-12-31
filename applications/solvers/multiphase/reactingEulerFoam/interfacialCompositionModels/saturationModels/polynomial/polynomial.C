@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,13 @@ namespace saturationModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationModels::polynomial::polynomial(const dictionary& dict)
+Foam::saturationModels::polynomial::polynomial
+(
+    const dictionary& dict,
+    const objectRegistry& db
+)
 :
-    saturationModel(),
+    saturationModel(db),
     C_(dict.lookup("C<8>"))
 {}
 

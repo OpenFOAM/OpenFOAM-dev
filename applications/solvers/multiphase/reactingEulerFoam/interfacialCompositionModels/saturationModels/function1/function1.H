@@ -107,7 +107,7 @@ public:
     // Constructors
 
         //- Construct from a dictionary
-        function1(const dictionary& dict);
+        function1(const dictionary& dict, const objectRegistry& db);
 
 
     //- Destructor

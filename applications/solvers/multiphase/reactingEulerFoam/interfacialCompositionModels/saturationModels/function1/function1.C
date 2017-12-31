@@ -40,9 +40,13 @@ namespace saturationModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationModels::function1::function1(const dictionary& dict)
+Foam::saturationModels::function1::function1
+(
+    const dictionary& dict,
+    const objectRegistry& db
+)
 :
-    saturationModel(),
+    saturationModel(db),
     function_
     (
         Function1<scalar>::New("function", dict)

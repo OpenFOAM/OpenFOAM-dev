@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ SourceFiles
 #ifndef saturationModel_H
 #define saturationModel_H
 
+#include "IOdictionary.H"
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
@@ -49,6 +50,8 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class saturationModel
+:
+    public IOdictionary
 {
     // Private Member Functions
 
@@ -72,22 +75,26 @@ public:
         saturationModel,
         dictionary,
         (
-            const dictionary& dict
+            const dictionary& dict, const objectRegistry& db
         ),
-        (dict)
+        (dict, db)
     );
 
 
     // Constructors
 
         //- Construct null
-        saturationModel();
+        saturationModel(const objectRegistry& db);
 
 
     // Selectors
 
         //- Select null constructed
-        static autoPtr<saturationModel> New(const dictionary& dict);
+        static autoPtr<saturationModel> New
+        (
+            const dictionary& dict,
+            const objectRegistry& db
+        );
 
 
     //- Destructor

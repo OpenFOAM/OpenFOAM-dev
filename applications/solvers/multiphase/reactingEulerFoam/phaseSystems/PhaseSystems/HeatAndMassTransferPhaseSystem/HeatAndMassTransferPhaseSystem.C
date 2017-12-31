@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,71 +73,50 @@ HeatAndMassTransferPhaseSystem
             continue;
         }
 
-        // Initialy assume no mass transfer
-
-        dmdt_.insert
+        if
         (
-            pair,
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("dmdt", pair.name()),
-                    this->mesh().time().timeName(),
-                    this->mesh(),
-                    IOobject::NO_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                this->mesh(),
-                dimensionedScalar("zero", dimDensity/dimTime, 0)
-            )
-        );
+            heatTransferModels_.found(pair)
+         && heatTransferModels_[pair][pair.first()].valid()
+         && heatTransferModels_[pair][pair.second()].valid()
+        )
+        {
 
-        dmdtExplicit_.insert
-        (
-            pair,
-            new volScalarField
-            (
-                IOobject
-                (
-                    IOobject::groupName("dmdtExplicit", pair.name()),
-                    this->mesh().time().timeName(),
-                    this->mesh()
-                ),
-                this->mesh(),
-                dimensionedScalar("zero", dimDensity/dimTime, 0)
-            )
-        );
+            volScalarField H1(heatTransferModels_[pair][pair.first()]->K());
+            volScalarField H2(heatTransferModels_[pair][pair.second()]->K());
 
-        volScalarField H1(heatTransferModels_[pair][pair.first()]->K());
-        volScalarField H2(heatTransferModels_[pair][pair.second()]->K());
-
-        Tf_.insert
-        (
-            pair,
-            new volScalarField
+            Tf_.insert
             (
-                IOobject
+                pair,
+                new volScalarField
                 (
-                    IOobject::groupName("Tf", pair.name()),
-                    this->mesh().time().timeName(),
-                    this->mesh(),
-                    IOobject::NO_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                (
-                    H1*pair.phase1().thermo().T()
-                  + H2*pair.phase2().thermo().T()
+                    IOobject
+                    (
+                        IOobject::groupName("Tf", pair.name()),
+                        this->mesh().time().timeName(),
+                        this->mesh(),
+                        IOobject::NO_READ,
+                        IOobject::AUTO_WRITE
+                    ),
+                    (
+                        H1*pair.phase1().thermo().T()
+                      + H2*pair.phase2().thermo().T()
+                    )
+                   /max
+                    (
+                        H1 + H2,
+                        dimensionedScalar
+                        (
+                            "small",
+                            heatTransferModel::dimK,
+                            SMALL
+                        )
+                    ),
+                    zeroGradientFvPatchScalarField::typeName
                 )
-               /max
-                (
-                    H1 + H2,
-                    dimensionedScalar("small", heatTransferModel::dimK, SMALL)
-                ),
-                zeroGradientFvPatchScalarField::typeName
-            )
-        );
-        Tf_[pair]->correctBoundaryConditions();
+            );
+
+            Tf_[pair]->correctBoundaryConditions();
+        }
     }
 }
 
@@ -169,9 +148,20 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
     const phasePairKey& key
 ) const
 {
-    const scalar dmdtSign(Pair<word>::compare(dmdt_.find(key).key(), key));
-
-    return dmdtSign**dmdt_[key];
+    return tmp<Foam::volScalarField>
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                "dmdt",
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
 }
 
 
@@ -182,7 +172,7 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
     const Foam::phaseModel& phase
 ) const
 {
-    tmp<volScalarField> tdmdt
+    tmp<volScalarField> tDmdt
     (
         new volScalarField
         (
@@ -197,35 +187,7 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::dmdt
         )
     );
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        const phaseModel* phase1 = &pair.phase1();
-        const phaseModel* phase2 = &pair.phase2();
-
-        forAllConstIter(phasePair, pair, iter)
-        {
-            if (phase1 == &phase)
-            {
-                tdmdt.ref() += this->dmdt(pair);
-            }
-
-            Swap(phase1, phase2);
-        }
-    }
-
-    return tdmdt;
+    return tDmdt;
 }
 
 
@@ -235,34 +197,6 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
 {
     autoPtr<phaseSystem::momentumTransferTable>
         eqnsPtr(BasePhaseSystem::momentumTransfer());
-
-    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
-
-    // Source term due to mass trasfer
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        const volVectorField& U1(pair.phase1().U());
-        const volVectorField& U2(pair.phase2().U());
-
-        const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-
-        *eqns[pair.phase1().name()] += dmdt21*U2 - fvm::Sp(dmdt21, U1);
-        *eqns[pair.phase2().name()] -= dmdt12*U1 - fvm::Sp(dmdt12, U2);
-    }
 
     return eqnsPtr;
 }
@@ -298,52 +232,98 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         heatTransferModelIter
     )
     {
-        const phasePair& pair
+        if
         (
-            this->phasePairs_[heatTransferModelIter.key()]
-        );
-
-        const phaseModel* phase = &pair.phase1();
-        const phaseModel* otherPhase = &pair.phase2();
-
-        const volScalarField& Tf(*Tf_[pair]);
-
-        const volScalarField K1
-        (
-            heatTransferModelIter()[pair.first()]->K()
-        );
-        const volScalarField K2
-        (
-            heatTransferModelIter()[pair.second()]->K()
-        );
-        const volScalarField KEff
-        (
-            K1*K2
-           /max
-            (
-                K1 + K2,
-                dimensionedScalar("small", heatTransferModel::dimK, SMALL)
-            )
-        );
-
-        const volScalarField* K = &K1;
-        const volScalarField* otherK = &K2;
-
-        forAllConstIter(phasePair, pair, iter)
+            heatTransferModels_.found(heatTransferModelIter.key())
+        )
         {
-            const volScalarField& he(phase->thermo().he());
-            volScalarField Cpv(phase->thermo().Cpv());
+            const phasePair& pair
+            (
+                this->phasePairs_[heatTransferModelIter.key()]
+            );
 
-            *eqns[phase->name()] +=
-                (*K)*(Tf - phase->thermo().T())
-              + KEff/Cpv*he - fvm::Sp(KEff/Cpv, he);
+            const phaseModel* phase = &pair.phase1();
+            const phaseModel* otherPhase = &pair.phase2();
 
-            Swap(phase, otherPhase);
-            Swap(K, otherK);
+            const volScalarField& Tf(*Tf_[pair]);
+
+            const volScalarField K1
+            (
+                heatTransferModelIter()[pair.first()]->K()
+            );
+            const volScalarField K2
+            (
+                heatTransferModelIter()[pair.second()]->K()
+            );
+            const volScalarField KEff
+            (
+                K1*K2
+               /max
+                (
+                    K1 + K2,
+                    dimensionedScalar("small", heatTransferModel::dimK, SMALL)
+                )
+            );
+
+            const volScalarField* K = &K1;
+            const volScalarField* otherK = &K2;
+
+            forAllConstIter(phasePair, pair, iter)
+            {
+                const volScalarField& he(phase->thermo().he());
+                volScalarField Cpv(phase->thermo().Cpv());
+
+                *eqns[phase->name()] +=
+                    (*K)*(Tf - phase->thermo().T())
+                  + KEff/Cpv*he - fvm::Sp(KEff/Cpv, he);
+
+                Swap(phase, otherPhase);
+                Swap(K, otherK);
+            }
         }
     }
 
-    // Source term due to mass transfer
+    return eqnsPtr;
+}
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::massTransferTable>
+Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::massTransfer() const
+{
+    // Create a mass transfer matrix for each species of each phase
+    autoPtr<phaseSystem::massTransferTable> eqnsPtr
+    (
+        new phaseSystem::massTransferTable()
+    );
+
+    phaseSystem::massTransferTable& eqns = eqnsPtr();
+
+    forAll(this->phaseModels_, phasei)
+    {
+        const phaseModel& phase = this->phaseModels_[phasei];
+
+        const PtrList<volScalarField>& Yi = phase.Y();
+
+        forAll(Yi, i)
+        {
+            eqns.insert
+            (
+                Yi[i].name(),
+                new fvScalarMatrix(Yi[i], dimMass/dimTime)
+            );
+        }
+    }
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+void Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::correctThermo()
+{
+
+    phaseSystem::correctThermo();
+
     forAllConstIter
     (
         phaseSystem::phasePairTable,
@@ -351,39 +331,49 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
         phasePairIter
     )
     {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
+        if
+        (
+            this->heatTransferModels_.found(phasePairIter.key())
+        )
         {
-            continue;
+            const phasePair& pair(phasePairIter());
+
+            if (pair.ordered())
+            {
+                continue;
+            }
+
+            const phaseModel& phase1 = pair.phase1();
+            const phaseModel& phase2 = pair.phase2();
+
+            const volScalarField& T1(phase1.thermo().T());
+            const volScalarField& T2(phase2.thermo().T());
+
+            volScalarField& Tf(*this->Tf_[pair]);
+
+            volScalarField H1
+            (
+                this->heatTransferModels_[pair][pair.first()]->K()
+            );
+
+            volScalarField H2
+            (
+                this->heatTransferModels_[pair][pair.second()]->K()
+            );
+
+            // Limit the H[12] to avoid /0
+            H1.max(SMALL);
+            H2.max(SMALL);
+
+            Tf = (H1*T1 + H2*T2)/(H1 + H2);
+
+            Info<< "Tf." << pair.name()
+                << ": min = " << min(Tf.primitiveField())
+                << ", mean = " << average(Tf.primitiveField())
+                << ", max = " << max(Tf.primitiveField())
+                << endl;
         }
-
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-
-        const volScalarField& he1(phase1.thermo().he());
-        const volScalarField& he2(phase2.thermo().he());
-
-        const volScalarField& K1(phase1.K());
-        const volScalarField& K2(phase2.K());
-
-        const volScalarField dmdt(this->dmdt(pair));
-        const volScalarField dmdt21(posPart(dmdt));
-        const volScalarField dmdt12(negPart(dmdt));
-        const volScalarField& Tf(*Tf_[pair]);
-
-        *eqns[phase1.name()] +=
-            dmdt21*(phase1.thermo().he(phase1.thermo().p(), Tf))
-          - fvm::Sp(dmdt21, he1)
-          + dmdt21*(K2 - K1);
-
-        *eqns[phase2.name()] -=
-            dmdt12*(phase2.thermo().he(phase2.thermo().p(), Tf))
-          - fvm::Sp(dmdt12, he2)
-          + dmdt12*(K1 - K2);
     }
-
-    return eqnsPtr;
 }
 
 

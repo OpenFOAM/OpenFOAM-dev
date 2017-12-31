@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,8 @@ Class
 
 Description
     Base class to support interfacial heat and mass transfer between a number
-    of phases.
+    of phases. Can be used on its own to simulate flows without mass transfer
+    with two-resistance interfacial heat trasnfer.
 
 SourceFiles
     HeatAndMassTransferPhaseSystem.C
@@ -86,14 +87,6 @@ protected:
 
     // Protected data
 
-        //- Mass transfer rate
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            dmdt_;
-
-        //- Explicit part of the mass transfer rate
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            dmdtExplicit_;
-
         //- Interface temperatures
         HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash> Tf_;
 
@@ -138,11 +131,10 @@ public:
             heatTransfer() const;
 
         //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable>
-            massTransfer() const = 0;
+        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
         //- Correct the thermodynamics
-        virtual void correctThermo() = 0;
+        virtual void correctThermo();
 
         //- Read base phaseProperties dictionary
         virtual bool read();

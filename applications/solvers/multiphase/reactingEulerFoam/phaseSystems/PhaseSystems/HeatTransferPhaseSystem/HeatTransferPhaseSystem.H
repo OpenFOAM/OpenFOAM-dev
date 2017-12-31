@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,8 +106,7 @@ public:
             heatTransfer() const;
 
         //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable>
-            massTransfer() const;
+        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
 
         //- Read base phaseProperties dictionary
         virtual bool read();

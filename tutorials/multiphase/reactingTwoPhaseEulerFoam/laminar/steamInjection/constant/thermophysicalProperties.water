@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         multiComponentMixture;
+    mixture         pureMixture;
     transport       const;
     thermo          hRefConst;
     equationOfState perfectFluid;
@@ -30,14 +30,7 @@ dpdt yes;
 
 pressureWorkAlphaLimit 0;
 
-species
-(
-    water
-);
-
-inertSpecie water;
-
-water
+mixture
 {
     specie
     {

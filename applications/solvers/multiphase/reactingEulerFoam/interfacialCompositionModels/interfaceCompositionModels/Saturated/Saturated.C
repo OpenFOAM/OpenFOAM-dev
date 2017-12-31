@@ -62,7 +62,8 @@ Foam::interfaceCompositionModels::Saturated<Thermo, OtherThermo>::Saturated
     (
         saturationModel::New
         (
-            dict.subDict("saturationPressure")
+            dict.subDict("saturationPressure"),
+            pair.phase1().mesh()
         )
     )
 {
