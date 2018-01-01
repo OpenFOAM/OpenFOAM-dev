@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,8 +204,7 @@ public:
         //- Return true if there is mass transfer for phase
         virtual bool transfersMass(const phaseModel& phase) const = 0;
 
-        //- Return the total interfacial mass transfer rate for phase
-        virtual tmp<volScalarField> dmdt(const phaseModel& phase) const = 0;
+        using phaseSystem::dmdt;
 
         //- Return the momentum transfer matrices
         virtual autoPtr<momentumTransferTable> momentumTransfer() const = 0;

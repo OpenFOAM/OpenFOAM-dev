@@ -317,20 +317,20 @@ while (pimple.correct())
     {
         if (pEqnComp1.valid())
         {
-            pEqnComp1.ref() -= fluid.dmdt()/rho1;
+            pEqnComp1.ref() -= fluid.dmdt(phase1)/rho1;
         }
         else
         {
-            pEqnComp1 = fvm::Su(-fluid.dmdt()/rho1, p_rgh);
+            pEqnComp1 = fvm::Su(-fluid.dmdt(phase1)/rho1, p_rgh);
         }
 
         if (pEqnComp2.valid())
         {
-            pEqnComp2.ref() += fluid.dmdt()/rho2;
+            pEqnComp2.ref() -= fluid.dmdt(phase2)/rho2;
         }
         else
         {
-            pEqnComp2 = fvm::Su(fluid.dmdt()/rho2, p_rgh);
+            pEqnComp2 = fvm::Su(-fluid.dmdt(phase2)/rho2, p_rgh);
         }
     }
 

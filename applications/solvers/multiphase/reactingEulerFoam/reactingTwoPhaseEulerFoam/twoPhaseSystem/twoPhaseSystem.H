@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,8 +198,7 @@ public:
         //- Return true if there is mass transfer
         bool transfersMass() const;
 
-        //- Return the interfacial mass flow rate
-        tmp<volScalarField> dmdt() const;
+        using phaseSystem::dmdt;
 
         //- Solve for the phase fractions
         virtual void solve();

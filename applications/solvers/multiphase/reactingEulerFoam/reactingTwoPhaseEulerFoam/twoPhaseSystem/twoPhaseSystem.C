@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,16 +171,6 @@ Foam::twoPhaseSystem::D() const
 bool Foam::twoPhaseSystem::transfersMass() const
 {
     return transfersMass(phase1());
-}
-
-
-Foam::tmp<Foam::volScalarField>
-Foam::twoPhaseSystem::dmdt() const
-{
-    return dmdt
-    (
-        phasePairKey(phase1().name(), phase2().name())
-    );
 }
 
 

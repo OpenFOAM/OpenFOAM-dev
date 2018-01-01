@@ -18,8 +18,8 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVol/dimTime);
       + MRF.DDt(U2)
     );
 
-    const volScalarField dmdt21(posPart(fluid.dmdt()));
-    const volScalarField dmdt12(negPart(fluid.dmdt()));
+    const volScalarField dmdt21(posPart(fluid.dmdt(phase1)));
+    const volScalarField dmdt12(negPart(fluid.dmdt(phase1)));
 
     {
         U1Eqn =
