@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,7 +279,7 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 bool alphatWallBoilingWallFunctionFvPatchScalarField::
 activePhasePair(const phasePairKey& phasePair) const
 {
-    if (phasePair == phasePairKey(otherPhaseName_,internalField().group()))
+    if (phasePair == phasePairKey(otherPhaseName_, internalField().group()))
     {
         return true;
     }
@@ -479,7 +479,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const scalarField L
             (
-                vapor.thermo().he(pw,Tsatc,patchi)-hew.patchInternalField()
+                vapor.thermo().he(pw, Tsatc, patchi) - hew.patchInternalField()
             );
 
             // Liquid phase fraction at the wall
@@ -544,9 +544,10 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 (
                     rhoLiquidw*Cpw*(Tsatw - Tl)/(rhoVaporw*L)
                 );
+
                 const scalarField Al
                 (
-                    fLiquid*4.8*exp( min(-Ja/80,log(VGREAT)))
+                    fLiquid*4.8*exp( min(-Ja/80, log(VGREAT)))
                 );
 
                 const scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
@@ -584,9 +585,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                    /max(liquidw, scalar(1e-8))
                 );
 
-                scalarField TsupPrev(max((Tw - Tsatw),scalar(0)));
+                scalarField TsupPrev(max((Tw - Tsatw), scalar(0)));
                 const_cast<fvPatchScalarField&>(Tw).evaluate();
-                scalarField TsupNew(max((Tw - Tsatw),scalar(0)));
+                scalarField TsupNew(max((Tw - Tsatw), scalar(0)));
 
                 scalar maxErr(max(mag(TsupPrev - TsupNew)));
 

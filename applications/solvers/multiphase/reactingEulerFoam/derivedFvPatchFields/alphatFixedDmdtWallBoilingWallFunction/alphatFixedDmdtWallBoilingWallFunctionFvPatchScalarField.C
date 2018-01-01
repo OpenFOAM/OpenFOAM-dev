@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
     L_(psf.L_)
 {}
 
+
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 (
@@ -121,7 +122,7 @@ alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField
 bool alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 activePhasePair(const phasePairKey& phasePair) const
 {
-    if (phasePair == phasePairKey(vaporPhaseName_,internalField().group()))
+    if (phasePair == phasePairKey(vaporPhaseName_, internalField().group()))
     {
         return true;
     }
@@ -130,6 +131,7 @@ activePhasePair(const phasePairKey& phasePair) const
         return false;
     }
 }
+
 
 const scalarField& alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 dmdt(const phasePairKey& phasePair) const
@@ -148,6 +150,7 @@ dmdt(const phasePairKey& phasePair) const
     }
 }
 
+
 const scalarField& alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::
 mDotL(const phasePairKey& phasePair) const
 {
@@ -164,6 +167,7 @@ mDotL(const phasePairKey& phasePair) const
         return mDotL_;
     }
 }
+
 
 void alphatFixedDmdtWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 {

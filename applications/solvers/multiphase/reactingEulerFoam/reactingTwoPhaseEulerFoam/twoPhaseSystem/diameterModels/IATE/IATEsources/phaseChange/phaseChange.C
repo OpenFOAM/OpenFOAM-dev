@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,13 +69,12 @@ Foam::diameterModels::IATEsources::phaseChange::R
     volScalarField& kappai
 ) const
 {
-
     if (!iDmdtPtr_)
     {
         iDmdtPtr_ = &alphai.mesh().lookupObject<volScalarField>
-            (
-                IOobject::groupName("iDmdt",pairName_)
-            );
+        (
+            IOobject::groupName("iDmdt", pairName_)
+        );
     }
 
     const volScalarField& iDmdt = *iDmdtPtr_;

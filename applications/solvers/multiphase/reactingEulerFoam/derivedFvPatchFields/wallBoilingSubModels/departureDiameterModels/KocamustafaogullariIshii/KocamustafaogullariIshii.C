@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,14 +99,14 @@ KocamustafaogullariIshii::dDeparture
 
     const tmp<volScalarField>& tsigma
     (
-        liquid.fluid().sigma(phasePairKey(liquid.name(),vapor.name()))
+        liquid.fluid().sigma(phasePairKey(liquid.name(), vapor.name()))
     );
     const volScalarField& sigma = tsigma();
     const fvPatchScalarField& sigmaw = sigma.boundaryField()[patchi];
 
     return
-        0.0012*pow(rhoM,0.9)*0.0208*phi_
-       *sqrt(sigmaw/(mag(g.value())*(rhoLiquid-rhoVapor)));
+        0.0012*pow(rhoM, 0.9)*0.0208*phi_
+       *sqrt(sigmaw/(mag(g.value())*(rhoLiquid - rhoVapor)));
 }
 
 

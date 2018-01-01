@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ Foam::diameterModels::velocityGroup::fSum() const
 
     volScalarField& sumSizeGroups = tsumSizeGroups.ref();
 
-    forAll(sizeGroups_,i)
+    forAll(sizeGroups_, i)
     {
         sumSizeGroups += sizeGroups_[i];
     }

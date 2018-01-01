@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -274,7 +274,7 @@ class populationBalanceModel
 
         void calcDeltas();
 
-        void birthByBinaryBreakup(const label i,const label j);
+        void birthByBinaryBreakup(const label i, const label j);
 
         void deathByBinaryBreakup(const label j, const label i);
 

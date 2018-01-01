@@ -539,7 +539,7 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
             }
             else
             {
-                iDmdtNew == dimensionedScalar("0",iDmdt.dimensions(), 0);
+                iDmdtNew == dimensionedScalar("0", iDmdt.dimensions(), 0);
             }
 
             volScalarField H1
@@ -638,7 +638,7 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
                                     Pair<word>::compare(pair, key)
                                 );
 
-                                forAll(patchDmdt,facei)
+                                forAll(patchDmdt, facei)
                                 {
                                     const label faceCelli =
                                         currPatch.faceCells()[facei];
