@@ -60,22 +60,16 @@ PtrList<fvVectorMatrix> UEqns(phases.size());
 
             const phasePair& pair(fluid.phasePairs()[VmIter.key()]);
 
-            const phaseModel* phase1 = &pair.phase1();
-            const phaseModel* phase2 = &pair.phase2();
-
-            forAllConstIter(phasePair, pair, iter)
+            if (pair.contains(phase))
             {
-                if (phase1 == &phase)
-                {
-                    UEqns[phasei] +=
-                        Vm
-                       *(
-                            UgradUs[phasei]
-                          - (UgradUs[phase2->index()] & phase2->U())
-                        );
-                }
+                const phaseModel& otherPhase = pair.other(phase);
 
-                Swap(phase1, phase2);
+                UEqns[phasei] +=
+                    Vm
+                   *(
+                        UgradUs[phasei]
+                      - (UgradUs[otherPhase.index()] & otherPhase.U())
+                    );
             }
         }
 

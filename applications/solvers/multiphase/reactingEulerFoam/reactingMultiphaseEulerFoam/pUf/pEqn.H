@@ -194,18 +194,10 @@ while (pimple.correct())
 
             const phasePair& pair(fluid.phasePairs()[KdfIter.key()]);
 
-            const phaseModel* phase1 = &pair.phase1();
-            const phaseModel* phase2 = &pair.phase2();
-
-            forAllConstIter(phasePair, pair, iter)
+            if (pair.contains(phase))
             {
-                if (phase1 == &phase)
-                {
-                    phiHbyAs[phasei] +=
-                        rAUfs[phasei]*Kf*MRF.absolute(phase2->phi());
-                }
-
-                Swap(phase1, phase2);
+                phiHbyAs[phasei] +=
+                    rAUfs[phasei]*Kf*MRF.absolute(pair.other(phase).phi());
             }
         }
 
@@ -221,22 +213,14 @@ while (pimple.correct())
 
             const phasePair& pair(fluid.phasePairs()[VmfIter.key()]);
 
-            const phaseModel* phase1 = &pair.phase1();
-            const phaseModel* phase2 = &pair.phase2();
-
-            forAllConstIter(phasePair, pair, iter)
+            if (pair.contains(phase))
             {
-                if (phase1 == &phase)
-                {
-                    phiHbyAs[phasei] +=
-                        rAUfs[phasei]
-                       *(
-                            Vmf*byDt(MRF.absolute(phase1->phi()().oldTime()))
-                          + Vmf*ddtPhis[phase2->index()]
-                        );
-                }
-
-                Swap(phase1, phase2);
+                phiHbyAs[phasei] +=
+                    rAUfs[phasei]
+                   *(
+                        Vmf*byDt(MRF.absolute(phase.phi().oldTime()))
+                      + Vmf*ddtPhis[pair.other(phase).index()]
+                    );
             }
         }
 
