@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,25 +187,18 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
             continue;
         }
 
-        const phaseModel* phase1 = &pair.phase1();
-        const phaseModel* phase2 = &pair.phase2();
-
-        forAllConstIter(phasePair, pair, iter)
+        if (pair.contains(phase))
         {
-            if (phase1 == &phase)
-            {
-                tDmdtFromKey.ref() += this->dmdt
-                (
-                    phasePairKey(phase1->name(), phase2->name(),false)
-                );
-            }
-
-            Swap(phase1, phase2);
+            tDmdtFromKey.ref() += this->dmdt
+            (
+                phasePairKey(phase.name(), pair.other(phase).name(), false)
+            );
         }
     }
 
     return tDmdtFromKey;
 }
+
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
