@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
 
     volScalarField CdReIsolated
     (
-        neg(Res - 1000)*24.0*(1.0 + 0.15*pow(Res, 0.687))
+        neg(Res - 1000)*24*(1 + 0.15*pow(Res, 0.687))
       + pos0(Res - 1000)*0.44*max(Res, residualRe_)
     );
 
@@ -96,7 +96,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Tenneti::CdRe() const
     // This was removed here by multiplying F by alpha2 for consistency with
     // the formulation used in OpenFOAM
     return
-        CdReIsolated + 24.0*sqr(alpha2)*(F0 + F1);
+        CdReIsolated + 24*sqr(alpha2)*(F0 + F1);
 }
 
 

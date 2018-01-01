@@ -320,8 +320,8 @@ Foam::diameterModels::velocityGroup::velocityGroup
           - fSum_.weightedAverage(fSum_.mesh().V()).value()
         )
       >= 1e-5
-     || mag(1.0 - max(fSum_).value()) >= 1e-5
-     || mag(1.0 - min(fSum_).value()) >= 1e-5
+     || mag(1 - max(fSum_).value()) >= 1e-5
+     || mag(1 - min(fSum_).value()) >= 1e-5
     )
     {
         FatalErrorInFunction

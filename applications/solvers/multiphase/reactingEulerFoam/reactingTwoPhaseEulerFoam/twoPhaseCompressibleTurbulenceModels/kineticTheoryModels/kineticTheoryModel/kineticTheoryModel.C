@@ -369,7 +369,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         refCast<const twoPhaseSystem>(phase_.fluid()).otherPhase(phase_).U();
 
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
-    dimensionedScalar ThetaSmall("ThetaSmall", Theta_.dimensions(), 1.0e-6);
+    dimensionedScalar ThetaSmall("ThetaSmall", Theta_.dimensions(), 1e-6);
     dimensionedScalar ThetaSmallSqrt(sqrt(ThetaSmall));
 
     tmp<volScalarField> tda(phase_.d());
@@ -390,19 +390,19 @@ void Foam::RASModels::kineticTheoryModel::correct()
         volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
         // Bulk viscosity  p. 45 (Lun et al. 1984).
-        lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1.0 + e_)*ThetaSqrt/sqrtPi;
+        lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1 + e_)*ThetaSqrt/sqrtPi;
 
         // Stress tensor, Definitions, Table 3.1, p. 43
         volSymmTensorField tau
         (
-            rho*(2.0*nut_*D + (lambda_ - (2.0/3.0)*nut_)*tr(D)*I)
+            rho*(2*nut_*D + (lambda_ - (2.0/3.0)*nut_)*tr(D)*I)
         );
 
         // Dissipation (Eq. 3.24, p.50)
         volScalarField gammaCoeff
         (
             "gammaCoeff",
-            12.0*(1.0 - sqr(e_))
+            12*(1 - sqr(e_))
            *max(sqr(alpha), residualAlpha_)
            *rho*gs0_*(1.0/da)*ThetaSqrt/sqrtPi
         );
@@ -414,7 +414,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         );
 
         // Eq. 3.25, p. 50 Js = J1 - J2
-        volScalarField J1("J1", 3.0*beta);
+        volScalarField J1("J1", 3*beta);
         volScalarField J2
         (
             "J2",
@@ -473,25 +473,25 @@ void Foam::RASModels::kineticTheoryModel::correct()
     {
         // Equilibrium => dissipation == production
         // Eq. 4.14, p.82
-        volScalarField K1("K1", 2.0*(1.0 + e_)*rho*gs0_);
+        volScalarField K1("K1", 2*(1 + e_)*rho*gs0_);
         volScalarField K3
         (
             "K3",
             0.5*da*rho*
             (
-                (sqrtPi/(3.0*(3.0 - e_)))
-               *(1.0 + 0.4*(1.0 + e_)*(3.0*e_ - 1.0)*alpha*gs0_)
-               +1.6*alpha*gs0_*(1.0 + e_)/sqrtPi
+                (sqrtPi/(3*(3.0 - e_)))
+               *(1 + 0.4*(1 + e_)*(3*e_ - 1)*alpha*gs0_)
+               +1.6*alpha*gs0_*(1 + e_)/sqrtPi
             )
         );
 
         volScalarField K2
         (
             "K2",
-            4.0*da*rho*(1.0 + e_)*alpha*gs0_/(3.0*sqrtPi) - 2.0*K3/3.0
+            4*da*rho*(1 + e_)*alpha*gs0_/(3*sqrtPi) - 2*K3/3.0
         );
 
-        volScalarField K4("K4", 12.0*(1.0 - sqr(e_))*rho*gs0_/(da*sqrtPi));
+        volScalarField K4("K4", 12*(1 - sqr(e_))*rho*gs0_/(da*sqrtPi));
 
         volScalarField trD
         (
@@ -511,13 +511,13 @@ void Foam::RASModels::kineticTheoryModel::correct()
             4.0
            *K4
            *alpha
-           *(2.0*K3*trD2 + K2*tr2D)
+           *(2*K3*trD2 + K2*tr2D)
         );
 
         Theta_ = sqr
         (
             (l1 + sqrt(l2 + l3))
-           /(2.0*max(alpha, residualAlpha_)*K4)
+           /(2*max(alpha, residualAlpha_)*K4)
         );
 
         kappa_ = conductivityModel_->kappa(alpha, Theta_, gs0_, rho, da, e_);
@@ -533,7 +533,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         volScalarField ThetaSqrt("sqrtTheta", sqrt(Theta_));
 
         // Bulk viscosity  p. 45 (Lun et al. 1984).
-        lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1.0 + e_)*ThetaSqrt/sqrtPi;
+        lambda_ = (4.0/3.0)*sqr(alpha)*da*gs0_*(1 + e_)*ThetaSqrt/sqrtPi;
 
         // Frictional pressure
         volScalarField pf

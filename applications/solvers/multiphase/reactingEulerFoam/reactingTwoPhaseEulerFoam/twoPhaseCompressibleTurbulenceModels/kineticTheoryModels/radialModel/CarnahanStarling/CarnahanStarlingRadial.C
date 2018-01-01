@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,9 @@ Foam::kineticTheoryModels::radialModels::CarnahanStarling::g0
 {
 
     return
-        1.0/(1.0 - alpha)
-      + 3.0*alpha/(2.0*sqr(1.0 - alpha))
-      + sqr(alpha)/(2.0*pow3(1.0 - alpha));
+        1.0/(1 - alpha)
+      + 3*alpha/(2*sqr(1 - alpha))
+      + sqr(alpha)/(2*pow3(1 - alpha));
 }
 
 
@@ -91,9 +91,9 @@ Foam::kineticTheoryModels::radialModels::CarnahanStarling::g0prime
 ) const
 {
     return
-        2.5/sqr(1.0 - alpha)
-      + 4.0*alpha/pow3(1.0 - alpha)
-      + 1.5*sqr(alpha)/pow4(1.0 - alpha);
+        2.5/sqr(1 - alpha)
+      + 4*alpha/pow3(1 - alpha)
+      + 1.5*sqr(alpha)/pow4(1 - alpha);
 }
 
 

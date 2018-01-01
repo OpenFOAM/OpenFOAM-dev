@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -368,7 +368,7 @@ birthByCoalescence
                     Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
                 );
 
-                pDmdt_[pairik]->ref() += dmdtSign*(1.0 - ratio)*Sui_()*rho;
+                pDmdt_[pairik]->ref() += dmdtSign*(1 - ratio)*Sui_()*rho;
             }
         }
         else
@@ -642,16 +642,16 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
     if (i == sizeGroups_.size() - 1)
     {
         SuSp_[i] += neg(driftRate_())*fi.x()*driftRate_()*fi.phase()/fi.x()
-           /((r_() - 1.0)*v_[i]);
+           /((r_() - 1)*v_[i]);
     }
     else if (i == 0)
     {
         SuSp_[i] += pos(driftRate_())*fi.x()*driftRate_()*fi.phase()/fi.x()
-           /((r_() - 1.0)*v_[i]);
+           /((r_() - 1)*v_[i]);
     }
     else
     {
-        SuSp_[i] += fi.x()*driftRate_()*fi.phase()/fi.x()/((r_() - 1.0)*v_[i]);
+        SuSp_[i] += fi.x()*driftRate_()*fi.phase()/fi.x()/((r_() - 1)*v_[i]);
     }
 
     if (i != 0)
@@ -663,7 +663,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
             volScalarField& Suh = Sui_();
 
             Suh = neg(driftRate_())*fh.x()*r_()*driftRate_()*fi*fi.phase()
-               /fi.x()/((r_() - 1.0)*v_[i-1]);
+               /fi.x()/((r_() - 1)*v_[i-1]);
 
             const phasePairKey pair
             (
@@ -687,7 +687,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
         else
         {
             Su_[i-1] += neg(driftRate_())*sizeGroups_[i-1]->x()*r_()
-               *driftRate_()*fi*fi.phase()/fi.x()/((r_() - 1.0)*v_[i-1]);
+               *driftRate_()*fi*fi.phase()/fi.x()/((r_() - 1)*v_[i-1]);
         }
     }
 
@@ -700,7 +700,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
             volScalarField& Suj = Sui_();
 
             Suj = pos(driftRate_())*fj.x()*r_()*driftRate_()*fi*fi.phase()
-               /fi.x()/((r_() - 1.0)*v_[i+1]);
+               /fi.x()/((r_() - 1)*v_[i+1]);
 
             const phasePairKey pair
             (
@@ -724,7 +724,7 @@ void Foam::diameterModels::populationBalanceModel::drift(const label i)
         else
         {
             Su_[i+1] += pos(driftRate_())*sizeGroups_[i+1]->x()*r_()
-               *driftRate_()*fi*fi.phase()/fi.x()/((r_() - 1.0)*v_[i+1]);
+               *driftRate_()*fi*fi.phase()/fi.x()/((r_() - 1)*v_[i+1]);
         }
     }
 }

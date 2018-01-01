@@ -374,7 +374,7 @@ while (pimple.correct())
             surfaceScalarField phir
             (
                 ((phi2s + rAUf2*Kdf*phi1s) - (phi1s + rAUf1*Kdf*phi2s))
-               /(1.0 - rAUf1*rAUf2*sqr(Kdf))
+               /(1 - rAUf1*rAUf2*sqr(Kdf))
             );
 
             phi1 = phi - alphaf2*phir;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,8 @@ Foam::dragModels::TomiyamaKataokaZunSakaguchi::CdRe() const
     return
         max
         (
-            24.0*(1.0 + 0.15*pow(Re, 0.687))/max(Re, residualRe_),
-            8.0*Eo/(3.0*(Eo + 4.0))
+            24*(1 + 0.15*pow(Re, 0.687))/max(Re, residualRe_),
+            8*Eo/(3*(Eo + 4.0))
         )
        *max(pair_.Re(), residualRe_);
 }

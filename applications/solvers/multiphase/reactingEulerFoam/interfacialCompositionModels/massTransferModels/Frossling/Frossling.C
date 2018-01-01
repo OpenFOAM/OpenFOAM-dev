@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,9 @@ Foam::massTransferModels::Frossling::~Frossling()
 Foam::tmp<Foam::volScalarField>
 Foam::massTransferModels::Frossling::K() const
 {
-    volScalarField Sh(scalar(2) + 0.552*sqrt(pair_.Re())*cbrt(Le_*pair_.Pr()));
+    volScalarField Sh(2 + 0.552*sqrt(pair_.Re())*cbrt(Le_*pair_.Pr()));
 
-    return 6.0*pair_.dispersed()*Sh/sqr(pair_.dispersed().d());
+    return 6*pair_.dispersed()*Sh/sqr(pair_.dispersed().d());
 }
 
 

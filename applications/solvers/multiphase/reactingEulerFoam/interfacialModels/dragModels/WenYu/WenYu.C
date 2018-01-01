@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::WenYu::CdRe() const
     volScalarField Res(alpha2*pair_.Re());
     volScalarField CdsRes
     (
-        neg(Res - 1000)*24.0*(1.0 + 0.15*pow(Res, 0.687))
+        neg(Res - 1000)*24*(1.0 + 0.15*pow(Res, 0.687))
       + pos0(Res - 1000)*0.44*max(Res, residualRe_)
     );
 

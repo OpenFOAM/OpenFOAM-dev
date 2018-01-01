@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ TolubinskiKostanchuk::dDeparture
     const scalarField& L
 ) const
 {
-    return max(min(dRef_*exp(-(Tsatw-Tl)/45), dMax_), dMin_);
+    return max(min(dRef_*exp(-(Tsatw - Tl)/45), dMax_), dMin_);
 }
 
 

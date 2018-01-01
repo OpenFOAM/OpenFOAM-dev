@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,14 +80,14 @@ Foam::tmp<Foam::volVectorField> Foam::wallLubricationModels::Frank::Fi() const
     return zeroGradWalls
     (
         (
-            pos0(Eo - 1.0)*neg(Eo - 5.0)*exp(-0.933*Eo + 0.179)
-          + pos0(Eo - 5.0)*neg(Eo - 33.0)*(0.00599*Eo - 0.0187)
-          + pos0(Eo - 33.0)*0.179
+            pos0(Eo - 1)*neg(Eo - 5)*exp(-0.933*Eo + 0.179)
+          + pos0(Eo - 5)*neg(Eo - 33)*(0.00599*Eo - 0.0187)
+          + pos0(Eo - 33)*0.179
         )
        *max
         (
             dimensionedScalar("zero", dimless/dimLength, 0.0),
-            (1.0 - yTilde)/(Cwd_*y*pow(yTilde, p_ - 1.0))
+            (1 - yTilde)/(Cwd_*y*pow(yTilde, p_ - 1))
         )
        *pair_.continuous().rho()
        *magSqr(Ur - (Ur & n)*n)

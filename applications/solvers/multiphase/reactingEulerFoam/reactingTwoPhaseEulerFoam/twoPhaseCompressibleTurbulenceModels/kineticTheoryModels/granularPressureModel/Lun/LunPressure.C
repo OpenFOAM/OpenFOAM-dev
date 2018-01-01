@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Foam::kineticTheoryModels::granularPressureModels::Lun::granularPressureCoeff
 ) const
 {
 
-    return rho1*alpha1*(1.0 + 2.0*(1.0 + e)*alpha1*g0);
+    return rho1*alpha1*(1 + 2*(1 + e)*alpha1*g0);
 }
 
 
@@ -91,7 +91,7 @@ granularPressureCoeffPrime
     const dimensionedScalar& e
 ) const
 {
-    return rho1*(1.0 + alpha1*(1.0 + e)*(4.0*g0 + 2.0*g0prime*alpha1));
+    return rho1*(1 + alpha1*(1 + e)*(4*g0 + 2*g0prime*alpha1));
 }
 
 

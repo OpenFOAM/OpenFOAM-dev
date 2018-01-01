@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,9 @@ Foam::kineticTheoryModels::viscosityModels::Syamlal::nu
 
     return da*sqrt(Theta)*
     (
-        (4.0/5.0)*sqr(alpha1)*g0*(1.0 + e)/sqrtPi
-      + (1.0/15.0)*sqrtPi*g0*(1.0 + e)*(3.0*e - 1.0)*sqr(alpha1)/(3.0 - e)
-      + (1.0/6.0)*alpha1*sqrtPi/(3.0 - e)
+        (4.0/5.0)*sqr(alpha1)*g0*(1 + e)/sqrtPi
+      + (1.0/15.0)*sqrtPi*g0*(1 + e)*(3*e - 1)*sqr(alpha1)/(3 - e)
+      + (1.0/6.0)*alpha1*sqrtPi/(3 - e)
     );
 }
 

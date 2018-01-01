@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::LegendreMagnaudet::Cl() const
 
     volScalarField ClLowSqr
     (
-        sqr(6.0*2.255)
+        sqr(6*2.255)
        *sqr(Sr)
        /(
             pow4(constant::mathematical::pi)
@@ -88,7 +88,7 @@ Foam::tmp<Foam::volScalarField> Foam::liftModels::LegendreMagnaudet::Cl() const
 
     volScalarField ClHighSqr
     (
-        sqr(0.5*(Re + 16.0)/(Re + 29.0))
+        sqr(0.5*(Re + 16)/(Re + 29))
     );
 
     return sqrt(ClLowSqr + ClHighSqr);

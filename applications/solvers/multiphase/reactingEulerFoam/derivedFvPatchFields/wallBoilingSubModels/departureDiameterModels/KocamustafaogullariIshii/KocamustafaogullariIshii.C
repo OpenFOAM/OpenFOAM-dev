@@ -95,7 +95,7 @@ KocamustafaogullariIshii::dDeparture
     const fvPatchScalarField& rhoVapor =
         vapor.turbulence().rho().boundaryField()[patchi];
 
-    const scalarField rhoM((rhoLiquid-rhoVapor)/rhoVapor);
+    const scalarField rhoM((rhoLiquid - rhoVapor)/rhoVapor);
 
     const tmp<volScalarField>& tsigma
     (

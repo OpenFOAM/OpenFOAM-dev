@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,9 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::Lain::CdRe() const
 
     return
         neg(Re - 1.5)*16.0
-      + pos0(Re - 1.5)*neg(Re - 80.0)*14.9*pow(Re, 0.22)
-      + pos0(Re - 80.0)*neg(Re - 1500.0)*48*(1.0 - 2.21/sqrt(max(Re, SMALL)))
-      + pos0(Re - 1500.0)*2.61*Re;
+      + pos0(Re - 1.5)*neg(Re - 80)*14.9*pow(Re, 0.22)
+      + pos0(Re - 80)*neg(Re - 1500)*48*(1 - 2.21/sqrt(max(Re, SMALL)))
+      + pos0(Re - 1500)*2.61*Re;
 }
 
 
