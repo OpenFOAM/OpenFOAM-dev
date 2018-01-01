@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,18 +82,15 @@ Foam::kineticTheoryModels::viscosityModels::HrenyaSinclair::nu
 {
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
 
-    volScalarField lamda
-    (
-        scalar(1) + da/(6.0*sqrt(2.0)*(alpha1 + scalar(1.0e-5)))/L_
-    );
+    const volScalarField lamda(1 + da/(6*sqrt(2.0)*(alpha1 + 1e-5))/L_);
 
     return da*sqrt(Theta)*
     (
-        (4.0/5.0)*sqr(alpha1)*g0*(1.0 + e)/sqrtPi
-      + (1.0/15.0)*sqrtPi*g0*(1.0 + e)*(3.0*e - 1)*sqr(alpha1)/(3.0-e)
-      + (1.0/6.0)*sqrtPi*alpha1*(0.5*lamda + 0.25*(3.0*e - 1.0))
-       /(0.5*(3.0 - e)*lamda)
-      + (10/96.0)*sqrtPi/((1.0 + e)*0.5*(3.0 - e)*g0*lamda)
+        (4.0/5.0)*sqr(alpha1)*g0*(1 + e)/sqrtPi
+      + (1.0/15.0)*sqrtPi*g0*(1 + e)*(3*e - 1)*sqr(alpha1)/(3 - e)
+      + (1.0/6.0)*sqrtPi*alpha1*(0.5*lamda + 0.25*(3*e - 1))
+       /(0.5*(3 - e)*lamda)
+      + (10.0/96.0)*sqrtPi/((1 + e)*0.5*(3 - e)*g0*lamda)
     );
 }
 
