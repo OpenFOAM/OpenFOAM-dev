@@ -227,21 +227,15 @@ while (pimple.correct())
 
             const phasePair& pair(fluid.phasePairs()[KdIter.key()]);
 
-            const phaseModel* phase1 = &pair.phase1();
-            const phaseModel* phase2 = &pair.phase2();
-
-            forAllConstIter(phasePair, pair, iter)
+            if (pair.contains(phase))
             {
-                if (phase1 == &phase)
-                {
-                    phiHbyAs[phasei] +=
-                        fvc::interpolate(rAUs[phasei]*K)
-                       *MRF.absolute(phase2->phi());
+                const phaseModel& otherPhase = pair.other(phase);
 
-                    HbyAs[phasei] += rAUs[phasei]*K*phase2->U();
-                }
+                phiHbyAs[phasei] +=
+                    fvc::interpolate(rAUs[phasei]*K)
+                   *MRF.absolute(otherPhase.phi());
 
-                Swap(phase1, phase2);
+                HbyAs[phasei] += rAUs[phasei]*K*otherPhase.U();
             }
         }
 

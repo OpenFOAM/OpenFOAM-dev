@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,13 +150,21 @@ public:
 
         // Access
 
-            // Phase 1
+            //- Return phase 1
             inline const phaseModel& phase1() const;
 
-            // Phase 2
+            //- Return phase 2
             inline const phaseModel& phase2() const;
 
-            // Gravitation acceleration
+            //- Return true if this phasePair contains the given phase
+            inline bool contains(const phaseModel& phase) const;
+
+            //- Return the other phase relative to the given phase
+            //  Generates a FatalError if this phasePair does not contain
+            //  the given phase
+            inline const phaseModel& other(const phaseModel& phase) const;
+
+            //- Return gravitation acceleration
             inline const uniformDimensionedVectorField& g() const;
 };
 

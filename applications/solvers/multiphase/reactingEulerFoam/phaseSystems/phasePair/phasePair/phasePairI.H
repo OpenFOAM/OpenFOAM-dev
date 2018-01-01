@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,36 @@ inline const Foam::phaseModel& Foam::phasePair::phase1() const
 inline const Foam::phaseModel& Foam::phasePair::phase2() const
 {
     return phase2_;
+}
+
+
+inline bool Foam::phasePair::contains(const phaseModel& phase) const
+{
+    return &phase1_ == &phase || & phase2_ == &phase;
+}
+
+
+inline const Foam::phaseModel& Foam::phasePair::other
+(
+    const phaseModel& phase
+) const
+{
+    if (&phase1_ == &phase)
+    {
+        return phase2_;
+    }
+    else if (&phase2_ == &phase)
+    {
+        return phase1_;
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "this phasePair does not contain phase " << phase.name()
+            << exit(FatalError);
+
+        return phase;
+    }
 }
 
 
