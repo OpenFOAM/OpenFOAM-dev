@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,15 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "HeatTransferPhaseSystem.H"
-
-#include "BlendedInterfacialModel.H"
-#include "heatTransferModel.H"
-
-#include "HashPtrTable.H"
-
-#include "fvcDiv.H"
 #include "fvmSup.H"
-#include "fvMatrix.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -102,7 +94,22 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::dmdt
     const Foam::phaseModel& phase
 ) const
 {
-    return tmp<volScalarField>(nullptr);
+    tmp<volScalarField> tDmdt
+    (
+        new volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("dmdt", phase.name()),
+                this->mesh_.time().timeName(),
+                this->mesh_
+            ),
+            this->mesh_,
+            dimensionedScalar("zero", dimDensity/dimTime, 0)
+        )
+    );
+
+    return tDmdt;
 }
 
 
