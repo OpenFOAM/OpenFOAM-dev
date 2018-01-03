@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,17 +35,9 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::solutionControl::read(const bool absTolOnly)
+bool Foam::solutionControl::readResidualControl()
 {
     const dictionary& solutionDict = this->dict();
-
-    // Read solution controls
-    nNonOrthCorr_ =
-        solutionDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
-    momentumPredictor_ =
-        solutionDict.lookupOrDefault("momentumPredictor", true);
-    transonic_ = solutionDict.lookupOrDefault("transonic", false);
-    consistent_ = solutionDict.lookupOrDefault("consistent", false);
 
     // Read residual information
     const dictionary residualDict
@@ -64,28 +56,19 @@ void Foam::solutionControl::read(const bool absTolOnly)
             fieldData fd;
             fd.name = fName.c_str();
 
-            if (absTolOnly)
+            if (iter().isDict())
             {
-                fd.absTol = readScalar(residualDict.lookup(fName));
-                fd.relTol = -1;
-                fd.initialResidual = -1;
+                const dictionary& fieldDict(iter().dict());
+                fd.absTol = readScalar(fieldDict.lookup("tolerance"));
+                fd.relTol = readScalar(fieldDict.lookup("relTol"));
+                fd.initialResidual = 0;
             }
             else
             {
-                if (iter().isDict())
-                {
-                    const dictionary& fieldDict(iter().dict());
-                    fd.absTol = readScalar(fieldDict.lookup("tolerance"));
-                    fd.relTol = readScalar(fieldDict.lookup("relTol"));
-                    fd.initialResidual = 0.0;
-                }
-                else
-                {
-                    FatalErrorInFunction
-                        << "Residual data for " << iter().keyword()
-                        << " must be specified as a dictionary"
-                        << exit(FatalError);
-                }
+                FatalErrorInFunction
+                << "Residual data for " << iter().keyword()
+                    << " must be specified as a dictionary"
+                    << exit(FatalError);
             }
 
             data.append(fd);
@@ -93,25 +76,19 @@ void Foam::solutionControl::read(const bool absTolOnly)
         else
         {
             fieldData& fd = data[fieldi];
-            if (absTolOnly)
+
+            if (iter().isDict())
             {
-                fd.absTol = readScalar(residualDict.lookup(fName));
+                const dictionary& fieldDict(iter().dict());
+                fd.absTol = readScalar(fieldDict.lookup("tolerance"));
+                fd.relTol = readScalar(fieldDict.lookup("relTol"));
             }
             else
             {
-                if (iter().isDict())
-                {
-                    const dictionary& fieldDict(iter().dict());
-                    fd.absTol = readScalar(fieldDict.lookup("tolerance"));
-                    fd.relTol = readScalar(fieldDict.lookup("relTol"));
-                }
-                else
-                {
-                    FatalErrorInFunction
-                        << "Residual data for " << iter().keyword()
-                        << " must be specified as a dictionary"
-                        << exit(FatalError);
-                }
+                FatalErrorInFunction
+                << "Residual data for " << iter().keyword()
+                    << " must be specified as a dictionary"
+                    << exit(FatalError);
             }
         }
     }
@@ -126,16 +103,36 @@ void Foam::solutionControl::read(const bool absTolOnly)
             Info<< "residualControl[" << i << "]:" << nl
                 << "    name     : " << fd.name << nl
                 << "    absTol   : " << fd.absTol << nl
-                << "    relTol   : " << fd.relTol << nl
-                << "    iniResid : " << fd.initialResidual << endl;
+                << "    relTol   : " << fd.relTol << endl;
         }
     }
+
+    return true;
 }
 
 
-void Foam::solutionControl::read()
+bool Foam::solutionControl::read()
 {
-    read(false);
+    const dictionary& solutionDict = this->dict();
+
+    // Read solution controls
+    nNonOrthCorr_ =
+        solutionDict.lookupOrDefault<label>("nNonOrthogonalCorrectors", 0);
+    momentumPredictor_ =
+        solutionDict.lookupOrDefault("momentumPredictor", true);
+    transonic_ = solutionDict.lookupOrDefault("transonic", false);
+    consistent_ = solutionDict.lookupOrDefault("consistent", false);
+
+    readResidualControl();
+
+    return true;
+}
+
+
+bool Foam::solutionControl::writeData(Ostream&) const
+{
+    NotImplemented;
+    return false;
 }
 
 
@@ -215,11 +212,16 @@ Foam::scalar Foam::solutionControl::maxResidual
 
 Foam::solutionControl::solutionControl(fvMesh& mesh, const word& algorithmName)
 :
-    IOobject
+    regIOobject
     (
-        "solutionControl",
-        mesh.time().timeName(),
-        mesh
+        IOobject
+        (
+            typeName,
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        )
     ),
     mesh_(mesh),
     residualControl_(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ namespace Foam
 
 class solutionControl
 :
-    public IOobject
+    public regIOobject
 {
 public:
 
@@ -99,11 +99,13 @@ protected:
 
     // Protected Member Functions
 
-        //- Read controls from fvSolution dictionary
-        virtual void read(const bool absTolOnly);
+        //- Read residual controls from fvSolution dictionary
+        virtual bool readResidualControl();
 
         //- Read controls from fvSolution dictionary
-        virtual void read();
+        virtual bool read();
+
+        virtual bool writeData(Ostream&) const;
 
         //- Return index of field in residualControl_ if present
         virtual label applyToField
@@ -149,7 +151,6 @@ private:
 
 
 public:
-
 
     // Static Data Members
 

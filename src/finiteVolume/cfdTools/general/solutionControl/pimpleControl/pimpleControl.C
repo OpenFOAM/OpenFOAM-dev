@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,18 +36,23 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::pimpleControl::read()
+bool Foam::pimpleControl::read()
 {
-    solutionControl::read(false);
+    bool ok = solutionControl::read();
 
-    const dictionary& pimpleDict = dict();
+    if (ok)
+    {
+        const dictionary& pimpleDict = dict();
 
-    solveFlow_ = pimpleDict.lookupOrDefault<Switch>("solveFlow", true);
-    nCorrPIMPLE_ = pimpleDict.lookupOrDefault<label>("nOuterCorrectors", 1);
-    nCorrPISO_ = pimpleDict.lookupOrDefault<label>("nCorrectors", 1);
-    SIMPLErho_ = pimpleDict.lookupOrDefault<Switch>("SIMPLErho", false);
-    turbOnFinalIterOnly_ =
-        pimpleDict.lookupOrDefault<Switch>("turbOnFinalIterOnly", true);
+        solveFlow_ = pimpleDict.lookupOrDefault<Switch>("solveFlow", true);
+        nCorrPIMPLE_ = pimpleDict.lookupOrDefault<label>("nOuterCorrectors", 1);
+        nCorrPISO_ = pimpleDict.lookupOrDefault<label>("nCorrectors", 1);
+        SIMPLErho_ = pimpleDict.lookupOrDefault<Switch>("SIMPLErho", false);
+        turbOnFinalIterOnly_ =
+            pimpleDict.lookupOrDefault<Switch>("turbOnFinalIterOnly", true);
+    }
+
+    return ok;
 }
 
 

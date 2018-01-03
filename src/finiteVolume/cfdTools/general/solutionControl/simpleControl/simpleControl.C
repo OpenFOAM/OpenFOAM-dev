@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,55 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::simpleControl::read()
+bool Foam::simpleControl::readResidualControl()
 {
-    solutionControl::read(true);
+    const dictionary& solutionDict = this->dict();
+
+    // Read residual information
+    const dictionary residualDict
+    (
+        solutionDict.subOrEmptyDict("residualControl")
+    );
+
+    DynamicList<fieldData> data(residualControl_);
+
+    forAllConstIter(dictionary, residualDict, iter)
+    {
+        const word& fName = iter().keyword();
+        const label fieldi = applyToField(fName, false);
+
+        if (fieldi == -1)
+        {
+            fieldData fd;
+            fd.name = fName.c_str();
+
+            fd.absTol = readScalar(residualDict.lookup(fName));
+            fd.relTol = -1;
+            fd.initialResidual = -1;
+
+            data.append(fd);
+        }
+        else
+        {
+            fieldData& fd = data[fieldi];
+            fd.absTol = readScalar(residualDict.lookup(fName));
+        }
+    }
+
+    residualControl_.transfer(data);
+
+    if (debug)
+    {
+        forAll(residualControl_, i)
+        {
+            const fieldData& fd = residualControl_[i];
+            Info<< "residualControl[" << i << "]:" << nl
+                << "    name     : " << fd.name << nl
+                << "    absTol   : " << fd.absTol << endl;
+        }
+    }
+
+    return true;
 }
 
 
