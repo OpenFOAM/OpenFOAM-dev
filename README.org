@@ -2,10 +2,10 @@
 #
 #+TITLE:     README for [[http://openfoam.org/download/source][OpenFOAM-dev]]
 #+AUTHOR:               The OpenFOAM Foundation
-#+DATE:                     20th June 2016
+#+DATE:                     3rd January 2018
 #+LINK:                  http://openfoam.org
 #+OPTIONS: author:nil ^:{}
-# Copyright (c) 2015-2016 OpenFOAM Foundation.
+# Copyright (c) 2015-2018 OpenFOAM Foundation.
 
 * About OpenFOAM
   OpenFOAM is a free, open source computational fluid dynamics (CFD) software
@@ -23,9 +23,9 @@
   [[http://www.gnu.org/licenses/]], for a description of the GNU General Public
   License terms under which you can copy the files.
 
-* [[http://OpenFOAM.org/download/source][Download and installation instructions]]
-* [[http://OpenFOAM.org/docs][Documentation]]
-* [[http://OpenFOAM.github.io/Documentation-dev/html][Source code documentation]]
-* [[http://OpenFOAM.github.io/Documentation-dev/html/codingStyleGuide.html][OpenFOAM C++ Style Guide]]
-* [[http://OpenFOAM.org/bugs][Reporting bugs in OpenFOAM]]
-* [[http://openfoam.org/contact][Contacting the OpenFOAM Foundation]]
+* [[https://openfoam.org/download/source][Download and installation instructions]]
+* [[https://openfoam.org/resources][Documentation]]
+* [[https://cpp.openfoam.org/dev][Source code documentation]]
+* [[https://openfoam.org/dev/coding-style-guide][OpenFOAM C++ Style Guide]]
+* [[https://bugs.openfoam.org][Reporting bugs in OpenFOAM]]
+* [[https://openfoam.org/contact][Contacting the OpenFOAM Foundation]]
