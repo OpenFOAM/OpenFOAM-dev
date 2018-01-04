@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,7 +216,7 @@ Foam::interfaceCompositionModels::NonRandomTwoLiquid<Thermo, OtherThermo>::Yf
            *speciesModel1_->Yf(speciesName, Tf)
            *gamma1_;
     }
-    else if(speciesName == species2Name_)
+    else if (speciesName == species2Name_)
     {
         return
             this->otherThermo_.composition().Y(speciesName)
@@ -248,7 +248,7 @@ YfPrime
            *speciesModel1_->YfPrime(speciesName, Tf)
            *gamma1_;
     }
-    else if(speciesName == species2Name_)
+    else if (speciesName == species2Name_)
     {
         return
             this->otherThermo_.composition().Y(speciesName)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,9 +242,6 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
                 this->phasePairs_[heatTransferModelIter.key()]
             );
 
-            const phaseModel* phase = &pair.phase1();
-            const phaseModel* otherPhase = &pair.phase2();
-
             const volScalarField& Tf(*Tf_[pair]);
 
             const volScalarField K1
@@ -270,14 +267,15 @@ Foam::HeatAndMassTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 
             forAllConstIter(phasePair, pair, iter)
             {
-                const volScalarField& he(phase->thermo().he());
-                volScalarField Cpv(phase->thermo().Cpv());
+                const phaseModel& phase = iter();
 
-                *eqns[phase->name()] +=
-                    (*K)*(Tf - phase->thermo().T())
+                const volScalarField& he(phase.thermo().he());
+                volScalarField Cpv(phase.thermo().Cpv());
+
+                *eqns[phase.name()] +=
+                    (*K)*(Tf - phase.thermo().T())
                   + KEff/Cpv*he - fvm::Sp(KEff/Cpv, he);
 
-                Swap(phase, otherPhase);
                 Swap(K, otherK);
             }
         }

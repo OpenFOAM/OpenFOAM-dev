@@ -190,7 +190,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
         {
             tiDmdt.ref() += this->iDmdt
             (
-                phasePairKey(phase.name(), pair.other(phase).name(), false)
+                phasePairKey(phase.name(), pair.otherPhase(phase).name())
             );
         }
     }
@@ -252,7 +252,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::wDmdt
         {
             twDmdt.ref() += this->wDmdt
             (
-                phasePairKey(phase.name(), pair.other(phase).name(), false)
+                phasePairKey(phase.name(), pair.otherPhase(phase).name())
             );
         }
     }
@@ -301,7 +301,7 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
         {
             tDmdt.ref() += this->dmdt
             (
-                phasePairKey(phase.name(), pair.other(phase).name(), false)
+                phasePairKey(phase.name(), pair.otherPhase(phase).name())
             );
         }
     }
@@ -583,23 +583,24 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
             wMDotL *= 0;
 
             bool wallBoilingActive = false;
-            const phaseModel* phase1Ptr = &phase1;
-            const phaseModel* phase2Ptr = &phase2;
 
             forAllConstIter(phasePair, pair, iter)
             {
+                const phaseModel& phase = iter();
+                const phaseModel& otherPhase = iter.otherPhase();
+
                 if
                 (
-                    phase1Ptr->mesh().foundObject<volScalarField>
+                    phase.mesh().foundObject<volScalarField>
                     (
-                        "alphat." +  phase1Ptr->name()
+                        "alphat." +  phase.name()
                     )
                 )
                 {
                     const volScalarField& alphat =
-                        phase1Ptr->mesh().lookupObject<volScalarField>
+                        phase.mesh().lookupObject<volScalarField>
                         (
-                            "alphat." +  phase1Ptr->name()
+                            "alphat." +  phase.name()
                         );
 
                     const fvPatchList& patches = this->mesh().boundary();
@@ -620,11 +621,10 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
                                 (
                                     alphat.boundaryField()[patchi]
                                 );
-                            phasePairKey key
-                            (
-                                phase1Ptr->name(), phase2Ptr->name(), false
-                            );
-                            if(PCpatch.activePhasePair(key))
+
+                            phasePairKey key(phase.name(), otherPhase.name());
+
+                            if (PCpatch.activePhasePair(key))
                             {
                                 wallBoilingActive = true;
 
@@ -649,8 +649,6 @@ void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctThermo()
                         }
                     }
                 }
-
-                Swap(phase1Ptr, phase2Ptr);
             }
 
             if (wallBoilingActive)

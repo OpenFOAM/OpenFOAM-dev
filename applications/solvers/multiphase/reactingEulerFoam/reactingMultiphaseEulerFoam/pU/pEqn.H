@@ -229,7 +229,7 @@ while (pimple.correct())
 
             if (pair.contains(phase))
             {
-                const phaseModel& otherPhase = pair.other(phase);
+                const phaseModel& otherPhase = pair.otherPhase(phase);
 
                 phiHbyAs[phasei] +=
                     fvc::interpolate(rAUs[phasei]*K)

@@ -127,7 +127,7 @@ Foam::Istream& Foam::operator>>(Istream& is, phasePairKey& key)
     {
         key.ordered_ = false;
     }
-    else if(temp[1] == "in")
+    else if (temp[1] == "in")
     {
         key.ordered_ = true;
     }

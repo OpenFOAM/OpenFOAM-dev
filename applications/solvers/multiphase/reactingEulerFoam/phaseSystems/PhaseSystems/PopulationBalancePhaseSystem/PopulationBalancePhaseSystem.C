@@ -191,7 +191,7 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
         {
             tDmdtFromKey.ref() += this->dmdt
             (
-                phasePairKey(phase.name(), pair.other(phase).name(), false)
+                phasePairKey(phase.name(), pair.otherPhase(phase).name(), false)
             );
         }
     }

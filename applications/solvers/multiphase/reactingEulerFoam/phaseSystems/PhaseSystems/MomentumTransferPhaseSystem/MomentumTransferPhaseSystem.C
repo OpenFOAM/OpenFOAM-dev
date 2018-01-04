@@ -554,19 +554,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
     )
     {
         const volScalarField& K(*KdIter());
-
         const phasePair& pair(this->phasePairs_[KdIter.key()]);
-
-        const phaseModel* phase = &pair.phase1();
-        const phaseModel* otherPhase = &pair.phase2();
 
         forAllConstIter(phasePair, pair, iter)
         {
-            const volVectorField& U = phase->U();
-
-            *eqns[phase->name()] -= fvm::Sp(K, U);
-
-            Swap(phase, otherPhase);
+            *eqns[iter().name()] -= fvm::Sp(K, iter().U()());
         }
     }
 
@@ -591,28 +583,25 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer() const
     )
     {
         const volScalarField& Vm(*VmIter());
-
         const phasePair& pair(this->phasePairs_[VmIter.key()]);
-
-        const phaseModel* phase = &pair.phase1();
-        const phaseModel* otherPhase = &pair.phase2();
 
         forAllConstIter(phasePair, pair, iter)
         {
-            const volVectorField& U = phase->U();
-            const surfaceScalarField& phi = phase->phi();
+            const phaseModel& phase = iter();
+            const phaseModel& otherPhase = iter.otherPhase();
 
-            *eqns[phase->name()] -=
+            const volVectorField& U = phase.U();
+            const surfaceScalarField& phi = phase.phi();
+
+            *eqns[phase.name()] -=
                 Vm
                *(
                     fvm::ddt(U)
                   + fvm::div(phi, U)
                   - fvm::Sp(fvc::div(phi), U)
-                  - otherPhase->DUDt()
+                  - otherPhase.DUDt()
                 )
-              + this->MRF_.DDt(Vm, U - otherPhase->U());
-
-            Swap(phase, otherPhase);
+              + this->MRF_.DDt(Vm, U - otherPhase.U());
         }
     }
 

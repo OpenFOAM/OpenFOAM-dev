@@ -159,7 +159,7 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::iDmdt
         {
             tiDmdt.ref() += this->iDmdt
             (
-                phasePairKey(phase.name(), pair.other(phase).name(), false)
+                phasePairKey(phase.name(), pair.otherPhase(phase).name(), false)
             );
         }
     }
@@ -208,7 +208,7 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdt
         {
             tDmdt.ref() += this->dmdt
             (
-                phasePairKey(phase.name(), pair.other(phase).name(), false)
+                phasePairKey(phase.name(), pair.otherPhase(phase).name(), false)
             );
         }
     }

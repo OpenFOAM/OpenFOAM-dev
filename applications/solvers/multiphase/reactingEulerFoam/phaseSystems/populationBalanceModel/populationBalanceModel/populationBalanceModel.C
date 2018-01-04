@@ -40,12 +40,12 @@ void Foam::diameterModels::populationBalanceModel::registerVelocityGroups()
 {
     forAll(fluid_.phases(), phasei)
     {
-        if(isA<velocityGroup>(fluid_.phases()[phasei].dPtr()()))
+        if (isA<velocityGroup>(fluid_.phases()[phasei].dPtr()()))
         {
             const velocityGroup& velGroup =
                 refCast<const velocityGroup>(fluid_.phases()[phasei].dPtr()());
 
-            if(velGroup.popBalName() == this->name())
+            if (velGroup.popBalName() == this->name())
             {
                 velocityGroups_.append(&const_cast<velocityGroup&>(velGroup));
 

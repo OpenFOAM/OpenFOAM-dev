@@ -197,7 +197,7 @@ while (pimple.correct())
             if (pair.contains(phase))
             {
                 phiHbyAs[phasei] +=
-                    rAUfs[phasei]*Kf*MRF.absolute(pair.other(phase).phi());
+                    rAUfs[phasei]*Kf*MRF.absolute(pair.otherPhase(phase).phi());
             }
         }
 
@@ -219,7 +219,7 @@ while (pimple.correct())
                     rAUfs[phasei]
                    *(
                         Vmf*byDt(MRF.absolute(phase.phi().oldTime()))
-                      + Vmf*ddtPhis[pair.other(phase).index()]
+                      + Vmf*ddtPhis[pair.otherPhase(phase).index()]
                     );
             }
         }

@@ -162,10 +162,63 @@ public:
             //- Return the other phase relative to the given phase
             //  Generates a FatalError if this phasePair does not contain
             //  the given phase
-            inline const phaseModel& other(const phaseModel& phase) const;
+            inline const phaseModel& otherPhase(const phaseModel& phase) const;
 
             //- Return gravitation acceleration
             inline const uniformDimensionedVectorField& g() const;
+
+
+        //- STL const_iterator
+        class const_iterator
+        {
+            // Private data
+
+                //- Reference to the pair for which this is an iterator
+                const phasePair& pair_;
+
+                //- Current index
+                label index_;
+
+                //- Construct an iterator with the given index
+                inline const_iterator(const phasePair&, const label index);
+
+        public:
+
+            friend class phasePair;
+
+            // Constructors
+
+                //- Construct from pair, moving to its 'begin' position
+                inline explicit const_iterator(const phasePair&);
+
+
+            // Member operators
+
+                inline bool operator==(const const_iterator&) const;
+
+                inline bool operator!=(const const_iterator&) const;
+
+                inline const phaseModel& operator*() const;
+                inline const phaseModel& operator()() const;
+
+                inline const phaseModel& otherPhase() const;
+
+                inline const_iterator& operator++();
+                inline const_iterator operator++(int);
+        };
+
+
+        //- const_iterator set to the beginning of the pair
+        inline const_iterator cbegin() const;
+
+        //- const_iterator set to beyond the end of the pair
+        inline const_iterator cend() const;
+
+        //- const_iterator set to the beginning of the pair
+        inline const_iterator begin() const;
+
+        //- const_iterator set to beyond the end of the pair
+        inline const_iterator end() const;
 };
 
 

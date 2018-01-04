@@ -146,19 +146,17 @@ Foam::HeatTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
 
         const phasePair& pair(this->phasePairs_[heatTransferModelIter.key()]);
 
-        const phaseModel* phase = &pair.phase1();
-        const phaseModel* otherPhase = &pair.phase2();
-
         forAllConstIter(phasePair, pair, iter)
         {
-            const volScalarField& he(phase->thermo().he());
-            volScalarField Cpv(phase->thermo().Cpv());
+            const phaseModel& phase = iter();
+            const phaseModel& otherPhase = iter.otherPhase();
 
-            *eqns[phase->name()] +=
-                K*(otherPhase->thermo().T() - phase->thermo().T() + he/Cpv)
+            const volScalarField& he(phase.thermo().he());
+            volScalarField Cpv(phase.thermo().Cpv());
+
+            *eqns[phase.name()] +=
+                K*(otherPhase.thermo().T() - phase.thermo().T() + he/Cpv)
               - fvm::Sp(K/Cpv, he);
-
-            Swap(phase, otherPhase);
         }
     }
 

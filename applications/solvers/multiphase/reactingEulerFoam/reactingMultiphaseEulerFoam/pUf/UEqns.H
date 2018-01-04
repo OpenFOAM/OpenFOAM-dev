@@ -62,7 +62,7 @@ PtrList<fvVectorMatrix> UEqns(phases.size());
 
             if (pair.contains(phase))
             {
-                const phaseModel& otherPhase = pair.other(phase);
+                const phaseModel& otherPhase = pair.otherPhase(phase);
 
                 UEqns[phasei] +=
                     Vm
