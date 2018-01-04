@@ -122,9 +122,6 @@ populationBalanceCoeffs
         (
             densityChange{}
         );
-
-        zeroethOrderModels
-        ();
     }
 }
 

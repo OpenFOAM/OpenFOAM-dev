@@ -136,6 +136,7 @@ SourceFiles
 
 #include "sizeGroup.H"
 #include "phasePair.H"
+#include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -183,6 +184,9 @@ class populationBalanceModel
 
         //- Dictionary
         dictionary dict_;
+
+        //- Reference to pimpleControl
+        const pimpleControl& pimple_;
 
         //- Continuous phase
         const phaseModel& continuousPhase_;
@@ -245,7 +249,7 @@ class populationBalanceModel
         volVectorField U_;
 
         //- Mean Sauter diameter
-        volScalarField d_;
+        autoPtr<volScalarField> d_;
 
 
     // Private member functions

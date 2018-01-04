@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,8 +51,6 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
 )
 :
     driftModel(popBal, dict),
-    calculateFromFvOptions_(dict.lookup("calculateFromFvOptions")),
-    rate_("rate", dimVolume/dimTime, dict.lookupOrDefault<scalar>("rate", 1.0)),
     N_
     (
         IOobject
@@ -64,12 +62,7 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
         popBal.mesh(),
         dimensionedScalar("Sui", inv(dimVolume), Zero)
     )
-{
-    if (calculateFromFvOptions_ == false)
-    {
-        rate_.read(dict);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -97,15 +90,7 @@ void Foam::diameterModels::driftModels::constantDrift::driftRate
     phaseModel& phase = const_cast<phaseModel&>(fi.phase());
     volScalarField& rho = phase.thermo().rho();
 
-    if (calculateFromFvOptions_ == true)
-    {
-        driftRate +=(popBal_.fluid().fvOptions()(phase, rho)&rho)
-           /(N_*rho);
-    }
-    else
-    {
-        driftRate += rate_;
-    }
+    driftRate += (popBal_.fluid().fvOptions()(phase, rho)&rho)/(N_*rho);
 }
 
 

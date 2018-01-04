@@ -969,6 +969,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     (
         fluid.subDict("populationBalanceCoeffs").subDict(name_)
     ),
+    pimple_(mesh_.lookupObject<pimpleControl>("solutionControl")),
     continuousPhase_
     (
         mesh_.lookupObject<phaseModel>
@@ -1044,24 +1045,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             Zero
         )
     ),
-    d_
-    (
-        IOobject
-        (
-            IOobject::groupName("d", this->name()),
-            fluid.time().timeName(),
-            fluid.mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        fluid.mesh(),
-        dimensionedScalar
-        (
-            IOobject::groupName("d", this->name()),
-            dimLength,
-            Zero
-        )
-    )
+    d_()
 {
     this->registerVelocityGroups();
 
@@ -1083,6 +1067,30 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 dimensionedScalar("Sui", inv(dimTime), Zero)
             )
         );
+
+        d_.reset
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName("d", this->name()),
+                    fluid.time().timeName(),
+                    fluid.mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                fluid.mesh(),
+                dimensionedScalar
+                (
+                    IOobject::groupName("d", this->name()),
+                    dimLength,
+                    Zero
+                )
+            )
+        );
+
+
     }
 
     if (coalescence_.size() != 0)
@@ -1201,92 +1209,110 @@ bool Foam::diameterModels::populationBalanceModel::writeData(Ostream& os) const
 
 void Foam::diameterModels::populationBalanceModel::solve()
 {
-    const dictionary& populationBalanceControls = mesh_.solverDict(name_);
-    label nCorr(readLabel(populationBalanceControls.lookup("nCorr")));
-    scalar tolerance(readScalar(populationBalanceControls.lookup("tolerance")));
+    const dictionary& solutionControls = mesh_.solverDict(name_);
+    bool solveOnFinalIterOnly
+        (
+            solutionControls.lookupOrDefault<bool>
+            (
+                "solveOnFinalIterOnly",
+                false
+            )
+        );
 
-    calcAlphas();
-    calcVelocity();
-
-    if (nCorr > 0)
+    if (!solveOnFinalIterOnly || pimple_.finalIter())
     {
-        preSolve();
-    }
+        calcAlphas();
+        calcVelocity();
 
-    int iCorr = 0;
-    scalar initialResidual = 0;
-    scalar maxInitialResidual = 1;
+        label nCorr(readLabel(solutionControls.lookup("nCorr")));
+        scalar tolerance
+            (
+                readScalar(solutionControls.lookup("tolerance"))
+            );
 
-    while
-    (
-        maxInitialResidual > tolerance
-        &&
-        ++iCorr <= nCorr
-    )
-    {
-        Info<< "populationBalance "
-            << this->name()
-            << ": Iteration "
-            << iCorr
-            << endl;
-
-        sources();
-
-        dmdt();
-
-        forAll(sizeGroups_, i)
+        if (nCorr > 0)
         {
-            sizeGroup& fi = *sizeGroups_[i];
-            const phaseModel& phase = fi.phase();
-            const volScalarField& alpha = phase;
-            const dimensionedScalar& residualAlpha = phase.residualAlpha();
-            const volScalarField& rho = phase.thermo().rho();
+            preSolve();
+        }
 
-            fvScalarMatrix sizeGroupEqn
-            (
-                fvm::ddt(alpha, rho, fi)
-              + fi.VelocityGroup().mvConvection()->fvmDiv
+        int iCorr = 0;
+        scalar initialResidual = 0;
+        scalar maxInitialResidual = 1;
+
+        while
+        (
+            maxInitialResidual > tolerance
+            &&
+            ++iCorr <= nCorr
+        )
+        {
+            Info<< "populationBalance "
+                << this->name()
+                << ": Iteration "
+                << iCorr
+                << endl;
+
+            sources();
+
+            dmdt();
+
+            forAll(sizeGroups_, i)
+            {
+                sizeGroup& fi = *sizeGroups_[i];
+                const phaseModel& phase = fi.phase();
+                const volScalarField& alpha = phase;
+                const dimensionedScalar& residualAlpha = phase.residualAlpha();
+                const volScalarField& rho = phase.thermo().rho();
+
+                fvScalarMatrix sizeGroupEqn
                 (
-                    phase.alphaRhoPhi(),
-                    fi
-                )
-              - fvm::Sp
+                    fvm::ddt(alpha, rho, fi)
+                  + fi.VelocityGroup().mvConvection()->fvmDiv
+                    (
+                        phase.alphaRhoPhi(),
+                        fi
+                    )
+                  - fvm::Sp
+                    (
+                        fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
+                      - fi.VelocityGroup().dmdt(),
+                        fi
+                    )
+                  ==
+                    Su_[i]*rho
+                  - fvm::SuSp(SuSp_[i]*rho, fi)
+                  + fvc::ddt(residualAlpha*rho, fi)
+                  - fvm::ddt(residualAlpha*rho, fi)
+                );
+
+                sizeGroupEqn.relax
                 (
-                    fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
-                  - fi.VelocityGroup().dmdt(),
-                    fi
-                )
-              ==
-                Su_[i]*rho
-              - fvm::SuSp(SuSp_[i]*rho, fi)
-              + fvc::ddt(residualAlpha*rho, fi)
-              - fvm::ddt(residualAlpha*rho, fi)
-            );
+                    fi.mesh().equationRelaxationFactor("f")
+                );
 
-            sizeGroupEqn.relax
-            (
-                fi.mesh().equationRelaxationFactor("f")
-            );
+                initialResidual = sizeGroupEqn.solve().initialResidual();
 
-            initialResidual = sizeGroupEqn.solve().initialResidual();
+                maxInitialResidual = max
+                (
+                    initialResidual,
+                    maxInitialResidual
+                );
+            }
+        }
 
-            maxInitialResidual = max
-            (
-                initialResidual,
-                maxInitialResidual
-            );
+        if (nCorr > 0)
+        {
+            forAll(velocityGroups_, i)
+            {
+                velocityGroups_[i]->postSolve();
+            }
+        }
+
+        if (velocityGroups_.size() > 1)
+        {
+            d_() = dsm();
         }
     }
-
-    if (nCorr > 0)
-    {
-        forAll(velocityGroups_, i)
-        {
-            velocityGroups_[i]->postSolve();
-        }
-    }
-
-    d_ = dsm();
 }
 
 // ************************************************************************* //

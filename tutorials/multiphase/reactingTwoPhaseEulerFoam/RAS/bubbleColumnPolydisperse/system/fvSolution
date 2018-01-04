@@ -25,9 +25,10 @@ solvers
 
     bubbles
     {
-        nCorr           1;
-        tolerance       1e-4;
-        renormalize     false;
+        nCorr                1;
+        tolerance            1e-4;
+        renormalize          false;
+        solveOnFinalIterOnly true;
     }
 
     p_rgh

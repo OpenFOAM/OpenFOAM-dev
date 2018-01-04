@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,10 @@ Class
     Foam::diameterModels::driftModels::constant
 
 Description
-    Constant growth rate. Used for verification and validation of the drift
-    formulation implemented in the populationBalanceModel class. Rate is either
-    given in the corresponding dictionary or calculated from fvOptions mass
-    source, depending on Switch calculateFromFvOptions.
+    Constant drift rate within all classes. Used for verification and
+    validation of the drift formulation implemented in the
+    populationBalanceModel class. Rate is calculated from fvOptions mass source.
+
 
 SourceFiles
     constant.C
@@ -58,12 +58,6 @@ class constantDrift
     public driftModel
 {
     // Private data
-
-        //- If true, calculate drift rate from fvOptions mass source
-        Switch calculateFromFvOptions_;
-
-        //- Optional driftRate
-        dimensionedScalar rate_;
 
         //- Total number concentration
         volScalarField N_;
