@@ -145,12 +145,6 @@ Foam::diameterModels::velocityGroup::fSum() const
         sumSizeGroups += sizeGroups_[i];
     }
 
-    Info<< phase_.name() << " sizeGroups-sum volume fraction, min, max = "
-        << sumSizeGroups.weightedAverage(phase_.mesh().V()).value()
-        << ' ' << min(sumSizeGroups).value()
-        << ' ' << max(sumSizeGroups).value()
-        << endl;
-
     return tsumSizeGroups;
 }
 
@@ -225,7 +219,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
         ),
         phase.mesh()
     ),
-    formFactor_("formFactor", dimless, diameterProperties.lookup("formFactor")),
+    formFactor_("formFactor", dimless, diameterProperties),
     sizeGroups_
     (
         diameterProperties.lookup("sizeGroups"),
@@ -314,12 +308,21 @@ Foam::diameterModels::velocityGroup::velocityGroup
 {
     if
     (
-        mag
+        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
         (
-            1.0
-          - fSum_.weightedAverage(fSum_.mesh().V()).value()
+            "renormalize",
+            false
         )
-      >= 1e-5
+    )
+    {
+        renormalize();
+    }
+
+    fSum_ = fSum();
+
+    if
+    (
+        mag(1 - fSum_.weightedAverage(fSum_.mesh().V()).value()) >= 1e-5
      || mag(1 - max(fSum_).value()) >= 1e-5
      || mag(1 - min(fSum_).value()) >= 1e-5
     )
@@ -327,7 +330,9 @@ Foam::diameterModels::velocityGroup::velocityGroup
         FatalErrorInFunction
             << "Initial values of the sizeGroups belonging to velocityGroup "
             << this->phase().name()
-            << " must add to unity." << endl
+            << " must add to unity. The sizeGroup fractions can be"
+            << " renormalized by setting the renormalize switch"
+            << " in the fvSolution subdictionary " << popBalName_ << "." << endl
             << exit(FatalError);
     }
 
@@ -367,7 +372,19 @@ void Foam::diameterModels::velocityGroup::postSolve()
 
     d_ = dsm();
 
+    Info<< this->phase().name() << " Sauter mean diameter, min, max = "
+        << d_.weightedAverage(d_.mesh().V()).value()
+        << ' ' << min(d_).value()
+        << ' ' << max(d_).value()
+        << endl;
+
     fSum_ = fSum();
+
+    Info<< phase_.name() << " sizeGroups-sum volume fraction, min, max = "
+        << fSum_.weightedAverage(phase_.mesh().V()).value()
+        << ' ' << min(fSum_).value()
+        << ' ' << max(fSum_).value()
+        << endl;
 
     if
     (
