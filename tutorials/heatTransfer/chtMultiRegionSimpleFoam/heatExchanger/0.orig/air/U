@@ -25,20 +25,24 @@ boundaryField
     {
         type            noSlip;
     }
+
     inlet
     {
         type            fixedValue;
         value           uniform (0 0 5);
     }
+
     outlet
     {
         type            inletOutlet;
         inletValue      uniform (0 0 0);
         value           uniform (0 0 0);
     }
+
     blades
     {
-        type            noSlip;
+        type            fixedValue;
+        value           uniform (0 0 0);
     }
 }
 
