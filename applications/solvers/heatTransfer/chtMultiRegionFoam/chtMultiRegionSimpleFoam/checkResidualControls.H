@@ -53,12 +53,12 @@ if (resControlUsed)
     }
 }
 
-if (!runTime.run())
+if (!runTime.running())
 {
     Info<< "\nRegions not converged after " << runTime.timeName()
         << " iterations" << endl;
 }
-else if (runTime.run() && resControlUsed && allRegionsConverged)
+else if (runTime.running() && resControlUsed && allRegionsConverged)
 {
     Info<< "\nRegions converged after " << runTime.timeName()
         << " iterations" << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -778,9 +778,15 @@ Foam::dimensionedScalar Foam::Time::endTime() const
 }
 
 
+bool Foam::Time::running() const
+{
+    return value() < (endTime_ - 0.5*deltaT_);
+}
+
+
 bool Foam::Time::run() const
 {
-    bool running = value() < (endTime_ - 0.5*deltaT_);
+    const bool running = this->running();
 
     if (!subCycling_)
     {
@@ -806,21 +812,18 @@ bool Foam::Time::run() const
                 functionObjects_.execute();
             }
         }
-
-        // Update the "running" status following the
-        // possible side-effects from functionObjects
-        running = value() < (endTime_ - 0.5*deltaT_);
     }
 
-    return running;
+    // Re-evaluate if running in case a function object has changed things
+    return this->running();
 }
 
 
 bool Foam::Time::loop()
 {
-    bool running = run();
+    const bool running = this->running();
 
-    if (running)
+    if (run())
     {
         operator++();
     }

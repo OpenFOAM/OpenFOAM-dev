@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
     forAll(timeDirs, timeI)
     {
         runTime.setTime(timeDirs[timeI], timeI);
+        const scalar t = runTime.value();
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
@@ -188,17 +189,16 @@ int main(int argc, char *argv[])
             }
             liquid = liquidp;
 
-            const scalar t = runTime.value();
             const pointField& ccs = mesh.cellCentres();
             const pointField& pts = mesh.points();
 
             // Internal field superposition
             h.primitiveFieldRef() += waves.height(t, ccs);
             hp.primitiveFieldRef() += waves.height(t, pts);
-            uGas.primitiveFieldRef() += waves.UGas(t, ccs) - waves.UMean();
-            uGasp.primitiveFieldRef() += waves.UGas(t, pts) - waves.UMean();
-            uLiq.primitiveFieldRef() += waves.ULiquid(t, ccs) - waves.UMean();
-            uLiqp.primitiveFieldRef() += waves.ULiquid(t, pts) - waves.UMean();
+            uGas.primitiveFieldRef() += waves.UGas(t, ccs) - waves.UMean(t);
+            uGasp.primitiveFieldRef() += waves.UGas(t, pts) - waves.UMean(t);
+            uLiq.primitiveFieldRef() += waves.ULiquid(t, ccs) - waves.UMean(t);
+            uLiqp.primitiveFieldRef() += waves.ULiquid(t, pts) - waves.UMean(t);
 
             // Boundary field superposition
             forAll(mesh.boundary(), patchj)
@@ -206,9 +206,9 @@ int main(int argc, char *argv[])
                 const pointField& fcs = mesh.boundary()[patchj].Cf();
                 h.boundaryFieldRef()[patchj] += waves.height(t, fcs);
                 uGas.boundaryFieldRef()[patchj] +=
-                    waves.UGas(t, fcs) - waves.UMean();
+                    waves.UGas(t, fcs) - waves.UMean(t);
                 uLiq.boundaryFieldRef()[patchj] +=
-                    waves.ULiquid(t, fcs) - waves.UMean();
+                    waves.ULiquid(t, fcs) - waves.UMean(t);
             }
 
             ++ nWaves;
@@ -246,7 +246,8 @@ int main(int argc, char *argv[])
                 const waveSuperposition& waves =
                     refCast<const waveVelocityFvPatchVectorField>(Up).waves();
 
-                UMean == dimensionedVector("UMean", dimVelocity, waves.UMean());
+                UMean ==
+                    dimensionedVector("UMean", dimVelocity, waves.UMean(t));
             }
         }
         else if (nWaves > 1)
@@ -290,7 +291,7 @@ int main(int argc, char *argv[])
 
                 weight += w;
                 weightUMean +=
-                    w*dimensionedVector("wUMean", dimVelocity, waves.UMean());
+                    w*dimensionedVector("wUMean", dimVelocity, waves.UMean(t));
             }
 
             // Complete the average for the mean velocity
