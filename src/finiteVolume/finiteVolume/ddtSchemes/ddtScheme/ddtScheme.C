@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
       - min
         (
             mag(phiCorr)
-           /(mag(phi) + dimensionedScalar("small", phi.dimensions(), SMALL)),
+           *mesh().time().deltaT()*mesh().deltaCoeffs()/mesh().magSf(),
             scalar(1)
         );
 
@@ -199,10 +199,40 @@ template<class Type>
 tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
 (
     const GeometricField<Type, fvPatchField, volMesh>& U,
+    const fluxFieldType& phi,
+    const fluxFieldType& phiCorr,
+    const volScalarField& rho
+)
+{
+    return fvcDdtPhiCoeff(U, phi, phiCorr/fvc::interpolate(rho));
+}
+
+
+template<class Type>
+tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
+(
+    const GeometricField<Type, fvPatchField, volMesh>& U,
     const fluxFieldType& phi
 )
 {
     return fvcDdtPhiCoeff(U, phi, phi - fvc::dotInterpolate(mesh().Sf(), U));
+}
+
+
+template<class Type>
+tmp<surfaceScalarField> ddtScheme<Type>::fvcDdtPhiCoeff
+(
+    const GeometricField<Type, fvPatchField, volMesh>& U,
+    const fluxFieldType& phi,
+    const volScalarField& rho
+)
+{
+    return fvcDdtPhiCoeff
+    (
+        U,
+        phi,
+        (phi - fvc::dotInterpolate(mesh().Sf(), U))/fvc::interpolate(rho)
+    );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,7 +213,22 @@ public:
         tmp<surfaceScalarField> fvcDdtPhiCoeff
         (
             const GeometricField<Type, fvPatchField, volMesh>& U,
+            const fluxFieldType& phi,
+            const fluxFieldType& phiCorr,
+            const volScalarField& rho
+        );
+
+        tmp<surfaceScalarField> fvcDdtPhiCoeff
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& U,
             const fluxFieldType& phi
+        );
+
+        tmp<surfaceScalarField> fvcDdtPhiCoeff
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& U,
+            const fluxFieldType& phi,
+            const volScalarField& rho
         );
 
         virtual tmp<fluxFieldType> fvcDdtUfCorr
