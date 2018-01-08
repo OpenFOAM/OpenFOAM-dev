@@ -22,8 +22,6 @@ do
     runApplication -s $i refineMesh -dict system/refineMeshDictY -overwrite
 done
 
-runApplication topoSet
-
 runApplication setWaves -alpha alpha.water
 
 runApplication decomposePar

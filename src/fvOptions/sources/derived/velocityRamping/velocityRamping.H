@@ -40,7 +40,7 @@ Usage
         velocity    (-2.572 0 0);
         ramp
         {
-            type        quarterSineRamp;
+            type        halfCosineRamp;
             start       0;
             duration    10;
         }
