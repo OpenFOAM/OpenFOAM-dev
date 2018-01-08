@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,6 +180,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
     speed_(0),
     waveModels_(),
     waveAngles_(),
+    ramp_(),
     scale_(),
     crossScale_()
 {}
@@ -193,6 +194,7 @@ Foam::waveSuperposition::waveSuperposition(const waveSuperposition& waves)
     speed_(waves.speed_),
     waveModels_(waves.waveModels_),
     waveAngles_(waves.waveAngles_),
+    ramp_(waves.ramp_, false),
     scale_(waves.scale_, false),
     crossScale_(waves.crossScale_, false)
 {}
@@ -210,6 +212,12 @@ Foam::waveSuperposition::waveSuperposition
     speed_(readScalar(dict.lookup("speed"))),
     waveModels_(),
     waveAngles_(),
+    ramp_
+    (
+        dict.found("ramp")
+      ? Function1<scalar>::New("ramp", dict)
+      : autoPtr<Function1<scalar>>()
+    ),
     scale_
     (
         dict.found("scale")
@@ -277,7 +285,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::ULiquid
     vectorField xyz(p.size());
     transformation(p, axes, u, xyz);
 
-    return UMean() + (velocity(t, xyz) & axes);
+    return UMean(t) + (velocity(t, xyz) & axes);
 }
 
 
@@ -294,7 +302,7 @@ Foam::tmp<Foam::vectorField> Foam::waveSuperposition::UGas
 
     axes = tensor(- axes.x(), - axes.y(), axes.z());
 
-    return UMean() + (velocity(t, xyz) & axes);
+    return UMean(t) + (velocity(t, xyz) & axes);
 }
 
 
@@ -338,6 +346,10 @@ void Foam::waveSuperposition::write(Ostream& os) const
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
+    if (ramp_.valid())
+    {
+        ramp_->writeData(os);
+    }
     if (scale_.valid())
     {
         scale_->writeData(os);

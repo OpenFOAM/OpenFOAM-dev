@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,9 @@ class waveSuperposition
 
         //- The angle relative to the mean velocity at which the waves propagate
         scalarList waveAngles_;
+
+        //- Ramp for the mean flow speed
+        const autoPtr<Function1<scalar>> ramp_;
 
         //- Scaling in the flow direction
         const autoPtr<Function1<scalar>> scale_;
@@ -147,9 +150,9 @@ public:
         tmp<scalarField> pGas(const scalar t, const vectorField& p) const;
 
         //- Get the mean flow velocity
-        inline vector UMean() const
+        inline vector UMean(const scalar t) const
         {
-            return direction_*speed_;
+            return (ramp_.valid() ? ramp_->value(t) : 1)*direction_*speed_;
         }
 
         //- Write

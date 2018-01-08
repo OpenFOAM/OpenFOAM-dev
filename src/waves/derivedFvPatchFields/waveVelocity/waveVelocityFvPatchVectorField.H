@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,6 +60,7 @@ Usage
         direction   | direction of the mean flow             | yes    |
         speed       | speed of the mean flow                 | yes    |
         waves       | list of wave models to superimpose     | yes    |
+        ramp        | ramping function for the mean flow speed | no   | None
         scale       | scale factor along the mean flow direction | no | None
         crossScale  | scale factor across the mean flow direction | no | None
         phi         | Name of the flux field                 | no     | phi
@@ -91,6 +92,7 @@ Usage
                 angle       0;
             }
         );
+        ramp        constant 1;
         scale       table ((100 1) (200 0));
         crossScale  constant 1;
     }

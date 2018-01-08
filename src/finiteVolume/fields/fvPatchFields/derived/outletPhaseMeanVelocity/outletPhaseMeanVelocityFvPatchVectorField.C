@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2013-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 :
     mixedFvPatchField<vector>(p, iF),
     Umean_(0),
+    ramp_(),
     alphaName_("none")
 {
     refValue() = Zero;
@@ -59,6 +60,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 :
     mixedFvPatchField<vector>(ptf, p, iF, mapper),
     Umean_(ptf.Umean_),
+    ramp_(ptf.ramp_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -73,6 +75,12 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 :
     mixedFvPatchField<vector>(p, iF),
     Umean_(readScalar(dict.lookup("Umean"))),
+    ramp_
+    (
+        dict.found("ramp")
+      ? Function1<scalar>::New("ramp", dict)
+      : autoPtr<Function1<scalar>>()
+    ),
     alphaName_(dict.lookup("alpha"))
 {
     refValue() = Zero;
@@ -101,6 +109,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 :
     mixedFvPatchField<vector>(ptf),
     Umean_(ptf.Umean_),
+    ramp_(ptf.ramp_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -114,6 +123,7 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 :
     mixedFvPatchField<vector>(ptf, iF),
     Umean_(ptf.Umean_),
+    ramp_(ptf.ramp_, false),
     alphaName_(ptf.alphaName_)
 {}
 
@@ -126,6 +136,8 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
     {
         return;
     }
+
+    const scalar t = this->db().time().timeOutputValue();
 
     scalarField alphap =
         patch().lookupPatchField<volScalarField, scalar>(alphaName_);
@@ -143,15 +155,16 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::updateCoeffs()
 
     // Set the refValue and valueFraction to adjust the boundary field
     // such that the phase mean is Umean_
-    if (Uzgmean >= Umean_)
+    const scalar Umean = (ramp_.valid() ? ramp_->value(t) : 1)*Umean_;
+    if (Uzgmean >= Umean)
     {
         refValue() = Zero;
-        valueFraction() = 1.0 - Umean_/Uzgmean;
+        valueFraction() = 1.0 - Umean/Uzgmean;
     }
     else
     {
-        refValue() = (Umean_ + Uzgmean)*patch().nf();
-        valueFraction() = 1.0 - Uzgmean/Umean_;
+        refValue() = (Umean + Uzgmean)*patch().nf();
+        valueFraction() = 1.0 - Uzgmean/Umean;
     }
 
     mixedFvPatchField<vector>::updateCoeffs();
@@ -165,10 +178,12 @@ void Foam::outletPhaseMeanVelocityFvPatchVectorField::write
 {
     fvPatchField<vector>::write(os);
 
-    os.writeKeyword("Umean") << Umean_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("alpha") << alphaName_
-        << token::END_STATEMENT << nl;
+    os.writeKeyword("Umean") << Umean_ << token::END_STATEMENT << nl;
+    if (ramp_.valid())
+    {
+        ramp_->writeData(os);
+    }
+    os.writeKeyword("alpha") << alphaName_ << token::END_STATEMENT << nl;
     writeEntry("value", os);
 }
 
