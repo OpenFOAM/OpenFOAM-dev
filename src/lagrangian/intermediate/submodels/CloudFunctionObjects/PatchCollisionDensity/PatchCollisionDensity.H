@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,32 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::ParticleTrap
+    Foam::PatchCollisionDensity
 
 Description
-    Traps particles within a given phase fraction for multi-phase cases.
+    Function object which generates fields of the number and rate of collisions
+    per unit area on all patches. Can optionally take a minimum speed below
+    which a collision is not counted.
 
-    Model is activated using:
+    Example usage:
     \verbatim
-    particleTrap1
+    patchCollisionDensity1
     {
-        type        particleTrap;
-        alpha       alpha;      // name of the volume fraction field
-        threshold   0.95;       // alpha value below which model is active
+        type        patchCollisionDensity;
+        minSpeed    1e-3;
     }
     \endverbatim
 
-
 SourceFiles
-    ParticleTrap.C
+    PatchCollisionDensity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ParticleTrap_H
-#define ParticleTrap_H
+#ifndef PatchCollisionDensity_H
+#define PatchCollisionDensity_H
 
 #include "CloudFunctionObject.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,45 +54,50 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class ParticleTrap Declaration
+                    Class PatchCollisionDensity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>
-class ParticleTrap
+class PatchCollisionDensity
 :
     public CloudFunctionObject<CloudType>
 {
-    // Private Data
+    // Private data
 
-        // Typedefs
+        typedef typename CloudType::particleType parcelType;
 
-            //- Convenience typedef for parcel type
-            typedef typename CloudType::parcelType parcelType;
+        //- The threshold for a collision
+        const scalar minSpeed_;
+
+        //- The field of the number of collisions per unit area
+        volScalarField::Boundary collisionDensity_;
+
+        //- The field of the number of collisions per unit area at the last
+        //  output
+        volScalarField::Boundary collisionDensity0_;
+
+        //- The time at the last output
+        scalar time0_;
 
 
-        //- Name of vol fraction field
-        const word alphaName_;
+protected:
 
-        //- Pointer to the volume fraction field
-        const volScalarField* alphaPtr_;
+    // Protected Member Functions
 
-        //- Gradient of the volume fraction field
-        autoPtr<volVectorField> gradAlphaPtr_;
-
-        //- Threshold beyond which model is active
-        scalar threshold_;
+        //- Write post-processing info
+        void write();
 
 
 public:
 
     //- Runtime type information
-    TypeName("particleTrap");
+    TypeName("patchCollisionDensity");
 
 
     // Constructors
 
         //- Construct from dictionary
-        ParticleTrap
+        PatchCollisionDensity
         (
             const dictionary& dict,
             CloudType& owner,
@@ -101,38 +105,31 @@ public:
         );
 
         //- Construct copy
-        ParticleTrap(const ParticleTrap<CloudType>& pe);
+        PatchCollisionDensity(const PatchCollisionDensity<CloudType>& ppm);
 
         //- Construct and return a clone
         virtual autoPtr<CloudFunctionObject<CloudType>> clone() const
         {
             return autoPtr<CloudFunctionObject<CloudType>>
             (
-                new ParticleTrap<CloudType>(*this)
+                new PatchCollisionDensity<CloudType>(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~ParticleTrap();
+    virtual ~PatchCollisionDensity();
 
 
     // Member Functions
 
         // Evaluation
 
-            //- Pre-evolve hook
-            virtual void preEvolve();
-
-            //- Post-evolve hook
-            virtual void postEvolve();
-
-            //- Post-move hook
-            virtual void postMove
+            //- Post-patch hook
+            virtual void postPatch
             (
-                typename CloudType::parcelType& p,
-                const scalar dt,
-                const point& position0,
+                const parcelType& p,
+                const polyPatch& pp,
                 bool& keepParticle
             );
 };
@@ -145,7 +142,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "ParticleTrap.C"
+    #include "PatchCollisionDensity.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

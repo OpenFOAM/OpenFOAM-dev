@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,30 @@ Usage
     }
     \endverbatim
 
+    Example usage with graduated onset:
+    \verbatim
+    verticalDamping1
+    {
+        type            verticalDamping;
+
+        selectionMode   all;
+
+        origin          (1200 0 0);
+        direction       (1 0 0);
+        ramp
+        {
+            type        halfCosineRamp;
+            start       0;
+            duration    600;
+        }
+
+        lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
+
+        timeStart       0;
+        duration        1e6;
+    }
+    \endverbatim
+
 SourceFiles
     verticalDamping.C
 
@@ -81,6 +105,9 @@ SourceFiles
 
 namespace Foam
 {
+
+template<class Type> class Function1;
+
 namespace fv
 {
 
@@ -98,6 +125,15 @@ private:
 
         //- Damping coefficient [1/s]
         dimensionedScalar lambda_;
+
+        //- The ramping function
+        autoPtr<Function1<scalar>> ramp_;
+
+        //- Origin of the ramping coordinate
+        vector origin_;
+
+        //- Direction of increasing ramping coordinate
+        vector direction_;
 
 
     // Private Member Functions

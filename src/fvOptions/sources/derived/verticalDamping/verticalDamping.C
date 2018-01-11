@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "fvMatrix.H"
 #include "geometricOneField.H"
 #include "meshTools.H"
+#include "Function1.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -59,6 +60,14 @@ void Foam::fv::verticalDamping::add
 
     const DimensionedField<scalar, volMesh>& V = mesh_.V();
 
+    // Calculate the scale
+    const scalarField s
+    (
+        ramp_.valid()
+      ? ramp_->value((mesh_.cellCentres() - origin_) & direction_)
+      : tmp<scalarField>(new scalarField(mesh_.nCells(), 1))
+    );
+
     // Check dimensions
     eqn.dimensions()
       - V.dimensions()*(lgg.dimensions() & alphaRhoU.dimensions());
@@ -68,7 +77,7 @@ void Foam::fv::verticalDamping::add
     forAll(cells_, i)
     {
         const label c = cells_[i];
-        force[i] = V[c]*(lgg.value() & alphaRhoU[c]);
+        force[i] = V[c]*s[c]*(lgg.value() & alphaRhoU[c]);
     }
     meshTools::constrainDirection(mesh_, mesh_.solutionD(), force);
     forAll(cells_, i)
@@ -90,7 +99,10 @@ Foam::fv::verticalDamping::verticalDamping
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    lambda_("lambda", dimless/dimTime, coeffs_.lookup("lambda"))
+    lambda_("lambda", dimless/dimTime, coeffs_.lookup("lambda")),
+    ramp_(),
+    origin_(),
+    direction_()
 {
     read(dict);
 }
@@ -142,6 +154,25 @@ bool Foam::fv::verticalDamping::read(const dictionary& dict)
                 lambda_.dimensions(),
                 coeffs_.lookup(lambda_.name())
             );
+
+        const bool foundRamp = coeffs_.found("ramp");
+        const bool foundOrigin = coeffs_.found("origin");
+        const bool foundDirection = coeffs_.found("direction");
+        if (foundRamp && foundOrigin && foundDirection)
+        {
+            ramp_ = Function1<scalar>::New("ramp", coeffs_);
+            coeffs_.lookup("origin") >> origin_;
+            coeffs_.lookup("direction") >> direction_;
+            direction_ /= mag(direction_);
+        }
+        else if (foundRamp || foundOrigin || foundDirection)
+        {
+            WarningInFunction
+                << "The ramping specification is incomplete. \"ramp\", "
+                << "\"origin\" and \"direction\", must all be specified in "
+                << "order to ramp the damping. The damping will be applied "
+                << "uniformly across the cell set." << endl;
+        }
 
         fieldNames_ = wordList(1, coeffs_.lookupOrDefault<word>("U", "U"));
 

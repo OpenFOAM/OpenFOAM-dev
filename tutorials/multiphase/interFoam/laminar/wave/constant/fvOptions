@@ -19,10 +19,18 @@ option1
 {
     type            verticalDamping;
 
-    selectionMode   cellZone;
-    cellZone        right;
+    selectionMode   all;
 
-    lambda          0.1;
+    origin          (1200 0 0);
+    direction       (1 0 0);
+    ramp
+    {
+        type        halfCosineRamp;
+        start       0;
+        duration    600;
+    }
+
+    lambda          0.5;
 
     timeStart       0;
     duration        1e6;
