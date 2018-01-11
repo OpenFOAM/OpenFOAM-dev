@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,7 +188,32 @@ public:
         //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
         static void list();
 
-        //- Search for functionObject dictionary file in
+        //- Search for functionObject dictionary file for given region
+        //  and the user/group/shipped directories.
+        //  The search scheme allows for version-specific and
+        //  version-independent files using the following hierarchy:
+        //  - \b user settings:
+        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
+        //    - ~/.OpenFOAM/caseDicts/postProcessing
+        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
+        //    - $WM_PROJECT_SITE/\<VERSION\>/caseDicts/postProcessing
+        //    - $WM_PROJECT_SITE/caseDicts/postProcessing
+        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
+        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/caseDicts/postProcessing
+        //    - $WM_PROJECT_INST_DIR/site/caseDicts/postProcessing
+        //  - \b other (shipped) settings:
+        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
+        //
+        //  \return The path of the functionObject dictionary file if found
+        //  otherwise null
+        static fileName findRegionDict
+        (
+            const word& funcPath,
+            const word& region = word::null
+        );
+
+        //- Search for functionObject dictionary file for given region
+        //  and if not present also search the case directory as well as the
         //  user/group/shipped directories.
         //  The search scheme allows for version-specific and
         //  version-independent files using the following hierarchy:
@@ -206,7 +231,11 @@ public:
         //
         //  \return The path of the functionObject dictionary file if found
         //  otherwise null
-        static fileName findDict(const word& funcName);
+        static fileName findDict
+        (
+            const word& funcName,
+            const word& region = word::null
+        );
 
         //- Read the specified functionObject configuration dictionary parsing
         //  the optional arguments included in the name 'funcNameArgs0',

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ License
 #include "mapPolyMesh.H"
 #include "argList.H"
 #include "timeControlFunctionObject.H"
-//#include "IFstream.H"
 #include "dictionaryEntry.H"
 #include "stringOps.H"
 #include "Tuple2.H"
@@ -120,11 +119,18 @@ void Foam::functionObjectList::list()
 }
 
 
-Foam::fileName Foam::functionObjectList::findDict(const word& funcName)
+Foam::fileName Foam::functionObjectList::findRegionDict
+(
+    const word& funcName,
+    const word& region
+)
 {
     // First check if there is a functionObject dictionary file in the
     // case system directory
-    fileName dictFile = stringOps::expand("$FOAM_CASE")/"system"/funcName;
+    fileName dictFile
+    (
+        stringOps::expand("$FOAM_CASE")/"system"/region/funcName
+    );
 
     if (isFile(dictFile))
     {
@@ -145,6 +151,32 @@ Foam::fileName Foam::functionObjectList::findDict(const word& funcName)
     }
 
     return fileName::null;
+}
+
+
+Foam::fileName Foam::functionObjectList::findDict
+(
+    const word& funcName,
+    const word& region
+)
+{
+    if (region == word::null)
+    {
+        return findRegionDict(funcName);
+    }
+    else
+    {
+        fileName dictFile(findRegionDict(funcName, region));
+
+        if (dictFile != fileName::null)
+        {
+            return dictFile;
+        }
+        else
+        {
+            return findRegionDict(funcName);
+        }
+    }
 }
 
 
@@ -239,7 +271,7 @@ bool Foam::functionObjectList::readFunctionObject
     }
 
     // Search for the functionObject dictionary
-    fileName path = findDict(funcName);
+    fileName path = findDict(funcName, region);
 
     if (path == fileName::null)
     {
