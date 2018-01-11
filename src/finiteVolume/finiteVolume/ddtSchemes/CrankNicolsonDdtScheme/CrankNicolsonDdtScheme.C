@@ -102,7 +102,7 @@ operator=(const GeoField& gf)
 
 template<class Type>
 template<class GeoField>
-CrankNicolsonDdtScheme<Type>::DDt0Field<GeoField>&
+typename CrankNicolsonDdtScheme<Type>::template DDt0Field<GeoField>&
 CrankNicolsonDdtScheme<Type>::ddt0_
 (
     const word& name,
