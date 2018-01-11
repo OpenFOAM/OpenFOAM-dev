@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
     particleTrap1
     {
         type        particleTrap;
-        alphaName   alpha;      // name volume fraction field
+        alpha       alpha;      // name of the volume fraction field
         threshold   0.95;       // alpha value below which model is active
     }
     \endverbatim
