@@ -410,10 +410,28 @@ $(general)/pressureControl/pressureControl.C
 $(general)/levelSet/levelSet.C
 
 solutionControl = $(general)/solutionControl
-$(solutionControl)/solutionControl/solutionControl.C
+$(solutionControl)/solutionControl/solutionControl/solutionControl.C
+$(solutionControl)/solutionControl/singleRegionSolutionControl/singleRegionSolutionControl.C
+$(solutionControl)/solutionControl/multiRegionSolutionControl/multiRegionSolutionControl.C
+$(solutionControl)/solutionControl/nonOrthogonalSolutionControl/nonOrthogonalSolutionControl.C
+$(solutionControl)/solutionControl/fluidSolutionControl/fluidSolutionControl.C
 $(solutionControl)/simpleControl/simpleControl.C
-$(solutionControl)/pimpleControl/pimpleControl.C
 $(solutionControl)/pisoControl/pisoControl.C
+
+solidControl = $(solutionControl)/solidControl
+$(solidControl)/solidNoLoopControl/solidNoLoopControl.C
+
+pimpleControl = $(solutionControl)/pimpleControl
+$(pimpleControl)/pimpleControl/pimpleControl.C
+$(pimpleControl)/pimpleNoLoopControl/pimpleNoLoopControl.C
+$(pimpleControl)/pimpleLoop/pimpleLoop.C
+$(pimpleControl)/pimpleMultiRegionControl/pimpleMultiRegionControl.C
+
+convergenceControl = $(solutionControl)/convergenceControl
+$(convergenceControl)/convergenceControl/convergenceControl.C
+$(convergenceControl)/singleRegionConvergenceControl/singleRegionConvergenceControl.C
+$(convergenceControl)/correctorConvergenceControl/correctorConvergenceControl.C
+$(convergenceControl)/singleRegionCorrectorConvergenceControl/singleRegionCorrectorConvergenceControl.C
 
 porosity = $(general)/porosityModel
 $(porosity)/porosityModel/porosityModel.C

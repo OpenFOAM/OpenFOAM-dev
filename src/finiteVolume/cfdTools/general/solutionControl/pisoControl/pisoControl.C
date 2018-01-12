@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,11 +35,13 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::pisoControl::pisoControl(fvMesh& mesh, const word& dictName)
+Foam::pisoControl::pisoControl(fvMesh& mesh, const word& algorithmName)
 :
-    pimpleControl(mesh, dictName)
+    fluidSolutionControl(mesh, algorithmName),
+    nCorrPISO_(-1),
+    corrPISO_(0)
 {
-    // mesh_.data::add("finalIteration", true);
+    read();
 }
 
 
@@ -47,6 +49,51 @@ Foam::pisoControl::pisoControl(fvMesh& mesh, const word& dictName)
 
 Foam::pisoControl::~pisoControl()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+bool Foam::pisoControl::read()
+{
+    if (!fluidSolutionControl::read())
+    {
+        return false;
+    }
+
+    const dictionary& solutionDict = dict();
+
+    nCorrPISO_ = solutionDict.lookupOrDefault<label>("nCorrectors", 1);
+
+    return true;
+}
+
+
+bool Foam::pisoControl::correct()
+{
+    read();
+
+    if (finalPISOIter())
+    {
+        corrPISO_ = 0;
+        return false;
+    }
+
+    ++ corrPISO_;
+
+    return true;
+}
+
+
+bool Foam::pisoControl::run(Time& time)
+{
+    return time.run();
+}
+
+
+bool Foam::pisoControl::loop(Time& time)
+{
+    return time.loop();
+}
 
 
 // ************************************************************************* //

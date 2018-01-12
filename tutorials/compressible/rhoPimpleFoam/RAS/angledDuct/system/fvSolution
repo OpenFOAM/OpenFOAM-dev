@@ -59,7 +59,7 @@ PIMPLE
     pMaxFactor          1.5;
     pMinFactor          0.9;
 
-    residualControl
+    outerCorrectorResidualControl
     {
         "(U|k|epsilon)"
         {

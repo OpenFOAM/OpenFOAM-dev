@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inline Foam::label Foam::pisoControl::nCorrPISO() const
+{
+    return nCorrPISO_;
+}
+
+
+inline bool Foam::pisoControl::firstPISOIter() const
+{
+    return corrPISO_ == 1;
+}
+
+
+inline bool Foam::pisoControl::finalPISOIter() const
+{
+    return corrPISO_ >= nCorrPISO_;
+}
+
 
 inline bool Foam::pisoControl::finalInnerIter() const
 {
-    return
-       corrPISO_ == nCorrPISO_
-    && corrNonOrtho_ == nNonOrthCorr_ + 1;
+    return finalNonOrthogonalIter() && finalPISOIter();
 }
 
 

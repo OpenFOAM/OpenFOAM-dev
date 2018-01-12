@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,75 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const Foam::dictionary& Foam::solutionControl::dict() const
+inline bool Foam::fluidSolutionControl::solveFlow() const
 {
-    return mesh_.solutionDict().subDict(algorithmName_);
+    return solveFlow_;
 }
 
 
-inline Foam::label Foam::solutionControl::corr() const
-{
-    return corr_;
-}
-
-
-inline Foam::label Foam::solutionControl::corrNonOrtho() const
-{
-    return corrNonOrtho_;
-}
-
-
-inline Foam::label Foam::solutionControl::nNonOrthCorr() const
-{
-    return nNonOrthCorr_;
-}
-
-
-inline bool Foam::solutionControl::finalNonOrthogonalIter() const
-{
-    return corrNonOrtho_ == nNonOrthCorr_ + 1;
-}
-
-
-inline bool Foam::solutionControl::momentumPredictor() const
+inline bool Foam::fluidSolutionControl::momentumPredictor() const
 {
     return momentumPredictor_;
 }
 
 
-inline bool Foam::solutionControl::transonic() const
+inline bool Foam::fluidSolutionControl::transonic() const
 {
     return transonic_;
 }
 
 
-inline bool Foam::solutionControl::consistent() const
+inline bool Foam::fluidSolutionControl::consistent() const
 {
     return consistent_;
-}
-
-
-inline bool Foam::solutionControl::correctNonOrthogonal()
-{
-    corrNonOrtho_++;
-
-    if (debug)
-    {
-        Info<< algorithmName_ << " correctNonOrthogonal: corrNonOrtho = "
-            << corrNonOrtho_ << endl;
-    }
-
-    if (corrNonOrtho_ <= nNonOrthCorr_ + 1)
-    {
-        return true;
-    }
-    else
-    {
-        corrNonOrtho_ = 0;
-        return false;
-    }
 }
 
 

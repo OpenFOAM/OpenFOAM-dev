@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2013 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,39 +23,41 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "GeometricField.H"
-#include "volMesh.H"
-#include "fvPatchField.H"
+#include "multiRegionSolutionControl.H"
+#include "volFields.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::solutionControl::storePrevIter() const
+namespace Foam
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> GeoField;
+    defineTypeNameAndDebug(multiRegionSolutionControl, 0);
+}
 
-    HashTable<GeoField*>
-        flds(mesh_.objectRegistry::lookupClass<GeoField>());
 
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
-    {
-        GeoField& fld = *iter();
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-        const word& fName = fld.name();
+Foam::multiRegionSolutionControl::multiRegionSolutionControl
+(
+    const Time& time,
+    const word& algorithmName
+)
+:
+    solutionControl(time, time, algorithmName),
+    solution_(time)
+{}
 
-        size_t prevIterField = fName.find("PrevIter");
 
-        if ((prevIterField == word::npos) && mesh_.relaxField(fName))
-        {
-            if (debug)
-            {
-                Info<< algorithmName_ << ": storing previous iter for "
-                    << fName << endl;
-            }
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-            fld.storePrevIter();
-        }
-    }
+Foam::multiRegionSolutionControl::~multiRegionSolutionControl()
+{}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+const Foam::dictionary& Foam::multiRegionSolutionControl::dict() const
+{
+    return solution_.subDict(algorithmName_);
 }
 
 
