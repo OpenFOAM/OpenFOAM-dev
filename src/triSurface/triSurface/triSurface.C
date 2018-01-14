@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1028,6 +1028,19 @@ Foam::triSurface Foam::triSurface::subsetMesh
 
     // Construct subsurface
     return triSurface(newTriangles, patches(), newPoints, true);
+}
+
+
+Foam::faceList Foam::triSurface::faces() const
+{
+    faceList faces(size());
+
+    forAll(*this, facei)
+    {
+        faces[facei] = operator[](facei).triFaceFace();
+    }
+
+    return faces;
 }
 
 

@@ -1,3 +1,6 @@
+surfaceExtractCloseness.C
+surfaceExtractPointCloseness.C
+surfaceFeatureExtractUtilities.C
 surfaceFeatureExtract.C
 
 EXE = $(FOAM_APPBIN)/surfaceFeatureExtract
