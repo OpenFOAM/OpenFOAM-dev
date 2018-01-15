@@ -75,8 +75,14 @@ Usage
 
         selectionMode   all;
 
+        // Define the line along which to apply the graduation
         origin          (1200 0 0);
         direction       (1 0 0);
+
+        // Or, define multiple lines
+        //origins         ((1200 0 0) (1200 -300 0) (1200 300 0));
+        //directions      ((1 0 0) (0 -1 0) (0 1 0));
+
         ramp
         {
             type        halfCosineRamp;
@@ -129,11 +135,11 @@ private:
         //- The ramping function
         autoPtr<Function1<scalar>> ramp_;
 
-        //- Origin of the ramping coordinate
-        vector origin_;
+        //- Origins of the ramping coordinate
+        vectorField origins_;
 
-        //- Direction of increasing ramping coordinate
-        vector direction_;
+        //- Directions of increasing ramping coordinate
+        vectorField directions_;
 
 
     // Private Member Functions
