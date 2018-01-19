@@ -43,7 +43,7 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const Foam::scalar Foam::internalAngleTolerance(45);
+const Foam::scalar Foam::internalAngleTolerance(80);
 const Foam::scalar Foam::internalToleranceCosAngle
 (
     cos(degToRad(180 - internalAngleTolerance))
