@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,8 @@ const char* const Foam::FOAMbuild = "BUILD_STRING";
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "JobInfo.H"
-bool Foam::JobInfo::constructed(false);
+#include "jobInfo.H"
+bool Foam::jobInfo::constructed(false);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Global error definitions (initialised by construction)
@@ -94,6 +94,6 @@ bool Foam::JobInfo::constructed(false);
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // Create the jobInfo file in the $FOAM_JOB_DIR/runningJobs directory
 
-#include "JobInfo.C"
+#include "jobInfo.C"
 
 // ************************************************************************* //

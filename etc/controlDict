@@ -32,10 +32,11 @@ Documentation
 
 InfoSwitches
 {
-    writePrecision  6;
-    writeJobInfo    0;
-    writeDictionaries 0;
-    writeOptionalEntries 0;
+    writePrecision          6;
+    writeJobControl         0;
+    writeJobInfo            0;
+    writeDictionaries       0;
+    writeOptionalEntries    0;
 
     // Allow case-supplied C++ code (#codeStream, codedFixedValue)
     allowSystemOperations   1;

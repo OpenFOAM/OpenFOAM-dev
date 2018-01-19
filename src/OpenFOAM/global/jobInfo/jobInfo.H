@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::JobInfo
+    Foam::jobInfo
 
 Description
     Helper class for recording information about run/finished jobs.
@@ -32,12 +32,12 @@ Description
       - $FOAM_JOB_DIR/finishedJobs
 
 SourceFiles
-    JobInfo.C
+    jobInfo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef JobInfo_H
-#define JobInfo_H
+#ifndef jobInfo_H
+#define jobInfo_H
 
 #include "dictionary.H"
 #include "fileName.H"
@@ -49,17 +49,18 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class JobInfo Declaration
+                           Class jobInfo Declaration
 \*---------------------------------------------------------------------------*/
 
-class JobInfo
+class jobInfo
 :
     public dictionary
 {
     // Private data
-        fileName runningJobPath_;
-        fileName finishedJobPath_;
-        cpuTime  cpuTime_;
+
+        mutable fileName runningJobPath_;
+        mutable fileName finishedJobPath_;
+        cpuTime cpuTime_;
 
     // Private Member Functions
 
@@ -70,35 +71,34 @@ class JobInfo
 public:
 
     static bool constructed;
+    static bool writeJobControl;
     static bool writeJobInfo;
 
     // Constructors
 
         //- Construct null
-        JobInfo();
+        jobInfo();
 
 
     //- Destructor
-    ~JobInfo();
+    ~jobInfo();
 
 
     // Member Functions
 
-        // Write
+        void write(const fileName& casePath) const;
 
-            void write() const;
+        void end();
 
-            void end();
+        void exit();
 
-            void exit();
+        void abort();
 
-            void abort();
-
-            void signalEnd() const;
+        void signalEnd() const;
 };
 
 
-extern JobInfo jobInfo;
+extern jobInfo jobInfo_;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

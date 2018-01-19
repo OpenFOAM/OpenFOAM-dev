@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "sigStopAtWriteNow.H"
 #include "error.H"
-#include "JobInfo.H"
+#include "jobInfo.H"
 #include "IOstreams.H"
 #include "Time.H"
 
@@ -95,7 +95,7 @@ void Foam::sigStopAtWriteNow::sigHandler(int)
     }
 
     // Update jobInfo file
-    jobInfo.signalEnd();
+    jobInfo_.signalEnd();
 
     Info<< "sigStopAtWriteNow :"
         << " setting up write and stop at end of the next iteration"

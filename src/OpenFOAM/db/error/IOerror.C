@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,8 @@ License
 #include "OStringStream.H"
 #include "fileName.H"
 #include "dictionary.H"
-#include "JobInfo.H"
+#include "jobInfo.H"
 #include "Pstream.H"
-#include "JobInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -123,7 +122,7 @@ void Foam::IOerror::SafeFatalIOError
     const string& msg
 )
 {
-    if (JobInfo::constructed)
+    if (jobInfo::constructed)
     {
         FatalIOError
         (
@@ -170,10 +169,10 @@ Foam::IOerror::operator Foam::dictionary() const
 
 void Foam::IOerror::exit(const int)
 {
-    if (!throwExceptions_ && JobInfo::constructed)
+    if (!throwExceptions_ && jobInfo::constructed)
     {
-        jobInfo.add("FatalIOError", operator dictionary());
-        jobInfo.exit();
+        jobInfo_.add("FatalIOError", operator dictionary());
+        jobInfo_.exit();
     }
 
     if (abort_)
@@ -211,10 +210,10 @@ void Foam::IOerror::exit(const int)
 
 void Foam::IOerror::abort()
 {
-    if (!throwExceptions_ && JobInfo::constructed)
+    if (!throwExceptions_ && jobInfo::constructed)
     {
-        jobInfo.add("FatalIOError", operator dictionary());
-        jobInfo.abort();
+        jobInfo_.add("FatalIOError", operator dictionary());
+        jobInfo_.abort();
     }
 
     if (abort_)

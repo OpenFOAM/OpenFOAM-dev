@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2014 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "OStringStream.H"
 #include "fileName.H"
 #include "dictionary.H"
-#include "JobInfo.H"
+#include "jobInfo.H"
 #include "Pstream.H"
 #include "OSspecific.H"
 
@@ -167,10 +167,10 @@ Foam::string Foam::error::message() const
 
 void Foam::error::exit(const int errNo)
 {
-    if (!throwExceptions_ && JobInfo::constructed)
+    if (!throwExceptions_ && jobInfo::constructed)
     {
-        jobInfo.add("FatalError", operator dictionary());
-        jobInfo.exit();
+        jobInfo_.add("FatalError", operator dictionary());
+        jobInfo_.exit();
     }
 
     if (abort_)
@@ -208,10 +208,10 @@ void Foam::error::exit(const int errNo)
 
 void Foam::error::abort()
 {
-    if (!throwExceptions_ && JobInfo::constructed)
+    if (!throwExceptions_ && jobInfo::constructed)
     {
-        jobInfo.add("FatalError", operator dictionary());
-        jobInfo.abort();
+        jobInfo_.add("FatalError", operator dictionary());
+        jobInfo_.abort();
     }
 
     if (abort_)

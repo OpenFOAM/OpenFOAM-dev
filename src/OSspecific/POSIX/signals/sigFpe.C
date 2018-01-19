@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "sigFpe.H"
 #include "error.H"
-#include "JobInfo.H"
+#include "jobInfo.H"
 #include "OSspecific.H"
 #include "IOstreams.H"
 
@@ -98,7 +98,7 @@ void Foam::sigFpe::sigHandler(int)
     }
 
     // Update jobInfo file
-    jobInfo.signalEnd();
+    jobInfo_.signalEnd();
 
     error::printStack(Perr);
 

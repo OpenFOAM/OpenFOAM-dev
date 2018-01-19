@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "IFstream.H"
 #include "dictionary.H"
 #include "IOobject.H"
-#include "JobInfo.H"
+#include "jobInfo.H"
 #include "labelList.H"
 #include "regIOobject.H"
 #include "dynamicCode.H"
@@ -561,15 +561,15 @@ void Foam::argList::parse
                 << "PID    : " << pid() << endl;
         }
 
-        jobInfo.add("startDate", dateString);
-        jobInfo.add("startTime", timeString);
-        jobInfo.add("userName", userName());
-        jobInfo.add("foamVersion", word(FOAMversion));
-        jobInfo.add("code", executable_);
-        jobInfo.add("argList", argListStr_);
-        jobInfo.add("currentDir", cwd());
-        jobInfo.add("PPID", ppid());
-        jobInfo.add("PGID", pgid());
+        jobInfo_.add("startDate", dateString);
+        jobInfo_.add("startTime", timeString);
+        jobInfo_.add("userName", userName());
+        jobInfo_.add("foamVersion", word(FOAMversion));
+        jobInfo_.add("code", executable_);
+        jobInfo_.add("argList", argListStr_);
+        jobInfo_.add("currentDir", cwd());
+        jobInfo_.add("PPID", ppid());
+        jobInfo_.add("PGID", pgid());
 
         // Add build information - only use the first word
         {
@@ -579,7 +579,7 @@ void Foam::argList::parse
             {
                 build.resize(found);
             }
-            jobInfo.add("foamBuild", build);
+            jobInfo_.add("foamBuild", build);
         }
     }
 
@@ -884,18 +884,18 @@ void Foam::argList::parse
 
     if (initialise)
     {
-        jobInfo.add("root", rootPath_);
-        jobInfo.add("case", globalCase_);
-        jobInfo.add("nProcs", nProcs);
+        jobInfo_.add("root", rootPath_);
+        jobInfo_.add("case", globalCase_);
+        jobInfo_.add("nProcs", nProcs);
         if (slaveProcs.size())
         {
-            jobInfo.add("slaves", slaveProcs);
+            jobInfo_.add("slaves", slaveProcs);
         }
         if (roots.size())
         {
-            jobInfo.add("roots", roots);
+            jobInfo_.add("roots", roots);
         }
-        jobInfo.write();
+        jobInfo_.write(rootPath_/globalCase_);
 
         // Switch on signal trapping. We have to wait until after Pstream::init
         // since this sets up its own ones.
@@ -954,7 +954,7 @@ void Foam::argList::parse
 
 Foam::argList::~argList()
 {
-    jobInfo.end();
+    jobInfo_.end();
 
     // Delete file handler to flush any remaining IO
     autoPtr<fileOperation> dummy(nullptr);
