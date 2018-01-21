@@ -895,7 +895,7 @@ void Foam::argList::parse
         {
             jobInfo_.add("roots", roots);
         }
-        jobInfo_.write(rootPath_/globalCase_);
+        jobInfo_.write(executable_, rootPath_/globalCase_);
 
         // Switch on signal trapping. We have to wait until after Pstream::init
         // since this sets up its own ones.

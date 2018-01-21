@@ -86,7 +86,7 @@ public:
 
     // Member Functions
 
-        void write(const fileName& casePath) const;
+        void write(const word& executable, const fileName& casePath) const;
 
         void end();
 

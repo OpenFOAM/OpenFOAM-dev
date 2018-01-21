@@ -90,13 +90,6 @@ Foam::jobInfo::jobInfo()
 
             writeJobInfo = true;
         }
-        else if (writeJobInfo)
-        {
-            string jobFile = name() + '.' + Foam::name(pid());
-
-            runningJobPath_ = jobFile;
-            finishedJobPath_ = jobFile;
-        }
     }
 
     constructed = true;
@@ -139,14 +132,29 @@ bool Foam::jobInfo::write(Ostream& os) const
 }
 
 
-void Foam::jobInfo::write(const fileName& casePath) const
+void Foam::jobInfo::write
+(
+    const word& executable,
+    const fileName& casePath
+) const
 {
     if (writeJobInfo && Pstream::master())
     {
         if (!writeJobControl)
         {
-            runningJobPath_ = casePath/runningJobPath_;
-            finishedJobPath_ = casePath/finishedJobPath_;
+            const fileName jobInfoPath(casePath/"jobInfo");
+
+            if (!isDir(jobInfoPath) && !mkDir(jobInfoPath))
+            {
+                FatalErrorInFunction
+                    << "Cannot make jobInfo directory " << jobInfoPath
+                    << Foam::exit(FatalError);
+            }
+
+            const word jobFile = executable + '.' + Foam::name(pid());
+
+            runningJobPath_ = jobInfoPath/jobFile;
+            finishedJobPath_ = jobInfoPath/jobFile;
         }
 
         if (!write(OFstream(runningJobPath_)()))

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     |
-#   \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -56,6 +56,7 @@ cleanCase()
     cleanDynamicCode
 
     rm -rf processor* > /dev/null 2>&1
+    rm -rf jobInfo > /dev/null 2>&1
     rm -rf postProcessing > /dev/null 2>&1
     rm -rf TDAC > /dev/null 2>&1
     rm -rf probes* > /dev/null 2>&1
