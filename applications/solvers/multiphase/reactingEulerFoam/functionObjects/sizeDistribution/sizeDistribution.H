@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,12 +28,11 @@ Group
     grpreactingEulerFoamFunctionObjects
 
 Description
-    This function object calculates and outputs information on the
-    sizeDistribution as calculated by the populationBalanceModel class
-    implemented in the reactionEulerFoam solver suite. It is build up very
-    similar to the fieldValue/volRegion functionObjects, since it must be
-    possible to obtain information about the populationBalanceModel within a
-    defined region.
+    This function object calculates and outputs information about the size
+    distribution of the dispersed phase, such as the number density function or
+    its moments. It is designed to be used exclusively with the population
+    balance modeling functionality of the reactingEulerFoam solvers. It can be
+    applied to a specific cellZone or the entire domain.
 
     Example of function object specification:
     \verbatim
@@ -69,9 +68,9 @@ Usage
 
 See also
     Foam::diameterModels::populationBalanceModel
+    Foam::functionObject
     Foam::functionObjects::fvMeshFunctionObject
     Foam::functionObjects::logFiles
-    Foam::functionObject
 
 SourceFiles
     sizeDistribution.C

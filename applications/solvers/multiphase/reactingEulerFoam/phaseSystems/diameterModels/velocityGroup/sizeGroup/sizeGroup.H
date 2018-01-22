@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sizeGroup
+    Foam::diameterModels::sizeGroup
 
 Description
     This class represents a single sizeGroup belonging to a velocityGroup.
@@ -33,7 +33,7 @@ Description
     startTime directory if present or constructed from a reference field called
     f.<phaseName>.<populationBalanceName> where the boundary condition types
     must be specified. All field and boundary condition values are reset to
-    match the "value" given in the sizeGroup dictionary.
+    match the "value" given in the sizeGroup subdictionary.
 
 Usage
     \table
@@ -41,6 +41,7 @@ Usage
         d            | Representative diameter | yes         |
         value        | Field and BC value      | yes         |
     \endtable
+
     Example
     \verbatim
     f1
@@ -49,6 +50,10 @@ Usage
         value        1.0;
     }
     \endverbatim
+
+See also
+    Foam::diameterModels::velocityGroup
+    Foam::diameterModels::populationBalanceModel
 
 SourceFiles
     sizeGroup.C

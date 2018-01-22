@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ Class
     Foam::diameterModels::breakupModel
 
 Description
-    Base class for breakup models.
+    Base class for breakup models which give a total breakup rate and a separate
+    daughter size distribution function.
 
 SourceFiles
     breakupModel.C

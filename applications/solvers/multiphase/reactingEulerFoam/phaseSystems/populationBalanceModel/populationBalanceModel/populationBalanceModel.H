@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::populationBalance
+    Foam::diameterModels::populationBalanceModel
 
 Description
     Class that solves the univariate population balance equation by means of
@@ -30,14 +30,23 @@ Description
     coordinate is set to the particle volume, so the equation is based on
     a transport equation of the volume-based number density function. The
     discretization is done using the fixed pivot technique of Kumar and
-    Ramkrishna (1996). The source terms for coalescence and breakup are written
-    in a way that particle number and mass are preserved. An additional breakup
-    formulation that is restricted to binary breakup is also included which
-    allows a more efficient handling of breakup models with an integrated
-    daughter size distribution. It is given by Liao et al. (2017). The
-    implementation allows to split the population balance over multiple velocity
-    fields using the capability of reactingMultiphaseEulerFoam to solve for n
-    momentum equations. It is also possible to define multiple population
+    Ramkrishna (1996). The source terms are written in a way that particle
+    number and mass are preserved. Coalescence (aggregation), breakup as well
+    as drift (growth and surface loss) are supported.
+    For the discrete breakup term two recipies are available, depending on the
+    model choice. For models which state a total breakup rate and a separate
+    daughter size distribution function, the formulation of Kumar and Ramkrishna
+    (1996) is applied which is applicable for binary and multiple breakup
+    events. The second formulation is given by Liao et al. (2017). It is useful
+    for binary breakup models which give the breakup rate between a sizeGroup
+    pair directly, without an explicit expression for the daughter size
+    distribution. The drift term is implemented using a finite difference upwind
+    scheme. Although it is diffusive, it ensures a stable and
+    number-conservative solution.
+
+    The implementation allows to split the population balance over multiple
+    velocity fields using the capability of reactingMultiphaseEulerFoam to solve
+    for n momentum equations. It is also possible to define multiple population
     balances, e.g. bubbles and droplets simultaneously.
 
     References:
@@ -54,7 +63,8 @@ Description
         Binary breakup term formulation:
             Liao, Y.; Oertel, R.; Kriebitzsch, S.; Schlegel, F.; Lucas, D.
             (2017). A Discrete Population Balance Equation for Binary Breakage.
-            International Journal for Numerical Methods in Fluids, In review.
+            International Journal for Numerical Methods in Fluids, Accepted for
+            publication.
     \endverbatim
 
 Usage
@@ -125,6 +135,10 @@ Usage
         }
     }
     \endverbatim
+
+See also
+    Foam::diameterModels::sizeGroup
+    Foam::diameterModels::velocityGroup
 
 SourceFiles
     populationBalanceModel.C

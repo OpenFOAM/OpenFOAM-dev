@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     This diameterModel is intended for use with a populationBalanceModel in
-    order to simulate polydispersed bubbly or particulate flows. Can hold any
+    order to simulate polydispersed bubbly or particulate flows. It can hold any
     number of sizeGroups from which the Sauter mean diameter is calculated. It
     can also be used as a diameterModel without a populationBalance and would
     then behave like a constantDiameter model. In this case, some arbitrary name
@@ -39,6 +39,7 @@ Usage
         formFactor        | Form factor for converting diameter into volume
         sizeGroups        | List of sizeGroups
     \endtable
+
     Example
     \verbatim
     diameterModel   velocityGroup;
@@ -61,6 +62,10 @@ Usage
     }
     \endverbatim
 
+See also
+    Foam::diameterModels::sizeGroup
+    Foam::diameterModels::populationBalanceModel
+
 SourceFiles
     velocityGroup.C
 
@@ -80,7 +85,6 @@ namespace Foam
 namespace diameterModels
 {
 
-class populationBalanceModelModel;
 class sizeGroup;
 
 /*---------------------------------------------------------------------------*\
