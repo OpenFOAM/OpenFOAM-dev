@@ -1,0 +1,22 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     |
+    \\  /    A nd           | Web:      www.OpenFOAM.org
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes run time, CPU time and clock time
+    and optionally the CPU and clock times per time step
+
+\*---------------------------------------------------------------------------*/
+
+type            time;
+libs            ("libutilityFunctionObjects.so");
+
+writeControl    timeStep;
+writeInterval   1;
+
+perTimeStep     no;
+
+// ************************************************************************* //

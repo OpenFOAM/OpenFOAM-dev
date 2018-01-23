@@ -7,5 +7,6 @@ abort/abort.C
 removeRegisteredObject/removeRegisteredObject.C
 writeDictionary/writeDictionary.C
 writeObjects/writeObjects.C
+time/timeFunctionObject.C
 
 LIB = $(FOAM_LIBBIN)/libutilityFunctionObjects
