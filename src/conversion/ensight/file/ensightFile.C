@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 bool Foam::ensightFile::allowUndef_ = false;
 
-Foam::scalar Foam::ensightFile::undefValue_ = Foam::floatScalarVGREAT;
+Foam::scalar Foam::ensightFile::undefValue_ = Foam::floatScalarVGreat;
 
 // default is width 8
 Foam::string Foam::ensightFile::mask_ = "********";

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -208,13 +208,13 @@ inline Scalar negPart(const Scalar s)
 
 inline bool equal(const Scalar& s1, const Scalar& s2)
 {
-    return mag(s1 - s2) <= ScalarVSMALL;
+    return mag(s1 - s2) <= ScalarVSmall;
 }
 
 
 inline bool notEqual(const Scalar s1, const Scalar s2)
 {
-    return mag(s1 - s2) > ScalarVSMALL;
+    return mag(s1 - s2) > ScalarVSmall;
 }
 
 
@@ -343,7 +343,7 @@ inline Scalar sqrtSumSqr(const Scalar a, const Scalar b)
     }
     else
     {
-        return magb < ScalarVSMALL ? 0.0 : magb*sqrt(1.0 + sqr(maga/magb));
+        return magb < ScalarVSmall ? 0.0 : magb*sqrt(1.0 + sqr(maga/magb));
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void Foam::ensightSetWriter<Type>::write
             forAll(points, pointi)
             {
                 const scalar comp = points[pointi][cmpt];
-                if (mag(comp) >= scalar(floatScalarVSMALL))
+                if (mag(comp) >= scalar(floatScalarVSmall))
                 {
                     os  << setw(12) << comp << nl;
                 }
@@ -160,7 +160,7 @@ void Foam::ensightSetWriter<Type>::write
                 const scalarField fld(valueSets[setI]->component(cmpt));
                 forAll(fld, i)
                 {
-                    if (mag(fld[i]) >= scalar(floatScalarVSMALL))
+                    if (mag(fld[i]) >= scalar(floatScalarVSmall))
                     {
                         os  << setw(12) << fld[i] << nl;
                     }
@@ -243,7 +243,7 @@ void Foam::ensightSetWriter<Type>::write
                 forAll(points, pointi)
                 {
                     const scalar comp = points[pointi][cmpt];
-                    if (mag(comp) >= scalar(floatScalarVSMALL))
+                    if (mag(comp) >= scalar(floatScalarVSmall))
                     {
                         os  << setw(12) << comp << nl;
                     }
@@ -296,7 +296,7 @@ void Foam::ensightSetWriter<Type>::write
                     const scalarField fld(fieldVals[trackI].component(cmpt));
                     forAll(fld, i)
                     {
-                        if (mag(fld[i]) >= scalar(floatScalarVSMALL))
+                        if (mag(fld[i]) >= scalar(floatScalarVSmall))
                         {
                             os  << setw(12) << fld[i] << nl;
                         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,25 +53,25 @@ const Foam::floatTensor Foam::floatTensor::vsType::one
 template<>
 const Foam::floatTensor Foam::floatTensor::vsType::max
 (
-    floatTensor::uniform(floatScalarVGREAT)
+    floatTensor::uniform(floatScalarVGreat)
 );
 
 template<>
 const Foam::floatTensor Foam::floatTensor::vsType::min
 (
-    floatTensor::uniform(-floatScalarVGREAT)
+    floatTensor::uniform(-floatScalarVGreat)
 );
 
 template<>
 const Foam::floatTensor Foam::floatTensor::vsType::rootMax
 (
-    floatTensor::uniform(floatScalarROOTVGREAT)
+    floatTensor::uniform(floatScalarRootVGreat)
 );
 
 template<>
 const Foam::floatTensor Foam::floatTensor::vsType::rootMin
 (
-    floatTensor::uniform(-floatScalarROOTVGREAT)
+    floatTensor::uniform(-floatScalarRootVGreat)
 );
 
 template<>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,9 @@ SourceFiles
 #include "direction.H"
 #include "word.H"
 
+#include <limits>
+using std::numeric_limits;
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -49,15 +52,17 @@ namespace Foam
 typedef double doubleScalar;
 
 // Largest and smallest scalar values allowed in certain parts of the code.
-// (15 is the number of significant figures in an
-//  IEEE double precision number.  See limits.h or float.h)
-static const doubleScalar doubleScalarGREAT = 1.0e+15;
-static const doubleScalar doubleScalarVGREAT = 1.0e+300;
-static const doubleScalar doubleScalarROOTVGREAT = 1.0e+150;
-static const doubleScalar doubleScalarSMALL = 1.0e-15;
-static const doubleScalar doubleScalarROOTSMALL = 3.0e-8;
-static const doubleScalar doubleScalarVSMALL = 1.0e-300;
-static const doubleScalar doubleScalarROOTVSMALL = 1.0e-150;
+static const doubleScalar doubleScalarVGreat = numeric_limits<double>::max();
+static const doubleScalar doubleScalarVSmall = numeric_limits<double>::min();
+
+static const doubleScalar doubleScalarSmall = numeric_limits<double>::epsilon();
+static const doubleScalar doubleScalarGreat = 1.0/doubleScalarSmall;
+
+static const doubleScalar doubleScalarRootVGreat = ::sqrt(doubleScalarVGreat);
+static const doubleScalar doubleScalarRootVSmall = ::sqrt(doubleScalarVSmall);
+
+static const doubleScalar doubleScalarRootGreat = ::sqrt(doubleScalarGreat);
+static const doubleScalar doubleScalarRootSmall = ::sqrt(doubleScalarSmall);
 
 //- Read whole of buf as a scalar. Return true if succesful.
 inline bool readScalar(const char* buf, doubleScalar& s)
@@ -69,10 +74,10 @@ inline bool readScalar(const char* buf, doubleScalar& s)
 }
 
 #define Scalar doubleScalar
-#define ScalarVGREAT doubleScalarVGREAT
-#define ScalarVSMALL doubleScalarVSMALL
-#define ScalarROOTVGREAT doubleScalarROOTVGREAT
-#define ScalarROOTVSMALL doubleScalarROOTVSMALL
+#define ScalarVGreat doubleScalarVGreat
+#define ScalarVSmall doubleScalarVSmall
+#define ScalarRootVGreat doubleScalarRootVGreat
+#define ScalarRootVSmall doubleScalarRootVSmall
 #define readScalar readDoubleScalar
 
 inline Scalar mag(const Scalar s)
@@ -122,10 +127,10 @@ inline Scalar yn(const int n, const Scalar s)
 }
 
 #undef Scalar
-#undef ScalarVGREAT
-#undef ScalarVSMALL
-#undef ScalarROOTVGREAT
-#undef ScalarROOTVSMALL
+#undef ScalarVGreat
+#undef ScalarVSmall
+#undef ScalarRootVGreat
+#undef ScalarRootVSmall
 #undef readScalar
 #undef transFunc
 

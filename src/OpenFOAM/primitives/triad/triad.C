@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2012-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,9 +132,18 @@ void Foam::triad::orthogonalize()
     {
         for (int i=0; i<2; i++)
         {
-            scalar o01 = mag(operator[](0) & operator[](1));
-            scalar o02 = mag(operator[](0) & operator[](2));
-            scalar o12 = mag(operator[](1) & operator[](2));
+            const scalar o01
+            (
+                (set(0) && set(1)) ? mag(operator[](0) & operator[](1)) : VGREAT
+            );
+            const scalar o02
+            (
+                (set(0) && set(2)) ? mag(operator[](0) & operator[](2)) : VGREAT
+            );
+            const scalar o12
+            (
+                (set(1) && set(2)) ? mag(operator[](1) & operator[](2)) : VGREAT
+            );
 
             if (o01 < o02 && o01 < o12)
             {

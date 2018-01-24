@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ public:
         {
             forAll(sf, i)
             {
-                if (mag(sf[i]) >= scalar(floatScalarVSMALL))
+                if (mag(sf[i]) >= scalar(floatScalarVSmall))
                 {
                     str_ << setw(12) << sf[i] << nl;
                 }

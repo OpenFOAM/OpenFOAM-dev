@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -475,12 +475,14 @@ Foam::scalar Foam::sweptFaceAreaWeightAMI<SourcePatch, TargetPatch>::interArea
                         srcNrm[i+1],
                         tgtTri
                     );
+
                 cutTriList<8> cutTrisTmp;
-                for (label i = 0; i < cutTris.size(); ++ i)
+
+                for (label j = 0; j < cutTris.size(); ++j)
                 {
                     triCut
                     (
-                        cutTris[i],
+                        cutTris[j],
                         cutPlane,
                         cut::noOp(),
                         cut::appendOp<cutTriList<8>>(cutTrisTmp)
