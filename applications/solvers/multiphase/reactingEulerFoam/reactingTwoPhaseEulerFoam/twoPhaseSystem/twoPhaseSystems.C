@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2015-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,6 +121,27 @@ namespace Foam
         dictionary,
         populationBalanceTwoPhaseSystem
     );
+
+    typedef
+        ThermalPhaseChangePhaseSystem
+        <
+            PopulationBalancePhaseSystem
+            <
+                HeatAndMassTransferPhaseSystem
+                <
+                    MomentumTransferPhaseSystem<twoPhaseSystem>
+                >
+            >
+        >
+        thermalPhaseChangePopulationBalanceTwoPhaseSystem;
+
+        addNamedToRunTimeSelectionTable
+        (
+            twoPhaseSystem,
+            thermalPhaseChangePopulationBalanceTwoPhaseSystem,
+            dictionary,
+            thermalPhaseChangePopulationBalanceTwoPhaseSystem
+        );
 }
 
 

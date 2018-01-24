@@ -79,13 +79,6 @@ Foam::diameterModels::binaryBreakupModel::binaryBreakupModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::diameterModels::populationBalanceModel&
-Foam::diameterModels::binaryBreakupModel::popBal() const
-{
-    return popBal_;
-}
-
-
 void Foam::diameterModels::binaryBreakupModel::correct()
 {}
 

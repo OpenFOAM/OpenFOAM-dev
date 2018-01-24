@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,8 +136,11 @@ public:
 
     // Member Functions
 
-        //- Return reference to populationBalance
-        const populationBalanceModel& popBal() const;
+        //- Return reference to the populationBalance
+        const populationBalanceModel& popBal() const
+        {
+            return popBal_;
+        }
 
         //- Correct diameter independent expressions
         virtual void correct();

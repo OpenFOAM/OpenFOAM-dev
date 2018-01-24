@@ -138,8 +138,11 @@ public:
 
     // Member Functions
 
-        //- Return reference to populationBalance
-        const populationBalanceModel& popBal() const;
+        //- Return reference to the populationBalance
+        const populationBalanceModel& popBal() const
+        {
+            return popBal_;
+        }
 
         //- Correct diameter independent expressions
         virtual void correct();

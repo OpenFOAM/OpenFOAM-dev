@@ -1,0 +1,218 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    thermalPhaseChangePopulationBalanceTwoPhaseSystem;
+
+phases (gas liquid);
+
+massTransfer on;
+
+populationBalances (bubbles);
+
+gas
+{
+    type            purePhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        formFactor      0.5235987756;
+
+        sizeGroups
+        (
+            f0  {d  1.0e-4; value 0    ;}
+            f1  {d  2.0e-4; value 0    ;}
+            f2  {d  3.0e-4; value 0    ;}
+            f3  {d  4.0e-4; value 0    ;}
+            f4  {d  5.0e-4; value 0    ;}
+            f5  {d  6.0e-4; value 0    ;}
+            f6  {d  7.0e-4; value 0    ;}
+            f7  {d  8.0e-4; value 1.0  ;}
+            f8  {d  9.0e-4; value 0    ;}
+            f9  {d  1.0e-3; value 0    ;}
+            f10 {d  1.1e-3; value 0    ;}
+            f11 {d  1.2e-3; value 0    ;}
+            f12 {d  1.3e-3; value 0    ;}
+            f13 {d  1.4e-3; value 0    ;}
+        );
+    }
+
+    residualAlpha   1e-4;
+}
+
+liquid
+{
+    type            purePhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               0.00045;
+    }
+    Sc              0.7;
+
+    residualAlpha   1e-4;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase liquid;
+
+        coalescenceModels
+        (
+            hydrodynamic
+            {
+                C 0.25;
+            }
+        );
+
+        binaryBreakupModels
+        ();
+
+        breakupModels
+        (
+            exponential
+            {
+                C 0.5;
+                exponent 0.01;
+                daughterSizeDistributionModel uniformBinary;
+            }
+        );
+
+        driftModels
+        (
+            phaseChange
+            {
+                pairNames (gasAndLiquid);
+            }
+
+            densityChange{}
+        );
+
+        nucleationModels
+        (
+            wallBoiling
+            {
+                velocityGroup gas;
+            }
+        );
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase liquid;
+    }
+}
+
+surfaceTension
+();
+
+saturationModel
+{
+    type function1;
+
+    function csvFile;
+    functionCoeffs
+    {
+        nHeaderLine         1;
+        refColumn           0;
+        componentColumns    (1);
+        separator           ",";
+        mergeSeparators     no;
+        file                "Tsat_water_1_2bar.csv";
+        outOfBounds         clamp;
+        interpolationScheme linear;
+    };
+};
+
+aspectRatio
+();
+
+drag
+(
+    (gas in liquid)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (gas in liquid)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+heatTransfer.gas
+(
+    (gas in liquid)
+    {
+        type spherical;
+        residualAlpha 1e-3;
+    }
+);
+
+heatTransfer.liquid
+(
+    (gas in liquid)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-3;
+    }
+);
+
+massTransfer.gas
+();
+
+massTransfer.liquid
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+(
+    (gas in liquid)
+    {
+        type                Burns;
+        sigma               0.7;
+        Ctd                 1.0;
+        residualAlpha       1e-3;
+    }
+);
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

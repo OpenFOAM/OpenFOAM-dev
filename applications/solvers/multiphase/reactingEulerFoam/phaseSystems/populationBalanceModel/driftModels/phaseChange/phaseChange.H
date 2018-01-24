@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::driftModel
+    Foam::diameterModels::driftModels::isothermal
 
 Description
-    Base class for drift models.
+    Drift induced by interfacial phaseChange.
 
 SourceFiles
-    driftModel.C
+    isothermal.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef driftModel_H
-#define driftModel_H
+#ifndef phaseChange_H
+#define phaseChange_H
 
-#include "populationBalanceModel.H"
+#include "driftModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,101 +43,49 @@ namespace Foam
 {
 namespace diameterModels
 {
+namespace driftModels
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class driftModel Declaration
+                     Class phaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
-class driftModel
+class phaseChange
+:
+    public driftModel
 {
-protected:
+    // Private data
 
-    // Protected data
+        //- Names of unorderd phasePairs between which phaseChange occurs, i.e.
+        //  "(gasIAndLiquid gasIIAndLiquid)"
+        List<word> pairNames_;
 
-        //- Reference to the populationBalanceModel
-        const populationBalanceModel& popBal_;
+        //- Total mass transfer rate due to phaseChange
+        volScalarField iDmdt_;
 
+        //- Total number concentration
+        volScalarField N_;
 
 public:
 
     //- Runtime type information
-    TypeName("driftModel");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            driftModel,
-            dictionary,
-            (
-                const populationBalanceModel& popBal,
-                const dictionary& dict
-            ),
-            (popBal, dict)
-        );
-
-
-    //- Class used for the read-construction of
-    //  PtrLists of drift models
-    class iNew
-    {
-        const populationBalanceModel& popBal_;
-
-    public:
-
-        iNew(const populationBalanceModel& popBal)
-        :
-            popBal_(popBal)
-        {}
-
-        autoPtr<driftModel> operator()(Istream& is) const
-        {
-            word type(is);
-            dictionary dict(is);
-            return driftModel::New(type, popBal_, dict);
-        }
-    };
-
+    TypeName("phaseChange");
 
     // Constructor
 
-        driftModel
+        phaseChange
         (
-            const populationBalanceModel& popBal,
-            const dictionary& dict
-        );
-
-        autoPtr<driftModel> clone() const
-        {
-            NotImplemented;
-            return autoPtr<driftModel>(nullptr);
-        }
-
-
-    // Selector
-
-        static autoPtr<driftModel> New
-        (
-            const word& type,
             const populationBalanceModel& popBal,
             const dictionary& dict
         );
 
 
     //- Destructor
-    virtual ~driftModel()
+    virtual ~phaseChange()
     {}
 
 
     // Member Functions
-
-        //- Return reference to the populationBalance
-        const populationBalanceModel& popBal() const
-        {
-            return popBal_;
-        }
 
         //- Correct diameter independent expressions
         virtual void correct();
@@ -147,12 +95,13 @@ public:
         (
             volScalarField& driftRate,
             const label i
-        ) = 0;
+        );
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace driftModels
 } // End namespace diameterModels
 } // End namespace Foam
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "breakupModel.H"
+#include "nucleationModel.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -31,16 +32,16 @@ namespace Foam
 {
 namespace diameterModels
 {
-    defineTypeNameAndDebug(breakupModel, 0);
-    defineRunTimeSelectionTable(breakupModel, dictionary);
+    defineTypeNameAndDebug(nucleationModel, 0);
+    defineRunTimeSelectionTable(nucleationModel, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::diameterModels::breakupModel>
-Foam::diameterModels::breakupModel::New
+Foam::autoPtr<Foam::diameterModels::nucleationModel>
+Foam::diameterModels::nucleationModel::New
 (
     const word& type,
     const populationBalanceModel& popBal,
@@ -53,36 +54,32 @@ Foam::diameterModels::breakupModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown breakup model type "
+            << "Unknown zeroeth order model type "
             << type << nl << nl
-            << "Valid breakup model types : " << endl
+            << "Valid zeroeth order model types : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    return autoPtr<breakupModel>(cstrIter()(popBal, dict));
+    return autoPtr<nucleationModel>(cstrIter()(popBal, dict));
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::breakupModel::breakupModel
+Foam::diameterModels::nucleationModel::nucleationModel
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    popBal_(popBal),
-    dict_(dict),
-    C_("C", dimless, dict.lookupOrDefault("C", 1.0))
-{
-    dsd_ = daughterSizeDistributionModel::New(*this, dict);
-}
+    popBal_(popBal)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModel::correct()
+void Foam::diameterModels::nucleationModel::correct()
 {}
 
 

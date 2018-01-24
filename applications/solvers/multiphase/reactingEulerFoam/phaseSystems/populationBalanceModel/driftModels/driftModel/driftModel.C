@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,13 +78,6 @@ Foam::diameterModels::driftModel::driftModel
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::diameterModels::populationBalanceModel&
-Foam::diameterModels::driftModel::popBal() const
-{
-    return popBal_;
-}
-
 
 void Foam::diameterModels::driftModel::correct()
 {}

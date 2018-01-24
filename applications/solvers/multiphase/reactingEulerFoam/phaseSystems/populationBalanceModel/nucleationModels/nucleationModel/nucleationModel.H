@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::breakupModel
+    Foam::diameterModels::nucleationModel
 
 Description
-    Base class for breakup models which give a total breakup rate and a separate
-    daughter size distribution function.
+    Base class for nucleation models.
 
 SourceFiles
-    breakupModel.C
+    nucleationModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef breakupModel_H
-#define breakupModel_H
+#ifndef nucleationModel_H
+#define nucleationModel_H
 
 #include "populationBalanceModel.H"
-#include "daughterSizeDistributionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,32 +45,23 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class breakupModel Declaration
+                      Class nucleationModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class breakupModel
+class nucleationModel
 {
 protected:
 
     // Protected data
 
-        //- Reference to the populationBalance
+        //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
-
-        //- Dictionary
-        dictionary dict_;
-
-        //- Optional coefficient
-        const dimensionedScalar C_;
-
-        //- Daughter size distribution model
-        autoPtr<daughterSizeDistributionModel> dsd_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("breakupModel");
+    TypeName("nucleationModel");
 
 
     // Declare run-time constructor selection table
@@ -80,7 +69,7 @@ public:
         declareRunTimeSelectionTable
         (
             autoPtr,
-            breakupModel,
+            nucleationModel,
             dictionary,
             (
                 const populationBalanceModel& popBal,
@@ -91,7 +80,7 @@ public:
 
 
     //- Class used for the read-construction of
-    //  PtrLists of breakup models
+    //  PtrLists of nucleation models
     class iNew
     {
         const populationBalanceModel& popBal_;
@@ -103,33 +92,33 @@ public:
             popBal_(popBal)
         {}
 
-        autoPtr<breakupModel> operator()(Istream& is) const
+        autoPtr<nucleationModel> operator()(Istream& is) const
         {
             word type(is);
             dictionary dict(is);
-            return breakupModel::New(type, popBal_, dict);
+            return nucleationModel::New(type, popBal_, dict);
         }
     };
 
 
     // Constructor
 
-        breakupModel
+        nucleationModel
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
         );
 
-        autoPtr<breakupModel> clone() const
+        autoPtr<nucleationModel> clone() const
         {
             NotImplemented;
-            return autoPtr<breakupModel>(nullptr);
+            return autoPtr<nucleationModel>(nullptr);
         }
 
 
     // Selector
 
-        static autoPtr<breakupModel> New
+        static autoPtr<nucleationModel> New
         (
             const word& type,
             const populationBalanceModel& popBal,
@@ -138,7 +127,7 @@ public:
 
 
     //- Destructor
-    virtual ~breakupModel()
+    virtual ~nucleationModel()
     {}
 
 
@@ -150,25 +139,13 @@ public:
             return popBal_;
         }
 
-        //- Return const-reference to daughter size distribution pointer
-        const autoPtr<daughterSizeDistributionModel>& dsdPtr() const
-        {
-            return dsd_;
-        }
-
-        //- Return reference to daughter size distribution pointer
-        autoPtr<daughterSizeDistributionModel>& dsdPtr()
-        {
-            return dsd_;
-        }
-
         //- Correct diameter independent expressions
         virtual void correct();
 
-        //- Add to breakupRate
-        virtual void breakupRate
+        //- Add to nucleationRate
+        virtual void nucleationRate
         (
-            volScalarField& breakupRate,
+            volScalarField& nucleationRate,
             const label i
         ) = 0;
 };

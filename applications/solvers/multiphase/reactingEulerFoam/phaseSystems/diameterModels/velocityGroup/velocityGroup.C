@@ -74,7 +74,7 @@ Foam::diameterModels::velocityGroup::secondMoment() const
         const sizeGroup& fi = sizeGroups_[i];
 
         m2 += sqr(fi.d())*formFactor()*fi
-           *max(fi.phase(), fi.phase().residualAlpha())/fi.x();
+           *max(fi.phase(), SMALL)/fi.x();
     }
 
     return tm2;
@@ -106,7 +106,7 @@ Foam::diameterModels::velocityGroup::thirdMoment() const
         const sizeGroup& fi = sizeGroups_[i];
 
         m3 += pow3(fi.d())*formFactor()*fi
-           *max(fi.phase(), fi.phase().residualAlpha())/fi.x();
+           *max(fi.phase(), SMALL)/fi.x();
     }
 
     return tm3;
@@ -310,6 +310,12 @@ Foam::diameterModels::velocityGroup::velocityGroup
     (
         phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
         (
+            "renormalizeAtRestart",
+            false
+        )
+     ||
+        phase_.mesh().solverDict(popBalName_).lookupOrDefault<Switch>
+        (
             "renormalize",
             false
         )
@@ -328,11 +334,18 @@ Foam::diameterModels::velocityGroup::velocityGroup
     )
     {
         FatalErrorInFunction
-            << "Initial values of the sizeGroups belonging to velocityGroup "
+            << " Initial values of the sizeGroups belonging to velocityGroup "
             << this->phase().name()
-            << " must add to unity. The sizeGroup fractions can be"
-            << " renormalized by setting the renormalize switch"
-            << " in the fvSolution subdictionary " << popBalName_ << "." << endl
+            << " must add to" << nl << " unity. This condition might be"
+            << " violated due to wrong entries in the" << nl
+            << " velocityGroupCoeffs subdictionary or bad initial conditions in"
+            << " the startTime" << nl
+            << " directory. The sizeGroups can be renormalized at every"
+            << " timestep or at restart" << nl
+            << " only by setting the corresponding switch renormalize or"
+            << " renormalizeAtRestart" << nl
+            << " in the fvSolution subdictionary " << popBalName_ << "."
+            << " Note that boundary conditions are not" << nl << "renormalized."
             << exit(FatalError);
     }
 

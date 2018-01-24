@@ -359,8 +359,6 @@ void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve()
 {
     BasePhaseSystem::solve();
 
-    BasePhaseSystem::correct();
-
     forAll(populationBalances_, i)
     {
         populationBalances_[i].solve();
@@ -368,4 +366,4 @@ void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve()
 }
 
 
-// ************************************************************************* //1
+// ************************************************************************* //

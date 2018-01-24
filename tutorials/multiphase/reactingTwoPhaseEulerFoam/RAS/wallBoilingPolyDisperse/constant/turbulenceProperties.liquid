@@ -11,45 +11,18 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      thermophysicalProperties.gas;
+    object      turbulenceProperties.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
-{
-    type            heRhoThermo;
-    mixture         pureMixture;
-    transport       const;
-    thermo          hRefConst;
-    equationOfState perfectGas;
-    specie          specie;
-    energy          sensibleEnthalpy;
-}
+simulationType  RAS;
 
-dpdt no;
-
-mixture
+RAS
 {
-    specie
-    {
-        molWeight       18.0153;
-    }
-    equationOfState
-    {
-        rho        1;
-    }
-    thermodynamics
-    {
-        Hf          0;
-        Cp          12078.4;
-        Tref        373.55;
-        Href        2675500;
-    }
-    transport
-    {
-        mu          1.2256e-5;
-        Pr          2.289;
-    }
+    RASModel kEpsilon;
+
+    turbulence      on;
+    printCoeffs     on;
 }
 
 // ************************************************************************* //

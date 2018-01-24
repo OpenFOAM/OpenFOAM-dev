@@ -10,46 +10,71 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      thermophysicalProperties.gas;
+    object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
-{
-    type            heRhoThermo;
-    mixture         pureMixture;
-    transport       const;
-    thermo          hRefConst;
-    equationOfState perfectGas;
-    specie          specie;
-    energy          sensibleEnthalpy;
-}
+convertToMeters 1;
 
-dpdt no;
+vertices
+(
+    (0 0 0)
+    (0.05 0 0)
+    (0.05 2 0)
+    (0 2 0)
+    (0 0 0.1)
+    (0.05 0 0.1)
+    (0.05 2 0.1)
+    (0 2 0.1)
+);
 
-mixture
-{
-    specie
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (25 75 1) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    inlet
     {
-        molWeight       18.0153;
+        type mappedPatch;
+        offset          (0 0.1 0);
+        sampleRegion    region0;
+        sampleMode      nearestCell;
+        samplePatch     none;
+
+        faces
+        (
+            (1 5 4 0)
+        );
     }
-    equationOfState
+
+    outlet
     {
-        rho        1;
+        type patch;
+        faces
+        (
+            (3 7 6 2)
+        );
     }
-    thermodynamics
+
+    wall1
     {
-        Hf          0;
-        Cp          12078.4;
-        Tref        373.55;
-        Href        2675500;
+        type wall;
+        faces
+        (
+            (0 4 7 3)
+        );
     }
-    transport
+
+    wall2
     {
-        mu          1.2256e-5;
-        Pr          2.289;
+        type wall;
+        faces
+        (
+            (2 6 5 1)
+        );
     }
-}
+);
 
 // ************************************************************************* //

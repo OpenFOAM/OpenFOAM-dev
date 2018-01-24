@@ -6,6 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wmakeLnInclude interfacialModels
 wmakeLnInclude interfacialCompositionModels
+wmakeLnInclude derivedFvPatchFields
 wmake $targetType phaseSystems
 wmake $targetType interfacialModels
 wmake $targetType interfacialCompositionModels

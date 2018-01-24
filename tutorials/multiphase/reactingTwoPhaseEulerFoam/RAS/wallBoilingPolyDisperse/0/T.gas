@@ -9,47 +9,45 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      thermophysicalProperties.gas;
+    class       volScalarField;
+    location    "5";
+    object      T.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 368;
+
+boundaryField
 {
-    type            heRhoThermo;
-    mixture         pureMixture;
-    transport       const;
-    thermo          hRefConst;
-    equationOfState perfectGas;
-    specie          specie;
-    energy          sensibleEnthalpy;
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 368;
+    }
+    outlet
+    {
+        type            inletOutlet;
+        phi             phi.gas;
+        inletValue      uniform 368;
+        value           uniform 368;
+    }
+    wall1
+    {
+        type            zeroGradient;
+    }
+    wall2
+    {
+        type            copiedFixedValue;
+        sourceFieldName T.liquid;
+        value           uniform 368;
+    }
+    defaultFaces
+    {
+        type            empty;
+    }
 }
 
-dpdt no;
-
-mixture
-{
-    specie
-    {
-        molWeight       18.0153;
-    }
-    equationOfState
-    {
-        rho        1;
-    }
-    thermodynamics
-    {
-        Hf          0;
-        Cp          12078.4;
-        Tref        373.55;
-        Href        2675500;
-    }
-    transport
-    {
-        mu          1.2256e-5;
-        Pr          2.289;
-    }
-}
 
 // ************************************************************************* //

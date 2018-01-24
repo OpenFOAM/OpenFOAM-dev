@@ -34,6 +34,11 @@ populationBalanceModel/daughterSizeDistributionModels/uniformBinaryDsd/uniformBi
 populationBalanceModel/driftModels/driftModel/driftModel.C
 populationBalanceModel/driftModels/constantDrift/constantDrift.C
 populationBalanceModel/driftModels/densityChange/densityChange.C
+populationBalanceModel/driftModels/phaseChange/phaseChange.C
+
+populationBalanceModel/nucleationModels/nucleationModel/nucleationModel.C
+populationBalanceModel/nucleationModels/constantNucleation/constantNucleation.C
+populationBalanceModel/nucleationModels/wallBoiling/wallBoiling.C
 
 BlendedInterfacialModel/blendingMethods/blendingMethod/blendingMethod.C
 BlendedInterfacialModel/blendingMethods/blendingMethod/newBlendingMethod.C

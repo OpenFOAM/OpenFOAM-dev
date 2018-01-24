@@ -28,6 +28,7 @@ License
 #include "breakupModel.H"
 #include "binaryBreakupModel.H"
 #include "driftModel.H"
+#include "nucleationModel.H"
 #include "phaseSystem.H"
 #include "fvmDdt.H"
 #include "fvcDdt.H"
@@ -36,7 +37,8 @@ License
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-void Foam::diameterModels::populationBalanceModel::registerVelocityGroups()
+void
+Foam::diameterModels::populationBalanceModel::registerVelocityAndSizeGroups()
 {
     forAll(fluid_.phases(), phasei)
     {
@@ -245,50 +247,10 @@ void Foam::diameterModels::populationBalanceModel::preSolve()
     {
         drift_[model].correct();
     }
-}
 
-
-Foam::dimensionedScalar
-Foam::diameterModels::populationBalanceModel::
-gamma
-(
-    const label i,
-    const dimensionedScalar& v
-) const
-{
-    dimensionedScalar lowerBoundary(v);
-    dimensionedScalar upperBoundary(v);
-    const dimensionedScalar& xi = sizeGroups_[i]->x();
-
-    if (i == 0)
+    forAll(nucleation_, model)
     {
-       lowerBoundary = xi;
-    }
-    else
-    {
-       lowerBoundary = sizeGroups_[i-1]->x();
-    }
-
-    if (i == sizeGroups_.size() - 1)
-    {
-        upperBoundary = xi;
-    }
-    else
-    {
-        upperBoundary = sizeGroups_[i+1]->x();
-    }
-
-    if (v < lowerBoundary || v > upperBoundary)
-    {
-        return 0.0;
-    }
-    else if (v.value() <= xi.value())
-    {
-        return (v - lowerBoundary)/(xi - lowerBoundary);
-    }
-    else
-    {
-        return (upperBoundary - v)/(upperBoundary - xi);
+        nucleation_[model].correct();
     }
 }
 
@@ -317,73 +279,54 @@ birthByCoalescence
 
         const sizeGroup& fi = *sizeGroups_[i];
 
-        if (velocityGroups_.size() > 1)
+        // Avoid double counting of events
+        if (j == k)
         {
-            // Avoid double counting of events
-            if (j == k)
-            {
-                Sui_() = 0.5*fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk
-                   *alphak/fk.x()*Gamma;
-            }
-            else
-            {
-                Sui_() = fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk*alphak
-                   /fk.x()*Gamma;
-            }
-
-            Su_[i] += Sui_();
-
-            dimensionedScalar ratio = fj.x()/fi.x();
-
-            const volScalarField& rho = fi.phase().rho();
-
-            const phasePairKey pairij
-            (
-                fi.phase().name(),
-                fj.phase().name()
-            );
-
-            // Check whether fi and fj reside in different velocityGroups
-            if (pDmdt_.found(pairij))
-            {
-                const scalar dmdtSign
-                (
-                    Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
-                );
-
-                pDmdt_[pairij]->ref() += dmdtSign*ratio*Sui_()*rho;
-            }
-
-            const phasePairKey pairik
-            (
-                fi.phase().name(),
-                fk.phase().name()
-            );
-
-            // Check whether fi and fk reside in different velocityGroups
-            if (pDmdt_.found(pairik))
-            {
-                const scalar dmdtSign
-                (
-                    Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
-                );
-
-                pDmdt_[pairik]->ref() += dmdtSign*(1 - ratio)*Sui_()*rho;
-            }
+            Sui_ = 0.5*fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk*alphak
+               /fk.x()*Gamma;
         }
         else
         {
-            // Avoid double counting of events
-            if (j == k)
-            {
-                Su_[i] += 0.5*fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk
-                   *alphak/fk.x()*Gamma;
-            }
-            else
-            {
-                Su_[i] += fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk*alphak
-                   /fk.x()*Gamma;
-            }
+            Sui_ = fi.x()*coalescenceRate_()*fj*alphaj/fj.x()*fk*alphak/fk.x()
+               *Gamma;
+        }
+
+        Su_[i] += Sui_;
+
+        dimensionedScalar ratio = fj.x()/fi.x();
+
+        const volScalarField& rho = fi.phase().rho();
+
+        const phasePairKey pairij
+        (
+            fi.phase().name(),
+            fj.phase().name()
+        );
+
+        if (pDmdt_.found(pairij))
+        {
+            const scalar dmdtSign
+            (
+                Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
+            );
+
+            pDmdt_[pairij]->ref() += dmdtSign*ratio*Sui_*rho;
+        }
+
+        const phasePairKey pairik
+        (
+            fi.phase().name(),
+            fk.phase().name()
+        );
+
+        if (pDmdt_.found(pairik))
+        {
+            const scalar dmdtSign
+            (
+                Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
+            );
+
+            pDmdt_[pairik]->ref() += dmdtSign*(1 - ratio)*Sui_*rho;
         }
     }
 }
@@ -429,36 +372,27 @@ birthByBreakup
     {
         const sizeGroup& fi = *sizeGroups_[i];
 
-        if (velocityGroups_.size() > 1)
+        Sui_ = fi.x()*breakupRate_()*breakup_[model].dsdPtr()().nik(i, k)*fk
+           *fk.phase()/fk.x();
+
+        Su_[i] += Sui_;
+
+        const volScalarField& rho = fi.phase().rho();
+
+        const phasePairKey pair
+        (
+            fi.phase().name(),
+            fk.phase().name()
+        );
+
+        if (pDmdt_.found(pair))
         {
-            Sui_() = fi.x()*breakupRate_()*breakup_[model].dsdPtr()().nik(i, k)
-               *fk*fk.phase()/fk.x();
-
-            Su_[i] += Sui_();
-
-            const volScalarField& rho = fi.phase().rho();
-
-            const phasePairKey pair
+            const scalar dmdtSign
             (
-                fi.phase().name(),
-                fk.phase().name()
+                Pair<word>::compare(pDmdt_.find(pair).key(), pair)
             );
 
-            // Check whether fi and fk reside in different velocityGroups
-            if (pDmdt_.found(pair))
-            {
-                const scalar dmdtSign
-                (
-                    Pair<word>::compare(pDmdt_.find(pair).key(), pair)
-                );
-
-                pDmdt_[pair]->ref() += dmdtSign*Sui_()*rho;
-            }
-        }
-        else
-        {
-            Su_[i] += fi.x()*breakupRate_()*breakup_[model].dsdPtr()().nik(i, k)
-               *fk*fk.phase()/fk.x();
+            pDmdt_[pair]->ref() += dmdtSign*Sui_*rho;
         }
     }
 }
@@ -521,32 +455,24 @@ birthByBinaryBreakup
     const volScalarField& alphaj = fj.phase();
     const volScalarField& rho = fj.phase().rho();
 
-    if (velocityGroups_.size() > 1)
+    Sui_ = fi.x()*binaryBreakupRate_()*delta_[i][j]*fj*alphaj/fj.x();
+
+    Su_[i] += Sui_;
+
+    const phasePairKey pairij
+    (
+        fi.phase().name(),
+        fj.phase().name()
+    );
+
+    if (pDmdt_.found(pairij))
     {
-        Sui_() = fi.x()*binaryBreakupRate_()*delta_[i][j]*fj*alphaj/fj.x();
-
-        Su_[i] += Sui_();
-
-        const phasePairKey pairij
+        const scalar dmdtSign
         (
-            fi.phase().name(),
-            fj.phase().name()
+            Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
         );
 
-        // Check whether fi and fj reside in different velocityGroups
-        if (pDmdt_.found(pairij))
-        {
-            const scalar dmdtSign
-            (
-                Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
-            );
-
-            pDmdt_[pairij]->ref() += dmdtSign*Sui_()*rho;
-        }
-    }
-    else
-    {
-        Su_[i] += fi.x()*binaryBreakupRate_()*delta_[i][j]*fj*alphaj/fj.x();
+        pDmdt_[pairij]->ref() += dmdtSign*Sui_*rho;
     }
 
     dimensionedScalar Gamma;
@@ -561,42 +487,32 @@ birthByBinaryBreakup
 
         const sizeGroup& fk = *sizeGroups_[k];
 
-        if (velocityGroups_.size() > 1)
+        volScalarField& Suk = Sui_;
+
+        Suk = sizeGroups_[k]->x()*binaryBreakupRate_()*delta_[i][j]*fj*alphaj
+           /fj.x()*Gamma;
+
+        Su_[k] += Suk;
+
+        const phasePairKey pairkj
+        (
+            fk.phase().name(),
+            fj.phase().name()
+        );
+
+        if (pDmdt_.found(pairkj))
         {
-            volScalarField& Suk = Sui_();
-
-            Suk = sizeGroups_[k]->x()*binaryBreakupRate_()*delta_[i][j]*fj
-               *alphaj/fj.x()*Gamma;
-
-            Su_[k] += Suk;
-
-            const phasePairKey pairkj
+            const scalar dmdtSign
             (
-                fk.phase().name(),
-                fj.phase().name()
+                Pair<word>::compare
+                (
+                    pDmdt_.find(pairkj).key(),
+                    pairkj
+                )
             );
 
-            // Check whether fk and fj reside in different velocityGroups
-            if (pDmdt_.found(pairkj))
-            {
-                const scalar dmdtSign
-                (
-                    Pair<word>::compare
-                    (
-                        pDmdt_.find(pairkj).key(),
-                        pairkj
-                    )
-                );
-
-                pDmdt_[pairkj]->ref() += dmdtSign*Suk*rho;
-            }
+            pDmdt_[pairkj]->ref() += dmdtSign*Suk*rho;
         }
-        else
-        {
-            Su_[k] += sizeGroups_[k]->x()*binaryBreakupRate_()*delta_[i][j]*fj
-               *alphaj/fj.x()*Gamma;
-        }
-
     }
 }
 
@@ -616,117 +532,126 @@ deathByBinaryBreakup
 
 void Foam::diameterModels::populationBalanceModel::drift(const label i)
 {
-    r_() *= 0.0;
-
-    if (i == sizeGroups_.size() - 1)
-    {
-        r_() += pos(driftRate_())*sizeGroups_[i]->x()/sizeGroups_[i-1]->x();
-    }
-    else
-    {
-        r_() += pos(driftRate_())*sizeGroups_[i+1]->x()/sizeGroups_[i]->x();
-    }
-
-    if (i == 0)
-    {
-        r_() += neg(driftRate_())*sizeGroups_[i]->x()/sizeGroups_[i+1]->x();
-    }
-    else
-    {
-        r_() += neg(driftRate_())*sizeGroups_[i-1]->x()/sizeGroups_[i]->x();
-    }
-
     const sizeGroup& fi = *sizeGroups_[i];
     const volScalarField& rho = fi.phase().rho();
 
-    if (i == sizeGroups_.size() - 1)
+    if (i == 0)
     {
-        SuSp_[i] += neg(driftRate_())*fi.x()*driftRate_()*fi.phase()/fi.x()
-           /((r_() - 1)*v_[i]);
+        rx_() = pos(driftRate_())*sizeGroups_[i+1]->x()/sizeGroups_[i]->x();
     }
-    else if (i == 0)
+    else if (i == sizeGroups_.size() - 1)
     {
-        SuSp_[i] += pos(driftRate_())*fi.x()*driftRate_()*fi.phase()/fi.x()
-           /((r_() - 1)*v_[i]);
+        rx_() = neg(driftRate_())*sizeGroups_[i-1]->x()/sizeGroups_[i]->x();
     }
     else
     {
-        SuSp_[i] += fi.x()*driftRate_()*fi.phase()/fi.x()/((r_() - 1)*v_[i]);
+        rx_() = pos(driftRate_())*sizeGroups_[i+1]->x()/sizeGroups_[i]->x()
+          + neg(driftRate_())*sizeGroups_[i-1]->x()/sizeGroups_[i]->x();
     }
 
-    if (i != 0)
+    SuSp_[i] += (neg(1 - rx_()) + neg(1 - rx_()/(1 - rx_())))*driftRate_()
+       *fi.phase()/((rx_() - 1)*sizeGroups_[i]->x());
+
+    rx_() *= 0.0;
+    rdx_() *= 0.0;
+
+    if (i < sizeGroups_.size() - 2)
     {
-        if (velocityGroups_.size() > 1)
-        {
-            const sizeGroup& fh = *sizeGroups_[i-1];
+        rx_() += pos(driftRate_())*sizeGroups_[i+2]->x()/sizeGroups_[i+1]->x();
 
-            volScalarField& Suh = Sui_();
+        rdx_() += pos(driftRate_())
+           *(sizeGroups_[i+2]->x() - sizeGroups_[i+1]->x())
+           /(sizeGroups_[i+1]->x() - sizeGroups_[i]->x());
+    }
+    else if (i == sizeGroups_.size() - 2)
+    {
+        rx_() += pos(driftRate_())*sizeGroups_[i+1]->x()
+           /sizeGroups_[i]->x();
 
-            Suh = neg(driftRate_())*fh.x()*r_()*driftRate_()*fi*fi.phase()
-               /fi.x()/((r_() - 1)*v_[i-1]);
+        rdx_() += pos(driftRate_())
+           *(sizeGroups_[i+1]->x() - sizeGroups_[i]->x())
+           /(sizeGroups_[i]->x() - sizeGroups_[i-1]->x());
+    }
 
-            const phasePairKey pair
-            (
-                fi.phase().name(),
-                fh.phase().name()
-            );
+    if (i == 1)
+    {
+        rx_() += neg(driftRate_())*sizeGroups_[i-1]->x()
+           /sizeGroups_[i]->x();
 
-            // Check whether fi and fh reside in different velocityGroups
-            if (pDmdt_.found(pair))
-            {
-                const scalar dmdtSign
-                (
-                    Pair<word>::compare(pDmdt_.find(pair).key(), pair)
-                );
+        rdx_() += neg(driftRate_())
+           *(sizeGroups_[i]->x() - sizeGroups_[i-1]->x())
+           /(sizeGroups_[i+1]->x() - sizeGroups_[i]->x());
+    }
+    else if (i > 1)
+    {
+        rx_() += neg(driftRate_())*sizeGroups_[i-2]->x()/sizeGroups_[i-1]->x();
 
-                pDmdt_[pair]->ref() -= dmdtSign*Suh*rho;
-            }
-
-            Su_[i-1] += Suh;
-        }
-        else
-        {
-            Su_[i-1] += neg(driftRate_())*sizeGroups_[i-1]->x()*r_()
-               *driftRate_()*fi*fi.phase()/fi.x()/((r_() - 1)*v_[i-1]);
-        }
+        rdx_() += neg(driftRate_())
+           *(sizeGroups_[i-1]->x() - sizeGroups_[i-2]->x())
+           /(sizeGroups_[i]->x() - sizeGroups_[i-1]->x());
     }
 
     if (i != sizeGroups_.size() - 1)
     {
-        if (velocityGroups_.size() > 1)
+        const sizeGroup& fj = *sizeGroups_[i+1];
+        volScalarField& Suj = Sui_;
+
+        Suj = pos(driftRate_())*driftRate_()*rdx_()*fi*fi.phase()/fi.x()
+           /(rx_() - 1);
+
+        Su_[i+1] += Suj;
+
+        const phasePairKey pairij
+        (
+            fi.phase().name(),
+            fj.phase().name()
+        );
+
+        if (pDmdt_.found(pairij))
         {
-            const sizeGroup& fj = *sizeGroups_[i+1];
-
-            volScalarField& Suj = Sui_();
-
-            Suj = pos(driftRate_())*fj.x()*r_()*driftRate_()*fi*fi.phase()
-               /fi.x()/((r_() - 1)*v_[i+1]);
-
-            const phasePairKey pair
+            const scalar dmdtSign
             (
-                fi.phase().name(),
-                fj.phase().name()
+                Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            // Check whether fi and fj reside in different velocityGroups
-            if (pDmdt_.found(pair))
-            {
-                const scalar dmdtSign
-                (
-                    Pair<word>::compare(pDmdt_.find(pair).key(), pair)
-                );
-
-                pDmdt_[pair]->ref() -= dmdtSign*Suj*rho;
-            }
-
-            Su_[i+1] += Suj;
-        }
-        else
-        {
-            Su_[i+1] += pos(driftRate_())*sizeGroups_[i+1]->x()*r_()
-               *driftRate_()*fi*fi.phase()/fi.x()/((r_() - 1)*v_[i+1]);
+            pDmdt_[pairij]->ref() -= dmdtSign*Suj*rho;
         }
     }
+
+    if (i != 0)
+    {
+        const sizeGroup& fh = *sizeGroups_[i-1];
+        volScalarField& Suh = Sui_;
+
+        Suh = neg(driftRate_())*driftRate_()*rdx_()*fi*fi.phase()/fi.x()
+           /(rx_() - 1);
+
+        Su_[i-1] += Suh;
+
+        const phasePairKey pairih
+        (
+            fi.phase().name(),
+            fh.phase().name()
+        );
+
+        if (pDmdt_.found(pairih))
+        {
+            const scalar dmdtSign
+            (
+                Pair<word>::compare(pDmdt_.find(pairih).key(), pairih)
+            );
+
+            pDmdt_[pairih]->ref() -= dmdtSign*Suh*rho;
+        }
+    }
+}
+
+
+void Foam::diameterModels::populationBalanceModel::nucleation(const label i)
+{
+    dimensionedScalar volume("volume", dimVolume, 1.0);
+
+    Su_[i] += sizeGroups_[i]->x()*nucleationRate_();
 }
 
 
@@ -830,6 +755,18 @@ void Foam::diameterModels::populationBalanceModel::sources()
 
             drift(i);
         }
+
+        if (nucleation_.size() != 0)
+        {
+            nucleationRate_() *= 0.0;
+
+            forAll(nucleation_, model)
+            {
+                nucleation_[model].nucleationRate(nucleationRate_(), i);
+            }
+
+            nucleation(i);
+        }
     }
 }
 
@@ -872,7 +809,8 @@ void Foam::diameterModels::populationBalanceModel::calcVelocity()
 
     forAllIter(PtrListDictionary<velocityGroup>, velocityGroups_, iter)
     {
-        U_ += iter().phase().U()*iter().phase()
+        U_ += iter().phase().U()
+           *max(iter().phase(), iter().phase().residualAlpha())
            /max(alphas_, iter().phase().residualAlpha());
     }
 }
@@ -983,7 +921,17 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     delta_(),
     Su_(),
     SuSp_(),
-    Sui_(),
+    Sui_
+    (
+        IOobject
+        (
+            "Sui",
+            fluid_.time().timeName(),
+            fluid_.mesh()
+        ),
+        fluid_.mesh(),
+        dimensionedScalar("Sui", inv(dimTime), Zero)
+    ),
     coalescence_
     (
         dict_.lookup("coalescenceModels"),
@@ -1008,7 +956,14 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         driftModel::iNew(*this)
     ),
     driftRate_(),
-    r_(),
+    rx_(),
+    rdx_(),
+    nucleation_
+    (
+        dict_.lookup("nucleationModels"),
+        nucleationModel::iNew(*this)
+    ),
+    nucleationRate_(),
     alphas_
     (
         IOobject
@@ -1047,27 +1002,21 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     ),
     d_()
 {
-    this->registerVelocityGroups();
+    this->registerVelocityAndSizeGroups();
 
     this->createPhasePairs();
 
+    if (sizeGroups_.size() < 3)
+    {
+        FatalErrorInFunction
+                    << "The populationBalance " << name_
+                    << " requires a minimum number of three sizeGroups to be"
+                    << " specified."
+                    << exit(FatalError);
+    }
+
     if (velocityGroups_.size() > 1)
     {
-        Sui_.reset
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "Sui",
-                    fluid_.time().timeName(),
-                    fluid_.mesh()
-                ),
-                fluid_.mesh(),
-                dimensionedScalar("Sui", inv(dimTime), Zero)
-            )
-        );
-
         d_.reset
         (
             new volScalarField
@@ -1169,7 +1118,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
             )
         );
 
-        r_.reset
+        rx_.reset
         (
             new volScalarField
             (
@@ -1181,6 +1130,44 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 ),
                 fluid_.mesh(),
                 dimensionedScalar("r", dimless, Zero)
+            )
+        );
+
+        rdx_.reset
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "r",
+                    fluid_.time().timeName(),
+                    fluid_.mesh()
+                ),
+                fluid_.mesh(),
+                dimensionedScalar("r", dimless, Zero)
+            )
+        );
+    }
+
+    if (nucleation_.size() != 0)
+    {
+        nucleationRate_.reset
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "nucleationRate",
+                    fluid.time().timeName(),
+                    fluid.mesh()
+                ),
+                fluid.mesh(),
+                dimensionedScalar
+                (
+                    "nucleationRate",
+                    inv(dimTime*dimVolume),
+                    Zero
+                )
             )
         );
     }
@@ -1204,6 +1191,50 @@ Foam::diameterModels::populationBalanceModel::clone() const
 bool Foam::diameterModels::populationBalanceModel::writeData(Ostream& os) const
 {
     return os.good();
+}
+
+
+const Foam::dimensionedScalar
+Foam::diameterModels::populationBalanceModel::gamma
+(
+    const label i,
+    const dimensionedScalar& v
+) const
+{
+    dimensionedScalar lowerBoundary(v);
+    dimensionedScalar upperBoundary(v);
+    const dimensionedScalar& xi = sizeGroups_[i]->x();
+
+    if (i == 0)
+    {
+       lowerBoundary = xi;
+    }
+    else
+    {
+       lowerBoundary = sizeGroups_[i-1]->x();
+    }
+
+    if (i == sizeGroups_.size() - 1)
+    {
+        upperBoundary = xi;
+    }
+    else
+    {
+        upperBoundary = sizeGroups_[i+1]->x();
+    }
+
+    if (v < lowerBoundary || v > upperBoundary)
+    {
+        return 0.0;
+    }
+    else if (v.value() <= xi.value())
+    {
+        return (v - lowerBoundary)/(xi - lowerBoundary);
+    }
+    else
+    {
+        return (upperBoundary - v)/(upperBoundary - xi);
+    }
 }
 
 
@@ -1312,6 +1343,17 @@ void Foam::diameterModels::populationBalanceModel::solve()
         {
             d_() = dsm();
         }
+
+        volScalarField fAlpha0 =
+            *sizeGroups_.first()*sizeGroups_.first()->phase();
+
+        volScalarField fAlphaN =
+            *sizeGroups_.last()*sizeGroups_.last()->phase();
+
+        Info<< this->name() << " sizeGroup phase fraction first, last = "
+            << fAlpha0.weightedAverage(this->mesh().V()).value()
+            << ' ' << fAlphaN.weightedAverage(this->mesh().V()).value()
+            << endl;
     }
 }
 

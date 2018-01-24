@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,13 +79,6 @@ Foam::diameterModels::coalescenceModel::coalescenceModel
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::diameterModels::populationBalanceModel&
-Foam::diameterModels::coalescenceModel::popBal() const
-{
-    return popBal_;
-}
-
 
 void Foam::diameterModels::coalescenceModel::correct()
 {}

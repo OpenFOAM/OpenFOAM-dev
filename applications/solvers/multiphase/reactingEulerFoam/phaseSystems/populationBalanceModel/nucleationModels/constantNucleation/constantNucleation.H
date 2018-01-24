@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::driftModel
+    Foam::diameterModels::nucleationModels::constant
 
 Description
-    Base class for drift models.
+    Constant nucleation rate within all classes. Used for verification and
+    validation of the nucleation formulation implemented in the
+    populationBalanceModel class. Rate is calculated from fvOptions mass source.
 
 SourceFiles
-    driftModel.C
+    constant.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef driftModel_H
-#define driftModel_H
+#ifndef constantNucleation_H
+#define constantNucleation_H
 
-#include "populationBalanceModel.H"
+#include "nucleationModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,116 +45,62 @@ namespace Foam
 {
 namespace diameterModels
 {
+namespace nucleationModels
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class driftModel Declaration
+                     Class constantNucleation Declaration
 \*---------------------------------------------------------------------------*/
 
-class driftModel
+class constantNucleation
+:
+    public nucleationModel
 {
-protected:
+    // Private data
 
-    // Protected data
+        //- Departure diameter
+        dimensionedScalar d_;
 
-        //- Reference to the populationBalanceModel
-        const populationBalanceModel& popBal_;
+        //- Velocity group in which the nucleation occurs
+        const velocityGroup& velGroup_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("driftModel");
-
-
-    // Declare run-time constructor selection table
-
-        declareRunTimeSelectionTable
-        (
-            autoPtr,
-            driftModel,
-            dictionary,
-            (
-                const populationBalanceModel& popBal,
-                const dictionary& dict
-            ),
-            (popBal, dict)
-        );
-
-
-    //- Class used for the read-construction of
-    //  PtrLists of drift models
-    class iNew
-    {
-        const populationBalanceModel& popBal_;
-
-    public:
-
-        iNew(const populationBalanceModel& popBal)
-        :
-            popBal_(popBal)
-        {}
-
-        autoPtr<driftModel> operator()(Istream& is) const
-        {
-            word type(is);
-            dictionary dict(is);
-            return driftModel::New(type, popBal_, dict);
-        }
-    };
-
+    TypeName("constant");
 
     // Constructor
 
-        driftModel
+        constantNucleation
         (
-            const populationBalanceModel& popBal,
-            const dictionary& dict
-        );
-
-        autoPtr<driftModel> clone() const
-        {
-            NotImplemented;
-            return autoPtr<driftModel>(nullptr);
-        }
-
-
-    // Selector
-
-        static autoPtr<driftModel> New
-        (
-            const word& type,
             const populationBalanceModel& popBal,
             const dictionary& dict
         );
 
 
     //- Destructor
-    virtual ~driftModel()
+    virtual ~constantNucleation()
     {}
 
 
     // Member Functions
 
-        //- Return reference to the populationBalance
-        const populationBalanceModel& popBal() const
-        {
-            return popBal_;
-        }
-
         //- Correct diameter independent expressions
         virtual void correct();
 
-        //- Add to driftRate
-        virtual void driftRate
+        //- Add to nucleationRate
+        virtual void nucleationRate
         (
-            volScalarField& driftRate,
+            volScalarField& nucleationRate,
             const label i
-        ) = 0;
+        );
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace nucleationModels
 } // End namespace diameterModels
 } // End namespace Foam
 

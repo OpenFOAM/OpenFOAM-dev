@@ -31,8 +31,8 @@ Description
     a transport equation of the volume-based number density function. The
     discretization is done using the fixed pivot technique of Kumar and
     Ramkrishna (1996). The source terms are written in a way that particle
-    number and mass are preserved. Coalescence (aggregation), breakup as well
-    as drift (growth and surface loss) are supported.
+    number and mass are preserved. Coalescence (aggregation), breakup, drift
+    (growth and surface loss) as well as nucleation are supported.
     For the discrete breakup term two recipies are available, depending on the
     model choice. For models which state a total breakup rate and a separate
     daughter size distribution function, the formulation of Kumar and Ramkrishna
@@ -132,6 +132,9 @@ Usage
             (
                 densityChange{}
             );
+
+            nucleationModels
+            ();
         }
     }
     \endverbatim
@@ -166,6 +169,7 @@ class coalescenceModel;
 class breakupModel;
 class binaryBreakupModel;
 class driftModel;
+class nucleationModel;
 
 /*---------------------------------------------------------------------------*\
                    Class populationBalanceModel Declaration
@@ -226,8 +230,8 @@ class populationBalanceModel
         //- Sources treated implicitly or explicitly depending on sign
         PtrList<volScalarField> SuSp_;
 
-        //- Field for caching pDmdt sources
-        autoPtr<volScalarField> Sui_;
+        //- Field for caching sources
+        volScalarField Sui_;
 
         //- Coalescence models
         PtrList<coalescenceModel> coalescence_;
@@ -253,8 +257,17 @@ class populationBalanceModel
         //- Drift rate
         autoPtr<volScalarField> driftRate_;
 
-        //- Ratio between sucessive reprasentative volumes
-        autoPtr<volScalarField> r_;
+        //- Ratio between sucessive representative volumes
+        autoPtr<volScalarField> rx_;
+
+        //- Ratio between sucessive class widths
+        autoPtr<volScalarField> rdx_;
+
+        //- Zeroeth order models
+        PtrList<nucleationModel> nucleation_;
+
+        //- Zeroeth order rate
+        autoPtr<volScalarField> nucleationRate_;
 
         //- Total void fraction of phases belonging to this populationBalance
         volScalarField alphas_;
@@ -268,19 +281,13 @@ class populationBalanceModel
 
     // Private member functions
 
-        void registerVelocityGroups();
+        void registerVelocityAndSizeGroups();
 
         void add(sizeGroup* group);
 
         void createPhasePairs();
 
         void preSolve();
-
-        dimensionedScalar gamma
-        (
-            const label i,
-            const dimensionedScalar& v
-        ) const;
 
         void birthByCoalescence(const label j, const label k);
 
@@ -297,6 +304,8 @@ class populationBalanceModel
         void deathByBinaryBreakup(const label j, const label i);
 
         void drift(const label i);
+
+        void nucleation(const label i);
 
         void sources();
 
@@ -400,6 +409,13 @@ public:
 
         //- Return average velocity
         inline const volVectorField& U() const;
+
+        //- Return allocation coefficient
+        const dimensionedScalar gamma
+        (
+            const label i,
+            const dimensionedScalar& v
+        ) const;
 
         //- Solve the population balance equation
         void solve();
